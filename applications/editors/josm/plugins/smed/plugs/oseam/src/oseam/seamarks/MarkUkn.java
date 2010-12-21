@@ -1,12 +1,10 @@
 package oseam.seamarks;
 
-import org.openstreetmap.josm.data.osm.Node;
-
 import oseam.dialogs.OSeaMAction;
 
 public class MarkUkn extends SeaMark {
-	public MarkUkn(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkUkn(OSeaMAction dia) {
+		super(dia);
 		dlg.panelMain.clearSelections();
 	}
 

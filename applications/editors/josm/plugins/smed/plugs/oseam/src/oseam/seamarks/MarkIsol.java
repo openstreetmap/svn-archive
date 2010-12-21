@@ -6,21 +6,20 @@ import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
 public class MarkIsol extends SeaMark {
-	public MarkIsol(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkIsol(OSeaMAction dia) {
+		super(dia);
 	}
 	
 	public void parseMark() {
 
 		String str;
 		Map<String, String> keys;
-		keys = getNode().getKeys();
+		keys = dlg.node.getKeys();
 
 		if (!dlg.panelMain.hazButton.isSelected())
 			dlg.panelMain.hazButton.doClick();
@@ -69,11 +68,6 @@ public class MarkIsol extends SeaMark {
 //		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
-	public boolean isValid() {
-		return (getCategory() != Cat.UNKNOWN_CAT)
-				&& (getShape() != Styl.UNKNOWN_SHAPE);
-	}
-
 	public void setLightColour() {
 		super.setLightColour("W");
 	}
@@ -84,7 +78,7 @@ public class MarkIsol extends SeaMark {
 
 		super.paintSign();
 */
-		if (isValid()) {
+		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 
 			String image = "/images/Cardinal";
 
@@ -117,21 +111,20 @@ public class MarkIsol extends SeaMark {
 	}
 
 	public void saveSign() {
-		Node node = getNode();
 
-		if (node == null) {
+		if (dlg.node == null) {
 			return;
 		}
 
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_isolated_danger:shape", "pillar"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_isolated_danger:shape", "spar"));
 			break;
 		case BEACON:
@@ -139,7 +132,7 @@ public class MarkIsol extends SeaMark {
 			break;
 		case TOWER:
 			super.saveSign("beacon_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_isolated_danger:shape", "tower"));
 			break;
 		case FLOAT:
@@ -151,23 +144,23 @@ public class MarkIsol extends SeaMark {
 		switch (getShape()) {
 		case PILLAR:
 		case SPAR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_isolated_danger:colour", "black;red;black"));
 			break;
 		case BEACON:
 		case TOWER:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_isolated_danger:colour_pattern",
 					"horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_isolated_danger:colour", "black;red;black"));
 			break;
 		case FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:light_float:colour_pattern", "horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:light_float:colour", "black;red;black"));
 			break;
 		}

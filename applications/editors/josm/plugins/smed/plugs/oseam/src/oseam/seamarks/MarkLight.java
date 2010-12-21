@@ -4,20 +4,18 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.data.osm.Node;
-
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
 public class MarkLight extends SeaMark {
-	public MarkLight(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkLight(OSeaMAction dia) {
+		super(dia);
 	}
 	
 	public void parseMark() {
 
 		Map<String, String> keys;
-		keys = getNode().getKeys();
+		keys = dlg.node.getKeys();
 
 		if (!dlg.panelMain.lightsButton.isSelected())
 			dlg.panelMain.lightsButton.doClick();
@@ -62,17 +60,13 @@ public class MarkLight extends SeaMark {
 		dlg.cM01Fired.setEnabled(false);
 		dlg.cM01Fired.setSelected(true);
 */	}
-/*
-	public boolean isValid() {
-		return (getBuoyIndex() > 0);
-	}
-*/
+
 	public void paintSign() {
 /*		if (dlg.paintlock)
 			return;
 		super.paintSign();
 */
-		if (isValid()) {
+		if (getCategory() != Cat.UNKNOWN) {
 
 			switch (getCategory()) {
 			case LIGHT_HOUSE:
@@ -101,9 +95,7 @@ public class MarkLight extends SeaMark {
 	}
 
 	public void saveSign() {
-		Node node = getNode();
-
-		if (node == null) {
+		if (dlg.node == null) {
 			return;
 		}
 

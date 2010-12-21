@@ -12,9 +12,11 @@ import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.MarkCard;
+import oseam.seamarks.MarkIsol;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
-import oseam.seamarks.SeaMark.Styl;
+import oseam.seamarks.SeaMark.Shp;
 
 import java.awt.event.ActionListener;
 
@@ -54,42 +56,60 @@ public class PanelHaz extends JPanel {
 		alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (northButton.isSelected()) {
-					northButton.setBorderPainted(true);
+					if (!(dlg.mark instanceof MarkCard))
+						dlg.mark = new MarkCard(dlg);
 					dlg.mark.setCategory(Cat.CARD_NORTH);
 					dlg.mark.setColour(Col.BLACK_YELLOW);
 					dlg.panelMain.panelTop.northTopButton.doClick();
 					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+					northButton.setBorderPainted(true);
 				} else {
 					northButton.setBorderPainted(false);
 				}
 				if (southButton.isSelected()) {
-					southButton.setBorderPainted(true);
+					if (!(dlg.mark instanceof MarkCard))
+						dlg.mark = new MarkCard(dlg);
 					dlg.mark.setCategory(Cat.CARD_SOUTH);
 					dlg.mark.setColour(Col.YELLOW_BLACK);
 					dlg.panelMain.panelTop.southTopButton.doClick();
 					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+					southButton.setBorderPainted(true);
 				} else {
 					southButton.setBorderPainted(false);
 				}
 				if (eastButton.isSelected()) {
-					eastButton.setBorderPainted(true);
+					if (!(dlg.mark instanceof MarkCard))
+						dlg.mark = new MarkCard(dlg);
 					dlg.mark.setCategory(Cat.CARD_EAST);
 					dlg.mark.setColour(Col.BLACK_YELLOW_BLACK);
 					dlg.panelMain.panelTop.eastTopButton.doClick();
 					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+					eastButton.setBorderPainted(true);
 				} else {
 					eastButton.setBorderPainted(false);
 				}
 				if (westButton.isSelected()) {
-					westButton.setBorderPainted(true);
+					if (!(dlg.mark instanceof MarkCard))
+						dlg.mark = new MarkCard(dlg);
 					dlg.mark.setCategory(Cat.CARD_WEST);
 					dlg.mark.setColour(Col.YELLOW_BLACK_YELLOW);
 					dlg.panelMain.panelTop.westTopButton.doClick();
 					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+					westButton.setBorderPainted(true);
 				} else {
 					westButton.setBorderPainted(false);
 				}
-				isolButton.setBorderPainted(isolButton.isSelected());
+				if (isolButton.isSelected()) {
+					if (!(dlg.mark instanceof MarkIsol))
+						dlg.mark = new MarkIsol(dlg);
+					dlg.mark.setColour(Col.BLACK_RED_BLACK);
+					dlg.panelMain.panelTop.spheres2TopButton.doClick();
+					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+					isolButton.setBorderPainted(true);
+				} else {
+					isolButton.setBorderPainted(false);
+				}
+				if (dlg.mark != null) dlg.mark.paintSign();
 			}
 		};
 		northButton.addActionListener(alCat);
@@ -113,31 +133,31 @@ public class PanelHaz extends JPanel {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (pillarButton.isSelected()) {
 				pillarButton.setBorderPainted(true);
-				dlg.mark.setShape(Styl.PILLAR);
+				dlg.mark.setShape(Shp.PILLAR);
 				} else {
 					pillarButton.setBorderPainted(false);
 				}
 				if (sparButton.isSelected()) {
 				sparButton.setBorderPainted(true);
-				dlg.mark.setShape(Styl.SPAR);
+				dlg.mark.setShape(Shp.SPAR);
 				} else {
 					sparButton.setBorderPainted(false);
 				}
 				if (floatButton.isSelected()) {
 				floatButton.setBorderPainted(true);
-				dlg.mark.setShape(Styl.FLOAT);
+				dlg.mark.setShape(Shp.FLOAT);
 				} else {
 					floatButton.setBorderPainted(false);
 				}
 				if (beaconButton.isSelected()) {
 				beaconButton.setBorderPainted(true);
-				dlg.mark.setShape(Styl.BEACON);
+				dlg.mark.setShape(Shp.BEACON);
 				} else {
 					beaconButton.setBorderPainted(false);
 				}
 				if (towerButton.isSelected()) {
 				towerButton.setBorderPainted(true);
-				dlg.mark.setShape(Styl.TOWER);
+				dlg.mark.setShape(Shp.TOWER);
 				} else {
 					towerButton.setBorderPainted(false);
 				}

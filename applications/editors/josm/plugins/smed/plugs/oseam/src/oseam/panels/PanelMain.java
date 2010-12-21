@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.MarkSpec;
+import oseam.seamarks.MarkLight;
 
 public class PanelMain extends JPanel {
 
@@ -54,28 +56,28 @@ public class PanelMain extends JPanel {
 	public PanelMain(OSeaMAction dia) {
 
 		dlg = dia;
-		panelChan = new PanelChan();
+		panelChan = new PanelChan(dlg);
 		panelChan.setBounds(new Rectangle(65, 0, 335, 160));
 		panelChan.setVisible(false);
-		panelHaz = new PanelHaz(dia);
+		panelHaz = new PanelHaz(dlg);
 		panelHaz.setBounds(new Rectangle(65, 0, 335, 160));
 		panelHaz.setVisible(false);
-		panelSpec = new PanelSpec();
+		panelSpec = new PanelSpec(dlg);
 		panelSpec.setBounds(new Rectangle(65, 0, 335, 160));
 		panelSpec.setVisible(false);
-		panelLights = new PanelLights();
+		panelLights = new PanelLights(dlg);
 		panelLights.setBounds(new Rectangle(65, 0, 335, 160));
 		panelLights.setVisible(false);
-		panelTop = new PanelTop();
+		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 220, 160));
 		panelTop.setVisible(false);
-		panelFog = new PanelFog();
+		panelFog = new PanelFog(dlg);
 		panelFog.setBounds(new Rectangle(40, 165, 220, 160));
 		panelFog.setVisible(false);
-		panelRadar = new PanelRadar();
+		panelRadar = new PanelRadar(dlg);
 		panelRadar.setBounds(new Rectangle(40, 165, 220, 160));
 		panelRadar.setVisible(false);
-		panelLit = new PanelLit();
+		panelLit = new PanelLit(dlg);
 		panelLit.setBounds(new Rectangle(40, 165, 220, 160));
 		panelLit.setVisible(false);
 
@@ -117,8 +119,10 @@ public class PanelMain extends JPanel {
 		typeButtons.add(lightsButton);
 		alType = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (dlg.mark == null)
+				if (dlg.mark == null) {
 					typeButtons.clearSelection();
+					return;
+				}
 				if (chanButton.isSelected()) {
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
@@ -134,6 +138,8 @@ public class PanelMain extends JPanel {
 					panelHaz.setVisible(false);
 				}
 				if (specButton.isSelected()) {
+					if (!(dlg.mark instanceof MarkSpec))
+						dlg.mark = new MarkSpec(dlg);
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
 				} else {
@@ -141,6 +147,8 @@ public class PanelMain extends JPanel {
 					panelSpec.setVisible(false);
 				}
 				if (lightsButton.isSelected()) {
+					if (!(dlg.mark instanceof MarkLight))
+						dlg.mark = new MarkLight(dlg);
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
 				} else {
@@ -165,8 +173,10 @@ public class PanelMain extends JPanel {
 		miscButtons.add(litButton);
 		alMisc = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (dlg.mark == null)
+				if (dlg.mark == null) {
 					miscButtons.clearSelection();
+					return;
+				}
 				if (topButton.isSelected()) {
 					topButton.setBorderPainted(true);
 					panelTop.setVisible(true);

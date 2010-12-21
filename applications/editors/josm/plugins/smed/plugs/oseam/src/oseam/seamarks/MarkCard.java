@@ -5,21 +5,20 @@ import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
 public class MarkCard extends SeaMark {
 
-	public MarkCard(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkCard(OSeaMAction dia) {
+		super(dia);
 	}
 	
 	public void parseMark() {
 		String str;
 		Map<String, String> keys;
-		keys = getNode().getKeys();
+		keys = dlg.node.getKeys();
 
 		if (!dlg.panelMain.hazButton.isSelected())
 			dlg.panelMain.hazButton.doClick();
@@ -101,11 +100,6 @@ public class MarkCard extends SeaMark {
 		// dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
-	public boolean isValid() {
-		return (getCategory() != Cat.UNKNOWN_CAT)
-				&& (getShape() != Styl.UNKNOWN_SHAPE);
-	}
-
 	public void setLightColour() {
 		super.setLightColour("W");
 	}
@@ -114,7 +108,7 @@ public class MarkCard extends SeaMark {
 		/*
 		if (dlg.paintlock) return; super.paintSign();
 		 */
-		if (isValid()) {
+		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 			String image = "/images/Cardinal";
 			switch (getShape()) {
 			case PILLAR:
@@ -163,8 +157,7 @@ public class MarkCard extends SeaMark {
 	}
 
 	public void saveSign() {
-		Node node = getNode();
-		if (node == null)
+		if (dlg.node == null)
 			return;
 
 		String shape = "";
@@ -172,12 +165,12 @@ public class MarkCard extends SeaMark {
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_cardinal");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_cardinal:shape", "pillar"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_cardinal");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_cardinal:shape", "spar"));
 			break;
 		case BEACON:
@@ -185,7 +178,7 @@ public class MarkCard extends SeaMark {
 			break;
 		case TOWER:
 			super.saveSign("beacon_cardinal");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_cardinal:shape", "tower"));
 			break;
 		case FLOAT:
@@ -199,38 +192,38 @@ public class MarkCard extends SeaMark {
 		case SPAR:
 			switch (getCategory()) {
 			case CARD_NORTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:category", "north"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:colour", "black;yellow"));
 				shape = "2 cones up";
 				break;
 
 			case CARD_EAST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:category", "east"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:colour", "black;yellow;black"));
 				shape = "2 cones base together";
 				break;
 
 			case CARD_SOUTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:category", "south"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:colour", "yellow;black"));
 				shape = "2 cones down";
 				break;
 
 			case CARD_WEST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:category", "west"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:buoy_cardinal:colour", "yellow;black;yellow"));
 				shape = "2 cones point together";
 				break;
 			}
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_cardinal:colour_pattern",
 					"horizontal stripes"));
 			break;
@@ -239,42 +232,42 @@ public class MarkCard extends SeaMark {
 		case TOWER:
 			switch (getCategory()) {
 			case CARD_NORTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:category", "north"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:colour", "black;yellow"));
 				shape = "2 cones up";
 				break;
 
 			case CARD_EAST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:category", "east"));
 				Main.main.undoRedo
-						.add(new ChangePropertyCommand(node,
+						.add(new ChangePropertyCommand(dlg.node,
 								"seamark:beacon_cardinal:colour",
 								"black;yellow;black"));
 				shape = "2 cones base together";
 				break;
 
 			case CARD_SOUTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:category", "south"));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:colour", "yellow;black"));
 				shape = "2 cones down";
 				break;
 
 			case CARD_WEST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:beacon_cardinal:category", "west"));
 				Main.main.undoRedo
-						.add(new ChangePropertyCommand(node,
+						.add(new ChangePropertyCommand(dlg.node,
 								"seamark:beacon_cardinal:colour",
 								"yellow;black;yellow"));
 				shape = "2 cones point together";
 				break;
 			}
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_cardinal:colour_pattern",
 					"horizontal stripes"));
 			break;
@@ -282,31 +275,31 @@ public class MarkCard extends SeaMark {
 		case FLOAT:
 			switch (getCategory()) {
 			case CARD_NORTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:light_float:colour", "black;yellow"));
 				shape = "2 cones up";
 				break;
 
 			case CARD_EAST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:light_float:colour", "black;yellow;black"));
 				shape = "2 cones base together";
 				break;
 
 			case CARD_SOUTH:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:light_float:colour", "yellow;black"));
 				shape = "2 cones down";
 				break;
 
 			case CARD_WEST:
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 						"seamark:light_float:colour", "yellow;black;yellow"));
 				shape = "2 cones point together";
 				break;
 			}
 			Main.main.undoRedo
-					.add(new ChangePropertyCommand(node,
+					.add(new ChangePropertyCommand(dlg.node,
 							"seamark:light_float:colour_pattern",
 							"horizontal stripes"));
 			break;

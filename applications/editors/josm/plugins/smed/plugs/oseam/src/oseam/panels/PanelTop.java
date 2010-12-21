@@ -18,12 +18,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelTop extends JPanel {
 
+	private OSeaMAction dlg;
 	public PanelCol panelCol = null;
 	private ButtonGroup topButtons = null;
 	public JRadioButton noTopButton = null;
@@ -44,9 +46,9 @@ public class PanelTop extends JPanel {
 	public JRadioButton mooringTopButton = null;
 	ActionListener alTop = null;
 
-	public PanelTop() {
-		super();
-		panelCol = new PanelCol();
+	public PanelTop(OSeaMAction dia) {
+		dlg = dia;
+		panelCol = new PanelCol(dlg);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

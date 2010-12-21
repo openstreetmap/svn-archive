@@ -17,12 +17,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelSafeWater extends JPanel {
 
+	private OSeaMAction dlg;
 	private ButtonGroup shapeButtons = null;
 	private JRadioButton pillarButton = null;
 	private JRadioButton sparButton = null;
@@ -30,8 +32,8 @@ public class PanelSafeWater extends JPanel {
 	private JRadioButton barrelButton = null;
 	private JRadioButton floatButton = null;
 
-	public PanelSafeWater() {
-		super();
+	public PanelSafeWater(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 		this.add(getPillarButton(), null);
 		this.add(getSparButton(), null);

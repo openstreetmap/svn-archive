@@ -16,14 +16,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelFog extends JPanel {
 
-	public PanelFog() {
-		super();
+	private OSeaMAction dlg;
+
+	public PanelFog(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 	}
 

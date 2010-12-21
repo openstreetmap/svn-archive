@@ -19,12 +19,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelSpec extends JPanel {
 
+	private OSeaMAction dlg;
 	private ButtonGroup shapeButtons = null;
 	private JRadioButton pillarButton = null;
 	private JRadioButton sparButton = null;
@@ -38,12 +40,12 @@ public class PanelSpec extends JPanel {
 	private JRadioButton towerButton = null;
 	private PanelCol panelCol = null;
 
-	public PanelSpec() {
-		super();
-		panelCol = new PanelCol();
+	public PanelSpec(OSeaMAction dia) {
+		dlg = dia;
+		panelCol = new PanelCol(dlg);
 		panelCol.setBounds(new Rectangle(9, 0, 34, 160));
-		this.setLayout(null);
 
+		this.setLayout(null);
 		this.add(panelCol, null);
 		this.add(getPillarButton(), null);
 		this.add(getSparButton(), null);
@@ -78,6 +80,7 @@ public class PanelSpec extends JPanel {
 				floatButton.setBorderPainted(floatButton.isSelected());
 				beaconButton.setBorderPainted(beaconButton.isSelected());
 				towerButton.setBorderPainted(towerButton.isSelected());
+				if (dlg.mark != null) dlg.mark.paintSign();
 			}
 		};
 		pillarButton.addActionListener(alShape);

@@ -17,25 +17,27 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelPrefPort extends JPanel {
 
+	private OSeaMAction dlg;
 	private ButtonGroup regionButtons = null;
-	private JRadioButton regionAButton = null;
-	private JRadioButton regionBButton = null;
+	public JRadioButton regionAButton = null;
+	public JRadioButton regionBButton = null;
 	private ButtonGroup shapeButtons = null;
-	private JRadioButton pillarButton = null;
-	private JRadioButton sparButton = null;
-	private JRadioButton canButton = null;
-	private JRadioButton floatButton = null;
-	private JRadioButton beaconButton = null;
-	private JRadioButton towerButton = null;
+	public JRadioButton pillarButton = null;
+	public JRadioButton sparButton = null;
+	public JRadioButton canButton = null;
+	public JRadioButton floatButton = null;
+	public JRadioButton beaconButton = null;
+	public JRadioButton towerButton = null;
 
-	public PanelPrefPort() {
-		super();
+	public PanelPrefPort(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 		this.add(getRegionAButton(), null);
 		this.add(getRegionBButton(), null);
@@ -53,6 +55,7 @@ public class PanelPrefPort extends JPanel {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				regionAButton.setBorderPainted(regionAButton.isSelected());
 				regionBButton.setBorderPainted(regionBButton.isSelected());
+				dlg.mark.paintSign();
 			}
 		};
 		regionAButton.addActionListener(alRegion);
@@ -73,6 +76,7 @@ public class PanelPrefPort extends JPanel {
 				floatButton.setBorderPainted(floatButton.isSelected());
 				beaconButton.setBorderPainted(beaconButton.isSelected());
 				towerButton.setBorderPainted(towerButton.isSelected());
+				dlg.mark.paintSign();
 			}
 		};
 		pillarButton.addActionListener(alShape);

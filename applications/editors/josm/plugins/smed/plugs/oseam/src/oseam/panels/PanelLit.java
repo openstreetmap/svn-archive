@@ -16,17 +16,19 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelLit extends JPanel {
 
+	private OSeaMAction dlg;
 	private PanelCol panelCol = null;
 
-	public PanelLit() {
-		super();
-		panelCol = new PanelCol();
+	public PanelLit(OSeaMAction dia) {
+		dlg = dia;
+		panelCol = new PanelCol(dlg);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

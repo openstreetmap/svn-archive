@@ -16,15 +16,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelRadar extends JPanel {
 
+	private OSeaMAction dlg;
 
-	public PanelRadar() {
-		super();
+	public PanelRadar(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 	}
 

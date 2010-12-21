@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
@@ -12,15 +11,15 @@ import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
 public class MarkSaw extends SeaMark {
-	public MarkSaw(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkSaw(OSeaMAction dia) {
+		super(dia);
 	}
 
 	public void parseMark() {
 
 		String str;
 		Map<String, String> keys;
-		keys = getNode().getKeys();
+		keys = dlg.node.getKeys();
 
 		if (!dlg.panelMain.chanButton.isSelected())
 			dlg.panelMain.chanButton.doClick();
@@ -83,16 +82,13 @@ public class MarkSaw extends SeaMark {
 	 * dlg.cbM01Kennung.addItem("LFl"); dlg.cbM01Kennung.addItem("Mo");
 	 * dlg.cbM01Kennung.setSelectedIndex(0); }
 	 * 
-	 * public boolean isValid() { return (getBuoyIndex() > 0) &&
-	 * (getStyleIndex() > 0); }
-	 * 
 	 * public void setLightColour() { super.setLightColour("W"); }
 	 */
 	public void paintSign() {
 		/*
 		 * if (dlg.paintlock) return; super.paintSign();
 		 */
-		if (isValid()) {
+		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 
 			String image = "/images/Safe_Water";
 
@@ -149,26 +145,24 @@ public class MarkSaw extends SeaMark {
 	}
 
 	public void saveSign() {
-		Node node = getNode();
-
-		if (node == null) {
+		if (dlg.node == null) {
 			return;
 		}
 
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_safe_water:shape", "pillar"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_safe_water:shape", "spar"));
 			break;
 		case SPHERE:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_safe_water:shape", "sphere"));
 			break;
 		case BEACON:
@@ -184,23 +178,23 @@ public class MarkSaw extends SeaMark {
 		case PILLAR:
 		case SPAR:
 		case SPHERE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_safe_water:colour_pattern",
 					"vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_safe_water:colour", "red;white"));
 			break;
 		case BEACON:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_safe_water:colour_pattern",
 					"vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_safe_water:colour", "red;white"));
 			break;
 		case FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:light_float:colour_pattern", "vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:light_float:colour", "red;white"));
 			break;
 		default:

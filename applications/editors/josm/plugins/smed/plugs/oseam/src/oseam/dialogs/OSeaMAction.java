@@ -6,7 +6,6 @@ import oseam.panels.*;
 
 import java.awt.Dimension;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -34,30 +33,33 @@ public class OSeaMAction {
 	public PanelMain panelMain = null;
 
 	public SeaMark mark = null;
+	public Node node = null;
 	private Collection<? extends OsmPrimitive> Selection = null;
-	private OsmPrimitive SelNode = null;
+	private OsmPrimitive lastNode = null;
 
 	public SelectionChangedListener SmpListener = new SelectionChangedListener() {
-		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-			Node node = null;
+		public void selectionChanged(
+				Collection<? extends OsmPrimitive> newSelection) {
+			Node nextNode = null;
 			Selection = newSelection;
 
-//System.out.println(newSelection);
+			// System.out.println(newSelection);
 			for (OsmPrimitive osm : Selection) {
 				if (osm instanceof Node) {
-					node = (Node) osm;
+					nextNode = (Node) osm;
 					if (Selection.size() == 1) {
-						if (node.compareTo(SelNode) != 0) {
-							SelNode = node;
-							parseSeaMark();
-							mark.paintSign();
+						if (nextNode.compareTo(lastNode) != 0) {
+							lastNode = nextNode;
+							parseNode(nextNode);
 						}
-					}
+					} else
+						manager.showVisualMessage(Messages.getString("OneNode"));
 				}
 			}
-			if (node == null) {
+			if (nextNode == null) {
 				panelMain.clearSelections();
-				SelNode = null;
+				lastNode = null;
+				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}
 	};
@@ -87,43 +89,13 @@ public class OSeaMAction {
 		return panelMain;
 	}
 
-	private void parseSeaMark() {
+	private void parseNode(Node newNode) {
 
-		int nodes = 0;
-		Node node = null;
-		Collection<Node> selection = null;
 		Map<String, String> keys;
-		DataSet ds;
-
-		ds = Main.main.getCurrentDataSet();
 
 		manager.showVisualMessage("");
-		if (ds == null) {
-			manager.showVisualMessage(Messages.getString("NoData"));
-			mark = new MarkUkn(this, null);
-			return;
-		}
-
-		selection = ds.getSelectedNodes();
-		nodes = selection.size();
-
-		if (nodes == 0) {
-			manager.showVisualMessage(Messages.getString("SelectNode"));
-			mark = new MarkUkn(this, null);
-			return;
-		}
-
-		if (nodes > 1) {
-			manager.showVisualMessage(Messages.getString("OneNode"));
-			mark = new MarkUkn(this, null);
-			return;
-		}
-		
+		node = newNode;
 		mark = null;
-
-		Iterator<Node> it = selection.iterator();
-		node = it.next();
-
 		String type = "";
 		String str = "";
 
@@ -132,104 +104,105 @@ public class OSeaMAction {
 		if (keys.containsKey("seamark:type"))
 			type = keys.get("seamark:type");
 		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) {
-			mark = new MarkLat(this, node);
+			mark = new MarkLat(this);
 		} else if (type.equals("buoy_cardinal")
 				|| type.equals("beacon_cardinal")) {
-			mark = new MarkCard(this, node);
+			mark = new MarkCard(this);
 		} else if (type.equals("buoy_safe_water")
 				|| type.equals("beacon_safe_water")) {
-			mark = new MarkSaw(this, node);
+			mark = new MarkSaw(this);
 		} else if (type.equals("buoy_special_purpose")
 				|| type.equals("beacon_special_purpose")) {
-			mark = new MarkSpec(this, node);
+			mark = new MarkSpec(this);
 		} else if (type.equals("buoy_isolated_danger")
 				|| type.equals("beacon_isolated_danger")) {
-			mark = new MarkIsol(this, node);
+			mark = new MarkIsol(this);
 		} else if (type.equals("landmark") || type.equals("light_vessel")
 				|| type.equals("light_major") || type.equals("light_minor")) {
-			mark = new MarkLight(this, node);
+			mark = new MarkLight(this);
 		} else if (type.equals("light_float")) {
 			if (keys.containsKey("seamark:light_float:colour")) {
 				str = keys.get("seamark:light_float:colour");
 				if (str.equals("red") || str.equals("green")
 						|| str.equals("red;green;red")
 						|| str.equals("green;red;green")) {
-					mark = new MarkLat(this, node);
+					mark = new MarkLat(this);
 				} else if (str.equals("black;yellow")
 						|| str.equals("black;yellow;black")
 						|| str.equals("yellow;black")
 						|| str.equals("yellow;black;yellow")) {
-					mark = new MarkCard(this, node);
+					mark = new MarkCard(this);
 				} else if (str.equals("black;red;black")) {
-					mark = new MarkIsol(this, node);
+					mark = new MarkIsol(this);
 				} else if (str.equals("red;white")) {
-					mark = new MarkSaw(this, node);
+					mark = new MarkSaw(this);
 				} else if (str.equals("yellow")) {
-					mark = new MarkSpec(this, node);
+					mark = new MarkSpec(this);
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
 				str = keys.get("seamark:light_float:topmark:shape");
 				if (str.equals("cylinder") || str.equals("cone, point up")) {
-					mark = new MarkLat(this, node);
+					mark = new MarkLat(this);
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
 				str = keys.get("seamark:light_float:topmark:colour");
 				if (str.equals("red") || str.equals("green")) {
-					mark = new MarkLat(this, node);
+					mark = new MarkLat(this);
 				}
 			}
 		} else if (keys.containsKey("buoy_lateral:category")
 				|| keys.containsKey("beacon_lateral:category")) {
-			mark = new MarkLat(this, node);
+			mark = new MarkLat(this);
 		} else if (keys.containsKey("buoy_cardinal:category")
 				|| keys.containsKey("beacon_cardinal:category")) {
-			mark = new MarkCard(this, node);
+			mark = new MarkCard(this);
 		} else if (keys.containsKey("buoy_isolated_danger:category")
 				|| keys.containsKey("beacon_isolated_danger:category")) {
-			mark = new MarkIsol(this, node);
+			mark = new MarkIsol(this);
 		} else if (keys.containsKey("buoy_safe_water:category")
 				|| keys.containsKey("beacon_safe_water:category")) {
-			mark = new MarkSaw(this, node);
+			mark = new MarkSaw(this);
 		} else if (keys.containsKey("buoy_special_purpose:category")
 				|| keys.containsKey("beacon_special_purpose:category")) {
-			mark = new MarkSpec(this, node);
+			mark = new MarkSpec(this);
 		} else if (keys.containsKey("buoy_lateral:shape")
 				|| keys.containsKey("beacon_lateral:shape")) {
-			mark = new MarkLat(this, node);
+			mark = new MarkLat(this);
 		} else if (keys.containsKey("buoy_cardinal:shape")
 				|| keys.containsKey("beacon_cardinal:shape")) {
-			mark = new MarkCard(this, node);
+			mark = new MarkCard(this);
 		} else if (keys.containsKey("buoy_isolated_danger:shape")
 				|| keys.containsKey("beacon_isolated_danger:shape")) {
-			mark = new MarkIsol(this, node);
+			mark = new MarkIsol(this);
 		} else if (keys.containsKey("buoy_safe_water:shape")
 				|| keys.containsKey("beacon_safe_water:shape")) {
-			mark = new MarkSaw(this, node);
+			mark = new MarkSaw(this);
 		} else if (keys.containsKey("buoy_special_purpose:shape")
 				|| keys.containsKey("beacon_special_purpose:shape")) {
-			mark = new MarkSpec(this, node);
+			mark = new MarkSpec(this);
 		} else if (keys.containsKey("buoy_lateral:colour")
 				|| keys.containsKey("beacon_lateral:colour")) {
-			mark = new MarkLat(this, node);
+			mark = new MarkLat(this);
 		} else if (keys.containsKey("buoy_cardinal:colour")
 				|| keys.containsKey("beacon_cardinal:colour")) {
-			mark = new MarkCard(this, node);
+			mark = new MarkCard(this);
 		} else if (keys.containsKey("buoy_isolated_danger:colour")
 				|| keys.containsKey("beacon_isolated_danger:colour")) {
-			mark = new MarkIsol(this, node);
+			mark = new MarkIsol(this);
 		} else if (keys.containsKey("buoy_safe_water:colour")
 				|| keys.containsKey("beacon_safe_water:colour")) {
-			mark = new MarkSaw(this, node);
+			mark = new MarkSaw(this);
 		} else if (keys.containsKey("buoy_special_purpose:colour")
 				|| keys.containsKey("beacon_special_purpose:colour")) {
-			mark = new MarkSpec(this, node);
+			mark = new MarkSpec(this);
 		}
-		
+
 		if (mark == null) {
-			manager.showVisualMessage(tr("No seamark recognised at this node"));
-			mark = new MarkUkn(this, node);
+			manager.showVisualMessage(Messages.getString("NoMark"));
+			mark = new MarkUkn(this);
 		} else {
 			mark.parseMark();
+			mark.paintSign();
 		}
 	}
 }

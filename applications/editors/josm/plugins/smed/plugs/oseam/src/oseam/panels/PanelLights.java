@@ -17,12 +17,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelLights extends JPanel {
 
+	private OSeaMAction dlg;
 	private ButtonGroup catButtons = null;
 	private JRadioButton houseButton = null;
 	private JRadioButton majorButton = null;
@@ -30,8 +32,8 @@ public class PanelLights extends JPanel {
 	private JRadioButton vesselButton = null;
 	private JRadioButton floatButton = null;
 
-	public PanelLights() {
-		super();
+	public PanelLights(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 		this.add(getHouseButton(), null);
 		this.add(getMajorButton(), null);
@@ -51,6 +53,7 @@ public class PanelLights extends JPanel {
 				minorButton.setBorderPainted(minorButton.isSelected());
 				vesselButton.setBorderPainted(vesselButton.isSelected());
 				floatButton.setBorderPainted(floatButton.isSelected());
+				if (dlg.mark != null) dlg.mark.paintSign();
 			}
 		};
 		houseButton.addActionListener(alCat);

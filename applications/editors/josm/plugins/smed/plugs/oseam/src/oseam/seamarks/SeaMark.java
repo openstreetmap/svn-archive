@@ -13,60 +13,35 @@ import oseam.dialogs.OSeaMAction;
 
 abstract public class SeaMark {
 
-	public enum Type {
-		UNKNOWN_TYPE, LATERAL, CARDINAL, SAFE_WATER, ISOLATED_DANGER, SPECIAL_PURPOSE, LIGHT
-	}
-
-	public enum Cat {
-		UNKNOWN_CAT, PORT_HAND, STARBOARD_HAND, PREF_PORT_HAND, PREF_STARBOARD_HAND, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL
-	}
-
 	public final static boolean IALA_A = false;
 	public final static boolean IALA_B = true;
 
-	public enum Styl {
-		UNKNOWN_SHAPE, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
+	public enum Cat {
+		UNKNOWN, PORT_HAND, STARBOARD_HAND, PREF_PORT_HAND, PREF_STARBOARD_HAND,
+		CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST,
+		LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT
+	}
+
+	public enum Shp {
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
 	}
 
 	public enum Col {
-		UNKNOWN_COLOUR, RED, GREEN, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE, BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK, YELLOW
+		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, 
+		RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE, BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK
 	}
 
-	public final static int WHITE_LIGHT = 1;
-	public final static int RED_LIGHT = 2;
-	public final static int GREEN_LIGHT = 3;
+	public enum Top {
+		UNKNOWN, X_SHAPE, CAN, CONE
+	}
 
-	/**
-	 * Topmark Shapes - correspond to TopMarkIndex
-	 */
+	public enum Rtb {
+		UNKNOWN, RACON, RAMARK, LEADING
+	}
 
-	public final static int UNKNOWN_TOPMARK = 0;
-	public final static int TOP_YELLOW_X = 1;
-	public final static int TOP_RED_X = 2;
-	public final static int TOP_YELLOW_CAN = 3;
-	public final static int TOP_YELLOW_CONE = 4;
-
-	/**
-	 * Radar Beacons - correspond to Ratyp Index
-	 */
-
-	public final static int UNKNOWN_RATYPE = 0;
-	public final static int RATYPE_RACON = 1;
-	public final static int RATYPE_RAMARK = 2;
-	public final static int RATYPE_LEADING = 3;
-
-	/**
-	 * Fog Signals - correspond to FogSound Index
-	 */
-
-	public final static int UNKNOWN_FOG = 0;
-	public final static int FOG_HORN = 1;
-	public final static int FOG_SIREN = 2;
-	public final static int FOG_DIA = 3;
-	public final static int FOG_BELL = 4;
-	public final static int FOG_WHIS = 5;
-	public final static int FOG_GONG = 6;
-	public final static int FOG_EXPLOS = 7;
+	public enum Fog {
+		UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
+	}
 
 	/**
 	 * Variables
@@ -78,19 +53,9 @@ abstract public class SeaMark {
 		return dlg;
 	}
 
-	protected SeaMark(OSeaMAction dia, Node node) {
+	protected SeaMark(OSeaMAction dia) {
 		dlg = dia;
-		this.node = node;
-	}
-
-	private Node node = null;
-
-	public Node getNode() {
-		return node;
-	}
-
-	public void setNode(Node nod) {
-		node = nod;
+		region = Main.pref.get("tomsplugin.IALA").equals("B");
 	}
 
 	private boolean region = false;
@@ -103,7 +68,7 @@ abstract public class SeaMark {
 		region = reg;
 	}
 
-	private Col colour = Col.UNKNOWN_COLOUR;
+	private Col colour = Col.UNKNOWN;
 
 	public Col getColour() {
 		return colour;
@@ -111,16 +76,6 @@ abstract public class SeaMark {
 
 	public void setColour(Col col) {
 		colour = col;
-	}
-
-	private String errMsg = null;
-
-	public String getErrMsg() {
-		return errMsg;
-	}
-
-	public void setErrMsg(String msg) {
-		errMsg = msg;
 	}
 
 	private String name;
@@ -133,7 +88,7 @@ abstract public class SeaMark {
 		name = nam;
 	}
 
-	private Cat category = Cat.UNKNOWN_CAT;
+	private Cat category = Cat.UNKNOWN;
 
 	public Cat getCategory() {
 		return category;
@@ -143,24 +98,14 @@ abstract public class SeaMark {
 		category = cat;
 	}
 
-	private Styl shape = Styl.UNKNOWN_SHAPE;
+	private Shp shape = Shp.UNKNOWN;
 
-	public Styl getShape() {
+	public Shp getShape() {
 		return shape;
 	}
 
-	public void setShape(Styl styl) {
+	public void setShape(Shp styl) {
 		shape = styl;
-	}
-
-	private boolean valid = true;
-
-	public boolean isValid() {
-		return valid;
-	}
-
-	public void setValid(boolean val) {
-		valid = val;
 	}
 
 	private boolean TopMark = false;
@@ -193,13 +138,13 @@ abstract public class SeaMark {
 		Racon = racon;
 	}
 
-	private int RaType = 0;
+	private Rtb RaType = Rtb.UNKNOWN;
 
-	public int getRaType() {
+	public Rtb getRaType() {
 		return RaType;
 	}
 
-	public void setRaType(int type) {
+	public void setRaType(Rtb type) {
 		RaType = type;
 	}
 
@@ -213,23 +158,23 @@ abstract public class SeaMark {
 		RaconGroup = raconGroup;
 	}
 
-	private boolean Fog = false;
+	private boolean FogSignal = false;
 
 	public boolean hasFog() {
-		return Fog;
+		return FogSignal;
 	}
 
 	public void setFog(boolean fog) {
-		Fog = fog;
+		FogSignal = fog;
 	}
 
-	private int FogSound = 0;
+	private Fog FogSound = Fog.UNKNOWN;
 
-	public int getFogSound() {
+	public Fog getFogSound() {
 		return FogSound;
 	}
 
-	public void setFogSound(int sound) {
+	public void setFogSound(Fog sound) {
 		FogSound = sound;
 	}
 
@@ -433,9 +378,9 @@ abstract public class SeaMark {
 			Matcher matcher = pat.matcher(lightPeriod);
 
 			if (matcher.find()) {
-				setErrMsg(null);
+//				setErrMsg(null);
 			} else {
-				setErrMsg("Must be a number");
+//				setErrMsg("Must be a number");
 				lightPeriod = "";
 //				dlg.tfM01RepeatTime.requestFocus();
 			}
@@ -528,21 +473,21 @@ abstract public class SeaMark {
 			if (k.containsKey("seamark:fog_signal:category")) {
 				str = k.get("seamark:fog_signal:category");
 				if (str.equals("horn"))
-					setFogSound(FOG_HORN);
+					setFogSound(Fog.HORN);
 				else if (str.equals("siren"))
-					setFogSound(FOG_SIREN);
+					setFogSound(Fog.SIREN);
 				else if (str.equals("diaphone"))
-					setFogSound(FOG_DIA);
+					setFogSound(Fog.DIA);
 				else if (str.equals("bell"))
-					setFogSound(FOG_BELL);
+					setFogSound(Fog.BELL);
 				else if (str.equals("whis"))
-					setFogSound(FOG_WHIS);
+					setFogSound(Fog.WHIS);
 				else if (str.equals("gong"))
-					setFogSound(FOG_GONG);
+					setFogSound(Fog.GONG);
 				else if (str.equals("explosive"))
-					setFogSound(FOG_EXPLOS);
+					setFogSound(Fog.EXPLOS);
 				else
-					setFogSound(UNKNOWN_FOG);
+					setFogSound(Fog.UNKNOWN);
 			}
 			if (k.containsKey("seamark:fog_signal:group"))
 				setFogGroup(k.get("seamark:fog_signal:group"));
@@ -561,13 +506,13 @@ abstract public class SeaMark {
 			if (k.containsKey("seamark:radar_transponder:category")) {
 				str = k.get("seamark:radar_transponder:category");
 				if (str.equals("racon"))
-					setRaType(RATYPE_RACON);
+					setRaType(Rtb.RACON);
 				else if (str.equals("ramark"))
-					setRaType(RATYPE_RAMARK);
+					setRaType(Rtb.RAMARK);
 				else if (str.equals("leading"))
-					setRaType(RATYPE_LEADING);
+					setRaType(Rtb.LEADING);
 				else
-					setRaType(UNKNOWN_RATYPE);
+					setRaType(Rtb.UNKNOWN);
 			}
 			if (k.containsKey("seamark:radar_transponder:group"))
 				setRaconGroup(k.get("seamark:radar_transponder:group"));
@@ -582,13 +527,13 @@ abstract public class SeaMark {
 	public abstract void paintSign();
 
 	public void saveSign(String type) {
-		delSeaMarkKeys(node);
+		delSeaMarkKeys(dlg.node);
 
 		String str = dlg.panelMain.nameBox.getText();
 		if (!str.isEmpty())
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:name", str));
-		Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type",
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type",
 				type));
 	}
 

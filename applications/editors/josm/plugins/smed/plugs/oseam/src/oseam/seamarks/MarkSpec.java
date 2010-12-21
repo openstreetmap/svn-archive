@@ -4,25 +4,22 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
-import oseam.seamarks.SeaMark.Cat;
-import oseam.seamarks.SeaMark.Styl;
 
 public class MarkSpec extends SeaMark {
-	public MarkSpec(OSeaMAction dia, Node node) {
-		super(dia, node);
+	public MarkSpec(OSeaMAction dia) {
+		super(dia);
 	}
 	
 	public void parseMark() {
 
 		String str;
 		Map<String, String> keys;
-		keys = getNode().getKeys();
+		keys = dlg.node.getKeys();
 
 		if (!dlg.panelMain.specButton.isSelected())
 			dlg.panelMain.specButton.doClick();
@@ -119,11 +116,6 @@ public class MarkSpec extends SeaMark {
 		dlg.cM01TopMark.setSelected(hasTopMark());
 */	}
 
-	public boolean isValid() {
-		return (getCategory() != Cat.UNKNOWN_CAT)
-				&& (getShape() != Styl.UNKNOWN_SHAPE);
-	}
-
 	public void setLightColour() {
 		super.setLightColour("W");
 	}
@@ -133,7 +125,7 @@ public class MarkSpec extends SeaMark {
 			return;
 		super.paintSign();
 */
-		if (isValid()) {
+		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 
 			String image = "/images/Special_Purpose";
 
@@ -254,70 +246,68 @@ public class MarkSpec extends SeaMark {
 	}
 
 	public void saveSign() {
-		Node node = getNode();
-
-		if (node == null) {
+		if (dlg.node == null) {
 			return;
 		}
 
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "pillar"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "spar"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case CAN:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "can"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case CONE:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "conical"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPHERE:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "sphere"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case BARREL:
 			super.saveSign("buoy_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:shape", "barrel"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case FLOAT:
 			super.saveSign("light_float");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:light_float:colour", "yellow"));
 			break;
 		case BEACON:
 			super.saveSign("beacon_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;
 		case TOWER:
 			super.saveSign("beacon_special_purpose");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_special_purpose:shape", "tower"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
 					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;
 		default:

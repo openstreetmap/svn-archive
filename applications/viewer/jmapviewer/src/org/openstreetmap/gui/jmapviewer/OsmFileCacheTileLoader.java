@@ -127,7 +127,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                     return;
                 tile.loading = true;
             }
-            tileCacheDir = new File(cacheDirBase, source.getName());
+            tileCacheDir = new File(cacheDirBase, source.getName().replaceAll("[\\\\/:*?\"<>|]", "_"));
             if (!tileCacheDir.exists()) {
                 tileCacheDir.mkdirs();
             }

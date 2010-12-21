@@ -24,6 +24,7 @@ import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import javax.swing.SwingConstants;
 
 public class HarbourAction implements PropertyChangeListener, LayerChangeListener, EditLayerChangeListener, ComponentListener {
 
@@ -60,7 +61,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 	private JToggleButton chartButton = null;
 	private JPanel curPanel = null;
 	private PanelSearchPois panelSearchPois = null;
-	private static LayerHarbour curLayer = new LayerHarbour("Harbour");
+	private static LayerHarbour curLayer = null;
 	
 	public HarbourAction() {
 		Rectangle rect = new Rectangle(2, 56, 330, 270);
@@ -89,6 +90,9 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 		panelSearchPois = new PanelSearchPois();
 		panelSearchPois.setBounds(rect);
 		panelSearchPois.setVisible(false);
+		
+		curLayer = new LayerHarbour("Harbour", panelSearchPois);
+		panelSearchPois.setLayerHarbour(curLayer);
 	}
 	
 	/**
@@ -189,6 +193,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					envButton.setEnabled(true);
 					relButton.setEnabled(true);
 					
+					Main.map.mapView.removeLayerChangeListener(curLayer);
 					Main.main.removeLayer(curLayer);
 					curPanel = panelGeneral;
 				}
@@ -223,6 +228,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					envButton.setEnabled(true);
 					relButton.setEnabled(true);
 					
+					Main.map.mapView.removeLayerChangeListener(curLayer);
 					Main.main.removeLayer(curLayer);
 					curPanel = panelLimits;
 				}
@@ -257,7 +263,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					envButton.setEnabled(true);
 					relButton.setEnabled(true);
 					
-					
+					Main.map.mapView.removeLayerChangeListener(curLayer);
 					Main.main.removeLayer(curLayer);
 					curPanel = panelServices;
 				}
@@ -279,6 +285,8 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 			envButton.setToolTipText("Umgebung");
 			envButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String name = null;
+					
 					panelGeneral.setVisible(false);
 					panelLimits.setVisible(false);
 					panelServices.setVisible(false);
@@ -292,7 +300,19 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					envButton.setEnabled(false);
 					relButton.setEnabled(true);
 
+					panelSearchPois.iniLayer();
+					
+					name = panelSearchPois.getActiveLayer();
+					if(name != null) curLayer.setName("Harbour - " + name);
+					else curLayer.setName("Harbour");
+
+					Layer tmp = Main.map.mapView.getActiveLayer();
+					
+					Main.map.mapView.addLayerChangeListener(curLayer);
 					Main.main.addLayer(curLayer);
+
+					Main.map.mapView.setActiveLayer(tmp);
+					
 					curPanel = panelEnv;
 				}
 			});
@@ -326,6 +346,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					envButton.setEnabled(true);
 					relButton.setEnabled(false);
 					
+					Main.map.mapView.removeLayerChangeListener(curLayer);
 					Main.main.removeLayer(curLayer);
 					curPanel = panelRelations;
 				}
@@ -506,8 +527,10 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 	private JToggleButton getChartButton() {
 		if (chartButton == null) {
 			chartButton = new JToggleButton();
-			chartButton.setBounds(new Rectangle(367, 5, 28, 18));
+			chartButton.setBounds(new Rectangle(375, 4, 20, 20));
 			chartButton.setSelected(false);
+			chartButton.setIcon(new ImageIcon(getClass().getResource("/images/oseam_20x20.png")));
+			chartButton.setHorizontalTextPosition(SwingConstants.LEADING);
 			chartButton.setEnabled(false);
 			chartButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -518,22 +541,24 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 						servButton.setEnabled(false);
 						envButton.setEnabled(false);
 						relButton.setEnabled(false);
+						panelSearchPois.setVisible(true);
 						
-						if(curPanel == panelEnv) { 
-							panelEnv.setVisible(false);
-							panelSearchPois.setVisible(true);
-						} else if(curPanel == panelRelations) panelRelations.setVisible(false);
+						if(curPanel == panelEnv) panelEnv.setVisible(false);
+						else if(curPanel == panelRelations) panelRelations.setVisible(false);
+						
 					} else {
 						comButton.setEnabled(true);
 						restButton.setEnabled(true);
 						servButton.setEnabled(true);
-						envButton.setEnabled(true);
-						relButton.setEnabled(true);
+						panelSearchPois.setVisible(false);
 						
 						if(curPanel == panelEnv) {
 							panelEnv.setVisible(true);
-							panelSearchPois.setVisible(false);
-						} else if(curPanel == panelRelations) panelRelations.setVisible(true);
+							relButton.setEnabled(true);
+						} else if(curPanel == panelRelations) { 
+							panelRelations.setVisible(true);
+							envButton.setEnabled(true);
+						}
 					}
 				}
 			});

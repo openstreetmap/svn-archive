@@ -11,7 +11,6 @@ public class SearchTableModel extends AbstractTableModel {
             "Value",
             "Show"};
 	private Object[][] data = {
-			{"amenity","",				new Boolean(false) },
 			{"amenity","bank",			new Boolean(false) },
 			{"amenity","cafe",			new Boolean(false) },
 			{"amenity","hospital",		new Boolean(false) },
@@ -24,7 +23,6 @@ public class SearchTableModel extends AbstractTableModel {
 			{"amenity","restaurant",	new Boolean(false) },
 			{"amenity","telephone",		new Boolean(false) },
 			{"amenity","toilets",		new Boolean(false) },
-			{"information","",			new Boolean(false) },
 			{"information","board",		new Boolean(false) },
 			{"information","citymap",	new Boolean(false) },
 			{"information","office",	new Boolean(false) },
@@ -74,4 +72,7 @@ public class SearchTableModel extends AbstractTableModel {
         fireTableCellUpdated(row, col);
     }
     
+    public Boolean isWanted(int i)	{ return (Boolean) data[i][2]; }
+    public String getKey(int i)		{ return (String) data[i][0]; }
+    public String getValue(int i)	{ return (String) data[i][1]; }
 }

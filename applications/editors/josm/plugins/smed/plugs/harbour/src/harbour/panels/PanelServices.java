@@ -1,5 +1,6 @@
 package harbour.panels;
 
+
 import harbour.widgets.CraneTable;
 import harbour.widgets.TristateCheckBox;
 
@@ -91,6 +92,7 @@ public class PanelServices extends JPanel {
 		servLabel.setText("Service:");
 		DLLabel = new JLabel();
 		DLLabel.setBounds(new Rectangle(3, 165, 147, 20));
+		DLLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		DLLabel.setText("weitere Dienstleistungen");
 		moorLabel = new JLabel();
 		moorLabel.setBounds(new Rectangle(145, 50, 70, 16));
@@ -98,6 +100,7 @@ public class PanelServices extends JPanel {
 		moorLabel.setText("Ankerplatz:");
 		loadLabel = new JLabel();
 		loadLabel.setBounds(new Rectangle(3, 50, 97, 16));
+		loadLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		loadLabel.setText("Laden / Entladen");
 		airLabel = new JLabel();
 		airLabel.setBounds(new Rectangle(215, 26, 20, 20));
@@ -613,7 +616,7 @@ public class PanelServices extends JPanel {
 	private CraneTable getCraneScrollPane() {
 		if (craneScrollPane == null) {
 			craneScrollPane = new CraneTable();
-			craneScrollPane.setBounds(new Rectangle(3, 90, 207, 66));
+			craneScrollPane.setBounds(new Rectangle(3, 90, 207, 71));
 		}
 		return craneScrollPane;
 	}

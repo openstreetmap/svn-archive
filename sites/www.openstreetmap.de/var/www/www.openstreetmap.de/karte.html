@@ -60,13 +60,13 @@ function init() {
 
     map.addLayers([
         new OpenLayers.Layer.OSM.Mapnik("OSM Standard (engl. Server)", { attribution: '', keyname: 'mapnik' }),
-        new OpenLayers.Layer.XYZ("OSM Standard (dt. Server)", [
+/*        new OpenLayers.Layer.XYZ("OSM Standard (dt. Server)", [
                 "http://b.tile.openstreetmap.de/tiles/osm/${z}/${x}/${y}.png",
                 "http://c.tile.openstreetmap.de/tiles/osm/${z}/${x}/${y}.png"
             ], {
             attribution: 'Map tiles from server sponsored by STRATO',
             keyname: 'mapnik'
-        }),
+        }),*/
         new OpenLayers.Layer.OSM.Osmarender("OSM Alternativ (Tiles@Home)", { attribution: '', keyname: 'osmarender' })
     ]);
 

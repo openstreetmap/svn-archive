@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-15 22:55+0100\n"
+"POT-Creation-Date: 2010-12-21 22:47+0100\n"
 "PO-Revision-Date: 2010-11-27 02:33+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2010-12-15 20:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2010-12-21 19:08+0000\n"
+"X-Generator: Launchpad (build 12093)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -26,8 +26,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:194
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:355
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:185
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:348
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:208
 #: ../core/src/org/openstreetmap/josm/gui/help/ContextSensitiveHelpAction.java:47
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:55
@@ -90,13 +90,13 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:515
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceTabbedPane.java:186
 #: ../core/src/org/openstreetmap/josm/io/imagery/WMSGrabber.java:131
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:147
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:322
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:561
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:203
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:378
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:617
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:51
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:662
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:130
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:144
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:146
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:145
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:85
@@ -242,8 +242,9 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:159
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:201
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:154
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:154
 #: ../core/src/org/openstreetmap/josm/actions/PurgeAction.java:166
@@ -299,6 +300,7 @@ msgstr ""
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1304
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:150
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportDialog.java:25
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportVectorAction.java:100
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:151
@@ -350,7 +352,7 @@ msgstr ""
 msgid "No target layers"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/AddImageryLayerAction.java:17
+#: ../core/src/org/openstreetmap/josm/actions/AddImageryLayerAction.java:18
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/AddImageryLayerAction.java:15
 #, java-format
 msgid "Add imagery layer {0}"
@@ -433,7 +435,7 @@ msgstr "Premakne izbrana vozlišča tako, da tvorijo krog."
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:71
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:26
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:35
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:44
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:57
 #: ../plugins/gpxfilter/src/gpxfilter/AddEGpxLayerAction.java:18
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
@@ -452,6 +454,7 @@ msgstr "Premakne izbrana vozlišča tako, da tvorijo krog."
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:218
 #: ../plugins/tracer/src/org/openstreetmap/josm/plugins/tracer/TracerAction.java:44
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:27
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:44
 #: ../plugins/utilsplugin2/src/utilsplugin2/UnGlueRelationAction.java:45
 #, java-format
@@ -482,8 +485,8 @@ msgstr "Prosim, izberite vsaj 4 vozlišča."
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:462
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:250
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:422
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:927
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:956
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:983
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1012
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:43
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:118
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:40
@@ -752,6 +755,8 @@ msgstr "Izbriši izbrane predmete."
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:200
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:201
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:204
@@ -961,15 +966,15 @@ msgid "Display history information about OSM ways, nodes, or relations."
 msgstr "Prikaz zgodovine poti, vozlišča ali relacije OSM."
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:48
-#, fuzzy
 msgid "New offset"
-msgstr "Nova vloga"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:49
 msgid "Adjust the position of this imagery layer"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:158
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:31
 msgid "Adjust imagery offset"
 msgstr ""
 
@@ -1018,22 +1023,24 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Easting"
-msgstr "strelišče"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Northing"
-msgstr "Nič"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:171
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:128
-#, fuzzy
 msgid "Bookmark name: "
-msgstr "Zaznamki"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:205
+#, fuzzy
+msgid "Offset bookmark already exists. Overwrite?"
+msgstr "Datoteka obstaja. Jo nadomestim?"
 
 #: ../core/src/org/openstreetmap/josm/actions/InfoAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/InfoAction.java:19
@@ -1263,36 +1270,36 @@ msgstr ""
 msgid "Custom WMS Link"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:116
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:114
 msgid "Supported Rectifier Services:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:141
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:138
 msgid "Visit Homepage"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:148
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:152
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:147
 msgid "WMS URL or Image ID:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:152
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:154
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:156
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:151
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
 msgid "Add Rectified Image"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:204
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:210
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:203
 msgid ""
 "Couldn't match the entered link or id to the selected service. Please try "
 "again."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:205
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:211
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:204
 msgid "No valid WMS URL or id"
 msgstr ""
@@ -1315,11 +1322,10 @@ msgid "Merge nodes into the oldest one."
 msgstr "Združi vozlišča v najstarejšega"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:70
-#, fuzzy
 msgid ""
 "Please select at least two nodes to merge or node that is close to another "
 "node."
-msgstr "Izberite vsaj dve vozlišči za združitev"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:175
 msgid "Abort Merging"
@@ -1739,8 +1745,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:403
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:416
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:948
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:507
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:664
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:509
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:666
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
@@ -1762,7 +1768,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:90
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:105
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:120
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:310
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:366
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:468
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:35
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:685
@@ -1780,7 +1786,7 @@ msgstr ""
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:969
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:508
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:665
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:153
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:159
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteActionList.java:84
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:141
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:152
@@ -1836,7 +1842,7 @@ msgstr "Obrni smer poti"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:325
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:216
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:258
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:224
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
 #: build/specialmessages.java:65
@@ -1970,7 +1976,7 @@ msgid "Delete nodes outside of downloaded data regions"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:231
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:233
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:227
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:73
 msgid "No, abort"
@@ -2744,9 +2750,8 @@ msgid "Select"
 msgstr "Izberite"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:107
-#, fuzzy
 msgid "Select, move, scale and rotate objects"
-msgstr "Izberi, premakni ali zasuči predmete"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:217
 #, java-format
@@ -2791,9 +2796,8 @@ msgid "Release the mouse button to stop rotating."
 msgstr "Za prenehanje vrtenja izpustite miškin gumb."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:713
-#, fuzzy
 msgid "Release the mouse button to stop scaling."
-msgstr "Za prenehanje vrtenja izpustite miškin gumb."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:715
 msgid ""
@@ -3511,13 +3515,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/ScaleCommand.java:84
-#, fuzzy, java-format
+#, java-format
 msgid "Scale {0} node"
 msgid_plural "Scale {0} nodes"
-msgstr[0] "{0} točk"
-msgstr[1] "{0} točka"
-msgstr[2] "{0} točki"
-msgstr[3] "{0} točke"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/SequenceCommand.java:93
 msgid "Sequence"
@@ -3539,13 +3541,11 @@ msgid "Resolve {0} tag conflicts in relation {1}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/TransformNodesCommand.java:126
-#, fuzzy, java-format
+#, java-format
 msgid "Transform {0} node"
 msgid_plural "Transform {0} nodes"
-msgstr[0] "{0} točk"
-msgstr[1] "{0} točka"
-msgstr[2] "{0} točki"
-msgstr[3] "{0} točke"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
 #, java-format
@@ -3847,11 +3847,11 @@ msgstr "V"
 msgid "Not in cache"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/imagery/OffsetBookmark.java:46
+#: ../core/src/org/openstreetmap/josm/data/imagery/OffsetBookmark.java:47
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmark.java:44
-#, fuzzy, java-format
+#, java-format
 msgid "Projection ''{0}'' not found"
-msgstr "Geografska projekcija"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:290
 #, java-format
@@ -3867,8 +3867,8 @@ msgid ""
 "error, it should be safe to continue in your work."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:147
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:235
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:146
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:234
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:107
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:110
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:121
@@ -3876,27 +3876,27 @@ msgstr ""
 msgid "Missing merge target for way with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:182
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:181
 #, java-format
 msgid ""
 "Object of type {0} with id {1} was marked to be deleted, but it's missing in "
 "the source dataset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:247
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:246
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:117
 #, java-format
 msgid "Missing merge target for node with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:262
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:261
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:144
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:148
 #, java-format
 msgid "Missing merge target for relation with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:267
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:266
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:155
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:159
 #: ../plugins/reverter/src/reverter/DataSetCommandMerger.java:47
@@ -3907,7 +3907,7 @@ msgstr ""
 #. Same version, but different "visible" attribute. It indicates a serious problem in datasets.
 #. For example, datasets can be fetched from different OSM servers or badly hand-modified.
 #. We shouldn't merge that datasets.
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:315
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:318
 #, java-format
 msgid "Conflict in 'visible' attribute for object of type {0} with id {1}"
 msgstr ""
@@ -4729,7 +4729,7 @@ msgid "TagChecker source"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:606
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:188
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:178
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1022
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
@@ -5329,6 +5329,36 @@ msgstr ""
 msgid "Click to close the dialog"
 msgstr ""
 
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:31
+msgid "Imagery offset"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:73
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:183
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:221
+msgid "Imagery"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:92
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:107
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:99
+msgid "Blank Layer"
+msgstr "Prazna plast"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:92
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
+msgid "Open a blank WMS layer to load data from a file"
+msgstr "Odpri prazno plast WMS za nalaganje podatkov iz datoteke"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:117
+#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:155
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:157
+msgctxt "layer"
+msgid "Offset"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/gui/JosmUserIdentityManager.java:104
 #, java-format
 msgid "Expected non-empty value for parameter ''{0}'', got ''{1}''"
@@ -5562,36 +5592,31 @@ msgstr ""
 msgid "Continue, try anyway"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:187
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:177
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:41
 msgid "File"
 msgstr "Datoteka"
 
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:189
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:179
 #: build/specialmessages.java:76
 msgid "View"
 msgstr "Pogled"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:190
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:180
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyPlugin.java:27
 #: ../plugins/multipoly/src/multipoly/MultipolyPlugin.java:27
 #: ../plugins/pdfimport/src/pdfimport/PdfImportPlugin.java:26
 msgid "Tools"
 msgstr "Orodja"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:191
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:181
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:191
 msgid "Presets"
 msgstr "Prednastavitve"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:192
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:221
-msgid "Imagery"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:226
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:219
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:109
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:58
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:90
@@ -5600,29 +5625,9 @@ msgstr ""
 msgid "Menu: {0}"
 msgstr "Meni: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:342
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:335
 msgid "Audio"
 msgstr "Zvok"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:394
-#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:153
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:157
-msgctxt "layer"
-msgid "Offset"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:414
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:106
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:99
-msgid "Blank Layer"
-msgstr "Prazna plast"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:414
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
-msgid "Open a blank WMS layer to load data from a file"
-msgstr "Odpri prazno plast WMS za nalaganje podatkov iz datoteke"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapFrame.java:263
 msgid "Hide this button"
@@ -6737,7 +6742,7 @@ msgstr "Odpri seznam vseh ukazov (za razveljavo)"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:541
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:109
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:112
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
@@ -11500,7 +11505,7 @@ msgid ""
 "them with images.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:207
+#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:203
 msgid "ERROR"
 msgstr ""
 
@@ -11619,52 +11624,52 @@ msgstr[1] "{0} točka"
 msgstr[2] "{0} točki"
 msgstr[3] "{0} točke"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:286
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:287
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:204
 msgid "Auto Zoom"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:297
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:298
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:215
 msgid "Auto load tiles"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:306
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:307
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:224
 msgid "Load Tile"
 msgstr "Naloži ploščico"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:317
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:318
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:235
 msgid "Show Tile Info"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:340
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:341
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:258
 msgid "Load All Tiles"
 msgstr "Naloži vse ploščice"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:350
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:351
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:268
 msgid "Increase zoom"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:359
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:360
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:277
 msgid "Decrease zoom"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:370
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:371
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:288
 msgid "Snap to tile size"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:388
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:389
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:305
 msgid "Flush Tile Cache"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:858
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:859
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:792
 msgid "image "
 msgstr ""
@@ -11673,30 +11678,30 @@ msgstr ""
 msgid "No validation errors"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:125
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:127
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:117
 #, java-format
 msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:127
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:129
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:119
 msgid "(deactivated)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:180
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:182
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:169
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:182
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:184
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:171
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:222
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:224
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:218
 #, java-format
 msgid ""
@@ -11706,84 +11711,84 @@ msgid ""
 "tiles anyway?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:230
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:232
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:226
 msgid "Yes, fetch images"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:236
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:238
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:232
 msgid "Invalid URL?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:499
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:501
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:500
 msgid "Download visible tiles"
 msgstr "Naloži vidne ploščice"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:506
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:508
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:507
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:518
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:520
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:519
 msgid "Change resolution"
 msgstr "Spremeni ločljivost"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:532
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:534
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:533
 msgid "Reload erroneous tiles"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:554
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:556
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:555
 msgid "Alpha channel"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:585
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:587
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:586
 msgid "Save WMS layer to file"
 msgstr "Shrani plast WMS v datoteko"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:590
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:592
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:591
 msgid "Save WMS layer"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:614
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:616
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:615
 msgid "Load WMS layer from file"
 msgstr "Naloži plast WMS iz datoteke"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:619
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:621
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:620
 msgid "Load WMS layer"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:630
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:632
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:631
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "Nepodprta različica datoteke WMS; našel {0}, pričakoval {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:631
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:633
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:632
 msgid "File Format Error"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:663
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:665
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:664
 msgid "Error loading file"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:677
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:679
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:678
 msgid "Set WMS Bookmark"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:688
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:690
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:689
 msgid "Automatic downloading"
 msgstr "Samodejno sprejemanje"
@@ -13538,15 +13543,13 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:119
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:104
-#, fuzzy
 msgid "Soft"
-msgstr "Šport"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:120
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:105
-#, fuzzy
 msgid "Strong"
-msgstr "Izvir"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:121
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:106
@@ -13638,9 +13641,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:246
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:216
-#, fuzzy
 msgid "Offset bookmarks"
-msgstr "Zaznamki"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:388
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:85
@@ -13692,9 +13694,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Projection"
-msgstr "Geografska projekcija"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -13717,9 +13718,8 @@ msgid "There are {0} unknown slippymap plugin settings"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:158
-#, fuzzy
 msgid "Keep current list"
-msgstr "Shrani trenutne podatke"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:159
 msgid "Overwrite with WMSPlugin list"
@@ -13739,19 +13739,16 @@ msgid "Overwrite with SlippyMap settings"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:172
-#, fuzzy
 msgid "WMS layer list:"
-msgstr "Plast WMS"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:185
-#, fuzzy
 msgid "WMSPlugin settings:"
-msgstr "Pomoč vstavka WMS"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:196
-#, fuzzy
 msgid "SlippyMap settings:"
-msgstr "Nastavitve zemljevida"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:207
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:227
@@ -13873,10 +13870,10 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:303
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:321
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:344
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:218
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:263
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:691
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:860
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:274
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:319
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:747
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:916
 msgid "Update plugins"
 msgstr ""
 
@@ -14137,63 +14134,66 @@ msgid "The projection {0} could not be activated. Using Mercator"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:47
-msgid "load data from API"
+msgid "Load data from API"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:48
-msgid "import data from URL"
+msgid "Import data from URL"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:49
 #, fuzzy
-msgid "load imagery layers"
-msgstr "Sprejmi kot novo plast"
+msgid "Load imagery layers"
+msgstr "Naloži slike v novo plast."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:50
-msgid "create new objects"
-msgstr ""
+#, fuzzy
+msgid "Create new objects"
+msgstr "Ustvari novo vozlišče."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:51
-msgid "change the selection"
+#, fuzzy
+msgid "Change the selection"
 msgstr "spremeni izbor"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:52
-msgid "change the viewport"
-msgstr ""
+#, fuzzy
+msgid "Change the viewport"
+msgstr "spremeni izbor"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:53
-msgid "read protocol version"
+msgid "Read protocol version"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:54
-msgid "confirm all Remote Control actions manually"
+msgid "Confirm all Remote Control actions manually"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:59
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:58
 msgid "Remote Control"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:59
-msgid "Settings for the Remote Control freature."
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:58
+msgid "Settings for the remote control feature."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:61
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:60
 msgid "Enable remote control"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:70
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:69
 msgid ""
 "The remote control feature allows JOSM to be controlled from other "
 "applications, e.g. from a web browser."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:75
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:74
 msgid "Permitted actions:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:89
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:88
 msgid ""
-"JOSM will always listen on port 8111 on localhost.The port is not "
+"JOSM will always listen at port 8111 on localhost.This port is not "
 "configurable because it is referenced by external applications talking to "
 "JOSM."
 msgstr ""
@@ -16100,9 +16100,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/handler/ImageryHandler.java:48
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryRemoteHandler.java:48
-#, fuzzy
 msgid "Remote imagery"
-msgstr "Uvozi slike"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/handler/ImportHandler.java:41
 msgid "Remote Control has been asked to import data from the following URL:"
@@ -16182,24 +16181,24 @@ msgstr ""
 msgid "An error occurred in plugin {0}"
 msgstr "V vstavku {0} je prišlo do napake"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:76
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:75
 msgid "integrated into main program"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:84
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:87
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:102
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:106
 #, java-format
-msgid "replaced by {0} plugin"
+msgid "replaced by new {0} plugin"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:129
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:186
 msgid "The following plugin is no longer necessary and has been deactivated:"
 msgid_plural ""
 "The following plugins are no longer necessary and have been deactivated:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:166
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:222
 #, java-format
 msgid ""
 "<html>Loading of the plugin \"{0}\" was requested.<br>This plugin is no "
@@ -16207,60 +16206,60 @@ msgid ""
 "disabled.<br>Delete from preferences?</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:193
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:249
 msgid ""
 "You updated your JOSM software.<br>To prevent problems the plugins should be "
 "updated as well.<br><br>Update plugins now?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:209
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:265
 #, java-format
 msgid "Last plugin update more than {0} days ago."
 msgstr "Zadnja posodobitev vstavkov pred več kot {0} dnevi."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:220
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:276
 msgid "Click to update the activated plugins"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:224
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:280
 msgid "Skip update"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:226
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:282
 msgid "Click to skip updating the activated plugins"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:241
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:297
 msgid ""
 "Skipping plugin update after JOSM upgrade. Automatic update at startup is "
 "disabled."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:243
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:299
 msgid ""
 "Skipping plugin update after elapsed update interval. Automatic update at "
 "startup is disabled."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:250
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:306
 msgid ""
 "Running plugin update after JOSM upgrade. Automatic update at startup is "
 "enabled."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:252
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:308
 msgid ""
 "Running plugin update after elapsed update interval. Automatic update at "
 "startup is disabled."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:258
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:314
 #, java-format
 msgid ""
 "Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:296
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:352
 #, java-format
 msgid ""
 "Plugin {0} requires a plugin which was not found. The missing plugin is:"
@@ -16270,74 +16269,74 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:318
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:374
 #, java-format
 msgid ""
 "<html>Plugin {0} requires JOSM version {1}. The current JOSM version is {2}."
 "<br>You have to update JOSM in order to use this plugin.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:404
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:460
 #, java-format
 msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr "Vstavka {0} ni bilo mogoče naložiti. Ga izbrišem iz nastavitev?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:408
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:464
 #, java-format
 msgid "loading plugin ''{0}'' (version {1})"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:415
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:471
 #, java-format
 msgid ""
 "<html>Could not load plugin {0} because the plugin<br>main class ''{1}'' was "
 "not found.<br>Delete from preferences?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:437
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:493
 msgid "Loading plugins ..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:438
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:494
 msgid "Checking plugin preconditions..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:465
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:521
 #, java-format
 msgid "Loading plugin ''{0}''..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:546
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:602
 msgid "JOSM could not find information about the following plugin:"
 msgid_plural "JOSM could not find information about the following plugins:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:554
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:610
 msgid "The plugin is not going to be loaded."
 msgid_plural "The plugins are not going to be loaded."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:580
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:636
 msgid "Determine plugins to load..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:586
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:642
 msgid "Removing deprecated plugins..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:588
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:644
 msgid "Removing unmaintained plugins..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:612
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:668
 msgid "Updating the following plugin has failed:"
 msgid_plural "Updating the following plugins has failed:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:623
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:679
 msgid ""
 "Please open the Preference Dialog after JOSM has started and try to update "
 "it manually."
@@ -16347,85 +16346,85 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:631
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:687
 msgid "Plugin update failed"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:667
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:671
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:723
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:727
 msgid "Warning: failed to download plugin information list"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:733
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:748
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:831
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:789
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:804
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:887
 msgid "Disable plugin"
 msgstr "Onemogoči vstavek"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:735
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:791
 #, java-format
 msgid "Click to delete the plugin ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:739
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:837
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:795
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:893
 msgid "Keep plugin"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:741
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:839
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:797
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:895
 #, java-format
 msgid "Click to keep the plugin ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:815
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:871
 #, java-format
 msgid "Warning: failed to delete outdated plugin ''{0}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:816
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:822
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:872
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:878
 #, java-format
 msgid ""
 "Warning: failed to install already downloaded plugin ''{0}''. Skipping "
 "installation. JOSM is still going to load the old plugin version."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:821
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:877
 #, java-format
 msgid ""
 "Warning: failed to install plugin ''{0}'' from temporary download file "
 "''{1}''. Renaming failed."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:833
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:889
 #, java-format
 msgid "Click to disable the plugin ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:846
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:902
 #, java-format
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Prišlo je do nepričakovane napake, ki verjetno izvira iz vstavka ''{0}''."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:849
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:905
 #, java-format
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "Glede na podatke znotraj vstavka je avtor {0}."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:852
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:908
 msgid ""
 "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 "Preden prijavite napako poskusite posodobiti vstavek na najnovejšo različico."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:854
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:910
 msgid "Should the plugin be disabled?"
 msgstr "Naj vstavek onemogočim?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:926
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:982
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -16433,16 +16432,16 @@ msgstr ""
 "Vstavek je bil odstranjen iz nastavitev. Prosim, ponovno zaženite JOSM za "
 "njegovo odstranitev iz spomina."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:968
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1024
 msgid "Plugin information"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:973
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1029
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:243
 msgid "no description available"
 msgstr "opis ni na voljo"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1005
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1061
 msgid ""
 "Do not ask again and remember my decision (go to Preferences->Plugins to "
 "change it later)"
@@ -16521,20 +16520,20 @@ msgstr ""
 msgid "Writing plugin list to local cache ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:315
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:318
 #, java-format
 msgid "Parsing plugin list from site ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:320
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:323
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:326
 #, java-format
 msgid ""
 "Failed to parse plugin list document from site ''{0}''. Skipping site. "
 "Exception was: {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:352
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:355
 #, java-format
 msgid "Processing plugin list from site ''{0}''"
 msgstr ""
@@ -17649,18 +17648,18 @@ msgstr ""
 msgid "Align Ways"
 msgstr ""
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:77
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:76
 msgid ""
 "Please select two segments that don''t share any nodes\n"
 " or put the pivot on their common node.\n"
 msgstr ""
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:79
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:90
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:78
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:89
 msgid "AlignWayS: Alignment not possible"
 msgstr ""
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:89
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:88
 msgid "Aligning would result nodes outside the world.\n"
 msgstr ""
 
@@ -18721,12 +18720,12 @@ msgstr ""
 msgid "Color Schemes"
 msgstr ""
 
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:39
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:40
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:44
 msgid "Split area"
 msgstr ""
 
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:41
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:42
 msgid "Splits an area by an untagged way."
 msgstr ""
 
@@ -18889,7 +18888,7 @@ msgid "Edit tool"
 msgstr ""
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:54
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:251
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:217
 msgid "Name:"
 msgstr ""
 
@@ -19067,37 +19066,43 @@ msgid "GPX"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:39
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:38
 msgid "Adjust imagery"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:40
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:39
 msgid "Adjust the position of the selected imagery layer"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:161
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:144
 msgid "Please select the imagery layer to adjust."
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:166
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:149
 msgid "Select imagery layer"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:150
 msgid "Start adjusting"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:186
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:169
 msgid "There are currently no imagery layer to adjust."
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:187
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:170
 msgid "No layers to adjust"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:133
-#, fuzzy
 msgid "(save current)"
-msgstr "Shrani trenutne podatke"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:140
 msgid "Add offset bookmark"
@@ -19579,7 +19584,7 @@ msgstr "Nenehno centriraj plast LiveGPS na trenutni položaj."
 msgid "LiveGPS"
 msgstr ""
 
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:109
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:112
 msgid "Open MapDust"
 msgstr ""
 
@@ -19977,9 +19982,8 @@ msgid "Single segments"
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:257
-#, fuzzy
 msgid "Orthogonal shapes"
-msgstr "Vrsta (neobvezno)"
+msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:260
 msgid "Import settings"
@@ -20738,54 +20742,45 @@ msgid_plural "Simplify Area (remove {0} nodes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:101
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:97
 msgid "No colour"
-msgstr "Izberite barvo"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:112
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:108
 msgid "White"
-msgstr "Voda"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:123
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:119
 msgid "Red"
-msgstr "Ponovi"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:134
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:130
 msgid "Orange"
-msgstr "Žerjav"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:145
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:141
 msgid "Amber"
-msgstr "Člani"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:156
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:152
 msgid "Yellow"
 msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:167
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:163
 msgid "Green"
-msgstr "Drevo"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:178
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:174
 msgid "Blue"
-msgstr "Vrednost"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:189
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:185
 msgid "Violet"
-msgstr "nepopoln"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:200
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:196
 msgid "Black"
-msgstr "Nazaj"
+msgstr ""
 
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:58
 msgid "Online Help"
@@ -20960,9 +20955,8 @@ msgid "Highest Number"
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:178
-#, fuzzy
 msgid "List of Numbers"
-msgstr "Številke ploščic"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:180
 msgid "add to existing associatedStreet relation"
@@ -21045,9 +21039,8 @@ msgid "Creates individual buildings from a long building."
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:167
-#, fuzzy
 msgid "Invalid selection"
-msgstr "dodaj v izbor"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:169
 msgid ""
@@ -22208,6 +22201,16 @@ msgstr ""
 msgid "Please select one or more ways with intersections of segments."
 msgstr ""
 
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:48
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:49
+msgid "Select Way Nodes"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:48
+#, fuzzy
+msgid "Select all nodes of a selected way."
+msgstr "Obrni smer izbranih poti."
+
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:43
 msgid "Split Object"
 msgstr ""
@@ -22991,8 +22994,13 @@ msgstr ""
 msgid "Experimental union of SlippyMap plugin and WMSPlugin"
 msgstr ""
 
-#. Plugin ImageWayPoint
+#. Plugin imageryadjust
 #: build/trans_plugins.java:44
+msgid "WMSPlugin-style imagery adjustment mapmode"
+msgstr ""
+
+#. Plugin ImageWayPoint
+#: build/trans_plugins.java:46
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -23000,34 +23008,34 @@ msgid ""
 msgstr ""
 
 #. Plugin ImportImagePlugin
-#: build/trans_plugins.java:46 build/trans_plugins.java:48
+#: build/trans_plugins.java:48 build/trans_plugins.java:50
 msgid "Plugin for importing spatial referenced images"
 msgstr ""
 
 #. Plugin importvec
-#: build/trans_plugins.java:50
+#: build/trans_plugins.java:52
 msgid "Import vector graphics (SVG)"
 msgstr ""
 
 #. Plugin irsrectify
-#: build/trans_plugins.java:52
+#: build/trans_plugins.java:54
 msgid "A helper for IRS satellite adjustment."
 msgstr ""
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:54
+#: build/trans_plugins.java:56
 msgid "Helps vectorizing WMS images."
 msgstr ""
 
 #. Plugin livegps
-#: build/trans_plugins.java:56
+#: build/trans_plugins.java:58
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr ""
 
 #. File ../plugins/mapdust/build.xml had no data
 #. Plugin measurement
-#: build/trans_plugins.java:59
+#: build/trans_plugins.java:61
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -23035,24 +23043,24 @@ msgid ""
 msgstr ""
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:61
+#: build/trans_plugins.java:63
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr ""
 
 #. Plugin multipoly-convert
-#: build/trans_plugins.java:63
+#: build/trans_plugins.java:65
 msgid "Simply convert an area to a multipolygon."
 msgstr ""
 
 #. Plugin multipoly
-#: build/trans_plugins.java:65
+#: build/trans_plugins.java:67
 msgid ""
 "Create multipolygons by one click, much easier than standard way with "
 "relation editor."
 msgstr ""
 
 #. Plugin nearclick
-#: build/trans_plugins.java:67
+#: build/trans_plugins.java:69
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -23060,74 +23068,74 @@ msgid ""
 msgstr ""
 
 #. Plugin OpeningHoursEditor
-#: build/trans_plugins.java:69
+#: build/trans_plugins.java:71
 msgid "extended options for editing opening_hours"
 msgstr ""
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:71
+#: build/trans_plugins.java:73
 msgid "Imports issues from OpenStreetBugs"
 msgstr ""
 
 #. Plugin openvisible
-#: build/trans_plugins.java:73
+#: build/trans_plugins.java:75
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr ""
 
 #. Plugin osmarender
-#: build/trans_plugins.java:75
+#: build/trans_plugins.java:77
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr ""
 
 #. Plugin pdfimport
-#: build/trans_plugins.java:77
+#: build/trans_plugins.java:79
 msgid "Import PDF file and convert to ways."
 msgstr ""
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:79
+#: build/trans_plugins.java:81
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
 msgstr ""
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:81
+#: build/trans_plugins.java:83
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
 msgstr ""
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:83
+#: build/trans_plugins.java:85
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr ""
 
 #. Plugin public_transport
-#: build/trans_plugins.java:85
+#: build/trans_plugins.java:87
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr ""
 
 #. Plugin restart
-#: build/trans_plugins.java:87
+#: build/trans_plugins.java:89
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:89
+#: build/trans_plugins.java:91
 msgid "Plugin for reverting changesets"
 msgstr ""
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:91
+#: build/trans_plugins.java:93
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:93
+#: build/trans_plugins.java:95
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -23135,42 +23143,42 @@ msgid ""
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:95
+#: build/trans_plugins.java:97
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
 msgstr ""
 
 #. Plugin routing
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Provides routing capabilities."
 msgstr ""
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
 msgstr ""
 
-#. Plugin smed
+#. Plugin SeaMapEditor
 #. Plugin smed_fw
-#: build/trans_plugins.java:101 build/trans_plugins.java:103
+#: build/trans_plugins.java:103 build/trans_plugins.java:105
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr ""
 
 #. Plugin tageditor
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr ""
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -23178,53 +23186,53 @@ msgid ""
 msgstr ""
 
 #. Plugin terracer
-#: build/trans_plugins.java:111
+#: build/trans_plugins.java:113
 msgid "Make terraced houses out of single blocks."
 msgstr ""
 
 #. Plugin toms
-#: build/trans_plugins.java:113
+#: build/trans_plugins.java:115
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr ""
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr ""
 
 #. Plugin trustosm
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid "Plugin to digital sign OSM-Data"
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
 msgstr ""
 
 #. Plugin undelete
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Allows undeleting object from OSM database"
 msgstr ""
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid "Several utilities that make your life easier."
 msgstr ""
 
 #. Plugin videomapping
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -23232,29 +23240,29 @@ msgid ""
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
 msgstr ""
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr ""
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr ""
 
 #. Plugin wayselector
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Select a sequence of non-branching connected ways"
 msgstr ""
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -24797,9 +24805,8 @@ msgid "viaduct"
 msgstr ""
 
 #: build/trans_presets.java:451
-#, fuzzy
 msgid "swing"
-msgstr "plavanje"
+msgstr ""
 
 #: build/trans_presets.java:451
 msgid "aqueduct"
@@ -24886,7 +24893,7 @@ msgid "T2 - mountain hiking trail"
 msgstr ""
 
 #: build/trans_presets.java:508
-msgid "T3 - difficult"
+msgid "T3 - difficult, exposed hiking trail"
 msgstr ""
 
 #: build/trans_presets.java:508
@@ -24913,7 +24920,7 @@ msgid ""
 "fall hazard possible"
 msgstr ""
 
-#. item "Ways/Path" combo "SAC Scale" item "T3 - difficult" short description
+#. item "Ways/Path" combo "SAC Scale" item "T3 - difficult, exposed hiking trail" short description
 #: build/trans_presets.java:511
 msgid ""
 "exposed sites may be secured with ropes or chains, possible need to use "
@@ -36839,43 +36846,6 @@ msgstr ""
 msgid "Test"
 msgstr ""
 
-#~ msgid "Duplicate selected ways."
-#~ msgstr "Podvoji izbrano pot."
-
-#~ msgid "Can't duplicate unordered way."
-#~ msgstr "Neurejene poti ni mogoče podvojiti."
-
-#~ msgid "Grid layer:"
-#~ msgstr "Plast z mrežo:"
-
-#~ msgid "Tile Sources"
-#~ msgstr "Viri ploščic"
-
-#~ msgid "Grid"
-#~ msgstr "Mreža"
-
-#~ msgid "Download WMS tile from {0}"
-#~ msgstr "Naloži vidne ploščice WMS iz {0}"
-
-#~ msgid "WMS"
-#~ msgstr "WMS"
-
-#~ msgid "WMS Plugin Preferences"
-#~ msgstr "Nastavitve WMS vstavka"
-
-#~ msgid "Modify list of WMS servers displayed in the WMS plugin menu"
-#~ msgstr ""
-#~ "Spremeni seznam strežnikov WMS, ki so prikazani v meniju WMS vstavka"
-
-#~ msgid "abbreviated street name"
-#~ msgstr "okrajšano ime ceste"
-
-#~ msgid "barrier used on a way"
-#~ msgstr "uporaba ovire na poti"
-
-#~ msgid "street name contains ss"
-#~ msgstr "ime ceste vsebuje ss"
-
 #~ msgid "Move"
 #~ msgstr "Premakni"
 
@@ -36885,8 +36855,26 @@ msgstr ""
 #~ msgid "No data imported."
 #~ msgstr "Nič podatkov ni bilo uvoženih."
 
+#~ msgid "Please enter a name for the location."
+#~ msgstr "Prosim, vnesite ime kraja."
+
+#~ msgid "Please enter the desired coordinates first."
+#~ msgstr "Prosim, vnesite želene koordinate."
+
 #~ msgid "Select a bookmark first."
 #~ msgstr "Najprej izberite zaznamek."
+
+#~ msgid "File could not be found."
+#~ msgstr "Datoteke ni bilo moč najti."
+
+#~ msgid "There are unresolved conflicts. You have to resolve these first."
+#~ msgstr "Obstajajo nerazrešeni konflikti. Razrešite jih."
+
+#~ msgid "gps track description"
+#~ msgstr "Opis GPS sledi"
+
+#~ msgid "Refresh the selection list."
+#~ msgstr "Osveži seznam izbora."
 
 #~ msgid "Cannot read time \"{0}\" from point {1} x {2}"
 #~ msgstr "Ni mogoče razbrati časa \"{0}\" točke {1} x {2}"
@@ -36912,16 +36900,44 @@ msgstr ""
 #~ msgid "their version:"
 #~ msgstr "njihova različica:"
 
+#~ msgid "resolved version:"
+#~ msgstr "končna različica:"
+
 #~ msgid "my version:"
 #~ msgstr "moja različica:"
+
+#~ msgid "Object"
+#~ msgstr "Predmet"
+
+#~ msgid "{0} object has conflicts:"
+#~ msgid_plural "{0} objects have conflicts:"
+#~ msgstr[0] "{0} objektov s konflikti:"
+#~ msgstr[1] "{0} objekt s konfliktom:"
+#~ msgstr[2] "{0} objekta s konflikti:"
+#~ msgstr[3] "{0} objekti s konflikti:"
+
+#~ msgid "Login name (email) to the OSM account."
+#~ msgstr "Uporabniško ime (email) vašega računa pri OSM."
 
 #~ msgid ""
 #~ "Login password to the OSM account. Leave blank to not store any password."
 #~ msgstr ""
 #~ "Geslo vašega računa pri OSM. Pustite prazno da se geslo ne shranjuje."
 
+#~ msgid "OSM password"
+#~ msgstr "OSM geslo"
+
+#~ msgid "OSM username (email)"
+#~ msgstr "OSM uporabniško ime (email)"
+
+#~ msgid "Aborting..."
+#~ msgstr "Prekinjanje ..."
+
 #~ msgid "Enter Password"
 #~ msgstr "Vnesite geslo"
+
+#~ msgid "position"
+#~ msgstr "položaj"
 
 #~ msgid "different"
 #~ msgstr "različno"
@@ -36929,14 +36945,35 @@ msgstr ""
 #~ msgid "false"
 #~ msgstr "napačno"
 
+#~ msgid "true"
+#~ msgstr "pravilno"
+
+#~ msgid "Change"
+#~ msgstr "Spremeni"
+
 #~ msgid "No document open so nothing to save."
 #~ msgstr "Dokument ni odprt, zato ni kaj shraniti."
+
+#~ msgid "Not implemented yet."
+#~ msgstr "Še ni podprto."
 
 #~ msgid "Email"
 #~ msgstr "E-pošta"
 
+#~ msgid "Load Selection"
+#~ msgstr "Naloži izbrano"
+
+#~ msgid "Contact {0}..."
+#~ msgstr "Kontaktiraj {0}..."
+
 #~ msgid "Merging conflicts."
 #~ msgstr "Spori pri zlivanju"
+
+#~ msgid "Resolve Conflicts"
+#~ msgstr "Razreši spore"
+
+#~ msgid " ({0} deleted.)"
+#~ msgstr " ({0} izbrisan.)"
 
 #~ msgid "No images with readable timestamps found."
 #~ msgstr "Ni moč najti slik z berljivo časovno oznako."
@@ -36950,11 +36987,33 @@ msgstr ""
 #~ msgid "GPS end: {0}"
 #~ msgstr "Konec GPS sledi: {0}"
 
+#~ msgid "image"
+#~ msgid_plural "images"
+#~ msgstr[0] "slik"
+#~ msgstr[1] "slika"
+#~ msgstr[2] "sliki"
+#~ msgstr[3] "slike"
+
+#~ msgid "timezone difference: "
+#~ msgstr "razlika časovnih pasov: "
+
 #~ msgid "{0} within the track."
 #~ msgstr "{0} znotraj sledi."
 
+#~ msgid "Time entered could not be parsed."
+#~ msgstr "Vpisanega časa ni bilo mogoče razpoznati."
+
 #~ msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
 #~ msgstr "Vnesite prikazan čas (mm/dd/yyyy HH:MM:SS)"
+
+#~ msgid "Base Server URL"
+#~ msgstr "Osnovni URL naslov strežnika"
+
+#~ msgid "Illegal object with id=0"
+#~ msgstr "predmet z id=0 ni dovoljen"
+
+#~ msgid "Preparing data..."
+#~ msgstr "Pripravljam podatke..."
 
 #~ msgid "Incorrect password or username."
 #~ msgstr "Napačno uporabniško ime ali geslo."
@@ -36962,19 +37021,107 @@ msgstr ""
 #~ msgid "unnamed"
 #~ msgstr "neimenovano"
 
+#~ msgid "Resolve {0} conflicts in {1} objects"
+#~ msgstr "Razreši {0} sporov v {1} predmetih"
+
 #~ msgid "Hint: Some changes came from uploading new data to the server."
 #~ msgstr ""
 #~ "Namig: Do nekaterih sprememb je prišlo zaradi pošiljanja podatkov na "
 #~ "strežnik."
 
+#~ msgid "Uploading data"
+#~ msgstr "Pošiljanje podatkov"
+
+#~ msgid "Jump forward"
+#~ msgstr "Skok naprej"
+
+#~ msgid "Jump back."
+#~ msgstr "Skok nazaj"
+
+#~ msgid "Previous Marker"
+#~ msgstr "Prejšnji označevalnik"
+
+#~ msgid "Next Marker"
+#~ msgstr "Naslednji označevalnik"
+
+#~ msgid "Slower Forward"
+#~ msgstr "Počasneje naprej"
+
 #~ msgid "Unknown file extension."
 #~ msgstr "Neznana končnica datoteke."
+
+#~ msgid "Could not rename the file \"{0}\"."
+#~ msgstr "Preimenovanje datoteke \"{0}\" ni uspelo."
+
+#~ msgid ""
+#~ "An unexpected exception occurred.\n"
+#~ "\n"
+#~ "This is always a coding error. If you are running the latest\n"
+#~ "version of JOSM, please consider being kind and file a bug report."
+#~ msgstr ""
+#~ "Prišlo je do nepričakovane napake.\n"
+#~ "\n"
+#~ "To je vedno programerska napaka. Če uporabljate zadnjo različico \n"
+#~ "urejevalnika JOSM, vas prosimo, da prijavite napako (podrobno, v "
+#~ "angleščini)."
 
 #~ msgid "Keep backup files"
 #~ msgstr "Ohrani varnostne kopije datotek"
 
+#~ msgid "Error reading plugin information file: {0}"
+#~ msgstr "Napaka pri branju datoteke s podatki o vstavkih: {0}"
+
+#~ msgid "File not found"
+#~ msgstr "Datoteke ni mogoče najti"
+
+#~ msgid "There are unsaved changes. Delete the layer anwyay?"
+#~ msgstr "Imate neshranjene spremembe. Vseeno izbrišem plast?"
+
+#~ msgid "Do you really want to delete the whole layer?"
+#~ msgstr "Ali res želite izbrisati celotno plast?"
+
 #~ msgid "Delete the selected layer."
 #~ msgstr "Izbriši izbrano plast."
+
+#~ msgid "Merge the layer directly below into the selected layer."
+#~ msgstr "Združi izbrano plast s plastjo pod njo."
+
+#~ msgid "layer not in list."
+#~ msgstr "plasti ni na seznamu."
+
+#~ msgid "Grid layer:"
+#~ msgstr "Plast z mrežo:"
+
+#~ msgid "Adjust the position of the WMS layer"
+#~ msgstr "Prilagodi položaj plasti WMS"
+
+#~ msgid "Display history information about OSM ways or nodes."
+#~ msgstr "Prikaže podatke o zgodovini vozlišč in poti OSM"
+
+#~ msgid "Downloading..."
+#~ msgstr "Sprejemanje..."
+
+#~ msgid "Download Area"
+#~ msgstr "Sprejmi področje"
+
+#~ msgid "Download all incomplete ways and nodes in relation"
+#~ msgstr "Sprejmi vse nepopolne poti in vozlišča v relaciji"
+
+#~ msgid "Download List"
+#~ msgstr "Sprejmi seznam"
+
+#~ msgid "Downloaded plugin information from {0} site"
+#~ msgid_plural "Downloaded plugin information from {0} sites"
+#~ msgstr[0] "Sprejeti podatki o vstavkih z  {0} strežnikov"
+#~ msgstr[1] "Sprejeti podatki o vstavkih z  {0} strežnika"
+#~ msgstr[2] "Sprejeti podatki o vstavkih z  {0} strežnikov"
+#~ msgstr[3] "Sprejeti podatki o vstavkih z  {0} strežnikov"
+
+#~ msgid "No plugin information found."
+#~ msgstr "Informacij o vsavku ni bilo mogoče najti."
+
+#~ msgid "All installed plugins are up to date."
+#~ msgstr "Vsi nameščeni vstavki so posodobljeni."
 
 #~ msgid ""
 #~ "There were problems with the following plugins:\n"
@@ -36988,24 +37135,120 @@ msgstr ""
 #~ msgid "Plugin not found: {0}."
 #~ msgstr "Vstavka {0} ni bilo mogoče najti."
 
+#~ msgid "Update Plugins"
+#~ msgstr "Posodobitev vstavkov"
+
+#~ msgid ""
+#~ "Update the following plugins:\n"
+#~ "\n"
+#~ "{0}"
+#~ msgstr ""
+#~ "Posodobi naslednje vstavke:\n"
+#~ "\n"
+#~ "{0}"
+
+#~ msgid "{0} Plugin successfully updated. Please restart JOSM."
+#~ msgid_plural "{0} Plugins successfully updated. Please restart JOSM."
+#~ msgstr[0] "{0} vsavkov uspešno posodobljenih. Ponovno zaženite JOSM."
+#~ msgstr[1] "{0} vsavek uspešno posodobljen. Ponovno zaženite JOSM."
+#~ msgstr[2] "{0} vsavka uspešno posodobljena. Ponovno zaženite JOSM."
+#~ msgstr[3] "{0} vsavki uspešno posodobljeni. Ponovno zaženite JOSM."
+
 #~ msgid "Could not download plugin: {0} from {1}"
 #~ msgstr "Sprejem vstavka {0} z naslova {1} ni bil mogoč"
 
+#~ msgid "Please select at least two nodes to merge."
+#~ msgstr "Izberite vsaj dve vozlišči za združitev"
+
+#~ msgid "Cannot merge nodes: Would have to delete a way that is still used."
+#~ msgstr "Ne morem združiti vozlišč: Moral bi izbrisati pot, ki je še v rabi."
+
+#~ msgid "An empty value deletes the key."
+#~ msgstr "Prazna vrednost izbriše ključ"
+
+#~ msgid "Delete {1} {0}"
+#~ msgstr "Izbriši {1} {0}"
+
+#~ msgid "Delete {0} {1}"
+#~ msgstr "Izbriši {0} {1}"
+
+#~ msgid ""
+#~ "Selection \"{0}\" is used by relation \"{1}\" with role {2}.\n"
+#~ "Delete from relation?"
+#~ msgstr ""
+#~ "Izbrani predmet \"{0}\" je vključen v relacijo \"{1}\" z vlogo {2}.\n"
+#~ "Izbrišem iz relacije?"
+
+#~ msgid "Edit new relation"
+#~ msgstr "Uredi novo relacijo"
+
+#~ msgid "Create new relation"
+#~ msgstr "Ustvari novo relacijo"
+
+#~ msgid "Edit relation #{0}"
+#~ msgstr "Uredi relacijo #{0}"
+
 #~ msgid "Combine ways with different memberships?"
 #~ msgstr "Združim poti z različnim članstvom?"
+
+#~ msgid "street name contains ss"
+#~ msgstr "ime ceste vsebuje ss"
+
+#~ msgid "abbreviated street name"
+#~ msgstr "okrajšano ime ceste"
+
+#~ msgid "Tile Sources"
+#~ msgstr "Viri ploščic"
+
+#~ msgid "Show Tile Status"
+#~ msgstr "Prikaži stanje ploščice"
+
+#~ msgid "Download WMS tile from {0}"
+#~ msgstr "Naloži vidne ploščice WMS iz {0}"
+
+#~ msgid "Could not write bookmark."
+#~ msgstr "Zaznamka ni bilo mogoče zapisati."
+
+#~ msgid "Could not read bookmarks."
+#~ msgstr "Zaznamkov ni bilo mogoče prebrati."
 
 #~ msgid "You can use the mouse or Ctrl+Arrow keys/./ to zoom and pan."
 #~ msgstr ""
 #~ "Za premikanje in povečavo lahko uporabite miško ali <ctrl>+<smerne tipke>."
 
+#~ msgid "Please enter a search string"
+#~ msgstr "Prosim, vpišite iskani niz"
+
 #~ msgid "Cannot read place search results from server"
 #~ msgstr "Rezultata iskanja kraja se ne da prebrati s strežnika"
+
+#~ msgid ""
+#~ "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "
+#~ "move mouse.   Select: Click."
+#~ msgstr ""
+#~ "Povečava: Miškino kolesce ali dvojni klik. Premik: Desni miškin gumb in "
+#~ "premik. Izbor: Kliknite z miško in povlecite"
+
+#~ msgid "Data Sources and Types"
+#~ msgstr "Viri in vrste podatkov"
+
+#~ msgid "Show/Hide Text/Icons"
+#~ msgstr "Prikaži/skrij besedilo/ikone"
 
 #~ msgid "Validate either current selection or complete dataset."
 #~ msgstr "Preveri pravilnost vseh podatkov ali samo izbora."
 
+#~ msgid "Select, move and rotate objects"
+#~ msgstr "Izberi, premakni ali zasuči predmete"
+
 #~ msgid "Proxy server host"
 #~ msgstr "Ime posredovalnega strežnika"
+
+#~ msgid "Proxy Settings"
+#~ msgstr "Nastavitve posredovalnega strežnika"
+
+#~ msgid "Enable proxy server"
+#~ msgstr "Omogoči posredovalni strežnik"
 
 #~ msgid "Proxy server port"
 #~ msgstr "Vrata posredovalnega strežnika"
@@ -37016,8 +37259,29 @@ msgstr ""
 #~ msgid "Proxy server password"
 #~ msgstr "Geslo na posredovalnem strežniku"
 
+#~ msgid "WMS"
+#~ msgstr "WMS"
+
 #~ msgid "Enter a menu name and WMS URL"
 #~ msgstr "Vpišite ime za meni in povezavo do WMS"
+
+#~ msgid "Request Update"
+#~ msgstr "Zahtevaj posodobitev"
+
+#~ msgid "Edit Station"
+#~ msgstr "Uredi postajo"
+
+#~ msgid "Station"
+#~ msgstr "Postaja"
+
+#~ msgid "Duplicate selected ways."
+#~ msgstr "Podvoji izbrano pot."
+
+#~ msgid "Accomodation"
+#~ msgstr "Nastanitev"
+
+#~ msgid "zoom level"
+#~ msgstr "Nivo povečave"
 
 #~ msgid "zoom"
 #~ msgstr "povečava"
@@ -37025,8 +37289,21 @@ msgstr ""
 #~ msgid "Waterway Point"
 #~ msgstr "Vodna točka"
 
+#~ msgid "Faster Forward"
+#~ msgstr "Hitreje naprej"
+
+#~ msgid ""
+#~ "Please select exactly three nodes or one way with exactly three nodes."
+#~ msgstr "Prosim, izberite točno tri vozlišča ali pot s tremi vozlišči."
+
+#~ msgid "help"
+#~ msgstr "pomoč"
+
 #~ msgid "Help / About"
 #~ msgstr "Pomoč / O programu"
+
+#~ msgid "Grid"
+#~ msgstr "Mreža"
 
 #~ msgid "Cycleway"
 #~ msgstr "Kolesarska steza"
@@ -37034,11 +37311,29 @@ msgstr ""
 #~ msgid "Footway"
 #~ msgstr "Pešpot"
 
+#~ msgid "near"
+#~ msgstr "blizu"
+
+#~ msgid "Create a new map."
+#~ msgstr "Ustvari nov zemljevid."
+
 #~ msgid "AgPifoJ - Geotagged pictures"
 #~ msgstr "AgPifoJ - slike z geografskim položajem"
 
+#~ msgid "Display geotagged photos"
+#~ msgstr "Prikaži slike z geografskim položajem"
+
 #~ msgid "All images"
 #~ msgstr "Vse slike"
+
+#~ msgid "image not loaded"
+#~ msgstr "slika ni naložena"
+
+#~ msgid "Rotate"
+#~ msgstr "Zasuk"
+
+#~ msgid "Drag a way segment to make a rectangle."
+#~ msgstr "Povlecite segment poti za ustvarjenje pravokotnika."
 
 #~ msgid "to"
 #~ msgstr "do"
@@ -37051,6 +37346,12 @@ msgstr ""
 
 #~ msgid "Unknown version"
 #~ msgstr "Neznana različica"
+
+#~ msgid "{0}: Version {1}{2}"
+#~ msgstr "{0}: Različica {1}{2}"
+
+#~ msgid "Do not show again"
+#~ msgstr "Ne prikaži več"
 
 #~ msgid "Ill-formed node id"
 #~ msgstr "Neveljaven id točke"
@@ -37071,11 +37372,38 @@ msgstr ""
 #~ msgid "Synchronize Time with GPS Unit"
 #~ msgstr "Uskladite čas z GPS napravo"
 
+#~ msgid "Preparing..."
+#~ msgstr "Pripravljanje..."
+
+#~ msgid "Uploading..."
+#~ msgstr "Pošiljanje ..."
+
+#~ msgid "S"
+#~ msgstr "J"
+
+#~ msgid "N"
+#~ msgstr "S"
+
 #~ msgid "Error: {0}"
 #~ msgstr "Napaka: {0}"
 
 #~ msgid "Warning: {0}"
 #~ msgstr "Opozorilo: {0}"
+
+#~ msgid "W"
+#~ msgstr "Z"
+
+#~ msgid "E"
+#~ msgstr "V"
+
+#~ msgid "Layers: {0}"
+#~ msgstr "Plasti: {0}"
+
+#~ msgid "Upload these changes?"
+#~ msgstr "Pošljem te spremembe?"
+
+#~ msgid "Upload all changes to the OSM server."
+#~ msgstr "Pošlji vse spremembe na strežnik OSM."
 
 #~ msgid "Upload to OSM..."
 #~ msgstr "Pošlji v OSM ..."
@@ -37100,6 +37428,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Preden prijavite napako poskusite posodobiti JOSM na najnovejšo različico."
 
+#~ msgid "Activating updated plugins"
+#~ msgstr "Aktiviranje posodobljenih vstavkov"
+
 #~ msgid ""
 #~ "Activating the updated plugins failed. Check if JOSM has the permission "
 #~ "to overwrite the existing ones."
@@ -37107,8 +37438,39 @@ msgstr ""
 #~ "Aktivacija posodobljenih vstavkov ni uspela. Preverite, če ima JOSM "
 #~ "pravico prepisati obstoječe datoteke."
 
+#~ msgid "Error deleting plugin file: {0}"
+#~ msgstr "Napaka pri brisanju datoteke vstavka: {0}"
+
 #~ msgid "Plugin already exists"
 #~ msgstr "Vstavek že obstaja"
+
+#~ msgid "Download missing plugins"
+#~ msgstr "Sprejem manjkajočih vstavkov"
+
+#~ msgid ""
+#~ "Download the following plugins?\n"
+#~ "\n"
+#~ "{0}"
+#~ msgstr ""
+#~ "Sprejmem naslednje vstavke?\n"
+#~ "\n"
+#~ "{0}"
+
+#~ msgid "WMS Plugin Preferences"
+#~ msgstr "Nastavitve WMS vstavka"
+
+#~ msgid "Modify list of WMS servers displayed in the WMS plugin menu"
+#~ msgstr ""
+#~ "Spremeni seznam strežnikov WMS, ki so prikazani v meniju WMS vstavka"
+
+#~ msgid "WMS Plugin Help"
+#~ msgstr "Pomoč vstavka WMS"
+
+#~ msgid ""
+#~ "Couldn't connect to the osm server. Please check your internet connection."
+#~ msgstr ""
+#~ "Ni se bilo mogoče povezati s strežnikom OSM. Preverite vašo povezavo z "
+#~ "internetom."
 
 #~ msgid "Error during parse."
 #~ msgstr "Napaka med razčlenjevanjem."
@@ -37122,6 +37484,9 @@ msgstr ""
 #~ msgid "Please report a ticket at {0}"
 #~ msgstr "Prosimo, prijavite težavo na {0}"
 
+#~ msgid "Don't apply changes"
+#~ msgstr "Ne uveljavi sprememb"
+
 #~ msgid "Be sure to include the following information:"
 #~ msgstr "Prijava napake naj vsebuje vsaj naslednje informacije:"
 
@@ -37134,11 +37499,34 @@ msgstr ""
 #~ msgid "Selected makes your trace public in openstreetmap.org"
 #~ msgstr "Izbrana možnost javno objavi sled na openstreetmap.org"
 
+#~ msgid "Public"
+#~ msgstr "Javna"
+
+#~ msgid "Updates the current data layer from the server (re-downloads data)"
+#~ msgstr ""
+#~ "Posodobitev trenutne podatkovne plasti (ponoven sprejem s strežnika)"
+
 #~ msgid "Update Data"
 #~ msgstr "Posodobitev podatkov"
 
 #~ msgid "error requesting update"
 #~ msgstr "napaka pri oddaji zahtevka za pososobitev"
+
+#~ msgid ""
+#~ "Maximum length (in meters) to draw lines. Set to '-1' to draw all lines."
+#~ msgstr ""
+#~ "Največja razdalja (v metrih) med točkama, da med njima potegne črto. "
+#~ "Nastavite '-1' za povezavo vseh točk."
+
+#~ msgid ""
+#~ "<html>WARNING: The password is stored in plain text in the preferences "
+#~ "file.<br>The password is transfered in plain text to the server, encoded "
+#~ "in the URL.<br><b>Do not use a valuable Password.</b></html>"
+#~ msgstr ""
+#~ "<html>POZOR: Geslo je shranjeno v datoteki z nastavitvami v obliki "
+#~ "navadnega besedila.<br>Geslo se na strežnik prenaša nekriptirano v "
+#~ "naslovu URL.<br><b>Ne uporabljaj gesla enakega nekeu drugemu pomembnemu "
+#~ "geslu.</b></html>"
 
 #~ msgid "Anonymous"
 #~ msgstr "Anonimno"
@@ -37149,17 +37537,38 @@ msgstr ""
 #~ msgid "Degrees Minutes Seconds"
 #~ msgstr "Stopinje Minute Sekunde"
 
+#~ msgid "Move nodes so all angles are 90 or 270 degree"
+#~ msgstr "Premakne vozlišča tako, da so koti med njimi 90 ali 270 stopinj"
+
 #~ msgid "Use preset ''{0}'' of group ''{1}''"
 #~ msgstr "Uporabi prednastavitev ''{0}'' iz skupine ''{1}''"
+
+#~ msgid "Use preset ''{0}''"
+#~ msgstr "Uporabi prednastavitev ''{0}''"
+
+#~ msgid "Preset group ''{0}''"
+#~ msgstr "Skupina prednastavitev ''{0}''"
 
 #~ msgid "Tagging preset source"
 #~ msgstr "Vir prednastavljenih oznak"
 
+#~ msgid "Add a new tagging preset source to the list."
+#~ msgstr "Dodaj nov vir prednastavitev na seznam."
+
 #~ msgid "Tagging preset sources"
 #~ msgstr "Viri prednastavljenih oznak"
 
+#~ msgid "barrier used on a way"
+#~ msgstr "uporaba ovire na poti"
+
+#~ msgid "Add Selected"
+#~ msgstr "Dodaj izbrano"
+
 #~ msgid "Remove Selected"
 #~ msgstr "Odstrani izbrano"
+
+#~ msgid "Members: {0}"
+#~ msgstr "Člani: {0}"
 
 #~ msgid "Add all currently selected objects as members"
 #~ msgstr "Dodaj kot člane vse trenutno izbrane predmete"
@@ -37170,8 +37579,17 @@ msgstr ""
 #~ msgid "Occupied By"
 #~ msgstr "Član"
 
+#~ msgid "Can't duplicate unordered way."
+#~ msgstr "Neurejene poti ni mogoče podvojiti."
+
 #~ msgid "Edit Portcullis"
 #~ msgstr "Uredi dók"
+
+#~ msgid "There are unsaved changes. Discard the changes and continue?"
+#~ msgstr "Nekaj sprememb ni shranjenih."
+
+#~ msgid "Save and Exit"
+#~ msgstr "Shrani in končaj"
 
 #~ msgid "Use decimal degrees."
 #~ msgstr "Uporabi decimalne stopinje."
@@ -37185,17 +37603,44 @@ msgstr ""
 #~ msgid "All the ways were empty"
 #~ msgstr "Vse poti so bile prazne"
 
+#~ msgid "Those nodes are not in a circle."
+#~ msgstr "Izbrana vozlišča niso v krogu."
+
 #~ msgid "Solve Conflicts"
 #~ msgstr "Razreši neskladja"
+
+#~ msgid "Error while loading page {0}"
+#~ msgstr "Napaka pri nalaganju strani {0}"
 
 #~ msgid "Open in Browser"
 #~ msgstr "Odpri v brskalniku"
 
+#~ msgid "JOSM Online Help"
+#~ msgstr "Spletna pomoč programa JOSM"
+
 #~ msgid "Merge Anyway"
 #~ msgstr "Vseeno združi"
 
+#~ msgid "History of Element"
+#~ msgstr "Zgodovina elementa"
+
 #~ msgid "Only one node selected"
 #~ msgstr "Izbrano je le eno vozlišče"
+
+#~ msgid "Open a preferences page for global settings."
+#~ msgstr "Odpri stran z nastavitvami za splošne nastavitve."
+
+#~ msgid "No data"
+#~ msgstr "Ni podatkov"
+
+#~ msgid "Dupe {0} nodes into {1} nodes"
+#~ msgstr "Razmnoži {0} vozlišč v {1} vozlišč"
+
+#~ msgid "Uploading"
+#~ msgstr "Pošiljanje"
+
+#~ msgid "Update failed"
+#~ msgstr "Posodobitev ni uspela"
 
 #~ msgid "Update Selection"
 #~ msgstr "Posodobi izbor"
@@ -37203,17 +37648,83 @@ msgstr ""
 #~ msgid "Errors during Download"
 #~ msgstr "Napake pri sprejemu"
 
+#~ msgid ""
+#~ "You did move more than {0} elements. Moving a large number of elements is "
+#~ "often an error.\n"
+#~ "Really move them?"
+#~ msgstr ""
+#~ "Premaknili ste več kot {0} elementov. Sočasen premik velikega števila "
+#~ "elementov je pogosto nenamerno.\n"
+#~ "Naj jih zares premaknem?"
+
+#~ msgid "Change {0} {1}"
+#~ msgstr "Spremeni {0} {1}"
+
+#~ msgid "Add {0} {1}"
+#~ msgstr "Dodaj {0} {1}"
+
+#~ msgid "Set {0}={1} for {2} {3}"
+#~ msgstr "Nastavi {0}={1} pri {2} {3}"
+
+#~ msgid "Set {0}={1} for {2} ''{3}''"
+#~ msgstr "Nastavi {0}={1} pri {2} ''{3}''"
+
+#~ msgid "Remove \"{0}\" for {1} {2}"
+#~ msgstr "Odstrani \"{0}\" pri {1} {2}"
+
+#~ msgid "Remove \"{0}\" for {1} ''{2}''"
+#~ msgstr "Odstrani \"{0}\" pri {1} ''{2}''"
+
+#~ msgid "Rotate {0} {1}"
+#~ msgstr "Zasuči {0} {1}"
+
+#~ msgid "parameter ''{0}'' must not be null"
+#~ msgstr "parameter ''{0}'' ne sme biti ničen"
+
 #~ msgid "ways"
 #~ msgstr "poti"
 
 #~ msgid "nodes"
 #~ msgstr "vozlišča"
 
+#~ msgid "relations"
+#~ msgstr "relacije"
+
+#~ msgid "changeset"
+#~ msgstr "paket sprememb"
+
+#~ msgid "changesets"
+#~ msgstr "paketi sprememb"
+
 #~ msgid "Open file (as raw gps, if .gpx)"
 #~ msgstr "Odpri datoteko (če .gpx, potem kot surov GPS)"
+
+#~ msgid "Full Screen"
+#~ msgstr "Celozaslonski način"
+
+#~ msgid "Toggle Full Screen view"
+#~ msgstr "Preklop celozaslonskega načina"
+
+#~ msgid "Error while parsing"
+#~ msgstr "Napaka pri razčlenjevanju"
+
+#~ msgid "Move up the selected elements by one position"
+#~ msgstr "Premakni izbrani element za eno mesto višje"
+
+#~ msgid "Move down the selected entries by one position"
+#~ msgstr "Premakni izbrani element za eno mesto nižje"
 
 #~ msgid "parameter '{0}' must not be null"
 #~ msgstr "parameter '{0}' ne sme biti ničen"
 
 #~ msgid "Parameter ''{0}'' must not be null."
 #~ msgstr "parameter ''{0}'' ne sme biti ničen"
+
+#~ msgid "Could not read ''{0}''."
+#~ msgstr "Ni bilo možno prebrati \"{0}\""
+
+#~ msgid ""
+#~ "Couldn't connect to the OSM server. Please check your internet connection."
+#~ msgstr ""
+#~ "Ni se bilo mogoče povezati s strežnikom OSM. Preverite vašo povezavo z "
+#~ "internetom."

@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-15 22:55+0100\n"
-"PO-Revision-Date: 2010-12-14 13:09+0000\n"
-"Last-Translator: ribbon <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 22:47+0100\n"
+"PO-Revision-Date: 2010-12-16 01:28+0000\n"
+"Last-Translator: bastik <Unknown>\n"
 "Language-Team: Japanese <tr@openstreetmap.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-12-15 20:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2010-12-21 19:15+0000\n"
+"X-Generator: Launchpad (build 12093)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -28,8 +28,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:194
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:355
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:185
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:348
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:208
 #: ../core/src/org/openstreetmap/josm/gui/help/ContextSensitiveHelpAction.java:47
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:55
@@ -92,13 +92,13 @@ msgstr "不正な形式のファイルURL\"{0}\"を無視します。"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:515
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceTabbedPane.java:186
 #: ../core/src/org/openstreetmap/josm/io/imagery/WMSGrabber.java:131
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:147
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:322
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:561
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:203
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:378
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:617
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:51
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:662
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:130
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:144
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:146
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:145
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:85
@@ -251,8 +251,9 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:159
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:201
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:154
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:154
 #: ../core/src/org/openstreetmap/josm/actions/PurgeAction.java:166
@@ -308,6 +309,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1304
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:150
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportDialog.java:25
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportVectorAction.java:100
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:151
@@ -363,7 +365,7 @@ msgstr ""
 msgid "No target layers"
 msgstr "対象のレイヤーがありません。"
 
-#: ../core/src/org/openstreetmap/josm/actions/AddImageryLayerAction.java:17
+#: ../core/src/org/openstreetmap/josm/actions/AddImageryLayerAction.java:18
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/AddImageryLayerAction.java:15
 #, java-format
 msgid "Add imagery layer {0}"
@@ -446,7 +448,7 @@ msgstr "選択したノードを円形に移動します"
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:71
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:26
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:35
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:44
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:57
 #: ../plugins/gpxfilter/src/gpxfilter/AddEGpxLayerAction.java:18
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
@@ -465,6 +467,7 @@ msgstr "選択したノードを円形に移動します"
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:218
 #: ../plugins/tracer/src/org/openstreetmap/josm/plugins/tracer/TracerAction.java:44
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:27
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:44
 #: ../plugins/utilsplugin2/src/utilsplugin2/UnGlueRelationAction.java:45
 #, java-format
@@ -495,8 +498,8 @@ msgstr "少なくとも４つのノードを選択してください。"
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:462
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:250
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:422
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:927
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:956
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:983
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1012
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:43
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:118
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:40
@@ -768,6 +771,8 @@ msgstr "選択したオブジェクトを削除します"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:200
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:201
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:204
@@ -978,19 +983,17 @@ msgid "Display history information about OSM ways, nodes, or relations."
 msgstr "OSM ウェイ、ノードまたはリレーションについて履歴情報を表示"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:48
-#, fuzzy
 msgid "New offset"
-msgstr "新しいロール"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:49
-#, fuzzy
 msgid "Adjust the position of this imagery layer"
-msgstr "選択した画像レイヤの位置を調整"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:158
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:31
 msgid "Adjust imagery offset"
-msgstr "画像を調整"
+msgstr ""
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:159
@@ -1037,22 +1040,24 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Easting"
-msgstr "文字列"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Northing"
-msgstr "何もしない"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:171
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:128
-#, fuzzy
 msgid "Bookmark name: "
-msgstr "ブックマーク"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:205
+#, fuzzy
+msgid "Offset bookmark already exists. Overwrite?"
+msgstr "ファイルが存在します。上書きしますか？"
 
 #: ../core/src/org/openstreetmap/josm/actions/InfoAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/InfoAction.java:19
@@ -1285,29 +1290,29 @@ msgstr "WMS: {0}"
 msgid "Custom WMS Link"
 msgstr "カスタムWMS リンク"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:116
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:114
 msgid "Supported Rectifier Services:"
 msgstr "サポートされるRectifier サービス:"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:141
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:138
 msgid "Visit Homepage"
 msgstr "ホームページはこちら"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:148
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:152
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:147
 msgid "WMS URL or Image ID:"
 msgstr "WMS URL または画像ID:"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:152
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:154
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:156
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:151
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
 msgid "Add Rectified Image"
 msgstr "修正した画像を追加"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:204
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:210
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:203
 msgid ""
 "Couldn't match the entered link or id to the selected service. Please try "
@@ -1316,7 +1321,7 @@ msgstr ""
 "入力されたリンクまたはID を選択されたサービスにマッチさせることができませんで"
 "した。もう一度試してください。"
 
-#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:205
+#: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:211
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:204
 msgid "No valid WMS URL or id"
 msgstr "正しいWMSまたはID がありません"
@@ -1339,11 +1344,10 @@ msgid "Merge nodes into the oldest one."
 msgstr "一番古いものにノードをマージします。"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:70
-#, fuzzy
 msgid ""
 "Please select at least two nodes to merge or node that is close to another "
 "node."
-msgstr "結合する少なくとも二つのウェイを選択してください。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:175
 msgid "Abort Merging"
@@ -1781,8 +1785,8 @@ msgstr "ファイル ''{0}'' をリネームできません"
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:403
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:416
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:948
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:507
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:664
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:509
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:666
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
@@ -1804,7 +1808,7 @@ msgstr "ファイル ''{0}'' をリネームできません"
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:90
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:105
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:120
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:310
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:366
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:468
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:35
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:685
@@ -1822,7 +1826,7 @@ msgstr "ファイル ''{0}'' をリネームできません"
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:969
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:508
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:665
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:153
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:159
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteActionList.java:84
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:141
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:152
@@ -1878,7 +1882,7 @@ msgstr "ウェイ方向反転"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:325
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:216
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:258
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:224
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
 #: build/specialmessages.java:65
@@ -2015,7 +2019,7 @@ msgid "Delete nodes outside of downloaded data regions"
 msgstr "ダウンロード済みデータ領域の外側のノードを削除"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:231
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:233
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:227
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:73
 msgid "No, abort"
@@ -2801,9 +2805,8 @@ msgid "Select"
 msgstr "選択"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:107
-#, fuzzy
 msgid "Select, move, scale and rotate objects"
-msgstr "オブジェクトの選択、移動および回転"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:217
 #, java-format
@@ -2850,18 +2853,14 @@ msgid "Release the mouse button to stop rotating."
 msgstr "回転を止めるには、マウスボタンを放します。"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:713
-#, fuzzy
 msgid "Release the mouse button to stop scaling."
-msgstr "回転を止めるには、マウスボタンを放します。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:715
-#, fuzzy
 msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
 "Ctrl to rotate selected; Alt-Ctrl to scale selected; or change selection"
 msgstr ""
-"ドラッグでオブジェクトを動かす;Shiftキーで、選択を加える。(Ctrlキーで切り替"
-"え);Shft-Ctrlで選択を回転。;選択を変更。"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:45
@@ -3620,10 +3619,11 @@ msgid_plural "Rotate {0} nodes"
 msgstr[0] "{0} 個のノードを回転"
 
 #: ../core/src/org/openstreetmap/josm/command/ScaleCommand.java:84
-#, fuzzy, java-format
+#, java-format
 msgid "Scale {0} node"
 msgid_plural "Scale {0} nodes"
-msgstr[0] "{0} 個のノードを削除"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/SequenceCommand.java:93
 msgid "Sequence"
@@ -3645,10 +3645,11 @@ msgid "Resolve {0} tag conflicts in relation {1}"
 msgstr "リレーション {1} の {0} タグ競合を解決"
 
 #: ../core/src/org/openstreetmap/josm/command/TransformNodesCommand.java:126
-#, fuzzy, java-format
+#, java-format
 msgid "Transform {0} node"
 msgid_plural "Transform {0} nodes"
-msgstr[0] "ノードからのタグ"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
 #, java-format
@@ -3967,11 +3968,11 @@ msgstr "東"
 msgid "Not in cache"
 msgstr "キャッシュにありません"
 
-#: ../core/src/org/openstreetmap/josm/data/imagery/OffsetBookmark.java:46
+#: ../core/src/org/openstreetmap/josm/data/imagery/OffsetBookmark.java:47
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmark.java:44
-#, fuzzy, java-format
+#, java-format
 msgid "Projection ''{0}'' not found"
-msgstr "方向インデックス'{0}'がありません"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:290
 #, java-format
@@ -3990,8 +3991,8 @@ msgstr ""
 "つかりませんでした。このことを http://josm.openstreetmap.de に報告してくださ"
 "い。これは深刻なエラーではなく、作業を継続しても安全と思われます。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:147
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:235
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:146
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:234
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:107
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:110
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:121
@@ -3999,7 +4000,7 @@ msgstr ""
 msgid "Missing merge target for way with id {0}"
 msgstr "ID {0} のウェイの結合対象が見つかりません"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:182
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:181
 #, java-format
 msgid ""
 "Object of type {0} with id {1} was marked to be deleted, but it's missing in "
@@ -4008,20 +4009,20 @@ msgstr ""
 "ID{1}を持つオブジェクトタイプ{0}に削除の印が付けられましたが、元のデータセッ"
 "トにありません"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:247
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:246
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:117
 #, java-format
 msgid "Missing merge target for node with id {0}"
 msgstr "ID {0} のノードの結合対象が見つかりません"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:262
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:261
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:144
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:148
 #, java-format
 msgid "Missing merge target for relation with id {0}"
 msgstr "ID {0} のリレーションの結合対象が見つかりません"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:267
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:266
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:155
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:159
 #: ../plugins/reverter/src/reverter/DataSetCommandMerger.java:47
@@ -4032,7 +4033,7 @@ msgstr "ID {1} のタイプ {0} の結合対象が見つかりません"
 #. Same version, but different "visible" attribute. It indicates a serious problem in datasets.
 #. For example, datasets can be fetched from different OSM servers or badly hand-modified.
 #. We shouldn't merge that datasets.
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:315
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:318
 #, java-format
 msgid "Conflict in 'visible' attribute for object of type {0} with id {1}"
 msgstr ""
@@ -4859,7 +4860,7 @@ msgid "TagChecker source"
 msgstr "タグチェッカーのソース"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:606
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:188
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:178
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1022
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
@@ -5461,6 +5462,37 @@ msgstr "\"今日のメッセージ\"をダウンロード"
 msgid "Click to close the dialog"
 msgstr "クリックしてダイアログを閉じる"
 
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:31
+#, fuzzy
+msgid "Imagery offset"
+msgstr "画像減色"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:73
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:183
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:221
+msgid "Imagery"
+msgstr "画像"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:92
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:107
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:99
+msgid "Blank Layer"
+msgstr "空のレイヤー"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:92
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
+msgid "Open a blank WMS layer to load data from a file"
+msgstr "ファイルからデータをロードするためのブランクWMSレイヤーを開く"
+
+#: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:117
+#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:155
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:157
+msgctxt "layer"
+msgid "Offset"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/gui/JosmUserIdentityManager.java:104
 #, java-format
 msgid "Expected non-empty value for parameter ''{0}'', got ''{1}''"
@@ -5707,36 +5739,31 @@ msgstr "JOSMを終了"
 msgid "Continue, try anyway"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:187
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:177
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:41
 msgid "File"
 msgstr "ファイル"
 
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:189
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:179
 #: build/specialmessages.java:76
 msgid "View"
 msgstr "表示"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:190
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:180
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyPlugin.java:27
 #: ../plugins/multipoly/src/multipoly/MultipolyPlugin.java:27
 #: ../plugins/pdfimport/src/pdfimport/PdfImportPlugin.java:26
 msgid "Tools"
 msgstr "ツール"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:191
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:181
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:191
 msgid "Presets"
 msgstr "プリセット"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:192
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:221
-msgid "Imagery"
-msgstr "画像"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:226
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:219
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:109
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:58
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:90
@@ -5745,30 +5772,9 @@ msgstr "画像"
 msgid "Menu: {0}"
 msgstr "メニュー: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:342
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:335
 msgid "Audio"
 msgstr "音声"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:394
-#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:153
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:157
-#, fuzzy
-msgctxt "layer"
-msgid "Offset"
-msgstr "オフセット:"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:414
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:106
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:99
-msgid "Blank Layer"
-msgstr "空のレイヤー"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:414
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
-msgid "Open a blank WMS layer to load data from a file"
-msgstr "ファイルからデータをロードするためのブランクWMSレイヤーを開く"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapFrame.java:263
 msgid "Hide this button"
@@ -6919,7 +6925,7 @@ msgstr "全指示のリストを開く（取り消しバッファ）"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:541
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:109
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:112
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
@@ -7229,14 +7235,12 @@ msgid "Toggle visible state of the selected layer."
 msgstr "選択したレイヤーの表示状態を切り替え"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:474
-#, fuzzy
 msgid "Opacity"
-msgstr "収容台数"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:486
-#, fuzzy
 msgid "Adjust opacity of the layer."
-msgstr "WMSレイヤーの位置を調整"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:571
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:511
@@ -10786,9 +10790,8 @@ msgid "Select filename"
 msgstr "ファイル名を選択"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/RecentlyOpenedFilesMenu.java:28
-#, fuzzy
 msgid "Open Recent"
-msgstr "変更セットを開く"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/RecentlyOpenedFilesMenu.java:29
 msgid "List of recently opened files"
@@ -11846,7 +11849,7 @@ msgstr ""
 "<html>選択したGPXレイヤー ''{0}'' はサーバからダウンロードしたものです。<br>"
 "タイムスタンプの情報が無いため、写真との同期はできません。</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:207
+#: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:203
 msgid "ERROR"
 msgstr ""
 
@@ -11955,52 +11958,52 @@ msgid "{0} point"
 msgid_plural "{0} points"
 msgstr[0] "{0} ポイント"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:286
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:287
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:204
 msgid "Auto Zoom"
 msgstr "自動ズーム"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:297
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:298
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:215
 msgid "Auto load tiles"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:306
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:307
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:224
 msgid "Load Tile"
 msgstr "タイルの読み込み"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:317
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:318
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:235
 msgid "Show Tile Info"
 msgstr "タイル情報を表示"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:340
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:341
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:258
 msgid "Load All Tiles"
 msgstr "全てのタイルをロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:350
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:351
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:268
 msgid "Increase zoom"
 msgstr "ズームアップ"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:359
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:360
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:277
 msgid "Decrease zoom"
 msgstr "ズームダウン"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:370
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:371
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:288
 msgid "Snap to tile size"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:388
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:389
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:305
 msgid "Flush Tile Cache"
 msgstr "タイルのキャッシュをフラッシュ"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:858
+#: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:859
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:792
 msgid "image "
 msgstr "画像 "
@@ -12009,30 +12012,30 @@ msgstr "画像 "
 msgid "No validation errors"
 msgstr "妥当性検証エラー"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:125
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:127
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:117
 #, java-format
 msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
 msgstr "警告: WMS レイヤーは不正なベースURL ''{0}'' のために無効化されました"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:127
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:129
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:119
 msgid "(deactivated)"
 msgstr "(無効化)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:180
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:182
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:169
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr "WMS レイヤー ({0}), 自動的に倍率 {1} でダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:182
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:184
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:171
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "WMS レイヤー ({0}), 自倍率 {1} でダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:222
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:224
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:218
 #, java-format
 msgid ""
@@ -12045,85 +12048,85 @@ msgstr ""
 "を付けてはなりません。<br>そうすると不正なWMSリクエストとなる場合があります。"
 "設定を<br>チェックしてください。<br>強制的にWMS タイルを取得しますか？"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:230
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:232
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:226
 msgid "Yes, fetch images"
 msgstr "はい、画像を取得します"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:236
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:238
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:232
 msgid "Invalid URL?"
 msgstr "不正なURL？"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:499
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:501
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:500
 msgid "Download visible tiles"
 msgstr "見えるタイルのダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:506
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:508
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:507
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "要求された範囲は大きすぎます。もう少し拡大するか、解像度を変更してください。"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:518
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:520
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:519
 msgid "Change resolution"
 msgstr "解像度の変更"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:532
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:534
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:533
 msgid "Reload erroneous tiles"
 msgstr "誤ったタイルのリロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:554
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:556
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:555
 msgid "Alpha channel"
 msgstr "アルファチャンネル"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:585
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:587
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:586
 msgid "Save WMS layer to file"
 msgstr "WMSレイヤーをファイルに保存"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:590
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:592
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:591
 msgid "Save WMS layer"
 msgstr "WMS レイヤーを保存"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:614
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:616
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:615
 msgid "Load WMS layer from file"
 msgstr "WMSレイヤーをファイルから読み込む"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:619
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:621
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:620
 msgid "Load WMS layer"
 msgstr "WMS レイヤーをロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:630
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:632
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:631
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "未サポートの WMSファイルのバージョン; 発見 {0}, 予想 {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:631
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:633
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:632
 msgid "File Format Error"
 msgstr "ファイルフォーマットエラー"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:663
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:665
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:664
 msgid "Error loading file"
 msgstr "ファイルの読み込みエラー"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:677
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:679
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:678
 msgid "Set WMS Bookmark"
 msgstr "WMSブックマークをセット"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:688
+#: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:690
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:689
 msgid "Automatic downloading"
 msgstr "自動ダウンロード"
@@ -13546,9 +13549,8 @@ msgid "Voice recorder calibration"
 msgstr "ボイスレコーダの調整"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/BackupPreference.java:45
-#, fuzzy
 msgid "Auto save enabled"
-msgstr "自動セーブ間隔(秒)"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/BackupPreference.java:49
 msgid "Auto save interval (seconds)"
@@ -13977,15 +13979,13 @@ msgstr "減色量 "
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:119
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:104
-#, fuzzy
 msgid "Soft"
-msgstr "並べ替え"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:120
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:105
-#, fuzzy
 msgid "Strong"
-msgstr "文字列"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:121
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:106
@@ -14077,9 +14077,8 @@ msgstr "画像プロバイダ"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:246
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:216
-#, fuzzy
 msgid "Offset bookmarks"
-msgstr "ブックマークを作成"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:388
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:85
@@ -14131,9 +14130,8 @@ msgstr "EULAライセンスに対する不正なURL: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:669
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
-#, fuzzy
 msgid "Projection"
-msgstr "投影法:"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -14156,9 +14154,8 @@ msgid "There are {0} unknown slippymap plugin settings"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:158
-#, fuzzy
 msgid "Keep current list"
-msgstr "最新データを保存します。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:159
 msgid "Overwrite with WMSPlugin list"
@@ -14166,34 +14163,28 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:162
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:165
-#, fuzzy
 msgid "Keep current settings"
-msgstr "インポート設定"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:163
-#, fuzzy
 msgid "Overwrite with WMSPlugin settings"
-msgstr "既にあるOAuthの設定を上書きしてよろしいですか？"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:166
-#, fuzzy
 msgid "Overwrite with SlippyMap settings"
-msgstr "既にあるOAuthの設定を上書きしてよろしいですか？"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:172
-#, fuzzy
 msgid "WMS layer list:"
-msgstr "WMSレイヤー"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:185
-#, fuzzy
 msgid "WMSPlugin settings:"
-msgstr "WMS設定"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:196
-#, fuzzy
 msgid "SlippyMap settings:"
-msgstr "マップ設定"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:207
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:227
@@ -14313,10 +14304,10 @@ msgstr "利用可能なプラグインのリストをダウンロード"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:303
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:321
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:344
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:218
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:263
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:691
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:860
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:274
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:319
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:747
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:916
 msgid "Update plugins"
 msgstr "プラグインを更新"
 
@@ -14581,68 +14572,72 @@ msgid "The projection {0} could not be activated. Using Mercator"
 msgstr "投影法 {0} は、有効化できませんでした。メルカトル図法を使います。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:47
-msgid "load data from API"
+#, fuzzy
+msgid "Load data from API"
 msgstr "APIからデータ読み込み"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:48
-msgid "import data from URL"
-msgstr ""
+#, fuzzy
+msgid "Import data from URL"
+msgstr "{0} からデータをインポート"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:49
 #, fuzzy
-msgid "load imagery layers"
-msgstr "画像レイヤを選択"
+msgid "Load imagery layers"
+msgstr "画像レイヤ{0}を追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:50
-msgid "create new objects"
+#, fuzzy
+msgid "Create new objects"
 msgstr "新しいオブジェクトを作成"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:51
-msgid "change the selection"
+#, fuzzy
+msgid "Change the selection"
 msgstr "選択の変更"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:52
-msgid "change the viewport"
+#, fuzzy
+msgid "Change the viewport"
 msgstr "表示領域を変更"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:53
-msgid "read protocol version"
+#, fuzzy
+msgid "Read protocol version"
 msgstr "プロトコルバージョンを読み込む"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:54
-msgid "confirm all Remote Control actions manually"
+#, fuzzy
+msgid "Confirm all Remote Control actions manually"
 msgstr "全てのリモコン操作を手動で確認"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:59
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:58
 msgid "Remote Control"
 msgstr "リモート制御"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:59
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:58
 #, fuzzy
-msgid "Settings for the Remote Control freature."
+msgid "Settings for the remote control feature."
 msgstr "リモート制御プラグインの設定。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:61
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:60
 msgid "Enable remote control"
-msgstr "リモート制御"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:70
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:69
 msgid ""
 "The remote control feature allows JOSM to be controlled from other "
 "applications, e.g. from a web browser."
-msgstr "JOSMをほかのアプリーケーションから制御できるようにするプラグインです。"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:75
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:74
 msgid "Permitted actions:"
-msgstr "許可されたアクション"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:89
+#: ../core/src/org/openstreetmap/josm/gui/preferences/RemoteControlPreference.java:88
 #, fuzzy
 msgid ""
-"JOSM will always listen on port 8111 on localhost.The port is not "
+"JOSM will always listen at port 8111 on localhost.This port is not "
 "configurable because it is referenced by external applications talking to "
 "JOSM."
 msgstr ""
@@ -14910,14 +14905,12 @@ msgid "Use the error layer to display problematic elements."
 msgstr "疑わしい要素を表示するために、エラーレイヤーを使用"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ValidatorPreference.java:86
-#, fuzzy
 msgid "Show informational level."
-msgstr "アップロードの情報レベルを示してください。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ValidatorPreference.java:87
-#, fuzzy
 msgid "Show the informational tests."
-msgstr "ヘルプ情報を表示"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ValidatorPreference.java:90
 msgid "Show informational level on upload."
@@ -15273,22 +15266,18 @@ msgid "Add a new tag"
 msgstr "新しいタグを追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:396
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in ''display_values'' "
 "must be the same as in ''values''"
 msgstr ""
-"破損したタグ付けプリセット \"{0}-{1}\" - display_values中のアイテム数は値の中"
-"にあるものと同じでなければなりません"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:401
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in "
 "''short_descriptions'' must be the same as in ''values''"
 msgstr ""
-"破損したタグ付けプリセット \"{0}-{1}\" - display_values中のアイテム数は値の中"
-"にあるものと同じでなければなりません"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:639
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:314
@@ -16633,19 +16622,15 @@ msgstr "リモート制御より新しいノードを作成するかどうか問
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/handler/ImageryHandler.java:23
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryRemoteHandler.java:21
-#, fuzzy
 msgid ""
 "Remote Control has been asked to load an imagery layer from the following "
 "URL:"
 msgstr ""
-"リモートコントロールは以下のURLからデータをインポートするように確認されまし"
-"た。:"
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/handler/ImageryHandler.java:48
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryRemoteHandler.java:48
-#, fuzzy
 msgid "Remote imagery"
-msgstr "画像を右へ回転"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/handler/ImportHandler.java:41
 msgid "Remote Control has been asked to import data from the following URL:"
@@ -16735,23 +16720,23 @@ msgstr "プラグイン {0} をダウンロードしています..."
 msgid "An error occurred in plugin {0}"
 msgstr "プラグイン {0} でエラーが発生しました。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:76
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:75
 msgid "integrated into main program"
 msgstr "メインプログラムに統合"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:84
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:87
-#, java-format
-msgid "replaced by {0} plugin"
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:102
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:106
+#, fuzzy, java-format
+msgid "replaced by new {0} plugin"
 msgstr "{0}のプラグインで置換"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:129
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:186
 msgid "The following plugin is no longer necessary and has been deactivated:"
 msgid_plural ""
 "The following plugins are no longer necessary and have been deactivated:"
 msgstr[0] "次のプラグインは現在では不要になっていますので無効化しました:"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:166
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:222
 #, java-format
 msgid ""
 "<html>Loading of the plugin \"{0}\" was requested.<br>This plugin is no "
@@ -16762,7 +16747,7 @@ msgstr ""
 "れておらず、エラーを起こすおそれがあります。<br>使用しないようにすべきです。"
 "<br>設定から削除しますか？</html>"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:193
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:249
 msgid ""
 "You updated your JOSM software.<br>To prevent problems the plugins should be "
 "updated as well.<br><br>Update plugins now?"
@@ -16770,24 +16755,24 @@ msgstr ""
 "JOSMソフトウエアは更新されました。<br>問題が起こらないよう、プラグインも同様"
 "に更新すべきです。<br><br>プラグインを更新しますか？"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:209
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:265
 #, java-format
 msgid "Last plugin update more than {0} days ago."
 msgstr "プラグインが最後に更新されてから{0}日以上経過しました。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:220
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:276
 msgid "Click to update the activated plugins"
 msgstr "有効なプラグインの更新するにはクリック"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:224
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:280
 msgid "Skip update"
 msgstr "更新をスキップ"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:226
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:282
 msgid "Click to skip updating the activated plugins"
 msgstr "有効なプラグインの更新をスキップするならクリック"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:241
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:297
 msgid ""
 "Skipping plugin update after JOSM upgrade. Automatic update at startup is "
 "disabled."
@@ -16795,7 +16780,7 @@ msgstr ""
 "JOSMアップグレード後、プラグインの更新をスキップします。開始時の自動更新は停"
 "止します。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:243
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:299
 msgid ""
 "Skipping plugin update after elapsed update interval. Automatic update at "
 "startup is disabled."
@@ -16803,7 +16788,7 @@ msgstr ""
 "更新間隔が過ぎた後のプラグイン更新をスキップします。開始時の自動更新を停止し"
 "ます。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:250
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:306
 msgid ""
 "Running plugin update after JOSM upgrade. Automatic update at startup is "
 "enabled."
@@ -16811,21 +16796,21 @@ msgstr ""
 "JOSMアップグレード後に、プラグイン更新を行います。開始時の自動更新を有効にし"
 "ます。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:252
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:308
 msgid ""
 "Running plugin update after elapsed update interval. Automatic update at "
 "startup is disabled."
 msgstr ""
 "更新間隔が過ぎた後のプラグイン更新を行います。開始時の自動更新は停止します。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:258
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:314
 #, java-format
 msgid ""
 "Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''."
 msgstr ""
 "設定\"{1}\"に予期しない値\"{0}\"が指定されました。\"Ask\"を想定します。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:296
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:352
 #, java-format
 msgid ""
 "Plugin {0} requires a plugin which was not found. The missing plugin is:"
@@ -16835,7 +16820,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:318
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:374
 #, java-format
 msgid ""
 "<html>Plugin {0} requires JOSM version {1}. The current JOSM version is {2}."
@@ -16845,17 +16830,17 @@ msgstr ""
 "ジョンは {2} です。<br>このプラグインを使うにはJOSMを更新しなければなりませ"
 "ん。</html>"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:404
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:460
 #, java-format
 msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr "プラグイン {0} を読み込めません。設定から削除しますか？"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:408
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:464
 #, java-format
 msgid "loading plugin ''{0}'' (version {1})"
 msgstr "プラグイン ''{0}'' をロード中 (バージョン {1})"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:415
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:471
 #, java-format
 msgid ""
 "<html>Could not load plugin {0} because the plugin<br>main class ''{1}'' was "
@@ -16864,47 +16849,47 @@ msgstr ""
 "<html>プラグイン {0} をロードできません。プラグインの<br>main クラス ''{1}'' "
 "が見つかりません。<br>プリファレンスから削除しますか？"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:437
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:493
 msgid "Loading plugins ..."
 msgstr "プラグインの読み込み"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:438
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:494
 msgid "Checking plugin preconditions..."
 msgstr "プラグインの前提条件をチェック中.."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:465
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:521
 #, java-format
 msgid "Loading plugin ''{0}''..."
 msgstr "プラグイン \"{0}\"の読み込み..."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:546
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:602
 msgid "JOSM could not find information about the following plugin:"
 msgid_plural "JOSM could not find information about the following plugins:"
 msgstr[0] "JOSMは次のプラグインの情報を見つけられません:"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:554
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:610
 msgid "The plugin is not going to be loaded."
 msgid_plural "The plugins are not going to be loaded."
 msgstr[0] "プラグインはロードされません。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:580
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:636
 msgid "Determine plugins to load..."
 msgstr "ロードすべきプラグインを確認しています..."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:586
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:642
 msgid "Removing deprecated plugins..."
 msgstr "古くなったプラグインを削除しています..."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:588
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:644
 msgid "Removing unmaintained plugins..."
 msgstr "維持されていないプラグインを取り外します..."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:612
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:668
 msgid "Updating the following plugin has failed:"
 msgid_plural "Updating the following plugins has failed:"
 msgstr[0] "次のプラグインの更新に失敗:"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:623
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:679
 msgid ""
 "Please open the Preference Dialog after JOSM has started and try to update "
 "it manually."
@@ -16914,44 +16899,44 @@ msgid_plural ""
 msgstr[0] ""
 "JOSMが開始してからプリファレンスダイアログを開いて手動更新してみてください。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:631
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:687
 msgid "Plugin update failed"
 msgstr "プラグインの更新に失敗しました"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:667
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:671
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:723
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:727
 msgid "Warning: failed to download plugin information list"
 msgstr "警告: プラグイン情報リストのダウンロードに失敗"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:733
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:748
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:831
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:789
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:804
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:887
 msgid "Disable plugin"
 msgstr "このプラグインを使用不可にする"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:735
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:791
 #, java-format
 msgid "Click to delete the plugin ''{0}''"
 msgstr "プラグイン \"{0}\"の削除をするにはクリック"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:739
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:837
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:795
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:893
 msgid "Keep plugin"
 msgstr "プラグインを継続"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:741
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:839
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:797
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:895
 #, java-format
 msgid "Click to keep the plugin ''{0}''"
 msgstr "クリックしてプラグイン ''{0}'' を保持"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:815
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:871
 #, java-format
 msgid "Warning: failed to delete outdated plugin ''{0}''."
 msgstr "警告: 期限切れプラグイン ''{0}'' の削除に失敗。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:816
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:822
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:872
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:878
 #, java-format
 msgid ""
 "Warning: failed to install already downloaded plugin ''{0}''. Skipping "
@@ -16960,7 +16945,7 @@ msgstr ""
 "警告: ダウンロード済みのプラグイン ''{0}'' のインストールに失敗。インストール"
 "をスキップします。JOSMは古いプラグインのバージョンをロードします。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:821
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:877
 #, java-format
 msgid ""
 "Warning: failed to install plugin ''{0}'' from temporary download file "
@@ -16969,34 +16954,34 @@ msgstr ""
 "警告: 一時ダウンロードファイル ''{1}'' からのプラグイン ''{0}'' のインストー"
 "ルに失敗。リネームに失敗。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:833
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:889
 #, java-format
 msgid "Click to disable the plugin ''{0}''"
 msgstr "クリックしてプラグイン ''{0}'' を無効化"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:846
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:902
 #, java-format
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr "予期せぬ例外がプラグイン\"{0}\"で発生しました。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:849
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:905
 #, java-format
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "このプラグインから得られる情報では、作者は {0} です。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:852
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:908
 msgid ""
 "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 "バグレポートをする前に、最新バージョンのプラグインにアップデートしてくださ"
 "い。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:854
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:910
 msgid "Should the plugin be disabled?"
 msgstr "このプラグインを使用不可にしますか?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:926
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:982
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -17004,16 +16989,16 @@ msgstr ""
 "プラグインは設定から削除されています。プラグインをアンロードするためにJOSMを"
 "再起動してください。"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:968
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1024
 msgid "Plugin information"
 msgstr "プラグイン情報"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:973
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1029
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:243
 msgid "no description available"
 msgstr "説明がありません"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1005
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1061
 msgid ""
 "Do not ask again and remember my decision (go to Preferences->Plugins to "
 "change it later)"
@@ -17098,13 +17083,13 @@ msgstr ""
 msgid "Writing plugin list to local cache ''{0}''"
 msgstr "ローカルキャッシュ ''{0}'' にプラグインリストを書き込み中"
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:315
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:318
 #, java-format
 msgid "Parsing plugin list from site ''{0}''"
 msgstr "サイト ''{0}'' からのプラグインリストをパースしています"
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:320
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:323
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:326
 #, java-format
 msgid ""
 "Failed to parse plugin list document from site ''{0}''. Skipping site. "
@@ -17113,7 +17098,7 @@ msgstr ""
 "サイト ''{0}'' からのプラグインリスト文書のパースに失敗。サイトをスキップしま"
 "す。例外コード: {1}"
 
-#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:352
+#: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:355
 #, java-format
 msgid "Processing plugin list from site ''{0}''"
 msgstr "サイト ''{0}'' からのプラグインリストを処理しています"
@@ -18308,18 +18293,18 @@ msgstr ""
 msgid "Align Ways"
 msgstr "ウェイをアライン"
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:77
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:76
 msgid ""
 "Please select two segments that don''t share any nodes\n"
 " or put the pivot on their common node.\n"
 msgstr ""
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:79
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:90
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:78
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:89
 msgid "AlignWayS: Alignment not possible"
 msgstr ""
 
-#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:89
+#: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:88
 msgid "Aligning would result nodes outside the world.\n"
 msgstr ""
 
@@ -19429,12 +19414,12 @@ msgstr "選択した配色を一覧から削除する。"
 msgid "Color Schemes"
 msgstr "配色"
 
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:39
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:40
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:44
 msgid "Split area"
 msgstr "エリア分割"
 
-#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:41
+#: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:42
 msgid "Splits an area by an untagged way."
 msgstr "タグ付けされていないウェイでエリアを分割"
 
@@ -19599,7 +19584,7 @@ msgid "Edit tool"
 msgstr "ツールを編集"
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:54
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:251
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:217
 msgid "Name:"
 msgstr "名前:"
 
@@ -19781,42 +19766,47 @@ msgid "GPX"
 msgstr "GPX"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:39
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:38
 msgid "Adjust imagery"
 msgstr "画像を調整"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:40
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:39
 msgid "Adjust the position of the selected imagery layer"
 msgstr "選択した画像レイヤの位置を調整"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:161
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:144
 msgid "Please select the imagery layer to adjust."
 msgstr "調整する画像レイヤを選んでください。"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:166
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:149
 msgid "Select imagery layer"
 msgstr "画像レイヤを選択"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:150
 msgid "Start adjusting"
 msgstr "調整開始"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:186
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:169
 msgid "There are currently no imagery layer to adjust."
 msgstr "現在は調整する画像レイヤがありません。"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:187
+#: ../plugins/imageryadjust/src/imageryadjust/ImageryAdjustMapMode.java:170
 msgid "No layers to adjust"
 msgstr "調整するレイヤーがありません"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:133
-#, fuzzy
 msgid "(save current)"
-msgstr "最新データを保存します。"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:140
-#, fuzzy
 msgid "Add offset bookmark"
-msgstr "ブックマークを作成"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:147
 msgid "Could not initialize remote control."
@@ -20298,7 +20288,7 @@ msgstr "現在の位置にLiveGPSレイヤーを引き続き中央寄せする�
 msgid "LiveGPS"
 msgstr "LiveGPS"
 
-#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:109
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:112
 msgid "Open MapDust"
 msgstr ""
 
@@ -20709,9 +20699,8 @@ msgid "Single segments"
 msgstr "単一セグメント"
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:257
-#, fuzzy
 msgid "Orthogonal shapes"
-msgstr "直交した形状"
+msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:260
 msgid "Import settings"
@@ -21471,55 +21460,45 @@ msgid_plural "Simplify Area (remove {0} nodes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:101
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:97
 msgid "No colour"
-msgstr "色"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:112
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:108
 msgid "White"
-msgstr "白"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:123
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:119
 msgid "Red"
-msgstr "やり直し"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:134
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:130
 msgid "Orange"
-msgstr "クレーン"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:145
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:141
 msgid "Amber"
-msgstr "数"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:156
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:152
 msgid "Yellow"
-msgstr "低い"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:167
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:163
 msgid "Green"
-msgstr "緑:"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:178
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:174
 msgid "Blue"
-msgstr "青:"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:189
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:185
 msgid "Violet"
-msgstr "不完全"
+msgstr ""
 
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:200
-#, fuzzy
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelCol.java:196
 msgid "Black"
-msgstr "戻る"
+msgstr ""
 
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:58
 msgid "Online Help"
@@ -21694,9 +21673,8 @@ msgid "Highest Number"
 msgstr "最大数"
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:178
-#, fuzzy
 msgid "List of Numbers"
-msgstr "最小数"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:180
 msgid "add to existing associatedStreet relation"
@@ -21779,9 +21757,8 @@ msgid "Creates individual buildings from a long building."
 msgstr "長い建物から個別の建物を生成"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:167
-#, fuzzy
 msgid "Invalid selection"
-msgstr "投影法が無効"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:169
 msgid ""
@@ -22960,6 +22937,17 @@ msgstr ""
 msgid "Please select one or more ways with intersections of segments."
 msgstr ""
 
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:48
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:49
+#, fuzzy
+msgid "Select Way Nodes"
+msgstr "選択して閉じる"
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/SelectWayNodesAction.java:48
+#, fuzzy
+msgid "Select all nodes of a selected way."
+msgstr "全ての選択済リレーションのメンバーを選択"
+
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:43
 msgid "Split Object"
 msgstr ""
@@ -23765,8 +23753,13 @@ msgstr "ルーティング情報をルーティンググラフとして可視化
 msgid "Experimental union of SlippyMap plugin and WMSPlugin"
 msgstr ""
 
-#. Plugin ImageWayPoint
+#. Plugin imageryadjust
 #: build/trans_plugins.java:44
+msgid "WMSPlugin-style imagery adjustment mapmode"
+msgstr ""
+
+#. Plugin ImageWayPoint
+#: build/trans_plugins.java:46
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -23777,34 +23770,34 @@ msgstr ""
 "たときに行われます。"
 
 #. Plugin ImportImagePlugin
-#: build/trans_plugins.java:46 build/trans_plugins.java:48
+#: build/trans_plugins.java:48 build/trans_plugins.java:50
 msgid "Plugin for importing spatial referenced images"
 msgstr ""
 
 #. Plugin importvec
-#: build/trans_plugins.java:50
+#: build/trans_plugins.java:52
 msgid "Import vector graphics (SVG)"
 msgstr ""
 
 #. Plugin irsrectify
-#: build/trans_plugins.java:52
+#: build/trans_plugins.java:54
 msgid "A helper for IRS satellite adjustment."
 msgstr ""
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:54
+#: build/trans_plugins.java:56
 msgid "Helps vectorizing WMS images."
 msgstr "WMS イメージのベクトル化を支援する"
 
 #. Plugin livegps
-#: build/trans_plugins.java:56
+#: build/trans_plugins.java:58
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr "gpsd サーバを通してライブ GPS 入力(移動する点)をサポート。"
 
 #. File ../plugins/mapdust/build.xml had no data
 #. Plugin measurement
-#: build/trans_plugins.java:59
+#: build/trans_plugins.java:61
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -23814,17 +23807,17 @@ msgstr ""
 "追加します。"
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:61
+#: build/trans_plugins.java:63
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr "4 または5のウェイのセットに左折禁止を追加"
 
 #. Plugin multipoly-convert
-#: build/trans_plugins.java:63
+#: build/trans_plugins.java:65
 msgid "Simply convert an area to a multipolygon."
 msgstr "単純にエリアをマルチポリゴンに変換します。"
 
 #. Plugin multipoly
-#: build/trans_plugins.java:65
+#: build/trans_plugins.java:67
 msgid ""
 "Create multipolygons by one click, much easier than standard way with "
 "relation editor."
@@ -23833,7 +23826,7 @@ msgstr ""
 "よりはるかに簡単です。"
 
 #. Plugin nearclick
-#: build/trans_plugins.java:67
+#: build/trans_plugins.java:69
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -23844,25 +23837,25 @@ msgstr ""
 "す。（一般的な Java - タブレット問題）"
 
 #. Plugin OpeningHoursEditor
-#: build/trans_plugins.java:69
+#: build/trans_plugins.java:71
 msgid "extended options for editing opening_hours"
 msgstr ""
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:71
+#: build/trans_plugins.java:73
 msgid "Imports issues from OpenStreetBugs"
 msgstr ""
 "OpenStreetBugs のバグ情報を読んだり、新たにバグを報告したりできるようにしま"
 "す。"
 
 #. Plugin openvisible
-#: build/trans_plugins.java:73
+#: build/trans_plugins.java:75
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr "現在の表示スクリーンエリアに交差するgpx/osm ファイルのオープンを許可"
 
 #. Plugin osmarender
-#: build/trans_plugins.java:75
+#: build/trans_plugins.java:77
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr ""
@@ -23870,12 +23863,12 @@ msgstr ""
 "Firefoxを起動する。"
 
 #. Plugin pdfimport
-#: build/trans_plugins.java:77
+#: build/trans_plugins.java:79
 msgid "Import PDF file and convert to ways."
 msgstr ""
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:79
+#: build/trans_plugins.java:81
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
@@ -23884,7 +23877,7 @@ msgstr ""
 "クリックメニューから起動します。"
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:81
+#: build/trans_plugins.java:83
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
@@ -23893,33 +23886,33 @@ msgstr ""
 "できます。"
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:83
+#: build/trans_plugins.java:85
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr "偉大なJGoodies のプラスティック風のルック＆フィール。"
 
 #. Plugin public_transport
-#: build/trans_plugins.java:85
+#: build/trans_plugins.java:87
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr "このプラグインは公共輸送ルートのマッピングと編集を簡素化します。"
 
 #. Plugin restart
-#: build/trans_plugins.java:87
+#: build/trans_plugins.java:89
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:89
+#: build/trans_plugins.java:91
 msgid "Plugin for reverting changesets"
 msgstr "変更セットを元に戻すプラグイン"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:91
+#: build/trans_plugins.java:93
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:93
+#: build/trans_plugins.java:95
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -23927,7 +23920,7 @@ msgid ""
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:95
+#: build/trans_plugins.java:97
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -23937,35 +23930,35 @@ msgstr ""
 "ん"
 
 #. Plugin routing
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Provides routing capabilities."
 msgstr "ルーティング能力の提供"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
 msgstr ""
 
-#. Plugin smed
+#. Plugin SeaMapEditor
 #. Plugin smed_fw
-#: build/trans_plugins.java:101 build/trans_plugins.java:103
+#: build/trans_plugins.java:103 build/trans_plugins.java:105
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "openSeaMap用の海図を作成・編集"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "現在のGPS位置上にマーカー/ノードの追加を許可"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "表形式でタグ編集のダイアログ・ボックスを提供"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -23976,53 +23969,53 @@ msgstr ""
 "ファイルも同様にスタンドアロンとして起動できます。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:111
+#: build/trans_plugins.java:113
 msgid "Make terraced houses out of single blocks."
 msgstr "1つのブロックからテラスハウスを作成する"
 
 #. Plugin toms
-#: build/trans_plugins.java:113
+#: build/trans_plugins.java:115
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr ""
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr ""
 
 #. Plugin trustosm
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid "Plugin to digital sign OSM-Data"
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
 msgstr ""
 
 #. Plugin undelete
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Allows undeleting object from OSM database"
 msgstr "OSMデータベースからの削除取消を許可"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid "Several utilities that make your life easier."
 msgstr ""
 
 #. Plugin videomapping
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -24030,7 +24023,7 @@ msgid ""
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -24039,22 +24032,22 @@ msgstr ""
 "す。まだ開発初期段階ですので、バグを含んでいるかもしれません。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "長い相互接続されたウェイのセットに沿って簡単にダウンロード"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr ""
 
 #. Plugin wayselector
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Select a sequence of non-branching connected ways"
 msgstr ""
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -25597,9 +25590,8 @@ msgid "viaduct"
 msgstr "高架橋"
 
 #: build/trans_presets.java:451
-#, fuzzy
 msgid "swing"
-msgstr "水泳"
+msgstr ""
 
 #: build/trans_presets.java:451
 msgid "aqueduct"
@@ -25682,23 +25674,20 @@ msgid "T1 - hiking trail"
 msgstr ""
 
 #: build/trans_presets.java:508
-#, fuzzy
 msgid "T2 - mountain hiking trail"
-msgstr "山間地のハイキング"
+msgstr ""
 
 #: build/trans_presets.java:508
-#, fuzzy
-msgid "T3 - difficult"
-msgstr "難易度"
+msgid "T3 - difficult, exposed hiking trail"
+msgstr ""
 
 #: build/trans_presets.java:508
 msgid "T4 - difficult, exposed, steep alpine trail"
 msgstr ""
 
 #: build/trans_presets.java:508
-#, fuzzy
 msgid "T5 - difficult alpine trail with climbing"
-msgstr "専門家向け山岳登山道"
+msgstr ""
 
 #: build/trans_presets.java:508
 msgid "T6 - hazardous alpine trail with climbing"
@@ -25716,7 +25705,7 @@ msgid ""
 "fall hazard possible"
 msgstr ""
 
-#. item "Ways/Path" combo "SAC Scale" item "T3 - difficult" short description
+#. item "Ways/Path" combo "SAC Scale" item "T3 - difficult, exposed hiking trail" short description
 #: build/trans_presets.java:511
 msgid ""
 "exposed sites may be secured with ropes or chains, possible need to use "
@@ -37646,264 +37635,17 @@ msgstr "キャンプ場"
 msgid "Test"
 msgstr "テスト"
 
-#~ msgid "Duplicate Way"
-#~ msgstr "ウェイの複製"
-
-#~ msgid "Duplicate selected ways."
-#~ msgstr "選択したウェイを複製"
-
-#~ msgid "Can't duplicate unordered way."
-#~ msgstr "順不同の道をコピーできません。"
-
-#~ msgid "Create duplicate way"
-#~ msgstr "複製したウェイの作成"
-
-#~ msgid "Grid origin location"
-#~ msgstr "Gridの起点位置"
-
-#~ msgid "Grid rotation"
-#~ msgstr "Gridの回転"
-
-#~ msgid "World"
-#~ msgstr "世界地図"
-
-#~ msgid "Grid layout"
-#~ msgstr "グリッドのレイアウト"
-
-#~ msgid "Grid layer:"
-#~ msgstr "Gridレイヤー："
-
-#~ msgid "Add grid"
-#~ msgstr "グリッドの追加"
-
-#~ msgid "Remote WMS"
-#~ msgstr "リモートWMS"
-
-#~ msgid "OpenLayers"
-#~ msgstr "OpenLayers"
-
-#~ msgid "Slippy Map"
-#~ msgstr "スリッピーマップ"
-
-#~ msgid "autozoom"
-#~ msgstr "自動ズーム"
-
-#~ msgid "autoload tiles"
-#~ msgstr "タイルの自動読み込み"
-
-#~ msgid "SlippyMap"
-#~ msgstr "スリッピーマップ"
-
-#~ msgid "Settings for the SlippyMap plugin."
-#~ msgstr "スリッピマップ プラグイン用設定"
-
-#~ msgid "Tile Sources"
-#~ msgstr "タイルソース"
-
-#~ msgid "Auto zoom: "
-#~ msgstr "自動ズーム: "
-
-#~ msgid "Autoload Tiles: "
-#~ msgstr "タイルの自動読み込み "
-
-#~ msgid "Fade background: "
-#~ msgstr "Fade background: "
-
-#~ msgid "Select a single, closed way of at least four nodes."
-#~ msgstr "最低4ノード以上の単一のクローズドウェイを選択"
-
-#~ msgid "Grid"
-#~ msgstr "グリッド"
-
-#~ msgid "Please select the WMS layer to adjust."
-#~ msgstr "調整するWMSレイヤーを選択してください。"
-
-#~ msgid "Select WMS layer"
-#~ msgstr "WMSレイヤーを選択"
-
-#~ msgid "There are currently no WMS layer to adjust."
-#~ msgstr "現在は調整するWMSレイヤーがありません。"
-
-#~ msgid "Download WMS tile from {0}"
-#~ msgstr "{0}からWMSタイルのダウンロード"
-
-#~ msgid "WMS"
-#~ msgstr "WMS"
-
-#~ msgid "WMS Plugin Preferences"
-#~ msgstr "WMSプラグイン設定"
-
-#~ msgid "Modify list of WMS servers displayed in the WMS plugin menu"
-#~ msgstr "WMSプラグインメニューに表示されるWMS サーバのリストを変更"
-
-#~ msgid "Add WMS URL"
-#~ msgstr "WMS URLの追加"
-
-#~ msgid "WMS URL (Default)"
-#~ msgstr "WMS URL (既定)"
-
-#~ msgid "Duplicate Ways with an offset"
-#~ msgstr "オフセットのあるウェイを複製"
-
-#~ msgid "Provide a background layer that displays a map grid"
-#~ msgstr "地図グリッドを表示する背景レイヤーを提供します。"
-
-#~ msgid "Displays an OpenLayers background image"
-#~ msgstr "OpenLayers の背景画面を表示"
-
-#~ msgid "Let other applications send commands to JOSM."
-#~ msgstr "他のアプリーケーションにJOSM へのコマンドを送信させる"
-
-#~ msgid ""
-#~ "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
-#~ "background and request updates."
-#~ msgstr ""
-#~ "JOSM のスリッピーマップグリッドを表示。スリッピーマップからタイルを背景と"
-#~ "してロードし、更新を要求できます。"
-
-#~ msgid ""
-#~ "An OSM data validator. It checks for problems in data, and provides fixes "
-#~ "for the common ones. Spellcheck integrated for tag names."
-#~ msgstr ""
-#~ "OSM データ妥当性検証。データ中の問題をチェックし、一般的な解決法を提供しま"
-#~ "す。タグ名用にスペルチェック機能が統合されています。"
-
-#~ msgid ""
-#~ "Display georeferenced images as background in JOSM (WMS servers, "
-#~ "Yahoo, ...)."
-#~ msgstr "地理参照画像をJOSM の背景として表示（WMS サーバ、Yahoo,...）。"
-
-#~ msgid "demanding_mountain_hiking"
-#~ msgstr "登山道"
-
-#~ msgid "alpine_hiking"
-#~ msgstr "難度の高い登山道"
-
-#~ msgid "demanding_alpine_hiking"
-#~ msgstr "難易度の高い山岳登山道"
-
-#~ msgid "abbreviated street name"
-#~ msgstr "簡略化されたストリート名"
-
-#~ msgid "oneway tag on a node"
-#~ msgstr "単一ノードに一方通行のタグ"
-
-#~ msgid "bridge tag on a node"
-#~ msgstr "単一ノードに橋梁のタグ"
-
-#~ msgid "wrong highway tag on a node"
-#~ msgstr "ノード上の誤った高速道路タグ"
-
-#~ msgid "Unnamed unclassified highway"
-#~ msgstr "名前のない一般道(2車線未満)"
-
-#~ msgid "highway without a reference"
-#~ msgstr "参照のない道路"
-
-#~ msgid "temporary highway type"
-#~ msgstr "一時的な道路タイプ"
-
-#~ msgid "misspelled key name"
-#~ msgstr "スペルの間違ったキー名"
-
-#~ msgid "cycleway with tag bicycle"
-#~ msgstr "bicycleタグつきの自転車道"
-
-#~ msgid "footway with tag foot"
-#~ msgstr "footタグつきの遊歩道"
-
-#~ msgid "separate cycleway as lane on a cycleway"
-#~ msgstr "自転車道のレーンとしてウェイを分離する"
-
-#~ msgid "barrier used on a way"
-#~ msgstr "路上のバリア"
-
-#~ msgid "maxspeed used for footway"
-#~ msgstr "遊歩道に最大速度が指定"
-
-#~ msgid "layer tag with + sign"
-#~ msgstr "+ sign付きのlayerタグ"
-
-#~ msgid "street name contains ss"
-#~ msgstr "ストリート名は ss を含んでいます。"
-
-#~ msgid "relation without type"
-#~ msgstr "typeのないリレーション"
-
-#~ msgid "restaurant without name"
-#~ msgstr "名前のないレストラン"
-
-#~ msgid "unusual tag combination"
-#~ msgstr "通常無いタグの組み合わせ"
-
-#~ msgid "Landsat"
-#~ msgstr "ランドサット"
-
-#~ msgid "Landsat (mirror)"
-#~ msgstr "ランドサット(ミラー)"
-
-#~ msgid "Open Aerial Map"
-#~ msgstr "オープンエアリアルマップ"
-
-#~ msgid "Yahoo Sat"
-#~ msgstr "Yahoo 衛星"
-
-#~ msgid "OpenStreetMap"
-#~ msgstr "OpenStreetMap"
-
-#~ msgid "OpenCycleMap"
-#~ msgstr "OpenCycleMap"
-
-#~ msgid "TilesAtHome"
-#~ msgstr "TilesAtHome"
-
-#~ msgid "Streets NRW Geofabrik.de"
-#~ msgstr "Streets NRW Geofabrik.de"
-
-#~ msgid "Terraserver Topo"
-#~ msgstr "Terraserver Topo"
-
-#~ msgid "Terraserver Urban"
-#~ msgstr "Terraserver Urban"
-
-#~ msgid "Czech CUZK:KM"
-#~ msgstr "チェコ CUZK:KM"
-
-#~ msgid "Czech UHUL:ORTOFOTO"
-#~ msgstr "チェコ UHUL:ORTOFOTO"
-
-#~ msgid "NPE Maps"
-#~ msgstr "NPEマップ"
-
-#~ msgid "NPE Maps (Tim)"
-#~ msgstr "NPEマップ(Tim)"
-
-#~ msgid "7th Series (OS7)"
-#~ msgstr "7番目のシリーズ (OS7)"
-
-#~ msgid "MLIT Japan (ORTHO)"
-#~ msgstr "国土交通省 (オルソ)"
-
-#~ msgid "MLIT Japan (ORTHO01)"
-#~ msgstr "国土交通省 (オルソ01)"
-
-#~ msgid "MLIT Japan (ORTHO02)"
-#~ msgstr "国土交通省 (オルソ02)"
-
-#~ msgid "MLIT Japan (ORTHO03)"
-#~ msgstr "国土交通省 (オルソ03)"
-
-#~ msgid "Lodi - Italy"
-#~ msgstr "Lodi - Italy"
-
-#~ msgid "Sicily - Italy"
-#~ msgstr "Sicily - Italy"
-
-#~ msgid "PCN 2006 - Italy"
-#~ msgstr "PCN 2006 - イタリア"
-
 #~ msgid "Move"
 #~ msgstr "移動"
+
+#~ msgid "File could not be found."
+#~ msgstr "ファイルは存在しませんでした。"
+
+#~ msgid "Previous Marker"
+#~ msgstr "前のマーカー"
+
+#~ msgid "Next Marker"
+#~ msgstr "次のマーカー"
 
 #~ msgid "No data imported."
 #~ msgstr "データーはインポートされませんでした。"
@@ -37920,11 +37662,26 @@ msgstr "テスト"
 #~ msgid "Preparing data..."
 #~ msgstr "データを準備中..."
 
+#~ msgid "Uploading..."
+#~ msgstr "アップロード中..."
+
 #~ msgid "Select a bookmark first."
 #~ msgstr "最初にブックマークを選択してください、"
 
+#~ msgid "Please enter a name for the location."
+#~ msgstr "場所の名称を入力してください。"
+
+#~ msgid "Please enter the desired coordinates first."
+#~ msgstr "最初に目的の座標を入力してください。"
+
+#~ msgid "Data Sources and Types"
+#~ msgstr "データソースと型"
+
 #~ msgid "You can use the mouse or Ctrl+Arrow keys/./ to zoom and pan."
 #~ msgstr "ズームやパンにマウスやCtrl+Arrow キー/./を使います。"
+
+#~ msgid "Download Area"
+#~ msgstr "エリアをダウンロードする"
 
 #~ msgid "Edit Properties"
 #~ msgstr "プロパティの編集"
@@ -37935,8 +37692,14 @@ msgstr "テスト"
 #~ msgid "Click Reload to refresh list"
 #~ msgstr "リストを更新するために再読込のクリック"
 
+#~ msgid "Do you really want to delete the whole layer?"
+#~ msgstr "本当にすべてのレイヤーを削除してよろしいですか?"
+
 #~ msgid "Delete the selected layer."
 #~ msgstr "選択したレイヤーの削除"
+
+#~ msgid "Show/Hide Text/Icons"
+#~ msgstr "テキスト/アイコンの表示/非表示"
 
 #~ msgid "Refresh the selection list."
 #~ msgstr "選択したリストを更新する。"
@@ -37944,11 +37707,20 @@ msgstr "テスト"
 #~ msgid "Update Plugins"
 #~ msgstr "プラグインのアップデート"
 
+#~ msgid "Commit comment"
+#~ msgstr "コメントを反映します"
+
+#~ msgid "Preparing..."
+#~ msgstr "準備中..."
+
 #~ msgid "Server does not support changesets"
 #~ msgstr "サーバは変更した設定をサポートしていません"
 
 #~ msgid "Error during parse."
 #~ msgstr "パース中にエラーが発生しています"
+
+#~ msgid "Aborting..."
+#~ msgstr "中止します..."
 
 #~ msgid "Enter Password"
 #~ msgstr "パスワードを入力して下さい"
@@ -37956,8 +37728,32 @@ msgstr "テスト"
 #~ msgid "Unsaved Changes"
 #~ msgstr "保存されていない変更"
 
+#~ msgid "Don't apply changes"
+#~ msgstr "変更を適用しません"
+
+#~ msgid "Those nodes are not in a circle."
+#~ msgstr "円形内にそのノードはありません。"
+
+#~ msgid "Create a new map."
+#~ msgstr "新しい地図を作成します。"
+
+#~ msgid "Upload these changes?"
+#~ msgstr "この変更をアップロードしますか?"
+
+#~ msgid "Upload all changes to the OSM server."
+#~ msgstr "OSMサーバにすべての変更をアップロードします。"
+
+#~ msgid "Uploading data"
+#~ msgstr "アップロードするデータ"
+
+#~ msgid "Could not back up file."
+#~ msgstr "ファイルをバックアップできませんでした。"
+
 #~ msgid "Open in Browser"
 #~ msgstr "ブラウザで開く"
+
+#~ msgid "JOSM Online Help"
+#~ msgstr "JOSMオンラインヘルプ"
 
 #~ msgid ""
 #~ "There were problems with the following plugins:\n"
@@ -37985,6 +37781,13 @@ msgstr "テスト"
 #~ msgid "Incorrect password or username."
 #~ msgstr "正しくないパスワードかユーザ名です。"
 
+#~ msgid ""
+#~ "Warning - loading of {0} plugin was requested. This plugin is no longer "
+#~ "required."
+#~ msgstr ""
+#~ "警告 - {0}プラグインのロードを要求されています。このプラグインはもう必須で"
+#~ "はありません。"
+
 #~ msgid "Plugin not found: {0}."
 #~ msgstr "プラグインが見つかりません： {0}"
 
@@ -38008,6 +37811,11 @@ msgstr "テスト"
 #~ msgstr "バージョン番号は不明です"
 
 #~ msgid ""
+#~ "Couldn't connect to the osm server. Please check your internet connection."
+#~ msgstr ""
+#~ "osmサーバに接続できません。インターネット接続 をチェックしてください。"
+
+#~ msgid ""
 #~ "Server returned internal error. Try a reduced area or retry after waiting "
 #~ "some time."
 #~ msgstr ""
@@ -38017,19 +37825,37 @@ msgstr "テスト"
 #~ msgid "Found <member> element in non-relation."
 #~ msgstr "<member>要素がリレーション以外に見つかりました"
 
+#~ msgid "Illegal object with id=0"
+#~ msgstr "id=0の禁じられたオブジェクトです"
+
+#~ msgid "Missing required attribute \"{0}\"."
+#~ msgstr "必要な属性\"{0}\"がありません"
+
 #~ msgid "Skipping a way because it includes a node that doesn''t exist: {0}\n"
 #~ msgstr "存在しないノードを含むため、ウエイ {0} をスキップします\n"
 
 #~ msgid "Ill-formed node id"
 #~ msgstr "III-形式のノードID"
 
+#~ msgid "Parse error: invalid document structure for gpx document"
+#~ msgstr "パースエラー：GPXファイルのドキュメント構造が不適切です"
+
+#~ msgid "Opening changeset..."
+#~ msgstr "変更セットを開いています…"
+
 #~ msgid "Transfer aborted due to error (will wait for 5 seconds):"
 #~ msgstr "エラーのため転送が中断しました（５秒待ちます）："
+
+#~ msgid "The projection could not be read from preferences. Using EPSG:4326"
+#~ msgstr "投影法が設定から読み取れませんでした。EPSG:4326を使用します。"
 
 #~ msgid "Hint: Some changes came from uploading new data to the server."
 #~ msgstr ""
 #~ "ヒント：変更の一部は、新しいデータをサーバにアップロードすることで現れま"
 #~ "す。"
+
+#~ msgid "There are unsaved changes. Discard the changes and continue?"
+#~ msgstr "保存されていない変更があります。変更分を破棄して継続しますか？"
 
 #~ msgid "Please enter a search string"
 #~ msgstr "検索文字列を入力してください"
@@ -38040,11 +37866,35 @@ msgstr "テスト"
 #~ msgid "name"
 #~ msgstr "名前"
 
+#~ msgid "near"
+#~ msgstr "近く"
+
 #~ msgid "zoom"
 #~ msgstr "ズーム"
 
+#~ msgid "zoom level"
+#~ msgstr "ズームレベル"
+
+#~ msgid "There are unsaved changes. Delete the layer anwyay?"
+#~ msgstr "保存していない変更があります。それでもレイヤーを削除しますか？"
+
+#~ msgid "Merge the layer directly below into the selected layer."
+#~ msgstr "直下のレイヤーを選択したレイヤーに結合します"
+
 #~ msgid "Layers: {0}"
 #~ msgstr "レイヤー：{0}"
+
+#~ msgid ""
+#~ "An unexpected exception occurred.\n"
+#~ "\n"
+#~ "This is always a coding error. If you are running the latest\n"
+#~ "version of JOSM, please consider being kind and file a bug report."
+#~ msgstr ""
+#~ "予想外の例外が発生しました。\n"
+#~ "\n"
+#~ "これは通常プログラミングの誤りです。最新のJOSMのバージョンを使っている場合"
+#~ "には、\n"
+#~ "大目にみて、ぜひバグレポートをぜひお願いします。"
 
 #~ msgid "<nd> has zero ref"
 #~ msgstr "<nd> はゼロ参照です。"
@@ -38066,6 +37916,9 @@ msgstr "テスト"
 
 #~ msgid "Authors: {0}"
 #~ msgstr "作者: {0}"
+
+#~ msgid "Length: "
+#~ msgstr "長さ: "
 
 #~ msgid "Images for {0}"
 #~ msgstr "{0} のイメージ"
@@ -38091,6 +37944,9 @@ msgstr "テスト"
 #~ msgid "current delta: {0}s"
 #~ msgstr "現在の差分: {0} 秒"
 
+#~ msgid "timezone difference: "
+#~ msgstr "タイムゾーンの違い: "
+
 #~ msgid "image"
 #~ msgid_plural "images"
 #~ msgstr[0] "画像"
@@ -38104,6 +37960,15 @@ msgstr "テスト"
 #~ msgid "Synchronize Time with GPS Unit"
 #~ msgstr "時刻をGPSユニットと同期する"
 
+#~ msgid " ({0} deleted.)"
+#~ msgstr " ({0}は削除されました)"
+
+#~ msgid "Could not read bookmarks."
+#~ msgstr "ブックマークを読み込めません。"
+
+#~ msgid "Could not write bookmark."
+#~ msgstr "ブックマークを書き込みできません。"
+
 #~ msgid "Login name (email) to the OSM account."
 #~ msgstr "OSMアカウントのログイン名（email)"
 
@@ -38111,14 +37976,29 @@ msgstr "テスト"
 #~ "Login password to the OSM account. Leave blank to not store any password."
 #~ msgstr "OSMのログインパスワード。空白にすればパスワードを格納しません。"
 
+#~ msgid "Base Server URL"
+#~ msgstr "サーバのベースURL"
+
+#~ msgid "OSM username (email)"
+#~ msgstr "OSMユーザ名（email）"
+
+#~ msgid "OSM password"
+#~ msgstr "OSMパスワード"
+
 #~ msgid "Keep backup files"
 #~ msgstr "バックアップファイルの保存"
+
+#~ msgid "Configure Sites..."
+#~ msgstr "サイトの設定..."
 
 #~ msgid "Enable proxy server"
 #~ msgstr "プロキシーサーバを有効"
 
 #~ msgid "Anonymous"
 #~ msgstr "匿名"
+
+#~ msgid "Proxy Settings"
+#~ msgstr "プロキシー設定"
 
 #~ msgid "Proxy server host"
 #~ msgstr "プロキシーサーバのホスト名"
@@ -38138,8 +38018,35 @@ msgstr "テスト"
 #~ msgid "Error while parsing"
 #~ msgstr "解析中にエラー"
 
+#~ msgid "File not found"
+#~ msgstr "ファイルが見つかりません"
+
+#~ msgid "No plugin information found."
+#~ msgstr "プラグイン情報が見つかりません。"
+
+#~ msgid ""
+#~ "Update the following plugins:\n"
+#~ "\n"
+#~ "{0}"
+#~ msgstr ""
+#~ "次のプラグインを更新:\n"
+#~ "\n"
+#~ "{0}"
+
+#~ msgid ""
+#~ "Download the following plugins?\n"
+#~ "\n"
+#~ "{0}"
+#~ msgstr ""
+#~ "プラグインをダウンロードしますか？\n"
+#~ "\n"
+#~ "{0}"
+
 #~ msgid "Download missing plugins"
 #~ msgstr "不足するプラグインをダウンロードします。"
+
+#~ msgid "{0}: Version {1}{2}"
+#~ msgstr "{0}: Version {1}{2}"
 
 #~ msgid ""
 #~ "Plugin archive already available. Do you want to download the current "
@@ -38154,11 +38061,35 @@ msgstr "テスト"
 #~ msgid "Plugin already exists"
 #~ msgstr "プラグインはすでに存在しています"
 
+#~ msgid "Error deleting plugin file: {0}"
+#~ msgstr "Error deleting plugin file: {0}"
+
+#~ msgid "Error reading plugin information file: {0}"
+#~ msgstr "Error reading plugin information file: {0}"
+
 #~ msgid "Rotate"
 #~ msgstr "回転"
 
 #~ msgid "Change"
 #~ msgstr "更新"
+
+#~ msgid "Remove \"{0}\" for {1} ''{2}''"
+#~ msgstr "Remove \"{0}\" for {1} ''{2}''"
+
+#~ msgid "Set {0}={1} for {2} ''{3}''"
+#~ msgstr "Set {0}={1} for {2} ''{3}''"
+
+#~ msgid "Remove \"{0}\" for {1} {2}"
+#~ msgstr "Remove \"{0}\" for {1} {2}"
+
+#~ msgid "Set {0}={1} for {2} {3}"
+#~ msgstr "Set {0}={1} for {2} {3}"
+
+#~ msgid "Delete {1} {0}"
+#~ msgstr "削除 {1} {0}"
+
+#~ msgid "Delete {0} {1}"
+#~ msgstr "削除 {0} {1}"
 
 #~ msgid "true"
 #~ msgstr "真"
@@ -38166,14 +38097,38 @@ msgstr "テスト"
 #~ msgid "false"
 #~ msgstr "偽"
 
+#~ msgid "position"
+#~ msgstr "位置"
+
 #~ msgid "different"
 #~ msgstr "差異"
 
 #~ msgid "Cannot open preferences directory: {0}"
 #~ msgstr "情報ディレクトリを読み取れません: {0}"
 
+#~ msgid "S"
+#~ msgstr "南"
+
+#~ msgid "N"
+#~ msgstr "北"
+
+#~ msgid "W"
+#~ msgstr "西"
+
+#~ msgid "E"
+#~ msgstr "東"
+
+#~ msgid "Lambert Zone (France)"
+#~ msgstr "ランベルトゾーン（フランス）"
+
+#~ msgid "EPSG:4326"
+#~ msgstr "EPSG:4326"
+
 #~ msgid "Empty member in relation."
 #~ msgstr "リレーションに登録すべきものがありません。"
+
+#~ msgid "Deleted member ''{0}'' in relation."
+#~ msgstr "メンバー \"{0}\"を関連から削除"
 
 #~ msgid "Unknown role ''{0}''."
 #~ msgstr "不明なロール\"{0}\"です。"
@@ -38190,6 +38145,12 @@ msgstr "テスト"
 #~ msgid "Warning: {0}"
 #~ msgstr "Warning: {0}"
 
+#~ msgid "Could not rename the file \"{0}\"."
+#~ msgstr "ファイル\"{0}\"の名前を変更できませんでした。"
+
+#~ msgid "gps track description"
+#~ msgstr "gpsトラックの記述"
+
 #~ msgid "Email"
 #~ msgstr "Email"
 
@@ -38205,6 +38166,12 @@ msgstr "テスト"
 #~ msgid "Contact {0}..."
 #~ msgstr "連絡先 {0} ..."
 
+#~ msgid "Downloading..."
+#~ msgstr "ダウンロード…"
+
+#~ msgid "CI"
+#~ msgstr "CI"
+
 #~ msgid "Only two nodes allowed"
 #~ msgstr "二つだけのノード選択が許されています"
 
@@ -38214,8 +38181,29 @@ msgstr "テスト"
 #~ msgid "Enter the coordinates for the new node."
 #~ msgstr "新しいノードの座標を入力してください"
 
+#~ msgid "Dupe {0} nodes into {1} nodes"
+#~ msgstr "{0}ノードを{1}ノードと見なす"
+
+#~ msgid "Slower Forward"
+#~ msgstr "ゆっくり再生"
+
+#~ msgid "Faster Forward"
+#~ msgstr "早回し"
+
+#~ msgid "Duplicate selected ways."
+#~ msgstr "選択したウェイを複製"
+
+#~ msgid "Create duplicate way"
+#~ msgstr "複製したウェイの作成"
+
+#~ msgid "Permitted actions"
+#~ msgstr "許可されたアクション"
+
 #~ msgid "Import TCX File..."
 #~ msgstr "TCXファイルをインポート"
+
+#~ msgid "Grid"
+#~ msgstr "グリッド"
 
 #~ msgid "Painting problem"
 #~ msgstr "色つけに問題発生"
@@ -38223,14 +38211,41 @@ msgstr "テスト"
 #~ msgid "Check for paint notes."
 #~ msgstr "Check for paint notes."
 
+#~ msgid "start"
+#~ msgstr "開始"
+
+#~ msgid "end"
+#~ msgstr "終了"
+
+#~ msgid "Slippy Map"
+#~ msgstr "スリッピーマップ"
+
 #~ msgid "Show Tile Status"
 #~ msgstr "タイルの状態を表示"
+
+#~ msgid "Request Update"
+#~ msgstr "要求の更新"
+
+#~ msgid "image not loaded"
+#~ msgstr "画像が読み込まれていません。"
 
 #~ msgid "error loading metadata"
 #~ msgstr "メタデータの読み込みエラー"
 
+#~ msgid "requested: {0}"
+#~ msgstr "要求: {0}"
+
 #~ msgid "error requesting update"
 #~ msgstr "アップデート要求時にエラー"
+
+#~ msgid "Tile Sources"
+#~ msgstr "タイルソース"
+
+#~ msgid "Lambert Zone 1 cache file (.1)"
+#~ msgstr "Lambert Zone 1 cache file (.1)"
+
+#~ msgid "Lambert Zone 2 cache file (.2)"
+#~ msgstr "Lambert Zone 2 cache file (.2)"
 
 #~ msgid "Lambert Zone 3 cache file (.3)"
 #~ msgstr "Lambert Zone 3 cache file (.3)"
@@ -38238,8 +38253,29 @@ msgstr "テスト"
 #~ msgid "Lambert Zone 4 cache file (.4)"
 #~ msgstr "Lambert Zone 4 cache file (.4)"
 
+#~ msgid "Select Tableau d'Assemblage"
+#~ msgstr "Tableau d'Assemblageを選択"
+
+#~ msgid "Zone"
+#~ msgstr "Zone"
+
+#~ msgid "Lambert zone"
+#~ msgstr "ランベルトゾーン"
+
+#~ msgid "Download WMS tile from {0}"
+#~ msgstr "{0}からWMSタイルのダウンロード"
+
 #~ msgid "Open images with AgPifoJ..."
 #~ msgstr "AgPifoJで画像を開く..."
+
+#~ msgid "Display geotagged photos"
+#~ msgstr "ジオタグされた写真の表示"
+
+#~ msgid "I'm in the timezone of: "
+#~ msgstr "タイムゾーンの選択: "
+
+#~ msgid "Open an other photo"
+#~ msgstr "他の写真を開く"
 
 #~ msgid "All images"
 #~ msgstr "すべての画像"
@@ -38247,8 +38283,14 @@ msgstr "テスト"
 #~ msgid "Images with no exif position"
 #~ msgstr "exif位置のついていない画像"
 
+#~ msgid "Not yet tagged images"
+#~ msgstr "まだタグ付けされていない画像"
+
 #~ msgid "GPX Track loaded"
 #~ msgstr "GPXトラックが読み込まれました"
+
+#~ msgid "Public"
+#~ msgstr "公開"
 
 #~ msgid "No username provided."
 #~ msgstr "ユーザ名が与えられていません。"
@@ -38274,6 +38316,15 @@ msgstr "テスト"
 #~ msgid "osmarender options"
 #~ msgstr "osmarenderオプション"
 
+#~ msgid "WMS"
+#~ msgstr "WMS"
+
+#~ msgid "WMS Plugin Preferences"
+#~ msgstr "WMSプラグイン設定"
+
+#~ msgid "WMS URL (Default)"
+#~ msgstr "WMS URL (既定)"
+
 #~ msgid "help"
 #~ msgstr "ヘルプ"
 
@@ -38283,11 +38334,26 @@ msgstr "テスト"
 #~ msgid "WMS Plugin Help"
 #~ msgstr "WMSプラグイン　ヘルプ"
 
+#~ msgid "Grid origin location"
+#~ msgstr "Gridの起点位置"
+
+#~ msgid "Grid rotation"
+#~ msgstr "Gridの回転"
+
+#~ msgid "Grid layout"
+#~ msgstr "グリッドのレイアウト"
+
+#~ msgid "Grid layer:"
+#~ msgstr "Gridレイヤー："
+
 #~ msgid "Navigation"
 #~ msgstr "ナビゲーション"
 
 #~ msgid "standard"
 #~ msgstr "標準"
+
+#~ msgid "Landsat"
+#~ msgstr "ランドサット"
 
 #~ msgid "YAHOO (GNOME)"
 #~ msgstr "YAHOO (GNOME)"
@@ -38298,8 +38364,29 @@ msgstr "テスト"
 #~ msgid "Oberpfalz Geofabrik.de"
 #~ msgstr "Oberpfalz Geofabrik.de"
 
+#~ msgid "oneway tag on a node"
+#~ msgstr "単一ノードに一方通行のタグ"
+
+#~ msgid "bridge tag on a node"
+#~ msgstr "単一ノードに橋梁のタグ"
+
+#~ msgid "highway without a reference"
+#~ msgstr "参照のない道路"
+
+#~ msgid "temporary highway type"
+#~ msgstr "一時的な道路タイプ"
+
+#~ msgid "restaurant without name"
+#~ msgstr "名前のないレストラン"
+
+#~ msgid "unusual tag combination"
+#~ msgstr "通常無いタグの組み合わせ"
+
 #~ msgid "Motorboat"
 #~ msgstr "モーターボート"
+
+#~ msgid "Boat"
+#~ msgstr "ボート"
 
 # http://en.wikipedia.org/wiki/Draw_bridge
 #~ msgid "Drawbridge"
@@ -38309,11 +38396,20 @@ msgstr "テスト"
 #~ msgid "Portcullis"
 #~ msgstr "城の格子戸"
 
+#~ msgid "Station"
+#~ msgstr "駅"
+
+#~ msgid "park_and_ride"
+#~ msgstr "パーク＆ライド"
+
 #~ msgid "Shop"
 #~ msgstr "自動車パーツショップ"
 
 #~ msgid "Edit Station"
 #~ msgstr "駅の編集"
+
+#~ msgid "Accomodation"
+#~ msgstr "宿泊施設"
 
 #~ msgid "map"
 #~ msgstr "マップ"
@@ -38330,11 +38426,53 @@ msgstr "テスト"
 #~ msgid "football"
 #~ msgstr "フットボール"
 
+#~ msgid "rugby"
+#~ msgstr "ラグビー"
+
+#~ msgid "Motor Sports"
+#~ msgstr "モータースポーツ"
+
+#~ msgid "Edit Motor Sports"
+#~ msgstr "モータースポーツの編集"
+
+#~ msgid "intermedia"
+#~ msgstr "中級"
+
+#~ msgid "advance"
+#~ msgstr "上級"
+
 #~ msgid "Football"
 #~ msgstr "フットボール"
 
+#~ msgid "Edit Football"
+#~ msgstr "フットボール場の編集"
+
+#~ msgid "Rugby"
+#~ msgstr "ラグビー"
+
+#~ msgid "Edit Rugby"
+#~ msgstr "ラグビー場の編集"
+
+#~ msgid "Edit Beverages  Shop"
+#~ msgstr "飲料店の編集"
+
 #~ msgid "sports"
 #~ msgstr "スポーツ店"
+
+#~ msgid "optician"
+#~ msgstr "眼鏡屋"
+
+#~ msgid "An empty value deletes the key."
+#~ msgstr "空の値でキーを削除。"
+
+#~ msgid "Create new relation"
+#~ msgstr "新規関連作成"
+
+#~ msgid "Edit new relation"
+#~ msgstr "新規関連編集"
+
+#~ msgid "Edit relation #{0}"
+#~ msgstr "関連 #{0}の編集"
 
 #~ msgid "Tags (empty value deletes tag)"
 #~ msgstr "タグ（空の値でタグ自身を削除）"
@@ -38342,8 +38480,17 @@ msgstr "テスト"
 #~ msgid "Add all currently selected objects as members"
 #~ msgstr "現在選択されている全てのオブジェクトをメンバーとして追加"
 
+#~ msgid "Remove the member in the current table row from this relation"
+#~ msgstr "この関連から現在の行のメンバーを削除"
+
+#~ msgid "Members: {0}"
+#~ msgstr "メンバー: {0}"
+
 #~ msgid "Error parsing server response."
 #~ msgstr "サーバからの応答内容が不正です。"
+
+#~ msgid "Object"
+#~ msgstr "オブジェクト"
 
 #~ msgid ""
 #~ "Revert the state of all currently selected objects to the version "
@@ -38358,6 +38505,9 @@ msgstr "テスト"
 #~ msgid "The date in file \"{0}\" could not be parsed."
 #~ msgstr "ファイル \"{0}\"中の日付が取得できません。"
 
+#~ msgid "Time entered could not be parsed."
+#~ msgstr "入力した時刻は、解釈できません"
+
 #~ msgid "Tagging preset source"
 #~ msgstr "事前に設定した情報源をタグ付け"
 
@@ -38367,11 +38517,17 @@ msgstr "テスト"
 #~ msgid "<p>Thank you for your understanding</p>"
 #~ msgstr "<p>ご理解ありがとうございます</p>"
 
+#~ msgid "Activating updated plugins"
+#~ msgstr "アップデートしたプラグインの活性化"
+
 #~ msgid "my version:"
 #~ msgstr "私のバージョン:"
 
 #~ msgid "their version:"
 #~ msgstr "相手のバージョン:"
+
+#~ msgid "resolved version:"
+#~ msgstr "解決したバージョン:"
 
 #~ msgid "Could not read from URL: \"{0}\""
 #~ msgstr "URL: \"{0}\"から読み込むことができません"
@@ -38379,17 +38535,42 @@ msgstr "テスト"
 #~ msgid "Parsing error in URL: \"{0}\""
 #~ msgstr "URL: \"{0}\"の走査エラー"
 
+#~ msgid "CS"
+#~ msgstr "CS"
+
+#~ msgid "RX"
+#~ msgstr "RX"
+
 #~ msgid "Unknown file extension."
 #~ msgstr "ファイルの拡張子が不明です"
 
+#~ msgid "An error occurred while saving."
+#~ msgstr "保存中にエラー発生"
+
+#~ msgid "A plugin that allows JOSM to be controlled from other applications."
+#~ msgstr ""
+#~ "JOSMをほかのアプリーケーションから制御できるようにするプラグインです。"
+
 #~ msgid "Import TCX file as GPS track"
 #~ msgstr "TCXファイルをTCXファイルとしてインポート"
+
+#~ msgid "OpenLayers"
+#~ msgstr "OpenLayers"
 
 #~ msgid "Validate either current selection or complete dataset."
 #~ msgstr "現在の選択か、全てのデータ一式の検証"
 
 #~ msgid "Open a layer first (GPX, OSM, cache)"
 #~ msgstr "レイヤーを最初に開く(GPX, OSM, cache)"
+
+#~ msgid "Image grab multiplier:"
+#~ msgstr "イメージ取得倍率:"
+
+#~ msgid "Adjust the position of the WMS layer"
+#~ msgstr "WMSレイヤーの位置を調整"
+
+#~ msgid "Copy Default"
+#~ msgstr "既定のコピー"
 
 #~ msgid "Please select the row to copy."
 #~ msgstr "コピーする列を選択してください。"
@@ -38403,8 +38584,23 @@ msgstr "テスト"
 #~ msgid "Waterway Point"
 #~ msgstr "水路ポイント"
 
+#~ msgid "board"
+#~ msgstr "board"
+
+#~ msgid "Amount of Wires"
+#~ msgstr "ワイヤー量"
+
+#~ msgid "Add Selected"
+#~ msgstr "選択したものを追加"
+
+#~ msgid "Not implemented yet."
+#~ msgstr "まだ実装されていません。"
+
 #~ msgid "NullPointerException, possibly some missing tags."
 #~ msgstr "ヌルポインタ例外です。失われたタグがあるのでしょう。"
+
+#~ msgid "Save and Exit"
+#~ msgstr "保存して終了"
 
 #~ msgid "Please report a ticket at {0}"
 #~ msgstr "{0}でトラブルチケットを報告してください。"
@@ -38424,11 +38620,38 @@ msgstr "テスト"
 #~ msgid "Use preset ''{0}''"
 #~ msgstr "プリセット \"{0}\"を使います"
 
+#~ msgid "Preset group ''{0}''"
+#~ msgstr "プリセットグループ \"{0}\""
+
 #~ msgid "Remove Selected"
 #~ msgstr "選択の削除"
 
+#~ msgid "Remove all currently selected objects from relation"
+#~ msgstr "現在選択されている全てのオブジェクトを関連から削除"
+
 #~ msgid "rectifier id={0}"
 #~ msgstr "修正子 ID={0}"
+
+#~ msgid "Update position for: "
+#~ msgstr "次の場所を更新： "
+
+#~ msgid "Add a new layer"
+#~ msgstr "新規レイヤーを追加"
+
+#~ msgid "World"
+#~ msgstr "世界地図"
+
+#~ msgid "misspelled key name"
+#~ msgstr "スペルの間違ったキー名"
+
+#~ msgid "barrier used on a way"
+#~ msgstr "路上のバリア"
+
+#~ msgid "unitarianist"
+#~ msgstr "ユニテリアン"
+
+#~ msgid "Amenities"
+#~ msgstr "各種設備"
 
 #~ msgid "Use decimal degrees."
 #~ msgstr "十進経緯度を使う。"
@@ -38439,6 +38662,14 @@ msgstr "テスト"
 #~ msgid "Downloaded plugin information from {0} site"
 #~ msgid_plural "Downloaded plugin information from {0} sites"
 #~ msgstr[0] "{0} このサイトからプラグイン情報をダウンロードしました。"
+
+#~ msgid "Plugin {0} is required by plugin {1} but was not found."
+#~ msgstr ""
+#~ "プラグイン {0} は、プラグイン {1} の動作に必要ですが、見つかりませんでし"
+#~ "た。"
+
+#~ msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
+#~ msgstr "{0}% ({1}/{2}), {3} 残っています. アップロード中 {4}: {5} (id: {6})"
 
 #~ msgid "Unknown member type for ''{0}''."
 #~ msgstr "{0}のメンバーのタイプが不明"
@@ -38457,6 +38688,16 @@ msgstr "テスト"
 #~ "新しいレイヤーを新しいゾーンで開始してください。"
 
 #~ msgid ""
+#~ "Selection \"{0}\" is used by relation \"{1}\" with role {2}.\n"
+#~ "Delete from relation?"
+#~ msgstr ""
+#~ "選択 \"{0}\" は、関連 \"{1}\" において、ロール {2}として使われています。\n"
+#~ "関連から削除しますか？"
+
+#~ msgid "Split way segment"
+#~ msgstr "ウェイのセグメントを分割"
+
+#~ msgid ""
 #~ "You are about to delete nodes outside of the area you have downloaded."
 #~ "<br>This can cause problems because other objects (that you don't see) "
 #~ "might use them.<br>Do you really want to delete?"
@@ -38468,11 +38709,60 @@ msgstr "テスト"
 #~ msgid "All the ways were empty"
 #~ msgstr "ウェイが全て空です。"
 
+#~ msgid ""
+#~ "Please select exactly three nodes or one way with exactly three nodes."
+#~ msgstr ""
+#~ "３つだけノードを選択するか、３つだけのノードを持つ１つのウェイを選択してく"
+#~ "ださい。"
+
+#~ msgid "Please select at least one task to download"
+#~ msgstr "ダウンロードするタスクを少なくとも一つ選んでください。"
+
+#~ msgid "Open a preferences page for global settings."
+#~ msgstr "全体の設定のページを開きます。"
+
+#~ msgid "Move nodes so all angles are 90 or 270 degree"
+#~ msgstr "角度が９０度ないしは２７０度になるようにノードを移動します。"
+
+#~ msgid "Selection must consist only of ways."
+#~ msgstr "ウェイだけを選択してください。"
+
+#~ msgid ""
+#~ "<html>You are using the EPSG:4326 projection which might lead<br>to "
+#~ "undesirable results when doing rectangular alignments.<br>Change your "
+#~ "projection to get rid of this warning.<br>Do you want to continue?"
+#~ msgstr ""
+#~ "<html>EPSG:4326投影法を使用しています。この投影法では、<br>長方形の配置を"
+#~ "行った場合に、意図しない結果になるおそれがあります。<br>対応するには、投影"
+#~ "法を変更してください。<br>それでも続けますか？"
+
+#~ msgid "Drag a way segment to make a rectangle."
+#~ msgstr "ドラッグして、ウェイのセグメントで長方形を作成します。"
+
 #~ msgid "Negative values denote Western/Southern hemisphere."
 #~ msgstr "負の値は、西半球（西経）または南半球（南緯）を意味します。"
 
 #~ msgid "Open file (as raw gps, if .gpx)"
 #~ msgstr "ファイルを開く（.gpxの場合生のGPSとして)"
+
+#~ msgid ""
+#~ "Maximum length (in meters) to draw lines. Set to '-1' to draw all lines."
+#~ msgstr "線を描く最大長(m)。'-1'にすると全ての線を描く。"
+
+#~ msgid "Download Image from french Cadastre WMS"
+#~ msgstr "フランスのCadastre WMSからイメージのダウンロード"
+
+#~ msgid "Raster center: {0}"
+#~ msgstr "ラスター画像の中央: {0}"
+
+#~ msgid "NPE Maps"
+#~ msgstr "NPEマップ"
+
+#~ msgid "NPE Maps (Tim)"
+#~ msgstr "NPEマップ(Tim)"
+
+#~ msgid "Streets NRW Geofabrik.de"
+#~ msgstr "Streets NRW Geofabrik.de"
 
 #~ msgid "Charge"
 #~ msgstr "料金"
@@ -38500,6 +38790,9 @@ msgstr "テスト"
 #~ msgid "More than one \"to\" way found."
 #~ msgstr "二つ以上の\"to\"ウェイがあります。"
 
+#~ msgid "The \"from\" way doesn't start or end at a \"via\" node."
+#~ msgstr "\"from\"ウェイは、\"via\"ノードで開始または終了していません。"
+
 #~ msgid "Style for restriction {0} not found."
 #~ msgstr "制約条件{0}のスタイルがありません。"
 
@@ -38508,6 +38801,11 @@ msgstr "テスト"
 
 #~ msgid "Non-Way ''{0}'' in multipolygon."
 #~ msgstr "マルチポリゴンにウェイではない\"{0}\"があります。"
+
+#~ msgid "Preferences file had errors. Making backup of old one to {0}."
+#~ msgstr ""
+#~ "設定ファイルにエラーがあります。古いファイルのバックアップを{0}に作りま"
+#~ "す。"
 
 #~ msgid ""
 #~ "The projection \"{0}\" is designed for\n"
@@ -38522,11 +38820,17 @@ msgstr "テスト"
 #~ "ほかの投影法を使用してください。\n"
 #~ "本メッセージ後は、データのアップロードはやめてください。"
 
+#~ msgid "RemoveRelationMember"
+#~ msgstr "RemoveRelationMember"
+
 #~ msgid "Malformed sentences: "
 #~ msgstr "不正なセンテンス: "
 
 #~ msgid "Unknown sentences: "
 #~ msgstr "不明なセンテンス: "
+
+#~ msgid "Zero coordinates: "
+#~ msgstr "ゼロ座標: "
 
 #~ msgid ""
 #~ "The selected ways have differing relation memberships.  Do you still want "
@@ -38541,14 +38845,39 @@ msgstr "テスト"
 #~ msgid "No document open so nothing to save."
 #~ msgstr "一つも開かれたデータがありませんんで、保存されません。"
 
+#~ msgid "An error occurred while restoring backup file."
+#~ msgstr "バックアップファイルから復元するときに、エラーになりました。"
+
+#~ msgid "Missing arguments for or."
+#~ msgstr "orに引数がありません。"
+
+#~ msgid "Missing argument for not."
+#~ msgstr "not に引数がありません。"
+
 #~ msgid "Expected closing parenthesis."
 #~ msgstr "閉じ括弧があるはずです。"
+
+#~ msgid "Please select one or more closed ways of at least four nodes."
+#~ msgstr ""
+#~ "少なくとも４ノードからなる閉じたウェイを、一つ以上選択してください。"
+
+#~ msgid "Select, move and rotate objects"
+#~ msgstr "オブジェクトの選択、移動および回転"
+
+#~ msgid "layer not in list."
+#~ msgstr "レイヤーがリストにありません。"
+
+#~ msgid "Timespan: "
+#~ msgstr "Timespan: "
 
 #~ msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
 #~ msgstr "写真の日付を入力(mm/dd/yyyy HH:MM:SS)"
 
 #~ msgid "The base URL for the OSM server (REST API)"
 #~ msgstr "OSMサーバのベースURL（REST API)"
+
+#~ msgid "Modify list of WMS servers displayed in the WMS plugin menu"
+#~ msgstr "WMSプラグインメニューに表示されるWMS サーバのリストを変更"
 
 #~ msgid "Enter a menu name and WMS URL"
 #~ msgstr "メニュー名とWMS URLを入力"
@@ -38559,8 +38888,20 @@ msgstr "テスト"
 #~ msgid "Open the OpenStreetBugs window and activate the automatic download"
 #~ msgstr "OpenStreetBugsウインドウを開き、自動ダウンロードを行います。"
 
+#~ msgid ""
+#~ "<html>WARNING: The password is stored in plain text in the preferences "
+#~ "file.<br>The password is transfered in plain text to the server, encoded "
+#~ "in the URL.<br><b>Do not use a valuable Password.</b></html>"
+#~ msgstr ""
+#~ "<html>警告：パスワードは平文で設定ファイルに格納されます。<br>パスワード"
+#~ "は、URLに付加されて平文でサーバに送信されます。<br><b>他で使用しているパス"
+#~ "ワードは使用しないでください。</b></html>"
+
 #~ msgid "Mountain Hiking"
 #~ msgstr "山岳ハイキング"
+
+#~ msgid "Alpine Hiking"
+#~ msgstr "高山ハイキング"
 
 #~ msgid ""
 #~ "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "
@@ -38568,6 +38909,9 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "ズーム:マウスのホイールか、ダブルクリック。地図の移動：右マウスボタンを押"
 #~ "した状態で移動させる。選択：クリック。"
+
+#~ msgid "Delete Layer"
+#~ msgstr "レイヤー削除"
 
 #~ msgid "Login"
 #~ msgstr "ログイン"
@@ -38584,6 +38928,16 @@ msgstr "テスト"
 #~ msgid "Delete and Download"
 #~ msgstr "削除とダウンロード"
 
+#~ msgid "Download Plugins"
+#~ msgstr "ダウンロードプラグイン"
+
+#~ msgid ""
+#~ "Selection \"{0}\" is used by relation \"{1}\".\n"
+#~ "Delete from relation?"
+#~ msgstr ""
+#~ "選択\"{0}\" は、関連 \"{1}\" で使われています。\n"
+#~ "関連から削除しますか？"
+
 #~ msgid ""
 #~ "The sources (URL or filename) of tagging preset definition files. See "
 #~ "http://josm.openstreetmap.de/wiki/TaggingPresets for help."
@@ -38594,9 +38948,15 @@ msgstr "テスト"
 #~ msgid "Enter values for all conflicts."
 #~ msgstr "すべての競合に値を入力してください。"
 
+#~ msgid "Resolve {0} conflicts in {1} objects"
+#~ msgstr "{1}個のオブジェクト中の{0}個の競合を解決"
+
 #~ msgid "{0} object has conflicts:"
 #~ msgid_plural "{0} objects have conflicts:"
 #~ msgstr[0] "{0} 個のオブジェクトが競合しています:"
+
+#~ msgid "There are unresolved conflicts. You have to resolve these first."
+#~ msgstr "未解決の競合があります。まずこれらの競合を解決してください。"
 
 #~ msgid "Conflicting relation"
 #~ msgstr "競合中のリレーション"
@@ -38610,11 +38970,20 @@ msgstr "テスト"
 #~ msgid "Merging conflicts."
 #~ msgstr "競合点の統合"
 
+#~ msgid "Conflicts: {0}"
+#~ msgstr "競合: {0}"
+
+#~ msgid "Resolve Conflicts"
+#~ msgstr "競合の解決"
+
 #~ msgid "Move Down"
 #~ msgstr "下に移動"
 
 #~ msgid "Relation Editor: {0}"
 #~ msgstr "関連の編集者:{0}"
+
+#~ msgid "Solve Conflict"
+#~ msgstr "矛盾の解決"
 
 #~ msgid "Move Up"
 #~ msgstr "上に移動"
@@ -38636,8 +39005,17 @@ msgstr "テスト"
 #~ "指定された順番で設定が読み込まれます。一部のデータがselection以前に\n"
 #~ "読み込まれることにご注意ください。"
 
+#~ msgid "Display history information about OSM ways or nodes."
+#~ msgstr "OSMノードやウエイに関する履歴情報の表示"
+
 #~ msgid "Some of the nodes are (almost) in the line"
 #~ msgstr "ノードの一部は（ほぼ）一直線上にある"
+
+#~ msgid "<b>id:</b>... - object with given ID"
+#~ msgstr "<b>id:</b>... - 指定されたIDを持つオブジェクト"
+
+#~ msgid "<b>nodes:</b>... - object with given number of nodes"
+#~ msgstr "<b>nodes:</b>... - 指定されたノード番号のオブジェクト"
 
 #~ msgid "Update Data"
 #~ msgstr "データの更新"
@@ -38658,12 +39036,22 @@ msgstr "テスト"
 #~ msgid "Merge nodes with different memberships?"
 #~ msgstr "異なったメンバーになっているノードを結合しますか？"
 
+#~ msgid "Cannot merge nodes: Would have to delete a way that is still used."
+#~ msgstr ""
+#~ "ノードを結合できません：使用しているウェイを削除しないとけなくなります。"
+
 #~ msgid ""
 #~ "Internal Error: cannot check conditions for no layer. Please report this "
 #~ "as a bug."
 #~ msgstr ""
 #~ "内部エラー：レイヤーのないところで条件チェックはできません。バグとして報告"
 #~ "してください。"
+
+#~ msgid "Combine Anyway"
+#~ msgstr "強制的に連結。"
+
+#~ msgid "Please select ways with almost right angles to orthogonalize."
+#~ msgstr "ほぼ垂直になっているウェイを選択してください。"
 
 #~ msgid ""
 #~ "Please select at least one node, way or relation. Only already uploaded "
@@ -38679,13 +39067,44 @@ msgstr "テスト"
 #~ "更新するデータは見つかりませんでした。もう既にデータレイヤーを開いている"
 #~ "か、ダウンロードしましたか？"
 
+#~ msgid "The following errors occured during mass download:"
+#~ msgstr "次のエラーは、大量ダウンロードのときに起きました。"
+
 #~ msgid ""
 #~ "This action will require {0} individual download requests. Do you wish to "
 #~ "continue?"
 #~ msgstr "この作業は、{0}回のダウンロードを実行します。続けますか？"
 
+#~ msgid ""
+#~ "Click to delete. Shift: delete way segment. Alt: don't delete unused "
+#~ "nodes when deleting a way. Ctrl: delete referring objects."
+#~ msgstr ""
+#~ "クリックすると削除。SHIFT: ウェイセグメントを削除。Alt: ウェイを消すときに"
+#~ "ノードは消さない。 Ctrl: 参照するオブジェクトを消す。"
+
 #~ msgid "Upload to OSM..."
 #~ msgstr "OSMにアップロード"
+
+#~ msgid "The selected photos don't contain time information."
+#~ msgstr "選択した写真には時間情報がありません"
+
+#~ msgid "Full Screen"
+#~ msgstr "全画面表示"
+
+#~ msgid "Helppage missing. Create it in <A HREF=\"{0}\">english</A>."
+#~ msgstr ""
+#~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A>でそれを作成してくださ"
+#~ "い。"
+
+#~ msgid ""
+#~ "Helppage missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF="
+#~ "\"{1}\">your language</A>."
+#~ msgstr ""
+#~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A>もしくは<A HREF=\"{1}\">"
+#~ "あなたの母国語</A>でそれを作成してください。"
+
+#~ msgid "Photos don't contain time information"
+#~ msgstr "写真は時間情報を含んでいません。"
 
 #~ msgid "Style for inner way ''{0}'' equals multipolygon."
 #~ msgstr "マルチポリゴンと等しい、内側のウェイ ''{0}'' 用のスタイル。"
@@ -38693,8 +39112,52 @@ msgstr "テスト"
 #~ msgid "No outer way for multipolygon ''{0}''."
 #~ msgstr "マルチポリゴン用の外側のウェイが ''{0}'' にありません。"
 
+#~ msgid "- running version is {0}"
+#~ msgstr "- 起動中のバージョンは {0} です。"
+
+#~ msgid "autozoom"
+#~ msgstr "自動ズーム"
+
 #~ msgid "Sorry, doesn't work with anonymous users"
 #~ msgstr "申し訳ありません。匿名のユーザでは利用できません。"
+
+#~ msgid "Invalid projection"
+#~ msgstr "投影法が無効"
+
+#~ msgid ""
+#~ "To enable the cadastre WMS plugin, change\n"
+#~ "the JOSM projection to Lambert and restart"
+#~ msgstr ""
+#~ "土地台帳WMSプラグインを可能にするために、JOSMの座標系をランバート投影法に"
+#~ "変えて、再起動してください。"
+
+#~ msgid "Add grid"
+#~ msgstr "グリッドの追加"
+
+#~ msgid ""
+#~ "The selected GPX track doesn't contain timestamps. Please select another "
+#~ "one."
+#~ msgstr ""
+#~ "選択されたGPXトラックはタイムスタンプを含んでいません。他のGPXトラックを選"
+#~ "択してください。"
+
+#~ msgid "autoload tiles"
+#~ msgstr "タイルの自動読み込み"
+
+#~ msgid "Auto zoom: "
+#~ msgstr "自動ズーム: "
+
+#~ msgid "Autoload Tiles: "
+#~ msgstr "タイルの自動読み込み "
+
+#~ msgid "SlippyMap"
+#~ msgstr "スリッピーマップ"
+
+#~ msgid "Settings for the SlippyMap plugin."
+#~ msgstr "スリッピマップ プラグイン用設定"
+
+#~ msgid "Fade background: "
+#~ msgstr "Fade background: "
 
 #~ msgid "Replaces Selection with Users data"
 #~ msgstr "ユーザデータを選択したものに置き替えます。"
@@ -38702,11 +39165,35 @@ msgstr "テスト"
 #~ msgid "Please choose a user using the author panel"
 #~ msgstr "著作者パネルを使用してユーザを選んでください。"
 
+#~ msgid "Optional"
+#~ msgstr "オプション"
+
+#~ msgid "Continue anyway"
+#~ msgstr "とりあえず続ける"
+
+#~ msgid "Toggle Full Screen view"
+#~ msgstr "フルスクリーン表示のトグル"
+
+#~ msgid "Change the projection to {0} first."
+#~ msgstr "最初に投影法を {0} に変えてください。"
+
+#~ msgid "Can't duplicate unordered way."
+#~ msgstr "順不同の道をコピーできません。"
+
+#~ msgid "street name contains ss"
+#~ msgstr "ストリート名は ss を含んでいます。"
+
 #~ msgid "Directly load TCX files from JOSM."
 #~ msgstr "直接JOSMからのTCXファイルをロードしてください。"
 
+#~ msgid "Provide a background layer that displays a map grid"
+#~ msgstr "地図グリッドを表示する背景レイヤーを提供します。"
+
 #~ msgid "Auto-tag source added:"
 #~ msgstr "自動タグのソースを追加しました。:"
+
+#~ msgid "abbreviated street name"
+#~ msgstr "簡略化されたストリート名"
 
 #~ msgid ""
 #~ "An error occured while trying to match the photos to the GPX track. You "
@@ -38715,11 +39202,26 @@ msgstr "テスト"
 #~ "GPXトラックに写真を合わせようとしているときにエラーが起きました。スライ"
 #~ "ダーを調整して、手動で写真に合わせることができます。"
 
+#~ msgid "Guidepost (Hiking)"
+#~ msgstr "ガイドポスト(ハイキング)"
+
 #~ msgid "Map Type"
 #~ msgstr "マップタイプ"
 
 #~ msgid "Default Values"
 #~ msgstr "デフォルトの値"
+
+#~ msgid "Extract building footprints"
+#~ msgstr "建物のフットプリントの抽出"
+
+#~ msgid "Demanding Alpine Hiking"
+#~ msgstr "厳しい高山ハイキング"
+
+#~ msgid "Demanding Mountain Hiking"
+#~ msgstr "厳しい山岳ハイキング"
+
+#~ msgid "Difficult Alpine Hiking"
+#~ msgstr "困難な高山ハイキング"
 
 #~ msgid "Edit Demanding Alpine Hiking"
 #~ msgstr "厳しい高山ハイキングの編集"
@@ -38742,8 +39244,23 @@ msgstr "テスト"
 #~ msgid "Edit Information Office"
 #~ msgstr "案内所の編集"
 
+#~ msgid "Remove route nodes"
+#~ msgstr "ルートノードの削除"
+
+#~ msgid "Click and drag to move route nodes."
+#~ msgstr "クリックとドラッグでルートノードの移動"
+
+#~ msgid "Click to add route nodes."
+#~ msgstr "クリックしてルートノードの追加"
+
+#~ msgid "Start routing"
+#~ msgstr "ルーティングの開始"
+
 #~ msgid "<multiple>"
 #~ msgstr "<multiple>"
+
+#~ msgid "Edit Airport"
+#~ msgstr "空港の編集"
 
 #~ msgid "Edit Track of grade 2"
 #~ msgstr "トラック グレード 2の編集"
@@ -38778,9 +39295,15 @@ msgstr "テスト"
 #~ msgid "Edit Portcullis"
 #~ msgstr "城の格子戸の編集"
 
+#~ msgid "Displays an OpenLayers background image"
+#~ msgstr "OpenLayers の背景画面を表示"
+
 #~ msgid "Download Rectified Image from Metacarta's Map Rectifier WMS"
 #~ msgstr ""
 #~ "Metacarta's Map Rectifier WMS から 幾何補正されたイメージのダウンロード"
+
+#~ msgid "wrong highway tag on a node"
+#~ msgstr "ノード上の誤った高速道路タグ"
 
 #~ msgid "Join Areas: Remove Short Ways"
 #~ msgstr "エリアの結合：　短いウェイの削除"
@@ -38797,11 +39320,53 @@ msgstr "テスト"
 #~ msgid "Really mark this issue as ''done''?"
 #~ msgstr "本当に、この問題を“処理済み”としてマークしますか？"
 
+#~ msgid "(Time difference of {0} days)"
+#~ msgstr "(時差 {0} 日)"
+
+#~ msgid "Matched {0} of {1} photos to GPX track."
+#~ msgstr "{0}／{1} 枚の写真がGPXトラックにマッチしました。"
+
+#~ msgid "Use <b>\"</b> to quote operators (e.g. if key contains :)"
+#~ msgstr ""
+#~ "<b>\"</b> を演算子をくくるために使ってください。（例：キーが：を含む)"
+
+#~ msgid ""
+#~ "Move objects by dragging; Shift to add to selection (Ctrl to toggle); "
+#~ "Shift-Ctrl to rotate selected; or change selection"
+#~ msgstr ""
+#~ "ドラッグでオブジェクトを動かす;Shiftキーで、選択を加える。(Ctrlキーで切り"
+#~ "替え);Shft-Ctrlで選択を回転。;選択を変更。"
+
+#~ msgid "<b>-name:Bak</b> - not 'Bak' in the name."
+#~ msgstr "<b>-name:Bak</b> - その名前の内 'Bak' でない。"
+
+#~ msgid ""
+#~ "A role based relation membership was copied to all new ways.\n"
+#~ "You should verify this and correct it when necessary."
+#~ msgstr ""
+#~ "リレーションのメンバーが持つロールは、新しい全てのウェイにコピーされまし"
+#~ "た。\n"
+#~ "確認して、必要なら訂正してください。"
+
+#~ msgid ""
+#~ "<p>The pseudo-modifier 'disabled' will disable the shortcut when "
+#~ "encountered.</p>"
+#~ msgstr ""
+#~ "<p>擬似変更 'disabled' は、次に起こったときにショートカットを無効にしま"
+#~ "す。</p>"
+
 #~ msgid "Style for outer way ''{0}'' mismatches."
 #~ msgstr "外側のウェイ ''{0}''のスタイルが合いません。"
 
 #~ msgid "Found {0} matches of {1} in GPX track {2}"
 #~ msgstr "GPX トラック {2} に、{1}中に{0}枚発見しました。"
+
+#~ msgid ""
+#~ "Town/city {0} not found or not available in WMS.\n"
+#~ "Please check its availibility on www.cadastre.gouv.fr"
+#~ msgstr ""
+#~ "市/町/村 {0} はWMSに見つからないか、入手不可能です。\n"
+#~ "入手可能かは、www.cadastre.gouv.fr で確認してください。"
 
 #~ msgid "Offset between track and photos: {0}m {1}s"
 #~ msgstr "トラックと写真の間には、時差があります。: {0}分 {1}秒"
@@ -38812,17 +39377,46 @@ msgstr "テスト"
 #~ "<html>私のGPSレシーバーは写真を撮ることができます。<br>これは使えますか。"
 #~ "</html>"
 
+#~ msgid "Download List"
+#~ msgstr "リストをダウンロードする"
+
 #~ msgid "YAHOO (WebKit GTK)"
 #~ msgstr "米Yahoo (WebKit GTK)"
+
+#~ msgid "Open Aerial Map"
+#~ msgstr "オープンエアリアルマップ"
 
 #~ msgid "YAHOO (GNOME Fix)"
 #~ msgstr "米Yahoo (GNOME Fix)"
 
+#~ msgid "layer tag with + sign"
+#~ msgstr "+ sign付きのlayerタグ"
+
+#~ msgid "separate cycleway as lane on a cycleway"
+#~ msgstr "自転車道のレーンとしてウェイを分離する"
+
+#~ msgid "cycleway with tag bicycle"
+#~ msgstr "bicycleタグつきの自転車道"
+
 #~ msgid "GPS unit timezone (difference to photo)"
 #~ msgstr "GPSユニットのタイムゾーン(写真の時間との違い)"
 
+#~ msgid ""
+#~ "Maximum length (in meters) to draw lines for local files. Set to '-1' to "
+#~ "draw all lines."
+#~ msgstr "ローカルファイルに線を描くの最大長(m)。'-1'にすると全てに線を描く。"
+
+#~ msgid "The projection could not be read from preferences. Using Mercartor"
+#~ msgstr "投影法が設定から読み取れません。メルカトル図法を使います。"
+
 #~ msgid "Image with path {0} does not exist or is not readable."
 #~ msgstr "パス {0} にあるイメージは存在しないか、読めません。"
+
+#~ msgid "linked"
+#~ msgstr "継げられた"
+
+#~ msgid "ChangeRelationMemberRole"
+#~ msgstr "ChangeRelationMemberRole"
 
 #~ msgid ""
 #~ "The projection \"{0}\" is designed for\n"
@@ -38839,8 +39433,27 @@ msgstr "テスト"
 #~ "違う投影系を使ってください。\n"
 #~ "このメッセージ以降のデータはアップロードしないでください。"
 
+#~ msgid "Communications with {0} established using protocol version {1}"
+#~ msgstr "プロトコルバージョン {1}を使った確立された{0}で通信する。"
+
+#~ msgid ""
+#~ "It supports protocol versions 0.5 and 0.6, while the server says it "
+#~ "supports {0} to {1}."
+#~ msgstr ""
+#~ "これは、プロトコールバージョン 0.5 と 0.6 をサポートしていますが、サーバー"
+#~ "は、 {0} から {1}をサポートするといっています。"
+
+#~ msgid "Missing attribute \"ref\" on member in relation {0}"
+#~ msgstr "リレーション {0}のメンバーに属性\"ref\"がかけています。"
+
+#~ msgid "No changeset present for diff upload"
+#~ msgstr "diffアップロードのための変更セットを用意できませんでした。"
+
 #~ msgid "Version number missing from OSM data"
 #~ msgstr "OSMデータにバージョン番号が欠けています。"
+
+#~ msgid "Not initialized"
+#~ msgstr "初期化されていません。"
 
 #~ msgid "Data upload failed for unknown reason"
 #~ msgstr "不明な理由でデータのアップロードに失敗しました。"
@@ -38848,8 +39461,23 @@ msgstr "テスト"
 #~ msgid "Cannot read numeric value from response"
 #~ msgstr "応答から数値を読み取れません。"
 
+#~ msgid "Unknown version: {0}"
+#~ msgstr "不明なバージョン: {0}"
+
+#~ msgid "More details"
+#~ msgstr "もっと詳細"
+
 #~ msgid "Selected makes your trace public in openstreetmap.org"
 #~ msgstr "選択したあなたのトレースは、openstreetmap.orgに公開されます。"
+
+#~ msgid "Wrong number of parameters for nodes operator."
+#~ msgstr "間違った数のパラメータが、ノード演算子に渡されました。"
+
+#~ msgid "relation without type"
+#~ msgstr "typeのないリレーション"
+
+#~ msgid "The projection could not be read from preferences. Using Mercator"
+#~ msgstr "投影法が設定から読み取れません。メルカトル図法を使います。"
 
 #~ msgid "AgPifoJ - Geotagged pictures"
 #~ msgstr "ジオタグのある写真"
@@ -38861,10 +39489,21 @@ msgstr "テスト"
 #~ "標準とは別の JOSM 用ジオタグ plugin。GPS ログと、写真の EXIFに埋め込まれた"
 #~ "ジオタグを関連づけします。"
 
+#~ msgid "NMEA import faliure!"
+#~ msgstr "NMEAのインポートに失敗しました。"
+
+#~ msgid "TangoGPS import faliure!"
+#~ msgstr "TangoGPS のインポートに失敗しました。"
+
 #~ msgid "Plugin {0} requires JOSM update to version {1}."
 #~ msgstr ""
 #~ "プラグイン {0} を使うには JOSMをバージョン {1} にアップデートする必要があ"
 #~ "ります。"
+
+#~ msgid "{0} Plugin successfully downloaded. Please restart JOSM."
+#~ msgid_plural "{0} Plugins successfully downloaded. Please restart JOSM."
+#~ msgstr[0] ""
+#~ "{0} 個のプラグインのダウロードに成功しました。JOSMを再起動してください。"
 
 #~ msgid ""
 #~ "(You can change the number of days after which this warning appears<br>by "
@@ -38881,11 +39520,28 @@ msgstr "テスト"
 #~ "す。"
 
 #~ msgid ""
+#~ "Length of value for tag ''{0}'' on primitive {1} exceeds the max. allowed "
+#~ "length {2}. Values length is {3}."
+#~ msgstr ""
+#~ "プリミティブ{1}のタグ\"{0}\"の値の長さが最大値を超えています。有効な長さは"
+#~ "{2}です。値の長さは{3}です。"
+
+#~ msgid ""
 #~ "WARNING: launching browser windows for the first {0} of {1} selected "
 #~ "primitives only"
 #~ msgstr ""
 #~ "警告：ブラウザウインドウを開くのは、選択したプリミティブの{1}のうち、最初"
 #~ "の{0}だけです。"
+
+#~ msgid "Download referrers..."
+#~ msgstr "参照をダウンロード..."
+
+#~ msgid ""
+#~ "Warning: automatically truncating value of tag ''{0}'' on deleted "
+#~ "primitive {1}"
+#~ msgstr ""
+#~ "警告：削除されたプリミティブ {1} のタグ\"{0}\"の値が、自動的に切り詰められ"
+#~ "ます。"
 
 #~ msgid ""
 #~ "There are unsaved changes in {0} layer. Discard the changes and continue?"
@@ -38894,11 +39550,65 @@ msgstr "テスト"
 #~ msgstr[0] ""
 #~ "{0} のレイヤーに保存されていない変更があります。変更を無視して続けますか?"
 
+#~ msgid "paramenter ''{0}'' must not be null"
+#~ msgstr "パラメータ ''{0}'' はヌルでなければなりません"
+
+#~ msgid "Help page missing. Create it in <A HREF=\"{0}\">english</A>."
+#~ msgstr ""
+#~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A>で作成してください。"
+
+#~ msgid ""
+#~ "Help page missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF="
+#~ "\"{1}\">your language</A>."
+#~ msgstr ""
+#~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A> または <A HREF=\"{1}\">"
+#~ "あなたの言語</A>で作成してください。"
+
+#~ msgid "<html>Could not read file ''{0}''.<br> Error is: <br>{1}</html>"
+#~ msgstr ""
+#~ "<html>ファイル ''{0}'' が読み込めません。<br> エラー内容: <br>{1}</html>"
+
+#~ msgid "Synchronize {0} {1} only"
+#~ msgstr "{0} {1} だけを同期"
+
+#~ msgid ""
+#~ "<html>There are unresolved conflicts in layer ''{0}''.<br>You have to "
+#~ "resolve them first.<html>"
+#~ msgstr ""
+#~ "<html>レイヤー ''{0}' に未解決の競合があります。<br>最初に競合を解決してく"
+#~ "ださい。<html>"
+
+#~ msgid "There is currently no changeset open."
+#~ msgstr "現在開かれている変更セットはありません。"
+
+#~ msgid "Close the current changeset ..."
+#~ msgstr "現在の変更セットを閉じる ..."
+
 #~ msgid "Close current changeset"
 #~ msgstr "現在の変更セットを閉じる"
 
+#~ msgid "Use a new changeset and leave it open"
+#~ msgstr "新しい変更セットを使用して開いたままにする"
+
+#~ msgid ""
+#~ "Select to upload the data using a new changeset and to close the "
+#~ "changeset after the upload"
+#~ msgstr ""
+#~ "選択の上、新しい変更セットを使用してデータをアップロードし、アップロード後"
+#~ "に変更セットを閉じる"
+
 #~ msgid "Use a new changeset and close it"
 #~ msgstr "新しい変更セットを使用して閉じる"
+
+#~ msgid ""
+#~ "Select to upload the data using a new changeset and to leave the "
+#~ "changeset open after the upload"
+#~ msgstr ""
+#~ "選択の上、新しい変更セットを使用してデータをアップロードし、アップロード後"
+#~ "に変更セットを閉じる"
+
+#~ msgid "Upload to a new or to an existing changeset?"
+#~ msgstr "新規または既存の変更セットにアップロードしますか？"
 
 #~ msgid "Use the existing changeset {0} and close it after upload"
 #~ msgstr "既存の変更セット {0} を使用しアップロード後に閉じる"
@@ -38944,12 +39654,18 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "警告: 要求された既存の変更セットを再利用できません。新しく開いています。"
 
+#~ msgid "Closing changeset {0}..."
+#~ msgstr "変更セット {0} を閉じています..."
+
 #~ msgid ""
 #~ "Failed to update changeset. Either there is no current changeset or the "
 #~ "id of the current changeset is 0"
 #~ msgstr ""
 #~ "変更セットの更新に失敗しました。現在の変更セットが無いか、または現在の変更"
 #~ "セットのIDが 0 です。"
+
+#~ msgid "Leaving changeset {0} open..."
+#~ msgstr "変更セット {0} を開いたままにします.."
 
 #~ msgid "Error header \"{0}\" does not match expected pattern \"{1}\""
 #~ msgstr "エラー　ヘッダ \"{0}\" は期待パターン \"{1}\" に一致しません"
@@ -38960,11 +39676,26 @@ msgstr "テスト"
 #~ msgid "Updates the currently selected primitives from the server"
 #~ msgstr "サーバから現在選択されたプリミティブを更新"
 
+#~ msgid "Didn't find a primitive with id {0} in the current dataset"
+#~ msgstr "現在のデータセット中には ID {0} のプリミティブが見つかりません"
+
+#~ msgid "Warning: error header \"{0}\" did not match expected pattern \"{1}\""
+#~ msgstr "警告: エラーヘッダ \"{0}\" は期待されたパターン {1} に一致しません"
+
 #~ msgid "Upload to OSM API failed"
 #~ msgstr "OSM API へのアップロード失敗"
 
 #~ msgid "Updating primitive"
 #~ msgstr "プリミティブ更新中"
+
+#~ msgid "<html>Uploading <strong>failed</strong>.<br>{0}</html>"
+#~ msgstr "<html>アップロード <strong>失敗</strong>。<br>{0}</html>"
+
+#~ msgid "parameter ''{0}'' must not be null"
+#~ msgstr "パラメータ ''{0}'' はヌルでなければなりません"
+
+#~ msgid "The following errors occurred during mass download:{0}"
+#~ msgstr "次のエラーが一括ダウンロード中に発生しました: {0}"
 
 #~ msgid "Deleted or moved primitives"
 #~ msgstr "削除または移動されたプリミティブ"
@@ -38988,6 +39719,9 @@ msgstr "テスト"
 #~ msgid "Error while communicating with server."
 #~ msgstr "サーバとの通信中にエラー。"
 
+#~ msgid "Conflicts during download"
+#~ msgstr "ダウンロード中に競合"
+
 #~ msgid "Conflict detected"
 #~ msgstr "競合が検出されました"
 
@@ -38997,11 +39731,22 @@ msgstr "テスト"
 #~ msgid "Keep my visible state"
 #~ msgstr "自分の表示状態を残す"
 
+#~ msgid "Visible State:"
+#~ msgstr "表示状態:"
+
 #~ msgid "Undecide conflict between visible state"
 #~ msgstr "表示状態間の競合を未決にする"
 
+#~ msgid "cannot resolve undecided conflict"
+#~ msgstr "未決の競合を解決できません"
+
 #~ msgid "Yes, purge it"
 #~ msgstr "はい、破棄します"
+
+#~ msgid ""
+#~ "Can't undo command ''{0}'' because layer ''{1}'' is not present anymore"
+#~ msgstr ""
+#~ "コマンド ''{0}'' はレイヤー {1} がすでに表示されていないので取り消せません"
 
 #~ msgid ""
 #~ "<html>Selection \"{0}\" is used by relation \"{1}\".<br>Delete from "
@@ -39009,6 +39754,18 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "<html>選択 \"{0}\" はリレーション \"{1}\" で使用されています。<br>リレー"
 #~ "ションから削除しますか？</html>"
+
+#~ msgid "Undelete {0} primitives"
+#~ msgstr "{0} のプリミティブを復活"
+
+#~ msgid "Resolve version conflicts for node {0}"
+#~ msgstr "ノード {0} のバージョン競合を解決"
+
+#~ msgid "already registered a conflict for primitive ''{0}''"
+#~ msgstr "プリミティブ ''{0}'' には既に競合が登録されています"
+
+#~ msgid "a primitive with id=0 can't be invisible"
+#~ msgstr "id=0 のプリミティブは非表示にできません"
 
 #~ msgid ""
 #~ "Failed to load bookmarks from ''{0}'' for security reasons. Exception "
@@ -39020,9 +39777,48 @@ msgstr "テスト"
 #~ msgid "Incorrect value of id operator: {0}. Number is expected."
 #~ msgstr "不正なid演算子の値: {0}。数字を入力してください。"
 
+#~ msgid "Resolve version conflicts for relation {0}"
+#~ msgstr "リレーション {0} のバージョン競合を解決"
+
+#~ msgid "Resolve version conflicts for way {0}"
+#~ msgstr "ウェイ {0} のバージョン競合を解決"
+
+#~ msgid ""
+#~ "Warning: Failed to initialize preferences. Preference directory ''{0}'' "
+#~ "isn't a directory."
+#~ msgstr ""
+#~ "警告: 設定の初期化に失敗しました。設定ディレクトリ ''{0}'' はディレクトリ"
+#~ "ではありません。"
+
+#~ msgid ""
+#~ "<html>Failed to initialize preferences.<br>Preference directory ''{0}'' "
+#~ "isn't a directory.</html>"
+#~ msgstr ""
+#~ "<html>設定の初期化に失敗しました。<br>設定ディレクトリ ''{0}'' はディレク"
+#~ "トリではありません。</html>"
+
+#~ msgid "no earliest version found. History is empty."
+#~ msgstr "前のバージョンがありません。履歴は空です。"
+
+#~ msgid "can't compare primitive with id ''{0}'' to primitive with id ''{1}''"
+#~ msgstr ""
+#~ "id ''{0}'' のプリミティブと id ''{1}'' のプリミティブを比較できません"
+
 #~ msgid "Didn't find an primitive with id {0} and version {1} in this dataset"
 #~ msgstr ""
 #~ "このデータセットには id {0} バージョン {1} のプリミティブはありません"
+
+#~ msgid "no latest version found. History is empty."
+#~ msgstr "最新のバージョンがありません。履歴は空です。"
+
+#~ msgid "Didn't find an  primitive with id {0} in this dataset"
+#~ msgstr "このデータセットには id {0} のプリミティブはありません"
+
+#~ msgid "Resolve conflicts in node list of of way {0}"
+#~ msgstr "ウェイ {0} のノードリストの競合を解決"
+
+#~ msgid "Remove from dataset"
+#~ msgstr "データセットから削除"
 
 #~ msgid "Physically delete from local dataset"
 #~ msgstr "ローカルデータセットから物理的に削除"
@@ -39033,6 +39829,16 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "一度のリクエストで全ての変更をアップロードするには有効にする。変更したプリ"
 #~ "ミティブごとにリクエストするには、無効にする。"
+
+#~ msgid "upload all changes in one request"
+#~ msgstr "一度のリクエストで全ての変更をアップロードしました。"
+
+#~ msgid "unexpected return value. Got {0}"
+#~ msgstr "予期せぬ値が返って来ました。 {0} を受けとりました。"
+
+#~ msgid "{0} object to modifiy:"
+#~ msgid_plural "{0} objects to modify:"
+#~ msgstr[0] "{0}個のオブジェクトを変更:"
 
 #~ msgid ""
 #~ "<html>There are {0} primitives in your local dataset which<br>might be "
@@ -39048,11 +39854,23 @@ msgstr "テスト"
 #~ "い。 <br>無視するには、<strong>{2}</strong>をクリックしてください。<br></"
 #~ "html>"
 
+#~ msgid "There's no primitive with version {0} in this history"
+#~ msgstr "この履歴にはバージョン {0} のプリミティブはありません"
+
 #~ msgid "<html>Could not write bookmark.<br>{0}</html>"
 #~ msgstr "<html>ブックマークを書き込めません。<br>{0}</html>"
 
 #~ msgid "Primitive already deleted"
 #~ msgstr "プリミティブは削除済み"
+
+#~ msgid ""
+#~ "<html>Failed to open a connection to the remote server<br>''{0}''<br>for "
+#~ "security reasons. This is most likely because you are running<br>in an "
+#~ "applet and because you didn''t load your applet from ''{1}''.</html>"
+#~ msgstr ""
+#~ "<html>リモートサーバ<br>''{0}''<br>への接続にセキュリティ上の理由で接続を"
+#~ "開けませんでした。おそらくアプレットを実行しているがアプレットを ''{1}' か"
+#~ "らロードしていないためだと思われます。</html>"
 
 #~ msgid ""
 #~ "<html>Uploading <strong>failed</strong> because a primitive you tried "
@@ -39061,6 +39879,48 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "<html>アップロード <strong>失敗</strong> サーバから削除しようとしたプリミ"
 #~ "ティブは既に削除されています。<br><br>エラーメッセージ:<br>{0}</html>"
+
+#~ msgid "Tags({0} conflicts)"
+#~ msgstr "タグ({0} 競合)"
+
+#~ msgid "Copy my selected elements to the end of the list of merged elements"
+#~ msgstr "自分の選択した要素を結合された要素リストの最後にコピー"
+
+#~ msgid ""
+#~ "Copy my selected elements after the first selected element in the list of "
+#~ "merged elements"
+#~ msgstr ""
+#~ "自分の選択した要素を、結合された要素リストの最初に選択された要素の後にコ"
+#~ "ピー"
+
+#~ msgid ""
+#~ "Copy my selected elements before the first selected element in the list "
+#~ "of merged elements"
+#~ msgstr ""
+#~ "自分の選択した要素を、結合された要素リストの最初に選択された要素の前にコ"
+#~ "ピー"
+
+#~ msgid ""
+#~ "Copy their selected element to the start of the list of merged elements"
+#~ msgstr "相手の選択した要素を、結合された要素リストの先頭にコピー"
+
+#~ msgid ""
+#~ "Copy their selected elements before the first selected element in the "
+#~ "list of merged elements"
+#~ msgstr ""
+#~ "相手の選択した要素を、結合された要素リストの最初に選択された要素の前にコ"
+#~ "ピー"
+
+#~ msgid ""
+#~ "Copy their selected elements to the end of the list of merged elements"
+#~ msgstr "相手の選択した要素を、結合された要素リストの最後にコピー"
+
+#~ msgid ""
+#~ "<html>Click <strong>{0}</strong> to finish merging my and their entries</"
+#~ "html>"
+#~ msgstr ""
+#~ "<html><strong>{0}</strong> をクリックして自分と相手のエントリの結合を完了"
+#~ "</html>"
 
 #~ msgid "No, cancel operation"
 #~ msgstr "いいえ、操作をキャンセルします"
@@ -39088,8 +39948,23 @@ msgstr "テスト"
 #~ msgid "Yes, reset the id"
 #~ msgstr "はい、id をリセットします"
 
+#~ msgid "parameter ''{0}'' must not be empty"
+#~ msgstr "パラメータ ''{0}'' は空以外でなければなりません"
+
+#~ msgid "No, don't apply"
+#~ msgstr "いいえ、適用しません"
+
+#~ msgid "Please decided which values to keep"
+#~ msgstr "どちらの値を残すか決定してください"
+
 #~ msgid "not yet decided"
 #~ msgstr "未決定です"
+
+#~ msgid "History item"
+#~ msgstr "履歴アイテム"
+
+#~ msgid "item {0} not found in list"
+#~ msgstr "アイテム {0} はリストに見つかりません"
 
 #~ msgid "parameter '{0}' must not be null"
 #~ msgstr "パラメータ '{0}' はヌル以外でなければなりません"
@@ -39100,8 +39975,45 @@ msgstr "テスト"
 #~ msgid "Undelete additional nodes?"
 #~ msgstr "追加のノードの削除を取り消しますか？"
 
+#~ msgid "parameter current out of range: got {0}"
+#~ msgstr "現在のパラメータは範囲外です: {0} を受け取りました"
+
+#~ msgid "Unfreeze the list of merged elements and start merging"
+#~ msgstr "結合された要素のリスト固定を解除して結合をはじめる"
+
+#~ msgid ""
+#~ "<html>Click <strong>{0}</strong> to start merging my and their entries</"
+#~ "html>"
+#~ msgstr ""
+#~ "<html><strong>{0}</strong> をクリックして自分と相手のエントリの結合を開始"
+#~ "</html>"
+
+#~ msgid "Freeze the current list of merged elements"
+#~ msgstr "結合された要素の現在のリストを固定"
+
+#~ msgid "Remove the selected entries from the list of merged elements"
+#~ msgstr "結合された要素のリストから選択したエントリを削除"
+
+#~ msgid "Move up the selected elements by one position"
+#~ msgstr "同じ位置で選択した要素を上に移動"
+
+#~ msgid "Move down the selected entries by one position"
+#~ msgstr "同じ位置で選択したエントリを下に移動"
+
 #~ msgid "Undelete dependent primitives?"
 #~ msgstr "依存するプリミティブの削除を取り消しますか？"
+
+#~ msgid "The key ''{0}'' and all it's values are going to be removed"
+#~ msgstr "キー ''{0}'' とその全ての値は削除されます"
+
+#~ msgid ""
+#~ "<html>To keep your local version, JOSM<br>has to reset the id of "
+#~ "primitive {0} to 0.<br>On the next upload the server will assign<br>it a "
+#~ "new id.<br>Do yo agree?</html>"
+#~ msgstr ""
+#~ "<html>あなたのローカルバージョンを残すために、JOSMは<br>プリミティブ {0} "
+#~ "のID を0にリセットしなければなりません。<br>次回のアップロード時にサーバが"
+#~ "新しいidを割り当てます。<br>よろしいですか？</html>"
 
 #~ msgid ""
 #~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
@@ -39110,13 +40022,40 @@ msgstr "テスト"
 #~ "<html>JOSM はid {0} のあなたのローカルプリミティブをデータセットから<br>削"
 #~ "除しなければなりません。<br>よろしいですか？</html>"
 
+#~ msgid "merged nodes not frozen yet. Can't build resolution command"
+#~ msgstr ""
+#~ "結合されたノードはまだ固定されていません。解決コマンドをビルドできません"
+
+#~ msgid "cannot apply undecided tag merge item"
+#~ msgstr "未決のタグ結合アイテムを適用できません"
+
+#~ msgid "Parameter 'col' must be 0 or 1. Got {0}"
+#~ msgstr ""
+#~ "パラメータ 'col' は0 または 1でなければなりません。{0} を受け取りました"
+
 #~ msgid "Dialog not created yet. Invoke createInstance() first"
 #~ msgstr ""
 #~ "ダイアログはまだ作成されていません。最初に createInstance() を呼び出してく"
 #~ "ださい"
 
+#~ msgid "Display the history of the selected primitive"
+#~ msgstr "選択されたプリミティブの履歴を表示"
+
+#~ msgid "index out of bounds Got {0}"
+#~ msgstr "範囲外のインデックス。{0} を受け取りました"
+
+#~ msgid ""
+#~ "<html>The child relation<br>{0}<br>is deleted on the server. It can't be "
+#~ "loaded"
+#~ msgstr ""
+#~ "<html>子リレーション<br>{0}<br>はサーバ上から削除されました。ロードできま"
+#~ "せん"
+
 #~ msgid "Conflicts in data"
 #~ msgstr "データ内の競合"
+
+#~ msgid "Delete the currently selected tags"
+#~ msgstr "現在選択されているタグを削除"
 
 #~ msgid ""
 #~ "<html>You are setting an empty role on {0} primitives.<br>This is equal "
@@ -39127,6 +40066,47 @@ msgstr "テスト"
 #~ "ロールを削除することになります。<br>新しいロールを本当に適用しますか？</"
 #~ "html>"
 
+#~ msgid "Linked"
+#~ msgstr "リンク済み"
+
+#~ msgid "child.id >0 expected. Got {1}"
+#~ msgstr "子id > 0 でなければなりません。{1} を受け取りました"
+
+#~ msgid ""
+#~ "Warning: ignoring exception because task was cancelled. Exception was: "
+#~ msgstr "警告: タスクがキャンセルされたので例外を無視。例外: "
+
+#~ msgid "history not initialized yet. Failed to set reference primitive."
+#~ msgstr ""
+#~ "履歴はまだ初期化されていません。参照プリミティブのセットに失敗しました。"
+
+#~ msgid "id > 0 expected, got {0}"
+#~ msgstr "id > 0 でなければなりませんが、{0} を受け取りました"
+
+#~ msgid "Layer ''{0}'' has no modifications to be saved"
+#~ msgstr "レイヤー ''{0}'' には保存する修正はありません"
+
+#~ msgid ""
+#~ "Layer ''{0}'' has modifications which should be saved to its assoicated "
+#~ "file ''{1}''."
+#~ msgstr ""
+#~ "レイヤー ''{0}'' は修正されているのでその関連ファイル ''{1}'' に保存する必"
+#~ "要があります。"
+
+#~ msgid "Layer ''{0}'' has no modifications to be uploaded"
+#~ msgstr "レイヤー ''{0}'' にはアップロードする修正はありません"
+
+#~ msgid "Save and Delete"
+#~ msgstr "保存と削除"
+
+#~ msgid "({0}/{1}) Loading parents of primitive {2}"
+#~ msgstr "({0}/{1}) プリミティブ {2} の親要素をロード中"
+
+#~ msgid "expected instance of OsmDataLayer or GpxLayer. Got ''{0}''."
+#~ msgstr ""
+#~ "OSMデータレイヤーかGPXレイヤーのインスタンスであると期待しています。 "
+#~ "''{0}''を得ました。"
+
 #~ msgid "Defaults (See tooltip for detailed information)"
 #~ msgstr "デフォルト(詳細はツールチップ参照)"
 
@@ -39136,11 +40116,38 @@ msgstr "テスト"
 #~ msgid "Copy defaults"
 #~ msgstr "デフォルトをコピー"
 
+#~ msgid "Icon paths"
+#~ msgstr "アイコンのパス"
+
+#~ msgid "Could not export \"{0}\""
+#~ msgstr "\"{0}\" をエクスポートできません"
+
+#~ msgid ""
+#~ "no primitive with id {0} in local dataset. Can't infer primitive type"
+#~ msgstr ""
+#~ "id {0} のプリミティブはローカルデータセットにはありません。プリミティブタ"
+#~ "イプ不明"
+
+#~ msgid "preference ''{0}'' missing. Can't initialize OsmApi"
+#~ msgstr "設定 ''{0}'' がみつかりません。OsmApi を初期化できません"
+
 #~ msgid "Login name (e-mail) to the OSM account."
 #~ msgstr "OSM アカウントへのログイン名(e-mail)。"
 
 #~ msgid "OSM username (e-mail)"
 #~ msgstr "OSM ユーザ名 (e-mail)"
+
+#~ msgid "mandatory attribute ''{0}'' missing"
+#~ msgstr "必須の属性 ''{0}'' がありません"
+
+#~ msgid "Missing attribute \"version\" on OSM primitive with id {0}"
+#~ msgstr "id {0} のOSM プリミティブに属性 \"version\" がありません"
+
+#~ msgid "Unknown relation member type {0}"
+#~ msgstr "不明なリレーションメンバーのタイプ {0}"
+
+#~ msgid "Failed to open connection to API {0}"
+#~ msgstr "API {0} への接続に失敗しました"
 
 #~ msgid "Plug-in named {0} is not available. Update skipped."
 #~ msgstr ""
@@ -39155,8 +40162,42 @@ msgstr "テスト"
 #~ "{0} プラグインのロードが要求されました。このプラグインは今は必須ではありま"
 #~ "せん。"
 
+#~ msgid "The server replied an error with code {0}"
+#~ msgstr "サーバがエラーを返しました。コード {0}"
+
+#~ msgid "<html>An error occurred while saving.<br>Error is: <br>{0}</html>"
+#~ msgstr "<html>保存中にエラー発生。<br>エラー: <br>{0}</html>"
+
+#~ msgid ""
+#~ "<html>An error occurred while restoring backup file.<br>Error is: <br>{0}"
+#~ "</html>"
+#~ msgstr ""
+#~ "<html>バックアップファイルのレストア中にエラー発生。<br>エラー: <br>{0}</"
+#~ "html>"
+
+#~ msgid ""
+#~ "<html>WARNING: The password is stored in plain text in the preferences "
+#~ "file.<br>The password is transferred in plain text to the server, encoded "
+#~ "in the URL.<br><b>Do not use a valuable Password.</b></html>"
+#~ msgstr ""
+#~ "<html>警告: パスワードは設定ファイルに平文で保管されています。<br>パスワー"
+#~ "ドはサーバに平文で、URLエンコードされて送信されます。<br><b>重要なパスワー"
+#~ "ドは使用しないでください。</b></html>"
+
+#~ msgid "Confirmation"
+#~ msgstr "確認"
+
 #~ msgid "Reached the end of the line"
 #~ msgstr "ラインの終端に到達"
+
+#~ msgid "Reached a junction"
+#~ msgstr "ジャンクションに到達"
+
+#~ msgid "Let other applications send commands to JOSM."
+#~ msgstr "他のアプリーケーションにJOSM へのコマンドを送信させる"
+
+#~ msgid "Purging 1 primitive"
+#~ msgstr "1 つのプリミティブを破棄"
 
 #~ msgid ""
 #~ "<html>Selection \"{0}\" is used by relation \"{1}\" with role {2}."
@@ -39169,22 +40210,199 @@ msgstr "テスト"
 #~ msgstr "ウェイ {0}から、参照を取り除く"
 
 #~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>This conflict can't be added.</html>"
+#~ msgstr ""
+#~ "<html>レイヤー ''{0}'' は、既にプリミティブ<br>''{1}''<br>で、競合していま"
+#~ "す。この競合は加えることができません。</html>"
+
+#~ msgid ""
+#~ "Warning: layer ''{0}'' doesn't exist anymore. Can't remove conflict for "
+#~ "primitmive ''{1}''"
+#~ msgstr ""
+#~ "警告: レイヤー ''{0}'' は、もうぞんざいしません。プリミティブ ''{1}'' での"
+#~ "競合も取り除けません。"
+
+#~ msgid "removing reference from relation {0}"
+#~ msgstr "リレーション {0}から、参照を除きます。"
+
+#~ msgid ""
+#~ "tag collection can't be applied to a primitive because there are keys "
+#~ "with multiple values"
+#~ msgstr ""
+#~ "タグコレクションには複数の値を持つキーがあるのでプリミティブに適用できませ"
+#~ "ん"
+
+#~ msgid "tag collection doesn't include the selected value ''{0}''"
+#~ msgstr "タグコレクションには選択された値 ''{0}'' が含まれていません"
+
+#~ msgid "parameter {0} > 0 required. Got {1}."
+#~ msgstr "パラメータ {0} > 0 が必須です。 {1} を受け取りました。"
+
+#~ msgid "parameter ''{0}'' is not an acceptable class, got ''{1}''"
+#~ msgstr ""
+#~ "パラメータ ''{0}'' は受け入れ可能なクラスではありません、 ''{1}'' を受け取"
+#~ "りました"
+
+#~ msgid "parameter ''{0}'' is not a valid type name, got ''{1}''"
+#~ msgstr ""
+#~ "パラメータ ''{0}'' は正しいタイプ名ではありません、 ''{1}'' を受け取りまし"
+#~ "た"
+
+#~ msgid "There's no version valid at date ''{0}'' in this history"
+#~ msgstr "履歴の日付 ''{0}'' には有効なバージョンはありません"
+
+#~ msgid "parameter ''{0}'' > 0 expected, got ''{1}''"
+#~ msgstr ""
+#~ "パラメータ ''{0}'' > 0 である必要がありますが、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "<html>Failed to open a connection to the remote server<br>''{0}''."
+#~ "<br>Host name ''{1}'' couldn''t be resolved. <br>Please check the API URL "
+#~ "in your preferences and your internet connection.</html>"
+#~ msgstr ""
+#~ "<html>リモートサーバ<br>''{0}''.<br>への接続を開けませんでした。ホスト名 "
+#~ "''{1}'' を解決できません。<br>設定のAPI URL とインターネット接続をチェック"
+#~ "してください。</html>"
+
+#~ msgid "{0} pending tag conflicts to be resolved"
+#~ msgstr "解決待ちの保留中タグ競合 {0}"
+
+#~ msgid ""
 #~ "<html>Failed to create an URL because the encoding ''{0}'' was<br>was "
 #~ "missing on this system.</html>"
 #~ msgstr ""
 #~ "<html>URL の作成に失敗しました。エンコーディング ''{0}''は<br>このシステム"
 #~ "にはありません。</html>"
 
+#~ msgid "history not initialized yet. Failed to set current primitive."
+#~ msgstr "履歴がまだ初期化されていません。現在のプリミティブのセットに失敗。"
+
+#~ msgid ""
+#~ "failed to set reference. reference version {0} not available in history"
+#~ msgstr ""
+#~ "参照のセットに失敗しました。参照バージョン {0} は履歴で利用できません"
+
+#~ msgid ""
+#~ "Illegal value for attribute \"ref\" on member in relation {0}, got {1}"
+#~ msgstr ""
+#~ "リレーション {0} のメンバーの属性 \"ref\" に不正な値、 ''{1}'' を受け取り"
+#~ "ました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type long, got ''{1}''"
+#~ msgstr "long 型の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type OsmPrimitiveType, "
+#~ "got ''{1}''"
+#~ msgstr ""
+#~ "OsmPrimitiveType 型の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type int (>=0), got "
+#~ "''{1}''"
+#~ msgstr "int 型(>=0)の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type boolean, got ''{1}''"
+#~ msgstr "boolean 型の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type long (>=0), got "
+#~ "''{1}''"
+#~ msgstr "long 型(>=0)の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid ""
+#~ "illegal value for mandatory attribute ''{0}'' of type int, got ''{1}''"
+#~ msgstr "int 型の必須属性 {0} に不正な値、 ''{1}'' を受け取りました"
+
+#~ msgid "parameter ''{0}'' > 0 required. Got {1}"
+#~ msgstr "パラメータ ''{0}'' > 0 必須です。 {1} を受け取りました"
+
+#~ msgid "id parameter ''{0}'' > 0 required. Got {1}"
+#~ msgstr "ID パラメータ ''{0}'' > 0 必須です。 {1} を受け取りました"
+
+#~ msgid "parameter ''{0}'' >= 0 expected, got ''{1}''"
+#~ msgstr "パラメータ ''{0}'' >= 0 であるべきです。 {1} を受け取りました"
+
+#~ msgid ""
+#~ "Warning: failed to acccess directory ''{0}'' for security reasons. "
+#~ "Exception was: {1}"
+#~ msgstr ""
+#~ "警告: セキュリティ上の理由によりディレクトリ ''{0}'' へのアクセスに失敗。"
+#~ "例外: {1}"
+
+#~ msgid ""
+#~ "Illegal value for attribute \"version\" on OSM primitive with id {0}, got "
+#~ "{1}"
+#~ msgstr ""
+#~ "ID {0} のOSM プリミティブの属性 \"version\"に不正な値 、 {1} を受け取りま"
+#~ "した"
+
 #~ msgid "Unexpected \"type\" on member {0} in relation {1}, got {2}."
 #~ msgstr ""
 #~ "リレーション {1} のメンバー {0} に予期しない \"type\"、 {2} を受け取りまし"
 #~ "た。"
 
+#~ msgid "Missing attribute \"type\" on member {0} in relation {1}"
+#~ msgstr "リレーション {1} のメンバー {0} に属性 \"type\" がありません"
+
+#~ msgid ""
+#~ "<html>The openstreetbus plugin is using the old server at appspot.com."
+#~ "<br>A new server is available at schokokeks.org.<br>Do you want to switch "
+#~ "to the new server? (Strongly recommended)</html>"
+#~ msgstr ""
+#~ "<html>openstreetbus プラグインは appspot.com の古いサーバを使用していま"
+#~ "す。<br>schokokeks.org の新しいサーバが利用できます。<br>新しいサーバに切"
+#~ "り換えますか？ (強く推奨)</html>"
+
+#~ msgid "\"{0}\" is not closed and therefore can't be joined."
+#~ msgstr "\"{0}\" は閉じられていないので連結できません。"
+
 #~ msgid "Select a starting node on the end of a way"
 #~ msgstr "ウェイ終端の開始ノードを選択"
 
+#~ msgid "Please select the WMS layer to adjust."
+#~ msgstr "調整するWMSレイヤーを選択してください。"
+
+#~ msgid "There are currently no WMS layer to adjust."
+#~ msgstr "現在は調整するWMSレイヤーがありません。"
+
+#~ msgid ""
+#~ "<b>Zoom:</b> Mousewheel, double click or Ctrl + Up/Down <b>Move map:</b> "
+#~ "Hold right mousebutton and move mouse or use cursor keys. <b>Select:</b> "
+#~ "Click."
+#~ msgstr ""
+#~ "<b>ズーム:</b> マウスホイール、ダブルクリックまたは Ctrl + Up/Down <b>マッ"
+#~ "プ移動:</b> 右クリックしたままマウスを動かすか、カーソルキーを使用。 <b>選"
+#~ "択:</b> クリック"
+
+#~ msgid "parameter {0} not in range 0..{1}, got {2}"
+#~ msgstr "パラメータ {0} は 0..{1} の範囲外です、 {2} を受け取りました"
+
+#~ msgid "role {0} is not participating in compare pair {1}"
+#~ msgstr "ロール {0} は比較ペア {1} に参加していません"
+
+#~ msgid "list in role {0} is currently not participating in a compare pair"
+#~ msgstr "ロール {0} のリストは現在比較ペアに参加していません"
+
+#~ msgid ""
+#~ "<html>An upload and/or save operation of one layer with "
+#~ "modifications<br>was cancelled or has been failed.</html>"
+#~ msgstr ""
+#~ "<html>修正されたひとつのレイヤーのアップロード、保存操作は<br>キャンセルさ"
+#~ "れたか失敗しました。</html>"
+
 #~ msgid "The XML source (URL or filename) for {0} definition files."
 #~ msgstr "{0} 定義ファイル用XML ソース(URL またはファイル名)。"
+
+#~ msgid ""
+#~ "Server replied with response code 404, retrying with an individual "
+#~ "request for each primitive"
+#~ msgstr ""
+#~ "サーバがレスポンスコード404を返しました、各プリミティブの個別リクエストで"
+#~ "最試行中"
 
 #~ msgid ""
 #~ "<html>There are unresolved conflicts in layer ''{0}''.<br>You have to "
@@ -39193,8 +40411,34 @@ msgstr "テスト"
 #~ "<html>レイヤー ''{0}'' に未解決の競合があります。<br>これを最初に解決して"
 #~ "ください。</html>"
 
+#~ msgid "expected id >= 0. Got {0}"
+#~ msgstr "ID >= 0 である必要があります。 {0} を受け取りました"
+
+#~ msgid "unsupported value ''{0}'' or parameter ''{1}''"
+#~ msgstr "サポートされていない値 ''{0}''またはパラメータ ''{1}''"
+
 #~ msgid "paramete''{0}'' must not be null"
 #~ msgstr "パラメータ''{0}'' はヌルでなければなりません"
+
+#~ msgid "can't add node {0} to incomplete way {1}"
+#~ msgstr "ノード {0} を不完全なウェイ {1} に追加できません"
+
+#~ msgid "version > 0 expected. Got {0}"
+#~ msgstr "バージョン > 0 である必要があります。 {0} を受け取りました"
+
+#~ msgid "id > 0 expected. Got {0}"
+#~ msgstr "ID > 0 である必要があります。 {0} を受け取りました"
+
+#~ msgid "parameter ''{0}'' in range 0..{1} expected, got {2}"
+#~ msgstr ""
+#~ "パラメータ {0} は 0..{1} の範囲内である必要があります、 {2} を受け取りまし"
+#~ "た"
+
+#~ msgid "Conflicts when merging nodes - merged node is ''{0}''"
+#~ msgstr "ノードの結合時に競合 - 結合されたノードは''{0}'' です"
+
+#~ msgid "Zoom to primitive the first selected member refers to"
+#~ msgstr "最初に選択されたメンバーが参照しているプリミティブにズーム"
 
 #~ msgid ""
 #~ "<b>Zoom:</b> Mousewheel, double click or Ctrl + Up/Down <b>Move map:</b> "
@@ -39208,8 +40452,51 @@ msgstr "テスト"
 #~ msgid "Please enter a comment for this upload changeset (min. 3 characters)"
 #~ msgstr "このアップロード変更セットにコメントを入力してください（3文字以上）"
 
+#~ msgid "Illegal upload comment"
+#~ msgstr "不正なアップロードコメント"
+
 #~ msgid "Missing mandatory attribute ''{0}''"
 #~ msgstr "必要な属性 ''{0}'' がありません"
+
+#~ msgid "Missing mandatory attribute ''{0}'' of XML element {1}"
+#~ msgstr "XML 要素 {1} に必要な属性 ''{0}'' がありません"
+
+#~ msgid "Missing attribute ''type'' on member {0} in relation {1}"
+#~ msgstr "リレーション {1} のメンバー {0} に属性 ''type'' がありません"
+
+#~ msgid "Missing attribute ''ref'' on member in relation {0}"
+#~ msgstr "リレーション {0} のメンバーに属性 ''ref'' がありません"
+
+#~ msgid "Warning: Undefined element ''{0}'' found in input stream. Skipping."
+#~ msgstr ""
+#~ "警告: 未定義の要素 ''{0}'' が入力ストリームに見つかりました。スキップしま"
+#~ "す。"
+
+#~ msgid "Illegal long value for attribute ''{0}''. Got ''{1}''"
+#~ msgstr "属性 ''{0}'' に不正な長い値。入力値: ''{1}''"
+
+#~ msgid "Missing attribute ''version'' on OSM primitive with id {0}"
+#~ msgstr "ID {0} のOSM プリミティブ「の属性 ''version'' がありません"
+
+#~ msgid "Unknown or unsupported API version. Got {0}"
+#~ msgstr "不明なまたはサポートされない APIバージョン。入力値: {0}"
+
+#~ msgid ""
+#~ "Illegal value for attribute ''version'' on OSM primitive with id {0}. Got "
+#~ "{1}"
+#~ msgstr "ID {0} のOSM プリミティブの ''version'' 属性に不正な値。入力値: {1}"
+
+#~ msgid ""
+#~ "Relation with external id ''{0}'' refers to missing primitive with "
+#~ "external id ''{1}''"
+#~ msgstr ""
+#~ "外部ID ''{0}'' のリレーションが外部ID ''{1}'' の存在しないプリミティブを参"
+#~ "照しています"
+
+#~ msgid ""
+#~ "Unknown relation member type ''{0}'' in relation with external id ''{1}''"
+#~ msgstr ""
+#~ "外部ID ''{1}'' のリレーションに不明なリレーションメンバータイプ ''{0}''"
 
 #~ msgid ""
 #~ "The selected way(s) have nodes outside of the downloaded data region.\n"
@@ -39228,11 +40515,71 @@ msgstr "テスト"
 #~ "all?"
 #~ msgstr[0] "選択には {0} ウェイが含まれます。本当に簡略化しますか？"
 
+#~ msgid ""
+#~ "My primitive with id {0} and version {1} is visible although their "
+#~ "primitive with lower version {2} is not visible. Can't deal with this "
+#~ "inconsistency. Keeping my primitive. "
+#~ msgstr ""
+#~ "ID {0} バージョン {1} の自分のプリミティブは表示されますが、低いバージョ"
+#~ "ン {2} の相手のプリミティブは表示されません。この不整合を解決できません。"
+#~ "自分のプリミティブを残します。 "
+
 #~ msgid "Replace"
 #~ msgstr "置換"
 
 #~ msgid ">"
 #~ msgstr ">"
+
+#~ msgid ""
+#~ "<html>There are {0} additional nodes used by way {1}<br>which are deleted "
+#~ "on the server.<br><br>Do you want to undelete these nodes too?</html>"
+#~ msgstr ""
+#~ "<html>サーバーから削除されたウェイ{1}に<br>付加された {0} 個のノードがあり"
+#~ "ます。<br><br>これらのノードも復活させたいですか?</html>"
+
+#~ msgid "pos {0} is out of range. current number of members: {1}"
+#~ msgstr "pos {0} は、範囲外です。現在のメンバーの数: {1}"
+
+#~ msgid "parameter ''{0}'' with tags for exactly one key expected. Got {1}"
+#~ msgstr ""
+#~ "タグのパラメーター ''{0}'' は、厳格に1つのキーであることが期待されていま"
+#~ "す。 {1} を受けとりました。"
+
+#~ msgid ""
+#~ "<html>There are {0} additional primitives referred to by relation {1}"
+#~ "<br>which are deleted on the server.<br><br>Do you want to undelete them "
+#~ "too?</html>"
+#~ msgstr ""
+#~ "<html>サーバーから削除されたリレーション{1}に<br>参照されていた {0} 個のプ"
+#~ "リミティブがあります。<br><br>これらも復活させたいですか?</html>"
+
+#~ msgid "Tag modified relations with   "
+#~ msgstr "タグは、次のものでリレーションを変更しました:   "
+
+#~ msgid ""
+#~ "<html>There is at least one member in this relation referring<br>to the "
+#~ "relation itself.<br>This creates circular dependencies and is dicuraged."
+#~ "<br>How do you want to proceed with circular dependencies?</html>"
+#~ msgstr ""
+#~ "<html>このリレーションの少なくともひとつメンバーは、<br>自身のリレーション"
+#~ "を参照しています。<br>これは循環参照を引き起こすため、推奨されません。<br>"
+#~ "循環参照をどうしますか？</html>"
+
+#~ msgid "unexpected value of parameter \"index\". Got {0}"
+#~ msgstr "パラメータ \"index\" におかしな値。入力値: {0}"
+
+#~ msgid "unexpected format of id replied by the server, got ''{0}''"
+#~ msgstr "おかしな形式のID がサーバから返されました。入力値: ''{0}''"
+
+#~ msgid ""
+#~ "unexpected format of new version of modified primitive ''{0}'', got "
+#~ "''{1}''"
+#~ msgstr ""
+#~ "変更されたプリミティブ ''{0}'' の新しいバージョンにおかしな形式。入力値: "
+#~ "''{1}''"
+
+#~ msgid "unexpected column index. Got {0}"
+#~ msgstr "おかしなカラムインデックス。入力値: {0}"
 
 #~ msgid ""
 #~ "Unexpected version of JOSM. Neither Main.ds nor Main.getCurrentDataSet() "
@@ -39244,6 +40591,43 @@ msgstr "テスト"
 #~ msgid "Check if map painting found data errors."
 #~ msgstr "地図塗りつぶしでデータエラーがあるかどうかチェック"
 
+#~ msgid ""
+#~ "An OSM data validator. It checks for problems in data, and provides fixes "
+#~ "for the common ones. Spellcheck integrated for tag names."
+#~ msgstr ""
+#~ "OSM データ妥当性検証。データ中の問題をチェックし、一般的な解決法を提供しま"
+#~ "す。タグ名用にスペルチェック機能が統合されています。"
+
+#~ msgid "UTM Zone {0}"
+#~ msgstr "UTM ゾーン {0}"
+
+#~ msgid "Czech CUZK:KM"
+#~ msgstr "チェコ CUZK:KM"
+
+#~ msgid "TilesAtHome"
+#~ msgstr "TilesAtHome"
+
+#~ msgid "OpenStreetMap"
+#~ msgstr "OpenStreetMap"
+
+#~ msgid "OpenCycleMap"
+#~ msgstr "OpenCycleMap"
+
+#~ msgid "Yahoo Sat"
+#~ msgstr "Yahoo 衛星"
+
+#~ msgid "Terraserver Urban"
+#~ msgstr "Terraserver Urban"
+
+#~ msgid "Terraserver Topo"
+#~ msgstr "Terraserver Topo"
+
+#~ msgid "Czech UHUL:ORTOFOTO"
+#~ msgstr "チェコ UHUL:ORTOFOTO"
+
+#~ msgid "Illegal value for attribute ''uid''. Got ''{0}''"
+#~ msgstr "属性 ''uid'' に不正な値。入力値: ''{0}''"
+
 #~ msgid "Help page missing. Create it in <A HREF=\"{0}\">English</A>."
 #~ msgstr ""
 #~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A>で作成してください。"
@@ -39254,6 +40638,11 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A> または <A HREF=\"{1}\">"
 #~ "あなたの言語</A>で作成してください。"
+
+#~ msgid ""
+#~ "Can't undo command ''{0}'' because layer ''{1}'' is not present any more"
+#~ msgstr ""
+#~ "コマンド ''{0}'' はレイヤー {1} がすでに表示されていないので取り消せません"
 
 #~ msgid "Didn't find an primitive with id {0} in this dataset"
 #~ msgstr "このデータセットには id {0} のプリミティブはありません"
@@ -39270,14 +40659,127 @@ msgstr "テスト"
 #~ "ヘルプページがありません。<A HREF=\"{0}\">英語</A>もしくは<A HREF=\"{1}\">"
 #~ "あなたの母国語</A>でそれを作成してください。"
 
+#~ msgid ""
+#~ "<html>Uploading <strong>failed</strong> because you've been "
+#~ "using<br>changeset {0} which was already closed at {1}.<br>Please upload "
+#~ "again with a new or an existing open changeset."
+#~ msgstr ""
+#~ "<html>アップロードに<strong>失敗</strong>。 {1} で既に閉じられた変更セッ"
+#~ "ト {0} を<br>使用していたためです。<br>新規または既存の開かれた変更セット"
+#~ "を再度アップロードしてください。"
+
+#~ msgid ""
+#~ "Warning: layer ''{0}'' doesn't exist any more. Can't remove conflict for "
+#~ "primitmive ''{1}''"
+#~ msgstr ""
+#~ "警告: レイヤー ''{0}'' はもはや存在しません。プリミティブ  ''{1}'' の競合"
+#~ "は削除不可。"
+
+#~ msgid "Text"
+#~ msgstr "テキスト"
+
+#~ msgid ""
+#~ "<html>{0} relations build a cycle because they refer to each other."
+#~ "<br>JOSM can''t upload them. Please edit the relations and remove the "
+#~ "cyclic dependency.</html>"
+#~ msgstr ""
+#~ "<html>{0} リレーションが相互に参照しあっており、循環を形成しています。"
+#~ "<br>JOSM はこれをアップロードできません。リレーションを編集して相互依存を"
+#~ "解消してください。</html>"
+
+#~ msgid ""
+#~ "<html>Uploading <strong>failed</strong> because you've been "
+#~ "using<br>changeset {0} which was already closed at {1}.<br>Please upload "
+#~ "again with a new or an existing open changeset.</html>"
+#~ msgstr ""
+#~ "<html>アップロードに<strong>失敗</strong>。既に {1} で閉じられた<br>変更"
+#~ "セット {0} を使用しています。<br>新規または既存の開かれた変更セットで再度"
+#~ "アップロードしてください。</html>"
+
+#~ msgid ""
+#~ "Warning: layer ''{0}'' doesn't exist any more. Can't remove conflict for "
+#~ "primitive ''{1}''"
+#~ msgstr ""
+#~ "警告: レイヤー ''{0}'' は既に存在しません。プリミティブ ''{1}'' の競合を解"
+#~ "消できません"
+
 #~ msgid "Apply also for children"
 #~ msgstr "子へも適用"
+
+#~ msgid "child.getId() >0 expected. Got {1}"
+#~ msgstr "child.getId() >0 であるべきです。入力値 {1}"
+
+#~ msgid "Open a new changeset"
+#~ msgstr "新しい変更セットを開く"
+
+#~ msgid "Upload data to an already opened changeset"
+#~ msgstr "既に開かれた変更セットにデータをアップロード"
+
+#~ msgid "Use an open changeset"
+#~ msgstr "開かれた変更セットを使用"
+
+#~ msgid "Upload all changes in one request"
+#~ msgstr "ひとつのリクエストで全ての変更をアップロード"
+
+#~ msgid "changeset id > 0 expected. Got {1}"
+#~ msgstr "変更セット ID > 0 であるべきです。入力値: {1}"
+
+#~ msgid "missing mandatory attribute ''{0}''"
+#~ msgstr "必須の属性 ''{0}'' がありません"
+
+#~ msgid "illegal value for attribute ''{0}''. Got ''{1}''"
+#~ msgstr "属性 ''{0}'' に不正な値。入力値: ''{1}''"
+
+#~ msgid "Changeset id > 0 expected. Got {0}"
+#~ msgstr "変更セットID > 0 であるべきです。入力値: {0}"
+
+#~ msgid "Open changeset expected. Got closed changeset with id {0}"
+#~ msgstr ""
+#~ "変更セットは開かれているべきです。ID {0} の閉じられた変更セットが入力され"
+#~ "ました"
+
+#~ msgid "id of changeset > 0 required. Got {0}"
+#~ msgstr "変更セットのID > 0 であるべきです。入力値: {0}"
+
+#~ msgid "parameter ''{0}'' > 0 expected. Got {1}"
+#~ msgstr "パラメータ ''{0}'' > 0 であるべきです。入力値: {1}"
+
+#~ msgid "id of current changeset > 0 required. Current id is {0}"
+#~ msgstr "現在の変更セットのID > 0 でなければなりません。現在のID: {0}"
 
 #~ msgid "Current changeset is null. Can't upload data."
 #~ msgstr "現在の変更セットはヌルです。データをアップロードできません。"
 
+#~ msgid "illegal nummeric value for attribute ''{0}''. Got ''{1}''"
+#~ msgstr "属性 ''{0}'' に不正な数値。入力値: ''{1}''"
+
+#~ msgid "illegal boolean value for attribute ''{0}''. Got ''{1}''"
+#~ msgstr "属性 ''{0}'' に不正なブール値。入力値: ''{1}''"
+
+#~ msgid ""
+#~ "Missing manadatory attributes on element ''bounds''. Got minlon=''{0}'',"
+#~ "minlat=''{1}00,maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''"
+#~ msgstr ""
+#~ "要素 ''bounds'' に必須の属性がありません。入力値: minlon=''{0}'',"
+#~ "minlat=''{1}00,maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''"
+
 #~ msgid "Expected instance of OsmDataLayer. Got ''{0}''."
 #~ msgstr "OsmDataLayerのインスタンスであるべきです。 入力値: ''{0}''。"
+
+#~ msgid ""
+#~ "way with external id ''{0}'' includes missing node with external id "
+#~ "''{1}''"
+#~ msgstr ""
+#~ "外部ID ''{0}'' のウェイは外部ID ''{1}'' の不明なノードを含んでいます"
+
+#~ msgid "Illegal value of attribute ''ref'' of element <nd>. Got {0}"
+#~ msgstr "要素 <nd> の属性 ''ref'' に不正な値。 入力値: {0}"
+
+#~ msgid "Missing attribute ''{0}'' on XML tag ''{1}''"
+#~ msgstr "XMLタグ ''{1}'' の属性 ''{0}'' がありません"
+
+#~ msgid "XML tag <user> is missing"
+#~ msgstr "XMLタグ <user> がありません"
 
 #~ msgid "Error: failed to add authentication credentials to the connection."
 #~ msgstr "エラー: 接続する認証信任状の追加に失敗。"
@@ -39289,11 +40791,40 @@ msgstr "テスト"
 #~ "警告: アップロードするデータにAPIバージョンが定義されていません。バージョ"
 #~ "ン0.6 にフォールバックします。"
 
+#~ msgid "Illegal value for attribute ''{0}'' on XML tag ''{1}''. Got {2}"
+#~ msgstr "XML タグ ''{1}'' の属性 ''{0}'' に不正な値。入力値: {2}"
+
 #~ msgid "<html>"
 #~ msgstr "<html>"
 
+#~ msgid ""
+#~ "WARNING: preference ''{0}'' or api version ''{1}'' of dataset requires to "
+#~ "use diff uploads, but API is not able to handle them. Ignoring diff "
+#~ "upload."
+#~ msgstr ""
+#~ "警告: 設定 ''{0}'' またはデータセットのAPIバージョン ''{1}'' では差分アッ"
+#~ "プロードが必要ですが、API が対応していません。差分アップロードを無視しま"
+#~ "す。"
+
+#~ msgid "All:"
+#~ msgstr "すべて:"
+
+#~ msgid "Missing mandatory attribute ''{0}'' on <nd> of way {1}"
+#~ msgstr "ウェイ {1} の<nd>に必要な属性 ''{0}'' が見つかりません"
+
+#~ msgid "Nothing find in selection by searching for ''{0}''"
+#~ msgstr "''{0}'' を探した結果何も見つからなかった"
+
 #~ msgid "Gauss-Laborde Réunion 1947"
 #~ msgstr "ガウス-ラボルド会議1947"
+
+#~ msgid ""
+#~ "<html>Version <strong>{0}</strong> created on <strong>{1}</strong> by "
+#~ "<strong>{2}</strong> in changeset <strong>{3}</strong></html>"
+#~ msgstr ""
+#~ "<html>バージョン <strong>{0}</strong> は変更セット <strong>{3}</strong> "
+#~ "の <strong>{2}</strong> によって <strong>{1}</strong> 上で作成された</"
+#~ "html>"
 
 #~ msgid "Unexpected return value. Got {0}."
 #~ msgstr "予期せぬ値が返って来ました。 {0} を受けとりました。"
@@ -39303,6 +40834,9 @@ msgstr "テスト"
 
 #~ msgid "Expected ID >= 0. Got {0}."
 #~ msgstr "ID >= 0 である必要があります。 {0} を受け取りました"
+
+#~ msgid "A primitive with ID = 0 can't be invisible."
+#~ msgstr "id=0 のプリミティブは非表示にできません"
 
 #~ msgid "Parameter ''{0}'' is not a valid type name. Got ''{1}''."
 #~ msgstr ""
@@ -39331,6 +40865,11 @@ msgstr "テスト"
 #~ msgid "No latest version found. History is empty."
 #~ msgstr "最新のバージョンがありません。履歴は空です。"
 
+#~ msgid ""
+#~ "Can't compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
+#~ msgstr ""
+#~ "id ''{0}'' のプリミティブと id ''{1}'' のプリミティブを比較できません"
+
 #~ msgid "Parameter current out of range. Got {0}."
 #~ msgstr "現在のパラメータは範囲外です: {0} を受け取りました"
 
@@ -39346,6 +40885,9 @@ msgstr "テスト"
 #~ "タグのパラメーター ''{0}'' は、厳格に1つのキーであることが期待されていま"
 #~ "す。 {1} を受けとりました。"
 
+#~ msgid "Tag collection doesn't include the selected value ''{0}''."
+#~ msgstr "タグコレクションには選択された値 ''{0}'' が含まれていません"
+
 #~ msgid "Index out of bounds. Got {0}."
 #~ msgstr "範囲外のインデックス。{0} を受け取りました"
 
@@ -39354,6 +40896,15 @@ msgstr "テスト"
 
 #~ msgid "Could not read ''{0}''."
 #~ msgstr "\"{0}\"を読み込めません。"
+
+#~ msgid ""
+#~ "No primitive with id {0} in local dataset. Can't infer primitive type."
+#~ msgstr ""
+#~ "id {0} のプリミティブはローカルデータセットにはありません。プリミティブタ"
+#~ "イプ不明"
+
+#~ msgid "Preference ''{0}'' missing. Can't initialize OsmApi."
+#~ msgstr "設定 ''{0}'' がみつかりません。OsmApi を初期化できません"
 
 #~ msgid "Illegal value for attribute ''uid''. Got ''{0}''."
 #~ msgstr "属性 ''uid'' に不正な値。入力値: ''{0}''"
@@ -39378,8 +40929,30 @@ msgstr "テスト"
 #~ msgid "Parameter ''{0}'' >= 0 expected. Got ''{1}''."
 #~ msgstr "パラメータ ''{0}'' >= 0 であるべきです。 {1} を受け取りました"
 
+#~ msgid ""
+#~ "Couldn't connect to the OSM server. Please check your internet connection."
+#~ msgstr ""
+#~ "osmサーバに接続できません。インターネット接続 をチェックしてください。"
+
 #~ msgid "Value of child.getId() > 0 expected. Got {1}."
 #~ msgstr "child.getId() の値 > 0 であるべきです。入力値: {1}。"
+
+#~ msgid "Illegal nummeric value for attribute ''{0}''. Got ''{1}''."
+#~ msgstr "属性 ''{0}'' に不正な数値。入力値: ''{1}''。"
+
+#~ msgid ""
+#~ "Missing manadatory attributes on element ''bounds''. Got minlon=''{0}'',"
+#~ "minlat=''{1}00,maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''."
+#~ msgstr ""
+#~ "要素 ''bounds'' に必要な属性が見つかりません。入力値: minlon=''{0}'',"
+#~ "minlat=''{1}00,maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''。"
+
+#~ msgid ""
+#~ "Relation with external id ''{0}'' refers to missing primitive with "
+#~ "external id ''{1}''."
+#~ msgstr ""
+#~ "外部ID ''{0}'' のリレーションは外部ID ''{1}'' の存在しないプリミティブを参"
+#~ "照しています。"
 
 #~ msgid ""
 #~ "WARNING: preference ''{0}'' or API version ''{1}'' of dataset requires to "
@@ -39390,11 +40963,62 @@ msgstr "テスト"
 #~ "プロードの使用が必須ですが、API は取扱えません。差分アップロードを無視しま"
 #~ "す。"
 
+#~ msgid "UTM20N Martinique Fort Desaix 1952"
+#~ msgstr "UTM20N (仏領)マルティニーク海外県 Fort Desaix 市 1952"
+
+#~ msgid "UTM20N Guadeloupe Fort-Marigot 1949"
+#~ msgstr "UTM20N (仏領)グアドループ海外県 マリゴ市 1949"
+
+#~ msgid "UTM20N Guadeloupe Ste-Anne 1948"
+#~ msgstr "UTM20N (仏領)グアドループ海外県 Sainte-Anne 市 1948"
+
 #~ msgid "Preset group ''{0}'' of group ''{1}''"
 #~ msgstr "プリセットのグループ ''{1}'' のグループ ''{0}''"
 
 #~ msgid "Unexpected column index. Got {0}."
 #~ msgstr "予期せぬカラムインデックス。入力値: {0}"
+
+#~ msgid ""
+#~ "Tag collection can't be applied to a primitive because there are keys "
+#~ "with multiple values."
+#~ msgstr ""
+#~ "タグコレクションをプリミティブに適用できません。複数の値を持つキーがありま"
+#~ "す。"
+
+#~ msgid ""
+#~ "Marked way {0} with {1} nodes incomplete because at least one node was "
+#~ "missing in the loaded data and is therefore incomplete too."
+#~ msgstr ""
+#~ "{1} ノードのウェイ {0} は不完全です。ロードされたデータに少なくとひとつの"
+#~ "ノードが見つからないため、不完全です。"
+
+#~ msgid ""
+#~ "Preference with key ''{0}'' does not include ''{1}''. Can''t restore "
+#~ "window geometry from preferences."
+#~ msgstr ""
+#~ "キー ''{0}'' の設定は ''{1}'' を含んでいません。設定から window geometry "
+#~ "を復元できません。"
+
+#~ msgid ""
+#~ "Preference with key ''{0}'' does not provide an int value for ''{1}''. "
+#~ "Got {2}. Can''t restore window geometry from preferences."
+#~ msgstr ""
+#~ "キー ''{0}'' の設定は ''{1}'' にint 値を与えていません。入力値: {2}。設定"
+#~ "から window geometry を復元できません。"
+
+#~ msgid ""
+#~ "Failed to parse field ''{1}'' in preference with key ''{0}''. Exception "
+#~ "was: {2}. Can''t restore window geometry from preferences."
+#~ msgstr ""
+#~ "キー ''{0}'' の設定中のフィールド ''{1}'' の解析に失敗しました。例外コー"
+#~ "ド: {2}。設定から window geometry を復元できません。"
+
+#~ msgid ""
+#~ "Preference with key ''{0}'' does not exist. Can''t restore window "
+#~ "geometry from preferences."
+#~ msgstr ""
+#~ "キー ''{0}'' の設定が存在しません。設定から window geometry を復元できませ"
+#~ "ん。"
 
 #~ msgid ""
 #~ "Warning: Failed to restore window geometry from key ''{0}''. Falling back "
@@ -39412,8 +41036,28 @@ msgstr "テスト"
 #~ "要です\n"
 #~ "     Javaの使用メモリ最大サイズを増やすオプション"
 
+#~ msgid "Merged nodes not frozen yet. Can't build resolution command."
+#~ msgstr ""
+#~ "結合したノードがまだ固定されていません。解決コマンドをビルドできません"
+
+#~ msgid "Merged nodes not frozen yet. Can't build resolution command"
+#~ msgstr ""
+#~ "結合したノードはまだ固定されていません。解決コマンドをビルドできません"
+
 #~ msgid "Set manually the Lambert zone (e.g. for locations between two zones)"
 #~ msgstr "ランベルトzone を手動設定 (例：２つのゾーン間の位置用)"
+
+#~ msgid "Processing {0}"
+#~ msgstr "{0} 実行中"
+
+#~ msgid "Relation: from {0} to {1} via {2}"
+#~ msgstr "リレーション: {0} から {1} まで {2} 経由"
+
+#~ msgid "Please select at least one closed way the should be joined."
+#~ msgstr "結合させるクローズドノードを最低ひとつ選んでください。"
+
+#~ msgid "Select a single, closed way of at least four nodes."
+#~ msgstr "最低4ノード以上の単一のクローズドウェイを選択"
 
 #~ msgid ""
 #~ "You can add, edit and delete WMS entries in the WMSplugin Preference Tab "
@@ -39461,6 +41105,25 @@ msgstr "テスト"
 #~ "お知らせ: 画像はコピーライト表示に従い、疑わしいものは使用しないでくださ"
 #~ "い。"
 
+#~ msgid ""
+#~ "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
+#~ "background and request updates."
+#~ msgstr ""
+#~ "JOSM のスリッピーマップグリッドを表示。スリッピーマップからタイルを背景と"
+#~ "してロードし、更新を要求できます。"
+
+#~ msgid ""
+#~ "Several utilities that make your life easier: e.g. simplify way, join "
+#~ "areas, jump to position."
+#~ msgstr ""
+#~ "あなたの人生をより楽なものにする数種のユーティリティ: 例、ウェイ簡素化、エ"
+#~ "リア結合、ポジションへのジャンプ"
+
+#~ msgid ""
+#~ "Display georeferenced images as background in JOSM (WMS servers, "
+#~ "Yahoo, ...)."
+#~ msgstr "地理参照画像をJOSM の背景として表示（WMS サーバ、Yahoo,...）。"
+
 #~ msgid "Bikes"
 #~ msgstr "自転車"
 
@@ -39469,6 +41132,9 @@ msgstr "テスト"
 
 #~ msgid "Man-Made"
 #~ msgstr "建造物"
+
+#~ msgid "{0} via nodes."
+#~ msgstr "{0} 経由ノード。"
 
 #~ msgid "error requesting update: not zoom-level 12"
 #~ msgstr "更新要求中にエラー: ズームレベル12 ではありません"
@@ -39479,9 +41145,89 @@ msgstr "テスト"
 #~ msgid "Group common Address Interpolation inputs in a single dialog,"
 #~ msgstr "グループ共通のアドレス補間をひとつのダイアログに入力します。"
 
+#~ msgid "H"
+#~ msgstr "H"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "R"
+#~ msgstr "R"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "F"
+#~ msgstr "F"
+
+#~ msgid "I"
+#~ msgstr "I"
+
+#~ msgid "M"
+#~ msgstr "M"
+
+#~ msgid ""
+#~ "Adjustable {0} not registered yet. Can't set participation in "
+#~ "synchronized adjustment."
+#~ msgstr ""
+#~ "調整可能な {0} がまだ登録されていません。同期された調整に参加設定できませ"
+#~ "ん。"
+
 #~ msgid "Replace the way this member refers to with the combined way"
 #~ msgstr ""
 #~ "このメンバーが参照しているウェイを結合するウェイと置き換えてください。"
+
+#~ msgid ""
+#~ "<p>You may notice that the key selection list on the next page lists all "
+#~ "keys that exist on all kinds of keyboards Java knows about, not just "
+#~ "those keys that exist on your keyboard. Please use only those values that "
+#~ "correspond to a real key on your keyboard. So if your keyboard has no "
+#~ "'Copy' key (PC keyboard don't have them, Sun keyboards do), the do not "
+#~ "use it. Also there will be 'keys' listed that correspond to a shortcut on "
+#~ "your keyboard (e.g. ':'/Colon). Please also do not use them, use the base "
+#~ "key (';'/Semicolon on US keyboards, '.'/Period on German keyboards, ...) "
+#~ "instead. Not doing so may result in conflicts, as there is no way for "
+#~ "JOSM to know that Ctrl+Shift+; and Ctrl+: actually is the same thing on "
+#~ "an US keyboard...</p>"
+#~ msgstr ""
+#~ "<p>次ページのキー選択一覧は全種類のJava が知りうるあらゆるキーボードをリス"
+#~ "トしており、あなたのキーボード上にあるキーではないことにご注意ください。あ"
+#~ "なたのキーボード上にある実際のキーに対応する値だけを使用してください。もし"
+#~ "あなたのキーボードに 'Copy' キーが無い場合 (PC キーボードにはありません、"
+#~ "Sun のキーボードにはあります)、使用しないでください。 また、あなたのキー"
+#~ "ボード上のショーツカットに対応するリストされた'key' もあります。(例： ':'/"
+#~ "Colon)。これも同様に使わないでください。代わりにベースキー(US キーボード"
+#~ "の';'/Semicolon 、ドイツキーボードの '.'/Period 、...) を使ってください。"
+#~ "そうしないと競合を引き起こす場合があります。JOSM には Ctrl+Shift+; and "
+#~ "Ctrl+: がUS キーボードでは実際には同じことだと知る手立てが無いのです...</"
+#~ "p>"
+
+#~ msgid "Updates the current data layer from the server (re-downloads data)"
+#~ msgstr ""
+#~ "サーバーからの新しいデータで、データレイヤーのデーターを更新する。(データ"
+#~ "の再ダウンロード)"
+
+#~ msgid ""
+#~ "<html>{0} layer needs saving but has an associated file<br>which can't be "
+#~ "written.<br>Either select another file for this layer or discard the "
+#~ "changes.<br>Layer with a non-writable file:</html>"
+#~ msgid_plural ""
+#~ "<html>{0} layers need saving but have associated files<br>which can't be "
+#~ "written.<br>Either select another file for each of them or discard the "
+#~ "changes.<br>Layers with non-writable files:</html>"
+#~ msgstr[0] ""
+#~ "<html>{0} レイヤーは保存が必要ですが<br>書き込み不可の<br>関連するファイル"
+#~ "があります。<br>このレイヤー用の他のファイルを選択するか変更を破棄してくだ"
+#~ "さい。<br>書き込み不可のファイルのあるレイヤー:</html>"
+
+#~ msgid "Please select at least two nodes to merge."
+#~ msgstr "結合する少なくとも二つのウェイを選択してください。"
+
+#~ msgid "The \"to\" way doesn't start or end at a \"via\" node."
+#~ msgstr "\"to\"のウェイは\"via\"のノードで始まったり終わったりしません。"
 
 #~ msgid "Way ''{0}'' with less than two points."
 #~ msgstr "ウェイ\"{0}\"は二つ未満のポイントです。"
@@ -39489,8 +41235,36 @@ msgstr "テスト"
 #~ msgid "No \"via\" node or way found."
 #~ msgstr "経由地かウェイが見つかりません。"
 
+#~ msgid "Area style way is not closed."
+#~ msgstr "領域を指定するウェイが閉じていません。"
+
+#~ msgid "The \"from\" way doesn't start or end at the \"via\" way."
+#~ msgstr "\"from\" のウェイは\"via\"のウェイで始まったり終わったりしません。"
+
+#~ msgid "Duplicate Way"
+#~ msgstr "ウェイの複製"
+
 #~ msgid "Intersection between ways ''{0}'' and ''{1}''."
 #~ msgstr "ウェイ \"{0}\"と\"{1}\"の交差する点"
+
+#~ msgid "The \"to\" way doesn't start or end at the \"via\" way."
+#~ msgstr "\"to\"のウェイは\"via\"のウェイで始まったり終わったりしません。"
+
+#~ msgid "Duplicate Ways with an offset"
+#~ msgstr "オフセットのあるウェイを複製"
+
+#~ msgid ""
+#~ "<p>The last page lists the modifier keys JOSM will automatically assign "
+#~ "to shortcuts. For every of the four kinds of shortcuts there are three "
+#~ "alternatives. JOSM will try those alternative in the listed order when "
+#~ "managing a conflict. If all alternatives would result in shortcuts that "
+#~ "are already taken, it will assign a random shortcut instead.</p>"
+#~ msgstr ""
+#~ "<p>最終ページはJOSM が自動的にショートカットに割り当てる修飾を一覧表示して"
+#~ "います。4種のショートカットごとに3つの代替案があります。JOSM は競合を管理"
+#~ "する際、リスト順にこれらの代替案を試します。全ての代替案が既に割り当てられ"
+#~ "たショートカットになった場合、代わりにランダムなショートカットを割り当てま"
+#~ "す。</p>"
 
 #~ msgid "MIddle way: {0}"
 #~ msgstr "中間のウェイ: {0}"
@@ -39509,8 +41283,21 @@ msgstr "テスト"
 #~ "OSMデータレイヤーかGPXレイヤーのインスタンスが予期されています。 入力値: "
 #~ "''{0}''。"
 
+#~ msgid ""
+#~ "Warning: Layer ''{0}'' doesn't exist any more. Can't remove conflict for "
+#~ "primitive ''{1}''."
+#~ msgstr ""
+#~ "警告: レイヤー ''{0}'' は既に存在しません。元の ''{1}'' への競合は取り除け"
+#~ "ません。"
+
+#~ msgid "Select WMS layer"
+#~ msgstr "WMSレイヤーを選択"
+
 #~ msgid "any substance"
 #~ msgstr "どれかの実体"
+
+#~ msgid "overground"
+#~ msgstr "地上"
 
 #~ msgid ""
 #~ "Can''t undo command ''{0}'' because layer ''{1}'' is not present any more"
@@ -39518,11 +41305,54 @@ msgstr "テスト"
 #~ "コマンド ''{0}'' をアンドゥできません。なぜならレイヤ ''{1}'' はもうないか"
 #~ "らです。"
 
+#~ msgid "Purged {0} objects"
+#~ msgstr "{0} 個のオブジェクトを取り除いた。"
+
+#~ msgid ""
+#~ "{0} object has been purged from the local dataset because it is deleted "
+#~ "on the server."
+#~ msgid_plural ""
+#~ "{0} objects have been purged from the local dataset because they are "
+#~ "deleted on the server."
+#~ msgstr[0] ""
+#~ "{0} 個のオブジェクトはサーバから削除されましたので、ローカルなデータセット"
+#~ "から放棄されました。"
+
 #~ msgid "tower"
 #~ msgstr "送電塔"
 
+#~ msgid "underwater"
+#~ msgstr "水中"
+
+#~ msgid "minor_line"
+#~ msgstr "細い線"
+
+#~ msgid "One of the selected files was null !!!"
+#~ msgstr "選択したファイルはのひとつはヌルでした !!!"
+
+#~ msgid ""
+#~ "<html>This relation has been changed outside of the editor.<br>You can't "
+#~ "apply your changes and continue editing.<br><br>Do you want to create a "
+#~ "conflict and close the editor?</html>"
+#~ msgstr ""
+#~ "<html>このリレーションは編集画面以外で変更されています。<br>変更を適用して"
+#~ "編集を続けることはできません<br><br>競合を作成してエディタを閉じますか？</"
+#~ "html>"
+
+#~ msgid "Unnamed unclassified highway"
+#~ msgstr "名前のない一般道(2車線未満)"
+
+#~ msgid "footway with tag foot"
+#~ msgstr "footタグつきの遊歩道"
+
+#~ msgid "maxspeed used for footway"
+#~ msgstr "遊歩道に最大速度が指定"
+
 #~ msgid "Footway"
 #~ msgstr "遊歩道"
+
+#~ msgid "line"
+#~ msgstr "線"
 
 #~ msgid "No type found. History is empty."
 #~ msgstr "種別が見つかりません。履歴は空です。"
@@ -39532,6 +41362,13 @@ msgstr "テスト"
 
 #~ msgid "latitude"
 #~ msgstr "緯度"
+
+#~ msgid ""
+#~ "You''re about to launch {0} browser windows.<br>This may both clutter "
+#~ "your screen with browser windows<br>and take some time to finish."
+#~ msgstr ""
+#~ "{0} ブラウザウィンドウを起動しようとしています。<br>画面がブラウザウィンド"
+#~ "ウで散らかり<br>終わらせるのに少し時間が掛かります。"
 
 #~ msgid "Coordinate"
 #~ msgstr "座標"
@@ -39545,6 +41382,44 @@ msgstr "テスト"
 #~ msgid "Can only edit help pages from JOSM Online Help"
 #~ msgstr "JOSMオンラインヘルプからのみヘルプページを編集できます。"
 
+#~ msgid "None of this way's nodes are glued to anything else."
+#~ msgstr "どのウェイも接着していません。"
+
+#~ msgid "Update selections"
+#~ msgstr "選択を更新"
+
+#~ msgid "Updates the objects in the current data layer from the server."
+#~ msgstr "サーバから現在のデータレイヤーのオブジェクトを更新します。"
+
+#~ msgid ""
+#~ "Upload all changes in the current current selection to the OSM server."
+#~ msgstr "現在の選択の変更を全てOSM サーバにアップロード。"
+
+#~ msgid "Upload all changes in the current data layer to the OSM server"
+#~ msgstr "現在のデータレイヤーの変更を全てOSM サーバにアップロード"
+
+#~ msgid ""
+#~ "Please consult the Conflict List Dialog<br>and manually resolve them."
+#~ msgstr "競合リストダイアログを見て<br>手動で解決してください。"
+
+#~ msgid "There are no selected primitives to update."
+#~ msgstr "更新用に選択されたプリミティブがありません。"
+
+#~ msgid ""
+#~ "<html>Uploading <strong>failed</strong> because you''ve been "
+#~ "using<br>changeset {0} which was already closed at {1}.<br>Please upload "
+#~ "again with a new or an existing open changeset.</html>"
+#~ msgstr ""
+#~ "<html>アップロード <strong>失敗</strong>: あなたが<br>チェンジセット {0} "
+#~ "を使用しています。それはすでに {1} に閉じられましたので、<br>もう一度新規"
+#~ "または既に開いている変更セットをアップロードしてください。</html>"
+
+#~ msgid "Select if the data should be downloaded in a new layer"
+#~ msgstr "新しいレイヤーにデータをダウンロードするなら選択"
+
+#~ msgid "Didn''t find an object with id {0} in the current dataset"
+#~ msgstr "現在のデータセットには ID {0} のオブジェクトがありません"
+
 #~ msgid "Object id > 0 expected. Got {0}"
 #~ msgstr "オブジェクト ID > 0 が期待されています。入力値: {0}"
 
@@ -39557,11 +41432,30 @@ msgstr "テスト"
 #~ msgid "Enter an upload comment (min. 3 characters)"
 #~ msgstr "アップロード用コメントを入力(最小3文字)"
 
+#~ msgid ""
+#~ "<html>The server reported that it has detected a conflict.<br>Error "
+#~ "message (untranslated):<br>{0}"
+#~ msgstr ""
+#~ "<html>サーバから競合検出の報告がありました。<br>エラーメッセージ(未翻訳):"
+#~ "<br>{0}"
+
 #~ msgid "You must select at least two ways."
 #~ msgstr "少なくとも2つのウェイを選択してください。"
 
+#~ msgid ""
+#~ "<html>Loading of {0} plugin was requested.<br>This plugin is no longer "
+#~ "developed and very likely will produce errors.<br>It should be disabled."
+#~ "<br>Delete from preferences?</html>"
+#~ msgstr ""
+#~ "<html>プラグイン {0} が読み込まれました。<br>このプラグインは開発を終了し"
+#~ "ていて、問題を起こす可能性があります。<br>無効にしてください。<br>使用をや"
+#~ "めますか？</html>"
+
 #~ msgid "Id > 0 required, got {0}"
 #~ msgstr "ID > 0 が必須です。入力値 {0}"
+
+#~ msgid "Added {0} objects"
+#~ msgstr "{0} オブジェクトを追加しました"
 
 #~ msgid ""
 #~ "Click to to return to the relation editor and to resume relation editing"
@@ -39584,6 +41478,15 @@ msgstr "テスト"
 #~ "削除するオブジェクトが少なくともひとつは必要です、空のコレクションを受け取"
 #~ "りました"
 
+#~ msgid ""
+#~ "Unable to add primitive {0} to the dataset because it's already included"
+#~ msgstr "プリミティブ {0} をデータセットに追加できません、既に含まれています"
+
+#~ msgid ""
+#~ "Can''t compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
+#~ msgstr ""
+#~ "ID ''{0}'' のプリミティブとID ''{1}'' のプリミティブを比較できません。"
+
 #~ msgid "User with the same uid but different name found"
 #~ msgstr "同じuidで異なる名前のユーザが見つかりました"
 
@@ -39592,6 +41495,15 @@ msgstr "テスト"
 
 #~ msgid "Could not create a node with the entered latitude/longitude."
 #~ msgstr "入力された緯度/経度のノードを作成できませんでした。"
+
+#~ msgid "Illegal lat/lon value"
+#~ msgstr "不正な緯度/経度の値"
+
+#~ msgid "The string ''{0}'' isn''t a valid double value."
+#~ msgstr "文字列 ''{0}'' は正しいダブル値ではありません。"
+
+#~ msgid "Downloading relation ''{0}''"
+#~ msgstr "リレーション''{0}'' をダウンロード中"
 
 #~ msgid "Parameter ''{0}'' > 0 expected. Got {1}."
 #~ msgstr "パラメータ ''{0}'' > 0 が期待されています。入力値 {1}."
@@ -39610,6 +41522,18 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "マルチポリゴンはクローズドウェイだけから構成されていなければなりません"
 
+#~ msgid "MLIT Japan (ORTHO)"
+#~ msgstr "国土交通省 (オルソ)"
+
+#~ msgid "MLIT Japan (ORTHO01)"
+#~ msgstr "国土交通省 (オルソ01)"
+
+#~ msgid "MLIT Japan (ORTHO02)"
+#~ msgstr "国土交通省 (オルソ02)"
+
+#~ msgid "MLIT Japan (ORTHO03)"
+#~ msgstr "国土交通省 (オルソ03)"
+
 #~ msgid "Please enter a latitude in the range -90..90"
 #~ msgstr "-90から90の範囲で緯度を入力してください"
 
@@ -39621,6 +41545,9 @@ msgstr "テスト"
 
 #~ msgid "Please enter a longitude in the range -180..180"
 #~ msgstr "-180から180の範囲で経度を入力してください"
+
+#~ msgid "Close the dialog, don't create a new node"
+#~ msgstr "ダイアログを閉じて、新しいノードを作成しない"
 
 #~ msgid "Expected array of length 4, got {0}"
 #~ msgstr "長さ4の配列が期待されています、入力値{0}"
@@ -39641,6 +41568,19 @@ msgstr "テスト"
 #~ "エラー: サーバからのブックマークリストの行 ''{1}'' に不正なダブル値 "
 #~ "''{0}''"
 
+#~ msgid "7th Series (OS7)"
+#~ msgstr "7番目のシリーズ (OS7)"
+
+#~ msgid "Missing right parent"
+#~ msgstr "正しい親が見つかりません"
+
+#~ msgid ""
+#~ "Can''t assign a changesetId > 0 to a new primitive. Value of changesetId "
+#~ "is {0}"
+#~ msgstr ""
+#~ "変更セットID > 0 は新しいプリミティブには割り当てられません。変更セットの"
+#~ "値は {0}"
+
 #~ msgid "Parameter ''{0}'' >= 0 expected, got {1}"
 #~ msgstr "パラメータ ''{0}'' >= 0 が期待されています、入力値 {1}"
 
@@ -39650,6 +41590,12 @@ msgstr "テスト"
 #~ msgid "Incorrect value of changeset operator: {0}. Number is expected."
 #~ msgstr "変更セット演算子の不正な値: {0}。 数値が期待されています。"
 
+#~ msgid "UTM 20N (France)"
+#~ msgstr "UTM 20N (フランス)"
+
+#~ msgid "Wrong number of parameters for tags operator."
+#~ msgstr "tags演算子用のパラメータ数値誤り。"
+
 #~ msgid ""
 #~ "Incorrect value of tags operator: {0}. Tags operator expects number of "
 #~ "tags or range, for example tags:1 or tags:2-5"
@@ -39657,11 +41603,99 @@ msgstr "テスト"
 #~ "tags演算子の不正な値: {0}。 tags 演算子はタグ数または範囲が期待されていま"
 #~ "す、例 tags:1 または tags:2-5"
 
+#~ msgid "Set the 'modified' flag for way {0}"
+#~ msgstr "ウェイ {0} 用に'変更された'フラグをセット"
+
+#~ msgid "Set the 'modified' flag for relation {0}"
+#~ msgstr "リレーション {0} 用に'変更された'フラグをセット"
+
+#~ msgid "Set the 'modified' flag for node {0}"
+#~ msgstr "ノード {0} 用に'変更された'フラグをセット"
+
+#~ msgid ""
+#~ "Can''t merge primitives with different ids. This id is {0}, the other is "
+#~ "{1}"
+#~ msgstr ""
+#~ "異なるIDのプリミティブはマージできません。こちらのIDは{0}です、相手は {1}"
+#~ "です"
+
+#~ msgid "({0}/{1}: Downloading relation ''{2}''..."
+#~ msgstr "({0}/{1}: リレーションをダウンロード中 ''{2}''..."
+
 #~ msgid "id in parameter ''{0}'' > 0 expected, got {1}."
 #~ msgstr "パラメータ ''{0}'' 中のID > 0 が期待されています、入力値 {1}."
 
+#~ msgid "Warning: bad location in HTML document. Exception was: "
+#~ msgstr "警告: HTMLドキュメント中に不正な位置。例外コード: "
+
+#~ msgid ""
+#~ "<html><strong>Current download area</strong> (minlat,minlon, maxlat, "
+#~ "maxlon): {0}, {1}, {2}, {3}</html>"
+#~ msgstr ""
+#~ "<html><strong>現在のダウンロードエリア</strong> (最小緯度, 最小経度, 最大"
+#~ "緯度, 最大経度): {0}, {1}, {2}, {3}</html>"
+
+#~ msgid "<html>Cannot open directory.<br>Please select a file!"
+#~ msgstr ""
+#~ "<html>ディレクトリをオープンできません。<br>ファイルを選択してください！"
+
+#~ msgid "Missing right parenthesis"
+#~ msgstr "右括弧がありません"
+
+#~ msgid "Opening {0} files..."
+#~ msgstr "{0} ファイルを開いています..."
+
 #~ msgid "Incorrect value of version operator: {0}. Number is expected."
 #~ msgstr "バージョン演算子の不正な値: {0}。数値が期待されています。"
+
+#~ msgid ""
+#~ "Colors points and track segments by dilution of position (HDOP). Your "
+#~ "capture device needs to logs that information."
+#~ msgstr ""
+#~ "位置精度低下 (HDOP) によって、点とトラックセグメントの配色をおこなう。使用"
+#~ "しているGPS機器がこの情報を記録している必要があります。"
+
+#~ msgid ""
+#~ "Don't draw arrows if they are not at least this distance away from the "
+#~ "last one."
+#~ msgstr "これより短いウェイでは方向の矢印を描画しない。"
+
+#~ msgid ""
+#~ "<p>Furthermore, the shortcuts are activated when the actions are assigned "
+#~ "to a menu entry of button for the first time. So some of your changes may "
+#~ "become active even without restart --- but also without collistion "
+#~ "handling. This is another reason to <b>restart</b> JOSM after making any "
+#~ "changes here.</p>"
+#~ msgstr ""
+#~ "<p>また、ショートカットの割り当ては、アプリケーション起動時に各メニューの"
+#~ "アクションが読み込まれる際にだけ行われるため、ここで変更した物を反映したと"
+#~ "しても、再起動しないと機能しなかったり、変更前の設定と衝突してしまうことが"
+#~ "あります。ここで変更を行った際には必ずJOSMを再起動するようにしてください。"
+#~ "</p>"
+
+#~ msgid ""
+#~ "<p>Please note that shortcuts keys are assigned to the actions when JOSM "
+#~ "is started. So you need to <b>restart</b> JOSM to see your changes.</p>"
+#~ msgstr ""
+#~ "<p>ショートカットキーを変更した場合、JOSMの<b>再起動</b>が必要となります。"
+#~ "再起動するまで変更しても反映されません。</p><br>"
+
+#~ msgid ""
+#~ "<html>The data in the GPX layer ''{0}'' has been downloaded from the "
+#~ "server.<br>Because its way points don''t include a timestamp we can''t "
+#~ "correlate them with images.</html>"
+#~ msgstr ""
+#~ "<html>選択したGPXレイヤー ''{0}'' はサーバからダウンロードしたものです。"
+#~ "<br>タイムスタンプの情報が無いため、写真との同期はできません。</html>"
+
+#~ msgid ""
+#~ "<html>The data in the GPX layer ''{0}'' has been downloaded from the "
+#~ "server.<br>Because its way points don''t include a timestamp we can''t "
+#~ "correlate them with audio data.</html>"
+#~ msgstr ""
+#~ "<html>選択したGPXレイヤー ''{0}'' はサーバからダウンロードしたものです。"
+#~ "<br>タイムスタンプの情報が無いため、音声データとの同期はできません。</"
+#~ "html>"
 
 #~ msgid ""
 #~ "The server reported that the current changset was closed.<br>This is most "
@@ -39672,8 +41706,54 @@ msgstr "テスト"
 #~ "く、変更セットのサイズが上限を超えています。<br>{0} 個のオブジェクトがサー"
 #~ "バにあります。\"{1}\"。"
 
+#~ msgid ""
+#~ "Can't restrict changeset query to the current user because the current "
+#~ "user is anonymous"
+#~ msgstr ""
+#~ "現在匿名ユーザーで編集しているため、変更セットのクエリを制限できません。"
+
+#~ msgid ""
+#~ "<html>Authenticating at the HTTP proxy ''{0}'' failed. Please enter a "
+#~ "valid username and a valid password.</html>"
+#~ msgstr ""
+#~ "<html>HTTPプロキシ ''{0}'' の認証に失敗しました。有効なユーザー名とパス"
+#~ "ワードを入力してください。</html>"
+
+#~ msgid ""
+#~ "<html>Warning: depending on the authentication method the proxy server "
+#~ "uses the password may be transferred unencrypted.</html>"
+#~ msgstr ""
+#~ "<html>警告: プロキシサーバへのログイン用ユーザー名とパスワードは暗号化され"
+#~ "ずに送信される可能性があります。</html>"
+
+#~ msgid ""
+#~ "Warning: the JVM is not configured to lookup proxies from the system "
+#~ "settings. The property ''java.net.useSystemProxies'' was missing at "
+#~ "startup time. Won't use a proxy."
+#~ msgstr ""
+#~ "警告: JVM の環境がプロキシを使用しないよう設定されています。起動時"
+#~ "に''java.net.useSystemProxies'' が設定されていません。プロキシを利用せずに"
+#~ "接続します。"
+
 #~ msgid "Create non-audio markers when reading GPX."
 #~ msgstr "GPXを読み込むときにオーディオではないマーカーを作成"
+
+#~ msgid "All installed plugins are up to date."
+#~ msgstr "インストールされているプラグインは全て最新です。"
+
+#~ msgid ""
+#~ "<html>JOSM is currently running with an anonymous user. It can't "
+#~ "download<br>your changesets from the OSM server unless you enter your OSM "
+#~ "user name<br>in the JOSM preferences.</html>"
+#~ msgstr ""
+#~ "<html>現在 JOSM は匿名ユーザで起動しています。<br>環境設定でOSMのユーザ名"
+#~ "を設定しないとあなたの変更セットをダウンロードすることはできません。</"
+#~ "html>"
+
+#~ msgid ""
+#~ "The current value isn't a valid changeset ID. Please enter an integer "
+#~ "value > 0"
+#~ msgstr "変更セットIDが無効な値です。1以上の整数を入力してください。"
 
 #~ msgid ""
 #~ "Warning: ignoring changeset id {0} for new object with external id {1} "
@@ -39685,8 +41765,84 @@ msgstr "テスト"
 #~ msgid "Errors during Download"
 #~ msgstr "ダウンロード中にエラーが発生しました"
 
+#~ msgid "<b>Baker Street</b> - 'Baker' and 'Street' in any key or name."
+#~ msgstr ""
+#~ "<b>ベイカー ストリート</b> - 任意のキーや名前に 'ベイカー' と 'ストリー"
+#~ "ト' を両方含むもの"
+
+#~ msgid "<b>\"Baker Street\"</b> - 'Baker Street' in any key or name."
+#~ msgstr ""
+#~ "<b>\"ベイカー ストリート\"</b> - 任意のキーや名前に 'ベイカー ストリート' "
+#~ "を含むもの。"
+
+#~ msgid "<b>name:Bak</b> - 'Bak' anywhere in the name."
+#~ msgstr "<b>name:Bak</b> - nameタグに 'Bak' を含むもの"
+
+#~ msgid "<b>type=route</b> - key 'type' with value exactly 'route'."
+#~ msgstr "<b>type=route</b> -  キー 'type' の値が 'route' であるもの"
+
+#~ msgid ""
+#~ "<b>type=*</b> - key 'type' with any value. Try also <b>*=value</b>, "
+#~ "<b>type=</b>, <b>*=*</b>, <b>*=</b>"
+#~ msgstr ""
+#~ "<b>type=*</b> -  'type' というキーを持つもの全て。* は任意の文字列を意味し"
+#~ "ます。<b>*=value</b>, <b>type=</b>, <b>*=*</b>, <b>*=</b>なども可能です。"
+
+#~ msgid ""
+#~ "<html>The selected object isn''t available in the current<br>edit layer "
+#~ "''{0}''.</html>"
+#~ msgid_plural ""
+#~ "<html>None of the selected objects is available in the current<br>edit "
+#~ "layer ''{0}''.</html>"
+#~ msgstr[0] ""
+#~ "<html>選択したオブジェクトは現在の編集レイヤー  ''{0}' 上にありません。</"
+#~ "html>"
+
+#~ msgid "Available styles (from {0})"
+#~ msgstr "使用するスタイル (from {0})"
+
+#~ msgid "Play next marker."
+#~ msgstr "次のマーカーを再生"
+
+#~ msgid "Play previous marker."
+#~ msgstr "一つ前のマーカーを再生"
+
+#~ msgid "Jump back."
+#~ msgstr "一つ戻る"
+
+#~ msgid "Jump forward"
+#~ msgstr "一つ進む"
+
 #~ msgid "Enter a changset id"
 #~ msgstr "変更セットID"
+
+#~ msgid "Current value ''{0}'' for user ID isn''t valid"
+#~ msgstr "ユーザID \"{0}\" は不正な値です。"
+
+#~ msgid ""
+#~ "Can't build changeset query with time based restrictions. Input isn't "
+#~ "valid."
+#~ msgstr ""
+#~ "入力に間違いはありませんが、時間に基づいた変更セットクエリは生成できませ"
+#~ "ん。"
+
+#~ msgid ""
+#~ "Can''t restrict the changeset query to a specific bounding box. The input "
+#~ "is invalid."
+#~ msgstr ""
+#~ "入力に誤りはありませんが、境界囲みに基づく変更セットクエリは生成できませ"
+#~ "ん。"
+
+#~ msgid ""
+#~ "The current value isn't a valid user ID. Please enter an integer value > 0"
+#~ msgstr "不正なユーザIDが入力されています。1以上の整数を入力してください。"
+
+#~ msgid ""
+#~ "<html>The  current value isn't a valid user name.<br>Please enter an non-"
+#~ "empty user name.</html>"
+#~ msgstr ""
+#~ "<html>不正なユーザ名です。<br>ユーザ名は空白以外を指定してください。</"
+#~ "html>"
 
 #~ msgid ""
 #~ "Failed to add an OAuth authentication header. There is currently no OAuth "
@@ -39694,6 +41850,22 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "OAuth 認証ヘッダのの追加に失敗しました。OAuth 通信トークンは設定していませ"
 #~ "ん。"
+
+#~ msgid ""
+#~ "<html>Authenticating at the OSM API ''{0}'' failed. Please enter a valid "
+#~ "username and a valid password.</html>"
+#~ msgstr ""
+#~ "<html>OSM APIの認証 ''{0}'' に失敗しました。正しいユーザ名とパスワードを入"
+#~ "力してください。</html>"
+
+#~ msgid ""
+#~ "JOSM expected to find primitive [{0} {1}] in dataset but it's not there. "
+#~ "Please report this  at http://josm.openstreetmap.de . This is not a "
+#~ "critical error, it should be safe to continue in your work."
+#~ msgstr ""
+#~ "JOSMはデータセット中にプリミティブ [{0} {1}] があることを期待しています"
+#~ "が、見つかりませんでした。このことを http://josm.openstreetmap.de に報告し"
+#~ "てください。これは深刻なエラーではなく、作業を継続しても安全と思われます。"
 
 #~ msgctxt "changeset.open"
 #~ msgid "Open"
@@ -39707,6 +41879,12 @@ msgstr "テスト"
 #~ "Warning: Failed to retrieve user infos for the current JOSM user. "
 #~ "Exceptions was: {0}"
 #~ msgstr "警告: 現在のJOSMユーザ用のユーザ情報の参照に失敗。例外コード: {0}"
+
+#~ msgid "Adjust the position of the selected WMS layer"
+#~ msgstr "WMSレイヤーの位置を調整"
+
+#~ msgid "\"{0}\" is not closed and therefore cannot be joined."
+#~ msgstr "\"{0}\" は閉じられていないので連結できません。"
 
 #~ msgid "The \"from\" way does not start or end at a \"via\" node."
 #~ msgstr "\"from\"ウェイは、\"via\"ノードで開始または終了していません。"
@@ -39724,14 +41902,46 @@ msgstr "テスト"
 #~ msgstr ""
 #~ "<html>ディレクトリを開けません。<br>ファイルを選択してください！</html>"
 
+#~ msgid ""
+#~ "Primitive {0} cannot be added to the relation because it was deleted."
+#~ msgstr "プリミティブ {0} は削除済のためリレーションに追加できません。"
+
+#~ msgid ""
+#~ "<html>You have sucessfully retrieved an OAuth Access Token from the OSM "
+#~ "website. Click on <strong>{0}</strong> to accept the token. JOSM will use "
+#~ "it in subsequent requests to gain access to the OSM API.</html>"
+#~ msgstr ""
+#~ "<html>OSMサーバへのOAuthトークンの受け取りに成功しました。トークンを受け入"
+#~ "れる場合は <strong>{0}</strong>をクリックしてください。以後  JOSM がOSM "
+#~ "API にアクセスする際に使用します。</html>"
+
 #~ msgid "Node {0} cannot be added to the way because it was deleted"
 #~ msgstr "ノード {0} は削除済みなのでウェイに追加できません"
 
 #~ msgid "GPS point"
 #~ msgstr "GPS ポイント"
 
+#~ msgid "Active styles"
+#~ msgstr "有効なスタイル"
+
+#~ msgid "<html>Could not read files.<br> Error is: <br>{0}</html>"
+#~ msgstr "<html>ファイルを読み込めません。<br> エラー内容: <br>{0}</html>"
+
+#~ msgid "Do not check and ask again at startup (remembers choice)"
+#~ msgstr "スタートアップ時にチェックと質問をしない(この選択を記憶)"
+
+#~ msgid ""
+#~ "Warning: failed to install already downloaded plugin ''{0}''. Skipping "
+#~ "installation. JOSM still going to load the old plugin version."
+#~ msgstr ""
+#~ "警告: ダウンロード済みのプラグイン ''{0}'' のインストールに失敗。インス"
+#~ "トールをスキップしています。JOSMは古いプラグインバージョンをロードします。"
+
 #~ msgid "Exec"
 #~ msgstr "実行"
+
+#~ msgid "Execute Script"
+#~ msgstr "スクリプトを実行"
 
 #~ msgid "Multipolygon inner way is outside."
 #~ msgstr "マルチポリゴンの内側のウェイが外にあります"
@@ -39739,11 +41949,27 @@ msgstr "テスト"
 #~ msgid "nice Plugin"
 #~ msgstr "素敵なプラグイン"
 
+#~ msgid ""
+#~ "Cannot open {0} file with the file importer ''{1}''. Skipping the "
+#~ "following files:"
+#~ msgid_plural ""
+#~ "Cannot open {0} files with the file importer ''{1}''. Skipping the "
+#~ "following files:"
+#~ msgstr[0] ""
+#~ "ファイルインポータ ''{1}'' で {0} ファイルをオープンできません。次のファイ"
+#~ "ルをスキップします:"
+
 #~ msgid "Use all my elements"
 #~ msgstr "全て自分の要素を使う"
 
 #~ msgid "Use all their elements"
 #~ msgstr "全て相手の要素を使う"
+
+#~ msgid ""
+#~ "Warning: failed to parse Mappaint styles from ''{0}''. Exception was: {1}"
+#~ msgstr ""
+#~ "警告: \"\"{0}\"からのMappaintスタイルの解釈に失敗しました。発生した例外は"
+#~ "{1}:"
 
 #~ msgid "Missing merge target for object with id {0}"
 #~ msgstr "ID {0} のオブジェクトの結合対象が見つかりません"
@@ -39757,8 +41983,29 @@ msgstr "テスト"
 #~ "でバージョン{1}のオブジェクトは可視になります。この一貫性の矛盾を扱うこと"
 #~ "はできません。対象オブジェクトを維持します。 "
 
+#~ msgid "UTM20 North Geodesic system"
+#~ msgstr "UTM２０北測地システム"
+
+#~ msgid "Lodi - Italy"
+#~ msgstr "Lodi - Italy"
+
+#~ msgid "Sicily - Italy"
+#~ msgstr "Sicily - Italy"
+
+#~ msgid "Splits the way"
+#~ msgstr "ウェイを分割"
+
+#~ msgid "An OSM way is required instead."
+#~ msgstr "代わりにOSMウェイが必要です。"
+
+#~ msgid "Please go to the Basic editor and manually choose an OSM way."
+#~ msgstr "基本エディタに移動してOSMウェイを手動で選んでください。"
+
 #~ msgid "Image not created properly."
 #~ msgstr "画像は正しく作成されませんでした。"
+
+#~ msgid "Change to the Basic Editor and select an OSM way"
+#~ msgstr "基本エディタに変更し、OSMウェイを選択"
 
 #~ msgctxt "filter"
 #~ msgid "C"
@@ -39773,6 +42020,16 @@ msgstr "テスト"
 #~ msgstr[0] ""
 #~ "{0} 件の競合が未解決です。<br><br>競合リストダイアログをオープンして手動で"
 #~ "解決してください。"
+
+#~ msgid "Set width of building"
+#~ msgstr "ビルの幅をセット"
+
+#~ msgid ""
+#~ "The turnrestrictions plugin allows to create and edit turn restrictions "
+#~ "in the OpenStreetMap database."
+#~ msgstr ""
+#~ "turnrestrictions プラグインを使ってOpenStreetMapデータベースに転回制限を作"
+#~ "成、編集することができます。"
 
 #~ msgid ""
 #~ "<html>To keep your local version, JOSM<br>has to reset the id of "
@@ -39803,8 +42060,21 @@ msgstr "テスト"
 #~ "{0} 件の付加的なプリミティブをリレーション {1} が参照していますがサーバ上"
 #~ "から削除されています。<br><br>これも削除を取り消しますか？"
 
+#~ msgid "Loads calibration data to a file"
+#~ msgstr "較正データをファイルにロードします"
+
+#~ msgid "Point on opposite end of building"
+#~ msgstr "建物の反対側の終端をポイント"
+
 #~ msgid "Point on angle of building to start drawing"
 #~ msgstr "描画を始める建物の角度をポイント"
+
+#~ msgid ""
+#~ "You are about to delete incomplete objects.<br>This will cause problems "
+#~ "because you don't see the real object.<br>Do you really want to delete?"
+#~ msgstr ""
+#~ "不完全なオブジェクトを削除しようとしています。<br>実際のオブジェクトを見て"
+#~ "いないので問題を引き起こす可能性があります。<br>本当に削除しますか？"
 
 #~ msgid ""
 #~ "You cannot align connected segments.\n"
@@ -39813,8 +42083,50 @@ msgstr "テスト"
 #~ "接続されたセグメントはアラインできません。\n"
 #~ "ノードを共有していない２つのセグメントを選択してください。"
 
+#~ msgid "Add an OSM way with role ''from''"
+#~ msgstr "ロール''from''のOSMウェイを追加"
+
+#~ msgid "Add an OSM way with role ''to''"
+#~ msgstr "ロール''to''のOSMウェイを追加"
+
+#~ msgid "An OSM way with role <tt>to</tt> is required in a turn restriction."
+#~ msgstr "方向転換の中ではロール<tt>to</tt>のOSMウェイが必須です。"
+
+#~ msgid ""
+#~ "An OSM way with role <tt>from</tt> is required in a turn restriction."
+#~ msgstr "方向転換の中ではロール<tt>from</tt>のOSMウェイが必須です。"
+
+#~ msgid ""
+#~ "Broken tagging preset \"{0}-{1}\" - number of items in display_values "
+#~ "must be the same as in values"
+#~ msgstr ""
+#~ "破損したタグ付けプリセット \"{0}-{1}\" - display_values中のアイテム数は値"
+#~ "の中にあるものと同じでなければなりません"
+
+#~ msgid "Point on the corner of building to start drawing"
+#~ msgstr "建物のコーナーをポイントして描画を開始"
+
+#~ msgid "multipolygon"
+#~ msgstr "マルチポリゴン"
+
+#~ msgid ""
+#~ "Aligning would result nodes outside the world.\n"
+#~ "Your action is being reverted."
+#~ msgstr ""
+#~ "アラインするとノードを世界の外におくことになります。\n"
+#~ "あなたの操作を元に戻しています。"
+
+#~ msgid "Child script have returned invalid data."
+#~ msgstr "子スクリプトが不正なデータを返した"
+
 #~ msgid "Unable to read autosaved osm data ({0}) - {1}"
 #~ msgstr "自動保存されたosmデータを読み込めません ({0}) - {1}"
+
+#~ msgid "Seamark Editor"
+#~ msgstr "Seamarkエディタ"
+
+#~ msgid "Edit SeaMap Symbols"
+#~ msgstr "SeaMapシンボルを編集"
 
 #~ msgid "jump"
 #~ msgstr "ジャンプ"
@@ -39822,8 +42134,41 @@ msgstr "テスト"
 #~ msgid "play/pause"
 #~ msgstr "再生/停止"
 
+#~ msgid "please enter GPS timecode"
+#~ msgstr "GPSのタイムコードを入力してください"
+
 #~ msgid "forward"
 #~ msgstr "進む"
 
+#~ msgid "backward"
+#~ msgstr "戻る"
+
+#~ msgid "PCN 2006 - Italy"
+#~ msgstr "PCN 2006 - イタリア"
+
+#~ msgid "Landsat (mirror)"
+#~ msgstr "ランドサット(ミラー)"
+
 #~ msgid "Add relation"
 #~ msgstr "リレーションの追加"
+
+#~ msgid "demanding_alpine_hiking"
+#~ msgstr "難易度の高い山岳登山道"
+
+#~ msgid "difficult_alpine_hiking"
+#~ msgstr "専門家向け山岳登山道"
+
+#~ msgid "mountain_hiking"
+#~ msgstr "山間地のハイキング"
+
+#~ msgid "demanding_mountain_hiking"
+#~ msgstr "登山道"
+
+#~ msgid "alpine_hiking"
+#~ msgstr "難度の高い登山道"
+
+#~ msgid "Add WMS URL"
+#~ msgstr "WMS URLの追加"
+
+#~ msgid "Remote WMS"
+#~ msgstr "リモートWMS"

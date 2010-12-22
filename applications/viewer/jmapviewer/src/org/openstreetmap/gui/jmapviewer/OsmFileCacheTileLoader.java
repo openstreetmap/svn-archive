@@ -112,7 +112,6 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
         boolean fileTilePainted = false;
 
         public FileLoadJob(TileSource source, int tilex, int tiley, int zoom) {
-            super();
             this.source = source;
             this.tilex = tilex;
             this.tiley = tiley;
@@ -150,7 +149,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 
             try {
                 // log.finest("Loading tile from OSM: " + tile);
-                HttpURLConnection urlConn = loadTileFromOsm(tile);
+                URLConnection urlConn = loadTileFromOsm(tile);
                 if (tileFile != null) {
                     switch (source.getTileUpdate()) {
                     case IfModifiedSince:
@@ -188,7 +187,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                     String eTag = urlConn.getHeaderField("ETag");
                     saveETagToFile(eTag);
                 }
-                if (urlConn.getResponseCode() == 304) {
+                loadTileMetadata(tile, urlConn);
+                if (urlConn instanceof HttpURLConnection && ((HttpURLConnection)urlConn).getResponseCode() == 304) {
                     // If we are isModifiedSince or If-None-Match has been set
                     // and the server answers with a HTTP 304 = "Not Modified"
                     log.finest("ETag test: local version is up to date: " + tile);

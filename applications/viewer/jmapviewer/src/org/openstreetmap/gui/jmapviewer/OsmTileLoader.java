@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
@@ -13,7 +14,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
- * A {@link TileLoader} implementation that loads tiles from OSM via HTTP.
+ * A {@link TileLoader} implementation that loads tiles from OSM.
  *
  * @author Jan Peter Stotz
  */
@@ -48,7 +49,9 @@ public class OsmTileLoader implements TileLoader {
                 }
                 try {
                     // Thread.sleep(500);
-                    input = loadTileFromOsm(tile).getInputStream();
+                    URLConnection conn = loadTileFromOsm(tile);
+                    loadTileMetadata(tile, conn);
+                    input = conn.getInputStream();
                     tile.loadImage(input);
                     tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
@@ -58,8 +61,9 @@ public class OsmTileLoader implements TileLoader {
                     tile.setImage(Tile.ERROR_IMAGE);
                     tile.error = true;
                     listener.tileLoadingFinished(tile, false);
-                    if (input == null)
+                    if (input == null) {
                         System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
+                    }
                 } finally {
                     tile.loading = false;
                     tile.setLoaded(true);
@@ -69,18 +73,28 @@ public class OsmTileLoader implements TileLoader {
         };
     }
 
-    protected HttpURLConnection loadTileFromOsm(Tile tile) throws IOException {
+    protected URLConnection loadTileFromOsm(Tile tile) throws IOException {
         URL url;
         url = new URL(tile.getUrl());
-        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        prepareHttpUrlConnection(urlConn);
+        URLConnection urlConn = url.openConnection();
+        if (urlConn instanceof HttpURLConnection) {
+            prepareHttpUrlConnection((HttpURLConnection)urlConn);
+        }
         urlConn.setReadTimeout(30000); // 30 seconds read timeout
         return urlConn;
     }
 
+    protected void loadTileMetadata(Tile tile, URLConnection urlConn) {
+        String bing_capturedate = urlConn.getHeaderField("X-VE-TILEMETA-CaptureDatesRange");
+        if (bing_capturedate != null) {
+            tile.putValue("capture-date", bing_capturedate);
+        }
+    }
+
     protected void prepareHttpUrlConnection(HttpURLConnection urlConn) {
-        if (USER_AGENT != null)
+        if (USER_AGENT != null) {
             urlConn.setRequestProperty("User-agent", USER_AGENT);
+        }
         urlConn.setRequestProperty("Accept", ACCEPT);
     }
 

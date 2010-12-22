@@ -8,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -47,6 +49,9 @@ public class Tile {
     protected boolean loaded = false;
     protected boolean loading = false;
     protected boolean error = false;
+
+    /** TileSource-specific tile metadata */
+    protected Map<String, String> metadata;
 
     /**
      * Creates a tile with empty image.
@@ -252,21 +257,32 @@ public class Tile {
     }
 
     public String getStatus() {
-        String status = "new";
-        if (this.error) {
-            status = "error";
-        }
-        if (this.loading) {
-            status = "loading";
-        }
-        if (this.loaded) {
-            status = "loaded";
-        }
-        return status;
+        if (this.error)
+            return "error";
+        if (this.loaded)
+            return "loaded";
+        if (this.loading)
+            return "loading";
+        return "new";
     }
 
     public boolean hasError() {
         return error;
     }
 
+    public void putValue(String key, String value) {
+        if (metadata == null) {
+            metadata = new HashMap<String,String>();
+        }
+        metadata.put(key, value);
+    }
+
+    public String getValue(String key) {
+        if (metadata == null) return null;
+        return metadata.get(key);
+    }
+
+    public Map<String,String> getMetadata() {
+        return metadata;
+    }
 }

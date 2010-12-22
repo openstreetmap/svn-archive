@@ -31,7 +31,7 @@ public class PanelFog extends JPanel {
 	}
 
 	public void clearSelections() {
-		
+
 	}
 
 }

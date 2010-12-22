@@ -31,7 +31,7 @@ public class PanelRadar extends JPanel {
 	}
 
 	public void clearSelections() {
-		
+
 	}
 
 }

@@ -131,10 +131,9 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getNoTopButton() {
 		if (noTopButton == null) {
-			noTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/NoTopButton.png")));
+			noTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NoTopButton.png")));
 			noTopButton.setBounds(new Rectangle(40, 5, 27, 27));
-	        noTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			noTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			noTopButton.setToolTipText(Messages.getString("NoTopTip"));
 		}
 		return noTopButton;
@@ -142,10 +141,9 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getCanTopButton() {
 		if (canTopButton == null) {
-			canTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/CanTopButton.png")));
+			canTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanTopButton.png")));
 			canTopButton.setBounds(new Rectangle(70, 5, 27, 27));
-	        canTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			canTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			canTopButton.setToolTipText(Messages.getString("CanTopTip"));
 		}
 		return canTopButton;
@@ -153,8 +151,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getConeTopButton() {
 		if (coneTopButton == null) {
-			coneTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/ConeTopButton.png")));
+			coneTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ConeTopButton.png")));
 			coneTopButton.setBounds(new Rectangle(100, 5, 27, 27));
 			coneTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			coneTopButton.setToolTipText(Messages.getString("ConeTopTip"));
@@ -164,8 +161,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getSphereTopButton() {
 		if (sphereTopButton == null) {
-			sphereTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/SphereTopButton.png")));
+			sphereTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereTopButton.png")));
 			sphereTopButton.setBounds(new Rectangle(130, 5, 27, 27));
 			sphereTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			sphereTopButton.setToolTipText(Messages.getString("SphereTopTip"));
@@ -175,8 +171,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getXTopButton() {
 		if (XTopButton == null) {
-			XTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/XTopButton.png")));
+			XTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/XTopButton.png")));
 			XTopButton.setBounds(new Rectangle(160, 5, 27, 27));
 			XTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			XTopButton.setToolTipText(Messages.getString("XTopTip"));
@@ -186,10 +181,9 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getNorthTopButton() {
 		if (northTopButton == null) {
-			northTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/NorthTopButton.png")));
+			northTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NorthTopButton.png")));
 			northTopButton.setBounds(new Rectangle(40, 35, 27, 27));
-	        northTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			northTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			northTopButton.setToolTipText(Messages.getString("NorthTopTip"));
 		}
 		return northTopButton;
@@ -197,10 +191,9 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getSouthTopButton() {
 		if (southTopButton == null) {
-			southTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/SouthTopButton.png")));
+			southTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SouthTopButton.png")));
 			southTopButton.setBounds(new Rectangle(70, 35, 27, 27));
-	        southTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			southTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			southTopButton.setToolTipText(Messages.getString("SouthTopTip"));
 		}
 		return southTopButton;
@@ -208,8 +201,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getEastTopButton() {
 		if (eastTopButton == null) {
-			eastTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/EastTopButton.png")));
+			eastTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/EastTopButton.png")));
 			eastTopButton.setBounds(new Rectangle(100, 35, 27, 27));
 			eastTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			eastTopButton.setToolTipText(Messages.getString("EastTopTip"));
@@ -219,8 +211,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getWestTopButton() {
 		if (westTopButton == null) {
-			westTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/WestTopButton.png")));
+			westTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WestTopButton.png")));
 			westTopButton.setBounds(new Rectangle(130, 35, 27, 27));
 			westTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			westTopButton.setToolTipText(Messages.getString("WestTopTip"));
@@ -230,8 +221,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getSpheres2TopButton() {
 		if (spheres2TopButton == null) {
-			spheres2TopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/Spheres2TopButton.png")));
+			spheres2TopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/Spheres2TopButton.png")));
 			spheres2TopButton.setBounds(new Rectangle(160, 35, 27, 27));
 			spheres2TopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			spheres2TopButton.setToolTipText(Messages.getString("Spheres2TopTip"));
@@ -241,8 +231,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getBoardDayButton() {
 		if (boardDayButton == null) {
-			boardDayButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/BoardDayButton.png")));
+			boardDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BoardDayButton.png")));
 			boardDayButton.setBounds(new Rectangle(40, 65, 27, 27));
 			boardDayButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			boardDayButton.setToolTipText(Messages.getString("BoardDayTip"));
@@ -252,8 +241,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getDiamondDayButton() {
 		if (diamondDayButton == null) {
-			diamondDayButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/DiamondDayButton.png")));
+			diamondDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DiamondDayButton.png")));
 			diamondDayButton.setBounds(new Rectangle(70, 65, 27, 27));
 			diamondDayButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			diamondDayButton.setToolTipText(Messages.getString("DiamondDayTip"));
@@ -263,8 +251,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getTriangleDayButton() {
 		if (triangleDayButton == null) {
-			triangleDayButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/TriangleDayButton.png")));
+			triangleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleDayButton.png")));
 			triangleDayButton.setBounds(new Rectangle(100, 65, 27, 27));
 			triangleDayButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			triangleDayButton.setToolTipText(Messages.getString("TriangleDayTip"));
@@ -274,8 +261,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getTriangleInvDayButton() {
 		if (triangleInvDayButton == null) {
-			triangleInvDayButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/TriangleInvDayButton.png")));
+			triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 			triangleInvDayButton.setBounds(new Rectangle(130, 65, 27, 27));
 			triangleInvDayButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			triangleInvDayButton.setToolTipText(Messages.getString("TriangleInvDayTip"));
@@ -285,8 +271,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getSquareDayButton() {
 		if (squareDayButton == null) {
-			squareDayButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/SquareDayButton.png")));
+			squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
 			squareDayButton.setBounds(new Rectangle(160, 65, 27, 27));
 			squareDayButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			squareDayButton.setToolTipText(Messages.getString("SquareDayTip"));
@@ -296,8 +281,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getMooringTopButton() {
 		if (mooringTopButton == null) {
-			mooringTopButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/MooringTopButton.png")));
+			mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
 			mooringTopButton.setBounds(new Rectangle(40, 95, 27, 27));
 			mooringTopButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			mooringTopButton.setToolTipText(Messages.getString("MooringTopTip"));

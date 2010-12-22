@@ -78,8 +78,7 @@ public class PanelChan extends JPanel {
 		alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (portButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLat)
-							|| (dlg.mark.getCategory() != Cat.LAT_PORT))
+					if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PORT))
 						dlg.mark = new MarkLat(dlg);
 					dlg.mark.setCategory(Cat.LAT_PORT);
 					if (dlg.mark.getRegion() == SeaMark.IALA_A) {
@@ -97,8 +96,7 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 				}
 				if (stbdButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLat)
-							|| (dlg.mark.getCategory() != Cat.LAT_STBD))
+					if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_STBD))
 						dlg.mark = new MarkLat(dlg);
 					dlg.mark.setCategory(Cat.LAT_STBD);
 					if (dlg.mark.getRegion() == SeaMark.IALA_A) {
@@ -116,8 +114,7 @@ public class PanelChan extends JPanel {
 					panelStbd.clearSelections();
 				}
 				if (prefPortButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLat)
-							|| (dlg.mark.getCategory() != Cat.LAT_PREF_PORT))
+					if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_PORT))
 						dlg.mark = new MarkLat(dlg);
 					dlg.mark.setCategory(Cat.LAT_PREF_PORT);
 					if (dlg.mark.getRegion() == SeaMark.IALA_A) {
@@ -135,8 +132,7 @@ public class PanelChan extends JPanel {
 					panelPrefPort.clearSelections();
 				}
 				if (prefStbdButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLat)
-							|| (dlg.mark.getCategory() != Cat.LAT_PREF_STBD))
+					if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_STBD))
 						dlg.mark = new MarkLat(dlg);
 					dlg.mark.setCategory(Cat.LAT_PREF_STBD);
 					if (dlg.mark.getRegion() == SeaMark.IALA_A) {
@@ -187,11 +183,9 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getPortButton() {
 		if (portButton == null) {
-			portButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/PortButton.png")));
+			portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
 			portButton.setBounds(new Rectangle(0, 0, 52, 32));
-			portButton.setBorder(BorderFactory.createLineBorder(Color.magenta,
-					2));
+			portButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			portButton.setToolTipText(Messages.getString("PortTip"));
 		}
 		return portButton;
@@ -199,11 +193,9 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getStbdButton() {
 		if (stbdButton == null) {
-			stbdButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/StbdButton.png")));
+			stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
 			stbdButton.setBounds(new Rectangle(0, 32, 52, 32));
-			stbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta,
-					2));
+			stbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			stbdButton.setToolTipText(Messages.getString("StbdTip"));
 		}
 		return stbdButton;
@@ -211,11 +203,9 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getPrefPortButton() {
 		if (prefPortButton == null) {
-			prefPortButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/PrefPortButton.png")));
+			prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
 			prefPortButton.setBounds(new Rectangle(0, 64, 52, 32));
-			prefPortButton.setBorder(BorderFactory.createLineBorder(
-					Color.magenta, 2));
+			prefPortButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			prefPortButton.setToolTipText(Messages.getString("PrefPortTip"));
 		}
 		return prefPortButton;
@@ -223,11 +213,9 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getPrefStbdButton() {
 		if (prefStbdButton == null) {
-			prefStbdButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/PrefStbdButton.png")));
+			prefStbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefStbdButton.png")));
 			prefStbdButton.setBounds(new Rectangle(0, 96, 52, 32));
-			prefStbdButton.setBorder(BorderFactory.createLineBorder(
-					Color.magenta, 2));
+			prefStbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			prefStbdButton.setToolTipText(Messages.getString("PrefStbdTip"));
 		}
 		return prefStbdButton;
@@ -235,11 +223,9 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getSafeWaterButton() {
 		if (safeWaterButton == null) {
-			safeWaterButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/SafeWaterButton.png")));
+			safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
 			safeWaterButton.setBounds(new Rectangle(0, 128, 52, 32));
-			safeWaterButton.setBorder(BorderFactory.createLineBorder(
-					Color.magenta, 2));
+			safeWaterButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			safeWaterButton.setToolTipText(Messages.getString("SafeWaterTip"));
 		}
 		return safeWaterButton;

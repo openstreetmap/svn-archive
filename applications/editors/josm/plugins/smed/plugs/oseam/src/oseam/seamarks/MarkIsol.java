@@ -14,7 +14,7 @@ public class MarkIsol extends SeaMark {
 	public MarkIsol(OSeaMAction dia) {
 		super(dia);
 	}
-	
+
 	public void parseMark() {
 
 		String str;
@@ -49,23 +49,22 @@ public class MarkIsol extends SeaMark {
 				dlg.panelMain.panelHaz.sparButton.doClick();
 			}
 		} else if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
-				str = keys.get("seamark:beacon_isolated_danger:shape");
-				if (str.equals("tower")) {
-					dlg.panelMain.panelHaz.towerButton.doClick();
-				} else {
-					dlg.panelMain.panelHaz.beaconButton.doClick();
-				}
-		} else if (keys.containsKey("seamark:type")
-				&& (keys.get("seamark:type").equals("light_float"))) {
+			str = keys.get("seamark:beacon_isolated_danger:shape");
+			if (str.equals("tower")) {
+				dlg.panelMain.panelHaz.towerButton.doClick();
+			} else {
+				dlg.panelMain.panelHaz.beaconButton.doClick();
+			}
+		} else if (keys.containsKey("seamark:type") && (keys.get("seamark:type").equals("light_float"))) {
 			dlg.panelMain.panelHaz.floatButton.doClick();
 		}
 
 		parseLights(keys);
 		parseFogRadar(keys);
 
-//		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-//		dlg.tfM01Name.setText(getName());
-//		dlg.cM01TopMark.setSelected(hasTopMark());
+		// dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		// dlg.tfM01Name.setText(getName());
+		// dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void setLightColour() {
@@ -73,11 +72,11 @@ public class MarkIsol extends SeaMark {
 	}
 
 	public void paintSign() {
-/*		if (dlg.paintlock)
-			return;
-
-		super.paintSign();
-*/
+		/*
+		 * if (dlg.paintlock) return;
+		 * 
+		 * super.paintSign();
+		 */
 		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 
 			String image = "/images/Cardinal";
@@ -103,8 +102,7 @@ public class MarkIsol extends SeaMark {
 
 			if (!image.equals("/images/Cardinal")) {
 				image += ".png";
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
-						.getResource(image)));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
 			} else
 				dlg.panelMain.shapeIcon.setIcon(null);
 		}
@@ -119,21 +117,18 @@ public class MarkIsol extends SeaMark {
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_isolated_danger:shape", "pillar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_isolated_danger:shape", "pillar"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_isolated_danger:shape", "spar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_isolated_danger:shape", "spar"));
 			break;
 		case BEACON:
 			super.saveSign("beacon_isolated_danger");
 			break;
 		case TOWER:
 			super.saveSign("beacon_isolated_danger");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:beacon_isolated_danger:shape", "tower"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_isolated_danger:shape", "tower"));
 			break;
 		case FLOAT:
 			super.saveSign("light_float");
@@ -144,24 +139,19 @@ public class MarkIsol extends SeaMark {
 		switch (getShape()) {
 		case PILLAR:
 		case SPAR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_isolated_danger:colour", "black;red;black"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_isolated_danger:colour_pattern",
+					"horizontal stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_isolated_danger:colour", "black;red;black"));
 			break;
 		case BEACON:
 		case TOWER:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:beacon_isolated_danger:colour_pattern",
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_isolated_danger:colour_pattern",
 					"horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:beacon_isolated_danger:colour", "black;red;black"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_isolated_danger:colour", "black;red;black"));
 			break;
 		case FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:light_float:colour_pattern", "horizontal stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:light_float:colour", "black;red;black"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour_pattern", "horizontal stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour", "black;red;black"));
 			break;
 		}
 

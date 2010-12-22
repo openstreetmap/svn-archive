@@ -36,7 +36,7 @@ public class PanelLit extends JPanel {
 	}
 
 	public void clearSelections() {
-		
+
 	}
 
 }

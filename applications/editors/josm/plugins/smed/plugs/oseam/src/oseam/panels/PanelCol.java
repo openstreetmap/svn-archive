@@ -90,10 +90,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getOffButton() {
 		if (offButton == null) {
-			offButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/OffButton.png")));
+			offButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 			offButton.setBounds(new Rectangle(0, 0, 34, 16));
-	        offButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			offButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			offButton.setToolTipText(tr("No colour"));
 		}
 		return offButton;
@@ -101,10 +100,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getWhiteButton() {
 		if (whiteButton == null) {
-			whiteButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/WhiteButton.png")));
+			whiteButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WhiteButton.png")));
 			whiteButton.setBounds(new Rectangle(0, 16, 34, 16));
-	        whiteButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			whiteButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			whiteButton.setToolTipText(tr("White"));
 		}
 		return whiteButton;
@@ -112,10 +110,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getRedButton() {
 		if (redButton == null) {
-			redButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/RedButton.png")));
+			redButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RedButton.png")));
 			redButton.setBounds(new Rectangle(0, 32, 34, 16));
-	        redButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			redButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			redButton.setToolTipText(tr("Red"));
 		}
 		return redButton;
@@ -123,10 +120,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getOrangeButton() {
 		if (orangeButton == null) {
-			orangeButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/OrangeButton.png")));
+			orangeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OrangeButton.png")));
 			orangeButton.setBounds(new Rectangle(0, 48, 34, 16));
-	        orangeButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			orangeButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			orangeButton.setToolTipText(tr("Orange"));
 		}
 		return orangeButton;
@@ -134,10 +130,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getAmberButton() {
 		if (amberButton == null) {
-			amberButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/AmberButton.png")));
+			amberButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/AmberButton.png")));
 			amberButton.setBounds(new Rectangle(0, 64, 34, 16));
-	        amberButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			amberButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			amberButton.setToolTipText(tr("Amber"));
 		}
 		return amberButton;
@@ -145,10 +140,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getYellowButton() {
 		if (yellowButton == null) {
-			yellowButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/YellowButton.png")));
+			yellowButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/YellowButton.png")));
 			yellowButton.setBounds(new Rectangle(0, 80, 34, 16));
-	        yellowButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			yellowButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			yellowButton.setToolTipText(tr("Yellow"));
 		}
 		return yellowButton;
@@ -156,10 +150,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getGreenButton() {
 		if (greenButton == null) {
-			greenButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/GreenButton.png")));
+			greenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/GreenButton.png")));
 			greenButton.setBounds(new Rectangle(0, 96, 34, 16));
-	        greenButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			greenButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			greenButton.setToolTipText(tr("Green"));
 		}
 		return greenButton;
@@ -167,10 +160,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getBlueButton() {
 		if (blueButton == null) {
-			blueButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/BlueButton.png")));
+			blueButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlueButton.png")));
 			blueButton.setBounds(new Rectangle(0, 112, 34, 16));
-	        blueButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			blueButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			blueButton.setToolTipText(tr("Blue"));
 		}
 		return blueButton;
@@ -178,10 +170,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getVioletButton() {
 		if (violetButton == null) {
-			violetButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/VioletButton.png")));
+			violetButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/VioletButton.png")));
 			violetButton.setBounds(new Rectangle(0, 128, 34, 16));
-	        violetButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			violetButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			violetButton.setToolTipText(tr("Violet"));
 		}
 		return violetButton;
@@ -189,10 +180,9 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getBlackButton() {
 		if (blackButton == null) {
-			blackButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/BlackButton.png")));
+			blackButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlackButton.png")));
 			blackButton.setBounds(new Rectangle(0, 144, 34, 16));
-	        blackButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+			blackButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			blackButton.setToolTipText(tr("Black"));
 		}
 		return blackButton;

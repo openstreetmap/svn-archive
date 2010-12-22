@@ -41,23 +41,20 @@ public class MarkSaw extends SeaMark {
 
 		/*
 		 * 
-		 * setBuoyIndex(SAFE_WATER);
-		 *  setColour(SeaMark.RED_WHITE);
+		 * setBuoyIndex(SAFE_WATER); setColour(SeaMark.RED_WHITE);
 		 * setLightColour("W");
 		 * setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 		 * 
-		 * if (keys.containsKey("seamark:buoy_safe_water:shape")) {
-		 *  str = keys.get("seamark:buoy_safe_water:shape");
+		 * if (keys.containsKey("seamark:buoy_safe_water:shape")) { str =
+		 * keys.get("seamark:buoy_safe_water:shape");
 		 * 
-		 * if (str.equals("pillar")) setStyleIndex(SAFE_PILLAR);
-		 *  else if
-		 * (str.equals("spar")) setStyleIndex(SAFE_SPAR);
-		 *  else if (str.equals("sphere")) setStyleIndex(SAFE_SPHERE);
-		 *   } else if ((keys.containsKey("seamark:type")) &&
+		 * if (str.equals("pillar")) setStyleIndex(SAFE_PILLAR); else if
+		 * (str.equals("spar")) setStyleIndex(SAFE_SPAR); else if
+		 * (str.equals("sphere")) setStyleIndex(SAFE_SPHERE); } else if
+		 * ((keys.containsKey("seamark:type")) &&
 		 * (keys.get("seamark:type").equals("light_float"))) {
-		 * setStyleIndex(SAFE_FLOAT);
-		 *  } else if ((keys.containsKey("seamark:type")) &&
-		 * (keys.get("seamark:type").equals("beacon_safe_water"))) {
+		 * setStyleIndex(SAFE_FLOAT); } else if ((keys.containsKey("seamark:type"))
+		 * && (keys.get("seamark:type").equals("beacon_safe_water"))) {
 		 * setStyleIndex(SAFE_BEACON); }
 		 * 
 		 * if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
@@ -66,9 +63,7 @@ public class MarkSaw extends SeaMark {
 		 * if (keys.containsKey("seamark:topmark:shape") ||
 		 * keys.containsKey("seamark:topmark:colour")) { setTopMark(true); }
 		 * 
-		 * refreshLights();
-		 *  parseLights(keys);
-		 *   parseFogRadar(keys);
+		 * refreshLights(); parseLights(keys); parseFogRadar(keys);
 		 * 
 		 * dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
 		 * dlg.tfM01Name.setText(getName());
@@ -111,8 +106,7 @@ public class MarkSaw extends SeaMark {
 
 		if (!image.equals("/images/Safe_Water")) {
 			image += ".png";
-			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
-					.getResource(image)));
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
 			if (hasTopMark()) {
 				image = "";
 				switch (getShape()) {
@@ -131,8 +125,7 @@ public class MarkSaw extends SeaMark {
 					break;
 				}
 				if (!image.isEmpty())
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
-							.getResource(image)));
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
 			} else
 				dlg.panelMain.topIcon.setIcon(null);
 		} else {
@@ -149,18 +142,15 @@ public class MarkSaw extends SeaMark {
 		switch (getShape()) {
 		case PILLAR:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_safe_water:shape", "pillar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "pillar"));
 			break;
 		case SPAR:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_safe_water:shape", "spar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "spar"));
 			break;
 		case SPHERE:
 			super.saveSign("buoy_safe_water");
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_safe_water:shape", "sphere"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "sphere"));
 			break;
 		case BEACON:
 			super.saveSign("beacon_safe_water");
@@ -175,24 +165,16 @@ public class MarkSaw extends SeaMark {
 		case PILLAR:
 		case SPAR:
 		case SPHERE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_safe_water:colour_pattern",
-					"vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:buoy_safe_water:colour", "red;white"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:colour", "red;white"));
 			break;
 		case BEACON:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:beacon_safe_water:colour_pattern",
-					"vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:beacon_safe_water:colour", "red;white"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_safe_water:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_safe_water:colour", "red;white"));
 			break;
 		case FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:light_float:colour_pattern", "vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
-					"seamark:light_float:colour", "red;white"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour", "red;white"));
 			break;
 		default:
 		}

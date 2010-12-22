@@ -11,7 +11,7 @@ public class MarkLight extends SeaMark {
 	public MarkLight(OSeaMAction dia) {
 		super(dia);
 	}
-	
+
 	public void parseMark() {
 
 		Map<String, String> keys;
@@ -38,55 +38,42 @@ public class MarkLight extends SeaMark {
 			setName(keys.get("seamark:light_float:name"));
 
 		/*
-		if (keys.containsKey("seamark:type")) {
-			String type = keys.get("seamark:type");
-			if (type.equals("landmark"))
-				setBuoyIndex(LIGHT_HOUSE);
-			else if (type.equals("light_major"))
-				setBuoyIndex(LIGHT_MAJOR);
-			else if (type.equals("light_minor"))
-				setBuoyIndex(LIGHT_MINOR);
-			else if (type.equals("light_vessel"))
-				setBuoyIndex(LIGHT_VESSEL);
-		}
-
-		parseLights(keys);
-		parseFogRadar(keys);
-		setTopMark(false);
-		setFired(true);
-
-		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01Fired.setSelected(true);
-*/	}
+		 * if (keys.containsKey("seamark:type")) { String type =
+		 * keys.get("seamark:type"); if (type.equals("landmark"))
+		 * setBuoyIndex(LIGHT_HOUSE); else if (type.equals("light_major"))
+		 * setBuoyIndex(LIGHT_MAJOR); else if (type.equals("light_minor"))
+		 * setBuoyIndex(LIGHT_MINOR); else if (type.equals("light_vessel"))
+		 * setBuoyIndex(LIGHT_VESSEL); }
+		 * 
+		 * parseLights(keys); parseFogRadar(keys); setTopMark(false);
+		 * setFired(true);
+		 * 
+		 * dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+		 * dlg.tfM01Name.setText(getName()); dlg.cM01Fired.setEnabled(false);
+		 * dlg.cM01Fired.setSelected(true);
+		 */}
 
 	public void paintSign() {
-/*		if (dlg.paintlock)
-			return;
-		super.paintSign();
-*/
+		/*
+		 * if (dlg.paintlock) return; super.paintSign();
+		 */
 		if (getCategory() != Cat.UNKNOWN) {
 
 			switch (getCategory()) {
 			case LIGHT_HOUSE:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_House.png")));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_House.png")));
 				break;
 
 			case LIGHT_MAJOR:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Major.png")));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Major.png")));
 				break;
 
 			case LIGHT_MINOR:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Minor.png")));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Minor.png")));
 				break;
 
 			case LIGHT_VESSEL:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Major_Float.png")));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Major_Float.png")));
 				break;
 
 			default:

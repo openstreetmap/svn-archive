@@ -17,8 +17,13 @@ import javax.swing.JTextField;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.MarkLat;
+import oseam.seamarks.MarkSaw;
+import oseam.seamarks.MarkCard;
+import oseam.seamarks.MarkIsol;
 import oseam.seamarks.MarkSpec;
 import oseam.seamarks.MarkLight;
+import oseam.seamarks.SeaMark.Cat;
 
 public class PanelMain extends JPanel {
 
@@ -119,11 +124,14 @@ public class PanelMain extends JPanel {
 		typeButtons.add(lightsButton);
 		alType = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (dlg.mark == null) {
+				if (dlg.node == null) {
 					typeButtons.clearSelection();
-					return;
 				}
 				if (chanButton.isSelected()) {
+					if (!((dlg.mark instanceof MarkLat) || (dlg.mark instanceof MarkSaw))) {
+						dlg.mark = null;
+						clearIcons();
+					}
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
 				} else {
@@ -132,6 +140,10 @@ public class PanelMain extends JPanel {
 					panelChan.clearSelections();
 				}
 				if (hazButton.isSelected()) {
+					if (!((dlg.mark instanceof MarkCard) || (dlg.mark instanceof MarkIsol))) {
+						dlg.mark = null;
+						clearIcons();
+					}
 					hazButton.setBorderPainted(true);
 					panelHaz.setVisible(true);
 				} else {
@@ -140,8 +152,10 @@ public class PanelMain extends JPanel {
 					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkSpec))
+					if (!(dlg.mark instanceof MarkSpec)) {
 						dlg.mark = new MarkSpec(dlg);
+						clearIcons();
+					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
 				} else {
@@ -150,8 +164,10 @@ public class PanelMain extends JPanel {
 					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLight))
+					if (!(dlg.mark instanceof MarkLight)) {
 						dlg.mark = new MarkLight(dlg);
+						clearIcons();
+					}
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
 				} else {
@@ -234,12 +250,6 @@ public class PanelMain extends JPanel {
 		alType.actionPerformed(null);
 		miscButtons.clearSelection();
 		alMisc.actionPerformed(null);
-		shapeIcon.setIcon(null);
-		lightIcon.setIcon(null);
-		topIcon.setIcon(null);
-		reflIcon.setIcon(null);
-		radarIcon.setIcon(null);
-		fogIcon.setIcon(null);
 		panelChan.clearSelections();
 		panelHaz.clearSelections();
 		panelSpec.clearSelections();
@@ -248,15 +258,23 @@ public class PanelMain extends JPanel {
 		panelFog.clearSelections();
 		panelRadar.clearSelections();
 		panelLit.clearSelections();
+		clearIcons();
+	}
+
+	public void clearIcons() {
+		shapeIcon.setIcon(null);
+		lightIcon.setIcon(null);
+		topIcon.setIcon(null);
+		reflIcon.setIcon(null);
+		radarIcon.setIcon(null);
+		fogIcon.setIcon(null);
 	}
 
 	private JRadioButton getChanButton() {
 		if (chanButton == null) {
-			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/ChanButton.png")));
+			chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
 			chanButton.setBounds(new Rectangle(0, 0, 62, 40));
-			chanButton.setBorder(BorderFactory.createLineBorder(Color.magenta,
-					2));
+			chanButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
 		}
 		return chanButton;
@@ -264,11 +282,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getHazButton() {
 		if (hazButton == null) {
-			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/HazButton.png")));
+			hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
 			hazButton.setBounds(new Rectangle(0, 40, 62, 40));
-			hazButton.setBorder(BorderFactory
-					.createLineBorder(Color.magenta, 2));
+			hazButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			hazButton.setToolTipText(Messages.getString("HazTip"));
 		}
 		return hazButton;
@@ -276,11 +292,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getSpecButton() {
 		if (specButton == null) {
-			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/SpecButton.png")));
+			specButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SpecButton.png")));
 			specButton.setBounds(new Rectangle(0, 80, 62, 40));
-			specButton.setBorder(BorderFactory.createLineBorder(Color.magenta,
-					2));
+			specButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			specButton.setToolTipText(Messages.getString("SpecTip"));
 		}
 		return specButton;
@@ -288,11 +302,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getLightsButton() {
 		if (lightsButton == null) {
-			lightsButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/LightsButton.png")));
+			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightsButton.png")));
 			lightsButton.setBounds(new Rectangle(0, 120, 62, 40));
-			lightsButton.setBorder(BorderFactory.createLineBorder(
-					Color.magenta, 2));
+			lightsButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			lightsButton.setToolTipText(Messages.getString("LightsTip"));
 		}
 		return lightsButton;
@@ -300,11 +312,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getTopButton() {
 		if (topButton == null) {
-			topButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/TopButton.png")));
+			topButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TopButton.png")));
 			topButton.setBounds(new Rectangle(0, 165, 34, 32));
-			topButton.setBorder(BorderFactory
-					.createLineBorder(Color.magenta, 2));
+			topButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			topButton.setToolTipText(Messages.getString("TopmarksTip"));
 		}
 		return topButton;
@@ -312,11 +322,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getFogButton() {
 		if (fogButton == null) {
-			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/FogButton.png")));
+			fogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogButton.png")));
 			fogButton.setBounds(new Rectangle(0, 205, 34, 32));
-			fogButton.setBorder(BorderFactory
-					.createLineBorder(Color.magenta, 2));
+			fogButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
 		}
 		return fogButton;
@@ -324,11 +332,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getRadarButton() {
 		if (radarButton == null) {
-			radarButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/RadarButton.png")));
+			radarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
 			radarButton.setBounds(new Rectangle(0, 245, 34, 32));
-			radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta,
-					2));
+			radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			radarButton.setToolTipText(Messages.getString("RadarTip"));
 		}
 		return radarButton;
@@ -336,11 +342,9 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getLitButton() {
 		if (litButton == null) {
-			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/LitButton.png")));
+			litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 			litButton.setBounds(new Rectangle(0, 285, 34, 32));
-			litButton.setBorder(BorderFactory
-					.createLineBorder(Color.magenta, 2));
+			litButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			litButton.setToolTipText(Messages.getString("LitTip"));
 		}
 		return litButton;

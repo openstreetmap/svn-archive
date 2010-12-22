@@ -129,6 +129,7 @@ public class PanelMain extends JPanel {
 				} else {
 					chanButton.setBorderPainted(false);
 					panelChan.setVisible(false);
+					panelChan.clearSelections();
 				}
 				if (hazButton.isSelected()) {
 					hazButton.setBorderPainted(true);
@@ -136,6 +137,7 @@ public class PanelMain extends JPanel {
 				} else {
 					hazButton.setBorderPainted(false);
 					panelHaz.setVisible(false);
+					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
 					if (!(dlg.mark instanceof MarkSpec))
@@ -145,6 +147,7 @@ public class PanelMain extends JPanel {
 				} else {
 					specButton.setBorderPainted(false);
 					panelSpec.setVisible(false);
+					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
 					if (!(dlg.mark instanceof MarkLight))
@@ -154,6 +157,7 @@ public class PanelMain extends JPanel {
 				} else {
 					lightsButton.setBorderPainted(false);
 					panelLights.setVisible(false);
+					panelLights.clearSelections();
 				}
 			}
 		};

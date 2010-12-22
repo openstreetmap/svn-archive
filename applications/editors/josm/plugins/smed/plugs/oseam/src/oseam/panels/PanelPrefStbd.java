@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Shp;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
@@ -35,6 +36,7 @@ public class PanelPrefStbd extends JPanel {
 	public JRadioButton floatButton = null;
 	public JRadioButton beaconButton = null;
 	public JRadioButton towerButton = null;
+	private ActionListener alShape = null;
 
 	public PanelPrefStbd(OSeaMAction dia) {
 		dlg = dia;
@@ -68,15 +70,46 @@ public class PanelPrefStbd extends JPanel {
 		shapeButtons.add(floatButton);
 		shapeButtons.add(beaconButton);
 		shapeButtons.add(towerButton);
-		ActionListener alShape = new ActionListener() {
+		alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setBorderPainted(pillarButton.isSelected());
-				sparButton.setBorderPainted(sparButton.isSelected());
-				coneButton.setBorderPainted(coneButton.isSelected());
-				floatButton.setBorderPainted(floatButton.isSelected());
-				beaconButton.setBorderPainted(beaconButton.isSelected());
-				towerButton.setBorderPainted(towerButton.isSelected());
-				dlg.mark.paintSign();
+				if (pillarButton.isSelected()) {
+					dlg.mark.setShape(Shp.PILLAR);
+					pillarButton.setBorderPainted(true);
+				} else {
+					pillarButton.setBorderPainted(false);
+				}
+				if (sparButton.isSelected()) {
+					dlg.mark.setShape(Shp.SPAR);
+					sparButton.setBorderPainted(true);
+				} else {
+					sparButton.setBorderPainted(false);
+				}
+				if (coneButton.isSelected()) {
+					dlg.mark.setShape(Shp.CONE);
+					coneButton.setBorderPainted(true);
+				} else {
+					coneButton.setBorderPainted(false);
+				}
+				if (floatButton.isSelected()) {
+					dlg.mark.setShape(Shp.FLOAT);
+					floatButton.setBorderPainted(true);
+				} else {
+					floatButton.setBorderPainted(false);
+				}
+				if (beaconButton.isSelected()) {
+					dlg.mark.setShape(Shp.BEACON);
+					beaconButton.setBorderPainted(true);
+				} else {
+					beaconButton.setBorderPainted(false);
+				}
+				if (towerButton.isSelected()) {
+					dlg.mark.setShape(Shp.TOWER);
+					towerButton.setBorderPainted(true);
+				} else {
+					towerButton.setBorderPainted(false);
+				}
+				if (dlg.mark != null)
+					dlg.mark.paintSign();
 			}
 		};
 		pillarButton.addActionListener(alShape);
@@ -88,7 +121,8 @@ public class PanelPrefStbd extends JPanel {
 	}
 
 	public void clearSelections() {
-		
+		shapeButtons.clearSelection();
+		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getRegionAButton() {

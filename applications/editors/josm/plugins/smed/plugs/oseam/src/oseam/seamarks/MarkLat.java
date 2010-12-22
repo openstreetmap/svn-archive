@@ -258,12 +258,12 @@ public class MarkLat extends SeaMark {
 
 	public void setLightColour() {
 		if (getRegion() == IALA_A) {
-			if (getCategory() == Cat.PORT_HAND || getCategory() == Cat.PREF_PORT_HAND)
+			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
 				super.setLightColour("R");
 			else
 				super.setLightColour("G");
 		} else {
-			if (getCategory() == Cat.PORT_HAND || getCategory() == Cat.PREF_PORT_HAND)
+			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
 				super.setLightColour("G");
 			else
 				super.setLightColour("R");
@@ -275,308 +275,306 @@ public class MarkLat extends SeaMark {
 			return;
 		super.paintSign();
 */
-		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 		boolean region = getRegion();
-			Shp style = getShape();
+		Shp style = getShape();
 
-			String image = "/images/Lateral";
+		String image = "/images/Lateral";
 
-			switch (getCategory()) {
-			case PORT_HAND:
-				if (region == IALA_A)
-					switch (style) {
-					case CAN:
-						image += "_Can_Red";
-						break;
-					case PILLAR:
-						image += "_Pillar_Red";
-						break;
-					case SPAR:
-						image += "_Spar_Red";
-						break;
-					case BEACON:
-						image += "_Beacon_Red";
-						break;
-					case TOWER:
-						image += "_Tower_Red";
-						break;
-					case FLOAT:
-						image += "_Float_Red";
-						break;
-					case PERCH:
-						image += "_Perch_Port";
-						break;
-					default:
-					}
-				else
-					switch (style) {
-					case CAN:
-						image += "_Can_Green";
-						break;
-					case PILLAR:
-						image += "_Pillar_Green";
-						break;
-					case SPAR:
-						image += "_Spar_Green";
-						break;
-					case BEACON:
-						image += "_Beacon_Green";
-						break;
-					case TOWER:
-						image += "_Tower_Green";
-						break;
-					case FLOAT:
-						image += "_Float_Green";
-						break;
-					case PERCH:
-						image += "_Perch_Port";
-						break;
-					default:
-					}
-				break;
-
-			case STARBOARD_HAND:
-				if (region == IALA_A)
-					switch (style) {
-					case CONE:
-						image += "_Cone_Green";
-						break;
-					case PILLAR:
-						image += "_Pillar_Green";
-						break;
-					case SPAR:
-						image += "_Spar_Green";
-						break;
-					case BEACON:
-						image += "_Beacon_Green";
-						break;
-					case TOWER:
-						image += "_Tower_Green";
-						break;
-					case FLOAT:
-						image += "_Float_Green";
-						break;
-					case PERCH:
-						image += "_Perch_Starboard";
-						break;
-					default:
-					}
-				else
-					switch (style) {
-					case CONE:
-						image += "_Cone_Red";
-						break;
-					case PILLAR:
-						image += "_Pillar_Red";
-						break;
-					case SPAR:
-						image += "_Spar_Red";
-						break;
-					case BEACON:
-						image += "_Beacon_Red";
-						break;
-					case TOWER:
-						image += "_Tower_Red";
-						break;
-					case FLOAT:
-						image += "_Float_Red";
-						break;
-					case PERCH:
-						image += "_Perch_Starboard";
-						break;
-					default:
-					}
-				break;
-
-			case PREF_PORT_HAND:
-				if (region == IALA_A)
-					switch (style) {
-					case CAN:
-						image += "_Can_Red_Green_Red";
-						break;
-					case PILLAR:
-						image += "_Pillar_Red_Green_Red";
-						break;
-					case SPAR:
-						image += "_Spar_Red_Green_Red";
-						break;
-					case BEACON:
-						image += "_Beacon_Red_Green_Red";
-						break;
-					case TOWER:
-						image += "_Tower_Red_Green_Red";
-						break;
-					case FLOAT:
-						image += "_Float_Red_Green_Red";
-						break;
-					default:
-					}
-				else
-					switch (style) {
-					case CAN:
-						image += "_Can_Green_Red_Green";
-						break;
-					case PILLAR:
-						image += "_Pillar_Green_Red_Green";
-						break;
-					case SPAR:
-						image += "_Spar_Green_Red_Green";
-						break;
-					case BEACON:
-						image += "_Beacon_Green_Red_Green";
-						break;
-					case TOWER:
-						image += "_Tower_Green_Red_Green";
-						break;
-					case FLOAT:
-						image += "_Float_Green_Red_Green";
-						break;
-					default:
-					}
-				break;
-
-			case PREF_STARBOARD_HAND:
-				if (region == IALA_A)
-					switch (style) {
-					case CONE:
-						image += "_Cone_Green_Red_Green";
-						break;
-					case PILLAR:
-						image += "_Pillar_Green_Red_Green";
-						break;
-					case SPAR:
-						image += "_Spar_Green_Red_Green";
-						break;
-					case BEACON:
-						image += "_Beacon_Green_Red_Green";
-						break;
-					case TOWER:
-						image += "_Tower_Green_Red_Green";
-						break;
-					case FLOAT:
-						image += "_Float_Green_Red_Green";
-						break;
-					default:
-					}
-				else
-					switch (style) {
-					case CONE:
-						image += "_Cone_Red_Green_Red";
-						break;
-					case PILLAR:
-						image += "_Pillar_Red_Green_Red";
-						break;
-					case SPAR:
-						image += "_Spar_Red_Green_Red";
-						break;
-					case BEACON:
-						image += "_Beacon_Red_Green_Red";
-						break;
-					case TOWER:
-						image += "_Tower_Red_Green_Red";
-						break;
-					case FLOAT:
-						image += "_Float_Red_Green_Red";
-						break;
-					default:
-					}
-				break;
-
-			default:
-			}
-
-			if (!image.equals("/images/Lateral")) {
-
-				image += ".png";
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
-						.getResource(image)));
-
-				if (hasTopMark()) {
-					image = "";
-					switch (getCategory()) {
-					case PORT_HAND:
-					case PREF_PORT_HAND:
-						if (region == IALA_A)
-							switch (style) {
-							case CAN:
-								image = "/images/Top_Can_Red_Buoy_Small.png";
-								break;
-							case PILLAR:
-							case SPAR:
-								image = "/images/Top_Can_Red_Buoy.png";
-								break;
-							case BEACON:
-							case TOWER:
-								image = "/images/Top_Can_Red_Beacon.png";
-								break;
-							case FLOAT:
-								image = "/images/Top_Can_Red_Float.png";
-								break;
-							}
-						else
-							switch (style) {
-							case CAN:
-								image = "/images/Top_Can_Green_Buoy_Small.png";
-								break;
-							case PILLAR:
-							case SPAR:
-								image = "/images/Top_Can_Green_Buoy.png";
-								break;
-							case BEACON:
-							case TOWER:
-								image = "/images/Top_Can_Green_Beacon.png";
-								break;
-							case FLOAT:
-								image = "/images/Top_Can_Green_Float.png";
-								break;
-							}
-						break;
-
-					case STARBOARD_HAND:
-					case PREF_STARBOARD_HAND:
-						if (region == IALA_A)
-							switch (style) {
-							case CONE:
-								image = "/images/Top_Cone_Green_Buoy_Small.png";
-								break;
-							case PILLAR:
-							case SPAR:
-								image = "/images/Top_Cone_Green_Buoy.png";
-								break;
-							case BEACON:
-							case TOWER:
-								image = "/images/Top_Cone_Green_Beacon.png";
-								break;
-							case FLOAT:
-								image = "/images/Top_Cone_Green_Float.png";
-								break;
-							}
-						else
-							switch (style) {
-							case CONE:
-								image = "/images/Top_Cone_Red_Buoy_Small.png";
-								break;
-							case PILLAR:
-							case SPAR:
-								image = "/images/Top_Cone_Red_Buoy.png";
-								break;
-							case BEACON:
-							case TOWER:
-								image = "/images/Top_Cone_Red_Beacon.png";
-								break;
-							case FLOAT:
-								image = "/images/Top_Cone_Red_Float.png";
-								break;
-							}
-						break;
-					}
-					if (!image.isEmpty())
-						dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
-								.getResource(image)));
+		switch (getCategory()) {
+		case LAT_PORT:
+			if (region == IALA_A)
+				switch (style) {
+				case CAN:
+					image += "_Can_Red";
+					break;
+				case PILLAR:
+					image += "_Pillar_Red";
+					break;
+				case SPAR:
+					image += "_Spar_Red";
+					break;
+				case BEACON:
+					image += "_Beacon_Red";
+					break;
+				case TOWER:
+					image += "_Tower_Red";
+					break;
+				case FLOAT:
+					image += "_Float_Red";
+					break;
+				case PERCH:
+					image += "_Perch_Port";
+					break;
+				default:
 				}
-			} else
-				dlg.panelMain.shapeIcon.setIcon(null);
+			else
+				switch (style) {
+				case CAN:
+					image += "_Can_Green";
+					break;
+				case PILLAR:
+					image += "_Pillar_Green";
+					break;
+				case SPAR:
+					image += "_Spar_Green";
+					break;
+				case BEACON:
+					image += "_Beacon_Green";
+					break;
+				case TOWER:
+					image += "_Tower_Green";
+					break;
+				case FLOAT:
+					image += "_Float_Green";
+					break;
+				case PERCH:
+					image += "_Perch_Port";
+					break;
+				default:
+				}
+			break;
+
+		case LAT_STBD:
+			if (region == IALA_A)
+				switch (style) {
+				case CONE:
+					image += "_Cone_Green";
+					break;
+				case PILLAR:
+					image += "_Pillar_Green";
+					break;
+				case SPAR:
+					image += "_Spar_Green";
+					break;
+				case BEACON:
+					image += "_Beacon_Green";
+					break;
+				case TOWER:
+					image += "_Tower_Green";
+					break;
+				case FLOAT:
+					image += "_Float_Green";
+					break;
+				case PERCH:
+					image += "_Perch_Starboard";
+					break;
+				default:
+				}
+			else
+				switch (style) {
+				case CONE:
+					image += "_Cone_Red";
+					break;
+				case PILLAR:
+					image += "_Pillar_Red";
+					break;
+				case SPAR:
+					image += "_Spar_Red";
+					break;
+				case BEACON:
+					image += "_Beacon_Red";
+					break;
+				case TOWER:
+					image += "_Tower_Red";
+					break;
+				case FLOAT:
+					image += "_Float_Red";
+					break;
+				case PERCH:
+					image += "_Perch_Starboard";
+					break;
+				default:
+				}
+			break;
+
+		case LAT_PREF_PORT:
+			if (region == IALA_A)
+				switch (style) {
+				case CAN:
+					image += "_Can_Red_Green_Red";
+					break;
+				case PILLAR:
+					image += "_Pillar_Red_Green_Red";
+					break;
+				case SPAR:
+					image += "_Spar_Red_Green_Red";
+					break;
+				case BEACON:
+					image += "_Beacon_Red_Green_Red";
+					break;
+				case TOWER:
+					image += "_Tower_Red_Green_Red";
+					break;
+				case FLOAT:
+					image += "_Float_Red_Green_Red";
+					break;
+				default:
+				}
+			else
+				switch (style) {
+				case CAN:
+					image += "_Can_Green_Red_Green";
+					break;
+				case PILLAR:
+					image += "_Pillar_Green_Red_Green";
+					break;
+				case SPAR:
+					image += "_Spar_Green_Red_Green";
+					break;
+				case BEACON:
+					image += "_Beacon_Green_Red_Green";
+					break;
+				case TOWER:
+					image += "_Tower_Green_Red_Green";
+					break;
+				case FLOAT:
+					image += "_Float_Green_Red_Green";
+					break;
+				default:
+				}
+			break;
+
+		case LAT_PREF_STBD:
+			if (region == IALA_A)
+				switch (style) {
+				case CONE:
+					image += "_Cone_Green_Red_Green";
+					break;
+				case PILLAR:
+					image += "_Pillar_Green_Red_Green";
+					break;
+				case SPAR:
+					image += "_Spar_Green_Red_Green";
+					break;
+				case BEACON:
+					image += "_Beacon_Green_Red_Green";
+					break;
+				case TOWER:
+					image += "_Tower_Green_Red_Green";
+					break;
+				case FLOAT:
+					image += "_Float_Green_Red_Green";
+					break;
+				default:
+				}
+			else
+				switch (style) {
+				case CONE:
+					image += "_Cone_Red_Green_Red";
+					break;
+				case PILLAR:
+					image += "_Pillar_Red_Green_Red";
+					break;
+				case SPAR:
+					image += "_Spar_Red_Green_Red";
+					break;
+				case BEACON:
+					image += "_Beacon_Red_Green_Red";
+					break;
+				case TOWER:
+					image += "_Tower_Red_Green_Red";
+					break;
+				case FLOAT:
+					image += "_Float_Red_Green_Red";
+					break;
+				default:
+				}
+			break;
+
+		default:
 		}
+
+		if (!image.equals("/images/Lateral")) {
+
+			image += ".png";
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
+					.getResource(image)));
+
+			if (hasTopMark()) {
+				image = "";
+				switch (getCategory()) {
+				case LAT_PORT:
+				case LAT_PREF_PORT:
+					if (region == IALA_A)
+						switch (style) {
+						case CAN:
+							image = "/images/Top_Can_Red_Buoy_Small.png";
+							break;
+						case PILLAR:
+						case SPAR:
+							image = "/images/Top_Can_Red_Buoy.png";
+							break;
+						case BEACON:
+						case TOWER:
+							image = "/images/Top_Can_Red_Beacon.png";
+							break;
+						case FLOAT:
+							image = "/images/Top_Can_Red_Float.png";
+							break;
+						}
+					else
+						switch (style) {
+						case CAN:
+							image = "/images/Top_Can_Green_Buoy_Small.png";
+							break;
+						case PILLAR:
+						case SPAR:
+							image = "/images/Top_Can_Green_Buoy.png";
+							break;
+						case BEACON:
+						case TOWER:
+							image = "/images/Top_Can_Green_Beacon.png";
+							break;
+						case FLOAT:
+							image = "/images/Top_Can_Green_Float.png";
+							break;
+						}
+					break;
+
+				case LAT_STBD:
+				case LAT_PREF_STBD:
+					if (region == IALA_A)
+						switch (style) {
+						case CONE:
+							image = "/images/Top_Cone_Green_Buoy_Small.png";
+							break;
+						case PILLAR:
+						case SPAR:
+							image = "/images/Top_Cone_Green_Buoy.png";
+							break;
+						case BEACON:
+						case TOWER:
+							image = "/images/Top_Cone_Green_Beacon.png";
+							break;
+						case FLOAT:
+							image = "/images/Top_Cone_Green_Float.png";
+							break;
+						}
+					else
+						switch (style) {
+						case CONE:
+							image = "/images/Top_Cone_Red_Buoy_Small.png";
+							break;
+						case PILLAR:
+						case SPAR:
+							image = "/images/Top_Cone_Red_Buoy.png";
+							break;
+						case BEACON:
+						case TOWER:
+							image = "/images/Top_Cone_Red_Beacon.png";
+							break;
+						case FLOAT:
+							image = "/images/Top_Cone_Red_Float.png";
+							break;
+						}
+					break;
+				}
+				if (!image.isEmpty())
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
+							.getResource(image)));
+			}
+		} else
+			dlg.panelMain.shapeIcon.setIcon(null);
 	}
 
 	public void saveSign() {
@@ -591,7 +589,7 @@ public class MarkLat extends SeaMark {
 
 		switch (cat) {
 
-		case PORT_HAND:
+		case LAT_PORT:
 			switch (getShape()) {
 			case CAN:
 				super.saveSign("buoy_lateral");
@@ -675,7 +673,7 @@ public class MarkLat extends SeaMark {
 			shape = "cylinder";
 			break;
 
-		case PREF_PORT_HAND:
+		case LAT_PREF_PORT:
 			switch (getShape()) {
 			case CAN:
 				super.saveSign("buoy_lateral");
@@ -756,7 +754,7 @@ public class MarkLat extends SeaMark {
 			shape = "cylinder";
 			break;
 
-		case STARBOARD_HAND:
+		case LAT_STBD:
 			switch (getShape()) {
 			case CONE:
 				super.saveSign("buoy_lateral");
@@ -842,7 +840,7 @@ public class MarkLat extends SeaMark {
 			shape = "cone, point up";
 			break;
 
-		case PREF_STARBOARD_HAND:
+		case LAT_PREF_STBD:
 			switch (getShape()) {
 			case CONE:
 				super.saveSign("buoy_lateral");

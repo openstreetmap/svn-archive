@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Shp;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ public class PanelSafeWater extends JPanel {
 	private JRadioButton sphereButton = null;
 	private JRadioButton barrelButton = null;
 	private JRadioButton floatButton = null;
+	private ActionListener alShape = null;
 
 	public PanelSafeWater(OSeaMAction dia) {
 		dlg = dia;
@@ -47,13 +49,40 @@ public class PanelSafeWater extends JPanel {
 		shapeButtons.add(sphereButton);
 		shapeButtons.add(barrelButton);
 		shapeButtons.add(floatButton);
-		ActionListener alShape = new ActionListener() {
+		alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setBorderPainted(pillarButton.isSelected());
-				sparButton.setBorderPainted(sparButton.isSelected());
-				sphereButton.setBorderPainted(sphereButton.isSelected());
-				barrelButton.setBorderPainted(barrelButton.isSelected());
-				floatButton.setBorderPainted(floatButton.isSelected());
+				if (pillarButton.isSelected()) {
+					dlg.mark.setShape(Shp.PILLAR);
+					pillarButton.setBorderPainted(true);
+				} else {
+					pillarButton.setBorderPainted(false);
+				}
+				if (sparButton.isSelected()) {
+					dlg.mark.setShape(Shp.SPAR);
+					sparButton.setBorderPainted(true);
+				} else {
+					sparButton.setBorderPainted(false);
+				}
+				if (sphereButton.isSelected()) {
+					dlg.mark.setShape(Shp.SPHERE);
+					sphereButton.setBorderPainted(true);
+				} else {
+					sphereButton.setBorderPainted(false);
+				}
+				if (barrelButton.isSelected()) {
+					dlg.mark.setShape(Shp.BARREL);
+					barrelButton.setBorderPainted(true);
+				} else {
+					barrelButton.setBorderPainted(false);
+				}
+				if (floatButton.isSelected()) {
+					dlg.mark.setShape(Shp.FLOAT);
+					floatButton.setBorderPainted(true);
+				} else {
+					floatButton.setBorderPainted(false);
+				}
+				if (dlg.mark != null)
+					dlg.mark.paintSign();
 			}
 		};
 		pillarButton.addActionListener(alShape);
@@ -64,7 +93,8 @@ public class PanelSafeWater extends JPanel {
 	}
 
 	public void clearSelections() {
-		
+		shapeButtons.clearSelection();
+		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getPillarButton() {

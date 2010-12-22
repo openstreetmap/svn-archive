@@ -88,59 +88,56 @@ public class MarkSaw extends SeaMark {
 		/*
 		 * if (dlg.paintlock) return; super.paintSign();
 		 */
-		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
+		String image = "/images/Safe_Water";
 
-			String image = "/images/Safe_Water";
+		switch (getShape()) {
+		case PILLAR:
+			image += "_Pillar";
+			break;
+		case SPAR:
+			image += "_Spar";
+			break;
+		case SPHERE:
+			image += "_Sphere";
+			break;
+		case BEACON:
+			image += "_Beacon";
+			break;
+		case FLOAT:
+			image += "_Float";
+			break;
+		default:
+		}
 
-			switch (getShape()) {
-			case PILLAR:
-				image += "_Pillar";
-				break;
-			case SPAR:
-				image += "_Spar";
-				break;
-			case SPHERE:
-				image += "_Sphere";
-				break;
-			case BEACON:
-				image += "_Beacon";
-				break;
-			case FLOAT:
-				image += "_Float";
-				break;
-			default:
-			}
-
-			if (!image.equals("/images/Safe_Water")) {
-				image += ".png";
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
-						.getResource(image)));
-				if (hasTopMark()) {
-					image = "";
-					switch (getShape()) {
-					case PILLAR:
-					case SPAR:
-						image = "/images/Top_Sphere_Red_Buoy.png";
-						break;
-					case SPHERE:
-						image = "/images/Top_Sphere_Red_Buoy_Small.png";
-						break;
-					case BEACON:
-						image = "/images/Top_Sphere_Red_Beacon.png";
-						break;
-					case FLOAT:
-						image = "/images/Top_Sphere_Red_Float.png";
-						break;
-					}
-					if (!image.isEmpty())
-						dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
-								.getResource(image)));
-				} else
-					dlg.panelMain.topIcon.setIcon(null);
-			} else {
-				dlg.panelMain.shapeIcon.setIcon(null);
+		if (!image.equals("/images/Safe_Water")) {
+			image += ".png";
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
+					.getResource(image)));
+			if (hasTopMark()) {
+				image = "";
+				switch (getShape()) {
+				case PILLAR:
+				case SPAR:
+					image = "/images/Top_Sphere_Red_Buoy.png";
+					break;
+				case SPHERE:
+					image = "/images/Top_Sphere_Red_Buoy_Small.png";
+					break;
+				case BEACON:
+					image = "/images/Top_Sphere_Red_Beacon.png";
+					break;
+				case FLOAT:
+					image = "/images/Top_Sphere_Red_Float.png";
+					break;
+				}
+				if (!image.isEmpty())
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
+							.getResource(image)));
+			} else
 				dlg.panelMain.topIcon.setIcon(null);
-			}
+		} else {
+			dlg.panelMain.shapeIcon.setIcon(null);
+			dlg.panelMain.topIcon.setIcon(null);
 		}
 	}
 

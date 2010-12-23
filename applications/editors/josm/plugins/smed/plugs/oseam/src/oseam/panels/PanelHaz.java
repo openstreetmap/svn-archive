@@ -56,8 +56,10 @@ public class PanelHaz extends JPanel {
 		alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (northButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkCard))
+					if (!(dlg.mark instanceof MarkCard)) {
 						dlg.mark = new MarkCard(dlg);
+						alShape.actionPerformed(null);
+					}
 					dlg.mark.setCategory(Cat.CARD_NORTH);
 					dlg.mark.setColour(Col.BLACK_YELLOW);
 					dlg.panelMain.panelTop.northTopButton.doClick();
@@ -67,8 +69,10 @@ public class PanelHaz extends JPanel {
 					northButton.setBorderPainted(false);
 				}
 				if (southButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkCard))
+					if (!(dlg.mark instanceof MarkCard)) {
 						dlg.mark = new MarkCard(dlg);
+						alShape.actionPerformed(null);
+					}
 					dlg.mark.setCategory(Cat.CARD_SOUTH);
 					dlg.mark.setColour(Col.YELLOW_BLACK);
 					dlg.panelMain.panelTop.southTopButton.doClick();
@@ -78,8 +82,10 @@ public class PanelHaz extends JPanel {
 					southButton.setBorderPainted(false);
 				}
 				if (eastButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkCard))
+					if (!(dlg.mark instanceof MarkCard)) {
 						dlg.mark = new MarkCard(dlg);
+						alShape.actionPerformed(null);
+					}
 					dlg.mark.setCategory(Cat.CARD_EAST);
 					dlg.mark.setColour(Col.BLACK_YELLOW_BLACK);
 					dlg.panelMain.panelTop.eastTopButton.doClick();
@@ -89,8 +95,10 @@ public class PanelHaz extends JPanel {
 					eastButton.setBorderPainted(false);
 				}
 				if (westButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkCard))
+					if (!(dlg.mark instanceof MarkCard)) {
 						dlg.mark = new MarkCard(dlg);
+						alShape.actionPerformed(null);
+					}
 					dlg.mark.setCategory(Cat.CARD_WEST);
 					dlg.mark.setColour(Col.YELLOW_BLACK_YELLOW);
 					dlg.panelMain.panelTop.westTopButton.doClick();
@@ -100,8 +108,10 @@ public class PanelHaz extends JPanel {
 					westButton.setBorderPainted(false);
 				}
 				if (isolButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkIsol))
+					if (!(dlg.mark instanceof MarkIsol)) {
 						dlg.mark = new MarkIsol(dlg);
+						alShape.actionPerformed(null);
+					}
 					dlg.mark.setColour(Col.BLACK_RED_BLACK);
 					dlg.panelMain.panelTop.spheres2TopButton.doClick();
 					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
@@ -162,6 +172,8 @@ public class PanelHaz extends JPanel {
 				} else {
 					towerButton.setBorderPainted(false);
 				}
+				if (dlg.mark != null)
+					dlg.mark.paintSign();
 			}
 		};
 		pillarButton.addActionListener(alShape);

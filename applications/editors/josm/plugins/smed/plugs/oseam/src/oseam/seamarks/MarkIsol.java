@@ -72,40 +72,33 @@ public class MarkIsol extends SeaMark {
 	}
 
 	public void paintSign() {
-		/*
-		 * if (dlg.paintlock) return;
-		 * 
-		 * super.paintSign();
-		 */
-		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
+		String image = "/images/Cardinal";
 
-			String image = "/images/Cardinal";
-
-			switch (getShape()) {
-			case PILLAR:
-				image += "_Pillar_Single";
-				break;
-			case SPAR:
-				image += "_Spar_Single";
-				break;
-			case BEACON:
-				image += "_Beacon_Single";
-				break;
-			case TOWER:
-				image += "_Tower_Single";
-				break;
-			case FLOAT:
-				image += "_Float_Single";
-				break;
-			default:
-			}
-
-			if (!image.equals("/images/Cardinal")) {
-				image += ".png";
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			} else
-				dlg.panelMain.shapeIcon.setIcon(null);
+		switch (getShape()) {
+		case PILLAR:
+			image += "_Pillar_Single";
+			break;
+		case SPAR:
+			image += "_Spar_Single";
+			break;
+		case BEACON:
+			image += "_Beacon_Single";
+			break;
+		case TOWER:
+			image += "_Tower_Single";
+			break;
+		case FLOAT:
+			image += "_Float_Single";
+			break;
+		default:
 		}
+
+		if (!image.equals("/images/Cardinal")) {
+			image += ".png";
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
+		} else
+			dlg.panelMain.shapeIcon.setIcon(null);
+		super.paintSign();
 	}
 
 	public void saveSign() {

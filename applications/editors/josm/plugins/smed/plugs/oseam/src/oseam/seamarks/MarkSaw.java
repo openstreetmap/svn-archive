@@ -80,9 +80,7 @@ public class MarkSaw extends SeaMark {
 	 * public void setLightColour() { super.setLightColour("W"); }
 	 */
 	public void paintSign() {
-		/*
-		 * if (dlg.paintlock) return; super.paintSign();
-		 */
+
 		String image = "/images/Safe_Water";
 
 		switch (getShape()) {
@@ -132,6 +130,7 @@ public class MarkSaw extends SeaMark {
 			dlg.panelMain.shapeIcon.setIcon(null);
 			dlg.panelMain.topIcon.setIcon(null);
 		}
+		super.paintSign();
 	}
 
 	public void saveSign() {

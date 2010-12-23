@@ -168,9 +168,6 @@ public class MarkLat extends SeaMark {
 	}
 
 	public void paintSign() {
-		/*
-		 * if (dlg.paintlock) return; super.paintSign();
-		 */
 		boolean region = getRegion();
 		Shp style = getShape();
 
@@ -469,6 +466,7 @@ public class MarkLat extends SeaMark {
 			}
 		} else
 			dlg.panelMain.shapeIcon.setIcon(null);
+		super.paintSign();
 	}
 
 	public void saveSign() {

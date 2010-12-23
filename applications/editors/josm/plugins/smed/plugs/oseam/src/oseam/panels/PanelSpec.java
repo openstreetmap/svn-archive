@@ -6,22 +6,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.Font;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Shp;
+import oseam.seamarks.SeaMark.Col;
 
-import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelSpec extends JPanel {
@@ -70,16 +65,66 @@ public class PanelSpec extends JPanel {
 		shapeButtons.add(towerButton);
 		ActionListener alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setBorderPainted(pillarButton.isSelected());
-				sparButton.setBorderPainted(sparButton.isSelected());
-				canButton.setBorderPainted(canButton.isSelected());
-				coneButton.setBorderPainted(coneButton.isSelected());
-				sphereButton.setBorderPainted(sphereButton.isSelected());
-				barrelButton.setBorderPainted(barrelButton.isSelected());
-				superButton.setBorderPainted(superButton.isSelected());
-				floatButton.setBorderPainted(floatButton.isSelected());
-				beaconButton.setBorderPainted(beaconButton.isSelected());
-				towerButton.setBorderPainted(towerButton.isSelected());
+				if (pillarButton.isSelected()) {
+					dlg.mark.setShape(Shp.PILLAR);
+					pillarButton.setBorderPainted(true);
+				} else {
+					pillarButton.setBorderPainted(false);
+				}
+				if (sparButton.isSelected()) {
+					dlg.mark.setShape(Shp.SPAR);
+					sparButton.setBorderPainted(true);
+				} else {
+					sparButton.setBorderPainted(false);
+				}
+				if (canButton.isSelected()) {
+					dlg.mark.setShape(Shp.CAN);
+					canButton.setBorderPainted(true);
+				} else {
+					canButton.setBorderPainted(false);
+				}
+				if (coneButton.isSelected()) {
+					dlg.mark.setShape(Shp.CONE);
+					coneButton.setBorderPainted(true);
+				} else {
+					coneButton.setBorderPainted(false);
+				}
+				if (sphereButton.isSelected()) {
+					dlg.mark.setShape(Shp.SPHERE);
+					sphereButton.setBorderPainted(true);
+				} else {
+					sphereButton.setBorderPainted(false);
+				}
+				if (barrelButton.isSelected()) {
+					dlg.mark.setShape(Shp.BARREL);
+					barrelButton.setBorderPainted(true);
+				} else {
+					barrelButton.setBorderPainted(false);
+				}
+				if (superButton.isSelected()) {
+					dlg.mark.setShape(Shp.SUPER);
+					superButton.setBorderPainted(true);
+				} else {
+					superButton.setBorderPainted(false);
+				}
+				if (floatButton.isSelected()) {
+					dlg.mark.setShape(Shp.FLOAT);
+					floatButton.setBorderPainted(true);
+				} else {
+					floatButton.setBorderPainted(false);
+				}
+				if (beaconButton.isSelected()) {
+					dlg.mark.setShape(Shp.BEACON);
+					beaconButton.setBorderPainted(true);
+				} else {
+					beaconButton.setBorderPainted(false);
+				}
+				if (towerButton.isSelected()) {
+					dlg.mark.setShape(Shp.TOWER);
+					towerButton.setBorderPainted(true);
+				} else {
+					towerButton.setBorderPainted(false);
+				}
 				if (dlg.mark != null)
 					dlg.mark.paintSign();
 			}
@@ -94,7 +139,6 @@ public class PanelSpec extends JPanel {
 		floatButton.addActionListener(alShape);
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
-
 	}
 
 	public void clearSelections() {

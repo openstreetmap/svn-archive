@@ -54,31 +54,28 @@ public class MarkLight extends SeaMark {
 		 */}
 
 	public void paintSign() {
-		/*
-		 * if (dlg.paintlock) return; super.paintSign();
-		 */
-		if (getCategory() != Cat.UNKNOWN) {
+		switch (getCategory()) {
+		case LIGHT_HOUSE:
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_House.png")));
+			break;
 
-			switch (getCategory()) {
-			case LIGHT_HOUSE:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_House.png")));
-				break;
+		case LIGHT_MAJOR:
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Major.png")));
+			break;
 
-			case LIGHT_MAJOR:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Major.png")));
-				break;
+		case LIGHT_MINOR:
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Minor.png")));
+			break;
 
-			case LIGHT_MINOR:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Minor.png")));
-				break;
+		case LIGHT_VESSEL:
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Float_Major.png")));
+			break;
 
-			case LIGHT_VESSEL:
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Major_Float.png")));
-				break;
-
-			default:
-			}
+		case LIGHT_FLOAT:
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/Float_Minor.png")));
+			break;
 		}
+		super.paintSign();
 	}
 
 	public void saveSign() {
@@ -98,6 +95,9 @@ public class MarkLight extends SeaMark {
 			break;
 		case LIGHT_VESSEL:
 			super.saveSign("light_vessel");
+			break;
+		case LIGHT_FLOAT:
+			super.saveSign("light_float");
 			break;
 		default:
 		}

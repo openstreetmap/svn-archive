@@ -94,75 +94,70 @@ public class MarkSpec extends SeaMark {
 	}
 
 	public void paintSign() {
-		/*
-		 * if (dlg.paintlock) return; super.paintSign();
-		 */
-		if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN)) {
 
-			String image = "/images/Special_Purpose";
+		String image = "/images/Special_Purpose";
 
-			switch (getShape()) {
-			case PILLAR:
-				image += "_Pillar";
-				break;
-			case CAN:
-				image += "_Can";
-				break;
-			case CONE:
-				image += "_Cone";
-				break;
-			case SPAR:
-				image += "_Spar";
-				break;
-			case SPHERE:
-				image += "_Sphere";
-				break;
-			case BARREL:
-				image += "_Barrel";
-				break;
-			case FLOAT:
-				image += "_Float";
-				break;
-			case BEACON:
-				image += "_Beacon";
-				break;
-			case TOWER:
-				image += "_Tower";
-				break;
-			default:
-			}
-
-			if (!image.equals("/images/Special_Purpose")) {
-				image += ".png";
-				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-				/*
-				 * if (hasTopMark()) { image = ""; switch (getShape()) { case PILLAR:
-				 * case SPAR: switch (getTopMarkIndex()) { case TOP_YELLOW_X: image =
-				 * "/images/Top_X_Yellow_Buoy.png"; break; case TOP_RED_X: image =
-				 * "/images/Top_X_Red_Buoy.png"; break; case TOP_YELLOW_CAN: image =
-				 * "/images/Top_Can_Yellow_Buoy.png"; break; case TOP_YELLOW_CONE: image
-				 * = "/images/Top_Cone_Yellow_Buoy.png"; break; } break; case CAN: case
-				 * CONE: case SPHERE: case BARREL: switch (getTopMarkIndex()) { case
-				 * TOP_YELLOW_X: image = "/images/Top_X_Yellow_Buoy_Small.png"; break;
-				 * case TOP_RED_X: image = "/images/Top_X_Red_Buoy_Small.png"; break;
-				 * case TOP_YELLOW_CAN: image = "/images/Top_Can_Yellow_Buoy_Small.png";
-				 * break; case TOP_YELLOW_CONE: image =
-				 * "/images/Top_Cone_Yellow_Buoy_Small.png"; break; } break; case
-				 * BEACON: case TOWER: switch (getTopMarkIndex()) { case TOP_YELLOW_X:
-				 * image = "/images/Top_X_Yellow_Beacon.png"; break; case TOP_RED_X:
-				 * image = "/images/Top_X_Red_Beacon.png"; break; case TOP_YELLOW_CAN:
-				 * image = "/images/Top_Can_Yellow_Beacon.png"; break; case
-				 * TOP_YELLOW_CONE: image = "/images/Top_Cone_Yellow_Beacon.png"; break;
-				 * } break; case FLOAT: switch (getTopMarkIndex()) { case TOP_YELLOW_X:
-				 * image = "/images/Top_X_Yellow_Float.png"; break; case TOP_RED_X:
-				 * image = "/images/Top_X_Red_Float.png"; break; case TOP_YELLOW_CAN:
-				 * image = "/images/Top_Can_Yellow_Float.png"; break; case
-				 * TOP_YELLOW_CONE: image = "/images/Top_Cone_Yellow_Float.png"; break;
-				 * } break; } if (!image.isEmpty()) dlg.lM06Icon.setIcon(new
-				 * ImageIcon(getClass().getResource(image))); }
-				 */} else
-				dlg.panelMain.shapeIcon.setIcon(null);
+		switch (getShape()) {
+		case PILLAR:
+			image += "_Pillar";
+			break;
+		case CAN:
+			image += "_Can";
+			break;
+		case CONE:
+			image += "_Cone";
+			break;
+		case SPAR:
+			image += "_Spar";
+			break;
+		case SPHERE:
+			image += "_Sphere";
+			break;
+		case BARREL:
+			image += "_Barrel";
+			break;
+		case FLOAT:
+			image += "_Float";
+			break;
+		case BEACON:
+			image += "_Beacon";
+			break;
+		case TOWER:
+			image += "_Tower";
+			break;
 		}
+
+		if (!image.equals("/images/Special_Purpose")) {
+			image += ".png";
+			dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
+			/*
+			 * if (hasTopMark()) { image = ""; switch (getShape()) { case PILLAR: case
+			 * SPAR: switch (getTopMarkIndex()) { case TOP_YELLOW_X: image =
+			 * "/images/Top_X_Yellow_Buoy.png"; break; case TOP_RED_X: image =
+			 * "/images/Top_X_Red_Buoy.png"; break; case TOP_YELLOW_CAN: image =
+			 * "/images/Top_Can_Yellow_Buoy.png"; break; case TOP_YELLOW_CONE: image =
+			 * "/images/Top_Cone_Yellow_Buoy.png"; break; } break; case CAN: case
+			 * CONE: case SPHERE: case BARREL: switch (getTopMarkIndex()) { case
+			 * TOP_YELLOW_X: image = "/images/Top_X_Yellow_Buoy_Small.png"; break;
+			 * case TOP_RED_X: image = "/images/Top_X_Red_Buoy_Small.png"; break; case
+			 * TOP_YELLOW_CAN: image = "/images/Top_Can_Yellow_Buoy_Small.png"; break;
+			 * case TOP_YELLOW_CONE: image = "/images/Top_Cone_Yellow_Buoy_Small.png";
+			 * break; } break; case BEACON: case TOWER: switch (getTopMarkIndex()) {
+			 * case TOP_YELLOW_X: image = "/images/Top_X_Yellow_Beacon.png"; break;
+			 * case TOP_RED_X: image = "/images/Top_X_Red_Beacon.png"; break; case
+			 * TOP_YELLOW_CAN: image = "/images/Top_Can_Yellow_Beacon.png"; break;
+			 * case TOP_YELLOW_CONE: image = "/images/Top_Cone_Yellow_Beacon.png";
+			 * break; } break; case FLOAT: switch (getTopMarkIndex()) { case
+			 * TOP_YELLOW_X: image = "/images/Top_X_Yellow_Float.png"; break; case
+			 * TOP_RED_X: image = "/images/Top_X_Red_Float.png"; break; case
+			 * TOP_YELLOW_CAN: image = "/images/Top_Can_Yellow_Float.png"; break; case
+			 * TOP_YELLOW_CONE: image = "/images/Top_Cone_Yellow_Float.png"; break; }
+			 * break; } if (!image.isEmpty()) dlg.lM06Icon.setIcon(new
+			 * ImageIcon(getClass().getResource(image))); }
+			 */
+		} else
+			dlg.panelMain.shapeIcon.setIcon(null);
+		super.paintSign();
 	}
 
 	public void saveSign() {

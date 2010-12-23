@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Cat;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
@@ -48,11 +49,36 @@ public class PanelLights extends JPanel {
 		catButtons.add(floatButton);
 		ActionListener alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				houseButton.setBorderPainted(houseButton.isSelected());
-				majorButton.setBorderPainted(majorButton.isSelected());
-				minorButton.setBorderPainted(minorButton.isSelected());
-				vesselButton.setBorderPainted(vesselButton.isSelected());
-				floatButton.setBorderPainted(floatButton.isSelected());
+				if (houseButton.isSelected()) {
+					dlg.mark.setCategory(Cat.LIGHT_HOUSE);
+					houseButton.setBorderPainted(true);
+				} else {
+					houseButton.setBorderPainted(false);
+				}
+				if (majorButton.isSelected()) {
+					dlg.mark.setCategory(Cat.LIGHT_MAJOR);
+					majorButton.setBorderPainted(true);
+				} else {
+					majorButton.setBorderPainted(false);
+				}
+				if (minorButton.isSelected()) {
+					dlg.mark.setCategory(Cat.LIGHT_MINOR);
+					minorButton.setBorderPainted(true);
+				} else {
+					minorButton.setBorderPainted(false);
+				}
+				if (vesselButton.isSelected()) {
+					dlg.mark.setCategory(Cat.LIGHT_VESSEL);
+					vesselButton.setBorderPainted(true);
+				} else {
+					vesselButton.setBorderPainted(false);
+				}
+				if (floatButton.isSelected()) {
+					dlg.mark.setCategory(Cat.LIGHT_FLOAT);
+					floatButton.setBorderPainted(true);
+				} else {
+					floatButton.setBorderPainted(false);
+				}
 				if (dlg.mark != null)
 					dlg.mark.paintSign();
 			}

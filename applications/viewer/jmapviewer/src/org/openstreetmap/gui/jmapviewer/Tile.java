@@ -50,7 +50,7 @@ public class Tile {
     protected boolean loading = false;
     protected boolean error = false;
 
-    /** TileSource-specific tile metadata */
+    /** TileLoader-specific tile metadata */
     protected Map<String, String> metadata;
 
     /**
@@ -271,6 +271,12 @@ public class Tile {
     }
 
     public void putValue(String key, String value) {
+        if (value == null || "".equals(value)) {
+            if (metadata != null) {
+                metadata.remove(key);
+            }
+            return;
+        }
         if (metadata == null) {
             metadata = new HashMap<String,String>();
         }

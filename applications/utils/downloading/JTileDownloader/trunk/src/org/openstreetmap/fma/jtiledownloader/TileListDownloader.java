@@ -1,6 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
- * Copyright 2009, Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -34,6 +34,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -83,19 +84,6 @@ public class TileListDownloader
         }
     }
 
-    /**
-     * @param tilesToDownload
-     * @return number of tiles to download
-     */
-    public final int getNumberOfTilesToDownload(Vector<Tile> tilesToDownload)
-    {
-        if (tilesToDownload == null)
-        {
-            return 0;
-        }
-        return tilesToDownload.size();
-    }
-
     private TileDownloadResult doDownload(Tile tileToDownload, int actDownloadCounter)
     {
         TileDownloadResult result = new TileDownloadResult();
@@ -127,7 +115,7 @@ public class TileListDownloader
             result = doSingleDownload(fileName, url);
             if (result.getCode() == TileDownloadResult.CODE_OK)
             {
-                fireDownloadedTileEvent(fileName, actDownloadCounter, getNumberOfTilesToDownload(getTilesToDownload()), result.isUpdatedTile());
+                fireDownloadedTileEvent(fileName, actDownloadCounter, getTilesToDownload().size(), result.isUpdatedTile());
                 break;
             }
             else if (result.getCode() == TileDownloadResult.CODE_HTTP_500)
@@ -388,16 +376,23 @@ public class TileListDownloader
      */
     public void setTilesToDownload(Vector<Tile> tilesToDownload)
     {
-        _tilesToDownload = new LinkedList<Tile>(tilesToDownload);
+        if (tilesToDownload != null)
+        {
+            _tilesToDownload = new LinkedList<Tile>(tilesToDownload);
+        }
+        else
+        {
+            _tilesToDownload = new LinkedList<Tile>();
+        }
     }
 
     /**
      * Getter for tilesToDownload
      * @return the tilesToDownload
      */
-    public Vector<Tile> getTilesToDownload()
+    private List<Tile> getTilesToDownload()
     {
-        return new Vector<Tile>(_tilesToDownload);
+        return _tilesToDownload;
     }
 
     public class TileListDownloaderThread
@@ -436,7 +431,7 @@ public class TileListDownloader
             {
                 if (interrupted())
                 {
-                    fireDownloadStoppedEvent(tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                    fireDownloadStoppedEvent(tileCounter, getTilesToDownload().size());
                     return;
                 }
 
@@ -452,14 +447,14 @@ public class TileListDownloader
                     error.setTile(tileToDownload);
                     error.setResult(result);
                     errorTileList.add(error);
-                    fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                    fireErrorOccuredEvent(tileToDownload, tileCounter, getTilesToDownload().size());
                 }
                 else
                 {
                     updatedTileCount++;
                 }
 
-                if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
+                if ((tileCounter < getTilesToDownload().size()) && AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
                 {
                     if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
                     {

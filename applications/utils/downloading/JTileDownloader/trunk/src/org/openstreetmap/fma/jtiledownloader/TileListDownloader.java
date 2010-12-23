@@ -320,6 +320,10 @@ public class TileListDownloader
      */
     private void fireDownloadedTileEvent(String fileName, boolean updatedTile)
     {
+        if (updatedTile)
+        {
+            _updatedTilesCount++;
+        }
         if (_listener != null)
         {
             _listener.downloadedTile(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload, fileName, _updatedTilesCount, updatedTile);
@@ -491,10 +495,6 @@ public class TileListDownloader
                     error.setResult(result);
                     _errorTileList.add(error);
                     fireErrorOccuredEvent(tileToDownload);
-                }
-                else
-                {
-                    _updatedTilesCount++;
                 }
 
                 tilesDownloaded++;

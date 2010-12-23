@@ -425,6 +425,25 @@ public class TileListDownloader
             int tilesDownloaded = 0;
             while ((tileToDownload = getTilesToDownload()) != null)
             {
+                if (tilesDownloaded > 0 && AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
+                {
+                    if ((tilesDownloaded) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
+                    {
+                        try
+                        {
+                            int waitSeconds = AppConfiguration.getInstance().getWaitSeconds();
+                            String waitMsg = "Waiting " + waitSeconds + " sec to resume";
+                            System.out.println(waitMsg);
+                            fireWaitResume(waitMsg);
+                            Thread.sleep(waitSeconds * 1000);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            interrupt();
+                        }
+                    }
+                }
+
                 if (interrupted())
                 {
                     fireDownloadStoppedEvent();
@@ -450,24 +469,6 @@ public class TileListDownloader
                 }
 
                 tilesDownloaded++;
-                if (AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
-                {
-                    if ((tilesDownloaded) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
-                    {
-                        try
-                        {
-                            int waitSeconds = AppConfiguration.getInstance().getWaitSeconds();
-                            String waitMsg = "Waiting " + waitSeconds + " sec to resume";
-                            System.out.println(waitMsg);
-                            fireWaitResume(waitMsg);
-                            Thread.sleep(waitSeconds * 1000);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            interrupt();
-                        }
-                    }
-                }
             }
             fireDownloadCompleteEvent();
         }

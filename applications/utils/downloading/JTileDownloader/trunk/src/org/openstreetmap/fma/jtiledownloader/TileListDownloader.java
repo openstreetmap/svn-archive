@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -46,7 +47,7 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 public class TileListDownloader
 {
-    private Vector<Tile> _tilesToDownload;
+    private LinkedList<Tile> _tilesToDownload;
     private String _downloadPath;
     private TileProviderIf _tileProvider;
     private TileListDownloaderThread downloaderThread = null;
@@ -387,7 +388,7 @@ public class TileListDownloader
      */
     public void setTilesToDownload(Vector<Tile> tilesToDownload)
     {
-        _tilesToDownload = tilesToDownload;
+        _tilesToDownload = new LinkedList<Tile>(tilesToDownload);
     }
 
     /**
@@ -396,7 +397,7 @@ public class TileListDownloader
      */
     public Vector<Tile> getTilesToDownload()
     {
-        return _tilesToDownload;
+        return new Vector<Tile>(_tilesToDownload);
     }
 
     public class TileListDownloaderThread

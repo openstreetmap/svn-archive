@@ -322,7 +322,7 @@ public class TileListDownloader
     {
         if (_listener != null)
         {
-            _listener.downloadedTile(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload, fileName, updatedTile);
+            _listener.downloadedTile(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload, fileName, _updatedTilesCount, updatedTile);
         }
     }
 

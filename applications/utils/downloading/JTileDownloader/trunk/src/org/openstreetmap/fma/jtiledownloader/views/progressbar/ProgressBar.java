@@ -68,8 +68,6 @@ public class ProgressBar
     private TileListDownloader downloader = null;
     private Calendar start = Calendar.getInstance();
 
-    private int _updatedTileCounter = 0;
-
     public ProgressBar(int tilesCount, TileListDownloader downloader)
     {
         super();
@@ -242,17 +240,13 @@ public class ProgressBar
     /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
      */
-    public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
+    public void downloadedTile(int actCount, int maxCount, String path, int updatedCount, boolean updatedTile)
     {
         progressBar.setValue(actCount);
         progressBar.setMaximum(maxCount);
         progressBar.setString("Download tile " + actCount + "/" + maxCount);
         updateTimes();
-        if (updatedTile)
-        {
-            _updatedTileCounter++;
-        }
-        updatedTileCounter.setText("Updated Tile Counter: " + _updatedTileCounter);
+        updatedTileCounter.setText("Updated Tile Counter: " + updatedCount);
         if (previewVisible)
         {
             tilePreviewViewComponent.setImage(path);

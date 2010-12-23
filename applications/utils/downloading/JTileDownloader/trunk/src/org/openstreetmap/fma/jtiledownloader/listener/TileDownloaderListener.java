@@ -33,7 +33,7 @@ public interface TileDownloaderListener
      * @param path
      * @param updatedTile 
      */
-    void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile);
+    void downloadedTile(int actCount, int maxCount, String path, int updatedCount, boolean updatedTile);
 
     /**
      * @param errorCount

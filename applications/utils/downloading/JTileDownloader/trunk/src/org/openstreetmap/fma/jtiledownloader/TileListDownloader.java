@@ -467,6 +467,7 @@ public class TileListDownloader
 
                 if (interrupted())
                 {
+                    _tilesToDownload.add(tileToDownload);
                     if (paused)
                     {
                         fireDownloadPausedEvent();

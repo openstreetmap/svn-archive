@@ -68,6 +68,10 @@ public class ProgressBar
     private TileListDownloader downloader = null;
     private Calendar start = Calendar.getInstance();
 
+    /**
+     * @param tilesCount
+     * @param downloader
+     */
     public ProgressBar(int tilesCount, TileListDownloader downloader)
     {
         super();
@@ -238,7 +242,7 @@ public class ProgressBar
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, int, boolean)
      */
     public void downloadedTile(int actCount, int maxCount, String path, int updatedCount, boolean updatedTile)
     {

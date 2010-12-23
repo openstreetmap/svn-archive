@@ -319,7 +319,7 @@ public class TileListDownloader
     }
 
     /**
-    s     * @param actCount
+     * @param actCount
      * @param maxCount
      */
     private void fireDownloadStoppedEvent(int actCount, int maxCount)

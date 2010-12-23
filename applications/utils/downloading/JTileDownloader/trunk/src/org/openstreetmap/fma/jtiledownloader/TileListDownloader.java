@@ -157,7 +157,7 @@ public class TileListDownloader
     /**
      * @param fileName
      * @param url
-     * @return 0 = OK,  
+     * @return TileDownloadResult
      */
     private TileDownloadResult doSingleDownload(String fileName, URL url)
     {
@@ -203,25 +203,6 @@ public class TileListDownloader
                 result.setMessage(TileDownloadResult.MSG_OK);
                 return result;
             }
-
-            //            Map headerFields = urlConnection.getHeaderFields();
-
-            //            WebFile file = new WebFile("http://example.com/example.gif");
-            //            String MIME = file.getMIMEType();
-            //            Object content = file.getContent();
-            //            if (MIME.startsWith("image") && content instanceof java.awt.Image)
-            //            {
-            //                java.awt.Image image = (java.awt.Image) content;
-            //            }
-
-            //            URLConnection conn = url.openConnection(); 
-            //            String base64 = "Basic " + new sun.misc.BASE64Encoder(). 
-            //                                       encode((user + ":" + passwd).getBytes() ); 
-            //            conn.setRequestProperty( "Proxy-Authorization", 
-            //              "Basic " + 
-            //              new sun.misc.BASE64Encoder().encode((proxyUser + ":" + proxyPass).getBytes()) ); 
-            //            conn.connect(); 
-            //            InputStream in = conn.getInputStream();
 
             InputStream inputStream = urlConnection.getInputStream();
 

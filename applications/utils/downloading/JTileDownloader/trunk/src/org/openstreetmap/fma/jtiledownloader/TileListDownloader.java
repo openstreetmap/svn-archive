@@ -54,6 +54,8 @@ public class TileListDownloader
 
     private TileDownloaderListener _listener = null;
 
+    private boolean paused = false;
+
     private int _numberOfTilesToDownload = 0;
     private int _errorCount = 0;
     private int _updatedTilesCount = 0;
@@ -88,12 +90,26 @@ public class TileListDownloader
 
     public void start()
     {
+        paused = false;
         downloaderThread = new TileListDownloaderThread();
         downloaderThread.start();
     }
 
     public void abort()
     {
+        if (downloaderThread != null)
+        {
+            downloaderThread.interrupt();
+        }
+        if (paused && !downloaderThread.isAlive())
+        {
+            fireDownloadStoppedEvent();
+        }
+    }
+
+    public void pause()
+    {
+        paused = true;
         if (downloaderThread != null)
         {
             downloaderThread.interrupt();
@@ -335,9 +351,14 @@ public class TileListDownloader
         }
     }
 
-    /**
-     * 
-     */
+    private void fireDownloadPausedEvent()
+    {
+        if (_listener != null)
+        {
+            _listener.downloadPaused(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload);
+        }
+    }
+
     private void fireDownloadCompleteEvent()
     {
         if (_listener != null)
@@ -446,7 +467,14 @@ public class TileListDownloader
 
                 if (interrupted())
                 {
-                    fireDownloadStoppedEvent();
+                    if (paused)
+                    {
+                        fireDownloadPausedEvent();
+                    }
+                    else
+                    {
+                        fireDownloadStoppedEvent();
+                    }
                     return;
                 }
 

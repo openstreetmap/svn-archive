@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  *
@@ -37,6 +37,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
@@ -61,6 +62,7 @@ public class ProgressBar
     private JLabel updatedTileCounter = new JLabel("Updated Tile Counter: n/a");
     private JCheckBox showPreview = new JCheckBox("Show Preview");
     private Boolean previewVisible = false;
+    private JButton pauseResumeButton = new JButton("Pause");
     private JButton abortButton = new JButton("Abort");
     private TilePreviewViewComponent tilePreviewViewComponent = new TilePreviewViewComponent();
     private TileListDownloader downloader = null;
@@ -94,8 +96,12 @@ public class ProgressBar
         add(timeElapsed, constraints);
         add(timeRemaining, constraints);
         add(updatedTileCounter, constraints);
-        add(abortButton, constraints);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(pauseResumeButton);
+        pauseResumeButton.addActionListener(this);
+        buttonsPanel.add(abortButton);
         abortButton.addActionListener(this);
+        add(buttonsPanel, constraints);
         constraints.insets = new Insets(5, 5, 5, 5);
         add(showPreview, constraints);
         showPreview.addActionListener(this);
@@ -116,8 +122,22 @@ public class ProgressBar
         {
             setShowPreview(showPreview.isSelected());
         }
+        else if (arg0.getSource().equals(pauseResumeButton))
+        {
+            if (pauseResumeButton.getText().equals("Pause"))
+            {
+                pauseResumeButton.setEnabled(false);
+                downloader.pause();
+            }
+            else
+            {
+                pauseResumeButton.setText("Pause");
+                downloader.start();
+            }
+        }
         else
         {
+            pauseResumeButton.setEnabled(false);
             downloader.abort();
         }
     }
@@ -210,6 +230,16 @@ public class ProgressBar
     }
 
     /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadPaused(int, int)
+     */
+    public void downloadPaused(int actCount, int maxCount)
+    {
+        pauseResumeButton.setText("Resume");
+        pauseResumeButton.setEnabled(true);
+        progressBar.setString("Paused at " + actCount + "/" + maxCount);
+    }
+
+    /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
      */
     public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
@@ -235,7 +265,7 @@ public class ProgressBar
      */
     public void errorOccured(int actCount, int maxCount, Tile tile)
     {
-    // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
     }
 
     /**

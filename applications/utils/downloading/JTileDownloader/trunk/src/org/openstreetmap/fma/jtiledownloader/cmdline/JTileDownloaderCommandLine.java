@@ -209,4 +209,10 @@ public class JTileDownloaderCommandLine
     {
         log(message);
     }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadPaused(int, int)
+     */
+    public void downloadPaused(int actCount, int maxCount)
+    {}
 }

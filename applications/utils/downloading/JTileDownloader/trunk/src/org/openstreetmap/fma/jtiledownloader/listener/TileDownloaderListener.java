@@ -49,6 +49,12 @@ public interface TileDownloaderListener
     void downloadStopped(int actCount, int maxCount);
 
     /**
+     * @param actCount
+     * @param maxCount
+     */
+    void downloadPaused(int actCount, int maxCount);
+
+    /**
      * @param message
      */
     void setInfo(String message);

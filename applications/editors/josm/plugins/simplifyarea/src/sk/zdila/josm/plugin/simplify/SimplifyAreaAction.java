@@ -224,22 +224,30 @@ public class SimplifyAreaAction extends JosmAction {
         LatLon coord1 = null;
         LatLon coord2 = null;
 
-        for (int i = 0, len = size2 + 1 + (closed ? 1 : 0); i < len; i++) {
-            final Node n = newNodes.get(i % size2);
+        for (int i = 0, j = 0, len = size2 + (closed ? 2 : 1); i < len; i++, j++) {
+            final Node n = newNodes.get(j % newNodes.size());
             final LatLon coord3 = n.getCoor();
 
             if (coord1 != null) {
-            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3) + "; XTE: " + crossTrackError(coord1, coord2, coord3));
+//            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3) + "; XTE: " + crossTrackError(coord1, coord2, coord3));
+
+//            	final double weight = isRequiredNode(w, prevNode) || !closed && i == len - 1 ? Double.MAX_VALUE :
+//            		computeConvectAngle(coord1, coord2, coord3) / angleThreshold +
+//            		computeArea(coord1, coord2, coord3) / areaThreshold +
+//            		Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
+
                 if (isRequiredNode(w, prevNode) ||
                 		!closed && i == len - 1 || // don't remove last node of the not closed way
                 		computeConvectAngle(coord1, coord2, coord3) > angleThreshold ||
-                        computeArea(coord1, coord2, coord3) > areaThreshold ||
+                		computeArea(coord1, coord2, coord3) > areaThreshold ||
                         Math.abs(crossTrackError(coord1, coord2, coord3)) > distanceThreshold) {
                     newNodes2.add(prevNode);
-                	System.out.println(" ... KEEP");
+//                	System.out.println(" ... KEEP " + prevNode.getUniqueId());
                 } else {
-                	System.out.println(" ... REMOVE");
+//                	System.out.println(" ... REMOVE " + prevNode.getUniqueId());
                     coord2 = coord1; // at the end of the iteration preserve coord1
+                    newNodes.remove(prevNode);
+                    j--;
                 }
             } else if (!closed && prevNode != null) {
                 newNodes2.add(prevNode);

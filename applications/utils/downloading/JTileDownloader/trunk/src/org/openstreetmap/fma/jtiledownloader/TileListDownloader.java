@@ -34,7 +34,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -55,6 +54,11 @@ public class TileListDownloader
 
     private TileDownloaderListener _listener = null;
 
+    private int _numberOfTilesToDownload = 0;
+    private int _errorCount = 0;
+    private int _updatedTilesCount = 0;
+    private LinkedList<TileDownloadError> _errorTileList = new LinkedList<TileDownloadError>();
+
     private static final int MAX_RETRIES = 5;
 
     /**
@@ -68,6 +72,18 @@ public class TileListDownloader
         setDownloadPath(downloadPath);
         setTilesToDownload(tilesToDownload.getTileListToDownload());
         _tileProvider = tileProvider;
+
+        if (AppConfiguration.getInstance().getUseProxyServer())
+        {
+            if (AppConfiguration.getInstance().isProxyServerRequiresAuthentitication())
+            {
+                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), AppConfiguration.getInstance().getProxyServerPassword());
+            }
+            else
+            {
+                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()));
+            }
+        }
     }
 
     public void start()
@@ -84,7 +100,7 @@ public class TileListDownloader
         }
     }
 
-    private TileDownloadResult doDownload(Tile tileToDownload, int actDownloadCounter)
+    private TileDownloadResult doDownload(Tile tileToDownload)
     {
         TileDownloadResult result = new TileDownloadResult();
 
@@ -115,7 +131,7 @@ public class TileListDownloader
             result = doSingleDownload(fileName, url);
             if (result.getCode() == TileDownloadResult.CODE_OK)
             {
-                fireDownloadedTileEvent(fileName, actDownloadCounter, getTilesToDownload().size(), result.isUpdatedTile());
+                fireDownloadedTileEvent(fileName, result.isUpdatedTile());
                 break;
             }
             else if (result.getCode() == TileDownloadResult.CODE_HTTP_500)
@@ -286,11 +302,11 @@ public class TileListDownloader
      * @param actCount
      * @param maxCount
      */
-    private void fireDownloadedTileEvent(String fileName, int actCount, int maxCount, boolean updatedTile)
+    private void fireDownloadedTileEvent(String fileName, boolean updatedTile)
     {
         if (_listener != null)
         {
-            _listener.downloadedTile(actCount, maxCount, fileName, updatedTile);
+            _listener.downloadedTile(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload, fileName, updatedTile);
         }
     }
 
@@ -299,11 +315,11 @@ public class TileListDownloader
      * @param actCount
      * @param maxCount
      */
-    private void fireErrorOccuredEvent(Tile tile, int actCount, int maxCount)
+    private void fireErrorOccuredEvent(Tile tile)
     {
         if (_listener != null)
         {
-            _listener.errorOccured(actCount, maxCount, tile);
+            _listener.errorOccured(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload, tile);
         }
     }
 
@@ -311,22 +327,22 @@ public class TileListDownloader
      * @param actCount
      * @param maxCount
      */
-    private void fireDownloadStoppedEvent(int actCount, int maxCount)
+    private void fireDownloadStoppedEvent()
     {
         if (_listener != null)
         {
-            _listener.downloadStopped(actCount, maxCount);
+            _listener.downloadStopped(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload);
         }
     }
 
     /**
      * 
      */
-    private void fireDownloadCompleteEvent(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
+    private void fireDownloadCompleteEvent()
     {
         if (_listener != null)
         {
-            _listener.downloadComplete(errorCount, errorTileList, updatedTileCount);
+            _listener.downloadComplete(_errorCount, new Vector(_errorTileList), _updatedTilesCount);
         }
     }
 
@@ -384,15 +400,16 @@ public class TileListDownloader
         {
             _tilesToDownload = new LinkedList<Tile>();
         }
+        _numberOfTilesToDownload = _tilesToDownload.size();
     }
 
     /**
-     * Getter for tilesToDownload
-     * @return the tilesToDownload
+     * Get tile to download
+     * @return a tile
      */
-    private List<Tile> getTilesToDownload()
+    private Tile getTilesToDownload()
     {
-        return _tilesToDownload;
+        return _tilesToDownload.poll();
     }
 
     public class TileListDownloaderThread
@@ -404,59 +421,38 @@ public class TileListDownloader
         @Override
         public void run()
         {
-            Vector<TileDownloadError> errorTileList = new Vector<TileDownloadError>();
-
-            if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
-            {
-                return;
-            }
-
-            if (AppConfiguration.getInstance().getUseProxyServer())
-            {
-                if (AppConfiguration.getInstance().isProxyServerRequiresAuthentitication())
-                {
-                    new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), AppConfiguration.getInstance().getProxyServerPassword());
-                }
-                else
-                {
-                    new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()));
-                }
-            }
-
-            int errorCount = 0;
-            int tileCounter = 0;
-            int updatedTileCount = 0;
-
-            for (Tile tileToDownload : getTilesToDownload())
+            Tile tileToDownload = null;
+            int tilesDownloaded = 0;
+            while ((tileToDownload = getTilesToDownload()) != null)
             {
                 if (interrupted())
                 {
-                    fireDownloadStoppedEvent(tileCounter, getTilesToDownload().size());
+                    fireDownloadStoppedEvent();
                     return;
                 }
 
                 System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
-                tileCounter++;
 
-                TileDownloadResult result = doDownload(tileToDownload, tileCounter);
+                TileDownloadResult result = doDownload(tileToDownload);
 
                 if (result.getCode() != TileDownloadResult.CODE_OK)
                 {
-                    errorCount++;
+                    _errorCount++;
                     TileDownloadError error = new TileDownloadError();
                     error.setTile(tileToDownload);
                     error.setResult(result);
-                    errorTileList.add(error);
-                    fireErrorOccuredEvent(tileToDownload, tileCounter, getTilesToDownload().size());
+                    _errorTileList.add(error);
+                    fireErrorOccuredEvent(tileToDownload);
                 }
                 else
                 {
-                    updatedTileCount++;
+                    _updatedTilesCount++;
                 }
 
-                if ((tileCounter < getTilesToDownload().size()) && AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
+                tilesDownloaded++;
+                if (AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
                 {
-                    if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
+                    if ((tilesDownloaded) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
                     {
                         try
                         {
@@ -473,7 +469,7 @@ public class TileListDownloader
                     }
                 }
             }
-            fireDownloadCompleteEvent(errorCount, errorTileList, updatedTileCount);
+            fireDownloadCompleteEvent();
         }
     }
 }

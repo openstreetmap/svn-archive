@@ -50,11 +50,13 @@ public class TileListDownloader
     private LinkedList<Tile> _tilesToDownload;
     private String _downloadPath;
     private TileProviderIf _tileProvider;
-    private TileListDownloaderThread downloaderThread = null;
+    private Vector<TileListDownloaderThread> downloaderThreads = new Vector<TileListDownloaderThread>();
 
     private TileDownloaderListener _listener = null;
 
     private boolean paused = false;
+
+    final static private int THREADS = 1;
 
     private int _numberOfTilesToDownload = 0;
     private int _errorCount = 0;
@@ -91,17 +93,21 @@ public class TileListDownloader
     public void start()
     {
         paused = false;
-        downloaderThread = new TileListDownloaderThread();
-        downloaderThread.start();
+        for (int i = 0; i < THREADS; i++)
+        {
+            TileListDownloaderThread downloaderThread = new TileListDownloaderThread();
+            downloaderThread.start();
+            downloaderThreads.add(downloaderThread);
+        }
     }
 
     public void abort()
     {
-        if (downloaderThread != null)
+        for (TileListDownloaderThread downloaderThread : downloaderThreads)
         {
             downloaderThread.interrupt();
         }
-        if (paused && !downloaderThread.isAlive())
+        if (paused && runningThreads() == 0)
         {
             fireDownloadStoppedEvent();
         }
@@ -110,10 +116,24 @@ public class TileListDownloader
     public void pause()
     {
         paused = true;
-        if (downloaderThread != null)
+        for (TileListDownloaderThread downloaderThread : downloaderThreads)
         {
             downloaderThread.interrupt();
         }
+    }
+
+    synchronized private void increaseUpdatedCount()
+    {
+        _updatedTilesCount++;
+    }
+
+    synchronized private void addedTileDownloadError(TileDownloadResult result, Tile tileToDownload)
+    {
+        _errorCount++;
+        TileDownloadError error = new TileDownloadError();
+        error.setTile(tileToDownload);
+        error.setResult(result);
+        _errorTileList.add(error);
     }
 
     private TileDownloadResult doDownload(Tile tileToDownload)
@@ -322,7 +342,7 @@ public class TileListDownloader
     {
         if (updatedTile)
         {
-            _updatedTilesCount++;
+            increaseUpdatedCount();
         }
         if (_listener != null)
         {
@@ -349,7 +369,7 @@ public class TileListDownloader
      */
     private void fireDownloadStoppedEvent()
     {
-        if (_listener != null)
+        if (_listener != null && isLastThread())
         {
             _listener.downloadStopped(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload);
         }
@@ -357,7 +377,7 @@ public class TileListDownloader
 
     private void fireDownloadPausedEvent()
     {
-        if (_listener != null)
+        if (_listener != null && isLastThread())
         {
             _listener.downloadPaused(_numberOfTilesToDownload - _tilesToDownload.size(), _numberOfTilesToDownload);
         }
@@ -365,10 +385,29 @@ public class TileListDownloader
 
     private void fireDownloadCompleteEvent()
     {
-        if (_listener != null)
+        if (_listener != null && isLastThread())
         {
             _listener.downloadComplete(_errorCount, new Vector(_errorTileList), _updatedTilesCount);
         }
+    }
+
+    synchronized private int runningThreads() {
+        int runningThreads = 0;
+        for (TileListDownloaderThread downloaderThread : downloaderThreads)
+        {
+            if (downloaderThread.isAlive()) {
+                runningThreads++;
+            }
+        }
+        return runningThreads;
+    }
+
+    /**
+     * @return is the current thread is the last thread
+     */
+    private boolean isLastThread()
+    {
+        return (runningThreads() <= 1);
     }
 
     /**
@@ -432,9 +471,14 @@ public class TileListDownloader
      * Get tile to download
      * @return a tile
      */
-    private Tile getTilesToDownload()
+    synchronized private Tile getTilesToDownload()
     {
         return _tilesToDownload.poll();
+    }
+
+    synchronized private void requeueTile(Tile tile)
+    {
+        _tilesToDownload.add(tile);
     }
 
     public class TileListDownloaderThread
@@ -471,7 +515,7 @@ public class TileListDownloader
 
                 if (interrupted())
                 {
-                    _tilesToDownload.add(tileToDownload);
+                    requeueTile(tileToDownload);
                     if (paused)
                     {
                         fireDownloadPausedEvent();
@@ -489,11 +533,7 @@ public class TileListDownloader
 
                 if (result.getCode() != TileDownloadResult.CODE_OK)
                 {
-                    _errorCount++;
-                    TileDownloadError error = new TileDownloadError();
-                    error.setTile(tileToDownload);
-                    error.setResult(result);
-                    _errorTileList.add(error);
+                    addedTileDownloadError(result, tileToDownload);
                     fireErrorOccuredEvent(tileToDownload);
                 }
 

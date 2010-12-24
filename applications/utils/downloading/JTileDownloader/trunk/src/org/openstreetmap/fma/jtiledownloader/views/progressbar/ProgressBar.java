@@ -110,6 +110,7 @@ public class ProgressBar
 
         tilePreviewViewComponent.setPreferredSize(new Dimension(256, 256));
         setShowPreview(AppConfiguration.getInstance().isShowTilePreview());
+        center();
         downloader.setListener(this);
         downloader.start();
         setVisible(true);
@@ -165,7 +166,6 @@ public class ProgressBar
             remove(tilePreviewViewComponent);
         }
         pack();
-        center();
     }
 
     private class ProgressBarWindowListener

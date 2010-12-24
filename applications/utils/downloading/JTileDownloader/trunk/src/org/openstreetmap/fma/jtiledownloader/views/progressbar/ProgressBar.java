@@ -141,6 +141,7 @@ public class ProgressBar
         else
         {
             pauseResumeButton.setEnabled(false);
+            abortButton.setEnabled(false);
             downloader.abort();
         }
     }

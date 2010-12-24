@@ -29,11 +29,11 @@ public class PanelChan extends JPanel {
 	private OSeaMAction dlg;
 	private boolean region;
 	private ButtonGroup catButtons = null;
-	public JRadioButton portButton = null;
-	public JRadioButton stbdButton = null;
-	public JRadioButton prefPortButton = null;
-	public JRadioButton prefStbdButton = null;
-	public JRadioButton safeWaterButton = null;
+	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
+	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
+	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
+	public JRadioButton prefStbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefStbdButton.png")));
+	public JRadioButton safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
 	private ActionListener alCat = null;
 	public PanelPort panelPort = null;
 	public PanelStbd panelStbd = null;
@@ -64,11 +64,11 @@ public class PanelChan extends JPanel {
 		this.add(panelPrefPort, null);
 		this.add(panelPrefStbd, null);
 		this.add(panelSafeWater, null);
-		this.add(getPortButton(), null);
-		this.add(getStbdButton(), null);
-		this.add(getPrefPortButton(), null);
-		this.add(getPrefStbdButton(), null);
-		this.add(getSafeWaterButton(), null);
+		this.add(getButton(portButton, 0, 0, 52, 32, "PortTip"), null);
+		this.add(getButton(stbdButton, 0, 32, 52, 32, "StbdTip"), null);
+		this.add(getButton(prefPortButton, 0, 64, 52, 32, "PrefPortTip"), null);
+		this.add(getButton(prefStbdButton, 0, 96, 52, 32, "PrefStbdTip"), null);
+		this.add(getButton(safeWaterButton, 0, 128, 52, 32, "SafeWaterTip"), null);
 		catButtons = new ButtonGroup();
 		catButtons.add(portButton);
 		catButtons.add(stbdButton);
@@ -181,54 +181,11 @@ public class PanelChan extends JPanel {
 		panelSafeWater.clearSelections();
 	}
 
-	private JRadioButton getPortButton() {
-		if (portButton == null) {
-			portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
-			portButton.setBounds(new Rectangle(0, 0, 52, 32));
-			portButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			portButton.setToolTipText(Messages.getString("PortTip"));
-		}
-		return portButton;
-	}
-
-	private JRadioButton getStbdButton() {
-		if (stbdButton == null) {
-			stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
-			stbdButton.setBounds(new Rectangle(0, 32, 52, 32));
-			stbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			stbdButton.setToolTipText(Messages.getString("StbdTip"));
-		}
-		return stbdButton;
-	}
-
-	private JRadioButton getPrefPortButton() {
-		if (prefPortButton == null) {
-			prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
-			prefPortButton.setBounds(new Rectangle(0, 64, 52, 32));
-			prefPortButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			prefPortButton.setToolTipText(Messages.getString("PrefPortTip"));
-		}
-		return prefPortButton;
-	}
-
-	private JRadioButton getPrefStbdButton() {
-		if (prefStbdButton == null) {
-			prefStbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefStbdButton.png")));
-			prefStbdButton.setBounds(new Rectangle(0, 96, 52, 32));
-			prefStbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			prefStbdButton.setToolTipText(Messages.getString("PrefStbdTip"));
-		}
-		return prefStbdButton;
-	}
-
-	private JRadioButton getSafeWaterButton() {
-		if (safeWaterButton == null) {
-			safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
-			safeWaterButton.setBounds(new Rectangle(0, 128, 52, 32));
-			safeWaterButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			safeWaterButton.setToolTipText(Messages.getString("SafeWaterTip"));
-		}
-		return safeWaterButton;
+	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		return button;
 	}
 
 }

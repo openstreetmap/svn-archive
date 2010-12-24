@@ -161,51 +161,52 @@ public class MarkSpec extends SeaMark {
 	}
 
 	public void saveSign() {
-		if (dlg.node == null) {
+		if (dlg.node == null)
 			return;
-		}
+		else
+			super.saveSign();
 
 		switch (getShape()) {
 		case PILLAR:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "pillar"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPAR:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "spar"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case CAN:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "can"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case CONE:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "conical"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPHERE:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "sphere"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case BARREL:
-			super.saveSign("buoy_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "barrel"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case FLOAT:
-			super.saveSign("light_float");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour", "yellow"));
 			break;
 		case BEACON:
-			super.saveSign("beacon_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_special_purpose:colour", "yellow"));
 			break;
 		case TOWER:
-			super.saveSign("beacon_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_special_purpose"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_special_purpose:shape", "tower"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_special_purpose:colour", "yellow"));
 			break;
@@ -217,7 +218,9 @@ public class MarkSpec extends SeaMark {
 		 * saveTopMarkData("x-shape", "red"); break; case TOP_YELLOW_CAN:
 		 * saveTopMarkData("cylinder", "yellow"); break; case TOP_YELLOW_CONE:
 		 * saveTopMarkData("cone, point up", "yellow"); break; }
-		 */saveLightData();
-		saveRadarFogData();
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node,
+		 * "seamark:topmark:shape", shape)); Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(dlg.node, "seamark:topmark:colour", "yellow"));
+		 */
 	}
 }

@@ -471,9 +471,10 @@ public class MarkLat extends SeaMark {
 
 	public void saveSign() {
 
-		if (dlg.node == null) {
+		if (dlg.node == null)
 			return;
-		}
+		else
+			super.saveSign();
 
 		Cat cat = getCategory();
 		String shape = "";
@@ -484,29 +485,29 @@ public class MarkLat extends SeaMark {
 		case LAT_PORT:
 			switch (getShape()) {
 			case CAN:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "can"));
 				break;
 			case PILLAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "pillar"));
 				break;
 			case SPAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "spar"));
 				break;
 			case BEACON:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				break;
 			case TOWER:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "tower"));
 				break;
 			case FLOAT:
-				super.saveSign("light_float");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 				break;
 			case PERCH:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "perch"));
 				break;
 			default:
@@ -554,26 +555,26 @@ public class MarkLat extends SeaMark {
 		case LAT_PREF_PORT:
 			switch (getShape()) {
 			case CAN:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "can"));
 				break;
 			case PILLAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "pillar"));
 				break;
 			case SPAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "spar"));
 				break;
 			case BEACON:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				break;
 			case TOWER:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "tower"));
 				break;
 			case FLOAT:
-				super.saveSign("light_float");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 				break;
 			default:
 			}
@@ -620,30 +621,30 @@ public class MarkLat extends SeaMark {
 		case LAT_STBD:
 			switch (getShape()) {
 			case CONE:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "conical"));
 				break;
 			case PILLAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "pillar"));
 				break;
 			case SPAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "spar"));
 				break;
 			case BEACON:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "stake"));
 				break;
 			case TOWER:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "tower"));
 				break;
 			case FLOAT:
-				super.saveSign("light_float");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 				break;
 			case PERCH:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "perch"));
 				break;
 			default:
@@ -691,27 +692,27 @@ public class MarkLat extends SeaMark {
 		case LAT_PREF_STBD:
 			switch (getShape()) {
 			case CONE:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "conical"));
 				break;
 			case PILLAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "pillar"));
 				break;
 			case SPAR:
-				super.saveSign("buoy_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_lateral:shape", "spar"));
 				break;
 			case BEACON:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "stake"));
 				break;
 			case TOWER:
-				super.saveSign("beacon_lateral");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_lateral"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_lateral:shape", "tower"));
 				break;
 			case FLOAT:
-				super.saveSign("light_float");
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 				break;
 			default:
 			}
@@ -758,9 +759,8 @@ public class MarkLat extends SeaMark {
 
 		default:
 		}
-		saveTopMarkData(shape, colour);
-		saveLightData();
-		saveRadarFogData();
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", shape));
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:colour", colour));
 
 		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A");
 	}

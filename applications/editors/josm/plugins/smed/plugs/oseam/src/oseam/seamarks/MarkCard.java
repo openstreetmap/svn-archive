@@ -152,27 +152,29 @@ public class MarkCard extends SeaMark {
 	public void saveSign() {
 		if (dlg.node == null)
 			return;
+		else
+			super.saveSign();
 
 		String shape = "";
 
 		switch (getShape()) {
 		case PILLAR:
-			super.saveSign("buoy_cardinal");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_cardinal"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_cardinal:shape", "pillar"));
 			break;
 		case SPAR:
-			super.saveSign("buoy_cardinal");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_cardinal"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_cardinal:shape", "spar"));
 			break;
 		case BEACON:
-			super.saveSign("beacon_cardinal");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_cardinal"));
 			break;
 		case TOWER:
-			super.saveSign("beacon_cardinal");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_cardinal"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_cardinal:shape", "tower"));
 			break;
 		case FLOAT:
-			super.saveSign("light_float");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 			break;
 		default:
 		}
@@ -263,9 +265,8 @@ public class MarkCard extends SeaMark {
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour_pattern", "horizontal stripes"));
 			break;
 		}
-		saveTopMarkData(shape, "black");
-		saveLightData();
-		saveRadarFogData();
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", shape));
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:colour", "black"));
 	}
 
 }

@@ -23,7 +23,6 @@ import oseam.seamarks.MarkCard;
 import oseam.seamarks.MarkIsol;
 import oseam.seamarks.MarkSpec;
 import oseam.seamarks.MarkLight;
-import oseam.seamarks.SeaMark.Cat;
 
 public class PanelMain extends JPanel {
 
@@ -38,16 +37,16 @@ public class PanelMain extends JPanel {
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	public ButtonGroup typeButtons = null;
-	public JRadioButton chanButton = null;
-	public JRadioButton hazButton = null;
-	public JRadioButton specButton = null;
-	public JRadioButton lightsButton = null;
+	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
+	public JRadioButton hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
+	public JRadioButton specButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SpecButton.png")));
+	public JRadioButton lightsButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightsButton.png")));
 	private ActionListener alType = null;
 	private ButtonGroup miscButtons = null;
-	public JRadioButton topButton = null;
-	public JRadioButton fogButton = null;
-	public JRadioButton radarButton = null;
-	public JRadioButton litButton = null;
+	public JRadioButton topButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TopButton.png")));
+	public JRadioButton fogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogButton.png")));
+	public JRadioButton radarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
+	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 	private ActionListener alMisc = null;
 	public PanelChan panelChan = null;
 	public PanelHaz panelHaz = null;
@@ -105,10 +104,10 @@ public class PanelMain extends JPanel {
 		fogIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(fogIcon, null);
 
-		this.add(getChanButton(), null);
-		this.add(getHazButton(), null);
-		this.add(getSpecButton(), null);
-		this.add(getLightsButton(), null);
+		this.add(getButton(chanButton, 0, 0, 62, 40, "ChanTip"), null);
+		this.add(getButton(hazButton, 0, 40, 62, 40, "HazTip"), null);
+		this.add(getButton(specButton, 0, 80, 62, 40, "SpecTip"), null);
+		this.add(getButton(lightsButton, 0, 120, 62, 40, "LightsTip"), null);
 		this.add(panelChan, null);
 		this.add(panelHaz, null);
 		this.add(panelSpec, null);
@@ -182,10 +181,10 @@ public class PanelMain extends JPanel {
 		specButton.addActionListener(alType);
 		lightsButton.addActionListener(alType);
 
-		this.add(getTopButton(), null);
-		this.add(getFogButton(), null);
-		this.add(getRadarButton(), null);
-		this.add(getLitButton(), null);
+		this.add(getButton(topButton, 0, 165, 34, 32, "TopmarksTip"), null);
+		this.add(getButton(fogButton, 0, 205, 34, 32, "FogSignalsTip"), null);
+		this.add(getButton(radarButton, 0, 245, 34, 32, "RadarTip"), null);
+		this.add(getButton(litButton, 0, 285, 34, 32, "LitTip"), null);
 		miscButtons = new ButtonGroup();
 		miscButtons.add(topButton);
 		miscButtons.add(fogButton);
@@ -270,84 +269,11 @@ public class PanelMain extends JPanel {
 		fogIcon.setIcon(null);
 	}
 
-	private JRadioButton getChanButton() {
-		if (chanButton == null) {
-			chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
-			chanButton.setBounds(new Rectangle(0, 0, 62, 40));
-			chanButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			chanButton.setToolTipText(Messages.getString("ChanTip"));
-		}
-		return chanButton;
-	}
-
-	private JRadioButton getHazButton() {
-		if (hazButton == null) {
-			hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
-			hazButton.setBounds(new Rectangle(0, 40, 62, 40));
-			hazButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			hazButton.setToolTipText(Messages.getString("HazTip"));
-		}
-		return hazButton;
-	}
-
-	private JRadioButton getSpecButton() {
-		if (specButton == null) {
-			specButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SpecButton.png")));
-			specButton.setBounds(new Rectangle(0, 80, 62, 40));
-			specButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			specButton.setToolTipText(Messages.getString("SpecTip"));
-		}
-		return specButton;
-	}
-
-	private JRadioButton getLightsButton() {
-		if (lightsButton == null) {
-			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightsButton.png")));
-			lightsButton.setBounds(new Rectangle(0, 120, 62, 40));
-			lightsButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			lightsButton.setToolTipText(Messages.getString("LightsTip"));
-		}
-		return lightsButton;
-	}
-
-	private JRadioButton getTopButton() {
-		if (topButton == null) {
-			topButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TopButton.png")));
-			topButton.setBounds(new Rectangle(0, 165, 34, 32));
-			topButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			topButton.setToolTipText(Messages.getString("TopmarksTip"));
-		}
-		return topButton;
-	}
-
-	private JRadioButton getFogButton() {
-		if (fogButton == null) {
-			fogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogButton.png")));
-			fogButton.setBounds(new Rectangle(0, 205, 34, 32));
-			fogButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
-		}
-		return fogButton;
-	}
-
-	private JRadioButton getRadarButton() {
-		if (radarButton == null) {
-			radarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
-			radarButton.setBounds(new Rectangle(0, 245, 34, 32));
-			radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			radarButton.setToolTipText(Messages.getString("RadarTip"));
-		}
-		return radarButton;
-	}
-
-	private JRadioButton getLitButton() {
-		if (litButton == null) {
-			litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
-			litButton.setBounds(new Rectangle(0, 285, 34, 32));
-			litButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			litButton.setToolTipText(Messages.getString("LitTip"));
-		}
-		return litButton;
+	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		return button;
 	}
 
 }

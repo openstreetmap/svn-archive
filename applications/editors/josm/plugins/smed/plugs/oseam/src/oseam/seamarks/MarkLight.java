@@ -4,6 +4,9 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
@@ -79,30 +82,29 @@ public class MarkLight extends SeaMark {
 	}
 
 	public void saveSign() {
-		if (dlg.node == null) {
+		if (dlg.node == null)
 			return;
-		}
+		else
+			super.saveSign();
 
 		switch (getCategory()) {
 		case LIGHT_HOUSE:
-			super.saveSign("landmark");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "landmark"));
 			break;
 		case LIGHT_MAJOR:
-			super.saveSign("light_major");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_major"));
 			break;
 		case LIGHT_MINOR:
-			super.saveSign("light_minor");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_minor"));
 			break;
 		case LIGHT_VESSEL:
-			super.saveSign("light_vessel");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_vessel"));
 			break;
 		case LIGHT_FLOAT:
-			super.saveSign("light_float");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 			break;
 		default:
 		}
-		saveLightData();
-		saveRadarFogData();
 	}
 
 	public void setLightColour() {

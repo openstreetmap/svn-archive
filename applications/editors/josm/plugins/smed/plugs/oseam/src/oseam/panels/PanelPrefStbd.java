@@ -27,28 +27,28 @@ public class PanelPrefStbd extends JPanel {
 
 	private OSeaMAction dlg;
 	private ButtonGroup regionButtons = null;
-	public JRadioButton regionAButton = null;
-	public JRadioButton regionBButton = null;
+	public JRadioButton regionAButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionAButton.png")));
+	public JRadioButton regionBButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionBButton.png")));
 	private ButtonGroup shapeButtons = null;
-	public JRadioButton pillarButton = null;
-	public JRadioButton sparButton = null;
-	public JRadioButton coneButton = null;
-	public JRadioButton floatButton = null;
-	public JRadioButton beaconButton = null;
-	public JRadioButton towerButton = null;
+	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
+	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
+	public JRadioButton coneButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ConeButton.png")));
+	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
+	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
+	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
 	private ActionListener alShape = null;
 
 	public PanelPrefStbd(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getRegionAButton(), null);
-		this.add(getRegionBButton(), null);
-		this.add(getPillarButton(), null);
-		this.add(getSparButton(), null);
-		this.add(getConeButton(), null);
-		this.add(getFloatButton(), null);
-		this.add(getBeaconButton(), null);
-		this.add(getTowerButton(), null);
+		this.add(getButton(regionAButton, 0, 2, 34, 30, "RegionATip"), null);
+		this.add(getButton(regionBButton, 0, 32, 34, 30, "RegionBTip"), null);
+		this.add(getButton(pillarButton, 0, 64, 34, 32, "PillarTip"), null);
+		this.add(getButton(sparButton, 0, 96, 34, 32, "SparTip"), null);
+		this.add(getButton(coneButton, 0, 128, 34, 32, "ConeTip"), null);
+		this.add(getButton(floatButton, 35, 0, 34, 32, "FloatTip"), null);
+		this.add(getButton(beaconButton, 35, 32, 34, 32, "BeaconTip"), null);
+		this.add(getButton(towerButton, 35, 64, 34, 32, "TowerTip"), null);
 
 		regionButtons = new ButtonGroup();
 		regionButtons.add(regionAButton);
@@ -125,84 +125,11 @@ public class PanelPrefStbd extends JPanel {
 		alShape.actionPerformed(null);
 	}
 
-	private JRadioButton getRegionAButton() {
-		if (regionAButton == null) {
-			regionAButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionAButton.png")));
-			regionAButton.setBounds(new Rectangle(0, 2, 34, 30));
-			regionAButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			regionAButton.setToolTipText(Messages.getString("RegionATip"));
-		}
-		return regionAButton;
-	}
-
-	private JRadioButton getRegionBButton() {
-		if (regionBButton == null) {
-			regionBButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionBButton.png")));
-			regionBButton.setBounds(new Rectangle(0, 32, 34, 30));
-			regionBButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			regionBButton.setToolTipText(Messages.getString("RegionBTip"));
-		}
-		return regionBButton;
-	}
-
-	private JRadioButton getPillarButton() {
-		if (pillarButton == null) {
-			pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(0, 64, 34, 32));
-			pillarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			pillarButton.setToolTipText(Messages.getString("PillarTip"));
-		}
-		return pillarButton;
-	}
-
-	private JRadioButton getSparButton() {
-		if (sparButton == null) {
-			sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(0, 96, 34, 32));
-			sparButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			sparButton.setToolTipText(Messages.getString("SparTip"));
-		}
-		return sparButton;
-	}
-
-	private JRadioButton getConeButton() {
-		if (coneButton == null) {
-			coneButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ConeButton.png")));
-			coneButton.setBounds(new Rectangle(0, 128, 34, 32));
-			coneButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			coneButton.setToolTipText(Messages.getString("ConeTip"));
-		}
-		return coneButton;
-	}
-
-	private JRadioButton getFloatButton() {
-		if (floatButton == null) {
-			floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(35, 0, 34, 32));
-			floatButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			floatButton.setToolTipText(Messages.getString("FloatTip"));
-		}
-		return floatButton;
-	}
-
-	private JRadioButton getBeaconButton() {
-		if (beaconButton == null) {
-			beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
-			beaconButton.setBounds(new Rectangle(35, 32, 34, 32));
-			beaconButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
-		}
-		return beaconButton;
-	}
-
-	private JRadioButton getTowerButton() {
-		if (towerButton == null) {
-			towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
-			towerButton.setBounds(new Rectangle(35, 64, 34, 32));
-			towerButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			towerButton.setToolTipText(Messages.getString("TowerTip"));
-		}
-		return towerButton;
+	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		return button;
 	}
 
 }

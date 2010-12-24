@@ -15,33 +15,6 @@ import oseam.dialogs.OSeaMAction;
 
 abstract public class SeaMark {
 
-	public final static boolean IALA_A = false;
-	public final static boolean IALA_B = true;
-
-	public enum Cat {
-		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT
-	}
-
-	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
-	}
-
-	public enum Col {
-		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE, BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK
-	}
-
-	public enum Top {
-		UNKNOWN, X_SHAPE, CAN, CONE
-	}
-
-	public enum Rtb {
-		UNKNOWN, RACON, RAMARK, LEADING
-	}
-
-	public enum Fog {
-		UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
-	}
-
 	/**
 	 * Variables
 	 */
@@ -57,6 +30,9 @@ abstract public class SeaMark {
 		region = Main.pref.get("tomsplugin.IALA").equals("B");
 	}
 
+	public final static boolean IALA_A = false;
+	public final static boolean IALA_B = true;
+
 	private boolean region = false;
 
 	public boolean getRegion() {
@@ -65,6 +41,12 @@ abstract public class SeaMark {
 
 	public void setRegion(boolean reg) {
 		region = reg;
+	}
+
+	public enum Col {
+		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET,
+		BLACK, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE,
+		BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK
 	}
 
 	private Col colour = Col.UNKNOWN;
@@ -87,6 +69,12 @@ abstract public class SeaMark {
 		name = nam;
 	}
 
+	public enum Cat {
+		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD,
+		CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST,
+		LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT
+	}
+
 	private Cat category = Cat.UNKNOWN;
 
 	public Cat getCategory() {
@@ -97,6 +85,10 @@ abstract public class SeaMark {
 		category = cat;
 	}
 
+	public enum Shp {
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
+	}
+
 	private Shp shape = Shp.UNKNOWN;
 
 	public Shp getShape() {
@@ -105,6 +97,10 @@ abstract public class SeaMark {
 
 	public void setShape(Shp styl) {
 		shape = styl;
+	}
+
+	public enum Top {
+		UNKNOWN, X_SHAPE, CAN, CONE
 	}
 
 	private boolean TopMark = false;
@@ -137,6 +133,10 @@ abstract public class SeaMark {
 		Racon = racon;
 	}
 
+	public enum Rtb {
+		UNKNOWN, RACON, RAMARK, LEADING
+	}
+
 	private Rtb RaType = Rtb.UNKNOWN;
 
 	public Rtb getRaType() {
@@ -165,6 +165,10 @@ abstract public class SeaMark {
 
 	public void setFog(boolean fog) {
 		FogSignal = fog;
+	}
+
+	public enum Fog {
+		UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
 	}
 
 	private Fog FogSound = Fog.UNKNOWN;
@@ -598,7 +602,7 @@ abstract public class SeaMark {
 		 * dlg.cbM01Sector.setVisible(true); } else { } } else { } } else {
 		 */}
 
-	public void saveSign(String type) {
+	public void saveSign() {
 		Iterator<String> it = dlg.node.getKeys().keySet().iterator();
 		String str;
 
@@ -612,10 +616,6 @@ abstract public class SeaMark {
 		str = dlg.panelMain.nameBox.getText();
 		if (!str.isEmpty())
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:name", str));
-		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", type));
-	}
-
-	protected void saveLightData() {
 		/*
 		 * String colour; if (dlg.cM01Fired.isSelected()) { if (!(colour =
 		 * LightColour[0]).isEmpty()) if (colour.equals("R")) {
@@ -685,18 +685,10 @@ abstract public class SeaMark {
 		 * if (Bearing2[i] != null) Main.main.undoRedo.add(new
 		 * ChangePropertyCommand(Node, "seamark:light:" + i + ":sector_end",
 		 * Bearing2[i])); } }
-		 */}
-
-	protected void saveTopMarkData(String shape, String colour) {
-		/*
 		 * if (hasTopMark()) { Main.main.undoRedo.add(new
 		 * ChangePropertyCommand(Node, "seamark:topmark:shape", shape));
 		 * Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 		 * "seamark:topmark:colour", colour)); }
-		 */}
-
-	protected void saveRadarFogData() {
-		/*
 		 * if (hasRadar()) { Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 		 * "seamark:radar_reflector", "yes")); } if (hasRacon()) { switch (RaType) {
 		 * case RATYPE_RACON: Main.main.undoRedo.add(new ChangePropertyCommand(Node,

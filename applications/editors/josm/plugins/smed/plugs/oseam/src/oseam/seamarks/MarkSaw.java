@@ -134,28 +134,29 @@ public class MarkSaw extends SeaMark {
 	}
 
 	public void saveSign() {
-		if (dlg.node == null) {
+		if (dlg.node == null)
 			return;
-		}
+		else
+			super.saveSign();
 
 		switch (getShape()) {
 		case PILLAR:
-			super.saveSign("buoy_safe_water");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_safe_water"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "pillar"));
 			break;
 		case SPAR:
-			super.saveSign("buoy_safe_water");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_safe_water"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "spar"));
 			break;
 		case SPHERE:
-			super.saveSign("buoy_safe_water");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_safe_water"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_safe_water:shape", "sphere"));
 			break;
 		case BEACON:
-			super.saveSign("beacon_safe_water");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_safe_water"));
 			break;
 		case FLOAT:
-			super.saveSign("light_float");
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
 			break;
 		default:
 		}
@@ -177,8 +178,7 @@ public class MarkSaw extends SeaMark {
 			break;
 		default:
 		}
-		saveTopMarkData("sphere", "red");
-		saveLightData();
-		saveRadarFogData();
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "sphere"));
+		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:colour", "red"));
 	}
 }

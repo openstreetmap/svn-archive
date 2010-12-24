@@ -14,6 +14,12 @@
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 
+# requires osmdb.ini file in program directory for credentials containing two information
+# 
+# user=NAME
+# password=PASSWORD
+#
+
 
 # TODO
 #
@@ -24,16 +30,16 @@
 
 package OSM::osmDB ;
 
-my $DBname = "test" ;
-my $DBuser = "root" ;
-my $DBpassword = "7636" ;
+my $DBuser = "" ;	# to be read from ini file
+my $DBpassword = "" ;
 
+my $tempDir = "/tmp" ;
 
 use strict ;
 use warnings ;
 
 use DBI ;
-
+use OSM::osm ;
 
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
@@ -44,7 +50,8 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw ( 	dbConnect
+@EXPORT = qw (		bulkLoad
+	 		dbConnect
 			dbDisconnect
 			deleteDBNode
 			deleteDBWay
@@ -52,6 +59,7 @@ require Exporter ;
 			getDBNode
 			getDBWay
 			getDBRelation
+			getTag
 			initTableNodes
 			initTableWays
 			initTableRelations
@@ -281,6 +289,29 @@ sub loopGetNextRelation {
 
 # ----------------------------------------------------------------------------
 
+
+sub getTag {
+	my ($type, $id, $key) = @_ ;
+	my $tag = undef ;
+
+	my $tableName = "" ;
+	if ($type eq "node") { $tableName = "nodetags" ; }
+	if ($type eq "way") { $tableName = "waytags" ; }
+	if ($type eq "relation") { $tableName = "relationtags" ; }
+
+	if ($tableName ne "") {
+		my $sth = $dbh->prepare("SELECT v FROM $tableName WHERE id = $id AND k='$key'") or die "Couldn't prepare statement: " . $dbh->errstr ;
+		my @data ;
+	 	$sth->execute() or die "Couldn't execute statement: " . $sth->errstr ;
+		while (@data = $sth->fetchrow_array()) {
+			$tag = $data[0] ;
+		}
+		$sth->finish ;
+	}
+	return $tag ;	
+}
+
+
 sub getDBNode {
 	my $id = shift ;
 
@@ -427,14 +458,18 @@ sub getDBRelation {
 # ----------------------------------------------------------------------------
 
 sub dbConnect {
-	$dbh = DBI->connect('DBI:mysql:test', 'root', '7636') or die ("error connecting DB: $DBI::errstr\n") ;
+	my $DBname = shift ;
+
+	readINI() ;
+
+	$dbh = DBI->connect("DBI:mysql:$DBname", 'root', '7636') or die ("error connecting DB: $DBI::errstr\n") ;
 	print STDERR "successfully connected to DB $DBname\n" ;
 }
 
 
 sub dbDisconnect {
 	$dbh->disconnect() ;
-	print STDERR "DB $DBname disconnected\n" ;
+	print STDERR "DB disconnected\n" ;
 }
 
 
@@ -478,4 +513,238 @@ sub initTableRelations {
 	$dbh->do("create table relationmembers (id BIGINT, s INT, type VARCHAR(20), memberid BIGINT, role VARCHAR(20))") ;	
 	$dbh->do("CREATE INDEX i_relationids3 ON relationmembers (id)") ;	
 }
+
+# --------------------------------------------------------------------------
+
+sub readINI {
+	my $file ;
+	open ($file, "<", "osmdb.ini") or die ("ERROR: could not open ./osmdb.ini\n") ;
+	my $line ;
+	while ($line = <$file>) {
+		my ($k, $v) = ( $line =~ /(.+)=(.+)/ ) ;
+		if ((defined $k) and (defined $v)) {
+			if ($k eq "password") { $DBpassword = $v ; } 
+			if ($k eq "user") { $DBuser = $v ; } 
+		}
+	}
+	close ($file) ;
+}
+
+# --------------------------------------------------------------------------
+
+sub bulkLoad {
+	my ($file, $dbName) = @_ ;
+	my $nodeCount = 0 ;
+	my $wayCount = 0 ;
+	my $relationCount = 0 ;
+
+	my $wayId ;
+	my $wayId2 ;
+	my $wayUser ;
+	my @wayNodes ;
+	my @wayTags ;
+	my $nodeId ;
+	my $nodeUser ;
+	my $nodeLat ;
+	my $nodeLon ;
+	my @nodeTags ;
+	my $relationId ;
+	my $relationUser ;
+	my @relationTags ;
+	my @relationMembers ;
+	my %relationProperties ;
+	my $aRef0 ;
+	my $aRef1 ;
+	my $aRef2 ;
+
+
+	openOsmFile ($file) ;
+
+	print STDERR "INFO: processing nodes...\n" ;
+
+	open (my $nodesFile, ">", $tempDir . "/nodes.txt") ;
+	open (my $nodetagsFile, ">", $tempDir . "/nodetags.txt") ;
+
+	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
+	if ($nodeId != -1) {
+		@nodeTags = @$aRef1 ;
+	}
+
+	while ($nodeId != -1) {
+		$nodeCount++ ;
+
+		if ( ! defined $nodeUser) {
+			$nodeUser = "unknown" ;
+		}
+		else {
+			if ($nodeUser eq "") { $nodeUser = "unknown" ; }
+		}
+		print $nodesFile "$nodeId\t$nodeLon\t$nodeLat\t$nodeUser\n" ;
+
+		foreach my $t (@nodeTags) {
+			my $k = $t->[0] ;
+			my $v = $t->[1] ;
+			print $nodetagsFile "$nodeId\t$k\t$v\n" ;
+		}
+
+		# next
+		($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
+		if ($nodeId != -1) {
+			@nodeTags = @$aRef1 ;
+		}
+	}
+
+	close ($nodesFile) ;
+	close ($nodetagsFile) ;
+
+	dbConnect ($dbName) ;
+	initTableNodes() ;
+	print STDERR "load nodes data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/nodes.txt' INTO TABLE nodes") ;
+	print STDERR "load nodetags data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/nodetags.txt' INTO TABLE nodetags") ;
+	dbDisconnect ($dbName) ;
+
+	`rm $tempDir/nodes.txt` ;
+	`rm $tempDir/nodetags.txt` ;
+
+	print STDERR "INFO: $nodeCount nodes processed.\n" ;
+
+	# -----------
+
+	print STDERR "INFO: processing ways...\n" ;
+
+	open (my $waysFile, ">", $tempDir . "/ways.txt") ;
+	open (my $waytagsFile, ">", $tempDir . "/waytags.txt") ;
+	open (my $waynodesFile, ">", $tempDir . "/waynodes.txt") ;
+
+	($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
+	if ($wayId != -1) {
+		@wayNodes = @$aRef1 ;
+		@wayTags = @$aRef2 ;
+	}
+	while ($wayId != -1) {	
+		$wayCount++ ;
+
+		if ( ! defined $wayUser) {
+			$wayUser = "unknown" ;
+		}
+		else {
+			if ($wayUser eq "") { $wayUser = "unknown" ; }
+		}
+		print $waysFile "$wayId\t$wayUser\n" ;
+
+		foreach my $t (@wayTags) {
+			my $k = $t->[0] ;
+			my $v = $t->[1] ;
+			print $waytagsFile "$wayId\t$k\t$v\n" ;
+		}
+
+		my $i = 0 ;
+		foreach my $n (@wayNodes) {
+			print $waynodesFile "$wayId\t$i\t$n\n" ;
+			$i++ ;
+		}
+
+
+		# next way
+		($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
+		if ($wayId != -1) {
+			@wayNodes = @$aRef1 ;
+			@wayTags = @$aRef2 ;
+		}
+	}
+
+	close ($waysFile) ;
+	close ($waytagsFile) ;
+	close ($waynodesFile) ;
+
+	dbConnect ($dbName) ;
+	initTableWays() ;
+	print STDERR "load ways data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/ways.txt' INTO TABLE ways") ;
+	print STDERR "load waytags data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/waytags.txt' INTO TABLE waytags") ;
+	print STDERR "load waynodes data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/waynodes.txt' INTO TABLE waynodes") ;
+	dbDisconnect ($dbName) ;
+
+	`rm $tempDir/ways.txt` ;
+	`rm $tempDir/waytags.txt` ;
+	`rm $tempDir/waynodes.txt` ;
+
+	print STDERR "INFO: $wayCount ways processed.\n" ;
+
+	# -----------
+
+	print STDERR "INFO: processing relations...\n" ;
+
+	open (my $relationsFile, ">", $tempDir . "/relations.txt") ;
+	open (my $relationtagsFile, ">", $tempDir . "/relationtags.txt") ;
+	open (my $relationmembersFile, ">", $tempDir . "/relationmembers.txt") ;
+
+	($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+	if ($relationId != -1) {
+		@relationMembers = @$aRef1 ;
+		@relationTags = @$aRef2 ;
+	}
+
+	while ($relationId != -1) {
+		$relationCount++ ;
+	
+		if ( ! defined $relationUser) {
+			$relationUser = "unknown" ;
+		}
+		else {
+			if ($relationUser eq "") { $relationUser = "unknown" ; }
+		}
+		print $relationsFile "$relationId\t$relationUser\n" ;
+
+		foreach my $t (@relationTags) {
+			my $k = $t->[0] ;
+			my $v = $t->[1] ;
+			print $relationtagsFile "$relationId\t$k\t$v\n" ;
+		}
+
+		my $n = 0 ;
+		foreach my $m (@relationMembers) {
+			my $t = $m->[0] ;
+			my $i = $m->[1] ;
+			my $r = $m->[2] ;
+			print $relationmembersFile "$relationId\t$n\t$t\t$i\t$r\n" ;
+			$n++ ;
+		}
+
+		#next
+		($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+		if ($relationId != -1) {
+			@relationMembers = @$aRef1 ;
+			@relationTags = @$aRef2 ;
+		}
+	}
+
+	close ($relationsFile) ;
+	close ($relationtagsFile) ;
+	close ($relationmembersFile) ;
+
+	dbConnect ($dbName) ;
+	initTableRelations() ;
+	print STDERR "load relations data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/relations.txt' INTO TABLE relations") ;
+	print STDERR "load relationtags data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/relationtags.txt' INTO TABLE relationtags") ;
+	print STDERR "load relationmembers data...\n" ;
+	$dbh->do("LOAD DATA LOCAL INFILE '$tempDir/relationmembers.txt' INTO TABLE relationmembers") ;
+	dbDisconnect ($dbName) ;
+
+	`rm $tempDir/relations.txt` ;
+	`rm $tempDir/relationtags.txt` ;
+	`rm $tempDir/relationmembers.txt` ;
+
+	print STDERR "INFO: $relationCount relations processed.\n" ;
+
+	closeOsmFile () ;
+
+}
+
 1 ;

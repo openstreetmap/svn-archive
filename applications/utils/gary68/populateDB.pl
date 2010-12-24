@@ -20,13 +20,13 @@ use strict ;
 use warnings ;
 
 use OSM::osm ;
-use OSM::osmdb ;
+use OSM::osmDB ;
 
 use DBI ;
 
 my $program = "populateDB.pl" ;
 my $version = "1.0 BETA" ;
-my $usage = $program . " file.osm" ;
+my $usage = $program . " file.osm DBname" ;
 
 my $wayId ;
 my $wayId2 ;
@@ -53,6 +53,7 @@ my $relationCount = 0 ;
 my $time0 = time() ; my $time1 ; my $time2 ;
 
 my $osmName ;
+my $dbName ;
 
 my $maxK = 0 ;
 my $maxV = 0 ;
@@ -65,16 +66,21 @@ if (!$osmName)
 {
 	die (print $usage, "\n");
 }
+$dbName = shift||'';
+if (!$dbName)
+{
+	die (print $usage, "\n");
+}
 
-print "\n$program $version for file $osmName\n\n" ;
+print "\n$program $version for file $osmName DB:$ dbName\n\n" ;
 print "\n\n" ;
 
 
 
 
 
-dbConnect() ;
-print "DB connected\n" ;
+dbConnect($dbName) ;
+print "DB $dbName connected\n" ;
 
 initTableNodes() ;
 initTableWays() ;

@@ -46,6 +46,7 @@ my $txtFile ;
 my $line = 0 ;
 my $problems = 0 ;
 
+my $dbName = shift ;
 my $txtFileName = shift ;
 
 my $html ;
@@ -75,8 +76,7 @@ print $html "</tr>\n" ;
 
 
 
-
-dbConnect() ;
+dbConnect($dbName) ;
 
 loopInitWays ("ref", undef) ;
 $wayId = loopGetNextWay() ;

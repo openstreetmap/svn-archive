@@ -44,19 +44,41 @@ abstract public class SeaMark {
 	}
 
 	public enum Col {
-		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET,
-		BLACK, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE,
+		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK,
+		RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE,
 		BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK
 	}
 
-	private Col colour = Col.UNKNOWN;
-
-	public Col getColour() {
-		return colour;
+	public enum Obj {
+		BODY, TOPMARK, LIGHT
 	}
 
-	public void setColour(Col col) {
-		colour = col;
+	private Col bodyColour = Col.UNKNOWN;
+
+	public Col getColour(Obj obj) {
+		switch (obj) {
+		case BODY:
+			return bodyColour;
+		case TOPMARK:
+			return topColour;
+		case LIGHT:
+			return lightColour[sectorIndex];
+		}
+		return Col.UNKNOWN;
+	}
+
+	public void setColour(Obj obj, Col col) {
+		switch (obj) {
+		case BODY:
+			bodyColour = col;
+			break;
+		case TOPMARK:
+			topColour = col;
+			break;
+		case LIGHT:
+			lightColour[sectorIndex] = col;
+			break;
+		}
 	}
 
 	private String name;
@@ -86,7 +108,8 @@ abstract public class SeaMark {
 	}
 
 	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER,
+		BEACON, TOWER, STAKE, PERCH
 	}
 
 	private Shp shape = Shp.UNKNOWN;
@@ -100,17 +123,19 @@ abstract public class SeaMark {
 	}
 
 	public enum Top {
-		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, TRIANGLE, TRIANGLE_INV, SQUARE, MOORING
+		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2,
+		BOARD, DIAMOND, TRIANGLE, TRIANGLE_INV, SQUARE, MOORING
 	}
 
-	private Top TopMark = Top.NONE;
+	private Top topMark = Top.NONE;
+	private Col topColour = Col.UNKNOWN;
 
 	public boolean hasTopMark() {
-		return (TopMark != Top.NONE);
+		return (topMark != Top.NONE);
 	}
 
 	public void setTopMark(Top top) {
-		TopMark = top;
+		topMark = top;
 	}
 
 	private boolean Radar = false;
@@ -220,11 +245,11 @@ abstract public class SeaMark {
 	public void setSectored(boolean sectored) {
 		Sectored = sectored;
 		if (sectored) {
-			LightColour[0] = "";
+			lightColour[0] = Col.UNKNOWN;
 		} else {
-			setSectorIndex(0);
+			setsectorIndex(0);
 			setLightChar("");
-			setLightColour("");
+			setLightColour(Col.UNKNOWN);
 			setLightGroup("");
 			setHeight("");
 			setRange("");
@@ -234,56 +259,56 @@ abstract public class SeaMark {
 		}
 	}
 
-	private int SectorIndex = 0;
+	private int sectorIndex = 0;
 
-	public int getSectorIndex() {
-		return SectorIndex;
+	public int getsectorIndex() {
+		return sectorIndex;
 	}
 
-	public void setSectorIndex(int sector) {
-		SectorIndex = sector;
+	public void setsectorIndex(int sector) {
+		sectorIndex = sector;
 	}
 
 	private String[] LightChar = new String[10];
 
 	public String getLightChar() {
-		if (LightChar[SectorIndex] == null)
+		if (LightChar[sectorIndex] == null)
 			return (LightChar[0]);
-		return LightChar[SectorIndex];
+		return LightChar[sectorIndex];
 	}
 
 	public void setLightChar(String lightChar) {
-		if (SectorIndex == 0) {
+		if (sectorIndex == 0) {
 			LightChar = new String[10];
 			LightChar[0] = lightChar;
 		} else if (LightChar[0].isEmpty())
-			LightChar[SectorIndex] = lightChar;
+			LightChar[sectorIndex] = lightChar;
 	}
 
-	private String[] LightColour = new String[10];
+	private Col[] lightColour = new Col[10];
 
-	public String getLightColour() {
-		if (LightColour[SectorIndex] == null)
-			return (LightColour[0]);
-		return LightColour[SectorIndex];
+	public Col getLightColour() {
+		if (lightColour[sectorIndex] == null)
+			return (lightColour[0]);
+		return lightColour[sectorIndex];
 	}
 
-	public void setLightColour(String lightColour) {
-		LightColour[SectorIndex] = lightColour;
+	public void setLightColour(Col col) {
+		lightColour[sectorIndex] = col;
 	}
 
 	private String[] LightGroup = new String[10];
 
 	public String getLightGroup() {
-		if (LightGroup[SectorIndex] == null)
+		if (LightGroup[sectorIndex] == null)
 			return (LightGroup[0]);
-		return LightGroup[SectorIndex];
+		return LightGroup[sectorIndex];
 	}
 
 	public void setLightGroup(String lightGroup) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			LightGroup = new String[10];
-		LightGroup[SectorIndex] = lightGroup;
+		LightGroup[sectorIndex] = lightGroup;
 	}
 
 	protected void setLightGroup(Map<String, String> k) {
@@ -297,79 +322,79 @@ abstract public class SeaMark {
 	private String[] Height = new String[10];
 
 	public String getHeight() {
-		if (Height[SectorIndex] == null)
+		if (Height[sectorIndex] == null)
 			return (Height[0]);
-		return Height[SectorIndex];
+		return Height[sectorIndex];
 	}
 
 	public void setHeight(String height) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			Height = new String[10];
-		Height[SectorIndex] = height;
+		Height[sectorIndex] = height;
 	}
 
 	private String[] Range = new String[10];
 
 	public String getRange() {
-		if (Range[SectorIndex] == null)
+		if (Range[sectorIndex] == null)
 			return (Range[0]);
-		return Range[SectorIndex];
+		return Range[sectorIndex];
 	}
 
 	public void setRange(String range) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			Range = new String[10];
-		Range[SectorIndex] = range;
+		Range[sectorIndex] = range;
 	}
 
 	private String[] Bearing1 = new String[10];
 
 	public String getBearing1() {
-		if (Bearing1[SectorIndex] == null)
+		if (Bearing1[sectorIndex] == null)
 			return (Bearing1[0]);
-		return Bearing1[SectorIndex];
+		return Bearing1[sectorIndex];
 	}
 
 	public void setBearing1(String bearing) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			Bearing1 = new String[10];
-		Bearing1[SectorIndex] = bearing;
+		Bearing1[sectorIndex] = bearing;
 	}
 
 	private String[] Bearing2 = new String[10];
 
 	public String getBearing2() {
-		if (Bearing2[SectorIndex] == null)
+		if (Bearing2[sectorIndex] == null)
 			return (Bearing2[0]);
-		return Bearing2[SectorIndex];
+		return Bearing2[sectorIndex];
 	}
 
 	public void setBearing2(String bearing) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			Bearing2 = new String[10];
-		Bearing2[SectorIndex] = bearing;
+		Bearing2[sectorIndex] = bearing;
 	}
 
 	private String[] Radius = new String[10];
 
 	public String getRadius() {
-		if (Radius[SectorIndex] == null)
+		if (Radius[sectorIndex] == null)
 			return (Radius[0]);
-		return Radius[SectorIndex];
+		return Radius[sectorIndex];
 	}
 
 	public void setRadius(String radius) {
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			Radius = new String[10];
-		Radius[SectorIndex] = radius;
+		Radius[sectorIndex] = radius;
 	}
 
 	private String[] LightPeriod = new String[10];
 
 	public String getLightPeriod() {
-		if (LightPeriod[SectorIndex] == null)
+		if (LightPeriod[sectorIndex] == null)
 			return (LightPeriod[0]);
-		return LightPeriod[SectorIndex];
+		return LightPeriod[sectorIndex];
 	}
 
 	public void setLightPeriod(String lightPeriod) {
@@ -388,9 +413,9 @@ abstract public class SeaMark {
 				// dlg.tfM01RepeatTime.requestFocus();
 			}
 		}
-		if (SectorIndex == 0)
+		if (sectorIndex == 0)
 			LightPeriod = new String[10];
-		LightPeriod[SectorIndex] = lightPeriod;
+		LightPeriod[sectorIndex] = lightPeriod;
 	}
 
 	public abstract void parseMark();
@@ -414,11 +439,11 @@ abstract public class SeaMark {
 					index = key.charAt(0) - '0';
 					String values[] = value.split(":");
 					if (values[0].equals("red"))
-						LightColour[index] = "R";
+						lightColour[index] = Col.RED;
 					else if (values[0].equals("green"))
-						LightColour[index] = "G";
+						lightColour[index] = Col.GREEN;
 					else if (values[0].equals("white"))
-						LightColour[index] = "W";
+						lightColour[index] = Col.WHITE;
 					if (values.length > 1)
 						Bearing1[index] = values[1];
 					if (values.length > 2)
@@ -432,11 +457,11 @@ abstract public class SeaMark {
 					setSectored(true);
 				if (key.equals("colour")) {
 					if (value.equals("red"))
-						LightColour[index] = "R";
+						lightColour[index] = Col.RED;
 					else if (value.equals("green"))
-						LightColour[index] = "G";
+						lightColour[index] = Col.GREEN;
 					else if (value.equals("white"))
-						LightColour[index] = "W";
+						lightColour[index] = Col.WHITE;
 				} else if (key.equals("character")) {
 					LightChar[index] = value;
 				} else if (key.equals("group")) {
@@ -584,19 +609,19 @@ abstract public class SeaMark {
 		 * dlg.lM01RepeatTime.setVisible(true);
 		 * dlg.tfM01RepeatTime.setVisible(true); if (isSectored()) {
 		 * dlg.rbM01Fired1.setSelected(false); dlg.rbM01FiredN.setSelected(true); if
-		 * ((getSectorIndex() != 0) && (!LightChar[0].isEmpty()))
+		 * ((getsectorIndex() != 0) && (!LightChar[0].isEmpty()))
 		 * dlg.cbM01Kennung.setEnabled(false); else
 		 * dlg.cbM01Kennung.setEnabled(true);
-		 * dlg.cbM01Kennung.setSelectedItem(getLightChar()); if ((getSectorIndex()
+		 * dlg.cbM01Kennung.setSelectedItem(getLightChar()); if ((getsectorIndex()
 		 * != 0) && (!LightGroup[0].isEmpty())) dlg.tfM01Group.setEnabled(false);
 		 * else dlg.tfM01Group.setEnabled(true);
-		 * dlg.tfM01Group.setText(getLightGroup()); if ((getSectorIndex() != 0) &&
+		 * dlg.tfM01Group.setText(getLightGroup()); if ((getsectorIndex() != 0) &&
 		 * (!LightPeriod[0].isEmpty())) dlg.tfM01RepeatTime.setEnabled(false); else
 		 * dlg.tfM01RepeatTime.setEnabled(true);
-		 * dlg.tfM01RepeatTime.setText(getLightPeriod()); if ((getSectorIndex() !=
+		 * dlg.tfM01RepeatTime.setText(getLightPeriod()); if ((getsectorIndex() !=
 		 * 0) && (!Height[0].isEmpty())) dlg.tfM01Height.setEnabled(false); else
 		 * dlg.tfM01Height.setEnabled(true); dlg.tfM01Height.setText(getHeight());
-		 * if ((getSectorIndex() != 0) && (!Range[0].isEmpty()))
+		 * if ((getsectorIndex() != 0) && (!Range[0].isEmpty()))
 		 * dlg.tfM01Range.setEnabled(false); else dlg.tfM01Range.setEnabled(true);
 		 * dlg.tfM01Range.setText(getRange()); dlg.lM01Sector.setVisible(true);
 		 * dlg.cbM01Sector.setVisible(true); } else { } } else { } } else {
@@ -684,12 +709,11 @@ abstract public class SeaMark {
 		 * 
 		 * if (Bearing2[i] != null) Main.main.undoRedo.add(new
 		 * ChangePropertyCommand(Node, "seamark:light:" + i + ":sector_end",
-		 * Bearing2[i])); } }
-		 * if (hasTopMark()) { Main.main.undoRedo.add(new
+		 * Bearing2[i])); } } if (hasTopMark()) { Main.main.undoRedo.add(new
 		 * ChangePropertyCommand(Node, "seamark:topmark:shape", shape));
 		 * Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-		 * "seamark:topmark:colour", colour)); }
-		 * if (hasRadar()) { Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+		 * "seamark:topmark:colour", colour)); } if (hasRadar()) {
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 		 * "seamark:radar_reflector", "yes")); } if (hasRacon()) { switch (RaType) {
 		 * case RATYPE_RACON: Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 		 * "seamark:radar_transponder:category", "racon")); if

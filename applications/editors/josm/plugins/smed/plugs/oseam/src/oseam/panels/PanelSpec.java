@@ -19,6 +19,7 @@ import java.util.Iterator;
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Shp;
+import oseam.seamarks.SeaMark.Obj;
 
 public class PanelSpec extends JPanel {
 
@@ -55,7 +56,7 @@ public class PanelSpec extends JPanel {
 
 	public PanelSpec(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg);
+		panelCol = new PanelCol(dlg, Obj.BODY);
 		panelCol.setBounds(new Rectangle(9, 0, 34, 160));
 
 		this.setLayout(null);

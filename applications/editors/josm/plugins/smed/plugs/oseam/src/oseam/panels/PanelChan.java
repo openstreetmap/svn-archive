@@ -19,6 +19,7 @@ import oseam.panels.PanelPrefStbd;
 import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Obj;
 import oseam.seamarks.MarkLat;
 import oseam.seamarks.MarkSaw;
 
@@ -40,10 +41,10 @@ public class PanelChan extends JPanel {
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PORT);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
-					dlg.mark.setColour(Col.RED);
+					dlg.mark.setColour(Obj.BODY, Col.RED);
 					panelPort.regionAButton.doClick();
 				} else {
-					dlg.mark.setColour(Col.GREEN);
+					dlg.mark.setColour(Obj.BODY, Col.GREEN);
 					panelPort.regionBButton.doClick();
 				}
 				portButton.setBorderPainted(true);
@@ -58,10 +59,10 @@ public class PanelChan extends JPanel {
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_STBD);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
-					dlg.mark.setColour(Col.GREEN);
+					dlg.mark.setColour(Obj.BODY, Col.GREEN);
 					panelStbd.regionAButton.doClick();
 				} else {
-					dlg.mark.setColour(Col.RED);
+					dlg.mark.setColour(Obj.BODY, Col.RED);
 					panelStbd.regionBButton.doClick();
 				}
 				stbdButton.setBorderPainted(true);
@@ -76,10 +77,10 @@ public class PanelChan extends JPanel {
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PREF_PORT);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
-					dlg.mark.setColour(Col.RED_GREEN_RED);
+					dlg.mark.setColour(Obj.BODY, Col.RED_GREEN_RED);
 					panelPrefPort.regionAButton.doClick();
 				} else {
-					dlg.mark.setColour(Col.GREEN_RED_GREEN);
+					dlg.mark.setColour(Obj.BODY, Col.GREEN_RED_GREEN);
 					panelPrefPort.regionBButton.doClick();
 				}
 				prefPortButton.setBorderPainted(true);
@@ -94,10 +95,10 @@ public class PanelChan extends JPanel {
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PREF_STBD);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
-					dlg.mark.setColour(Col.GREEN_RED_GREEN);
+					dlg.mark.setColour(Obj.BODY, Col.GREEN_RED_GREEN);
 					panelPrefStbd.regionAButton.doClick();
 				} else {
-					dlg.mark.setColour(Col.RED_GREEN_RED);
+					dlg.mark.setColour(Obj.BODY, Col.RED_GREEN_RED);
 					panelPrefStbd.regionBButton.doClick();
 				}
 				prefStbdButton.setBorderPainted(true);
@@ -110,7 +111,7 @@ public class PanelChan extends JPanel {
 			if (safeWaterButton.isSelected()) {
 				if (!(dlg.mark instanceof MarkSaw))
 					dlg.mark = new MarkSaw(dlg);
-				dlg.mark.setColour(Col.RED_WHITE);
+				dlg.mark.setColour(Obj.BODY, Col.RED_WHITE);
 				safeWaterButton.setBorderPainted(true);
 				panelSafeWater.setVisible(true);
 			} else {

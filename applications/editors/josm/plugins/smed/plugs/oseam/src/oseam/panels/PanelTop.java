@@ -15,6 +15,7 @@ import java.util.Iterator;
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Top;
+import oseam.seamarks.SeaMark.Obj;
 
 public class PanelTop extends JPanel {
 
@@ -45,6 +46,7 @@ public class PanelTop extends JPanel {
 				Top top = it.next();
 				JRadioButton button = tops.get(top);
 				if (button.isSelected()) {
+					dlg.mark.setTopMark(top);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -54,7 +56,7 @@ public class PanelTop extends JPanel {
 
 	public PanelTop(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg);
+		panelCol = new PanelCol(dlg, Obj.TOPMARK);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

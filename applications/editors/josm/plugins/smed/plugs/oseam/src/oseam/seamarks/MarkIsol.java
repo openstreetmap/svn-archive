@@ -9,6 +9,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.SeaMark.Col;
 
 public class MarkIsol extends SeaMark {
 	public MarkIsol(OSeaMAction dia) {
@@ -68,7 +69,7 @@ public class MarkIsol extends SeaMark {
 	}
 
 	public void setLightColour() {
-		super.setLightColour("W");
+		super.setLightColour(Col.WHITE);
 	}
 
 	public void paintSign() {

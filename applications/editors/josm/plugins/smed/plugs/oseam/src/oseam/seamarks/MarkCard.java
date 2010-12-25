@@ -100,7 +100,7 @@ public class MarkCard extends SeaMark {
 	}
 
 	public void setLightColour() {
-		super.setLightColour("W");
+		super.setLightColour(Col.WHITE);
 	}
 
 	public void paintSign() {

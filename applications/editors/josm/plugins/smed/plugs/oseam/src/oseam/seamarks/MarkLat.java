@@ -8,6 +8,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Col;
 
 public class MarkLat extends SeaMark {
 	public MarkLat(OSeaMAction dia) {
@@ -156,14 +157,14 @@ public class MarkLat extends SeaMark {
 	public void setLightColour() {
 		if (getRegion() == IALA_A) {
 			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
-				super.setLightColour("R");
+				super.setLightColour(Col.RED);
 			else
-				super.setLightColour("G");
+				super.setLightColour(Col.GREEN);
 		} else {
 			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
-				super.setLightColour("G");
+				super.setLightColour(Col.GREEN);
 			else
-				super.setLightColour("R");
+				super.setLightColour(Col.RED);
 		}
 	}
 

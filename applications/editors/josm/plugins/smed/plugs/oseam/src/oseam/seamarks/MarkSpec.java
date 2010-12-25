@@ -9,6 +9,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.SeaMark.Col;
 
 public class MarkSpec extends SeaMark {
 	public MarkSpec(OSeaMAction dia) {
@@ -90,7 +91,7 @@ public class MarkSpec extends SeaMark {
 		 */}
 
 	public void setLightColour() {
-		super.setLightColour("W");
+		super.setLightColour(Col.WHITE);
 	}
 
 	public void paintSign() {

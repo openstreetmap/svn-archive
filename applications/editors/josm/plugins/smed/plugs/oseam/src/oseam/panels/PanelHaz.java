@@ -16,6 +16,7 @@ import oseam.seamarks.MarkCard;
 import oseam.seamarks.MarkIsol;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Obj;
 import oseam.seamarks.SeaMark.Shp;
 
 import java.awt.event.ActionListener;
@@ -39,7 +40,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_NORTH);
-				dlg.mark.setColour(Col.BLACK_YELLOW);
+				dlg.mark.setColour(Obj.BODY, Col.BLACK_YELLOW);
 				dlg.panelMain.panelTop.northTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				northButton.setBorderPainted(true);
@@ -52,7 +53,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_SOUTH);
-				dlg.mark.setColour(Col.YELLOW_BLACK);
+				dlg.mark.setColour(Obj.BODY, Col.YELLOW_BLACK);
 				dlg.panelMain.panelTop.southTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				southButton.setBorderPainted(true);
@@ -65,7 +66,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_EAST);
-				dlg.mark.setColour(Col.BLACK_YELLOW_BLACK);
+				dlg.mark.setColour(Obj.BODY, Col.BLACK_YELLOW_BLACK);
 				dlg.panelMain.panelTop.eastTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				eastButton.setBorderPainted(true);
@@ -78,7 +79,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_WEST);
-				dlg.mark.setColour(Col.YELLOW_BLACK_YELLOW);
+				dlg.mark.setColour(Obj.BODY, Col.YELLOW_BLACK_YELLOW);
 				dlg.panelMain.panelTop.westTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				westButton.setBorderPainted(true);
@@ -90,7 +91,7 @@ public class PanelHaz extends JPanel {
 					dlg.mark = new MarkIsol(dlg);
 					alShape.actionPerformed(null);
 				}
-				dlg.mark.setColour(Col.BLACK_RED_BLACK);
+				dlg.mark.setColour(Obj.BODY, Col.BLACK_RED_BLACK);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				isolButton.setBorderPainted(true);

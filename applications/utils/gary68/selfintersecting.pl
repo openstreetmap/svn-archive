@@ -26,7 +26,7 @@ use OSM::osm 5.0 ;
 
 my $programName = "selfintersecting.pl" ;
 my $usage = "selfintersecting.pl file.osm out.htm out.gpx" ; 
-my $version = "1.3" ;
+my $version = "1.4" ;
 
 
 
@@ -169,7 +169,7 @@ while ($wayId != -1) {
 			my ($cLon, $cLat, $seg1, $seg2) ;
 			# print $wayId, " ", $#wayNodes, "\n" ;
 			for ($a=0; $a<$#wayNodes-1; $a++) {
-				for ($b=$a + 1; $b<$#wayNodes; $b++) {
+				for ($b=$a + 2; $b<$#wayNodes; $b++) {
 					my ($x, $y) = crossing ($lon{$wayNodes[$a]}, 
 									$lat{$wayNodes[$a]}, 
 									$lon{$wayNodes[$a+1]}, 

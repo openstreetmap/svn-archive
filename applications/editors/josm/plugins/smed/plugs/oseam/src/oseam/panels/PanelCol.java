@@ -72,8 +72,8 @@ public class PanelCol extends JPanel {
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(tr(tip));
 		button.addActionListener(alColour);
-		colours.put(col, button);
 		colourButtons.add(button);
+		colours.put(col, button);
 		return button;
 	}
 

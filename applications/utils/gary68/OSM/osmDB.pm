@@ -462,7 +462,7 @@ sub dbConnect {
 
 	readINI() ;
 
-	$dbh = DBI->connect("DBI:mysql:$DBname", 'root', '7636') or die ("error connecting DB: $DBI::errstr\n") ;
+	$dbh = DBI->connect("DBI:mysql:$DBname", $DBuser, $DBpassword) or die ("error connecting DB: $DBI::errstr\n") ;
 	print STDERR "successfully connected to DB $DBname\n" ;
 }
 
@@ -557,10 +557,10 @@ sub bulkLoad {
 	my $aRef1 ;
 	my $aRef2 ;
 
-
 	openOsmFile ($file) ;
 
 	print STDERR "INFO: processing nodes...\n" ;
+	print STDERR "reading nodes...\n" ;
 
 	open (my $nodesFile, ">", $tempDir . "/nodes.txt") ;
 	open (my $nodetagsFile, ">", $tempDir . "/nodetags.txt") ;
@@ -613,6 +613,7 @@ sub bulkLoad {
 	# -----------
 
 	print STDERR "INFO: processing ways...\n" ;
+	print STDERR "reading ways...\n" ;
 
 	open (my $waysFile, ">", $tempDir . "/ways.txt") ;
 	open (my $waytagsFile, ">", $tempDir . "/waytags.txt") ;
@@ -678,6 +679,7 @@ sub bulkLoad {
 	# -----------
 
 	print STDERR "INFO: processing relations...\n" ;
+	print STDERR "reading relations...\n" ;
 
 	open (my $relationsFile, ">", $tempDir . "/relations.txt") ;
 	open (my $relationtagsFile, ">", $tempDir . "/relationtags.txt") ;

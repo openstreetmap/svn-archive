@@ -22,74 +22,44 @@ import oseam.seamarks.SeaMark.Shp;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
+import java.util.EnumMap;
+import java.util.Iterator;
 
 public class PanelSafeWater extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup shapeButtons = null;
-	private JRadioButton pillarButton = null;
-	private JRadioButton sparButton = null;
-	private JRadioButton sphereButton = null;
-	private JRadioButton barrelButton = null;
-	private JRadioButton floatButton = null;
-	private ActionListener alShape = null;
+	private ButtonGroup shapeButtons = new ButtonGroup();
+	private JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
+	private JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
+	private JRadioButton sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
+	private JRadioButton barrelButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BarrelButton.png")));
+	private JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
+	private EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
+	private ActionListener alShape = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			Iterator<Shp> it = shapes.keySet().iterator();
+			while (it.hasNext()) {
+				Shp shp = it.next();
+				JRadioButton button = shapes.get(shp);
+				if (button.isSelected()) {
+					dlg.mark.setShape(shp);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
+			}
+			if (dlg.mark != null)
+				dlg.mark.paintSign();
+		}
+	};
 
 	public PanelSafeWater(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getPillarButton(), null);
-		this.add(getSparButton(), null);
-		this.add(getSphereButton(), null);
-		this.add(getBarrelButton(), null);
-		this.add(getFloatButton(), null);
-
-		shapeButtons = new ButtonGroup();
-		shapeButtons.add(pillarButton);
-		shapeButtons.add(sparButton);
-		shapeButtons.add(sphereButton);
-		shapeButtons.add(barrelButton);
-		shapeButtons.add(floatButton);
-		alShape = new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (pillarButton.isSelected()) {
-					dlg.mark.setShape(Shp.PILLAR);
-					pillarButton.setBorderPainted(true);
-				} else {
-					pillarButton.setBorderPainted(false);
-				}
-				if (sparButton.isSelected()) {
-					dlg.mark.setShape(Shp.SPAR);
-					sparButton.setBorderPainted(true);
-				} else {
-					sparButton.setBorderPainted(false);
-				}
-				if (sphereButton.isSelected()) {
-					dlg.mark.setShape(Shp.SPHERE);
-					sphereButton.setBorderPainted(true);
-				} else {
-					sphereButton.setBorderPainted(false);
-				}
-				if (barrelButton.isSelected()) {
-					dlg.mark.setShape(Shp.BARREL);
-					barrelButton.setBorderPainted(true);
-				} else {
-					barrelButton.setBorderPainted(false);
-				}
-				if (floatButton.isSelected()) {
-					dlg.mark.setShape(Shp.FLOAT);
-					floatButton.setBorderPainted(true);
-				} else {
-					floatButton.setBorderPainted(false);
-				}
-				if (dlg.mark != null)
-					dlg.mark.paintSign();
-			}
-		};
-		pillarButton.addActionListener(alShape);
-		sparButton.addActionListener(alShape);
-		sphereButton.addActionListener(alShape);
-		barrelButton.addActionListener(alShape);
-		floatButton.addActionListener(alShape);
+		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "PillarTip", Shp.PILLAR), null);
+		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "SparTip", Shp.SPAR), null);
+		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "SphereTip", Shp.SPHERE), null);
+		this.add(getShapeButton(barrelButton, 0, 96, 34, 32, "BarrelTip", Shp.BARREL), null);
+		this.add(getShapeButton(floatButton, 0, 128, 34, 32, "FloatTip", Shp.FLOAT), null);
 	}
 
 	public void clearSelections() {
@@ -97,54 +67,14 @@ public class PanelSafeWater extends JPanel {
 		alShape.actionPerformed(null);
 	}
 
-	private JRadioButton getPillarButton() {
-		if (pillarButton == null) {
-			pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(0, 0, 34, 32));
-			pillarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			pillarButton.setToolTipText(Messages.getString("PillarTip"));
-		}
-		return pillarButton;
-	}
-
-	private JRadioButton getSparButton() {
-		if (sparButton == null) {
-			sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(0, 32, 34, 32));
-			sparButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			sparButton.setToolTipText(Messages.getString("SparTip"));
-		}
-		return sparButton;
-	}
-
-	private JRadioButton getSphereButton() {
-		if (sphereButton == null) {
-			sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
-			sphereButton.setBounds(new Rectangle(0, 64, 34, 32));
-			sphereButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			sphereButton.setToolTipText(Messages.getString("SphereTip"));
-		}
-		return sphereButton;
-	}
-
-	private JRadioButton getBarrelButton() {
-		if (barrelButton == null) {
-			barrelButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BarrelButton.png")));
-			barrelButton.setBounds(new Rectangle(0, 96, 34, 32));
-			barrelButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			barrelButton.setToolTipText(Messages.getString("BarrelTip"));
-		}
-		return barrelButton;
-	}
-
-	private JRadioButton getFloatButton() {
-		if (floatButton == null) {
-			floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(0, 128, 34, 32));
-			floatButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			floatButton.setToolTipText(Messages.getString("FloatTip"));
-		}
-		return floatButton;
+	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		button.addActionListener(alShape);
+		shapeButtons.add(button);
+		shapes.put(shp, button);
+		return button;
 	}
 
 }

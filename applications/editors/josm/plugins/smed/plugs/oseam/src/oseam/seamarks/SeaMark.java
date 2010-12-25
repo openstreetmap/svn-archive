@@ -100,17 +100,17 @@ abstract public class SeaMark {
 	}
 
 	public enum Top {
-		UNKNOWN, X_SHAPE, CAN, CONE
+		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, TRIANGLE, TRIANGLE_INV, SQUARE, MOORING
 	}
 
-	private boolean TopMark = false;
+	private Top TopMark = Top.NONE;
 
 	public boolean hasTopMark() {
-		return TopMark;
+		return (TopMark != Top.NONE);
 	}
 
-	public void setTopMark(boolean topMark) {
-		TopMark = topMark;
+	public void setTopMark(Top top) {
+		TopMark = top;
 	}
 
 	private boolean Radar = false;

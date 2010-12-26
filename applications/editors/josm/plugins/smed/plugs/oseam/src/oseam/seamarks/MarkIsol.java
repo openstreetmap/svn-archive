@@ -108,7 +108,6 @@ public class MarkIsol extends SeaMark {
 			return;
 		else
 			super.saveSign();
-
 		switch (getShape()) {
 		case PILLAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_isolated_danger"));
@@ -130,7 +129,6 @@ public class MarkIsol extends SeaMark {
 			break;
 		default:
 		}
-
 		switch (getShape()) {
 		case PILLAR:
 		case SPAR:
@@ -149,7 +147,6 @@ public class MarkIsol extends SeaMark {
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:light_float:colour", "black;red;black"));
 			break;
 		}
-
 		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 spheres"));
 		Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:colour", "black"));
 	}

@@ -105,7 +105,7 @@ public class MarkSaw extends SeaMark {
 		if (!image.equals("/images/Safe_Water")) {
 			image += ".png";
 			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			if (hasTopMark()) {
+			if (hasTopmark()) {
 				image = "";
 				switch (getShape()) {
 				case PILLAR:
@@ -160,7 +160,6 @@ public class MarkSaw extends SeaMark {
 			break;
 		default:
 		}
-
 		switch (getShape()) {
 		case PILLAR:
 		case SPAR:

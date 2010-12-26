@@ -46,7 +46,7 @@ public class PanelTop extends JPanel {
 				Top top = it.next();
 				JRadioButton button = tops.get(top);
 				if (button.isSelected()) {
-					dlg.mark.setTopMark(top);
+					dlg.mark.setTopmark(top);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);

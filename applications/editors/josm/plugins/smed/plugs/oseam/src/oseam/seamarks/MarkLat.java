@@ -383,7 +383,7 @@ public class MarkLat extends SeaMark {
 			image += ".png";
 			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
 
-			if (hasTopMark()) {
+			if (hasTopmark()) {
 				image = "";
 				switch (getCategory()) {
 				case LAT_PORT:

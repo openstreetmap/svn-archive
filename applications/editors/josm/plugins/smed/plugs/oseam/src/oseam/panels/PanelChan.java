@@ -27,6 +27,9 @@ import java.awt.event.ActionListener;
 public class PanelChan extends JPanel {
 
 	private OSeaMAction dlg;
+	public PanelPort panelPort = null;
+	public PanelStbd panelStbd = null;
+	public PanelSaw panelSaw = null;
 	private ButtonGroup catButtons = new ButtonGroup();
 	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
 	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
@@ -121,10 +124,6 @@ public class PanelChan extends JPanel {
 				dlg.mark.paintSign();
 		}
 	};
-
-	public PanelPort panelPort = null;
-	public PanelStbd panelStbd = null;
-	public PanelSaw panelSaw = null;
 
 	public PanelChan(OSeaMAction dia) {
 		dlg = dia;

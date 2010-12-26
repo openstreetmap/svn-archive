@@ -107,7 +107,4 @@ public class MarkLight extends SeaMark {
 		}
 	}
 
-	public void setLightColour() {
-	}
-
 }

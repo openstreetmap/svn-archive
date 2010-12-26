@@ -58,6 +58,7 @@ require Exporter ;
 			deleteDBRelation
 			getDBNode
 			getDBWay
+			getDBWayNodesCoords
 			getDBRelation
 			getTag
 			initTableNodes
@@ -311,6 +312,23 @@ sub getTag {
 	return $tag ;	
 }
 
+sub getDBWayNodesCoords {
+	my $wayId = shift ;
+	my %lon = () ;
+	my %lat = () ;
+
+	my $sth = $dbh->prepare("SELECT nodes.id,lon,lat FROM waynodes, nodes WHERE waynodes.id=$wayId AND waynodes.nodeid=nodes.id") or die "Couldn't prepare statement: " . $dbh->errstr ;
+	my @data ;
+ 	$sth->execute() or die "Couldn't execute statement: " . $sth->errstr ;
+	while (@data = $sth->fetchrow_array()) {		my $id = $data[0] ;
+		my $lo = $data[1] ;
+		my $la = $data[2] ;
+		$lon{$id} = $lo ;
+		$lat{$id} = $la ;
+	}
+
+	return (\%lon, \%lat) ;
+}
 
 sub getDBNode {
 	my $id = shift ;

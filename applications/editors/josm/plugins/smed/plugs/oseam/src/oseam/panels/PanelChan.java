@@ -14,8 +14,7 @@ import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.panels.PanelPort;
 import oseam.panels.PanelStbd;
-import oseam.panels.PanelPrefPort;
-import oseam.panels.PanelPrefStbd;
+import oseam.panels.PanelSaw;
 import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
@@ -49,10 +48,10 @@ public class PanelChan extends JPanel {
 				}
 				portButton.setBorderPainted(true);
 				panelPort.setVisible(true);
+				panelPort.perchButton.setVisible(true);
 			} else {
 				portButton.setBorderPainted(false);
 				panelPort.setVisible(false);
-				panelPort.clearSelections();
 			}
 			if (stbdButton.isSelected()) {
 				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_STBD))
@@ -67,10 +66,10 @@ public class PanelChan extends JPanel {
 				}
 				stbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
+				panelStbd.perchButton.setVisible(true);
 			} else {
 				stbdButton.setBorderPainted(false);
 				panelStbd.setVisible(false);
-				panelStbd.clearSelections();
 			}
 			if (prefPortButton.isSelected()) {
 				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_PORT))
@@ -78,17 +77,17 @@ public class PanelChan extends JPanel {
 				dlg.mark.setCategory(Cat.LAT_PREF_PORT);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Obj.BODY, Col.RED_GREEN_RED);
-					panelPrefPort.regionAButton.doClick();
+					panelPort.regionAButton.doClick();
 				} else {
 					dlg.mark.setColour(Obj.BODY, Col.GREEN_RED_GREEN);
-					panelPrefPort.regionBButton.doClick();
+					panelPort.regionBButton.doClick();
 				}
 				prefPortButton.setBorderPainted(true);
-				panelPrefPort.setVisible(true);
+				panelPort.setVisible(true);
+				panelPort.perchButton.setVisible(false);
 			} else {
 				prefPortButton.setBorderPainted(false);
-				panelPrefPort.setVisible(false);
-				panelPrefPort.clearSelections();
+				if (!portButton.isSelected()) panelPort.setVisible(false);
 			}
 			if (prefStbdButton.isSelected()) {
 				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_STBD))
@@ -96,28 +95,27 @@ public class PanelChan extends JPanel {
 				dlg.mark.setCategory(Cat.LAT_PREF_STBD);
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Obj.BODY, Col.GREEN_RED_GREEN);
-					panelPrefStbd.regionAButton.doClick();
+					panelStbd.regionAButton.doClick();
 				} else {
 					dlg.mark.setColour(Obj.BODY, Col.RED_GREEN_RED);
-					panelPrefStbd.regionBButton.doClick();
+					panelStbd.regionBButton.doClick();
 				}
 				prefStbdButton.setBorderPainted(true);
-				panelPrefStbd.setVisible(true);
+				panelStbd.setVisible(true);
+				panelStbd.perchButton.setVisible(false);
 			} else {
 				prefStbdButton.setBorderPainted(false);
-				panelPrefStbd.setVisible(false);
-				panelPrefStbd.clearSelections();
+				if (!stbdButton.isSelected()) panelStbd.setVisible(false);
 			}
 			if (safeWaterButton.isSelected()) {
 				if (!(dlg.mark instanceof MarkSaw))
 					dlg.mark = new MarkSaw(dlg);
 				dlg.mark.setColour(Obj.BODY, Col.RED_WHITE);
 				safeWaterButton.setBorderPainted(true);
-				panelSafeWater.setVisible(true);
+				panelSaw.setVisible(true);
 			} else {
 				safeWaterButton.setBorderPainted(false);
-				panelSafeWater.setVisible(false);
-				panelSafeWater.clearSelections();
+				panelSaw.setVisible(false);
 			}
 			if (dlg.mark != null)
 				dlg.mark.paintSign();
@@ -126,9 +124,7 @@ public class PanelChan extends JPanel {
 
 	public PanelPort panelPort = null;
 	public PanelStbd panelStbd = null;
-	public PanelPrefPort panelPrefPort = null;
-	public PanelPrefStbd panelPrefStbd = null;
-	public PanelSafeWater panelSafeWater = null;
+	public PanelSaw panelSaw = null;
 
 	public PanelChan(OSeaMAction dia) {
 		dlg = dia;
@@ -138,21 +134,13 @@ public class PanelChan extends JPanel {
 		panelStbd = new PanelStbd(dlg);
 		panelStbd.setBounds(new Rectangle(55, 0, 225, 160));
 		panelStbd.setVisible(false);
-		panelPrefPort = new PanelPrefPort(dlg);
-		panelPrefPort.setBounds(new Rectangle(55, 0, 225, 160));
-		panelPrefPort.setVisible(false);
-		panelPrefStbd = new PanelPrefStbd(dlg);
-		panelPrefStbd.setBounds(new Rectangle(55, 0, 225, 160));
-		panelPrefStbd.setVisible(false);
-		panelSafeWater = new PanelSafeWater(dlg);
-		panelSafeWater.setBounds(new Rectangle(55, 0, 225, 160));
-		panelSafeWater.setVisible(false);
+		panelSaw = new PanelSaw(dlg);
+		panelSaw.setBounds(new Rectangle(55, 0, 225, 160));
+		panelSaw.setVisible(false);
 		this.setLayout(null);
 		this.add(panelPort, null);
 		this.add(panelStbd, null);
-		this.add(panelPrefPort, null);
-		this.add(panelPrefStbd, null);
-		this.add(panelSafeWater, null);
+		this.add(panelSaw, null);
 		this.add(getCatButton(portButton, 0, 0, 52, 32, "PortTip"), null);
 		this.add(getCatButton(stbdButton, 0, 32, 52, 32, "StbdTip"), null);
 		this.add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPortTip"), null);
@@ -165,9 +153,7 @@ public class PanelChan extends JPanel {
 		alCat.actionPerformed(null);
 		panelPort.clearSelections();
 		panelStbd.clearSelections();
-		panelPrefPort.clearSelections();
-		panelPrefStbd.clearSelections();
-		panelSafeWater.clearSelections();
+		panelSaw.clearSelections();
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

@@ -25,7 +25,7 @@ import java.awt.event.ActionListener;
 import java.util.EnumMap;
 import java.util.Iterator;
 
-public class PanelSafeWater extends JPanel {
+public class PanelSaw extends JPanel {
 
 	private OSeaMAction dlg;
 	private ButtonGroup shapeButtons = new ButtonGroup();
@@ -52,7 +52,7 @@ public class PanelSafeWater extends JPanel {
 		}
 	};
 
-	public PanelSafeWater(OSeaMAction dia) {
+	public PanelSaw(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
 		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "PillarTip", Shp.PILLAR), null);

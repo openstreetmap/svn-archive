@@ -11,12 +11,12 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Shortcut;
+
 import reverter.ChangesetReverter.RevertType;
 
 @SuppressWarnings("serial")
@@ -95,7 +95,7 @@ public class RevertChangesetAction extends JosmAction {
                 if (progressMonitor.isCancelled()) return;
                 if (!checkAndDownloadMissing()) return;
                 List<Command> cmds = rev.getCommands();
-                Command cmd = new SequenceCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
+                Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
                         "Partially revert changeset #{0}",changesetId),cmds);
                 Main.main.undoRedo.add(cmd);
             }

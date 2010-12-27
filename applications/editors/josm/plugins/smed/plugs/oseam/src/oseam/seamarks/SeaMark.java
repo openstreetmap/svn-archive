@@ -688,7 +688,10 @@ abstract public class SeaMark {
 			objStr = "buoy_safe_water";
 			break;
 		case BOYSPP:
-			objStr = "buoy_special_purpose";
+			if (topShape == Top.MOORING)
+				objStr = "mooring";
+			else
+				objStr = "buoy_special_purpose";
 			break;
 		case LIGHTS:
 			if (category == Cat.LIGHT_MAJOR)
@@ -735,6 +738,8 @@ abstract public class SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "west"));
 				break;
 			}
+			if ((object == Obj.BOYSPP) && (topShape == Top.MOORING))
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:mooring:category", "mooring-buoy"));
 
 			switch (shape) {
 			case PILLAR:

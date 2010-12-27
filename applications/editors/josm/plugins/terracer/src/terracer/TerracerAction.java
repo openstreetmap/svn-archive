@@ -233,7 +233,7 @@ public final class TerracerAction extends JosmAction {
      *            number nodes
      */
     class HousenumberNodeComparator implements Comparator<Node> {
-        private final Pattern pat = Pattern.compile("^([0-9]+)");
+        private final Pattern pat = Pattern.compile("^(\\d+)\\s*(.*)");
 
         /*
          * (non-Javadoc)
@@ -251,9 +251,17 @@ public final class TerracerAction extends JosmAction {
             Matcher mat = pat.matcher(node1String);
             if (mat.find()) {
                 Integer node1Int = Integer.valueOf(mat.group(1));
+                String node1Rest = mat.group(2);
                 mat = pat.matcher(node2String);
                 if (mat.find()) {
                     Integer node2Int = Integer.valueOf(mat.group(1));
+                    // If the numbers are the same, the rest has to make the decision,
+                    // e.g. when comparing 23, 23a and 23b.
+                    if (node1Int.equals(node2Int))
+                    {
+                      String node2Rest = mat.group(2);
+                      return node1Rest.compareTo(node2Rest);
+                    }
 
                     return node1Int.compareTo(node2Int);
                 }

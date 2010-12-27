@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.Ent;
 
 public class PanelLit extends JPanel {
 
@@ -15,7 +15,7 @@ public class PanelLit extends JPanel {
 
 	public PanelLit(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, Obj.LIGHT);
+		panelCol = new PanelCol(dlg, Ent.LIGHT);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

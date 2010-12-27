@@ -5,11 +5,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 
@@ -43,18 +40,42 @@ abstract public class SeaMark {
 		region = reg;
 	}
 
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String nam) {
+		name = nam;
+	}
+
+	public enum Obj {
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, LIGHTS, LITFLT, LITVES, LNDMRK
+	}
+
+	private Obj object = Obj.UNKNOWN;
+
+	public Obj getObject() {
+		return object;
+	}
+
+	public void setObject(Obj obj) {
+		object = obj;
+	}
+
+	public enum Ent {
+		BODY, BUOY, BEACON, FLOAT, TOPMARK, LIGHT
+	}
+
 	public enum Col {
 		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE, BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK
 	}
 
-	public enum Obj {
-		BODY, BUOY, BEACON, FLOAT, TOPMARK, LIGHT
-	}
-
 	private Col bodyColour = Col.UNKNOWN;
 
-	public Col getColour(Obj obj) {
-		switch (obj) {
+	public Col getColour(Ent ent) {
+		switch (ent) {
 		case BODY:
 		case BUOY:
 		case BEACON:
@@ -68,8 +89,8 @@ abstract public class SeaMark {
 		return Col.UNKNOWN;
 	}
 
-	public void setColour(Obj obj, Col col) {
-		switch (obj) {
+	public void setColour(Ent ent, Col col) {
+		switch (ent) {
 		case BODY:
 		case BUOY:
 		case BEACON:
@@ -83,16 +104,6 @@ abstract public class SeaMark {
 			lightColour[sectorIndex] = col;
 			break;
 		}
-	}
-
-	private String name;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String nam) {
-		name = nam;
 	}
 
 	public enum Cat {
@@ -635,6 +646,8 @@ abstract public class SeaMark {
 		Iterator<String> it = dlg.node.getKeys().keySet().iterator();
 		String str;
 
+		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A");
+
 		while (it.hasNext()) {
 			str = it.next();
 			if (str.contains("seamark"))
@@ -642,10 +655,274 @@ abstract public class SeaMark {
 					Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, null));
 				}
 		}
-		str = dlg.panelMain.nameBox.getText();
-		if (!str.isEmpty())
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:name", str));
+		if (!name.isEmpty())
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:name", name));
+		
+		String objStr = "";
+		switch (object) {
+		case BCNCAR:
+			objStr = "beacon_cardinal";
+			break;
+		case BCNISD:
+			objStr = "beacon_isolated_danger";
+			break;
+		case BCNLAT:
+			objStr = "beacon_lateral";
+			break;
+		case BCNSAW:
+			objStr = "beacon_safe_water";
+			break;
+		case BCNSPP:
+			objStr = "beacon_special_purpose";
+			break;
+		case BOYCAR:
+			objStr = "buoy_cardinal";
+			break;
+		case BOYISD:
+			objStr = "buoy_isolated_danger";
+			break;
+		case BOYLAT:
+			objStr = "buoy_lateral";
+			break;
+		case BOYSAW:
+			objStr = "buoy_safe_water";
+			break;
+		case BOYSPP:
+			objStr = "buoy_special_purpose";
+			break;
+		case LIGHTS:
+			if (category == Cat.LIGHT_MAJOR)
+				objStr = "light_major";
+			else
+				objStr = "light_minor";
+			break;
+		case LITFLT:
+			objStr = "light_float";
+			break;
+		case LITVES:
+			objStr = "light_vessel";
+			break;
+		case LNDMRK:
+			objStr = "landmark";
+			break;
+		}
+		if (!objStr.isEmpty()) {
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", objStr));
 
+			switch (category) {
+			case LAT_PORT:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "port"));
+				break;
+			case LAT_STBD:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "starboard"));
+				break;
+			case LAT_PREF_PORT:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "preferred_channel_port"));
+				break;
+			case LAT_PREF_STBD:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "preferred_channel_starboard"));
+				break;
+			case CARD_NORTH:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "north"));
+				break;
+			case CARD_EAST:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "east"));
+				break;
+			case CARD_SOUTH:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "south"));
+				break;
+			case CARD_WEST:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", "west"));
+				break;
+			}
+
+			switch (shape) {
+			case PILLAR:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "pillar"));
+				break;
+			case SPAR:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "spar"));
+				break;
+			case CAN:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "can"));
+				break;
+			case CONE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "conical"));
+				break;
+			case SPHERE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "sphere"));
+				break;
+			case BARREL:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "barrel"));
+				break;
+			case SUPER:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "super-buoy"));
+				break;
+			case TOWER:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "tower"));
+				break;
+			case STAKE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "stake"));
+				break;
+			case PERCH:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":shape", "perch"));
+				break;
+			}
+			
+			switch (bodyColour) {
+			case WHITE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "white"));
+				break;
+			case RED:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "red"));
+				break;
+			case ORANGE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "orange"));
+				break;
+			case AMBER:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "amber"));
+				break;
+			case YELLOW:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "yellow"));
+				break;
+			case GREEN:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "green"));
+				break;
+			case BLUE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "blue"));
+				break;
+			case VIOLET:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "violet"));
+				break;
+			case BLACK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "black"));
+				break;
+			case RED_GREEN_RED:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "red;green;red"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case GREEN_RED_GREEN:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "green;red;green"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case RED_WHITE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "red;white"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"vertical stripes"));
+				break;
+			case BLACK_YELLOW:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "black;yellow"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case BLACK_YELLOW_BLACK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "black;yellow;black"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case YELLOW_BLACK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "yellow;black"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case YELLOW_BLACK_YELLOW:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "yellow;black;yellow"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			case BLACK_RED_BLACK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour", "black;red;black"));
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":colour_pattern",	"horizontal stripes"));
+				break;
+			}
+		}
+			
+		String top = "";
+		switch (topShape) {
+		case CAN:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "cylinder"));
+			top = "top";
+			break;
+		case CONE:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "cone, point up"));
+			top = "top";
+			break;
+		case SPHERE:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "sphere"));
+			top = "top";
+			break;
+		case X_SHAPE:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "x-shape"));
+			top = "top";
+			break;
+		case NORTH:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 cones up"));
+			top = "top";
+			break;
+		case SOUTH:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 cones down"));
+			top = "top";
+			break;
+		case EAST:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 cones base together"));
+			top = "top";
+			break;
+		case WEST:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 cones points together"));
+			top = "top";
+			break;
+		case SPHERES2:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "2 spheres"));
+			top = "top";
+			break;
+		case BOARD:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:daymark:shape", "board"));
+			top = "day";
+			break;
+		case DIAMOND:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:daymark:shape", "diamond"));
+			top = "day";
+			break;
+		case TRIANGLE:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:daymark:shape", "triangle, point up"));
+			top = "day";
+			break;
+		case TRIANGLE_INV:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:daymark:shape", "triangle, point down"));
+			top = "day";
+			break;
+		case SQUARE:
+			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:daymark:shape", "square"));
+			top = "day";
+			break;
+		}
+		if (!top.isEmpty()) {
+			switch (topColour) {
+			case WHITE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "white"));
+				break;
+			case RED:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "red"));
+				break;
+			case ORANGE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "orange"));
+				break;
+			case AMBER:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "amber"));
+				break;
+			case YELLOW:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "yellow"));
+				break;
+			case GREEN:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "green"));
+				break;
+			case BLUE:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "blue"));
+				break;
+			case VIOLET:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "violet"));
+				break;
+			case BLACK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + top + "mark:colour", "black"));
+				break;
+			}
+		}
+		
 		Col colour;
 		if (isFired()) {
 			if ((colour = lightColour[0]) != Col.UNKNOWN)

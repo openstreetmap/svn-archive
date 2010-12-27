@@ -17,12 +17,12 @@ import java.util.Iterator;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Col;
-import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.Ent;
 
 public class PanelCol extends JPanel {
 
 	private OSeaMAction dlg;
-	private Obj obj;
+	private Ent ent;
 	private ButtonGroup colourButtons = new ButtonGroup();
 	public JRadioButton offButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton whiteButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WhiteButton.png")));
@@ -42,7 +42,7 @@ public class PanelCol extends JPanel {
 				Col col = it.next();
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
-					if (dlg.mark != null) dlg.mark.setColour(obj, col);
+					if (dlg.mark != null) dlg.mark.setColour(ent, col);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -50,9 +50,9 @@ public class PanelCol extends JPanel {
 		}
 	};
 
-	public PanelCol(OSeaMAction dia, Obj object) {
+	public PanelCol(OSeaMAction dia, Ent entity) {
 		dlg = dia;
-		obj = object;
+		ent = entity;
 		this.setLayout(null);
 		this.add(getColButton(offButton, 0, 0, 34, 16, "No colour", Col.UNKNOWN), null);
 		this.add(getColButton(whiteButton, 0, 16, 34, 16, "White", Col.WHITE), null);

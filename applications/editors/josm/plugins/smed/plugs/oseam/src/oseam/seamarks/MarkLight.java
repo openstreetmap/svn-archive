@@ -81,30 +81,4 @@ public class MarkLight extends SeaMark {
 		super.paintSign();
 	}
 
-	public void saveSign() {
-		if (dlg.node == null)
-			return;
-		else
-			super.saveSign();
-
-		switch (getCategory()) {
-		case LIGHT_HOUSE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "landmark"));
-			break;
-		case LIGHT_MAJOR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_major"));
-			break;
-		case LIGHT_MINOR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_minor"));
-			break;
-		case LIGHT_VESSEL:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_vessel"));
-			break;
-		case LIGHT_FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
-			break;
-		default:
-		}
-	}
-
 }

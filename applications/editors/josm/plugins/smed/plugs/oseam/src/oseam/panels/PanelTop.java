@@ -15,7 +15,7 @@ import java.util.Iterator;
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Top;
-import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.Ent;
 
 public class PanelTop extends JPanel {
 
@@ -56,7 +56,7 @@ public class PanelTop extends JPanel {
 
 	public PanelTop(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, Obj.TOPMARK);
+		panelCol = new PanelCol(dlg, Ent.TOPMARK);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

@@ -1,14 +1,17 @@
 package oseam.panels;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
+
+import java.util.EnumMap;
+import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
@@ -16,12 +19,9 @@ import oseam.seamarks.MarkCard;
 import oseam.seamarks.MarkIsol;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
-import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.Ent;
 import oseam.seamarks.SeaMark.Shp;
-
-import java.awt.event.ActionListener;
-import java.util.EnumMap;
-import java.util.Iterator;
+import oseam.seamarks.SeaMark.Obj;
 
 public class PanelHaz extends JPanel {
 
@@ -40,7 +40,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_NORTH);
-				dlg.mark.setColour(Obj.BODY, Col.BLACK_YELLOW);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW);
 				dlg.panelMain.panelTop.northTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				northButton.setBorderPainted(true);
@@ -53,7 +53,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_SOUTH);
-				dlg.mark.setColour(Obj.BODY, Col.YELLOW_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK);
 				dlg.panelMain.panelTop.southTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				southButton.setBorderPainted(true);
@@ -66,7 +66,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_EAST);
-				dlg.mark.setColour(Obj.BODY, Col.BLACK_YELLOW_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW_BLACK);
 				dlg.panelMain.panelTop.eastTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				eastButton.setBorderPainted(true);
@@ -79,7 +79,7 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setCategory(Cat.CARD_WEST);
-				dlg.mark.setColour(Obj.BODY, Col.YELLOW_BLACK_YELLOW);
+				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK_YELLOW);
 				dlg.panelMain.panelTop.westTopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				westButton.setBorderPainted(true);
@@ -91,7 +91,7 @@ public class PanelHaz extends JPanel {
 					dlg.mark = new MarkIsol(dlg);
 					alShape.actionPerformed(null);
 				}
-				dlg.mark.setColour(Obj.BODY, Col.BLACK_RED_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK_RED_BLACK);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();
 				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				isolButton.setBorderPainted(true);
@@ -110,6 +110,8 @@ public class PanelHaz extends JPanel {
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
 	private EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
+	private EnumMap<Shp, Obj> carObjects = new EnumMap<Shp, Obj>(Shp.class);
+	private EnumMap<Shp, Obj> isdObjects = new EnumMap<Shp, Obj>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			Iterator<Shp> it = shapes.keySet().iterator();
@@ -118,6 +120,10 @@ public class PanelHaz extends JPanel {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
+					if (isolButton.isSelected())
+						dlg.mark.setObject(isdObjects.get(shp));
+					else
+						dlg.mark.setObject(carObjects.get(shp));
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -136,11 +142,11 @@ public class PanelHaz extends JPanel {
 		this.add(getCatButton(westButton, 0, 96, 52, 32, "WestTip"), null);
 		this.add(getCatButton(isolButton, 0, 128, 52, 32, "IsolTip"), null);
 
-		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "PillarTip", Shp.PILLAR), null);
-		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "SparTip", Shp.SPAR), null);
-		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "FloatTip", Shp.FLOAT), null);
-		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "BeaconTip", Shp.BEACON), null);
-		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "TowerTip", Shp.TOWER), null);
+		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "PillarTip", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "SparTip", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "FloatTip", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "BeaconTip", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "TowerTip", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 	}
 
 	public void clearSelections() {
@@ -159,13 +165,15 @@ public class PanelHaz extends JPanel {
 		return button;
 	}
 
-	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp) {
+	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj car, Obj isd) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alShape);
 		shapeButtons.add(button);
 		shapes.put(shp, button);
+		carObjects.put(shp, car);
+		isdObjects.put(shp, isd);
 		return button;
 	}
 

@@ -10,6 +10,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Ent;
 
 public class MarkSpec extends SeaMark {
 	public MarkSpec(OSeaMAction dia) {
@@ -159,119 +160,5 @@ public class MarkSpec extends SeaMark {
 		} else
 			dlg.panelMain.shapeIcon.setIcon(null);
 		super.paintSign();
-	}
-
-	public void saveSign() {
-		if (dlg.node == null)
-			return;
-		else
-			super.saveSign();
-
-		switch (getShape()) {
-		case PILLAR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "pillar"));
-			saveColour(Obj.BUOY);
-			break;
-		case SPAR:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "spar"));
-			saveColour(Obj.BUOY);
-			break;
-		case CAN:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "can"));
-			saveColour(Obj.BUOY);
-			break;
-		case CONE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "conical"));
-			saveColour(Obj.BUOY);
-			break;
-		case SPHERE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "sphere"));
-			saveColour(Obj.BUOY);
-			break;
-		case BARREL:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "barrel"));
-			saveColour(Obj.BUOY);
-			break;
-		case SUPER:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "buoy_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:buoy_special_purpose:shape", "super-buoy"));
-			saveColour(Obj.BUOY);
-			break;
-		case FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "light_float"));
-			saveColour(Obj.FLOAT);
-			break;
-		case BEACON:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_special_purpose"));
-			saveColour(Obj.BEACON);
-			break;
-		case TOWER:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", "beacon_special_purpose"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:beacon_special_purpose:shape", "tower"));
-			saveColour(Obj.BEACON);
-			break;
-		default:
-		}
-		if (hasTopmark()) {
-			switch (getTopmark()) {
-			case X_SHAPE:
-				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", "x-shape"));
-				break;
-			}
-			saveColour(Obj.TOPMARK);
-		}
-	}
-	
-	private void saveColour(Obj obj) {
-		String str = "";
-		switch (obj) {
-		case BUOY:
-			str = "seamark:buoy_special_purpose:colour";
-			break;
-		case BEACON:
-			str = "seamark:beacon_special_purpose:colour";
-			break;
-		case FLOAT:
-			str = "seamark:light_float:colour";
-			break;
-		case TOPMARK:
-			str = "seamark:topmark:colour";
-			break;
-		}
-		switch (getColour(obj)) {
-		case WHITE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "white"));
-			break;
-		case RED:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "red"));
-			break;
-		case ORANGE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "orange"));
-			break;
-		case AMBER:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "amber"));
-			break;
-		case YELLOW:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "yellow"));
-			break;
-		case GREEN:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "green"));
-			break;
-		case BLUE:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "blue"));
-			break;
-		case VIOLET:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "violet"));
-			break;
-		case BLACK:
-			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, "black"));
-			break;
-		}
 	}
 }

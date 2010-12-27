@@ -14,6 +14,7 @@ public class RevertChangesetCommand extends SequenceCommand {
     public RevertChangesetCommand(String name, Collection<Command> sequenz) {
         super(name, sequenz);
         this.name = name;
+        ReverterPlugin.reverterUsed = true;
     }
 
     @Override public JLabel getDescription() {

@@ -45,7 +45,10 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     }
                     if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
-                        wmsLayer.setRasterBounds(bounds);
+                        JOptionPane.showMessageDialog(Main.parent,tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
+                        Main.main.removeLayer(wmsLayer);
+                        wmsLayer = null;
+                        return;
                     } else {
                         // set vectorized commune bounding box by opening the standard web window
                         grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);

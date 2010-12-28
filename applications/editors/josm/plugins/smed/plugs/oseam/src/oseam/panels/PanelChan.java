@@ -19,6 +19,7 @@ import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
+import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.MarkLat;
 import oseam.seamarks.MarkSaw;
 
@@ -38,10 +39,18 @@ public class PanelChan extends JPanel {
 	public JRadioButton safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			Shp shp = null;
+			if (dlg.mark != null) shp = dlg.mark.getShape();
 			if (portButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PORT))
+				if (!(dlg.mark instanceof MarkLat))
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PORT);
+				if (panelPort.shapes.containsKey(shp)) {
+					panelPort.shapes.get(shp).doClick();
+				} else {
+					panelPort.clearSelections();
+					dlg.mark.setShape(Shp.UNKNOWN);
+				}
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Ent.BODY, Col.RED);
 					panelPort.regionAButton.doClick();
@@ -57,9 +66,15 @@ public class PanelChan extends JPanel {
 				panelPort.setVisible(false);
 			}
 			if (stbdButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_STBD))
+				if (!(dlg.mark instanceof MarkLat))
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_STBD);
+				if (panelStbd.shapes.containsKey(shp)) {
+					panelStbd.shapes.get(shp).doClick();
+				} else {
+					panelStbd.clearSelections();
+					dlg.mark.setShape(Shp.UNKNOWN);
+				}
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN);
 					panelStbd.regionAButton.doClick();
@@ -75,9 +90,15 @@ public class PanelChan extends JPanel {
 				panelStbd.setVisible(false);
 			}
 			if (prefPortButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_PORT))
+				if (!(dlg.mark instanceof MarkLat))
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PREF_PORT);
+				if (panelPort.shapes.containsKey(shp) && (shp != Shp.PERCH)) {
+					panelPort.shapes.get(shp).doClick();
+				} else {
+					panelPort.clearSelections();
+					dlg.mark.setShape(Shp.UNKNOWN);
+				}
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
 					panelPort.regionAButton.doClick();
@@ -93,9 +114,15 @@ public class PanelChan extends JPanel {
 				if (!portButton.isSelected()) panelPort.setVisible(false);
 			}
 			if (prefStbdButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat) || (dlg.mark.getCategory() != Cat.LAT_PREF_STBD))
+				if (!(dlg.mark instanceof MarkLat))
 					dlg.mark = new MarkLat(dlg);
 				dlg.mark.setCategory(Cat.LAT_PREF_STBD);
+				if (panelStbd.shapes.containsKey(shp) && (shp != Shp.PERCH)) {
+					panelStbd.shapes.get(shp).doClick();
+				} else {
+					panelStbd.clearSelections();
+					dlg.mark.setShape(Shp.UNKNOWN);
+				}
 				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
 					panelStbd.regionAButton.doClick();
@@ -111,8 +138,15 @@ public class PanelChan extends JPanel {
 				if (!stbdButton.isSelected()) panelStbd.setVisible(false);
 			}
 			if (safeWaterButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkSaw))
+				if (!(dlg.mark instanceof MarkSaw)) {
 					dlg.mark = new MarkSaw(dlg);
+					if (panelSaw.shapes.containsKey(shp)) {
+						panelSaw.shapes.get(shp).doClick();
+					} else {
+						panelSaw.clearSelections();
+						dlg.mark.setShape(Shp.UNKNOWN);
+					}
+				}
 				dlg.mark.setColour(Ent.BODY, Col.RED_WHITE);
 				safeWaterButton.setBorderPainted(true);
 				panelSaw.setVisible(true);

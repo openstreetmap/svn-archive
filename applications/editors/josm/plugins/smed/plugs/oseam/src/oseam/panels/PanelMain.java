@@ -30,7 +30,6 @@ public class PanelMain extends JPanel {
 	public JLabel shapeIcon = null;
 	public JLabel lightIcon = null;
 	public JLabel topIcon = null;
-	public JLabel reflIcon = null;
 	public JLabel radarIcon = null;
 	public JLabel fogIcon = null;
 	public JLabel nameLabel = null;
@@ -94,9 +93,6 @@ public class PanelMain extends JPanel {
 		topIcon = new JLabel();
 		topIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(topIcon, null);
-		reflIcon = new JLabel();
-		reflIcon.setBounds(new Rectangle(265, 170, 125, 185));
-		this.add(reflIcon, null);
 		radarIcon = new JLabel();
 		radarIcon.setBounds(new Rectangle(265, 170, 130, 185));
 		this.add(radarIcon, null);
@@ -264,7 +260,6 @@ public class PanelMain extends JPanel {
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);
-		reflIcon.setIcon(null);
 		radarIcon.setIcon(null);
 		fogIcon.setIcon(null);
 	}

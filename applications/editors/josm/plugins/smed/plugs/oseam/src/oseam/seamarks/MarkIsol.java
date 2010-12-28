@@ -4,12 +4,8 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
-import oseam.seamarks.SeaMark.Col;
 
 public class MarkIsol extends SeaMark {
 	public MarkIsol(OSeaMAction dia) {
@@ -58,14 +54,12 @@ public class MarkIsol extends SeaMark {
 			}
 		} else if (keys.containsKey("seamark:type") && (keys.get("seamark:type").equals("light_float"))) {
 			dlg.panelMain.panelHaz.floatButton.doClick();
+		} else {
+			dlg.panelMain.panelHaz.beaconButton.doClick();
 		}
 
 		parseLights(keys);
 		parseFogRadar(keys);
-
-		// dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-		// dlg.tfM01Name.setText(getName());
-		// dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void setLightColour() {

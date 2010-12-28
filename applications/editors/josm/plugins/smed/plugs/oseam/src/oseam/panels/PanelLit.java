@@ -11,7 +11,7 @@ import oseam.seamarks.SeaMark.Ent;
 public class PanelLit extends JPanel {
 
 	private OSeaMAction dlg;
-	private PanelCol panelCol = null;
+	public PanelCol panelCol = null;
 
 	public PanelLit(OSeaMAction dia) {
 		dlg = dia;

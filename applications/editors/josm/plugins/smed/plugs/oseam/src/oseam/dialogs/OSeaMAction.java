@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import oseam.Messages;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.SeaMark.Obj;
 import oseam.seamarks.MarkCard;
 import oseam.seamarks.MarkIsol;
 import oseam.seamarks.MarkLat;
@@ -99,74 +100,102 @@ public class OSeaMAction {
 
 		if (keys.containsKey("seamark:type"))
 			type = keys.get("seamark:type");
-		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) {
+		if (type.equals("buoy_lateral")) {
 			mark = new MarkLat(this);
-		} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")) {
+			mark.setObject(Obj.BOYLAT);
+		} else if (type.equals("beacon_lateral")) {
+			mark = new MarkLat(this);
+			mark.setObject(Obj.BCNLAT);
+		} else if (type.equals("buoy_cardinal")) {
 			mark = new MarkCard(this);
-		} else if (type.equals("buoy_safe_water") || type.equals("beacon_safe_water")) {
+			mark.setObject(Obj.BOYCAR);
+		} else if (type.equals("beacon_cardinal")) {
+			mark = new MarkCard(this);
+			mark.setObject(Obj.BCNCAR);
+		} else if (type.equals("buoy_safe_water")) {
 			mark = new MarkSaw(this);
-		} else if (type.equals("buoy_special_purpose") || type.equals("beacon_special_purpose")) {
+			mark.setObject(Obj.BOYSAW);
+		} else if (type.equals("beacon_safe_water")) {
+			mark = new MarkSaw(this);
+			mark.setObject(Obj.BCNSAW);
+		} else if (type.equals("buoy_special_purpose")) {
 			mark = new MarkSpec(this);
-		} else if (type.equals("buoy_isolated_danger") || type.equals("beacon_isolated_danger")) {
+			mark.setObject(Obj.BOYSPP);
+		} else if (type.equals("beacon_special_purpose")) {
+			mark = new MarkSpec(this);
+			mark.setObject(Obj.BCNSPP);
+		} else if (type.equals("buoy_isolated_danger")) {
 			mark = new MarkIsol(this);
+			mark.setObject(Obj.BOYISD);
+		} else if (type.equals("beacon_isolated_danger")) {
+			mark = new MarkIsol(this);
+			mark.setObject(Obj.BCNISD);
 		} else if (type.equals("landmark") || type.equals("light_vessel") || type.equals("light_major") || type.equals("light_minor")) {
 			mark = new MarkLight(this);
+			mark.setObject(Obj.LIGHTS);
 		} else if (type.equals("light_float")) {
 			if (keys.containsKey("seamark:light_float:colour")) {
 				str = keys.get("seamark:light_float:colour");
 				if (str.equals("red") || str.equals("green") || str.equals("red;green;red") || str.equals("green;red;green")) {
 					mark = new MarkLat(this);
+					mark.setObject(Obj.BOYLAT);
 				} else if (str.equals("black;yellow") || str.equals("black;yellow;black") || str.equals("yellow;black")
 						|| str.equals("yellow;black;yellow")) {
 					mark = new MarkCard(this);
+					mark.setObject(Obj.BOYCAR);
 				} else if (str.equals("black;red;black")) {
 					mark = new MarkIsol(this);
+					mark.setObject(Obj.BOYISD);
 				} else if (str.equals("red;white")) {
 					mark = new MarkSaw(this);
+					mark.setObject(Obj.BOYSAW);
 				} else if (str.equals("yellow")) {
 					mark = new MarkSpec(this);
+					mark.setObject(Obj.BOYSPP);
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
 				str = keys.get("seamark:light_float:topmark:shape");
 				if (str.equals("cylinder") || str.equals("cone, point up")) {
 					mark = new MarkLat(this);
+					mark.setObject(Obj.BOYLAT);
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
 				str = keys.get("seamark:light_float:topmark:colour");
 				if (str.equals("red") || str.equals("green")) {
 					mark = new MarkLat(this);
+					mark.setObject(Obj.BOYLAT);
 				}
 			}
-		} else if (keys.containsKey("buoy_lateral:category") || keys.containsKey("beacon_lateral:category")) {
+		} else if (keys.containsKey("buoy_lateral:category") || keys.containsKey("buoy_lateral:shape") || keys.containsKey("buoy_lateral:colour")) {
 			mark = new MarkLat(this);
-		} else if (keys.containsKey("buoy_cardinal:category") || keys.containsKey("beacon_cardinal:category")) {
-			mark = new MarkCard(this);
-		} else if (keys.containsKey("buoy_isolated_danger:category") || keys.containsKey("beacon_isolated_danger:category")) {
-			mark = new MarkIsol(this);
-		} else if (keys.containsKey("buoy_safe_water:category") || keys.containsKey("beacon_safe_water:category")) {
-			mark = new MarkSaw(this);
-		} else if (keys.containsKey("buoy_special_purpose:category") || keys.containsKey("beacon_special_purpose:category")) {
-			mark = new MarkSpec(this);
-		} else if (keys.containsKey("buoy_lateral:shape") || keys.containsKey("beacon_lateral:shape")) {
+			mark.setObject(Obj.BOYLAT);
+		} else if (keys.containsKey("beacon_lateral:category") || keys.containsKey("beacon_lateral:shape") || keys.containsKey("beacon_lateral:colour")) {
 			mark = new MarkLat(this);
-		} else if (keys.containsKey("buoy_cardinal:shape") || keys.containsKey("beacon_cardinal:shape")) {
+			mark.setObject(Obj.BCNLAT);
+		} else if (keys.containsKey("buoy_cardinal:category") || keys.containsKey("buoy_cardinal:shape") || keys.containsKey("buoy_cardinal:colour")) {
 			mark = new MarkCard(this);
-		} else if (keys.containsKey("buoy_isolated_danger:shape") || keys.containsKey("beacon_isolated_danger:shape")) {
-			mark = new MarkIsol(this);
-		} else if (keys.containsKey("buoy_safe_water:shape") || keys.containsKey("beacon_safe_water:shape")) {
-			mark = new MarkSaw(this);
-		} else if (keys.containsKey("buoy_special_purpose:shape") || keys.containsKey("beacon_special_purpose:shape")) {
-			mark = new MarkSpec(this);
-		} else if (keys.containsKey("buoy_lateral:colour") || keys.containsKey("beacon_lateral:colour")) {
-			mark = new MarkLat(this);
-		} else if (keys.containsKey("buoy_cardinal:colour") || keys.containsKey("beacon_cardinal:colour")) {
+			mark.setObject(Obj.BOYCAR);
+		} else if (keys.containsKey("beacon_cardinal:category") || keys.containsKey("beacon_cardinal:shape") || keys.containsKey("beacon_cardinal:colour")) {
 			mark = new MarkCard(this);
-		} else if (keys.containsKey("buoy_isolated_danger:colour") || keys.containsKey("beacon_isolated_danger:colour")) {
+			mark.setObject(Obj.BCNCAR);
+		} else if (keys.containsKey("buoy_isolated_danger:category") || keys.containsKey("buoy_isolated_danger:shape") || keys.containsKey("buoy_isolated_danger:colour")) {
 			mark = new MarkIsol(this);
-		} else if (keys.containsKey("buoy_safe_water:colour") || keys.containsKey("beacon_safe_water:colour")) {
+			mark.setObject(Obj.BOYISD);
+		} else if (keys.containsKey("beacon_isolated_danger:category") || keys.containsKey("beacon_isolated_danger:shape") || keys.containsKey("beacon_isolated_danger:colour")) {
+			mark = new MarkIsol(this);
+			mark.setObject(Obj.BCNISD);
+		} else if (keys.containsKey("buoy_safe_water:category") || keys.containsKey("buoy_safe_water:shape") || keys.containsKey("buoy_safe_water:colour")) {
 			mark = new MarkSaw(this);
-		} else if (keys.containsKey("buoy_special_purpose:colour") || keys.containsKey("beacon_special_purpose:colour")) {
+			mark.setObject(Obj.BOYSAW);
+		} else if (keys.containsKey("beacon_safe_water:category") || keys.containsKey("beacon_safe_water:shape") || keys.containsKey("beacon_safe_water:colour")) {
+			mark = new MarkSaw(this);
+			mark.setObject(Obj.BCNSAW);
+		} else if (keys.containsKey("buoy_special_purpose:category") || keys.containsKey("buoy_special_purpose:shape") || keys.containsKey("buoy_special_purpose:colour")) {
 			mark = new MarkSpec(this);
+			mark.setObject(Obj.BOYSPP);
+		} else if (keys.containsKey("beacon_special_purpose:category") || keys.containsKey("beacon_special_purpose:shape") || keys.containsKey("beacon_special_purpose:colour")) {
+			mark = new MarkSpec(this);
+			mark.setObject(Obj.BCNSPP);
 		}
 
 		if (mark == null) {

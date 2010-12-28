@@ -4,11 +4,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Col;
 
 public class MarkLat extends SeaMark {
 	public MarkLat(OSeaMAction dia) {
@@ -70,89 +66,151 @@ public class MarkLat extends SeaMark {
 				col = keys.get("seamark:light:colour");
 		}
 
-		/*
-		 * if (cat.isEmpty()) { if (col.equals("red")) { setColour(RED); if
-		 * (top.equals("cylinder")) { setBuoyIndex(PORT_HAND); setRegion(IALA_A); }
-		 * else if (top.equals("cone, point up")) { setBuoyIndex(STARBOARD_HAND);
-		 * setRegion(IALA_B); } else { if (getRegion() == IALA_A)
-		 * setBuoyIndex(PORT_HAND); else setBuoyIndex(STARBOARD_HAND); } } else if
-		 * (col.equals("green")) { setColour(GREEN); if
-		 * (top.equals("cone, point up")) { setBuoyIndex(STARBOARD_HAND);
-		 * setRegion(IALA_A); } else if (top.equals("cylinder")) {
-		 * setBuoyIndex(PORT_HAND); setRegion(IALA_B); } else { if (getRegion() ==
-		 * IALA_A) setBuoyIndex(STARBOARD_HAND); else setBuoyIndex(PORT_HAND); } }
-		 * else if (col.equals("red;green;red")) { setColour(RED_GREEN_RED); if
-		 * (top.equals("cylinder")) { setBuoyIndex(PREF_PORT_HAND);
-		 * setRegion(IALA_A); } else if (top.equals("cone, point up")) {
-		 * setBuoyIndex(PREF_STARBOARD_HAND); setRegion(IALA_B); } else { if
-		 * (getRegion() == IALA_A) setBuoyIndex(PREF_PORT_HAND); else
-		 * setBuoyIndex(PREF_STARBOARD_HAND); } } else if
-		 * (col.equals("green;red;green")) { setColour(GREEN_RED_GREEN); if
-		 * (top.equals("cone, point up")) { setBuoyIndex(PREF_STARBOARD_HAND);
-		 * setRegion(IALA_A); } else if (top.equals("cylinder")) {
-		 * setBuoyIndex(PREF_PORT_HAND); setRegion(IALA_B); } else { if (getRegion()
-		 * == IALA_A) setBuoyIndex(PREF_STARBOARD_HAND); else
-		 * setBuoyIndex(PREF_PORT_HAND); } } } else if (cat.equals("port")) {
-		 * 
-		 * setBuoyIndex(PORT_HAND);
-		 * 
-		 * if (col.equals("red")) { setRegion(IALA_A); setColour(RED); } else if
-		 * (col.equals("green")) { setRegion(IALA_B); setColour(GREEN); } else { if
-		 * (getRegion() == IALA_A) setColour(RED); else setColour(GREEN); } } else
-		 * if (cat.equals("starboard")) {
-		 * 
-		 * setBuoyIndex(STARBOARD_HAND);
-		 * 
-		 * if (col.equals("green")) { setRegion(IALA_A); setColour(GREEN); } else if
-		 * (col.equals("red")) { setRegion(IALA_B); setColour(RED); } else { if
-		 * (getRegion() == IALA_A) setColour(GREEN); else setColour(RED); } } else
-		 * if (cat.equals("preferred_channel_port")) {
-		 * 
-		 * setBuoyIndex(PREF_PORT_HAND);
-		 * 
-		 * if (col.equals("red;green;red")) { setRegion(IALA_A);
-		 * setColour(RED_GREEN_RED); } else if (col.equals("green;red;green")) {
-		 * setRegion(IALA_B); setColour(GREEN_RED_GREEN); } else { if (getRegion()
-		 * == IALA_A) setColour(RED_GREEN_RED); else setColour(GREEN_RED_GREEN); }
-		 * 
-		 * } else if (cat.equals("preferred_channel_starboard")) {
-		 * 
-		 * setBuoyIndex(PREF_STARBOARD_HAND);
-		 * 
-		 * if (col.equals("green;red;green")) { setRegion(IALA_A);
-		 * setColour(GREEN_RED_GREEN); } else if (col.equals("red;green;red")) {
-		 * setRegion(IALA_B); setColour(RED_GREEN_RED); } else { if (getRegion() ==
-		 * IALA_A) setColour(GREEN_RED_GREEN); else setColour(RED_GREEN_RED); } }
-		 * 
-		 * if (keys.containsKey("seamark:buoy_lateral:shape")) { str =
-		 * keys.get("seamark:buoy_lateral:shape");
-		 * 
-		 * switch (getBuoyIndex()) { case PORT_HAND: if (str.equals("can"))
-		 * setStyleIndex(CAN); else if (str.equals("pillar")) setStyleIndex(PILLAR);
-		 * else if (str.equals("spar")) setStyleIndex(SPAR); break;
-		 * 
-		 * case PREF_PORT_HAND: if (str.equals("can")) setStyleIndex(CAN); else if
-		 * (str.equals("pillar")) setStyleIndex(PILLAR); else if
-		 * (str.equals("spar")) setStyleIndex(SPAR); break;
-		 * 
-		 * case STARBOARD_HAND: if (str.equals("conical")) setStyleIndex(CONE); else
-		 * if (str.equals("pillar")) setStyleIndex(PILLAR); else if
-		 * (str.equals("spar")) setStyleIndex(SPAR); break;
-		 * 
-		 * case PREF_STARBOARD_HAND: if (str.equals("conical")) setStyleIndex(CONE);
-		 * else if (str.equals("pillar")) setStyleIndex(PILLAR); else if
-		 * (str.equals("spar")) setStyleIndex(SPAR); break; } } else if
-		 * (keys.containsKey("seamark:beacon_lateral:shape")) { str =
-		 * keys.get("seamark:beacon_lateral:shape"); if (str.equals("tower"))
-		 * setStyleIndex(TOWER); else if (str.equals("perch")) setStyleIndex(PERCH);
-		 * else setStyleIndex(BEACON); } else if (keys.containsKey("seamark:type")
-		 * && (keys.get("seamark:type").equals("beacon_lateral"))) {
-		 * setStyleIndex(BEACON); } else if (keys.containsKey("seamark:type") &&
-		 * (keys.get("seamark:type").equals("light_float"))) { setStyleIndex(FLOAT);
-		 * }
-		 * 
-		 * parseLights(keys); parseFogRadar(keys); setLightColour();
-		 */}
+		if (cat.isEmpty()) {
+			if (col.equals("red")) {
+				setColour(Ent.BODY, Col.RED);
+				if (top.equals("cylinder")) {
+					dlg.panelMain.panelChan.portButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+				} else if (top.equals("cone, point up")) {
+					dlg.panelMain.panelChan.stbdButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+				} else {
+					if (getRegion() == IALA_A)
+						dlg.panelMain.panelChan.portButton.doClick();
+					else
+						dlg.panelMain.panelChan.stbdButton.doClick();
+				}
+			} else if (col.equals("green")) {
+				setColour(Ent.BODY, Col.GREEN);
+				if (top.equals("cone, point up")) {
+					dlg.panelMain.panelChan.stbdButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+				} else if (top.equals("cylinder")) {
+					dlg.panelMain.panelChan.portButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+				} else {
+					if (getRegion() == IALA_A)
+						dlg.panelMain.panelChan.stbdButton.doClick();
+					else
+						dlg.panelMain.panelChan.portButton.doClick();
+				}
+			} else if (col.equals("red;green;red")) {
+				setColour(Ent.BODY, Col.RED_GREEN_RED);
+				if (top.equals("cylinder")) {
+					dlg.panelMain.panelChan.prefPortButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+				} else if (top.equals("cone, point up")) {
+					dlg.panelMain.panelChan.prefStbdButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+				} else {
+					if (getRegion() == IALA_A)
+						dlg.panelMain.panelChan.prefPortButton.doClick();
+					else
+						dlg.panelMain.panelChan.prefStbdButton.doClick();
+				}
+			} else if (col.equals("green;red;green")) {
+				setColour(Ent.BODY, Col.GREEN_RED_GREEN);
+				if (top.equals("cone, point up")) {
+					dlg.panelMain.panelChan.prefStbdButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+				} else if (top.equals("cylinder")) {
+					dlg.panelMain.panelChan.prefPortButton.doClick();
+					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+				} else {
+					if (getRegion() == IALA_A)
+						dlg.panelMain.panelChan.prefStbdButton.doClick();
+					else
+						dlg.panelMain.panelChan.prefPortButton.doClick();
+				}
+			}
+		} else if (cat.equals("port")) {
+
+			dlg.panelMain.panelChan.portButton.doClick();
+
+			if (col.equals("red")) {
+				dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+			} else if (col.equals("green")) {
+				dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+			}
+		} else if (cat.equals("starboard")) {
+
+			dlg.panelMain.panelChan.stbdButton.doClick();
+
+			if (col.equals("green")) {
+				dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+			} else if (col.equals("red")) {
+				dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+			}
+		} else if (cat.equals("preferred_channel_port")) {
+
+			dlg.panelMain.panelChan.prefPortButton.doClick();
+
+			if (col.equals("red;green;red")) {
+				dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+			} else if (col.equals("green;red;green")) {
+				dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+			}
+
+		} else if (cat.equals("preferred_channel_starboard")) {
+
+			dlg.panelMain.panelChan.prefStbdButton.doClick();
+
+			if (col.equals("green;red;green")) {
+				dlg.panelMain.panelChan.panelPort.regionAButton.doClick();
+			} else if (col.equals("red;green;red")) {
+				dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
+			}
+		}
+
+		if (keys.containsKey("seamark:buoy_lateral:shape"))
+			str = keys.get("seamark:buoy_lateral:shape");
+		else if (keys.containsKey("seamark:beacon_lateral:shape"))
+			str = keys.get("seamark:beacon_lateral:shape");
+		else str = "";
+
+		switch (getCategory()) {
+		case LAT_PORT:
+		case LAT_PREF_PORT:
+			if (str.equals("can"))
+				dlg.panelMain.panelChan.panelPort.canButton.doClick();
+			else if (str.equals("pillar"))
+				dlg.panelMain.panelChan.panelPort.pillarButton.doClick();
+			else if (str.equals("spar"))
+				dlg.panelMain.panelChan.panelPort.sparButton.doClick();
+			else if (str.equals("tower"))
+				setShape(Shp.TOWER);
+			else if (str.equals("perch"))
+				setShape(Shp.PERCH);
+			else if (keys.containsKey("seamark:type") && (keys.get("seamark:type").equals("light_float")))
+				dlg.panelMain.panelChan.panelPort.floatButton.doClick();
+			else
+				dlg.panelMain.panelChan.panelPort.beaconButton.doClick();
+			break;
+
+		case LAT_STBD:
+		case LAT_PREF_STBD:
+			if (str.equals("conical"))
+				dlg.panelMain.panelChan.panelStbd.coneButton.doClick();
+			else if (str.equals("pillar"))
+				dlg.panelMain.panelChan.panelStbd.pillarButton.doClick();
+			else if (str.equals("spar"))
+				dlg.panelMain.panelChan.panelStbd.sparButton.doClick();
+			else if (str.equals("tower"))
+				setShape(Shp.TOWER);
+			else if (str.equals("perch"))
+				setShape(Shp.PERCH);
+			else if (keys.containsKey("seamark:type") && (keys.get("seamark:type").equals("light_float")))
+				dlg.panelMain.panelChan.panelStbd.floatButton.doClick();
+			else
+				dlg.panelMain.panelChan.panelStbd.beaconButton.doClick();
+			break;
+		}
+
+		parseLights(keys);
+		parseFogRadar(keys);
+		setLightColour();
+	}
 
 	public void setLightColour() {
 		if (getRegion() == IALA_A) {

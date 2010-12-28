@@ -3,9 +3,6 @@ package oseam.seamarks;
 import java.util.Map;
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
@@ -88,15 +85,13 @@ public class MarkCard extends SeaMark {
 			}
 		} else if (keys.containsKey("seamark:type") && (keys.get("seamark:type").equals("light_float"))) {
 			dlg.panelMain.panelHaz.floatButton.doClick();
+		} else {
+			dlg.panelMain.panelHaz.beaconButton.doClick();
 		}
 
 		parseLights(keys);
 		parseFogRadar(keys);
 
-		// dlg.cbM01CatOfMark.setSelectedIndex(getMarkIndex());
-		// dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-		// dlg.tfM01Name.setText(getName());
-		// dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void setLightColour() {

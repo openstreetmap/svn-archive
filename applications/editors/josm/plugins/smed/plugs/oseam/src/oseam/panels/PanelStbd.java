@@ -39,8 +39,8 @@ public class PanelStbd extends JPanel {
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
 	public JRadioButton perchButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PerchSButton.png")));
-	private EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
-	private EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
+	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			Iterator<Shp> it = shapes.keySet().iterator();

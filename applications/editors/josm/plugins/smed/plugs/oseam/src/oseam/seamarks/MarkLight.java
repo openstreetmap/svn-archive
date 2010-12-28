@@ -4,9 +4,6 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
@@ -40,21 +37,24 @@ public class MarkLight extends SeaMark {
 		else if (keys.containsKey("seamark:light_float:name"))
 			setName(keys.get("seamark:light_float:name"));
 
-		/*
-		 * if (keys.containsKey("seamark:type")) { String type =
-		 * keys.get("seamark:type"); if (type.equals("landmark"))
-		 * setBuoyIndex(LIGHT_HOUSE); else if (type.equals("light_major"))
-		 * setBuoyIndex(LIGHT_MAJOR); else if (type.equals("light_minor"))
-		 * setBuoyIndex(LIGHT_MINOR); else if (type.equals("light_vessel"))
-		 * setBuoyIndex(LIGHT_VESSEL); }
-		 * 
-		 * parseLights(keys); parseFogRadar(keys); setTopMark(false);
-		 * setFired(true);
-		 * 
-		 * dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
-		 * dlg.tfM01Name.setText(getName()); dlg.cM01Fired.setEnabled(false);
-		 * dlg.cM01Fired.setSelected(true);
-		 */}
+		if (keys.containsKey("seamark:type")) {
+			String type = keys.get("seamark:type");
+			if (type.equals("landmark"))
+				setCategory(Cat.LIGHT_HOUSE);
+			else if (type.equals("light_major"))
+				setCategory(Cat.LIGHT_MAJOR);
+			else if (type.equals("light_minor"))
+				setCategory(Cat.LIGHT_MINOR);
+			else if (type.equals("light_vessel"))
+				setCategory(Cat.LIGHT_VESSEL);
+			else if (type.equals("light_float"))
+				setCategory(Cat.LIGHT_FLOAT);
+		}
+
+		parseLights(keys);
+		parseFogRadar(keys);
+		setFired(true);
+	}
 
 	public void paintSign() {
 		switch (getCategory()) {

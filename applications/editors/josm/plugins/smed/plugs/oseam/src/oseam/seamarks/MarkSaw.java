@@ -4,9 +4,6 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
@@ -39,46 +36,29 @@ public class MarkSaw extends SeaMark {
 		else if (keys.containsKey("seamark:light_float:name"))
 			setName(keys.get("seamark:light_float:name"));
 
-		/*
-		 * 
-		 * setBuoyIndex(SAFE_WATER); setColour(SeaMark.RED_WHITE);
-		 * setLightColour("W");
-		 * setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
-		 * 
-		 * if (keys.containsKey("seamark:buoy_safe_water:shape")) { str =
-		 * keys.get("seamark:buoy_safe_water:shape");
-		 * 
-		 * if (str.equals("pillar")) setStyleIndex(SAFE_PILLAR); else if
-		 * (str.equals("spar")) setStyleIndex(SAFE_SPAR); else if
-		 * (str.equals("sphere")) setStyleIndex(SAFE_SPHERE); } else if
-		 * ((keys.containsKey("seamark:type")) &&
-		 * (keys.get("seamark:type").equals("light_float"))) {
-		 * setStyleIndex(SAFE_FLOAT); } else if ((keys.containsKey("seamark:type"))
-		 * && (keys.get("seamark:type").equals("beacon_safe_water"))) {
-		 * setStyleIndex(SAFE_BEACON); }
-		 * 
-		 * if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
-		 * setStyleIndex(0);
-		 * 
-		 * if (keys.containsKey("seamark:topmark:shape") ||
-		 * keys.containsKey("seamark:topmark:colour")) { setTopMark(true); }
-		 * 
-		 * refreshLights(); parseLights(keys); parseFogRadar(keys);
-		 * 
-		 * dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-		 * dlg.tfM01Name.setText(getName());
-		 * dlg.cM01TopMark.setSelected(hasTopMark());
-		 */}
+		if (keys.containsKey("seamark:buoy_safe_water:shape")) {
+			str = keys.get("seamark:buoy_safe_water:shape");
 
-	/*
-	 * public void refreshLights() { dlg.cbM01Kennung.removeAllItems();
-	 * dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212"));
-	 * dlg.cbM01Kennung.addItem("Iso"); dlg.cbM01Kennung.addItem("Oc");
-	 * dlg.cbM01Kennung.addItem("LFl"); dlg.cbM01Kennung.addItem("Mo");
-	 * dlg.cbM01Kennung.setSelectedIndex(0); }
-	 * 
-	 * public void setLightColour() { super.setLightColour("W"); }
-	 */
+			if (str.equals("pillar"))
+				dlg.panelMain.panelChan.panelSaw.pillarButton.doClick();
+			else if (str.equals("spar"))
+				dlg.panelMain.panelChan.panelSaw.sparButton.doClick();
+			else if (str.equals("sphere"))
+				dlg.panelMain.panelChan.panelSaw.sphereButton.doClick();
+			else if (str.equals("barrel"))
+				dlg.panelMain.panelChan.panelSaw.barrelButton.doClick();
+		} else if ((keys.containsKey("seamark:type")) && (keys.get("seamark:type").equals("light_float"))) {
+			dlg.panelMain.panelChan.panelSaw.floatButton.doClick();
+		}
+
+		if (keys.containsKey("seamark:topmark:shape") || keys.containsKey("seamark:topmark:colour")) {
+//			setTopMark(true);
+		}
+
+		parseLights(keys);
+		parseFogRadar(keys);
+	}
+
 	public void paintSign() {
 
 		String image = "/images/Safe_Water";

@@ -109,11 +109,22 @@ sub deleteDBRelation {
 
 
 sub storeDBNode {
-	my ($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = @_ ;
+	my ($aRef0, $aRef1) = @_ ;
+	my %nodeProperties = %$aRef0 ;
 	my @nodeTags = @$aRef1 ;
 
-	$dbh->do("INSERT INTO nodes (id, lon, lat, user) VALUES ($nodeId, $nodeLon, $nodeLat, '$nodeUser')") ;
+	my $id = $nodeProperties{'id'} ;
+	my $lon = $nodeProperties{'lon'} ;
+	my $lat = $nodeProperties{'lat'} ;
+	my $user = $nodeProperties{'user'} ;
+	my $version = $nodeProperties{'version'} ;
+	my $timestamp = $nodeProperties{'timestamp'} ;
+	my $uid = $nodeProperties{'uid'} ;
+	my $changeset = $nodeProperties{'changeset'} ;
 
+	$dbh->do("INSERT INTO nodes (id, lon, lat, user, version, timestamp, uid, changeset) VALUES ($id, $lon, $lat, '$user', $version, '$timestamp', $uid, $changeset)") ;
+
+	my $nodeId = $nodeProperties{'id'} ;
 	foreach my $t (@nodeTags) {
 		my $k = $t->[0] ;
 		my $v = $t->[1] ;
@@ -124,12 +135,21 @@ sub storeDBNode {
 }
 
 sub storeDBWay {
-	my ($wayId, $wayUser, $aRef1, $aRef2) = @_ ;
+	my ($aRef0, $aRef1, $aRef2) = @_ ;
+	my %wayProperties = %$aRef0 ;
 	my @wayNodes = @$aRef1 ;
 	my @wayTags = @$aRef2 ;
 
-	$dbh->do("INSERT INTO ways (id, user) VALUES ($wayId, '$wayUser')") ;
+	my $id = $wayProperties{'id'} ;
+	my $user = $wayProperties{'user'} ;
+	my $version = $wayProperties{'version'} ;
+	my $timestamp = $wayProperties{'timestamp'} ;
+	my $uid = $wayProperties{'uid'} ;
+	my $changeset = $wayProperties{'changeset'} ;
 
+	$dbh->do("INSERT INTO ways (id, user, version, timestamp, uid, changeset) VALUES ($id, '$user', $version, '$timestamp', $uid, $changeset)") ;
+
+	my $wayId = $wayProperties{'id'} ;
 	foreach my $t (@wayTags) {
 		my $k = $t->[0] ;
 		my $v = $t->[1] ;
@@ -147,12 +167,20 @@ sub storeDBWay {
 
 
 sub storeDBRelation {
-	my ($relationId, $relationUser, $aRef1, $aRef2) = @_ ;
+	my ($aRef0, $aRef1, $aRef2) = @_ ;
+	my %relationProperties = %$aRef0 ;
 	my @relationMembers = @$aRef1 ;
 	my @relationTags = @$aRef2 ;
 
-	$dbh->do("INSERT INTO relations (id, user) VALUES ($relationId, '$relationUser')") ;
+	my $id = $relationProperties{'id'} ;
+	my $user = $relationProperties{'user'} ;
+	my $version = $relationProperties{'version'} ;
+	my $timestamp = $relationProperties{'timestamp'} ;
+	my $uid = $relationProperties{'uid'} ;
+	my $changeset = $relationProperties{'changeset'} ;
+	$dbh->do("INSERT INTO relations (id, user, version, timestamp, uid, changeset) VALUES ($id, '$user', $version, '$timestamp', $uid, $changeset)") ;
 
+	my $relationId = $relationProperties{'id'} ;
 	foreach my $t (@relationTags) {
 		my $k = $t->[0] ;
 		my $v = $t->[1] ;
@@ -336,6 +364,10 @@ sub getDBNode {
 	my $user = undef ;
 	my $lon = undef ;
 	my $lat = undef ;
+	my $version = "0" ;
+	my $timestamp = "" ;
+	my $uid = 0 ;
+	my $changeset = 0 ;
 	my @nodeTags = () ;
 	my $refTags = undef ;
 	my %properties = () ;
@@ -345,12 +377,20 @@ sub getDBNode {
 	my @data ;
  	$sth->execute() or die "Couldn't execute statement: " . $sth->errstr ;
 	while (@data = $sth->fetchrow_array()) {
-		$user = $data[3] ;
 		$lon = $data[1] ;
 		$lat = $data[2] ;
+		$user = $data[3] ;
+		$version = $data[4] ;
+		$timestamp = $data[5] ;
+		$uid = $data[6] ;
+		$changeset = $data[7] ;
 		$properties{"user"} = $user ;
 		$properties{"lon"} = $lon ;
 		$properties{"lat"} = $lat ;
+		$properties{"version"} = $version ;
+		$properties{"timestamp"} = $timestamp ;
+		$properties{"uid"} = $uid ;
+		$properties{"changeset"} = $changeset ;
 	}
 
 	if ($sth->rows == 0) {
@@ -379,6 +419,10 @@ sub getDBWay {
 	my $id = shift ;
 
 	my $user = undef ;
+	my $version = "0" ;
+	my $timestamp = "" ;
+	my $uid = 0 ;
+	my $changeset = 0 ;
 	my @wayTags = () ;
 	my @wayNodes = () ;
 	my %properties = () ;
@@ -390,7 +434,15 @@ sub getDBWay {
 	my @data ;
  	$sth->execute() or die "Couldn't execute statement: " . $sth->errstr ;
 	while (@data = $sth->fetchrow_array()) {		$user = $data[1] ;
+		$version = $data[2] ;
+		$timestamp = $data[3] ;
+		$uid = $data[4] ;
+		$changeset = $data[5] ;
 		$properties{"user"} = $user ;
+		$properties{"version"} = $version ;
+		$properties{"timestamp"} = $timestamp ;
+		$properties{"uid"} = $uid ;
+		$properties{"changeset"} = $changeset ;
 	}
 
 	if ($sth->rows == 0) {
@@ -427,6 +479,10 @@ sub getDBRelation {
 	my $id = shift ;
 
 	my $user = undef ;
+	my $version = "0" ;
+	my $timestamp = "" ;
+	my $uid = 0 ;
+	my $changeset = 0 ;
 	my @relationTags = () ;
 	my @relationMembers = () ;
 	my %properties = ()  ;
@@ -438,7 +494,15 @@ sub getDBRelation {
 	my @data ;
  	$sth->execute() or die "Couldn't execute statement: " . $sth->errstr ;
 	while (@data = $sth->fetchrow_array()) {		$user = $data[1] ;
+		$version = $data[2] ;
+		$timestamp = $data[3] ;
+		$uid = $data[4] ;
+		$changeset = $data[5] ;
 		$properties{"user"} = $user ;
+		$properties{"version"} = $version ;
+		$properties{"timestamp"} = $timestamp ;
+		$properties{"uid"} = $uid ;
+		$properties{"changeset"} = $changeset ;
 	}
 
 	if ($sth->rows == 0) {
@@ -496,7 +560,7 @@ sub dbDisconnect {
 
 sub initTableNodes {
 	$dbh->do("DROP TABLE nodes") ;	
-	$dbh->do("create table nodes (id BIGINT, lon DOUBLE, lat DOUBLE, user VARCHAR(50) )") ;	
+	$dbh->do("create table nodes ( id BIGINT, lon DOUBLE, lat DOUBLE, user VARCHAR(50), version INTEGER, timestamp VARCHAR(20), uid INTEGER, changeset INTEGER )") ;	
 	$dbh->do("CREATE UNIQUE INDEX i_nodeids ON nodes (id)") ;	
 
 	$dbh->do("DROP TABLE nodetags") ;	
@@ -508,7 +572,7 @@ sub initTableNodes {
 
 sub initTableWays {
 	$dbh->do("DROP TABLE ways") ;	
-	$dbh->do("create table ways (id BIGINT, user VARCHAR(50))") ;	
+	$dbh->do("create table ways (id BIGINT, user VARCHAR(50), version INTEGER, timestamp VARCHAR(20), uid INTEGER, changeset INTEGER)") ;	
 	$dbh->do("CREATE UNIQUE INDEX i_wayids ON ways (id)") ;	
 
 	$dbh->do("DROP TABLE waytags") ;	
@@ -524,7 +588,7 @@ sub initTableWays {
 
 sub initTableRelations {
 	$dbh->do("DROP TABLE relations") ;	
-	$dbh->do("create table relations (id BIGINT, user VARCHAR(50))") ;	
+	$dbh->do("create table relations (id BIGINT, user VARCHAR(50), version INTEGER, timestamp VARCHAR(20), uid INTEGER, changeset INTEGER)") ;	
 	$dbh->do("CREATE UNIQUE INDEX i_relationids ON relations (id)") ;	
 
 	$dbh->do("DROP TABLE relationtags") ;	
@@ -576,6 +640,8 @@ sub bulkLoad {
 	my $relationUser ;
 	my @relationTags ;
 	my @relationMembers ;
+	my %nodeProperties ;
+	my %wayProperties ;
 	my %relationProperties ;
 	my $aRef0 ;
 	my $aRef1 ;
@@ -589,22 +655,20 @@ sub bulkLoad {
 	open (my $nodesFile, ">", $tempDir . "/nodes.txt") ;
 	open (my $nodetagsFile, ">", $tempDir . "/nodetags.txt") ;
 
-	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
-	if ($nodeId != -1) {
+	($aRef0, $aRef1) = getNode3 () ;
+	if (defined $aRef0) {
 		@nodeTags = @$aRef1 ;
+		%nodeProperties = %$aRef0 ;
 	}
 
-	while ($nodeId != -1) {
+	while (defined $aRef0) {
 		$nodeCount++ ;
 
-		if ( ! defined $nodeUser) {
-			$nodeUser = "unknown" ;
-		}
-		else {
-			if ($nodeUser eq "") { $nodeUser = "unknown" ; }
-		}
-		print $nodesFile "$nodeId\t$nodeLon\t$nodeLat\t$nodeUser\n" ;
+		print $nodesFile "$nodeProperties{'id'}\t$nodeProperties{'lon'}\t$nodeProperties{'lat'}\t" ;
+		print $nodesFile "$nodeProperties{'user'}\t$nodeProperties{'version'}\t$nodeProperties{'timestamp'}\t" ;
+		print $nodesFile "$nodeProperties{'uid'}\t$nodeProperties{'changeset'}\n" ;
 
+		my $nodeId = $nodeProperties{'id'} ;
 		foreach my $t (@nodeTags) {
 			my $k = $t->[0] ;
 			my $v = $t->[1] ;
@@ -612,9 +676,10 @@ sub bulkLoad {
 		}
 
 		# next
-		($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
-		if ($nodeId != -1) {
+		($aRef0, $aRef1) = getNode3 () ;
+		if (defined $aRef0) {
 			@nodeTags = @$aRef1 ;
+			%nodeProperties = %$aRef0 ;
 		}
 	}
 
@@ -643,22 +708,20 @@ sub bulkLoad {
 	open (my $waytagsFile, ">", $tempDir . "/waytags.txt") ;
 	open (my $waynodesFile, ">", $tempDir . "/waynodes.txt") ;
 
-	($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
-	if ($wayId != -1) {
+	($aRef0, $aRef1, $aRef2) = getWay3 () ;
+	if (defined $aRef0) {
+		%wayProperties = %$aRef0 ;
 		@wayNodes = @$aRef1 ;
 		@wayTags = @$aRef2 ;
 	}
-	while ($wayId != -1) {	
+	while (defined $aRef0) {	
 		$wayCount++ ;
 
-		if ( ! defined $wayUser) {
-			$wayUser = "unknown" ;
-		}
-		else {
-			if ($wayUser eq "") { $wayUser = "unknown" ; }
-		}
-		print $waysFile "$wayId\t$wayUser\n" ;
+		print $waysFile "$wayProperties{'id'}\t" ;
+		print $waysFile "$wayProperties{'user'}\t$wayProperties{'version'}\t$wayProperties{'timestamp'}\t" ;
+		print $waysFile "$wayProperties{'uid'}\t$wayProperties{'changeset'}\n" ;
 
+		my $wayId = $wayProperties{'id'} ;
 		foreach my $t (@wayTags) {
 			my $k = $t->[0] ;
 			my $v = $t->[1] ;
@@ -673,8 +736,9 @@ sub bulkLoad {
 
 
 		# next way
-		($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
-		if ($wayId != -1) {
+		($aRef0, $aRef1, $aRef2) = getWay3 () ;
+		if (defined $aRef0) {
+			%wayProperties = %$aRef0 ;
 			@wayNodes = @$aRef1 ;
 			@wayTags = @$aRef2 ;
 		}
@@ -709,23 +773,21 @@ sub bulkLoad {
 	open (my $relationtagsFile, ">", $tempDir . "/relationtags.txt") ;
 	open (my $relationmembersFile, ">", $tempDir . "/relationmembers.txt") ;
 
-	($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
-	if ($relationId != -1) {
+	($aRef0, $aRef1, $aRef2) = getRelation3 () ;
+	if (defined $aRef0) {
+		%relationProperties = %$aRef0 ;
 		@relationMembers = @$aRef1 ;
 		@relationTags = @$aRef2 ;
 	}
 
-	while ($relationId != -1) {
+	while (defined $aRef0) {
 		$relationCount++ ;
 	
-		if ( ! defined $relationUser) {
-			$relationUser = "unknown" ;
-		}
-		else {
-			if ($relationUser eq "") { $relationUser = "unknown" ; }
-		}
-		print $relationsFile "$relationId\t$relationUser\n" ;
+		print $relationsFile "$relationProperties{'id'}\t" ;
+		print $relationsFile "$relationProperties{'user'}\t$relationProperties{'version'}\t$relationProperties{'timestamp'}\t" ;
+		print $relationsFile "$relationProperties{'uid'}\t$relationProperties{'changeset'}\n" ;
 
+		my $relationId = $relationProperties{'id'} ;
 		foreach my $t (@relationTags) {
 			my $k = $t->[0] ;
 			my $v = $t->[1] ;
@@ -742,8 +804,9 @@ sub bulkLoad {
 		}
 
 		#next
-		($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
-		if ($relationId != -1) {
+		($aRef0, $aRef1, $aRef2) = getRelation3 () ;
+		if (defined $aRef0) {
+			%relationProperties = %$aRef0 ;
 			@relationMembers = @$aRef1 ;
 			@relationTags = @$aRef2 ;
 		}

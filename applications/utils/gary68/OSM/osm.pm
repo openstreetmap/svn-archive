@@ -2,17 +2,13 @@
 # 
 # PERL osm module by gary68
 #
-##########################
-# DON'T EDIT UNDER WINDOWS
-##########################
-#
 # !!! store as osm.pm in folder OSM in lib directory !!!
 #
 # This module contains a lot of useful functions for working with osm files and data. it also
 # includes functions for calculation and output.
 #
 #
-# Copyright (C) 2008, Gerhard Schwanz
+# Copyright (C) 2008, 2009, 2010 Gerhard Schwanz
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
 # Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -94,6 +90,10 @@
 # - get...Xml functions added
 #
 #
+# Version 8.0
+# - read xml subs implemented for different getXXX
+#
+#
 # USAGE
 #
 # analyzerLink ($id) 					> $htmlString, link to relation analyzer
@@ -105,12 +105,13 @@
 # crossing (g1x1,g1y1,g1x2,g1y2,g2x1,g2y1,g2x2,g2y2) 	> ($sx, $sy) 
 # distance (x1,y1,x2,y2) 				> $distance in km
 # getBugs ($lon, $lat, $bugsDownDist, $bugsMaxDist)	> pos, down dist in deg, max dist in km -> html text
-# getNode ()						> ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
 # getNode2 ()						> ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
+# getNode3 ()						> (\%nodeProperties \@nodeTags) ; # in main @array = @$ref // returns k/v as array, not string!
 # getNodeXml ()                  > ($gId, $xml) ;
 # getRelation 
-# getWay ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref
+# getRelation3					> (\%properties, \@members, \@tags) 
 # getWay2 ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
+# getWay3 ()						> (\%properties, \@Nodes, \@Tags) ; 
 # getWayXml ()                  > ($gId, $xml) ;
 # getRelationXml ()                  > ($gId, $xml) ;
 # hashValue ($lon, $lat)				> $hashValue 0.1 deg
@@ -179,7 +180,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '7.1' ; 
+$VERSION = '8.0' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -187,7 +188,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getNodeXml getWay getWay2 getWayXml getRelation getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode2 getNode3 getNodeXml getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -335,38 +336,55 @@ sub skipNodes {
 }
 
 
-
-sub getNode {
-	my $gId ;
-	my $gLon ;
-	my $gLat ;
-	my $gU ;
-	my @gTags = () ;
+sub getNode2 {
+	my $gId ; my $gLon ; my $gLat ; my $gU ; 
+	my ($ref0, $ref1) ;
 	if($line =~ /^\s*\<node/) {
+		($ref0, $ref1) = readNode () ;
+		my %properties = %$ref0 ;
+		$gId = $properties{"id"} ;
+		$gLon = $properties{"lon"} ;
+		$gLat = $properties{"lat"} ;
+		$gU = $properties{"user"} ;
+	} # node
+	else {
+		return (-1, -1, -1, -1, -1) ; 
+	} # node
+	return ($gId, $gLon, $gLat, $gU, $ref1) ;
+} # getNode2
 
-		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
-		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
-		my ($lon) = ($line =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
-		my ($lat) = ($line =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
 
-		if (!defined $u) { $u = "undefined" ; } 
+sub getNode3 {
+	my $ref0 ; my $ref1 ;
+	if($line =~ /^\s*\<node/) {
+		($ref0, $ref1) = readNode () ;
+	} 
+	else {
+		return (undef, undef) ; 
+	} 
+	return ($ref0, $ref1) ;
+} # getNode3
 
-		if (! defined $id ) {
-			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
-		}
 
-		unless ($id) { next; }
-		if  (! (defined ($lat))) { next; }
-		if  (! (defined ($lon))) { next; }
+sub readNode {
+	my $id ; 
+	my $propRef = () ;	
+	my @nodeTags = () ;
+
+	($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+
+	if (! defined $id ) {
+		print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
+	}
+	else {
+		$propRef = getProperties ($line, "node", $id) ;
 		if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
 			nextLine() ;
 			while (!grep(/<\/node>/, $line)) {
-
 				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
 				if ( (defined ($k)) and (defined ($v)) ) {
-					my $tag = $k . ":" . $v ;
-					push @gTags, $tag ;
+					my $tag = [$k, $v] ;
+					push @nodeTags, $tag ;
 				}
 				else {
 					#print "WARNING tag not recognized: ", $line, "\n" ;
@@ -378,73 +396,41 @@ sub getNode {
 		else {
 			nextLine() ;
 		}
-		$gId = $id ;
-		$gLon = $lon ;
-		$gLat = $lat ;
-		$gU = $u ;
-	} # node
-	else {
-		return (-1, -1, -1, -1, -1) ; 
-	} # node
-	#print "$gId $gLon $gLat $gU\n" ; 
-	return ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
-} # getNode
+	}
+	return ($propRef, \@nodeTags) ;
+}
 
-sub getNode2 {
-	my $gId ;
-	my $gLon ;
-	my $gLat ;
-	my $gU ;
-	my @gTags = () ;
-	if($line =~ /^\s*\<node/) {
+sub getProperties {
+	my ($line, $type, $id) = @_ ;
+	my $version ; my $timestamp ; my $uid ; my $lon ; my $lat ; my $u ; my $cs ; 
+	my %properties = () ;
+	($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+	($version) = ($line =~ / version=[\'\"](.+?)[\'\"]/ ) ;
+	($timestamp) = ($line =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
+	($uid) = ($line =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
+	($cs) = ($line =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
 
-		my $version ; my $timestamp ; my $uid ; my $id ; my $lon ; my $lat ; my $u ; my $cs ;
-
-		($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
-		($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+	if ( ! defined $u) { $u = "undefined" ; } 
+	if ( ! defined $version) { $version = "0" ; } 
+	if ( ! defined $uid) { $uid = 0 ; } 
+	if ( ! defined $timestamp) { $timestamp = "" ; } 
+	if ( ! defined $cs) { $cs = "" ; } 
+	$properties{"id"} = $id ;
+	$properties{"user"} = $u ;
+	$properties{"uid"} = $uid ;
+	$properties{"version"} = $version ;
+	$properties{"timestamp"} = $timestamp ;
+	$properties{"changeset"} = $cs ;
+	if ($type eq "node") {
 		($lon) = ($line =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
 		($lat) = ($line =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
-
-		if (!defined $u) { $u = "undefined" ; } 
-
-		if (! defined $id ) {
-			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
-		}
-		else {
-			if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
-				nextLine() ;
-				while (!grep(/<\/node>/, $line)) {
-	
-					my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-	
-					if ( (defined ($k)) and (defined ($v)) ) {
-						my $tag = [$k, $v] ;
-						push @gTags, $tag ;
-					}
-					else {
-						#print "WARNING tag not recognized: ", $line, "\n" ;
-					}
-					nextLine() ;
-				}
-				nextLine() ;
-			}
-			else {
-				nextLine() ;
-			}
-
-		}
-
-		$gId = $id ;
-		$gLon = $lon ;
-		$gLat = $lat ;
-		$gU = $u ;
-	} # node
-	else {
-		return (-1, -1, -1, -1, -1) ; 
-	} # node
-	#print "$gId $gLon $gLat $gU\n" ; 
-	return ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
-} # getNode2
+		if ( ! defined $lon) { $lon = 0 ; } 
+		if ( ! defined $lat) { $lat = 0 ; } 
+		$properties{"lon"} = $lon ;
+		$properties{"lat"} = $lat ;
+	}
+	return ( \%properties ) ;
+}
 
 sub getNodeXml {
    my $gId ;
@@ -502,73 +488,50 @@ sub skipWays {
 }
 
 
-sub getWay {
-	my $gId ;
-	my $gU ;
-	my @gTags ;
-	my @gNodes ;
-	if($line =~ /^\s*\<way/) {
-		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
-		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
-
-		if (!defined $u) { $u = "undefined" ; } 
-
-		if (! defined $id ) { print "ERROR: $line\n" ; }
-
-		nextLine() ;
-		while (not($line =~ /\/way>/)) { # more way data
-			#get nodes and type
-			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
-
-			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
-			if (!(($node) or ($k and defined($v) ))) {
-				#print "WARNING tag not recognized", $line, "\n" ; 
-			}
-		
-			if ($node) {
-				push @gNodes, $node ;
-			}
-
-			#get tags 
-			if ($k and defined($v)) {
-				my $tag = $k . ":" . $v ;
-				push @gTags, $tag ;
-			}
-			nextLine() ;
-		}
-		nextLine() ;
-		$gId = $id ;
-		$gU = $u ;
-	}
-	else {
-		return (-1, -1, -1, -1) ;
-	}
-	return ($gId, $gU, \@gNodes, \@gTags) ;
-} # way
-
 sub getWay2 {
 	my $gId ;
 	my $gU ;
 	my @gTags ;
 	my @gNodes ;
+	my ($ref0, $ref1, $ref2) ;
 	if($line =~ /^\s*\<way/) {
+		($ref0, $ref1, $ref2) = readWay () ;
+		my %properties = %$ref0 ;
+		$gId = $properties{"id"} ;
+		$gU = $properties{"user"} ;
+	}
+	else {
+		return (-1, -1, -1, -1) ;
+	}
+	return ($gId, $gU, $ref1, $ref2) ;
+} # getWay2
 
-		my $version ; my $timestamp ; my $uid ; my $id ; my $u ; my $changeset ;
+sub getWay3 {
+	my $ref0 ; my $ref1 ; my $ref3 ;
+	if($line =~ /^\s*\<way/) {
+		($ref0, $ref1, $ref3) = readWay () ;
+	} 
+	else {
+		return (undef, undef, undef) ; 
+	} 
+	return ($ref0, $ref1, $ref3) ;
+}
 
-		($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
-		($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
-
-		if (!defined $u) { $u = "undefined" ; } 
-
-		if (! defined $id ) { print "ERROR: $line\n" ; }
-
+sub readWay {
+	my @gNodes ; my @gTags ;
+	my $propRef ;
+	
+	my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+	if (! defined $id ) {
+		print "WARNING reading osm file, line follows :\n", $line, "\n" ; 
+	}
+	else {
+		$propRef = getProperties ($line, "way", $id) ;
 
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data
 			#get nodes and type
 			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
-
 			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
 
 			if (!(($node) or ($k and defined($v) ))) {
@@ -587,14 +550,9 @@ sub getWay2 {
 			nextLine() ;
 		}
 		nextLine() ;
-		$gId = $id ;
-		$gU = $u ;
 	}
-	else {
-		return (-1, -1, -1, -1) ;
-	}
-	return ($gId, $gU, \@gNodes, \@gTags) ;
-} # getWay2
+	return ($propRef, \@gNodes, \@gTags) ;
+}
 
 sub getWayXml {
    my $gId ;
@@ -629,42 +587,59 @@ sub getWayXml {
 sub getRelation {
 	my $gId ;
 	my $gU ;
-	my @gMembers = () ;
-	my @gTags = () ;
+	my ($ref1, $ref2) ;
+	my $propRef ;
 
 	if ($line =~ /^\s*\<relation/) {
 
-		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
-		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($propRef, $ref1, $ref2) = readRelation () ;
+		my %properties = %$propRef ;
 
-		if (!defined $u) { $u = "undefined" ; } 
+		$gId = $properties{"id"} ;
+		$gU = $properties{"user"} ;
+	}
+	else {
+		return (-1, -1, -1, -1) ;
+	}
+	return ($gId, $gU, $ref1, $ref2) ;
+}
 
-		if (! defined $id ) { print "ERROR: $line\n" ; }
+sub getRelation3 {
+	my $ref0 ; my $ref1 ; my $ref2 ;
+	if($line =~ /^\s*\<relation/) {
+		($ref0, $ref1, $ref2) = readRelation () ;
+	} 
+	else {
+		return (undef, undef, undef) ; 
+	} 
+	return ($ref0, $ref1, $ref2) ;
+}
 
-		unless ($id) { next ; }
+sub readRelation {
+	my $propRef ; my @gTags ; my @gMembers ;
+
+	my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+
+	if (! defined $id ) { 
+		print "ERROR: $line\n" ; 
+	}
+	else {		
+
+		$propRef = getProperties ($line, "relation", $id) ;
 
 		nextLine() ;
 		while (not($line =~ /\/relation>/)) { # more data
 			if ($line =~ /<member/) {
-				#print "PM line: $line\n" ;
 				my ($memberType)   = ($line =~ /^\s*\<member type=[\'\"]([\w]*)[\'\"]/); 
 				my ($memberRef) = ($line =~ /^.+ref=[\'\"](\d*)[\'\"]/);       
 				my ($memberRole) = ($line =~ /^.+role=[\'\"](.*)[\'\"]/);
 				if (!$memberRole) { $memberRole = "none" ; }
 				my @member = [$memberType, $memberRef, $memberRole] ;
-				#print "PM: $memberType # $memberRef # $memberRole\n" ;
 				push @gMembers, @member ;
 			}
 			if ($line =~ /<tag/) {
-
-				#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"]([-\w\d\s\.\,\:]+)[\'\"]/); # get key
-				#my ($v) = ($line =~ /v=[\'\"]([-\w\d\s\.\,\;\:äöüÄÖÜß\/\(\)\+\&]+)[\'\"]/) ;
-				#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]/); # get key
-				#my ($v) = ($line =~ /v=[\'\"](.+)[\'\"]/) ;
 				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
 				if (!(($k and defined($v) ))) {
-					#print "WARNING tag not recognized", $line, "\n" ; 
 					$k = "unknown" ; $v = "unknown" ;
 				}
 				my $tag = [$k, $v] ;
@@ -673,15 +648,10 @@ sub getRelation {
 			nextLine() ;
 		}
 		nextLine() ;
-
-		$gId = $id ;
-		$gU = $u ;
 	}
-	else {
-		return (-1, -1, -1, -1) ;
-	}
-	return ($gId, $gU, \@gMembers, \@gTags) ;
+	return ($propRef, \@gMembers, \@gTags) ;
 }
+
 
 sub getRelationXml {
    my $gId ;

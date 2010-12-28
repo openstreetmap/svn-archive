@@ -502,6 +502,8 @@ sub initTableNodes {
 	$dbh->do("DROP TABLE nodetags") ;	
 	$dbh->do("create table nodetags (id BIGINT, k VARCHAR(50), v VARCHAR(256))") ;	
 	$dbh->do("CREATE INDEX i_nodeids2 ON nodetags (id)") ;	
+	$dbh->do("CREATE INDEX i_nodekeys ON nodetags (k(12))") ;	
+	$dbh->do("CREATE INDEX i_nodevalues ON nodetags (v(12))") ;	
 }
 
 sub initTableWays {
@@ -512,6 +514,8 @@ sub initTableWays {
 	$dbh->do("DROP TABLE waytags") ;	
 	$dbh->do("create table waytags (id BIGINT, k VARCHAR(50), v VARCHAR(256))") ;	
 	$dbh->do("CREATE INDEX i_wayids2 ON waytags (id)") ;	
+	$dbh->do("CREATE INDEX i_waykeys ON waytags (k(12))") ;	
+	$dbh->do("CREATE INDEX i_wayvalues ON waytags (v(12))") ;	
 
 	$dbh->do("DROP TABLE waynodes") ;	
 	$dbh->do("create table waynodes (id BIGINT, s INT, nodeid BIGINT)") ;	
@@ -526,6 +530,8 @@ sub initTableRelations {
 	$dbh->do("DROP TABLE relationtags") ;	
 	$dbh->do("create table relationtags (id BIGINT, k VARCHAR(50), v VARCHAR(256))") ;	
 	$dbh->do("CREATE INDEX i_relationids2 ON relationtags (id)") ;	
+	$dbh->do("CREATE INDEX i_relationkeys ON relationtags (k(12))") ;	
+	$dbh->do("CREATE INDEX i_relationvalues ON relationtags (v(12))") ;	
 
 	$dbh->do("DROP TABLE relationmembers") ;	
 	$dbh->do("create table relationmembers (id BIGINT, s INT, type VARCHAR(20), memberid BIGINT, role VARCHAR(20))") ;	

@@ -51,6 +51,22 @@ function get_high_level ($tags)
     return "unknown"; 
 }
 
+function get_path_type($pathinfo)
+{
+	$destypes = array
+		("public_footpath" => "public footpath",
+		"footpath" => "public footpath",
+		"public_bridleway" => "public bridleway",
+		"bridleway" => "public bridleway",
+		"public_byway" => "byway",
+		"byway" => "byway",
+		"restricted_byway" => "restricted byway");
+
+	return (isset($destypes[$pathinfo['designation']]))?
+		$destypes[$pathinfo['designation']]:
+		($pathinfo['foot']==='permissive' ? "permissive path" : 
+		$pathinfo['highway']);
+}
 
 function get_photo($id,$width,$height)
 {
@@ -78,128 +94,6 @@ function get_photo($id,$width,$height)
         }
     }
     return true;
-}
-
-function get_annotated_way($id,$do_annotations=true)
-{
-    $way=null;
-    $q=
-            ("SELECT osm_id, name,".
-            "AsText(way),foot,horse,highway,designation,fmap_bearing FROM ".
-            "planet_osm_line WHERE osm_id=$id");
-    $result=pg_query($q);
-    $row=pg_fetch_array($result,null,PGSQL_ASSOC);
-    if(!$row)
-        return null;
-    return do_get_annotated_way($row,$do_annotations);
-}
-
-function do_get_annotated_way($row,$do_annotations=true,$start=0,$end=1)
-{
-		$lower=($start<$end) ? $start:$end;
-		$higher=($lower==$start) ? $end:$start;
-
-        $way=array();
-        $way["annotations"] = array();
-        $tags = array("osm_id",
-                     "name","highway","foot","horse","fmap_bearing",
-                     "designation");
-        foreach($tags as $tag)
-        {
-            if($row[$tag]!='')
-                $way[$tag] = $row[$tag];
-        }
-		if($lower>0 || $higher<1)
-		{
-			$result = pg_query
-			("SELECT AsText(line_substring(way,$lower,$higher)) ".
-			"FROM planet_osm_line WHERE osm_id=$way[osm_id]");
-			$row2 = pg_fetch_array($result,null,PGSQL_ASSOC);
-        	$way['points'] = array();
-        	preg_match("/LINESTRING\((.+)\)/",$row2['astext'],$m);
-			$way['points']=explode(",", $m[1]);
-		}
-		else
-		{
-        	preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
-        	$way['points'] = explode(",", $m[1]);
-		}
-        if($do_annotations==true)
-        {
-            $way['annwayid']=find_annotated_way($way);
-            if($way['annwayid']>0)
-            {
-                $result2=pg_query
-                ("SELECT ann.wayid,AsText(ann.xy),ann.text ".
-				"FROM planet_osm_line pol,annotations ann ".
-				"WHERE ann.wayid=$way[annwayid] AND pol.osm_id=$way[osm_id] ".
-				"AND line_locate_point(pol.way,ann.xy) BETWEEN ".
-				"$lower AND $higher ".
-                "ORDER BY line_locate_point(pol.way,ann.xy)");
-                while($row2=pg_fetch_array($result2,NULL,PGSQL_ASSOC))
-				{
-        			$a = preg_match ("/POINT\((.+)\)/",$row2['astext'],$m);
-        			list($row2['x'],$row2['y'])= explode(" ",$m[1]);
-                    $way["annotations"][] = $row2;
-				}
-            }
-        }
-
-    return $way;
-}
-
-function find_annotated_way($way)
-{
-    list($x1,$y1) = explode(" ", $way['points'][0]);
-    list($x2,$y2) = explode(" ", $way['points'][count($way['points'])-1]);
-    $wx = ($x1<$x2) ? $x1:$x2;
-    $wy = ($x1<$x2) ? $y1:$y2;
-    $ex = ($x1<$x2) ? $x2:$x1;
-    $ey = ($x1<$x2) ? $y2:$y1;
-   	$q =  
-        ("SELECT * FROM annotatedways WHERE wx BETWEEN $wx-10 AND $wx+10 AND ".
-         "wy BETWEEN $wy-10 AND $wy+10 AND ex BETWEEN $ex-10 AND $ex+10 AND ". 
-         "ey BETWEEN $ey-10 AND $ey+10 AND ".
-		 "bearing BETWEEN $way[fmap_bearing]-10 AND $way[fmap_bearing]+10 ".
-         "LIMIT 1");
-	$result3=pg_query($q);
-    return ($row3=pg_fetch_array($result3,NULL,PGSQL_ASSOC)) ?
-        $row3['id'] : 0;
-}
-
-function annotated_way_to_xml($way,$reverse=false)
-{
-    echo "<way>\n";
-    echo "<osm_id>$way[osm_id]</osm_id>\n";
-    $tags = array("name","highway","foot","horse","designation","annwayid");
-    foreach($tags as $tag)
-    {
-        if($way[$tag]!==null)
-            echo "<$tag>$way[$tag]</$tag>\n";
-    }
-	$start=($reverse===true) ? count($way['points'])-1  :0;
-	$end = ($reverse===true) ? -1: count($way['points']);
-	$step = ($reverse===true) ?  -1:1;
-
-	for($i=$start; $i!=$end; $i+=$step)
-        echo "<point>{$way[points][$i]}</point>\n";
-
-    way_annotations_to_xml($way['annotations'],$reverse);
-    echo "</way>\n";
-}
-
-function way_annotations_to_xml($annotations,$reverse=false)
-{
-	$start=($reverse===true) ? count($annotations)-1  :0;
-	$end = ($reverse===true) ? -1: count($annotations);
-	$step = ($reverse===true) ?  -1:1;
-	for($i=$start; $i!=$end; $i+=$step)
-    {
-        echo "<annotation id='{$annotations[$i][annotationid]}' ".
-        "seg='{$annotations[$i][seg]}' wayid='{$annotations[$i][wayid]}' ".
-		"x='{$annotations[$i][x]}'".
-        " y='{$annotations[$i][y]}'>{$annotations[$i][text]}</annotation>\n";
-    }
 }
 
 function get_ways_by_point($x,$y,$dist=100,$n=0,$snap=false)
@@ -253,48 +147,6 @@ function node_to_xml($row)
     }
 }
 
-function get_annotation_id($way,$x,$y)
-{
-	// get position along the way of point x,y
-	$q=("SELECT  line_locate_point(way,PointFromText('POINT($x $y)',900913)) ".
-			"AS posn FROM planet_osm_line WHERE osm_id=$way[osm_id]");
-
-	$result=pg_query($q);
-	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
-	if($row)
-	{
-
-		// find annotations along this way
-		$result2=pg_query
-			("SELECT ann.annotationid,".
-			"line_locate_point(pol.way,ann.xy) AS posn ".
-			"FROM planet_osm_line pol, annotations ann ".
-			"WHERE pol.osm_id=$way[osm_id] AND ann.wayid=$way[annwayid] ".
-			"ORDER BY line_locate_point(pol.way,ann.xy)");
-		while($row2=pg_fetch_array($result2,null,PGSQL_ASSOC))
-		{
-			if($row2['posn'] > $row['posn'])
-			{
-				return $row2['annotationid'];
-			}
-		}
-		return  pg_numrows($result2) + 1;
-	}
-	return 0;
-}
-
-function get_route($id)
-{
-	$result=pg_query("SELECT AsText(route) FROM routes WHERE id=$id");
-	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
-	if($row)
-	{
-		$m=array();
-        preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
-		return $m[1];
-	}
-	return null; 
-}
 
 function get_route_annotations($id)
 {
@@ -315,6 +167,75 @@ function get_route_annotations($id)
 	return $annotations;
 }
 
+function get_bearing($dx,$dy)
+{
+    $ang=(-rad2deg(atan2($dy,$dx))) + 90;
+    return ($ang<0 ? $ang+360:$ang);
+}
+
+function compass_direction($a)
+{
+    if($a<22.5 || $a>=337.5)
+        return "N";
+    else if($a<67.5)
+        return "NE";
+    else if($a<112.5)
+        return "E";
+    else if($a<157.5)
+        return "SE";
+    else if($a<202.5)
+        return "S";
+    else if($a<247.5)
+        return "SW";
+    else if($a<292.5)
+        return "W";
+    else
+        return "NW";
+}
+
+function opposite_direction($dir)
+{
+    $dirs=array ("N","NE","E","SE","S","SW","W","NW");
+    for($i=0; $i<8; $i++)
+    {
+        if($dirs[$i]==$dir)
+            return $dirs[$i<4 ? $i+4:$i-4];
+    }
+    return null;
+}
+
+function render_tiles($im,$east,$north,$zoom,$width,$height)
+{
+            $nTileCols = 2+floor($width/256);
+            $nTileRows = 2+floor($height/256);
+        	$topLeftX = metresToPixel($east,$zoom)-$width/2;
+        	$topLeftY = metresToPixel(-$north,$zoom)-$height/2;
+        	$topLeftXTile = floor($topLeftX/256);
+        	$topLeftYTile = floor($topLeftY/256);
+			$curY = -$topLeftY%256;
+            for($row=0; $row<$nTileRows; $row++)
+            {        
+                $curX = -$topLeftX%256;
+                for($col=0; $col<$nTileCols; $col++)
+                {
+                    if($curX<$width && $curY<$height &&
+                        $curX>-256 && $curY>-256)
+                    {    
+						$filename="http://tilesrv.sucs.org/ofm/$zoom/".
+							($topLeftXTile+$col)."/".
+							($topLeftYTile+$row).".png";
+
+                        $tile=ImageCreateFromPNG($filename);
+						ImageCopy($im,$tile,$curX,$curY,0,0,256,256);
+						//echo $filename;
+                    }
+                    
+                    $curX+=256;
+                }
+                $curY+=256;
+            }
+}
+
 function lonToX($lon,$zoom)
 {
 
@@ -330,4 +251,38 @@ function latToY($lat,$zoom)
                          (-pow(2,$zoom+8)/(2*M_PI))));
     return $y;
 } 
+
+function metresToPixel($m,$zoom)
+{
+	return (pow(2,8+$zoom)*($m+20037508.34)) / 40075016.68;
+}
+
+function get_bounds($pts)
+{
+	$w=20037508.34;
+	$e=-20037508.34;
+	$n=-20037508.34;
+	$s=20037508.34;
+
+	for($i=0; $i<count($pts); $i++)
+	{
+		if($pts[$i]['x'] < $w)
+			$w=$pts[$i]['x'];
+		if($pts[$i]['x'] > $e)
+			$e=$pts[$i]['x'];
+		if($pts[$i]['y'] < $s)
+			$s=$pts[$i]['y'];
+		if($pts[$i]['y'] > $n)
+			$n=$pts[$i]['y'];
+	}
+	return array($w,$s,$e,$n);
+}
+
+function get_required_dimensions($bounds,$zoom)
+{
+	$factor=(pow(2,8+$zoom)) / 40075016.68;
+	$edist=$bounds[2]-$bounds[0];
+	$ndist=$bounds[3]-$bounds[1];
+	return array($edist*$factor,$ndist*$factor);
+}
 ?>

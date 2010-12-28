@@ -161,8 +161,11 @@ var Freemap = Class.create ( {
                     "<p><select id='routeaction'>"+
                     "<option value='test'>Test (not for users)</option>"+
                     "<option value='getxml'>Route as XML</option>"+
-                    "<option value='add'>Save to database</option>"+
-                    "</select>"+
+                    "<option value='gethtml'>Route as HTML</option>"+
+                    "<option value='getpdf'>Route as PDF</option>";
+		if(loggedin)
+            html += "<option value='add'>Save to database</option>";
+		html += "</select>"+
                     "</p>"+
                     "<input type='button' id='routeactionbtn' value='Go' />";
         this.displayCentredPopup(html,0.25);
@@ -174,10 +177,25 @@ var Freemap = Class.create ( {
         var qs;
         if($('routeaction').value.substr(0,3)=='get')
         {
-            qs='action=get&format='+$('routeaction').value.substr(3);
+			var format=$('routeaction').value.substr(3);
+            qs='action=get&format='+format;
             this.map.removePopup(this.popup);
             this.popup=null;
-            window.location='/freemap/route.php?'+qs+'&route='+this.csvroute;
+			if(format!='html')
+			{
+            	window.location='/freemap/route.php?'+qs+
+				'&route='+this.csvroute;
+			}
+			else
+			{
+				new Ajax.Request
+				("/freemap/route.php",
+					{ method: 'GET',
+					 parameters: qs+'&route='+this.csvroute,
+					 onComplete: this.routeSendCallback.bind(this) 
+					 }
+				);
+			}
         }
         else if ($('routeaction').value=='test')
         {
@@ -207,6 +225,13 @@ var Freemap = Class.create ( {
             this.popup=null;
         }
     },
+
+	routeSendCallback: function(xmlHTTP)
+	{
+		this.displayCentredPopup(xmlHTTP.responseText +
+			"<p><a href='/freemap/route.php?action=get&format=htmlpage"
+			+"&route="+this.csvroute+"'>Printable</a></p>",0.8);
+	},
 
     mouseDownHandler: function(e)
     {

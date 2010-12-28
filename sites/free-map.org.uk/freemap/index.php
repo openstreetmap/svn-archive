@@ -19,8 +19,7 @@ $zoom = (isset($_GET['zoom'])) ? $_GET['zoom']:
 $modes = array (
                     array ("Normal", "MODE_NORMAL",true),
                     array ("Distance", "MODE_DISTANCE",true),
-                    array ("Route", "MODE_ROUTE",
-							isset($_SESSION['gatekeeper']) ? true:false),
+                    array ("Route", "MODE_ROUTE",true),
 					array ("Annotate", "MODE_ANNOTATE",
 							isset($_SESSION['gatekeeper']) ? true:false)
                 );
@@ -37,6 +36,7 @@ var freemap;
 var lat=<?php echo $lat; ?>;
 var lon=<?php echo $lon; ?>;
 var zoom=<?php echo $zoom;?>;
+var loggedin=<?php echo isset($_SESSION['gatekeeper']) ? "true":"false";?>;
 
 <?php
 for($i=0; $i<count($modes); $i++)

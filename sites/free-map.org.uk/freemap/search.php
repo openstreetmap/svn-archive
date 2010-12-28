@@ -2,6 +2,7 @@
 require_once('/home/www-data/private/defines.php');
 require_once('../lib/functionsnew.php');
 require_once('freemap_functions.php');
+require_once('Way.php');
 
 // fernhurst -80454 6629930 (900913 spherical mercator)
 
@@ -56,8 +57,8 @@ switch($_REQUEST['type'])
 
 			foreach($rows as $row)
             {
-				$way=do_get_annotated_way($row);
-				annotated_way_to_xml($way);
+				$way=new Way($row);
+				$way->annotated_way_to_xml();
             }
         }
         echo "</osmdata>";

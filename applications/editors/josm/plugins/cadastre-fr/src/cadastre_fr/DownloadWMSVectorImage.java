@@ -19,12 +19,11 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
     private static String errorMessage;
 
-    public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds, boolean buildingsOnly) {
+    public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds) {
         super(tr("Downloading {0}", wmsLayer.getName()));
 
         this.wmsLayer = wmsLayer;
         this.bounds = bounds;
-        this.wmsLayer.setBuildingsOnly(buildingsOnly);
     }
 
     @Override
@@ -83,11 +82,11 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     protected void finish() {
     }
 
-    public static void download(WMSLayer wmsLayer, boolean buildingsOnly) {
+    public static void download(WMSLayer wmsLayer) {
         MapView mv = Main.map.mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
 
-        Main.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds, buildingsOnly));
+        Main.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds));
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }

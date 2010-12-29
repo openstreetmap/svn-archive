@@ -41,28 +41,6 @@ public class CadastreGrabber {
         }
     }
 
-    public GeorefImage grabBuildings(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
-        try {
-            URL url = getURLVectorBuildings(lambertMin, lambertMax);
-            BufferedImage img = grab(url);
-            ImageModifier imageModified = new VectorImageModifier(img, true);
-            return new GeorefImage(imageModified.bufferedImage, lambertMin, lambertMax);
-        } catch (MalformedURLException e) {
-            throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
-        }
-    }
-
-    public GeorefImage grabParcels(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
-        try {
-            URL url = getURLVectorParcels(lambertMin, lambertMax);
-            BufferedImage img = grab(url);
-            //ImageModifier imageModified = new VectorImageModifier(img, true);
-            return new GeorefImage(/*imageModified.bufferedImage*/img, lambertMin, lambertMax);
-        } catch (MalformedURLException e) {
-            throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
-        }
-    }
-
     private URL getURLRaster(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         // GET /scpc/wms?version=1.1&request=GetMap&layers=CDIF:PMC@QH4480001701&format=image/png&bbox=-1186,0,13555,8830&width=576&height=345&exception=application/vnd.ogc.se_inimage&styles= HTTP/1.1
         final int cRasterX = CadastrePlugin.imageWidth; // keep width constant and adjust width to original image proportions
@@ -102,14 +80,6 @@ public class CadastreGrabber {
         return buildURLVector(CadastrePlugin.grabLayers, CadastrePlugin.grabStyles,
                 CadastrePlugin.imageWidth, CadastrePlugin.imageHeight,
                 lambertMin, lambertMax);
-    }
-
-    private URL getURLVectorBuildings(EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
-        return buildURLVector("CDIF:LS2", "LS2_90", 1000, 800, lambertMin, lambertMax);
-    }
-
-    private URL getURLVectorParcels(EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
-        return buildURLVector("CDIF:PARCELLE", "PARCELLE_90", 1000, 800, lambertMin, lambertMax);
     }
 
     private BufferedImage grab(URL url) throws IOException, OsmTransferException {

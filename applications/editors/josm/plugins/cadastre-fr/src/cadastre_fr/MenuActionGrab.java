@@ -32,7 +32,7 @@ public class MenuActionGrab extends JosmAction {
             if (CadastrePlugin.isCadastreProjection()) {
                 WMSLayer wmsLayer = WMSDownloadAction.getLayer();
                 if (wmsLayer != null)
-                    DownloadWMSVectorImage.download(wmsLayer, false);
+                    DownloadWMSVectorImage.download(wmsLayer);
             } else {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("To enable the cadastre WMS plugin, change\n"

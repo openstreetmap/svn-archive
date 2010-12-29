@@ -58,8 +58,6 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public static int currentFormat;
 
-    private static final int cBBoxForBuildings = 50; // hard coded size of grabbed boxes for building layers
-
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
 
     private CacheControl cacheControl = null;
@@ -76,7 +74,6 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private boolean isRaster = false;
     private boolean isAlreadyGeoreferenced = false;
-    private boolean buildingsOnly = false;
     public double X0, Y0, angle, fX, fY;
 
     // bbox of the georeferenced raster image (the nice horizontal and vertical box)
@@ -94,7 +91,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public WMSLayer(String location, String codeCommune, int lambertZone) {
-        super(buildName(location, codeCommune, false));
+        super(buildName(location, codeCommune));
         this.location = location;
         this.codeCommune = codeCommune;
         this.lambertZone = lambertZone;
@@ -117,17 +114,15 @@ public class WMSLayer extends Layer implements ImageObserver {
         System.out.println("Layer "+location+" destroyed");
     }
 
-    private static String buildName(String location, String codeCommune, boolean buildingOnly) {
+    private static String buildName(String location, String codeCommune) {
         String ret = location.toUpperCase();
         if (codeCommune != null && !codeCommune.equals(""))
             ret += "(" + codeCommune + ")";
-        if (buildingOnly)
-            ret += ".b";
         return  ret;
     }
 
     private String rebuildName() {
-        return buildName(this.location.toUpperCase(), this.codeCommune, this.buildingsOnly);
+        return buildName(this.location.toUpperCase(), this.codeCommune);
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
@@ -141,9 +136,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
                         CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)), 0);
-            } else if (buildingsOnly)
-                divideBbox(b, 5, cBBoxForBuildings);
-            else
+            } else
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())), 0);
         } else
             divideBbox(b, 1, 0);
@@ -154,14 +147,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 return;
             GeorefImage newImage;
             try {
-                if (buildingsOnly == false)
-                    newImage = grabber.grab(this, n.min, n.max);
-                else { // TODO
-                    GeorefImage buildings = grabber.grabBuildings(this, n.min, n.max);
-                    GeorefImage parcels = grabber.grabParcels(this, n.min, n.max);
-                    new BuildingsImageModifier(buildings, parcels);
-                    newImage = buildings;
-                }
+                newImage = grabber.grab(this, n.min, n.max);
             } catch (IOException e) {
                 System.out.println("Download action cancelled by user or server did not respond");
                 break;
@@ -188,15 +174,14 @@ public class WMSLayer extends Layer implements ImageObserver {
             Main.map.mapView.repaint();
         }
         if (!cancelled) {
-            if (buildingsOnly)
-                joinBufferedImages();
             for (int i=lastSavedImage; i < images.size(); i++)
                 saveToCache(images.get(i));
         }
     }
 
     /**
-     *
+     * Divides the bounding box in smaller polygons.
+     * 
      * @param b      the original bbox, usually the current bbox on screen
      * @param factor 1 = source bbox 1:1
      *               2 = source bbox divided by 2x2 smaller boxes
@@ -397,15 +382,6 @@ public class WMSLayer extends Layer implements ImageObserver {
         setName(rebuildName());
     }
 
-    public boolean isBuildingsOnly() {
-        return buildingsOnly;
-    }
-
-    public void setBuildingsOnly(boolean buildingsOnly) {
-        this.buildingsOnly = buildingsOnly;
-        setName(rebuildName());
-    }
-
     public boolean isRaster() {
         return isRaster;
     }
@@ -457,7 +433,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         oos.writeObject(this.codeCommune); // String
         oos.writeInt(this.lambertZone);
         oos.writeBoolean(this.isRaster);
-        oos.writeBoolean(this.buildingsOnly);
+        oos.writeBoolean(false); // previously buildingsOnly
         if (this.isRaster) {
             oos.writeDouble(this.rasterMin.getX());
             oos.writeDouble(this.rasterMin.getY());
@@ -490,7 +466,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.lambertZone = ois.readInt();
         this.setRaster(ois.readBoolean());
         if (currentFormat >= 4)
-            this.setBuildingsOnly(ois.readBoolean());
+            ois.readBoolean();
         if (this.isRaster) {
             double X = ois.readDouble();
             double Y = ois.readDouble();

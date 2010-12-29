@@ -29,10 +29,10 @@ public class WMSDownloadAction /*extends JosmAction */{
         ArrayList<WMSLayer> existingWMSlayers = new ArrayList<WMSLayer>();
         if (Main.map != null) {
             Layer activeLayer = Main.map.mapView.getActiveLayer();
-            if (activeLayer instanceof WMSLayer && !((WMSLayer)activeLayer).isBuildingsOnly())
+            if (activeLayer instanceof WMSLayer)
                 return (WMSLayer) activeLayer;
             for (Layer l : Main.map.mapView.getAllLayers()) {
-                if (l instanceof WMSLayer && !((WMSLayer)l).isBuildingsOnly()) {
+                if (l instanceof WMSLayer) {
                     existingWMSlayers.add((WMSLayer)l);
                 }
             }

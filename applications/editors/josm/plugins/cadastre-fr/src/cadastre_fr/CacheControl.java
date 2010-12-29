@@ -95,32 +95,25 @@ public class CacheControl implements Runnable {
 
     public boolean loadCacheIfExist() {
         try {
-            if (!wmsLayer.isBuildingsOnly()) {
-                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
-                if (file.exists()) {
-                    JOptionPane pane = new JOptionPane(
-                            tr("Location \"{0}\" found in cache.\n"+
-                            "Load cache first ?\n"+
-                            "(No = new cache)", wmsLayer.getName()),
-                            JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
-                    // this below is a temporary workaround to fix the "always on top" issue
-                    JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
-                    CadastrePlugin.prepareDialog(dialog);
-                    dialog.setVisible(true);
-                    int reply = (Integer)pane.getValue();
-                    // till here
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
+            if (file.exists()) {
+                JOptionPane pane = new JOptionPane(
+                        tr("Location \"{0}\" found in cache.\n"+
+                        "Load cache first ?\n"+
+                        "(No = new cache)", wmsLayer.getName()),
+                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
+                // this below is a temporary workaround to fix the "always on top" issue
+                JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+                CadastrePlugin.prepareDialog(dialog);
+                dialog.setVisible(true);
+                int reply = (Integer)pane.getValue();
+                // till here
 
-                    if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
-                        return true;
-                    } else {
-                        delete(file);
-                    }
+                if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
+                    return true;
+                } else {
+                    delete(file);
                 }
-            } else {
-                int i=0;
-                while (new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "."+i+"."+ WMSFileExtension()).exists())
-                    i++;
-                wmsLayer.setName(wmsLayer.getName()+"."+i);
             }
         } catch (Exception e) {
             e.printStackTrace(System.out);

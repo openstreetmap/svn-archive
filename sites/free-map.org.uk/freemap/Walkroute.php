@@ -208,9 +208,9 @@ class Walkroute
     
     function to_html()
     {
-		echo "<p><img src='/freemap/route.php?action=get&serialised=".
-			urlencode($this->serialise())."&format=png' ".
-			"alt='your walk route' /></p><br />";
+        echo "<p><img src='/freemap/route.php?action=get&serialised=".
+            urlencode($this->serialise())."&format=png' ".
+            "alt='your walk route' /></p><br />";
         $text = $this->to_text();
         echo "<ol>\n";
         foreach($text as $line)
@@ -228,7 +228,7 @@ class Walkroute
                 echo "<li>$line</li>\n";
             }
         }
-    	echo "</ol>\n";
+        echo "</ol>\n";
     }
 
     function to_pdf()

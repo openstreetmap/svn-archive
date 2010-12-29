@@ -163,9 +163,9 @@ var Freemap = Class.create ( {
                     "<option value='getxml'>Route as XML</option>"+
                     "<option value='gethtml'>Route as HTML</option>"+
                     "<option value='getpdf'>Route as PDF</option>";
-		if(loggedin)
+        if(loggedin)
             html += "<option value='add'>Save to database</option>";
-		html += "</select>"+
+        html += "</select>"+
                     "</p>"+
                     "<input type='button' id='routeactionbtn' value='Go' />";
         this.displayCentredPopup(html,0.25);
@@ -177,25 +177,25 @@ var Freemap = Class.create ( {
         var qs;
         if($('routeaction').value.substr(0,3)=='get')
         {
-			var format=$('routeaction').value.substr(3);
+            var format=$('routeaction').value.substr(3);
             qs='action=get&format='+format;
             this.map.removePopup(this.popup);
             this.popup=null;
-			if(format!='html')
-			{
-            	window.location='/freemap/route.php?'+qs+
-				'&route='+this.csvroute;
-			}
-			else
-			{
-				new Ajax.Request
-				("/freemap/route.php",
-					{ method: 'GET',
-					 parameters: qs+'&route='+this.csvroute,
-					 onComplete: this.routeSendCallback.bind(this) 
-					 }
-				);
-			}
+            if(format!='html')
+            {
+                window.location='/freemap/route.php?'+qs+
+                '&route='+this.csvroute;
+            }
+            else
+            {
+                new Ajax.Request
+                ("/freemap/route.php",
+                    { method: 'GET',
+                     parameters: qs+'&route='+this.csvroute,
+                     onComplete: this.routeSendCallback.bind(this) 
+                     }
+                );
+            }
         }
         else if ($('routeaction').value=='test')
         {
@@ -226,12 +226,12 @@ var Freemap = Class.create ( {
         }
     },
 
-	routeSendCallback: function(xmlHTTP)
-	{
-		this.displayCentredPopup(xmlHTTP.responseText +
-			"<p><a href='/freemap/route.php?action=get&format=htmlpage"
-			+"&route="+this.csvroute+"'>Printable</a></p>",0.8);
-	},
+    routeSendCallback: function(xmlHTTP)
+    {
+        this.displayCentredPopup(xmlHTTP.responseText +
+            "<p><a href='/freemap/route.php?action=get&format=htmlpage"
+            +"&route="+this.csvroute+"'>Printable</a></p>",0.8);
+    },
 
     mouseDownHandler: function(e)
     {
@@ -264,12 +264,12 @@ var Freemap = Class.create ( {
             (this.map.getProjectionObject(),this.wgs84);
         $('osmedit').href='http://www.openstreetmap.org/edit.html?lat='+
             ll.lat+'&lon='+ll.lon+'&zoom='+this.map.getZoom();
-		var expiry = new Date();
-		expiry.setTime(expiry.getTime() + (1000*60*60*24*365));
+        var expiry = new Date();
+        expiry.setTime(expiry.getTime() + (1000*60*60*24*365));
         document.cookie='lat='+ll.lat+'; expires=' + expiry.toGMTString();
         document.cookie='lon='+ll.lon+'; expires=' + expiry.toGMTString();
         document.cookie='zoom='+this.map.getZoom()+'; expires=' + 
-			expiry.toGMTString();
+            expiry.toGMTString();
     },
 
     clickHandler:function(e)
@@ -328,16 +328,16 @@ var Freemap = Class.create ( {
             var ways=xmlHTTP.responseXML.getElementsByTagName("way");
             if(ways && ways.length==1)
             {
-                var des=ways[0].getElementsByTagName("designation")[0].
-                    firstChild.nodeValue;
+                var des= 
+                (ways[0].getElementsByTagName("designation").length>0) ? 
+                     ways[0].getElementsByTagName("designation")[0].
+                    firstChild.nodeValue: "";
                 var hwy=ways[0].getElementsByTagName("highway")[0].
                     firstChild.nodeValue;
                 var id=ways[0].getElementsByTagName("osm_id")[0].
                     firstChild.nodeValue;
-                var annwayid=ways[0].getElementsByTagName("annwayid")[0].
-                    firstChild.nodeValue;
                 var html = "<h1>Way "+id+"</h1><p>Designation : "+des+"<br />"+
-                    "Highway : " + hwy +"</p><p>Annwayid: "+annwayid+"</p>";
+                    "Highway : " + hwy +"</p>";
                 if(this.popup)
                 {
                     this.map.removePopup(this.popup);

@@ -18,7 +18,9 @@ switch($_REQUEST['action'])
 
     case 'annotate':
         if($cleaned['id'])
-            $way = new Way($cleaned['id']);
+        {
+            $way = new Way((int)$cleaned['id']);
+        }
         else
         {
             $way = get_ways_by_point($cleaned['x'],$cleaned['y'],100,1);
@@ -31,27 +33,8 @@ switch($_REQUEST['action'])
         }
         else
         {
-            if($way->getAttribute('annwayid')==0)
-            {
-                // should return member of way['points']
-                list($x1,$y1) = explode(" ", $way->getPoint(0));
-                list($x2,$y2)= explode(" ", $way->getLastPoint());
-                $wx=($x1<$x2)?$x1:$x2;
-                $wy=($x1<$x2)?$y1:$y2;
-                $ex=($x1<$x2)?$x2:$x1;
-                $ey=($x1<$x2)?$y2:$y1;
-                pg_query
-                    ("INSERT INTO annotatedways (wx,wy,ex,ey,bearing) VALUES ".
-                    "($wx,$wy,$ex,$ey,".
-                    $way->getAttribute('fmap_bearing').")");
-                $result=pg_query
-                    ("select currval('annotatedways_id_seq') as lastid");
-                $row=pg_fetch_array($result,null,PGSQL_ASSOC);
-                $way->setAttribute('annwayid',$row["lastid"]);    
-            }
-
             $q= "INSERT INTO annotations(wayid,text,xy,dir) ".
-                "VALUES (".$way->getAttribute('annwayid').",".
+                "VALUES (".$way->getAttribute('osm_id').",".
                 "'$cleaned[text]',".
                 "PointFromText('POINT ($cleaned[x] $cleaned[y])',900913)".
                 ",$cleaned[dir])";

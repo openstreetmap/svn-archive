@@ -46,7 +46,8 @@ its northern end follows a track.</p>
 	<li>Click on a feature and get information about it;</li>
 	<li>Annotate a feature with text, e.g. provide
 	more information about a point of interest such as a hill or pub;</li>
-	<li>Annotate a right of way, e.g. provide path directions or other
+	<li>Annotate a right of way or permissive path, 
+	e.g. provide path directions or other
 	info, such as the location of a good view or a problem such as a muddy
 	path or path blockage;</li>
 	<li>Click on a right of way and see all the annotations relating to that
@@ -65,33 +66,31 @@ will then be displayed, assuming someone has added some that is....</p>
 <p>Make sure you've <a href='user.php?action=signup'>signed up</a> for an
 account and log in. Select "Annotate" mode and click on the feature. You'll
 then be prompted to enter the information.</p>
-<h3>Annotating a right of way</h3>
+<h3>Annotating a right of way or permissive path</h3>
 <p>Again, ensure you're signed up, and login. Select "Annotate" mode and
 click on the right of way at the position where you want to add the annotation;
 it should become highlighted in yellow. Add your text, select which direction
 the annotation applies to (can be both) and click Go. Note
-that at the moment, this only works with official rights of way, not
-permissive paths.</p>
-<h3>Getting information about a right of way</h3>
-<p>In "normal" mode, you can click on a right of way and see all the 
-annotations relating to that right of way. So if you want to find out whether
+that at the moment, this only works with official rights of way and
+permissive paths; it will not work on other paths and tracks, or roads.
+The basic rule is: if it's coloured on the map, you can annotate it!</p>
+<h3>Getting information about a right of way or permissive path</h3>
+<p>In "normal" mode, you can click on a right of way or permissive
+path and see all the 
+annotations relating to that path. So if you want to find out whether
 a particular path has interesting views, or any problems, this is an easy
-way to do it! Note that at the moment this only works with official rights
-of way, not permissive paths.</p>
+way to do it! </p>
 <h3>Walking routes</h3>
-<p>Soon, Freemap will allow you to create <em>self-describing walk routes</em>.
-You will be able to select "Route" mode and then draw your route. Freemap
-will soon be able use the path annotations described above to auto-generate
-a walking route description which you can print off and take on a walk. The
-plans are to offer the walking route in HTML and PDF format, as well as an
+<p>Freemap also allows you to create <em>self-describing walk routes</em>
+(note, this functionality is new and prone to glitches at the moment).
+You can select "Route" mode and then draw your route. Freemap
+can use the path annotations described above to auto-generate
+a walking route description which you can print off and take on a walk. 
+The walking route is available in HTML and PDF format, as well as an
 XML format intended for a (planned!) Freemap Android application which you'll
-be able to upload to your phone and use for in-the-field navigation. You'll
-also be able to save your route to Freemap for later retrieval.</p>
-<p>Walking route functionality is partly implemented at the moment, but all
-you can do for the moment is draw the route,
-save your route to Freemap and download the
-XML format (but since the Android app isn't written yet, it's not a lot of
-use for the end user; it exists solely for testing purposes. )</p>
+be able to upload to your phone and use for in-the-field navigation. If you
+are logged in, you can also 
+save your route to Freemap for later retrieval. </p>
 <p>Looking further ahead still, it is planned to link Freemap's walking
 route functionality to <a href='/otv'>OpenTrailView</a>.</p>
 <h2 id='norender'>The map isn't showing! Why?</h2>
@@ -135,48 +134,30 @@ here</a>).</li>
 is also present on the Freemap server itself</em>. As the SUCS database 
 covers the whole world, database queries are rather slow. So to counteract
 that, a pared-down database exists on Freemap containing <em>relevant
-points of interest</em> (currently places, hills, pubs and restaurants)
-and <em>rights of way</em> (defined as anything with a designation tag; it
-is planned to also include permissive paths). This is done by downloading the
+points of interest</em> (currently places, hills, pubs and restaurants),
+<em>rights of way</em> (defined as anything with a designation tag) 
+and <em>permissive paths</em> (anything with foot=permissive and 
+highway=footway,path,track or service).
+This is done by downloading the
 UK OSM extract from geofabrik.de, and then using Osmosis to extract the
 relevant information and osm2pgsql to import to the database. So far, 
 so good...</li>
 <li>Path annotations are linked directly to their associated OSM way in the
-database. However a potential problem exists in that the OSM ID could change
+database by OSM ID. 
+However a potential problem exists in that the OSM ID could change
 over time, for example a way might be divided into two or deleted and
-redrawn. To attempt to minimise this the following steps are taken:
-	<ul>
-	<li>The ways output from Osmosis are broken down into segments at
-	every junction (not old style OSM segments, merely shorter ways!) 
-	Such segments are less likely to change their course than the original,
-	perhaps much longer, OSM way. This
-	is done using the 
-	<a href=
-	'http://svn.openstreetmap.org/applications/utils/export/segmentise'>
-	segmentise</a> tool available in OSM SVN.</li>
-	<li>These "segmented ways" are imported into the PostGIS database.</li>
-	<li>An additional database table, called <em>annotatedways</em>
-	exists to attempt to identify segmented 
-	ways using their geographical properties,
-	rather than OSM ID, and as such aims to minimise the "OSM ID change"
-	problem. When a way is annotated, the geographical properties of the
-	way are saved in this additional table. These geographical properties
-	aim to uniquely identify the way without recourse to the OSM ID, and
-	currently consist of coordinates of the westernmost end of the way,
-	coordinates of the easternmost end, and bearing from the westernmost
-	end of the way to the central node. (These properties may change
-	should they prove not to be effective).</li>
-	<li>Annotations are linked to these geographically-defined ways, rather
-	than to OSM ID. So if the OSM ID changes but the geographical properties
-	remain the same (small variations in start and end points and bearings
-	are permitted) then the way and annotations can still be linked and
-	annotations will not be "orphaned".</li>
-	<li>POIs are similarly stored in an additional table to
-	allow annotation. The information to uniquely identify a POI avoiding
-	the use of OSM IDs includes position (again some error is allowed), name 
-	and POI type.</li>
-	</ul>
-</li>
+redrawn. To attempt to minimise this, it is planned to write some software
+which goes through the annotations when the database is reloaded, sees if
+the way with the given OSM ID still exists, and if it doesn't, reassigns
+the annotation to the nearest way of the same type (footpath, bridleway etc)
+as the original way.</li>
+<li>A different approach to solving this problem is taken with POIs.
+When a POI is annotated, its 
+position (some error is allowed), name and POI type is stored in an 
+additional table, together with the annotation.
+So when a POI is clicked, first the POI is located in the planet_osm_point
+table, and then this additional table is searched using the POI's name, type 
+and location to see if a matching annotation exists.</li> 
 </ul>
 <h2 id='source'>Source code</h2>
 <p>Freemap source code is available in OSM SVN, under 

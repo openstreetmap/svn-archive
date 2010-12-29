@@ -53,19 +53,19 @@ function get_high_level ($tags)
 
 function get_path_type($pathinfo)
 {
-	$destypes = array
-		("public_footpath" => "public footpath",
-		"footpath" => "public footpath",
-		"public_bridleway" => "public bridleway",
-		"bridleway" => "public bridleway",
-		"public_byway" => "byway",
-		"byway" => "byway",
-		"restricted_byway" => "restricted byway");
+    $destypes = array
+        ("public_footpath" => "public footpath",
+        "footpath" => "public footpath",
+        "public_bridleway" => "public bridleway",
+        "bridleway" => "public bridleway",
+        "public_byway" => "byway",
+        "byway" => "byway",
+        "restricted_byway" => "restricted byway");
 
-	return (isset($destypes[$pathinfo['designation']]))?
-		$destypes[$pathinfo['designation']]:
-		($pathinfo['foot']==='permissive' ? "permissive path" : 
-		$pathinfo['highway']);
+    return (isset($destypes[$pathinfo['designation']]))?
+        $destypes[$pathinfo['designation']]:
+        ($pathinfo['foot']==='permissive' ? "permissive $pathinfo[highway]" : 
+        $pathinfo['highway']);
 }
 
 function get_photo($id,$width,$height)
@@ -98,27 +98,27 @@ function get_photo($id,$width,$height)
 
 function get_ways_by_point($x,$y,$dist=100,$n=0,$snap=false)
 {
-	$ways=array();
-	$q=("SELECT osm_id, name,highway,designation,".
-				"foot,horse,fmap_bearing,AsText(way), ".
-				"line_locate_point(way,PointFromText('POINT($x $y)',900913)) ".
-				"as posn,".
+    $ways=array();
+    $q=("SELECT osm_id, name,highway,designation,".
+                "foot,horse,fmap_bearing,AsText(way), ".
+                "line_locate_point(way,PointFromText('POINT($x $y)',900913)) ".
+                "as posn,".
                 "Distance(GeomFromText('POINT($x $y)',900913),way) as dist ".
-				"FROM ".
+                "FROM ".
                 "planet_osm_line WHERE Distance(GeomFromText('POINT($x $y)',".
                 "900913),way) < $dist AND highway != '' ");
 
-	$q .= "ORDER BY dist";
+    $q .= "ORDER BY dist";
 
-	if($n>0)
-		$q .= " LIMIT $n";
-	$result2=pg_query($q);
+    if($n>0)
+        $q .= " LIMIT $n";
+    $result2=pg_query($q);
 
-	while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
-		$ways[] = $row;
+    while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
+        $ways[] = $row;
 
-	pg_free_result($result2);
-	return $ways;
+    pg_free_result($result2);
+    return $ways;
 }
 
 function node_to_xml($row)
@@ -150,21 +150,21 @@ function node_to_xml($row)
 
 function get_route_annotations($id)
 {
-	$annotations=array();
-	$result2=pg_query
-		("SELECT AsText(ann.xy),ann.text,ann.annotationid,".
-		"line_locate_point(rte.route,ann.xy) AS posn FROM routes rte,".
-		"annotations ann WHERE rte.id=$id AND ".
-		"Distance(ann.xy,rte.route) < 100 ".
-		"ORDER BY line_locate_point(rte.route,ann.xy)");
+    $annotations=array();
+    $result2=pg_query
+        ("SELECT AsText(ann.xy),ann.text,ann.annotationid,".
+        "line_locate_point(rte.route,ann.xy) AS posn FROM routes rte,".
+        "annotations ann WHERE rte.id=$id AND ".
+        "Distance(ann.xy,rte.route) < 100 ".
+        "ORDER BY line_locate_point(rte.route,ann.xy)");
 
-	while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
-	{
+    while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
+    {
         $a = preg_match ("/POINT\((.+)\)/",$row['astext'],$m);
         list($row['x'],$row['y'])= explode(" ",$m[1]);
-		$annotations[] = $row;
-	}
-	return $annotations;
+        $annotations[] = $row;
+    }
+    return $annotations;
 }
 
 function get_bearing($dx,$dy)
@@ -206,13 +206,20 @@ function opposite_direction($dir)
 
 function render_tiles($im,$east,$north,$zoom,$width,$height)
 {
+    /*
+    $filename="http://tilesrv.sucs.org/~nickw/render.php?".
+                 "e=$e&n=$n&zoom=$zoom&w=$width&h=$height";
+
+    $img=ImageCreateFromPNG($filename);
+    ImageCopy($im,$img,0,0,0,0,$width,$height);
+    */
             $nTileCols = 2+floor($width/256);
             $nTileRows = 2+floor($height/256);
-        	$topLeftX = metresToPixel($east,$zoom)-$width/2;
-        	$topLeftY = metresToPixel(-$north,$zoom)-$height/2;
-        	$topLeftXTile = floor($topLeftX/256);
-        	$topLeftYTile = floor($topLeftY/256);
-			$curY = -$topLeftY%256;
+            $topLeftX = metresToPixel($east,$zoom)-$width/2;
+            $topLeftY = metresToPixel(-$north,$zoom)-$height/2;
+            $topLeftXTile = floor($topLeftX/256);
+            $topLeftYTile = floor($topLeftY/256);
+            $curY = -$topLeftY%256;
             for($row=0; $row<$nTileRows; $row++)
             {        
                 $curX = -$topLeftX%256;
@@ -221,13 +228,13 @@ function render_tiles($im,$east,$north,$zoom,$width,$height)
                     if($curX<$width && $curY<$height &&
                         $curX>-256 && $curY>-256)
                     {    
-						$filename="http://tilesrv.sucs.org/ofm/$zoom/".
-							($topLeftXTile+$col)."/".
-							($topLeftYTile+$row).".png";
+                        $filename="http://tilesrv.sucs.org/ofm/$zoom/".
+                            ($topLeftXTile+$col)."/".
+                            ($topLeftYTile+$row).".png";
 
                         $tile=ImageCreateFromPNG($filename);
-						ImageCopy($im,$tile,$curX,$curY,0,0,256,256);
-						//echo $filename;
+                        ImageCopy($im,$tile,$curX,$curY,0,0,256,256);
+                        //echo $filename;
                     }
                     
                     $curX+=256;
@@ -254,35 +261,35 @@ function latToY($lat,$zoom)
 
 function metresToPixel($m,$zoom)
 {
-	return (pow(2,8+$zoom)*($m+20037508.34)) / 40075016.68;
+    return (pow(2,8+$zoom)*($m+20037508.34)) / 40075016.68;
 }
 
 function get_bounds($pts)
 {
-	$w=20037508.34;
-	$e=-20037508.34;
-	$n=-20037508.34;
-	$s=20037508.34;
+    $w=20037508.34;
+    $e=-20037508.34;
+    $n=-20037508.34;
+    $s=20037508.34;
 
-	for($i=0; $i<count($pts); $i++)
-	{
-		if($pts[$i]['x'] < $w)
-			$w=$pts[$i]['x'];
-		if($pts[$i]['x'] > $e)
-			$e=$pts[$i]['x'];
-		if($pts[$i]['y'] < $s)
-			$s=$pts[$i]['y'];
-		if($pts[$i]['y'] > $n)
-			$n=$pts[$i]['y'];
-	}
-	return array($w,$s,$e,$n);
+    for($i=0; $i<count($pts); $i++)
+    {
+        if($pts[$i]['x'] < $w)
+            $w=$pts[$i]['x'];
+        if($pts[$i]['x'] > $e)
+            $e=$pts[$i]['x'];
+        if($pts[$i]['y'] < $s)
+            $s=$pts[$i]['y'];
+        if($pts[$i]['y'] > $n)
+            $n=$pts[$i]['y'];
+    }
+    return array($w,$s,$e,$n);
 }
 
 function get_required_dimensions($bounds,$zoom)
 {
-	$factor=(pow(2,8+$zoom)) / 40075016.68;
-	$edist=$bounds[2]-$bounds[0];
-	$ndist=$bounds[3]-$bounds[1];
-	return array($edist*$factor,$ndist*$factor);
+    $factor=(pow(2,8+$zoom)) / 40075016.68;
+    $edist=$bounds[2]-$bounds[0];
+    $ndist=$bounds[3]-$bounds[1];
+    return array($edist*$factor,$ndist*$factor);
 }
 ?>

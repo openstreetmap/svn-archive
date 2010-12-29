@@ -25,6 +25,8 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
@@ -32,6 +34,7 @@ import org.openstreetmap.josm.data.osm.history.History;
 import org.openstreetmap.josm.data.osm.history.HistoryDataSet;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
+import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -43,7 +46,9 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
-
+/**
+ *  // TODO: undelete relation members if necessary
+ */
 
 public class Undelete extends Plugin {
     JMenuItem Undelete;
@@ -78,6 +83,7 @@ public class Undelete extends Plugin {
         all.add(new JLabel(tr("Object type:")), gc);
         OsmPrimitiveTypesComboBox cbType = new OsmPrimitiveTypesComboBox();
         cbType.setToolTipText("Choose the OSM object type");
+        cbType.setSelectedIndex(Main.pref.getInteger("undelete.lasttype", 0));
         gc.weightx = 1;
         all.add(cbType, gc);
         gc.gridy = 1;
@@ -110,6 +116,7 @@ public class Undelete extends Plugin {
         //dialog.configureContextsensitiveHelp("/Action/DownloadObject", true /* show help button */);
         dialog.showDialog();
         if (dialog.getValue() != 1) return;
+        Main.pref.putInteger("undelete.lasttype", cbType.getSelectedIndex());
         Main.pref.put("undelete.newlayer", layer.isSelected());
         Main.pref.putInteger("undelete.osmid", tfId.getOsmId());
         List<Long> ids=new ArrayList<Long>();
@@ -209,9 +216,31 @@ public class Undelete extends Plugin {
                   }
                   else
                   {
-                      primitive=new Node();
+                      primitive=new Relation();
                       hPrimitive1=h.getLatest();
-                      hPrimitive2=h.getLatest();
+                      hPrimitive2=h.getByVersion(h.getNumVersions()-1);
+                      
+                      Relation rel = new Relation(id, (int) hPrimitive1.getVersion());
+                      
+                      HistoryRelation hRel = (HistoryRelation) hPrimitive2;
+                      
+                      List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
+                      for (org.openstreetmap.josm.data.osm.history.RelationMember m : hRel.getMembers()) {
+                        OsmPrimitive p = datas.getPrimitiveById(m.getPrimitiveId(), m.getPrimitiveType());
+                        if (p == null) {
+                            switch (m.getPrimitiveType()) {
+                            case NODE: p = new Node(m.getPrimitiveId()); break;
+                            case WAY: p = new Way(m.getPrimitiveId()); break;
+                            case RELATION: p = new Relation(m.getPrimitiveId()); break;
+                            }
+                            datas.addPrimitive(p);
+                        }
+                        members.add(new RelationMember(m.getRole(), p));
+                      }
+                      
+                      rel.setMembers(members);
+                      
+                      primitive=rel;
                   }
 
                   User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());

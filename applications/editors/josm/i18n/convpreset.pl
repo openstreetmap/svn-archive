@@ -122,7 +122,7 @@ while(my $line = <>)
     for (my $i=0; $i<@combo_values; ++$i) {
       $combo_values[$i] =~ s/\x91/,/g;
       next if $combo_values[$i] =~ /^[0-9-]+$/; # search for non-numbers
-      print $vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");";
+      print "/* item $item combo $n display value */" . ($vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");");
     }
     print "\n";
   }
@@ -144,11 +144,11 @@ while(my $line = <>)
     foreach my $val (@combo_values)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print $vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");";
+      print "/* item $item combo $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
     }
     print "\n";
   }
-  elsif($line =~ /<short_description>(.*?)<\/short_description>/)
+  elsif(!$comment && $line =~ /<short_description>(.*?)<\/short_description>/)
   {
     my $n = $1;
     print "/* item $item combo $combo_n item \"$combo_values[$combo_idx]\" short description */ tr(\"$n\");\n";

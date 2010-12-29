@@ -89,13 +89,7 @@ public class MarkCard extends SeaMark {
 			dlg.panelMain.panelHaz.beaconButton.doClick();
 		}
 
-		parseLights(keys);
-		parseFogRadar(keys);
-
-	}
-
-	public void setLightColour() {
-		super.setLightColour(Col.WHITE);
+		super.parseMark();
 	}
 
 	public void paintSign() {
@@ -120,7 +114,6 @@ public class MarkCard extends SeaMark {
 			dlg.panelMain.shapeIcon.setIcon(null);
 			return;
 		}
-
 		switch (getCategory()) {
 		case CARD_NORTH:
 			image += "_North";
@@ -138,9 +131,9 @@ public class MarkCard extends SeaMark {
 			dlg.panelMain.shapeIcon.setIcon(null);
 			return;
 		}
-
 		image += ".png";
 		dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
+		
 		super.paintSign();
 	}
 }

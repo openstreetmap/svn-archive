@@ -328,10 +328,10 @@ abstract public class SeaMark {
 		LightGroup[sectorIndex] = lightGroup;
 	}
 
-	protected void setLightGroup(Map<String, String> k) {
+	protected void setLightGroup(Map<String, String> keys) {
 		String s = "";
-		if (k.containsKey("seamark:light:group")) {
-			s = k.get("seamark:light:group");
+		if (keys.containsKey("seamark:light:group")) {
+			s = keys.get("seamark:light:group");
 			setLightGroup(s);
 		}
 	}
@@ -435,12 +435,15 @@ abstract public class SeaMark {
 		LightPeriod[sectorIndex] = lightPeriod;
 	}
 
-	public abstract void parseMark();
+	public void parseMark() {
 
-	public void parseLights(Map<String, String> k) {
+		String str;
+		Map<String, String> keys;
+		keys = dlg.node.getKeys();
+
 		setFired(false);
 		setSectored(false);
-		Iterator it = k.entrySet().iterator();
+		Iterator it = keys.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry entry = (Map.Entry) it.next();
 			String key = (String) entry.getKey();
@@ -492,18 +495,15 @@ abstract public class SeaMark {
 				}
 			}
 		}
-	}
 
-	public void parseFogRadar(Map<String, String> k) {
-		String str;
 		setFog(false);
 		setRadar(false);
 		setRacon(false);
-		if (k.containsKey("seamark:fog_signal") || k.containsKey("seamark:fog_signal:category")
-				|| k.containsKey("seamark:fog_signal:group") || k.containsKey("seamark:fog_signal:period")) {
+		if (keys.containsKey("seamark:fog_signal") || keys.containsKey("seamark:fog_signal:category")
+				|| keys.containsKey("seamark:fog_signal:group") || keys.containsKey("seamark:fog_signal:period")) {
 			setFog(true);
-			if (k.containsKey("seamark:fog_signal:category")) {
-				str = k.get("seamark:fog_signal:category");
+			if (keys.containsKey("seamark:fog_signal:category")) {
+				str = keys.get("seamark:fog_signal:category");
 				if (str.equals("horn"))
 					setFogSound(Fog.HORN);
 				else if (str.equals("siren"))
@@ -521,17 +521,17 @@ abstract public class SeaMark {
 				else
 					setFogSound(Fog.UNKNOWN);
 			}
-			if (k.containsKey("seamark:fog_signal:group"))
-				setFogGroup(k.get("seamark:fog_signal:group"));
-			if (k.containsKey("seamark:fog_signal:period"))
-				setFogPeriod(k.get("seamark:fog_signal:period"));
+			if (keys.containsKey("seamark:fog_signal:group"))
+				setFogGroup(keys.get("seamark:fog_signal:group"));
+			if (keys.containsKey("seamark:fog_signal:period"))
+				setFogPeriod(keys.get("seamark:fog_signal:period"));
 		}
 
-		if (k.containsKey("seamark:radar_transponder") || k.containsKey("seamark:radar_transponder:category")
-				|| k.containsKey("seamark:radar_transponder:group")) {
+		if (keys.containsKey("seamark:radar_transponder") || keys.containsKey("seamark:radar_transponder:category")
+				|| keys.containsKey("seamark:radar_transponder:group")) {
 			setRacon(true);
-			if (k.containsKey("seamark:radar_transponder:category")) {
-				str = k.get("seamark:radar_transponder:category");
+			if (keys.containsKey("seamark:radar_transponder:category")) {
+				str = keys.get("seamark:radar_transponder:category");
 				if (str.equals("racon"))
 					setRaType(Rtb.RACON);
 				else if (str.equals("ramark"))
@@ -541,26 +541,14 @@ abstract public class SeaMark {
 				else
 					setRaType(Rtb.UNKNOWN);
 			}
-			if (k.containsKey("seamark:radar_transponder:group"))
-				setRaconGroup(k.get("seamark:radar_transponder:group"));
-		} else if (k.containsKey("seamark:radar_reflector"))
+			if (keys.containsKey("seamark:radar_transponder:group"))
+				setRaconGroup(keys.get("seamark:radar_transponder:group"));
+		} else if (keys.containsKey("seamark:radar_reflector"))
 			setRadar(true);
 	}
 
 	public void paintSign() {
-/*
-		dlg.lM01NameMark.setText(getName());
 
-		dlg.bM01Save.setEnabled(true);
-
-		dlg.cM01TopMark.setSelected(hasTopMark());
-		dlg.cM01Fired.setSelected(isFired());
-
-		dlg.tfM01RepeatTime.setText(getLightPeriod());
-
-		dlg.tfM01Name.setText(getName());
-		dlg.tfM01Name.setEnabled(true);
-*/
 		if (hasRadar()) {
 			dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
 		}	else if (hasRacon()) {
@@ -569,7 +557,7 @@ abstract public class SeaMark {
 //				String c = (String) dlg.cbM01Racon.getSelectedItem();
 //				if ((getRaType() == RATYPE_RACON) && !getRaconGroup().isEmpty())
 //					c += ("(" + getRaconGroup() + ")");
-//				dlg.lM01RadarMark.setText(c);
+//				dlg.lM01RadarMarkeys.setText(c);
 //			}
 		}
 
@@ -581,7 +569,7 @@ abstract public class SeaMark {
 //					c += ("(" + getFogGroup() + ")");
 //				if (!getFogPeriod().isEmpty())
 //					c += (" " + getFogPeriod() + "s");
-//				dlg.lM01FogMark.setText(c);
+//				dlg.lM01FogMarkeys.setText(c);
 //			}
 		}
 

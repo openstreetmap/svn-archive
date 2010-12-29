@@ -77,23 +77,9 @@ public class MarkSpec extends SeaMark {
 
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
-/*			setTopMark(true);
-			if (str.equals("x-shape")) {
-				if (keys.containsKey("seamark:topmark:colour")) {
-					if (keys.get("seamark:topmark:colour").equals("red"))
-						setTopMarkIndex(TOP_RED_X);
-					else
-						setTopMarkIndex(TOP_YELLOW_X);
-				}
-			} else if (str.equals("cone, point up")) {
-				setTopMarkIndex(TOP_YELLOW_CONE);
-			} else if (str.equals("cylinder")) {
-				setTopMarkIndex(TOP_YELLOW_CAN);
-			}
-*/		}
+		}
 
-		parseLights(keys);
-		parseFogRadar(keys);
+		super.parseMark();
 	}
 
 	public void paintSign() {
@@ -128,92 +114,13 @@ public class MarkSpec extends SeaMark {
 		case TOWER:
 			image += "_Tower";
 			break;
-		}
-
-		if (!image.equals("/images/Special_Purpose")) {
-			image += ".png";
-			dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-			if (hasTopmark()) {
-				image = "";
-				switch (getShape()) {
-				case PILLAR:
-				case SPAR:
-					switch (getTopmark()) {
-					case X_SHAPE:
-						if (getColour(Ent.TOPMARK) == Col.YELLOW)
-							image = "/images/Top_X_Yellow_Buoy.png";
-						else
-							image = "/images/Top_X_Red_Buoy.png";
-						break;
-					case CAN:
-						image = "/images/Top_Can_Yellow_Buoy.png";
-						break;
-					case CONE:
-						image = "/images/Top_Cone_Yellow_Buoy.png";
-						break;
-					}
-					break;
-				case CAN:
-				case CONE:
-				case SPHERE:
-				case BARREL:
-					switch (getTopmark()) {
-					case X_SHAPE:
-						if (getColour(Ent.TOPMARK) == Col.YELLOW)
-							image = "/images/Top_X_Yellow_Buoy_Small.png";
-						else
-							image = "/images/Top_X_Red_Buoy_Small.png";
-						break;
-					case CAN:
-						image = "/images/Top_Can_Yellow_Buoy_Small.png";
-						break;
-					case CONE:
-						image = "/images/Top_Cone_Yellow_Buoy_Small.png";
-						break;
-					}
-					break;
-				case BEACON:
-				case TOWER:
-					switch (getTopmark()) {
-					case X_SHAPE:
-						if (getColour(Ent.TOPMARK) == Col.YELLOW)
-							image = "/images/Top_X_Yellow_Beacon.png";
-						else
-							image = "/images/Top_X_Red_Beacon.png";
-						break;
-					case CAN:
-						image = "/images/Top_Can_Yellow_Beacon.png";
-						break;
-					case CONE:
-						image = "/images/Top_Cone_Yellow_Beacon.png";
-						break;
-					}
-					break;
-				case FLOAT:
-				case SUPER:
-					switch (getTopmark()) {
-					case X_SHAPE:
-						if (getColour(Ent.TOPMARK) == Col.YELLOW)
-							image = "/images/Top_X_Yellow_Float.png";
-						else
-							image = "/images/Top_X_Red_Float.png";
-						break;
-					case CAN:
-						image = "/images/Top_Can_Yellow_Float.png";
-						break;
-					case CONE:
-						image = "/images/Top_Cone_Yellow_Float.png";
-						break;
-					}
-					break;
-				}
-				if (!image.isEmpty())
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			}
-
-		} else
+		default:
 			dlg.panelMain.shapeIcon.setIcon(null);
+			return;
+		}
+		image += ".png";
+		dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
+
 		super.paintSign();
 	}
 }

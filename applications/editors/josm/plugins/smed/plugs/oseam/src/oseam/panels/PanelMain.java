@@ -44,7 +44,7 @@ public class PanelMain extends JPanel {
 	private ButtonGroup miscButtons = null;
 	public JRadioButton topButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TopButton.png")));
 	public JRadioButton fogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogButton.png")));
-	public JRadioButton radarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
+	public JRadioButton radButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
 	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 	private ActionListener alMisc = null;
 	public PanelChan panelChan = null;
@@ -125,7 +125,7 @@ public class PanelMain extends JPanel {
 				if (chanButton.isSelected()) {
 					if (!((dlg.mark instanceof MarkLat) || (dlg.mark instanceof MarkSaw))) {
 						dlg.mark = null;
-						clearIcons();
+						clearType();
 					}
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
@@ -137,7 +137,7 @@ public class PanelMain extends JPanel {
 				if (hazButton.isSelected()) {
 					if (!((dlg.mark instanceof MarkCard) || (dlg.mark instanceof MarkIsol))) {
 						dlg.mark = null;
-						clearIcons();
+						clearType();
 					}
 					hazButton.setBorderPainted(true);
 					panelHaz.setVisible(true);
@@ -149,7 +149,16 @@ public class PanelMain extends JPanel {
 				if (specButton.isSelected()) {
 					if (!(dlg.mark instanceof MarkSpec)) {
 						dlg.mark = new MarkSpec(dlg);
-						clearIcons();
+						clearType();
+						dlg.panelMain.panelSpec.panelCol.yellowButton.doClick();
+						dlg.panelMain.panelTop.enableAll(true);
+						dlg.panelMain.panelTop.noTopButton.doClick();
+						dlg.panelMain.panelTop.panelCol.enableAll(true);
+						dlg.panelMain.panelTop.panelCol.yellowButton.doClick();
+						topButton.setEnabled(true);
+						fogButton.setEnabled(true);
+						radButton.setEnabled(true);
+						litButton.setEnabled(true);
 					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
@@ -161,7 +170,11 @@ public class PanelMain extends JPanel {
 				if (lightsButton.isSelected()) {
 					if (!(dlg.mark instanceof MarkLight)) {
 						dlg.mark = new MarkLight(dlg);
-						clearIcons();
+						clearType();
+						fogButton.setEnabled(true);
+						radButton.setEnabled(true);
+						litButton.setEnabled(true);
+						litButton.doClick();
 					}
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
@@ -179,18 +192,17 @@ public class PanelMain extends JPanel {
 
 		this.add(getButton(topButton, 0, 165, 34, 32, "TopmarksTip"), null);
 		this.add(getButton(fogButton, 0, 205, 34, 32, "FogSignalsTip"), null);
-		this.add(getButton(radarButton, 0, 245, 34, 32, "RadarTip"), null);
+		this.add(getButton(radButton, 0, 245, 34, 32, "RadarTip"), null);
 		this.add(getButton(litButton, 0, 285, 34, 32, "LitTip"), null);
 		miscButtons = new ButtonGroup();
 		miscButtons.add(topButton);
 		miscButtons.add(fogButton);
-		miscButtons.add(radarButton);
+		miscButtons.add(radButton);
 		miscButtons.add(litButton);
 		alMisc = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (dlg.mark == null) {
 					miscButtons.clearSelection();
-					return;
 				}
 				if (topButton.isSelected()) {
 					topButton.setBorderPainted(true);
@@ -206,11 +218,11 @@ public class PanelMain extends JPanel {
 					fogButton.setBorderPainted(false);
 					panelFog.setVisible(false);
 				}
-				if (radarButton.isSelected()) {
-					radarButton.setBorderPainted(true);
+				if (radButton.isSelected()) {
+					radButton.setBorderPainted(true);
 					panelRadar.setVisible(true);
 				} else {
-					radarButton.setBorderPainted(false);
+					radButton.setBorderPainted(false);
 					panelRadar.setVisible(false);
 				}
 				if (litButton.isSelected()) {
@@ -224,7 +236,7 @@ public class PanelMain extends JPanel {
 		};
 		topButton.addActionListener(alMisc);
 		fogButton.addActionListener(alMisc);
-		radarButton.addActionListener(alMisc);
+		radButton.addActionListener(alMisc);
 		litButton.addActionListener(alMisc);
 
 		nameLabel = new JLabel();
@@ -243,6 +255,14 @@ public class PanelMain extends JPanel {
 	public void clearSelections() {
 		typeButtons.clearSelection();
 		alType.actionPerformed(null);
+		clearType();
+	}
+
+	public void clearType() {
+		topButton.setEnabled(false);
+		fogButton.setEnabled(false);
+		radButton.setEnabled(false);
+		litButton.setEnabled(false);
 		miscButtons.clearSelection();
 		alMisc.actionPerformed(null);
 		panelChan.clearSelections();
@@ -253,10 +273,6 @@ public class PanelMain extends JPanel {
 		panelFog.clearSelections();
 		panelRadar.clearSelections();
 		panelLit.clearSelections();
-		clearIcons();
-	}
-
-	public void clearIcons() {
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);

@@ -207,23 +207,7 @@ public class MarkLat extends SeaMark {
 			break;
 		}
 
-		parseLights(keys);
-		parseFogRadar(keys);
-		setLightColour();
-	}
-
-	public void setLightColour() {
-		if (getRegion() == IALA_A) {
-			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
-				super.setLightColour(Col.RED);
-			else
-				super.setLightColour(Col.GREEN);
-		} else {
-			if (getCategory() == Cat.LAT_PORT || getCategory() == Cat.LAT_PREF_PORT)
-				super.setLightColour(Col.GREEN);
-			else
-				super.setLightColour(Col.RED);
-		}
+		super.parseMark();
 	}
 
 	public void paintSign() {
@@ -258,6 +242,8 @@ public class MarkLat extends SeaMark {
 					image += "_Perch_Port";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			else
 				switch (style) {
@@ -283,6 +269,8 @@ public class MarkLat extends SeaMark {
 					image += "_Perch_Port";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			break;
 
@@ -311,6 +299,8 @@ public class MarkLat extends SeaMark {
 					image += "_Perch_Starboard";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			else
 				switch (style) {
@@ -336,6 +326,8 @@ public class MarkLat extends SeaMark {
 					image += "_Perch_Starboard";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			break;
 
@@ -361,6 +353,8 @@ public class MarkLat extends SeaMark {
 					image += "_Float_Red_Green_Red";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			else
 				switch (style) {
@@ -383,6 +377,8 @@ public class MarkLat extends SeaMark {
 					image += "_Float_Green_Red_Green";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			break;
 
@@ -408,6 +404,8 @@ public class MarkLat extends SeaMark {
 					image += "_Float_Green_Red_Green";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			else
 				switch (style) {
@@ -430,101 +428,17 @@ public class MarkLat extends SeaMark {
 					image += "_Float_Red_Green_Red";
 					break;
 				default:
+					dlg.panelMain.shapeIcon.setIcon(null);
+					return;
 				}
 			break;
-
 		default:
+			dlg.panelMain.shapeIcon.setIcon(null);
+			return;
 		}
-
-		if (!image.equals("/images/Lateral")) {
-
 			image += ".png";
 			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
 
-			if (hasTopmark()) {
-				image = "";
-				switch (getCategory()) {
-				case LAT_PORT:
-				case LAT_PREF_PORT:
-					if (region == IALA_A)
-						switch (style) {
-						case CAN:
-							image = "/images/Top_Can_Red_Buoy_Small.png";
-							break;
-						case PILLAR:
-						case SPAR:
-							image = "/images/Top_Can_Red_Buoy.png";
-							break;
-						case BEACON:
-						case TOWER:
-							image = "/images/Top_Can_Red_Beacon.png";
-							break;
-						case FLOAT:
-							image = "/images/Top_Can_Red_Float.png";
-							break;
-						}
-					else
-						switch (style) {
-						case CAN:
-							image = "/images/Top_Can_Green_Buoy_Small.png";
-							break;
-						case PILLAR:
-						case SPAR:
-							image = "/images/Top_Can_Green_Buoy.png";
-							break;
-						case BEACON:
-						case TOWER:
-							image = "/images/Top_Can_Green_Beacon.png";
-							break;
-						case FLOAT:
-							image = "/images/Top_Can_Green_Float.png";
-							break;
-						}
-					break;
-
-				case LAT_STBD:
-				case LAT_PREF_STBD:
-					if (region == IALA_A)
-						switch (style) {
-						case CONE:
-							image = "/images/Top_Cone_Green_Buoy_Small.png";
-							break;
-						case PILLAR:
-						case SPAR:
-							image = "/images/Top_Cone_Green_Buoy.png";
-							break;
-						case BEACON:
-						case TOWER:
-							image = "/images/Top_Cone_Green_Beacon.png";
-							break;
-						case FLOAT:
-							image = "/images/Top_Cone_Green_Float.png";
-							break;
-						}
-					else
-						switch (style) {
-						case CONE:
-							image = "/images/Top_Cone_Red_Buoy_Small.png";
-							break;
-						case PILLAR:
-						case SPAR:
-							image = "/images/Top_Cone_Red_Buoy.png";
-							break;
-						case BEACON:
-						case TOWER:
-							image = "/images/Top_Cone_Red_Beacon.png";
-							break;
-						case FLOAT:
-							image = "/images/Top_Cone_Red_Float.png";
-							break;
-						}
-					break;
-				}
-				if (!image.isEmpty())
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			}
-		} else
-			dlg.panelMain.shapeIcon.setIcon(null);
 		super.paintSign();
 	}
 }

@@ -17,6 +17,7 @@ import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.MarkCard;
 import oseam.seamarks.MarkIsol;
+import oseam.seamarks.MarkLat;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
@@ -34,54 +35,52 @@ public class PanelHaz extends JPanel {
 	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/IsolButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (northButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkCard)) {
+			if (catButtons.getSelection() != null) {
+				if (!(dlg.mark instanceof MarkCard) && !isolButton.isSelected()) {
 					dlg.mark = new MarkCard(dlg);
 					alShape.actionPerformed(null);
 				}
+				dlg.panelMain.topButton.setEnabled(true);
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.panelTop.enableAll(false);
+				dlg.panelMain.panelTop.panelCol.enableAll(false);
+				dlg.panelMain.panelTop.panelCol.blackButton.setEnabled(true);
+				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
+			}
+			if (northButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CARD_NORTH);
 				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW);
+				dlg.panelMain.panelTop.northTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.northTopButton.doClick();
-				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				northButton.setBorderPainted(true);
 			} else {
 				northButton.setBorderPainted(false);
 			}
 			if (southButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkCard)) {
-					dlg.mark = new MarkCard(dlg);
-					alShape.actionPerformed(null);
-				}
 				dlg.mark.setCategory(Cat.CARD_SOUTH);
 				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK);
+				dlg.panelMain.panelTop.southTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.southTopButton.doClick();
-				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				southButton.setBorderPainted(true);
 			} else {
 				southButton.setBorderPainted(false);
 			}
 			if (eastButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkCard)) {
-					dlg.mark = new MarkCard(dlg);
-					alShape.actionPerformed(null);
-				}
 				dlg.mark.setCategory(Cat.CARD_EAST);
 				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW_BLACK);
+				dlg.panelMain.panelTop.eastTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.eastTopButton.doClick();
-				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				eastButton.setBorderPainted(true);
 			} else {
 				eastButton.setBorderPainted(false);
 			}
 			if (westButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkCard)) {
-					dlg.mark = new MarkCard(dlg);
-					alShape.actionPerformed(null);
-				}
 				dlg.mark.setCategory(Cat.CARD_WEST);
 				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK_YELLOW);
+				dlg.panelMain.panelTop.westTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.westTopButton.doClick();
-				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				westButton.setBorderPainted(true);
 			} else {
 				westButton.setBorderPainted(false);
@@ -92,8 +91,8 @@ public class PanelHaz extends JPanel {
 					alShape.actionPerformed(null);
 				}
 				dlg.mark.setColour(Ent.BODY, Col.BLACK_RED_BLACK);
+				dlg.panelMain.panelTop.spheres2TopButton.setEnabled(true);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();
-				dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				isolButton.setBorderPainted(true);
 			} else {
 				isolButton.setBorderPainted(false);

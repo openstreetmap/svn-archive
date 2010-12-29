@@ -51,9 +51,7 @@ public class MarkLight extends SeaMark {
 				setCategory(Cat.LIGHT_FLOAT);
 		}
 
-		parseLights(keys);
-		parseFogRadar(keys);
-		setFired(true);
+		super.parseMark();
 	}
 
 	public void paintSign() {

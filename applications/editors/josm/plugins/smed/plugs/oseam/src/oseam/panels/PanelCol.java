@@ -71,6 +71,13 @@ public class PanelCol extends JPanel {
 		offButton.doClick();
 	}
 
+	public void enableAll(boolean state) {
+		Iterator<Col> it = colours.keySet().iterator();
+		while (it.hasNext()) {
+			colours.get(it.next()).setEnabled(state);
+		}
+	}
+
 	private JRadioButton getColButton(JRadioButton button, int x, int y, int w, int h, String tip, Col col) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));

@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Top;
 import oseam.seamarks.SeaMark.Ent;
 
@@ -82,6 +83,13 @@ public class PanelTop extends JPanel {
 		topButtons.clearSelection();
 		alTop.actionPerformed(null);
 		panelCol.clearSelections();
+	}
+
+	public void enableAll(boolean state) {
+		Iterator<Top> it = tops.keySet().iterator();
+		while (it.hasNext()) {
+			tops.get(it.next()).setEnabled(state);
+		}
 	}
 
 	private JRadioButton getTopButton(JRadioButton button, int x, int y, int w, int h, String tip, Top top) {

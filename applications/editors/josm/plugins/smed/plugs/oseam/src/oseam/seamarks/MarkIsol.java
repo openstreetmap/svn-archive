@@ -58,12 +58,7 @@ public class MarkIsol extends SeaMark {
 			dlg.panelMain.panelHaz.beaconButton.doClick();
 		}
 
-		parseLights(keys);
-		parseFogRadar(keys);
-	}
-
-	public void setLightColour() {
-		super.setLightColour(Col.WHITE);
+		super.parseMark();
 	}
 
 	public void paintSign() {
@@ -86,13 +81,12 @@ public class MarkIsol extends SeaMark {
 			image += "_Float_Single";
 			break;
 		default:
-		}
-
-		if (!image.equals("/images/Cardinal")) {
-			image += ".png";
-			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-		} else
 			dlg.panelMain.shapeIcon.setIcon(null);
+			return;
+		}
+		image += ".png";
+		dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
+
 		super.paintSign();
 	}
 }

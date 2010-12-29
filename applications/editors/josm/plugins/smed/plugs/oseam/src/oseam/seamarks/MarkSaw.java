@@ -51,12 +51,7 @@ public class MarkSaw extends SeaMark {
 			dlg.panelMain.panelChan.panelSaw.floatButton.doClick();
 		}
 
-		if (keys.containsKey("seamark:topmark:shape") || keys.containsKey("seamark:topmark:colour")) {
-//			setTopMark(true);
-		}
-
-		parseLights(keys);
-		parseFogRadar(keys);
+		super.parseMark();
 	}
 
 	public void paintSign() {
@@ -80,36 +75,12 @@ public class MarkSaw extends SeaMark {
 			image += "_Float";
 			break;
 		default:
+			dlg.panelMain.shapeIcon.setIcon(null);
+			return;
 		}
-
-		if (!image.equals("/images/Safe_Water")) {
 			image += ".png";
 			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			if (hasTopmark()) {
-				image = "";
-				switch (getShape()) {
-				case PILLAR:
-				case SPAR:
-					image = "/images/Top_Sphere_Red_Buoy.png";
-					break;
-				case SPHERE:
-					image = "/images/Top_Sphere_Red_Buoy_Small.png";
-					break;
-				case BEACON:
-					image = "/images/Top_Sphere_Red_Beacon.png";
-					break;
-				case FLOAT:
-					image = "/images/Top_Sphere_Red_Float.png";
-					break;
-				}
-				if (!image.isEmpty())
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-			} else
-				dlg.panelMain.topIcon.setIcon(null);
-		} else {
-			dlg.panelMain.shapeIcon.setIcon(null);
-			dlg.panelMain.topIcon.setIcon(null);
-		}
-		super.paintSign();
+
+			super.paintSign();
 	}
 }

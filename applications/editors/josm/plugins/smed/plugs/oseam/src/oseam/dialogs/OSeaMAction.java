@@ -41,7 +41,7 @@ public class OSeaMAction {
 			Node nextNode = null;
 			Selection = newSelection;
 
-			// System.out.println(newSelection);
+			// System.out.println("hello");
 			for (OsmPrimitive osm : Selection) {
 				if (osm instanceof Node) {
 					nextNode = (Node) osm;

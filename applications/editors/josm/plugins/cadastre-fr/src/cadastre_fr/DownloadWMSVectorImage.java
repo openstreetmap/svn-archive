@@ -32,7 +32,6 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         errorMessage = null;
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
-                boolean useFactor = true;
                 if (wmsLayer.images.isEmpty()) {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
@@ -51,16 +50,10 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     } else {
                         // set vectorized commune bounding box by opening the standard web window
                         grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
-                        // if it is the first layer, use the communeBBox as grab bbox (and not divided)
-                        if (Main.map.mapView.getAllLayers().size() == 1 ) {
-                            bounds = wmsLayer.getCommuneBBox().toBounds();
-                            Main.map.mapView.zoomTo(bounds);
-                            useFactor = false;
-                        }
                     }
                 }
                 // grab new images from wms server into active layer
-                wmsLayer.grab(grabber, bounds, useFactor);
+                wmsLayer.grab(grabber, bounds);
             }
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)

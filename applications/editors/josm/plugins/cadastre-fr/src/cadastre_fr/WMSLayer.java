@@ -126,20 +126,20 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
-        grab(grabber, b, true);
-    }
-
-    public void grab(CadastreGrabber grabber, Bounds b, boolean useFactor) throws IOException {
         cancelled = false;
-        if (useFactor) {
+        // if it is the first layer, use the communeBBox as grab bbox (and not divided)
+        if (Main.map.mapView.getAllLayers().size() == 1 ) {
+            b = this.getCommuneBBox().toBounds();
+            Main.map.mapView.zoomTo(b);
+            divideBbox(b, 1);
+        } else {
             if (isRaster) {
                 b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
-                        CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)), 0);
+                        CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
             } else
-                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())), 0);
-        } else
-            divideBbox(b, 1, 0);
+                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
+        }
 
         int lastSavedImage = images.size();
         for (EastNorthBound n : dividedBbox) {
@@ -188,10 +188,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      *               3 = source bbox divided by 3x3 smaller boxes
      *               4 = configurable size from preferences (100 meters per default) rounded
      *                   allowing grabbing of next contiguous zone
-     *               5 = use the size provided in next argument optionalSize
-     * @param optionalSize box size used when factor is 5.
      */
-    private void divideBbox(Bounds b, int factor, int optionalSize) {
+    private void divideBbox(Bounds b, int factor) {
         EastNorth lambertMin = Main.proj.latlon2eastNorth(b.getMin());
         EastNorth lambertMax = Main.proj.latlon2eastNorth(b.getMax());
         double minEast = lambertMin.east();
@@ -207,7 +205,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         } else {
             // divide to fixed size squares
-            int cSquare = factor == 4 ? Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100")) : optionalSize;
+            int cSquare = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
             minEast = minEast - minEast % cSquare;
             minNorth = minNorth - minNorth % cSquare;
             for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)

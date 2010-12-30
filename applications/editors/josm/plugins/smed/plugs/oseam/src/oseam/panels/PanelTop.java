@@ -39,6 +39,7 @@ public class PanelTop extends JPanel {
 	public JRadioButton triangleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleDayButton.png")));
 	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
+	public JRadioButton circleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CircleDayButton.png")));
 	public JRadioButton mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
 	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
 	private EnumMap<Day, JRadioButton> days = new EnumMap<Day, JRadioButton>(Day.class);
@@ -91,6 +92,7 @@ public class PanelTop extends JPanel {
 		this.add(getDayButton(triangleDayButton, 100, 65, 27, 27, "TriangleDayTip", Day.TRIANGLE), null);
 		this.add(getDayButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDayTip", Day.TRIANGLE_INV), null);
 		this.add(getDayButton(squareDayButton, 160, 65, 27, 27, "SquareDayTip", Day.SQUARE), null);
+		this.add(getDayButton(circleDayButton, 160, 95, 27, 27, "CircleDayTip", Day.CIRCLE), null);
 		this.add(getMoorButton(mooringTopButton, 40, 95, 27, 27, "MooringTopTip"), null);
 	}
 

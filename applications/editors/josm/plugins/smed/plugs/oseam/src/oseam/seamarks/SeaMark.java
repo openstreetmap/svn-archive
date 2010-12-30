@@ -244,13 +244,14 @@ abstract public class SeaMark {
 	}
 
 	public enum Day {
-		NONE, BOARD, DIAMOND, TRIANGLE, TRIANGLE_INV, SQUARE
+		NONE, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
 	public static final EnumMap<Day, String> days = new EnumMap<Day, String>(Day.class);
 	static {
 		days.put(Day.BOARD, "board");
 		days.put(Day.DIAMOND, "diamond");
+		days.put(Day.CIRCLE, "circle");
 		days.put(Day.TRIANGLE, "triangle, point up");
 		days.put(Day.TRIANGLE_INV, "triangle, point down");
 		days.put(Day.SQUARE, "square");
@@ -672,7 +673,7 @@ abstract public class SeaMark {
 		String imgStr = "/images/";
 		String shpStr = shapes.get(shape);
 		if (shpStr == null)
-			dlg.panelMain.topIcon.setIcon(null);
+			dlg.panelMain.shapeIcon.setIcon(null);
 		else {
 			imgStr += shpStr;
 			if (shpStr.equals("perch")) {
@@ -683,7 +684,47 @@ abstract public class SeaMark {
 					imgStr += ("_" + colStr);
 			}
 			imgStr += ".png";
-			dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+		}
+
+		imgStr = "/images/top_";
+		shpStr = tops.get(topShape);
+		if (shpStr == null)
+			dlg.panelMain.topIcon.setIcon(null);
+		else {
+			switch (getShape()) {
+			case CAN:
+			case CONE:
+			case SPHERE:
+			case BARREL:
+				imgStr += "il_";
+				break;
+			case PILLAR:
+			case SPAR:
+				imgStr += "ih_";
+				break;
+			case FLOAT:
+			case SUPER:
+				imgStr += "vl_";
+				break;
+			case BEACON:
+			case TOWER:
+				imgStr += "vh_";
+				break;
+			default:
+				imgStr = null;
+				dlg.panelMain.topIcon.setIcon(null);
+				break;
+			}
+			if (imgStr != null) {
+				imgStr += shpStr;
+				String colStr = colours.get(topColour);
+				if (colStr != null)
+					imgStr += ("_" + colStr);
+				imgStr += ".png";
+System.out.println(imgStr);
+//				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+			}
 		}
 
 		if (hasRadar()) {

@@ -647,7 +647,7 @@ sub bulkLoad {
 	my $aRef1 ;
 	my $aRef2 ;
 
-	openOsmFile ($file) ;
+	OSM::osm::openOsmFile ($file) ;
 
 	print STDERR "INFO: processing nodes...\n" ;
 	print STDERR "reading nodes...\n" ;
@@ -655,7 +655,7 @@ sub bulkLoad {
 	open (my $nodesFile, ">", $tempDir . "/nodes.txt") ;
 	open (my $nodetagsFile, ">", $tempDir . "/nodetags.txt") ;
 
-	($aRef0, $aRef1) = getNode3 () ;
+	($aRef0, $aRef1) = OSM::osm::getNode3 () ;
 	if (defined $aRef0) {
 		@nodeTags = @$aRef1 ;
 		%nodeProperties = %$aRef0 ;
@@ -676,7 +676,7 @@ sub bulkLoad {
 		}
 
 		# next
-		($aRef0, $aRef1) = getNode3 () ;
+		($aRef0, $aRef1) = OSM::osm::getNode3 () ;
 		if (defined $aRef0) {
 			@nodeTags = @$aRef1 ;
 			%nodeProperties = %$aRef0 ;
@@ -708,7 +708,7 @@ sub bulkLoad {
 	open (my $waytagsFile, ">", $tempDir . "/waytags.txt") ;
 	open (my $waynodesFile, ">", $tempDir . "/waynodes.txt") ;
 
-	($aRef0, $aRef1, $aRef2) = getWay3 () ;
+	($aRef0, $aRef1, $aRef2) = OSM::osm::getWay3 () ;
 	if (defined $aRef0) {
 		%wayProperties = %$aRef0 ;
 		@wayNodes = @$aRef1 ;
@@ -736,7 +736,7 @@ sub bulkLoad {
 
 
 		# next way
-		($aRef0, $aRef1, $aRef2) = getWay3 () ;
+		($aRef0, $aRef1, $aRef2) = OSM::osm::getWay3 () ;
 		if (defined $aRef0) {
 			%wayProperties = %$aRef0 ;
 			@wayNodes = @$aRef1 ;
@@ -773,7 +773,7 @@ sub bulkLoad {
 	open (my $relationtagsFile, ">", $tempDir . "/relationtags.txt") ;
 	open (my $relationmembersFile, ">", $tempDir . "/relationmembers.txt") ;
 
-	($aRef0, $aRef1, $aRef2) = getRelation3 () ;
+	($aRef0, $aRef1, $aRef2) = OSM::osm::getRelation3 () ;
 	if (defined $aRef0) {
 		%relationProperties = %$aRef0 ;
 		@relationMembers = @$aRef1 ;
@@ -804,7 +804,7 @@ sub bulkLoad {
 		}
 
 		#next
-		($aRef0, $aRef1, $aRef2) = getRelation3 () ;
+		($aRef0, $aRef1, $aRef2) = OSM::osm::getRelation3 () ;
 		if (defined $aRef0) {
 			%relationProperties = %$aRef0 ;
 			@relationMembers = @$aRef1 ;
@@ -832,7 +832,7 @@ sub bulkLoad {
 
 	print STDERR "INFO: $relationCount relations processed.\n" ;
 
-	closeOsmFile () ;
+	OSM::osm::closeOsmFile () ;
 
 }
 

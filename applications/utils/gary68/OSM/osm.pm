@@ -93,6 +93,9 @@
 # Version 8.0
 # - read xml subs implemented for different getXXX
 #
+# Version 8.1
+# - diff db sub
+#
 #
 # USAGE
 #
@@ -168,6 +171,7 @@ package OSM::osm ;
 use strict;
 use warnings;
 
+use OSM::osmDB ;
 use LWP::Simple;
 use Math::Trig;
 # use IO::Handle ;
@@ -188,7 +192,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode2 getNode3 getNodeXml getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink applyDiffFile getBugs getNode2 getNode3 getNodeXml getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -518,7 +522,7 @@ sub getWay3 {
 }
 
 sub readWay {
-	my @gNodes ; my @gTags ;
+	my @gNodes = () ; my @gTags = () ;
 	my $propRef ;
 	
 	my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
@@ -528,26 +532,28 @@ sub readWay {
 	else {
 		$propRef = getProperties ($line, "way", $id) ;
 
-		nextLine() ;
-		while (not($line =~ /\/way>/)) { # more way data
-			#get nodes and type
-			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
-			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
-			if (!(($node) or ($k and defined($v) ))) {
-				#print "WARNING tag not recognized", $line, "\n" ; 
-			}
-		
-			if ($node) {
-				push @gNodes, $node ;
-			}
-
-			#get tags 
-			if ($k and defined($v)) {
-				my $tag = [$k, $v] ;
-				push @gTags, $tag ;
-			}
+		if ( ! grep /\/>/, $line) {
 			nextLine() ;
+			while (not($line =~ /\/way>/)) { # more way data
+				#get nodes and type
+				my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
+				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+	
+				if (!(($node) or ($k and defined($v) ))) {
+					#print "WARNING tag not recognized", $line, "\n" ; 
+				}
+			
+				if ($node) {
+					push @gNodes, $node ;
+				}
+
+				#get tags 
+				if ($k and defined($v)) {
+					my $tag = [$k, $v] ;
+					push @gTags, $tag ;
+				}
+				nextLine() ;
+			}
 		}
 		nextLine() ;
 	}
@@ -627,25 +633,27 @@ sub readRelation {
 
 		$propRef = getProperties ($line, "relation", $id) ;
 
-		nextLine() ;
-		while (not($line =~ /\/relation>/)) { # more data
-			if ($line =~ /<member/) {
-				my ($memberType)   = ($line =~ /^\s*\<member type=[\'\"]([\w]*)[\'\"]/); 
-				my ($memberRef) = ($line =~ /^.+ref=[\'\"](\d*)[\'\"]/);       
-				my ($memberRole) = ($line =~ /^.+role=[\'\"](.*)[\'\"]/);
-				if (!$memberRole) { $memberRole = "none" ; }
-				my @member = [$memberType, $memberRef, $memberRole] ;
-				push @gMembers, @member ;
-			}
-			if ($line =~ /<tag/) {
-				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-				if (!(($k and defined($v) ))) {
-					$k = "unknown" ; $v = "unknown" ;
-				}
-				my $tag = [$k, $v] ;
-				push @gTags, $tag ;
-			}
+		if ( ! grep /\/>/, $line) {
 			nextLine() ;
+			while (not($line =~ /\/relation>/)) { # more data
+				if ($line =~ /<member/) {
+					my ($memberType)   = ($line =~ /^\s*\<member type=[\'\"]([\w]*)[\'\"]/); 
+					my ($memberRef) = ($line =~ /^.+ref=[\'\"](\d*)[\'\"]/);       
+					my ($memberRole) = ($line =~ /^.+role=[\'\"](.*)[\'\"]/);
+					if (!$memberRole) { $memberRole = "none" ; }
+					my @member = [$memberType, $memberRef, $memberRole] ;
+					push @gMembers, @member ;
+				}
+				if ($line =~ /<tag/) {
+					my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+					if (!(($k and defined($v) ))) {
+						$k = "unknown" ; $v = "unknown" ;
+					}
+					my $tag = [$k, $v] ;
+					push @gTags, $tag ;
+				}
+				nextLine() ;
+			}
 		}
 		nextLine() ;
 	}
@@ -1475,6 +1483,69 @@ sub APIgetWay {
 	return ($wayId, $wayUser, \@wayNodes, \@wayTags) ;
 }
 
+# -------------------------------------------------------------------------------
+
+sub applyDiffFile {
+	my ($dbName, $fileName) = @_ ;
+	my $mode = "" ;
+	my $object = "" ;
+	my ($propRef, $tagRef, $nodeRef, $memberRef) ; 
+	open ($file, "<", $fileName) or die ("ERROR: could not open diff file $fileName\n") ;	
+	dbConnect ($dbName) ;
+	
+	$line = <$file> ;
+	$line = <$file> ;
+	$line = <$file> ;
+	while ( ! grep /<\/osmchange/i, $line) {
+		($mode) = ( $line =~ /<(.+)>/ ) ;
+		$line = <$file> ;
+		print "MODE: $mode\n" ;
+		while ( ! grep /<\/$mode>/i, $line) {
+			if (grep /<node/i, $line) {
+				($propRef, $tagRef) = getNode3() ;
+				my $id = $$propRef{"id"} ;
+				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
+					deleteDBNode ($id) ; 
+					print "  deleting node $id\n" ;
+				}
+				if ( ($mode eq "modify") or ($mode eq "create") ) { 
+					storeDBNode ($propRef, $tagRef) ; 
+					print "  storing node $id\n" ;
+				}
+			}
+			if (grep /<way/i, $line) {
+				# TODO single line (ONLY delete!)
+				($propRef, $nodeRef, $tagRef) = getWay3() ;
+
+				my $id = $$propRef{"id"} ;
+				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
+					deleteDBWay ($id) ; 
+					print "  deleting way $id\n" ;
+				}
+				if ( ($mode eq "modify") or ($mode eq "create") ) { 
+					storeDBWay ($propRef, $nodeRef, $tagRef) ; 
+					print "  storing way $id\n" ;
+				}
+			}
+			if (grep /<relation/i, $line) {
+				($propRef, $memberRef, $tagRef) = getRelation3() ;
+				my $id = $$propRef{"id"} ;
+				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
+					deleteDBRelation ($id) ; 
+					print "  deleting relation $id\n" ;
+				}
+				if ( ($mode eq "modify") or ($mode eq "create") ) { 
+					storeDBRelation ($propRef, $memberRef, $tagRef) ; 
+					print "  storing relation $id\n" ;
+				}
+			}
+		}
+		$line = <$file> ; # end of mode
+	}
+
+	dbDisconnect () ;
+	close ($file) ;
+}
 
 1 ;
 

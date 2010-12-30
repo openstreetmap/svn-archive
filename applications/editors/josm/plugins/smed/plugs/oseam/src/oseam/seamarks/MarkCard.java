@@ -92,48 +92,4 @@ public class MarkCard extends SeaMark {
 		super.parseMark();
 	}
 
-	public void paintSign() {
-		String image = "/images/Cardinal";
-		switch (getShape()) {
-		case PILLAR:
-			image += "_Pillar";
-			break;
-		case SPAR:
-			image += "_Spar";
-			break;
-		case BEACON:
-			image += "_Beacon";
-			break;
-		case TOWER:
-			image += "_Tower";
-			break;
-		case FLOAT:
-			image += "_Float";
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-		switch (getCategory()) {
-		case CARD_NORTH:
-			image += "_North";
-			break;
-		case CARD_EAST:
-			image += "_East";
-			break;
-		case CARD_SOUTH:
-			image += "_South";
-			break;
-		case CARD_WEST:
-			image += "_West";
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-		image += ".png";
-		dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-		
-		super.paintSign();
-	}
 }

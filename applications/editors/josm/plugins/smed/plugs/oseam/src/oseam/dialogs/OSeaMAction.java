@@ -130,9 +130,18 @@ public class OSeaMAction {
 		} else if (type.equals("beacon_isolated_danger")) {
 			mark = new MarkIsol(this);
 			mark.setObject(Obj.BCNISD);
-		} else if (type.equals("landmark") || type.equals("light_vessel") || type.equals("light_major") || type.equals("light_minor")) {
+		} else if (type.equals("landmark")) {
 			mark = new MarkLight(this);
-			mark.setObject(Obj.LIGHTS);
+			mark.setObject(Obj.LNDMRK);
+		} else if (type.equals("light_vessel")) {
+			mark = new MarkLight(this);
+			mark.setObject(Obj.LITVES);
+		} else if (type.equals("light_major")) {
+			mark = new MarkLight(this);
+			mark.setObject(Obj.LITMAJ);
+		} else if (type.equals("light_minor")) {
+			mark = new MarkLight(this);
+			mark.setObject(Obj.LITMIN);
 		} else if (type.equals("light_float")) {
 			if (keys.containsKey("seamark:light_float:colour")) {
 				str = keys.get("seamark:light_float:colour");

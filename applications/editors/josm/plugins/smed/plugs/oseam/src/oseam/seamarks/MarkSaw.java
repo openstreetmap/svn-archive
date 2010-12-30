@@ -54,33 +54,4 @@ public class MarkSaw extends SeaMark {
 		super.parseMark();
 	}
 
-	public void paintSign() {
-
-		String image = "/images/Safe_Water";
-
-		switch (getShape()) {
-		case PILLAR:
-			image += "_Pillar";
-			break;
-		case SPAR:
-			image += "_Spar";
-			break;
-		case SPHERE:
-			image += "_Sphere";
-			break;
-		case BEACON:
-			image += "_Beacon";
-			break;
-		case FLOAT:
-			image += "_Float";
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-			image += ".png";
-			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-			super.paintSign();
-	}
 }

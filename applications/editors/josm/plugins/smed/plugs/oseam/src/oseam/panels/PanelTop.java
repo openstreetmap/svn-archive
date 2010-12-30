@@ -16,6 +16,7 @@ import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Top;
+import oseam.seamarks.SeaMark.Day;
 import oseam.seamarks.SeaMark.Ent;
 
 public class PanelTop extends JPanel {
@@ -40,6 +41,7 @@ public class PanelTop extends JPanel {
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
 	public JRadioButton mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
 	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
+	private EnumMap<Day, JRadioButton> days = new EnumMap<Day, JRadioButton>(Day.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			Iterator<Top> it = tops.keySet().iterator();
@@ -48,10 +50,23 @@ public class PanelTop extends JPanel {
 				JRadioButton button = tops.get(top);
 				if (button.isSelected()) {
 					dlg.mark.setTopmark(top);
+					dlg.mark.setDaymark(Day.NONE);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
+			Iterator<Day> id = days.keySet().iterator();
+			while (id.hasNext()) {
+				Day day = id.next();
+				JRadioButton button = days.get(day);
+				if (button.isSelected()) {
+					dlg.mark.setDaymark(day);
+					dlg.mark.setTopmark(Top.NONE);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
+			}
+			mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
 		}
 	};
 
@@ -71,12 +86,12 @@ public class PanelTop extends JPanel {
 		this.add(getTopButton(eastTopButton, 100, 35, 27, 27, "EastTopTip", Top.EAST), null);
 		this.add(getTopButton(westTopButton, 130, 35, 27, 27, "WestTopTip", Top.WEST), null);
 		this.add(getTopButton(spheres2TopButton, 160, 35, 27, 27, "Spheres2TopTip", Top.SPHERES2), null);
-		this.add(getTopButton(boardDayButton, 40, 65, 27, 27, "BoardDayTip", Top.BOARD), null);
-		this.add(getTopButton(diamondDayButton, 70, 65, 27, 27, "DiamondDayTip", Top.DIAMOND), null);
-		this.add(getTopButton(triangleDayButton, 100, 65, 27, 27, "TriangleDayTip", Top.TRIANGLE), null);
-		this.add(getTopButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDayTip", Top.TRIANGLE_INV), null);
-		this.add(getTopButton(squareDayButton, 160, 65, 27, 27, "SquareDayTip", Top.SQUARE), null);
-		this.add(getTopButton(mooringTopButton, 40, 95, 27, 27, "MooringTopTip", Top.MOORING), null);
+		this.add(getDayButton(boardDayButton, 40, 65, 27, 27, "BoardDayTip", Day.BOARD), null);
+		this.add(getDayButton(diamondDayButton, 70, 65, 27, 27, "DiamondDayTip", Day.DIAMOND), null);
+		this.add(getDayButton(triangleDayButton, 100, 65, 27, 27, "TriangleDayTip", Day.TRIANGLE), null);
+		this.add(getDayButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDayTip", Day.TRIANGLE_INV), null);
+		this.add(getDayButton(squareDayButton, 160, 65, 27, 27, "SquareDayTip", Day.SQUARE), null);
+		this.add(getMoorButton(mooringTopButton, 40, 95, 27, 27, "MooringTopTip"), null);
 	}
 
 	public void clearSelections() {
@@ -93,13 +108,32 @@ public class PanelTop extends JPanel {
 	}
 
 	private JRadioButton getTopButton(JRadioButton button, int x, int y, int w, int h, String tip, Top top) {
-			button.setBounds(new Rectangle(x, y, w, h));
-			button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			button.setToolTipText(Messages.getString(tip));
-			button.addActionListener(alTop);
-			topButtons.add(button);
-			tops.put(top, button);
-		return button;
-	}
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		button.addActionListener(alTop);
+		topButtons.add(button);
+		tops.put(top, button);
+	return button;
+}
+
+	private JRadioButton getDayButton(JRadioButton button, int x, int y, int w, int h, String tip, Day day) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		button.addActionListener(alTop);
+		topButtons.add(button);
+		days.put(day, button);
+	return button;
+}
+
+	private JRadioButton getMoorButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+		button.setBounds(new Rectangle(x, y, w, h));
+		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setToolTipText(Messages.getString(tip));
+		button.addActionListener(alTop);
+		topButtons.add(button);
+	return button;
+}
 
 }

@@ -61,32 +61,4 @@ public class MarkIsol extends SeaMark {
 		super.parseMark();
 	}
 
-	public void paintSign() {
-		String image = "/images/Cardinal";
-
-		switch (getShape()) {
-		case PILLAR:
-			image += "_Pillar_Single";
-			break;
-		case SPAR:
-			image += "_Spar_Single";
-			break;
-		case BEACON:
-			image += "_Beacon_Single";
-			break;
-		case TOWER:
-			image += "_Tower_Single";
-			break;
-		case FLOAT:
-			image += "_Float_Single";
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-		image += ".png";
-		dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-		super.paintSign();
-	}
 }

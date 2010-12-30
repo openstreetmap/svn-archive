@@ -15,11 +15,11 @@ import oseam.dialogs.OSeaMAction;
 import oseam.panels.PanelPort;
 import oseam.panels.PanelStbd;
 import oseam.panels.PanelSaw;
-import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
 import oseam.seamarks.SeaMark.Shp;
+import oseam.seamarks.SeaMark.Reg;
 import oseam.seamarks.MarkLat;
 import oseam.seamarks.MarkSaw;
 
@@ -54,7 +54,7 @@ public class PanelChan extends JPanel {
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.canTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.panelCol.enableAll(false);
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
 					dlg.panelMain.panelTop.panelCol.redButton.doClick();
 				} else {
@@ -70,7 +70,7 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.mark.setColour(Ent.BODY, Col.RED);
 					panelPort.regionAButton.doClick();
 				} else {
@@ -92,7 +92,7 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
 					panelPort.regionAButton.doClick();
 				} else {
@@ -119,7 +119,7 @@ public class PanelChan extends JPanel {
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.coneTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.panelCol.enableAll(false);
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.panelMain.panelTop.panelCol.greenButton.setEnabled(true);
 					dlg.panelMain.panelTop.panelCol.greenButton.doClick();
 				} else {
@@ -135,7 +135,7 @@ public class PanelChan extends JPanel {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN);
 					panelStbd.regionAButton.doClick();
 				} else {
@@ -157,7 +157,7 @@ public class PanelChan extends JPanel {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == SeaMark.IALA_A) {
+				if (dlg.mark.getRegion() == Reg.A) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
 					panelStbd.regionAButton.doClick();
 				} else {

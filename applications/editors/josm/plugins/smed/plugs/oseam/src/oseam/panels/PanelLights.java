@@ -51,8 +51,8 @@ public class PanelLights extends JPanel {
 		dlg = dia;
 		this.setLayout(null);
 		this.add(getCatButton(houseButton, 0, 0, 34, 32, "LighthouseTip", Cat.LIGHT_HOUSE, Obj.LNDMRK), null);
-		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLightTip", Cat.LIGHT_MAJOR, Obj.LIGHTS), null);
-		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLightTip", Cat.LIGHT_MINOR, Obj.LIGHTS), null);
+		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLightTip", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
+		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLightTip", Cat.LIGHT_MINOR, Obj.LITMIN), null);
 		this.add(getCatButton(vesselButton, 0, 96, 34, 32, "LightVesselTip", Cat.LIGHT_VESSEL, Obj.LITVES), null);
 		this.add(getCatButton(floatButton, 0, 128, 34, 32, "LightFloatTip", Cat.LIGHT_FLOAT, Obj.LITFLT), null);
 	}

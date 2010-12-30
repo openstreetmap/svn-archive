@@ -82,45 +82,4 @@ public class MarkSpec extends SeaMark {
 		super.parseMark();
 	}
 
-	public void paintSign() {
-
-		String image = "/images/Special_Purpose";
-
-		switch (getShape()) {
-		case PILLAR:
-			image += "_Pillar";
-			break;
-		case CAN:
-			image += "_Can";
-			break;
-		case CONE:
-			image += "_Cone";
-			break;
-		case SPAR:
-			image += "_Spar";
-			break;
-		case SPHERE:
-			image += "_Sphere";
-			break;
-		case BARREL:
-			image += "_Barrel";
-			break;
-		case FLOAT:
-			image += "_Float";
-			break;
-		case BEACON:
-			image += "_Beacon";
-			break;
-		case TOWER:
-			image += "_Tower";
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-		image += ".png";
-		dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-		super.paintSign();
-	}
 }

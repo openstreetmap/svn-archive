@@ -76,7 +76,7 @@ public class MarkLat extends SeaMark {
 					dlg.panelMain.panelChan.stbdButton.doClick();
 					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
 				} else {
-					if (getRegion() == IALA_A)
+					if (getRegion() == Reg.A)
 						dlg.panelMain.panelChan.portButton.doClick();
 					else
 						dlg.panelMain.panelChan.stbdButton.doClick();
@@ -90,7 +90,7 @@ public class MarkLat extends SeaMark {
 					dlg.panelMain.panelChan.portButton.doClick();
 					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
 				} else {
-					if (getRegion() == IALA_A)
+					if (getRegion() == Reg.A)
 						dlg.panelMain.panelChan.stbdButton.doClick();
 					else
 						dlg.panelMain.panelChan.portButton.doClick();
@@ -104,7 +104,7 @@ public class MarkLat extends SeaMark {
 					dlg.panelMain.panelChan.prefStbdButton.doClick();
 					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
 				} else {
-					if (getRegion() == IALA_A)
+					if (getRegion() == Reg.A)
 						dlg.panelMain.panelChan.prefPortButton.doClick();
 					else
 						dlg.panelMain.panelChan.prefStbdButton.doClick();
@@ -118,7 +118,7 @@ public class MarkLat extends SeaMark {
 					dlg.panelMain.panelChan.prefPortButton.doClick();
 					dlg.panelMain.panelChan.panelPort.regionBButton.doClick();
 				} else {
-					if (getRegion() == IALA_A)
+					if (getRegion() == Reg.A)
 						dlg.panelMain.panelChan.prefStbdButton.doClick();
 					else
 						dlg.panelMain.panelChan.prefPortButton.doClick();
@@ -210,235 +210,4 @@ public class MarkLat extends SeaMark {
 		super.parseMark();
 	}
 
-	public void paintSign() {
-		boolean region = getRegion();
-		Shp style = getShape();
-
-		String image = "/images/Lateral";
-
-		switch (getCategory()) {
-		case LAT_PORT:
-			if (region == IALA_A)
-				switch (style) {
-				case CAN:
-					image += "_Can_Red";
-					break;
-				case PILLAR:
-					image += "_Pillar_Red";
-					break;
-				case SPAR:
-					image += "_Spar_Red";
-					break;
-				case BEACON:
-					image += "_Beacon_Red";
-					break;
-				case TOWER:
-					image += "_Tower_Red";
-					break;
-				case FLOAT:
-					image += "_Float_Red";
-					break;
-				case PERCH:
-					image += "_Perch_Port";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			else
-				switch (style) {
-				case CAN:
-					image += "_Can_Green";
-					break;
-				case PILLAR:
-					image += "_Pillar_Green";
-					break;
-				case SPAR:
-					image += "_Spar_Green";
-					break;
-				case BEACON:
-					image += "_Beacon_Green";
-					break;
-				case TOWER:
-					image += "_Tower_Green";
-					break;
-				case FLOAT:
-					image += "_Float_Green";
-					break;
-				case PERCH:
-					image += "_Perch_Port";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			break;
-
-		case LAT_STBD:
-			if (region == IALA_A)
-				switch (style) {
-				case CONE:
-					image += "_Cone_Green";
-					break;
-				case PILLAR:
-					image += "_Pillar_Green";
-					break;
-				case SPAR:
-					image += "_Spar_Green";
-					break;
-				case BEACON:
-					image += "_Beacon_Green";
-					break;
-				case TOWER:
-					image += "_Tower_Green";
-					break;
-				case FLOAT:
-					image += "_Float_Green";
-					break;
-				case PERCH:
-					image += "_Perch_Starboard";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			else
-				switch (style) {
-				case CONE:
-					image += "_Cone_Red";
-					break;
-				case PILLAR:
-					image += "_Pillar_Red";
-					break;
-				case SPAR:
-					image += "_Spar_Red";
-					break;
-				case BEACON:
-					image += "_Beacon_Red";
-					break;
-				case TOWER:
-					image += "_Tower_Red";
-					break;
-				case FLOAT:
-					image += "_Float_Red";
-					break;
-				case PERCH:
-					image += "_Perch_Starboard";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			break;
-
-		case LAT_PREF_PORT:
-			if (region == IALA_A)
-				switch (style) {
-				case CAN:
-					image += "_Can_Red_Green_Red";
-					break;
-				case PILLAR:
-					image += "_Pillar_Red_Green_Red";
-					break;
-				case SPAR:
-					image += "_Spar_Red_Green_Red";
-					break;
-				case BEACON:
-					image += "_Beacon_Red_Green_Red";
-					break;
-				case TOWER:
-					image += "_Tower_Red_Green_Red";
-					break;
-				case FLOAT:
-					image += "_Float_Red_Green_Red";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			else
-				switch (style) {
-				case CAN:
-					image += "_Can_Green_Red_Green";
-					break;
-				case PILLAR:
-					image += "_Pillar_Green_Red_Green";
-					break;
-				case SPAR:
-					image += "_Spar_Green_Red_Green";
-					break;
-				case BEACON:
-					image += "_Beacon_Green_Red_Green";
-					break;
-				case TOWER:
-					image += "_Tower_Green_Red_Green";
-					break;
-				case FLOAT:
-					image += "_Float_Green_Red_Green";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			break;
-
-		case LAT_PREF_STBD:
-			if (region == IALA_A)
-				switch (style) {
-				case CONE:
-					image += "_Cone_Green_Red_Green";
-					break;
-				case PILLAR:
-					image += "_Pillar_Green_Red_Green";
-					break;
-				case SPAR:
-					image += "_Spar_Green_Red_Green";
-					break;
-				case BEACON:
-					image += "_Beacon_Green_Red_Green";
-					break;
-				case TOWER:
-					image += "_Tower_Green_Red_Green";
-					break;
-				case FLOAT:
-					image += "_Float_Green_Red_Green";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			else
-				switch (style) {
-				case CONE:
-					image += "_Cone_Red_Green_Red";
-					break;
-				case PILLAR:
-					image += "_Pillar_Red_Green_Red";
-					break;
-				case SPAR:
-					image += "_Spar_Red_Green_Red";
-					break;
-				case BEACON:
-					image += "_Beacon_Red_Green_Red";
-					break;
-				case TOWER:
-					image += "_Tower_Red_Green_Red";
-					break;
-				case FLOAT:
-					image += "_Float_Red_Green_Red";
-					break;
-				default:
-					dlg.panelMain.shapeIcon.setIcon(null);
-					return;
-				}
-			break;
-		default:
-			dlg.panelMain.shapeIcon.setIcon(null);
-			return;
-		}
-			image += ".png";
-			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-		super.paintSign();
-	}
 }

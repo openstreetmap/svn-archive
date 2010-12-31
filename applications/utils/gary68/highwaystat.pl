@@ -25,7 +25,7 @@ use Time::localtime;
 
 
 my $program = "highwaystat.pl" ;
-my $version = "1.0 BETA (002)" ;
+my $version = "1.1" ;
 my $usage = $program . " file.osm" ;
 
 my $wayId ;
@@ -81,7 +81,7 @@ print "get node information...\n" ;
 openOsmFile ($osmName) ;
 
 
-($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
+($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
 if ($nodeId != -1) {
 	#@nodeTags = @$aRef1 ;
 }
@@ -92,7 +92,7 @@ while ($nodeId != -1) {
 	$lat{$nodeId} = $nodeLat ;
 
 	# next
-	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
+	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
 	if ($nodeId != -1) {
 		#@nodeTags = @$aRef1 ;
 	}
@@ -101,7 +101,7 @@ while ($nodeId != -1) {
 
 print "get way information...\n" ;
 
-($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
+($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
 if ($wayId != -1) {
 	@wayNodes = @$aRef1 ;
 	@wayTags = @$aRef2 ;
@@ -112,7 +112,7 @@ while ($wayId != -1) {
 	my $found = 0 ;
 	my $type = "" ;
 	foreach $tag1 (@wayTags) {
-		if (grep /^highway/, $tag1) { $found = 1 ; $type = $tag1 ; }
+		if ($tag1->[0] eq "highway") { $found = 1 ; $type = $tag1->[1] ; }
 	}
 
 	if ($found and (scalar @wayNodes>1) ) { 
@@ -129,7 +129,7 @@ while ($wayId != -1) {
 	}
 
 	# next way
-	($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
+	($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
 	if ($wayId != -1) {
 		@wayNodes = @$aRef1 ;
 		@wayTags = @$aRef2 ;

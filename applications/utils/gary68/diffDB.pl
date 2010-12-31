@@ -9,7 +9,7 @@ use Time::localtime;
 
 
 my $program = "diffDB.pl" ;
-my $version = "0.1 BETA" ;
+my $version = "1.0" ;
 
 my $usage = $program . " dbname file.osc" ;
 

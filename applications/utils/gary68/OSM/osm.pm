@@ -184,7 +184,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.0' ; 
+$VERSION = '8.11' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -1490,6 +1490,10 @@ sub applyDiffFile {
 	my $mode = "" ;
 	my $object = "" ;
 	my ($propRef, $tagRef, $nodeRef, $memberRef) ; 
+	my $nodeCount = 0 ;
+	my $wayCount = 0 ;
+	my $relationCount = 0 ;
+
 	open ($file, "<", $fileName) or die ("ERROR: could not open diff file $fileName\n") ;	
 	dbConnect ($dbName) ;
 	
@@ -1499,44 +1503,46 @@ sub applyDiffFile {
 	while ( ! grep /<\/osmchange/i, $line) {
 		($mode) = ( $line =~ /<(.+)>/ ) ;
 		$line = <$file> ;
-		print "MODE: $mode\n" ;
+		# print "MODE: $mode\n" ;
 		while ( ! grep /<\/$mode>/i, $line) {
 			if (grep /<node/i, $line) {
+				$nodeCount++ ;
 				($propRef, $tagRef) = getNode3() ;
 				my $id = $$propRef{"id"} ;
 				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
 					deleteDBNode ($id) ; 
-					print "  deleting node $id\n" ;
+					# print "  deleting node $id\n" ;
 				}
 				if ( ($mode eq "modify") or ($mode eq "create") ) { 
 					storeDBNode ($propRef, $tagRef) ; 
-					print "  storing node $id\n" ;
+					# print "  storing node $id\n" ;
 				}
 			}
 			if (grep /<way/i, $line) {
-				# TODO single line (ONLY delete!)
+				$wayCount++ ;
 				($propRef, $nodeRef, $tagRef) = getWay3() ;
 
 				my $id = $$propRef{"id"} ;
 				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
 					deleteDBWay ($id) ; 
-					print "  deleting way $id\n" ;
+					# print "  deleting way $id\n" ;
 				}
 				if ( ($mode eq "modify") or ($mode eq "create") ) { 
 					storeDBWay ($propRef, $nodeRef, $tagRef) ; 
-					print "  storing way $id\n" ;
+					# print "  storing way $id\n" ;
 				}
 			}
 			if (grep /<relation/i, $line) {
+				$relationCount++ ;
 				($propRef, $memberRef, $tagRef) = getRelation3() ;
 				my $id = $$propRef{"id"} ;
 				if ( ($mode eq "delete") or ($mode eq "modify") ) { 
 					deleteDBRelation ($id) ; 
-					print "  deleting relation $id\n" ;
+					# print "  deleting relation $id\n" ;
 				}
 				if ( ($mode eq "modify") or ($mode eq "create") ) { 
 					storeDBRelation ($propRef, $memberRef, $tagRef) ; 
-					print "  storing relation $id\n" ;
+					# print "  storing relation $id\n" ;
 				}
 			}
 		}
@@ -1545,6 +1551,10 @@ sub applyDiffFile {
 
 	dbDisconnect () ;
 	close ($file) ;
+
+	print "$nodeCount nodes processed.\n" ;
+	print "$wayCount ways processed.\n" ;
+	print "$relationCount relations processed.\n" ;
 }
 
 1 ;

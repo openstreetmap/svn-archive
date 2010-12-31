@@ -20,19 +20,6 @@ public class MarkLat extends SeaMark {
 		if (!dlg.panelMain.chanButton.isSelected())
 			dlg.panelMain.chanButton.doClick();
 
-		if (keys.containsKey("name"))
-			setName(keys.get("name"));
-
-		if (keys.containsKey("seamark:name"))
-			setName(keys.get("seamark:name"));
-
-		if (keys.containsKey("seamark:buoy_lateral:name"))
-			setName(keys.get("seamark:buoy_lateral:name"));
-		else if (keys.containsKey("seamark:beacon_lateral:name"))
-			setName(keys.get("seamark:beacon_lateral:name"));
-		else if (keys.containsKey("seamark:light_float:name"))
-			setName(keys.get("seamark:light_float:name"));
-
 		String cat = "";
 		String col = "";
 		String top = "";

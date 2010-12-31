@@ -23,19 +23,6 @@ public class MarkSaw extends SeaMark {
 		if (!dlg.panelMain.panelChan.safeWaterButton.isSelected())
 			dlg.panelMain.panelChan.safeWaterButton.doClick();
 
-		if (keys.containsKey("name"))
-			setName(keys.get("name"));
-
-		if (keys.containsKey("seamark:name"))
-			setName(keys.get("seamark:name"));
-
-		if (keys.containsKey("seamark:buoy_safe_water:name"))
-			setName(keys.get("seamark:buoy_safe_water:name"));
-		else if (keys.containsKey("seamark:beacon_safe_water:name"))
-			setName(keys.get("seamark:beacon_safe_water:name"));
-		else if (keys.containsKey("seamark:light_float:name"))
-			setName(keys.get("seamark:light_float:name"));
-
 		if (keys.containsKey("seamark:buoy_safe_water:shape")) {
 			str = keys.get("seamark:buoy_safe_water:shape");
 

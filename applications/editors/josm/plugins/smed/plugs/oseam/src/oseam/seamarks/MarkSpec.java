@@ -2,8 +2,6 @@ package oseam.seamarks;
 
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
 import oseam.dialogs.OSeaMAction;
 
 public class MarkSpec extends SeaMark {
@@ -20,18 +18,12 @@ public class MarkSpec extends SeaMark {
 		if (!dlg.panelMain.specButton.isSelected())
 			dlg.panelMain.specButton.doClick();
 
-		if (keys.containsKey("name"))
-			setName(keys.get("name"));
-
-		if (keys.containsKey("seamark:name"))
-			setName(keys.get("seamark:name"));
-
 		if (keys.containsKey("seamark:buoy_special_purpose:name"))
-			setName(keys.get("seamark:buoy_special_purpose:name"));
+			dlg.panelMain.nameBox.setText(keys.get("seamark:buoy_special_purpose:name"));
 		else if (keys.containsKey("seamark:beacon_special_purpose:name"))
-			setName(keys.get("seamark:beacon_special_purpose:name"));
+			dlg.panelMain.nameBox.setText(keys.get("seamark:beacon_special_purpose:name"));
 		else if (keys.containsKey("seamark:light_float:name"))
-			setName(keys.get("seamark:light_float:name"));
+			dlg.panelMain.nameBox.setText(keys.get("seamark:light_float:name"));
 
 		dlg.panelMain.panelSpec.panelCol.yellowButton.doClick();
 		dlg.panelMain.panelLit.panelCol.whiteButton.doClick();

@@ -73,7 +73,6 @@ abstract public class SeaMark {
 		objects.put(Obj.LITVES, "light_vessel");
 		objects.put(Obj.LNDMRK, "landmark");
 		objects.put(Obj.MORFAC, "mooring");
-
 	}
 
 	private Obj object = Obj.UNKNOWN;
@@ -88,6 +87,87 @@ abstract public class SeaMark {
 
 	public enum Ent {
 		BODY, BUOY, BEACON, FLOAT, TOPMARK, DAYMARK, LIGHT
+	}
+
+	public enum Grp {
+		LAT, CAR, SAW, ISD, SPP, LIT
+	}
+
+	public static final EnumMap<Obj, Grp> groups = new EnumMap<Obj, Grp>(Obj.class);
+	static {
+		groups.put(Obj.BCNCAR, Grp.CAR);
+		groups.put(Obj.BCNISD, Grp.ISD);
+		groups.put(Obj.BCNLAT, Grp.LAT);
+		groups.put(Obj.BCNSAW, Grp.SAW);
+		groups.put(Obj.BCNSPP, Grp.SPP);
+		groups.put(Obj.BOYCAR, Grp.CAR);
+		groups.put(Obj.BOYISD, Grp.ISD);
+		groups.put(Obj.BOYLAT, Grp.LAT);
+		groups.put(Obj.BOYSAW, Grp.SAW);
+		groups.put(Obj.BOYSPP, Grp.SPP);
+		groups.put(Obj.LITMAJ, Grp.LIT);
+		groups.put(Obj.LITMIN, Grp.LIT);
+		groups.put(Obj.LITFLT, Grp.LIT);
+		groups.put(Obj.LITVES, Grp.LIT);
+		groups.put(Obj.LNDMRK, Grp.LIT);
+		groups.put(Obj.MORFAC, Grp.SPP);
+	}
+	
+	public enum Cat {
+		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT, MOORING_BUOY
+	}
+
+	public static final EnumMap<Cat, String> categories = new EnumMap<Cat, String>(Cat.class);
+	static {
+		categories.put(Cat.LAT_PORT, "port");
+		categories.put(Cat.LAT_STBD, "starboard");
+		categories.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
+		categories.put(Cat.LAT_PREF_STBD, "preferred_channel_starboard");
+		categories.put(Cat.CARD_NORTH, "north");
+		categories.put(Cat.CARD_EAST, "east");
+		categories.put(Cat.CARD_SOUTH, "south");
+		categories.put(Cat.CARD_WEST, "west");
+		categories.put(Cat.MOORING_BUOY, "mooring_buoy");
+	}
+
+	private Cat category = Cat.UNKNOWN;
+
+	public Cat getCategory() {
+		return category;
+	}
+
+	public void setCategory(Cat cat) {
+		category = cat;
+	}
+
+	public enum Shp {
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
+	}
+
+	public static final EnumMap<Shp, String> shapes = new EnumMap<Shp, String>(Shp.class);
+	static {
+		shapes.put(Shp.PILLAR, "pillar");
+		shapes.put(Shp.SPAR, "spar");
+		shapes.put(Shp.CAN, "can");
+		shapes.put(Shp.CONE, "conical");
+		shapes.put(Shp.SPHERE, "sphere");
+		shapes.put(Shp.BARREL, "barrel");
+		shapes.put(Shp.FLOAT, "float");
+		shapes.put(Shp.SUPER, "super-buoy");
+		shapes.put(Shp.BEACON, "beacon");
+		shapes.put(Shp.TOWER, "tower");
+		shapes.put(Shp.STAKE, "stake");
+		shapes.put(Shp.PERCH, "perch");
+	}
+
+	private Shp shape = Shp.UNKNOWN;
+
+	public Shp getShape() {
+		return shape;
+	}
+
+	public void setShape(Shp styl) {
+		shape = styl;
 	}
 
 	public enum Col {
@@ -152,63 +232,6 @@ abstract public class SeaMark {
 			lightColour[sectorIndex] = col;
 			break;
 		}
-	}
-
-	public enum Cat {
-		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT, MOORING_BUOY
-	}
-
-	public static final EnumMap<Cat, String> categories = new EnumMap<Cat, String>(Cat.class);
-	static {
-		categories.put(Cat.LAT_PORT, "port");
-		categories.put(Cat.LAT_STBD, "starboard");
-		categories.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
-		categories.put(Cat.LAT_PREF_STBD, "preferred_channel_starboard");
-		categories.put(Cat.CARD_NORTH, "north");
-		categories.put(Cat.CARD_EAST, "east");
-		categories.put(Cat.CARD_SOUTH, "south");
-		categories.put(Cat.CARD_WEST, "west");
-		categories.put(Cat.MOORING_BUOY, "mooring_buoy");
-	}
-
-	private Cat category = Cat.UNKNOWN;
-
-	public Cat getCategory() {
-		return category;
-	}
-
-	public void setCategory(Cat cat) {
-		category = cat;
-	}
-
-	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
-	}
-
-	public static final EnumMap<Shp, String> shapes = new EnumMap<Shp, String>(Shp.class);
-	static {
-		shapes.put(Shp.PILLAR, "pillar");
-		shapes.put(Shp.SPAR, "spar");
-		shapes.put(Shp.CAN, "can");
-		shapes.put(Shp.CONE, "conical");
-		shapes.put(Shp.SPHERE, "sphere");
-		shapes.put(Shp.BARREL, "barrel");
-		shapes.put(Shp.FLOAT, "float");
-		shapes.put(Shp.SUPER, "super-buoy");
-		shapes.put(Shp.BEACON, "beacon");
-		shapes.put(Shp.TOWER, "tower");
-		shapes.put(Shp.STAKE, "stake");
-		shapes.put(Shp.PERCH, "perch");
-	}
-
-	private Shp shape = Shp.UNKNOWN;
-
-	public Shp getShape() {
-		return shape;
-	}
-
-	public void setShape(Shp styl) {
-		shape = styl;
 	}
 
 	public enum Top {
@@ -684,6 +707,9 @@ abstract public class SeaMark {
 					imgStr += ("_" + colStr);
 			}
 			imgStr += ".png";
+if (getClass().getResource(imgStr) == null)
+System.out.println(imgStr);
+else
 			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 		}
 
@@ -722,11 +748,13 @@ abstract public class SeaMark {
 				if (colStr != null)
 					imgStr += ("_" + colStr);
 				imgStr += ".png";
+if (getClass().getResource(imgStr) == null)
 System.out.println(imgStr);
-//				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+else
+				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 			}
 		}
-
+/*
 		if (hasRadar()) {
 			dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
 		} else if (hasRacon()) {
@@ -767,14 +795,13 @@ System.out.println(imgStr);
 				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
 			}
 
-			/*
-			 * c = getLightChar(); if (c.contains("+")) { i1 = c.indexOf("+"); tmp =
-			 * c.substring(i1, c.length()); c = c.substring(0, i1); if
-			 * (!getLightGroup().isEmpty()) { c = c + "(" + getLightGroup() + ")"; }
-			 * if (tmp != null) c = c + tmp; } else if (!getLightGroup().isEmpty()) c
-			 * = c + "(" + getLightGroup() + ")"; c = c + " " + getLightColour(); lp =
-			 * getLightPeriod(); if (!lp.isEmpty()) c = c + " " + lp + "s";
-			 */}
+			 c = getLightChar(); if (c.contains("+")) { i1 = c.indexOf("+"); tmp =
+			 c.substring(i1, c.length()); c = c.substring(0, i1); if
+			 (!getLightGroup().isEmpty()) { c = c + "(" + getLightGroup() + ")"; }
+			 if (tmp != null) c = c + tmp; } else if (!getLightGroup().isEmpty()) c
+			 = c + "(" + getLightGroup() + ")"; c = c + " " + getLightColour(); lp =
+			 getLightPeriod(); if (!lp.isEmpty()) c = c + " " + lp + "s";
+			 }*/
 	}
 
 	public void saveSign() {

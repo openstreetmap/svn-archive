@@ -20,19 +20,6 @@ public class MarkCard extends SeaMark {
 		if (!dlg.panelMain.hazButton.isSelected())
 			dlg.panelMain.hazButton.doClick();
 
-		if (keys.containsKey("name"))
-			setName(keys.get("name"));
-
-		if (keys.containsKey("seamark:name"))
-			setName(keys.get("seamark:name"));
-
-		if (keys.containsKey("seamark:buoy_cardinal:name"))
-			setName(keys.get("seamark:buoy_cardinal:name"));
-		else if (keys.containsKey("seamark:beacon_cardinal:name"))
-			setName(keys.get("seamark:beacon_cardinal:name"));
-		else if (keys.containsKey("seamark:light_float:name"))
-			setName(keys.get("seamark:light_float:name"));
-
 		String cat = "";
 		String col = "";
 

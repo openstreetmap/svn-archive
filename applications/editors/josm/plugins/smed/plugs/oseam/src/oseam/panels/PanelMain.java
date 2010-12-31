@@ -47,6 +47,7 @@ public class PanelMain extends JPanel {
 	public JRadioButton radButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
 	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 	private ActionListener alMisc = null;
+	private ActionListener alName = null;
 	public PanelChan panelChan = null;
 	public PanelHaz panelHaz = null;
 	public PanelSpec panelSpec = null;
@@ -246,6 +247,16 @@ public class PanelMain extends JPanel {
 		nameBox = new JTextField();
 		nameBox.setBounds(new Rectangle(60, 330, 200, 20));
 		this.add(nameBox, null);
+		alName = new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (dlg.mark == null)
+					return;
+				else
+					dlg.mark.setName(nameBox.getText());
+			}
+		};
+		nameBox.addActionListener(alName);
+
 		saveButton = new JButton();
 		saveButton.setBounds(new Rectangle(285, 330, 100, 20));
 		saveButton.setText(tr("Save"));
@@ -255,6 +266,7 @@ public class PanelMain extends JPanel {
 	public void clearSelections() {
 		typeButtons.clearSelection();
 		alType.actionPerformed(null);
+		nameBox.setText("");
 		clearType();
 	}
 

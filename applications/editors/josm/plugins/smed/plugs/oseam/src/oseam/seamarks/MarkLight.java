@@ -20,23 +20,6 @@ public class MarkLight extends SeaMark {
 		if (!dlg.panelMain.lightsButton.isSelected())
 			dlg.panelMain.lightsButton.doClick();
 
-		if (keys.containsKey("name"))
-			setName(keys.get("name"));
-
-		if (keys.containsKey("seamark:name"))
-			setName(keys.get("seamark:name"));
-
-		if (keys.containsKey("seamark:landmark:name"))
-			setName(keys.get("seamark:landmark:name"));
-		else if (keys.containsKey("seamark:light_major:name"))
-			setName(keys.get("seamark:light_major:name"));
-		else if (keys.containsKey("seamark:light_minor:name"))
-			setName(keys.get("seamark:light_minor:name"));
-		else if (keys.containsKey("seamark:light_vessel:name"))
-			setName(keys.get("seamark:light_vessel:name"));
-		else if (keys.containsKey("seamark:light_float:name"))
-			setName(keys.get("seamark:light_float:name"));
-
 		if (keys.containsKey("seamark:type")) {
 			String type = keys.get("seamark:type");
 			if (type.equals("landmark"))

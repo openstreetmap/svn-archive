@@ -211,6 +211,18 @@ public class OSeaMAction {
 			manager.showVisualMessage(Messages.getString("NoMark"));
 			panelMain.clearSelections();
 		} else {
+			if (keys.containsKey("name")) {
+				panelMain.nameBox.setText(keys.get("name"));
+				panelMain.nameBox.postActionEvent();
+			}
+			if (keys.containsKey("seamark:name")) {
+				panelMain.nameBox.setText(keys.get("seamark:name"));
+				panelMain.nameBox.postActionEvent();
+			}
+			if (keys.containsKey("seamark:" + type + ":name")) {
+				panelMain.nameBox.setText(keys.get("seamark:" + type + ":name"));
+				panelMain.nameBox.postActionEvent();
+			}
 			mark.parseMark();
 			mark.paintSign();
 		}

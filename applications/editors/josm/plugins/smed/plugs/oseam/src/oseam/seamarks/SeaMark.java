@@ -14,15 +14,15 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 
-abstract public class SeaMark {
+public class SeaMark {
 
-	protected OSeaMAction dlg = null;
+	public OSeaMAction dlg = null;
 
 	public OSeaMAction getDlg() {
 		return dlg;
 	}
 
-	protected SeaMark(OSeaMAction dia) {
+	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
 		region = Main.pref.get("tomsplugin.IALA").equals("A") ? Reg.A : Reg.B;
 	}
@@ -90,7 +90,7 @@ abstract public class SeaMark {
 	}
 
 	public enum Grp {
-		LAT, CAR, SAW, ISD, SPP, LIT
+		LAT, CAR, SAW, ISD, SPP, FLT, LIT
 	}
 
 	public static final EnumMap<Obj, Grp> groups = new EnumMap<Obj, Grp>(Obj.class);
@@ -107,7 +107,7 @@ abstract public class SeaMark {
 		groups.put(Obj.BOYSPP, Grp.SPP);
 		groups.put(Obj.LITMAJ, Grp.LIT);
 		groups.put(Obj.LITMIN, Grp.LIT);
-		groups.put(Obj.LITFLT, Grp.LIT);
+		groups.put(Obj.LITFLT, Grp.FLT);
 		groups.put(Obj.LITVES, Grp.LIT);
 		groups.put(Obj.LNDMRK, Grp.LIT);
 		groups.put(Obj.MORFAC, Grp.SPP);

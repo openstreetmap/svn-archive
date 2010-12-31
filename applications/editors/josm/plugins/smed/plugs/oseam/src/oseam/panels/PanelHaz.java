@@ -15,9 +15,6 @@ import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.MarkCard;
-import oseam.seamarks.MarkIsol;
-import oseam.seamarks.MarkLat;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
@@ -36,10 +33,10 @@ public class PanelHaz extends JPanel {
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (catButtons.getSelection() != null) {
-				if (!(dlg.mark instanceof MarkCard) && !isolButton.isSelected()) {
-					dlg.mark = new MarkCard(dlg);
-					alShape.actionPerformed(null);
-				}
+//				if (!(dlg.mark instanceof MarkCard) && !isolButton.isSelected()) {
+//					dlg.mark = new MarkCard(dlg);
+//					alShape.actionPerformed(null);
+//				}
 				dlg.panelMain.topButton.setEnabled(true);
 				dlg.panelMain.fogButton.setEnabled(true);
 				dlg.panelMain.radButton.setEnabled(true);
@@ -86,10 +83,10 @@ public class PanelHaz extends JPanel {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkIsol)) {
-					dlg.mark = new MarkIsol(dlg);
-					alShape.actionPerformed(null);
-				}
+//				if (!(dlg.mark instanceof MarkIsol)) {
+//					dlg.mark = new MarkIsol(dlg);
+//					alShape.actionPerformed(null);
+//				}
 				dlg.mark.setColour(Ent.BODY, Col.BLACK_RED_BLACK);
 				dlg.panelMain.panelTop.spheres2TopButton.setEnabled(true);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();

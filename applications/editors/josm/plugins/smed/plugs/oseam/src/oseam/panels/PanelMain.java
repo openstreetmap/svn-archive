@@ -17,12 +17,6 @@ import javax.swing.JTextField;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.MarkLat;
-import oseam.seamarks.MarkSaw;
-import oseam.seamarks.MarkCard;
-import oseam.seamarks.MarkIsol;
-import oseam.seamarks.MarkSpec;
-import oseam.seamarks.MarkLight;
 
 public class PanelMain extends JPanel {
 
@@ -124,10 +118,10 @@ public class PanelMain extends JPanel {
 					typeButtons.clearSelection();
 				}
 				if (chanButton.isSelected()) {
-					if (!((dlg.mark instanceof MarkLat) || (dlg.mark instanceof MarkSaw))) {
-						dlg.mark = null;
-						clearType();
-					}
+//					if (!((dlg.mark instanceof MarkLat) || (dlg.mark instanceof MarkSaw))) {
+//						dlg.mark = null;
+//						clearType();
+//					}
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
 				} else {
@@ -136,10 +130,10 @@ public class PanelMain extends JPanel {
 					panelChan.clearSelections();
 				}
 				if (hazButton.isSelected()) {
-					if (!((dlg.mark instanceof MarkCard) || (dlg.mark instanceof MarkIsol))) {
-						dlg.mark = null;
-						clearType();
-					}
+//					if (!((dlg.mark instanceof MarkCard) || (dlg.mark instanceof MarkIsol))) {
+//						dlg.mark = null;
+//						clearType();
+//					}
 					hazButton.setBorderPainted(true);
 					panelHaz.setVisible(true);
 				} else {
@@ -148,9 +142,9 @@ public class PanelMain extends JPanel {
 					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkSpec)) {
-						dlg.mark = new MarkSpec(dlg);
-						clearType();
+//					if (!(dlg.mark instanceof MarkSpec)) {
+//						dlg.mark = new MarkSpec(dlg);
+//						clearType();
 						dlg.panelMain.panelSpec.panelCol.yellowButton.doClick();
 						dlg.panelMain.panelTop.enableAll(true);
 						dlg.panelMain.panelTop.noTopButton.doClick();
@@ -160,7 +154,7 @@ public class PanelMain extends JPanel {
 						fogButton.setEnabled(true);
 						radButton.setEnabled(true);
 						litButton.setEnabled(true);
-					}
+//					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
 				} else {
@@ -169,14 +163,14 @@ public class PanelMain extends JPanel {
 					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
-					if (!(dlg.mark instanceof MarkLight)) {
-						dlg.mark = new MarkLight(dlg);
-						clearType();
+//					if (!(dlg.mark instanceof MarkLight)) {
+//						dlg.mark = new MarkLight(dlg);
+//						clearType();
 						fogButton.setEnabled(true);
 						radButton.setEnabled(true);
 						litButton.setEnabled(true);
 						litButton.doClick();
-					}
+//					}
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
 				} else {

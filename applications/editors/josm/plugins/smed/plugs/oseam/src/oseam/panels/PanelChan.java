@@ -20,8 +20,6 @@ import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Reg;
-import oseam.seamarks.MarkLat;
-import oseam.seamarks.MarkSaw;
 
 import java.awt.event.ActionListener;
 
@@ -43,13 +41,13 @@ public class PanelChan extends JPanel {
 			if (dlg.mark != null)
 				shp = dlg.mark.getShape();
 			if (portButton.isSelected() || prefPortButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat)) {
-					dlg.mark = new MarkLat(dlg);
+//				if (!(dlg.mark instanceof MarkLat)) {
+//					dlg.mark = new MarkLat(dlg);
 					dlg.panelMain.topButton.setEnabled(true);
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-				}
+//				}
 				dlg.panelMain.panelTop.enableAll(false);
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.canTopButton.setEnabled(true);
@@ -108,13 +106,13 @@ public class PanelChan extends JPanel {
 					panelPort.setVisible(false);
 			}
 			if (stbdButton.isSelected() || prefStbdButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkLat)) {
-					dlg.mark = new MarkLat(dlg);
+//				if (!(dlg.mark instanceof MarkLat)) {
+//					dlg.mark = new MarkLat(dlg);
 					dlg.panelMain.topButton.setEnabled(true);
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-				}
+//				}
 				dlg.panelMain.panelTop.enableAll(false);
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.coneTopButton.setEnabled(true);
@@ -173,8 +171,8 @@ public class PanelChan extends JPanel {
 					panelStbd.setVisible(false);
 			}
 			if (safeWaterButton.isSelected()) {
-				if (!(dlg.mark instanceof MarkSaw)) {
-					dlg.mark = new MarkSaw(dlg);
+//				if (!(dlg.mark instanceof MarkSaw)) {
+//					dlg.mark = new MarkSaw(dlg);
 					if (panelSaw.shapes.containsKey(shp)) {
 						panelSaw.shapes.get(shp).doClick();
 					} else {
@@ -187,7 +185,7 @@ public class PanelChan extends JPanel {
 					dlg.panelMain.panelTop.panelCol.enableAll(false);
 					dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
 					dlg.panelMain.panelTop.panelCol.redButton.doClick();
-				}
+//				}
 				dlg.mark.setColour(Ent.BODY, Col.RED_WHITE);
 				safeWaterButton.setBorderPainted(true);
 				panelSaw.setVisible(true);

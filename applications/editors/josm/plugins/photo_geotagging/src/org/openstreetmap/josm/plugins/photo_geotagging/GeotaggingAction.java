@@ -37,6 +37,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
+import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -292,27 +293,35 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         }
 
         private void confirm_override() {
-            if (override_backup == null) {
-                JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
-                l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-                int override = new ExtendedDialog(
-                        Main.parent,
-                        tr("Override old backup files?"),
-                        new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
-                    .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
-                    .setContent(l)
-                    .setCancelButton(1)
-                    .setDefaultButton(2)
-                    .showDialog()
-                    .getValue();
-                if (override == 2) {
-                    override_backup = false;
-                } else if (override == 3) {
-                    override_backup = true;
-                } else {
-                    cancelled = true;
-                    return;
-                }
+            if (override_backup != null)
+                return;
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
+                        l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
+                        int override = new ExtendedDialog(
+                                ((PleaseWaitProgressMonitor) progressMonitor).getDialog(),
+                                tr("Override old backup files?"),
+                                new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
+                            .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
+                            .setContent(l)
+                            .setCancelButton(1)
+                            .setDefaultButton(2)
+                            .showDialog()
+                            .getValue();
+                        if (override == 2) {
+                            override_backup = false;
+                        } else if (override == 3) {
+                            override_backup = true;
+                        } else {
+                            cancelled = true;
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println(e);
+                cancelled = true;
             }
         }
 

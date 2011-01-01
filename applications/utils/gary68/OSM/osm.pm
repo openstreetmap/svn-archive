@@ -184,7 +184,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.11' ; 
+$VERSION = '8.12' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -192,7 +192,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink applyDiffFile getBugs getNode2 getNode3 getNodeXml getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink applyDiffFile getBugs getNode getNode2 getNode3 getNodeXml getWay getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -338,6 +338,60 @@ sub skipNodes {
 		nextLine() ;
 	}
 }
+
+sub getNode {
+	my $gId ;
+	my $gLon ;
+	my $gLat ;
+	my $gU ;
+	my @gTags = () ;
+	if($line =~ /^\s*\<node/) {
+
+		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		my ($lon) = ($line =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
+		my ($lat) = ($line =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
+
+		if (!defined $u) { $u = "undefined" ; } 
+
+		if (! defined $id ) {
+			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
+		}
+
+		unless ($id) { next; }
+		if  (! (defined ($lat))) { next; }
+		if  (! (defined ($lon))) { next; }
+		if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
+			nextLine() ;
+			while (!grep(/<\/node>/, $line)) {
+
+				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+
+				if ( (defined ($k)) and (defined ($v)) ) {
+					my $tag = $k . ":" . $v ;
+					push @gTags, $tag ;
+				}
+				else {
+					#print "WARNING tag not recognized: ", $line, "\n" ;
+				}
+				nextLine() ;
+			}
+			nextLine() ;
+		}
+		else {
+			nextLine() ;
+		}
+		$gId = $id ;
+		$gLon = $lon ;
+		$gLat = $lat ;
+		$gU = $u ;
+	} # node
+	else {
+		return (-1, -1, -1, -1, -1) ; 
+	} # node
+	#print "$gId $gLon $gLat $gU\n" ; 
+	return ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
+} # getNode
 
 
 sub getNode2 {
@@ -491,6 +545,50 @@ sub skipWays {
 	}
 }
 
+sub getWay {
+	my $gId ;
+	my $gU ;
+	my @gTags ;
+	my @gNodes ;
+	if($line =~ /^\s*\<way/) {
+		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+
+		if (!defined $u) { $u = "undefined" ; } 
+
+		if (! defined $id ) { print "ERROR: $line\n" ; }
+
+		nextLine() ;
+		while (not($line =~ /\/way>/)) { # more way data
+			#get nodes and type
+			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
+
+			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+
+			if (!(($node) or ($k and defined($v) ))) {
+				#print "WARNING tag not recognized", $line, "\n" ; 
+			}
+		
+			if ($node) {
+				push @gNodes, $node ;
+			}
+
+			#get tags 
+			if ($k and defined($v)) {
+				my $tag = $k . ":" . $v ;
+				push @gTags, $tag ;
+			}
+			nextLine() ;
+		}
+		nextLine() ;
+		$gId = $id ;
+		$gU = $u ;
+	}
+	else {
+		return (-1, -1, -1, -1) ;
+	}
+	return ($gId, $gU, \@gNodes, \@gTags) ;
+} # way
 
 sub getWay2 {
 	my $gId ;

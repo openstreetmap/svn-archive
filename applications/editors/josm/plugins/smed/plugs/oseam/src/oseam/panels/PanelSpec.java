@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
@@ -38,9 +37,7 @@ public class PanelSpec extends JPanel {
 	public PanelCol panelCol = null;
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			Iterator<Shp> it = shapes.keySet().iterator();
-			while (it.hasNext()) {
-				Shp shp = it.next();
+			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);

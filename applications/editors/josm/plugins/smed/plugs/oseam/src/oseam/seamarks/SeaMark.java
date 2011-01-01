@@ -1,10 +1,8 @@
 package oseam.seamarks;
 
 import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +10,7 @@ import java.util.regex.Pattern;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
+import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 
 public class SeaMark {
@@ -25,6 +24,7 @@ public class SeaMark {
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
 		region = Main.pref.get("tomsplugin.IALA").equals("A") ? Reg.A : Reg.B;
+		parseNode();
 	}
 
 	public enum Reg {
@@ -112,7 +112,7 @@ public class SeaMark {
 		groups.put(Obj.LNDMRK, Grp.LIT);
 		groups.put(Obj.MORFAC, Grp.SPP);
 	}
-	
+
 	public enum Cat {
 		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT, MOORING_BUOY
 	}
@@ -575,23 +575,200 @@ public class SeaMark {
 		LightPeriod[sectorIndex] = lightPeriod;
 	}
 
-	public void parseMark() {
+	public void parseNode() {
 
-		String str;
-		Map<String, String> keys;
-		keys = dlg.node.getKeys();
+		dlg.panelMain.clearSelections();
+		dlg.manager.showVisualMessage("");
+		String type = "";
+		String str = "";
+		String col = "";
+
+		Map<String, String> keys = dlg.node.getKeys();
+
+		if (keys.containsKey("seamark:type"))
+			type = keys.get("seamark:type");
+
+		for (Obj obj : objects.keySet()) {
+			if (objects.get(obj).equals(type))
+				setObject(obj);
+		}
+
+		if (type.equals("light_float") || type.equals("") || keys.containsKey("seamark:light_float:colour")
+				|| keys.containsKey("seamark:light_float:colour_pattern")) {
+			if (keys.containsKey("seamark:light_float:colour_pattern")) {
+				setObject(Obj.LITFLT);
+				type = "light_float";
+			}
+			if (keys.containsKey("seamark:light_float:colour")) {
+				col = keys.get("seamark:light_float:colour");
+				if (col.equals("red") || col.equals("green") || col.equals("red;green;red") || col.equals("green;red;green")) {
+					setObject(Obj.BOYLAT);
+				} else if (col.equals("black;yellow") || col.equals("black;yellow;black") || col.equals("yellow;black")
+						|| col.equals("yellow;black;yellow")) {
+					setObject(Obj.BOYCAR);
+				} else if (col.equals("black;red;black")) {
+					setObject(Obj.BOYISD);
+				} else if (col.equals("red;white")) {
+					setObject(Obj.BOYSAW);
+				} else if (col.equals("yellow")) {
+					setObject(Obj.BOYSPP);
+				} else
+					setObject(Obj.LITFLT);
+				type = "light_float";
+			}
+			if (type.equals("")) {
+				if (keys.containsKey("seamark:buoy_lateral:category") || keys.containsKey("seamark:buoy_lateral:shape")
+						|| keys.containsKey("seamark:buoy_lateral:colour")) {
+					setObject(Obj.BOYLAT);
+				} else if (keys.containsKey("seamark:beacon_lateral:category") || keys.containsKey("seamark:beacon_lateral:shape")
+						|| keys.containsKey("seamark:beacon_lateral:colour")) {
+					setObject(Obj.BCNLAT);
+				} else if (keys.containsKey("seamark:buoy_cardinal:category") || keys.containsKey("seamark:buoy_cardinal:shape")
+						|| keys.containsKey("seamark:buoy_cardinal:colour")) {
+					setObject(Obj.BOYCAR);
+				} else if (keys.containsKey("seamark:beacon_cardinal:category") || keys.containsKey("seamark:beacon_cardinal:shape")
+						|| keys.containsKey("seamark:beacon_cardinal:colour")) {
+					setObject(Obj.BCNCAR);
+				} else if (keys.containsKey("seamark:buoy_isolated_danger:category") || keys.containsKey("seamark:buoy_isolated_danger:shape")
+						|| keys.containsKey("seamark:buoy_isolated_danger:colour")) {
+					setObject(Obj.BOYISD);
+				} else if (keys.containsKey("seamark:beacon_isolated_danger:category") || keys.containsKey("seamark:beacon_isolated_danger:shape")
+						|| keys.containsKey("seamark:beacon_isolated_danger:colour")) {
+					setObject(Obj.BCNISD);
+				} else if (keys.containsKey("seamark:buoy_safe_water:category") || keys.containsKey("seamark:buoy_safe_water:shape")
+						|| keys.containsKey("seamark:buoy_safe_water:colour")) {
+					setObject(Obj.BOYSAW);
+				} else if (keys.containsKey("seamark:beacon_safe_water:category") || keys.containsKey("seamark:beacon_safe_water:shape")
+						|| keys.containsKey("seamark:beacon_safe_water:colour")) {
+					setObject(Obj.BCNSAW);
+				} else if (keys.containsKey("seamark:buoy_special_purpose:category") || keys.containsKey("seamark:buoy_special_purpose:shape")
+						|| keys.containsKey("seamark:buoy_special_purpose:colour")) {
+					setObject(Obj.BOYSPP);
+				} else if (keys.containsKey("seamark:beacon_special_purpose:category") || keys.containsKey("seamark:beacon_special_purpose:shape")
+						|| keys.containsKey("seamark:beacon_special_purpose:colour")) {
+					setObject(Obj.BCNSPP);
+				}
+			}
+		}
+
+		if (getObject() == Obj.UNKNOWN) {
+			dlg.manager.showVisualMessage(Messages.getString("NoMark"));
+			return;
+		}
+
+		if (keys.containsKey("seamark:" + type + ":name")) {
+			dlg.panelMain.nameBox.setText(keys.get("seamark:" + type + ":name"));
+			dlg.panelMain.nameBox.postActionEvent();
+		} else if (keys.containsKey("seamark:name")) {
+			dlg.panelMain.nameBox.setText(keys.get("seamark:name"));
+			dlg.panelMain.nameBox.postActionEvent();
+		} else if (keys.containsKey("name")) {
+			dlg.panelMain.nameBox.setText(keys.get("name"));
+			dlg.panelMain.nameBox.postActionEvent();
+		} else
+			dlg.panelMain.nameBox.setText("");
+
+		switch (groups.get(getObject())) {
+		case LAT:
+			dlg.panelMain.chanButton.doClick();
+			switch (getObject()) {
+			case BCNLAT:
+				if (keys.containsKey("seamark:beacon_lateral:category"))
+					str = keys.get("seamark:beacon_lateral:category");
+				break;
+			case BOYLAT:
+				if (keys.containsKey("seamark:buoy_lateral:category"))
+					str = keys.get("seamark:buoy_lateral:category");
+				else if (type.equals("light_float")) {
+					if (region == Reg.A) {
+						if (col.equals("red"))
+							dlg.panelMain.panelChan.portButton.doClick();
+						else if (col.equals("green"))
+							dlg.panelMain.panelChan.stbdButton.doClick();
+						else if (col.equals("red;green;red"))
+							dlg.panelMain.panelChan.prefPortButton.doClick();
+						else if (col.equals("green;red;green"))
+							dlg.panelMain.panelChan.prefStbdButton.doClick();
+					} else {
+						if (col.equals("green"))
+							dlg.panelMain.panelChan.portButton.doClick();
+						else if (col.equals("red"))
+							dlg.panelMain.panelChan.stbdButton.doClick();
+						else if (col.equals("green;red;green"))
+							dlg.panelMain.panelChan.prefPortButton.doClick();
+						else if (col.equals("red;green;red"))
+							dlg.panelMain.panelChan.prefStbdButton.doClick();
+					}
+				}
+				break;
+			}
+			if (str.equals("port"))
+				dlg.panelMain.panelChan.portButton.doClick();
+			else if (str.equals("starboard"))
+				dlg.panelMain.panelChan.stbdButton.doClick();
+			else if (str.equals("preferred_channel_port"))
+				dlg.panelMain.panelChan.prefPortButton.doClick();
+			else if (str.equals("preferred_channel_starboard"))
+				dlg.panelMain.panelChan.prefStbdButton.doClick();
+			break;
+		case CAR:
+			dlg.panelMain.hazButton.doClick();
+			switch (getObject()) {
+			case BCNCAR:
+				if (keys.containsKey("seamark:beacon_cardinal:category"))
+					str = keys.get("seamark:beacon_cardinal:category");
+				break;
+			case BOYCAR:
+				if (keys.containsKey("seamark:buoy_cardinal:category"))
+					str = keys.get("seamark:buoy_cardinal:category");
+				else if (type.equals("light_float")) {
+					if (col.equals("black;yellow"))
+						dlg.panelMain.panelHaz.northButton.doClick();
+					else if (col.equals("yellow;black"))
+						dlg.panelMain.panelHaz.southButton.doClick();
+					else if (col.equals("black;yellow;black"))
+						dlg.panelMain.panelHaz.eastButton.doClick();
+					else if (col.equals("yellow;black;yellow"))
+						dlg.panelMain.panelHaz.westButton.doClick();
+				}
+				break;
+			}
+			if (str.equals("north"))
+				dlg.panelMain.panelHaz.northButton.doClick();
+			else if (str.equals("south"))
+				dlg.panelMain.panelHaz.southButton.doClick();
+			else if (str.equals("east"))
+				dlg.panelMain.panelHaz.eastButton.doClick();
+			else if (str.equals("west"))
+				dlg.panelMain.panelHaz.westButton.doClick();
+			break;
+		case SAW:
+			dlg.panelMain.chanButton.doClick();
+			dlg.panelMain.panelChan.safeWaterButton.doClick();
+			break;
+		case ISD:
+			dlg.panelMain.hazButton.doClick();
+			dlg.panelMain.panelHaz.isolButton.doClick();
+			break;
+		case SPP:
+			dlg.panelMain.specButton.doClick();
+			break;
+		case FLT:
+			dlg.panelMain.lightsButton.doClick();
+			dlg.panelMain.panelLights.floatButton.doClick();
+			break;
+		case LIT:
+			dlg.panelMain.lightsButton.doClick();
+			break;
+		}
 
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 		}
 
-		setFired(false);
-		setSectored(false);
-		Iterator it = keys.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String key = (String) entry.getKey();
-			String value = ((String) entry.getValue()).trim();
+		for (Map.Entry<String, String> entry : keys.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue().trim();
 			if (key.contains("seamark:light:")) {
 				setFired(true);
 				int index = 0;
@@ -640,9 +817,6 @@ public class SeaMark {
 			}
 		}
 
-		setFog(false);
-		setRadar(false);
-		setRacon(false);
 		if (keys.containsKey("seamark:fog_signal") || keys.containsKey("seamark:fog_signal:category")
 				|| keys.containsKey("seamark:fog_signal:group") || keys.containsKey("seamark:fog_signal:period")) {
 			setFog(true);
@@ -707,10 +881,10 @@ public class SeaMark {
 					imgStr += ("_" + colStr);
 			}
 			imgStr += ".png";
-if (getClass().getResource(imgStr) == null)
-System.out.println(imgStr);
-else
-			dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+			if (getClass().getResource(imgStr) == null)
+				System.out.println(imgStr);
+			else
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 		}
 
 		imgStr = "/images/top_";
@@ -748,70 +922,55 @@ else
 				if (colStr != null)
 					imgStr += ("_" + colStr);
 				imgStr += ".png";
-if (getClass().getResource(imgStr) == null)
-System.out.println(imgStr);
-else
-				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+				if (getClass().getResource(imgStr) == null)
+					System.out.println(imgStr);
+				else
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 			}
 		}
-/*
-		if (hasRadar()) {
-			dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
-		} else if (hasRacon()) {
-			dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
-			// if (getRaType() != 0) {
-			// String c = (String) dlg.cbM01Racon.getSelectedItem();
-			// if ((getRaType() == RATYPE_RACON) && !getRaconGroup().isEmpty())
-			// c += ("(" + getRaconGroup() + ")");
-			// dlg.lM01RadarMarkeys.setText(c);
-			// }
-		}
-
-		if (hasFog()) {
-			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
-			// if (getFogSound() != 0) {
-			// String c = (String) dlg.cbM01Fog.getSelectedItem();
-			// if (!getFogGroup().isEmpty())
-			// c += ("(" + getFogGroup() + ")");
-			// if (!getFogPeriod().isEmpty())
-			// c += (" " + getFogPeriod() + "s");
-			// dlg.lM01FogMarkeys.setText(c);
-			// }
-		}
-
-		if (isFired()) {
-			String lp, c;
-			String tmp = null;
-			int i1;
-
-			Col col = getColour(Ent.LIGHT);
-			if (col == Col.WHITE) {
-				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
-			} else if (col == Col.RED) {
-				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
-			} else if (col == Col.GREEN) {
-				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
-			} else {
-				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
-			}
-
-			 c = getLightChar(); if (c.contains("+")) { i1 = c.indexOf("+"); tmp =
-			 c.substring(i1, c.length()); c = c.substring(0, i1); if
-			 (!getLightGroup().isEmpty()) { c = c + "(" + getLightGroup() + ")"; }
-			 if (tmp != null) c = c + tmp; } else if (!getLightGroup().isEmpty()) c
-			 = c + "(" + getLightGroup() + ")"; c = c + " " + getLightColour(); lp =
-			 getLightPeriod(); if (!lp.isEmpty()) c = c + " " + lp + "s";
-			 }*/
+		/*
+		 * if (hasRadar()) { dlg.panelMain.radarIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png"))); }
+		 * else if (hasRacon()) { dlg.panelMain.radarIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Radar_Station.png"))); // if
+		 * (getRaType() != 0) { // String c = (String)
+		 * dlg.cbM01Racon.getSelectedItem(); // if ((getRaType() == RATYPE_RACON) &&
+		 * !getRaconGroup().isEmpty()) // c += ("(" + getRaconGroup() + ")"); //
+		 * dlg.lM01RadarMarkeys.setText(c); // } }
+		 * 
+		 * if (hasFog()) { dlg.panelMain.fogIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Fog_Signal.png"))); // if
+		 * (getFogSound() != 0) { // String c = (String)
+		 * dlg.cbM01Fog.getSelectedItem(); // if (!getFogGroup().isEmpty()) // c +=
+		 * ("(" + getFogGroup() + ")"); // if (!getFogPeriod().isEmpty()) // c +=
+		 * (" " + getFogPeriod() + "s"); // dlg.lM01FogMarkeys.setText(c); // } }
+		 * 
+		 * if (isFired()) { String lp, c; String tmp = null; int i1;
+		 * 
+		 * Col col = getColour(Ent.LIGHT); if (col == Col.WHITE) {
+		 * dlg.panelMain.lightIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Light_White_120.png"))); } else
+		 * if (col == Col.RED) { dlg.panelMain.lightIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Light_Red_120.png"))); } else
+		 * if (col == Col.GREEN) { dlg.panelMain.lightIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Light_Green_120.png"))); } else
+		 * { dlg.panelMain.lightIcon.setIcon(new
+		 * ImageIcon(getClass().getResource("/images/Light_Magenta_120.png"))); }
+		 * 
+		 * c = getLightChar(); if (c.contains("+")) { i1 = c.indexOf("+"); tmp =
+		 * c.substring(i1, c.length()); c = c.substring(0, i1); if
+		 * (!getLightGroup().isEmpty()) { c = c + "(" + getLightGroup() + ")"; } if
+		 * (tmp != null) c = c + tmp; } else if (!getLightGroup().isEmpty()) c = c +
+		 * "(" + getLightGroup() + ")"; c = c + " " + getLightColour(); lp =
+		 * getLightPeriod(); if (!lp.isEmpty()) c = c + " " + lp + "s"; }
+		 */
 	}
 
 	public void saveSign() {
-		Iterator<String> it = dlg.node.getKeys().keySet().iterator();
-		String str;
 
 		Main.pref.put("tomsplugin.IALA", getRegion() == Reg.A ? "A" : "B");
 
-		while (it.hasNext()) {
-			str = it.next();
+		for (String str : dlg.node.getKeys().keySet()) {
 			if (str.contains("seamark"))
 				if (!str.equals("seamark")) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, str, null));
@@ -824,7 +983,7 @@ else
 		if (objStr != null) {
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:type", objStr));
 
-			str = categories.get(category);
+			String str = categories.get(category);
 			if (str != null)
 				Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:" + objStr + ":category", str));
 
@@ -850,7 +1009,7 @@ else
 			}
 		}
 
-		str = tops.get(topShape);
+		String str = tops.get(topShape);
 		if (str != null) {
 			Main.main.undoRedo.add(new ChangePropertyCommand(dlg.node, "seamark:topmark:shape", str));
 

@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Col;
@@ -37,9 +36,7 @@ public class PanelCol extends JPanel {
 	private EnumMap<Col, JRadioButton> colours = new EnumMap<Col, JRadioButton>(Col.class);
 	private ActionListener alColour = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			Iterator<Col> it = colours.keySet().iterator();
-			while (it.hasNext()) {
-				Col col = it.next();
+			for (Col col : colours.keySet()) {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
 					if (dlg.mark != null) dlg.mark.setColour(ent, col);
@@ -72,9 +69,8 @@ public class PanelCol extends JPanel {
 	}
 
 	public void enableAll(boolean state) {
-		Iterator<Col> it = colours.keySet().iterator();
-		while (it.hasNext()) {
-			colours.get(it.next()).setEnabled(state);
+		for (JRadioButton button : colours.values()) {
+			button.setEnabled(state);
 		}
 	}
 

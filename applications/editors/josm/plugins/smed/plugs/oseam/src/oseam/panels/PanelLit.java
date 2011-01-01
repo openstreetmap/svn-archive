@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 
 import java.awt.Rectangle;
 
-import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Ent;
 

@@ -10,11 +10,9 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.util.EnumMap;
-import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Top;
 import oseam.seamarks.SeaMark.Day;
 import oseam.seamarks.SeaMark.Ent;
@@ -45,9 +43,7 @@ public class PanelTop extends JPanel {
 	private EnumMap<Day, JRadioButton> days = new EnumMap<Day, JRadioButton>(Day.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			Iterator<Top> it = tops.keySet().iterator();
-			while (it.hasNext()) {
-				Top top = it.next();
+			for (Top top : tops.keySet()) {
 				JRadioButton button = tops.get(top);
 				if (button.isSelected()) {
 					dlg.mark.setTopmark(top);
@@ -56,9 +52,7 @@ public class PanelTop extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			Iterator<Day> id = days.keySet().iterator();
-			while (id.hasNext()) {
-				Day day = id.next();
+			for (Day day : days.keySet()) {
 				JRadioButton button = days.get(day);
 				if (button.isSelected()) {
 					dlg.mark.setDaymark(day);
@@ -103,9 +97,8 @@ public class PanelTop extends JPanel {
 	}
 
 	public void enableAll(boolean state) {
-		Iterator<Top> it = tops.keySet().iterator();
-		while (it.hasNext()) {
-			tops.get(it.next()).setEnabled(state);
+	for (JRadioButton button : tops.values()) {
+			button.setEnabled(state);
 		}
 	}
 

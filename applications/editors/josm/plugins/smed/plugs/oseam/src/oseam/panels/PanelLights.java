@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
@@ -22,18 +21,16 @@ public class PanelLights extends JPanel {
 
 	private OSeaMAction dlg;
 	private ButtonGroup catButtons = new ButtonGroup();
-	private JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
-	private JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
-	private JRadioButton minorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMinorButton.png")));
-	private JRadioButton vesselButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightVesselButton.png")));
-	private JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
+	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
+	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
+	public JRadioButton minorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMinorButton.png")));
+	public JRadioButton vesselButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightVesselButton.png")));
+	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
 	private EnumMap<Cat, JRadioButton> categories = new EnumMap<Cat, JRadioButton>(Cat.class);
 	private EnumMap<Cat, Obj> objects = new EnumMap<Cat, Obj>(Cat.class);
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			Iterator<Cat> it = categories.keySet().iterator();
-			while (it.hasNext()) {
-				Cat cat = it.next();
+			for (Cat cat : categories.keySet()) {
 				JRadioButton button = categories.get(cat);
 				if (button.isSelected()) {
 					dlg.mark.setCategory(cat);

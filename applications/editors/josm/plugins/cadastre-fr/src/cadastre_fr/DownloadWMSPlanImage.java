@@ -34,7 +34,7 @@ public class DownloadWMSPlanImage {
             errorMessage = null;
             try {
                 if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
-                    if (!wmsLayer.images.isEmpty()) {
+                    if (!wmsLayer.getImages().isEmpty()) {
                         //JOptionPane.showMessageDialog(Main.parent,tr("Image already loaded"));
                         JOptionPane pane = new JOptionPane(
                                 tr("Image already loaded")
@@ -50,7 +50,7 @@ public class DownloadWMSPlanImage {
                     } else {
                         // first time we grab an image for this layer
                         if (CacheControl.cacheEnabled) {
-                            if (wmsLayer.getCacheControl().loadCacheIfExist()) {
+                            if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
                                 dontGeoreference = true;
                                 Main.map.mapView.repaint();
                                 return;
@@ -63,7 +63,7 @@ public class DownloadWMSPlanImage {
                             // grab new images from wms server into active layer
                             wmsLayer.grab(grabber, bounds);
                             if (grabber.getWmsInterface().downloadCancelled) {
-                                wmsLayer.images.clear();
+                                wmsLayer.clearImages();
                                 Main.map.mapView.repaint();
                             } else {
                                 // next steps follow in method finish() when download is terminated

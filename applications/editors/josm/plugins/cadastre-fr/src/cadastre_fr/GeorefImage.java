@@ -22,7 +22,7 @@ import javax.imageio.ImageIO;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
-public class GeorefImage implements Serializable, ImageObserver {
+public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     private static final long serialVersionUID = 1L;
 
     // bbox of the georeferenced image (the nice horizontal and vertical box)

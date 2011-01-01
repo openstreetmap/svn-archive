@@ -19,6 +19,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -33,7 +35,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.io.OsmTransferException;
 
 /**
  * This is a layer that grabs the current screen from the French cadastre WMS
@@ -47,7 +48,9 @@ public class WMSLayer extends Layer implements ImageObserver {
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
-    protected Vector<GeorefImage> images = new Vector<GeorefImage>();
+    private Vector<GeorefImage> images = new Vector<GeorefImage>();
+
+    public Lock imagesLock = new ReentrantLock();
 
     /**
      * v1 to v2 = not supported
@@ -60,8 +63,6 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
 
-    private CacheControl cacheControl = null;
-
     private String location = "";
 
     private String departement = "";
@@ -69,8 +70,6 @@ public class WMSLayer extends Layer implements ImageObserver {
     private String codeCommune = "";
 
     public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
-
-    public boolean cancelled;
 
     private boolean isRaster = false;
     private boolean isAlreadyGeoreferenced = false;
@@ -83,9 +82,12 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private Action saveAsPng;
 
+    private Action cancelGrab;
+
     public boolean adjustModeEnabled;
 
-
+    public GrabThread grabThread;
+    
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
     }
@@ -95,6 +97,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.location = location;
         this.codeCommune = codeCommune;
         this.lambertZone = lambertZone;
+        grabThread = new GrabThread(this);
+        grabThread.start();
         // enable auto-sourcing option
         CadastrePlugin.pluginUsed = true;
     }
@@ -102,12 +106,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     @Override
     public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
-        if (cacheControl != null) {
-            while (!cacheControl.isCachePipeEmpty()) {
-                System.out.println("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
-                CadastrePlugin.safeSleep(1000);
-            }
-        }
+        grabThread.cancel();
         super.destroy();
         images = null;
         dividedBbox = null;
@@ -126,7 +125,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
-        cancelled = false;
+        grabThread.setCancelled(false);
+        grabThread.setGrabber(grabber);
         // if it is the first layer, use the communeBBox as grab bbox (and not divided)
         if (Main.map.mapView.getAllLayers().size() == 1 ) {
             b = this.getCommuneBBox().toBounds();
@@ -141,42 +141,8 @@ public class WMSLayer extends Layer implements ImageObserver {
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
         }
 
-        int lastSavedImage = images.size();
-        for (EastNorthBound n : dividedBbox) {
-            if (cancelled)
-                return;
-            GeorefImage newImage;
-            try {
-                newImage = grabber.grab(this, n.min, n.max);
-            } catch (IOException e) {
-                System.out.println("Download action cancelled by user or server did not respond");
-                break;
-            } catch (OsmTransferException e) {
-                System.out.println("OSM transfer failed");
-                break;
-            }
-            if (grabber.getWmsInterface().downloadCancelled) {
-                System.out.println("Download action cancelled by user");
-                break;
-            }
-            if (CadastrePlugin.backgroundTransparent) {
-                for (GeorefImage img : images) {
-                    if (img.overlap(newImage))
-                        // mask overlapping zone in already grabbed image
-                        img.withdraw(newImage);
-                    else
-                        // mask overlapping zone in new image only when new
-                        // image covers completely the existing image
-                        newImage.withdraw(img);
-                }
-            }
-            images.add(newImage);
-            Main.map.mapView.repaint();
-        }
-        if (!cancelled) {
-            for (int i=lastSavedImage; i < images.size(); i++)
-                saveToCache(images.get(i));
-        }
+        grabThread.addImages(dividedBbox);
+        Main.map.repaint();
     }
 
     /**
@@ -254,15 +220,18 @@ public class WMSLayer extends Layer implements ImageObserver {
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             else
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-            synchronized(this){
-                for (GeorefImage img : images)
-                    img.paint(g, mv, CadastrePlugin.backgroundTransparent,
-                            CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
-            }
+            imagesLock.lock();
+            for (GeorefImage img : images)
+                img.paint(g, mv, CadastrePlugin.backgroundTransparent,
+                        CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            imagesLock.unlock();
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, savedInterpolation);
         }
         if (this.isRaster) {
             paintCrosspieces(g, mv);
+        }
+        if (grabThread.getImagesToGrabSize() > 0) {
+            grabThread.paintBoxesToGrab(g, mv);
         }
         if (this.adjustModeEnabled) {
             WMSAdjustAction.paintAdjustFrames(g, mv);
@@ -286,11 +255,14 @@ public class WMSLayer extends Layer implements ImageObserver {
     public Action[] getMenuEntries() {
         saveAsPng = new MenuActionSaveRasterAs(this);
         saveAsPng.setEnabled(isRaster);
+        cancelGrab = new MenuActionCancelGrab(this);
+        cancelGrab.setEnabled(!isRaster && grabThread.getImagesToGrabSize() > 0);
         return new Action[] {
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 new MenuActionLoadFromCache(),
                 saveAsPng,
+                cancelGrab,
                 new LayerListPopup.InfoAction(this),
 
         };
@@ -317,26 +289,6 @@ public class WMSLayer extends Layer implements ImageObserver {
                 return true;
         }
         return false;
-    }
-
-    public void saveToCache(GeorefImage image) {
-        if (CacheControl.cacheEnabled && !isRaster()) {
-            getCacheControl().saveCache(image);
-        }
-    }
-
-    public void saveNewCache() {
-        if (CacheControl.cacheEnabled) {
-            getCacheControl().deleteCacheFile();
-            for (GeorefImage image : images)
-                getCacheControl().saveCache(image);
-        }
-    }
-
-    public CacheControl getCacheControl() {
-        if (cacheControl == null)
-            cacheControl = new CacheControl(this);
-        return cacheControl;
     }
 
     /**
@@ -639,6 +591,40 @@ public class WMSLayer extends Layer implements ImageObserver {
                 }
             }
         }
+    }
+
+    public GeorefImage getImage(int index) {
+        imagesLock.lock();
+        GeorefImage img = null;
+        try {
+            img = this.images.get(index);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace(System.out);
+        }
+        imagesLock.unlock();
+        return img;
+    }
+    
+    public Vector<GeorefImage> getImages() {
+        return this.images;
+    }
+    
+    public void addImage(GeorefImage img) {
+        imagesLock.lock();
+        this.images.add(img);
+        imagesLock.unlock();
+    }
+    
+    public void setImages(Vector<GeorefImage> images) {
+        imagesLock.lock();
+        this.images = images;
+        imagesLock.unlock();
+    }
+    
+    public void clearImages() {
+        imagesLock.lock();
+        this.images.clear();
+        imagesLock.unlock();
     }
 
 }

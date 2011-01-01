@@ -105,7 +105,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (loadedFromCache) {
             Main.map.repaint();
-        } else if (wmsLayer.images.size() == 0) {
+        } else if (wmsLayer.getImages().size() == 0) {
             // action cancelled or image loaded from cache (and already georeferenced)
             actionInterrupted();
         } else {
@@ -148,8 +148,8 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         } else {
             countMouseClicked++;
             // ignore clicks outside the image
-            if (ea.east() < wmsLayer.images.get(0).min.east() || ea.east() > wmsLayer.images.get(0).max.east()
-                    || ea.north() < wmsLayer.images.get(0).min.north() || ea.north() > wmsLayer.images.get(0).max.north())
+            if (ea.east() < wmsLayer.getImage(0).min.east() || ea.east() > wmsLayer.getImage(0).max.east()
+                    || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north())
                 return;
             if (mode == cGetCorners) {
                 if (countMouseClicked == 1) {
@@ -258,7 +258,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private void endGeoreferencing() {
         Main.map.mapView.removeMouseListener(this);
         affineTransform(ea1, ea2, georefpoint1, georefpoint2);
-        wmsLayer.saveNewCache();
+        wmsLayer.grabThread.saveNewCache();
         Main.map.mapView.repaint();
         actionCompleted();
         clickOnTheMap = false;
@@ -377,24 +377,24 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         // move
         double dx = dst1.getX() - org1.getX();
         double dy = dst1.getY() - org1.getY();
-        wmsLayer.images.get(0).shear(dx, dy);
+        wmsLayer.getImage(0).shear(dx, dy);
         org1 = org1.add(dx, dy); // org1=dst1 now
         org2 = org2.add(dx, dy);
         // rotate : org1(=dst1 now) is anchor for rotation and scale
-        wmsLayer.images.get(0).rotate(dst1, angle);
+        wmsLayer.getImage(0).rotate(dst1, angle);
         org2 = org2.rotate(dst1, angle);
         // scale image from anchor org1(=dst1 now)
-        wmsLayer.images.get(0).scale(dst1, proportion);
+        wmsLayer.getImage(0).scale(dst1, proportion);
     }
 
     private void transformGeoreferencedImg() {
         georefpoint1 = new EastNorth(wmsLayer.X0, wmsLayer.Y0);
         georefpoint2 = new EastNorth(wmsLayer.X0+wmsLayer.fX*wmsLayer.communeBBox.max.getX(),
                 wmsLayer.Y0+wmsLayer.fY*wmsLayer.communeBBox.max.getX());
-        ea1 = new EastNorth(wmsLayer.images.get(0).min.east(), wmsLayer.images.get(0).max.north());
-        EastNorth ea2 = wmsLayer.images.get(0).max;
+        ea1 = new EastNorth(wmsLayer.getImage(0).min.east(), wmsLayer.getImage(0).max.north());
+        EastNorth ea2 = wmsLayer.getImage(0).max;
         affineTransform(ea1, ea2, georefpoint1, georefpoint2);
-        wmsLayer.saveNewCache();
+        wmsLayer.grabThread.saveNewCache();
         Main.map.mapView.repaint();
     }
 

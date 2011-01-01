@@ -164,9 +164,9 @@ public class WMSAdjustAction extends MapMode implements
             double startAngle = Math.atan2(start.east()-pivot.east(), start.north()-pivot.north());
             double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
             double rotationAngle = endAngle - startAngle;
-            if (selectedLayer.images.get(0).orgCroppedRaster != null) {
+            if (selectedLayer.getImage(0).orgCroppedRaster != null) {
                 for (int i=0; i<4; i++) {
-                    croppedRaster[i] = selectedLayer.images.get(0).orgCroppedRaster[i].rotate(pivot, rotationAngle);
+                    croppedRaster[i] = selectedLayer.getImage(0).orgCroppedRaster[i].rotate(pivot, rotationAngle);
                 }
                 croppedRaster[4] = croppedRaster[0];
             }
@@ -197,7 +197,7 @@ public class WMSAdjustAction extends MapMode implements
 
     private void saveModifiedLayers() {
         for (WMSLayer wmsLayer : modifiedLayers) {
-            wmsLayer.saveNewCache();
+            wmsLayer.grabThread.saveNewCache();
         }
     }
 }

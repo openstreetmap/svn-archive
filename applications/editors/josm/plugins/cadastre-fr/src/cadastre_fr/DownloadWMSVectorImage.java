@@ -32,10 +32,10 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         errorMessage = null;
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
-                if (wmsLayer.images.isEmpty()) {
+                if (wmsLayer.getImages().isEmpty()) {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
-                        if (wmsLayer.getCacheControl().loadCacheIfExist()) {
+                        if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
                             Main.map.mapView.zoomTo(wmsLayer.getCommuneBBox().toBounds());
                             //Main.map.mapView.repaint();
                             return;
@@ -68,7 +68,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     protected void cancel() {
         grabber.getWmsInterface().cancel();
         if (wmsLayer != null)
-            wmsLayer.cancelled = true;
+            wmsLayer.grabThread.setCancelled(true);
     }
 
     @Override

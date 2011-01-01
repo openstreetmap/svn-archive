@@ -74,7 +74,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                     }
                     // create layer and load cache
                     WMSLayer wmsLayer = new WMSLayer("", "", Integer.parseInt(ext)-1);
-                    if (wmsLayer.getCacheControl().loadCache(file, layoutZone)) {
+                    if (wmsLayer.grabThread.getCacheControl().loadCache(file, layoutZone)) {
                         CadastrePlugin.addWMSLayer(wmsLayer);
                     }
                 }

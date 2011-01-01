@@ -152,7 +152,7 @@ public class CacheControl implements Runnable {
         }
         if (successfulRead && wmsLayer.isRaster()) {
             // serialized raster bufferedImage hangs-up on Java6. Recreate them here
-            wmsLayer.images.get(0).image = RasterImageModifier.fixRasterImage(wmsLayer.images.get(0).image);
+            wmsLayer.getImage(0).image = RasterImageModifier.fixRasterImage(wmsLayer.getImage(0).image);
         }
         return successfulRead;
     }
@@ -171,7 +171,6 @@ public class CacheControl implements Runnable {
     public synchronized void run() {
         for (;;) {
             imagesLock.lock();
-            //ArrayList<GeorefImage> images = new ArrayList<GeorefImage>(imagesToSave);
             int size = imagesToSave.size();
             imagesLock.unlock();
             if (size > 0) {

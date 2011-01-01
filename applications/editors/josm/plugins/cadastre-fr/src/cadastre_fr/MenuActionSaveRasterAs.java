@@ -55,7 +55,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
             file = fc.getSelectedFile();
             if (!file.getName().endsWith(".png"))
                 file = new File(file.getParent(), file.getName()+".png");
-            BufferedImage bi = wmsLayer.images.get(0).image; 
+            BufferedImage bi = wmsLayer.getImage(0).image; 
             try {
                 ImageIO.write(bi, "png", file);
 /*

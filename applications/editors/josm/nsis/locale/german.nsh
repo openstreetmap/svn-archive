@@ -29,7 +29,7 @@
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_REMOTECONTROL_PLUGIN  "Andere Applikationen können JOSM Kommandos zusenden."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_TURNRESTRICTIONS_PLUGIN  "Erleichtert die Eingabe und Pflege von Informationen zu Abbiegebeschränkungen."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_VALIDATOR_PLUGIN  "Validatiert geänderte Daten ob diese mit den üblichen Ratschlägen übereinstimmen."
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_WMS_PLUGIN  "Hintergrundbilder von Web Map Service (WMS) Quellen."
+!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_WMS  "Hintergrundbilder von Web Map Service (WMS) Quellen."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_STARTMENU  "Fügt JOSM zum Startmenü hinzu."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_DESKTOP_ICON  "Fügt ein JOSM Icon zum Desktop hinzu."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_QUICKLAUNCH_ICON  "Fügt ein JOSM Icon zur Schnellstartleiste (Quick Launch) hinzu."

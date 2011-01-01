@@ -43,7 +43,7 @@ if [ -n "$1" ]; then
   export VERSION=$1
   export JOSM_BUILD="no"
   export WEBKIT_DOWNLAD="no"
-  export JOSM_FILE="/var/www/josm.openstreetmap.de/download/josm-tested.jar"
+  export JOSM_FILE="/home/josm/www/download/josm-tested.jar"
 else
   svncorerevision=`svnversion ../core`
   svnpluginsrevision=`svnversion ../plugins`

@@ -13,7 +13,7 @@ switch($_REQUEST['action'])
     case 'get':
         $way=new Way((int)$cleaned['id']);
         header("Content-type: text/xml");
-        $way->annotated_way_to_xml();
+        $way->to_xml();
         break;
 
     case 'annotate':

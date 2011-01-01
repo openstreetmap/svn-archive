@@ -264,6 +264,40 @@ switch($cleaned["action"])
 		session_destroy();
 		header("Location: /freemap/index.php");
 		break;
+
+	case "routes":
+		$result=pg_query("SELECT * FROM users WHERE id=$_SESSION[gatekeeper]");
+		$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+		?>
+		<html>
+		<head>
+		<title><?php echo $row['username']?>'s walk routes</title>
+		<link rel='stylesheet' 
+		type='text/css' href='/freemap/css/freemap2.css' />
+		</head>
+		<body>
+		<h1><?php echo $row['username']?>'s walk routes</h1>
+		<?php
+		$formats = array ("htmlpage" => "HTML",
+						"pdf" => "PDF",
+						"xml" => "XML" );
+		echo "<ul>\n";
+		$result=pg_query("SELECT *,length(route) FROM routes WHERE userid=".
+						"$_SESSION[gatekeeper] ORDER BY id");
+		while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
+		{
+			echo "<li>Walk route of ".
+				(round($row['length']/1000,2))." km ";
+			foreach($formats as $qsformat=>$txtformat)
+			{
+				echo "<a href='route.php?action=get&id=$row[id]&source=db".
+					"&format=$qsformat'>$txtformat</a> ";
+			}
+			echo "</li>\n";
+		}
+		echo "</ul>\n";
+		echo "<p><a href='/freemap/index.php'>Back to map</a></p>\n";
+		break;
 }
 
 pg_close($conn);

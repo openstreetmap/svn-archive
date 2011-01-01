@@ -6,6 +6,7 @@ require_once('Way.php');
 
 include ('fpdf16/fpdf.php');
 
+
 class PDF extends FPDF
 {
 
@@ -73,11 +74,13 @@ class PDF extends FPDF
 
 class Walkroute
 {
-    var $pts, $ways;
+    var $pts, $ways, $route;
 
 
     function __construct($in,$deserialise=false)
     {
+        $this->pts=array();
+        $this->ways=array();
         if(is_int($in))
         {
             $p=$this->get_route($in);
@@ -103,15 +106,20 @@ class Walkroute
         $prevways=array();
         $waystoadd=array();
         $this->pts = array();
+        $prevPt=null;
         for($i=0; $i<count($points); $i++)
         {
             $prevdist=100;
-            $this->pts[$i] = array();
-            $this->pts[$i]['way']= 0;
-            list($this->pts[$i]['x'],$this->pts[$i]['y'])=    
-                explode(" ", $points[$i]);
-            $ways=get_ways_by_point($this->pts[$i]['x'],
-                $this->pts[$i]['y'],100,0);
+            $curPt = array();
+            $curPt['way']= 0;
+            list($curPt['x'],$curPt['y'])=explode(" ", $points[$i]);
+
+            // Prevent double clicks adding same point twice
+            if($prevPt!==null && dist($prevPt['x'],$prevPt['y'],
+                                    $curPt['x'],$curPt['y']) < 10)
+                continue;
+
+            $ways=get_ways_by_point($curPt['x'],$curPt['y'],100,0);
             if(count($ways)>0)
             {
                 $waytoadd=null;
@@ -129,44 +137,55 @@ class Walkroute
                     }
                 }
 
-                $this->pts[$i]['way']=($waytoadd===null ) ? 
-                    0 : $waytoadd['osm_id'];
+                $curPt['way']=($waytoadd===null ) ?  0 : $waytoadd['osm_id'];
                 if($waytoadd!==null&&!isset($waystoadd[$waytoadd['osm_id']]))
-                {
                     $waystoadd[$waytoadd['osm_id']] = $waytoadd; 
-                    $lastway=$waytoadd['osm_id'];
-                }
-                if($this->pts[$i-1]['way']>0 && 
-                    $this->pts[$i]['way']!=$this->pts[$i-1]['way'])
+
+                if($curPt['way']>0)
                 {
-                    $waystoadd[$this->pts[$i-1]['way']]['end'] = $prevposn;
+                    $waystoadd[$curPt['way']]['end'] = 
+                        $waytoadd['posn'];
                 }
-                if($this->pts[$i]['way']>0 && 
-                    $this->pts[$i]['way']!=$this->pts[$i-1]['way'])
+                if($curPt['way']>0 && $curPt['way']!=$prevPt['way'])
                 {
                     for($j=0; $j<count($prevways); $j++)
                     {
-                        if($prevways[$j]['osm_id']==$this->pts[$i]['way'])
+                        if($prevways[$j]['osm_id']==$curPt['way'])
                         {
-                            $waystoadd[$this->pts[$i]['way']]['start'] = 
+                            $waystoadd[$curPt['way']]['start'] = 
                                 $prevways[$j]['posn'];
                             break;
                         }
                     }
                 }
-                $prevways=$ways;
-                if($waytoadd!==null)
+
+                if($i>0 && $prevPt['way']==0 && $curPt['way']==0)
                 {
-                    $prevposn=$waytoadd['posn'];
-                } 
+                    $this->route[] = new Point($prevPt['x'],$prevPt['y']);
+                }
+            } // end if count > 0
+            if($i>0 && $prevPt['way']>0 && $curPt['way'] != $prevPt['way'])
+            {
+                $w=new Way
+                        ($waystoadd[$prevPt['way']],true,
+                        $waystoadd[$prevPt['way']]['start'],
+                                $waystoadd[$prevPt['way']]['end']);
+                $this->route[] = $w;
             }
-            if(isset($waystoadd[$lastway]))
-                $waystoadd[$lastway]['end'] = $prevposn;
-        }
-        foreach($waystoadd as $w)
+            if($i>0 && count($ways)==0 && $prevPt['way']==0)
+            {
+                $this->route[] = new Point($prevPt['x'],$prevPt['y']);
+            }
+            $prevPt = $curPt;
+            $prevways=$ways;
+        } // end for
+        if($prevPt['way']>0)
         {
-            $this->ways[$w['osm_id']] = 
-                new Way($w,true,$w['start'],$w['end']);
+            $w=new Way
+                        ($waystoadd[$prevPt['way']],true,
+                        $waystoadd[$prevPt['way']]['start'],
+                                $waystoadd[$prevPt['way']]['end']);
+            $this->route[] = $w;
         }
     }
 
@@ -186,22 +205,9 @@ class Walkroute
     function to_xml()
     {
         echo "<route>\n";
-        for($i=0; $i<count($this->pts); $i++)
+        foreach($this->route as $r)
         {
-            echo "<pt wayid='".$this->pts[$i][way]."' />\n";
-            if($this->pts[$i]['way']==0 && 
-                    ($i==count($this->pts)-1 || $this->pts[$i+1]['way']==0))
-            {
-                echo "<point>".$this->pts[$i][x]." ".
-                    $this->pts[$i][y]."</point>\n";
-            }
-
-            if($i < count($this->pts)-1 && $this->pts[$i]['way'] != 
-                $this->pts[$i+1]['way'] && $this->pts[$i+1]['way']>0)
-            {
-                $w1=$this->ways[$this->pts[$i+1]['way']];
-                $w1->annotated_way_to_xml();
-            }
+            $r->to_xml();
         }
         echo "</route>\n";
     }
@@ -215,45 +221,47 @@ class Walkroute
         echo "<ol>\n";
         foreach($text as $line)
         {
-            if(is_array($line))
-            {
-                echo "<li>$line[general]</li>\n";
-                foreach($line['annotations'] as $ann)
-                {
-                    echo "<li>$ann</li>\n";
-                }
-            }
-            else
-            {
-                echo "<li>$line</li>\n";
-            }
+            echo "<li>$line</li>\n";
         }
         echo "</ol>\n";
     }
 
     function to_pdf()
     {
+        $pts=array();
+        foreach ($this->route as $r)
+        {
+            $pts=array_merge($pts,$r->getCoords());
+        }
         $text=$this->to_text();
         $pdf = new PDF();
         $pdf->SetFont('Arial','B',10);
         $pdf->title="Your walkroute";
         $pdf->SetLeftMargin(10);
         $pdf->AddPage();
-        list($w,$h)=get_required_dimensions(get_bounds($this->pts,14),14);
+        list($w,$h)=get_required_dimensions(get_bounds($pts,14),14);
         $w+=32;
         $h+=32;
+
+        // convert to mm
+        // 72dpi (GD resolution) = 2.835 pixels/mm
+        $w /= 2.835;
+        $h /= 2.835;
+
         if($w>$h)
         {
-            $pageW=($w>190) ? 190:0;
-            $pageH=($w>190) ? 190*($h/$w) : 0;
+            $pageW=($w>190) ? 190:$w;
+            $pageH=($w>190) ? 190*($h/$w) : $h;
             $pdf->secondColStart=$pdf->bodystart + $pageH;
         }
         else
         {
-            $pageW=($w>90) ? 90:0;
-            $pageH=($w>90) ? 90*($h/$w) : 0;
+            $pageW=($w>90) ? 90:$w;
+            $pageH=($w>90) ? 90*($h/$w) : $h;
             $pdf->secondColStart=$pdf->bodystart;
         }
+
+
         $pdf->Image("http://www.free-map.org.uk/freemap/route.php".
             "?format=png&action=get&serialised=".
             urlencode($this->serialise()), 10,20,$pageW,$pageH,"png");
@@ -275,31 +283,8 @@ class Walkroute
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
             $pdf->SetTextColor(0,0,0);
-
-            if(is_array($line))
-            {
-                $pdf->MultiCell(80,5,$line['general']);
-                $pdf->Ln();
-                foreach($line['annotations'] as $ann)
-                {
-                    $pdf->SetX($pdf->col==1 ? 110: 10);
-                    $pdf->SetDrawColor(0,0,255);
-                    $pdf->SetFillColor(0,0,255);
-                    $pdf->SetTextColor(255,255,255);
-                    $pdf->Cell
-                        ($pdf->GetStringWidth($count)*2,
-                        5,$count++,1,0,'L',true);
-                    $pdf->SetDrawColor(0,0,0);
-                    $pdf->SetFillColor(255,255,255);
-                    $pdf->SetTextColor(0,0,0);
-                    $pdf->MultiCell(80,5,$ann);
-                    $pdf->Ln();
-                }
-            }
-            else
-            {
-                $pdf->MultiCell(80,5,$line);
-            }
+            $pdf->MultiCell(80,5,$line);
+            $pdf->Ln();
         }
 
         $pdf->Output();
@@ -307,7 +292,12 @@ class Walkroute
 
     function to_png($w=null,$h=null,$wrpadding=16)
     {
-        $bounds=get_bounds($this->pts);
+        $pts=array();
+        foreach ($this->route as $r)
+        {
+            $pts=array_merge($pts,$r->getCoords());
+        }
+        $bounds=get_bounds($pts);
         $mpx=($bounds[0]+$bounds[2]) / 2;
         $mpy=($bounds[1]+$bounds[3]) / 2;
         if($w===null || $h===null)
@@ -320,12 +310,12 @@ class Walkroute
         $anncol=ImageColorAllocate($im,0,0,255);
         $textcol=ImageColorAllocate($im,255,255,255);
         render_tiles($im,$mpx,$mpy,14,$w,$h);
-        for($i=0;$i<count($this->pts); $i++)
+        for($i=0;$i<count($pts); $i++)
         {
-            $px=(metresToPixel($this->pts[$i]['x'],14) - 
+            $px=(metresToPixel($pts[$i]['x'],14) - 
                 metresToPixel($bounds[0],14))+
                 $wrpadding;
-            $py=(metresToPixel(-$this->pts[$i]['y'],14)-
+            $py=(metresToPixel(-$pts[$i]['y'],14)-
                 metresToPixel(-$bounds[3],14))+
                 $wrpadding;
             if(isset($prevpx) && isset($prevpy))
@@ -337,6 +327,7 @@ class Walkroute
             $prevpy=$py;
         }
         $coords=$this->keypoint_coords();
+        //print_r($coords);
         $count=1;
         foreach($coords as $coord)
         {
@@ -354,47 +345,22 @@ class Walkroute
     function to_text()
     {
         $text=array();
-        for($i=0; $i<count($this->pts); $i++)
+        for($i=0; $i<count($this->route)-1; $i++)
         {
-            if($this->pts[$i]['way']==0 && $i>0) 
-            {
-                    $dist=round
-                    (dist($this->pts[$i-1]['x'],$this->pts[$i-1]['y'],
-                        $this->pts[$i]['x'],$this->pts[$i]['y']) / 1000, 2);
-                    $dir=compass_direction
-                    (get_bearing($this->pts[$i]['x']-$this->pts[$i-1]['x'],
-                              $this->pts[$i]['y']-$this->pts[$i-1]['y']));
-                    $text[] = "Continue $dir for $dist km";
-            }
-
-            if($i < count($this->pts)-1 && $this->pts[$i]['way'] 
-                != $this->pts[$i+1]['way'] &&
-                $this->pts[$i+1]['way']>0)
-            {
-                $w1=$this->ways[$this->pts[$i+1]['way']];
-                $text[] = $w1->annotated_way_to_text( );
-            }
+            $text=array_merge($text,
+                $this->route[$i]->toTextFull($this->route[$i+1]));
         }
-        return $text;
+        
+        return array_merge($text,$this->route[$i]->to_text());
     }
 
     function keypoint_coords()
     {
         $coords=array();
-        for($i=0; $i<count($this->pts); $i++)
+        for($i=0; $i<count($this->route); $i++)
         {
-            if ($i<count($this->pts)-1 && $this->pts[$i+1]['way']==0)
-            {
-                $coords[] = $this->pts[$i];
-            }
-            elseif ($i<count($this->pts)-1 && 
-                $this->pts[$i]['way'] != $this->pts[$i+1]['way'] &&
-                    $this->pts[$i+1]['way'] > 0)
-            {
-                $coords[] = $this->pts[$i];
-                $w=$this->ways[$this->pts[$i+1]['way']];
-                $coords=array_merge($coords, $w->get_annotation_coords());
-            }
+            $coords = array_merge($coords,
+                $this->route[$i]->get_key_coords($this->route[$i+1]));
         }
         return $coords;
     }
@@ -402,44 +368,32 @@ class Walkroute
     function serialise()
     {
         $str="";
-        for($i=0; $i<count($this->pts); $i++)
+        for($i=0; $i<count($this->route); $i++)
         {
             if($i>0)
                 $str.=",";
-            $str .= round($this->pts[$i]['x'],0) ." ".
-                    round($this->pts[$i]['y'],0)." ".
-                    $this->pts[$i]['way'];
-        }
-        $str.=";";
-        $first=true;
-        foreach($this->ways as $id=>$w)
-        {
-            if(!$first)
-                $str.=",";
-            else
-                $first=false;
-            $str.=$id." ".round($w->getStart(),2)." ".  round($w->getEnd(),2);
+            $str.=$this->route[$i]->serialise();
         }
         return $str;
     }
 
     function deserialise($str)
     {
-        $this->pts=array();
-        $this->ways=array();
-        list($ptinfo,$wayinfo) = explode(";", $str);
-        $pts=explode(",",$ptinfo);
-        $wys=explode(",",$wayinfo);
-        for($i=0; $i<count($pts); $i++)
+        $this->route=array();
+        $features=explode(",", $str);
+        foreach($features as $f)
         {
-            $this->pts[$i]=array();
-            list($this->pts[$i]['x'],$this->pts[$i]['y'],
-                    $this->pts[$i]['way']) = explode(" ",$pts[$i]);
-        }
-        for($i=0; $i<count($wys); $i++)
-        {
-            list($id,$start,$end) = explode(" ", $wys[$i]);
-            $this->ways[$id]=new Way((int)$id,true,$start,$end);
+            if($f[0]=='P')
+            {
+                list(,$x,$y) = explode(" ",$f);
+                $p =new Point($x,$y);
+                $this->route[] = $p;
+            }
+            elseif($f[0]=='W')
+            {
+                list(,$osm_id,$start,$end) = explode(" ",$f);
+                $this->route[] = new Way((int)$osm_id,true,$start,$end);
+            }
         }
     }
 }

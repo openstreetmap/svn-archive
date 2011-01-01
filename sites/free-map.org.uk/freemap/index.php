@@ -188,7 +188,8 @@ function write_login()
 		$row=pg_fetch_array($result,null,PGSQL_ASSOC);
 		echo "<em>Logged in as $row[username]</em>\n";
 		echo "<a href='user.php?action=logout&redirect=".
-			htmlentities($_SERVER['PHP_SELF'])."'>Log out</a>\n";
+			htmlentities($_SERVER['PHP_SELF'])."'>Log out</a> |".
+			" <a href='user.php?action=routes'>Your walk routes</a>\n";
 	}
 	echo "</div>";
 }

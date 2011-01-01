@@ -68,8 +68,9 @@ switch($cleaned['action'])
   case 'add':
     if(isset($_SESSION['gatekeeper']))
     {
-        $q=("INSERT INTO routes (route) VALUES ".
-        "(GeomFromText('LINESTRING($cleaned[route])',900913))");
+        $q=("INSERT INTO routes (userid,route) VALUES ".
+        "('$_SESSION[gatekeeper]',".
+        "GeomFromText('LINESTRING($cleaned[route])',900913))");
         echo $q;
         pg_query($q);
     }

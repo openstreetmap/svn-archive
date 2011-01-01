@@ -125,7 +125,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
         CheckParameterUtil.ensureParameterNotNull(model, "model");
         this.model = model;
         build();
-        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#BasicEditor"));
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/turnrestrictions#BasicEditor"));
     }
     
     /**

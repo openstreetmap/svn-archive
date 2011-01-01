@@ -104,7 +104,7 @@ public class AdvancedEditorPanel extends JPanel {
         CheckParameterUtil.ensureParameterNotNull(model, "model");
         this.model = model;
         build();
-        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#AdvancedEditor"));
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/turnrestrictions#AdvancedEditor"));
     }
 
     /**

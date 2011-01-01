@@ -166,7 +166,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
                 150   // default height
         );
         build();
-        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/turnrestrictions#TurnRestrictionToggleDialog"));
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/TurnRestrictions#TurnRestrictionToggleDialog"));
     }   
     
     /**

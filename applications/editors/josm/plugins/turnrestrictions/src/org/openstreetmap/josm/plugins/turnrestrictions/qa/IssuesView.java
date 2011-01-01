@@ -36,7 +36,7 @@ public class IssuesView extends VerticallyScrollablePanel implements Observer{
         this.model = model;
         model.addObserver(this);
         build();
-        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/turnrestrictions#ErrorsAndWarnings"));
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugin/TurnRestrictions#ErrorsAndWarnings"));
     }
     
     /**

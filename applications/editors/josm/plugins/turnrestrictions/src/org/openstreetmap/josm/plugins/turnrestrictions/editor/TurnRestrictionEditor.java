@@ -104,7 +104,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         b.setName("btnOK");
         pnl.add(b = new SideButton(new CancelAction()));
         b.setName("btnCancel");
-        pnl.add(b = new SideButton(new ContextSensitiveHelpAction(ht("/Plugin/turnrestrictions#TurnRestrictionEditor"))));
+        pnl.add(b = new SideButton(new ContextSensitiveHelpAction(ht("/Plugin/TurnRestrictions#TurnRestrictionEditor"))));
         b.setName("btnHelp");
         return pnl;
     }
@@ -428,7 +428,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                     null, // no special icon
                     options,
                     options[1], // cancel is default operation
-                    HelpUtil.ht("/Plugin/turnrestrictions#PendingErrorsAndWarnings")
+                    HelpUtil.ht("/Plugin/TurnRestrictions#PendingErrorsAndWarnings")
             );
             return ret == 0 /* OK */;           
         }

@@ -141,6 +141,9 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#sortByColumn(int, boolean)
+	 */
 	@Override
 	protected void sortByColumn(int column, boolean ascending) {
 		if (addressContainer.getNumberOfIncompleteAddresses() == 0) return;

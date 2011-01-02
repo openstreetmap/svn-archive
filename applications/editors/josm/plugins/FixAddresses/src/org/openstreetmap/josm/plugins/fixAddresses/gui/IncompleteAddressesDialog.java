@@ -40,6 +40,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.OsmUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
@@ -203,7 +204,9 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		
 		for (AbstractAddressEditAction action : actions) {
 			action.setEvent(event);
-		}		
+		}	
+		
+		OsmUtils.zoomAddresses(event.getSelectedIncompleteAddresses());
 	}
 
 	/* (non-Javadoc)

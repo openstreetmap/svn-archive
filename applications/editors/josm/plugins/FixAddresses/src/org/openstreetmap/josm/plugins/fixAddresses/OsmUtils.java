@@ -16,21 +16,30 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 import java.util.List;
 import java.util.Locale;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class OsmUtils provides some utilities not provided by the OSM data framework.
  */
 public class OsmUtils {
+	
+	/**
+	 * Instantiates a new osm utils.
+	 */
 	private OsmUtils() {}
 	
+	/** The cached locale. */
 	private static String cachedLocale = null;
 	
 	/**
@@ -195,6 +204,28 @@ public class OsmUtils {
 		}
 		return cachedLocale;
 	}
+	
+	/**
+	 * Zooms to the given addresses.
+	 *
+	 * @param addressList the address list
+	 */
+	public static void zoomAddresses(List<OSMAddress> addressList) {
+		CheckParameterUtil.ensureParameterNotNull(addressList, "addressList");
+		
+		if (Main.map == null && Main.map.mapView == null) return; // nothing to do
+			
+		// compute bounding box
+		BoundingXYVisitor bbox = new BoundingXYVisitor();
+        for (OSMAddress source : addressList) {
+        	OsmPrimitive osm = source.getOsmObject();
+        	Bounds b = new Bounds(osm.getBBox().getTopLeft(), osm.getBBox().getBottomRight());
+            bbox.visit(b);
+        }
+        
+        // zoom to calculated bounding box        
+        Main.map.mapView.zoomTo(bbox.getBounds());
+	}
 
 	/**
 	 * Helper method to set an derived value of an address node.
@@ -204,6 +235,9 @@ public class OsmUtils {
 	 * @param tag the tag to set as applied value.
 	 */
 	private static void applyDerivedValue(OSMAddress address, Way w, String tag) {
+		CheckParameterUtil.ensureParameterNotNull(address, "address");
+		CheckParameterUtil.ensureParameterNotNull(w, "way");
+		
 		if (!address.hasTag(tag) && TagUtils.hasTag(w, tag)) {						
 			address.setDerivedValue(tag, w.get(tag));
 		}

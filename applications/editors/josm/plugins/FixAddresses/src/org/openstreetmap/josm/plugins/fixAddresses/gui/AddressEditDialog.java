@@ -69,8 +69,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
 	private static final String UNRESOLVED_ADDRESS = tr("Unresolved Addresses");
 	private static final String STREETS = tr("Streets");
-	private static final String UNRESOLVED_HEADER_FMT = tr("%s (%d)");
-	private static final String STREET_HEADER_FMT = tr("%s (%d)");
+	private static final String UNRESOLVED_HEADER_FMT = "%s (%d)";
+	private static final String STREET_HEADER_FMT = "%s (%d)";
 	private static final String OK_COMMAND = tr("Close");
 	private static final String SELECT_AND_CLOSE = tr("Select and close");
 	
@@ -126,7 +126,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetPanel.add(scroll1, BorderLayout.CENTER);
 			
 			streetLabel = createHeaderLabel(STREET_HEADER_FMT,
-					STREETS,
+					tr(STREETS),
 					editContainer.getNumberOfStreets());
 			
 			JPanel headerPanel = new JPanel(new GridLayout(1, 4));
@@ -165,7 +165,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);
 			unresolvedAddressesLabel = createHeaderLabel(
 					UNRESOLVED_HEADER_FMT, 
-					UNRESOLVED_ADDRESS, 
+					tr(UNRESOLVED_ADDRESS), 
 					editContainer.getNumberOfUnresolvedAddresses());
 			
 			JPanel headerPanel2 = new JPanel(new GridLayout(1, 4));

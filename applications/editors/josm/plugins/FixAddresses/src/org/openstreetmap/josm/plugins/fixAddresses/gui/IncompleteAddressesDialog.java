@@ -52,11 +52,13 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 
 	private AddressEditContainer container;
 
+	// Create action objects
 	private SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
 	private GuessAddressDataAction guessDataAction = new GuessAddressDataAction();
 	private ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
 	private RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
 	
+	// Array containing the available actions
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
 			selectAction,
 			guessDataAction,
@@ -76,21 +78,24 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		
 		this.container = new AddressEditContainer();
 		container.addChangedListener(this);
-		
+		// Top-level panel
 		JPanel p = new JPanel(new BorderLayout());
-		
+		// Table containing address entities
 		IncompleteAddressesTableModel model = new IncompleteAddressesTableModel(container);
 		incompleteAddr = new JTable(model);
 	    JTableHeader header = incompleteAddr.getTableHeader();
 		header.addMouseListener(model.new ColumnListener(incompleteAddr));
 		incompleteAddr.getSelectionModel().addListSelectionListener(this);
 		
+		// Scroll pane hosting the table
 		JScrollPane sp = new JScrollPane(incompleteAddr);
 		p.add(sp, BorderLayout.CENTER);
 		this.add(p);
 		
+		// Button panel containing the commands
 		JPanel buttonPanel = getButtonPanel(actions.length);
 		
+		// Populate panel with actions
 		for (int i = 0; i < actions.length; i++) {
 			SideButton sb = new SideButton(actions[i]);
 			buttonPanel.add(sb);
@@ -98,6 +103,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		
 		this.add(buttonPanel, BorderLayout.SOUTH);
 		
+		// Link actions with address container
 		for (AbstractAddressEditAction action : actions) {
 			action.setContainer(container);
 		}
@@ -220,6 +226,4 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
 }

@@ -97,10 +97,13 @@ public class OsmUtils {
 	}
 	
 	/**
-	 * Gets the associated street name via relation of the address node, if present.
+	 * Checks, if the given address has a relation hosting the address values. This method looks
+	 * for a relation of type 'associatedStreet' and checks the members for address values, if present.
+	 * If the member has address values, this methods sets the derived properties of the address
+	 * node accordingly. 
 	 *
-	 * @param address the address
-	 * @return true, if an associated street has been found.
+	 * @param address The address to check.
+	 * @return true, if an associated relation has been found.
 	 */
 	public static boolean getValuesFromRelation(OSMAddress address) {
 		if (address == null) {
@@ -110,23 +113,26 @@ public class OsmUtils {
 		boolean hasValuesFromRel = false; /* true, if we applied some address props from the relation */
 		OsmPrimitive addrNode = address.getOsmObject();
 		
+		// check all referrers of the node
 		for (OsmPrimitive osm : addrNode.getReferrers()) {
 			if (osm instanceof Relation) {
 				Relation r = (Relation) osm;
-				
+				// Relation has the right type?
 				if (!TagUtils.isAssociatedStreetRelation(r)) continue;
 				
+				// check for 'street' members 
 				for (RelationMember rm : r.getMembers()) {
 					if (TagUtils.isStreetMember(rm)) {
 						OsmPrimitive street = rm.getMember();
-						if (TagUtils.hasHighwayTag(street)) {
+						if (TagUtils.hasHighwayTag(street)) {							
 							String streetName = TagUtils.getNameValue(street);
 							if (!StringUtils.isNullOrEmpty(streetName)) {
+								// street name found -> set property
 								address.setDerivedValue(TagUtils.ADDR_STREET_TAG, streetName);
 								hasValuesFromRel = true;
 								break;
-							}
-						} // TODO: Issue a warning here						
+							} // else: Street has no name: Ooops
+						} // else: Street member, but no highway tag: Ooops						
 					}
 				}
 				
@@ -151,8 +157,8 @@ public class OsmUtils {
 	/**
 	 * Gets the tag values from an address interpolation ref, if present.
 	 *
-	 * @param address the address
-	 * @return the values from address interpolation
+	 * @param address The address
+	 * @return true, if house numbers are given via address interpolation; otherwise false.
 	 */
 	public static boolean getValuesFromAddressInterpolation(OSMAddress address) {
 		if (address == null) return false;
@@ -177,9 +183,9 @@ public class OsmUtils {
 	}
 	
 	/**
-	 * Gets the locale code as string.
+	 * Gets the local code as string.
 	 *
-	 * @return the locale
+	 * @return the string representation of the local.
 	 */
 	public static String getLocale() {
 		// Check if user could prefer imperial system
@@ -190,6 +196,13 @@ public class OsmUtils {
 		return cachedLocale;
 	}
 
+	/**
+	 * Helper method to set an derived value of an address node.
+	 *
+	 * @param address The address to change
+	 * @param w the way containing the tag for the derived value.
+	 * @param tag the tag to set as applied value.
+	 */
 	private static void applyDerivedValue(OSMAddress address, Way w, String tag) {
 		if (!address.hasTag(tag) && TagUtils.hasTag(w, tag)) {						
 			address.setDerivedValue(tag, w.get(tag));

@@ -213,7 +213,8 @@ public class OsmUtils {
 	public static void zoomAddresses(List<OSMAddress> addressList) {
 		CheckParameterUtil.ensureParameterNotNull(addressList, "addressList");
 		
-		if (Main.map == null && Main.map.mapView == null) return; // nothing to do
+		if (Main.map == null && Main.map.mapView == null) return; 	// nothing to do
+		if (addressList.size() == 0) return;						// dto.
 			
 		// compute bounding box
 		BoundingXYVisitor bbox = new BoundingXYVisitor();
@@ -223,8 +224,10 @@ public class OsmUtils {
             bbox.visit(b);
         }
         
-        // zoom to calculated bounding box        
-        Main.map.mapView.zoomTo(bbox.getBounds());
+        if (bbox.getBounds() != null) {
+        	// 	zoom to calculated bounding box        
+        	Main.map.mapView.zoomTo(bbox.getBounds());
+        }
 	}
 
 	/**

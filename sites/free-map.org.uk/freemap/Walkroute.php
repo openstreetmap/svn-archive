@@ -109,7 +109,7 @@ class Walkroute
         $prevPt=null;
         for($i=0; $i<count($points); $i++)
         {
-            $prevdist=100;
+            $prevdist=1000;
             $curPt = array();
             $curPt['way']= 0;
             list($curPt['x'],$curPt['y'])=explode(" ", $points[$i]);
@@ -129,10 +129,10 @@ class Walkroute
                     for($k=0; $k<count($prevways); $k++)
                     {
                         if($ways[$j]['osm_id']==$prevways[$k]['osm_id'] &&
-                        $ways[$j]['dist'] < $prevdist)
+                        $ways[$j]['dist']+$prevways[$k]['dist'] < $prevdist)
                         {
                             $waytoadd=$ways[$j];
-                            $prevdist=$ways[$j]['dist'];
+                            $prevdist=$ways[$j]['dist']+$prevways[$k]['dist'];
                         }
                     }
                 }

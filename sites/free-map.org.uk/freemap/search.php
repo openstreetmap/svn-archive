@@ -58,7 +58,7 @@ switch($_REQUEST['type'])
 			foreach($rows as $row)
             {
 				$way=new Way($row);
-				$way->to_xml();
+				$way->to_xml(false);
             }
         }
         echo "</osmdata>";

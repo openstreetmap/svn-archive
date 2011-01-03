@@ -230,9 +230,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         if (this.isRaster) {
             paintCrosspieces(g, mv);
         }
-        if (grabThread.getImagesToGrabSize() > 0) {
+        //        if (grabThread.getImagesToGrabSize() > 0) {
             grabThread.paintBoxesToGrab(g, mv);
-        }
+            //        }
         if (this.adjustModeEnabled) {
             WMSAdjustAction.paintAdjustFrames(g, mv);
         }
@@ -378,6 +378,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @throws IOException
      */
     public void write(ObjectOutputStream oos) throws IOException {
+        // Set currentFormat to the serializeFormatVersion
+        currentFormat = this.serializeFormatVersion;
         oos.writeInt(this.serializeFormatVersion);
         oos.writeObject(this.location);    // String
         oos.writeObject(this.codeCommune); // String

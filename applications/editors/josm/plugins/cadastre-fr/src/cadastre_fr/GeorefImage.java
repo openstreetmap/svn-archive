@@ -45,7 +45,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
 
     public GeorefImage(BufferedImage img, EastNorth min, EastNorth max) {
         image = img;
-
+ 
         this.min = min;
         this.max = max;
         this.orgRaster[0] = min;
@@ -140,9 +140,9 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
                 */
             }
         }
-        g.drawImage(image, minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
-                0, 0, image.getWidth(), image.getHeight(), // src
-                null);
+            g.drawImage(image, minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
+                        0, 0, image.getWidth(), image.getHeight(), // src
+                        null);
         if (backgroundTransparent && transparency < 1.0f)
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
@@ -236,8 +236,11 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         out.writeDouble(orgCroppedRaster[1].getX()); out.writeDouble(orgCroppedRaster[1].getY());
         out.writeDouble(orgCroppedRaster[2].getX()); out.writeDouble(orgCroppedRaster[2].getY());
         out.writeDouble(orgCroppedRaster[3].getX()); out.writeDouble(orgCroppedRaster[3].getY());
-        out.writeInt(imageOriginalHeight);
-        out.writeInt(imageOriginalWidth);
+        // Write image as a format 3 if cache was loaded with this format to avoid incompatibilities.
+        if (WMSLayer.currentFormat >= 4) {
+            out.writeInt(imageOriginalHeight);
+            out.writeInt(imageOriginalWidth);
+        }
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
 

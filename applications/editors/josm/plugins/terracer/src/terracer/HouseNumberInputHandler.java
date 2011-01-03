@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
  * The Class HouseNumberInputHandler contains all the logic
@@ -388,7 +389,16 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         if (selected == null) {
             return null;
         } else {
-            String name = selected.toString();
+            String name;
+            if (selected instanceof AutoCompletionListItem) 
+            {
+               name = ((AutoCompletionListItem)selected).getValue();
+            }
+            else
+            {
+               name = selected.toString();
+            }
+
             if (name.length() == 0) {
                 return null;
             } else {

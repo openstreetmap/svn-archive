@@ -72,6 +72,8 @@ public class CadastreInterface {
         boolean isCookieExpired = isCookieExpired();
         if (wmsLayer.getName().equals(lastWMSLayerName) && !isCookieExpired)
             return true;
+        if (!wmsLayer.getName().equals(lastWMSLayerName))
+            interfaceRef = null;
         // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {

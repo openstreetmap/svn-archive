@@ -49,6 +49,7 @@ public class Tile {
     protected boolean loaded = false;
     protected boolean loading = false;
     protected boolean error = false;
+    protected String error_message;
 
     /** TileLoader-specific tile metadata */
     protected Map<String, String> metadata;
@@ -268,6 +269,16 @@ public class Tile {
 
     public boolean hasError() {
         return error;
+    }
+
+    public String getErrorMessage() {
+        return error_message;
+    }
+
+    public void setError(String message) {
+        error = true;
+        setImage(ERROR_IMAGE);
+        error_message = message;
     }
 
     public void putValue(String key, String value) {

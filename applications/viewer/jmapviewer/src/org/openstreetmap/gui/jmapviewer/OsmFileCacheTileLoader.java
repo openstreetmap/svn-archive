@@ -202,18 +202,21 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 loadTileMetadata(tile, urlConn);
                 saveTagsToFile();
 
-                byte[] buffer = loadTileInBuffer(urlConn);
+                byte[] buffer = null;
+                if ("no-tile".equals(tile.getValue("tile-info")))
+                {
+                    tile.setError("No tile at this zoom level");
+                } else {
+                    buffer = loadTileInBuffer(urlConn);
+                }
                 if (buffer != null) {
                     tile.loadImage(new ByteArrayInputStream(buffer));
                     tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
                     saveTileToFile(buffer);
-                } else {
-                    tile.setLoaded(true);
                 }
             } catch (Exception e) {
-                tile.setImage(Tile.ERROR_IMAGE);
-                tile.error = true;
+                tile.setError(e.getMessage());
                 listener.tileLoadingFinished(tile, false);
                 if (input == null) {
                     System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
@@ -228,13 +231,21 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             FileInputStream fin = null;
             try {
                 tileFile = getTileFile();
-                fin = new FileInputStream(tileFile);
-                if (fin.available() == 0)
-                    throw new IOException("File empty");
-                tile.loadImage(fin);
-                fin.close();
-
                 loadTagsFromFile();
+                if ("no-tile".equals(tile.getValue("tile-info")))
+                {
+                    tile.setError("No tile at this zoom level");
+                    if (tileFile.exists()) {
+                        tileFile.delete();
+                    }
+                    tileFile = getTagsFile();
+                } else {
+                    fin = new FileInputStream(tileFile);
+                    if (fin.available() == 0)
+                        throw new IOException("File empty");
+                    tile.loadImage(fin);
+                    fin.close();
+                }
 
                 fileAge = tileFile.lastModified();
                 boolean oldTile = System.currentTimeMillis() - fileAge > maxCacheFileAge;
@@ -332,6 +343,11 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                     + source.getTileType());
         }
 
+        protected File getTagsFile() {
+            return new File(tileCacheDir + "/" + tile.getZoom() + "_" + tile.getXtile() + "_" + tile.getYtile()
+                    + TAGS_FILE_EXT);
+        }
+
         protected void saveTileToFile(byte[] rawData) {
             try {
                 FileOutputStream f = new FileOutputStream(tileCacheDir + "/" + tile.getZoom() + "_" + tile.getXtile()
@@ -345,14 +361,14 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
         }
 
         protected void saveTagsToFile() {
-            File tagsFile = new File(tileCacheDir, tile.getZoom() + "_"
-                    + tile.getXtile() + "_" + tile.getYtile() + TAGS_FILE_EXT);
+            File tagsFile = getTagsFile();
             if (tile.getMetadata() == null) {
                 tagsFile.delete();
                 return;
             }
             try {
-                final PrintWriter f = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tagsFile)));
+                final PrintWriter f = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tagsFile),
+                        TAGS_CHARSET));
                 for (Entry<String, String> entry : tile.getMetadata().entrySet()) {
                     f.println(entry.getKey() + "=" + entry.getValue());
                 }
@@ -384,10 +400,10 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 
         protected void loadTagsFromFile() {
             loadOldETagfromFile();
-            File tagsFile = new File(tileCacheDir, tile.getZoom() + "_"
-                    + tile.getXtile() + "_" + tile.getYtile() + TAGS_FILE_EXT);
+            File tagsFile = getTagsFile();
             try {
-                final BufferedReader f = new BufferedReader(new InputStreamReader(new FileInputStream(tagsFile)));
+                final BufferedReader f = new BufferedReader(new InputStreamReader(new FileInputStream(tagsFile),
+                        TAGS_CHARSET));
                 for (String line = f.readLine(); line != null; line = f.readLine()) {
                     final int i = line.indexOf('=');
                     if (i == -1 || i == 0) {

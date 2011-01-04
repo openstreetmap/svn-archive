@@ -51,15 +51,18 @@ public class OsmTileLoader implements TileLoader {
                     // Thread.sleep(500);
                     URLConnection conn = loadTileFromOsm(tile);
                     loadTileMetadata(tile, conn);
-                    input = conn.getInputStream();
-                    tile.loadImage(input);
+                    if ("no-tile".equals(tile.getValue("tile-info"))) {
+                        tile.setError("No tile at this zoom level");
+                    } else {
+                        input = conn.getInputStream();
+                        tile.loadImage(input);
+                        input.close();
+                        input = null;
+                    }
                     tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
-                    input.close();
-                    input = null;
                 } catch (Exception e) {
-                    tile.setImage(Tile.ERROR_IMAGE);
-                    tile.error = true;
+                    tile.setError(e.getMessage());
                     listener.tileLoadingFinished(tile, false);
                     if (input == null) {
                         System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
@@ -85,9 +88,13 @@ public class OsmTileLoader implements TileLoader {
     }
 
     protected void loadTileMetadata(Tile tile, URLConnection urlConn) {
-        String bing_capturedate = urlConn.getHeaderField("X-VE-TILEMETA-CaptureDatesRange");
-        if (bing_capturedate != null) {
-            tile.putValue("capture-date", bing_capturedate);
+        String str = urlConn.getHeaderField("X-VE-TILEMETA-CaptureDatesRange");
+        if (str != null) {
+            tile.putValue("capture-date", str);
+        }
+        str = urlConn.getHeaderField("X-VE-Tile-Info");
+        if (str != null) {
+            tile.putValue("tile-info", str);
         }
     }
 

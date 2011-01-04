@@ -73,7 +73,7 @@
 		<echo message="creating ${plugin.jar} for version ${version.entry.commit.revision} ... " />
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images">
-				<include name="*.png" />
+				<exclude name="*.svg" />
 			</fileset>
 		</copy>
 		<copy todir="${plugin.build.dir}">

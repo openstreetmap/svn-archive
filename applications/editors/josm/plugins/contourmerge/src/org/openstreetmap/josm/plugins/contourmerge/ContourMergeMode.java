@@ -43,7 +43,7 @@ public class ContourMergeMode extends MapMode {
 				mapFrame,
 				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 		);
-		putValue("help", HelpUtil.ht("Plugin/contourmerge"));
+		putValue("help", HelpUtil.ht("Plugin/ContourMerge"));
 	}
 	
 	protected MapView getMapView(){

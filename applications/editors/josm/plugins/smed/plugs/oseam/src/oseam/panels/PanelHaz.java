@@ -32,10 +32,6 @@ public class PanelHaz extends JPanel {
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (catButtons.getSelection() != null) {
-//				if (!(dlg.mark instanceof MarkCard) && !isolButton.isSelected()) {
-//					dlg.mark = new MarkCard(dlg);
-//					alShape.actionPerformed(null);
-//				}
 				dlg.panelMain.topButton.setEnabled(true);
 				dlg.panelMain.fogButton.setEnabled(true);
 				dlg.panelMain.radButton.setEnabled(true);
@@ -82,10 +78,6 @@ public class PanelHaz extends JPanel {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
-//				if (!(dlg.mark instanceof MarkIsol)) {
-//					dlg.mark = new MarkIsol(dlg);
-//					alShape.actionPerformed(null);
-//				}
 				dlg.mark.setColour(Ent.BODY, Col.BLACK_RED_BLACK);
 				dlg.panelMain.panelTop.spheres2TopButton.setEnabled(true);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();
@@ -104,9 +96,9 @@ public class PanelHaz extends JPanel {
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
-	private EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
-	private EnumMap<Shp, Obj> carObjects = new EnumMap<Shp, Obj>(Shp.class);
-	private EnumMap<Shp, Obj> isdObjects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
+	public EnumMap<Shp, Obj> carObjects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, Obj> isdObjects = new EnumMap<Shp, Obj>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {

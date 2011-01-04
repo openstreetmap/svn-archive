@@ -25,7 +25,7 @@ public class PanelLights extends JPanel {
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
 	public JRadioButton minorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMinorButton.png")));
 	public JRadioButton vesselButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightVesselButton.png")));
-	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
+	public JRadioButton stationButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StationButton.png")));
 	private EnumMap<Cat, JRadioButton> categories = new EnumMap<Cat, JRadioButton>(Cat.class);
 	private EnumMap<Cat, Obj> objects = new EnumMap<Cat, Obj>(Cat.class);
 	private ActionListener alCat = new ActionListener() {
@@ -51,7 +51,7 @@ public class PanelLights extends JPanel {
 		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLightTip", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
 		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLightTip", Cat.LIGHT_MINOR, Obj.LITMIN), null);
 		this.add(getCatButton(vesselButton, 0, 96, 34, 32, "LightVesselTip", Cat.LIGHT_VESSEL, Obj.LITVES), null);
-		this.add(getCatButton(floatButton, 0, 128, 34, 32, "LightFloatTip", Cat.LIGHT_FLOAT, Obj.LITFLT), null);
+		this.add(getCatButton(stationButton, 0, 128, 34, 32, "SignalStationTip", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
 	}
 
 	public void clearSelections() {

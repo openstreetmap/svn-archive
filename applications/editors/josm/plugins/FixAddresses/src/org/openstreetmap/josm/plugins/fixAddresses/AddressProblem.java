@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
-public class Problem implements IProblem {
+public class AddressProblem implements IProblem {
 	private List<ISolution> solutions = null;
 	private String description;
 	private ProblemType type;
@@ -32,7 +32,7 @@ public class Problem implements IProblem {
 	 * @param solutions This list of solutions.
 	 * @param type the type
 	 */
-	public Problem(IOSMEntity source, String description,
+	public AddressProblem(IOSMEntity source, String description,
 			List<ISolution> solutions, ProblemType type) {
 		super();
 		this.source = source;
@@ -48,7 +48,7 @@ public class Problem implements IProblem {
 	 * @param description The problem description.
 	 * @param solutions This list of solutions.
 	 */
-	public Problem(IOSMEntity source, String description, List<ISolution> solutions) {
+	public AddressProblem(IOSMEntity source, String description, List<ISolution> solutions) {
 		this(source, description, solutions, ProblemType.Warning);
 	}
 	
@@ -58,7 +58,7 @@ public class Problem implements IProblem {
 	 * @param source the source
 	 * @param description The problem description.
 	 */
-	public Problem(IOSMEntity source, String description) {
+	public AddressProblem(IOSMEntity source, String description) {
 		this(source, description, null, ProblemType.Warning);
 	}
 

@@ -70,7 +70,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 
-public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor {
+public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
 	
 	private Collection<? extends OsmPrimitive> workingSet;
 	/** The street dictionary collecting all streets to a set of unique street names. */
@@ -217,7 +217,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 						
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
-			aNode.visit(this);
+			aNode.visit(this, this);
 		} 
 		markNodeAsVisited(n);
 	}
@@ -541,6 +541,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
 		synchronized (this) {
 			clearData();
+			clearProblems();
+			
 			for (OsmPrimitive osmPrimitive : osmData) {
 				osmPrimitive.visit(this);
 			}
@@ -718,6 +720,104 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		
 		for (IProblem iProblem : problemsToRemove) {
 			problems.remove(iProblem);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAllKnowingTrashHeap#getClosestStreetName(java.lang.String)
+	 */
+	@Override
+	public String getClosestStreetName(String name) {
+		List<String> matches = getClosestStreetNames(name, 1);
+		
+		if (matches != null && matches.size() > 0) {
+			return matches.get(0);
+		}
+		
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAllKnowingTrashHeap#getClosestStreetNames(java.lang.String, int)
+	 */
+	@Override
+	public List<String> getClosestStreetNames(String name, int maxEntries) {
+		CheckParameterUtil.ensureParameterNotNull(name, "name");
+		
+		// ensure right number of entries
+		if (maxEntries < 1) maxEntries = 1;
+		
+		List<StreetScore> scores = new ArrayList<StreetScore>();
+		List<String> matches = new ArrayList<String>();
+		
+		// Find the longest common sub string
+		for (String	streetName : streetDict.keySet()) {
+			int score = StringUtils.lcsLength(name, streetName);
+			
+			if (score > 3) { // reasonable value?
+				StreetScore sc = new StreetScore(streetName, score);
+				scores.add(sc);
+			}
+		}
+		
+		// sort by score
+		Collections.sort(scores);
+		
+		// populate result list
+		int n = Math.min(maxEntries, scores.size());
+		for (int i = 0; i < n; i++) {
+			matches.add(scores.get(i).getName());
+		}
+		
+		return matches;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAllKnowingTrashHeap#isValidStreetName(java.lang.String)
+	 */
+	@Override
+	public boolean isValidStreetName(String name) {
+		if (streetDict == null) return false;
+		
+		return streetDict.containsKey(name);
+	}
+	
+	/**
+	 * Internal class to handle results of {@link AddressEditContainer#getClosestStreetNames(String, int)}.
+	 */
+	private class StreetScore implements Comparable<StreetScore> {
+		private String name;
+		private int score;
+		
+		/**
+		 * @param name Name of the street.
+		 * @param score Score of the street (length of longest common substring)
+		 */
+		public StreetScore(String name, int score) {
+			super();
+			this.name = name;
+			this.score = score;
+		}
+
+		/**
+		 * @return the name of the street.
+		 */
+		protected String getName() {
+			return name;
+		}
+
+		/**
+		 * @return the score of the street.
+		 */
+		protected int getScore() {
+			return score;
+		}
+
+		@Override
+		public int compareTo(StreetScore arg0) {
+			if (arg0 == null) return 1;
+			
+			return new Integer(score).compareTo(new Integer(arg0.score));
 		}
 	}
 }

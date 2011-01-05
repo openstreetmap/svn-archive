@@ -13,10 +13,13 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -86,7 +89,7 @@ public class OSMAddress extends OSMEntityBase {
 	}
 	
 	/**
-	 * Gets the tag value with guess. If the object does not have the given tag, this mehtod looks for
+	 * Gets the tag value with guess. If the object does not have the given tag, this method looks for
 	 * an appropriate guess. If both, real value and guess, are missing, a question mark is returned.
 	 *
 	 * @param tag the tag
@@ -213,15 +216,26 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public void applyAllGuesses() {
 		for (String tag : guessedValues.keySet()) {
-			String val = guessedValues.get(tag);
-			if (!StringUtils.isNullOrEmpty(val)) {
-				setOSMTag(tag, val);				
-			}
+			applyGuessForTag(tag);
 		}
 		
 		// Clear all guesses
 		guessedValues.clear();
 		guessedObjects.clear();
+	}
+	
+	/**
+	 * Apply the guessed value for the given tag.
+	 *
+	 * @param tag the tag to apply the guessed value for.
+	 */
+	public void applyGuessForTag(String tag) {
+		if (guessedValues.containsKey(tag)) {
+			String val = guessedValues.get(tag);
+			if (!StringUtils.isNullOrEmpty(val)) {
+				setOSMTag(tag, val);				
+			}
+		}
 	}
 
 	/**
@@ -538,7 +552,9 @@ public class OSMAddress extends OSMEntityBase {
 
 		if (value != null && osm != null) {
 			guessedValues.put(tag, value);
-			guessedObjects.put(tag, osm);
+			if (osm != null) {
+				guessedObjects.put(tag, osm);
+			}
 			fireEntityChanged(this);
 		}
 	}
@@ -630,12 +646,90 @@ public class OSMAddress extends OSMEntityBase {
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#visit(org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor)
 	 */
-	public void visit(IProblemVisitor visitor) {
+	@Override
+	public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor) {
 		CheckParameterUtil.ensureParameterNotNull(visitor, "visitor");
 		
+		// Check for street
 		if (!hasStreetName()) {
+			AddressProblem p = new AddressProblem(this, tr("Address has no street"));
+			if (hasGuessedStreetName()) { // guess exists -> add solution entry
+				String tag = TagUtils.ADDR_STREET_TAG;
+				addGuessValueSolution(p, tag);
+			}
+			addRemoveAddressTagsSolution(p);
+			visitor.addProblem(p);
+		// Street name exists, but is invalid -> ask the all knowing trash heap
+		} else if (!trashHeap.isValidStreetName(getStreetName())) {
+			AddressProblem p = new AddressProblem(this, tr("Address has no valid street"));
+			String match = trashHeap.getClosestStreetName(getStreetName());
 			
+			if (!StringUtils.isNullOrEmpty(match)) {
+				setGuessedStreetName(match, null);
+				addGuessValueSolution(p, TagUtils.ADDR_STREET_TAG);
+			}
+			visitor.addProblem(p);
 		}
+		
+		// Check for postal code
+		if (!hasPostalCode()) {
+			AddressProblem p = new AddressProblem(this, tr("Address has no post code"));
+			if (hasGuessedStreetName()) {
+				String tag = TagUtils.ADDR_POSTCODE_TAG;
+				addGuessValueSolution(p, tag);
+			}
+			addRemoveAddressTagsSolution(p);
+			visitor.addProblem(p);
+		}
+		
+		// Check for city
+		if (!hasCity()) {
+			AddressProblem p = new AddressProblem(this, tr("Address has no city"));
+			if (hasGuessedStreetName()) {
+				String tag = TagUtils.ADDR_CITY_TAG;
+				addGuessValueSolution(p, tag);
+			}
+			addRemoveAddressTagsSolution(p);
+			visitor.addProblem(p);
+		}
+		
+		// Check for country
+		if (!hasCountry()) {
+			// TODO: Add guess for country
+			AddressProblem p = new AddressProblem(this, tr("Address has no country"));
+			addRemoveAddressTagsSolution(p);
+			visitor.addProblem(p);
+		}
+	}
+
+	/**
+	 * Adds the guess value solution to a problem.
+	 *
+	 * @param p the problem to add the solution to.
+	 * @param tag the tag to change.
+	 */
+	private void addGuessValueSolution(AddressProblem p, String tag) {
+		AddressSolution s = new AddressSolution(
+				String.format("%s '%s'", tr("Assign to"), getGuessedValue(tag)), 
+				new ApplyAllGuessesAction(tag),
+				SolutionType.Change);
+		
+		p.addSolution(s);
+	}
+	
+	/**
+	 * Adds the remove address tags solution entry to a problem.
+	 *
+	 * @param problem the problem
+	 */
+	private void addRemoveAddressTagsSolution(IProblem problem) {
+		CheckParameterUtil.ensureParameterNotNull(problem, "problem");
+		
+		AddressSolution s = new AddressSolution(
+						tr("Remove all address tags"), 
+						new RemoveAddressTagsAction(),
+						SolutionType.Remove);
+		problem.addSolution(s);
 	}
 	
 	/* (non-Javadoc)

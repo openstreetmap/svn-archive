@@ -202,8 +202,11 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 		return this.getName().compareTo(o.getName());
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity#visit(org.openstreetmap.josm.plugins.fixAddresses.IAllKnowingTrashHeap, org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor)
+	 */
 	@Override
-	public void visit(IProblemVisitor visitor) {
+	public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor) {
 		// do nothing
 	}
 

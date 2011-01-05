@@ -26,6 +26,7 @@ import javax.swing.JTable;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
 
@@ -37,12 +38,20 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
 
 @SuppressWarnings("serial")
 public class ApplyAllGuessesAction extends AbstractAddressEditAction implements MouseListener{
-
+	private String tag;
+	/**
+	 * Instantiates a new "apply all guesses" action.
+	 */
+	public ApplyAllGuessesAction(String tag) {	
+		super(tr("Apply"), "applyguesses_24", tr("Turns all guesses into the corresponding tag values."));
+		this.tag = tag;
+	}
+	
 	/**
 	 * Instantiates a new "apply all guesses" action.
 	 */
 	public ApplyAllGuessesAction() {	
-		super(tr("Apply"), "applyguesses_24", tr("Turns all guesses into the corresponding tag values."));
+		this(null);
 	}
 
 	/* (non-Javadoc)
@@ -53,13 +62,11 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		if (ev == null) return;
 		
 		if (ev.getSelectedUnresolvedAddresses() != null) {
-			// fix SELECTED items only
 			List<OSMAddress> addrToFix = ev.getSelectedUnresolvedAddresses();
 			applyGuesses(addrToFix);
 		}
 		
 		if (ev.getSelectedIncompleteAddresses() != null) {
-			// fix SELECTED items only
 			List<OSMAddress> addrToFix = ev.getSelectedIncompleteAddresses();
 			applyGuesses(addrToFix);
 		}
@@ -83,7 +90,12 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		List<OSMAddress> addrToFixShadow = new ArrayList<OSMAddress>(addrToFix);
 		for (OSMAddress aNode : addrToFixShadow) {
 			beginObjectTransaction(aNode);
-			aNode.applyAllGuesses();
+			
+			if (StringUtils.isNullOrEmpty(tag)) { // tag given?
+				aNode.applyAllGuesses(); // no -> apply all guesses
+			} else { // apply guessed values for single tag only
+				aNode.applyGuessForTag(tag);
+			}
 			finishObjectTransaction(aNode);
 		}
 		finishTransaction();

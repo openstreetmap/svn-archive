@@ -11,7 +11,7 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.fixAddresses;
+package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
 @SuppressWarnings("serial")
 public class SelectIncompleteAddressesAction extends JosmAction {

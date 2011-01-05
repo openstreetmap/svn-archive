@@ -19,6 +19,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.IncompleteAddressesDialog;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectIncompleteAddressesAction;
 
 /**
  * The Class FixAddressesPlugin is the main entry point for the plugin.

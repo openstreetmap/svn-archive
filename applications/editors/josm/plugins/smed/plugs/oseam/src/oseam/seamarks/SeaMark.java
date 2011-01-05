@@ -599,6 +599,7 @@ public class SeaMark {
 
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
+		dlg.mark = this;
 		region = Main.pref.get("tomsplugin.IALA").equals("A") ? Reg.A : Reg.B;
 		paintlock = true;
 		dlg.panelMain.clearSelections();
@@ -986,11 +987,10 @@ public class SeaMark {
 				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 		}
 
-		imgStr = "/images/top_";
-		shpStr = tops.get(topShape);
-		if (shpStr == null)
+		if (topShape == Top.NONE)
 			dlg.panelMain.topIcon.setIcon(null);
 		else {
+			imgStr = "/images/top_";
 			switch (getShape()) {
 			case CAN:
 			case CONE:
@@ -1016,7 +1016,7 @@ public class SeaMark {
 				break;
 			}
 			if (imgStr != null) {
-				imgStr += shpStr;
+				imgStr += (tops.get(topShape) + "_");
 				String colStr = colours.get(topColour);
 				if (colStr != null)
 					imgStr += colStr;

@@ -69,4 +69,11 @@ public interface IOSMEntity extends Comparable<IOSMEntity> {
 	 * @param listener
 	 */
 	public void removeCommandListener(ICommandListener listener);
+	
+	/**
+	 * Collects problems and possible solutions.
+	 *
+	 * @param visitor the problem visitor
+	 */
+	public void visit(IProblemVisitor visitor);
 }

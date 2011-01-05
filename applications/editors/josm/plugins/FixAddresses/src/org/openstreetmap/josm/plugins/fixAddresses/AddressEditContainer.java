@@ -51,6 +51,7 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * Provides a container serving streets and unresolved/incomplete addresses. It scans through a
@@ -69,7 +70,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * 
  */
 
-public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener {
+public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor {
 	
 	private Collection<? extends OsmPrimitive> workingSet;
 	/** The street dictionary collecting all streets to a set of unique street names. */
@@ -96,6 +97,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private HashSet<String> tags = new HashSet<String>();
 	/** The tag list used within the data area. */
 	private HashMap<String, String> values = new HashMap<String, String>();
+	
+	/** The list containing the problems */
+	private List<IProblem> problems = new ArrayList<IProblem>();
 	
 	/** The change listeners. */
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
@@ -213,6 +217,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 						
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
+			aNode.visit(this);
 		} 
 		markNodeAsVisited(n);
 	}
@@ -462,6 +467,20 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		
 		return all; 
 	}
+	
+	/**
+	 * @return the problems
+	 */
+	protected List<IProblem> getProblems() {
+		return problems;
+	}
+	
+	/**
+	 * Clears the problem list.
+	 */
+	protected void clearProblems() {
+		problems.clear();
+	}
 
 	/**
 	 * Tries to assign an address to a street.
@@ -539,6 +558,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			shadowStreetDict.clear();
 			shadowUnresolvedAddresses.clear();
 			shadowIncompleteAddresses.clear();
+			
 			// update clients
 			fireContainerChanged();
 		}
@@ -672,5 +692,32 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	@Override
 	public void entityChanged(IOSMEntity entity) {
 		fireEntityChanged(entity);	
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor#addProblem(org.openstreetmap.josm.plugins.fixAddresses.IProblem)
+	 */
+	@Override
+	public void addProblem(IProblem problem) {
+		problems.add(problem);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor#removeProblemsOfSource(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
+	 */
+	@Override
+	public void removeProblemsOfSource(IOSMEntity entity) {
+		CheckParameterUtil.ensureParameterNotNull(entity, "entity");
+		
+		List<IProblem> problemsToRemove = new ArrayList<IProblem>();
+		for (IProblem problem : problems) {
+			if (problem.getSource() == entity) {
+				problemsToRemove.add(problem);
+			}
+		}
+		
+		for (IProblem iProblem : problemsToRemove) {
+			problems.remove(iProblem);
+		}
 	}
 }

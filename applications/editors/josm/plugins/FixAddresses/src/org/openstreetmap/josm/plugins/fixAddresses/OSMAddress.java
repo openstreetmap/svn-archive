@@ -627,11 +627,31 @@ public class OSMAddress extends OSMEntityBase {
 		setOSMTag(TagUtils.ADDR_POSTCODE_TAG, postCode);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#visit(org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor)
+	 */
+	public void visit(IProblemVisitor visitor) {
+		CheckParameterUtil.ensureParameterNotNull(visitor, "visitor");
+		
+		if (!hasStreetName()) {
+			
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#toString()
+	 */
 	@Override
 	public String toString() {
 		return OSMAddress.getFormatString(this);
 	}
 
+	/**
+	 * Gets the formatted string representation of the given node.
+	 *
+	 * @param node the node
+	 * @return the format string
+	 */
 	public static String getFormatString(OSMAddress node) {
 		// TODO: Add further countries here
 		// DE

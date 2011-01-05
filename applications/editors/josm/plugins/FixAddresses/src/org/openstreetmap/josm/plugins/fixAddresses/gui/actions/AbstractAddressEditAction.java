@@ -174,6 +174,8 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 */
 	@Override
 	public void entityChanged(IOSMEntity node) {
+		container.removeProblemsOfSource(node); // clear problems of changed node...
+		node.visit(container);					// .. and revisit it.
 		updateEnabledState();		
 	}
 	

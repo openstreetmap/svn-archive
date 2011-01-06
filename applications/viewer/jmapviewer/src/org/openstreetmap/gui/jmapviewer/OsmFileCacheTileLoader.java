@@ -202,18 +202,18 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 loadTileMetadata(tile, urlConn);
                 saveTagsToFile();
 
-                byte[] buffer = null;
                 if ("no-tile".equals(tile.getValue("tile-info")))
                 {
                     tile.setError("No tile at this zoom level");
-                } else {
-                    buffer = loadTileInBuffer(urlConn);
-                }
-                if (buffer != null) {
-                    tile.loadImage(new ByteArrayInputStream(buffer));
-                    tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
-                    saveTileToFile(buffer);
+                } else {
+                    byte[] buffer = loadTileInBuffer(urlConn);
+                    if (buffer != null) {
+                        tile.loadImage(new ByteArrayInputStream(buffer));
+                        tile.setLoaded(true);
+                        listener.tileLoadingFinished(tile, true);
+                        saveTileToFile(buffer);
+                    }
                 }
             } catch (Exception e) {
                 tile.setError(e.getMessage());

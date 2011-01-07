@@ -279,6 +279,11 @@ public class DownloadAlong extends Plugin {
     }
 
     @Override
+    protected void updateEnabledState() {
+      setEnabled(getEditLayer() != null);
+    }
+    
+    @Override
     protected void updateEnabledState(
         Collection<? extends OsmPrimitive> selection) {
       // do nothing

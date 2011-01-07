@@ -53,15 +53,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
     protected long maxCacheFileAge = FILE_AGE_ONE_WEEK;
     protected long recheckAfter = FILE_AGE_ONE_DAY;
 
-    /**
-     * Create a OSMFileCacheTileLoader with given cache directory.
-     * If cacheDir is <code>null</code> the system property temp dir
-     * is used. If not set an IOException will be thrown.
-     * @param map
-     * @param cacheDir
-     */
-    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) throws SecurityException {
-        super(map);
+    public static File getDefaultCacheDir() throws SecurityException {
         String tempDir = null;
         String userName = System.getProperty("user.name");
         try {
@@ -73,24 +65,34 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             throw e; // rethrow
         }
         try {
-            if (cacheDir == null) {
-                if (tempDir == null)
-                    throw new IOException("No temp directory set");
-                String subDirName = "JMapViewerTiles";
-                // On Linux/Unix systems we do not have a per user tmp directory.
-                // Therefore we add the user name for getting a unique dir name.
-                if (userName != null && userName.length() > 0) {
-                    subDirName += "_" + userName;
-                }
-                cacheDir = new File(tempDir, subDirName);
+            if (tempDir == null)
+                throw new IOException("No temp directory set");
+            String subDirName = "JMapViewerTiles";
+            // On Linux/Unix systems we do not have a per user tmp directory.
+            // Therefore we add the user name for getting a unique dir name.
+            if (userName != null && userName.length() > 0) {
+                subDirName += "_" + userName;
             }
-            log.finest("Tile cache directory: " + cacheDir);
-            if (!cacheDir.exists() && !cacheDir.mkdirs())
-                throw new IOException();
-            cacheDirBase = cacheDir.getAbsolutePath();
+            File cacheDir = new File(tempDir, subDirName);
+            return cacheDir;
         } catch (Exception e) {
-            cacheDirBase = "tiles";
         }
+        return null;
+    }
+
+    /**
+     * Create a OSMFileCacheTileLoader with given cache directory.
+     * If cacheDir is not set or invalid, IOException will be thrown.
+     * @param map
+     * @param cacheDir
+     */
+    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) throws IOException  {
+        super(map);
+        if (cacheDir == null || (!cacheDir.exists() && !cacheDir.mkdirs()))
+            throw new IOException("Cannot access cache directory");
+
+        log.finest("Tile cache directory: " + cacheDir);
+        cacheDirBase = cacheDir.getAbsolutePath();
     }
 
     /**
@@ -98,8 +100,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
      * If not set an IOException will be thrown.
      * @param map
      */
-    public OsmFileCacheTileLoader(TileLoaderListener map) throws SecurityException {
-        this(map, null);
+    public OsmFileCacheTileLoader(TileLoaderListener map) throws SecurityException, IOException {
+        this(map, getDefaultCacheDir());
     }
 
     @Override

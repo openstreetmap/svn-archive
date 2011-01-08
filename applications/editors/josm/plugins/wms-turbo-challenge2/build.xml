@@ -15,7 +15,6 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="wmsplugin"              location="${plugin.dist.dir}/wmsplugin.jar:${user.home}/.josm/plugins/wmsplugin.jar"/>
 
     <!--
     **********************************************************
@@ -33,7 +32,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" classpath="${josm}:${wmsplugin}" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
@@ -66,7 +65,7 @@
                 <attribute name="Plugin-Description" value="Drive a race car from point A to point B over aerial imagery, leave cacti behind."/>
                 <attribute name="Plugin-Icon" value="images/wmsracer.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMS_Racer"/>
-                <attribute name="Plugin-Mainversion" value="3252"/>
+                <attribute name="Plugin-Mainversion" value="3715"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

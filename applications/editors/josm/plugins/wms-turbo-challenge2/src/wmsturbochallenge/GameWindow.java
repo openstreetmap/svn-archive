@@ -5,40 +5,36 @@
  */
 package wmsturbochallenge;
 
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.Main;
-
-import org.openstreetmap.josm.data.ProjectionBounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
-
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
-import java.awt.Toolkit;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
+import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.WMSLayer;
 
 public class GameWindow extends JFrame implements ActionListener {
     public GameWindow(Layer ground) {
@@ -109,6 +105,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     new EastNorth(lon, lat))));
         }
 
+        @Override
         public void start() {
             super.start();
 
@@ -393,8 +390,8 @@ public class GameWindow extends JFrame implements ActionListener {
 
         /* If the layer is a WMS layer, check if any tiles are
          * missing */
-        if (ground instanceof wmsplugin.WMSLayer) {
-            wmsplugin.WMSLayer wms = (wmsplugin.WMSLayer) ground;
+        if (ground instanceof WMSLayer) {
+            WMSLayer wms = (WMSLayer) ground;
             downloading = wms.hasAutoDownload() && (
                     null == wms.findImage(new EastNorth(
                             e_lon[0], e_lat[0])) ||
@@ -589,6 +586,7 @@ public class GameWindow extends JFrame implements ActionListener {
             setDoubleBuffered(true);
         }
 
+        @Override
         public void paint(Graphics g) {
             int w = (int) getSize().getWidth();
             int h = (int) getSize().getHeight();
@@ -638,6 +636,7 @@ public class GameWindow extends JFrame implements ActionListener {
     }
 
     protected class TAdapter extends KeyAdapter {
+        @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
 
@@ -681,6 +680,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     current_car = 0;
         }
 
+        @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
 

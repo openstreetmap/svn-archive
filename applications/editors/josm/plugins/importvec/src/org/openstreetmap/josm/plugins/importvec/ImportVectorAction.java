@@ -50,7 +50,10 @@ public class ImportVectorAction extends JosmAction {
 
     public ImportVectorAction() {
         super(tr("Import..."), "open", tr("Import vector graphics."),
-                Shortcut.registerShortcut("system:import", tr("File: {0}", tr("Import...")), KeyEvent.VK_I, Shortcut.GROUP_MENU),true);
+                Shortcut.registerShortcut("system:import", tr("File: {0}", tr("Import...")), KeyEvent.VK_I, Shortcut.GROUP_MENU), false);
+        // Avoid to override "open" toolbar function
+        putValue("toolbar", "importvec");
+        Main.toolbar.register(this);
     }
     public static JFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
         String curDir = Main.pref.get("lastDirectory");
@@ -121,10 +124,10 @@ public class ImportVectorAction extends JosmAction {
         dlg.saveSettings();
 
         File[] files = fc.getSelectedFiles();
-        
+
         Main.worker.submit(new ImportTask(Arrays.asList(files)));
     }
-    
+
     static public class ImportTask extends PleaseWaitRunnable {
         LinkedList<Node> nodes = new LinkedList<Node>();
         LinkedList<Way> ways = new LinkedList<Way>();
@@ -149,11 +152,11 @@ public class ImportVectorAction extends JosmAction {
         Mercator projection = new Mercator();
         EastNorth center;
         double scale;
-        
+
         Way currentway;
         double lastX;
         double lastY;
-        
+
         private void appendNode(double x, double y) throws IOException {
             if (currentway == null)
                 throw new IOException("Shape is started incorectly");
@@ -194,7 +197,7 @@ public class ImportVectorAction extends JosmAction {
                     cube(1-t)*ax+3*sqr(1-t)*t*bx+3*(1-t)*t*t*cx+t*t*t*dx,
                     cube(1-t)*ay+3*sqr(1-t)*t*by+3*(1-t)*t*t*cy+t*t*t*dy);
         }
-        
+
         private void processElement(SVGElement el) throws IOException {
             if (el instanceof Group) {
                 for (SVGElement child : ((Group)el).getChildren(null)) {
@@ -223,7 +226,7 @@ public class ImportVectorAction extends JosmAction {
                         double lastx = lastX;
                         double lasty = lastY;
                         for (int i = 1;i<Settings.getCurveSteps();i++) {
-                            appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],(double)i/Settings.getCurveSteps()));
+                            appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],i/Settings.getCurveSteps()));
                         }
                         appendNode(coords[2],coords[3]);
                         break;
@@ -231,7 +234,7 @@ public class ImportVectorAction extends JosmAction {
                         lastx = lastX;
                         lasty = lastY;
                         for (int i = 1;i<Settings.getCurveSteps();i++) {
-                            appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],(double)i/Settings.getCurveSteps()));
+                            appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],i/Settings.getCurveSteps()));
                         }
                         appendNode(coords[4],coords[5]);
                         break;
@@ -264,13 +267,13 @@ public class ImportVectorAction extends JosmAction {
                     } finally {
                         in.close();
                     }
-                
+
                     SVGDiagram diagram = loader.getLoadedDiagram();
                     ShapeElement root = diagram.getRoot();
                     if (root == null) throw new IOException("Can't find root SVG element");
                     Rectangle2D bbox = root.getBoundingBox();
                     this.center = this.center.add(-bbox.getCenterX()*scale, bbox.getCenterY()*scale);
-                    
+
                     processElement(root);
                 }
             } catch(SAXException e) {

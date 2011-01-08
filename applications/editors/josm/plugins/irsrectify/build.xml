@@ -32,7 +32,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="New plugin - irsrectify" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="3000" />
+    <property name="plugin.main.version" value="3715" />
 
 
     <!--
@@ -64,7 +64,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" classpath="${josm};../../dist/wmsplugin.jar" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
@@ -105,7 +105,6 @@
                 <attribute name="Plugin-Link" value="http://forum.openstreetmap.org/viewtopic.php?id=6817"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-		<attribute name="Plugin-Requires" value="wmsplugin"/>
             </manifest>
         </jar>
     </target>

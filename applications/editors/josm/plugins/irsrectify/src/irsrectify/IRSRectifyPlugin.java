@@ -1,11 +1,14 @@
 package irsrectify;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -13,12 +16,12 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
-import wmsplugin.WMSLayer;
 
 public class IRSRectifyPlugin extends Plugin {
     static private int newLayerNameCounter = 0;
@@ -44,21 +47,20 @@ public class IRSRectifyPlugin extends Plugin {
         }
 
         public void actionPerformed(ActionEvent e) {
-            WMSLayer wms = findWMSLayer();
-            if( wms == null )
+            ImageryLayer l = findImageryLayer();
+            if( l == null )
                 return;
 
             // calculate offset from wms layer
-            double ppd = wms.getPPD();
-            int dx = wms.getImageX(0);
-            int dy = wms.getImageY(0);
+            double dx = l.getDx();
+            double dy = l.getDy();
             if( dx == 0 && dy == 0 ) {
                 JOptionPane.showMessageDialog(Main.parent, tr("This option creates IRS adjustment layer and a little way inside it. You need to adjust WMS layer placement first.\nResulting layer is to be saved as .osm and sent to Komzpa (me@komzpa.net) with [irs rectify] in subject."));
                 return;
             }
             // create an offset way and add to dataset
             Node center = new Node(frame.mapView.getCenter());
-            Node offset = new Node(center.getEastNorth().add(dx/ppd, dy/ppd));
+            Node offset = new Node(center.getEastNorth().add(dx, dy));
             Way way = new Way();
             way.addNode(center);
             way.addNode(offset);
@@ -66,8 +68,6 @@ public class IRSRectifyPlugin extends Plugin {
             String userName = JosmUserIdentityManager.getInstance().getUserName();
             if( userName != null )
                 way.put("user", userName);
-            if( Math.abs(dx) < 10 && Math.abs(dy) < 10 )
-                way.put("note", tr("Zoom level was not enough to record an offset precisely"));
 
             OsmDataLayer data = findOrCreateDataLayer();
             data.data.addPrimitive(center);
@@ -77,12 +77,12 @@ public class IRSRectifyPlugin extends Plugin {
             frame.mapView.setActiveLayer(data);
         }
 
-        private WMSLayer findWMSLayer() {
+        private ImageryLayer findImageryLayer() {
             if( frame == null || frame.mapView == null )
                 return null;
             for( Layer l : frame.mapView.getAllLayers() )
-                if( l instanceof WMSLayer )
-                    return (WMSLayer)l;
+                if( l instanceof ImageryLayer )
+                    return (ImageryLayer)l;
             return null;
         }
 
@@ -119,7 +119,7 @@ public class IRSRectifyPlugin extends Plugin {
 
         @Override
         protected void updateEnabledState() {
-            setEnabled(findWMSLayer() != null);
+            setEnabled(findImageryLayer() != null);
         }
     }
 }

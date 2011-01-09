@@ -1,18 +1,18 @@
 <?php
 session_start();
 include('../lib/functionsnew.php');
-$conn=dbconnect("otv");
+$conn=pg_connect("dbname=gis user=gis");
 $cleaned=clean_input($_GET);
-$result=mysql_query("SELECT * FROM panoramas WHERE ID=$cleaned[id]");
-if(mysql_num_rows($result)==1)
+$result=pg_query("SELECT * FROM panoramas WHERE ID=$cleaned[id]");
+if(pg_num_rows($result)==1)
 {
-    $row=mysql_fetch_assoc($result);
+    $row=pg_fetch_array($result,null,PGSQL_ASSOC);
         switch($cleaned['action'])
         {
             case "rotate":
                 if(isset($_SESSION['gatekeeper']))
                 {
-                    mysql_query
+                    pg_query
                     ("UPDATE panoramas SET direction=$cleaned[angle] ".
                      "WHERE ID=$cleaned[id]");
                     echo "Angle set to $cleaned[angle]";
@@ -26,24 +26,18 @@ if(mysql_num_rows($result)==1)
             case "setAttributes":
                 if(isset($_SESSION['gatekeeper']))
                 {
-                    $editables = array ("lat","lon","isPano");
-                    $q = "UPDATE panoramas SET ";
-                    $first=true;
-                    foreach($editables as $editable)
-                    {
-                        if(isset($cleaned[$editable]))
-                        {
-                            if(!$first)
-                                $q .= ",";
-                            else
-                                $first=false;
-                            $q .= "$editable='".$cleaned[$editable]."'";
-                        }
-                    }
-                    $q .= " WHERE ID=$cleaned[id]";
-                    //echo $q;
-                    echo "setAttributes";
-                    mysql_query($q) or die(mysql_error());
+					if(isset($cleaned['ispano']))
+					{
+                    	$q = "UPDATE panoramas SET ispano=$cleaned[ispano] WHERE id=$cleaned[id] ";
+                    	pg_query($q);
+					}
+
+					if(isset($cleaned['x']) AND isset($cleaned['y']))
+					{
+						$q="UPDATE annotations SET xy=PointFromText('POINT($cleaned[x] $cleaned[y])',900913) WHERE id=(SELECT annid FROM panoramas WHERE id=$cleaned[id])";
+						echo $q;
+						pg_query($q);
+					}
                 }
                 else
                 {
@@ -53,7 +47,7 @@ if(mysql_num_rows($result)==1)
             case "authorise":
                 if(isset($_SESSION['admin']))
                 {
-                    mysql_query("UPDATE panoramas SET authorised=1 ".
+                    pg_query("UPDATE panoramas SET authorised=1 ".
                                 "WHERE ID=$cleaned[id]");
                     echo "Authorised";
                 }
@@ -64,19 +58,21 @@ if(mysql_num_rows($result)==1)
                 break;
             case "delete":
                 if( (isset($_SESSION['gatekeeper']) &&
-                        $row['user']==$_SESSION['gatekeeper']) ||
+                        $row['userid']==$_SESSION['gatekeeper']) ||
                             isset($_SESSION['admin']))
                 {
-                        mysql_query
+                        pg_query
                             ("DELETE FROM panoramas WHERE ID=$cleaned[id]");
-                        unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
-                        $result2=mysql_query("SELECT * FROM routes WHERE ".
+						unlink("/home/www-data/uploads/otvnew/${cleaned[id]}.jpg");
+
+                        $result2=pg_query("SELECT * FROM routes WHERE ".
                                             "fid=$cleaned[id]");
-                        while($row2=mysql_fetch_array($result2))
+                        while($row2=pg_fetch_array($result2,
+								null,PGSQL_ASSOC))
                         {
-                            mysql_query("DELETE FROM routes WHERE ".
+                            pg_query("DELETE FROM routes WHERE ".
                                         "id=$row2[id]");
-                            mysql_query("UPDATE routes SET routepoint=".
+                            pg_query("UPDATE routes SET routepoint=".
                                         "routepoint-1 WHERE ".
                                         "routeid=$row2[routeid] AND ".
                                         "routepoint>$row2[routepoint]");
@@ -98,19 +94,19 @@ if(mysql_num_rows($result)==1)
                     echo "</head>";
                     echo "<body><p>";
                     echo "<h1>Submitted photo $cleaned[id]</h1>\n";
-                    echo "<p><img src='/otv/panorama/$cleaned[id]' ".
+                    echo "<p><img src='/panorama/$cleaned[id]' ".
                     "alt='Panorama $cleaned[id]' /></p>\n";
-                    echo "<a href='/otv/panorama/$cleaned[id]/authorise'>".
+                    echo "<a href='/panorama/$cleaned[id]/authorise'>".
                         "Authorise</a> ";
                     echo 
-                      "<a href='/otv/panorama/$cleaned[id]/delete'>Delete</a>";
+                      "<a href='/panorama/$cleaned[id]/delete'>Delete</a>";
                     echo "</p></body></html>";
                 }
                 else
                 {
                     header("Location: ".
-                        "/otv/user.php?action=login&redirect=".
-                        "/otv/panorama/$cleaned[id]/moderate");
+                        "/common/user.php?action=login&redirect=".
+                        "/panorama/$cleaned[id]/moderate");
                 }
                 break;
             case "getJSON":
@@ -120,14 +116,31 @@ if(mysql_num_rows($result)==1)
             default:
                 if($row['authorised']==1 || isset($_SESSION['admin']) ||
                         (isset($_SESSION['gatekeeper']) &&
-                        $row['user']==$_SESSION['gatekeeper']))
+                        $row['userid']==$_SESSION['gatekeeper']))
                 {
-                    $file = "/home/www-data/uploads/otv/${cleaned[id]}.jpg";
+                    $file = "/home/www-data/uploads/otvnew/${cleaned[id]}.jpg";
                     if(file_exists($file))
                     {
                         header("Content-type: image/jpeg");
-                        $f = file_get_contents($file);
-                        echo $f;
+						if(isset($cleaned['resize']))
+						{
+							$imIn=ImageCreateFromJPEG($file);
+							list($wIn,$hIn)=getimagesize($file);
+							$wOut=round($wIn*$cleaned['resize']/100);
+							$hOut=round($hIn*$cleaned['resize']/100);
+							//echo "$wIn $wOut $hIn $hOut";
+							$imOut=ImageCreateTrueColor($wOut,$hOut);
+							ImageCopyResampled($imOut,$imIn,0,0,0,0,
+										$wOut,$hOut,$wIn,$hIn);
+							ImageJPEG($imOut);
+							ImageDestroy($imOut);
+							ImageDestroy($imIn);
+						}
+						else
+						{
+                        	$f = file_get_contents($file);
+                        	echo $f;
+						}
                     }
                     else
                     {
@@ -145,5 +158,5 @@ else
 {
     header("HTTP/1.1 404 Not Found");
 } 
-mysql_close($conn);
+pg_close($conn);
 ?>

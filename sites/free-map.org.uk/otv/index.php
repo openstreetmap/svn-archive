@@ -36,12 +36,9 @@ session_start();
     <script type='text/javascript' src='main.js'></script>
     <!-- Prototype and JSPanoviewer don't like each other-->
     <script type='text/javascript' 
-    src='../freemap/javascript/prototype/prototype.js'></script>
+    src='http://www.free-map.org.uk/javascript/prototype.js'></script>
     <!--    -->
     <script type='text/javascript' src='GeoRSSExt.js'></script>
-    <script type='text/javascript' src='RouteJSON.js'></script>
-    <script type='text/javascript' src='OSM2.js'></script>
-    <script type='text/javascript' src='HTTP2.js'></script>
     <script type='text/javascript' src='js/jspanoviewer.js'></script>
 	<script type='text/javascript' src='js/fileuploader.js'></script>
 	<script type='text/javascript' src='canvas/cpv.js'></script>
@@ -65,15 +62,20 @@ else
 <div id='login'>
 
 <?php
-$conn=dbconnect("otv");
 if(isset($_SESSION['gatekeeper']))
 {
-    $username=get_col("users",$_SESSION['gatekeeper'],"username");
-    echo "Logged in as $username <a href='user.php?action=logout'>Log out</a>";
+	$conn=pg_connect("dbname=gis user=gis");
+	$result=pg_query("SELECT username FROM users WHERE id=".
+				"$_SESSION[gatekeeper]");
+	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+    echo "Logged in as $row[username] ".
+		"<a href='/common/user.php?action=logout'>Log out</a>";
+	pg_close($conn);
 }
 else
 {
-    echo "<a href='user.php?action=login&redirect=/otv/index.php'>Login</a>";
+    echo "<a href='".
+		"/common/user.php?action=login&redirect=/index.php'>Login</a>";
 }
 ?>
 </div><!--login-->
@@ -94,32 +96,17 @@ if(true)
     echo "</div><!--pansubmit_all-->\n";
     ?>
     <div id='controls'>
-    <!--
-    <input type='button' id='mainctrl' 
-     onclick='modeSet()' value='Align photos' />
-     -->
-	 <!--
-     <select id='mainctrl' onchange='modeSet()'>
-     <option value='0'>View photos</option>
-     <option value='1'>Rotate photos</option>
-     <option value='2'>Make new route</option>
-     <option value='3'>Move photos, add photos to route</option>
-     <option value='4'>Delete</option>
-     </select>
-	 -->
 	 <input type='radio' id='mode0' name='modes' checked='checked' 
 	 onclick='modeSet(this)'/>View
-	 <input type='radio' id='mode1' name='modes' onclick='modeSet(this)'/>Rotate
-	 <input type='radio' id='mode2' name='modes' onclick='modeSet(this)'/>
-	 New route
+	 <input type='radio' id='mode1' name='modes' onclick='modeSet(this)'/>
+	 Preview
+	 <input type='radio' id='mode2' name='modes' onclick='modeSet(this)'/>Rotate
 	 <input type='radio' id='mode3' name='modes' onclick='modeSet(this)'/>Move
-	 <input type='radio' id='mode4' name='modes' onclick='modeSet(this)'/>Delete
      <input type='button' id='backtomap' value='Map' />
     </div>
     <?php
 }
 
-mysql_close($conn);
 ?>
 </div> <!--maindiv-->
 <div id='status' style='height:200px; overflow:auto'></div>

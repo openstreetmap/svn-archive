@@ -9,12 +9,12 @@ if(!isset($_SESSION['gatekeeper']))
     die("Must be logged in!");
 
 
-    $conn=dbconnect("otv");
+    $conn=pg_connect("dbname=gis user=gis");
 if(isset($_FILES["gpx"]))
 {
     $pan=array();
-    $u = upload_file("gpx","/home/www-data/uploads/otv/gpx");
-    $cleaned=clean_input($_POST);
+    $u = upload_file("gpx","/home/www-data/uploads/otvnew/gpx");
+    $cleaned=clean_input($_POST,'pgsql');
     if($u["file"]!==null)
     {
         $gpx = file($u["file"]);
@@ -25,13 +25,24 @@ if(isset($_FILES["gpx"]))
             if($gpx!==false)
             {
                 // get panoramas from this session
-                $q= ("SELECT * FROM panoramas where ".
-                "photosession=$cleaned[pssn] ".
-                "AND user=$_SESSION[gatekeeper] ORDER BY time");
-                $result=mysql_query($q);
-                while($row=mysql_fetch_assoc($result))
+                $q= ("SELECT * FROM panoramas ".
+				"where photosession=$cleaned[pssn] ".
+                "AND userid=$_SESSION[gatekeeper] AND parent IS NULL ".
+				"ORDER BY time");
+                $result=pg_query($q);
+                while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
+				{
+					/*
+					$m=array();
+					$a = preg_match ("/POINT\((.+)\)/",$row['astext'],$m);
+					list($x,$y)= explode(" ",$m[1]);
+					$row['lon'] = sphmerc_to_lon($x);
+					$row['lat'] = sphmerc_to_lat($y);
+					*/
                     $pan[] = $row;
+				}
 
+				print_r($pan);
 
                 for($i=0; $i<count($gpx["trk"])-1; $i++)
                 {
@@ -49,9 +60,12 @@ if(isset($_FILES["gpx"]))
                             $pan[$j]["lon"] = $gpx["trk"][$i]["lon"] + $t*
                             ($gpx["trk"][$i+1]["lon"]-$gpx["trk"][$i]["lon"]);
 
-                            mysql_query 
-                            ("UPDATE panoramas SET lat=".$pan[$j]["lat"].
-                            ",lon=".$pan[$j][lon]." WHERE ID=$curpan[ID]");
+							$x = lon_to_sphmerc($pan[$j]['lon']);
+							$y = lat_to_sphmerc($pan[$j]['lat']);
+                            pg_query 
+                            ("UPDATE annotations SET xy=".
+							 "PointFromText('POINT($x $y)',900913) ".
+                            " WHERE id=$curpan[annid]");
 
                             break;
                         }
@@ -107,8 +121,8 @@ else
     <script type='text/javascript'>
     function modifyPhotoLink()
     {
-        document.getElementById('photolink').value =
-            'photomgr.php?pssn='+
+        document.getElementById('photolink').href =
+            'photomgr.php?pg=0&pssn='+
             document.getElementById('pssn').value;
     }
     </script>
@@ -122,27 +136,28 @@ else
     <label for='pssn'>Pick an upload session:</label>
 <?php
     echo "<select name='pssn' id='pssn' onchange='modifyPhotoLink()'>";
-    $result=mysql_query
-        ("SELECT * FROM photosessions WHERE user=$_SESSION[gatekeeper]".
-        " ORDER BY t DESC");
-    if(mysql_num_rows($result)==0)
+    $result=pg_query
+        ("SELECT * FROM photosessions WHERE userid=$_SESSION[gatekeeper]".
+        " ORDER BY t");
+    if(pg_num_rows($result)==0)
     {
         echo "No photo sessions!";
     }
     else
     {
-        while($row=mysql_fetch_array($result))
+        while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
         {
-            $result2=mysql_query
-            ("SELECT * FROM panoramas WHERE photosession=$row[id]");
-            $np=mysql_num_rows($result2);
-			$t = date('D d M Y, H:i',strtotime($row['t']));
+            $result2=pg_query
+            ("SELECT * FROM panoramas WHERE photosession=$row[id] AND ".
+			"parent IS NULL");
+            $np=pg_num_rows($result2);
+			$t = date('D d M Y, H:i',$row['t']);
             echo "<option value='$row[id]'>$t ($np photos)</option>";
         }
         echo "</select>\n";
 ?>
     <a id='photolink'
-    href='photomgr.php?pssn=1'>View photos in this session</a></p>
+    href='photomgr.php?pg=0&pssn=1'>View photos in this session</a></p>
     <fieldset id='gpx_submit'>
     <legend>Please submit your GPX file</legend>
     <label for='gpx'>GPX file:</label>
@@ -156,6 +171,6 @@ else
     </body></html>
 <?php
     }
-    mysql_close($conn);
+    pg_close($conn);
 }
 ?>

@@ -5,6 +5,7 @@ require_once('otv_funcs.php');
 // partly based on example from Andrew Valums' site
 
 session_start();
+$conn = pg_connect("dbname=gis user=gis");
 
 //header ("Content-type: application/json");
 
@@ -71,16 +72,25 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
         }    
         else
         {
-            $conn = dbconnect("otv");
 
-			$pssn = newsession();
+			if(!isset($_SESSION['photosession']))
+				$_SESSION['photosession'] = newsession();
 
-            mysql_query("INSERT INTO panoramas ".
-                "(authorised,user,photosession) VALUES ".
-                "(0,$_SESSION[gatekeeper],$pssn)");
-            $id = mysql_insert_id();
 
-            $outdir = "/home/www-data/uploads/otv";
+			pg_query ("INSERT INTO annotations(type) VALUES ('pano')");
+			$result=pg_query("SELECT currval('annotations_id_seq') ".
+									"AS annid");
+			$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+			$annid=$row['annid'];
+            pg_query("INSERT INTO panoramas ".
+                "(authorised,direction,userid,photosession,annid) VALUES ".
+                "(0,0,$_SESSION[gatekeeper],$_SESSION[photosession],".
+				"$row[annid])");
+			$result=pg_query("SELECT currval('panoramas_id_seq') AS panid");
+			$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+            $id = $row['panid']; 
+
+            $outdir = "/home/www-data/uploads/otvnew";
              $outfile= "$id.jpg";
 
             if(writeFile($outdir,$outfile)===true)
@@ -90,7 +100,7 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 
                 // criteria for panoramas - width>1024 and width > 2*height
                 if($sz[0]>1024 && $sz[0]>2*$sz[1])
-                    mysql_query("UPDATE panoramas SET isPano=1 WHERE id=$id");
+                    pg_query("UPDATE panoramas SET ispano=1 WHERE id=$id");
 
                 // Note exif_read_data complains about certain non-standard
                 // tags. However it doesn't prevent working.
@@ -103,27 +113,29 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
                         $lat = -$lat;
                     if($exif['GPSLongitudeRef']=='W')
                         $lon = -$lon;
-                    mysql_query ("UPDATE panoramas SET lat=$lat,".
-                         "lon=$lon WHERE ID=$id");
+					$x = lon_to_sphmerc($lon);
+					$y = lat_to_sphmerc($lat);
+                    mysql_query ("UPDATE annotations SET ".
+						"xy=GeomFromText('POINT($x $y)',900913) ".
+						"WHERE annid=$annid");
                 }
                 if(isset($exif['DateTimeOriginal']))
                 {
 					$str .= "DateTimeOriginal = ".$exif['DateTimeOriginal'];
                     $time = strtotime($exif['DateTimeOriginal']);
-                    $q= ("UPDATE panoramas SET time=$time WHERE ID=$id");
-                    if (!mysql_query($q))
-						$str .= " error= ".mysql_error();
+                    $q= ("UPDATE panoramas SET time=$time WHERE id=$id");
+                    pg_query($q);
                 }
 
                 $resp = array ("success" => true,"id" => $id);
             }
             else
             {
-                mysql_query("DELETE FROM panoramas WHERE id=$id");
+                pg_query("DELETE FROM panoramas WHERE id=$id");
+                pg_query("DELETE FROM annotations WHERE annid=$annid");
                 $resp = array ("success" => false,
                         "error" => "Error saving file $filename on server");
             }
-            mysql_close($conn);
         }
     }
     else
@@ -139,6 +151,7 @@ else
 }
 
 echo json_encode($resp);
+pg_close($conn);
 
 function to_decimal_degrees($dms)
 {

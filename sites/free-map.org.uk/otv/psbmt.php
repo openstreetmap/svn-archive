@@ -3,7 +3,7 @@
 ?>
 <html>
 <head>
-    <title>OpenTrailView - Submit your photos</title>
+    <title>OpenTrailView - Submit your panoramas</title>
 
     <script type='text/javascript' src='js/fileuploader.js'></script>
     <link rel='stylesheet' type='text/css' href='css/osv.css' />
@@ -17,25 +17,21 @@
         //$_SESSION['photosession'] = newsession();
         ?>
         <h1>OpenTrailView</h1>
-        <h2>Submit a series of photos</h2>
+        <h2>Submit a series of panoramas</h2>
         <p>
-        Upload each photo or panorama in your trip (on Firefox or Chrome,
+        Upload each panorama in your trip (on Firefox or Chrome,
 		you can now select
         more than one at once, thanks to Andrew Valums' multi-file
         uploader, see <a href='http://valums.com/ajax-upload'>here</a>).
         Then, if you also recorded a GPX trace
         while out, you can select "Auto-position with GPX", below, to 
-        automatically position each photo or panorama. </p>
+        automatically position each panorama. </p>
         <p>You can then:
             <ul>
             <li>use the <a href='photomgr.php'>photo management
             page</a> to manage your photos (position any not auto-located
-            using your GPX trace, group photos taken from the same point in
-            different directions, or specify which photos are panoramas -
-            by default, all photos with a width greater than 1024 pixels and
-            a width greater than 2 times the height are treated as panoramas,
-            but you can change this);</li>
-            <li>orientate a photo on the main page by rotating its camera
+            using your GPX trace)</li>
+            <li>orientate a panorama on the main page by rotating its camera
             icon.</li>
             </ul>
         </p>
@@ -53,14 +49,14 @@
         {
             var uploader = new qq.FileUploader( {
             element: document.getElementById('div1'),
-            action: '/otv/photoupload.php',
+            action: '/photoupload.php',
             sizeLimit: 3*1024*1024,
             onComplete: function(id,fileName,responseJSON)
             {
                 var str="";
                 for(x in responseJSON)
                     str +=  x+"="+responseJSON[x]+":";
-            
+				//alert(str);            
             }
             } );
             //init();
@@ -76,12 +72,15 @@
         </p>
         <?php
     }
-    else
-    {
-        echo "<div id='pansubmit_all'>Need to be logged in to upload photos".
-        " <a href='user.php?action=login&redirect=index.php".
-        "'>Login now!</a></div>";
-    }
+	else
+	{
+		?>
+		<p>
+		You need to <a href='/common/user.php?action=login&redirect=/psbmt.php'>
+			log in</a> to contribute photos.
+		</p>
+		<?php
+	}
 ?>
 </body>
 </html>

@@ -1,12 +1,15 @@
 <?php
+require_once('../lib/functionsnew.php');
+
 session_start();
 
 
 function newsession()
 {
 	$u=(isset($_SESSION['gatekeeper']))?$_SESSION['gatekeeper']:0;
-	mysql_query("INSERT INTO photosessions (t,user) VALUES (NOW(),$u)");
-	$sessid = mysql_insert_id();
+	$t=time();
+	pg_query("INSERT INTO photosessions (t,userid) VALUES ($t,$u)");
+	$sessid = pg_insert_id('photosessions');
 	return $sessid;
 }
 

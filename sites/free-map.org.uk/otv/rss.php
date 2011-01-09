@@ -4,52 +4,48 @@ include('../lib/functionsnew.php');
 session_start();
 
 
-$conn=dbconnect("otv");
-$cleaned = clean_input($_GET);
+$conn=pg_connect("dbname=gis user=gis");
+$cleaned = clean_input($_GET,'pgsql');
 $cleaned['auth'] = (isset($cleaned['auth']))?$cleaned['auth']:1;
 $admin = ($cleaned['auth']==0);
 header("Content-type: application/atom+xml");
+//header("Content-type: text/xml");
 $title = $admin ?  "Unmoderated OTV Panoramas" : "Moderated OTV Panoramas";
-to_georss(get_markers_by_bbox($cleaned['bbox'],$cleaned['auth']),$title,$admin);
-mysql_close($conn);
+to_georss(get_anns_by_bbox($cleaned['bbox'],$cleaned['auth']),$title,$admin);
+pg_close($conn);
 
 
-function get_markers_by_bbox($bbox,$auth)
+function get_anns_by_bbox($bbox,$auth)
 {
-    list($bllon,$bllat,$trlon,$trlat) = explode(",",$bbox);
+    list($w,$s,$e,$n) = explode(",",$bbox);
 
-    $q = "select * from panoramas where ";
-
+    $q = "select pan.*,AsText(ann.xy) from annotations ann,panoramas pan where ann.type='pano' and ann.id=pan.annid and ";
+	
 	if($auth==1)
 	{
-		$q .= "(authorised=1 ";
+		$q .= "(pan.authorised=1 ";
 		if(isset($_SESSION["gatekeeper"]))
-			$q .= " or user=$_SESSION[gatekeeper]";
-		$q .= ") ";
+			$q .= " or pan.userid=$_SESSION[gatekeeper]";
+		$q .= ") and ";
 	}
-	else
-	{
-		$q .= "authorised=0 ";
-	}
+	$q .=
+	"(xy && GeomFromText('POLYGON(($w $s,$e $s,$e $n,$w $n,$w $s))',900913))";
 
-    if(isset($bbox))    
-    {    
-        $q .= " and lat between $bllat and $trlat and lon between ".
-            "$bllon and $trlon";
-    }
-
-    $markers=array();
+    $anns=array();
 
 
-    $result = mysql_query($q) or die(mysql_error()); 
-    while($row = mysql_fetch_array($result))
+    $result = pg_query($q);
+    while($row = pg_fetch_array($result,null,PGSQL_ASSOC))
     {
-        $markers[]=$row;
+			$m=array();
+        	$a = preg_match ("/POINT\((.+)\)/",$row['astext'],$m);
+        	list($row['x'],$row['y'])= explode(" ",$m[1]);
+        $anns[]=$row;
     }
-    return $markers;
+    return $anns;
 }
 
-function to_georss($markers,$title,$admin)
+function to_georss($anns,$title,$admin)
 {
     //echo "<rss version='2.0' ".
     echo "<feed xmlns='http://www.w3.org/2005/Atom' ".
@@ -58,51 +54,27 @@ function to_georss($markers,$title,$admin)
 //    echo "<channel>\n";
 
     echo "<title>$title</title>\n";
-    foreach ($markers as $marker)
+    foreach ($anns as $ann)
     {
             $url=($admin)?
-                "/otv/panorama/$marker[ID]/moderate":
-                "http://www.free-map.org.uk/otv/panorama/$marker[ID]";
+                "/panorama/$ann[id]/moderate":
+                "http://www.opentrailview.org/panorama/$ann[id]";
                 
-            /*
-            echo "<item>\n";
-            $t = "Panorama $marker[ID]"; 
-            echo "<title>$t</title>\n";
-            if(file_exists("/home/www-data/uploads/otv/$marker[ID].jpg"))
-            {
-                echo "<link>http://www.free-map.org.uk/otv/pan.php?".
-                    "id=$marker[ID]</link>\n";
-            }
-            $description="none";
-            echo "<description>$marker[direction]</description>\n";
-            // according to the rss 2.0 spec the guid is a unique string
-            // identifier for each item. so this is acceptable. it means
-            // that slippy clients can easily tell whether an item has 
-            // already been added as a marker.
-            echo "<guid>$marker[ID]</guid>\n";
-            echo "<georss:point>$marker[lat] $marker[lon]</georss:point>\n";
-            echo "<geo:dir>$marker[direction]</geo:dir>\n";
-            echo "<georss:featuretypetag>".
-				($marker["isPano"]==1 ? "panorama":"photo").
-				"</georss:featuretypetag>".
-                "\n";
-            echo "</item>\n";
-            */
             echo "<entry>\n";
-            $t = "Panorama $marker[ID]"; 
+            $t = "Panorama $ann[id]"; 
             echo "<title>$t</title>\n";
             echo "<link href='$url' />\n";
             $description="none";
-            echo "<summary>$marker[direction]</summary>\n";
+            echo "<summary>$ann[direction]</summary>\n";
             // according to the rss 2.0 spec the guid is a unique string
             // identifier for each item. so this is acceptable. it means
             // that slippy clients can easily tell whether an item has 
-            // already been added as a marker.
-            echo "<id>$marker[ID]</id>\n";
-            echo "<georss:point>$marker[lat] $marker[lon]</georss:point>\n";
-            echo "<geo:dir>$marker[direction]</geo:dir>\n";
+            // already been added as a ann.
+            echo "<id>$ann[id]</id>\n";
+            echo "<georss:point>$ann[y] $ann[x]</georss:point>\n";
+            echo "<geo:dir>$ann[direction]</geo:dir>\n";
             echo "<georss:featuretypetag>".
-				($marker["isPano"]==1 ? "panorama":"photo").
+				($ann["ispano"]==1 ? "panorama":"photo").
 				"</georss:featuretypetag>".
                 "\n";
             echo "</entry>\n";

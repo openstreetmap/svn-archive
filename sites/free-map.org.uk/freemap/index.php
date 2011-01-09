@@ -170,7 +170,8 @@ function write_login()
 
 	if(!isset($_SESSION['gatekeeper']))
 	{
-		echo "<form method='post' action='user.php?action=login&redirect=".
+		echo "<form method='post' ".
+		"action='/common/user.php?action=login&redirect=".
 			htmlentities($_SERVER['PHP_SELF'])."'>\n";
 		?>
 		<label for="username">Username</label> <br/>
@@ -180,16 +181,16 @@ function write_login()
 		<input type='submit' value='go' id='loginbtn'/>
 		</form>
 		<?php
-		echo "<a href='/freemap/user.php?action=signup'>Sign up</a>";
+		echo "<a href='/common/user.php?action=signup'>Sign up</a>";
 	}
 	else
 	{
 		$result=pg_query("SELECT * FROM users WHERE id=$_SESSION[gatekeeper]");
 		$row=pg_fetch_array($result,null,PGSQL_ASSOC);
 		echo "<em>Logged in as $row[username]</em>\n";
-		echo "<a href='user.php?action=logout&redirect=".
+		echo "<a href='/common/user.php?action=logout&redirect=".
 			htmlentities($_SERVER['PHP_SELF'])."'>Log out</a> |".
-			" <a href='user.php?action=routes'>Your walk routes</a>\n";
+			" <a href='/common/user.php?action=routes'>Your walk routes</a>\n";
 	}
 	echo "</div>";
 }

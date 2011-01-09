@@ -282,4 +282,33 @@ function dist($x1,$y1,$x2,$y2)
 	return sqrt($dx*$dx + $dy*$dy);
 }
 
+function pg_insert_id($table)
+{
+	$result=pg_query("SELECT currval('{$table}_id_seq') AS id");
+	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+	return $row["id"];
+}
+
+function sphmerc_to_lon($m)
+{
+	return ($m/20037508.34) * 180.0;
+}
+
+function lon_to_sphmerc($lon)
+{
+	return ($lon/180.0) * 20037508.34;
+}
+
+function sphmerc_to_lat($m)
+{
+	$lat=($m/20037508.34) * 180;
+	$lat = 180/M_PI * (2*atan(exp($lat*M_PI/180)) - M_PI/2);
+	return $lat;
+}
+
+function lat_to_sphmerc($lat)
+{
+	$a = log(tan((90+$lat)*M_PI/360)) / (M_PI/180);
+	return $a *20037508.34/180;
+}
 ?>

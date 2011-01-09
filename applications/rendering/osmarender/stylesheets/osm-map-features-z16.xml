@@ -2646,7 +2646,10 @@
 		</rule>
 		
 		<!-- Draw marine features -->
-		<rule e="way" k="man_made" v="breakwater">
+		<rule e="way" k="man_made" v="breakwater" closed="yes">
+			<line class="breakwater-area"/>
+		</rule>
+		<rule e="way" k="man_made" v="breakwater" closed="no">
 			<line class="breakwater"/>
 		</rule>
 		<rule e="way" k="man_made" v="pier" closed="yes">
@@ -4496,6 +4499,12 @@
 			
 			.breakwater {
 			fill: none;
+			stroke-width: 1.0px;
+			stroke: #707070;
+			}
+
+			.breakwater-area {
+			fill: #707070;
 			stroke-width: 1.0px;
 			stroke: #707070;
 			}

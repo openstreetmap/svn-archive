@@ -4028,6 +4028,9 @@
 		<!-- ==================================== Layer 5 ======================================== -->
 
 		<!-- Non-physical boundaries -->
+		<rule e="way" k="boundary" v="postal_code|postcode_area" layer="5">
+			<line class="boundary-postalcode-casing no-bezier" layer="5"/>
+		</rule>
 		<rule e="way" k="boundary" v="administrative" layer="5">
 			<rule e="way" k="admin_level" v="1|2|3|4|5|6|7|8|9|10|11" layer="5">
 				<rule e="way" k="admin_level" v="11" layer="5">
@@ -5981,6 +5984,14 @@
 			stroke-width: 0.25px;
 			stroke: #4ef94b;
 			stroke-dasharray: 1.5, 0.5, 0.5, 0.5;
+			}
+
+			.boundary-postalcode-casing {
+			stroke-width: 2px;
+			stroke: #ffff00;
+			stroke-dasharray: 5, 5;
+			opacity: 0.5;
+			fill: none;
 			}
 
 			/* Racetracks */

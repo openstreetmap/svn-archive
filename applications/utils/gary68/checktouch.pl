@@ -50,7 +50,10 @@
 # 
 # Version 2.0
 # - quad trees
-
+#
+# Version 2.1
+# - sort output by lon
+# 
 
 use strict ;
 use warnings ;
@@ -63,7 +66,7 @@ use Time::localtime;
 
 my $program = "checktouch.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "2.0" ;
+my $version = "2.1" ;
 
 my $maxDist = 0.002 ; # in km 
 my $maxDist2 = 0.001 ; 
@@ -464,7 +467,20 @@ print $html "<th>JOSM</th>\n" ;
 print $html "<th>Pic</th>\n" ;
 print $html "</tr>\n" ;
 $i = 0 ;
+
+my @sorted = () ;
 foreach $key (keys %touchingsHash) {
+	my ($x, $y, $id1, $id2, $dist) = @{$touchingsHash{$key}} ;
+	push @sorted, [$key, $x] ;
+}
+
+@sorted = sort { $a->[1] <=> $b->[1]} @sorted ;
+
+foreach my $s (@sorted) {
+
+	my $key ;	
+	$key = $s->[0] ;
+
 	my ($x, $y, $id1, $id2, $dist) = @{$touchingsHash{$key}} ;
 	#print "HTML $x, $y, $id1, $id2\n" ;
 	$i++ ;

@@ -63,7 +63,7 @@ function init() {
             { strategies: [new OpenLayers.Strategy.BBOX()],
              protocol: new OpenLayers.Protocol.HTTP
                  ( { url: "/freemap/annotation.php?action=getByBbox",
-                    format: new OpenLayers.Format.GeoRSS() } ),
+                    format: new OpenLayers.Format.FmapGeoRSS() } ),
             styleMap: asm } );
 
     freemap.map.addLayer(freemap.layerSelWays);
@@ -88,7 +88,14 @@ function init() {
         (freemap.layerAnnotations,
             { onSelect: function (f)
                 {
-                    freemap.displayPopup(f.attributes.description,
+                    var html = 
+                        (f.attributes.hasPhoto==1) ?
+                    "<p>"+f.attributes.description+"</p>"+
+                    "<p><img src='annotation.php?id="+f.fid+
+                        "&action=getPhoto' width='320px' height='200px'"+
+                        "/></p>" :
+                    f.attributes.description;
+                    freemap.displayPopup(html,
                         new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
                             200,200,true);
                 }
@@ -324,7 +331,8 @@ var Freemap = Class.create ( {
             var type=nodes[0].getElementsByTagName("type")[0].
                     firstChild.nodeValue;
             
-            description=(nodes[0].getElementsByTagName("description").length>0)
+            description=
+                (nodes[0].getElementsByTagName("description").length>0)
             ?  nodes[0].getElementsByTagName("description")[0].
                     firstChild.nodeValue: "";
             var html = "<h1>"+name+"</h1><p>" +name+ " is a <em>"+type+
@@ -632,10 +640,24 @@ var Freemap = Class.create ( {
     {
         alert('response from inserting annotation: ' + xmlHTTP.responseText);
         var pt=xmlHTTP.request.options.point;
+        var id=xmlHTTP.responseText;
         var annotationFeature=new OpenLayers.Feature.Vector();
         annotationFeature.geometry = pt;
         annotationFeature.text = xmlHTTP.request.options.aText;
         this.layerAnnotations.addFeatures(annotationFeature);
+        var html = "<p>If your annotation is accompanied by a photo or "+
+                    "diagram, upload it here (JPEGs only for the moment). "+
+                    "Otherwise click Cancel.</p>"+
+                "<form method='post' action='annotation.php' "+
+                "enctype='multipart/form-data'>"+
+                "<input type='file' name='photofile' /><br />"+
+                "<input type='hidden' name='id' value='"+id+"' />"+
+                "<input type='hidden' name='action' value='addPhoto' />"+
+                "<input type='submit' value='Go!' />"+
+                "<input type='button' value='Cancel' id='uploadcancel'/>"+
+                "</form>";
+        this.displayCentredPopup(html,0.4);
+        $('uploadcancel').onclick = this.removePopup.bind(this);
     },
 
     displayPopup:function(text,pos,w,h,fc)
@@ -675,6 +697,11 @@ var Freemap = Class.create ( {
                     this.map.getSize().h*relsize*0.5)),
                 this.map.getSize().w*relsize,this.map.getSize().h*relsize,
                 false);
+    },
+
+    removePopup: function()
+    {
+        this.map.removePopup(this.popup);
     }
 } );
 

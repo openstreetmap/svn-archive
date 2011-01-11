@@ -169,6 +169,7 @@ class Way extends Feature
         {
             if(isset($partway))
                 $this->way['points'] = $partway;
+			/*
             $q=
                 ("SELECT ann.wayid,AsText(ann.xy),ann.text,ann.dir,".
                 "line_locate_point".
@@ -177,11 +178,24 @@ class Way extends Feature
 				"wayannotations wa ".
                 "WHERE pol.osm_id=wa.wayid AND ".
 				"ann.id=wa.annid AND ".
+				"ann.ispano=0 AND ".
 				"wa.wayid=".$this->way['osm_id'].
                 " AND line_locate_point(pol.way,ann.xy) BETWEEN ".
                 "$lower AND $higher ".
                 "ORDER BY line_locate_point(pol.way,ann.xy)");
-                $result2=pg_query($q);
+			*/
+			$q=
+        	("SELECT AsText(ann.xy),ann.text,ann.dir,".
+			"line_locate_point".
+			"(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
+			"FROM planet_osm_line pol, annotations ann WHERE pol.osm_id=".
+			($this->way['osm_id'])." AND ".
+				"ann.ispano=0 AND ".
+			" line_locate_point(pol.way,ann.xy) BETWEEN ".
+                "$lower AND $higher ".
+        	"AND Distance(line_substring(pol.way,$lower,$higher),ann.xy) < 100".
+        	" ORDER BY line_locate_point(pol.way,ann.xy)");
+			$result2=pg_query($q);
             while($row2=pg_fetch_array($result2,NULL,PGSQL_ASSOC))
             {
                 $a = preg_match ("/POINT\((.+)\)/",$row2['astext'],$m);

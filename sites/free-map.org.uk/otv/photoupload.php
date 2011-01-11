@@ -77,7 +77,7 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 				$_SESSION['photosession'] = newsession();
 
 
-			pg_query ("INSERT INTO annotations(type) VALUES ('pano')");
+			pg_query ("INSERT INTO annotations(ispano) VALUES (1)");
 			$result=pg_query("SELECT currval('annotations_id_seq') ".
 									"AS annid");
 			$row=pg_fetch_array($result,null,PGSQL_ASSOC);

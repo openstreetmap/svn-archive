@@ -60,6 +60,9 @@
 # Version 3.0
 # - quad trees
 #
+# Version 3.1
+# - sorted output
+#
 
 use strict ;
 use warnings ;
@@ -75,7 +78,7 @@ my $olc = 0 ;
 
 my $program = "checkcross.pl" ;
 my $usage = $program . " [N|B] def.xml file.osm out.htm out.gpx (mode N = normal or B = also get openstreetbugs" ;
-my $version = "3.0" ;
+my $version = "3.1" ;
 my $mode = "N" ;
 
 my $gpxFileName = "../../web/osm/qa/bugs/OpenStreetBugsOpen.gpx" ;
@@ -447,7 +450,7 @@ print "potential checks: $potential\n" ;
 print "checks actually done: $checksDone\n" ;
 my $percent = $checksDone / $potential * 100 ;
 printf "work: %2.3f percent\n", $percent ;
-print "crossings found: $crossings\n" ;
+print "crossings found: $crossings. some may be omitted because length of way under threshold.\n" ;
 print "olc done: $olc\n" ;
 
 $time1 = time () ;
@@ -494,7 +497,23 @@ print $html "<th>Pic</th>\n" ;
 print $html "<th>Bugs found</th>\n" ;
 print $html "</tr>\n" ;
 $i = 0 ;
+
+
+
+
+my @sorted = () ;
 foreach $key (keys %crossingsHash) {
+	my ($x, $y, $id1, $id2) = @{$crossingsHash{$key}} ;
+	push @sorted, [$key, $x] ;
+}
+
+@sorted = sort { $a->[1] <=> $b->[1]} @sorted ;
+
+foreach my $s (@sorted) {
+
+	my $key ;	
+	$key = $s->[0] ;
+
 	my ($x, $y, $id1, $id2) = @{$crossingsHash{$key}} ;
 
 	my $len1 = int ( $length{$id1} * 1000) ;

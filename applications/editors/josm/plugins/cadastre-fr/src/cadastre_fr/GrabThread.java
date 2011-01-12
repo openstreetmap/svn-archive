@@ -21,7 +21,7 @@ public class GrabThread extends Thread {
 
     private WMSLayer wmsLayer;
 
-    private Lock lock = new ReentrantLock();
+    private Lock lockImagesToGrag = new ReentrantLock();
 
     private ArrayList<EastNorthBound> imagesToGrab = new ArrayList<EastNorthBound>();
 
@@ -29,53 +29,65 @@ public class GrabThread extends Thread {
     
     private EastNorthBound currentGrabImage;
 
+    private Lock lockCurrentGrabImage = new ReentrantLock();
+
+    /**
+     * Call directly grabber for raster images or prepare thread for vector images 
+     * @param moreImages
+     */
     public void addImages(ArrayList<EastNorthBound> moreImages) {
-        lock.lock();
+        lockImagesToGrag.lock();
         imagesToGrab.addAll(moreImages);
-        lock.unlock();
+        lockImagesToGrag.unlock();
         synchronized(this) {
             this.notify();
         }
         System.out.println("Added " + moreImages.size() + " to the grab thread");
+        if (wmsLayer.isRaster()) {
+            waitNotification();
+        }
     }
 
     public int getImagesToGrabSize() {
-        lock.lock();
+        lockImagesToGrag.lock();
         int size = imagesToGrab.size();
-        lock.unlock();
+        lockImagesToGrag.unlock();
         return size;
     }
     
     public ArrayList<EastNorthBound> getImagesToGrabCopy() {
         ArrayList<EastNorthBound> copyList = new ArrayList<EastNorthBound>(); 
-        lock.lock();
+        lockImagesToGrag.lock();
         for (EastNorthBound img : imagesToGrab) {
             EastNorthBound imgCpy = new EastNorthBound(img.min, img.max);
             copyList.add(imgCpy);
         }
-        lock.unlock();
+        lockImagesToGrag.unlock();
         return copyList;
     }
     
     public void clearImagesToGrab() {        
-        lock.lock();
+        lockImagesToGrag.lock();
         imagesToGrab.clear();
-        lock.unlock();
+        lockImagesToGrag.unlock();
     }
     
     @Override
     public void run() {
         for (;;) {
             while (getImagesToGrabSize() > 0) {
-                lock.lock();
+                lockImagesToGrag.lock();
+                lockCurrentGrabImage.lock();
                 currentGrabImage = imagesToGrab.get(0);
+                lockCurrentGrabImage.unlock();
                 imagesToGrab.remove(0);
-                lock.unlock();
+                lockImagesToGrag.unlock();
                 if (cancelled) {
                     break;
                 } else {
                     GeorefImage newImage;
                     try {
+                        Main.map.repaint(); // paint the current grab box
                         newImage = grabber.grab(wmsLayer, currentGrabImage.min, currentGrabImage.max);
                     } catch (IOException e) {
                         System.out
@@ -92,6 +104,7 @@ public class GrabThread extends Thread {
                         setCancelled(true);
                         break;
                     }
+                    try {
                     if (CadastrePlugin.backgroundTransparent) {
                         wmsLayer.imagesLock.lock();
                         for (GeorefImage img : wmsLayer.getImages()) {
@@ -108,22 +121,24 @@ public class GrabThread extends Thread {
                     wmsLayer.addImage(newImage);
                     Main.map.mapView.repaint();
                     saveToCache(newImage);
+                    } catch (NullPointerException e) {
+                        System.out.println("Layer destroyed. Cancel grab thread");
+                        setCancelled(true);
+                    }
                 }
             }
             System.out.println("grab thread list empty");
+            lockCurrentGrabImage.lock();
             currentGrabImage = null;
+            lockCurrentGrabImage.unlock();
             if (cancelled) {
                 clearImagesToGrab();
                 cancelled = false;
             }
-            synchronized(this) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace(System.out);
-                }
+            if (wmsLayer.isRaster()) {
+                notifyWaiter();
             }
-        }
+            waitNotification();        }
     }
 
     public void saveToCache(GeorefImage image) {
@@ -164,13 +179,17 @@ public class GrabThread extends Thread {
     }
 
     public void paintBoxesToGrab(Graphics g, MapView mv) {
-        ArrayList<EastNorthBound> imagesToGrab = getImagesToGrabCopy();
-        for (EastNorthBound img : imagesToGrab) {
-            paintBox(g, mv, img, Color.red);
+        if (getImagesToGrabSize() > 0) {
+            ArrayList<EastNorthBound> imagesToGrab = getImagesToGrabCopy();
+            for (EastNorthBound img : imagesToGrab) {
+                paintBox(g, mv, img, Color.red);
+            }
         }
+        lockCurrentGrabImage.lock();
         if (currentGrabImage != null) {
             paintBox(g, mv, currentGrabImage, Color.orange);
         }
+        lockCurrentGrabImage.unlock();
     }
     
     private void paintBox(Graphics g, MapView mv, EastNorthBound img, Color color) {
@@ -200,6 +219,18 @@ public class GrabThread extends Thread {
 
     public void setGrabber(CadastreGrabber grabber) {
         this.grabber = grabber;
+    }
+
+    private synchronized void notifyWaiter() {
+        this.notify();
+    }
+
+    private synchronized void waitNotification() {
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace(System.out);
+        }
     }
 
 }

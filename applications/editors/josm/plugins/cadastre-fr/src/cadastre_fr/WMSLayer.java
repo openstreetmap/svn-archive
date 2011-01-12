@@ -107,6 +107,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
         grabThread.cancel();
+        grabThread = null;
         super.destroy();
         images = null;
         dividedBbox = null;
@@ -140,13 +141,11 @@ public class WMSLayer extends Layer implements ImageObserver {
             } else
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
         }
-
         grabThread.addImages(dividedBbox);
-        Main.map.repaint();
     }
 
     /**
-     * Divides the bounding box in smaller polygons.
+     * Divides the bounding box in smaller squares. Their size (and quantity) is configurable in Preferences.
      * 
      * @param b      the original bbox, usually the current bbox on screen
      * @param factor 1 = source bbox 1:1
@@ -171,14 +170,54 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         } else {
             // divide to fixed size squares
-            int cSquare = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
-            minEast = minEast - minEast % cSquare;
-            minNorth = minNorth - minNorth % cSquare;
-            for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)
-                for (int xNorth = (int)minNorth; xNorth < lambertMax.north(); xNorth+=cSquare) {
-                    dividedBbox.add(new EastNorthBound(new EastNorth(xEast, xNorth),
-                                new EastNorth(xEast + cSquare, xNorth + cSquare)));
+            // grab all square in a spiral starting from the center (usually the most interesting place)
+            int c = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
+            lambertMin = lambertMin.add(- minEast%c, - minNorth%c);
+            lambertMax = lambertMax.add(c - lambertMax.east()%c, c - lambertMax.north()%c);
+            EastNorth mid = lambertMax.getCenter(lambertMin);
+            mid = mid.add(-1, 1); // in case the boxes side is a pair, select the one one top,left to follow the rotation
+            mid = mid.add(- mid.east()%c, - mid.north()%c);
+            int x = (int)(lambertMax.east() - lambertMin.east())/100;
+            int y = (int)(lambertMax.north() - lambertMin.north())/100;
+            int dx[] = {+1, 0,-1, 0};
+            int dy[] = {0,-1, 0,+1};
+            int currDir = -1, lDir = 1, i = 1, j = 0, k = -1;
+            if (x == 1)
+                currDir = 0;
+            dividedBbox.add(new EastNorthBound(mid, new EastNorth(mid.east()+c, mid.north()+c)));
+            while (i < (x*y)) {
+                i++;
+                j++;
+                if (j >= lDir) {
+                    k++;
+                    if (k > 1) {
+                        lDir++;
+                        k = 0;
+                    }
+                    j = 0;
+                    currDir = (currDir+1)%4;
+                } else if (currDir >= 0 && j >= (currDir == 0 || currDir == 2 ? x-1 : y-1)) {
+                    // the overall is a rectangle, not a square. Jump to the other side to grab next square.
+                    k++;
+                    if (k > 1) {
+                        lDir++;
+                        k = 0;
+                    }
+                    j = lDir-1;
+                    currDir = (currDir+1)%4;
+                    mid = new EastNorth(mid.east() + dx[currDir]*c*(lDir-1), mid.north() + dy[currDir]*c*(lDir-1));
+                }
+                mid = new EastNorth(mid.east() + dx[currDir]*c, mid.north() + dy[currDir]*c);
+                dividedBbox.add(new EastNorthBound(mid, new EastNorth(mid.east()+c, mid.north()+c)));
             }
+//            // simple algorithm to grab all squares
+//            minEast = minEast - minEast % cSquare;
+//            minNorth = minNorth - minNorth % cSquare;
+//            for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)
+//                for (int xNorth = (int)minNorth; xNorth < lambertMax.north(); xNorth+=cSquare) {
+//                    dividedBbox.add(new EastNorthBound(new EastNorth(xEast, xNorth),
+//                                new EastNorth(xEast + cSquare, xNorth + cSquare)));
+//            }
         }
     }
 
@@ -230,9 +269,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         if (this.isRaster) {
             paintCrosspieces(g, mv);
         }
-        //        if (grabThread.getImagesToGrabSize() > 0) {
-            grabThread.paintBoxesToGrab(g, mv);
-            //        }
+        grabThread.paintBoxesToGrab(g, mv);
         if (this.adjustModeEnabled) {
             WMSAdjustAction.paintAdjustFrames(g, mv);
         }
@@ -378,7 +415,6 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @throws IOException
      */
     public void write(ObjectOutputStream oos) throws IOException {
-        // Set currentFormat to the serializeFormatVersion
         currentFormat = this.serializeFormatVersion;
         oos.writeInt(this.serializeFormatVersion);
         oos.writeObject(this.location);    // String

@@ -75,7 +75,7 @@ public class SimplifyAreaAction extends JosmAction {
         final int ret = HelpAwareOptionPane.showOptionDialog(
                 Main.parent,
                 "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", getCurrentDataSet().getSelectedWays().size())
-                        + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
+                + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
                 tr("Delete nodes outside of data regions?"), JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
         return ret == 0;
@@ -167,7 +167,7 @@ public class SimplifyAreaAction extends JosmAction {
      * @param w
      *            the way to simplify
      */
-	private SequenceCommand simplifyWay(final Way w) {
+    private SequenceCommand simplifyWay(final Way w) {
         final double angleThreshold = Main.pref.getDouble("simplify-area.angle.threshold", 10);
         final double angleFactor = Main.pref.getDouble("simplify-area.angle.factor", 1.0);
         final double mergeThreshold = Main.pref.getDouble("simplify-area.merge.threshold", 0.2);
@@ -192,43 +192,43 @@ public class SimplifyAreaAction extends JosmAction {
         // remove nodes within threshold
 
         while (true) {
-        	Node prevNode = null;
-        	LatLon coord1 = null;
-        	LatLon coord2 = null;
+            Node prevNode = null;
+            LatLon coord1 = null;
+            LatLon coord2 = null;
 
-        	double minWeight = Double.MAX_VALUE;
-        	Node bestMatch = null;
+            double minWeight = Double.MAX_VALUE;
+            Node bestMatch = null;
 
-	        for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
-	            final Node n = nodes.get(i % nodes.size());
-	            final LatLon coord3 = n.getCoor();
+            for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
+                final Node n = nodes.get(i % nodes.size());
+                final LatLon coord3 = n.getCoor();
 
-	            if (coord1 != null) {
-	            	final double angleWeight = computeConvectAngle(coord1, coord2, coord3) / angleThreshold;
-	            	final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
-	            	final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
+                if (coord1 != null) {
+                    final double angleWeight = computeConvectAngle(coord1, coord2, coord3) / angleThreshold;
+                    final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
+                    final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
 
-	            	final double weight = isRequiredNode(w, prevNode) ||
-	            		!closed && i == len - 1 || // don't remove last node of the not closed way
-	            		angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
-	            		angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
+                    final double weight = isRequiredNode(w, prevNode) ||
+                    !closed && i == len - 1 || // don't remove last node of the not closed way
+                    angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
+                        angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
 
-	            	if (weight < minWeight) {
-	            		minWeight = weight;
-	            		bestMatch = prevNode;
-	            	}
-	            }
+                    if (weight < minWeight) {
+                        minWeight = weight;
+                        bestMatch = prevNode;
+                    }
+                }
 
-	            coord1 = coord2;
-	            coord2 = coord3;
-	            prevNode = n;
-	        }
+                coord1 = coord2;
+                coord2 = coord3;
+                prevNode = n;
+            }
 
-	        if (bestMatch == null) {
-	        	break;
-	        }
+            if (bestMatch == null) {
+                break;
+            }
 
-	        nodes.remove(bestMatch);
+            nodes.remove(bestMatch);
         }
 
 
@@ -236,44 +236,44 @@ public class SimplifyAreaAction extends JosmAction {
 
         final Map<Node, LatLon> coordMap = new HashMap<Node, LatLon>();
         for (final Node n : nodes) {
-        	coordMap.put(n, n.getCoor());
+            coordMap.put(n, n.getCoor());
         }
 
         final Map<Node, MoveCommand> moveCommandList = new HashMap<Node, MoveCommand>();
 
         while (true) {
-        	double minDist = Double.MAX_VALUE;
-        	Node node1 = null;
-        	Node node2 = null;
+            double minDist = Double.MAX_VALUE;
+            Node node1 = null;
+            Node node2 = null;
 
-        	for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
-	            final Node n1 = nodes.get(i % nodes.size());
-	            final Node n2 = nodes.get((i + 1) % nodes.size());
+            for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
+                final Node n1 = nodes.get(i % nodes.size());
+                final Node n2 = nodes.get((i + 1) % nodes.size());
 
-	            if (isRequiredNode(w, n1) || isRequiredNode(w, n2)) {
-	            	continue;
-	            }
+                if (isRequiredNode(w, n1) || isRequiredNode(w, n2)) {
+                    continue;
+                }
 
-	            final double dist = coordMap.get(n1).greatCircleDistance(coordMap.get(n2));
-	            if (dist < minDist && dist < mergeThreshold) {
-	            	minDist = dist;
-	            	node1 = n1;
-	            	node2 = n2;
-	            }
-        	}
+                final double dist = coordMap.get(n1).greatCircleDistance(coordMap.get(n2));
+                if (dist < minDist && dist < mergeThreshold) {
+                    minDist = dist;
+                    node1 = n1;
+                    node2 = n2;
+                }
+            }
 
-        	if (node1 == null || node2 == null) {
-        		break;
-        	}
+            if (node1 == null || node2 == null) {
+                break;
+            }
 
 
-        	final LatLon coord = coordMap.get(node1).getCenter(coordMap.get(node2));
-        	coordMap.put(node1, coord);
-			moveCommandList.put(node1, new MoveCommand(node1, coord));
+            final LatLon coord = coordMap.get(node1).getCenter(coordMap.get(node2));
+            coordMap.put(node1, coord);
+            moveCommandList.put(node1, new MoveCommand(node1, coord));
 
-			nodes.remove(node2);
-        	coordMap.remove(node2);
-        	moveCommandList.remove(node2);
+            nodes.remove(node2);
+            coordMap.remove(node2);
+            moveCommandList.remove(node2);
         }
 
 
@@ -300,8 +300,8 @@ public class SimplifyAreaAction extends JosmAction {
 
 
     public static double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
-    	final double angle =  Math.abs(heading(coord2, coord3) - heading(coord1, coord2));
-    	return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
+        final double angle =  Math.abs(heading(coord2, coord3) - heading(coord1, coord2));
+        return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
     }
 
 
@@ -313,7 +313,7 @@ public class SimplifyAreaAction extends JosmAction {
         final double p = (a + b + c) / 2.0;
 
         final double q = p * (p - a) * (p - b) * (p - c); // I found this negative in one case (:-o) when nodes were in line on a small area
-		return q < 0.0 ? 0.0 : Math.sqrt(q);
+        return q < 0.0 ? 0.0 : Math.sqrt(q);
     }
 
 
@@ -326,8 +326,8 @@ public class SimplifyAreaAction extends JosmAction {
 
     public static double heading(final LatLon a, final LatLon b) {
         double hd = Math.atan2(sin(toRadians(a.lon() - b.lon())) * cos(toRadians(b.lat())),
-        		cos(toRadians(a.lat())) * sin(toRadians(b.lat())) -
-        		sin(toRadians(a.lat())) * cos(toRadians(b.lat())) * cos(toRadians(a.lon() - b.lon())));
+                cos(toRadians(a.lat())) * sin(toRadians(b.lat())) -
+                sin(toRadians(a.lat())) * cos(toRadians(b.lat())) * cos(toRadians(a.lon() - b.lon())));
         hd %= 2 * Math.PI;
         if (hd < 0) {
             hd += 2 * Math.PI;

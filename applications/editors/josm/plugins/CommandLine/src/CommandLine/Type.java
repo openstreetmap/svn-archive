@@ -16,6 +16,6 @@
  * 
  */
  
-package commandline;
+package CommandLine;
 
 public enum Type { NODE, WAY, RELATION, ANY, POINT, LENGTH, NATURAL, STRING, TRIGGER, RELAY }

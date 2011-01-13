@@ -5,7 +5,7 @@
  *	  
  */
 
-package commandline;
+package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 

@@ -19,6 +19,6 @@
  *      MA 02110-1301, USA.
  */
  
-package commandline;
+package CommandLine;
 
 public enum Mode { IDLE, SELECTION, ADJUSTMENT, PROCESSING }

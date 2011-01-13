@@ -19,7 +19,7 @@
  *      MA 02110-1301, USA.
  */
 
-package commandline;
+package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 

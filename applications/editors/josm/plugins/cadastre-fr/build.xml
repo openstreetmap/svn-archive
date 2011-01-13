@@ -33,7 +33,7 @@
 
 
 	<property name="commit.message" value="Changed constructor for Plugin" />
-	<property name="plugin.main.version" value="3408" />
+	<property name="plugin.main.version" value="3751" />
 
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>

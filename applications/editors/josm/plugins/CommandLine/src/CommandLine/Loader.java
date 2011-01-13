@@ -1,7 +1,7 @@
 /*
  *	  Loader.java
  *	  
- *	  Copyright 2010 Hind <foxhind@gmail.com>
+ *	  Copyright 2011 Hind <foxhind@gmail.com>
  *	  
  */
  
@@ -78,9 +78,13 @@ public class Loader extends DefaultHandler {
 					currentCommand.name = Value;
 				else if (Name.equals("run"))
 					currentCommand.run = Value;
-				else if (Name.equals("tracks"))
+				else if (Name.equals("tracks")) {
 					if (Value.equals("bbox"))
 						currentCommand.tracks = true;
+				}
+				else if (Name.equals("icon")) {
+					currentCommand.icon = Value;
+				}
 			}
 		}
 		else if (rawName.equals("parameter")) {

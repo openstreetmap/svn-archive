@@ -1,7 +1,7 @@
 /*
  *      CommandLine.java
  *      
- *      Copyright 2010 Hind <foxhind@gmail.com>
+ *      Copyright 2011 Hind <foxhind@gmail.com>
  *      
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@
 
 package CommandLine;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -42,6 +44,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.*;
 import javax.swing.JTextField;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -75,11 +79,12 @@ public class CommandLine extends Plugin {
 	private String prefix;
 	private Mode mode;
 	private ArrayList<Command> commands;
+	private JMenu commandMenu;
 	protected Command currentCommand;
 	protected String commandSymbol;
-	private History history;
-	private MapFrame currentMapFrame;
-	private MapMode previousMode;
+	protected History history;
+	protected MapFrame currentMapFrame;
+	protected MapMode previousMode;
 
 	public CommandLine(PluginInformation info) {
 		super(info);
@@ -103,14 +108,7 @@ public class CommandLine extends Plugin {
 								}
 								Command command = findCommand(commandText, true);
 								if (command != null) {
-									currentCommand = command;
-									currentCommand.resetLoading();
-									parseSelection(Main.main.getCurrentDataSet().getSelected());
-									previousMode = Main.map.mapMode;
-									if (currentCommand.currentParameterNum < currentCommand.parameters.size())
-										setMode(Mode.SELECTION);
-									else
-										runTool();
+									startCommand(command);
 								}
 								else
 									setMode(Mode.IDLE);
@@ -192,9 +190,37 @@ public class CommandLine extends Plugin {
 			}
 		};
 
-		MainMenu.add(Main.main.menu.toolsMenu, new CommandLineAction(this));
+		if ( Main.main.menu != null ) {
+			commandMenu = Main.main.menu.addMenu(marktr("Commands") , KeyEvent.VK_C, Main.main.menu.defaultMenuPos, ht("/Plugin/CommandLine"));
+			MainMenu.add(Main.main.menu.toolsMenu, new CommandLineAction(this));
+		}
 		loadCommands();
 		setMode(Mode.IDLE);
+	}
+
+	public void startCommand(String commandName) {
+		Command command = findCommand(commandName, true);
+		if (command != null) {
+			startCommand(command);
+		}
+	}
+
+	protected void startCommand(Command command) {
+		if (Main.map == null)
+			return;
+		DataSet ds = Main.main.getCurrentDataSet();
+		if (ds == null)
+			return;
+		currentCommand = command;
+		currentCommand.resetLoading();
+		parseSelection(ds.getSelected());
+		if (!(Main.map.mapMode instanceof AnyAction || Main.map.mapMode instanceof DummyAction || Main.map.mapMode instanceof LengthAction || Main.map.mapMode instanceof NodeAction || Main.map.mapMode instanceof PointAction || Main.map.mapMode instanceof RelationAction || Main.map.mapMode instanceof WayAction)) {
+			previousMode = Main.map.mapMode;
+		}
+		if (currentCommand.currentParameterNum < currentCommand.parameters.size())
+			setMode(Mode.SELECTION);
+		else
+			runTool();
 	}
 
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
@@ -208,6 +234,10 @@ public class CommandLine extends Plugin {
 	private void loadCommands() {
 		Loader loader = new Loader(getPluginDir());
 		commands = loader.load(); // lol
+
+		for (Command command : commands) {
+			commandMenu.add(new CommandAction(command, this));
+		}
 	}
 
 	private Command findCommand(String text, boolean strict) {
@@ -226,7 +256,7 @@ public class CommandLine extends Plugin {
 		return null;
 	}
 	
-	private void setMode(Mode targetMode) {
+	protected void setMode(Mode targetMode) {
 		DataSet currentDataSet = Main.main.getCurrentDataSet();
 		if (currentDataSet != null) {
 			currentDataSet.clearSelection();
@@ -294,7 +324,6 @@ public class CommandLine extends Plugin {
 
 	public void endInput() {
 		setMode(Mode.IDLE);
-		//System.out.print(String.valueOf());
 		Main.map.selectMapMode(previousMode);
 		Main.map.mapView.repaint();
 	}

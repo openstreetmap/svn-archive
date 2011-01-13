@@ -1,7 +1,7 @@
 /*
  *      Command.java
  *      
- *      Copyright 2010 Hind <foxhind@gmail.com>
+ *      Copyright 2011 Hind <foxhind@gmail.com>
  *      
  */
 
@@ -21,12 +21,13 @@ import org.openstreetmap.josm.data.osm.DataSet;
 public class Command {
 	public String name;						// Command name
 	public String run;						// Executable file with arguments ("nya.exe {arg1} {arg2} ... {argn}")
+	public String icon;						// Icon file name
 	public ArrayList<Parameter> parameters;	// Required parameters list
 	public ArrayList<Parameter> optParameters;	// Optional parameters list
 	public int currentParameterNum;
 	public boolean tracks;
 	
-	public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; }
+	public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; icon = ""; }
 
 	public boolean loadObject(Object obj) {
 		Parameter currentParameter = parameters.get(currentParameterNum);

@@ -111,15 +111,19 @@ import org.openstreetmap.josm.data.projection.*;
  * 1.9 05-Apr-2010 - added a scroll bar in preferences
  *                 - download cancellation improved
  *                 - last deployment for Java1.5 compatibility
- * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S.
+ * 2.0 07-Jul-2010 - update projection for "La Reunion" departement to RGR92, UTM40S.
  *                 - add 'departement' as option in the municipality selection
  *                 - fixed bug in cache directory size control (and disabled by default)
  *                 - add map mode for addressing
  *                 - from Nicolas Dumoulin:
  *                 -     add "tableau d'assemblage" in raster images for georeferencing (as option)
+ * 2.1 14-Jan-2011 - add GrabThread moving the grab to a separate thread
+ *                 - the divided BBox mode starts from the central square and loads the next in a spiral
+ *                 - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
+ *                   of multiple municipalities in parallel.
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "2.0";
+    static String VERSION = "2.1";
 
     static JMenu cadastreJMenu;
 

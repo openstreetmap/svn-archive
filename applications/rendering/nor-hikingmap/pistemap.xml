@@ -3,7 +3,7 @@
 <!ENTITY % entities SYSTEM "inc/entities.xml.inc">
 <!ENTITY % sharedentities SYSTEM "entities.xml.ent">
 
-<!ENTITY background-color "#E9F8FF"><!-- background (default land) -->
+<!ENTITY background-color "#F4FAFF"><!-- background (default land) -->
 <!ENTITY forestland-color "#E9F8FF"><!-- wood -->
 <!ENTITY farmland-color "#FFF"><!-- farmland, field, orchard -->
 <!ENTITY openland-color "#FFF"><!-- meadow, recreation ground, park -->

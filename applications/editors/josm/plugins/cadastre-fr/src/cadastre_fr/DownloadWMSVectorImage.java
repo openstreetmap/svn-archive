@@ -16,7 +16,6 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
     private Bounds bounds;
-    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
     private static String errorMessage;
 
     public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds) {
@@ -31,7 +30,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
         errorMessage = null;
         try {
-            if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
+            if (wmsLayer.grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                 if (wmsLayer.getImages().isEmpty()) {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
@@ -49,24 +48,24 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                         return;
                     } else {
                         // set vectorized commune bounding box by opening the standard web window
-                        grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
+                        wmsLayer.grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
                     }
                 }
                 // grab new images from wms server into active layer
-                wmsLayer.grab(grabber, bounds);
+                wmsLayer.grab(bounds);
             }
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
             System.err.println("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
-            grabber.getWmsInterface().resetCookie();
+            wmsLayer.grabber.getWmsInterface().resetCookie();
         }
     }
 
     @Override
     protected void cancel() {
-        grabber.getWmsInterface().cancel();
+        wmsLayer.grabber.getWmsInterface().cancel();
         if (wmsLayer != null)
             wmsLayer.grabThread.setCancelled(true);
     }

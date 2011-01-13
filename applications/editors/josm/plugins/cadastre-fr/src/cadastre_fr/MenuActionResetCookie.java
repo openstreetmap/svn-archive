@@ -19,6 +19,6 @@ public class MenuActionResetCookie extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookie();
+        //CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookie();
     }
 }

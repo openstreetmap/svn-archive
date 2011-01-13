@@ -36,7 +36,6 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
-    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
     private CadastreInterface wmsInterface;
     private String svg = null;
     private static EastNorthBound currentView = null;
@@ -48,7 +47,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         super(tr("Downloading {0}", wmsLayer.getName()));
 
         this.wmsLayer = wmsLayer;
-        this.wmsInterface = grabber.getWmsInterface();
+        this.wmsInterface = wmsLayer.grabber.getWmsInterface();
     }
 
     @Override
@@ -69,13 +68,13 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             System.err.println("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
-            grabber.getWmsInterface().resetCookie();
+            wmsLayer.grabber.getWmsInterface().resetCookie();
         }
     }
 
     @Override
     protected void cancel() {
-        grabber.getWmsInterface().cancel();
+        wmsLayer.grabber.getWmsInterface().cancel();
     }
 
     @Override

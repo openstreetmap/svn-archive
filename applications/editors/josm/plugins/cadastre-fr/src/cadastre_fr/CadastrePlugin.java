@@ -123,8 +123,6 @@ public class CadastrePlugin extends Plugin {
 
     static JMenu cadastreJMenu;
 
-    public static CadastreGrabber cadastreGrabber = new CadastreGrabber();
-
     public static String source = "";
 
     // true if the checkbox "auto-sourcing" is set in the plugin menu

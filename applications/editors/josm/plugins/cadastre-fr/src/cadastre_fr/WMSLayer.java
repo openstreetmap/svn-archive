@@ -45,6 +45,8 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private int lambertZone = -1;
 
+    public CadastreGrabber grabber = new CadastreGrabber();
+
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
@@ -125,7 +127,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         return buildName(this.location.toUpperCase(), this.codeCommune);
     }
 
-    public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
+    public void grab(Bounds b) throws IOException {
         grabThread.setCancelled(false);
         grabThread.setGrabber(grabber);
         // if it is the first layer, use the communeBBox as grab bbox (and not divided)

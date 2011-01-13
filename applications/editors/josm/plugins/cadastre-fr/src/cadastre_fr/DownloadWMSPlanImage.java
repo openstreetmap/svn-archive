@@ -23,7 +23,6 @@ public class DownloadWMSPlanImage {
     private static String errorMessage;
     
     private class Task extends PleaseWaitRunnable {
-        private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
         public Task(WMSLayer wmsLayer, Bounds bounds) {
             super(tr("Downloading {0}", wmsLayer.getName()));
         }
@@ -33,7 +32,7 @@ public class DownloadWMSPlanImage {
             progressMonitor.indeterminateSubTask(tr("Contacting cadastre WMS ..."));
             errorMessage = null;
             try {
-                if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
+                if (wmsLayer.grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                     if (!wmsLayer.getImages().isEmpty()) {
                         //JOptionPane.showMessageDialog(Main.parent,tr("Image already loaded"));
                         JOptionPane pane = new JOptionPane(
@@ -45,7 +44,7 @@ public class DownloadWMSPlanImage {
                         dialog.setVisible(true);
                         // till here
                         dontGeoreference = true;
-                    } else if (grabber.getWmsInterface().downloadCancelled){
+                    } else if (wmsLayer.grabber.getWmsInterface().downloadCancelled){
                         // do nothing
                     } else {
                         // first time we grab an image for this layer
@@ -58,11 +57,11 @@ public class DownloadWMSPlanImage {
                         }
                         if (wmsLayer.isRaster()) {
                             // set raster image commune bounding box based on current view (before adjustment)
-                            grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
+                            wmsLayer.grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
                             wmsLayer.setRasterBounds(bounds);
                             // grab new images from wms server into active layer
-                            wmsLayer.grab(grabber, bounds);
-                            if (grabber.getWmsInterface().downloadCancelled) {
+                            wmsLayer.grab(bounds);
+                            if (wmsLayer.grabber.getWmsInterface().downloadCancelled) {
                                 wmsLayer.clearImages();
                                 Main.map.mapView.repaint();
                             } else {
@@ -88,13 +87,13 @@ public class DownloadWMSPlanImage {
                 System.err.println("removed a duplicated layer");
             } catch (WMSException e) {
                 errorMessage = e.getMessage();
-                grabber.getWmsInterface().resetCookie();
+                wmsLayer.grabber.getWmsInterface().resetCookie();
             }
         }
         
         @Override
         protected void cancel() {
-            grabber.getWmsInterface().cancel();
+            wmsLayer.grabber.getWmsInterface().cancel();
             dontGeoreference = true;
         }
 

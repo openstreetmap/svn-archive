@@ -1,3 +1,10 @@
+/*
+ *	  OsmToCmd.java
+ *	  
+ *	  Copyright 2011 Hind <foxhind@gmail.com>
+ *	  
+ */
+
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -11,6 +18,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
@@ -31,22 +39,27 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.ext.LexicalHandler;
 
 final class OsmToCmd {
+	private CommandLine parentPlugin;
 	private final DataSet targetDataSet;
 	private final LinkedList<Command> cmds = new LinkedList<Command>();
 	private HashMap<PrimitiveId, OsmPrimitive> externalIdMap; // Maps external ids to internal primitives
-	
-	public OsmToCmd(DataSet targetDataSet, InputStream stream) throws IllegalDataException {
+
+	public OsmToCmd(CommandLine parentPlugin, DataSet targetDataSet) {
+		this.parentPlugin = parentPlugin;
 		this.targetDataSet = targetDataSet;
 		externalIdMap = new HashMap<PrimitiveId, OsmPrimitive>();
-		parseStream(stream);
 	}
 
-	private void parseStream(InputStream stream) throws IllegalDataException {
+	public void parseStream(InputStream stream) throws IllegalDataException {
 		try {
 			InputSource inputSource = new InputSource(UTFInputStreamReader.create(stream, "UTF-8"));
-			SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
+			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+			Parser handler = new Parser();
+			parser.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
+			parser.parse(inputSource, handler);
 		} catch(ParserConfigurationException e) {
 			throw new IllegalDataException(e.getMessage(), e);
 		} catch (SAXParseException e) {
@@ -62,7 +75,7 @@ final class OsmToCmd {
 		return cmds;
 	}
 	
-	private class Parser extends DefaultHandler {
+	private class Parser extends DefaultHandler implements LexicalHandler {
 		private Locator locator;
 		
 		@Override
@@ -258,6 +271,29 @@ final class OsmToCmd {
 			}
 		}
 
+		@Override
+		public void comment(char[] ch, int start, int length) {
+			parentPlugin.printHistory(String.valueOf(ch));
+		}
+		
+		public void startCDATA() {
+		}
+		
+		public void endCDATA() {
+		}
+		
+		public void startEntity(String name) {
+		}
+		
+		public void endEntity(String name) {
+		}
+		
+		public void startDTD(String name, String publicId, String systemId) {
+		}
+		
+		public void endDTD() {
+		}
+		
 		private double getDouble(Attributes atts, String value) {
 			return Double.parseDouble(atts.getValue(value));
 		}

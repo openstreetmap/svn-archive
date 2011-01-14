@@ -163,6 +163,15 @@ public class Command {
 					}
 				}
 				break;
+			case USERNAME:
+				if (obj instanceof String) return true;
+				break;
+			case IMAGERYURL:
+				if (obj instanceof String) return true;
+				break;
+			case IMAGERYOFFSET:
+				if (obj instanceof String) return true;
+				break;
 		}
 		return false;
 	}

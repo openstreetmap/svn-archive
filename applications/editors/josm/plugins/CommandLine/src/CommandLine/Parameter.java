@@ -1,11 +1,13 @@
 /*
  *      Parameter.java
  *      
- *      Copyright 2010 Hind <foxhind@gmail.com>
+ *      Copyright 2011 Hind <foxhind@gmail.com>
  *      
  */
  
 package CommandLine;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.Relation;
 
 public class Parameter {
 	public boolean required;
@@ -40,10 +43,31 @@ public class Parameter {
 				out = String.valueOf(value);
 				break;
 			case STRING:
-				out = "\"" + String.valueOf(value) + "\"";
+				out = String.valueOf(value);
 				break;
 			case RELAY:
 				out = String.valueOf(((Relay)value).getValue());
+				break;
+			case NODE:
+				out = String.valueOf(valueList.size()) + " " + tr("nodes");
+				break;
+			case WAY:
+				out = String.valueOf(valueList.size()) + " " + tr("ways");
+				break;
+			case RELATION:
+				out = String.valueOf(valueList.size()) + " " + tr("relations");
+				break;
+			case ANY:
+				out = String.valueOf(valueList.size()) + " " + tr("OSM objects");
+				break;
+			case USERNAME:
+				out = String.valueOf(value);
+				break;
+			case IMAGERYURL:
+				out = String.valueOf(value);
+				break;
+			case IMAGERYOFFSET:
+				out = String.valueOf(value);
 				break;
 		}
 		return out;

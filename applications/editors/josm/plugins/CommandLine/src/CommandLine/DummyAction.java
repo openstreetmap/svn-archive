@@ -55,6 +55,6 @@ public class DummyAction extends MapMode implements AWTEventListener {
         Main.map.statusLine.setAngle(-1);
         Main.map.mapView.repaint();
         updateStatusLine();
-        parentPlugin.endInput();
+        parentPlugin.abortInput();
     }
 }

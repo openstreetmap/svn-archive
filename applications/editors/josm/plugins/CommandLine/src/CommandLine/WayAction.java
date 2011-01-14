@@ -1,7 +1,7 @@
 /*
  *      WayAction.java
  *      
- *      Copyright 2010 Hind <foxhind@gmail.com>
+ *      Copyright 2011 Hind <foxhind@gmail.com>
  *      
  */
 
@@ -190,6 +190,6 @@ public class WayAction extends MapMode implements AWTEventListener {
         Main.map.statusLine.setAngle(-1);
         Main.map.mapView.repaint();
         updateStatusLine();
-        parentPlugin.endInput();
+        parentPlugin.abortInput();
     }
 }

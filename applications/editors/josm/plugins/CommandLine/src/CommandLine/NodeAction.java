@@ -1,7 +1,7 @@
 /*
  *      NodeAction.java
  *      
- *      Copyright 2010 Hind <foxhind@gmail.com>
+ *      Copyright 2011 Hind <foxhind@gmail.com>
  *      
  */
 
@@ -108,7 +108,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
 						Main.map.mapView.repaint();
 					}
 					else
-						System.out.println("Maximum instances!");
+						parentPlugin.printHistory("Maximum instances is " + String.valueOf(maxInstances));
 				}
 			}
 		}
@@ -169,6 +169,6 @@ public class NodeAction extends MapMode implements AWTEventListener {
         Main.map.statusLine.setAngle(-1);
         Main.map.mapView.repaint();
         updateStatusLine();
-        parentPlugin.endInput();
+        parentPlugin.abortInput();
     }
 }

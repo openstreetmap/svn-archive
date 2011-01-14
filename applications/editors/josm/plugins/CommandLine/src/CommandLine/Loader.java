@@ -105,6 +105,9 @@ public class Loader extends DefaultHandler {
 					else if (Value.equals("any")) currentParameter.type = Type.ANY;
 					else if (Value.equals("string")) currentParameter.type = Type.STRING;
 					else if (Value.equals("relay")) currentParameter.type = Type.RELAY;
+					else if (Value.equals("username")) currentParameter.type = Type.USERNAME;
+					else if (Value.equals("imageryurl")) currentParameter.type = Type.IMAGERYURL;
+					else if (Value.equals("imageryoffset")) currentParameter.type = Type.IMAGERYOFFSET;
 				}
 				else if (Name.equals("maxinstances")) {
 					currentParameter.maxInstances = Integer.parseInt(Value);

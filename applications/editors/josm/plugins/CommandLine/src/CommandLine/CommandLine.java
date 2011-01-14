@@ -46,11 +46,18 @@ import java.util.regex.*;
 import javax.swing.JTextField;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JToolBar;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.imagery.ImageryInfo;
+import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -58,11 +65,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSetMerger;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -76,6 +80,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class CommandLine extends Plugin {
 	protected JTextField textField;
+	protected JTextField historyField;
 	private String prefix;
 	private Mode mode;
 	private ArrayList<Command> commands;
@@ -90,6 +95,7 @@ public class CommandLine extends Plugin {
 		super(info);
 		commandSymbol = ": ";
 		history = new History(100);
+		historyField = new JTextField();
 		textField = new JTextField() {
 			@Override
 			protected void processKeyEvent(KeyEvent e) {
@@ -225,16 +231,25 @@ public class CommandLine extends Plugin {
 
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
 	{
-		if (oldFrame==null && newFrame!=null) {
+		if (oldFrame == null && newFrame != null) {
 			currentMapFrame = newFrame;
-			currentMapFrame.add(textField,BorderLayout.NORTH);
+			JToolBar tb = new JToolBar();
+			tb.setLayout(new BorderLayout());
+			tb.setFloatable(false);
+			tb.setOrientation(JToolBar.HORIZONTAL);
+			tb.add(historyField, BorderLayout.NORTH);
+			tb.add(textField, BorderLayout.SOUTH);
+			currentMapFrame.add(tb, BorderLayout.NORTH);
+			printHistory("Loaded CommandLine, version " + getPluginInformation().version);
 		}
 	}
 
-	private void loadCommands() {
-		Loader loader = new Loader(getPluginDir());
-		commands = loader.load(); // lol
+	protected void printHistory(String text) {
+		historyField.setText(text);
+	}
 
+	private void loadCommands() {
+		commands = (new Loader(getPluginDir())).load();
 		for (Command command : commands) {
 			commandMenu.add(new CommandAction(command, this));
 		}
@@ -271,7 +286,7 @@ public class CommandLine extends Plugin {
 		else if (targetMode == Mode.SELECTION) {
 			mode = Mode.SELECTION;
 			Parameter currentParameter = currentCommand.parameters.get(currentCommand.currentParameterNum);
-			prefix = tr(currentParameter.description);
+			prefix = tr(currentParameter.description == null ? currentParameter.name : currentParameter.description);
 			if (currentParameter.getRawValue() instanceof Relay)
 				prefix = prefix + " (" + ((Relay)(currentParameter.getRawValue())).getOptionsString() + ")";
 			prefix += commandSymbol;
@@ -298,6 +313,51 @@ public class CommandLine extends Plugin {
 				case LENGTH:
 					action = new LengthAction(currentMapFrame, this);
 					break;
+				case USERNAME:
+					loadParameter((Object)Main.pref.get("osm-server.username", null), true);
+					action = new DummyAction(currentMapFrame, this);
+					break;
+				case IMAGERYURL:
+					Layer layer = Main.map.mapView.getActiveLayer();
+					if (layer != null) {
+						if (layer instanceof ImageryLayer) {
+						}
+						else {
+							List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+							if (imageryLayers.size() == 1) {
+								layer = imageryLayers.get(0);
+							}
+							else {
+								endInput();
+								return;
+							}
+						}
+					}
+					ImageryInfo info = ((ImageryLayer)layer).getInfo();
+					String url = info.getURL();
+					String itype = info.getImageryType().getUrlString();
+					loadParameter((Object)(url.equals("") ? itype : url), true);
+					action = new DummyAction(currentMapFrame, this);
+					break;
+				case IMAGERYOFFSET:
+					Layer olayer = Main.map.mapView.getActiveLayer();
+					if (olayer != null) {
+						if (olayer instanceof ImageryLayer) {
+						}
+						else {
+							List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+							if (imageryLayers.size() == 1) {
+								olayer = imageryLayers.get(0);
+							}
+							else {
+								endInput();
+								return;
+							}
+						}
+					}
+					loadParameter((Object)(String.valueOf(((ImageryLayer)olayer).getDx()) + "," + String.valueOf(((ImageryLayer)olayer).getDy())), true);
+					action = new DummyAction(currentMapFrame, this);
+					break;
 				default:
 					action = new DummyAction(currentMapFrame, this);
 					break;
@@ -310,6 +370,7 @@ public class CommandLine extends Plugin {
 			mode = Mode.PROCESSING;
 			prefix = tr("Processing...");
 			textField.setText(prefix);
+			Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		}
 	}
 
@@ -322,6 +383,11 @@ public class CommandLine extends Plugin {
 		Main.map.mapView.requestFocus();
 	}
 
+	public void abortInput() {
+		printHistory(tr("Aborted") + ".");
+		endInput();
+	}
+
 	public void endInput() {
 		setMode(Mode.IDLE);
 		Main.map.selectMapMode(previousMode);
@@ -332,6 +398,11 @@ public class CommandLine extends Plugin {
 		if (currentCommand.loadObject(obj)) {
 			if (currentCommand.hasNextParameter()) {
 				if (next) {
+					Parameter currentParameter = currentCommand.parameters.get(currentCommand.currentParameterNum);
+					String prefix = tr(currentParameter.description == null ? currentParameter.name : currentParameter.description);
+					prefix += commandSymbol;
+					String value = currentParameter.getValue();
+					printHistory(prefix + value);
 					currentCommand.nextParameter();
 					setMode(Mode.SELECTION);
 				}
@@ -359,7 +430,7 @@ public class CommandLine extends Plugin {
 		else {
 			currentCommand.resetLoading();
 		}
-		System.out.println("Selected before " + String.valueOf(currentCommand.currentParameterNum) + "\n");
+		//System.out.println("Selected before " + String.valueOf(currentCommand.currentParameterNum) + "\n");
 	}
 
 	private class ToolProcess {
@@ -370,7 +441,6 @@ public class CommandLine extends Plugin {
 	// Thanks to Upliner
 	public void runTool() {
 		setMode(Mode.PROCESSING);
-		Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String commandToRun = currentCommand.run;
 
 		for (Parameter parameter : currentCommand.parameters) {
@@ -494,14 +564,15 @@ public class CommandLine extends Plugin {
 		});
 
 		// Read stdout stream
+		final OsmToCmd osmToCmd = new OsmToCmd(this, Main.main.getCurrentDataSet());
 		Thread osmParseThread = new Thread(new Runnable() {
 			public void run() {
 				try {
 					String commandName = currentCommand.name;
 					HashMap<Long, Long> inexiDMap = new HashMap<Long, Long>();
 					final InputStream inputStream = tp.process.getInputStream();
-					final List<org.openstreetmap.josm.command.Command> cmdlist = new OsmToCmd(Main.main.getCurrentDataSet(), inputStream).getCommandList();
-					//OsmReaderMod.deleteInexiDMap();
+					osmToCmd.parseStream(inputStream);
+					final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
 					if (!cmdlist.isEmpty()) {
 						SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
 						Main.main.undoRedo.add(cmd);

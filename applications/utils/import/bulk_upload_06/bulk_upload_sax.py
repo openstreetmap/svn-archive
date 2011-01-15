@@ -106,9 +106,10 @@ class ImportProcessor:
             'created_by': headers['User-Agent'],
             'comment': self.comment,
         }
-        for tag in options.tags:
-            (k, v) = tag.split("=", 1)
-            tags[k] = v
+        if options.tags:
+            for tag in options.tags:
+                (k, v) = tag.split("=", 1)
+                tags[k] = v
         
         for key, value in tags.iteritems():
             change.append(ET.Element('tag',k=key, v=value))

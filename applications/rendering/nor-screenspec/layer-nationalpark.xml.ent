@@ -38,7 +38,7 @@
       <Parameter name="table">
       (select way,boundary,leisure,name,way_area
        from &prefix;_polygon
-       where boundary='national_park'
+       where boundary in ('national_park','protected_area')
           or leisure='nature_reserve'
       ) as nationalpark
       </Parameter>

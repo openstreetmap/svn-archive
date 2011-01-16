@@ -56,7 +56,9 @@ public class Loader extends DefaultHandler {
 
 	private void loadFile(SAXParser parser, String fileName) {
 		try {
-			parser.parse(new File(fileName).toURI().toString(), this);
+			String a = new File(fileName).toURI().toString().replace("file:/", "file:///");
+			System.out.println(a);
+			parser.parse(a, this);
 		}
 		catch (Exception e) {
 			System.err.println(e);

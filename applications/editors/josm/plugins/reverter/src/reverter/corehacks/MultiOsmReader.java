@@ -180,6 +180,7 @@ public class MultiOsmReader {
                 readCommon(atts, nd);
                 Node n = new Node(nd.getId(), nd.getVersion());
                 n.load(nd);
+                n.setVisible(nd.isVisible());
                 externalIdMap.put(nd.getPrimitiveId(), n);
                 currentPrimitive = n;
                 currentExternalId = nd.getUniqueId();
@@ -188,6 +189,7 @@ public class MultiOsmReader {
                 readCommon(atts, wd);
                 Way w = new Way(wd.getId(), wd.getVersion());
                 w.load(wd);
+                w.setVisible(wd.isVisible());
                 externalIdMap.put(wd.getPrimitiveId(), w);
                 ways.put(wd.getUniqueId(), new ArrayList<Long>());
                 currentPrimitive = w;
@@ -223,6 +225,7 @@ public class MultiOsmReader {
                 readCommon(atts, rd);
                 Relation r = new Relation(rd.getId(), rd.getVersion());
                 r.load(rd);
+                r.setVisible(rd.isVisible());
                 externalIdMap.put(rd.getPrimitiveId(), r);
                 relations.put(rd.getUniqueId(), new LinkedList<RelationMemberData>());
                 currentPrimitive = r;

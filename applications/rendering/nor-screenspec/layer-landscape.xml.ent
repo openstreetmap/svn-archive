@@ -9,7 +9,7 @@
   </Rule>
   <Rule>
     <Filter>[natural] = 'wood' or [landuse] = 'wood' or [landuse] = 'forest'</Filter>
-    &maxscale_zoom9;
+    &maxscale_zoom8;
     <PolygonSymbolizer>
       <CssParameter name="fill">&forestland-color;</CssParameter>
     </PolygonSymbolizer>

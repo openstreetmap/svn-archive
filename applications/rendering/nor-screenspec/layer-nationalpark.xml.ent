@@ -3,9 +3,10 @@
     <Rule>
       &maxscale_zoom7;
       &minscale_zoom9;
+      <Filter>[way_area] &gt;= 25000000</Filter>
       <LineSymbolizer>
         <CssParameter name="stroke">&border-naturereserve-color;</CssParameter>
-        <CssParameter name="stroke-width">0.75</CssParameter>
+        <CssParameter name="stroke-width">0.5</CssParameter>
       </LineSymbolizer>
     </Rule>
     <Rule>
@@ -13,20 +14,20 @@
       &minscale_zoom18;
       <LineSymbolizer>
         <CssParameter name="stroke">&border-naturereserve-color;</CssParameter>
-        <CssParameter name="stroke-width">1.5</CssParameter>
+        <CssParameter name="stroke-width">0.75</CssParameter>
       </LineSymbolizer>
     </Rule>
     <Rule>
       &maxscale_zoom8;
       &minscale_zoom9;
-      <Filter>[way_area] &gt;= 25000000</Filter>
+      <Filter>[way_area] &gt;= 100000000</Filter>
       <TextSymbolizer name="name" fontset_name="bold-fonts"
         size="8" dy="-8" fill="#9c9" halo_radius="1" wrap_width="14"/>
     </Rule>
     <Rule>
       &maxscale_zoom10;
       &minscale_zoom11;
-      <Filter>[way_area] &gt;= 25000000</Filter>
+      <Filter>[way_area] &gt;= 50000000</Filter>
       <TextSymbolizer name="name" fontset_name="bold-fonts"
         size="11" fill="#9c9" halo_radius="1" wrap_width="14"/>
     </Rule>

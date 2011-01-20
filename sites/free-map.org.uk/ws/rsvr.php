@@ -39,8 +39,8 @@ if(count($values)!=4 || $values[0]<-180 || $values[0] > 180 ||
     exit;
 }
 
-$sw = ll_to_merc($values[1],$values[0]);
-$ne = ll_to_merc($values[3],$values[2]);
+$sw = ll_to_sphmerc($values[1],$values[0]);
+$ne = ll_to_sphmerc($values[3],$values[2]);
 
 $ctype=("Content-type: " .(($cleaned["format"]=="json") ? "application/json":
 	"text/xml"));

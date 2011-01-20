@@ -1,12 +1,13 @@
 <?php
 define('HGTDIR','/var/www/data/hgt');
 require_once("../lib/latlong.php");
+require_once("../lib/functionsnew.php");
 
 function getData($w,$s,$e,$n,$options)
 {
 $conn=pg_connect("dbname=gis user=gis");
-$sw = ll_to_merc($s,$w);
-$ne = ll_to_merc($n,$e);
+$sw = ll_to_sphmerc($s,$w);
+$ne = ll_to_sphmerc($n,$e);
 
 $ctype=("Content-type: " .(($options["format"]=="json") ? "application/json":
 	"text/xml"));
@@ -38,7 +39,7 @@ if(isset($options["poi"]))
     {
 		if($options["format"] != "json")
 		{
-			$ll = merc_to_ll($prow['x'],$prow['y']);
+			$ll = sphmerc_to_ll($prow['x'],$prow['y']);
         	echo "<poi lat='$ll[lat]' lon='$ll[lon]'>";
 
         	foreach ($prow as $k=>$v)
@@ -57,7 +58,7 @@ if(isset($options["poi"]))
 				$first=false;
 			else
 				echo ",";
-			$ll = merc_to_ll($prow['x'],$prow['y']);
+			$ll = sphmerc_to_ll($prow['x'],$prow['y']);
 			$prow['x'] = $ll['lon'];
 			$prow['y'] = $ll['lat'];
 			echo assocToJSON($prow);
@@ -96,7 +97,7 @@ if(isset($options["way"]))
         	foreach ($poi as $point)
 			{
 				list($easting,$northing) = explode(" ",$point);
-				$ll = merc_to_ll($easting,$northing);
+				$ll = sphmerc_to_ll($easting,$northing);
             	echo "<point lat='$ll[lat]' lon='$ll[lon]' />";
 		    }
         	foreach ($wrow as $k=>$v)
@@ -122,7 +123,7 @@ if(isset($options["way"]))
 					echo ",";
 				
 				list($easting,$northing)=explode(" ",$poi[$i]);
-				$ll = merc_to_ll($easting,$northing);
+				$ll = sphmerc_to_ll($easting,$northing);
 				echo " [ $ll[lon], $ll[lat] ]";
 			}
 			echo "],"; // end its points

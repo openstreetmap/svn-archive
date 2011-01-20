@@ -1,4 +1,7 @@
 
+// 20/01/11 changed WebGLFloatArray to Float32Array
+// see: http://learningwebgl.com/blog/?p=2566
+
 var ShaderInterface = Class.create ( {
     initialize: function(gl,shaderProgram,vertexVarName,colourVarName,
                         perspMtxName,mvMtxName, doCalculationName,
@@ -59,7 +62,7 @@ var ShaderInterface = Class.create ( {
         var buffer1= this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER,buffer1);
         this.gl.bufferData
-            (this.gl.ARRAY_BUFFER,new WebGLFloatArray(data),
+            (this.gl.ARRAY_BUFFER,new Float32Array(data),
             this.gl.STATIC_DRAW);
         return buffer1;
 		}
@@ -74,7 +77,7 @@ var ShaderInterface = Class.create ( {
         var buffer=this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER,buffer);
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,
-            new WebGLUnsignedShortArray(indices),
+            new Uint16Array(indices),
             this.gl.STATIC_DRAW);
         return buffer;
     },
@@ -82,20 +85,20 @@ var ShaderInterface = Class.create ( {
     doMatrices: function(pMtx,mvMtx,nMtx)
     {
         this.gl.uniformMatrix4fv
-            (this.p_upMtx,false,new WebGLFloatArray(pMtx.flatten()));
+            (this.p_upMtx,false,new Float32Array(pMtx.flatten()));
         this.gl.uniformMatrix4fv
-            (this.p_umvMtx,false,new WebGLFloatArray(mvMtx.flatten()));
+            (this.p_umvMtx,false,new Float32Array(mvMtx.flatten()));
 		if(nMtx!=null)
 		{
         	this.gl.uniformMatrix4fv
-            (this.p_nMtx,false,new WebGLFloatArray(nMtx.flatten()));
+            (this.p_nMtx,false,new Float32Array(nMtx.flatten()));
 		}
     },
 
 	doColour: function(colour)
 	{
 		this.gl.uniform4fv
-			(this.p_uCol,new WebGLFloatArray(colour));
+			(this.p_uCol,new Float32Array(colour));
 	},
 
 	doCalculation: function(calculation)

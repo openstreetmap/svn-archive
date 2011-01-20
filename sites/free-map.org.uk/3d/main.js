@@ -72,11 +72,11 @@ var Freemap3D = Class.create ({
 			
             var url = (layer=='osm') ?
 			
-					Freemap3D.baseURL + '/freemap/ws/trsvr.php?x=' +
+					Freemap3D.baseURL + '/ws/trsvr.php?x=' +
 						tileX+ '&y=' + tileY + '&z=' + this.tileZoomLevel +
 						'&poi=all&way=all&format=json' :
 						
-					Freemap3D.baseURL + '/freemap/ws/srtmsvr.php?x=' +
+					Freemap3D.baseURL + '/ws/srtmsvr.php?x=' +
 						tileX+ '&y=' + tileY + '&z=' + this.tileZoomLevel;
 
 

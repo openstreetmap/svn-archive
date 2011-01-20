@@ -1,8 +1,7 @@
 <html>
 <head>
 
-<script type='application/x-javascript' 
-src='/freemap/javascript/prototype/prototype.js'></script>
+<script type='application/x-javascript' src='/javascript/prototype.js'></script>
 
 <script type='application/x-javascript' src='sylvester.js'></script>
 <script type='application/x-javascript' src='glUtils.js'></script>
@@ -54,6 +53,12 @@ void main (void)
 
 </script>
 <script id="shader-fs" type="x-shader/x-fragment">
+// 20/1/11 added this precision specifier
+// see http://learningwebgl.com/blog/?p=2481
+#ifdef GL_ES
+precision highp float;
+#endif
+
 varying vec4 vColour;
 varying vec3 vLightWeighting;
 void main (void)
@@ -76,6 +81,9 @@ void main (void)
 
 </script>
 <script id="wayshader-fs" type="x-shader/x-fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
 varying vec4 vColour2;
 void main (void)
 {
@@ -103,7 +111,10 @@ background-color: rgba(135,207,236,0) }
 <body onload='init()'>
 <h1>Freemap 3D</h1>
 <div id='intro'>
-<p>
+<p><strong>Important note!</strong> <em>This is once again functional due
+to fixing various WebGL spec changes. However lighting no longer works - 
+need to find out why that is. Also only footpaths are shown due to server
+constraints.</em></p>
 <p>This is a demo application to render OpenStreetMap data in 3D using 
 WebGL. This is a very early version, so it's not that impressive yet, but
 nonetheless you can navigate around and OSM data will be downloaded from

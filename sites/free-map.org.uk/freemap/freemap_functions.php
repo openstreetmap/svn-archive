@@ -167,52 +167,15 @@ function get_route_annotations($id)
     return $annotations;
 }
 
-function get_bearing($dx,$dy)
-{
-    $ang=(-rad2deg(atan2($dy,$dx))) + 90;
-    return ($ang<0 ? $ang+360:$ang);
-}
-
-function compass_direction($a)
-{
-    if($a<22.5 || $a>=337.5)
-        return "N";
-    else if($a<67.5)
-        return "NE";
-    else if($a<112.5)
-        return "E";
-    else if($a<157.5)
-        return "SE";
-    else if($a<202.5)
-        return "S";
-    else if($a<247.5)
-        return "SW";
-    else if($a<292.5)
-        return "W";
-    else
-        return "NW";
-}
-
-function opposite_direction($dir)
-{
-    $dirs=array ("N","NE","E","SE","S","SW","W","NW");
-    for($i=0; $i<8; $i++)
-    {
-        if($dirs[$i]==$dir)
-            return $dirs[$i<4 ? $i+4:$i-4];
-    }
-    return null;
-}
 
 function render_tiles($im,$east,$north,$zoom,$width,$height)
 {
-    /*
     $filename="http://tilesrv.sucs.org/~nickw/render.php?".
-                 "e=$e&n=$n&zoom=$zoom&w=$width&h=$height";
+                 "e=$east&n=$north&zoom=$zoom&w=$width&h=$height";
 
     $img=ImageCreateFromPNG($filename);
     ImageCopy($im,$img,0,0,0,0,$width,$height);
-    */
+	/*
             $nTileCols = 2+floor($width/256);
             $nTileRows = 2+floor($height/256);
             $topLeftX = metresToPixel($east,$zoom)-$width/2;
@@ -241,6 +204,7 @@ function render_tiles($im,$east,$north,$zoom,$width,$height)
                 }
                 $curY+=256;
             }
+	*/
 }
 
 function lonToX($lon,$zoom)

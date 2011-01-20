@@ -63,9 +63,9 @@ if(isset($_FILES["gpx"]))
 							$x = lon_to_sphmerc($pan[$j]['lon']);
 							$y = lat_to_sphmerc($pan[$j]['lat']);
                             pg_query 
-                            ("UPDATE annotations SET xy=".
+                            ("UPDATE panoramas SET xy=".
 							 "PointFromText('POINT($x $y)',900913) ".
-                            " WHERE id=$curpan[annid]");
+                            " WHERE id=$curpan[id]");
 
                             break;
                         }

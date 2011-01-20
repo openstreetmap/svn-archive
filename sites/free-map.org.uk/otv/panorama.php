@@ -26,18 +26,18 @@ if(pg_num_rows($result)==1)
             case "setAttributes":
                 if(isset($_SESSION['gatekeeper']))
                 {
-					if(isset($cleaned['ispano']))
-					{
-                    	$q = "UPDATE panoramas SET ispano=$cleaned[ispano] WHERE id=$cleaned[id] ";
-                    	pg_query($q);
-					}
+                    if(isset($cleaned['ispano']))
+                    {
+                        $q = "UPDATE panoramas SET ispano=$cleaned[ispano] WHERE id=$cleaned[id] ";
+                        pg_query($q);
+                    }
 
-					if(isset($cleaned['x']) AND isset($cleaned['y']))
-					{
-						$q="UPDATE annotations SET xy=PointFromText('POINT($cleaned[x] $cleaned[y])',900913) WHERE id=(SELECT annid FROM panoramas WHERE id=$cleaned[id])";
-						echo $q;
-						pg_query($q);
-					}
+                    if(isset($cleaned['x']) AND isset($cleaned['y']))
+                    {
+                        $q="UPDATE panoramas SET xy=PointFromText('POINT($cleaned[x] $cleaned[y])',900913) WHERE id=$cleaned[id]";
+                        echo $q;
+                        pg_query($q);
+                    }
                 }
                 else
                 {
@@ -63,12 +63,12 @@ if(pg_num_rows($result)==1)
                 {
                         pg_query
                             ("DELETE FROM panoramas WHERE ID=$cleaned[id]");
-						unlink("/home/www-data/uploads/otvnew/${cleaned[id]}.jpg");
+                        unlink("/home/www-data/uploads/otvnew/${cleaned[id]}.jpg");
 
                         $result2=pg_query("SELECT * FROM routes WHERE ".
                                             "fid=$cleaned[id]");
                         while($row2=pg_fetch_array($result2,
-								null,PGSQL_ASSOC))
+                                null,PGSQL_ASSOC))
                         {
                             pg_query("DELETE FROM routes WHERE ".
                                         "id=$row2[id]");
@@ -113,6 +113,11 @@ if(pg_num_rows($result)==1)
                 header("Content-type: application/json");
                 echo json_encode($row);
                 break;
+            case "getAdjacent":
+                header("Content-type: application/json");
+                $adjacents=get_adjacent_panoramas($cleaned['id']);
+                echo json_encode($adjacents);
+                break;
             default:
                 if($row['authorised']==1 || isset($_SESSION['admin']) ||
                         (isset($_SESSION['gatekeeper']) &&
@@ -122,25 +127,25 @@ if(pg_num_rows($result)==1)
                     if(file_exists($file))
                     {
                         header("Content-type: image/jpeg");
-						if(isset($cleaned['resize']))
-						{
-							$imIn=ImageCreateFromJPEG($file);
-							list($wIn,$hIn)=getimagesize($file);
-							$wOut=round($wIn*$cleaned['resize']/100);
-							$hOut=round($hIn*$cleaned['resize']/100);
-							//echo "$wIn $wOut $hIn $hOut";
-							$imOut=ImageCreateTrueColor($wOut,$hOut);
-							ImageCopyResampled($imOut,$imIn,0,0,0,0,
-										$wOut,$hOut,$wIn,$hIn);
-							ImageJPEG($imOut);
-							ImageDestroy($imOut);
-							ImageDestroy($imIn);
-						}
-						else
-						{
-                        	$f = file_get_contents($file);
-                        	echo $f;
-						}
+                        if(isset($cleaned['resize']))
+                        {
+                            $imIn=ImageCreateFromJPEG($file);
+                            list($wIn,$hIn)=getimagesize($file);
+                            $wOut=round($wIn*$cleaned['resize']/100);
+                            $hOut=round($hIn*$cleaned['resize']/100);
+                            //echo "$wIn $wOut $hIn $hOut";
+                            $imOut=ImageCreateTrueColor($wOut,$hOut);
+                            ImageCopyResampled($imOut,$imIn,0,0,0,0,
+                                        $wOut,$hOut,$wIn,$hIn);
+                            ImageJPEG($imOut);
+                            ImageDestroy($imOut);
+                            ImageDestroy($imIn);
+                        }
+                        else
+                        {
+                            $f = file_get_contents($file);
+                            echo $f;
+                        }
                     }
                     else
                     {
@@ -159,4 +164,47 @@ else
     header("HTTP/1.1 404 Not Found");
 } 
 pg_close($conn);
+
+
+function get_adjacent_panoramas($id)
+{
+    $lastrow=null;
+    $adjacents=array();
+    $result=pg_query("select pan.id,pan.direction,pol.osm_id,AsText(pan.xy),".
+        "line_locate_point(pol.way,pan.xy) as pos ".
+        "from planet_osm_line pol, panoramas pan ".
+        "where Distance(pan.xy,pol.way) < 100 and pol.osm_id in ".
+        "(select pol.osm_id from planet_osm_line pol, panoramas pan ".
+        "where Distance(pan.xy,pol.way)<100 and id=$id) order by ".
+        "pol.osm_id,pos");
+    while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
+    {
+		$added=false;
+
+        if($lastrow && $lastrow['osm_id'] == $row['osm_id'])
+        {
+            if($row['id']==$id)
+			{
+                $adjacents[] = $lastrow;
+				$added=true;
+			}
+            elseif($lastrow['id']==$id)
+			{
+                $adjacents[] = $row;
+				$added=true;
+			}
+			if($added==true)
+			{
+				$m=array();
+				$a = preg_match ("/POINT\((.+)\)/",
+					$adjacents[count($adjacents)-1]['astext'],$m);
+				list($adjacents[count($adjacents)-1]['x'],
+					$adjacents[count($adjacents)-1]['y'])= explode(" ",$m[1]);
+				unset($adjacents[count($adjacents)-1]['astext']);
+			}
+        }
+        $lastrow=$row;
+    }
+    return $adjacents;
+}
 ?>

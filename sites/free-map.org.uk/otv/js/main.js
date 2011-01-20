@@ -3,9 +3,7 @@
         var feature, p, rotateControl, selectControl, lineControl, dragControl;
         var georss, lineLayer;
         var wgs84;
-        var pv=null;
-        var currentRoute = null;
-        var photosInNewRoute = null;
+        var panorama=null;
         var mode;
         var lstyle,lselectStyle, lsstyle;
         var preDragGeom;
@@ -33,7 +31,6 @@
             } );
  
             mode=0;
-            photosInNewRoute = new Array();
 
 
             // Define the map layer
@@ -131,11 +128,11 @@
 
                         onComplete: function(f)
                         {
-							var lonlat=new OpenLayers.LonLat
+                            var lonlat=new OpenLayers.LonLat
                                     (f.geometry.x,f.geometry.y).
                                     transform(map.getProjectionObject(),wgs84);
 
-							var rqst = new Ajax.Request
+                            var rqst = new Ajax.Request
                                     ('/panorama.php?id='+f.fid+
                                     '&x='+f.geometry.x+'&y='+f.geometry.y+
                                     '&action=setAttributes',
@@ -146,8 +143,8 @@
                                               onSuccess: cb,
                                               onFailure: failcb }
                                   );
-						}
-					}
+                        }
+                    }
             );
 
             selectControl = new OpenLayers.Control.SelectFeature (
@@ -183,40 +180,33 @@
 
         function onFeatureSelect(feature)
         {
-			if(mode==0)
-			{
-                    var id = feature.fid;
-                    $('map').style.width='0px';
-                    $('backtomap').style.visibility='visible';
-                    $('pancanvas').style.visibility='visible';
-                    //$('pancanvas').style.height='400px';
-                    $('pancanvas').height = 400;
-                    pv=new CanvasPanoViewer({
-                    canvasId: 'pancanvas',
-                    statusElement: 'status', 
-                    hFovDst : 90,
-                    hFovSrc : 360,
-                    showStatus : 0,
-                    wSlice:10,
-                    imageUrl: '/panorama/'+id
-                    } );
-			}
-			else
-			{
-        		var popup = 
-        			new OpenLayers.Popup.FramedCloud
-        			( null, new OpenLayers.LonLat
-						(feature.geometry.x,feature.geometry.y),   
-						new OpenLayers.Size(400,800),
-            		"<img src='/panorama.php?id="+feature.fid+"&resize=20' />",
-            		null, true);
-				map.addPopup(popup);
-			}
+            if(mode==0)
+            {
+                var id = feature.fid;
+                $('map').style.width='0px';
+                $('backtomap').style.visibility='visible';
+                $('pancanvas').style.visibility='visible';
+                //$('pancanvas').style.height='400px';
+                $('pancanvas').height = 400;
+                panorama = new PanController(feature,'status');
+            }
+            else
+            {
+                var popup = 
+                    new OpenLayers.Popup.FramedCloud
+                    ( null, new OpenLayers.LonLat
+                        (feature.geometry.x,feature.geometry.y),   
+                        new OpenLayers.Size(400,800),
+                    "<img src='/panorama.php?id="+feature.fid+"&resize=20' />",
+                    null, true);
+                map.addPopup(popup);
+            }
         }
 
         function onFeatureUnselect(feature)
         {
         }
+
 
         function onPanoramaClose()
         {
@@ -232,7 +222,7 @@
                 $('pancanvas').style.visibility='hidden';
                 $('pancanvas').height = 0;
             }
-            pv=null;
+            panorama=null;
             $('backtomap').style.visibility='hidden';
         }
 
@@ -247,28 +237,28 @@
             {
                 rotateControl.activate();
                 selectControl.deactivate();
-				dragControl.deactivate();
+                dragControl.deactivate();
             }
             // view
             else if (mode==0 || mode==1)
             {
                 rotateControl.deactivate();
                 selectControl.activate();
-				dragControl.deactivate();
+                dragControl.deactivate();
             }
             // drag features
             else if (mode==3)
             {
                 rotateControl.deactivate();
                 selectControl.deactivate();
-				dragControl.activate();
+                dragControl.activate();
             }
             // anything else
             else 
             {
                 rotateControl.deactivate();
                 selectControl.deactivate();
-				dragControl.deactivate();
+                dragControl.deactivate();
             }
         }
         function cb(xmlHTTP)
@@ -302,6 +292,8 @@
                     break;
             }
         }
+
+
 
         function savePageState()
         {

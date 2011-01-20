@@ -16,10 +16,9 @@ else
     $conn=pg_connect("dbname=gis user=gis");
 	$sess_cond = (isset($cleaned["pssn"])) ?  
 		" AND photosession=$cleaned[pssn] ": "";
-	$q=("SELECT pan.*,AsText(ann.xy) FROM panoramas pan ".
-					",annotations ann WHERE pan.userid=".
+	$q=("SELECT pan.*,AsText(pan.xy) FROM panoramas pan ".
+					" WHERE pan.userid=".
 						"$_SESSION[gatekeeper] AND pan.parent IS NULL ".
-						"AND ann.id=pan.annid ".
 						"$sess_cond ORDER BY pan.id DESC ".
 						"LIMIT $cleaned[n] OFFSET ". 
 							($cleaned["pg"]*$cleaned["n"]));

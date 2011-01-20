@@ -66,6 +66,8 @@ for($i=0; $i<count($modes); $i++)
 
 <div id='main'>
 
+
+<div id="mapcontainer">
 <div id='menubar'>
 <span><strong>Mode:</strong></span>
 <?php
@@ -81,9 +83,11 @@ for($i=0; $i<count($modes); $i++)
 }
 ?>
 </div>
-
 <div id="map"> </div>
-
+<canvas id="canvas" style='visibility:hidden' width='800' height='600'>
+</canvas>
+</div>
+<input type='button' value='Map' style='visibility:hidden' id='backToMap' />
 </div>
 
 <?php

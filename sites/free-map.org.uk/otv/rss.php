@@ -19,7 +19,7 @@ function get_anns_by_bbox($bbox,$auth)
 {
     list($w,$s,$e,$n) = explode(",",$bbox);
 
-    $q = "select pan.*,AsText(ann.xy) from annotations ann,panoramas pan where ann.ispano=1 and ann.id=pan.annid and ";
+    $q = "select pan.*,AsText(pan.xy) from panoramas pan where  ";
 	
 	if($auth==1)
 	{

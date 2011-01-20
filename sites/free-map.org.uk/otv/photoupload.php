@@ -77,15 +77,10 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 				$_SESSION['photosession'] = newsession();
 
 
-			pg_query ("INSERT INTO annotations(ispano) VALUES (1)");
-			$result=pg_query("SELECT currval('annotations_id_seq') ".
-									"AS annid");
-			$row=pg_fetch_array($result,null,PGSQL_ASSOC);
-			$annid=$row['annid'];
             pg_query("INSERT INTO panoramas ".
-                "(authorised,direction,userid,photosession,annid) VALUES ".
-                "(0,0,$_SESSION[gatekeeper],$_SESSION[photosession],".
-				"$row[annid])");
+                "(authorised,direction,userid,photosession) VALUES ".
+                "(0,0,$_SESSION[gatekeeper],$_SESSION[photosession]".
+				")");
 			$result=pg_query("SELECT currval('panoramas_id_seq') AS panid");
 			$row=pg_fetch_array($result,null,PGSQL_ASSOC);
             $id = $row['panid']; 
@@ -115,9 +110,9 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
                         $lon = -$lon;
 					$x = lon_to_sphmerc($lon);
 					$y = lat_to_sphmerc($lat);
-                    mysql_query ("UPDATE annotations SET ".
+                    mysql_query ("UPDATE panoramas SET ".
 						"xy=GeomFromText('POINT($x $y)',900913) ".
-						"WHERE annid=$annid");
+						"WHERE id=$id");
                 }
                 if(isset($exif['DateTimeOriginal']))
                 {
@@ -132,7 +127,6 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
             else
             {
                 pg_query("DELETE FROM panoramas WHERE id=$id");
-                pg_query("DELETE FROM annotations WHERE annid=$annid");
                 $resp = array ("success" => false,
                         "error" => "Error saving file $filename on server");
             }

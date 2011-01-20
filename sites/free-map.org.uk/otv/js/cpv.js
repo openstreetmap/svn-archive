@@ -23,6 +23,7 @@
  * and don't want to blindly convert without understanding; so my strategy has 
  * been to get a simple, bare-bones canvas pano viewer first and then deal 
  * with the hairy maths when I get to overlaying OSM data on it.
+ *
  */
 
  
@@ -65,35 +66,36 @@ Math.wrap  = function(val, min, max) {
 
 var CanvasPanoViewer = Class.create ( {
 
-	initialize: function(opts)
-	{
-    	// Set default options
-    	this.setDefaults();
-    	// Supplied options override default options
-    	this.setOptions(opts);
+    initialize: function(opts)
+    {
+        // Set default options
+        this.setDefaults();
+        // Supplied options override default options
+        this.setOptions(opts);
     
-    	this.doInit();
-    	this.addControls();
+        this.doInit();
+        this.addControls();
 
-		this.panoOrientation = 0;
-    	if(typeof(this.imageUrl) != 'undefined') 
-		{
-        	this.loadImage(this.imageUrl);
-		}
-	},
+        this.panoOrientation = 0;
+        if(typeof(this.imageUrl) != 'undefined') 
+        {
+            this.loadImage(this.imageUrl);
+        }
+    },
 
     setDefaults:function() 
-	{
-    	this.defaults = {
+    {
+        this.defaults = {
         canvasId   : 'panoCanvas',
         wSlice        : 2,
         hFovSrc       : 360,
         hFovDst       : 120,
         optCircleSize : 1,
-		statusElement: 'status',
-		dirs: null,
-		showStatus : 0
-    	};
+        statusElement: 'status',
+        dirs: new Array(),
+        bearing: 0,
+        showStatus : 0
+        };
         this.setOptions(this.defaults);
     },
 
@@ -104,19 +106,18 @@ var CanvasPanoViewer = Class.create ( {
     },
 
     doInit:function() 
-	{
+    {
         // Prevent initializing more than once
         if(this.initComplete)
             return;
         
         this.canvas = document.getElementById(this.canvasId);
-		this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d');
         
         // Determine destination size
-        this.wDst = this.canvas.width;
-        this.hDst = this.canvas.height;
+        this.wDst = parseInt(this.canvas.width);
+        this.hDst = parseInt(this.canvas.height);
    
-		//this.status('*canvas dimensions read as: ' +this.wDst+','+this.hDst);
         
         this.viewportX = 0;
 
@@ -124,7 +125,7 @@ var CanvasPanoViewer = Class.create ( {
     },
 
     loadImage:function(url, options) 
-	{
+    {
         // Start loading the image, and make loadImageComplete finish up after 
         // loading has completed
         this.imageUrl = url;
@@ -133,173 +134,176 @@ var CanvasPanoViewer = Class.create ( {
         // otherwise the function may never be called.
         // Confirmed for IE7.
         if(this.image.onload) 
-		{
+        {
             var self = this;
             this.image.onload = function(){self.loadImageComplete(options);};
             this.image.src = url;
         }
         else 
-		{
+        {
             this.image.src = url;
             this.loadImageComplete(options);
         }
     },
 
     loadImageComplete:function(options) 
-	{
+    {
         if(!this.image.onload && !this.image.complete) 
-		{
+        {
             var self = this;
             setTimeout(function(){self.loadImageComplete(options);},125);
             return;
         }
         this.wSrc = this.image.width;
         this.hSrc = this.image.height;
-		//this.status('*loadImageComplete: ' +this.wSrc+','+this.hSrc);
         this.setOptions(options);
         this.hFovSrc = 
             (typeof(this.hFovSrc) != 'undefined') ? this.hFovSrc : 360;
         // View image center
         this.angCenter = this.hFovSrc / 2;
     
-		this.xStretch=(this.wDst*this.hFovSrc) / (this.wSrc*this.hFovDst);
-		this.yStretch = this.hDst / this.hSrc;
+        this.xStretch=(this.wDst*this.hFovSrc) / (this.wSrc*this.hFovDst);
+        this.yStretch = this.hDst / this.hSrc;
 
-		// the width of the viewport in the source image
-		this.wDstToSrc = (this.wDst/this.xStretch);
-		//this.status('wDstToSrc=' + this.wDstToSrc);
+        // the width of the viewport in the source image
+        this.wDstToSrc = (this.wDst/this.xStretch);
 
-		// what's the width of an input slice of defined width in the output?
+        // what's the width of an input slice of defined width in the output?
         this.wSliceDst = this.wSlice*this.xStretch;
 
-		// set the direction accordingly
-		this.setDirection(0);
-		this.updateImages();
+        // set the direction accordingly
+        this.updateImages();
     },
 
     // originally used degrees change, not pixels change
     shiftPano:function(pixels) 
-	{
-		//this.status('shiftPano');
+    {
         // constrain shift
         /*
         this.angCenter = Math.wrap
             (this.angCenter + Math.limit(degrees, -180, 180), 0, 360);
         */
-		// viewportX is the viewport position in the *output* (projected)
-		// world, this is because the mouse position will be with respect to
-		// the output
+        // viewportX is the viewport position in the *output* (projected)
+        // world, this is because the mouse position will be with respect to
+        // the output
         this.viewportX = Math.wrap
-            (this.viewportX + Math.limit(pixels,-80,80),0,
-				this.wSrc*this.xStretch);
-		//this.viewportX = 0;
-		//this.status('viewportX=' + this.viewportX);
+            (this.viewportX + 
+                Math.limit(pixels,-80,80),
+                0, this.wSrc*this.xStretch);
+        //this.viewportX = 0;
         this.updateImages();
     },
 
     updateImages:function() 
-	{
+    {
         // draw according to the current viewport
 
 
-		// convert viewport x to the x coord in the source image
+        // convert viewport x to the x coord in the source image
         var viewportXSrc=this.viewportX / this.xStretch;
         var xPxDst = 0;
 
 
-		// do each slice
-		// slices aren't strictly necessary just now but are done for
-		// futureproofing if any reprojection is done
-		var xPxSrc, xPxSrcSliceEnd;
+        // do each slice
+        // slices aren't strictly necessary just now but are done for
+        // futureproofing if any reprojection is done
+        var xPxSrc, xPxSrcSliceEnd;
         for(var vpXPxSrc=0; vpXPxSrc<this.wDstToSrc; vpXPxSrc+=this.wSlice) 
-		{ 
-			// position of end of slice
-			xPxSrcSliceEnd=Math.wrap(vpXPxSrc+viewportXSrc+this.wSlice,
-									0,this.wSrc);
-			xPxSrc = Math.wrap(vpXPxSrc+viewportXSrc,0, this.wSrc);
+        { 
+            // position of end of slice
+            xPxSrcSliceEnd=Math.wrap(vpXPxSrc+viewportXSrc+this.wSlice,
+                                    0,this.wSrc);
+            xPxSrc = Math.wrap(vpXPxSrc+viewportXSrc,0, this.wSrc);
 
 
-			// Does the current slice contain the extreme right of the source
-			// image plus the extreme left? If so, draw the slice in two parts.
-			if(xPxSrc>xPxSrcSliceEnd) 
-			{
-            	this.ctx.drawImage(this.image,xPxSrc,0,this.wSrc-xPxSrc,
-                	this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
-            	this.ctx.drawImage(this.image,0,0,xPxSrcSliceEnd,
-                	this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
-			} else 
-			{
-				// nb output width this.wSliceDst+1 to avoid gaps from
-				// rounding errors
-            	this.ctx.drawImage(this.image,xPxSrc,0,this.wSlice,
-                	this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
-			}
-			//this.status('drawingImg: XPxSrc='+xPxSrc+'xPxDst=' + xPxDst);
+            // Does the current slice contain the extreme right of the source
+            // image plus the extreme left? If so, draw the slice in two parts.
+            if(xPxSrc>xPxSrcSliceEnd) 
+            {
+                this.ctx.drawImage(this.image,xPxSrc,0,this.wSrc-xPxSrc,
+                    this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
+                this.ctx.drawImage(this.image,0,0,xPxSrcSliceEnd,
+                    this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
+            } else 
+            {
+                // nb output width this.wSliceDst+1 to avoid gaps from
+                // rounding errors
+                this.ctx.drawImage(this.image,xPxSrc,0,this.wSlice,
+                    this.hSrc,xPxDst,0,this.wSliceDst+1,this.hDst);
+            }
 
             xPxDst+=this.wSliceDst;
-			this.drawDirections();
+            this.drawDirections();
         }
     },
 
-	drawDirections: function() 
-	{
-		if(this.dirs==null) return;
-		var viewportXSrc = this.viewportX/this.xStretch;
-		var viewportAng = Math.wrap
-			(viewportXSrc * (this.hFovSrc/this.wSrc), 0, 360);
-		for(var i=0; i<this.dirs.length; i++) 
-		{
-			if(this.dirs[i]>=viewportAng && 
-				this.dirs[i]<=viewportAng+this.hFovDst) 
-			{
-				dirX = ((this.dirs[i]-viewportAng) / this.hFovDst) * this.wDst;
-	//			this.status('dir=' + this.dirs[i] + ' viewportAng=' + viewportAng+ 'dirX=' + dirX);
-				this.ctx.fillStyle = '#ffff00';
-				this.ctx.strokeStyle = '#ffff00';
-				this.ctx.beginPath();
-				this.ctx.moveTo(dirX-10,this.hDst-10);
-				this.ctx.lineTo(dirX+10,this.hDst-10);
-				this.ctx.lineTo(dirX,this.hDst-30);
-				this.ctx.closePath();
-				this.ctx.stroke();
-			}
-		}
-	},
+    drawDirections: function() 
+    {
+        if(this.dirs==null) return;
+        var viewportBearing=this.getViewportBearing();
+        for(var i=0; i<this.dirs.length; i++) 
+        {
+            var d2 = (viewportBearing>360-this.hFovDst &&
+                this.dirs[i]+360 < viewportBearing+this.hFovDst) ?
+                this.dirs[i]+360: this.dirs[i];
+            if((d2>=viewportBearing && d2<=viewportBearing+this.hFovDst))
+            {
+                dirX = ((d2-viewportBearing)/this.hFovDst) * this.wDst;
+                this.ctx.fillStyle = '#ffff00';
+                this.ctx.strokeStyle = '#ffff00';
+                this.ctx.beginPath();
+                this.ctx.moveTo(dirX-10,this.hDst-10);
+                this.ctx.lineTo(dirX+10,this.hDst-10);
+                this.ctx.lineTo(dirX,this.hDst-30);
+                this.ctx.closePath();
+                this.ctx.stroke();
+            }
+        }
+    },
 
-	getClosestBearing: function() 
-	{
-		var closest = -1, lastDist = 999;
-		var viewportXSrc = this.viewportX/this.xStretch;
-		var viewportCtrAng =  Math.wrap
-			((viewportXSrc * (this.hFovSrc/this.wSrc)) + this.hFovDst/2,0,360);
-		for(var i=0; i<this.dirs.length; i++) {
-			var dist = Math.abs(this.dirs[i] - viewportCtrAng);
-			this.status('i='+i+'dist=' + dist);
-			if(dist < lastDist && dist < 15) {
-				lastDist = dist;
-				closest = i;
-			}
-		}
-		return closest;
-	},
+    getClosestBearing: function() 
+    {
+        var closest = -1, lastDist = 999;
+        var viewportXSrc = this.viewportX/this.xStretch;
+        var viewportCtrAng =  Math.wrap
+            ((viewportXSrc * (this.hFovSrc/this.wSrc)) + this.hFovDst/2,0,360);
+        var viewportBearing = Math.wrap(this.bearing+(viewportCtrAng-180),
+                                    0,360);
+        for(var i=0; i<this.dirs.length; i++) {
+            var dist = Math.abs(this.dirs[i] - viewportBearing);
+            if(dist < lastDist && dist < 30) {
+                lastDist = dist;
+                closest = i;
+            }
+        }
+        return closest;
+    },
 
-	setDirection: function(desiredDir) 
-	{
-		desiredDir -= this.panoOrientation-180;
-		desiredDir = Math.wrap(desiredDir,0,360);
-		var viewportXSrc = desiredDir * (this.wSrc/this.hFovSrc);
-		this.viewportX = viewportXSrc * this.xStretch;
-	},
+    setViewportBearing: function(desiredDir) 
+    {
+        desiredDir -= this.bearing-180;
+        desiredDir = Math.wrap(desiredDir,0,360);
+        var viewportXSrc = desiredDir * (this.wSrc/this.hFovSrc);
+        this.viewportX = viewportXSrc * this.xStretch;
+    },
+
+    getViewportBearing: function()
+    {
+        var viewportXSrc=this.viewportX/this.xStretch;
+        var viewportAng = Math.wrap
+            ( (viewportXSrc * (this.hFovSrc/this.wSrc)), 0, 360);
+        return Math.wrap(this.bearing+(viewportAng-180),0,360);
+    },
 
     addControls:function(controller) 
-	{
+    {
         // Default: add mouse controls directly to pano canvas
         if(typeof(controller) == 'undefined') controller = this.canvas;
         
         var self = this;
         
         controller.onmousedown = function(event) 
-		{
+        {
             if(typeof(event) == 'undefined') event = window.event;
             controller.mouseDown = true;
             controller.lastX = event.clientX;
@@ -307,18 +311,16 @@ var CanvasPanoViewer = Class.create ( {
             return false; // Prevent default behaviour
         };
         controller.onmouseup = function(event) 
-		{
+        {
             controller.mouseDown = false;
             return false; // Prevent default behaviour
         };
         controller.onmousemove = function(event) 
-		{
+        {
             if(typeof(event) == 'undefined') event = window.event;
             if(controller.mouseDown) {
                 //var degrees = (controller.lastX - event.clientX) / 5;
                 var pixDiff = controller.lastX - event.clientX;
-				//self.status('shifting by ' + pixDiff);
-                //self.shiftPano(degrees);
                 self.shiftPano(pixDiff);
                 controller.lastX = event.clientX;
                 controller.lastY = event.clientY;
@@ -329,14 +331,11 @@ var CanvasPanoViewer = Class.create ( {
     },
 
 
-	status: function(msg) 
-	{
-		if(this.showStatus!=0) 
-		{
-			var txt = document.createTextNode(msg);
-			document.getElementById(this.statusElement).appendChild(txt);
-			var br = document.createElement('br');
-			document.getElementById(this.statusElement).appendChild(br);
-		}
-	}
+    status: function(msg) 
+    {
+        if(this.showStatus!=0) 
+        {
+            $(this.statusElement).innerHTML = msg;
+        }
+    },
 } );

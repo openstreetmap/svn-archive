@@ -33,15 +33,15 @@ session_start();
         var uploading=<?php echo $uploading;?>;
  
     </script>
-    <script type='text/javascript' src='main.js'></script>
+    <script type='text/javascript' src='js/main.js'></script>
     <!-- Prototype and JSPanoviewer don't like each other-->
     <script type='text/javascript' 
     src='http://www.free-map.org.uk/javascript/prototype.js'></script>
     <!--    -->
-    <script type='text/javascript' src='GeoRSSExt.js'></script>
-    <script type='text/javascript' src='js/jspanoviewer.js'></script>
+    <script type='text/javascript' src='js/GeoRSSExt.js'></script>
 	<script type='text/javascript' src='js/fileuploader.js'></script>
-	<script type='text/javascript' src='canvas/cpv.js'></script>
+	<script type='text/javascript' src='js/cpv.js'></script>
+	<script type='text/javascript' src='js/PanController.js'></script>
     <link rel='stylesheet' type='text/css' href='css/osv.css' />
     <link rel='stylesheet' type='text/css' href='css/fileuploader.css' />
     <style type='text/css'>

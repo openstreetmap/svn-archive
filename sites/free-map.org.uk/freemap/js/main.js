@@ -86,20 +86,7 @@ function init() {
 
     var selF = new OpenLayers.Control.SelectFeature
         (freemap.layerAnnotations,
-            { onSelect: function (f)
-                {
-                    var html = 
-                        (f.attributes.hasPhoto==1) ?
-                    "<p>"+f.attributes.description+"</p>"+
-                    "<p><img src='annotation.php?id="+f.fid+
-                        "&action=getPhoto' width='320px' height='200px'"+
-                        "/></p>" :
-                    f.attributes.description;
-                    freemap.displayPopup(html,
-                        new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
-                            200,200,true);
-                }
-            }
+            { onSelect: freemap.annotationSelect.bind(freemap) }  
         );
     freemap.map.addControl(selF);
     selF.activate();
@@ -116,6 +103,8 @@ function init() {
     freemap.setMode(MODE_NORMAL);
 
     freemap.layerAnnotations.refresh();
+
+    $('backToMap').onclick = freemap.hidePhotoCanvas.bind(freemap);
 }
 
 
@@ -602,8 +591,6 @@ var Freemap = Class.create ( {
                     ids+=',';
                 ids+=f[i].fid;
             }
-            alert('details: ids=' + ids+' text='+text+
-            'x='+pt.x+' y='+pt.y+' dir=' + dir);
 
             var rqst = new Ajax.Request
                 ('/freemap/annotation.php?action=create'+ids+
@@ -621,7 +608,6 @@ var Freemap = Class.create ( {
 
             var url='/freemap/node.php?action=annotate&id='+
                 this.selNode+'&text='+text;
-            alert('sending to:  ' +url);
             var rqst=new Ajax.Request
                 (url,
                     {
@@ -702,7 +688,50 @@ var Freemap = Class.create ( {
     removePopup: function()
     {
         this.map.removePopup(this.popup);
+    },
+
+     annotationSelect:            function (f)
+    {
+                    var html = 
+                        (f.attributes.hasPhoto==1) ?
+                    "<p>"+f.attributes.description+"</p>"+
+                    "<p><img src='annotation.php?id="+f.fid+
+                        "&action=getPhoto' width='320px' height='200px'"+
+                        "/></p>" +
+                        "<p><a href='#' id='viewFullSize'>View full size</a>":
+                    f.attributes.description;
+                    freemap.displayPopup(html,
+                        new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
+                            200,200,true);
+                    $('viewFullSize').onclick = this.showPhotoCanvas.bind(this);
+                    $('canvas').curId = f.fid;
+    },
+
+    showPhotoCanvas: function()
+    {
+        if($('canvas') && $('canvas').getContext)
+        {
+            $('map').style.width='0px';
+            $('canvas').style.visibility='visible';
+            $('backToMap').style.visibility='visible';
+            var ctx = $('canvas').getContext('2d');
+            var img=new Image();
+            img.src='annotation.php?id='+$('canvas').curId+'&action=getPhoto';
+            ctx.drawImage(img,0,0,800,600);
+        }
+        else
+        {
+            alert('sorry: only available on canvas-supporting browsers');
+        }
+    },
+
+    hidePhotoCanvas: function()
+    {
+        $('canvas').style.visibility='hidden';
+        $('backToMap').style.visibility='hidden';
+        $('map').style.width='800px';
     }
+
 } );
 
 function calcdist (x1,y1,x2,y2)

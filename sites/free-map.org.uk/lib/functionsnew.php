@@ -358,4 +358,27 @@ function opposite_direction($dir)
     }
     return null;
 }
-?>
+
+// calculates the "real" distance between two points in spherical mercator
+// (haversine formula)
+function realdist ($x1,$y1,$x2,$y2)
+{
+	$ll1=sphmerc_to_ll($x1,$y1);
+	$ll2=sphmerc_to_ll($x2,$y2);
+	return haversine_dist($ll1['lon'],$ll1['lat'],$ll2['lon'],$ll2['lat']);
+}
+
+// www.faqs.org/faqs/geography/infosystems-faq
+
+function haversine_dist($lon1,$lat1,$lon2,$lat2)
+{
+	$R = 6371;
+	$dlon=deg2rad($lon2-$lon1);
+	$dlat=deg2rad($lat2-$lat1);
+	$slat=sin($dlat/2);
+	$slon=sin($dlon/2);
+	$a1 = $slat*$lat;
+	$a = $slat*$slat + cos(deg2rad($lat1))*cos(deg2rad($lat2))*$slon*$slon;
+	$c = 2 *asin(min(1,sqrt($a)));
+	return $R*$c;
+}

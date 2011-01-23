@@ -187,6 +187,10 @@ class Walkroute
                                 $waystoadd[$prevPt['way']]['end']);
             $this->route[] = $w;
         }
+		else
+		{
+			$this->route[] = new Point($prevPt['x'],$prevPt['y']);
+		}
     }
 
     function get_route($id)

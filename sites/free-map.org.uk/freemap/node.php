@@ -23,22 +23,26 @@ case "annotate":
             $m = array();
             $a = preg_match ("/POINT\((.+)\)/",$row['astext'],$m);
             list($x,$y)= explode(" ",$m[1]);
-            $result2=pg_query("SELECT * FROM annotatednodes WHERE ".
+            $q=("SELECT * FROM annotatednodes WHERE ".
                 "x BETWEEN $x-50 AND $x+50 AND ".
                 "y BETWEEN $y-50 AND $y+50 AND ".
-                "type='$type' AND name='$row[name]'");
-            if($row2=pg_fetch_array($result,null,PGSQL_ASSOC))
+                "type='$highlevel' AND name='$row[name]'");
+			echo $q;
+			$result2=pg_query($q);
+            if($row2=pg_fetch_array($result2,null,PGSQL_ASSOC))
             {
-                pg_query("UPDATE annotatednodes SET description=".
+                $q=("UPDATE annotatednodes SET description=".
                     "'$cleaned[text]' WHERE id=$row2[id]");
             }
             else
             {
-                pg_query("INSERT INTO annotatednodes".
+                $q=("INSERT INTO annotatednodes".
                 "(x,y,name,type,description) ".
                     "VALUES ($x,$y,'$row[name]',".
                     "'$highlevel','$cleaned[text]')");
             }
+			echo $q;
+			pg_query($q);
         }
     }
     break;

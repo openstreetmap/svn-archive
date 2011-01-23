@@ -13,16 +13,16 @@ class Feature
         $text=array();
         $coords = $this->getCoords();
         $otherCoords=$nextFeature->getCoords();
-        $dist=dist($coords[count($coords)-1]['x'],
+        $dist=realdist($coords[count($coords)-1]['x'],
                 $coords[count($coords)-1]['y'],
                 $otherCoords[0]['x'],
                 $otherCoords[0]['y']);
-        if($dist>=50)
+        if($dist>=0.05)
         {
 
             $dx = $otherCoords[0]['x']-$coords[count($coords)-1]['x'];
             $dy = $otherCoords[0]['y']-$coords[count($coords)-1]['y'];
-            $text[] = "Continue for ".(round($dist/1000,2))." km in a ".
+            $text[] = "Continue for ".(round($dist,2))." km in a ".
                 compass_direction(get_bearing($dx,$dy))." direction ";
         }    
         return array_merge($this->to_text(),$text);
@@ -169,33 +169,33 @@ class Way extends Feature
         {
             if(isset($partway))
                 $this->way['points'] = $partway;
-			/*
+            /*
             $q=
                 ("SELECT ann.wayid,AsText(ann.xy),ann.text,ann.dir,".
                 "line_locate_point".
-				"(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
+                "(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
                 "FROM planet_osm_line pol,annotations ann,".
-				"wayannotations wa ".
+                "wayannotations wa ".
                 "WHERE pol.osm_id=wa.wayid AND ".
-				"ann.id=wa.annid AND ".
-				"ann.ispano=0 AND ".
-				"wa.wayid=".$this->way['osm_id'].
+                "ann.id=wa.annid AND ".
+                "ann.ispano=0 AND ".
+                "wa.wayid=".$this->way['osm_id'].
                 " AND line_locate_point(pol.way,ann.xy) BETWEEN ".
                 "$lower AND $higher ".
                 "ORDER BY line_locate_point(pol.way,ann.xy)");
-			*/
-			$q=
-        	("SELECT AsText(ann.xy),ann.text,ann.dir,".
-			"line_locate_point".
-			"(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
-			"FROM planet_osm_line pol, annotations ann WHERE pol.osm_id=".
-			($this->way['osm_id'])." AND ".
-				"ann.ispano=0 AND ".
-			" line_locate_point(pol.way,ann.xy) BETWEEN ".
+            */
+            $q=
+            ("SELECT AsText(ann.xy),ann.text,ann.dir,".
+            "line_locate_point".
+            "(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
+            "FROM planet_osm_line pol, annotations ann WHERE pol.osm_id=".
+            ($this->way['osm_id'])." AND ".
+                "ann.ispano=0 AND ".
+            " line_locate_point(pol.way,ann.xy) BETWEEN ".
                 "$lower AND $higher ".
-        	"AND Distance(line_substring(pol.way,$lower,$higher),ann.xy) < 100".
-        	" ORDER BY line_locate_point(pol.way,ann.xy)");
-			$result2=pg_query($q);
+            "AND Distance(line_substring(pol.way,$lower,$higher),ann.xy) < 100".
+            " ORDER BY line_locate_point(pol.way,ann.xy)");
+            $result2=pg_query($q);
             while($row2=pg_fetch_array($result2,NULL,PGSQL_ASSOC))
             {
                 $a = preg_match ("/POINT\((.+)\)/",$row2['astext'],$m);
@@ -304,19 +304,18 @@ function get_annotation_coords($anndir=true)
 function get_key_coords($nextFeature)
 {
     $keycoords=array();
-    $firstpt=($this->start>$this->end) ? count($this->way['points'])-1:0;
-    $lastpt=($this->start>$this->end) ? 0:count($this->way['points'])-1;
-    list($keycoords[0]['x'],$keycoords[0]['y']) = 
-        explode(" ",$this->way['points'][$firstpt]);
+    $coords=$this->getCoords();
+    $keycoords[0] = $coords[0];
     $keycoords=array_merge($keycoords,$this->get_annotation_coords());
     if($nextFeature)
     {
-        list($lastCoords['x'],$lastCoords['y'])
-            =explode(" ",$this->way['points'][$lastpt]);
-		$c=$nextFeature->getCoords();
-        $next1 = $c[0];
-        if(dist($lastCoords['x'],$lastCoords['y'],$next1['x'],$next1['y'])>=50)
-            $keycoords=array_merge($keycoords,array($lastCoords));
+        $nextCoords=$nextFeature->getCoords();
+        if(realdist($coords[count($coords)-1]['x'],
+                $coords[count($coords)-1]['y'],
+                $nextCoords[0]['x'],$nextCoords[0]['y'])>=0.05)
+        {
+            $keycoords=array_merge($keycoords,array($coords[count($coords)-1]));
+        }
     }
     return $keycoords;
 }
@@ -345,8 +344,7 @@ function way_annotations_to_xml($anndir=true)
 
 function get_way_distance()
 {
-    $lower=($this->start < $this->end) ? $this->start:$this->end;
-    $higher=($lower==$this->start) ? $this->end:$this->start;
+    /*
     $result=pg_query("SELECT length(way) ".
                         "FROM planet_osm_line WHERE ".
                         "osm_id=".$this->way['osm_id']);
@@ -356,6 +354,12 @@ function get_way_distance()
     }
 
     return 0;
+    */
+
+    list($sx,$sy) = explode(" ",$this->way['points'][0]);
+    list($ex,$ey) = explode(" ",$this->way['points']
+        [count($this->way['points'])-1]);
+    return realdist($sx,$sy,$ex,$ey);
 }
 
 function get_way_direction()

@@ -74,7 +74,6 @@ var CanvasPanoViewer = Class.create ( {
         this.setOptions(opts);
     
         this.doInit();
-        this.addControls();
 
         this.panoOrientation = 0;
         if(typeof(this.imageUrl) != 'undefined') 
@@ -126,6 +125,9 @@ var CanvasPanoViewer = Class.create ( {
 
     loadImage:function(url, options) 
     {
+		// disable controls until done
+		this.removeControls();
+
         // Start loading the image, and make loadImageComplete finish up after 
         // loading has completed
         this.imageUrl = url;
@@ -154,6 +156,8 @@ var CanvasPanoViewer = Class.create ( {
             setTimeout(function(){self.loadImageComplete(options);},125);
             return;
         }
+		// only allow controlling when complete
+        this.addControls();
         this.wSrc = this.image.width;
         this.hSrc = this.image.height;
         this.setOptions(options);
@@ -330,12 +334,19 @@ var CanvasPanoViewer = Class.create ( {
 
     },
 
+	removeControls: function (controller)
+	{
+		if(typeof(controller)=='undefined') controller=this.canvas;
+		controller.onmousedown = controller.onmouseup = controller.onmousemove=
+			null;
+	},
+
 
     status: function(msg) 
     {
         if(this.showStatus!=0) 
         {
-            $(this.statusElement).innerHTML = msg;
+            document.getElementById(this.statusElement).innerHTML = msg;
         }
     },
 } );

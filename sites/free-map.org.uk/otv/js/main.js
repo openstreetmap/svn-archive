@@ -197,7 +197,7 @@
                     ( null, new OpenLayers.LonLat
                         (feature.geometry.x,feature.geometry.y),   
                         new OpenLayers.Size(400,800),
-                    "<img src='/panorama.php?id="+feature.fid+"&resize=20' />",
+                    "<img src='/panorama.php?id="+feature.fid+"&resize=40' />",
                     null, true);
                 map.addPopup(popup);
             }

@@ -73,8 +73,7 @@ function to_georss($anns,$title,$admin)
             echo "<id>$ann[id]</id>\n";
             echo "<georss:point>$ann[y] $ann[x]</georss:point>\n";
             echo "<geo:dir>$ann[direction]</geo:dir>\n";
-            echo "<georss:featuretypetag>".
-				($ann["ispano"]==1 ? "panorama":"photo").
+            echo "<georss:featuretypetag>panorama".
 				"</georss:featuretypetag>".
                 "\n";
             echo "</entry>\n";

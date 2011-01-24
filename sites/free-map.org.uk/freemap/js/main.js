@@ -164,10 +164,10 @@ var Freemap = Class.create ( {
         }
         var html = "<p>Select what to do with your route:</p>" +
                     "<p><select id='routeaction'>"+
-                    "<option value='test'>Test (not for users)</option>"+
-                    "<option value='getxml'>Route as XML</option>"+
+ //                   "<option value='test'>Test (not for users)</option>"+
                     "<option value='gethtml'>Route as HTML</option>"+
-                    "<option value='getpdf'>Route as PDF</option>";
+                    "<option value='getpdf'>Route as PDF</option>"+
+                    "<option value='getxml'>Route as XML</option>";
         if(loggedin)
             html += "<option value='add'>Save to database</option>";
         html += "</select>"+
@@ -313,9 +313,10 @@ var Freemap = Class.create ( {
            var nodes = xmlHTTP.responseXML.getElementsByTagName("node");
         var ways=null;
         var description="";
+		var name="";
         if(this.mode!=MODE_ROUTE && nodes && nodes.length==1)
         {
-            var name=nodes[0].getElementsByTagName("name")[0].
+            name=nodes[0].getElementsByTagName("name")[0].
                 firstChild.nodeValue;
             var type=nodes[0].getElementsByTagName("type")[0].
                     firstChild.nodeValue;
@@ -418,7 +419,15 @@ var Freemap = Class.create ( {
         }
         if (this.mode==MODE_ANNOTATE) 
         {
-                var html="<strong>Please enter the annotation:"+
+				var html = "";
+				if(nodes && nodes.length==1 &&
+					nodes[0].getElementsByTagName("name").length==1)
+				{
+					html += "<h1>"+
+							nodes[0].getElementsByTagName("name")[0].
+								firstChild.nodeValue  + "</h1>";
+				}
+                html+="<strong>Please enter the annotation:"+
                             "</strong>"+
                             "<br />"+
                             "<textarea id='annotationText'>"+description+
@@ -608,6 +617,7 @@ var Freemap = Class.create ( {
 
             var url='/freemap/node.php?action=annotate&id='+
                 this.selNode+'&text='+text;
+			alert(url);
             var rqst=new Ajax.Request
                 (url,
                     {

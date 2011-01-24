@@ -18,15 +18,15 @@ else
 		" AND photosession=$cleaned[pssn] ": "";
 	$q=("SELECT pan.*,AsText(pan.xy) FROM panoramas pan ".
 					" WHERE pan.userid=".
-						"$_SESSION[gatekeeper] AND pan.parent IS NULL ".
+						"$_SESSION[gatekeeper] ".
 						"$sess_cond ORDER BY pan.id DESC ".
 						"LIMIT $cleaned[n] OFFSET ". 
 							($cleaned["pg"]*$cleaned["n"]));
 	$result=pg_query($q);
 
 	$result_all=pg_query
-		("SELECT * FROM panoramas WHERE userid=$_SESSION[gatekeeper] AND ".
-		"parent IS NULL $sess_cond");
+		("SELECT * FROM panoramas WHERE userid=$_SESSION[gatekeeper] ".
+		"$sess_cond");
 	$num_photos=pg_num_rows($result_all);
 
 	$data = array();
@@ -45,11 +45,7 @@ else
 		}
 			
 		$curRow["id"] = $row["id"];
-		$curRow["ispano"] = ($row["ispano"])?1:0;
 
-		$result2=pg_query("SELECT * FROM panoramas WHERE parent=".
-							"$row[id]");
-		$curRow["parent"] = (pg_num_rows($result2)>0) ? true:false;
 		$data['photos'][] = $curRow;
 	}
 

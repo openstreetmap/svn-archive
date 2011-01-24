@@ -7,7 +7,7 @@ var PanController = Class.create ( {
                 statusElement: se, 
                 hFovDst : 90,
                 hFovSrc : 360,
-                showStatus : 1,
+                showStatus : 0,
                 wSlice:10,
                 bearing:parseInt(f.attributes.direction),
                 imageUrl: '/panorama/'+f.fid
@@ -30,8 +30,8 @@ var PanController = Class.create ( {
         var vpBearing=this.pv.getViewportBearing();
         this.x=data.x;
         this.y=data.y;
-        this.pv.loadImage('/panorama/'+data.id,{bearing:
-                parseInt(data.direction)});
+        this.pv.loadImage('/panorama/'+data.id+'?t='+new Date().getTime(),
+			{bearing: parseInt(data.direction)});
         this.pv.setViewportBearing(vpBearing);
         new Ajax.Request
             ('/panorama.php',

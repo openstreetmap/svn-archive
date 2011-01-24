@@ -26,12 +26,6 @@ if(pg_num_rows($result)==1)
             case "setAttributes":
                 if(isset($_SESSION['gatekeeper']))
                 {
-                    if(isset($cleaned['ispano']))
-                    {
-                        $q = "UPDATE panoramas SET ispano=$cleaned[ispano] WHERE id=$cleaned[id] ";
-                        pg_query($q);
-                    }
-
                     if(isset($cleaned['x']) AND isset($cleaned['y']))
                     {
                         $q="UPDATE panoramas SET xy=PointFromText('POINT($cleaned[x] $cleaned[y])',900913) WHERE id=$cleaned[id]";
@@ -118,6 +112,16 @@ if(pg_num_rows($result)==1)
                 $adjacents=get_adjacent_panoramas($cleaned['id']);
                 echo json_encode($adjacents);
                 break;
+			case "getTime":
+				echo "$row[time]<br/>";
+				echo date('H:i:s', $row['time']);
+				$tm = 1270656310;
+				echo "tm $tm time $row[time]<br/>";
+				if($row['time']==$tm)
+					echo "yes";
+				echo date ("D d M Y, H:i:s e O" , $tm). "<br/>";
+				echo date ("D d M Y, H:i:s e O" , $row['time'])."<br/>";
+				break;
             default:
                 if($row['authorised']==1 || isset($_SESSION['admin']) ||
                         (isset($_SESSION['gatekeeper']) &&

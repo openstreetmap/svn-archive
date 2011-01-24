@@ -27,7 +27,7 @@ if(isset($_FILES["gpx"]))
                 // get panoramas from this session
                 $q= ("SELECT * FROM panoramas ".
 				"where photosession=$cleaned[pssn] ".
-                "AND userid=$_SESSION[gatekeeper] AND parent IS NULL ".
+                "AND userid=$_SESSION[gatekeeper] ".
 				"ORDER BY time");
                 $result=pg_query($q);
                 while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
@@ -42,7 +42,7 @@ if(isset($_FILES["gpx"]))
                     $pan[] = $row;
 				}
 
-				print_r($pan);
+				//print_r($pan);
 
                 for($i=0; $i<count($gpx["trk"])-1; $i++)
                 {
@@ -148,8 +148,7 @@ else
         while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
         {
             $result2=pg_query
-            ("SELECT * FROM panoramas WHERE photosession=$row[id] AND ".
-			"parent IS NULL");
+            ("SELECT * FROM panoramas WHERE photosession=$row[id]");
             $np=pg_num_rows($result2);
 			$t = date('D d M Y, H:i',$row['t']);
             echo "<option value='$row[id]'>$t ($np photos)</option>";

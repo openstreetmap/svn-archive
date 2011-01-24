@@ -16,10 +16,12 @@ OpenLayers.Format.GeoRSSExt = OpenLayers.Class (OpenLayers.Format.GeoRSS,
             f.attributes.direction=
                     this.getChildValue
                     (item,"http://www.w3.org/2003/01/geo/wgs84_pos#","dir");
-            f.attributes.isPano = 
+            f.attributes.isPano =  1;
+			/*
                     (this.getChildValue
                     (item,"http://www.georss.org/georss","featuretypetag") == 
                     "panorama" ) ? 1:0;
+			*/
             return f;
         },
 

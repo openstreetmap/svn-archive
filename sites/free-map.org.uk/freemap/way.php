@@ -178,7 +178,6 @@ class Way extends Feature
                 "wayannotations wa ".
                 "WHERE pol.osm_id=wa.wayid AND ".
                 "ann.id=wa.annid AND ".
-                "ann.ispano=0 AND ".
                 "wa.wayid=".$this->way['osm_id'].
                 " AND line_locate_point(pol.way,ann.xy) BETWEEN ".
                 "$lower AND $higher ".
@@ -190,7 +189,6 @@ class Way extends Feature
             "(line_substring(pol.way,$lower,$higher),ann.xy) as posn ".
             "FROM planet_osm_line pol, annotations ann WHERE pol.osm_id=".
             ($this->way['osm_id'])." AND ".
-                "ann.ispano=0 AND ".
             " line_locate_point(pol.way,ann.xy) BETWEEN ".
                 "$lower AND $higher ".
             "AND Distance(line_substring(pol.way,$lower,$higher),ann.xy) < 100".

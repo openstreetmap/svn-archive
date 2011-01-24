@@ -79,7 +79,7 @@ function get_anns_by_bbox($bbox)
 {
     list($w,$s,$e,$n) = explode(",",$bbox);
 
-    $q = "select *,AsText(xy) from annotations where ispano=0 AND xy && GeomFromText('POLYGON(($w $s,$e $s,$e $n,$w $n,$w $s))',900913)";
+    $q = "select *,AsText(xy) from annotations where xy && GeomFromText('POLYGON(($w $s,$e $s,$e $n,$w $n,$w $s))',900913)";
 
     $anns=array();
 

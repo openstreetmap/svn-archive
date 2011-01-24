@@ -93,9 +93,6 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 				$str = "";
                 $sz = getimagesize("$outdir/$outfile");
 
-                // criteria for panoramas - width>1024 and width > 2*height
-                if($sz[0]>1024 && $sz[0]>2*$sz[1])
-                    pg_query("UPDATE panoramas SET ispano=1 WHERE id=$id");
 
                 // Note exif_read_data complains about certain non-standard
                 // tags. However it doesn't prevent working.

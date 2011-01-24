@@ -131,38 +131,50 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             // click on existing node
             setNewSelection(currentMouseNode);
             String num = currentMouseNode.get(tagHouseNumber);
-            if (num != null) {
-                try {
-                    // add new address
-                    Integer.parseInt(num); 
-                    inputNumber.setText(num);
-                    applyInputNumberChange();
-                } catch (NumberFormatException en) {
-                    System.out.println("Unable to parse house number \"" + num + "\"");
-                }
-            }
-            if (currentMouseNode.get(tagHouseStreet) != null) {
-                inputStreet.setText(currentMouseNode.get(tagHouseStreet));
-                if (ctrl) {
-                    Collection<Command> cmds = new LinkedList<Command>();
-                    addAddrToPrimitive(currentMouseNode, cmds);
-                    if (num == null)
-                        applyInputNumberChange();
-                }
-                setSelectedWay((Way)null);
+            if (num != null //
+                    && currentMouseNode.get(tagHouseStreet) == null //
+                    && findWayInRelationAddr(currentMouseNode) == null //
+                    && !inputStreet.getText().equals("")) {
+                // address already present but not linked to a street
+                Collection<Command> cmds = new LinkedList<Command>();
+                addStreetNameOrRelation(currentMouseNode, cmds);
+                Command c = new SequenceCommand("Add node address", cmds);
+                Main.main.undoRedo.add(c);
+                setNewSelection(currentMouseNode);
             } else {
-                // check if the node belongs to an associatedStreet relation
-                Way wayInRelationAddr = findWayInRelationAddr(currentMouseNode);
-                if (wayInRelationAddr == null) {
-                    // node exists but doesn't carry address information : add tags like a new node
-                    if (ctrl) {
+                if (num != null) {
+                    try {
+                        // add new address
+                        Integer.parseInt(num); 
+                        inputNumber.setText(num);
                         applyInputNumberChange();
+                    } catch (NumberFormatException en) {
+                        System.out.println("Unable to parse house number \"" + num + "\"");
                     }
-                    Collection<Command> cmds = new LinkedList<Command>();
-                    addAddrToPrimitive(currentMouseNode, cmds);
+                }
+                if (currentMouseNode.get(tagHouseStreet) != null) {
+                    inputStreet.setText(currentMouseNode.get(tagHouseStreet));
+                    if (ctrl) {
+                        Collection<Command> cmds = new LinkedList<Command>();
+                        addAddrToPrimitive(currentMouseNode, cmds);
+                        if (num == null)
+                            applyInputNumberChange();
+                    }
+                    setSelectedWay((Way)null);
                 } else {
-                    inputStreet.setText(wayInRelationAddr.get(tagHighwayName));
-                    setSelectedWay(wayInRelationAddr);
+                    // check if the node belongs to an associatedStreet relation
+                    Way wayInRelationAddr = findWayInRelationAddr(currentMouseNode);
+                    if (wayInRelationAddr == null) {
+                        // node exists but doesn't carry address information : add tags like a new node
+                        if (ctrl) {
+                            applyInputNumberChange();
+                        }
+                        Collection<Command> cmds = new LinkedList<Command>();
+                        addAddrToPrimitive(currentMouseNode, cmds);
+                    } else {
+                        inputStreet.setText(wayInRelationAddr.get(tagHighwayName));
+                        setSelectedWay(wayInRelationAddr);
+                    }
                 }
             }
         } else {
@@ -233,27 +245,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             }
 
         }
-        cmds.add(new ChangePropertyCommand(osm, tagHouseNumber, inputNumber.getText()));            
-        if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
-            cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
-        } else if (selectedWay != null) {
-            Relation selectedRelation = findRelationAddr(selectedWay);
-            // add the node to its relation
-            if (selectedRelation != null) {
-                RelationMember rm = new RelationMember(relationMemberHouse, osm);
-                Relation newRel = new Relation(selectedRelation);
-                newRel.addMember(rm);
-                cmds.add(new ChangeCommand(selectedRelation, newRel));
-            } else {
-                // create new relation
-                Relation newRel = new Relation();
-                newRel.put("type", relationAddrType);
-                newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
-                newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
-                newRel.addMember(new RelationMember(relationMemberHouse, osm));
-                cmds.add(new AddCommand(newRel));
-            }
-        }
+        cmds.add(new ChangePropertyCommand(osm, tagHouseNumber, inputNumber.getText()));
+        addStreetNameOrRelation(osm, cmds);
         try {
             applyInputNumberChange();
             Command c = new SequenceCommand("Add node address", cmds);
@@ -274,6 +267,29 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         return null;
     }
     
+    private void addStreetNameOrRelation(OsmPrimitive osm, Collection<Command> cmds) {
+        if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+            cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
+        } else if (selectedWay != null) {
+            Relation selectedRelation = findRelationAddr(selectedWay);
+            // add the node to its relation
+            if (selectedRelation != null) {
+                RelationMember rm = new RelationMember(relationMemberHouse, osm);
+                Relation newRel = new Relation(selectedRelation);
+                newRel.addMember(rm);
+                cmds.add(new ChangeCommand(selectedRelation, newRel));
+            } else {
+                // create new relation
+                Relation newRel = new Relation();
+                newRel.put("type", relationAddrType);
+                newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
+                newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
+                newRel.addMember(new RelationMember(relationMemberHouse, osm));
+                cmds.add(new AddCommand(newRel));
+            }
+        }
+    }
+
     private Node createNewNode(MouseEvent e, Collection<Command> cmds) {
         // DrawAction.mouseReleased() but without key modifiers
         Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));

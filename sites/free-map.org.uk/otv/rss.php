@@ -1,5 +1,6 @@
 <?php
 include('../lib/functionsnew.php');
+require_once('../common/defines.php');
 
 session_start();
 
@@ -57,8 +58,7 @@ function to_georss($anns,$title,$admin)
     foreach ($anns as $ann)
     {
             $url=($admin)?
-                "/panorama/$ann[id]/moderate":
-                "http://www.opentrailview.org/panorama/$ann[id]";
+                "/panorama/$ann[id]/moderate": OTV_ROOT."/panorama/$ann[id]";
                 
             echo "<entry>\n";
             $t = "Panorama $ann[id]"; 

@@ -3,6 +3,7 @@ require_once('/home/www-data/private/defines.php');
 require_once('../lib/functionsnew.php');
 require_once('freemap_functions.php');
 require_once('Way.php');
+require_once('../common/defines.php');
 
 $conn=pg_connect("dbname=gis user=gis");
 $cleaned = clean_input($_REQUEST,'pgsql');
@@ -52,8 +53,7 @@ switch($_REQUEST['action'])
     case 'addPhoto':
     
         $id=$cleaned["id"];
-        $ret=upload_file("photofile",
-            "/home/www-data/uploads/photos", "$id.jpg");
+        $ret=upload_file("photofile", PHOTO_UPLOADS, "$id.jpg");
         $msg =($ret["error"] === null) ? 
             "Successfully uploaded" : $ret["error"];
         js_error($msg,"index.php");
@@ -63,7 +63,7 @@ switch($_REQUEST['action'])
         $id=$cleaned["id"];
 		$result=pg_query("SELECT authorised FROM annotations WHERE id=$id");
 		$row=pg_fetch_array($result,null,PGSQL_ASSOC);
-		$file="/home/www-data/uploads/photos/$id.jpg";
+		$file=PHOTO_UPLOADS."/$id.jpg";
 		if($row && $row['authorised']==1 && file_exists($file))
 		{
 			header("Content-type: image/jpeg");
@@ -113,7 +113,7 @@ function to_georss($anns)
             list($x,$y)= explode(" ",$m[1]);
             echo "<georss:point>$y $x</georss:point>\n";
 			$ftt=
-			(file_exists("/home/www-data/uploads/photos/{$ann[id]}.jpg")) ?
+			(file_exists(PHOTO_UPLOADS."/{$ann[id]}.jpg")) ?
 				"photo":"annotation";
 			echo "<georss:featuretypetag>$ftt</georss:featuretypetag>";
 				

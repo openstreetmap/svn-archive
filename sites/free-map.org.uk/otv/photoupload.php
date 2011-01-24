@@ -1,6 +1,7 @@
 <?php
 require_once('../lib/functionsnew.php');
 require_once('otv_funcs.php');
+require_once('../common/defines.php');
 
 // partly based on example from Andrew Valums' site
 
@@ -85,7 +86,7 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 			$row=pg_fetch_array($result,null,PGSQL_ASSOC);
             $id = $row['panid']; 
 
-            $outdir = "/home/www-data/uploads/otvnew";
+            $outdir = OTV_UPLOADS; 
              $outfile= "$id.jpg";
 
             if(writeFile($outdir,$outfile)===true)

@@ -6,6 +6,4 @@ To run on your server you will need to have a standard OSM PostGIS database
 present, prepared by importing .osm files using osm2pgsql or Osmosis. You
 also need to set up the Freemap/OTV specific tables, the SQL for this can be
 found in database.sql.
-You may also need to tweak some paths in some of the PHP scripts. Will try and
-sort this out at some stage to render this unnecessary.
-Code is licenced under the LGPL unless otherwise indicated.
+You will also need to tweak the paths in common/defines.php.

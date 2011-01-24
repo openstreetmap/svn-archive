@@ -3,6 +3,7 @@
 require_once('../lib/functionsnew.php');
 require_once('freemap_functions.php');
 require_once('Way.php');
+require_once('../common/defines.php');
 
 include ('fpdf16/fpdf.php');
 
@@ -266,7 +267,7 @@ class Walkroute
         }
 
 
-        $pdf->Image("http://www.free-map.org.uk/freemap/route.php".
+        $pdf->Image(FREEMAP_ROOT."/freemap/route.php".
             "?format=png&action=get&serialised=".
             urlencode($this->serialise()), 10,20,$pageW,$pageH,"png");
         $pdf->SetXY(10,$pdf->bodystart+$pageH);

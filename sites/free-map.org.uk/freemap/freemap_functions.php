@@ -1,6 +1,7 @@
 <?php
 require_once('../lib/latlong.php');
 require_once('../lib/functionsnew.php');
+require_once('../common/defines.php');
 
 function wholly_numeric($input)
 {
@@ -70,7 +71,7 @@ function get_path_type($pathinfo)
 
 function get_photo($id,$width,$height)
 {
-    $file="/home/www-data/uploads/photos/$id.jpg";
+    $file=PHOTO_UPLOADS."/$id.jpg";
     if(!file_exists($file))
         return false;
     else

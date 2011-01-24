@@ -4,6 +4,7 @@ session_start();
 
 require_once('../lib/gpx.php');
 require_once('../lib/functionsnew.php');
+require_once('../common/defines.php');
 
 if(!isset($_SESSION['gatekeeper']))
     die("Must be logged in!");
@@ -13,7 +14,7 @@ if(!isset($_SESSION['gatekeeper']))
 if(isset($_FILES["gpx"]))
 {
     $pan=array();
-    $u = upload_file("gpx","/home/www-data/uploads/otvnew/gpx");
+    $u = upload_file("gpx",OTV_GPX_UPLOADS);
     $cleaned=clean_input($_POST,'pgsql');
     if($u["file"]!==null)
     {

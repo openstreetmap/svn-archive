@@ -713,7 +713,11 @@ var Freemap = Class.create ( {
                     freemap.displayPopup(html,
                         new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
                             200,200,true);
-                    $('viewFullSize').onclick = this.showPhotoCanvas.bind(this);
+					if($('viewFullSize'))
+					{
+                    	$('viewFullSize').onclick=this.showPhotoCanvas.bind
+							(this);
+					}
                     $('canvas').curId = f.fid;
     },
 

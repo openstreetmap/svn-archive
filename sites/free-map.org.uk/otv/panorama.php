@@ -1,6 +1,8 @@
 <?php
 session_start();
 include('../lib/functionsnew.php');
+require_once('../common/defines.php');
+
 $conn=pg_connect("dbname=gis user=gis");
 $cleaned=clean_input($_GET);
 $result=pg_query("SELECT * FROM panoramas WHERE ID=$cleaned[id]");
@@ -57,7 +59,7 @@ if(pg_num_rows($result)==1)
                 {
                         pg_query
                             ("DELETE FROM panoramas WHERE ID=$cleaned[id]");
-                        unlink("/home/www-data/uploads/otvnew/${cleaned[id]}.jpg");
+                        unlink(OTV_UPLOADS."/${cleaned[id]}.jpg");
 
                         $result2=pg_query("SELECT * FROM routes WHERE ".
                                             "fid=$cleaned[id]");
@@ -127,7 +129,7 @@ if(pg_num_rows($result)==1)
                         (isset($_SESSION['gatekeeper']) &&
                         $row['userid']==$_SESSION['gatekeeper']))
                 {
-                    $file = "/home/www-data/uploads/otvnew/${cleaned[id]}.jpg";
+                    $file = OTV_UPLOADS."/${cleaned[id]}.jpg";
                     if(file_exists($file))
                     {
                         header("Content-type: image/jpeg");

@@ -94,27 +94,34 @@ public class ExecuteInvalidateBug extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Invalidates the given MapDust bug. If the entered informations are
+     * invalid a corresponding warning message will be displayed.
+     * 
+     * @param event The action event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JButton) {
             JButton btn = (JButton) event.getSource();
             if (btn.getText().equals("OK")) {
                 /* ok button was pressed */
-                ChangeIssueStatusDialog issueDialog = (ChangeIssueStatusDialog) getDialog();
+                ChangeIssueStatusDialog issueDialog =
+                        (ChangeIssueStatusDialog) getDialog();
                 String nickname = issueDialog.getTxtNickname().getText();
                 String commentText = issueDialog.getTxtDescription().getText();
                 /* validate input */
                 String errorMessage = validate(nickname, commentText);
                 if (errorMessage != null) {
                     /* invalid input */
-                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage), 
                             tr("Missing input data"), JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 /* valid input */
                 Main.pref.put("mapdust.nickname", nickname);
                 MapdustBug selectedBug = getSelectedBug();
-                MapdustComment comment = new MapdustComment(selectedBug.getId(),
+                MapdustComment comment = new MapdustComment(selectedBug.getId(), 
                         commentText, nickname);
                 String pluginState = Main.pref.get("mapdust.pluginState");
                 if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
@@ -122,7 +129,7 @@ public class ExecuteInvalidateBug extends MapdustExecuteAction implements
                     selectedBug.setStatus(Status.INVALID);
                     String iconPath = getIconPath(selectedBug);
                     MapdustAction mapdustAction = new MapdustAction(
-                            MapdustServiceCommand.CHANGE_BUG_STATUS, iconPath,
+                            MapdustServiceCommand.CHANGE_BUG_STATUS, iconPath, 
                             selectedBug, comment, 3);
                     if (getMapdustGUI().getQueuePanel() != null) {
                         notifyObservers(mapdustAction);
@@ -135,19 +142,22 @@ public class ExecuteInvalidateBug extends MapdustExecuteAction implements
                         id = handler.changeBugStatus(3, comment);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                                tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent, 
+                                tr(errorMessage), tr("Error"),
+                                JOptionPane.ERROR_MESSAGE);
                     }
                     if (id != null) {
                         // success
                         MapdustBug newMapdustBug = null;
                         try {
-                            newMapdustBug = handler.getBug(selectedBug.getId(), null);
+                            newMapdustBug = handler.getBug(selectedBug.getId(), 
+                                    null);
                         } catch (MapdustServiceHandlerException e) {
                             errorMessage = "There was a Mapdust service error.";
                             errorMessage += "Mapdust bug report.";
-                            JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                                    tr("Error"), JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(Main.parent, 
+                                    tr(errorMessage), tr("Error"),
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                         if (newMapdustBug != null) {
                             notifyObservers(newMapdustBug);
@@ -157,7 +167,6 @@ public class ExecuteInvalidateBug extends MapdustExecuteAction implements
                 /* enable buttons */
                 enableFiredButton(issueDialog.getFiredButton());
                 resetSelectedBug(0);
-                Main.pref.put("mapdust.modify", false);
                 /* destroy dialog */
                 issueDialog.dispose();
             }

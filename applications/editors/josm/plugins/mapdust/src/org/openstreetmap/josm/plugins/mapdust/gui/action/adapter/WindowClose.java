@@ -40,32 +40,32 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 
 /**
  * Closes the given dialog window.
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 public class WindowClose extends WindowAdapter {
-    
+
     /** Serial version UID */
     private static final long serialVersionUID = 1L;
-    
+
     /** A <code>AbstractDialog</code> object */
     private AbstractDialog dialog;
-    
+
     /** The <code>MapdustButtonPanel</code> object */
     private MapdustButtonPanel btnPanel;
-    
+
     /** The <code>JToggleButton</code> which had fired the dialog */
     private JToggleButton btnFired;
-    
+
     /**
      * Builds a <code>WindowClose</code> object
      */
     public WindowClose() {}
-    
+
     /**
      * Builds a <code>WindowClose</code> object based on the given arguments
-     * 
+     *
      * @param dialog The dialog which will be closed
      * @param btnPanel The button panel
      * @param btnFired The button which fired the display dialog action
@@ -76,7 +76,7 @@ public class WindowClose extends WindowAdapter {
         this.btnPanel = btnPanel;
         this.btnFired = btnFired;
     }
-    
+
     @Override
     public void windowClosing(WindowEvent event) {
         String status = Main.pref.get("selectedBug.status");
@@ -127,10 +127,8 @@ public class WindowClose extends WindowAdapter {
             btnFired.setSelected(false);
         }
         /* dispose dialog */
-        Main.pref.put("mapdust.addBug", true);
-        Main.pref.put("mapdust.modify", false);
         dialog.setVisible(false);
         dialog.dispose();
-        return;
     }
+
 }

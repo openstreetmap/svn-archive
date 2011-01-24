@@ -165,7 +165,7 @@ public class CommentIssueDialog extends AbstractDialog {
         }
         /* creates the cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(250, 170, 80, 25);
+            Rectangle bounds = new Rectangle(240, 170, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
             btnCancel = ComponentUtil.createJButton("Cancel", bounds,
@@ -173,7 +173,7 @@ public class CommentIssueDialog extends AbstractDialog {
         }
         /* creates the ok button */
         if (btnOk == null) {
-            Rectangle bounds = new Rectangle(180, 170, 60, 25);
+            Rectangle bounds = new Rectangle(170, 170, 60, 25);
             ExecuteCommentBug okAction =
                     new ExecuteCommentBug(this, mapdustPlugin.getMapdustGUI());
             okAction.addObserver(mapdustPlugin);
@@ -271,4 +271,5 @@ public class CommentIssueDialog extends AbstractDialog {
     public String getMessageText() {
         return messageText;
     }
+    
 }

@@ -90,6 +90,12 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Creates a comment for the given MapDust bug. If the entered informations
+     * are invalid a corresponding warning message will be displayed.
+     * 
+     * @param event The action event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JButton) {
@@ -153,7 +159,6 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                 /* enable buttons */
                 enableFiredButton(issueDialog.getFiredButton());
                 resetSelectedBug(0);
-                Main.pref.put("mapdust.modify", false);
                 /* destroy dialog */
                 issueDialog.dispose();
             }
@@ -227,4 +232,5 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
             (elements.next()).addAction(mapdustAction);
         }
     }
+    
 }

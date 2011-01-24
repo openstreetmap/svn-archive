@@ -65,7 +65,7 @@ public class CreateIssueDialog extends AbstractDialog {
     private static final long serialVersionUID = 1L;
 
     /** The create issue text */
-    private final String createIssueText;
+    private String createIssueText;
 
     /** Text message */
     private JScrollPane cmpMessage;
@@ -110,23 +110,45 @@ public class CreateIssueDialog extends AbstractDialog {
      * @param point The position where the bug was created
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
-    public CreateIssueDialog(String title, String iconName, String messageText,
-            Point point, MapdustPlugin mapdustPlugin) {
-        this.createIssueText = messageText;
+    public CreateIssueDialog(Point point, MapdustPlugin mapdustPlugin) {
+        this.createIssueText= "In order to create a new bug report you";
+        this.createIssueText += " need to provide your nickname and a brief";
+        this.createIssueText+= " description for the bug.";
         this.point = point;
-        setTitle(title);
-        setDefaultLookAndFeelDecorated(true);
-        Image image = ImageProvider.get(iconName).getImage();
+        /* set JDialog settings */
+        initializeDialog();
+        /* add components to the dialog */
+        addComponents(mapdustPlugin);
+        /* add window listenet */
+        MapdustButtonPanel btnPanel = mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
+        addWindowListener(new WindowClose(this, btnPanel, null));
+    }
+
+    /**
+     * Initializes the dialog default fields.
+     */
+    private void initializeDialog(){
+        /* set JDialog settings */
+        setTitle("Create bug report");
+        setModal(true);
+        Image image = ImageProvider.get("dialogs/open.png").getImage();
         setIconImage(image);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         getContentPane().setFont(new Font("Times New Roman", Font.BOLD, 14));
         setResizable(false);
         setForeground(Color.black);
         setLayout(null);
-        setModal(true);
-        addComponents(mapdustPlugin);
-        MapdustButtonPanel btnPanel = mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
-        addWindowListener(new WindowClose(this, btnPanel, getFiredButton()));
+
+    }
+
+    /**
+     * Displays the dialog.
+     */
+    public void showDialog(){
+       setLocationRelativeTo(null);
+       getContentPane().setPreferredSize(getSize());
+       pack();
+       setVisible(true);
     }
 
     @Override
@@ -166,7 +188,7 @@ public class CreateIssueDialog extends AbstractDialog {
         /* creates the description label and text area */
         if (lblDescription == null) {
             lblDescription = ComponentUtil.createJLabel("Description", font,
-                    new Rectangle(10, 150, 85, 25));
+                    new Rectangle(10, 150, 95, 25));
         }
         if (cmpDescription == null) {
             txtDescription = new JTextArea();
@@ -177,7 +199,7 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         /* creates the cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(260, 210, 80, 25);
+            Rectangle bounds = new Rectangle(250, 210, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
             btnCancel = ComponentUtil.createJButton("Cancel", bounds,
@@ -185,7 +207,7 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         /* creates the ok button */
         if (btnOk == null) {
-            Rectangle bounds = new Rectangle(190, 210, 60, 25);
+            Rectangle bounds = new Rectangle(180, 210, 60, 25);
             ExecuteAddBug okAction = new ExecuteAddBug(this,
                     mapdustPlugin.getMapdustGUI());
             okAction.addObserver(mapdustPlugin);
@@ -285,4 +307,5 @@ public class CreateIssueDialog extends AbstractDialog {
     public Point getPoint() {
         return point;
     }
+
 }

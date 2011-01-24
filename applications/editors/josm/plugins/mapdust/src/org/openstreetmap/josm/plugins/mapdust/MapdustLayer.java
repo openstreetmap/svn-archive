@@ -59,23 +59,23 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Defines the MapDust JOSM layer main functionality.
- *
+ * 
  * @author Bea
  */
 public class MapdustLayer extends Layer {
-
+    
     /** The <code>MapdustGUI</code> object */
     private MapdustGUI mapdustGUI;
-
+    
     /** The list of <code>MapdustBugList</code> objects */
     private List<MapdustBug> mapdustBugList;
-
+    
     /** The selected <code>MapdustBug</code> object */
     private MapdustBug bugSelected;
-
+    
     /**
      * Builds a <code>MapdustLayer</code> object based on the given parameters.
-     *
+     * 
      * @param name The name of the layer
      * @param mapdustGUI The <code>MapdustGUI</code> object
      * @param mapdustBugList The list of <code>MapdustBug</code> objects
@@ -87,10 +87,10 @@ public class MapdustLayer extends Layer {
         this.mapdustBugList = mapdustBugList;
         this.bugSelected = null;
     }
-
+    
     /**
      * Returns the icon of the MapDust layer.
-     *
+     * 
      * @return icon
      */
     @Override
@@ -98,10 +98,10 @@ public class MapdustLayer extends Layer {
         Icon layerIcon = ImageProvider.get("dialogs/mapdust_icon16.png");
         return layerIcon;
     }
-
+    
     /**
      * Returns the info components of the MapDust layer.
-     *
+     * 
      * @return object
      */
     @Override
@@ -109,10 +109,10 @@ public class MapdustLayer extends Layer {
         String infoComponent = "Shows the Mapdust bug reporter issues.";
         return tr(infoComponent);
     }
-
+    
     /**
      * Returns the menu entries of the MapDust layer.
-     *
+     * 
      * @return an array of <code>Action</code> objects.
      */
     @Override
@@ -128,10 +128,10 @@ public class MapdustLayer extends Layer {
         menuEntries[5] = new LayerListPopup.InfoAction(this);
         return menuEntries;
     }
-
+    
     /**
      * Returns the text of the tool tip of the MapDust layer.
-     *
+     * 
      * @return the tooltip text
      */
     @Override
@@ -139,10 +139,10 @@ public class MapdustLayer extends Layer {
         String toolTipText = "Shows Mapdust bug reporter issues.";
         return tr(toolTipText);
     }
-
+    
     /**
      * Returns the image icon based on the given status and type.
-     *
+     * 
      * @param iconType The type of the bug
      * @param status The status of the bug
      * @param bugType The type of the bug
@@ -157,11 +157,11 @@ public class MapdustLayer extends Layer {
         ImageIcon icon = ImageProvider.get(iconName);
         return icon;
     }
-
+    
     /**
      * Draw the objects to the given map view. Also draws the MapDust bugs to
      * the map, and the tooltip for the selected MapDust bug.
-     *
+     * 
      * @param g The <code>Graphics2D</code> object
      * @param mv The <code>MapView</code> object
      * @param bounds The <code>Bounds</code> object
@@ -180,15 +180,11 @@ public class MapdustLayer extends Layer {
                 ImageIcon icon = getImageIcon("normal", status, type);
                 int width = icon.getIconWidth();
                 int height = icon.getIconHeight();
-                /* draw the bug icon */
-                /*
-                 * need to do 2 times, because in some areas the bug image is
-                 * invisible
-                 */
+                /* need to do drawing 2 times, because in some areas the bug 
+                 * image is invisible */
                 for (int i = 0; i < 2; i++) {
                     g.drawImage(icon.getImage(), p.x - (width / 2), p.y
                             - (height / 2), new ImageObserver() {
-
                         @Override
                         public boolean imageUpdate(Image img, int infoflags,
                                 int x, int y, int width, int height) {
@@ -197,6 +193,7 @@ public class MapdustLayer extends Layer {
                     });
                 }
             }
+            
             /* draw the selected bug description */
             /* selected by clicking */
             MapdustBug bug1 = getBugSelected();
@@ -219,7 +216,6 @@ public class MapdustLayer extends Layer {
                 /* draw the icon */
                 g.drawImage(icon.getImage(), p.x - (width / 2), p.y
                         - (height / 2), new ImageObserver() {
-
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x,
                             int y, int width, int height) {
@@ -245,19 +241,25 @@ public class MapdustLayer extends Layer {
             }
         }
     }
-
+    
+    /**
+     * No need to implement this.
+     */
     @Override
     public boolean isMergable(Layer layer) {
         return false;
     }
-
+    
+    /**
+     * No need to implement this.
+     */
     @Override
     public void mergeFrom(Layer layer) {}
-
+    
     /**
      * Builds the text of the tooltip containing a short description of the
      * given <code>MapdustBug</code> object.
-     *
+     * 
      * @param bug The <code>MapdustBug</code> object
      * @return A string containing the description text
      */
@@ -276,57 +278,61 @@ public class MapdustLayer extends Layer {
         text += "</html>";
         return text;
     }
-
+    
+    /**
+     * No need to implement this.
+     */
     @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {}
-
+    
     /**
      * Returns the <code>MapdustGUI</code> object
-     *
+     * 
      * @return the mapdustGUI
      */
     public MapdustGUI getMapdustGUI() {
         return mapdustGUI;
     }
-
+    
     /**
      * Sets the <code>MapdustGUI</code> object
-     *
+     * 
      * @param mapdustGUI the mapdustGUI to set
      */
     public void setMapdustGUI(MapdustGUI mapdustGUI) {
         this.mapdustGUI = mapdustGUI;
     }
-
+    
     /**
      * Returns the list of <code>MapdustBug</code> objects
-     *
+     * 
      * @return the mapdustBugList
      */
     public List<MapdustBug> getMapdustBugList() {
         return mapdustBugList;
     }
-
+    
     /**
      * Returns the selected bug
-     *
+     * 
      * @return the bugSelected
      */
     public MapdustBug getBugSelected() {
         return bugSelected;
     }
-
+    
     /**
      * Sets the selected bug
-     *
+     * 
      * @param bugSelected the bugSelected to set
      */
     public void setBugSelected(MapdustBug bugSelected) {
         this.bugSelected = bugSelected;
     }
-
+    
     /**
      * Sets the list of <code>MapdustBug</code> objects
+     * 
      * @param mapdustBugList the mapdustBugList to set
      */
     public void setMapdustBugList(List<MapdustBug> mapdustBugList) {

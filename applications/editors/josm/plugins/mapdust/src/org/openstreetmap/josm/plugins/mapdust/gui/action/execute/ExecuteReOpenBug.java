@@ -93,6 +93,10 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * 
+     * @param event The event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JButton) {
@@ -164,7 +168,6 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
                 /* enable buttons */
                 enableFiredButton(issueDialog.getFiredButton());
                 resetSelectedBug(0);
-                Main.pref.put("mapdust.modify", false);
                 /* destroy dialog */
                 issueDialog.dispose();
             }
@@ -239,4 +242,5 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
             (elements.next()).addAction(mapdustAction);
         }
     }
+    
 }

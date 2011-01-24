@@ -54,7 +54,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 /**
  * Fixes the given <code>MapdustBug</code> object. Validates the input data, and
  * based on the plugin state executes the corresponding action. If the plugin is
- * in the "ONLINE" state then executes the Mapdust Service 'changeBugStatus'
+ * in the "ONLINE" state then executes the MapDust Service 'changeBugStatus'
  * action with statusId=2 and the given input parameters. If the plugin is in
  * the "OFFLINE" state then adds the given action to the queue list.
  *
@@ -91,6 +91,12 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Closes the given MapDust bug. If the entered informations are invalid a
+     * corresponding warning message will be displayed.
+     * 
+     * @param event The action event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JButton) {
@@ -106,7 +112,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                 if (errorMessage != null) {
                     /* invalid input data */
                     JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                           tr("Missing input data"), JOptionPane.WARNING_MESSAGE);
+                            tr("Missing input data"), JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 /* valid input data */
@@ -154,7 +160,6 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                 /* enable buttons */
                 enableFiredButton(issueDialog.getFiredButton());
                 resetSelectedBug(0);
-                Main.pref.put("mapdust.modify", false);
                 /* destroy dialog */
                 issueDialog.dispose();
             }

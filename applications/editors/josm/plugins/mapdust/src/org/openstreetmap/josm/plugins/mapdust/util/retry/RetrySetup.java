@@ -37,7 +37,7 @@ public class RetrySetup {
 
     /** A default configuration for the {@link RetryAgent} */
     public static final RetrySetup DEFAULT = new RetrySetup(RetryMode.COUNTED,
-            3, 500);
+            1, 500);
 
     /** The retry mode */
     private final RetryMode mode;

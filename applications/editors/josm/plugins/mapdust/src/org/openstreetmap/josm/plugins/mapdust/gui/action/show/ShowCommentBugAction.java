@@ -30,7 +30,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentIssueDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
@@ -76,7 +75,6 @@ public class ShowCommentBugAction extends MapdustShowAction {
                 btn.setEnabled(false);
             }
             disableButtons(getButtonPanel());
-            Main.pref.put("mapdust.modify", true);
             CommentIssueDialog dialog = new CommentIssueDialog(getTitle(),
                     getIconName(), getMessageText(), btn, getMapdustPlugin());
             dialog.setLocationRelativeTo(null);

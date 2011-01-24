@@ -140,7 +140,6 @@ public abstract class MapdustShowAction extends AbstractAction {
         this.messageText = messageText;
     }
 
-
     /**
      * Disables the buttons from the given button panel.
      *

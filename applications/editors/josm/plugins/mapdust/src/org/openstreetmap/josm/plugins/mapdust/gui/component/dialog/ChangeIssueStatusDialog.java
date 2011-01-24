@@ -125,8 +125,7 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
         setForeground(Color.black);
         setLayout(null);
         addComponents(mapdustPlugin);
-        MapdustButtonPanel btnPanel =
-                mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
+        MapdustButtonPanel btnPanel = mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
         addWindowListener(new WindowClose(this, btnPanel, getFiredButton()));
     }
 
@@ -200,12 +199,12 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
         }
         /* creates the cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(250, 170, 80, 25);
+            Rectangle bounds = new Rectangle(240, 170, 90, 25);
             btnCancel = ComponentUtil.createJButton("Cancel", bounds, cancelAction);
         }
         /* creates the ok button */
         if (btnOk == null) {
-            Rectangle bounds = new Rectangle(180, 170, 60, 25);
+            Rectangle bounds = new Rectangle(170, 170, 60, 25);
             btnOk = ComponentUtil.createJButton("OK", bounds, okAction);
         }
         /* add components to the frame */

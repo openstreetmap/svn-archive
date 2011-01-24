@@ -41,6 +41,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -59,8 +60,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 
 /**
- * This is the main class of the MapDust plugin. Defines the MapDust plugin main
- * functionality.
+ * This is the main class of the MapDust plug-in. Defines the MapDust plug-in
+ * main functionality.
  * 
  * @author Bea
  * 
@@ -68,36 +69,59 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class MapdustPlugin extends Plugin implements LayerChangeListener,
         ZoomChangeListener, MouseListener, MapdustRefreshObserver,
         MapdustBugObserver, MapdustInitialUpdateObserver {
-    
-    /** The graphical user interface of the plugin */
+
+    /** The graphical user interface of the plug-in */
     private MapdustGUI mapdustGUI;
-    
-    /** The layer of the MapDust plugin */
+
+    /** The layer of the MapDust plug-in */
     private MapdustLayer mapdustLayer;
-    
+
     /** The list of <code>MapdustBug</code> objects */
     private List<MapdustBug> mapdustBugList;
-    
-    /** Flag indicating if the list of bugs was empty or not */
-    private boolean wasEmpty;
-    
+
+    /** The <code>CreateIssueDialog</code> object */
+    private CreateIssueDialog dialog;
+
+    /** Specifies if there was or not an error downloading the data */
+    private boolean wasError = false;
+
     /**
      * Builds a new <code>MapDustPlugin</code> object based on the given
      * arguments.
-     * 
+     *
      * @param info The <code>MapDustPlugin</code> object
      */
     public MapdustPlugin(PluginInformation info) {
         super(info);
-        Main.pref.put("mapdust.pluginState",
-                MapdustPluginState.ONLINE.getValue());
-        Main.pref.put("mapdust.nickname", null);
-        Main.pref.put("mapdust.modify", false);
+        initializePlugin();
     }
-    
+
     /**
-     * Initializes the new view with the MapDust Bugs from that area.
-     * 
+     * Initialize the <code>MapdustPlugin</code> object. Creates the
+     * <code>MapdustGUI</code> and initializes the following variables with
+     * default values: 'mapdust.pluginState', 'mapdust.nickname',
+     * 'mapdust.showError'.
+     */
+    private void initializePlugin() {
+        /* create MapDust GUI */
+        Shortcut shortcut = Shortcut.registerShortcut("mapdust",
+                tr("Toggle: {0}", tr("Open MapDust")), KeyEvent.VK_0,
+                Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT);
+        String name = "MapDust bug reports";
+        String tooltip = "Activates the MapDust bug reporter plugin";
+        mapdustGUI = new MapdustGUI(tr(name), "mapdust_icon.png", tr(tooltip),
+                shortcut, 150, this);
+        /* add default values for static variables */
+        Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
+        Main.pref.put("mapdust.nickname", null);
+        Main.pref.put("mapdust.showError", true);
+    }
+
+    /**
+     * Initializes the new <code>MapFrame</code>. Adds the
+     * <code>MapdustGUI</code> to the new <code>MapFrame</code> and sets the
+     * observers/listeners.
+     *
      * @param oldMapFrame The old <code>MapFrame</code> object
      * @param newMapFrame The new <code>MapFrame</code> object
      */
@@ -106,74 +130,60 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (newMapFrame == null) {
             /* if new MapFrame is null, remove listener */
             MapView.removeLayerChangeListener(this);
+            NavigatableComponent.removeZoomChangeListener(this);
         } else {
             /* add MapDust dialog window */
-            Shortcut shortcut = Shortcut.registerShortcut("mapdust", 
-                    tr("Toggle: {0}", tr("Open MapDust")), KeyEvent.VK_0,
-                    Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT);
-            String name = "MapDust bug reports";
-            String tooltip = "Activates the MapDust bug reporter plugin";
-            mapdustGUI = new MapdustGUI(tr(name), "mapdust_icon.png", tr(tooltip),
-                    shortcut, 150, this);
-            mapdustGUI.setBounds(newMapFrame.getBounds());
-            mapdustGUI.addObserver(this);
-            newMapFrame.addToggleDialog(mapdustGUI);
-            MapView.addZoomChangeListener(this);
-            MapView.addLayerChangeListener(this);
-            Main.map.mapView.addMouseListener(this);
-        }
-    }
-    
-    /**
-     * Updates the MapDust plugin data. Downloads the list of
-     * <code>MapdustBug</code> objects for the given area, and updates the map
-     * and the Mapdust layer with the new data.
-     */
-    @Override
-    public synchronized void updateData() {
-        if (Main.map != null && Main.map.mapView != null) {
-            try {
-                /* downloads the MapDust bugs */
-                this.mapdustBugList = getMapdustBugs();
-                if (getMapdustGUI().isDialogShowing()) {
-                    /* updates the views */
-                    if ((this.mapdustBugList == null || this.mapdustBugList
-                            .size() == 0) && !wasEmpty) {
-                        updateView();
-                        String waringMessage = "There is no MapDust bug in ";
-                        waringMessage += "your visible area.";
-                        JOptionPane.showMessageDialog(Main.parent,
-                                tr(waringMessage), tr("Warning"),
-                                JOptionPane.WARNING_MESSAGE);
-                        wasEmpty = true;
-                    } else {
-                        updateView();
-                        wasEmpty = false;
-                    }
-                }
-            } catch (MapdustServiceHandlerException e) {
-                /* show errprMessage, and remove the layer */
-                String errorMessage = "There was a Mapdust service error.";
-                errorMessage += " Please try later.";
-                JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                        tr("Error"), JOptionPane.ERROR_MESSAGE);
-                MapView.removeLayerChangeListener(this);
-                Main.map.mapView.removeLayer(mapdustLayer);
-                Main.map.remove(mapdustGUI);
+            if (Main.map != null && Main.map.mapView != null) {
+                /* set bounds for MapdustGUI */
+                mapdustGUI.setBounds(newMapFrame.getBounds());
+                /* add observer */
+                mapdustGUI.addObserver(this);
+                /* add dialog to new MapFrame */
+                newMapFrame.addToggleDialog(mapdustGUI);
+                /* add ZoomChangeListener */
+                NavigatableComponent.addZoomChangeListener(this);
+                /* add LayerChangeListener */
+                MapView.addLayerChangeListener(this);
+                /* add MouseListener */
+                Main.map.mapView.addMouseListener(this);
             }
         }
     }
-    
+
+    /**
+     * Refreshes the MapDust data. Downloads the data from the given area and
+     * updates the map and the MapDust list with this new data. This method is
+     * called whenever the 'Refresh' button is pressed by the user.
+     */
+    @Override
+    public void refreshData() {
+        if (containsOsmDataLayer() && mapdustGUI.isShowing()) {
+            updatePluginData();
+        }
+    }
+
+    /**
+     * Downloads the MapDust bugs from the current map view, and updates the
+     * plugin data with the new downloaded data. This method is called only
+     * once, before first showing the MapDust bugs.
+     */
+    @Override
+    public void initialUpdate() {
+        if (containsOsmDataLayer()) {
+            updatePluginData();
+        }
+    }
+
     /**
      * Updates the given <code>MapdustBug</code> object from the map and from
      * the MapDust bugs list.
-     * 
+     *
      * @param mapdustBug The <code>MapdustBug</code> object
      */
     @Override
     public synchronized void changedData(MapdustBug mapdustBug) {
-        if (this.mapdustBugList == null) {
-            this.mapdustBugList = new ArrayList<MapdustBug>();
+        if (mapdustBugList == null) {
+            mapdustBugList = new ArrayList<MapdustBug>();
         }
         if (getMapdustGUI().isDialogShowing()) {
             if (Main.map != null && Main.map.mapView != null) {
@@ -196,115 +206,209 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             }
         }
     }
-    
+
+    /**
+     * If the zoom was changed, download the bugs from the current map view.
+     * This method is called whenever the zoom was changed.
+     */
+    @Override
+    public void zoomChanged() {
+        if (containsOsmDataLayer() && this.mapdustGUI.isShowing() && !wasError) {
+            updatePluginData();
+        }
+    }
+
+    /**
+     * No need to implement this.
+     */
     @Override
     public void activeLayerChange(Layer arg0, Layer arg1) {}
-    
+
+    /**
+     * Adds the <code>MapdustLayer</code> to the JOSM editor. If the list of
+     * <code>MapdustBug</code>s is null then downloads the data from the MapDust
+     * Service and updates the editor with this new data.
+     * 
+     * @param layer The <code>Layer</code> which will be added to the JOSM
+     * editor
+     */
     @Override
     public void layerAdded(Layer layer) {
         if (layer instanceof MapdustLayer) {
             /* download the MapDust bugs and update the plugin */
-            updateData();
+            if (mapdustBugList == null) {
+                updateMapdustData();
+            }
         }
     }
-    
+
+    /**
+     * Removes the <code>MapdustLayer</code> from the JOSM editor. Also closes
+     * the MapDust plugin window.
+     * 
+     * @param layer The <code>Layer</code> which will be removed from the JOSM
+     * editor
+     */
     @Override
     public void layerRemoved(Layer layer) {
         if (layer instanceof MapdustLayer) {
             /* remove the layer */
             MapView.removeLayerChangeListener(this);
-            MapView.removeZoomChangeListener(this);
+            NavigatableComponent.removeZoomChangeListener(this);
             Main.map.mapView.removeLayer(layer);
             Main.map.remove(mapdustGUI);
             if (mapdustGUI != null) {
-                mapdustGUI.update(null, this);
+                mapdustGUI.update(new ArrayList<MapdustBug>(), this);
+                mapdustGUI.setVisible(false);
             }
             mapdustLayer = null;
-            wasEmpty = false;
         }
     }
-    
+
+    /**
+     * No need to implement this.
+     */
+    @Override
+    public void mouseEntered(MouseEvent event) {}
+
+    /**
+     * No need to implement this.
+     */
+    @Override
+    public void mouseExited(MouseEvent arg0) {}
+
+    /**
+     * No need to implement this.
+     */
+    @Override
+    public void mousePressed(MouseEvent event) {}
+
+    /**
+     * No need to implement this.
+     */
+    @Override
+    public void mouseReleased(MouseEvent arg0) {}
+
+    /**
+     * At mouse click the following two actions can be done: adding a new bug,
+     * and selecting a bug from the map. A bug can be added if the plugin is the
+     * only active plugin and you double click on the map. You can select a bug
+     * from the map by clicking on it.
+     * 
+     * @event The <code>MouseEvent</code> object
+     */
     @Override
     public void mouseClicked(MouseEvent event) {
-        if (mapdustLayer != null && mapdustLayer.isVisible()
-                && Main.map.mapView.getActiveLayer() == getMapdustLayer()) {
-            /* show add bug dialog */
-            if (event.getButton() == MouseEvent.BUTTON3
-                    && event.getClickCount() == 2) {
-                String mapdustAddBug = Main.pref.get("mapdust.addBug");
-                boolean addBug = Boolean.parseBoolean(mapdustAddBug);
-                if (!addBug) {
-                    mapdustGUI.getPanel().getBtnPanel().getBtnWorkOffline()
-                            .setEnabled(false);
-                    mapdustGUI.getPanel().getBtnPanel().getBtnRefresh()
-                            .setEnabled(false);
-                    mapdustGUI.getPanel().getBtnPanel().getBtnAddComment()
-                            .setEnabled(false);
-                    mapdustGUI.getPanel().getBtnPanel().getBtnFixBugReport()
-                            .setEnabled(false);
-                    mapdustGUI.getPanel().getBtnPanel()
-                            .getBtnInvalidateBugReport().setEnabled(false);
-                    mapdustGUI.getPanel().getBtnPanel().getBtnReOpenBugReport()
-                            .setEnabled(false);
-                    Main.pref.put("mapdust.modify", true);
-                    MapdustBug selectedBug =
-                            mapdustGUI.getPanel().getSelectedBug();
-                    if (selectedBug != null) {
-                        Main.pref.put("selectedBug.status", selectedBug
-                                .getStatus().getValue());
-                    } else {
-                        Main.pref.put("selectedBug.status", "create");
-                    }
-                    String title = "Create bug report";
-                    String iconName = "dialogs/open.png";
-                    String messageText =
-                            "In order to create a new bug report you";
-                    messageText += " need to provide your nickname and a brief";
-                    messageText += " description for the bug.";
-                    Point point = event.getPoint();
-                    CreateIssueDialog dialog =
-                            new CreateIssueDialog(tr(title), iconName,
-                                    tr(messageText), point, this);
-                    dialog.setLocationRelativeTo(null);
-                    dialog.getContentPane().setPreferredSize(dialog.getSize());
-                    dialog.pack();
-                    dialog.setVisible(true);
-                } else {
-                    Main.pref.put("mapdust.addBug", false);
-                }
-            }
+        if (mapdustLayer != null && mapdustLayer.isVisible()) {
             if (event.getButton() == MouseEvent.BUTTON1) {
-                /* allow click on the bug icon on the map */
-                Point p = event.getPoint();
-                MapdustBug nearestBug = getNearestBug(p);
-                if (nearestBug != null) {
-                    mapdustLayer.setBugSelected(nearestBug);
-                    /* set also in the list of bugs the element */
-                    mapdustGUI.getPanel().setSelectedBug(nearestBug);
-                    Main.map.mapView.repaint();
+                if (event.getClickCount() == 2 && !event.isConsumed()) {
+                    if (Main.map.mapView.getActiveLayer() == getMapdustLayer()) {
+                        /* show add bug dialog */
+                        MapdustBug bug = mapdustGUI.getPanel().getSelectedBug();
+                        if (bug != null) {
+                            Main.pref.put("selectedBug.status", bug.getStatus()
+                                    .getValue());
+                        } else {
+                            Main.pref.put("selectedBug.status", "create");
+                        }
+                        /* disable MapdustButtonPanel */
+                        mapdustGUI.disableBtnPanel();
+                        /* create and show dialog */
+                        dialog = new CreateIssueDialog(event.getPoint(), this);
+                        dialog.showDialog();
+                        event.consume();
+                        return;
+                    }
+                }
+                if (event.getClickCount() == 1 && !event.isConsumed()) {
+                    /* allow click on the bug icon on the map */
+                    Point p = event.getPoint();
+                    MapdustBug nearestBug = getNearestBug(p);
+                    if (nearestBug != null) {
+                        mapdustLayer.setBugSelected(nearestBug);
+                        /* set also in the list of bugs the element */
+                        mapdustGUI.getPanel().setSelectedBug(nearestBug);
+                        Main.map.mapView.repaint();
+                    }
+                    return;
                 }
             }
         }
     }
-    
+
+
     /**
-     * Updates the current view, with the given list of <code>MapdustBug</code>
-     * objects.
+     * Updates the <code>MapdustPlugin</code> data. Downloads the
+     * <code>MapdustBug</code> objects from the current view, and updates the
+     * <code>MapdustGUI</code> and the map with the new data.
+     */
+    private void updatePluginData() {
+        Main.worker.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateMapdustData();
+            }
+        });
+    }
+
+    /**
+     * Returns the bounds of the current <code>MapView</code>.
+     *
+     * @return bounds
+     */
+    private Bounds getBounds() {
+        MapView mapView = Main.map.mapView;
+        Bounds bounds = new Bounds(mapView.getLatLon(0, mapView.getHeight()), 
+                mapView.getLatLon(mapView.getWidth(), 0));
+        return bounds;
+    }
+
+    /**
+     * Updates the MapDust plugin data. Downloads the list of
+     * <code>MapdustBug</code> objects for the given area, and updates the map
+     * and the MapDust layer with the new data.
+     */
+    private synchronized void updateMapdustData() {
+        if (Main.map != null && Main.map.mapView != null) {
+            /* download the MapDust data */
+            try {
+                Bounds bounds = getBounds();
+                MapdustServiceHandler handler = new MapdustServiceHandler();
+                mapdustBugList = handler.getBugs(bounds.getMin().lon(),
+                        bounds.getMin().lat(), bounds.getMax().lon(),
+                        bounds.getMax().lat());
+                wasError = false;
+            } catch (MapdustServiceHandlerException e) {
+                wasError = true;
+                mapdustBugList = new ArrayList<MapdustBug>();
+                updateView();
+                handleError();
+            }
+            /* update the view */
+            if (!wasError) {
+                updateView();
+            }
+        }
+    }
+
+    /**
+     * Updates the current view ( map and MapDust bug list), with the given list
+     * of <code>MapdustBug</code> objects.
      */
     private void updateView() {
         /* update the dialog with the new data */
         mapdustGUI.update(mapdustBugList, this);
+        mapdustGUI.setVisible(true);
         mapdustGUI.revalidate();
+        /* update the MapdustLayer */
         if (mapdustLayer == null) {
             /* create and add the layer */
-            mapdustLayer =
-                    new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
-            Main.main.addLayer(mapdustLayer);
-            Main.map.mapView.moveLayer(mapdustLayer, 0);
-            ;
+            mapdustLayer = new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
+            Main.main.addLayer(this.mapdustLayer);
+            Main.map.mapView.moveLayer(this.mapdustLayer, 0);
             Main.map.mapView.addMouseListener(this);
             MapView.addLayerChangeListener(this);
-            MapView.addZoomChangeListener(this);
+            NavigatableComponent.addZoomChangeListener(this);
         } else {
             /* re-set the properties */
             mapdustLayer.destroy();
@@ -316,97 +420,34 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         Main.map.mapView.revalidate();
         Main.map.repaint();
     }
-    
-    /**
-     * Downloads the MapDust bugs from the current map view, and updates the
-     * plugin data with the new downloaded data.
-     */
-    @Override
-    public void initialUpdate() {
-        if (containsOsmDataLayer()) {
-            updateData();
-        }
-    }
-    
-    /**
-     * If the zoom was changed, download the bugs from the current map view.
-     */
-    @Override
-    public void zoomChanged() {
-        updateData();
-    }
-    
-    /**
-     * Verifies if the <code>OsmDataLayer</code> layer has been added to the
-     * list of layers.
-     * 
-     * @return true if the <code>OsmDataLayer</code> layer has been added false
-     * otherwise
-     */
-    private boolean containsOsmDataLayer() {
-        boolean contains = false;
-        List<Layer> l = Main.map.mapView.getAllLayersAsList();
-        for (Layer ll : l) {
-            if (ll instanceof OsmDataLayer) {
-                contains = true;
-            }
-        }
-        return contains;
-    }
-    
+
     /**
      * Updates the MapDust bugs list with the given <code>MapdustBug</code>
      * object.
-     * 
+     *
      * @param mapdustBug The <code>MapdustBug</code> object
      */
     private void updateMapdustBugList(MapdustBug mapdustBug) {
         MapdustBug oldBug = null;
-        for (MapdustBug bug : mapdustBugList) {
+        for (MapdustBug bug : this.mapdustBugList) {
             if (bug.getId().equals(mapdustBug.getId())) {
                 oldBug = bug;
             }
         }
         if (oldBug != null) {
             /* remove, add */
-            mapdustBugList.remove(oldBug);
-            mapdustBugList.add(0, mapdustBug);
+            this.mapdustBugList.remove(oldBug);
+            this.mapdustBugList.add(0, mapdustBug);
         } else {
             /* new add */
-            mapdustBugList.add(0, mapdustBug);
+            this.mapdustBugList.add(0, mapdustBug);
         }
     }
-    
-    /**
-     * Returns the list of <code>MapdustBug</code> objects from the current
-     * area.
-     * 
-     * @return A list of <code>MapdustBug</code> objects
-     * @throws MapdustServiceHandlerException In the case of a MapDust service
-     * error
-     */
-    private List<MapdustBug> getMapdustBugs()
-            throws MapdustServiceHandlerException {
-        /* get the bounding box */
-        MapView mapView = Main.map.mapView;
-        Bounds bounds =
-                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
-                        mapView.getLatLon(mapView.getWidth(), 0));
-        Double minLon = bounds.getMin().lon();
-        Double minLat = bounds.getMin().lat();
-        Double maxLon = bounds.getMax().lon();
-        Double maxLat = bounds.getMax().lat();
-        
-        /* get the bugs from the bounding box */
-        MapdustServiceHandler handler = new MapdustServiceHandler();
-        List<MapdustBug> list = handler.getBugs(minLon, minLat, maxLon, maxLat);
-        return list;
-    }
-    
+
     /**
      * Returns the nearest <code>MapdustBug</code> object to the given point on
      * the map.
-     * 
+     *
      * @param p A <code>Point</code> object
      * @return A <code>MapdustBug</code> object
      */
@@ -426,75 +467,93 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         }
         return nearestBug;
     }
-    
-    @Override
-    public void mouseEntered(MouseEvent event) {
 
+    /**
+     * Verifies if the <code>OsmDataLayer</code> layer has been added to the
+     * list of layers.
+     *
+     * @return true if the <code>OsmDataLayer</code> layer has been added false
+     * otherwise
+     */
+    private boolean containsOsmDataLayer() {
+        boolean contains = false;
+        List<Layer> l = Main.map.mapView.getAllLayersAsList();
+        for (Layer ll : l) {
+            if (ll instanceof OsmDataLayer) {
+                contains = true;
+            }
+        }
+        return contains;
     }
-    
-    @Override
-    public void mouseExited(MouseEvent arg0) {}
-    
-    @Override
-    public void mousePressed(MouseEvent event) {
 
+    /**
+     * Handles the <code>MapdustServiceHandlerException</code> error.
+     *
+     */
+    private void handleError() {
+        String showMessage = Main.pref.get("mapdust.showError");
+        Boolean showErrorMessage = Boolean.parseBoolean(showMessage);
+        if (showErrorMessage) {
+            /* show errprMessage, and remove the layer */
+            Main.pref.put("mapdust.showError", false);
+            String errorMessage = "There was a Mapdust service error.";
+            errorMessage += " Please try later.";
+            JOptionPane.showMessageDialog(Main.parent, tr(errorMessage));
+        }
     }
-    
-    @Override
-    public void mouseReleased(MouseEvent arg0) {}
-    
+
     /**
      * Returns the <code>MapdustGUI</code> object
-     * 
+     *
      * @return the mapdustGUI
      */
     public MapdustGUI getMapdustGUI() {
         return mapdustGUI;
     }
-    
+
     /**
      * Sets the <code>MapdustGUI</code> object.
-     * 
+     *
      * @param mapdustGUI the mapdustGUI to set
      */
     public void setMapdustGUI(MapdustGUI mapdustGUI) {
         this.mapdustGUI = mapdustGUI;
     }
-    
+
     /**
      * Returns the <code>MapdustLayer</code> object.
-     * 
+     *
      * @return the mapdustLayer
      */
     public MapdustLayer getMapdustLayer() {
         return mapdustLayer;
     }
-    
+
     /**
      * Sets the <code>MapdustLayer</code> object.
-     * 
+     *
      * @param mapdustLayer the mapdustLayer to set
      */
     public void setMapdustLayer(MapdustLayer mapdustLayer) {
         this.mapdustLayer = mapdustLayer;
     }
-    
+
     /**
      * Returns the list of <code>MapdustBug</code> objects
-     * 
+     *
      * @return the mapdustBugList
      */
     public List<MapdustBug> getMapdustBugList() {
         return mapdustBugList;
     }
-    
+
     /**
      * Sets the list of <code>MapdustBug</code> objects
-     * 
+     *
      * @param mapdustBugList the mapdustBugList to set
      */
     public void setMapdustBugList(List<MapdustBug> mapdustBugList) {
         this.mapdustBugList = mapdustBugList;
     }
-    
+
 }

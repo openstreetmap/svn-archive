@@ -28,8 +28,8 @@
 package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +38,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.Main;
@@ -49,6 +50,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowCloseBugAction
 import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowCommentBugAction;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowInvalidateBugAction;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowReOpenBugAction;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.renderer.BugListCellRenderer;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObserver;
@@ -101,9 +103,7 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
     /**
      * Builds a <code>MapdustPlugin</code> object
      */
-    public MapdustPanel() {
-
-    }
+    public MapdustPanel() {}
 
     /**
      * Builds a <code>MapdustPlugin</code> object with the given parameters.
@@ -118,7 +118,7 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
         this.mapdustBugsList = mapdustBugsList;
         setLayout(new BorderLayout(5, 10));
         addComponents(mapdustPlugin);
-        setName(tr(name));
+        setName(name);
     }
 
     /**
@@ -133,37 +133,43 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
             menu = new JPopupMenu();
             /* add comment item */
             MapdustShowAction action = new ShowCommentBugAction(mapdustPlugin);
-            menuAddComment =
-                    ComponentUtil.createJMenuItem(action, tr("Add comment"),
-                            "dialogs/comment.png");
+            menuAddComment = ComponentUtil.createJMenuItem(action, "Add comment",
+                    "dialogs/comment.png");
             menu.add(menuAddComment);
             /* fix bug item */
             action = new ShowCloseBugAction(mapdustPlugin);
-            menuFixed =
-                    ComponentUtil.createJMenuItem(action, tr("Close bug"),
-                            "dialogs/fixed.png");
+            menuFixed = ComponentUtil.createJMenuItem(action, "Close bug",
+                    "dialogs/fixed.png");
             menu.add(menuFixed);
             /* invalidate bug item */
             action = new ShowInvalidateBugAction(mapdustPlugin);
-            menuInvalidate =
-                    ComponentUtil.createJMenuItem(action, tr("Invalidate bug"),
-                            "dialogs/invalid.png");
+            menuInvalidate = ComponentUtil.createJMenuItem(action,
+                    "Invalidate bug", "dialogs/invalid.png");
             menu.add(menuInvalidate);
             /* re-open bug item */
             action = new ShowReOpenBugAction(mapdustPlugin);
-            menuReopen =
-                    ComponentUtil.createJMenuItem(action, tr("Re-open bug"),
-                            "dialogs/reopen.png");
+            menuReopen = ComponentUtil.createJMenuItem(action, "Re-open bug",
+                    "dialogs/reopen.png");
             menu.add(menuReopen);
         }
         /* create bugs list */
-        listBugs = ComponentUtil.createJList(mapdustBugsList, menu);
-        listBugs.addListSelectionListener(this);
-        DisplayMenu adapter = new DisplayMenu(listBugs, menu);
-        listBugs.addMouseListener(adapter);
-        JScrollPane cmpBugs = ComponentUtil.createJScrollPane(listBugs);
-        /* add components */
-        add(cmpBugs, BorderLayout.CENTER);
+        JScrollPane cmpBugs;
+        if (mapdustBugsList != null && mapdustBugsList.size() == 0) {
+            String text = " No bugs in the current view!";
+            JList l=new JList(new String[]{text});
+            l.setBorder(new LineBorder(Color.black, 1, false));
+            l.setCellRenderer(new BugListCellRenderer());
+            cmpBugs=ComponentUtil.createJScrollPane(l);
+            add(cmpBugs, BorderLayout.CENTER);
+        } else {
+            listBugs = ComponentUtil.createJList(mapdustBugsList, menu);
+            listBugs.addListSelectionListener(this);
+            DisplayMenu adapter = new DisplayMenu(listBugs, menu);
+            listBugs.addMouseListener(adapter);
+            cmpBugs = ComponentUtil.createJScrollPane(getListBugs());
+            add(cmpBugs, BorderLayout.CENTER);
+        }
+        /* add button panel */
         add(btnPanel, BorderLayout.SOUTH);
     }
 
@@ -202,6 +208,7 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
             getMenuInvalidate().setEnabled(false);
             getMenuFixed().setEnabled(false);
         }
+        /* re-paint */
         Main.map.mapView.repaint();
         mapdustGUI.repaint();
     }
@@ -212,7 +219,10 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
      * @return a <code>MapdustBug</code> object
      */
     public MapdustBug getSelectedBug() {
-        MapdustBug selectedBug = (MapdustBug) getListBugs().getSelectedValue();
+        MapdustBug selectedBug=null;
+        if (getListBugs()!=null) {
+            selectedBug = (MapdustBug) getListBugs().getSelectedValue();
+        }
         return selectedBug;
     }
 
@@ -347,4 +357,5 @@ public class MapdustPanel extends JPanel implements ListSelectionListener,
             (elements.next()).showDetails(mapdustBug);
         }
     }
+
 }

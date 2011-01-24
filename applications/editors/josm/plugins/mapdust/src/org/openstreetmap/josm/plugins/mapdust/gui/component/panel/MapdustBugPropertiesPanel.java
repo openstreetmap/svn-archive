@@ -28,11 +28,14 @@
 package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObserver;
@@ -90,9 +93,14 @@ public class MapdustBugPropertiesPanel extends JPanel implements
 
     }
 
+    /**
+     * Displays the details of the given MapDust bug.
+     * 
+     * @param mapdustBug The <code>MapdustBug</code> object
+     */
     @Override
     public void showDetails(MapdustBug mapdustBug) {
-        MapdustBug selectedBug=mapdustBug;
+        MapdustBug selectedBug = mapdustBug;
         if (mapdustBug != null) {
             if (mapdustBug.getNumberOfComments() > 0) {
                 Long id = mapdustBug.getId();
@@ -103,12 +111,13 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         /* remove components */
         if (mainPanel != null) {
             index = mainPanel.getSelectedIndex();
-            cmpDetails.remove(detailsPanel);
-            mainPanel.remove(cmpDetails);
-            mainPanel.remove(cmpAddress);
-            mainPanel.remove(descriptionPanel);
-            mainPanel.remove(commentsPanel);
-            mainPanel.remove(helpPanel);
+            if (mainPanel.getComponentCount() > 0) {
+                mainPanel.remove(cmpDetails);
+                mainPanel.remove(cmpAddress);
+                mainPanel.remove(descriptionPanel);
+                mainPanel.remove(commentsPanel);
+                mainPanel.remove(helpPanel);
+            }
             remove(mainPanel);
         }
         /* create the panels */
@@ -142,9 +151,8 @@ public class MapdustBugPropertiesPanel extends JPanel implements
     private void createPanels(MapdustBug mapdustBug) {
         /* create details panel */
         detailsPanel = new MapdustBugDetailsPanel(mapdustBug);
-        cmpDetails =
-                ComponentUtil.createJScrollPane(detailsPanel, getBounds(),
-                        getBackground(), true, true);
+        cmpDetails = ComponentUtil.createJScrollPane(detailsPanel, getBounds(),
+                getBackground(), true, true);
         cmpDetails.setPreferredSize(new Dimension(100, 100));
         cmpDetails.setName("Bug Details");
 
@@ -152,21 +160,18 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         Address address = mapdustBug != null ? mapdustBug.getAddress() : null;
         LatLon coordinates = mapdustBug != null ? mapdustBug.getLatLon() : null;
         addressPanel = new MapdustAddressPanel(address, coordinates);
-        cmpAddress =
-                ComponentUtil.createJScrollPane(addressPanel, getBounds(),
-                        getBackground(), true, true);
+        cmpAddress = ComponentUtil.createJScrollPane(addressPanel, getBounds(),
+                getBackground(), true, true);
         cmpAddress.setName("Address");
         cmpAddress.setPreferredSize(new Dimension(100, 100));
 
         /* create description panel */
-        String description =
-                mapdustBug != null ? mapdustBug.getDescription() : "";
+        String description = mapdustBug != null ? mapdustBug.getDescription() : "";
         descriptionPanel = new MapdustDescriptionPanel(description);
 
         /* create comments panel */
-        MapdustComment[] comments =
-                mapdustBug != null ? mapdustBug.getComments()
-                        : new MapdustComment[0];
+        MapdustComment[] comments = mapdustBug != null ? mapdustBug.getComments()
+                : new MapdustComment[0];
         commentsPanel = new MapdustCommentsPanel(comments);
 
         /* create the help panel */
@@ -194,7 +199,10 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         try {
             bug = new MapdustServiceHandler().getBug(id, null);
         } catch (MapdustServiceHandlerException e) {
-
+            String errorMessage = "There was a MapDust service error durring ";
+            errorMessage+=" the MapDust bug retrieve process.";
+            JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                    tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
         return bug;
     }

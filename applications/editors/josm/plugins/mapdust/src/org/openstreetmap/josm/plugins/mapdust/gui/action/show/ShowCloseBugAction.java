@@ -30,7 +30,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
@@ -75,7 +74,6 @@ public class ShowCloseBugAction extends MapdustShowAction {
                 btn.setEnabled(false);
             }
             disableButtons(getButtonPanel());
-            Main.pref.put("mapdust.modify", true);
             ChangeIssueStatusDialog dialog = new ChangeIssueStatusDialog(
                     getTitle(), getIconName(), getMessageText(), "close", btn,
                     getMapdustPlugin());

@@ -38,7 +38,8 @@ package org.openstreetmap.josm.plugins.mapdust.gui.observer;
 public interface MapdustRefreshObserver {
 
     /**
-     * Updates the data of the MapDust plugin data.
+     * Refreshes the MapDust data. Downloads the bugs from the current view, and
+     * updates the plugin with the new data.
      */
-    public void updateData();
+    public void refreshData();
 }

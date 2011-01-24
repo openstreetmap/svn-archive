@@ -32,7 +32,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -86,16 +85,13 @@ public class MapdustGUI extends ToggleDialog implements
     private MapdustPlugin mapdustPlugin;
     
     /** The <code>MapdustBugPropertiesPanel</code> */
-    private final MapdustBugPropertiesPanel detailsPanel;
+    private MapdustBugPropertiesPanel detailsPanel;
     
     /** The <code>JPanel</code> */
     private JPanel mainPanel;
     
-    /**
-     * Flag indicating if the MapDust data was downloaded and the view was
-     * updated
-     */
-    private boolean initialUpdate = false;
+    /** Specifies if the MapDust data was or not downloaded */
+    private boolean downloaded = false;
     
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
@@ -111,42 +107,6 @@ public class MapdustGUI extends ToggleDialog implements
             Shortcut shortcut, int preferredHeight, MapdustPlugin mapdustPlugin) {
         super(tr(name), iconName, tr(tooltip), shortcut, preferredHeight);
         this.mapdustPlugin = mapdustPlugin;
-        panel = new MapdustPanel(mapdustPlugin.getMapdustBugList(),
-                "Bug reports", mapdustPlugin);
-        MapdustBug bug = null;
-        if (mapdustPlugin.getMapdustBugList() != null
-                && mapdustPlugin.getMapdustBugList().size() > 0) {
-            bug = mapdustPlugin.getMapdustBugList().get(0);
-        }
-        detailsPanel = new MapdustBugPropertiesPanel(bug);
-        panel.addObserver(detailsPanel);
-        addObserver(detailsPanel);
-        String pluginState = Main.pref.get("mapdust.pluginState");
-        if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
-            /* offline mode, need to add also queue panel */
-            tabbedPane = new JTabbedPane();
-            List<MapdustAction> list = new LinkedList<MapdustAction>();
-            mainPanel = new JPanel();
-            mainPanel.setAutoscrolls(true);
-            mainPanel.setLayout(new BorderLayout(5, 10));
-            mainPanel.add(detailsPanel, BorderLayout.NORTH);
-            mainPanel.add(panel, BorderLayout.CENTER);
-            queuePanel = new MapdustActionPanel(list, "Work offline", mapdustPlugin);
-            tabbedPane.add(mainPanel, 0);
-            tabbedPane.add(queuePanel);
-            add(tabbedPane, BorderLayout.CENTER);
-        } else {
-            /* online mode */
-            mainPanel = new JPanel();
-            mainPanel.setIgnoreRepaint(true);
-            mainPanel.setAutoscrolls(true);
-            mainPanel.setLayout(new BorderLayout(5, 10));
-            mainPanel.add(detailsPanel, BorderLayout.NORTH);
-            mainPanel.add(panel, BorderLayout.CENTER);
-            add(mainPanel, BorderLayout.CENTER);
-            tabbedPane = null;
-            queuePanel = null;
-        }
     }
     
     /**
@@ -164,22 +124,23 @@ public class MapdustGUI extends ToggleDialog implements
             /* remove the panels */
             if (tabbedPane != null) {
                 /* offline to online */
-                tabbedPane.remove(panel);
-                tabbedPane.remove(queuePanel);
-                mainPanel.remove(tabbedPane);
                 remove(mainPanel);
                 queuePanel = null;
             } else {
                 /* online to online */
-                mainPanel.remove(detailsPanel);
-                mainPanel.remove(panel);
-                remove(mainPanel);
+                if (mainPanel != null) {
+                    remove(mainPanel);
+                }
             }
             /* add panels with updated data */
             panel = new MapdustPanel(mapdustBugs, "Bug reports", mapdustPlugin);
-            MapdustBug selectedBug =
-                    (mapdustBugs != null && mapdustBugs.size() > 0) ? mapdustBugs
-                            .get(0) : null;
+            MapdustBug selectedBug = (mapdustBugs != null && mapdustBugs.size() 
+                    > 0) ? mapdustBugs.get(0) : null;
+            if (detailsPanel == null) {
+                detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
+                panel.addObserver(detailsPanel);
+                addObserver(detailsPanel);
+            }
             notifyObservers(selectedBug);
             panel.addObserver(detailsPanel);
             mainPanel = new JPanel();
@@ -195,15 +156,9 @@ public class MapdustGUI extends ToggleDialog implements
             /* remove panels */
             if (queuePanel == null) {
                 /* from online to offline */
-                mainPanel.remove(detailsPanel);
-                mainPanel.remove(panel);
                 remove(mainPanel);
             } else {
                 list = queuePanel.getActionList();
-                mainPanel.remove(detailsPanel);
-                tabbedPane.remove(panel);
-                tabbedPane.remove(queuePanel);
-                mainPanel.remove(tabbedPane);
                 remove(mainPanel);
             }
             /* add panels with updated data */
@@ -212,10 +167,19 @@ public class MapdustGUI extends ToggleDialog implements
                     mapdustPlugin);
             panel = new MapdustPanel(mapdustBugs, "Bug reports (offline)",
                     mapdustPlugin);
+            MapdustBug selectedBug = (mapdustBugs != null && mapdustBugs.size() 
+                    > 0) ? mapdustBugs.get(0) : null;
+            if (detailsPanel == null) {
+                detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
+                panel.addObserver(detailsPanel);
+                addObserver(detailsPanel);
+            }
+            notifyObservers(selectedBug);
+            panel.addObserver(detailsPanel);
             mainPanel = new JPanel();
             mainPanel.setAutoscrolls(true);
             mainPanel.setLayout(new BorderLayout());
-            if (mapdustBugs != null && mapdustBugs.size() > 0) {
+            if (mapdustBugs != null) {
                 mainPanel.add(detailsPanel, BorderLayout.NORTH);
             }
             tabbedPane.add(panel, 0);
@@ -238,11 +202,9 @@ public class MapdustGUI extends ToggleDialog implements
         mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug());
         
         /* remove panels */
-        mainPanel.remove(detailsPanel);
-        tabbedPane.remove(panel);
-        tabbedPane.remove(queuePanel);
-        mainPanel.remove(tabbedPane);
-        remove(mainPanel);
+        if (mainPanel != null) {
+            remove(mainPanel);
+        }
         /* create new tabbed pane */
         tabbedPane = new JTabbedPane();
         list.add(action);
@@ -262,21 +224,18 @@ public class MapdustGUI extends ToggleDialog implements
     }
     
     /**
-     * Shows the MapDust main dialog. In the case if the plugin was not updated
-     * with the new MapDust data, or the data was not downloaded; it will also
-     * download the MapDust data from the current view, and update the plugin
-     * with the new data.
+     * Disables the buttons from the <code>MapdustButtonPanel</code> buttons.
      * 
      */
-    @Override
-    public void showDialog() {
-        super.showDialog();
-        /* was not updated */
-        if (!initialUpdate && isShowing) {
-            notifyObservers();
-            initialUpdate = true;
-        }
+    public void disableBtnPanel() {
+        panel.getBtnPanel().getBtnWorkOffline().setEnabled(false);
+        panel.getBtnPanel().getBtnRefresh().setEnabled(false);
+        panel.getBtnPanel().getBtnAddComment().setEnabled(false);
+        panel.getBtnPanel().getBtnFixBugReport().setEnabled(false);
+        panel.getBtnPanel().getBtnInvalidateBugReport().setEnabled(false);
+        panel.getBtnPanel().getBtnReOpenBugReport().setEnabled(false);
     }
+    
     
     /**
      * Modifies the given <code>MapdustBug</code> in the given list of
@@ -303,6 +262,21 @@ public class MapdustGUI extends ToggleDialog implements
             mapdustBugs.add(0, modifiedBug);
         }
         return mapdustBugs;
+    }
+    
+    /**
+     * Displays the <code>MapdustGUI</code> dialog window in the JOSM editor. If
+     * the MapDust data was not downloaded yet, it will donwload the data and
+     * also update the MapDust plugin with the data. If the MapDust data was
+     * already downloaded, then the <code>MapdustGUI</code> will be displayed.
+     */
+    @Override
+    public void showDialog() {
+        if (!downloaded) {
+            notifyObservers();
+            downloaded = true;
+        }
+        super.showDialog();
     }
     
     /**

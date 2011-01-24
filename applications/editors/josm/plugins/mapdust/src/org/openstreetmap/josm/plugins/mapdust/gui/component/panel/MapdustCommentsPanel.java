@@ -99,4 +99,5 @@ public class MapdustCommentsPanel extends JPanel {
         sp.setPreferredSize(new Dimension(100, 100));
         add(sp);
     }
+
 }

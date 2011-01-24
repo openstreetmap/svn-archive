@@ -45,10 +45,10 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
 
 /**
  * Executes the work offline action. In the offline mode the user actions will
- * not be uploaded immediately to the Mapdust service. The user can perform the
+ * not be uploaded immediately to the MapDust service. The user can perform the
  * following actions in offline mode: add bug, comment bug and change bug
- * status. After deactivating the offline mode the user's modifications will be
- * uploaded to the Mapdust service.
+ * status. After de-activating the offline mode the user's modifications will be
+ * uploaded to the MapDust service.
  *
  * @author Bea
  *
@@ -78,6 +78,11 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Sets the 'offline' mode for the plugin.
+     * 
+     * @param event The event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JToggleButton) {
@@ -93,19 +98,15 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                     String title = "MapDust";
                     String message = "Do you want to submit your changes ";
                     message += "to Mapdust?";
-                    int result =
-                            JOptionPane.showConfirmDialog(Main.parent,
-                                    tr(message), tr(title),
-                                    JOptionPane.YES_NO_OPTION);
+                    int result = JOptionPane.showConfirmDialog(Main.parent,
+                            tr(message), tr(title), JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         // process data
                         try {
                             MapdustActionUploader.getInstance().uploadData(
-                                    getMapdustGUI().getQueuePanel()
-                                            .getActionList());
+                                    getMapdustGUI().getQueuePanel().getActionList());
                         } catch (MapdustActionUploaderException e) {
-                            String errorMessage =
-                                    "There was a Mapdust service error.";
+                            String errorMessage = "There was a Mapdust service error.";
                             JOptionPane.showMessageDialog(Main.parent,
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
@@ -149,7 +150,8 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
     public void notifyObservers() {
         Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).updateData();
+            (elements.next()).refreshData();
         }
     }
+    
 }

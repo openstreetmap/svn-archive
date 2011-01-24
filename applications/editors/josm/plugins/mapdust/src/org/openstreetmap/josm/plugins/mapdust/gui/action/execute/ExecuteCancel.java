@@ -64,15 +64,18 @@ public class ExecuteCancel extends MapdustExecuteAction {
         setMapdustGUI(mapdustGUI);
     }
 
-
+    /**
+     * Cancels the executed action, and closes the visible dialog window.
+     * 
+     * @param event The action event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
             String pluginState = Main.pref.get("mapdust.pluginState");
             String status = Main.pref.get("selectedBug.status");
             /* enable buttons */
-            MapdustButtonPanel btnPanel =
-                    getMapdustGUI().getPanel().getBtnPanel();
+            MapdustButtonPanel btnPanel = getMapdustGUI().getPanel().getBtnPanel();
             if (btnPanel != null) {
                 btnPanel.getBtnWorkOffline().setEnabled(true);
                 btnPanel.getBtnWorkOffline().setSelected(false);
@@ -118,11 +121,8 @@ public class ExecuteCancel extends MapdustExecuteAction {
             }
         }
 
-        Main.pref.put("mapdust.addBug", true);
-        Main.pref.put("mapdust.modify", false);
         /* dispose dialog */
-        getDialog().setVisible(false);
         getDialog().dispose();
     }
-    
+
 }

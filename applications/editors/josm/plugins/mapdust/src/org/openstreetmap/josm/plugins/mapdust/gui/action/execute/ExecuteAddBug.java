@@ -81,7 +81,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      */
     public ExecuteAddBug() {}
 
-    /***
+    /**
      * Builds a <code>ExecuteAddBug</code> object based on the given arguments.
      *
      * @param dialog The <code>CreateIssueDialog</code> object
@@ -92,6 +92,13 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Creates a new <code>MapdustBug</code> object if the entered informations
+     * are valid. Otherwise a corresponding warning message will be shown to the
+     * user.
+     * 
+     * @param event The action event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
@@ -114,17 +121,15 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
             if (p != null) {
                 latlon = Main.map.mapView.getLatLon(p.x, p.y);
             }
-            MapdustBug bug =
-                    new MapdustBug(latlon, type, commentText, nickname);
+            MapdustBug bug = new MapdustBug(latlon, type, commentText, nickname);
             String pluginState = Main.pref.get("mapdust.pluginState");
             if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                 /* offline state */
                 int index = getSelectedBugIndex();
                 bug.setStatus(Status.OPEN);
                 String iconPath = getIconPath(bug);
-                MapdustAction mapdustAction =
-                        new MapdustAction(MapdustServiceCommand.ADD_BUG,
-                                iconPath, bug);
+                MapdustAction mapdustAction = new MapdustAction(
+                        MapdustServiceCommand.ADD_BUG, iconPath, bug);
                 if (getMapdustGUI().getQueuePanel() != null) {
                     notifyObservers(mapdustAction);
                 }
@@ -137,9 +142,8 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
                     id = handler.addBug(bug);
                 } catch (MapdustServiceHandlerException e) {
                     errorMessage = "There was a Mapdust service error.";
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr(errorMessage), tr("Error"),
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage), 
+                            tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
                 if (id != null) {
                     /* success */
@@ -148,9 +152,8 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
                         newMapdustBug = handler.getBug(id, null);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent,
-                                tr(errorMessage), tr("Error"),
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent, tr(errorMessage), 
+                                tr("Error"), JOptionPane.ERROR_MESSAGE);
                     }
                     if (newMapdustBug != null) {
                         notifyObservers(newMapdustBug);
@@ -158,9 +161,9 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
                 }
                 resetSelectedBug(0);
             }
-            Main.pref.put("mapdust.modify", false);
             /* destroy dialog */
             getDialog().dispose();
+            return;
         }
     }
 

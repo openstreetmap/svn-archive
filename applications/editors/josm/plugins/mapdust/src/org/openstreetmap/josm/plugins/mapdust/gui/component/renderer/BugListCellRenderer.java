@@ -62,10 +62,10 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean hasFocus) {
-        JLabel label =
-                (JLabel) super.getListCellRendererComponent(list, value, index,
-                        isSelected, hasFocus);
+        JLabel label =(JLabel) super.getListCellRendererComponent(list, value,
+                index,isSelected, hasFocus);
         if (value instanceof MapdustBug) {
+            /* show the MapdustBug in the list */
             MapdustBug mapdustBug = (MapdustBug) value;
             String iconPath = "bugs/normal/";
             iconPath += mapdustBug.getStatus().getValue().toLowerCase();
@@ -83,6 +83,12 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
                     Locale.getDefault());
             text +=" last modified on ";
             text += df.format(mapdustBug.getDateUpdated());
+            label.setText(text);
+            label.setFont(new Font("Times New Roman", Font.BOLD, 12));
+        }
+        if (value instanceof String){
+            /* show default text in the list */
+            String text=(String)value;
             label.setText(text);
             label.setFont(new Font("Times New Roman", Font.BOLD, 12));
         }

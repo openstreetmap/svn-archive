@@ -41,4 +41,5 @@ public interface MapdustInitialUpdateObserver {
      * Downloads initially the MapDust Bugs and updates the plugin.
      */
     public void initialUpdate();
+
 }

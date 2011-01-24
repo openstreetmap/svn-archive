@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JToggleButton;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObserver;
 
@@ -59,11 +60,17 @@ public class ExecuteRefresh extends AbstractAction implements
      */
     public ExecuteRefresh() {}
 
+    /**
+     * Updates the Mapdust data.
+     * 
+     * @param event The event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JToggleButton) {
             JToggleButton btn = (JToggleButton) event.getSource();
             /* update the bugs */
+            Main.pref.put("mapdust.showError", true);
             notifyObservers();
             btn.setSelected(false);
         }
@@ -98,7 +105,8 @@ public class ExecuteRefresh extends AbstractAction implements
     public void notifyObservers() {
         Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).updateData();
+            (elements.next()).refreshData();
         }
     }
+    
 }

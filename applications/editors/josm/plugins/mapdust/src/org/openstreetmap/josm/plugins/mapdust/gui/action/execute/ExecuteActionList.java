@@ -70,10 +70,14 @@ public class ExecuteActionList extends MapdustExecuteAction implements
         setMapdustGUI(mapdustGUI);
     }
 
+    /**
+     * Uploads the content of the action list to the MapDust service. 
+     * 
+     * @param event The event which fires this action
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() instanceof JToggleButton) {
-            // upload actions
             try {
                 MapdustActionUploader.getInstance().uploadData(
                         getMapdustGUI().getQueuePanel().getActionList());
@@ -83,10 +87,8 @@ public class ExecuteActionList extends MapdustExecuteAction implements
                 JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
                         tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
-            Main.pref.put("mapdust.pluginState",
-                    MapdustPluginState.ONLINE.getValue());
-            getMapdustGUI().getPanel().getBtnPanel().getBtnRefresh()
-                    .setEnabled(true);
+            Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
+            getMapdustGUI().getPanel().getBtnPanel().getBtnRefresh().setEnabled(true);
             notifyObservers();
         }
     }
@@ -120,7 +122,8 @@ public class ExecuteActionList extends MapdustExecuteAction implements
     public void notifyObservers() {
         Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).updateData();
+            (elements.next()).refreshData();
         }
     }
+
 }

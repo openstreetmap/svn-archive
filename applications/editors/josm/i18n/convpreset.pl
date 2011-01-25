@@ -10,6 +10,7 @@ my $group;
 my $combo_n;
 my @combo_values;
 my $combo_idx;
+my $result = 0;
 my $comment = 0;
 
 # This is a simple conversion and in no way a complete XML parser
@@ -103,48 +104,50 @@ while(my $line = <>)
     }
   }
   # first handle display values
-  elsif($line =~ /<combo.*\s+text=(".*?").*\s+display_values="(.*?)"/)
+  elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+display_values="(.*?)"/)
   {
-    my ($n,$vals) = ($1,$2);
+    my ($type,$n,$vals) = ($1,$2,$3);
+    my $sp = ($type eq "combo" ? ",":";");
     $combo_n = $n;
     $combo_idx = 0;
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item combo $n */ trc($1,$n);";
+      print "/* item $item $type $n */ trc($1,$n);";
     }
     else
     {
-      print "/* item $item combo $n */ tr($n);";
+      print "/* item $item $type $n */ tr($n);";
     }
-    $vals =~ s/\\,/\x91/g;
-    @combo_values = split ",",$vals;
+    $vals =~ s/\\$sp/\x91/g;
+    @combo_values = split $sp,$vals;
     for (my $i=0; $i<@combo_values; ++$i) {
-      $combo_values[$i] =~ s/\x91/,/g;
+      $combo_values[$i] =~ s/\x91/$sp/g;
       next if $combo_values[$i] =~ /^[0-9-]+$/; # search for non-numbers
-      print "/* item $item combo $n display value */" . ($vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");");
+      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");");
     }
     print "\n";
   }
-  elsif($line =~ /<combo.*\s+text=(".*?").*\s+values="(.*?)"/)
+  elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+values="(.*?)"/)
   {
-    my ($n,$vals) = ($1,$2);
+    my ($type,$n,$vals) = ($1,$2,$3);
+    my $sp = ($type eq "combo" ? ",":";");
     $combo_n = $n;
     $combo_idx = 0;
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item combo $n */ trc($1,$n);";
+      print "/* item $item $type $n */ trc($1,$n);";
     }
     else
     {
-      print "/* item $item combo $n */ tr($n);";
+      print "/* item $item $type $n */ tr($n);";
     }
-    @combo_values = split ",",$vals;
+    @combo_values = split $sp,$vals;
     foreach my $val (@combo_values)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print "/* item $item combo $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
+      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
     }
     print "\n";
   }
@@ -178,10 +181,12 @@ while(my $line = <>)
      || $line =~ /<space *\/>/
      || $line =~ /<\/?optional>/
      || $line =~ /<key/
-     || $line =~ /annotations/
+     || $line =~ /<presets/
+     || $line =~ /<\/presets/
      || $line =~ /roles/
      || $line =~ /href=/
      || $line =~ /<!--/
+     || $line =~ /<\?xml/
      || $line =~ /-->/
      || $comment)
   {
@@ -190,7 +195,7 @@ while(my $line = <>)
   else
   {
     print "/* unparsed line $line */\n";
-#    print STDERR "Unparsed line $line\n";
+    $result = 20
   }
 
   # note, these two must be in this order ore oneliners aren't handled
@@ -199,3 +204,4 @@ while(my $line = <>)
 }
 
 print "}}\n";
+return $result if $result;

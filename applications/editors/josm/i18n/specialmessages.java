@@ -8,6 +8,7 @@
 /* OSM server message */ tr("You requested too many nodes (limit is 50,000). Either request a smaller area, or use planet.osm");
 /* OSM server message */ tr("Database offline for maintenance");
 /* OSM server message */ tr("The maximum bbox size is 0.25, and your request was too large. Either request a smaller area, or use planet.osm");
+/* JOSM server message */ tr("JOSM-Trac login at josm.openstreetmap.de");
 /* Java message loading audio data */ tr("could not get audio input stream from input URL");
 /* Java message loading audio data */ tr("Audio Device Unavailable");
 /* OSM server message */ tr("You must make your edits public to upload new data");

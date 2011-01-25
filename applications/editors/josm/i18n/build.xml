@@ -26,7 +26,7 @@
 
   <target name="trans_.java">
     <mkdir dir="${i18n.build.dir}"/>
-    <exec executable="perl" output="${i18n.build.dir}/trans_presets.java">
+    <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
       <arg line="convpreset.pl ${josm.presets}"/>
     </exec>
     <exec executable="perl" output="${i18n.build.dir}/trans_style.java">

@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="SeaMapEditor" basedir=".">
+<project name="smed" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="some new internationalized messages" />

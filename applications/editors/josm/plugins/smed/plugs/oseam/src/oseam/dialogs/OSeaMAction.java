@@ -32,7 +32,6 @@ public class OSeaMAction {
 			Node nextNode = null;
 			Selection = newSelection;
 
-			// System.out.println("hello");
 			for (OsmPrimitive osm : Selection) {
 				if (osm instanceof Node) {
 					nextNode = (Node) osm;
@@ -40,6 +39,7 @@ public class OSeaMAction {
 						if (nextNode.compareTo(node) != 0) {
 							node = nextNode;
 							mark = new SeaMark(dlg);
+							mark.parseMark(node);
 						}
 					} else
 						manager.showVisualMessage(Messages.getString("OneNode"));
@@ -56,6 +56,7 @@ public class OSeaMAction {
 
 	public OSeaMAction(SmedPluginManager mngr) {
 
+		// System.out.println("hello");
 		dlg = this;
 		manager = mngr;
 		DataSet.addSelectionListener(SmpListener);

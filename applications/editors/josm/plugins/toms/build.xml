@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="toms" default="dist" basedir=".">
+<project name="SeaMapEditor" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="Bug fix release" />

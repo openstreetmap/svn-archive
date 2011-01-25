@@ -143,23 +143,6 @@ public class MeasurementLayer extends Layer {
         MeasurementPlugin.measurementDialog.pathLengthLabel.setText(pathLength < 800?nf2.format(pathLength) + " m":nf.format(pathLength/1000) + " km");
     }
 
-    public static double calcDistance(LatLon p1, LatLon p2){
-        double lat1, lon1, lat2, lon2;
-        double dlon, dlat;
-
-        lat1 = p1.lat() * Math.PI / 180.0;
-        lon1 = p1.lon() * Math.PI / 180.0;
-        lat2 = p2.lat() * Math.PI / 180.0;
-        lon2 = p2.lon() * Math.PI / 180.0;
-
-        dlon = lon2 - lon1;
-        dlat = lat2 - lat1;
-
-        double a = (Math.pow(Math.sin(dlat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2), 2));
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return 6367000 * c;
-    }
-
     public static double calcX(LatLon p1){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
@@ -195,7 +178,7 @@ public class MeasurementLayer extends Layer {
     }
 
     public static double calcDistance(WayPoint p1, WayPoint p2){
-        return calcDistance(p1.getCoor(), p2.getCoor());
+        return p1.getCoor().greatCircleDistance(p2.getCoor());
     }
 
     public static double angleBetween(WayPoint p1, WayPoint p2){
@@ -259,6 +242,7 @@ public class MeasurementLayer extends Layer {
         super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Box panel = Box.createVerticalBox();
         final JList layerList = new JList(model);

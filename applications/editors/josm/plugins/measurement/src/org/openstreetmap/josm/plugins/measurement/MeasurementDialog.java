@@ -103,7 +103,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         this.setPreferredSize(new Dimension(0, 92));
         final MeasurementDialog dlg = this;
 
-        DataSet.selListeners.add(new SelectionChangedListener() {
+        DataSet.addSelectionListener(new SelectionChangedListener() {
+            @Override
             public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
                 double length = 0.0;
                 double segAngle = 0.0;
@@ -116,7 +117,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                         if(lastNode == null) {
                             lastNode = n;
                         } else {
-                            length += MeasurementLayer.calcDistance(lastNode.getCoor(), n.getCoor());
+                            length += lastNode.getCoor().greatCircleDistance(n.getCoor());
                             segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
                             lastNode = n;
                         }
@@ -125,7 +126,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                         Node lastN = null;
                         for(Node n: w.getNodes()) {
                             if(lastN != null) {
-                                length += MeasurementLayer.calcDistance(lastN.getCoor(), n.getCoor());
+                                length += lastN.getCoor().greatCircleDistance(n.getCoor());
                                 //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                                 area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
                                 - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
@@ -147,6 +148,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         });
     }
 
+    @Override
     public void actionPerformed(ActionEvent e)
     {
         String actionCommand = e.getActionCommand();

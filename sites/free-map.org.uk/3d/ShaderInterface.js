@@ -91,7 +91,7 @@ var ShaderInterface = Class.create ( {
 		if(nMtx!=null)
 		{
         	this.gl.uniformMatrix4fv
-            (this.p_nMtx,false,new Float32Array(nMtx.flatten()));
+            (this.p_unMtx,false,new Float32Array(nMtx.flatten()));
 		}
     },
 

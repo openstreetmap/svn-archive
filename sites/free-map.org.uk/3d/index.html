@@ -36,7 +36,7 @@ void main (void)
 	vec3 ambientColour = vec3(0.1, 0.1, 0.1);
 	vec3 directionalColour = vec3(0.8, 0.8, 0.8);
 	vec3 lightingDirection = vec3(0.0, 0.7, 0.3);
-	vec4 transformedNormal = unMtx *vec4(aNormal,0.0);
+	vec4 transformedNormal = unMtx *vec4(aNormal,1.0);
 	vec4 transformedLightingDirection = umvMtx*vec4(lightingDirection,0.0);
 	float dirLightWeighting =
 			max(dot(transformedNormal.xyz,transformedLightingDirection.xyz),
@@ -112,9 +112,9 @@ background-color: rgba(135,207,236,0) }
 <h1>Freemap 3D</h1>
 <div id='intro'>
 <p><strong>Important note!</strong> <em>This is once again functional due
-to fixing various WebGL spec changes. However lighting no longer works - 
-need to find out why that is. Also only footpaths are shown due to server
-constraints.</em></p>
+to fixing various WebGL spec changes. Lighting now works too :-)
+However, except for areas close to the default location (Sussex/Hampshire
+border area), only footpaths are shown due to server constraints.</em></p>
 <p>This is a demo application to render OpenStreetMap data in 3D using 
 WebGL. This is a very early version, so it's not that impressive yet, but
 nonetheless you can navigate around and OSM data will be downloaded from

@@ -226,9 +226,6 @@ public class SmpDialogAction extends JosmAction {
 			Main.pref.put("mappaint.style.sources", str //$NON-NLS-1$
 					+ "http://dev.openseamap.org/josm/seamark_styles.xml"); //$NON-NLS-1$
 		}
-		str = Main.pref.get("color.background"); //$NON-NLS-1$
-		if (str.equals("#000000") || str.isEmpty()) //$NON-NLS-1$ //$NON-NLS-2$
-			Main.pref.put("color.background", "#606060"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void CloseDialog() {

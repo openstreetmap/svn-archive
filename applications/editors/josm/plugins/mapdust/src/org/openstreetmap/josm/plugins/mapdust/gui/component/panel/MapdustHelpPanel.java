@@ -65,7 +65,7 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
         setName(name);
         String txt = "<html>";
         txt += "<font style='font-size:10px' face='Times New Roman'>";
-        txt += "<b>To select or add bugs on the map you need to activate ";
+        txt += "<b>To add bugs on the map you need to activate ";
         txt += "the MapDust layer in the Layer List Dialog. ";
         txt += "Click <a href='' target='_blank'>here</a> for more help.";
         txt += "</b></font></html>";

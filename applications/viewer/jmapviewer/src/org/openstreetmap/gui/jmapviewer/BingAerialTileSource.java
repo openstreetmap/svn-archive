@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -12,6 +13,7 @@ import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
+import org.openstreetmap.josm.Main;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -103,7 +105,10 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
     private List<Attribution> loadAttributionText() {
         try {
             URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/0,0?zl=1&mapVersion=v1&key="+API_KEY+"&include=ImageryProviders&output=xml");
-            InputStream stream = u.openStream();
+            URLConnection conn = u.openConnection();
+            conn.setConnectTimeout(Main.pref.getInteger("imagery.bing.load-attribution-text.timeout", 4000));
+            InputStream stream = conn.getInputStream();
+            
             XMLReader parser = XMLReaderFactory.createXMLReader();
             AttrHandler handler = new AttrHandler();
             parser.setContentHandler(handler);

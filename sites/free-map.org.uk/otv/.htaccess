@@ -1,4 +1,0 @@
-RewriteEngine on
-RewriteRule ^panorama/([0-9]+)/rotate/([0-9]+)/?$ /otv/panorama.php?action=rotate&angle=$2&id=$1 [L]
-RewriteRule ^([A-Za-z]+)/([0-9]+)/([A-Za-z]+)/?$ /otv/$1.php?id=$2&action=$3 [L]
-RewriteRule ^([A-Za-z]+)/([0-9]+)/?$ /otv/$1.php?id=$2

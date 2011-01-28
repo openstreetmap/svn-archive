@@ -1,9 +1,4 @@
-This is the source for all web apps running on the Freemap server, primarily:
-- Freemap itself;
-- OpenTrailView;
-- Freemap 3D (OSM WebGL demo).
-To run on your server you will need to have a standard OSM PostGIS database
-present, prepared by importing .osm files using osm2pgsql or Osmosis. You
-also need to set up the Freemap/OTV specific tables, the SQL for this can be
-found in database.sql.
-You will also need to tweak the paths in common/defines.php.
+Now moved to Freemap's own SVN server.
+svn co svn://free-map.org.uk/svn/freemap/
+
+Access via web at http://www.free-map.org.uk/svn/

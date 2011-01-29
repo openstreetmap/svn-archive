@@ -1,18 +1,18 @@
 /*
  *      CommandLine.java
- *      
+ * 
  *      Copyright 2011 Hind <foxhind@gmail.com>
- *      
+ * 
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
  *      the Free Software Foundation; either version 2 of the License, or
  *      (at your option) any later version.
- *      
+ * 
  *      This program is distributed in the hope that it will be useful,
  *      but WITHOUT ANY WARRANTY; without even the implied warranty of
  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *      GNU General Public License for more details.
- *      
+ * 
  *      You should have received a copy of the GNU General Public License
  *      along with this program; if not, write to the Free Software
  *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -22,8 +22,8 @@
 package CommandLine;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -34,47 +34,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.regex.*;
-import javax.swing.JTextField;
+import java.util.List;
+
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
-import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.DataSetMerger;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
-import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmWriter;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.GpxWriter;
+import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -105,32 +92,32 @@ public class CommandLine extends Plugin {
 					if (code == KeyEvent.VK_ENTER) {
 						String commandText = textField.getText().substring(prefix.length());
 						switch (mode) {
-							case IDLE:
-								if (commandText.isEmpty()) {
-									commandText = history.getLastItem();
-								}
-								else {
-									history.addItem(commandText);
-								}
-								Command command = findCommand(commandText, true);
-								if (command != null) {
-									startCommand(command);
-								}
-								else
-									setMode(Mode.IDLE);
-								break;
-							case SELECTION:
-								if (currentMapFrame.mapMode instanceof WayAction || currentMapFrame.mapMode instanceof NodeAction || currentMapFrame.mapMode instanceof RelationAction || currentMapFrame.mapMode instanceof AnyAction) {
-										Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
-										if (selected.size() > 0)
-											loadParameter(selected, true);
-								}
-								else {
-									loadParameter(commandText, currentCommand.parameters.get(currentCommand.currentParameterNum).maxInstances == 1);
-								}
-								break;
-							case ADJUSTMENT:
-								break;
+						case IDLE:
+							if (commandText.isEmpty()) {
+								commandText = history.getLastItem();
+							}
+							else {
+								history.addItem(commandText);
+							}
+							Command command = findCommand(commandText, true);
+							if (command != null) {
+								startCommand(command);
+							}
+							else
+								setMode(Mode.IDLE);
+							break;
+						case SELECTION:
+							if (currentMapFrame.mapMode instanceof WayAction || currentMapFrame.mapMode instanceof NodeAction || currentMapFrame.mapMode instanceof RelationAction || currentMapFrame.mapMode instanceof AnyAction) {
+								Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+								if (selected.size() > 0)
+									loadParameter(selected, true);
+							}
+							else {
+								loadParameter(commandText, currentCommand.parameters.get(currentCommand.currentParameterNum).maxInstances == 1);
+							}
+							break;
+						case ADJUSTMENT:
+							break;
 						}
 						e.consume();
 					}
@@ -164,13 +151,13 @@ public class CommandLine extends Plugin {
 					}
 					if (textField.getCaretPosition() < prefix.length() || (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0) )
 						e.consume();
-					}
-					if (e.getID() == KeyEvent.KEY_TYPED)
-						if (textField.getCaretPosition() < prefix.length() || (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0) )
-							e.consume();
-					super.processKeyEvent(e);
-					if (textField.getText().length() < prefix.length()) { // Safe
-						setMode(mode);
+				}
+				if (e.getID() == KeyEvent.KEY_TYPED)
+					if (textField.getCaretPosition() < prefix.length() || (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0) )
+						e.consume();
+				super.processKeyEvent(e);
+				if (textField.getText().length() < prefix.length()) { // Safe
+					setMode(mode);
 				}
 				if (e.getID() == KeyEvent.KEY_TYPED) {
 					if (e.getKeyChar() > 'A' && e.getKeyChar() < 'z') {
@@ -229,6 +216,7 @@ public class CommandLine extends Plugin {
 			runTool();
 	}
 
+	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
 	{
 		if (oldFrame == null && newFrame != null) {
@@ -270,7 +258,7 @@ public class CommandLine extends Plugin {
 		}
 		return null;
 	}
-	
+
 	protected void setMode(Mode targetMode) {
 		DataSet currentDataSet = Main.main.getCurrentDataSet();
 		if (currentDataSet != null) {
@@ -295,72 +283,72 @@ public class CommandLine extends Plugin {
 			Type currentType = currentParameter.type;
 			MapMode action = null;
 			switch (currentType) {
-				case POINT:
-					action = new PointAction(currentMapFrame, this);
-					break;
-				case WAY:
-					action = new WayAction(currentMapFrame, this);
-					break;
-				case NODE:
-					action = new NodeAction(currentMapFrame, this);
-					break;
-				case RELATION:
-					action = new RelationAction(currentMapFrame, this);
-					break;
-				case ANY:
-					action = new AnyAction(currentMapFrame, this);
-					break;
-				case LENGTH:
-					action = new LengthAction(currentMapFrame, this);
-					break;
-				case USERNAME:
-					loadParameter((Object)Main.pref.get("osm-server.username", null), true);
-					action = new DummyAction(currentMapFrame, this);
-					break;
-				case IMAGERYURL:
-					Layer layer = Main.map.mapView.getActiveLayer();
-					if (layer != null) {
-						if (layer instanceof ImageryLayer) {
+			case POINT:
+				action = new PointAction(currentMapFrame, this);
+				break;
+			case WAY:
+				action = new WayAction(currentMapFrame, this);
+				break;
+			case NODE:
+				action = new NodeAction(currentMapFrame, this);
+				break;
+			case RELATION:
+				action = new RelationAction(currentMapFrame, this);
+				break;
+			case ANY:
+				action = new AnyAction(currentMapFrame, this);
+				break;
+			case LENGTH:
+				action = new LengthAction(currentMapFrame, this);
+				break;
+			case USERNAME:
+				loadParameter(Main.pref.get("osm-server.username", null), true);
+				action = new DummyAction(currentMapFrame, this);
+				break;
+			case IMAGERYURL:
+				Layer layer = Main.map.mapView.getActiveLayer();
+				if (layer != null) {
+					if (layer instanceof ImageryLayer) {
+					}
+					else {
+						List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+						if (imageryLayers.size() == 1) {
+							layer = imageryLayers.get(0);
 						}
 						else {
-							List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
-							if (imageryLayers.size() == 1) {
-								layer = imageryLayers.get(0);
-							}
-							else {
-								endInput();
-								return;
-							}
+							endInput();
+							return;
 						}
 					}
-					ImageryInfo info = ((ImageryLayer)layer).getInfo();
-					String url = info.getURL();
-					String itype = info.getImageryType().getUrlString();
-					loadParameter((Object)(url.equals("") ? itype : url), true);
-					action = new DummyAction(currentMapFrame, this);
-					break;
-				case IMAGERYOFFSET:
-					Layer olayer = Main.map.mapView.getActiveLayer();
-					if (olayer != null) {
-						if (olayer instanceof ImageryLayer) {
+				}
+				ImageryInfo info = ((ImageryLayer)layer).getInfo();
+				String url = info.getUrl();
+				String itype = info.getImageryType().getUrlString();
+				loadParameter((url.equals("") ? itype : url), true);
+				action = new DummyAction(currentMapFrame, this);
+				break;
+			case IMAGERYOFFSET:
+				Layer olayer = Main.map.mapView.getActiveLayer();
+				if (olayer != null) {
+					if (olayer instanceof ImageryLayer) {
+					}
+					else {
+						List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+						if (imageryLayers.size() == 1) {
+							olayer = imageryLayers.get(0);
 						}
 						else {
-							List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
-							if (imageryLayers.size() == 1) {
-								olayer = imageryLayers.get(0);
-							}
-							else {
-								endInput();
-								return;
-							}
+							endInput();
+							return;
 						}
 					}
-					loadParameter((Object)(String.valueOf(((ImageryLayer)olayer).getDx()) + "," + String.valueOf(((ImageryLayer)olayer).getDy())), true);
-					action = new DummyAction(currentMapFrame, this);
-					break;
-				default:
-					action = new DummyAction(currentMapFrame, this);
-					break;
+				}
+				loadParameter((String.valueOf(((ImageryLayer)olayer).getDx()) + "," + String.valueOf(((ImageryLayer)olayer).getDy())), true);
+				action = new DummyAction(currentMapFrame, this);
+				break;
+			default:
+				action = new DummyAction(currentMapFrame, this);
+				break;
 			}
 			currentMapFrame.selectMapMode(action);
 			activate();
@@ -482,6 +470,7 @@ public class CommandLine extends Plugin {
 
 		// redirect child process's stderr to JOSM stderr
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					byte[] buffer = new byte[1024];
@@ -500,6 +489,7 @@ public class CommandLine extends Plugin {
 
 		// Write stdin stream
 		Thread osmWriteThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				BBox bbox = null;
 				final OutputStream outputStream = tp.process.getOutputStream();
@@ -511,11 +501,11 @@ public class CommandLine extends Plugin {
 				Collection<OsmPrimitive> pObjects;
 				osmWriter.header();
 				for (OsmPrimitive primitive : refObjects) {
-					if (primitive instanceof Node) 
+					if (primitive instanceof Node)
 						osmWriter.visit((Node)primitive);
-					else if (primitive instanceof Way) 
-						osmWriter.visit((Way)primitive);	
-					else if (primitive instanceof Relation) 
+					else if (primitive instanceof Way)
+						osmWriter.visit((Way)primitive);
+					else if (primitive instanceof Relation)
 						osmWriter.visit((Relation)primitive);
 					if (bbox == null)
 						bbox = new BBox(primitive.getBBox());
@@ -530,11 +520,11 @@ public class CommandLine extends Plugin {
 					osmWriter.header();
 					pObjects = parameter.getParameterObjects();
 					for (OsmPrimitive primitive : pObjects) {
-						if (primitive instanceof Node) 
+						if (primitive instanceof Node)
 							osmWriter.visit((Node)primitive);
-						else if (primitive instanceof Way) 
-							osmWriter.visit((Way)primitive);	
-						else if (primitive instanceof Relation) 
+						else if (primitive instanceof Way)
+							osmWriter.visit((Way)primitive);
+						else if (primitive instanceof Relation)
 							osmWriter.visit((Relation)primitive);
 						if (bbox == null)
 							bbox = new BBox(primitive.getBBox());
@@ -566,6 +556,7 @@ public class CommandLine extends Plugin {
 		// Read stdout stream
 		final OsmToCmd osmToCmd = new OsmToCmd(this, Main.main.getCurrentDataSet());
 		Thread osmParseThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					String commandName = currentCommand.name;

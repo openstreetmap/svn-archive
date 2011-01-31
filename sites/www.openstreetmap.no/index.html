@@ -49,7 +49,6 @@ function init() {
   map = new OpenLayers.Map ("map", {
     controls: [
       new OpenLayers.Control.ArgParser(),
-      new OpenLayers.Control.KeyboardDefaults(),
       new OpenLayers.Control.Navigation(),
       new OpenLayers.Control.PanZoomBar(),
       new OpenLayers.Control.LayerSwitcher(),
@@ -65,8 +64,11 @@ function init() {
     displayProjection: epsg4326
   });
 
+  keyboardnav = new OpenLayers.Control.KeyboardDefaults();
+  map.addControl(keyboardnav);
+
   // Tiles kan kun benyttes etter avtale
-  layerScreenspec = new OpenLayers.Layer.XYZ(
+  var layerScreenspec = new OpenLayers.Layer.XYZ(
     "Skjermkartografi (beta)",
     ["http://a.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
      "http://b.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
@@ -80,7 +82,7 @@ function init() {
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
   // Tiles kan kun benyttes etter avtale
-  layerHiking = new OpenLayers.Layer.XYZ(
+  var layerHiking = new OpenLayers.Layer.XYZ(
     "Turstier (beta)",
     ["http://a.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
      "http://b.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
@@ -94,7 +96,7 @@ function init() {
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
   // Tiles kan kun benyttes etter avtale
-  layerSkiing = new OpenLayers.Layer.XYZ(
+  var layerSkiing = new OpenLayers.Layer.XYZ(
     "Skiløyper (beta)",
     ["http://a.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
      "http://b.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
@@ -107,9 +109,9 @@ function init() {
       'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
-  layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
-  layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
-  layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
+  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
+  var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
+  var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
 
   map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
   map.addLayers([layerScreenspec, layerHiking, layerSkiing]);
@@ -364,6 +366,7 @@ window.onunload = setCookie;
     -webkit-border-bottom-right-radius: 7px;
   }
   #more, #search { display:none; }
+  input#q { width: 25em; }
   #videotutorial { display:none; text-align:center; }
   #menu * a {
     text-decoration:none;
@@ -408,7 +411,9 @@ window.onunload = setCookie;
         <form method="get" action="http://nominatim.openstreetmap.org/search"
               onSubmit="search(this.action, this.q.value);return false;">
         Finn et sted:
-          <input id="q" name="q" value="" style="width:270px;"/>
+          <input id="q" name="q" value=""
+                 onfocus="keyboardnav.deactivate();"
+                 onblur="keyboardnav.activate();"/>
           <input type="submit" value="Søk"/>
           <a id="searchCount" href="#"
              title="Se alle søkeresultatene med Nominatim"></a>

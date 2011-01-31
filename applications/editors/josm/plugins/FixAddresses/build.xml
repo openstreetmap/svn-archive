@@ -89,11 +89,11 @@
             <manifest>
                 <attribute name="Author" value="Oliver Wieland"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.fixAddresses.FixAddressesPlugin"/>
-                <attribute name="Plugin-Date" value="02.01.2011"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Finds and fixes invalid street addresses in a comfortable way."/>
             	<attribute name="de_Plugin-Description" value="Findet ungültige Addressen und bietet Unterstützung zur deren Korrektur."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
-                <attribute name="Plugin-Mainversion" value="3529"/>
+                <attribute name="Plugin-Mainversion" value="3835"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<attribute name="Plugin-Icon" value="images/fixaddresses.png"/>
             </manifest>

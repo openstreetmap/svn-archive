@@ -34,7 +34,7 @@
 
 
 	<property name="commit.message" value="Fixed #4360 - osmarender plugin does not load" />
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3835" />
 
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}" />

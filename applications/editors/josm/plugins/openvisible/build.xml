@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="Changed the constructor signature of the plugin main class; updated build.xml" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3835" />
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir"        value="../../dist"/>

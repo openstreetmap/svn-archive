@@ -28,7 +28,7 @@
 
 
 	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
-	<property name="plugin.main.version" value="3388" />
+	<property name="plugin.main.version" value="3835" />
 
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>

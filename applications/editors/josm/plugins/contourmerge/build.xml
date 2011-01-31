@@ -27,7 +27,7 @@
 <project name="contourmerge" default="dist" basedir=".">
 
 	<property name="commit.message" value="Updating to JOSM 3210" />
-	<property name="plugin.main.version" value="3210" />
+	<property name="plugin.main.version" value="3835" />
 
 	<!--
       ************************************************

@@ -32,7 +32,7 @@
 
 
     <property name="commit.message" value="applied #j5760 (patch by robome) - Order of housenumbers not correct" />
-    <property name="plugin.main.version" value="3711" />
+    <property name="plugin.main.version" value="3835" />
 
 
     <target name="init">

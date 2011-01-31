@@ -13,7 +13,8 @@
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
-		<ant antfile="build.xml" target="dist" dir="CommandLine"/>
+        <ant antfile="build.xml" target="dist" dir="CommandLine"/>
+        <ant antfile="build.xml" target="dist" dir="contourmerge"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="dataimport"/>
@@ -28,6 +29,7 @@
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
+        <ant antfile="build.xml" target="dist" dir="imageryadjust"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
@@ -36,7 +38,6 @@
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
-        <ant antfile="build.xml" target="dist" dir="multipoly"/>
         <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
@@ -53,6 +54,7 @@
         <ant antfile="build.xml" target="dist" dir="roadsigns"/>
         <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
+        <ant antfile="build.xml" target="dist" dir="scripting"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
         <ant antfile="build.xml" target="dist" dir="smed_fw"/>
@@ -87,6 +89,7 @@
         <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="CommandLine"/>
+        <ant antfile="build.xml" target="clean" dir="contourmerge"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
         <ant antfile="build.xml" target="clean" dir="dataimport"/>
@@ -99,6 +102,7 @@
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
+        <ant antfile="build.xml" target="clean" dir="imageryadjust"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>
@@ -108,7 +112,6 @@
         <ant antfile="build.xml" target="clean" dir="mapdust"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
-        <ant antfile="build.xml" target="clean" dir="multipoly"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>
@@ -126,6 +129,7 @@
         <ant antfile="build.xml" target="clean" dir="roadsigns"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
+        <ant antfile="build.xml" target="clean" dir="scripting"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
         <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->

@@ -24,7 +24,7 @@
 
 
 	<property name="commit.message" value="Impoved Icon" />
-	<property name="plugin.main.version" value="3514" />
+	<property name="plugin.main.version" value="3835" />
 
 	<!--
       ************************************************

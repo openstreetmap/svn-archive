@@ -32,7 +32,7 @@
     <!-- read build.properties for local settings -->
     <property file="build.properties" />
     <!-- enter the SVN command file name -->
-    <property name="svn" value="svn.cmd" />
+    <property name="svn" value="svn" />
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="fixed proj4 Parameters (thanks to Hetzi + Mikael Rittri)" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->

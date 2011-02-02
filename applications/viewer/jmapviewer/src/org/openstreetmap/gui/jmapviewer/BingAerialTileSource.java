@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.Main;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,7 +29,6 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
         if (attributions == null) {
             attributions = Executors.newSingleThreadExecutor().submit(new Callable<List<Attribution>>() {
-                @Override
                 public List<Attribution> call() throws Exception {
                     return loadAttributionText();
                 }
@@ -106,7 +104,11 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
         try {
             URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/0,0?zl=1&mapVersion=v1&key="+API_KEY+"&include=ImageryProviders&output=xml");
             URLConnection conn = u.openConnection();
-            conn.setConnectTimeout(Main.pref.getInteger("imagery.bing.load-attribution-text.timeout", 4000));
+            
+            // This is not JOSM! Do not use anything other than standard JRE classes within this package!
+            // See package.html for details
+            //conn.setConnectTimeout(Main.pref.getInteger("imagery.bing.load-attribution-text.timeout", 4000));
+            
             InputStream stream = conn.getInputStream();
             
             XMLReader parser = XMLReaderFactory.createXMLReader();
@@ -146,7 +148,6 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
         }
     }
 
-    @Override
     public TileUpdate getTileUpdate() {
         return TileUpdate.IfNoneMatch;
     }

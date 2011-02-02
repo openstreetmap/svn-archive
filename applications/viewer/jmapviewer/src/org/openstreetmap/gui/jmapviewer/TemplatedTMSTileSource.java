@@ -22,7 +22,6 @@ public class TemplatedTMSTileSource extends OsmTileSource.AbstractOsmTileSource 
         return (maxZoom == 0) ? super.getMaxZoom() : maxZoom;
     }
 
-    @Override
     public TileUpdate getTileUpdate() {
         return TileUpdate.IfNoneMatch;
     }

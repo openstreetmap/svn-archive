@@ -39,6 +39,10 @@ def application(env, start_response):
   for i in range(0,map.numlayers):
    layer = map.getLayer(i)
    extent = layer.metadata.get('wms_extent')
+   zoom = layer.metadata.get('zoomlevels')
+   if zoom is None:
+    zoom = 19
+   zoom = int(zoom)+1
    if (layer.name != 'copyright'):
     index_html += "<hr />\n"
     index_html += '<table border="0" width="100%">\n'
@@ -49,7 +53,8 @@ def application(env, start_response):
     index_html += '<tr><td width="30%%"><b>Source:</b></td><td>%s</td></tr>' % layer.metadata.get('copyright')
     index_html += '<tr><td width="30%%"><b>Content:</b></td><td>%s</td></tr>' % layer.metadata.get('wms_title')
     index_html += '<tr><td width="30%%"><b>Bounding Box:</b></td><td>%s</td></tr>' % extent
-    index_html += '<tr><td width="30%%"><b>WMS URL (for JOSM/Merkaartor):</b></td><td><b>%s?layers=%s&</b></td></tr>' % (wmsurl,layer.name)
+    index_html += '<tr><td width="30%%"><b>TMS URL for JOSM Imagery:</b></td><td><b>tms:%s/%s (zoom %d)</b></td></tr>' % (tmsurl,layer.name,zoom)
+    index_html += '<tr><td width="30%%"><b>WMS URL (for JOSM/Merkaartor):</b></td><td>%s?layers=%s&</td></tr>' % (wmsurl,layer.name)
     index_html += '<tr><td width="30%%"><b>Interactive map:</b></td><td><a href="%s/%s">%s/%s</a></td></tr>' % (mapurl,layer.name,mapurl,layer.name)
     latlon=extent.split()
     lon1=float(latlon[0])

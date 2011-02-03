@@ -54,6 +54,7 @@ public class ResetPictureAllAction extends JosmAction {
         m_owner.resetAngle();
         m_owner.resetPosition();
         m_owner.resetScale();
+        m_owner.resetShear();
         // Redraw
         Main.map.mapView.repaint();
     }

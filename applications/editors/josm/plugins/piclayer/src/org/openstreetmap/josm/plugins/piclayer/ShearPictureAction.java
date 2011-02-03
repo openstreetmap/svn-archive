@@ -1,5 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tomasz Stelmach                                 *
+ *                                                                         *
+ *   Copyright (C) 2011 Patrick "Petschge" Kilian, based on code           *
+ *   (c) 2009 by Tomasz Stelmach                                           *
  *   http://www.stelmach-online.net/                                       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,9 +37,9 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 //TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
 
 /**
- * This class handles the input during moving the picture.
+ * This class handles the input during shearing of the picture.
  */
-public class MovePictureAction extends MapMode implements MouseListener, MouseMotionListener
+public class ShearPictureAction extends MapMode implements MouseListener, MouseMotionListener
 {
     // Action ongoing?
     private boolean mb_dragging = false;
@@ -51,8 +53,8 @@ public class MovePictureAction extends MapMode implements MouseListener, MouseMo
     /**
      * Constructor
      */
-    public MovePictureAction(MapFrame frame) {
-        super(tr("PicLayer move"), "move", tr("Drag to move the picture"), frame, ImageProvider.getCursor("crosshair", null));
+    public ShearPictureAction(MapFrame frame) {
+        super(tr("PicLayer shear"), "shear", tr("Drag to shear the picture"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override
@@ -88,9 +90,9 @@ public class MovePictureAction extends MapMode implements MouseListener, MouseMo
         // Picture moving is ongoing
         if(mb_dragging) {
             EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
-            m_currentLayer.movePictureBy(
-                eastNorth.east()-m_prevEastNorth.east(),
-                eastNorth.north()-m_prevEastNorth.north()
+            m_currentLayer.shearPictureBy(
+                1000* (eastNorth.east()-m_prevEastNorth.east()),
+                1000* (eastNorth.north()-m_prevEastNorth.north())
             );
             m_prevEastNorth = eastNorth;
             Main.map.mapView.repaint();

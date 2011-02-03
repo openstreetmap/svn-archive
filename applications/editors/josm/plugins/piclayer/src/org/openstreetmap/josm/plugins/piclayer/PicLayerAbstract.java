@@ -73,6 +73,9 @@ public abstract class PicLayerAbstract extends Layer
     // Scale of the image
     private double m_scalex = 1.0;
     private double m_scaley = 1.0;
+    // Shear of the image
+    private double m_shearx = 0.0;
+    private double m_sheary = 0.0;
     // The scale that was set on the map during image creation
     private double m_initial_scale = 1.0;
     // Layer icon
@@ -87,6 +90,8 @@ public abstract class PicLayerAbstract extends Layer
     private final String INITIAL_SCALE = "INITIAL_SCALE";
     private final String SCALEX = "SCALEX";
     private final String SCALEY = "SCALEY";
+    private final String SHEARX = "SHEARX";
+    private final String SHEARY = "SHEARY";
 
     /**
      * Constructor
@@ -214,6 +219,8 @@ public abstract class PicLayerAbstract extends Layer
             double scalex = m_scalex * m_initial_scale / Main.map.mapView.getDist100Pixel();
             double scaley = m_scaley * m_initial_scale / Main.map.mapView.getDist100Pixel();
             g.scale( scalex, scaley );
+            // Shear
+            g.shear(m_shearx, m_sheary);
 
             // Draw picture
             g.drawImage( m_image, -m_image.getWidth() / 2, -m_image.getHeight() / 2, null );
@@ -257,6 +264,15 @@ public abstract class PicLayerAbstract extends Layer
     }
 
     /**
+     * Shear the picture. shearx and sheary will separately add to the
+     * corresponding current value
+     */
+    public void shearPictureBy( double shearx, double sheary ) {
+        m_shearx += shearx;
+        m_sheary += sheary;
+    }
+
+    /**
      * Sets the image position to the initial position
      */
     public void resetPosition() {
@@ -278,6 +294,14 @@ public abstract class PicLayerAbstract extends Layer
         m_angle = 0.0;
     }
 
+
+    /**
+     * Sets the image to no shear
+     */
+    public void resetShear() {
+        m_shearx = 0.0;
+        m_sheary = 0.0;
+    }
     @Override
     /**
      * Computes the (rough) bounding box.
@@ -329,6 +353,8 @@ public abstract class PicLayerAbstract extends Layer
         props.put(SCALEX, "" + m_scalex);
         props.put(SCALEY, "" + m_scaley);
         props.put(ANGLE, "" + m_angle);
+        props.put(SHEARX, "" + m_shearx);
+        props.put(SHEARY, "" + m_sheary);
     }
 
     /**
@@ -357,11 +383,15 @@ public abstract class PicLayerAbstract extends Layer
             double in_scale = Double.valueOf( props.getProperty(INITIAL_SCALE));
             double scale_x = Double.valueOf( props.getProperty(SCALEX));
             double scale_y = Double.valueOf( props.getProperty(SCALEY));
+            double shear_x = Double.valueOf( props.getProperty(SHEARX));
+            double shear_y = Double.valueOf( props.getProperty(SHEARY));
             m_position.setLocation(pos_x, pos_y);
             m_initial_position.setLocation(pos_x, pos_y);
             m_angle = angle;
             m_scalex = scale_x;
             m_scaley = scale_y;
+            m_shearx = shear_x;
+            m_sheary = shear_y;
             m_initial_scale = in_scale;
             // Refresh
             Main.map.mapView.repaint();
@@ -383,6 +413,7 @@ public abstract class PicLayerAbstract extends Layer
             reset_submenu.add( new ResetPicturePositionAction( PicLayerAbstract.this ) );
             reset_submenu.add( new ResetPictureAngleAction( PicLayerAbstract.this ) );
             reset_submenu.add( new ResetPictureScaleAction( PicLayerAbstract.this ) );
+            reset_submenu.add( new ResetPictureShearAction( PicLayerAbstract.this ) );
             return reset_submenu;
         }
 

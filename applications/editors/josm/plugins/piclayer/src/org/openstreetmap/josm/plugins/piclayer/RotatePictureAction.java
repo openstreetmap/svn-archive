@@ -31,7 +31,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-//TODO: Move/Rotate/Scale action classes are similar. Do the redesign!
+//TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
 
 /**
  * This class handles the input during rotating the picture.

@@ -49,6 +49,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     private IconToggleButton m_scalexPictureButton = null;
     private IconToggleButton m_scaleyPictureButton = null;
     private IconToggleButton m_scalexyPictureButton = null;
+    private IconToggleButton m_shearPictureButton = null;
 
     // Menu actions
     private NewLayerFromFileAction      m_newFromFileAction = null;
@@ -88,17 +89,20 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction(newFrame);
             ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction(newFrame);
             ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction(newFrame);
+            ShearPictureAction shearPictureAction = new ShearPictureAction(newFrame);
             // Create plugin buttons and add them to the toolbar
             m_movePictureButton = new IconToggleButton(movePictureAction);
             m_rotatePictureButton = new IconToggleButton(rotatePictureAction);
             m_scalexyPictureButton = new IconToggleButton(scaleXYPictureAction);
             m_scalexPictureButton = new IconToggleButton(scaleXPictureAction);
             m_scaleyPictureButton = new IconToggleButton(scaleYPictureAction);
+            m_shearPictureButton = new IconToggleButton(shearPictureAction);
             newFrame.addMapMode(m_movePictureButton);
             newFrame.addMapMode(m_rotatePictureButton);
             newFrame.addMapMode(m_scalexyPictureButton);
             newFrame.addMapMode(m_scalexPictureButton);
             newFrame.addMapMode(m_scaleyPictureButton);
+            newFrame.addMapMode(m_shearPictureButton);
 //            newFrame.toolGroup.add(m_movePictureButton);
 //            newFrame.toolGroup.add(m_rotatePictureButton);
 //            newFrame.toolGroup.add(m_scalePictureButton);
@@ -108,6 +112,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             m_scalexyPictureButton.setVisible(true);
             m_scalexPictureButton.setVisible(true);
             m_scaleyPictureButton.setVisible(true);
+            m_shearPictureButton.setVisible(true);
         }
     }
 

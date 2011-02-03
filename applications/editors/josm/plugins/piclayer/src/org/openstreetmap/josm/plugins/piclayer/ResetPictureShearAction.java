@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright (C) 2011 by Patrick "Petschge" Kilian, based on code        *
  *   Copyright (C) 2009 by Tomasz Stelmach                                 *
  *   http://www.stelmach-online.net/                                       *
  *                                                                         *
@@ -22,27 +23,37 @@ package org.openstreetmap.josm.plugins.piclayer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
+import java.awt.event.ActionEvent;
 
-// TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
- * This class handles the input during scaling the picture.
+ * Action for resetting properties of an image.
+ * 
+ * TODO Four almost identical classes. Refactoring needed.
  */
-public class ScaleYPictureAction extends ScalePictureActionAbstract
-{
-    /*
+public class ResetPictureShearAction extends JosmAction {
+
+    // Owner layer of the action
+    PicLayerAbstract m_owner = null;
+    
+    /**
      * Constructor
      */
-    public ScaleYPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale Y"), "scale_y", tr("Drag to scale the picture in the Y Axis"), frame);
-        // TODO Auto-generated constructor stub
+    public ResetPictureShearAction( PicLayerAbstract owner ) {
+        super(tr("Shear"), null, tr("Resets picture shear"), null, false);
+        // Remember the owner...
+        m_owner = owner;
     }
-
-    public void doTheScale( double scale ) {
-            m_currentLayer.scalePictureBy( 1.0, scale );
-        }
+    
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // Reset
+        m_owner.resetShear();
+        // Redraw
+        Main.map.mapView.repaint();
+    }
 }

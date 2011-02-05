@@ -94,7 +94,7 @@ namespace Srtm2Osm
             double elevationStepInUnits = elevationStep * elevationUnits;
             contourMarker.Configure (elevationUnits);
 
-            int wayId = 1000000000, nodeId = 1000000000;
+            int wayId = 1000000000, nodeId = 2000000000;
 
             if (largeAreaMode)
             {

@@ -1,0 +1,18 @@
+German Map Style for Mapnik
+---------------------------
+
+This style closely follows the "original" Mapnik style 
+(svn.openstreetmap.org/applications/rendering/mapnik). All
+instructions and helper programs from that directory apply
+equally to here, and changes made to that style could, and
+often should, be patched in here as well. 
+
+This style has been developed by Beate Braun for her Bachelor
+Thesis at HFT Stuttgart, with support from Geofabrik. The 
+style is made freely available here for anyone to use, subject
+to any constraints possibly inherited from the original Mapnik
+style.
+
+This style is in use at http://www.openstreetmap.de/.
+
+See http://www.openstreetmap.de/germanstyle.html for more.

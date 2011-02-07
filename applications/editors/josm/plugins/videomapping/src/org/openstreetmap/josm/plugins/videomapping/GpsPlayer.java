@@ -112,14 +112,22 @@ public class GpsPlayer {
         }
         Main.map.mapView.repaint(); //seperate modell and view logic...
     }
-    //go to the position at the timecode e.g.g "14:00:01";
+    //go to the position e.g.  "14.4.2010 14:00:01";
     public void jump(Date GPSAbsTime)
     {
-    	Date zero=start.getTime();
+    	Date zero=start.getTime();//TODO better Time wayfinding
     	Date starttime = new Date(zero.getHours(),zero.getMinutes(),zero.getSeconds());
     	long diff=GPSAbsTime.getTime()-starttime.getTime();
-        goTo(getWaypoint(diff)); //TODO replace Time by Date?
+        goTo(getWaypoint(diff)); 
     }
+    
+    //jumps to a specific time since the beginning
+    public void jump(long relTime) {
+        int pos = Math.round(relTime/1000);//TODO assumes the time is constant
+        goTo(pos);
+        if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
+    }
+    
  
     //gets only points on the line of the GPS track (between waypoints) nearby the point m
     private Point getInterpolated(Point m)
@@ -321,13 +329,7 @@ public class GpsPlayer {
     }
     
     
-    //jumps to a specific time
-    public void jump(long relTime) {
-        int pos = Math.round(relTime/1000);//TODO assumes the time is constant
-        goTo(pos);
-        if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
-    }
-    
+
     //toggles walking along the track
     /* public void play(){
     

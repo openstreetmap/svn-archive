@@ -502,6 +502,46 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
             if (mp.getSpuCount()==0) return false; else   return true;
         }
 
+		public void backward(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void buffering(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void forward(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void opening(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void pausableChanged(MediaPlayer arg0, int arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void seekableChanged(MediaPlayer arg0, int arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void snapshotTaken(MediaPlayer arg0, String arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void titleChanged(MediaPlayer arg0, int arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
     
 
 }

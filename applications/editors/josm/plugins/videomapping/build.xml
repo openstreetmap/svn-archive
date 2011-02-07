@@ -46,7 +46,7 @@
 	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="ant.build.javac.target" value="1.5"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-	<property name="vlcj"                  value="lib/vlcj-1.1.2.jar"/>
+	<property name="vlcj"                  value="lib/vlcj-1.1.5.1.jar"/>
 	<property name="jna"                  value="lib/jna.jar"/>
 	<property name="log4j"                  value="lib/log4j.jar"/>
 	<!--

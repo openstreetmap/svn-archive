@@ -129,6 +129,7 @@ public class GPSVideoPlayer
         //video.play();
     }
     
+    /*
     public void play(long gpsstart)
     {
         //video is already playing
@@ -136,6 +137,7 @@ public class GPSVideoPlayer
         gps.jump(gpsstart);
         //gps.play();
     }
+    */
     
     public void play()
     {
@@ -148,16 +150,16 @@ public class GPSVideoPlayer
     }
     
    
-    //jumps in video to the corresponding Video time (external triggered)
-    public void jumpToGPSTime(long gpsT)
+    //jumps in video to the corresponding GPS time(xx:yy:zz) not date (external triggered)
+    public void jumpToGPSTime(java.util.Date date)
     {
         if(!synced)
         {
             //when not synced we can just move the icon to the right position           
-            gps.jump(new Time(gpsT));
+            gps.jump(date);
             Main.map.mapView.repaint();
         }
-        video.jump(getVideoTime(gpsT));
+        video.jump(getVideoTime(date.getTime()));
     }
     
     //calc synced timecode from video

@@ -202,7 +202,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 	                t = sdf.parse(inp.getText());
 	                if (t!=null)
 	                {
-	                    player.jumpToGPSTime(t.getTime());
+	                    player.jumpToGPSTime(t);
 	                }                       
             	}
             	} catch (ParseException e1) {

@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.videomapping;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.awt.Color;
@@ -259,8 +260,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
                     gps.goTo(wp);
                     //jump if we know position
                     if(wp.attr.containsKey("synced"))
-                    {                       
-                        if(gpsVP!=null) gpsVP.jumpToGPSTime(gps.getRelativeTime()); //call videoplayers to set right position
+                    {
+                        if(gpsVP!=null) gpsVP.jumpToGPSTime(new Date(gps.getRelativeTime())); //call videoplayers to set right position
                     }
                 }
             }

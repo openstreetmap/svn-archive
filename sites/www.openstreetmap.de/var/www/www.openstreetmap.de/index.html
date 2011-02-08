@@ -38,15 +38,17 @@ function init() {
     });
 
     map.addLayers([
-        new OpenLayers.Layer.OSM.Mapnik("OSM Standard (engl. Server)"),
-/*        new OpenLayers.Layer.XYZ("OSM Standard (dt. Server)", [
-                "http://a.tile.openstreetmap.de/tiles/osm/${z}/${x}/${y}.png",
-                "http://d.tile.openstreetmap.de/tiles/osm/${z}/${x}/${y}.png"
+        new OpenLayers.Layer.XYZ("OSM deutscher Stil", [
+                "http://a.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
+                "http://b.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
+                "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
+                "http://d.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"
             ], {
-            attribution: 'Map tiles from server sponsored by STRATO',
-            keyname: 'mapnik'
-        }),*/
-        new OpenLayers.Layer.OSM.Osmarender("OSM Alternativ (Tiles@Home)")
+            attribution: 'Tile server sponsored by STRATO / <b>Europe only</b> / <a href="http://www.openstreetmap.de/germanstyle.html">About style</a>',
+            keyname: 'mapnikde'
+        }),
+        new OpenLayers.Layer.OSM.Mapnik("OSM Standard (engl. Server)", { attribution: '', keyname: 'mapnik' }),
+        new OpenLayers.Layer.OSM.Osmarender("OSM Tiles@Home", { attribution: '', keyname: 'osmarender' })
     ]);
 
     layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen");
@@ -224,16 +226,16 @@ function init() {
 
                     <td class="tdcontent" id="news">
                         <h2><a href="/news.html">News</a></h2>
+                <p><b>Neuer Kartenstil auf openstreetmap.de</b><br />
+                <span style="font-size: small;">8. Februar 2011</span>
+                Eine Bachelor-Arbeit an der HFT Stuttgart hat uns einen 
+                sch&ouml;nen, mehr "deutsch" aussehenden Kartenstil beschert.
+                <a href="/germanstyle.html">Mehr...</a></p>
+
                 <p><b>Lizenzänderung bei OpenStreetMap</b><br />
                 OpenStreetMap stellt die Lizenz von CC-BY-SA auf die neue
                 ODbL um und bittet alle Mapper um ihre Zustimmung.
                 <a href="lizenzaenderung.html">Mehr...</a></p>
-
-                <p><b>Luftbilder der Stadtwerke Witten</b><br />
-                <span style="font-size: small;">25. August 2010</span>
-                Die Stadtwerke Witten haben hochaufl&ouml;sende Luftbilder
-                aus einer Befliegung von 2009 zur Verf&uuml;gung gestellt. 
-                <a href="/news.html#witten">Mehr...</a></p>
 
                     <td class="tdcontent" id="events">
 

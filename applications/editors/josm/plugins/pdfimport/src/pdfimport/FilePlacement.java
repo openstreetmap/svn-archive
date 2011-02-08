@@ -10,6 +10,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.Projections;
 
 public class FilePlacement {
 	public Projection projection = null;
@@ -64,7 +65,7 @@ public class FilePlacement {
 		projection = null;
 
 		if (className != null) {
-			for(Projection proj: Projection.allProjections){
+			for(Projection proj: Projections.getProjections()){
 				if (proj.getClass().getCanonicalName().equals(className)){
 					projection = proj;
 					break;

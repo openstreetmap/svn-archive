@@ -40,6 +40,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
@@ -207,7 +208,7 @@ public class LoadPdfDialog extends JFrame{
 
 		this.projectionCombo = new JComboBox();
 		this.projectionCombo.addItem("Select projection...");
-		for (Projection p: Projection.allProjections) {
+		for (Projection p: Projections.getProjections()) {
 			this.projectionCombo.addItem(p);
 		}
 

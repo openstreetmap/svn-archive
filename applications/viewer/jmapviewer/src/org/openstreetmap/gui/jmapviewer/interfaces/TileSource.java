@@ -123,4 +123,12 @@ public interface TileSource {
      * @return The URL to open when the user clicks the attribution "Terms of Use" text.
      */
     public String getTermsOfUseURL();
+
+    public double latToTileY(double lat, int zoom);
+
+    public double lonToTileX(double lon, int zoom);
+     
+    public double tileYToLat(int y, int zoom);
+            
+    public double tileXToLon(int x, int zoom);
 }

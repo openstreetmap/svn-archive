@@ -5769,7 +5769,7 @@
 		M0.2,11.9 L1.8,11.1 M2.2,11.1 L3.8,11.9   M4.2,11.9 L5.8,11.1 M6.2,11.1 L7.8,11.9   M8.2,11.9 L9.8,11.1 M10.2,11.1 L11.8,11.9"/>
 			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.15;stroke-linecap:round;stroke-linejoin:round;" d="
 		M1.2,2.6 L1.2,1.4 L1.8,2.6 L1.8,1.4
-		M2.2,2.1 2.45,2.1 A 0.25 0.25 0 0 0 2.45,1.4 L2.2,1.4 L2.2,2.6  M2.8,2.6 L2.3,2.1 "/>
+		M2.2,2.1 L2.45,2.1 A 0.25 0.25 0 0 0 2.45,1.4 L2.2,1.4 L2.2,2.6  M2.8,2.6 L2.3,2.1 "/>
 		</svg:pattern>
 
 		<svg:pattern id="landscape-reserve-pattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="scale(2.6)">
@@ -5789,13 +5789,13 @@
 		M0.4,11.8 L1.6,11.2 M2.4,11.2 L3.6,11.8   M4.4,11.8 L5.6,11.2 M6.4,11.2 L7.6,11.8   M8.4,11.8 L9.6,11.2 M10.4,11.2 L11.6,11.8"/>
 			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.125;stroke-linecap:round;stroke-linejoin:round;" d="
 		M5.2,3.4 L5.2,4.6 L5.8,4.6
-		M6.2,4.1 6.45,4.1 A 0.25 0.25 0 0 0 6.45,3.4 L6.2,3.4 L6.2,4.6  M6.8,4.6 L6.3,4.1 "/>
+		M6.2,4.1 L6.45,4.1 A 0.25 0.25 0 0 0 6.45,3.4 L6.2,3.4 L6.2,4.6  M6.8,4.6 L6.3,4.1 "/>
 		</svg:pattern>
 
 		<svg:pattern id="national-park-pattern" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="scale(2.6)">
 			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.5;" d="
 		M9.2,6.6 L9.2,5.4 L9.8,6.6 L9.8,5.4
-		M10.2,6.1 10.45,6.1 A 0.25 0.25 0 0 0 10.45,5.4 L10.2,5.4 L10.2,6.6 "/>
+		M10.2,6.1 L10.45,6.1 A 0.25 0.25 0 0 0 10.45,5.4 L10.2,5.4 L10.2,6.6 "/>
 		</svg:pattern>
 
 

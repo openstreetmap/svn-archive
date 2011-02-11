@@ -24,9 +24,15 @@ public class TrustSignatures {
 	//	private final HashMap<PGPSignature, String> signatureTextMap = new HashMap<PGPSignature, String>();
 	private final Map<String, List<PGPSignature>> textsigs = new HashMap<String, List<PGPSignature>>();
 	private byte status;
+	private double reputation;
 
 	public TrustSignatures() {
 		this.status = SIG_UNKNOWN;
+	}
+
+	public TrustSignatures(PGPSignature signature, String sigtext, byte status) {
+		this.status = status;
+		addSignature(signature, sigtext);
 	}
 
 	public int countSigs() {
@@ -39,9 +45,12 @@ public class TrustSignatures {
 		return count;
 	}
 
-	public TrustSignatures(PGPSignature signature, String sigtext, byte status) {
-		this.status = status;
-		addSignature(signature, sigtext);
+	public void setReputation(double r) {
+		reputation = r;
+	}
+
+	public double getReputation() {
+		return reputation;
 	}
 
 	public void setStatus(byte status) {
@@ -96,6 +105,12 @@ public class TrustSignatures {
 		return signatures.lastElement();
 	}
 	 */
+	public String getOnePlainText() {
+		Set<String> texts = getAllPlainTexts();
+		if (texts.isEmpty()) return "";
+		else return texts.iterator().next();
+	}
+
 	public Set<String> getAllPlainTexts() {
 		return textsigs.keySet();
 	}

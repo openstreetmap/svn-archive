@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,14 +24,18 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustRelation;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustSignatures;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -41,10 +46,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SigReader {
 
-	private final Map<String,TrustOSMItem> trustitems = new HashMap<String,TrustOSMItem>();
+	private final Map<String,TrustOsmPrimitive> trustitems = new HashMap<String,TrustOsmPrimitive>();
 	private final Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
 
-	public Map<String,TrustOSMItem> getTrustItems() {
+	public Map<String,TrustOsmPrimitive> getTrustItems() {
 		return trustitems;
 	}
 
@@ -67,13 +72,9 @@ public class SigReader {
 		/**
 		 * The current TrustOSMItem to be read.
 		 */
-		private TrustOSMItem trust;
+		private TrustOsmPrimitive trust;
 
-		/**
-		 * Signatures of geometry and tags.
-		 */
-		private final Map<String, TrustSignatures> keySig = new HashMap<String, TrustSignatures>();
-		private final Map<String, TrustSignatures> nodeSig = new HashMap<String, TrustSignatures>();
+
 		/**
 		 * The current Signatures.
 		 */
@@ -86,9 +87,9 @@ public class SigReader {
 		@Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
 
 			try {
-				if (qName.equals("trustitem")) {
+				if (qName.equals("trustnode") || qName.equals("trustway") || qName.equals("trustrelation")) {
 					if (atts == null) {
-						throwException(tr("Missing mandatory attribute ''{0}'' of XML element {1}.", "osmid", "trustitem"));
+						throwException(tr("Missing mandatory attribute ''{0}'' of XML element {1}.", "osmid", qName));
 					}
 
 					String osmid = atts.getValue("osmid");
@@ -99,11 +100,9 @@ public class SigReader {
 					}
 					long uid = Long.parseLong(osmid);
 
-					String osmtype = atts.getValue("type");
-					if (osmtype == null){
-						throwException(tr("Missing mandatory attribute ''{0}''.", "type"));
-					}
-					OsmPrimitiveType t = OsmPrimitiveType.fromApiTypeName(osmtype);
+					OsmPrimitiveType t = OsmPrimitiveType.NODE;
+					if (qName.equals("trustway")) t = OsmPrimitiveType.WAY;
+					else if (qName.equals("trustrelation")) t = OsmPrimitiveType.RELATION;
 
 					// search corresponding OsmPrimitive
 					OsmPrimitive osm = Main.main.getCurrentDataSet().getPrimitiveById(uid, t);
@@ -115,27 +114,10 @@ public class SigReader {
 						}
 						missingData.add(osm);
 					}
-					trust = new TrustOSMItem(osm);
-				} else if (qName.equals("key")) {
-					if (atts == null) {
-						throwException(tr("Missing mandatory attribute ''{0}'' of XML element {1}.", "k", "key"));
-					}
-					String key = atts.getValue("k");
-					if (key == null || key.equals("")){
-						throwException(tr("Missing mandatory attribute ''{0}''.", "k"));
-					}
+					trust = TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+
+				} else if (qName.equals("key") || qName.equals("node") || qName.equals("segment") || qName.equals("member")) {
 					tsigs = new TrustSignatures();
-					keySig.put(key, tsigs);
-				} else if (qName.equals("node")) {
-					if (atts == null) {
-						throwException(tr("Missing mandatory attribute ''{0}'' of XML element {1}.", "id", "node"));
-					}
-					String key = atts.getValue("id");
-					if (key == null || key.equals("")){
-						throwException(tr("Missing mandatory attribute ''{0}''.", "id"));
-					}
-					tsigs = new TrustSignatures();
-					nodeSig.put(key, tsigs);
 				} else if (qName.equals("openpgp")) {
 					tmpbuf = new StringBuffer();
 				}
@@ -145,10 +127,8 @@ public class SigReader {
 		}
 
 		@Override public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
-			if (qName.equals("trustitem")) {
-				trust.storeAllTagSigs(keySig);
-				//trust.storeAllNodeSigs;
-				trustitems.put(String.valueOf(trust.getOsmItem().getUniqueId()), trust);
+			if (qName.equals("trustnode") || qName.equals("trustway") || qName.equals("trustrelation")) {
+				trustitems.put(TrustOsmPrimitive.createUniqueObjectIdentifier(trust.getOsmPrimitive()), trust);
 			} else if (qName.equals("openpgp")) {
 				// System.out.println(tmpbuf.toString());
 				try {
@@ -156,6 +136,17 @@ public class SigReader {
 				} catch (IOException e) {
 					throw new OsmDataParsingException(tr("Could not parse OpenPGP message."),e).rememberLocation(locator);
 				}
+			} else if (qName.equals("key")) {
+				String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(tsigs.getOnePlainText());
+				trust.setTagRatings(kv[0], tsigs);
+			} else if (qName.equals("node")) {
+				((TrustNode)trust).setNodeRatings(tsigs);
+			} else if (qName.equals("segment")) {
+				List<Node> nodes = TrustWay.generateSegmentFromSigtext(tsigs.getOnePlainText());
+				((TrustWay)trust).setSegmentRatings(nodes,tsigs);
+			} else if (qName.equals("member")) {
+				RelationMember member = TrustRelation.generateRelationMemberFromSigtext(tsigs.getOnePlainText());
+				((TrustRelation)trust).setMemberRating(TrustOsmPrimitive.createUniqueObjectIdentifier(member.getMember()), tsigs);
 			}
 		}
 
@@ -164,7 +155,6 @@ public class SigReader {
 		}
 
 		public void parseOpenPGP(String clearsigned) throws IOException {
-			System.out.println("Clearsignedtext vorher:\n"+clearsigned);
 
 			// handle different newline characters and match them all to \n
 			//clearsigned = clearsigned.replace('\r', '\n').replaceAll("\n\n", "\n");
@@ -187,7 +177,6 @@ public class SigReader {
 			// remove the last \n because it is not part of the plaintext
 			plain = plain.substring(0, plain.length()-1);
 
-			System.out.println("Plaintext:\n"+plain+"--------- hier is zu ende");
 			PGPSignatureList siglist = (PGPSignatureList)pgpFact.nextObject();
 			for (int i=0; i<siglist.size();i++) {
 				tsigs.addSignature(siglist.get(i), plain);
@@ -210,7 +199,7 @@ public class SigReader {
 	 * @throws IllegalDataException thrown if the an error was found while parsing the data from the source
 	 * @throws IllegalArgumentException thrown if source is null
 	 */
-	public static Map<String,TrustOSMItem> parseSignatureXML(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
+	public static Map<String,TrustOsmPrimitive> parseSignatureXML(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
 		if (progressMonitor == null) {
 			progressMonitor = NullProgressMonitor.INSTANCE;
 		}

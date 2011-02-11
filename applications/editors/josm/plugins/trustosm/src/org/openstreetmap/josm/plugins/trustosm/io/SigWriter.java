@@ -6,13 +6,18 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.io.XmlWriter;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustRelation;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustSignatures;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
 
 public class SigWriter extends XmlWriter {
 
@@ -26,7 +31,7 @@ public class SigWriter extends XmlWriter {
 		super(new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8"))));
 	}
 
-	public void write(Collection<TrustOSMItem> items) {
+	public void write(Collection<TrustOsmPrimitive> items) {
 		writeHeader();
 		indent = "  ";
 		writeItems(items);
@@ -36,17 +41,23 @@ public class SigWriter extends XmlWriter {
 
 	private void writeDTD() {
 		out.println("<!DOCTYPE trustXML [");
-		out.println("  <!ELEMENT trustcollection (trustitem)*>");
-		out.println("  <!ATTLIST trustcollection version CDATA #IMPLIED creator CDATA #IMPLIED >");
-		out.println("  <!ELEMENT trustitem (signatures)*>");
-		out.println("  <!ATTLIST trustitem osmid CDATA #REQUIRED type CDATA #REQUIRED >");
-		out.println("  <!ELEMENT signatures (tags|geometry)*>");
-		out.println("  <!ELEMENT tags (key)*>");
-		out.println("  <!ELEMENT key (openpgp)*>");
-		out.println("  <!ATTLIST key k CDATA #REQUIRED >");
-		out.println("  <!ELEMENT geometry (node)*>");
-		out.println("  <!ELEMENT node (openpgp)*>");
-		out.println("  <!ATTLIST node id CDATA #REQUIRED >");
+		out.println("  <!ELEMENT trustXML (trustnode|trustway|trustrelation)*>");
+		out.println("  <!ATTLIST trustXML version CDATA #IMPLIED creator CDATA #IMPLIED >");
+		out.println("  <!ELEMENT trustnode (tags?,node?)>");
+		out.println("  <!ELEMENT trustway (tags?,segmentlist?)>");
+		out.println("  <!ELEMENT trustrelation (tags?,memberlist?)>");
+		out.println("  <!ATTLIST trustnode osmid CDATA #IMPLIED >");
+		out.println("  <!ATTLIST trustway osmid CDATA #IMPLIED >");
+		out.println("  <!ATTLIST trustrelation osmid CDATA #IMPLIED >");
+		out.println("  <!ELEMENT tags (key)+>");
+		out.println("  <!ELEMENT key (openpgp)+>");
+		out.println("  <!ATTLIST key k CDATA #IMPLIED >");
+		out.println("  <!ELEMENT node (openpgp)>");
+		//		out.println("  <!ATTLIST node id CDATA #REQUIRED >");
+		out.println("  <!ELEMENT segmentlist (segment)*>");
+		out.println("  <!ELEMENT segment (openpgp)+>");
+		out.println("  <!ELEMENT memberlist (member)*>");
+		out.println("  <!ELEMENT member (openpgp)+>");
 		out.println("  <!ELEMENT openpgp (#PCDATA)*>");
 		out.println("]>");
 	}
@@ -54,11 +65,11 @@ public class SigWriter extends XmlWriter {
 	private void writeHeader() {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
 		writeDTD();
-		out.println("<trustcollection version=\"0.1\" creator=\"JOSM Signature export\">");
+		out.println("<trustXML version=\"0.1\" creator=\"JOSM Signature export\">");
 	}
 
 	private void writeFooter() {
-		out.println("</trustcollection>");
+		out.println("</trustXML>");
 	}
 
 	private void writeSigs(TrustSignatures tsigs) {
@@ -68,39 +79,81 @@ public class SigWriter extends XmlWriter {
 
 	}
 
-	private void writeItems(Collection<TrustOSMItem> items) {
-		Map<String, TrustSignatures> tagsigs;
-		Map<Node, TrustSignatures> nodesigs;
+	private void writeTags(TrustOsmPrimitive trust) {
+		Map<String, TrustSignatures> tagsigs = trust.getTagSigs();
+		Set<String> signedKeys = tagsigs.keySet();
+		if (signedKeys.isEmpty()) return;
+		openln("tags");
+		for (String key : signedKeys) {
+			openAtt("key","k=\""+key+"\"");
 
-		for (TrustOSMItem item : items){
-			OsmPrimitive osm = item.getOsmItem();
+			writeSigs(tagsigs.get(key));
 
-			openAtt("trustitem", "osmid=\""+String.valueOf(osm.getUniqueId())+"\" type=\""+osm.getType().getAPIName()+"\"");
-			openln("signatures");
+			closeln("key");
+		}
+		closeln("tags");
+	}
 
-			tagsigs = item.getTagSigs();
-			openln("tags");
-			for (String key : tagsigs.keySet()) {
-				openAtt("key","k=\""+key+"\"");
+	private void writeNode(TrustNode tn) {
+		TrustSignatures tsigs = tn.getNodeSigs();
+		if (tsigs == null) return;
+		openln("node");
+		writeSigs(tsigs);
+		closeln("node");
+	}
 
-				writeSigs(tagsigs.get(key));
+	private void writeSegments(TrustWay tw) {
+		Map<List<Node>, TrustSignatures> segmentSig = tw.getSegmentSigs();
+		Set<List<Node>> signedSegments = segmentSig.keySet();
+		if (signedSegments.isEmpty()) return;
+		openln("segmentlist");
+		for (List<Node> segment : signedSegments) {
+			openln("segment");
+			writeSigs(segmentSig.get(segment));
+			closeln("segment");
+		}
+		closeln("segmentlist");
+	}
 
-				closeln("key");
+	private void writeMembers(TrustRelation tr) {
+		Map<String, TrustSignatures> memberSig = tr.getMemberSigs();
+		Set<String> signedMembers = memberSig.keySet();
+		if (signedMembers.isEmpty()) return;
+		openln("memberlist");
+		for (String member : signedMembers) {
+			openln("member");
+			writeSigs(memberSig.get(member));
+			closeln("member");
+		}
+		closeln("memberlist");
+	}
+
+	private void writeItems(Collection<TrustOsmPrimitive> items) {
+
+		for (TrustOsmPrimitive trust : items){
+			OsmPrimitive osm = trust.getOsmPrimitive();
+			if (trust instanceof TrustNode) {
+				TrustNode tn = (TrustNode) trust;
+				openAtt("trustnode", "osmid=\""+String.valueOf(osm.getUniqueId())+"\"");
+				writeTags(tn);
+				writeNode(tn);
+				closeln("trustnode");
+			} else if (trust instanceof TrustWay) {
+				TrustWay tw = (TrustWay) trust;
+				openAtt("trustway", "osmid=\""+String.valueOf(osm.getUniqueId())+"\"");
+				writeTags(tw);
+				writeSegments(tw);
+				closeln("trustway");
+			} else if (trust instanceof TrustRelation) {
+				TrustRelation tr = (TrustRelation) trust;
+				openAtt("trustrelation", "osmid=\""+String.valueOf(osm.getUniqueId())+"\"");
+				writeTags(tr);
+				writeMembers(tr);
+				closeln("trustrelation");
 			}
-			closeln("tags");
 
-			nodesigs = item.getGeomSigs();
-			openln("geometry");
-			for (Node node : nodesigs.keySet()) {
-				openAtt("node","id=\""+String.valueOf(node.getUniqueId())+"\"");
+			//			openAtt("trustitem", "osmid=\""+String.valueOf(osm.getUniqueId())+"\" type=\""+osm.getType().getAPIName()+"\"");
 
-				writeSigs(nodesigs.get(node));
-
-				closeln("node");
-			}
-			closeln("geometry");
-			closeln("signatures");
-			closeln("trustitem");
 		}
 	}
 

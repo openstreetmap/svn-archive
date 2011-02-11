@@ -19,7 +19,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.xml.sax.SAXException;
 
 public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
@@ -111,10 +111,10 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 	}
 
 	public boolean updateReferences(DataSet ds) {
-		for (TrustOSMItem t : TrustOSMplugin.signedItems.values()) {
-			OsmPrimitive osm = ds.getPrimitiveById(t.getOsmItem().getPrimitiveId());
+		for (TrustOsmPrimitive t : TrustOSMplugin.signedItems.values()) {
+			OsmPrimitive osm = ds.getPrimitiveById(t.getOsmPrimitive().getPrimitiveId());
 			if (osm != null) {
-				t.setOsmItem(osm);
+				t.setOsmPrimitive(osm);
 				return true;
 			} else {
 				System.out.println("No item found");

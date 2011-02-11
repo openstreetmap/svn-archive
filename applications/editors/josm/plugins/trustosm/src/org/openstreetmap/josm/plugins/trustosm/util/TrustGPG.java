@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -19,14 +20,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -35,6 +38,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -42,8 +46,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-import org.bouncycastle.bcpg.ArmoredOutputStream;
-import org.bouncycastle.bcpg.BCPGOutputStream;
+import org.bouncycastle.bcpg.sig.NotationData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPEncryptedData;
 import org.bouncycastle.openpgp.PGPException;
@@ -63,18 +66,14 @@ import org.bouncycastle.openpgp.PGPSignatureSubpacketVector;
 import org.bouncycastle.openpgp.PGPUtil;
 import org.bouncycastle.util.encoders.Hex;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustSignatures;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
+import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import tools.NameGenerator;
-import tools.SpringUtilities;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
@@ -87,7 +86,9 @@ public class TrustGPG {
 	private PGPPublicKeyRingCollection pgpPub;
 	private static int digest = PGPUtil.SHA1;
 	private PGPSecretKey pgpSecKey;
-	public boolean keepkey = true;
+	public boolean keepkey = false;
+
+	public static final String NOTATION_DATA_KEY = "trustosm@openstreetmap.org";
 
 	public TrustGPG() {
 		Security.addProvider(new BouncyCastleProvider());
@@ -129,11 +130,19 @@ public class TrustGPG {
 
 	private void readSecretKey() {
 
+		// if there is no KeyRingCollection we have to create a new one
+		if (pgpSec == null) {
+			try {
+				generateKey();
+			} catch (Exception e) {
+				System.err.println("GPG Key Ring File could not be created in: "+Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
+			}
+		}
 		//
 		// we just loop through the collection till we find a key suitable for encryption, in the real
 		// world you would probably want to be a bit smarter about this.
 		//
-		if (keepkey && pgpSecKey != null) return;
+		if (keepkey) return;
 
 		final ArrayList<PGPSecretKey> sigKeys = new ArrayList<PGPSecretKey>();
 
@@ -242,6 +251,8 @@ public class TrustGPG {
 			} else {
 				pgpSecKey = sigKeys.get(keyBox.getSelectedIndex());
 			}
+		} else {
+			pgpSecKey = null;
 		}
 		//String selection = (String) JOptionPane.showInputDialog(null, tr("Select a Key to sign"),tr("Secret Key Choice"), JOptionPane.OK_CANCEL_OPTION, null, keys, keys[0]);
 
@@ -262,10 +273,8 @@ public class TrustGPG {
 			pgpPub = new PGPPublicKeyRingCollection(PGPUtil.getDecoderStream(secIn));
 		} catch (FileNotFoundException e) {
 			System.err.println("No gpg files found in "+Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
-			System.err.println("Creating new...");
 			pgpSec = null;
 			pgpPub = null;
-			generateKey();
 		}
 
 	}
@@ -281,24 +290,7 @@ public class TrustGPG {
 		secOut.close();
 	}
 
-	public static String[] generateTagsFromSigtext(String sigtext) {
-		String[] keyValue = sigtext.substring(sigtext.indexOf('\n')).split("=");
-		return keyValue;
-	}
 
-	public static String generateTagSigtext(OsmPrimitive osm, String key) {
-		String sigtext = "ID=" + osm.getUniqueId() + "\n";
-		sigtext += key + "=" + osm.get(key);
-		return sigtext;
-	}
-
-	public static String generateNodeSigtext(OsmPrimitive osm, Node node) {
-		LatLon point = node.getCoor();
-		String sigtext = "ID=" + osm.getUniqueId() + "\n";
-		sigtext += "Lat:" + point.latToString(CoordinateFormat.DECIMAL_DEGREES) + "\n";
-		sigtext += "Lon:" + point.lonToString(CoordinateFormat.DECIMAL_DEGREES);
-		return sigtext;
-	}
 
 	public void getPasswordfromUser() {
 
@@ -324,9 +316,9 @@ public class TrustGPG {
 		password = passwordField.getPassword();
 		 */
 	}
-
-	public void checkTag(TrustOSMItem trust, String key) {
-		String sigtext = generateTagSigtext(trust.getOsmItem(),key);
+	/*
+	public void checkTag(TrustOsmPrimitive trust, String key) {
+		String sigtext = TrustOsmPrimitive.generateTagSigtext(trust.getOsmPrimitive(),key);
 		TrustSignatures sigs;
 		if ((sigs = trust.getSigsOnKey(key))!=null)
 			for (PGPSignature sig : sigs.getSignatures()) {
@@ -334,86 +326,203 @@ public class TrustGPG {
 			}
 	}
 
-	public void checkNode(TrustOSMItem trust, Node node) {
-		String sigtext = generateNodeSigtext(trust.getOsmItem(),node);
-		TrustSignatures sigs;
-		if ((sigs = trust.getSigsOnNode(node))!=null)
-			for (PGPSignature sig : sigs.getSignatures()) {
-				trust.updateNodeSigStatus(node, verify(sigtext,sig)? TrustSignatures.SIG_VALID : TrustSignatures.SIG_BROKEN);
-			}
-	}
 
-	public void checkAll(TrustOSMItem trust) {
-		OsmPrimitive osm = trust.getOsmItem();
+
+	/*	public void checkAll(TrustOsmPrimitive trust) {
+		OsmPrimitive osm = trust.getOsmPrimitive();
 		for (String key : osm.keySet()) {
 			checkTag(trust, key);
 		}
 
 		if(osm instanceof Node) {
-			checkNode(trust, (Node)osm);
+			checkNode((TrustNode) trust);
 		} else if(osm instanceof Way) {
-			Iterator<Node> iter = ((Way)osm).getNodes().iterator();
+			/*			Iterator<Node> iter = ((Way)osm).getNodes().iterator();
 			while (iter.hasNext()) {
 				checkNode(trust, iter.next());
-			}
+			}/
 		} else if(osm instanceof Relation) {
 
 		}
 	}
+	 */
 
 	public void invalidIDWarning(OsmPrimitive osm) {
 		JOptionPane.showMessageDialog(Main.parent, tr("The object with the ID \"{0}\" ({1}) is newly created.\nYou can not sign it, because the signature would lose the ID-Reference after uploading it to the OSM-server.",osm.getUniqueId(),osm.toString()), tr("Signing canceled!"), JOptionPane.ERROR_MESSAGE);
 	}
-
-	public TrustOSMItem signGeometry(TrustOSMItem trust) {
+	/*
+	public TrustOsmPrimitive signGeometry(TrustOsmPrimitive trust) {
+		PGPSignatureSubpacketGenerator spGen = chooseAccuracy();
 		PGPSignature s;
 		Node node;
-		OsmPrimitive osm = trust.getOsmItem();
+		OsmPrimitive osm = trust.getOsmPrimitive();
 		if (osm.isNew()) {
 			invalidIDWarning(osm);
 			return trust;
 		}
 		if(osm instanceof Node) {
-			s = signNode(osm,(Node)osm);
-			if (s != null) trust.storeNodeSig((Node)osm, s);
+			s = signNode(osm,(Node)osm, spGen);
+			if (s != null) ((TrustNode)trust).storeNodeSig(s);
 		} else if(osm instanceof Way) {
 			Iterator<Node> iter = ((Way)osm).getNodes().iterator();
 			while (iter.hasNext()) {
 				node = iter.next();
-				s = signNode(osm,node);
-				if (s != null) trust.storeNodeSig(node, s);
+				s = signNode(osm,node,spGen);
+				if (s != null) ((TrustNode)trust).storeNodeSig(s);
 			}
 		} else if(osm instanceof Relation) {
 
 		}
 		return trust;
-	}
+	}*/
 
-	public PGPSignature signNode(OsmPrimitive osm, Node node) {
-		if (osm.isNew()) {
-			invalidIDWarning(osm);
-			return null;
-		}
-		String tosign = generateNodeSigtext(osm,node);
-		return sign(tosign);
-	}
-
-	public TrustOSMItem signTag(TrustOSMItem trust, String key) {
-		OsmPrimitive osm = trust.getOsmItem();
-		if (osm.isNew()) {
-			invalidIDWarning(osm);
+	public TrustWay signWay(TrustWay trust) {
+		PGPSignature s;
+		Way w = (Way) trust.getOsmPrimitive();
+		if (w.isNew()) {
+			invalidIDWarning(w);
 			return trust;
 		}
-		PGPSignature s;
-		String tosign = generateTagSigtext(osm,key);
-		s = sign(tosign);
-		if (s != null)
-			trust.storeTagSig(key, s);
+		/*
+		List<Node> nodes = w.getNodes();
+		s = signSegment(trust,nodes);
+		if (s != null) trust.storeSegmentSig(nodes,s);
+		 */
+		List<Node> wayNodes = w.getNodes();
+		for (int i=0; i<wayNodes.size()-1; i++) {
+			List<Node> nodes = new ArrayList<Node>();
+			nodes.add(wayNodes.get(i));
+			nodes.add(wayNodes.get(i+1));
+			s = signSegment(trust,nodes);
+			if (s != null) trust.storeSegmentSig(nodes,s);
+		}
+
 		return trust;
 	}
 
-	public PGPSignature sign(String tosign) {
+	public PGPSignature signSegment(TrustWay trust, List<Node> nodes) {
+		Way w = (Way) trust.getOsmPrimitive();
+		if (w.isNew()) {
+			invalidIDWarning(w);
+			return null;
+		}
+		String tosign = TrustWay.generateSegmentSigtext(trust,nodes);
+		PGPSignatureSubpacketGenerator spGen = chooseAccuracy();
+		return sign(tosign,spGen);
+	}
 
+	public PGPSignature signNode(Node node) {
+		PGPSignatureSubpacketGenerator  spGen = chooseAccuracy();
+		return signNode(node,spGen);
+	}
+
+	public PGPSignature signNode(Node node, PGPSignatureSubpacketGenerator spGen) {
+		if (node.isNew()) {
+			invalidIDWarning(node);
+			return null;
+		}
+		String tosign = TrustNode.generateNodeSigtext(node);
+		return sign(tosign,spGen);
+	}
+
+	public boolean signTag(TrustOsmPrimitive trust, String key) {
+		OsmPrimitive osm = trust.getOsmPrimitive();
+		if (osm.isNew()) {
+			invalidIDWarning(osm);
+			return false;
+		}
+		PGPSignature s;
+		String tosign = TrustOsmPrimitive.generateTagSigtext(osm,key);
+		//s = sign(tosign);
+		s = sign(tosign,chooseInformationSource());
+		if (s != null) {
+			trust.storeTagSig(key, s);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Search in a given Signature for Tolerance information.
+	 * @param sig
+	 * @return found tolerance as double or 0 if no Tolerance is given
+	 */
+
+	public static double searchTolerance(PGPSignature sig) {
+		/** Take the first NotationData packet that seems to have Tolerance information */
+		for (NotationData nd : sig.getHashedSubPackets().getNotationDataOccurences()){
+			if (nd.getNotationName().equals(TrustGPG.NOTATION_DATA_KEY)) {
+				String notation = nd.getNotationValue();
+				Pattern p = Pattern.compile("^Tolerance:(\\d*\\.?\\d*)m");
+				Matcher m = p.matcher(notation);
+				if (m.matches()) { // we found a valid Tolerance
+					return Double.parseDouble(m.group(1));
+				}
+			}
+		}
+		return 0;
+	}
+
+	public PGPSignatureSubpacketGenerator chooseAccuracy() {
+		PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
+		JPanel p = new JPanel(new GridBagLayout());
+		p.add(new JLabel(tr("Please give a tolerance in meters")),GBC.eol());
+
+		JFormattedTextField meters = new JFormattedTextField(NumberFormat.getNumberInstance());
+		meters.setValue(new Double(10));
+		meters.setColumns(5);
+
+		p.add(meters,GBC.std());
+		p.add(new JLabel(tr("meters")),GBC.eol());
+
+		int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Accuracy"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+		if (n == JOptionPane.OK_OPTION) {
+			spGen.setNotationData(false, true, TrustGPG.NOTATION_DATA_KEY, "Tolerance:"+meters.getValue()+"m");
+			return spGen;
+		}
+		return null;
+	}
+
+	public PGPSignatureSubpacketGenerator chooseInformationSource() {
+		PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
+		JPanel p = new JPanel(new GridBagLayout());
+		p.add(new JLabel(tr("Select as much as you like:")),GBC.eol());
+
+		JCheckBox survey = new JCheckBox(tr("Survey"));
+		p.add(survey,GBC.eol());
+
+		JCheckBox aerial = new JCheckBox(tr("Aerial Photography"));
+		p.add(aerial,GBC.eol());
+
+		JCheckBox web = new JCheckBox(tr("Web Recherche"));
+		p.add(web,GBC.eol());
+
+		JCheckBox trusted = new JCheckBox(tr("Trusted persons told me"));
+		p.add(trusted,GBC.eol());
+
+		int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Which source did you use?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+		if (n == JOptionPane.OK_OPTION) {
+			String sources = "Sources:";
+			if (survey.isSelected()) sources += ":survey";
+			if (aerial.isSelected()) sources += ":aerial";
+			if (web.isSelected()) sources += ":web";
+			if (trusted.isSelected()) sources += ":trusted";
+			spGen.setNotationData(false, true, TrustGPG.NOTATION_DATA_KEY, sources);
+			return spGen;
+		}
+		return null;
+	}
+
+	public PGPSignature sign(String tosign) {
+		PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
+		return sign(tosign,spGen);
+	}
+
+	public PGPSignature sign(String tosign, PGPSignatureSubpacketGenerator spGen) {
+
+		if (spGen == null) return null;
 		PGPSignature sig;
 		try{
 
@@ -427,21 +536,20 @@ public class TrustGPG {
 			PGPPrivateKey pgpPrivKey = pgpSecKey.extractPrivateKey(password, "BC");
 			PGPSignatureGenerator sGen = new PGPSignatureGenerator(pgpSecKey.getPublicKey().getAlgorithm(), digest, "BC");
 			sGen.initSign(PGPSignature.CANONICAL_TEXT_DOCUMENT, pgpPrivKey);
-			Iterator it = pgpSecKey.getPublicKey().getUserIDs();
-			if (it.hasNext())
-			{
-				PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
 
+			Iterator it = pgpSecKey.getPublicKey().getUserIDs();
+			if (it.hasNext()) {
 				spGen.setSignerUserID(false, (String)it.next());
-				sGen.setHashedSubpackets(spGen.generate());
 			}
+			sGen.setHashedSubpackets(spGen.generate());
 			sGen.update(tosign.getBytes(Charset.forName("UTF-8")));
 			sig = sGen.generate();
+			//System.out.println(new String(sGen.generateOnePassVersion(false).getEncoded(),Charset.forName("UTF-8")));
 			//writeSignatureToFile(sig, tosign, new FileOutputStream("/tmp/sigtest.asc"));
 			//sig.encode(new BCPGOutputStream(new ArmoredOutputStream(new FileOutputStream("/tmp/sigtest.asc"))));
 			return sig;
 		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			System.err.println("PGP Signing Error: " + e.getMessage());
 		}
 
 
@@ -470,37 +578,37 @@ public class TrustGPG {
 			sig.update(sigtext.getBytes(Charset.forName("UTF-8")));
 			return sig.verify();
 		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			System.err.println("PGP Verification Error: " + e.getMessage());
 		}
 		return false;
 	}
 
 
-	public static void writeSignatureToFile(PGPSignature sig, String clearText, FileOutputStream fout) throws Exception {
-		ArmoredOutputStream aOut = new ArmoredOutputStream(fout);
-		aOut.beginClearText(digest);
-		aOut.write(clearText.getBytes(Charset.forName("UTF-8")));
-		aOut.write('\n');
-		aOut.endClearText();
-
-		BCPGOutputStream bOut = new BCPGOutputStream(aOut);
-		sig.encode(bOut);
-		aOut.close();
-		bOut.close();
-	}
-
-	public Map<String, String> getKeyValueFromSignature(PGPSignature sig) {
-		Map<String, String> tags = new HashMap<String, String>();
-		try {
-			String sigtext = new String(sig.getEncoded(), Charset.forName("UTF-8"));
-			String[] kv = generateTagsFromSigtext(sigtext);
-			tags.put(kv[0],kv[1]);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return tags;
-	}
+	//	public static void writeSignatureToFile(PGPSignature sig, String clearText, FileOutputStream fout) throws Exception {
+	//		ArmoredOutputStream aOut = new ArmoredOutputStream(fout);
+	//		aOut.beginClearText(digest);
+	//		aOut.write(clearText.getBytes(Charset.forName("UTF-8")));
+	//		aOut.write('\n');
+	//		aOut.endClearText();
+	//
+	//		BCPGOutputStream bOut = new BCPGOutputStream(aOut);
+	//		sig.encode(bOut);
+	//		aOut.close();
+	//		bOut.close();
+	//	}
+	//
+	//	public Map<String, String> getKeyValueFromSignature(PGPSignature sig) {
+	//		Map<String, String> tags = new HashMap<String, String>();
+	//		try {
+	//			String sigtext = new String(sig.getEncoded(), Charset.forName("UTF-8"));
+	//			String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(sigtext);
+	//			tags.put(kv[0],kv[1]);
+	//		} catch (IOException e) {
+	//			// TODO Auto-generated catch block
+	//			e.printStackTrace();
+	//		}
+	//		return tags;
+	//	}
 
 	public static void showKeyDetails(PGPPublicKey key) {
 		String userid = "Unknown";
@@ -737,7 +845,7 @@ public class TrustGPG {
 		}
 
 
-		//writeGpgFiles();
+		writeGpgFiles();
 
 		return secRing.getSecretKey();
 	}

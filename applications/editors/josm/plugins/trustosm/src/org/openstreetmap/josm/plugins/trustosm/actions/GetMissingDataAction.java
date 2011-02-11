@@ -14,7 +14,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.gui.DownloadSignedOsmDataTask;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -34,7 +34,7 @@ public class GetMissingDataAction extends JosmAction {
 
 	public boolean downloadMissing() {
 		Collection<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
-		Map<String,TrustOSMItem> trustitems = TrustOSMplugin.signedItems;
+		Map<String,TrustOsmPrimitive> trustitems = TrustOSMplugin.signedItems;
 		getMissing(trustitems, missingData);
 
 		int missingCount = missingData.size();
@@ -53,10 +53,10 @@ public class GetMissingDataAction extends JosmAction {
 		return false;
 	}
 
-	public void getMissing(Map<String,TrustOSMItem> trustitems, Collection<OsmPrimitive> missingData) {
+	public void getMissing(Map<String,TrustOsmPrimitive> trustitems, Collection<OsmPrimitive> missingData) {
 		Collection<OsmPrimitive> presentData = getCurrentDataSet().allPrimitives();
-		for (TrustOSMItem t : trustitems.values()) {
-			OsmPrimitive osm = t.getOsmItem();
+		for (TrustOsmPrimitive t : trustitems.values()) {
+			OsmPrimitive osm = t.getOsmPrimitive();
 			if (!presentData.contains(osm))
 				missingData.add(osm);
 		}

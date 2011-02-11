@@ -3,18 +3,24 @@ package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,6 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -34,6 +42,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -41,16 +51,23 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustSignatures;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
+import org.openstreetmap.josm.plugins.trustosm.util.TrustAnalyzer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class TrustDialog extends ToggleDialog implements ActionListener, SelectionChangedListener {
+public class TrustDialog extends ToggleDialog implements ActionListener, SelectionChangedListener, MapViewPaintable {
 
 	/**
 	 * 
@@ -83,7 +100,13 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 	/** The selected osmData */
 	private Collection<? extends OsmPrimitive> osmData;
 
+
+	private final List<WaySegment> selectedSegments = new ArrayList<WaySegment>();
+	private final List<OsmPrimitive> selectedPrimitives = new ArrayList<OsmPrimitive>();
+
+	/** The JTree for showing the geometry */
 	private final JTree geomTree;
+
 
 	/**
 	 * The property data.
@@ -121,6 +144,42 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 		}
 	};
 
+	/** The JTable for members of a relation */
+	private final DefaultTableModel memberData = new DefaultTableModel() {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		@Override public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+		@Override public Class<?> getColumnClass(int columnIndex) {
+			return String.class;
+		}
+	};
+	private final JTable memberTable = new JTable(memberData) {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+			Component c = super.prepareRenderer(renderer, row, column);
+			Byte stat = rowStatus.get(getModel().getValueAt(row, 0));
+			if (!isRowSelected(row))
+				switch (stat.byteValue()) {
+				case -2: c.setBackground( BGCOLOR_REMOVED_ITEM ); break;
+				case -1: c.setBackground( BGCOLOR_BROKEN_SIG ); break;
+				case 1: c.setBackground( BGCOLOR_VALID_SIG ); break;
+				default: c.setBackground( BGCOLOR_NO_SIG ); break;
+				}
+			return c;
+		}
+	};
+
+
 	/**
 	 * Constructor
 	 */
@@ -129,6 +188,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 				Shortcut.registerShortcut("subwindow:trustosm", tr("Toggle: {0}", tr("Object signatures")),
 						KeyEvent.VK_T, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
 
+		Main.map.mapView.addTemporaryLayer(this);
 
 		// setting up the properties table
 		propertyData.setColumnIdentifiers(new String[]{tr("Key"),tr("Value")});
@@ -185,18 +245,38 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
 				if (node.isRoot()) return this;
-				OsmPrimitive osm = (OsmPrimitive) node.getUserObject();
-				setIcon(ImageProvider.get(OsmPrimitiveType.from(osm)));
-				setText(osm.getDisplayName(DefaultNameFormatter.getInstance()));
+				setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
+				Object o = node.getUserObject();
+				if (o instanceof OsmPrimitive){
+					OsmPrimitive osm = (OsmPrimitive) o;
+					setIcon(ImageProvider.get(OsmPrimitiveType.from(osm)));
+					setText(osm.getDisplayName(DefaultNameFormatter.getInstance()));
 
-				if (osm instanceof Node) {
-					Node osmNode = (Node) osm;
-					if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof Way) {
-						osm = (OsmPrimitive) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+
+					if (osm instanceof Node) {
+						Node osmNode = (Node) osm;
+						TrustSignatures sigs;
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+						if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = ((TrustNode)TrustOSMplugin.signedItems.get(id)).getNodeSigs()) != null) {
+							byte stat = sigs.getStatus();
+							switch (stat) {
+							case -2: setBackgroundNonSelectionColor( BGCOLOR_REMOVED_ITEM ); break;
+							case -1: setBackgroundNonSelectionColor( BGCOLOR_BROKEN_SIG ); break;
+							case 1: setBackgroundNonSelectionColor( BGCOLOR_VALID_SIG ); break;
+							default: setBackgroundNonSelectionColor( BGCOLOR_NO_SIG ); break;
+							}
+						}
+					} else if (osm instanceof Way) {
+						//setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
 					}
+
+				} else if (o instanceof WaySegment){
+					WaySegment seg = (WaySegment) o;
+					setIcon(ImageProvider.get("mapmode/addsegment"));
+					setText(seg.getFirstNode().getDisplayName(DefaultNameFormatter.getInstance()) + " ----- " + seg.getSecondNode().getDisplayName(DefaultNameFormatter.getInstance()));
 					TrustSignatures sigs;
-					String id = String.valueOf(osm.getUniqueId());
-					if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = TrustOSMplugin.signedItems.get(id).getSigsOnNode(osmNode)) != null) {
+					String id = TrustOsmPrimitive.createUniqueObjectIdentifier(seg.way);
+					if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = ((TrustWay)TrustOSMplugin.signedItems.get(id)).getSigsOnSegment(seg)) != null) {
 						byte stat = sigs.getStatus();
 						switch (stat) {
 						case -2: setBackgroundNonSelectionColor( BGCOLOR_REMOVED_ITEM ); break;
@@ -204,11 +284,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 						case 1: setBackgroundNonSelectionColor( BGCOLOR_VALID_SIG ); break;
 						default: setBackgroundNonSelectionColor( BGCOLOR_NO_SIG ); break;
 						}
-					} else {
-						setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
 					}
-				} else if (osm instanceof Way) {
-					setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
 				}
 				return this;
 			}
@@ -216,8 +292,58 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 
 		});
 
+		geomTree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				// unhighlight everything
+				for (OsmPrimitive p : selectedPrimitives) {
+					p.setHighlighted(false);
+				}
+				selectedPrimitives.clear();
+				selectedSegments.clear();
+				if (geomTree.getSelectionPaths()!=null)
+					for (TreePath tp : geomTree.getSelectionPaths()) {
+						Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
+						if (o instanceof WaySegment) {
+							selectedSegments.add((WaySegment) o);
+						} else if (o instanceof OsmPrimitive) {
+							OsmPrimitive highlight = (OsmPrimitive) o;
+							highlight.setHighlighted(true);
+							selectedPrimitives.add(highlight);
+						}
+					}
+				Main.map.mapView.repaint();
+			}
+		});
 
+		propertyTable.addFocusListener(new FocusListener(){
 
+			@Override
+			public void focusGained(FocusEvent fe) {
+				geomTree.clearSelection();
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent fe) {
+
+			}
+
+		});
+
+		geomTree.addFocusListener(new FocusListener(){
+
+			@Override
+			public void focusGained(FocusEvent fe) {
+				propertyTable.clearSelection();
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent fe) {
+
+			}
+
+		});
 
 		JPanel dataPanel = new JPanel();
 		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.PAGE_AXIS));
@@ -252,9 +378,9 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 		String actionCommand = e.getActionCommand();
 		if (actionCommand.equals("Check")) {
 			for (OsmPrimitive osm : osmData) {
-				String id = String.valueOf(osm.getUniqueId());
+				String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
 				if (TrustOSMplugin.signedItems.containsKey(id))
-					TrustOSMplugin.gpg.checkAll(TrustOSMplugin.signedItems.get(id));
+					TrustAnalyzer.checkEverything(TrustOSMplugin.signedItems.get(id));
 				//checkedItems.put(osm, TrustOSMplugin.gpg.check(checkedItems.containsKey(osm)? checkedItems.get(osm) : new TrustOSMItem(osm)));
 			}
 			updateTable();
@@ -264,28 +390,58 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 				String key = (String)propertyTable.getValueAt(i, 0);
 				for (OsmPrimitive osm : osmData) {
 					if (osm.keySet().contains(key)) {
-						String id = String.valueOf(osm.getUniqueId());
-						TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signTag(TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm), key));
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+						TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+						if (TrustOSMplugin.gpg.signTag(trust, key))
+							TrustOSMplugin.signedItems.put(id, trust);
 					}
 				}
 			}
 			if (geomTree.getSelectionPaths()!=null)
 				for (TreePath tp : geomTree.getSelectionPaths()) {
-					OsmPrimitive osm = (OsmPrimitive) ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
-					String id = String.valueOf(osm.getUniqueId());
-					if (osm instanceof Node) {
+					Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
+					if (o instanceof OsmPrimitive) {
+						OsmPrimitive osm = (OsmPrimitive) o;
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+						if (osm instanceof Node) {
+							Node osmNode = ((Node) osm);
+							TrustNode trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustNode) TrustOSMplugin.signedItems.get(id) : new TrustNode(osmNode);
+							trust.storeNodeSig(TrustOSMplugin.gpg.signNode(osmNode));
+							TrustOSMplugin.signedItems.put(id, trust);
+
+
+							/*						TreePath parentPath = tp.getParentPath();
+							if (geomTree.isPathSelected(parentPath)) return;
+
+							Node osmNode = ((Node) osm);
+							if (((DefaultMutableTreeNode) parentPath.getLastPathComponent()).getUserObject() instanceof Way) {
+								osm = (OsmPrimitive) ((DefaultMutableTreeNode) parentPath.getLastPathComponent()).getUserObject();
+								id = String.valueOf(osm.getUniqueId());
+							}
+							TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+							trust.storeNodeSig(osmNode, TrustOSMplugin.gpg.signNode(osm,osmNode));
+							TrustOSMplugin.signedItems.put(id, trust);
+							 */
+						} else if (osm instanceof Way) {
+							TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signWay(TrustOSMplugin.signedItems.containsKey(id)? (TrustWay)TrustOSMplugin.signedItems.get(id) : new TrustWay(osm)));
+							/*Way osmWay = ((Way) osm);
+							TrustWay trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(osmWay);
+							trust.storeSegmentSig(TrustOSMplugin.gpg.signWay(osmWay));
+							TrustOSMplugin.signedItems.put(id, trust);
+							 */
+						}
+					} else if (o instanceof WaySegment) {
 						TreePath parentPath = tp.getParentPath();
 						if (geomTree.isPathSelected(parentPath)) return;
-
-						Node osmNode = ((Node) osm);
-						if (((DefaultMutableTreeNode) parentPath.getLastPathComponent()).getUserObject() instanceof Way) {
-							osm = (OsmPrimitive) ((DefaultMutableTreeNode) parentPath.getLastPathComponent()).getUserObject();
-						}
-						TrustOSMItem trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm);
-						trust.storeNodeSig(osmNode, TrustOSMplugin.gpg.signNode(osm,osmNode));
+						WaySegment seg = (WaySegment) o;
+						List<Node> nodes = new ArrayList<Node>();
+						nodes.add(seg.getFirstNode());
+						nodes.add(seg.getSecondNode());
+						Way w = seg.way;
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(w);
+						TrustWay trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(w);
+						trust.storeSegmentSig(nodes,TrustOSMplugin.gpg.signSegment(trust,nodes));
 						TrustOSMplugin.signedItems.put(id, trust);
-					} else if (osm instanceof Way) {
-						TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signGeometry(TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm)));
 					}
 				}
 			updateTable();
@@ -294,12 +450,37 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 			for (int i : propertyTable.getSelectedRows()) {
 				String key = (String)propertyTable.getValueAt(i, 0);
 				for (OsmPrimitive osm : osmData) {
-					String id = String.valueOf(osm.getUniqueId());
+					String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
 					if (osm.keySet().contains(key) && TrustOSMplugin.signedItems.containsKey(id)) {
 						TrustSignaturesDialog.showSignaturesDialog(TrustOSMplugin.signedItems.get(id), key);
 					}
 				}
 			}
+			if (geomTree.getSelectionPaths()!=null)
+				for (TreePath tp : geomTree.getSelectionPaths()) {
+					Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
+					if (o instanceof OsmPrimitive) {
+						OsmPrimitive osm = (OsmPrimitive) o;
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+						if (osm instanceof Node) {
+							if (TrustOSMplugin.signedItems.containsKey(id)) {
+								TrustSignaturesDialog.showSignaturesDialog((TrustNode) TrustOSMplugin.signedItems.get(id));
+							}
+						} else if (osm instanceof Way) {
+							//TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signGeometry(TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm)));
+						}
+					} else if (o instanceof WaySegment) {
+						WaySegment seg = (WaySegment) o;
+						String id = TrustOsmPrimitive.createUniqueObjectIdentifier(seg.way);
+						if (TrustOSMplugin.signedItems.containsKey(id)) {
+							List<Node> nodes = new ArrayList<Node>();
+							nodes.add(seg.getFirstNode());
+							nodes.add(seg.getSecondNode());
+							TrustSignaturesDialog.showSignaturesDialog((TrustWay) TrustOSMplugin.signedItems.get(id),nodes);
+						}
+					}
+				}
+
 		}
 	}
 	/*
@@ -335,15 +516,30 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 		}
 	}
 	 */
+	public static List<WaySegment> generateSegmentListFromWay(Way w) {
+		List<WaySegment> segList = new ArrayList<WaySegment>();
+		for (int i = 0; i < w.getNodesCount()-1; i++) {
+			segList.add(new WaySegment(w,i));
+		}
+		return segList;
+	}
+
 	private DefaultTreeModel createTree(){
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		DefaultMutableTreeNode wayNode;
 		if (osmData!=null)
 			for (OsmPrimitive osm : osmData) {
-				String id = String.valueOf(osm.getUniqueId());
+				//String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
 				if(osm instanceof Node) {
 					root.add(new DefaultMutableTreeNode(osm));
 				} else if(osm instanceof Way) {
+					wayNode = new DefaultMutableTreeNode(osm);
+					List<WaySegment> presentSegments = TrustDialog.generateSegmentListFromWay(((Way)osm));
+					for (WaySegment seg : presentSegments ) {
+						wayNode.add(new DefaultMutableTreeNode(seg));
+					}
+
+					/*
 					wayNode = new DefaultMutableTreeNode(osm);
 					List<Node> presentNodes = ((Way)osm).getNodes();
 					Iterator<Node> iter = presentNodes.iterator();
@@ -352,7 +548,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 					}
 
 					if (TrustOSMplugin.signedItems.containsKey(id)) {
-						TrustOSMItem trust = TrustOSMplugin.signedItems.get(id);
+						TrustOsmPrimitive trust = TrustOSMplugin.signedItems.get(id);
 						HashSet<Node> signedNodes = new HashSet<Node>(trust.getGeomSigs().keySet());
 						signedNodes.removeAll(presentNodes);
 						iter = signedNodes.iterator();
@@ -363,6 +559,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 							wayNode.add(new DefaultMutableTreeNode(removedNode));
 						}
 					}
+					 */
 					root.add(wayNode);
 				} else if(osm instanceof Relation) {
 
@@ -380,14 +577,14 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 
 		Map<String, Map<String, Integer>> valueCount = new TreeMap<String, Map<String, Integer>>();
 
-		TrustOSMItem trust;
+		TrustOsmPrimitive trust;
 
 		valueCount.clear();
 		rowStatus.clear();
 		boolean sigsAvailable = false;
 
 		for (OsmPrimitive osm : osmData) {
-			String id = String.valueOf(osm.getUniqueId());
+			String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
 			if (TrustOSMplugin.signedItems.containsKey(id)) {
 				trust = TrustOSMplugin.signedItems.get(id);
 				sigsAvailable = true;
@@ -402,7 +599,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 				}
 
 			} else {
-				trust = new TrustOSMItem(osm);
+				trust = TrustOsmPrimitive.createTrustOsmPrimitive(osm);
 				sigsAvailable = false;
 			}
 
@@ -461,6 +658,32 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 		geomTree.setModel(createTree());
 		updateTable();
 		//		signButton.setEnabled(newSelection.size() == 1);
+	}
+
+	@Override
+	public void paint(Graphics2D g, MapView mv, Bounds bbox) {
+		// if there are no Segments to highlight - return
+		if (selectedSegments.isEmpty()) return;
+
+		// sanity checks
+		if (Main.map.mapView == null) return;
+
+
+		Graphics2D g2 = g;
+		g2.setColor(PaintColors.HIGHLIGHT.get());
+		g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+		// highlight all selected WaySegments
+		for (WaySegment seg : selectedSegments) {
+			GeneralPath b = new GeneralPath();
+			Point p1=mv.getPoint(seg.getFirstNode());
+			Point p2=mv.getPoint(seg.getSecondNode());
+
+			b.moveTo(p1.x,p1.y); b.lineTo(p2.x, p2.y);
+
+			g2.draw(b);
+		}
+		g2.setStroke(new BasicStroke(1));
 	}
 
 }

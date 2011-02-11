@@ -23,7 +23,7 @@ public class SigExporter extends FileExporter {
 	}
 
 	public SigExporter() {
-		super(new ExtensionFileFilter("toxm,xml", "tosm", tr("Signature Files") + " (*.tosm *.xml)"));
+		super(new ExtensionFileFilter("txml,xml", "txml", tr("Signature Files") + " (*.txml *.xml)"));
 	}
 
 	@Override

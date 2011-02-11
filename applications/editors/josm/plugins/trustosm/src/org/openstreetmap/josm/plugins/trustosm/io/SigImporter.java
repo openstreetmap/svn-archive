@@ -19,12 +19,12 @@ import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 import org.openstreetmap.josm.plugins.trustosm.actions.GetMissingDataAction;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 
 public class SigImporter extends FileImporter {
 
 	public SigImporter() {
-		super(new ExtensionFileFilter("tosm,xml", "tosm", tr("OSM Signature Files") + " (*.tosm *.xml)"));
+		super(new ExtensionFileFilter("txml,xml", "txml", tr("OSM Signature Files") + " (*.txml *.xml)"));
 	}
 
 	public SigImporter(ExtensionFileFilter filter) {
@@ -48,7 +48,7 @@ public class SigImporter extends FileImporter {
 			Main.main.addLayer(layer);
 		}
 		//		Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
-		Map<String,TrustOSMItem> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
+		Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
 
 		/*
 		int missingCount = missingData.size();

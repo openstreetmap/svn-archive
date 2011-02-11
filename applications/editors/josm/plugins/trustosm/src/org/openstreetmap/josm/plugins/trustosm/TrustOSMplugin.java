@@ -28,9 +28,9 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.trustosm.actions.ExportSigsAction;
-import org.openstreetmap.josm.plugins.trustosm.data.TrustOSMItem;
+import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.gui.dialogs.TrustDialog;
-import org.openstreetmap.josm.plugins.trustosm.gui.preferences.TrustPreferenceEditor;
+import org.openstreetmap.josm.plugins.trustosm.gui.dialogs.TrustPreferenceEditor;
 import org.openstreetmap.josm.plugins.trustosm.io.SigExporter;
 import org.openstreetmap.josm.plugins.trustosm.io.SigImporter;
 import org.openstreetmap.josm.plugins.trustosm.util.TrustGPG;
@@ -45,7 +45,7 @@ public class TrustOSMplugin extends Plugin {
 	public static TrustGPG gpg;
 
 	/** A global list with all OSM-Ids and corresponding TrustOSMItems */
-	public static final Map<String, TrustOSMItem> signedItems = new HashMap<String, TrustOSMItem>();
+	public static final Map<String, TrustOsmPrimitive> signedItems = new HashMap<String, TrustOsmPrimitive>();
 
 	/**
 	 * Will be invoked by JOSM to bootstrap the plugin
@@ -55,9 +55,14 @@ public class TrustOSMplugin extends Plugin {
 	public TrustOSMplugin(PluginInformation info) {
 		// init the plugin
 		super(info);
+		// check if the jarlibs are already extracted or not and extract them if not
+		if (!Main.pref.getBoolean("trustosm.jarLibsExtracted")) {
+			Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","lib"));
+			Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","resources"));
+		}
+
 		refreshMenu();
 		checkForUnrestrictedPolicyFiles();
-		extractFiles("trustosm","lib");
 		// register new SigImporter and SigExporter
 		ExtensionFileFilter.importers.add(new SigImporter());
 		ExtensionFileFilter.exporters.add(new SigExporter());
@@ -88,8 +93,8 @@ public class TrustOSMplugin extends Plugin {
 			c.init(Cipher.ENCRYPT_MODE, key192);
 			c.doFinal(data);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("It seems that the Unrestricted Policy Files are not available in this JVM. So high level crypto is not allowed. Problems may occure.");
+			//e.printStackTrace();
+			System.err.println("Warning: It seems that the Unrestricted Policy Files are not available in this JVM. So high level crypto is not allowed. Problems may occure.");
 			//extractFiles("trustosm","jce");
 			installUnrestrictedPolicyFiles();
 		}
@@ -207,7 +212,7 @@ public class TrustOSMplugin extends Plugin {
 		return false;
 	}
 
-	public static void extractFiles(String pluginname, String extractDir) {
+	public static boolean extractFiles(String pluginname, String extractDir) {
 		try {
 			if (extractDir == null) extractDir = "lib";
 			JarFile jar = new JarFile(Main.pref.getPluginsDirectory().getPath()+"/"+pluginname+".jar");
@@ -231,10 +236,11 @@ public class TrustOSMplugin extends Plugin {
 					is.close();
 				}
 			}
+			return true;
 
 		} catch (IOException e) {
 			e.printStackTrace();
-
+			return false;
 		}
 
 	}

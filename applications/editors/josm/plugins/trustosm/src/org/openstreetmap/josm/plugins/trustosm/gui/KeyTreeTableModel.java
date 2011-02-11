@@ -20,8 +20,9 @@ import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 public class KeyTreeTableModel extends AbstractTreeTableModel {
 
 	public static String convPGPSignatureToString(PGPSignature s) {
+		if (s==null) return null;
 		PGPSignatureSubpacketVector sv = s.getHashedSubPackets();
-		if (sv.hasSubpacket(SignatureSubpacketTags.SIGNER_USER_ID))
+		if (sv != null && sv.hasSubpacket(SignatureSubpacketTags.SIGNER_USER_ID))
 			return sv.getSignerUserID();
 
 		PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
@@ -29,12 +30,13 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
 			Iterator i = pub.getUserIDs();
 			if (i.hasNext())
 				return (String)i.next();
+
 		}
 		return tr("unknown");
 	}
 
 	private final SignatureTreeNode root;
-	private final String[] allTitle = {tr("UID"),tr("KeyID"),tr("OSM-Cert"),tr("Signed")};
+	private final String[] allTitle = {tr("UID"),tr("KeyID"),tr("OSM-Info"),tr("Signed")};
 	private final List<String> columns = new ArrayList<String>(Arrays.asList(allTitle));
 
 	public KeyTreeTableModel(Collection<PGPSignature> sigs) {

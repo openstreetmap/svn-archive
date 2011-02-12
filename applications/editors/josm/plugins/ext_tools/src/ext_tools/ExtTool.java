@@ -27,6 +27,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
@@ -115,6 +116,32 @@ public class ExtTool {
                 (bounds.max.east() - bounds.min.east());
     }
 
+    private double latToTileY(double lat, int zoom) {
+        double l = lat / 180 * Math.PI;
+        double pf = Math.log(Math.tan(l) + (1 / Math.cos(l)));
+        return Math.pow(2.0, zoom - 1) * (Math.PI - pf) / Math.PI;
+    }
+
+    private double lonToTileX(double lon, int zoom) {
+        return Math.pow(2.0, zoom - 3) * (lon + 180.0) / 45.0;
+    }
+
+    private double getTMSZoom() {
+        if (Main.map == null || Main.map.mapView == null) return 1;
+        MapView mv = Main.map.mapView;
+        LatLon topLeft = mv.getLatLon(0, 0);
+        LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+        double x1 = lonToTileX(topLeft.lon(), 1);
+        double y1 = latToTileY(topLeft.lat(), 1);
+        double x2 = lonToTileX(botRight.lon(), 1);
+        double y2 = latToTileY(botRight.lat(), 1);
+
+        int screenPixels = mv.getWidth()*mv.getHeight();
+        double tilePixels = Math.abs((y2-y1)*(x2-x1)*65536);
+        if (screenPixels == 0 || tilePixels == 0) return 1;
+        return Math.log(screenPixels/tilePixels)/Math.log(2)/2+1;
+    }
+
     protected void showErrorMessage(String message, String details) {
         final JPanel p = new JPanel(new GridBagLayout());
         p.add(new JMultilineLabel(message),GBC.eol());
@@ -139,6 +166,7 @@ public class ExtTool {
         replace.put("{lat}", "" + pos.lat());
         replace.put("{lon}", "" + pos.lon());
         replace.put("{PPD}", "" + getPPD());
+        replace.put("{TZoom}", "" + getTMSZoom());
 
         ArrayList<String> cmdParams = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(cmdline);

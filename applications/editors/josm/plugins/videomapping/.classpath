@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/vlcj-1.1.5.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/core"/>
+	<classpathentry kind="lib" path="lib/platform.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -66,9 +66,11 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 
     public VideoMappingPlugin(PluginInformation info) {
         super(info);
+        
         MapView.addLayerChangeListener(this);
         //Register for GPS menu
         VMenu = Main.main.menu.addMenu(" Video", KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));//TODO no more ugly " video" hack
+        VMenu.setEnabled(false);
         addMenuItems();
         enableControlMenus(true);
         loadSettings();
@@ -78,7 +80,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             
     //only use with GPS and own layers
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        System.out.println(newLayer);
+        VMenu.setEnabled(true);
         if (newLayer instanceof GpxLayer)
         {
             VAdd.setEnabled(true);
@@ -104,7 +106,8 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         activeLayerChange(null,arg0);
     }
 
-    public void layerRemoved(Layer arg0) {  
+    public void layerRemoved(Layer arg0) {
+    	if(Main.main.getActiveLayer()==null)	VMenu.setEnabled(false);
     } //well ok we have a local copy of the GPS track....
 
     //register main controls
@@ -311,7 +314,6 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         VMenu.add(VSubTitles);
         
     }
-    
     
     
     //we can only work on our own layer

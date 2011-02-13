@@ -17,7 +17,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
 import org.openstreetmap.josm.plugins.videomapping.VideoObserver;
 
-//combines video and GPS playback, major control has the video player
+//extends video playback, major control has the video player
 public class GPSVideoPlayer
 {
     Timer t;
@@ -46,7 +46,7 @@ public class GPSVideoPlayer
         syncBtn.addActionListener(new ActionListener() {
             //do a sync
             public void actionPerformed(ActionEvent e) {
-                long diff=gps.getRelativeTime()-video.getTime();
+                long diff=gps.getRelativeTime()-video.getTime(); //FIXME differenzierter betrachten
                 file= new GPSVideoFile(file, diff);
                 syncBtn.setBackground(Color.GREEN);
                 synced=true;
@@ -104,6 +104,7 @@ public class GPSVideoPlayer
         List<WayPoint> ls = gps.getTrack().subList(gps.getTrack().indexOf(start), gps.getTrack().indexOf(end));
         
         for (WayPoint wp : ls) {
+        	wp.attr.clear();
             wp.attr.put("synced", "true");
         }   
     }

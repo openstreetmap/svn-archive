@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
 import java.awt.Adjustable;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.DateTimeDateFormat;
 
@@ -50,6 +51,8 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.VideoMetaData;
 import uk.co.caprica.vlcj.player.embedded.*;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
+import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 
 //basic class of a videoplayer for one video
 public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListener, WindowListener{
@@ -72,20 +75,19 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
     
     public SimpleVideoPlayer() {
         super();
-        /*TODO new EnvironmentCheckerFactory().newEnvironmentChecker().checkEnvironment();
-         * if(RuntimeUtil.isWindows()) {
-                vlcArgs.add("--plugin-path=" + WindowsRuntimeUtil.getVlcInstallDir() + "\\plugins");
-            }
-         */
         try
         {
+        	//some workarounds to detect libVLC and DNA on windows        
+        	if(RuntimeUtil.isWindows()) {
+        		System.setProperty("jna.library.path",WindowsRuntimeUtil.getVlcInstallDir());  //FIXME doesn't work even with this workaround!
+            }
+        	System.setProperty("logj4.configuration","file:log4j.xml"); //TODO still unsure if we can't link this to the JOSM log4j instance        	        
             //we don't need any options
             String[] libvlcArgs = {""};
-            String[] standardMediaOptions = {""}; 
-            
+            String[] standardMediaOptions = {""};
             //System.out.println("libvlc version: " + LibVlc.INSTANCE.libvlc_get_version());
             //setup Media Player
-            //TODO we have to deal with unloading things....
+            //TODO we have to deal with unloading things again ....
             MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
             FullScreenStrategy fullScreenStrategy = new DefaultFullScreenStrategy(this);
             mp = mediaPlayerFactory.newMediaPlayer(fullScreenStrategy);

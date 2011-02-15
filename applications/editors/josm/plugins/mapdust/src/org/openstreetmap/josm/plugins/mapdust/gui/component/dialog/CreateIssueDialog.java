@@ -111,23 +111,24 @@ public class CreateIssueDialog extends AbstractDialog {
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
     public CreateIssueDialog(Point point, MapdustPlugin mapdustPlugin) {
-        this.createIssueText= "In order to create a new bug report you";
+        this.createIssueText = "In order to create a new bug report you";
         this.createIssueText += " need to provide your nickname and a brief";
-        this.createIssueText+= " description for the bug.";
+        this.createIssueText += " description for the bug.";
         this.point = point;
         /* set JDialog settings */
         initializeDialog();
         /* add components to the dialog */
         addComponents(mapdustPlugin);
         /* add window listenet */
-        MapdustButtonPanel btnPanel = mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
+        MapdustButtonPanel btnPanel =
+                mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
         addWindowListener(new WindowClose(this, btnPanel, null));
     }
 
     /**
      * Initializes the dialog default fields.
      */
-    private void initializeDialog(){
+    private void initializeDialog() {
         /* set JDialog settings */
         setTitle("Create bug report");
         setModal(true);
@@ -144,11 +145,11 @@ public class CreateIssueDialog extends AbstractDialog {
     /**
      * Displays the dialog.
      */
-    public void showDialog(){
-       setLocationRelativeTo(null);
-       getContentPane().setPreferredSize(getSize());
-       pack();
-       setVisible(true);
+    public void showDialog() {
+        setLocationRelativeTo(null);
+        getContentPane().setPreferredSize(getSize());
+        pack();
+        setVisible(true);
     }
 
     @Override
@@ -160,7 +161,7 @@ public class CreateIssueDialog extends AbstractDialog {
             JTextPane txtPane = ComponentUtil.createJTextPane(createIssueText,
                     backgroundColor);
             cmpMessage = ComponentUtil.createJScrollPane(txtPane,
-                    new Rectangle(10, 10, 330, 50), backgroundColor, true, true);
+                    new Rectangle(10,10, 330, 50), backgroundColor, true, true);
         }
         /* the type label and combo box */
         if (lblType == null) {
@@ -169,8 +170,8 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         if (cbbType == null) {
             ComboBoxRenderer renderer = new ComboBoxRenderer();
-            cbbType = ComponentUtil.createJComboBox(new Rectangle(110, 70, 230, 25),
-                    renderer, backgroundColor);
+            cbbType = ComponentUtil.createJComboBox(new Rectangle(110, 70, 230,
+                    25), renderer, backgroundColor);
         }
         /* create the nickname label and text field */
         if (lblNickname == null) {
@@ -178,9 +179,14 @@ public class CreateIssueDialog extends AbstractDialog {
                     new Rectangle(10, 110, 79, 25));
         }
         if (txtNickname == null) {
-            txtNickname = ComponentUtil.createJTextField(new Rectangle(110, 110, 230, 25));
-            /* nickname was set before */
+            txtNickname = ComponentUtil.createJTextField(new Rectangle(110, 110,
+                    230,25));
+            /* get the nickname */
             String nickname = Main.pref.get("mapdust.nickname");
+            if (nickname.isEmpty()) {
+                /* if nickname is empty, get the JOSM username */
+                nickname = Main.pref.get("mapdust.josmUserName");
+            }
             if (nickname != null && !nickname.isEmpty()) {
                 txtNickname.setText(nickname);
             }
@@ -195,7 +201,8 @@ public class CreateIssueDialog extends AbstractDialog {
             txtDescription.setFont(new Font("Times New Roman", Font.PLAIN, 12));
             txtDescription.setLineWrap(true);
             cmpDescription = ComponentUtil.createJScrollPane(txtDescription,
-                    new Rectangle(110, 150, 230, 50), backgroundColor, false, true);
+                    new Rectangle(110, 150, 230, 50), backgroundColor, false,
+                    true);
         }
         /* creates the cancel button */
         if (btnCancel == null) {

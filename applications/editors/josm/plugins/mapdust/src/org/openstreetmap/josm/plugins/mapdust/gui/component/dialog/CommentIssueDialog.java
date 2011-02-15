@@ -142,10 +142,15 @@ public class CommentIssueDialog extends AbstractDialog {
             Rectangle bounds = new Rectangle(10, 70, 91, 25);
             lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds);
         }
-        String nickname = Main.pref.get("mapdust.nickname");
         if (txtNickname == null) {
             Rectangle bounds = new Rectangle(100, 70, 230, 25);
             txtNickname = ComponentUtil.createJTextField(bounds);
+            /* get the nickname */
+            String nickname = Main.pref.get("mapdust.nickname");
+            if (nickname.isEmpty()) {
+                /* if nickname is empty, get JOSM username */
+                nickname = Main.pref.get("mapdust.josmUserName");
+            }
             if (nickname != null && !nickname.isEmpty()) {
                 txtNickname.setText(nickname);
             }
@@ -168,14 +173,13 @@ public class CommentIssueDialog extends AbstractDialog {
             Rectangle bounds = new Rectangle(240, 170, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
-            btnCancel = ComponentUtil.createJButton("Cancel", bounds,
-                    cancelAction);
+            btnCancel = ComponentUtil.createJButton("Cancel", bounds, cancelAction);
         }
         /* creates the ok button */
         if (btnOk == null) {
             Rectangle bounds = new Rectangle(170, 170, 60, 25);
-            ExecuteCommentBug okAction =
-                    new ExecuteCommentBug(this, mapdustPlugin.getMapdustGUI());
+            ExecuteCommentBug okAction = new ExecuteCommentBug(this,
+                    mapdustPlugin.getMapdustGUI());
             okAction.addObserver(mapdustPlugin);
             okAction.addObserver(mapdustPlugin.getMapdustGUI());
             btnOk = ComponentUtil.createJButton("OK", bounds, okAction);
@@ -271,5 +275,5 @@ public class CommentIssueDialog extends AbstractDialog {
     public String getMessageText() {
         return messageText;
     }
-    
+
 }

@@ -56,44 +56,41 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
         private boolean inCoverage = false;
 
         @Override
-        public void startElement(String uri, String stripped, String tagName,
-                Attributes attrs) throws SAXException {
-            if("ImageryProvider".equals(tagName)) {
+        public void startElement(String uri, String stripped, String tagName, Attributes attrs) throws SAXException {
+            if ("ImageryProvider".equals(tagName)) {
                 curr = new Attribution();
-            } else if("CoverageArea".equals(tagName)) {
+            } else if ("CoverageArea".equals(tagName)) {
                 inCoverage = true;
             }
         }
 
         @Override
-        public void characters(char[] ch, int start, int length)
-        throws SAXException {
+        public void characters(char[] ch, int start, int length) throws SAXException {
             string = new String(ch, start, length);
         }
 
         @Override
-        public void endElement(String uri, String stripped, String tagName)
-        throws SAXException {
-            if("ImageryProvider".equals(tagName)) {
+        public void endElement(String uri, String stripped, String tagName) throws SAXException {
+            if ("ImageryProvider".equals(tagName)) {
                 attributions.add(curr);
-            } else if("Attribution".equals(tagName)) {
+            } else if ("Attribution".equals(tagName)) {
                 curr.attribution = string;
-            } else if(inCoverage && "ZoomMin".equals(tagName)) {
+            } else if (inCoverage && "ZoomMin".equals(tagName)) {
                 curr.minZoom = Integer.parseInt(string);
-            } else if(inCoverage && "ZoomMax".equals(tagName)) {
+            } else if (inCoverage && "ZoomMax".equals(tagName)) {
                 curr.maxZoom = Integer.parseInt(string);
-            } else if(inCoverage && "SouthLatitude".equals(tagName)) {
+            } else if (inCoverage && "SouthLatitude".equals(tagName)) {
                 southLat = Double.parseDouble(string);
-            } else if(inCoverage && "NorthLatitude".equals(tagName)) {
+            } else if (inCoverage && "NorthLatitude".equals(tagName)) {
                 northLat = Double.parseDouble(string);
-            } else if(inCoverage && "EastLongitude".equals(tagName)) {
+            } else if (inCoverage && "EastLongitude".equals(tagName)) {
                 eastLon = Double.parseDouble(string);
-            } else if(inCoverage && "WestLongitude".equals(tagName)) {
+            } else if (inCoverage && "WestLongitude".equals(tagName)) {
                 westLon = Double.parseDouble(string);
-            } else if("BoundingBox".equals(tagName)) {
+            } else if ("BoundingBox".equals(tagName)) {
                 curr.min = new Coordinate(southLat, westLon);
                 curr.max = new Coordinate(northLat, eastLon);
-            } else if("CoverageArea".equals(tagName)) {
+            } else if ("CoverageArea".equals(tagName)) {
                 inCoverage = false;
             }
             string = "";
@@ -102,20 +99,21 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     private List<Attribution> loadAttributionText() {
         try {
-            URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/0,0?zl=1&mapVersion=v1&key="+API_KEY+"&include=ImageryProviders&output=xml");
+            URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/0,0?zl=1&mapVersion=v1&key="
+                    + API_KEY + "&include=ImageryProviders&output=xml");
             URLConnection conn = u.openConnection();
-            
+
             // This is not JOSM! Do not use anything other than standard JRE classes within this package!
             // See package.html for details
             //conn.setConnectTimeout(Main.pref.getInteger("imagery.bing.load-attribution-text.timeout", 4000));
-            
+
             InputStream stream = conn.getInputStream();
-            
+
             XMLReader parser = XMLReaderFactory.createXMLReader();
             AttrHandler handler = new AttrHandler();
             parser.setContentHandler(handler);
             parser.parse(new InputSource(stream));
-            System.err.println("Added " + handler.attributions.size() + " attributions.");
+            //System.err.println("Added " + handler.attributions.size() + " attributions.");
             return handler.attributions;
         } catch (IOException e) {
             System.err.println("Could not open Bing aerials attribution metadata.");
@@ -133,7 +131,7 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     @Override
     public String getExtension() {
-        return("jpeg");
+        return ("jpeg");
     }
 
     @Override
@@ -188,11 +186,9 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
                 return "Error loading Bing attribution data";
             StringBuilder a = new StringBuilder();
             for (Attribution attr : attributions.get()) {
-                if(zoom <= attr.maxZoom && zoom >= attr.minZoom) {
-                    if(topLeft.getLon() < attr.max.getLon()
-                            && botRight.getLon() > attr.min.getLon()
-                            && topLeft.getLat() > attr.min.getLat()
-                            && botRight.getLat() < attr.max.getLat()) {
+                if (zoom <= attr.maxZoom && zoom >= attr.minZoom) {
+                    if (topLeft.getLon() < attr.max.getLon() && botRight.getLon() > attr.min.getLon()
+                            && topLeft.getLat() > attr.min.getLat() && botRight.getLat() < attr.max.getLat()) {
                         a.append(attr.attribution);
                         a.append(" ");
                     }
@@ -207,7 +203,7 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     static String computeQuadTree(int zoom, int tilex, int tiley) {
         StringBuilder k = new StringBuilder();
-        for(int i = zoom; i > 0; i--) {
+        for (int i = zoom; i > 0; i--) {
             char digit = 48;
             int mask = 1 << (i - 1);
             if ((tilex & mask) != 0) {

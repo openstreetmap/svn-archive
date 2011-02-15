@@ -22,14 +22,10 @@ public class OsmTileSource {
             this(name, base_url, null);
         }
 
-        public AbstractOsmTileSource(String name, String base_url, String attr_img_url)
-        {
+        public AbstractOsmTileSource(String name, String base_url, String attr_img_url) {
             NAME = name;
             BASE_URL = base_url;
             ATTR_IMG_URL = attr_img_url;
-            if(ATTR_IMG_URL == null) {
-                REQUIRES_ATTRIBUTION = false;
-            }
         }
 
         public String getName() {
@@ -77,7 +73,7 @@ public class OsmTileSource {
         }
 
         public Image getAttributionImage() {
-            if(ATTR_IMG_URL != null)
+            if (ATTR_IMG_URL != null)
                 return new ImageIcon(ATTR_IMG_URL).getImage();
             else
                 return null;
@@ -88,7 +84,7 @@ public class OsmTileSource {
         }
 
         public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
-            return "CC-BY-SA OpenStreetMap and Contributors";
+            return "© OpenStreetMap contributors, CC-BY-SA ";
         }
 
         public String getAttributionLinkURL() {
@@ -96,27 +92,25 @@ public class OsmTileSource {
         }
 
         public String getTermsOfUseURL() {
-            return "http://openstreetmap.org/";
+            return "http://www.openstreetmap.org/copyright";
         }
 
         public double latToTileY(double lat, int zoom) {
-	    double l = lat / 180 * Math.PI;
-	    double pf = Math.log(Math.tan(l) + (1 / Math.cos(l)));
-	    return Math.pow(2.0, zoom - 1) * (Math.PI - pf) / Math.PI;
+            double l = lat / 180 * Math.PI;
+            double pf = Math.log(Math.tan(l) + (1 / Math.cos(l)));
+            return Math.pow(2.0, zoom - 1) * (Math.PI - pf) / Math.PI;
         }
 
         public double lonToTileX(double lon, int zoom) {
-	    return Math.pow(2.0, zoom - 3) * (lon + 180.0) / 45.0;
+            return Math.pow(2.0, zoom - 3) * (lon + 180.0) / 45.0;
         }
 
         public double tileYToLat(int y, int zoom) {
-	    return Math.atan(Math.sinh(Math.PI
-                - (Math.PI * y / Math.pow(2.0, zoom - 1))))
-                * 180 / Math.PI;
+            return Math.atan(Math.sinh(Math.PI - (Math.PI * y / Math.pow(2.0, zoom - 1)))) * 180 / Math.PI;
         }
 
         public double tileXToLon(int x, int zoom) {
-	    return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
+            return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
         }
     }
 
@@ -163,6 +157,7 @@ public class OsmTileSource {
 
     public static abstract class OsmaSource extends AbstractOsmTileSource {
         String osmaSuffix;
+
         public OsmaSource(String name, String osmaSuffix) {
             super(name, MAP_OSMA);
             this.osmaSuffix = osmaSuffix;
@@ -182,11 +177,13 @@ public class OsmTileSource {
             return TileUpdate.IfModifiedSince;
         }
     }
+
     public static class TilesAtHome extends OsmaSource {
         public TilesAtHome() {
             super("TilesAtHome", "tile");
         }
     }
+
     public static class Maplint extends OsmaSource {
         public Maplint() {
             super("Maplint", "maplint");

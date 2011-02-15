@@ -160,7 +160,7 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
     @Override
     public Image getAttributionImage() {
         try {
-            return ImageIO.read(getClass().getResourceAsStream("/images/bing_maps.png"));
+            return ImageIO.read(getClass().getResourceAsStream("images/bing_maps.png"));
         } catch (IOException e) {
             return null;
         }

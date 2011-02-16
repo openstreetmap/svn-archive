@@ -26,6 +26,9 @@ public class OsmTileSource {
             NAME = name;
             BASE_URL = base_url;
             ATTR_IMG_URL = attr_img_url;
+            if(ATTR_IMG_URL == null) {
+                 REQUIRES_ATTRIBUTION = false;
+            }
         }
 
         public String getName() {

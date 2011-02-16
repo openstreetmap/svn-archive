@@ -3,6 +3,7 @@ package ext_tools;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
@@ -10,6 +11,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 
 // TODO: Merge with ExtTool class?
 class ExtToolAction extends MapMode {
@@ -19,6 +21,8 @@ class ExtToolAction extends MapMode {
 
     public ExtToolAction(ExtTool tool) {
         super(tr(tool.name), "empty", tool.description,
+                Shortcut.registerShortcut(tr("exttool:{0}", tool.name), tr("External Tool: {0}", tool.name),
+                        KeyEvent.VK_K, Shortcut.GROUP_NONE, KeyEvent.CTRL_DOWN_MASK),
                 null,
                 ImageProvider.getCursor("crosshair", null));
         this.tool = tool;

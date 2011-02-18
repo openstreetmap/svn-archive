@@ -585,9 +585,9 @@ public class PathOptimizer {
 	private List<LayerContents> splitBySegmentKind(LayerContents layer, boolean closed, boolean single, boolean orthogonal)
 	{
 		if (!closed && !single) {
-			return Collections.singletonList(layer);			
+			return Collections.singletonList(layer);
 		}
-		
+
 		OrthogonalShapesFilter of = new OrthogonalShapesFilter(10);
 
 		List<PdfPath> singleSegmentPaths = new ArrayList<PdfPath>();
@@ -600,12 +600,12 @@ public class PathOptimizer {
 			boolean pathOrthgonal = orthogonal && of.isOrthogonal(path);
 			boolean pathUnclosed = !path.isClosed() && closed;
 			boolean pathSingleSegment = path.points.size() <= 3 && single;
-			
+
 			if (pathSingleSegment) {
 				singleSegmentPaths.add(path);
 			}
 			else if (pathUnclosed) {
-				
+
 				if (pathOrthgonal) {
 					orthogonalPaths.add(path);
 				}
@@ -615,13 +615,13 @@ public class PathOptimizer {
 			}
 			else {
 				if (pathOrthgonal) {
-					orthogonalClosedPaths.add(path);	
+					orthogonalClosedPaths.add(path);
 				}
 				else
 				{
 					closedPaths.add(path);
 				}
-				
+
 			}
 		}
 
@@ -641,7 +641,7 @@ public class PathOptimizer {
 			l.info = layer.info.copy();
 			layers.add(l);
 		}
-		
+
 
 		if (orthogonalPaths.size() > 0) {
 			LayerContents l = new LayerContents();
@@ -649,7 +649,7 @@ public class PathOptimizer {
 			l.info = layer.info.copy();
 			layers.add(l);
 		}
-		
+
 		if (orthogonalClosedPaths.size() > 0) {
 			LayerContents l = new LayerContents();
 			l.paths = orthogonalClosedPaths;

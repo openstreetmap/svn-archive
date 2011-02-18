@@ -14,27 +14,27 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class PdfImportPlugin extends Plugin {
 
-    protected String name;
+	protected String name;
 
-    public PdfImportPlugin(PluginInformation info) {
-        super(info);
-        name = tr("Import PDf file");
-        JMenu toolsMenu = null;
-        for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
-            JMenu menu = Main.main.menu.getMenu(i);
-            String name = menu.getText();
-            if (name != null && name.equals(tr("Tools"))) {
-                toolsMenu = menu;
-            }
-        }
+	public PdfImportPlugin(PluginInformation info) {
+		super(info);
+		name = tr("Import PDf file");
+		JMenu toolsMenu = null;
+		for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
+			JMenu menu = Main.main.menu.getMenu(i);
+			String name = menu.getText();
+			if (name != null && name.equals(tr("Tools"))) {
+				toolsMenu = menu;
+			}
+		}
 
-        if (toolsMenu == null) {
-            toolsMenu = new JMenu(name);
-            toolsMenu.add(new JMenuItem(new PdfImportAction()));
-            Main.main.menu.add(toolsMenu, 2);
-        } else {
-            toolsMenu.addSeparator();
-            toolsMenu.add(new JMenuItem(new PdfImportAction()));
-        }
-    }
+		if (toolsMenu == null) {
+			toolsMenu = new JMenu(name);
+			toolsMenu.add(new JMenuItem(new PdfImportAction()));
+			Main.main.menu.add(toolsMenu, 2);
+		} else {
+			toolsMenu.addSeparator();
+			toolsMenu.add(new JMenuItem(new PdfImportAction()));
+		}
+	}
 }

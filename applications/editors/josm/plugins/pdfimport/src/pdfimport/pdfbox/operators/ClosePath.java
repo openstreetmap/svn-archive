@@ -37,7 +37,7 @@ public class ClosePath extends OperatorProcessor
 	 * process : h : Close path.
 	 * @param operator The operator that is being executed.
 	 * @param arguments List
-	 * 
+	 *
 	 * @throws IOException if something went wrong during logging
 	 */
 	@Override

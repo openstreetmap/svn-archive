@@ -185,7 +185,7 @@ public class PageDrawer extends PDFStreamEngine
 	 * This will set the current stroke.
 	 *
 	 * @param newStroke The current stroke.
-	 * 
+	 *
 	 */
 	public void setStroke(BasicStroke newStroke)
 	{
@@ -216,7 +216,7 @@ public class PageDrawer extends PDFStreamEngine
 	 *
 	 * @param awtImage The image to draw.
 	 * @param at The transformation to use when drawing.
-	 * 
+	 *
 	 */
 	public void drawImage(){
 		graphics.setClip(getGraphicsState().getCurrentClippingPath());
@@ -256,7 +256,7 @@ public class PageDrawer extends PDFStreamEngine
 	 * Set the clipping Path.
 	 *
 	 * @param windingRule The winding rule this path will use.
-	 * 
+	 *
 	 */
 	public void setClippingPath(int windingRule)
 	{

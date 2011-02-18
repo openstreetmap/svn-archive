@@ -10,5 +10,5 @@ public class PdfMultiPath {
 	public PdfMultiPath(List<PdfPath> paths2) {
 		paths = paths2;
 	}
-		
+
 }

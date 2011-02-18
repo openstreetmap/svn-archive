@@ -19,6 +19,8 @@ use strict;
 use warnings;
 
 use Data::Dumper;
+use Date::Format;
+#use Date::Manip;
 use File::Basename;
 use File::Copy;
 use File::Find;
@@ -92,18 +94,34 @@ $COLOR{NORMAL}="${ESC}[0m";
 my @available_platforms= qw(
     debian-squeeze-64   debian-squeeze-32
     debian-lenny-64     debian-lenny-32
+    debian-wheezy-64     debian-wheezy-32
     ubuntu-hardy-64     ubuntu-hardy-32
-    ubuntu-intrepid-64  ubuntu-intrepid-32
-    ubuntu-jaunty-64    ubuntu-jaunty-32
     ubuntu-karmic-64	ubuntu-karmic-32
+    ubuntu-lucid-64		ubuntu-lucid-32
+    ubuntu-maverick-64	ubuntu-maverick-32
+    ubuntu-natty-64		ubuntu-natty-32
 );
 
-#    ubuntu-gutsy-64	ubuntu-gutsy-32
+# Support until taken from http://en.wikipedia.org/wiki/Ubuntu_(operating_system)
+# ubuntu-hardy    until 2011-04
+# ubuntu-karmic   until 2011-04
+# ubuntu-maverick until 2012-04
+# ubuntu-natty	  until 2012-10
+# ubuntu-lucid    until 2013-04
+
+# At 2011-02-15:
+# The latest LTS release is Ubuntu 10.04 (Lucid Lynx), released on 29 April 2010
+# The latest normal release is Ubuntu 10.10 (Maverick Meerkat), released on 10 October 2010.
+
+#    ubuntu-intrepid-64  ubuntu-intrepid-32  # End of Live 2010-04-30
+#    ubuntu-gutsy-64	ubuntu-gutsy-32      # End of Live 2009-04-18
+#    ubuntu-dapper-64	ubuntu-dapper-32     # End of Live 2009-07-14
+#    ubuntu-jaunty-64    ubuntu-jaunty-32    # End of Live 2010-10-23
 
 my @default_platforms= qw(
     debian-squeeze-64
     debian-squeeze-32
-    ubuntu-hardy-64
+    ubuntu-maverick64
 );
 @default_platforms= @available_platforms;
 
@@ -114,10 +132,13 @@ my %proj2path=(
     'gpsdrive-data-maps'=> 'gpsdrive/data/maps',
     'gpsdrive'	 	=> 'gpsdrive',
     'gpsdrive-2.10pre7'	=> 'gpsdrive-2.10pre7',
+    'gpsdrive-2.12'	=> 'gpsdrive-2.12',
+    'gpsdrive-data-maps-2.12'	=> 'gpsdrive-2.12/data/maps',
     'gpsdrive-data-maps-2.10pre7'=> 'gpsdrive-2.10pre7/data/maps',
-    'opencarbox' 	=> 'opencarbox',
+#    'opencarbox' 	=> 'opencarbox',
     'mod_tile'		=> 'openstreetmap-applications/utils/mod_tile',
     'osm2pgsql' 	=> 'openstreetmap-applications/utils/export/osm2pgsql',
+    'merkaartor' 	=> 'openstreetmap-applications/editors/merkaartor',
     'merkaartor' 	=> 'openstreetmap-applications/editors/merkaartor',
     'josm' 		=> 'openstreetmap-applications/editors/josm',
     'osm-utils'		=> 'openstreetmap-applications/utils',
@@ -130,7 +151,7 @@ my %proj2path=(
     'merkaartor-0.12' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.13-fixes',
-#    'osm-editor' 	=> 'openstreetmap-applications/editors/osm-editor',
+    'osm-editor' 	=> 'openstreetmap-applications/editors/osm-editor',
     'osm-editor-qt3' 	=> 'openstreetmap-applications/editors/osm-editor/qt3',
     'osm-editor-qt4' 	=> 'openstreetmap-applications/editors/osm-editor/qt4',
     );
@@ -141,8 +162,10 @@ my %proj2debname=(
     'gpsdrive'	 	=> 'gpsdrive',
     'gpsdrive-2.10pre5' => 'gpsdrive',
     'gpsdrive-2.10pre7' => 'gpsdrive',
+    'gpsdrive-2.12' => 'gpsdrive',
+    'gpsdrive-data-maps-2.12'=> 'gpsdrive-data-maps',
     'gpsdrive-data-maps-2.10pre7'=> 'gpsdrive-data-maps',
-    'opencarbox' 	=> 'opencarbox',
+#    'opencarbox' 	=> 'opencarbox',
     'osm2pgsql' 	=> 'osm2pgsql',
     'mod_tile'		=> 'libapache2-mod-tile',
     'merkaartor' 	=> 'merkaartor',
@@ -157,7 +180,7 @@ my %proj2debname=(
     'merkaartor-0.12' 	=> 'merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'merkaartor-0.13-fixes',
-#    'osm-editor' 	=> 'openstreetmap-editor',
+    'osm-editor' 	=> 'openstreetmap-editor',
     'osm-editor-qt3' 	=> 'openstreetmap-editor',
     'osm-editor-qt4' 	=> 'openstreetmap-editor',
     );
@@ -167,8 +190,10 @@ my %package_names=(
     'gpsdrive-data-maps'=> [qw(gpsdrive-data-maps)],
     'gpsdrive-2.10pre5' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
     'gpsdrive-2.10pre7' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
+    'gpsdrive-2.12'     => [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
+    'gpsdrive-data-maps-2.12'=> [qw(gpsdrive-data-maps)],
     'gpsdrive-data-maps-2.10pre7'=> [qw(gpsdrive-data-maps)],
-    'opencarbox' 	=> [qw(opencarbox)],
+#    'opencarbox' 	=> [qw(opencarbox)],
     'mod_tile'		=> [qw(libapache2-mod-tile renderd)],
     'osm2pgsql' 	=> [qw(osm2pgsql)],
     'merkaartor' 	=> [qw(merkaartor)],
@@ -189,9 +214,9 @@ my %package_names=(
     'merkaartor-0.12' 	=> [qw(merkaartor)],
     'merkaartor-0.11' 	=> [qw(merkaartor)],
     'merkaartor-0.13' 	=> [qw(merkaartor)],
-#    'osm-editor' 	=> [qw(osm-editor)],
-#    'osm-editor-qt3' 	=> [qw(osm-editor)],
-#    'osm-editor-qt4' 	=> [qw(osm-editor)],
+    'osm-editor' 	=> [qw(osm-editor)],
+    'osm-editor-qt3' 	=> [qw(osm-editor)],
+    'osm-editor-qt4' 	=> [qw(osm-editor)],
     );
 
 my %NO_BUILD=(
@@ -200,18 +225,20 @@ my %NO_BUILD=(
 my %svn_repository_url=(
     'openstreetmap-applications' => 'http://svn.openstreetmap.org/applications',
     'gpsdrive'                   => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/trunk',
-    'opencarbox'                 => 'https://opencarbox.svn.sourceforge.net/svnroot/opencarbox/OpenCarbox/trunk',
+#    'opencarbox'                 => 'https://opencarbox.svn.sourceforge.net/svnroot/opencarbox/OpenCarbox/trunk',
 
-    'gpsdrive-2.10pre5'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre5',
-    'gpsdrive-2.10pre6'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre6',
-    'gpsdrive-2.10pre7'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
-    'gpsdrive-data-maps-2.10pre7'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
+    'gpsdrive-2.10pre5'           => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre5',
+    'gpsdrive-2.10pre6'           => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre6',
+    'gpsdrive-2.10pre7'           => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
+    'gpsdrive-data-maps-2.10pre7' => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
+    'gpsdrive-2.12'               => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/experimental/gpsdrive-2.12',
+    'gpsdrive-data-maps-2.12'     => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/experimental/gpsdrive-2.12',
     );
 
 my %svn_update_done;
 
 my @available_proj=  sort keys %package_names;
-my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor|merkaartor-0...|gpsdrive-2.10pre|gpsdrive-data-maps-2.10pre7/ } @available_proj;# |osm-editor-qt4
+my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor|merkaartor-0...|gpsdrive-2.10pre|gpsdrive-data-maps-2.10pre7|osm-editor|josm|mod_tile|gosmore|osmosis/ } @available_proj;# 
 
 my @projs;
 #@projs= keys %proj2path;
@@ -262,22 +289,22 @@ my $getopt_result = GetOptions (
 
     "platforms=s"    => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
-				  @platforms= @available_platforms;
+					  @platforms= @available_platforms;
 			      } elsif ( $b =~ m/\*/ ) {
-				  $b =~ s,\*,\.\*,g;
-				  @platforms= grep { $_ =~ m{$b} } @available_platforms;
-			       } else {
-				   @platforms = split(',',$b);
-			       }
+					  $b =~ s,\*,\.\*,g;
+					  @platforms= grep { $_ =~ m{$b} } @available_platforms;
+				  } else {
+					  @platforms = split(',',$b);
+				  }
 },
     "projects=s"     => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
-				  @projs= @all_proj;
+					  @projs= @all_proj;
 			      } elsif ( $b =~ m/\*/ ) {
-				  $b =~ s,\*,\.\*,g;
-				  @projs= grep { $_ =~ m{$b} } @all_proj;
+					  $b =~ s,\*,\.\*,g;
+					  @projs= grep { $_ =~ m{$b} } @all_proj;
 			      } else {
-				  @projs = split(',',$b);
+					  @projs = split(',',$b);
 			      }
 },
     'show-results'      =>  \$do_show_results,
@@ -373,17 +400,17 @@ sub Log($$$){
 
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
 
-    my $platform = $self->platform();
+    my $platform = $self->{'platform'};
     my $proj     = $self->proj();
     my $section  = $self->section();
 
     if ( ! -d $dir_log ) {
-	die "Cannot Log, Directory '$dir_log' does not exist\n";
+		die "Cannot Log, Directory '$dir_log' does not exist\n";
     }
     my $dst_dir="$dir_log/$proj/$platform";
     if ( ! -d $dst_dir ) {
-	mkpath($dst_dir)
-	    or warn "WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!\n";
+		mkpath($dst_dir)
+			or warn "WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!\n";
     }
 
     # Normal Log Output
@@ -393,7 +420,7 @@ sub Log($$$){
     # Html Log
     $log_file ="$dst_dir/$section.log.shtml"; 
     if ( ! -s  $log_file ) {
-	append_file(  $log_file, "<html>\n<pre>\n" );
+		append_file(  $log_file, "<html>\n<pre>\n" );
     }
     my $html_msg=$msg;
     $html_msg =~ s/\</&lt;/g;
@@ -443,19 +470,20 @@ sub last_result($;$){
 
     if ( defined($new_result) ) {
 	my $svn_revision = $self->svn_revision_platform();
-	append_file( $last_log , "$new_result: $svn_revision\n" );
+	my $now=time();
+	append_file( $last_log , "$new_result: $svn_revision $now\n" );
 	$self->{last_result}=$new_result;
     } else {
-	my $last_result;
-	if ( -r "$last_log" ) {
-	    my @lines = read_file( $last_log ) ;
-	    $last_result = pop(@lines);
-	    chomp $last_result;
-	} else {
-	    $last_result='';
-	}
-	$self->{last_result}=$last_result;
-	return $last_result;
+		my $last_result;
+		if ( -r "$last_log" ) {
+			my @lines = read_file( $last_log ) ;
+			$last_result = pop(@lines);
+			chomp $last_result;
+		} else {
+			$last_result='';
+		}
+		$self->{last_result}=$last_result;
+		return $last_result;
     }  
 }
 
@@ -481,6 +509,7 @@ sub last_good_result($){
 	$last_result='';
     }
     $last_result =~ s/.*\:\s*//g;
+    $last_result =~ s/ .*//g;
     $self->{last_good_result}=$last_result;
     return $last_result;
 		 };
@@ -563,11 +592,11 @@ sub platform($){
     my $platform = $self->{platform};
     $platform || die "NO Platform specified";
     if ( grep { $_ eq $platform } @available_platforms ){
-	return $platform;
+		return $platform;
     } elsif ( "independent" eq $platform ) {
-	return $platform;
+		return $platform;
     } else {
-	$self->error("Unknown Platform '$self->{platform}' used");
+		$self->error("Unknown Platform '$self->{platform}' used");
     }
 }
 
@@ -581,21 +610,21 @@ sub proj($){
 }
 
 # ------------------------------------------------------------------
-# subpath of the project directory
+# subpath of the project directory 
 # Example: openstreetmap-applications/utils/osmosis
 sub proj_sub_dir($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
-
+	
     my $platform = $self->platform();
     my $proj     = $self->proj();
-
+	
     my $proj_sub_dir=$proj2path{$proj};
     if ( ! $proj_sub_dir ) {
-	die "Unknown Directory for Project '$proj'"
+		die "Unknown Directory for Project '$proj'; Please define inside build_cluster.pl"
     };
     return  $proj_sub_dir;
-	 }
+			 }
 
 # ------------------------------------------------------------------
 # return the base directory for a specific build
@@ -834,6 +863,7 @@ sub svn_update($){
     }
 
     $self->debug(3,"svn up $dir_svn/$proj_sub_dir");
+	$ENV{LC_CTYPE}="en_US.UTF-8";
     my ($rc,$out,$err,$out_all) = $self->command("svn up --accept theirs-full $dir_svn/$proj_sub_dir");
     if ( $rc ) {
 	$self->warning("Error '$rc' in 'svn up $dir_svn/$proj_sub_dir'");
@@ -889,6 +919,7 @@ sub svn_checkout($){
 
     my $url=$svn_repository_url{$proj_sub_dir};
 
+	$ENV{LC_CTYPE}="en_US.UTF-8";
     $self->debug(3,"svn co $url $dir_svn/$proj_sub_dir");
     my ($rc,$out,$err,$out_all) = $self->command("svn co $url $dir_svn/$proj_sub_dir");
     my @out = 
@@ -923,10 +954,14 @@ sub svn_changelog($){
     my $command="$dir_svn/openstreetmap-applications/utils/packaging/svn_log2debian_changelog.pl";
     $command .= " --project_name='$debname' ";
     
-    if ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
+    if ( $proj =~ m/gpsdrive.*(2.12)/ ) {
+	# No changelog Adaption
+	return;
+	# $command .= " --prefix=2.12 --release=''";
+    } elsif ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
 	$command .= " --prefix=2.10svn --release=$1";
-    } elsif ( $proj =~ m/gpsdrive/ ) {
-	$command .= " --prefix=2.10svn ";
+    } elsif ( $proj =~ m/gpsdrive[^.\d]*(2.[\d+])/ ) {
+	$command .= " --prefix=$1svn ";
     };
     if ( $DEBUG ) {
 	$command .= " --debug ";
@@ -1198,13 +1233,15 @@ sub debuild($) {
     my $result_dir=dirname("$dir_chroot/$platform/home/$user/$proj_sub_dir/");
     my $svn_revision = $self->svn_revision_platform();
     my $revision_string= $svn_revision;
-    if ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
+    if ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+)$/ ) {
+	$revision_string= "$1";
+    } elsif ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
 	$revision_string= "$1";
     }
     my @results= grep { $_ =~ m/\.deb$/ } glob("$result_dir/*$revision_string*.deb");
     if ( $proj =~ m/gpsdrive-(.*pre.*)/ ) {
     } else {
-	@results= grep { $_ !~ m/2.10pre/ } @results;
+		@results= grep { $_ !~ m/2.10pre/ } @results;
     }
 
     my $result_count=scalar(@results);
@@ -1212,44 +1249,44 @@ sub debuild($) {
     $self->{'results'}->{'packages'}= \@results;
     my $result_expected = scalar(@{$package_names{$proj}});
     if ( ! $result_count ) {
-	my $all_deb_in_results = join(",",glob("$result_dir/*$revision_string*.deb"));
-	$self->error( "!!!!!!!! WARN: NO resulting Packages for Proj '$proj' on Platform $platform.\n".
-		      "Expecting $result_expected packages for svn-revision $revision_string\n".
-		      "see results in '$result_dir'\n".
-		      "Other Debian Files:  $all_deb_in_results\n");
-	$self->last_result("fail");
+		my $all_deb_in_results = join("\n\t",glob("$result_dir/*.deb"));
+		$self->error( "!!!!!!!! WARN: NO resulting Packages for Proj '$proj' on Platform $platform.\n".
+					  "Expecting $result_expected packages for (svn-)revision '$revision_string'\n".
+					  "see results in '$result_dir'\n".
+					  "Other Debian Files:  \n\t$all_deb_in_results\n");
+		$self->last_result("fail");
     } elsif ( $result_expected !=  $result_count ) {
-	$self->error( "!!!!!!!! WARN: Number of resulting Packages for Proj '$proj' on Platform $platform is Wrong.\n".
-		      "Expecting $result_expected packages for svn-revision $revision_string, got: $result_count Packages\n".
-		      "see results in '$result_dir'");
-	$self->last_result("fail");
+		$self->error( "!!!!!!!! WARN: Number of resulting Packages for Proj '$proj' on Platform $platform is Wrong.\n".
+					  "Expecting $result_expected packages for svn-revision $revision_string, got: $result_count Packages\n".
+					  "see results in '$result_dir'");
+		$self->last_result("fail");
     } else {
-	# Check for missing result-packages
-	my @names=@{$package_names{$proj}};
-	my $missing=0;
-	for my $name ( @{$package_names{$proj}} ) {
-	    my $check_name="${name}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb";
-	    if ( ! grep { $_ =~ m/$check_name$/ } @results ) {
-		$self->error( "!!!!!!!! ERROR: Missing Result Package $name\n");
-		$missing++;
-	    };
-	}
-
-	my $wrong_name=0;
-	for my $name ( @results ) {
-	    my $short_name=basename($name);
-	    if ( ! grep { $short_name =~ m/${_}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb$/ }  @{$package_names{$proj}} ) {
-		$self->error( "!!!!!!!! ERROR: Unknown Result Package '$name'\n");
-		$wrong_name++;
-	    };
-	}
-	if ( $missing ) {
-	    $self->last_result("missing");
-	} elsif ( $wrong_name ) {
-	    $self->last_result("wrong_name");
-	} else {
-	    $self->last_result("success");
-	} 
+		# Check for missing result-packages
+		my @names=@{$package_names{$proj}};
+		my $missing=0;
+		for my $name ( @{$package_names{$proj}} ) {
+			my $check_name="${name}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb";
+			if ( ! grep { $_ =~ m/$check_name$/ } @results ) {
+				$self->error( "!!!!!!!! ERROR: Missing Result Package $name\n");
+				$missing++;
+			};
+		}
+		
+		my $wrong_name=0;
+		for my $name ( @results ) {
+			my $short_name=basename($name);
+			if ( ! grep { $short_name =~ m/${_}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb$/ }  @{$package_names{$proj}} ) {
+				$self->error( "!!!!!!!! ERROR: Unknown Result Package '$name'\n");
+				$wrong_name++;
+			};
+		}
+		if ( $missing ) {
+			$self->last_result("missing");
+		} elsif ( $wrong_name ) {
+			$self->last_result("wrong_name");
+		} else {
+			$self->last_result("success");
+		} 
     }
     $self->debug(3,"Resulting Packages($result_count):");
     $self->debug(4,"\n\t".join("\n\t",@results));
@@ -1264,11 +1301,26 @@ sub debuild($) {
 	mkpath($dst_dir)
 	    or $self->error( "!!!!!!!! WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!");
     }
-    for my $result ( @results) {
-	my $fn=basename($result);
-	rename($result,"$dst_dir/$fn")
-	    || $self->error( "!!!!!!!! WARNING Cannot move result '$result' to '$dst_dir/$fn': $!");
+    for my $result ( @results ) {
+		my $fn=basename($result);
+		rename($result,"$dst_dir/$fn")
+			|| $self->error( "!!!!!!!! WARNING Cannot move result '$result' to '$dst_dir/$fn': $!");
     }
+
+    my @results1= grep { $_ =~ m/\.dsc$/ } glob("$result_dir/*.dsc");
+    for my $result ( @results1 ) {
+		my $fn=basename($result);
+		rename($result,"$dst_dir/$fn")
+			|| $self->error( "!!!!!!!! WARNING Cannot move result '$result' to '$dst_dir/$fn': $!");
+    }
+
+    @results1= grep { $_ =~ m/\.changes$/ } glob("$result_dir/*.changes");
+    for my $result ( @results1 ) {
+		my $fn=basename($result);
+		rename($result,"$dst_dir/$fn")
+			|| $self->error( "!!!!!!!! WARNING Cannot move result '$result' to '$dst_dir/$fn': $!");
+    }
+
 }
 
 
@@ -1301,7 +1353,7 @@ sub show_results(){
 #	    print "$platform ";
 	    my $task = $RESULTS->{$platform}->{$proj};
 	    if ( ! defined ( $task ) )  {
-		$task = BuildTask->new( proj => $proj, platform => $platform );
+			$task = BuildTask->new( proj => $proj, platform => $platform );
 	    };
 	    my $svn_revision_platform = $task->svn_revision_platform()||'';
 	    my $svn_revision = $task->svn_revision()||'';
@@ -1309,39 +1361,39 @@ sub show_results(){
 	    
 	    $task->{svn_base_revision}= $svn_revision;
 	    if ( $svn_revision eq $svn_revision_platform) {
-		$task->{svn_up_to_date}=1;
+			$task->{svn_up_to_date}=1;
 		$task->{color_rev}=$COLOR{GREEN};
 	    } else {
-		$task->{svn_up_to_date}=0;
+			$task->{svn_up_to_date}=0;
 		$task->{color_rev}=$COLOR{BLUE};
 	    }    
 	    if ( ! $svn_revision_platform ) {
-		$task->{color_res}="+$COLOR{GREEN}";
-	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
-		$task->{color_res}="+$COLOR{GREEN}";
+			$task->{color_res}="+$COLOR{GREEN}";
+	    } elsif ( $last_result =~ m/^success: $svn_revision_platform\s/ ) {
+			$task->{color_res}="+$COLOR{GREEN}";
 	    } else {
-		$task->{color_res}="-$COLOR{RED}";
-		$task->{color_rev}=$COLOR{RED};
+			$task->{color_res}="-$COLOR{RED}";
+			$task->{color_rev}=$COLOR{RED};
 	    };
 
 	    my $color_rev = $task->{color_rev};
 	    my $color_res = $task->{color_res};
-	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
+	    my ( $res,$rev,$date)  = split(/:\s*|\s+/,$task->last_result());
 	    $rev ||='';
 	    my $rev_last_good  = $task->last_good_result();
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
 	    if ( $NO_BUILD{$proj} && ($platform =~ m{$NO_BUILD{$proj}} )) {
-		print "Do not build $proj on $platform\n";
-		$rev= "no-build";
-		$color_res="blue";
+			print "Do not build $proj on $platform\n";
+			$rev= "no-build";
+			$color_res="blue";
 	    }
 
 	    print "$color_res"; #. $print_platform."$COLOR{NORMAL} " ;
 	    printf "$color_rev%-6s$COLOR{NORMAL} ", $rev;
 	    if (  $rev_last_good && $rev ne $rev_last_good ) {
-		print "$COLOR{GREEN}($rev_last_good)$COLOR{NORMAL}";
+			print "$COLOR{GREEN}($rev_last_good)$COLOR{NORMAL}";
 	    }
 	}
 	print "\n";
@@ -1361,186 +1413,227 @@ sub write_html_results(){
     print $fh "<br/>\n";
     print $fh "<table border=1>\n";
     
+	# Header with Platform names
     print  $fh "<tr><th>Project</th><th>svn</th>";
     for my $platform ( @platforms ) {
-	my $print_platform=$platform;
-	$print_platform=~ s/(debian|ubuntu)-/$1\<br\/\>/;
-	$print_platform=~ s/-/ /g;
-	
-	print $fh "<th>$print_platform</th>" ;
-	
+		my $print_platform=$platform;
+		$print_platform=~ s/(debian|ubuntu)-/$1\<br\/\>/;
+		$print_platform=~ s/-/ /g;
+		
+		print $fh "<th><font size=\"-3\">$print_platform </font></th>" ;
+		
     }
     print  $fh "</tr>\n";
+	
+    my $count_green=0;
+    my $count_blue=0;
+    my $count_red=0;
 
+	# Each Project get it's own line in the Overview
     for my $proj ( @projs ) {
-	print  $fh "<tr>\n";
-	my $rel_proj_log_dir="$proj";
-	printf $fh "	<td><a href=\"$rel_proj_log_dir\">%s</a></td>\n",$proj;
-
-	my $proj_rev=svn_revision( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
-	print $fh "     <td>$proj_rev</td>\n";
-
-	for my $platform ( @platforms ) {
-#	    print $fh "$platform ";
-	    my $task = $RESULTS->{$platform}->{$proj};
-	    my $rel_log_dir="$proj/$platform";
-	    if ( ! defined ( $task ) )  {
-		$task = BuildTask->new( proj => $proj, platform => $platform );
-	    };
-	    my $svn_revision_platform = $task->svn_revision_platform()||'';
-	    my $svn_revision = $task->svn_revision()||'';
-	    my $last_result=$task->last_result();
-	    my $color_rev;
-	    my $color_res;
-	    if ( $svn_revision eq $svn_revision_platform) {
-		$color_rev="GREEN";
-	    } else {
-		$color_rev="BLUE";
-	    }    
-	    if ( ! $svn_revision_platform ) {
-		$color_res="GREEN";
-	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
-		$color_res="GREEN";
-	    } else {
-		$color_res="RED";
-		$color_rev="RED";
-	    };
-
-	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
-	    $rev ||='';
-	    my $rev_last_good  = $task->last_good_result();
-	    my $print_platform=$platform;
-	    $print_platform=~ s/(debian-|ubuntu-)//;
-
-	    if ( $NO_BUILD{$proj} && ($platform =~ m{$NO_BUILD{$proj}} )) {
-		$rev= "no-build";
-		$color_rev="black";
-	    }
-
-	    print $fh "     <td> <A href=\"$rel_log_dir\">";
-	    printf $fh "	<FONT  color=\"$color_rev\">%-6s </font>\t", $rev;
-	    if (  $rev_last_good
-		  && ( $rev ne $rev_last_good ) 
-		) {
-		print $fh "\n		<FONT color=\"GREEN\">($rev_last_good)</font>\n";
-	    }
-	    print $fh " </a> </td>\n\n";
-	}
-	print $fh "\n";
-	print  $fh "</tr>\n";
+		print  $fh "<tr>\n";
+		my $rel_proj_log_dir="$proj";
+		printf $fh "	<td><font size=\"-3\"><a href=\"$rel_proj_log_dir\">%s</a></font></td>\n",$proj;
+		
+		my $proj_rev=svn_revision( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
+		print $fh "     <td><font size=\"-3\">$proj_rev</font></td>\n";
+		
+		for my $platform ( @platforms ) {
+			my $task = $RESULTS->{$platform}->{$proj};
+			my $rel_log_dir="$proj/$platform";
+			if ( ! defined ( $task ) )  {
+				$task = BuildTask->new( proj => $proj, platform => $platform );
+			};
+			my $svn_revision_platform = $task->svn_revision_platform()||'';
+			my $svn_revision = $task->svn_revision()||'';
+			my $last_result=$task->last_result();
+			my $color_rev;
+			my $color_res;
+			if ( $svn_revision eq $svn_revision_platform) {
+				$color_rev="GREEN";
+			} else {
+				$color_rev="BLUE";
+				$count_blue++;
+			}    
+			my ( $res,$rev,$date)  = split(/:\s*|\s+/,$task->last_result());
+			$rev ||='';
+			if ( $NO_BUILD{$proj} && ($platform =~ m{$NO_BUILD{$proj}} )) {
+				$rev= "no-build";
+				$color_rev="black";
+			} elsif ( ! $svn_revision_platform ) {
+				$color_res="GREEN";
+			} elsif ( "$last_result " =~ m/^success: $svn_revision_platform / ) {
+				$color_res="GREEN";
+				$count_green++;
+			} else {
+				$color_res="RED";
+				$color_rev="RED";
+				$count_red++;
+			};
+			
+			my $rev_last_good  = $task->last_good_result();
+			my $print_platform=$platform;
+			$print_platform=~ s/(debian-|ubuntu-)//;
+			
+			
+			print $fh  "    <td valign=top>";
+			print $fh  "<A href=\"$rel_log_dir\">";
+			printf $fh "<font size=\"-2\" color=\"$color_rev\">%-6s</font>\t" , $rev;
+			$date && print $fh "<br/><FONT size=\"-4\"  color=\"$color_rev\">".
+				time2str("%e.%m<br/> %H:%M\n", $date)."</FONT>";
+			   #time2str("%y/%m/%e %H:%M\n", $date)."</FONT>";
+			if (  $rev_last_good
+				  && ( $rev ne $rev_last_good ) 
+				) {
+				print $fh "\n<br/>		<FONT size=\"-2\" color=\"GREEN\">($rev_last_good)</font>\n";
+			}
+			print $fh " </a> </td>\n\n";
+		}
+		print $fh "\n";
+		print  $fh "</tr>\n";
     }
 
     print $fh "</table>\n";
     print $fh "<br/>\n";
     print $fh "Colors:\n";
     print $fh "<ul>\n";
-    print $fh "<li><FONT color=\"green\">green</font>: Build successfull</li>\n";
-    print $fh "<li><FONT color=\"blue\">blue</font>: Build is old but successfull</li>\n";
-    print $fh "<li><FONT color=\"red\">red</font>: Build failed</li>\n";
+
+    print $fh "<li><FONT color=\"green\">green</font>: $count_green Build successfull</li>\n";
+    print $fh "<li><FONT color=\"blue\">blue</font>: $count_blue Build is old but successfull</li>\n";
+    print $fh "<li><FONT color=\"red\">red</font>: $count_red Build failed</li>\n";
     print $fh "</ul>\n";
+
+	print $fh "<br/><a href=history.shtml>History</a>";
+
     print $fh "</html>\n";
     $fh->close();
 
+	
+    print  "$dir_log/history.txt", "\n" ;
+    append_file(  "$dir_log/history.txt", "\n" . 
+				  "<tr><td>".localtime(time())."</td>" .
+				  "<td>$count_green</td>".
+				  "<td>$count_blue</td>".
+				  "<td>$count_red</td>".
+				  "<td>".scalar( @platforms )."</td>".
+				  "<td>".scalar(@projs )."</td>".
+
+				  "</tr>\n"
+		);
+	
+
     # Create Index for each proj/platform
     for my $proj ( @projs ) {
-	for my $platform ( @platforms ) {
-	    my $html_index_dir="$dir_log/$proj/$platform";
-	    if ( ! -d $html_index_dir ) {
-		mkpath($html_index_dir)
-		    or warn "WARNING: Konnte Pfad $html_index_dir nicht erzeugen: $!\n";
-	    }
-	    my $html_index="$html_index_dir/index.shtml";
-	    my $fh = IO::File->new(">$html_index");
-	    print $fh "<!--#include virtual=\"/header.shtml\" -->\n";
-	    print $fh "<div>\n";
-	    print $fh "<H1><a href=\"../../results.shtml\">Results from the Build-Cluster</a></H1>\n";
-	    print $fh "<H2>Project: $proj</H2>\n";
-	    print $fh "<H2>Platform: $platform</H2>\n";
-
-	    print $fh "<table><tr>\n";
-	    print $fh "<td valign=\"top\">\n";
-
-	    print $fh "Log Files:";
-	    print $fh "<ul>";
-	    debug({proj=>$proj,platform=>$platform},5,"Files:");
-	    for my $file ( glob("$html_index_dir/*.shtml") ) {
-		my $file_name = basename($file);
-		debug({proj=>$proj,platform=>$platform},5,"              $file");
-		next if $file_name eq "index.shtml";
-
-		my @lines = read_file( $file ) ;
-		my $count_warn=(grep {$_ =~ m/warn/i } @lines);
-		my $count_error=(grep {$_ =~ m/error/i } @lines);
-		my ( $disp_name ) = ( $file_name =~ m/(.*)\.shtml/ );
-		print $fh "<li><A href=\"$file_name\">$disp_name</a>";
-		print $fh "<br/>&nbsp;&nbsp;error: $count_error" if $count_error;
-		print $fh "<br/>&nbsp;&nbsp;warn: $count_warn" if $count_warn;
-		print $fh "</li>\n";
-	    }
-	    print $fh "</ul>";
-	    print $fh "</td>\n";
-
-
-	    # -----------------------------------------------------------------------
-	    # list of Debian Packages
-	    my $task=BuildTask->new( proj     => $proj ,
-				     platform => $platform );    
-	    my $rev_last_good  = $task->last_good_result();
-	    my $res_last  = $task->last_result();
-	    #print "rev_last_good($proj ,$platform) '$rev_last_good'\n";
-
-	    print $fh "<td valign=\"top\">\n";
-	    print $fh "Status:<br/><br/>\n";
-	    print $fh "Last Good Revision:<br/>&nbsp;&nbsp; $rev_last_good<br/><br/>\n";
-	    print $fh "Last Result:<br/>&nbsp;&nbsp; $res_last<br/>\n";
-	    print $fh "</td>\n";
-
-
-	    #$package_result_dir
-	    my ($distri,$version,$bits)=split_platform($platform);
-
-	    my $platform_glob='{i386,amd64,all}';
-	    $platform_glob='{i386,all}' if $bits eq "32";
-	    $platform_glob='{amd64,all}' if $bits eq "64";
-
-	    print $fh "<td valign=\"top\">\n";
-	    print $fh "<A href=\"/$distri/pool/$version/\">Packages ($distri $version)</a>:\n";
-	    if ( ${rev_last_good} ) {
-
-		print $fh "\t<ul>\n";
-		for my $name ( @{$package_names{$proj}} ) {
-		    print $fh "\t<li>$name:\n";	
-
-		    $task->debug(7,"glob($package_result_upload_dir/$distri/pool/$version/${name}_${rev_last_good}_${platform_glob}.deb");
-		    my @files = glob("$package_result_upload_dir/$distri/pool/$version/${name}_*${rev_last_good}_${platform_glob}.deb");
-		    @files = grep { -s $_ } @files;
-		    if ( @files ) {
-			print $fh "\t<ul>\n";
-			for my $file ( @files ) {
-			    my $file_name = basename($file);
-			    my $link = $file;
-			    $link =~ s/^$package_result_upload_dir//;
-			    #print "\t$link\n";	
-			    print $fh "\t<li><A href=\"$link\"> $file_name</a></li>\n";	
+		for my $platform ( @platforms ) {
+			my $html_index_dir="$dir_log/$proj/$platform";
+			if ( ! -d $html_index_dir ) {
+				mkpath($html_index_dir)
+					or warn "WARNING: Konnte Pfad $html_index_dir nicht erzeugen: $!\n";
 			}
-			print $fh "\t</ul>\n";
-		    } else {
-			print $fh "<FONT color=\"RED\">No Files found</font>\n";
-		    }
-		    print $fh "</li>\n";
+			my $html_index="$html_index_dir/index.shtml";
+			my $fh = IO::File->new(">$html_index");
+			print $fh "<!--#include virtual=\"/header.shtml\" -->\n";
+			print $fh "<div>\n";
+			print $fh "<H1><a href=\"../../results.shtml\">Results from the Build-Cluster</a></H1>\n";
+			print $fh "<H2>Project: $proj</H2>\n";
+			print $fh "<H2>Platform: $platform</H2>\n";
+
+			print $fh "<table><tr>\n";
+			print $fh "<td valign=\"top\">\n";
+			
+			print $fh "Log Files:";
+			print $fh "<ul>";
+			debug({proj=>$proj,platform=>$platform},5,"Files:");
+			for my $file ( glob("$html_index_dir/*.shtml") ) {
+				my $file_name = basename($file);
+				debug({proj=>$proj,platform=>$platform},5,"              $file");
+				next if $file_name eq "index.shtml";
+				
+				my @lines = read_file( $file ) ;
+				my $count_warn=(grep {$_ =~ m/warn/i } @lines);
+				my $count_error=(grep {$_ =~ m/error/i } @lines);
+				my ( $disp_name ) = ( $file_name =~ m/(.*)\.shtml/ );
+				print $fh "<li><A href=\"$file_name\">$disp_name</a>";
+				print $fh "<br/>&nbsp;&nbsp;error: $count_error" if $count_error;
+				print $fh "<br/>&nbsp;&nbsp;warn: $count_warn" if $count_warn;
+				print $fh "</li>\n";
+			}
+			print $fh "</ul>";
+			print $fh "</td>\n";
+			
+			
+			# -----------------------------------------------------------------------
+			# list of Debian Packages
+			my $task=BuildTask->new( proj     => $proj ,
+									 platform => $platform );    
+			my $rev_last_good  = $task->last_good_result();
+			my $res_last  = $task->last_result();
+			#print "rev_last_good($proj ,$platform) '$rev_last_good'\n";
+			
+			print $fh "<td valign=\"top\">\n";
+			print $fh "Status:<br/><br/>\n";
+			print $fh "Last Good Revision:<br/>&nbsp;&nbsp; $rev_last_good<br/><br/>\n";
+			print $fh "Last Result:<br/>&nbsp;&nbsp; $res_last<br/>\n";
+			print $fh "</td>\n";
+			
+			
+			#$package_result_dir
+			my ($distri,$version,$bits)=split_platform($platform);
+			
+			my $platform_glob='{i386,amd64,all}';
+			$platform_glob='{i386,all}' if $bits eq "32";
+			$platform_glob='{amd64,all}' if $bits eq "64";
+			
+			print $fh "<td valign=\"top\">\n";
+			print $fh "<A href=\"/$distri/pool/$version/\">Packages ($distri $version)</a>:\n";
+			if ( ${rev_last_good} ) {
+				
+				print $fh "\t<ul>\n";
+				for my $name ( @{$package_names{$proj}} ) {
+					print $fh "\t<li>$name:\n";	
+
+					$task->debug(7,"glob($package_result_upload_dir/$distri/pool/$version/${name}_${rev_last_good}_${platform_glob}.deb");
+					my @files = glob("$package_result_upload_dir/$distri/pool/$version/${name}_*${rev_last_good}_${platform_glob}.deb");
+					@files = grep { -s $_ } @files;
+					if ( @files ) {
+						print $fh "\t<ul>\n";
+						for my $file ( @files ) {
+							my $file_name = basename($file);
+							my $link = $file;
+							$link =~ s/^$package_result_upload_dir//;
+							#print "\t$link\n";	
+							print $fh "\t<li><A href=\"$link\"> $file_name</a></li>\n";	
+						}
+						print $fh "\t</ul>\n";
+					} else {
+						print $fh "<FONT color=\"RED\">No Files found</font>\n";
+					}
+					print $fh "</li>\n";
+				}
+				print $fh "\t<ul>\n";
+			}
+			print $fh "</td>\n";
+			print $fh "</tr></table>\n";
+
+			print $fh localtime(time())."\n";
+
+			print $fh "<br/><br/><a href=\"../../results.shtml\">Back to Overview</a>\n";
+			print $fh "</div>\n";
+
+			for my $file ( glob("$html_index_dir/*.shtml") ) {
+				my $file_name = basename($file);
+				next if $file_name eq "index.shtml";
+				next if $file_name eq "summary.log.shtml";
+				my ( $disp_name ) = ( $file_name =~ m/(.*)\.shtml/ );
+				print $fh "<h3><A href=\"$file_name\">$disp_name</a></h3>";
+				my @lines = read_file( $file ) ;
+				#print $fh join("<br/>\n",(grep {$_ =~ m/^(.*(warn|error).*)$/i } @lines));
+				print $fh join("<br/>\n",(grep {$_ =~ m/^(.*(failed|error).*)$/i } @lines));
+				print $fh "<br/>\n";
+			}
+			print $fh "<!--#include virtual=\"/footer.shtml\" -->\n";
+			$fh->close();
 		}
-		print $fh "\t<ul>\n";
-	    }
-	    print $fh "</td>\n";
-	    print $fh "</tr></table>\n";
-
-	    print $fh localtime(time())."\n";
-
-	    print $fh "<br/><br/><a href=\"../../results.shtml\">Back to Overview</a>\n";
-	    print $fh "</div>\n";    
-	    print $fh "<!--#include virtual=\"/footer.shtml\" -->\n";
-	    $fh->close();
-	}
     }
 }
 
@@ -1666,7 +1759,7 @@ for my $platform ( @platforms ) {
 	if ( $do_fast ) {
 	    my $svn_revision = $task->svn_revision();
 	    my $last_result=$task->last_result();
-	    if ( $svn_revision && ($last_result eq "success: $svn_revision") ) {
+	    if ( $svn_revision && ( $last_result =~ m/^success: $svn_revision /) ) {
 		if ( $VERBOSE >1 || $DEBUG >2 ) {
 		    print STDERR "$COLOR{GREEN}---- Project: $proj ($platform) '$last_result' up-to-date --> skipping$COLOR{NORMAL}\n";
 		}

@@ -9,6 +9,7 @@
 # automatic answering Yes to java install
 # setting dpkg question verbosity very low
 # renaming from -64 --> amd64 to reflect debian naming
+
 # renaming from -32 --> i386  to reflect debian naming (including symlink to old)
 
 
@@ -109,8 +110,8 @@ for arg in "$@" ; do
 	;;
 	
 	--release=*) #	Specify Release
-	             #	debian: etch|lenny|squeeze
-	             #	ubuntu: [dapper|feisty|gutsy|hardy|intrepid|jaunty|karmic]
+	             #	debian: etch|lenny|squeeze|wheezy
+	             #	ubuntu: [dapper|feisty|gutsy|hardy|intrepid|jaunty|karmic|lucid|maverick|natty]
 	             #	maemo: [diablo]
 	             #	Default: debian squeeze
 	             #	If we recognize that it is debian/ubuntu we set this too
@@ -155,6 +156,7 @@ for arg in "$@" ; do
 
 	--architecture=*) #Specify Architecture
 		     #	Default: 32-bit Linux
+	         #  Possible values: 32 64 arm
 	architecture=${arg#*=}
 	;;
 
@@ -274,7 +276,9 @@ fi
 if ps fauxwww | grep -v -e grep -e emacs -e "$$" | grep -B 5 -A 2 -e $0 ; then
     echo "There is already another setup_chroot.sh running"
     ps -eo "%t %u %p %C %y %x %c %a " |  (head -n 1 ; grep java)
-    exit -1
+	if  ! $force ; then
+		exit -1
+	fi
 fi
 
 
@@ -293,29 +297,30 @@ fi
 function debug_out () {
     task_name="$1"
     description_string="$2"
+
     LOGFILE="${log_dir}/$chroot/log-$task_name.log"
 
     if $debug ; then
-	echo "DEBUG: -------- $chroot --- '$task_name': Trying '$description_string'"
+		echo "DEBUG: -------- $chroot --- '$task_name': Trying '$description_string'"
     fi
 
     if $debug ; then
-	tee $LOGFILE
-	cat "${LOGFILE}" >>${log_dir}/$chroot/full-debug.log
+		tee $LOGFILE
+		cat "${LOGFILE}" >>${log_dir}/$chroot/full-debug.log
     else
-	cat >$LOGFILE
+		cat >$LOGFILE
     fi
     rc=`tail -1 | grep "EXIT CODE" $LOGFILE`
     rc=${rc##EXIT CODE=}
     if [ "$rc" != "0" ] ; then    
-	echo "$task_name: Trying $description_string" >>${log_dir}/$chroot/errors.log
-	cat "${LOGFILE}" >>${log_dir}/$chroot/errors.log
-	show_error "${LOGFILE}" "cannot do '$description_string' Exit Code $rc" 
-	return -1
+		echo "$task_name: Trying $description_string" >>${log_dir}/$chroot/errors.log
+		cat "${LOGFILE}" >>${log_dir}/$chroot/errors.log
+		show_error "${LOGFILE}" "cannot do '$description_string' Exit Code $rc" 
+		false
+		return 
     fi
-
+	
     $debug && echo "DEBUG: $LOGFILE"
-    return $rc
 }
 
 function set_rc {
@@ -379,7 +384,8 @@ function setup_variables {
 	    ;;
 	*)
 	    show_error "${LOGFILE}" "Uknown Architecture $architecture"
-	    return -1
+		false
+	    return 
     esac
 
     # --------------------------------------------
@@ -391,12 +397,12 @@ function setup_variables {
 	    archive_url="http://ftp.de.debian.org/debian"
 	    debian_based=true
 	    case $release in
-		etch|lenny|squeeze)
+		etch|lenny|squeeze|wheezy)
 		    $debug && echo "Specified Release '$release' is OK"
 		    ;;
 		*)
 		    show_error "${LOGFILE}" "unknown Debian Release $release"
-		    return -1
+		    false; return
 		    ;;
 	    esac
 	    ;;
@@ -404,12 +410,12 @@ function setup_variables {
 	    archive_url="http://archive.ubuntu.com/ubuntu/"
 	    debian_based=true
 	    case $release in
-		dapper|feisty|gutsy|hardy|intrepid|jaunty|karmic)
+		jaunty|hardy|karmic|dapper|lucid|intrepid|maverick|natty|feisty|gutsy)
 		    $debug && echo "Specified Release '$release' is OK"
 		    ;;
 		*)
 		    show_error "${LOGFILE}" "unknown Ubuntu Release $release"
-		    return -1
+		    false; return
 		    ;;
 	    esac
 	    ;;
@@ -422,7 +428,7 @@ function setup_variables {
 		    ;;
 		*)
 		    show_error "${LOGFILE}" "unknown Ubuntu Release $release"
-		    return -1
+		    false; return
 		    ;;
 	    esac
 	    ;;
@@ -437,7 +443,7 @@ function setup_variables {
 	    ;;
 	*)
 	    show_error "${LOGFILE}" "Uknown Distribution $distri"
-	    return -1
+	    false; return
     esac
     
 
@@ -447,28 +453,28 @@ function setup_variables {
 # ----------------------------------------------------------------------------------------
 function setup_distri {
 
-    $do_setup_distri ||    return 0 
+    $do_setup_distri || { true; return; }
 
     $debug && echo ""
     # --------------------------------------------
     if $debian_based ; then
-	if  $force || [ ! -s "$chroot_dir/etc/debian_version" ]; then
-	    $quiet || echo "-- $chroot -- debootstrap ----------------------------------------"
-	    command="debootstrap $variant $arch $release $chroot_dir $archive_url"
-	    $debug && echo $command
-	    task_name="debootstrap"
-	    { debootstrap $variant $arch "$release" "$chroot_dir" "$archive_url" \
-		2>&1 ;set_rc; } | debug_out "debootstrap" "$command"
-	    test "$?" -ne "2" && return -1
-	fi
+		if  $force || [ ! -s "$chroot_dir/etc/debian_version" ]; then
+			$quiet || echo "-- $chroot -- debootstrap ----------------------------------------"
+			command="debootstrap $variant $arch $release $chroot_dir $archive_url"
+			$debug && echo $command
+			task_name="debootstrap"
+			{ debootstrap $variant $arch "$release" "$chroot_dir" "$archive_url" \
+				2>&1 ;set_rc; } | debug_out "debootstrap" "$command"
+#	    test "$?" -ne "2" && return -1
+		fi
     fi
-
+	
     if $suse_based ; then
-	# $archive_url/bla.rpm
-	rpm --root $chroot_dir -ihv `cat /tmp/rpms-suse`
-	echo "$chroot not implemented .... Ends here for now ..." \
-	    | tee -a ${log_dir}/$chroot/results.log
-	return -1
+	    # $archive_url/bla.rpm
+		rpm --root $chroot_dir -ihv `cat /tmp/rpms-suse`
+		echo "$chroot not implemented .... Ends here for now ..." \
+			| tee -a ${log_dir}/$chroot/results.log
+		false; return
     fi
 
     # --------------------------------------------
@@ -482,16 +488,16 @@ function setup_distri {
 	# mount -t proc none /path-to-your-chroot/proc
 	# mount -t sysfs none /path-to-your-chroot/sys
 
-	for dev_type  in proc; do 
-            # mount -o bind /proc  $chroot_dir/proc
-	    if ! grep -q -e "/proc.*$chroot_dir/proc proc bind" /etc/fstab; then
-		echo "/proc  $chroot_dir/proc proc bind" >>/etc/fstab
+	for dev_type  in dev proc sys ; do 
+        # mount -o bind /proc  $chroot_dir/proc
+	    if ! grep -q -e "/${dev_type}.*$chroot_dir/${dev_type} ${dev_type} bind" /etc/fstab; then
+			echo "/${dev_type}  $chroot_dir/${dev_type} ${dev_type} bind" >>/etc/fstab
 	    fi
-	    umount "$chroot_dir/proc"
-	    mount "$chroot_dir/proc"
+	    umount "$chroot_dir/${dev_type}"
+	    mount "$chroot_dir/${dev_type}"
 	    if $debug ; then
-		echo "mounted:"
-		mount | grep -e '^/proc'
+			echo "mounted:"
+			mount | grep -e '^/${dev_type}'
 	    fi
 	done
     fi
@@ -502,11 +508,11 @@ function setup_distri {
 
     $quiet || echo "-- $chroot -- Update Sources.list----------------------------------------"
     if [ ! -s  "$chroot_dir/etc/apt/sources.list.DIST" ] ; then
-	mv "$chroot_dir/etc/apt/sources.list" "$chroot_dir/etc/apt/sources.list.DIST"
+		mv "$chroot_dir/etc/apt/sources.list" "$chroot_dir/etc/apt/sources.list.DIST"
     fi
     case $distri in
-	ubuntu)
-	    cat <<EOF >$chroot_dir/etc/apt/sources.list
+		ubuntu)
+			cat <<EOF >$chroot_dir/etc/apt/sources.list
 deb http://archive.ubuntu.com/ubuntu/ $release main restricted multiverse universe
 deb http://de.archive.ubuntu.com/ubuntu $release main restricted
 deb-src http://de.archive.ubuntu.com/ubuntu $release main restricted
@@ -515,10 +521,10 @@ deb http://security.ubuntu.com/ubuntu/ $release-security restricted main multive
 deb http://archive.ubuntu.com/ubuntu/ $release-updates restricted main multiverse universe
 deb http://archive.ubuntu.com/ubuntu/ $release universe
 EOF
-	    ;;
+			;;
 
-	debian)
-	    cat >$chroot_dir/etc/apt/sources.list <<EOF
+		debian)
+			cat >$chroot_dir/etc/apt/sources.list <<EOF
 deb http://ftp.de.debian.org/debian/ $release main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ $release main contrib non-free
 
@@ -526,115 +532,122 @@ deb http://security.debian.org/ $release/updates main contrib non-free
 deb-src http://security.debian.org/ $release/updates main contrib non-free
 EOF
 
-	    case $release in
-		etch)
-		    $quiet || echo "deb http://www.backports.org/debian $release-backports main contrib non-free" \
+			case $release in
+				etch)
+					$quiet || echo "deb http://www.backports.org/debian $release-backports main contrib non-free" \
                         >>$chroot_dir/etc/apt/sources.list
 #		    echo "deb http://volatile.debian.org/debian-volatile $release/volatile main contrib non-free" \
 #                         >>$chroot_dir/etc/apt/sources.list
-		    ;;
-	    esac
-
-	    case $architecture in
-		linux32|32)
-		    cat >>$chroot_dir/etc/apt/sources.list <<EOF
+					;;
+			esac
+			
+			case $architecture in
+				linux32|32)
+					cat >>$chroot_dir/etc/apt/sources.list <<EOF
 
 #deb     http://www.gpsdrive.de/debian testing main
 #deb-src http://www.gpsdrive.de/debian testing main
 EOF
-		    ;;
-	    esac
-	    ;;
+					;;
+			esac
+			;;
     esac
 
     # ----------------------------------------------------------------------------------------
-    if $do_apt_get_update; then
-	$debug && echo ""
-	command="apt-get update"
-	$quiet || echo "-- $chroot ---------- Update to newest version (update;dist-upgrade)"
-	$debug && echo "---- apt-get update"
-	task_name="apt-get_update"
-	{ chroot $chroot_dir apt-get --quiet --force-yes update \
-	    2>&1  ;set_rc; } | debug_out "$task_name" "$command"
-	test "$?" -ne "0" && return -1
-	
-	$debug && echo "---- dist-upgrade"
-	command="dist-upgrade"
-	task_name="apt-get_dist-upgrade"
-	{ chroot $chroot_dir apt-get --quiet --assume-yes --force-yes dist-upgrade \
-	    2>&1  ;set_rc; } | debug_out $task_name "$command"
-	test "$?" -ne "0" && return -1
-	
+	apt_get_update || return
+
 	case $distri in
-	    ubuntu)
-		$debug && echo "---- apt-get install gnupg"
-		command="apt-get install aptitude"
-		task_name="apt-get_install_gpg"
-		{ chroot $chroot_dir apt-get --assume-yes --force-yes install gnupg \
-		    2>&1  ;set_rc; } | debug_out $task_name "$command"
-		test "$?" -ne "0" && return -1
+		ubuntu)
+			case $release in
+				maverick)
+					for command in \
+						"dpkg-divert --local --rename --add /sbin/initctl" \
+						"ls -l /sbin/initctl | grep true || ln -s /bin/true /sbin/initctl" \
+						; do
+						{ chroot $chroot_dir "$command" \
+							2>&1  ;set_rc; } | debug_out $task_name "$command"
+						test "$?" -ne "0" && return 
+					done
+					;;
+			esac
+			
+			$debug && echo "---- apt-get install gnupg"
+			command="apt-get install aptitude"
+			task_name="apt-get_install_gpg"
+			{ chroot $chroot_dir apt-get --assume-yes --force-yes install gnupg \
+				2>&1  ;set_rc; } | debug_out $task_name "$command"
+			test "$?" -ne "0" && return 
     		;;
 	esac
+	
 
+	$debug && echo "---- apt-get install dialog apt-utils"
+	command="apt-get install dialog apt-utils"
+	task_name="apt-get_install_dialog_apt-utils"
+	if ! chroot $chroot_dir aptitude --version >/dev/null ; then
+		{ chroot $chroot_dir apt-get --quiet --assume-yes --force-yes install dialog apt-utils \
+			2>1   ;set_rc; } | debug_out $task_name "$command"
+		test "$?" -ne "0" && return 
+	fi
+	
 	$debug && echo "---- apt-get install aptitude"
 	command="apt-get install aptitude"
 	task_name="apt-get_install_aptitude"
 	if ! chroot $chroot_dir aptitude --version >/dev/null ; then
-	    { chroot $chroot_dir apt-get --quiet --assume-yes --force-yes install aptitude \
-		2>1   ;set_rc; } | debug_out $task_name "$command"
-	    test "$?" -ne "0" && return -1
+		{ chroot $chroot_dir apt-get --quiet --assume-yes --force-yes install aptitude \
+			2>1   ;set_rc; } | debug_out $task_name "$command"
+		test "$?" -ne "0" && return 
 	fi
-
-    fi
-
+	
     # ----------------------------------------------------------------------------------------
+    $debug && echo "--- $chroot -- User Setup for '$username'"
     chroot $chroot_dir ls -ld /home/$username | grep "$username root" >/dev/null 2>/dev/null
     user_dir_ok=$?
     id $username >/dev/null
     user_id_ok=$?
     if [ ! $force -a "$user_id_ok" -eq 0 -a "$user_dir_ok" -eq 0 ] ; then
-	$debug && echo "--- $chroot -- User Setup OK"
+		$debug && echo "--- $chroot -- User Setup OK"
     else
-	$debug && echo ""
-	echo "--- $chroot -- Add User"
-	chroot $chroot_dir useradd $username
-	if [ "$?" -ne "0" ] ; then
-	    echo "WARNING: cannot add user $username"
-	fi
-	chroot $chroot_dir mkdir -p /home/$username
-	if [ "$?" -ne "0" ] ; then
-	    show_error "${LOGFILE}" "cannot create homedir for $username"
-	    return -1
-	fi
-
+		$debug && echo ""
+		echo "--- $chroot -- Add User"
+		chroot $chroot_dir useradd $username
+		if [ "$?" -ne "0" ] ; then
+			echo "WARNING: cannot add user $username"
+		fi
+		chroot $chroot_dir mkdir -p /home/$username
+		if [ "$?" -ne "0" ] ; then
+			show_error "${LOGFILE}" "cannot create homedir for $username"
+			false; return
+		fi
+		
 	# Show Chroot Type in bash Prompt
-	echo '#!/bin/bash' > $chroot_dir/home/$username/.profile 
+		echo '#!/bin/bash' > $chroot_dir/home/$username/.profile 
 	echo 'PS1="`version`:\u@\h:\w\$"' >>$chroot_dir/home/$username/.profile 
-
+	
 	# set Permissions for user home
 	chroot $chroot_dir chown -R $username /home/$username
 	if [ "$?" -ne "0" ] ; then
 	    show_error "${LOGFILE}" "cannot grant user $username access to its home"
-	    return -1
+	    false; return
 	fi
-
+	
     fi
-
+	
 
     # ----------------------------------------------------------------------------------------
     if ! grep -q -e "$chroot " /etc/dchroot.conf; then
-	$debug && echo ""
-	$quiet || echo "-- $chroot ---------- dchroot.conf"
-	$quiet || echo "-- $chroot ---------- add to dchroot.conf"
-	echo "$chroot $chroot_dir ${personality}" >>/etc/dchroot.conf
+		$debug && echo ""
+		$quiet || echo "-- $chroot ---------- dchroot.conf"
+		$quiet || echo "-- $chroot ---------- add to dchroot.conf"
+		echo "$chroot $chroot_dir ${personality}" >>/etc/dchroot.conf
     fi
 
     if ! sudo -u $username dchroot -c $chroot "id $username" >/dev/null 2>&1 ; then
-	sudo -u $username dchroot -c $chroot "id $username"
-	show_error "${LOGFILE}" "calling dchroot"
-	return -1  
+		sudo -u $username dchroot -c $chroot "id $username"
+		show_error "${LOGFILE}" "calling dchroot"
+		false; return  
     fi
-
+	
 
     # ----------------------------------------------------------------------------------------
     # Add a version command inside the chroot
@@ -647,13 +660,13 @@ EOF
 
 # ----------------------------------------------------------------------------------------
 function install_devtools {
-    $do_install_dev_tools || return 0
+    $do_install_dev_tools ||  { true; return; }
 
     $debug && echo ""
     $quiet || echo "-- $chroot -------------------- Install development Tools"
 
     development_tools="pbuilder subversion wget gnupg nano subversion vim cmake less"
-    development_tools="$development_tools devscripts debconf debhelper"
+    development_tools="$development_tools devscripts debconf debhelper fakeroot aptitude"
     development_tools="$development_tools debian-archive-keyring debian-edu-archive-keyring debian-keyring"
     development_tools="$development_tools sun-java6-jdk openssh-server apt-utils dpatch"
     case $distri in
@@ -669,15 +682,43 @@ function install_devtools {
     task_name="apt-get_-f_install"
     command="Install development tools: apt-get -f install"
     { chroot $chroot_dir apt-get -f install \
-	2>&1  ;set_rc; } | debug_out $task_name "$command"
-    test "$?" -ne "0" && return -1
-
+		2>&1  ;set_rc; } | debug_out $task_name "$command"
+    test "$?" -ne "0" && return
+	
     $debug && echo "Check For Packages: '$development_tools'"
     task_name="aptitude_install_developmenttools"
     command="Install development tools: aptitude --assume-yes install $development_tools"
     { chroot $chroot_dir aptitude --assume-yes install $development_tools \
-	2>&1  ;set_rc; } | debug_out $task_name "$command"
-    test "$?" -ne "0" && return -1
+		2>&1  ;set_rc; } | debug_out $task_name "$command"
+    test "$?" -ne "0" && return
+    return 0
+}
+
+# -------- apt-get update ; apt-get dist-upgrade
+function apt_get_update {
+    $do_apt_get_update ||  { true; return; }
+	$debug && echo ""
+	command="apt-get update"
+	$quiet || echo "-- $chroot ---------- Update to newest version (update;dist-upgrade)"
+
+	test -d $chroot_dir ||  { echo "!!!!!! ERROR --------- $chroot DIR is missing"; return; }
+
+	chroot $chroot_dir which apt-get | grep -q / || { echo "-- $chroot is missing apt-get"; return; }
+	chroot $chroot_dir which dpkg    | grep -q / || { echo "-- $chroot is missing dpkg"; return; }
+
+	for command in \
+		"apt-get --quiet --force-yes update" \
+		"dpkg --configure -a --force-confnew" \
+		"apt-get --quiet --quiet --assume-yes --force-yes -f install" \
+		"apt-get --quiet --quiet --assume-yes --force-yes dist-upgrade" \
+		; do 
+		$debug && echo "---- $command"
+		task_name="${command// }"
+		{ chroot $chroot_dir $command \
+			2>&1  ;set_rc; } | debug_out "$task_name" "$command"
+		test "$?" -ne "0" && return
+	done
+	
     return 0
 }
 
@@ -687,7 +728,7 @@ function install_devtools {
 # ----------------------------------------------------------------------------------------
 function main_func {
 
-    setup_variables || return -1
+    setup_variables ||  { true; return; }
 
 
     mkdir -p ${log_dir}-old
@@ -697,12 +738,13 @@ function main_func {
     test -d ${log_dir}/$chroot && mv -f ${log_dir}/$chroot ${log_dir}-old/
     mkdir -p ${log_dir}/$chroot
 
-    setup_distri || return -1 
-    install_devtools || return -1 
+    setup_distri || return
+    install_devtools || return
+	apt_get_update || return
 
     echo "Usage of chroot $chroot with"
     echo "        dchroot -c $chroot"
-    return 0
+    true; return
 }
 
 
@@ -714,15 +756,14 @@ if $do_all_distributions ; then
 	
 	$quiet || echo "# -------------------- Debian"
 	distri=debian
-	for release in squeeze lenny ; do  
+	for release in squeeze lenny wheezy ; do  
 	    main_func || echo "Incomplete $distri-$release-$architecture"
 	done
 
 	$quiet || echo "# -------------------- Ubuntu"
 	distri=ubuntu
-        #for release in dapper feisty  gutsy hardy intrepid jaunty; do
-	for release in jaunty karmic intrepid hardy ; do
-	#for release in intrepid ; do
+    #for release in dapper feisty  gutsy hardy intrepid jaunty; do
+	for release in  hardy karmic dapper lucid maverick natty ; do
 	    main_func  || echo "Incomplete $distri-$release-$architecture"
 	done
 

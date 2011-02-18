@@ -14,7 +14,7 @@ Build-Depends: debhelper (>> 3.7.2),
 	libxml2-dev,
 	pkg-config,
 	ant, ant-optional,
-	sun-java6-jdk,
+	sun-java6-jdk|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk,
 	libmysqlclient15-dev
 Standards-Version: 3.6.1
 

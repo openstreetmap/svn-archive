@@ -1,14 +1,19 @@
 package pdfimport;
 
+import java.awt.BorderLayout;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -18,11 +23,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
+import javax.swing.AbstractAction;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -41,11 +51,16 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.data.projection.ProjectionSubPrefs;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
 import org.openstreetmap.josm.gui.progress.SwingRenderingProgressMonitor;
+import org.openstreetmap.josm.gui.SideButton;
+import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.io.OsmExporter;
+import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.WindowGeometry;
 
 import pdfimport.pdfbox.PdfBoxParser;
 
@@ -102,6 +117,7 @@ public class LoadPdfDialog extends JFrame{
 	 * Combobox with all projections available
 	 */
 	private JComboBox projectionCombo;
+	private JButton projectionPreferencesButton;
 	private JTextField minXField;
 	private JTextField minYField;
 	private JTextField minEastField;
@@ -149,6 +165,18 @@ public class LoadPdfDialog extends JFrame{
 	}
 
 	private void addListeners() {
+
+		this.projectionCombo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateProjectionPrefButton();
+			}
+
+		});
+		this.projectionPreferencesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showProjectionPreferences();
+			}
+		});
 
 		this.loadFileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -207,10 +235,13 @@ public class LoadPdfDialog extends JFrame{
 		c.gridheight = 1;c.gridwidth = 1;c.weightx =1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
 
 		this.projectionCombo = new JComboBox();
-		this.projectionCombo.addItem("Select projection...");
+		this.projectionCombo.addItem(tr("Select projection..."));
 		for (Projection p: Projections.getProjections()) {
 			this.projectionCombo.addItem(p);
 		}
+
+		this.projectionPreferencesButton = new JButton(tr("Prefs"));
+		updateProjectionPrefButton();
 
 		this.loadFileButton = new JButton(tr("Load file..."));
 		this.okButton = new JButton(tr("Place"));
@@ -317,10 +348,14 @@ public class LoadPdfDialog extends JFrame{
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
 		projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
 
-		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
-		projectionPanel.add(new JLabel(tr("Projection:")), c);
-		c.gridx = 1; c.gridy = 0; c.gridwidth = 1;
-		projectionPanel.add(this.projectionCombo);
+		JPanel projectionSubPanel = new JPanel();
+		projectionSubPanel.setLayout(new BoxLayout(projectionSubPanel, BoxLayout.X_AXIS));
+
+		projectionSubPanel.add(new JLabel(tr("Projection:")));
+		projectionSubPanel.add(this.projectionCombo);
+		projectionSubPanel.add(this.projectionPreferencesButton);
+		c.gridx = 0; c.gridy = 0; c.gridwidth = 3;
+		projectionPanel.add(projectionSubPanel, c);
 
 		c.gridx = 0; c.gridy = 1; c.gridwidth = 2;
 		projectionPanel.add(new JLabel(tr("Bottom left (min) corner:")), c);
@@ -382,6 +417,119 @@ public class LoadPdfDialog extends JFrame{
 		this.setContentPane(panel);
 	}
 
+	private class ProjectionSubPrefsDialog extends JDialog {
+		private ProjectionSubPrefs projPref;
+		private OKAction actOK;
+		private CancelAction actCancel;
+		private JPanel projPrefPanel;
+
+		public ProjectionSubPrefsDialog(Component parent, ProjectionSubPrefs pr) {
+			super(JOptionPane.getFrameForComponent(parent), ModalityType.DOCUMENT_MODAL);
+
+			projPref = pr;
+
+			setTitle(tr("Projection Preferences"));
+			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+			build();
+		}
+
+		protected void makeButtonRespondToEnter(SideButton btn) {
+			btn.setFocusable(true);
+			btn.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0), "enter");
+			btn.getActionMap().put("enter", btn.getAction());
+		}
+
+		protected JPanel buildInputForm() {
+			JPanel pnl = new JPanel();
+			projPref.setupPreferencePanel(pnl, null);
+			return pnl;
+		}
+
+		protected JPanel buildButtonRow() {
+			JPanel pnl = new JPanel(new FlowLayout());
+
+			actOK = new OKAction();
+			actCancel = new CancelAction();
+
+			SideButton btn;
+			pnl.add(btn = new SideButton(actOK));
+			makeButtonRespondToEnter(btn);
+			pnl.add(btn = new SideButton(actCancel));
+			makeButtonRespondToEnter(btn);
+			return pnl;
+		}
+
+		protected void build() {
+			projPrefPanel = buildInputForm();
+			getContentPane().setLayout(new BorderLayout());
+			getContentPane().add(projPrefPanel, BorderLayout.CENTER);
+			getContentPane().add(buildButtonRow(), BorderLayout.SOUTH);
+			pack();
+
+			// make dialog respond to ESCAPE
+			getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+			getRootPane().getActionMap().put("escape", actCancel);
+		}
+
+		class OKAction extends AbstractAction {
+			public OKAction() {
+			putValue(NAME, tr("OK"));
+			putValue(SHORT_DESCRIPTION, tr("Close the dialog and apply projection preferences"));
+			putValue(SMALL_ICON, ImageProvider.get("ok"));
+			}
+
+			public void actionPerformed(ActionEvent e) {
+			projPref.setPreferences(projPref.getPreferences(projPrefPanel));
+			setVisible(false);
+			}
+		}
+
+		class CancelAction extends AbstractAction {
+			public CancelAction() {
+			putValue(NAME, tr("Cancel"));
+			putValue(SHORT_DESCRIPTION, tr("Close the dialog, discard projection preference changes"));
+			putValue(SMALL_ICON, ImageProvider.get("cancel"));
+			}
+
+			public void actionPerformed(ActionEvent e) {
+			setVisible(false);
+			}
+		}
+
+		@Override
+		public void setVisible(boolean visible) {
+			if (visible) {
+			new WindowGeometry(
+				getClass().getName() + ".geometry",
+				WindowGeometry.centerOnScreen(new Dimension(400, 300))).applySafe(this);
+			} else {
+			new WindowGeometry(this).remember(getClass().getName() + ".geometry");
+			}
+			super.setVisible(visible);
+		}
+	}
+
+	private void updateProjectionPrefButton() {
+		Object proj = projectionCombo.getSelectedItem();
+
+		// Enable/disable pref button
+		if(!(proj instanceof ProjectionSubPrefs)) {
+			projectionPreferencesButton.setEnabled(false);
+		} else {
+			projectionPreferencesButton.setEnabled(true);
+		}
+	}
+
+	private void showProjectionPreferences() {
+		Object proj = projectionCombo.getSelectedItem();
+
+		if(proj instanceof ProjectionSubPrefs) {
+			ProjectionSubPrefsDialog dlg =
+			new ProjectionSubPrefsDialog(this, (ProjectionSubPrefs)proj);
+			dlg.setVisible(true);
+		}
+	}
 
 	private void loadFilePressed() {
 		final File newFileName = this.chooseFile();

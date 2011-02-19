@@ -1,4 +1,8 @@
-#Tue Oct 21 16:34:49 CEST 2008
+#Sun Jan 31 13:16:40 CET 2010
 eclipse.preferences.version=1
 formatter_profile=_JOSM
 formatter_settings_version=11
+org.eclipse.jdt.ui.exception.name=e
+org.eclipse.jdt.ui.gettersetter.use.is=true
+org.eclipse.jdt.ui.keywordthis=false
+org.eclipse.jdt.ui.overrideannotation=true

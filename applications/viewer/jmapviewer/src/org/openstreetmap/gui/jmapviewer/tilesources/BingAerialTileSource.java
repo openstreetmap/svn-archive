@@ -1,4 +1,4 @@
-package org.openstreetmap.gui.jmapviewer;
+package org.openstreetmap.gui.jmapviewer.tilesources;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,7 +21,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
+public class BingAerialTileSource extends AbstractOsmTileSource {
     private static String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
     private static Future<List<Attribution>> attributions;
 

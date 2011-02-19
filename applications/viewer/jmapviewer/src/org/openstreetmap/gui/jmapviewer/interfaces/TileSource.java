@@ -97,7 +97,7 @@ public interface TileSource {
     public int getTileSize();
 
     /**
-     * @return True if the tile source requires attribution.
+     * @return True if the tile source requires attribution in text or image form.
      */
     public boolean requiresAttribution();
 
@@ -127,8 +127,8 @@ public interface TileSource {
     public double latToTileY(double lat, int zoom);
 
     public double lonToTileX(double lon, int zoom);
-     
+
     public double tileYToLat(int y, int zoom);
-            
+
     public double tileXToLon(int x, int zoom);
 }

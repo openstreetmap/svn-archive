@@ -31,6 +31,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 /**
  * 
@@ -744,7 +745,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     }
 
     private void paintAttribution(Graphics g) {
-        if (!tileSource.requiresAttribution()) return;
+        if (!tileSource.requiresAttribution())
+            return;
         // Draw attribution
         Font font = g.getFont();
         g.setFont(ATTR_LINK_FONT);
@@ -770,11 +772,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         }
 
         g.setFont(ATTR_FONT);
-        Coordinate topLeft = getPosition(0,0);
-        Coordinate bottomRight = getPosition(getWidth(),getHeight());
+        Coordinate topLeft = getPosition(0, 0);
+        Coordinate bottomRight = getPosition(getWidth(), getHeight());
         String attributionText = tileSource.getAttributionText(zoom, topLeft, bottomRight);
-        Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
-        {
+        if (attributionText != null) {
+            Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
             int x = getWidth() - (int) stringBounds.getWidth();
             int y = getHeight() - textHeight;
             g.setColor(Color.black);

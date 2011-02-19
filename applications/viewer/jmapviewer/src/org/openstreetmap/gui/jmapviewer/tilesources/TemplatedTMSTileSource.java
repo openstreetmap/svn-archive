@@ -1,7 +1,7 @@
-package org.openstreetmap.gui.jmapviewer;
+package org.openstreetmap.gui.jmapviewer.tilesources;
 
 
-public class TemplatedTMSTileSource extends OsmTileSource.AbstractOsmTileSource {
+public class TemplatedTMSTileSource extends AbstractOsmTileSource {
     private int maxZoom;
     
     public TemplatedTMSTileSource(String name, String url, int maxZoom) {
@@ -10,7 +10,7 @@ public class TemplatedTMSTileSource extends OsmTileSource.AbstractOsmTileSource 
     }
 
     public String getTileUrl(int zoom, int tilex, int tiley) {
-        return this.BASE_URL
+        return this.baseUrl
         .replaceAll("\\{zoom\\}", Integer.toString(zoom))
         .replaceAll("\\{x\\}", Integer.toString(tilex))
         .replaceAll("\\{y\\}", Integer.toString(tiley));

@@ -1,6 +1,8 @@
-package org.openstreetmap.gui.jmapviewer;
+package org.openstreetmap.gui.jmapviewer.tilesources;
 
-public class ScanexTileSource extends OsmTileSource.AbstractOsmTileSource {
+import org.openstreetmap.gui.jmapviewer.OsmMercator;
+
+public class ScanexTileSource extends AbstractOsmTileSource {
     private static String API_KEY = "4018C5A9AECAD8868ED5DEB2E41D09F7";
 
     private enum ScanexLayer {

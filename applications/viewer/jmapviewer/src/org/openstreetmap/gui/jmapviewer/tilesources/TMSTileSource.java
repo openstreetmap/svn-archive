@@ -1,7 +1,7 @@
-package org.openstreetmap.gui.jmapviewer;
+package org.openstreetmap.gui.jmapviewer.tilesources;
 
 
-public class TMSTileSource extends OsmTileSource.AbstractOsmTileSource {
+public class TMSTileSource extends AbstractOsmTileSource {
     private int maxZoom;
 
     public TMSTileSource(String name, String url, int maxZoom) {

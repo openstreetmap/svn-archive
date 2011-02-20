@@ -26,7 +26,7 @@
 -->
 <project name="contourmerge" default="dist" basedir=".">
 
-	<property name="commit.message" value="Updating to JOSM 3210" />
+	<property name="commit.message" value="Fixed: unexpected intersections after drag-and-drop" />
 	<property name="plugin.main.version" value="3835" />
 
 	<!--
@@ -73,7 +73,7 @@
 		<echo message="creating ${plugin.jar} for version ${version.entry.commit.revision} ... " />
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images">
-				<exclude name="*.svg" />
+				<include name="*.png" />
 			</fileset>
 		</copy>
 		<copy todir="${plugin.build.dir}">

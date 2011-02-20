@@ -293,6 +293,7 @@ public class ContourMergeView implements MapViewPaintable{
 		if (dropTarget == null) {
 			/*
 			 * paint the temporary dragged way slice, unless the mouse is currently over a potential
+			 * drop target
 			 */
 			Path2D polyline = project(mv, dragSource, model.getDragOffset());
 			g.setColor(Color.RED);
@@ -304,7 +305,7 @@ public class ContourMergeView implements MapViewPaintable{
 			/*
 			 * the mouse is over a suitable drop target. Paint only 
 			 * two helper lines from the drag source to the drop target. The drop target
-			 * is highlighted. 
+			 * is highlighted elsewhere. 
 			 */
 			paintHelperLinesFromDragSourceToDropTarget(g,mv);			
 		}

@@ -397,6 +397,7 @@ public class ContourMergeModel implements DataSetListener{
 		if (dropTarget == null) return null;
 		List<Node> targetNodes = dropTarget.getNodes();
 		if (! areDirectionAligned(dragSource, dropTarget)) {
+			logger.info("not direction aligned !");
 			Collections.reverse(targetNodes);
 		}
 		List<Command> cmds = new ArrayList<Command>();
@@ -420,7 +421,7 @@ public class ContourMergeModel implements DataSetListener{
 	 * <p>Replies true, if the two polylines given by the node lists {@code n1} and
 	 * {@code n2} are "direction aligned". Their direction is aligned, if the two lines
 	 * between the two start nodes and the two end nodes of {@code n1} and code {@code n2}
-	 * respectively, do not interesect.</p> 
+	 * respectively, do not intersect.</p> 
 	 * 
 	 * @param n1 the first list of nodes 
 	 * @param n2 the second list of nodes 
@@ -450,7 +451,7 @@ public class ContourMergeModel implements DataSetListener{
 	protected boolean areDirectionAligned(WaySlice dragSource, WaySlice dropTarget){
 		if (dragSource == null) return false;
 		if (dropTarget == null) return false;
-		return areDirectionAligned(dragSource.getWay().getNodes(), dropTarget.getWay().getNodes());
+		return areDirectionAligned(dragSource.getNodes(), dropTarget.getNodes());
 	}
 
 	protected void ensureSelectedNodesConsistent() {

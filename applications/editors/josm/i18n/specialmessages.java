@@ -26,6 +26,16 @@
 /* relation type */ trc("Relation type", "route");
 /* relation type */ trc("Relation type", "site");
 /* relation type */ trc("Relation type", "waterway");
+/* relation place type */ trc("Place type", "city");
+/* relation place type */ trc("Place type", "locality");
+/* relation place type */ trc("Place type", "village");
+/* relation place type */ trc("Place type", "town");
+/* relation place type */ trc("Place type", "borough");
+/* relation place type */ trc("Place type", "municipality");
+/* relation place type */ trc("Place type", "island");
+/* relation place type */ trc("Place type", "county");
+/* relation place type */ trc("Place type", "hamlet");
+/* relation place type */ trc("Place type", "suburb");
 
 /* Strings in JFileChooser */ tr("All Files");
 /* Strings in JFileChooser */ tr("Attributes");

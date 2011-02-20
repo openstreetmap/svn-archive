@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -51,7 +51,7 @@ public class AddressProblem implements IProblem {
 	public AddressProblem(IOSMEntity source, String description, List<ISolution> solutions) {
 		this(source, description, solutions, ProblemType.Warning);
 	}
-	
+
 	/**
 	 * Instantiates a new problem with type 'warning' and without solutions.
 	 *
@@ -70,14 +70,14 @@ public class AddressProblem implements IProblem {
 			solutions = new ArrayList<ISolution>();
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.IProblem#addSolution(org.openstreetmap.josm.plugins.fixAddresses.ISolution)
 	 */
 	@Override
 	public void addSolution(ISolution solution) {
 		CheckParameterUtil.ensureParameterNotNull(solution, "solution");
-		
+
 		lazyCreateSolutions();
 		solutions.add(solution);
 	}
@@ -88,8 +88,8 @@ public class AddressProblem implements IProblem {
 	@Override
 	public void applySolution(ISolution solution) {
 		CheckParameterUtil.ensureParameterNotNull(solution, "solution");
-				
-		solution.solve();		
+
+		solution.solve();
 	}
 
 	/* (non-Javadoc)
@@ -98,7 +98,7 @@ public class AddressProblem implements IProblem {
 	@Override
 	public void clearSolutions() {
 		if (solutions == null) return;
-		
+
 		solutions.clear();
 	}
 
@@ -133,7 +133,7 @@ public class AddressProblem implements IProblem {
 	public void removeSolution(ISolution solution) {
 		if (solutions == null ) throw new RuntimeException("Solution list is null");
 		if (solutions.size() == 0) throw new RuntimeException("Solution list is empty");
-		
+
 		CheckParameterUtil.ensureParameterNotNull(solution, "solution");
 		solutions.remove(solution);
 	}

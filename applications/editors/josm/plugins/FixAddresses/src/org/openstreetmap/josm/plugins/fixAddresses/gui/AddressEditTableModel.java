@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses.gui;
@@ -30,7 +30,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 @SuppressWarnings("serial")
 public abstract class AddressEditTableModel extends DefaultTableModel implements
 		IAddressEditContainerListener {
-	
+
 	protected AddressEditContainer addressContainer;
 	protected int sortCol = 0;
 	protected boolean isSortAsc = true;
@@ -57,7 +57,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	/**
 	 * Gets the node entity for the given row or null; if row contains no
 	 * entity.
-	 * 
+	 *
 	 * @param row
 	 *            The row to get the entity object for.
 	 * @return
@@ -67,7 +67,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	/**
 	 * Gets the row for the given node entity or -1; if the model does not
 	 * contain the entity.
-	 * 
+	 *
 	 * @param entity
 	 *            The entity to get the row for.
 	 * @return
@@ -76,7 +76,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 
 	/**
 	 * Sorts the model data by the given column.
-	 * 
+	 *
 	 * @param column
 	 *            the column
 	 * @param ascending
@@ -84,7 +84,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	 */
 	protected abstract void sortByColumn(int column, boolean ascending);
 
-	
+
 	/**
 	 * The listener interface for receiving column events.
 	 * The class that is interested in processing a column
@@ -134,20 +134,20 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 			table.getTableHeader().repaint();
 
 			//Collections.sort(addressContainer, new MyComparator(isSortAsc));
-			
+
 			sortByColumn(sortCol, isSortAsc);
 			table.tableChanged(new TableModelEvent(AddressEditTableModel.this));
 			table.repaint();
 		}
 	}
-	
+
 	/**
 	 * Internal base class to sort items by different columns.
 	 */
 	protected abstract class ColumnSorter<E> implements Comparator<E> {
 		private int column;
 		private boolean ascending;
-		
+
 		/**
 		 * Instantiates a new address sorter.
 		 *
@@ -158,7 +158,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 			this.column = column;
 			this.ascending = ascending;
 		}
-		
+
 		/**
 		 * Gets the index of the column to sort.
 		 *
@@ -167,7 +167,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 		protected int getColumn() {
 			return column;
 		}
-				
+
 		/**
 		 * Checks if sort mode is ascending or not.
 		 *

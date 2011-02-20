@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -23,20 +23,20 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * GuessedValueHandler visits all nodes and ways in order to find a guessed value for a given tag.
  * The guess is determined by finding the closest way/node with the given tag. If no appropriate node
  * is found within maximum distance, no guess is made.
- * 
+ *
  * The default maximum distance is 100m.
  */
 public class GuessedValueHandler implements Visitor {
-	
+
 	/** Default maximum distance (100m) */
 	private static final double DEFAULT_MAX_DIST = 100.0;
-	
+
 	private String tag;
 	protected double minDist;
 	protected String currentValue;
 	private OSMAddress aNode;
 	private double maxDist = DEFAULT_MAX_DIST;
-	
+
 	/**
 	 * Instantiates a new guessed value handler.
 	 *
@@ -47,7 +47,7 @@ public class GuessedValueHandler implements Visitor {
 	public GuessedValueHandler(String tag, OSMAddress aNode) {
 		this(tag, aNode, DEFAULT_MAX_DIST);
 	}
-	
+
 	/**
 	 * Instantiates a new guessed value handler.
 	 *
@@ -57,25 +57,25 @@ public class GuessedValueHandler implements Visitor {
 	 */
 	public GuessedValueHandler(String tag, OSMAddress aNode, double maxDist) {
 		super();
-		
+
 		if (StringUtils.isNullOrEmpty(tag)) {
 			throw new RuntimeException("Tag must not be empty or null!");
 		}
-		
+
 		if (aNode == null) {
-			throw new RuntimeException("Address node must not be null!");			
+			throw new RuntimeException("Address node must not be null!");
 		}
-		
+
 		if (maxDist < 1.0) { // clip value
 			maxDist = 1.0;
 		}
 		this.tag = tag;
-		
+
 		minDist = Double.MAX_VALUE;
 		this.aNode = aNode;
-		this.maxDist = maxDist; 
+		this.maxDist = maxDist;
 	}
-	
+
 	/**
 	 * Gets the address node to make the guess for.
 	 *
@@ -86,8 +86,8 @@ public class GuessedValueHandler implements Visitor {
 	}
 
 	/**
-	 * Gets the max distance allowed to consider a node as guess. 
-	 * If the distance of the node is greater than maxDist, the 
+	 * Gets the max distance allowed to consider a node as guess.
+	 * If the distance of the node is greater than maxDist, the
 	 * node/way will be ignored.
 	 *
 	 * @return the maxDist
@@ -122,7 +122,7 @@ public class GuessedValueHandler implements Visitor {
 	protected String getCurrentValue() {
 		return currentValue;
 	}
-	
+
 	/**
 	 * Check if we need to visit the OSM data
 	 *
@@ -131,7 +131,7 @@ public class GuessedValueHandler implements Visitor {
 	public boolean needsGuess() {
 		return aNode.needsGuessedValue(tag);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
 	 */
@@ -141,7 +141,7 @@ public class GuessedValueHandler implements Visitor {
 			double dist = n.getCoor().greatCircleDistance(aNode.getCoor());
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
-				currentValue = n.get(tag);			
+				currentValue = n.get(tag);
 				aNode.setGuessedValue(tag, currentValue, n);
 			}
 		}
@@ -156,7 +156,7 @@ public class GuessedValueHandler implements Visitor {
 			double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
-				currentValue = w.get(tag);				
+				currentValue = w.get(tag);
 				aNode.setGuessedValue(tag, currentValue, w);
 			}
 		}

@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
@@ -29,10 +29,10 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 public class ConvertToRelationAction extends AbstractAddressEditAction {
 
 	public ConvertToRelationAction() {
-		super(tr("Convert to relation."), "convert2rel_24", 
+		super(tr("Convert to relation."), "convert2rel_24",
 				tr("Create relation between street and related addresses."));
 	}
-	
+
 	/**
 	 * Instantiates a new convert to relation action.
 	 *
@@ -41,7 +41,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	 * @param tooltip the tool tip to show on hover
 	 */
 	public ConvertToRelationAction(String name, String iconName, String tooltip) {
-		super(name, iconName, tooltip);		
+		super(name, iconName, tooltip);
 	}
 
 	/* (non-Javadoc)
@@ -50,7 +50,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		OSMStreet streetNode = ev.getSelectedStreet();
-		
+
 		if (streetNode != null) {
 			createRelationForStreet(streetNode);
 		}
@@ -64,7 +64,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	 */
 	protected void createRelationForStreet(OSMStreet streetNode) {
 		if (streetNode == null || !streetNode.hasAddresses()) return;
-		
+
 		beginTransaction(tr("Create address relation for ") + " '" + streetNode.getName() + "'");
 		// Create the relation
 		Relation r = new Relation();
@@ -73,10 +73,10 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 		commands.add(new ChangePropertyCommand(r, TagUtils.RELATION_TYPE, TagUtils.ASSOCIATEDSTREET_RELATION_TYPE));
 		// add street with role 'street'
 		r.addMember(new RelationMember(TagUtils.STREET_RELATION_ROLE, streetNode.getOsmObject()));
-		
+
 		// add address members
 		for (OSMAddress addrNode : streetNode.getAddresses()) {
-			beginObjectTransaction(addrNode);				
+			beginObjectTransaction(addrNode);
 			r.addMember(new RelationMember(TagUtils.HOUSE_RELATION_ROLE, addrNode.getOsmObject()));
 			addrNode.setStreetName(null); // remove street name
 			finishObjectTransaction(addrNode);
@@ -106,7 +106,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
 		if (event == null) return;
-		
+
 		OSMStreet street = event.getSelectedStreet();
 		setEnabled(street != null && street.hasAddresses() && !street.hasAssociatedStreetRelation());
 	}

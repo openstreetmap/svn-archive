@@ -1,27 +1,27 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -38,9 +38,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
 /**
  * Provides a table model to show unresolved addresses.
- * 
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
  */
 
 public class UnresolvedAddressesTableModel extends AddressEditTableModel {
@@ -54,7 +54,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 			String.class };
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 424009321818130586L;
 
@@ -67,7 +67,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.DefaultTableModel#getColumnCount()
 	 */
 	@Override
@@ -77,7 +77,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.DefaultTableModel#getColumnName(int)
 	 */
 	@Override
@@ -87,7 +87,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.DefaultTableModel#getRowCount()
 	 */
 	@Override
@@ -101,7 +101,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
 	 */
 	@Override
@@ -131,7 +131,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
 	@Override
@@ -141,7 +141,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
 	 */
 	@Override
@@ -151,7 +151,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
 	 * #getEntityOfRow(int)
@@ -180,7 +180,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
 	 * #sortByColumn(int, boolean)
@@ -205,7 +205,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
 		 * .ColumnSorter#compare(java.lang.Object, java.lang.Object)

@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -21,40 +21,40 @@ import org.openstreetmap.josm.data.osm.Way;
 /**
  * Contains the tags used within OSM. FIXME: Maybe there is a class or similar
  * within JOSM which already defines them, but I have not found it so far.
- * 
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
  */
 public final class TagUtils {
 	private static String COUNTRIES_REQUIRE_STATE[] = {
-		"en_US", 	/* USA */
-		"en_AU"	/* Australia */
+		"en_US",    /* USA */
+		"en_AU" /* Australia */
 	};
-	
+
 	/**
 	 * Checks if the given OSM object has a (non-empty) value for the given tag.
 	 *
 	 * @param osm the osm object to inspect.
 	 * @param tag the tag to look for.
-	 * @return true, if osm object has a non-empty value for this tag 
+	 * @return true, if osm object has a non-empty value for this tag
 	 */
 	public static boolean hasTag(OsmPrimitive osm, String tag) {
 		return osm != null && !StringUtils.isNullOrEmpty(osm.get(tag));
 	}
-	
+
 	/**
 	 * Checks if the given OSM primitive is an address node.
 	 * @return
 	 */
 	public static boolean isAddress(OsmPrimitive osmObject) {
-		return 	TagUtils.hasAddrCityTag(osmObject) || TagUtils.hasAddrCountryTag(osmObject) ||
+		return  TagUtils.hasAddrCityTag(osmObject) || TagUtils.hasAddrCountryTag(osmObject) ||
 				TagUtils.hasAddrHousenumberTag(osmObject) || TagUtils.hasAddrPostcodeTag(osmObject) ||
 				TagUtils.hasAddrStateTag(osmObject) || TagUtils.hasAddrStreetTag(osmObject);
 	}
-	
+
 	/**
 	 * Check if OSM primitive has a tag 'parking'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -64,7 +64,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'parking'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -74,7 +74,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'shop'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -84,7 +84,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'shop'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -94,7 +94,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'craft'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -104,7 +104,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'craft'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -114,7 +114,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'surface'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -124,7 +124,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'surface'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -134,7 +134,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'cuisine'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -144,7 +144,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'cuisine'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -154,7 +154,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'wood'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -164,7 +164,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'wood'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -174,7 +174,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'foot'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -184,7 +184,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'foot'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -194,7 +194,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'name:de'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -204,7 +204,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'name:de'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -214,7 +214,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'nat_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -224,7 +224,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'nat_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -234,7 +234,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'note:de'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -244,7 +244,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'note:de'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -254,7 +254,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:street'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -265,7 +265,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:street'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -275,7 +275,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'type'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -285,7 +285,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'type'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -295,7 +295,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:city'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -306,7 +306,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:city'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -316,7 +316,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'boundary'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -326,7 +326,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'boundary'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -336,7 +336,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'smoothness'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -347,7 +347,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'smoothness'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -357,7 +357,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'opening_hours'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -368,7 +368,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'opening_hours'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -379,7 +379,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'bicycle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -389,7 +389,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'bicycle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -399,7 +399,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'religion'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -409,7 +409,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'religion'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -419,7 +419,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'barrier'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -429,7 +429,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'barrier'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -439,7 +439,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'power'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -449,7 +449,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'power'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -459,7 +459,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'landuse'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -469,7 +469,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'landuse'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -479,7 +479,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'fireplace'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -490,7 +490,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'fireplace'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -500,7 +500,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'int_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -510,7 +510,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'int_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -520,7 +520,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'whitewater:section_grade'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -531,7 +531,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'whitewater:section_grade'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -543,7 +543,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'denomination'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -554,7 +554,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'denomination'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -564,7 +564,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:postcode'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -575,7 +575,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:postcode'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -586,7 +586,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'wires'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -596,7 +596,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'wires'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -606,7 +606,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'loc_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -616,7 +616,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'loc_ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -626,7 +626,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'width'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -636,7 +636,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'width'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -646,7 +646,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'tourism'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -656,7 +656,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'tourism'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -666,7 +666,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'leisure'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -676,7 +676,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'leisure'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -686,7 +686,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'electrified'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -697,7 +697,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'electrified'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -707,7 +707,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'junction'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -717,7 +717,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'junction'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -727,7 +727,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'railway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -737,7 +737,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'railway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -747,7 +747,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'voltage'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -757,7 +757,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'voltage'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -767,7 +767,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'bridge'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -777,7 +777,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'bridge'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -787,7 +787,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'motor_vehicle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -798,7 +798,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'motor_vehicle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -809,7 +809,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'comment'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -819,7 +819,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'comment'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -829,7 +829,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'maxspeed'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -839,7 +839,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'maxspeed'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -849,7 +849,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'natural'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -859,7 +859,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'natural'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -869,7 +869,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'sac_scale'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -880,7 +880,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'sac_scale'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -890,7 +890,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'tunnel'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -900,7 +900,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'tunnel'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -910,7 +910,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'waterway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -920,7 +920,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'waterway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -930,7 +930,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'trail_visibility'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -941,7 +941,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'trail_visibility'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -952,7 +952,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'highway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -962,7 +962,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'highway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -972,7 +972,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'vehicle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -982,7 +982,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'vehicle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -992,7 +992,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'horse'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1002,7 +1002,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'horse'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1012,7 +1012,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'goods'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1022,7 +1022,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'goods'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1032,7 +1032,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'frequency'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1043,7 +1043,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'frequency'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1053,7 +1053,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'man_made'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1063,7 +1063,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'man_made'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1073,7 +1073,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:housenumber'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1084,7 +1084,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:housenumber'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1092,10 +1092,10 @@ public final class TagUtils {
 		return osmPrimitive != null ? osmPrimitive.get(ADDR_HOUSENUMBER_TAG)
 				: null;
 	}
-	
+
 	/**
 	 * Check if OSM primitive has a tag 'addr:housename'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1106,7 +1106,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:housename'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1117,7 +1117,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'area'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1127,7 +1127,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'area'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1137,7 +1137,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'building:levels'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1148,7 +1148,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'building:levels'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1159,7 +1159,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'wheelchair'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1170,7 +1170,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'wheelchair'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1180,7 +1180,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'name'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1190,7 +1190,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'name'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1200,7 +1200,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'oneway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1210,7 +1210,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'oneway'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1220,7 +1220,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'FIXME'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1230,7 +1230,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'FIXME'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1240,7 +1240,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'capacity'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1250,7 +1250,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'capacity'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1260,7 +1260,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'motorcycle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1271,7 +1271,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'motorcycle'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1281,7 +1281,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'hgv'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1291,7 +1291,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'hgv'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1301,7 +1301,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'construction'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1312,7 +1312,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'construction'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1322,7 +1322,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:state'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1333,7 +1333,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:state'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1343,7 +1343,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'lanes'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1353,7 +1353,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'lanes'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1363,7 +1363,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'note'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1373,7 +1373,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'note'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1383,7 +1383,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'lit'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1393,7 +1393,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'lit'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1403,7 +1403,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'building'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1413,7 +1413,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'building'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1423,7 +1423,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'segregated'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1434,7 +1434,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'segregated'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1444,7 +1444,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:inclusion'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1455,7 +1455,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:inclusion'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1466,7 +1466,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'layer'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1476,7 +1476,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'layer'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1486,7 +1486,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'sport'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1496,7 +1496,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'sport'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1506,7 +1506,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:interpolation'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1517,7 +1517,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:interpolation'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1528,7 +1528,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'cutting'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1538,7 +1538,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'cutting'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1548,7 +1548,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'amenity'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1558,7 +1558,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'amenity'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1568,7 +1568,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'access'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1578,7 +1578,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'access'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1588,7 +1588,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'agricultural'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1599,7 +1599,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'agricultural'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1609,7 +1609,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'capacity:disabled'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1620,7 +1620,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'capacity:disabled'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1631,7 +1631,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'operator'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1641,7 +1641,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'operator'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1651,7 +1651,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1661,7 +1661,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'ref'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1671,7 +1671,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'noexit'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1681,7 +1681,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'noexit'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1691,7 +1691,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'admin_level'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1702,7 +1702,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'admin_level'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1712,7 +1712,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'source'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1722,7 +1722,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'source'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1732,7 +1732,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'tracktype'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1743,7 +1743,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'tracktype'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1753,7 +1753,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'addr:country'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1764,7 +1764,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'addr:country'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1774,7 +1774,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'route'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1784,7 +1784,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'route'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1794,7 +1794,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'cables'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1804,7 +1804,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'cables'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1814,7 +1814,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'service'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1824,7 +1824,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'service'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1834,7 +1834,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'motorcar'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1844,7 +1844,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'motorcar'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1854,7 +1854,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'whitewater'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1865,7 +1865,7 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'whitewater'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1875,7 +1875,7 @@ public final class TagUtils {
 
 	/**
 	 * Check if OSM primitive has a tag 'embankment'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
@@ -1886,16 +1886,16 @@ public final class TagUtils {
 
 	/**
 	 * Gets the value of tag 'embankment'.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
 	public static String getEmbankmentValue(OsmPrimitive osmPrimitive) {
 		return osmPrimitive != null ? osmPrimitive.get(EMBANKMENT_TAG) : null;
 	}
-	
+
 	/**
-	 * Checks if the given street supporting housenumbers. Usually motor ways and primary roads have 
+	 * Checks if the given street supporting housenumbers. Usually motor ways and primary roads have
 	 * no addresses, also no paths or tracks.
 	 *
 	 * @param w the w
@@ -1906,34 +1906,34 @@ public final class TagUtils {
 		if (!hasHighwayTag(w)) {
 			return false;
 		}
-		
+
 		// TODO: Should be configurable
-					
+
 		/* Allow everything until this can be configured */
 		return true;
 		/*
 		String hwType = getHighwayValue(w);
-		return 	!(TagUtils.HIGHWAY_MOTORWAY_LINK_VALUE.equals(hwType) ||
+		return  !(TagUtils.HIGHWAY_MOTORWAY_LINK_VALUE.equals(hwType) ||
 				TagUtils.HIGHWAY_MOTORWAY_VALUE.equals(hwType) ||
 				TagUtils.HIGHWAY_FOOTWAY_VALUE.equals(hwType) ||
-				TagUtils.HIGHWAY_TRACK_VALUE.equals(hwType) 
+				TagUtils.HIGHWAY_TRACK_VALUE.equals(hwType)
 				);*/
 	}
-	
+
 	// Relation support
-	
+
 	/**
 	 * Check if OSM relation is a 'associatedStreet' relation.
-	 * 
+	 *
 	 * @param osmPrimitive
 	 *            The OSM entity to check.
 	 */
 	public static boolean isAssociatedStreetRelation(Relation rel) {
-		return rel != null && 
-			rel.hasKey(RELATION_TYPE) && 
+		return rel != null &&
+			rel.hasKey(RELATION_TYPE) &&
 			ASSOCIATEDSTREET_RELATION_TYPE.equals(rel.get(RELATION_TYPE));
 	}
-	
+
 	/**
 	 * Checks if given relation member has role "street".
 	 *
@@ -1943,7 +1943,7 @@ public final class TagUtils {
 	public static boolean isStreetMember(RelationMember relMember) {
 		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
 	}
-	
+
 	/**
 	 * Checks if given relation member has role "house".
 	 *
@@ -1953,9 +1953,9 @@ public final class TagUtils {
 	public static boolean isHouseMember(RelationMember relMember) {
 		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Checks if "addr:state" tag is required.
 	 *
@@ -1963,13 +1963,13 @@ public final class TagUtils {
 	 */
 	public static boolean isStateRequired() {
 		String loc = OsmUtils.getLocale();
-		
-		for (int i = 0; i < COUNTRIES_REQUIRE_STATE.length; i++) {			
+
+		for (int i = 0; i < COUNTRIES_REQUIRE_STATE.length; i++) {
 			if (COUNTRIES_REQUIRE_STATE[i].equals(loc)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -2064,7 +2064,7 @@ public final class TagUtils {
 	public static final String WHITEWATER_TAG = "whitewater";
 	public static final String EMBANKMENT_TAG = "embankment";
 	public static final String ADDR_HOUSENAME_TAG = "addr:housename";
-	
+
 	/* Highway types */
 	public static final String HIGHWAY_CYCLEWAY_VALUE = "cycleway";
 	public static final String HIGHWAY_FOOTWAY_VALUE = "footway";
@@ -2084,7 +2084,7 @@ public final class TagUtils {
 	public static final String HIGHWAY_UNCLASSIFIED_VALUE = "unclassified";
 
 	/* Relation keys */
-	
+
 	// Associated street: See http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern
 	public static final String RELATION_TYPE = "type";
 	public static final String ASSOCIATEDSTREET_RELATION_TYPE = "associatedStreet";

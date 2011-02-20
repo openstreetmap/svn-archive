@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -33,15 +33,15 @@ import org.openstreetmap.josm.tools.Pair;
  * The Class OsmUtils provides some utilities not provided by the OSM data framework.
  */
 public class OsmUtils {
-	
+
 	/**
 	 * Instantiates a new osm utils.
 	 */
 	private OsmUtils() {}
-	
+
 	/** The cached locale. */
 	private static String cachedLocale = null;
-	
+
 	/**
 	 * Gets the minimum distance of single coordinate to a way.
 	 *
@@ -51,14 +51,14 @@ public class OsmUtils {
 	 */
 	public static double getMinimumDistanceToWay(LatLon coor, Way w) {
 		if (coor == null || w == null) return Double.POSITIVE_INFINITY;
-		
+
 		double minDist = Double.MAX_VALUE;
 		List<Pair<Node,Node>> x = w.getNodePairs(true);
-		
+
 		for (Pair<Node, Node> pair : x) {
 			LatLon ap = pair.a.getCoor();
 			LatLon bp = pair.b.getCoor();
-			
+
 			double dist = findMinimum(ap, bp, coor);
 			if (dist < minDist) {
 				minDist = dist;
@@ -66,7 +66,7 @@ public class OsmUtils {
 		}
 		return minDist;
 	}
-	
+
 	/**
 	 * Find the minimum distance between a point and two way coordinates recursively.
 	 *
@@ -79,21 +79,21 @@ public class OsmUtils {
 		CheckParameterUtil.ensureParameterNotNull(c, "c");
 		CheckParameterUtil.ensureParameterNotNull(b, "b");
 		CheckParameterUtil.ensureParameterNotNull(a, "a");
-		
+
 		LatLon mid = new LatLon((a.lat() + b.lat()) / 2, (a.lon() + b.lon()) / 2);
-		
+
 		double ac = a.greatCircleDistance(c);
 		double bc = b.greatCircleDistance(c);
 		double mc = mid.greatCircleDistance(c);
-		
+
 		double min = Math.min(Math.min(ac, mc), bc);
-		
-				
+
+
 		if (min < 5.0) { // close enough?
 			return min;
 		}
-		
-		if (mc < ac && mc < bc) { 
+
+		if (mc < ac && mc < bc) {
 			// mid point has lower distance than a and b
 			if (ac > bc) { // recurse
 				return findMinimum(b, mid, c);
@@ -104,12 +104,12 @@ public class OsmUtils {
 			return Math.min(ac, bc);
 		}
 	}
-	
+
 	/**
 	 * Checks, if the given address has a relation hosting the address values. This method looks
 	 * for a relation of type 'associatedStreet' and checks the members for address values, if present.
 	 * If the member has address values, this methods sets the derived properties of the address
-	 * node accordingly. 
+	 * node accordingly.
 	 *
 	 * @param address The address to check.
 	 * @return true, if an associated relation has been found.
@@ -118,22 +118,22 @@ public class OsmUtils {
 		if (address == null) {
 			return false;
 		}
-		
+
 		boolean hasValuesFromRel = false; /* true, if we applied some address props from the relation */
 		OsmPrimitive addrNode = address.getOsmObject();
-		
+
 		// check all referrers of the node
 		for (OsmPrimitive osm : addrNode.getReferrers()) {
 			if (osm instanceof Relation) {
 				Relation r = (Relation) osm;
 				// Relation has the right type?
 				if (!TagUtils.isAssociatedStreetRelation(r)) continue;
-				
-				// check for 'street' members 
+
+				// check for 'street' members
 				for (RelationMember rm : r.getMembers()) {
 					if (TagUtils.isStreetMember(rm)) {
 						OsmPrimitive street = rm.getMember();
-						if (TagUtils.hasHighwayTag(street)) {							
+						if (TagUtils.hasHighwayTag(street)) {
 							String streetName = TagUtils.getNameValue(street);
 							if (!StringUtils.isNullOrEmpty(streetName)) {
 								// street name found -> set property
@@ -141,10 +141,10 @@ public class OsmUtils {
 								hasValuesFromRel = true;
 								break;
 							} // else: Street has no name: Ooops
-						} // else: Street member, but no highway tag: Ooops						
+						} // else: Street member, but no highway tag: Ooops
 					}
 				}
-				
+
 				// Check for other address properties
 				if (TagUtils.hasAddrCityTag(r)) { // city
 					address.setDerivedValue(TagUtils.ADDR_CITY_TAG, TagUtils.getAddrCityValue(r));
@@ -162,7 +162,7 @@ public class OsmUtils {
 		}
 		return hasValuesFromRel;
 	}
-	
+
 	/**
 	 * Gets the tag values from an address interpolation ref, if present.
 	 *
@@ -171,9 +171,9 @@ public class OsmUtils {
 	 */
 	public static boolean getValuesFromAddressInterpolation(OSMAddress address) {
 		if (address == null) return false;
-		
+
 		OsmPrimitive osmAddr = address.getOsmObject();
-		
+
 		for (OsmPrimitive osm : osmAddr.getReferrers()) {
 			if (osm instanceof Way) {
 				Way w = (Way) osm;
@@ -187,10 +187,10 @@ public class OsmUtils {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Gets the local code as string.
 	 *
@@ -204,7 +204,7 @@ public class OsmUtils {
 		}
 		return cachedLocale;
 	}
-	
+
 	/**
 	 * Zooms to the given addresses.
 	 *
@@ -212,22 +212,22 @@ public class OsmUtils {
 	 */
 	public static void zoomAddresses(List<OSMAddress> addressList) {
 		CheckParameterUtil.ensureParameterNotNull(addressList, "addressList");
-		
-		if (Main.map == null && Main.map.mapView == null) return; 	// nothing to do
-		if (addressList.size() == 0) return;						// dto.
-			
+
+		if (Main.map == null && Main.map.mapView == null) return;   // nothing to do
+		if (addressList.size() == 0) return;                        // dto.
+
 		// compute bounding box
 		BoundingXYVisitor bbox = new BoundingXYVisitor();
-        for (OSMAddress source : addressList) {
-        	OsmPrimitive osm = source.getOsmObject();
-        	Bounds b = new Bounds(osm.getBBox().getTopLeft(), osm.getBBox().getBottomRight());
-            bbox.visit(b);
-        }
-        
-        if (bbox.getBounds() != null) {
-        	// 	zoom to calculated bounding box        
-        	Main.map.mapView.zoomTo(bbox.getBounds());
-        }
+		for (OSMAddress source : addressList) {
+			OsmPrimitive osm = source.getOsmObject();
+			Bounds b = new Bounds(osm.getBBox().getTopLeft(), osm.getBBox().getBottomRight());
+			bbox.visit(b);
+		}
+
+		if (bbox.getBounds() != null) {
+			//  zoom to calculated bounding box
+			Main.map.mapView.zoomTo(bbox.getBounds());
+		}
 	}
 
 	/**
@@ -240,8 +240,8 @@ public class OsmUtils {
 	private static void applyDerivedValue(OSMAddress address, Way w, String tag) {
 		CheckParameterUtil.ensureParameterNotNull(address, "address");
 		CheckParameterUtil.ensureParameterNotNull(w, "way");
-		
-		if (!address.hasTag(tag) && TagUtils.hasTag(w, tag)) {						
+
+		if (!address.hasTag(tag) && TagUtils.hasTag(w, tag)) {
 			address.setDerivedValue(tag, w.get(tag));
 		}
 	}

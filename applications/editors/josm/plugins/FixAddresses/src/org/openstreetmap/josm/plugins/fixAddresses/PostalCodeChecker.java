@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -23,31 +23,31 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class PostalCodeChecker {
 	private static HashMap<String, String> postalCodePatternMap = new HashMap<String, String>();
-	
+
 	static {
 		fillMap();
 	}
-	
+
 	/**
 	 * Checks if given address has a valid postal code.
 	 *
 	 * @param address the address to check the postal code for
-	 * @return true, if postal code is valid (this implies 
+	 * @return true, if postal code is valid (this implies
 	 * also that a country is NOT supported); otherwise false.
 	 */
 	public static boolean hasValidPostalCode(OSMAddress address) {
 		CheckParameterUtil.ensureParameterNotNull(address, "address");
-		
+
 		if (!address.hasPostalCode()) {
 			return false; // no postal code available
 		}
-		
+
 		String ctry = getCountry(address);
 		String postalCode = address.getPostalCode();
-		
+
 		return hasValidPostalCode(ctry, postalCode);
 	}
-	
+
 	/**
 	 * Checks if postal code is valid for the country reported by the Java VM.
 	 *
@@ -67,16 +67,16 @@ public class PostalCodeChecker {
 	 */
 	public static boolean hasValidPostalCode(String country, String postalCode) {
 		// Get country-specific pattern for postal code
-		if (postalCodePatternMap.containsKey(country)) {			
+		if (postalCodePatternMap.containsKey(country)) {
 			String pattern = postalCodePatternMap.get(country);
 			// Check if postal code matches pattern
 			return postalCode.matches(pattern);
 		} else {
 			// we cannot validate; assume postal code as valid until we know better
-			return true; 
+			return true;
 		}
 	}
-	
+
 	/**
 	 * Checks if validation for the given country is supported.
 	 *
@@ -87,7 +87,7 @@ public class PostalCodeChecker {
 		CheckParameterUtil.ensureParameterNotNull(country, "country");
 		return postalCodePatternMap.containsKey(country.toUpperCase());
 	}
-	
+
 	/**
 	 * Checks if validation for the given address is supported.
 	 *
@@ -96,11 +96,11 @@ public class PostalCodeChecker {
 	 */
 	public static boolean isValidationSupported(OSMAddress address) {
 		CheckParameterUtil.ensureParameterNotNull(address, "address");
-				
+
 		String ctry = getCountry(address);
 		return postalCodePatternMap.containsKey(ctry);
 	}
-	
+
 	/**
 	 * Gets the current country.
 	 *
@@ -125,40 +125,40 @@ public class PostalCodeChecker {
 		}
 		return ctry;
 	}
-	
+
 	/**
 	 * Fills the country-postal code pattern map.
 	 */
 	private static void fillMap() {
 		/*
 		String[] countries = Locale.getISOCountries();
-		
+
 		for (int i = 0; i < countries.length; i++) {
 			System.out.println("//postalCodePatternMap.put(\"" + countries[i] + "\", \"[0-9]{5}\");");
 		}
-		
+
 		String x = "A9999AAA";
-		
+
 		if (x.matches("[A-Z]{1}[0-9]{4}[A-Z]{3}")) {
 			System.out.println("YES");
 		}
-		
+
 		String xx = "99999-999";
-		// "[0-9]{5}\-[0-9]{3}"); // 
+		// "[0-9]{5}\-[0-9]{3}"); //
 		if (xx.matches("[0-9]{5}-[0-9]{3}")) {
 			System.out.println("YES");
 		}
-		
-		
-		String[] xxx = new String[]{"A9 9AA", "A99 9AA", "A9A 9AA",	"AA9 9AA", "AA99 9AA", "AA9A 9AA"};
+
+
+		String[] xxx = new String[]{"A9 9AA", "A99 9AA", "A9A 9AA", "AA9 9AA", "AA99 9AA", "AA9A 9AA"};
 		for (int i = 0; i < xxx.length; i++) {
 			if (!xxx[i].matches("[A-Z]{1,2}[0-9]{1,2}[A-Z]? [0-9]{1}[A-Z]{2}")) {
 				System.err.println(xxx[i]);
 			}
 		}*/
 		// see http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html for country codes
-		// 
-		
+		//
+
 		//postalCodePatternMap.put("AD", "[0-9]{5}");
 		//postalCodePatternMap.put("AE", "[0-9]{5}");
 		//postalCodePatternMap.put("AF", "[0-9]{5}");

@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
@@ -31,9 +31,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
 
 /**
- * Applies the guessed values for a set of addresses. 
+ * Applies the guessed values for a set of addresses.
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
  */
 
 @SuppressWarnings("serial")
@@ -42,15 +42,15 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	/**
 	 * Instantiates a new "apply all guesses" action.
 	 */
-	public ApplyAllGuessesAction(String tag) {	
+	public ApplyAllGuessesAction(String tag) {
 		super(tr("Apply"), "applyguesses_24", tr("Turns all guesses into the corresponding tag values."));
 		this.tag = tag;
 	}
-	
+
 	/**
 	 * Instantiates a new "apply all guesses" action.
 	 */
-	public ApplyAllGuessesAction() {	
+	public ApplyAllGuessesAction() {
 		this(null);
 	}
 
@@ -60,12 +60,12 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null) return;
-		
+
 		if (ev.getSelectedUnresolvedAddresses() != null) {
 			List<OSMAddress> addrToFix = ev.getSelectedUnresolvedAddresses();
 			applyGuesses(addrToFix);
 		}
-		
+
 		if (ev.getSelectedIncompleteAddresses() != null) {
 			List<OSMAddress> addrToFix = ev.getSelectedIncompleteAddresses();
 			applyGuesses(addrToFix);
@@ -90,7 +90,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		List<OSMAddress> addrToFixShadow = new ArrayList<OSMAddress>(addrToFix);
 		for (OSMAddress aNode : addrToFixShadow) {
 			beginObjectTransaction(aNode);
-			
+
 			if (StringUtils.isNullOrEmpty(tag)) { // tag given?
 				aNode.applyAllGuesses(); // no -> apply all guesses
 			} else { // apply guessed values for single tag only
@@ -115,10 +115,10 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null || container.getNumberOfIncompleteAddresses() == 0) return;
-		
+
 		List<OSMAddress> addrToFix = container.getUnresolvedAddresses();
-		applyGuesses(addrToFix);		
-		
+		applyGuesses(addrToFix);
+
 		addrToFix = container.getIncompleteAddresses();
 		applyGuesses(addrToFix);
 	}
@@ -130,7 +130,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	public void mouseClicked(MouseEvent e) {
 		JTable table = (JTable)e.getSource();
 		Point p = e.getPoint();
-		if(e.getClickCount() == 2) {						
+		if(e.getClickCount() == 2) {
 			AddressEditTableModel model = (AddressEditTableModel) table.getModel();
 			if (model != null) {
 				int row = table.rowAtPoint(p);
@@ -139,9 +139,9 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 					beginTransaction(tr("Applied guessed values for ") + node.getOsmObject());
 					beginObjectTransaction(node);
 					OSMAddress aNode = (OSMAddress) node;
-										
+
 					aNode.applyAllGuesses();
-					
+
 					finishObjectTransaction(node);
 					finishTransaction();
 				}

@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses.gui;
@@ -58,7 +58,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	private GuessAddressDataAction guessDataAction = new GuessAddressDataAction();
 	private ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
 	private RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
-	
+
 	// Array containing the available actions
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
 			selectAction,
@@ -69,14 +69,14 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 
 
 	private JTable incompleteAddr;
-	
+
 	/**
 	 * Instantiates a new "incomplete addresses" dialog.
 	 *
 	 */
 	public IncompleteAddressesDialog() {
 		super(FIXED_DIALOG_TITLE, "incompleteaddress_24", tr("Show incomplete addresses"), null, 150);
-		
+
 		this.container = new AddressEditContainer();
 		container.addChangedListener(this);
 		// Top-level panel
@@ -84,32 +84,32 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		// Table containing address entities
 		IncompleteAddressesTableModel model = new IncompleteAddressesTableModel(container);
 		incompleteAddr = new JTable(model);
-	    JTableHeader header = incompleteAddr.getTableHeader();
+		JTableHeader header = incompleteAddr.getTableHeader();
 		header.addMouseListener(model.new ColumnListener(incompleteAddr));
 		incompleteAddr.getSelectionModel().addListSelectionListener(this);
-		
+
 		// Scroll pane hosting the table
 		JScrollPane sp = new JScrollPane(incompleteAddr);
 		p.add(sp, BorderLayout.CENTER);
 		this.add(p);
-		
+
 		// Button panel containing the commands
 		JPanel buttonPanel = getButtonPanel(actions.length);
-		
+
 		// Populate panel with actions
 		for (int i = 0; i < actions.length; i++) {
 			SideButton sb = new SideButton(actions[i]);
 			buttonPanel.add(sb);
 		}
-		
+
 		this.add(buttonPanel, BorderLayout.SOUTH);
-		
+
 		// Link actions with address container
 		for (AbstractAddressEditAction action : actions) {
 			action.setContainer(container);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#hideNotify()
 	 */
@@ -132,7 +132,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#dataChanged(org.openstreetmap.josm.data.osm.event.DataChangedEvent)
 	 */
 	@Override
-	public void dataChanged(DataChangedEvent event) {		
+	public void dataChanged(DataChangedEvent event) {
 		container.invalidate();
 	}
 
@@ -141,7 +141,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void nodeMoved(NodeMovedEvent event) {
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -150,7 +150,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void otherDatasetChange(AbstractDatasetChangedEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -159,7 +159,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void primtivesAdded(PrimitivesAddedEvent event) {
 		container.invalidate();
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -167,7 +167,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void primtivesRemoved(PrimitivesRemovedEvent event) {
-		container.invalidate();		
+		container.invalidate();
 	}
 
 	/* (non-Javadoc)
@@ -175,7 +175,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void relationMembersChanged(RelationMembersChangedEvent event) {
-		container.invalidate();		
+		container.invalidate();
 	}
 
 	/* (non-Javadoc)
@@ -184,7 +184,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void tagsChanged(TagsChangedEvent event) {
 		container.invalidate();
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -192,7 +192,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void wayNodesChanged(WayNodesChangedEvent event) {
-		container.invalidate();		
+		container.invalidate();
 	}
 
 	/* (non-Javadoc)
@@ -201,11 +201,11 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		AddressEditSelectionEvent event = new AddressEditSelectionEvent(e, null, null, incompleteAddr, container);
-		
+
 		for (AbstractAddressEditAction action : actions) {
 			action.setEvent(event);
-		}	
-		
+		}
+
 		OsmUtils.zoomAddresses(event.getSelectedIncompleteAddresses());
 	}
 
@@ -217,7 +217,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
 			setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
 		} else {
-			setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));			
+			setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));
 		}
 	}
 
@@ -227,6 +227,6 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void entityChanged(IOSMEntity node) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

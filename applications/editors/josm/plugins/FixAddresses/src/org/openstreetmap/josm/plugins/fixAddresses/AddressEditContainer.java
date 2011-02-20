@@ -1,27 +1,27 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -57,55 +57,55 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * Provides a container serving streets and unresolved/incomplete addresses. It scans through a
  * set of OSM primitives and checks for incomplete addresses (e. g. missing addr:... tags) or
  * addresses with unknown streets ("unresolved addresses").
- * 
- * It listens to changes within instances of {@link IOSMEntity} to notify clients on update. 
- * 
+ *
+ * It listens to changes within instances of {@link IOSMEntity} to notify clients on update.
+ *
  * {@link AddressEditContainer} is the central class used within actions and UI models to show
  * and alter OSM data.
- * 
+ *
  * {@see AbstractAddressEditAction}
  * {@see AddressEditTableModel}
- *  
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
  */
 
 public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
-	
+
 	private Collection<? extends OsmPrimitive> workingSet;
 	/** The street dictionary collecting all streets to a set of unique street names. */
 	private HashMap<String, OSMStreet> streetDict = new HashMap<String, OSMStreet>(100);
-	
+
 	/** The unresolved addresses list. */
 	private List<OSMAddress> unresolvedAddresses = new ArrayList<OSMAddress>(100);
-	
+
 	/** The incomplete addresses list. */
 	private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>(100);
-	
+
 	/** The shadow copy to assemble the street dict during update. */
 	private HashMap<String, OSMStreet> shadowStreetDict = new HashMap<String, OSMStreet>(100);
 	/** The shadow copy to assemble the unresolved addresses during update. */
 	private List<OSMAddress> shadowUnresolvedAddresses = new ArrayList<OSMAddress>(100);
 	/** The shadow copy to assemble the incomplete addresses during update. */
 	private List<OSMAddress> shadowIncompleteAddresses = new ArrayList<OSMAddress>(100);
-	
+
 	/** The visited nodes cache to increase iteration speed. */
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
 	/** The visited ways cache to increase iteration speed. */
-	private HashSet<Way> visitedWays = new HashSet<Way>();	
+	private HashSet<Way> visitedWays = new HashSet<Way>();
 	/** The tag list used within the data area. */
 	private HashSet<String> tags = new HashSet<String>();
 	/** The tag list used within the data area. */
 	private HashMap<String, String> values = new HashMap<String, String>();
-	
+
 	/** The list containing the problems */
 	private List<IProblem> problems = new ArrayList<IProblem>();
-	
+
 	/** The change listeners. */
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
-	
+
 	/**
-	 * Creates an empty container. 
+	 * Creates an empty container.
 	 */
 	public AddressEditContainer() {
 		OSMEntityBase.addChangedListener(this);
@@ -129,7 +129,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public void addChangedListener(IAddressEditContainerListener listener) {
 		listeners.add(listener);
 	}
-	
+
 	/**
 	 * Removes a change listener.
 	 * @param listener
@@ -137,33 +137,33 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public void removeChangedListener(IAddressEditContainerListener listener) {
 		listeners.remove(listener);
 	}
-	
+
 	/**
 	 * Notifies clients that the address container changed.
 	 */
 	protected void fireContainerChanged() {
-		List<IAddressEditContainerListener> shadowListeners = 
+		List<IAddressEditContainerListener> shadowListeners =
 			new ArrayList<IAddressEditContainerListener>(listeners);
-		
+
 		for (IAddressEditContainerListener listener : shadowListeners) {
 			listener.containerChanged(this);
 		}
 	}
-	
+
 	/**
 	 * Notifies clients that an entity within the address container changed.
 	 */
 	protected void fireEntityChanged(IOSMEntity entity) {
 		if (entity == null) throw new RuntimeException("Entity must not be null");
-		
-		List<IAddressEditContainerListener> shadowListeners = 
+
+		List<IAddressEditContainerListener> shadowListeners =
 			new ArrayList<IAddressEditContainerListener>(listeners);
-		
+
 		for (IAddressEditContainerListener listener : shadowListeners) {
 			listener.entityChanged(entity);
 		}
 	}
-	
+
 	/**
 	 * Marks an OSM node as visited.
 	 *
@@ -172,7 +172,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private void markNodeAsVisited(Node n) {
 		visitedNodes.add(n);
 	}
-	
+
 	/**
 	 * Checks a node for been visited.
 	 *
@@ -182,7 +182,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private boolean hasBeenVisited(Node n) {
 		return visitedNodes.contains(n);
 	}
-	
+
 	/**
 	 * Marks a way as visited.
 	 *
@@ -191,7 +191,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private void markWayAsVisited(Way w) {
 		visitedWays.add(w);
 	}
-	
+
 	/**
 	 * Checks a way for been visited.
 	 *
@@ -201,7 +201,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private boolean hasBeenVisited(Way w) {
 		return visitedWays.contains(w);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
 	 */
@@ -214,26 +214,26 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		OSMAddress aNode = null;
 		// Address nodes are recycled in order to keep instance variables like guessed names
 		aNode = OsmFactory.createNode(n);
-						
+
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
 			aNode.visit(this, this);
-		} 
+		}
 		markNodeAsVisited(n);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Way)
 	 */
 	@Override
 	public void visit(Way w) {
-		// This doesn't matter, we just need the street name 
+		// This doesn't matter, we just need the street name
 		//if (w.isIncomplete()) return;
-		
+
 		if (hasBeenVisited(w)) {
 			return;
 		}
-		
+
 		createNodeFromWay(w);
 		markWayAsVisited(w);
 	}
@@ -245,7 +245,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private void addAndClassifyAddress(OSMAddress aNode) {
 		if (!assignAddressToStreet(aNode)) {
-			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
+			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list
 			shadowUnresolvedAddresses.add(aNode);
 		}
 
@@ -261,7 +261,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private void createNodeFromWay(Way w) {
 		IOSMEntity ne = OsmFactory.createNodeFromWay(w);
-		
+
 		if (!processNode(ne, w)) {
 			// Look also into nodes for addresses (unlikely, but at least they
 			// get marked as visited).
@@ -273,7 +273,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 				if (!tags.contains(key)) {
 					tags.add(key);
 				}
-				
+
 				String v = w.get(key);
 				if (!values.containsKey(v)) {
 					values.put(v, key);
@@ -285,7 +285,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/**
 	 * Process an entity node depending on the type. A street segment is added as a child to the
 	 * corresponding street dictionary while an address is added to the incomplete/unresolved list
-	 * depending of it's properties. 
+	 * depending of it's properties.
 	 *
 	 * @param ne the entity node.
 	 * @param w the corresponding OSM way
@@ -320,7 +320,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 				}
 			}
 
-			// Node is an address 
+			// Node is an address
 			if (ne instanceof OSMAddress) {
 				OSMAddress aNode = (OSMAddress) ne;
 				addAndClassifyAddress(aNode);
@@ -351,7 +351,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public HashMap<String, OSMStreet> getStreetDict() {
 		return streetDict;
 	}
-	
+
 	/**
 	 * Gets the unresolved (addresses without valid street name) addresses.
 	 *
@@ -375,7 +375,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 *
 	 * @return the street list
 	 */
-	public List<OSMStreet> getStreetList() {		
+	public List<OSMStreet> getStreetList() {
 		ArrayList<OSMStreet> sortedList = new ArrayList<OSMStreet>(streetDict.values());
 		Collections.sort(sortedList);
 		return sortedList;
@@ -396,7 +396,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public HashSet<String> getTags() {
 		return tags;
 	}
-		
+
 	/**
 	 * @return the values
 	 */
@@ -411,7 +411,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfStreets() {
 		return streetDict != null ? streetDict.size() : 0;
 	}
-	
+
 	/**
 	 * Get the number of incomplete addresses.
 	 * @return
@@ -419,7 +419,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfIncompleteAddresses() {
 		return incompleteAddresses != null ? incompleteAddresses.size() : 0;
 	}
-	
+
 	/**
 	 * Gets the number of unresolved addresses.
 	 * @return
@@ -427,7 +427,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfUnresolvedAddresses() {
 		return unresolvedAddresses != null ? unresolvedAddresses.size() : 0;
 	}
-	
+
 	/**
 	 * Gets the number of invalid (unresolved and/or incomplete) addresses.
 	 *
@@ -436,14 +436,14 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfInvalidAddresses() {
 		return getNumberOfIncompleteAddresses() + getNumberOfUnresolvedAddresses();
 	}
-	
+
 	/**
 	 * Gets the number of guessed tags.
 	 * @return
 	 */
 	public int getNumberOfGuesses() {
 		int sum = 0;
-				
+
 		for (OSMAddress aNode : getAllAddressesToFix()) {
 			if (aNode.hasGuesses()) {
 				sum++;
@@ -451,7 +451,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 		return sum;
 	}
-	
+
 	/**
 	 * Gets all (incomplete and/or unresolved) address nodes to fix.
 	 * @return
@@ -464,17 +464,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 				all.add(aNode);
 			}
 		}
-		
-		return all; 
+
+		return all;
 	}
-	
+
 	/**
 	 * @return the problems
 	 */
 	protected List<IProblem> getProblems() {
 		return problems;
 	}
-	
+
 	/**
 	 * Clears the problem list.
 	 */
@@ -488,16 +488,16 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private boolean assignAddressToStreet(OSMAddress aNode) {
 		String streetName = aNode.getStreetName();
-		
+
 		if (streetName != null && shadowStreetDict.containsKey(streetName)) {
 			OSMStreet sNode = shadowStreetDict.get(streetName);
 			sNode.addAddress(aNode);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Walks through the list of unassigned addresses and tries to assign them to streets.
 	 */
@@ -506,19 +506,19 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		for (OSMAddress node : shadowUnresolvedAddresses) {
 			if (assignAddressToStreet(node)) {
 				resolvedAddresses.add(node);
-			} 
+			}
 		}
-		
+
 		/* Remove all resolves nodes from unresolved list */
 		for (OSMAddress resolved : resolvedAddresses) {
 			shadowUnresolvedAddresses.remove(resolved);
 		}
 	}
-	
+
 	/**
 	 * Rebuilds the street and address lists using the data set given
-	 * in  {@link AddressEditContainer#attachToDataSet(Collection)} or the 
-	 * full data set of the current data layer {@link Main#getCurrentDataSet()}. 
+	 * in  {@link AddressEditContainer#attachToDataSet(Collection)} or the
+	 * full data set of the current data layer {@link Main#getCurrentDataSet()}.
 	 */
 	public void invalidate() {
 		if (workingSet != null) {
@@ -529,7 +529,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 		}
 	}
-	
+
 	/**
 	 * Invalidate using the given data collection.
 	 *
@@ -542,7 +542,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		synchronized (this) {
 			clearData();
 			clearProblems();
-			
+
 			for (OsmPrimitive osmPrimitive : osmData) {
 				osmPrimitive.visit(this);
 			}
@@ -560,12 +560,12 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			shadowStreetDict.clear();
 			shadowUnresolvedAddresses.clear();
 			shadowIncompleteAddresses.clear();
-			
+
 			// update clients
 			fireContainerChanged();
 		}
 	}
-	
+
 	/**
 	 * Clears the shadowed lists data and resets the 'visited' flag for every OSM object.
 	 */
@@ -576,19 +576,19 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		visitedNodes.clear();
 		visitedWays.clear();
 	}
-	
+
 	/**
 	 * Connects the listener to the given data set and revisits the data. This method should
 	 * be called immediately after an edit session finished.
-	 * 
+	 *
 	 * If the given data set is not null, calls of {@link AddressEditContainer#invalidate()} will
 	 * only consider the data given within this set. This can be useful to keep out unimportant
 	 * areas. However, a side-effect could be that some streets are not included and leads to
 	 * false alarms regarding unresolved addresses.
-	 * 
+	 *
 	 * Calling {@link AddressEditContainer#detachFromDataSet()} drops the explicit data set and uses
 	 * the full data set on subsequent updates.<p>
-	 * 
+	 *
 	 * <b>Example</b><br>
 	 * <code>
 	 * attachToDataSet(osmDataSetToWorkOn); // osmDataSetToWorkOn = selected items<br>
@@ -599,21 +599,21 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * @param osmDataToWorkOn the data to examine
 	 */
 	public void attachToDataSet(Collection<? extends OsmPrimitive> osmDataToWorkOn) {
-		if (osmDataToWorkOn != null && !osmDataToWorkOn.isEmpty()) {			
+		if (osmDataToWorkOn != null && !osmDataToWorkOn.isEmpty()) {
 			workingSet = new ArrayList<OsmPrimitive>(osmDataToWorkOn);
 		} else {
 			detachFromDataSet(); // drop old stuff, if present
 		}
 		invalidate(); // start our investigation...
 	}
-	
+
 	/**
 	 * Disconnects the listener from the data set. This method should
-	 * be called immediately before an edit session started in order to 
+	 * be called immediately before an edit session started in order to
 	 * prevent updates caused by e. g. a selection change within the map view.
 	 */
 	public void detachFromDataSet() {
-		//Main.main.getCurrentDataSet().removeDataSetListener(this);		
+		//Main.main.getCurrentDataSet().removeDataSetListener(this);
 		if (workingSet != null) {
 			workingSet.clear();
 			workingSet = null;
@@ -632,7 +632,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	@Override
 	public void nodeMoved(NodeMovedEvent event) {
-				
+
 	}
 
 	/* (non-Javadoc)
@@ -670,7 +670,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	@Override
 	public void tagsChanged(TagsChangedEvent event) {
-		invalidate();		
+		invalidate();
 	}
 
 	/* (non-Javadoc)
@@ -693,9 +693,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	@Override
 	public void entityChanged(IOSMEntity entity) {
-		fireEntityChanged(entity);	
+		fireEntityChanged(entity);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor#addProblem(org.openstreetmap.josm.plugins.fixAddresses.IProblem)
 	 */
@@ -710,14 +710,14 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	@Override
 	public void removeProblemsOfSource(IOSMEntity entity) {
 		CheckParameterUtil.ensureParameterNotNull(entity, "entity");
-		
+
 		List<IProblem> problemsToRemove = new ArrayList<IProblem>();
 		for (IProblem problem : problems) {
 			if (problem.getSource() == entity) {
 				problemsToRemove.add(problem);
 			}
 		}
-		
+
 		for (IProblem iProblem : problemsToRemove) {
 			problems.remove(iProblem);
 		}
@@ -729,11 +729,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	@Override
 	public String getClosestStreetName(String name) {
 		List<String> matches = getClosestStreetNames(name, 1);
-		
+
 		if (matches != null && matches.size() > 0) {
 			return matches.get(0);
 		}
-		
+
 		return null;
 	}
 
@@ -743,32 +743,32 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	@Override
 	public List<String> getClosestStreetNames(String name, int maxEntries) {
 		CheckParameterUtil.ensureParameterNotNull(name, "name");
-		
+
 		// ensure right number of entries
 		if (maxEntries < 1) maxEntries = 1;
-		
+
 		List<StreetScore> scores = new ArrayList<StreetScore>();
 		List<String> matches = new ArrayList<String>();
-		
+
 		// Find the longest common sub string
-		for (String	streetName : streetDict.keySet()) {
+		for (String streetName : streetDict.keySet()) {
 			int score = StringUtils.lcsLength(name, streetName);
-			
+
 			if (score > 3) { // reasonable value?
 				StreetScore sc = new StreetScore(streetName, score);
 				scores.add(sc);
 			}
 		}
-		
+
 		// sort by score
 		Collections.sort(scores);
-		
+
 		// populate result list
 		int n = Math.min(maxEntries, scores.size());
 		for (int i = 0; i < n; i++) {
 			matches.add(scores.get(i).getName());
 		}
-		
+
 		return matches;
 	}
 
@@ -778,17 +778,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	@Override
 	public boolean isValidStreetName(String name) {
 		if (streetDict == null) return false;
-		
+
 		return streetDict.containsKey(name);
 	}
-	
+
 	/**
 	 * Internal class to handle results of {@link AddressEditContainer#getClosestStreetNames(String, int)}.
 	 */
 	private class StreetScore implements Comparable<StreetScore> {
 		private String name;
 		private int score;
-		
+
 		/**
 		 * @param name Name of the street.
 		 * @param score Score of the street (length of longest common substring)
@@ -816,7 +816,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		@Override
 		public int compareTo(StreetScore arg0) {
 			if (arg0 == null) return 1;
-			
+
 			return new Integer(score).compareTo(new Integer(arg0.score));
 		}
 	}

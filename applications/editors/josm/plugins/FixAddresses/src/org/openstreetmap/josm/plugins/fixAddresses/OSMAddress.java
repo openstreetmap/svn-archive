@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -23,21 +23,21 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTags
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * The class OSMAddress represents a single address node of OSM. It is a lightweight 
+ * The class OSMAddress represents a single address node of OSM. It is a lightweight
  * wrapper for a OSM node in order to simplify tag handling.
  */
 public class OSMAddress extends OSMEntityBase {
 	public static final String MISSING_TAG = "?";
 	public static final String INTERPOLATION_TAG = "x..y";
-	
-	
-	/** True, if address is part of an address interpolation. */ 
-	private boolean isPartOfInterpolation;	
+
+
+	/** True, if address is part of an address interpolation. */
+	private boolean isPartOfInterpolation;
 	/**
-	 * True, if address has derived values from an associated street relation. 
+	 * True, if address has derived values from an associated street relation.
 	 */
 	private boolean isPartOfAssocStreetRel;
-	
+
 	/** The dictionary containing guessed values. */
 	private HashMap<String, String> guessedValues = new HashMap<String, String>();
 	/** The dictionary containing guessed objects. */
@@ -48,38 +48,38 @@ public class OSMAddress extends OSMEntityBase {
 	public OSMAddress(OsmPrimitive osmObject) {
 		super(osmObject);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#setOsmObject(org.openstreetmap.josm.data.osm.OsmPrimitive)
 	 */
 	@Override
 	public void setOsmObject(OsmPrimitive osmObject) {
 		super.setOsmObject(osmObject);
-		
-		isPartOfInterpolation = OsmUtils.getValuesFromAddressInterpolation(this);		
+
+		isPartOfInterpolation = OsmUtils.getValuesFromAddressInterpolation(this);
 		isPartOfAssocStreetRel = OsmUtils.getValuesFromRelation(this);
 	}
-	
+
 	/**
 	 * Checks if the underlying address node has all tags usually needed to describe an address.
 	 * @return
 	 */
 	public boolean isComplete() {
-		boolean isComplete = 	hasCity() && 
+		boolean isComplete =    hasCity() &&
 								hasHouseNumber() &&
-							 	(hasPostalCode() && 
-							 	PostalCodeChecker.hasValidPostalCode(this)) && 
-								hasCity() && 
+								(hasPostalCode() &&
+								PostalCodeChecker.hasValidPostalCode(this)) &&
+								hasCity() &&
 								hasStreetName();
-		
+
 		// Check, if "addr:state" is required (US and AU)
 		if (TagUtils.isStateRequired()) {
 			isComplete = isComplete && hasState();
 		}
-		
+
 		return isComplete;
 	}
-	
+
 	/**
 	 * Gets the name of the street associated with this address.
 	 * @return
@@ -87,7 +87,7 @@ public class OSMAddress extends OSMEntityBase {
 	public String getStreetName() {
 		return getTagValueWithGuess(TagUtils.ADDR_STREET_TAG);
 	}
-	
+
 	/**
 	 * Gets the tag value with guess. If the object does not have the given tag, this method looks for
 	 * an appropriate guess. If both, real value and guess, are missing, a question mark is returned.
@@ -98,7 +98,7 @@ public class OSMAddress extends OSMEntityBase {
 	private String getTagValueWithGuess(String tag) {
 		if (StringUtils.isNullOrEmpty(tag)) return MISSING_TAG;
 		if (osmObject == null) return MISSING_TAG;
-		
+
 		if (!osmObject.hasKey(tag) || StringUtils.isNullOrEmpty(osmObject.get(tag))) {
 			if (!hasDerivedValue(tag)) {
 				// object does not have this tag -> check for guess
@@ -108,14 +108,14 @@ public class OSMAddress extends OSMEntityBase {
 					// give up
 					return MISSING_TAG;
 				}
-			} else { // ok, use derived value known via associated relation or way 
+			} else { // ok, use derived value known via associated relation or way
 				return getDerivedValue(tag);
 			}
 		} else { // get existing tag value
-			return osmObject.get(tag);			
+			return osmObject.get(tag);
 		}
 	}
-	
+
 	/**
 	 * Returns <tt>true</tt>, if this address node has a street name.
 	 * @return
@@ -123,7 +123,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasStreetName() {
 		return hasTag(TagUtils.ADDR_STREET_TAG);
 	}
-	
+
 	/**
 	 * Returns the street name guessed by the nearest-neighbor search.
 	 * @return the guessedStreetName
@@ -141,7 +141,7 @@ public class OSMAddress extends OSMEntityBase {
 	public void setGuessedStreetName(String guessedStreetName, OsmPrimitive srcObj) {
 		setGuessedValue(TagUtils.ADDR_STREET_TAG, guessedStreetName, srcObj);
 	}
-	
+
 	/**
 	 * Checks for a guessed street name.
 	 *
@@ -150,7 +150,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasGuessedStreetName() {
 		return hasGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
-	
+
 	/**
 	 * @return the guessedPostCode
 	 */
@@ -167,7 +167,7 @@ public class OSMAddress extends OSMEntityBase {
 	public void setGuessedPostalCode(String guessedPostCode, OsmPrimitive srcObj) {
 		setGuessedValue(TagUtils.ADDR_POSTCODE_TAG, guessedPostCode, srcObj);
 	}
-	
+
 	/**
 	 * Checks for a guessed post code.
 	 *
@@ -208,9 +208,9 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public boolean hasGuesses() {
-		return guessedValues.size() > 0; 
+		return guessedValues.size() > 0;
 	}
-	
+
 	/**
 	 * Applies all guessed tags for this node.
 	 */
@@ -218,12 +218,12 @@ public class OSMAddress extends OSMEntityBase {
 		for (String tag : guessedValues.keySet()) {
 			applyGuessForTag(tag);
 		}
-		
+
 		// Clear all guesses
 		guessedValues.clear();
 		guessedObjects.clear();
 	}
-	
+
 	/**
 	 * Apply the guessed value for the given tag.
 	 *
@@ -233,7 +233,7 @@ public class OSMAddress extends OSMEntityBase {
 		if (guessedValues.containsKey(tag)) {
 			String val = guessedValues.get(tag);
 			if (!StringUtils.isNullOrEmpty(val)) {
-				setOSMTag(tag, val);				
+				setOSMTag(tag, val);
 			}
 		}
 	}
@@ -244,14 +244,14 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public String getPostalCode() {
 		String pc = getTagValueWithGuess(TagUtils.ADDR_POSTCODE_TAG);
-		
-		
+
+
 		if (!MISSING_TAG.equals(pc) && !PostalCodeChecker.hasValidPostalCode(getCountry(), pc)) {
 			pc = "(!)" + pc;
 		}
 		return pc;
 	}
-	
+
 	/**
 	 * Checks if this instance has a valid postal code.
 	 *
@@ -260,7 +260,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasValidPostalCode() {
 		return PostalCodeChecker.hasValidPostalCode(this);
 	}
-	
+
 	/**
 	 * Checks for post code tag.
 	 *
@@ -269,7 +269,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasPostalCode() {
 		return hasTag(TagUtils.ADDR_POSTCODE_TAG);
 	}
-	
+
 	/**
 	 * Gets the name of the house number associated with this address.
 	 * @return
@@ -284,7 +284,7 @@ public class OSMAddress extends OSMEntityBase {
 		}
 		return TagUtils.getAddrHousenumberValue(osmObject);
 	}
-	
+
 	/**
 	 * Checks for house number.
 	 *
@@ -293,7 +293,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasHouseNumber() {
 		return TagUtils.hasAddrHousenumberTag(osmObject) || isPartOfInterpolation;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#getName()
 	 */
@@ -302,10 +302,10 @@ public class OSMAddress extends OSMEntityBase {
 		if (!StringUtils.isNullOrEmpty(name)) {
 			return TagUtils.getAddrHousenameValue(osmObject);
 		}
-		
+
 		return "";
 	}
-		
+
 	/**
 	 * Checks if this address is part of a address interpolation.
 	 *
@@ -314,7 +314,7 @@ public class OSMAddress extends OSMEntityBase {
 	protected boolean isPartOfInterpolation() {
 		return isPartOfInterpolation;
 	}
-	
+
 	/**
 	 * Checks if this address is part of an 'associated street' relation.
 	 *
@@ -331,7 +331,7 @@ public class OSMAddress extends OSMEntityBase {
 	public String getCity() {
 		return getTagValueWithGuess(TagUtils.ADDR_CITY_TAG);
 	}
-	
+
 	/**
 	 * Checks for city tag.
 	 *
@@ -340,7 +340,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasCity() {
 		return hasTag(TagUtils.ADDR_CITY_TAG);
 	}
-	
+
 	/**
 	 * Gets the name of the state associated with this address.
 	 * @return
@@ -348,7 +348,7 @@ public class OSMAddress extends OSMEntityBase {
 	public String getState() {
 		return getTagValueWithGuess(TagUtils.ADDR_STATE_TAG);
 	}
-	
+
 	/**
 	 * Checks for state tag.
 	 *
@@ -365,7 +365,7 @@ public class OSMAddress extends OSMEntityBase {
 	public String getCountry() {
 		return getTagValueWithGuess(TagUtils.ADDR_COUNTRY_TAG);
 	}
-	
+
 	/**
 	 * Checks for country tag.
 	 *
@@ -374,7 +374,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasCountry() {
 		return hasTag(TagUtils.ADDR_COUNTRY_TAG);
 	}
-	
+
 	/**
 	 * Removes all address-related tags from the node or way.
 	 */
@@ -386,7 +386,7 @@ public class OSMAddress extends OSMEntityBase {
 		removeOSMTag(TagUtils.ADDR_STATE_TAG);
 		removeOSMTag(TagUtils.ADDR_STREET_TAG);
 	}
-	
+
 	/**
 	 * Checks if the associated OSM object has the given tag or if the tag is available via a referrer.
 	 *
@@ -395,10 +395,10 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public boolean hasTag(String tag) {
 		if (StringUtils.isNullOrEmpty(tag)) return false;
-		
+
 		return TagUtils.hasTag(osmObject, tag) || hasDerivedValue(tag);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#compareTo(org.openstreetmap.josm.plugins.addressEdit.INodeEntity)
 	 */
@@ -408,17 +408,17 @@ public class OSMAddress extends OSMEntityBase {
 			return -1;
 		}
 		OSMAddress other = (OSMAddress) o;
-		
+
 		int cc = 0;
 		cc = this.getCountry().compareTo(other.getCountry());
 		if ( cc  == 0) {
-			cc = this.getState().compareTo(other.getState());			
+			cc = this.getState().compareTo(other.getState());
 			if (cc  == 0) {
-				cc = this.getCity().compareTo(other.getCity());				
+				cc = this.getCity().compareTo(other.getCity());
 				if (cc  == 0) {
-					cc = this.getStreetName().compareTo(other.getStreetName());					
+					cc = this.getStreetName().compareTo(other.getStreetName());
 					if (cc  == 0) {
-						if (hasGuessedStreetName()) {							
+						if (hasGuessedStreetName()) {
 							if (other.hasStreetName()) {
 								// Compare guessed name with the real name
 								cc = this.getGuessedStreetName().compareTo(other.getStreetName());
@@ -440,24 +440,24 @@ public class OSMAddress extends OSMEntityBase {
 				}
 			}
 		}
-		
+
 		return cc;
 	}
-	
+
 	/**
 	 * Applies the street name from the specified street node.
 	 * @param node
 	 */
 	public void assignStreet(OSMStreet node) {
 		if (node == null || !node.hasName()) return;
-		
+
 		if (!node.getName().equals(getStreetName())) {
-			setStreetName(node.getName());			
+			setStreetName(node.getName());
 			node.addAddress(this);
 			fireEntityChanged(this);
 		}
 	}
-	
+
 	/**
 	 * Gets the guessed value for the given tag.
 	 *
@@ -466,13 +466,13 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public String getGuessedValue(String tag) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		
+
 		if (!hasGuessedValue(tag)) {
-			return null;			
+			return null;
 		}
 		return guessedValues.get(tag);
 	}
-	
+
 	/**
 	 * Gets the guessed object.
 	 *
@@ -481,13 +481,13 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public OsmPrimitive getGuessedObject(String tag) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		
+
 		if (guessedObjects.containsKey(tag)) {
 			return guessedObjects.get(tag);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets all guessed objects or an empty list, if no guesses have been made yet.
 	 *
@@ -495,24 +495,24 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public Collection<OsmPrimitive> getGuessedObjects() {
 		if (guessedObjects == null) return null;
-		
+
 		return guessedObjects.values();
 	}
-	
+
 	/**
 	 * Check if this instance needs guessed values. This is the case, if the underlying OSM node
 	 * has either no street name, post code or city.
 	 *
 	 * @return true, if this instance needs at least one guessed value.
 	 */
-	public boolean needsGuess() {		
-		return 	needsGuessedValue(TagUtils.ADDR_CITY_TAG) ||
+	public boolean needsGuess() {
+		return  needsGuessedValue(TagUtils.ADDR_CITY_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_POSTCODE_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_COUNTRY_TAG) ||
 				//needsGuessedValue(TagUtils.ADDR_STATE_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
-	
+
 	/**
 	 * Check if this instance needs guessed value for a given tag.
 	 * @return true, if successful
@@ -520,14 +520,14 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean needsGuessedValue(String tag) {
 		return MISSING_TAG.equals(getTagValueWithGuess(tag));
 	}
-	
+
 	/**
 	 * Clears all guessed values.
 	 */
 	public void clearAllGuesses() {
 		guessedValues.clear();
 	}
-	
+
 	/**
 	 * Checks if given tag has a guessed value (tag exists and has a non-empty value).
 	 *
@@ -536,11 +536,11 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	private boolean hasGuessedValue(String tag) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		
-		return guessedValues.containsKey(tag) && 
+
+		return guessedValues.containsKey(tag) &&
 			!StringUtils.isNullOrEmpty(guessedValues.get(tag));
 	}
-	
+
 	/**
 	 * Sets the guessed value with the given tag.
 	 *
@@ -558,7 +558,7 @@ public class OSMAddress extends OSMEntityBase {
 			fireEntityChanged(this);
 		}
 	}
-	
+
 	/**
 	 * Checks if given tag has a derived value (value is available via a referrer).
 	 *
@@ -567,19 +567,19 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	private boolean hasDerivedValue(String tag) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		
-		return derivedValues.containsKey(tag) && 
+
+		return derivedValues.containsKey(tag) &&
 			!StringUtils.isNullOrEmpty(derivedValues.get(tag));
 	}
-	
+
 	/**
 	 * Returns true, if this instance has derived values from any referrer.
 	 * @return
 	 */
 	public boolean hasDerivedValues() {
-		return derivedValues.size() > 0; 
+		return derivedValues.size() > 0;
 	}
-	
+
 	/**
 	 * Gets the derived value for the given tag.
 	 * @param tag The tag to get the derived value for.
@@ -587,11 +587,11 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public String getDerivedValue(String tag) {
 		if (!hasDerivedValue(tag)) {
-			return null;			
+			return null;
 		}
 		return derivedValues.get(tag);
 	}
-		
+
 	/**
 	 * Sets the value known indirectly via a referrer with the given tag.
 	 *
@@ -599,57 +599,57 @@ public class OSMAddress extends OSMEntityBase {
 	 * @param value the value of the derived tag.
 	 */
 	public void setDerivedValue(String tag, String value) {
-		derivedValues.put(tag, value);		
-	}	
-	
+		derivedValues.put(tag, value);
+	}
+
 	/**
 	 * Sets the street name of the address node.
 	 * @param streetName
 	 */
 	public void setStreetName(String streetName) {
 		if (streetName != null && streetName.length() == 0) return;
-		
+
 		setOSMTag(TagUtils.ADDR_STREET_TAG, streetName);
 	}
 
-	
+
 	/**
 	 * Sets the state of the address node.
 	 * @param state
 	 */
 	public void setState(String state) {
 		if (state != null && state.length() == 0) return;
-		
+
 		setOSMTag(TagUtils.ADDR_STATE_TAG, state);
 	}
-	
+
 	/**
 	 * Sets the country of the address node.
 	 * @param country
 	 */
 	public void setCountry(String country) {
 		if (country != null && country.length() == 0) return;
-		
+
 		setOSMTag(TagUtils.ADDR_COUNTRY_TAG, country);
 	}
-	
+
 	/**
 	 * Sets the post code of the address node.
 	 * @param postCode
 	 */
 	public void setPostCode(String postCode) {
 		if (postCode != null && postCode.length() == 0) return;
-		
+
 		setOSMTag(TagUtils.ADDR_POSTCODE_TAG, postCode);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#visit(org.openstreetmap.josm.plugins.fixAddresses.IProblemVisitor)
 	 */
 	@Override
 	public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor) {
 		CheckParameterUtil.ensureParameterNotNull(visitor, "visitor");
-		
+
 		// Check for street
 		if (!hasStreetName()) {
 			AddressProblem p = new AddressProblem(this, tr("Address has no street"));
@@ -663,14 +663,14 @@ public class OSMAddress extends OSMEntityBase {
 		} else if (!trashHeap.isValidStreetName(getStreetName())) {
 			AddressProblem p = new AddressProblem(this, tr("Address has no valid street"));
 			String match = trashHeap.getClosestStreetName(getStreetName());
-			
+
 			if (!StringUtils.isNullOrEmpty(match)) {
 				setGuessedStreetName(match, null);
 				addGuessValueSolution(p, TagUtils.ADDR_STREET_TAG);
 			}
 			visitor.addProblem(p);
 		}
-		
+
 		// Check for postal code
 		if (!hasPostalCode()) {
 			AddressProblem p = new AddressProblem(this, tr("Address has no post code"));
@@ -681,7 +681,7 @@ public class OSMAddress extends OSMEntityBase {
 			addRemoveAddressTagsSolution(p);
 			visitor.addProblem(p);
 		}
-		
+
 		// Check for city
 		if (!hasCity()) {
 			AddressProblem p = new AddressProblem(this, tr("Address has no city"));
@@ -692,7 +692,7 @@ public class OSMAddress extends OSMEntityBase {
 			addRemoveAddressTagsSolution(p);
 			visitor.addProblem(p);
 		}
-		
+
 		// Check for country
 		if (!hasCountry()) {
 			// TODO: Add guess for country
@@ -710,13 +710,13 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	private void addGuessValueSolution(AddressProblem p, String tag) {
 		AddressSolution s = new AddressSolution(
-				String.format("%s '%s'", tr("Assign to"), getGuessedValue(tag)), 
+				String.format("%s '%s'", tr("Assign to"), getGuessedValue(tag)),
 				new ApplyAllGuessesAction(tag),
 				SolutionType.Change);
-		
+
 		p.addSolution(s);
 	}
-	
+
 	/**
 	 * Adds the remove address tags solution entry to a problem.
 	 *
@@ -724,14 +724,14 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	private void addRemoveAddressTagsSolution(IProblem problem) {
 		CheckParameterUtil.ensureParameterNotNull(problem, "problem");
-		
+
 		AddressSolution s = new AddressSolution(
-						tr("Remove all address tags"), 
+						tr("Remove all address tags"),
 						new RemoveAddressTagsAction(),
 						SolutionType.Remove);
 		problem.addSolution(s);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#toString()
 	 */
@@ -753,9 +753,9 @@ public class OSMAddress extends OSMEntityBase {
 		String sName = node.getStreetName();
 		if (!StringUtils.isNullOrEmpty(guessed) && MISSING_TAG.equals(sName)) {
 			sName = String.format("(%s)", guessed);
-		}	
-		
-		return String.format("%s %s, %s-%s %s (%s) ", 
+		}
+
+		return String.format("%s %s, %s-%s %s (%s) ",
 				sName,
 				node.getHouseNumber(),
 				node.getCountry(),

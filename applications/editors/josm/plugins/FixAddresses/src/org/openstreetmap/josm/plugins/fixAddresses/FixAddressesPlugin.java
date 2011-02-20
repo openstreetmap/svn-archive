@@ -1,14 +1,14 @@
 /**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -26,7 +26,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectIncompleteA
  */
 public class FixAddressesPlugin extends Plugin {
 	private static IncompleteAddressesDialog incompleteAddrDlg;
-	private static FixAddressesPreferences preferences; 
+	private static FixAddressesPreferences preferences;
 
 	/**
 	 * Constructor for the AddressEdit plugin. Called by JOSM when loading the plugin.
@@ -34,18 +34,18 @@ public class FixAddressesPlugin extends Plugin {
 	 */
 	public FixAddressesPlugin(PluginInformation info) {
 		super(info);
-				
+
 		// Create actions...
-		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();		
+		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();
 		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
-		
+
 		// ... and add them to the tools menu in main
 		Main.main.menu.toolsMenu.addSeparator();
-        Main.main.menu.toolsMenu.add(action);
-        Main.main.menu.toolsMenu.add(incAddrAction);
-        
-        // create preferences instance
-        preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();
+		Main.main.menu.toolsMenu.add(action);
+		Main.main.menu.toolsMenu.add(incAddrAction);
+
+		// create preferences instance
+		preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();
 	}
 
 	/* (non-Javadoc)
@@ -55,17 +55,17 @@ public class FixAddressesPlugin extends Plugin {
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		// TODO Auto-generated method stub
 		super.mapFrameInitialized(oldFrame, newFrame);
-		
+
 		if (newFrame != null) {
 			incompleteAddrDlg = new IncompleteAddressesDialog();
-	        FixAddressesMapMode faMode = new FixAddressesMapMode(Main.map);
+			FixAddressesMapMode faMode = new FixAddressesMapMode(Main.map);
 			IconToggleButton faModeButton = new IconToggleButton(faMode);
 			faModeButton.setVisible(true);
-			newFrame.addToggleDialog(incompleteAddrDlg);						
+			newFrame.addToggleDialog(incompleteAddrDlg);
 		}
 	}
-	
-	
+
+
 
 	/**
 	 * @return the incompleteAddrDlg
@@ -73,7 +73,7 @@ public class FixAddressesPlugin extends Plugin {
 	protected static IncompleteAddressesDialog getIncompleteAddrDlg() {
 		return incompleteAddrDlg;
 	}
-	
+
 	/**
 	 * Gets the preferences instance for this plugin.
 	 *

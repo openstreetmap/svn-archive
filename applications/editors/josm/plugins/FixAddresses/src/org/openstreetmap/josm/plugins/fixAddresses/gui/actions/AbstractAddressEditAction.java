@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
@@ -36,12 +36,12 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
  * container or on selection items.
  * Most actions will work in both cases, so it is recommended to have one single method which
  * accepts a list of addresses or streets and executes the tasks to be done by this action.
- *  
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener, ICommandListener {	
+public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener, ICommandListener {
 	private AddressEditSelectionEvent event;
 	protected AddressEditContainer container;
 	protected List<Command> commands;
@@ -53,7 +53,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 */
 	public AbstractAddressEditAction(String name, String iconName, String tooltip) {
 		super(name, iconName, tooltip, null, true);
-		
+
 		setEnabled(false);
 	}
 
@@ -63,7 +63,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	public AbstractAddressEditAction(String name) {
 		this(name, null, "");
 	}
-	
+
 	/**
 	 * Gets the current address container.
 	 * @return the container
@@ -100,19 +100,19 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 		this.event = event;
 		updateEnabledState();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (event != null) { // use the event acquired previously.
-			addressEditActionPerformed(event);	
+			addressEditActionPerformed(event);
 			event = null; // consume event
 		} else {
 			if (container != null) {
 				addressEditActionPerformed(container);
-			} else { 
+			} else {
 				throw new RuntimeException("AbstractAddressEditAction has no container or event");
 			}
 		}
@@ -140,7 +140,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 * @return
 	 */
 	protected abstract void updateEnabledState(AddressEditContainer container);
-	
+
 	/**
 	 * Updates 'enabled' state depending on the current selection.
 	 * @param container The selection event.
@@ -153,14 +153,14 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 * @param ev
 	 */
 	public abstract void addressEditActionPerformed(AddressEditSelectionEvent ev);
-	
+
 	/**
 	 * Redirected action handler for doing actions on an address container.
 	 * @param ev
 	 */
 	public abstract void addressEditActionPerformed(AddressEditContainer container);
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
 	 */
@@ -175,10 +175,10 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	@Override
 	public void entityChanged(IOSMEntity node) {
 		container.removeProblemsOfSource(node); // clear problems of changed node...
-		node.visit(container, container);					// .. and revisit it.
-		updateEnabledState();		
+		node.visit(container, container);                   // .. and revisit it.
+		updateEnabledState();
 	}
-	
+
 	/**
 	 * Begins the transaction (command sequence). Must be called by every subclass before
 	 * any modification on OSM objects starts.
@@ -189,14 +189,14 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 		if (commands != null && commands.size() > 0) {
 			throw new RuntimeException("TX has not been closed (missing finishTransaction?)");
 		}
-		
+
 		commands = new ArrayList<Command>();
 		if (StringUtils.isNullOrEmpty(txName)) {
 			throw new RuntimeException("Transaction must have a name");
 		}
 		this.txName = txName;
 	}
-	
+
 	/**
 	 * Finishes the transaction and passes the command sequence to the framework.
 	 */
@@ -209,7 +209,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 		commands.clear();
 		container.invalidate();
 	}
-	
+
 	/**
 	 * Begins the transaction for a single object.
 	 *
@@ -222,7 +222,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 			throw new RuntimeException("Entity must not be null");
 		}
 	}
-	
+
 	/**
 	 * Finishes the transaction for a single object.
 	 *
@@ -235,7 +235,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 			throw new RuntimeException("Entity must not be null");
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.ICommandListener#commandIssued(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity, org.openstreetmap.josm.command.Command)
 	 */

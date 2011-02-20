@@ -17,7 +17,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Action to find and fix addresses without (valid) streets. It launches an dialog
  * instance of {@link AddressEditDialog}.
- * 
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
 
@@ -33,10 +33,10 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 						tr("Address Edit")), KeyEvent.VK_A,
 						Shortcut.GROUP_MENU, InputEvent.ALT_DOWN_MASK
 						| InputEvent.SHIFT_DOWN_MASK), false);
-		
-		setEnabled(false);		
-		addressEditContainer = new AddressEditContainer();				
-		DataSet.addSelectionListener(this);		
+
+		setEnabled(false);
+		addressEditContainer = new AddressEditContainer();
+		DataSet.addSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +52,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0) {		
+	public void actionPerformed(ActionEvent arg0) {
 		if (addressEditContainer != null) {
 			addressEditContainer.attachToDataSet(newSelection);
 			try {
@@ -64,7 +64,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 			}
 		}
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.actions.JosmAction#updateEnabledState()
@@ -78,7 +78,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 	protected void updateEnabledState(
 			Collection<? extends OsmPrimitive> selection) {
 		// Enable button if there is either a selection or at least a data set
-		setEnabled(	selection != null && !selection.isEmpty() || 
+		setEnabled( selection != null && !selection.isEmpty() ||
 					(getCurrentDataSet() != null));
 	}
 
@@ -86,7 +86,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 
 	@SuppressWarnings("unused")
 	private void generateTagCode(AddressEditContainer addrVisitor) {
-		
+
 		for (String tag : addrVisitor.getTags()) {
 			String methodName = createMethodName(tag);
 			System.out
@@ -108,11 +108,11 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 					"public static final String %s_TAG = \"%s\";", tag
 					.toUpperCase().replaceAll(":", "_"), tag));
 		}
-				
+
 		for (String value : addrVisitor.getValues().keySet()) {
 			String tag = addrVisitor.getValues().get(value);
-			
-			String tags = tag.toUpperCase().replaceAll(":", "_"); 
+
+			String tags = tag.toUpperCase().replaceAll(":", "_");
 			String values = value.toUpperCase().replaceAll(":", "_");
 			System.out.println(String.format(
 					"public static final String %s_%s_VALUE = \"%s\";", tags, values

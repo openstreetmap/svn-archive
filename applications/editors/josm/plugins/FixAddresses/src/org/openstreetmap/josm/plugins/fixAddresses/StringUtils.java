@@ -1,14 +1,14 @@
 /*
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
@@ -18,7 +18,7 @@ import java.util.List;
 public class StringUtils {
 	/**
 	 * Checks, if a string is either null or empty.
-	 * 
+	 *
 	 * @param txt
 	 *            Text to check
 	 * @return True, if string is null or empty; otherwise false
@@ -29,7 +29,7 @@ public class StringUtils {
 
 	/**
 	 * Gets the length of the longest common substring of a and b
-	 * 
+	 *
 	 * @param a
 	 *            First string
 	 * @param b
@@ -82,7 +82,7 @@ public class StringUtils {
 
 	/**
 	 * Gets the longest common substring of a and b.
-	 * 
+	 *
 	 * @param a The first string.
 	 * @param b The second string.
 	 * @return
@@ -116,7 +116,7 @@ public class StringUtils {
 		l = null;
 		return sb.toString();
 	}
-		
+
 	/**
 	 * @param needle The string to find the best match for.
 	 * @param haystack The list of strings to pick the the best match from.
@@ -126,14 +126,14 @@ public class StringUtils {
 	public static String findBestMatch(String needle, List<String> haystack) {
 		String bestMatch = null;
 		double maxRatio = Double.MIN_VALUE;
-				
+
 		if (StringUtils.isNullOrEmpty(needle)) {
 			return null;
 		}
 		if (haystack == null || haystack.size() == 0) {
 			return null;
 		}
-		
+
 		int lNeedle = needle.length();
 		for (String curString : haystack) {
 			int ll = lcsLength(needle, curString);
@@ -142,9 +142,9 @@ public class StringUtils {
 				maxRatio = ratio;
 				bestMatch = curString;
 			}
-			
+
 		}
-		
+
 		return bestMatch;
 	}
 }

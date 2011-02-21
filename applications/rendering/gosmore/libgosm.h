@@ -17,7 +17,9 @@ typedef int intptr_t;
 #endif
 
 #ifndef _WIN32
+#ifndef ANDROID_NDK
 #include <libxml/xmlreader.h>
+#endif
 #include <inttypes.h>
 #define stricmp strcasecmp
 typedef long long __int64;
@@ -26,7 +28,7 @@ typedef long long __int64;
 #define M_PI 3.14159265358979323846 // Not in math ??
 #endif
 
-#if __FreeBSD__ || __APPLE__  // Thanks to Ted Mielczarek & Dmitry
+#if __FreeBSD__ || __APPLE__ || ANDROID_NDK
 #define fopen64(x,y) fopen(x,y)
 #endif
 
@@ -46,7 +48,7 @@ typedef long long __int64;
 #endif
 
 #define Sqr(x) ((x)*(x))
-inline int isqrt (int x) { return lrint (sqrt (x)); } // Optimize this ?
+inline int isqrt (int x) { return lrint (sqrt ((double)x)); } // Optimize this ?
 
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
@@ -270,7 +272,7 @@ enum {
  s (landuse, retail,          "retail area"     , "") \
  s (landuse, commercial,      "commercial area" , "") \
  s (landuse, construction,    "construction area" , "") \
- s (landuse, reservoir,       "reservoir"       , "") \
+ s (natural, coastline,       "coastline"       , "") \
  s (natural, water,           "lake / dam"      , "") \
  s (landuse, basin,           "basin"           , "") \
  s (landuse, landfill,        "landfill"        , "") \

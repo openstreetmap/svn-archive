@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,7 +73,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         VMenu = Main.main.menu.addMenu(" Video", KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));//TODO no more ugly " video" hack
         VMenu.setEnabled(false);
         addMenuItems();
-        enableControlMenus(true);
+        enableControlMenus(false);
         loadSettings();
         applySettings();
         //further plugin informations are provided by build.xml properties
@@ -86,20 +87,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             VAdd.setEnabled(true);
             GpsLayer=((GpxLayer) newLayer);            
             //TODO append to GPS Layer menu
-        }
-        else
-        {/*
-            VAdd.setEnabled(false);
-            if(newLayer instanceof PositionLayer)
-            {
-                enableControlMenus(true);
-            }
-            else
-            {
-                enableControlMenus(false);
-            }*/
-        }
-        
+        }        
     }
 
     public void layerAdded(Layer arg0) {
@@ -108,7 +96,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 
     public void layerRemoved(Layer arg0) {
     	if(Main.main.getActiveLayer()==null)	VMenu.setEnabled(false);
-    } //well ok we have a local copy of the GPS track....
+    } //well ok we have allready a local copy of the GPS track....
 
     //register main controls
     private void addMenuItems() {
@@ -116,11 +104,13 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             private static final long serialVersionUID = 1L;
 
             public void actionPerformed(ActionEvent arg0) {                 
-                    JFileChooser fc = new JFileChooser("C:\\TEMP\\");
-                    //fc.setSelectedFile(new File(mru));
+                    JFileChooser fc = new JFileChooser(mru);
+                    fc.setSelectedFile(new File(mru));
                     if(fc.showOpenDialog(Main.main.parent)!=JFileChooser.CANCEL_OPTION)
                     {
-                        saveSettings();
+                    	//save selected path
+                    	mru=fc.getSelectedFile().getAbsolutePath();
+                    	Main.pref.put(VM_MRU, mru);
                         enableControlMenus(true);
                         layer = new PositionLayer(fc.getSelectedFile(),GpsLayer);
                         Main.main.addLayer(layer);
@@ -184,14 +174,14 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             	try {
             	JOptionPane d=new JOptionPane(tr("Jump to"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
             	final JFormattedTextField inp = new JFormattedTextField(new MaskFormatter("##:##:##"));
-            	inp.setText("00:00:01");
+            	inp.setText(layer.getGPSTime());
             	inp.setInputVerifier(new InputVerifier() {					
 					@Override
 					public boolean verify(JComponent input) {
-						// TODO Auto-generated method stub
 						return false;
 					}
 				});
+            	//hack to set the focus
             	SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                     	inp.requestFocus();
@@ -201,7 +191,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             	if(d.showConfirmDialog(Main.main.panel,inp, tr("Jump to"),JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION)
             	{
 	            	Date t;
-	                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm:ss");
+	                SimpleDateFormat sdf= new SimpleDateFormat("HH:mm:ss");
 	                t = sdf.parse(inp.getText());
 	                if (t!=null)
 	                {
@@ -323,6 +313,10 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         Vbackward.setEnabled(enabled);
         Vforward.setEnabled(enabled);
         Vloop.setEnabled(enabled);
+        Vfaster.setEnabled(enabled);
+        Vslower.setEnabled(enabled);
+        VJump.setEnabled(enabled);
+        
     }
     
     //load all properties or set defaults
@@ -337,7 +331,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         temp=Main.pref.get(VM_LOOPLENGTH);
         if((temp!=null)&&(temp.length()!=0)) looplength=Integer.valueOf(temp); else looplength=6000;
         temp=Main.pref.get(VM_MRU);
-        if((temp!=null)&&(temp.length()!=0)) mru=Main.pref.get(VM_MRU);else mru=System.getProperty("user.home");
+        if((temp!=null)&&(temp.length()!=0)) mru=Main.pref.get(VM_MRU);else mru=System.getProperty("user.home");        
     }
     
     private void applySettings(){
@@ -361,8 +355,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         Main.pref.put(VM_AUTOCENTER, autocenter);
         Main.pref.put(VM_DEINTERLACER, deinterlacer);
         Main.pref.put(VM_JUMPLENGTH, jumplength.toString());
-        Main.pref.put(VM_LOOPLENGTH, looplength.toString());
-        Main.pref.put(VM_MRU, mru);
+        Main.pref.put(VM_LOOPLENGTH, looplength.toString());        
     }
     
     

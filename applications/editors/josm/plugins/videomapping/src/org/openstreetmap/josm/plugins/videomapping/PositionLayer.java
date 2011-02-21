@@ -50,10 +50,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
         ls=copyGPSLayer(GpsLayer.data); //TODO This might be outsourced to a seperated track
         gps= new GpsPlayer(ls);
         icon = new ImageIcon("images/videomapping.png");
-        gpsTimeCode= new SimpleDateFormat("hh:mm:ss");//TODO replace with DF small
+        gpsTimeCode= new SimpleDateFormat("HH:mm:ss");//TODO replace with DF small
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);                          
         gpsVP = new GPSVideoPlayer(video, gps);
+        iconPosition=gps.getCurr();
     }
     
     //make a flat copy
@@ -252,17 +253,27 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
                 dragIcon=false;
             }
             else
-            {
+            {            	
                 //simple click
-                WayPoint wp = getNearestWayPoint(e.getPoint());
+            	WayPoint wp = getNearestWayPoint(e.getPoint());            	
                 if(wp!=null)
                 {
-                    gps.goTo(wp);
-                    //jump if we know position
-                    if(wp.attr.containsKey("synced"))
-                    {
-                        if(gpsVP!=null) gpsVP.jumpToGPSTime(new Date(gps.getRelativeTime())); //call videoplayers to set right position
-                    }
+                	//jump if unsynced
+                	if (gpsVP.isSynced())
+                	{
+                		//jump if we know position
+                        if(wp.attr.containsKey("synced"))
+                        {
+                        	gps.goTo(wp);
+                            if(gpsVP!=null) gpsVP.jumpToGPSTime(new Date(gps.getRelativeTime())); //call videoplayers to set right position
+                        }
+                	}
+                	else
+                	{
+                		//otherwise let user mark possible sync point
+                		gps.goTo(wp);
+                	}
+                    
                 }
             }
             Main.map.mapView.repaint();
@@ -306,5 +317,10 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	public GPSVideoPlayer getVideoPlayer()
 	{
 		return gpsVP;
+	}
+	
+	public String getGPSTime()
+	{
+		return gpsTimeCode.format(iconPosition.getTime());
 	}
 }

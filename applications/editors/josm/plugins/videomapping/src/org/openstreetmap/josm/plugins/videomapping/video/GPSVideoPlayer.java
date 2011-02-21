@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.videomapping.video;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
@@ -46,13 +47,24 @@ public class GPSVideoPlayer
         syncBtn.addActionListener(new ActionListener() {
             //do a sync
             public void actionPerformed(ActionEvent e) {
-                long diff=gps.getRelativeTime()-video.getTime(); //FIXME differenzierter betrachten
-                file= new GPSVideoFile(file, diff);
-                syncBtn.setBackground(Color.GREEN);
-                synced=true;
-                markSyncedPoints();
-                video.play();
-                //gps.play();
+            	if (!synced)
+            	{
+            		//FIXME doesn't work correctly after a resync
+            		//determine time offset
+	                long diff=gps.getRelativeTime()-video.getTime(); //FIXME differenzierter betrachten
+	                file= new GPSVideoFile(file, diff);
+	                syncBtn.setBackground(Color.GREEN);
+	                synced=true;
+	                markSyncedPoints();
+	                video.play();
+	                //gps.play();
+            	}
+            	else
+            	{
+            		//let user resync again
+            		synced=false;
+            		syncBtn.setBackground(null);
+            	}
             }
         });
         setAsyncMode(true);
@@ -189,7 +201,7 @@ public class GPSVideoPlayer
     
     public boolean isSynced()
     {
-        return isSynced();
+        return synced;
     }
 
     public void loop() {
@@ -265,6 +277,12 @@ public class GPSVideoPlayer
     {
         subtTitleComponent=a;
     }
+    
+    public void close()
+    {
+    	video.windowClosing(new WindowEvent(video,1));
+    }
+    
 
 
     

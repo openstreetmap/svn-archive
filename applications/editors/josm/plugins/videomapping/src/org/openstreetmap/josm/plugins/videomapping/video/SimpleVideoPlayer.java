@@ -117,7 +117,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 				        }
 				      });
 				}
-			}, 0L, 1000L, TimeUnit.MILLISECONDS);
+			}, 0L, 200L, TimeUnit.MILLISECONDS);
             //setDefaultCloseOperation(EXIT_ON_CLOSE);
             addWindowListener(this);
         }
@@ -293,9 +293,10 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
     //we have to unload and disconnect to the VLC engine
     public void windowClosing(WindowEvent evt) {
         if(LOG.isDebugEnabled()) {LOG.debug("windowClosing(evt=" + evt + ")");}
+        pause();
+        //FIXME stop timers etc.
         mp.release();
         mp = null;
-        System.exit(0);
       }
 
     public void windowDeactivated(WindowEvent arg0) {   }

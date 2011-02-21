@@ -29,6 +29,7 @@ public class GpsPlayer {
         return next;
     }
     
+    //jumps to the waypoint x ms from the beginning
     public WayPoint getWaypoint(long relTime)
     {
         int pos = Math.round(relTime/1000);//TODO ugly quick hack   
@@ -114,20 +115,24 @@ public class GpsPlayer {
     }
     //go to the position e.g.  "14.4.2010 14:00:01";
     public void jump(Date GPSAbsTime)
-    {
+    {  
     	Date zero=start.getTime();//TODO better Time wayfinding
-    	Date starttime = new Date(zero.getHours(),zero.getMinutes(),zero.getSeconds());
+    	//patch to get same datebase
+    	Date starttime = (Date) GPSAbsTime.clone();
+    	starttime.setHours(zero.getHours());
+    	starttime.setMinutes(zero.getMinutes());
+    	starttime.setSeconds(zero.getSeconds());  	
     	long diff=GPSAbsTime.getTime()-starttime.getTime();
-        goTo(getWaypoint(diff)); 
+        goTo(getWaypoint(diff));
     }
     
-    //jumps to a specific time since the beginning
+    //jumps to a specific time since the beginning, called by Video
     public void jump(long relTime) {
         int pos = Math.round(relTime/1000);//TODO assumes the time is constant
         goTo(pos);
         if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
     }
-    
+      
  
     //gets only points on the line of the GPS track (between waypoints) nearby the point m
     private Point getInterpolated(Point m)
@@ -237,10 +242,6 @@ public class GpsPlayer {
         Date t = new Date(old);
         w.time = t.getTime()/1000; //TODO need better way to set time and sync it
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss:S");
-        /*System.out.print(length+"px ");
-        System.out.print(ratio+"% ");
-        System.out.print(inc+"ms ");
-        System.out.println(df.format(t.getTime()));+*/
         System.out.println(df.format(w.getTime()));
         //TODO we have to publish the new date to the node...
         return w;
@@ -371,7 +372,6 @@ public class GpsPlayer {
     {
         return ls;
     }
-
 
 
     

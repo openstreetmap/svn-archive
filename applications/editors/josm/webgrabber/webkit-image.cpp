@@ -151,7 +151,8 @@ int main(int argc, char **argv)
   QObject::connect(page, SIGNAL(loadFinished(bool)), s, SLOT(loaded(bool)));
   QObject::connect(s, SIGNAL(finish(void)), &a, SLOT(quit()));
   /* set some useful defaults for a webpage */
-  page->setViewportSize(QSize(1280,1024));
+  // page->setViewportSize(QSize(1280,1024));
+  // don't set size, or it breaks josm */
   page->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
   page->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
   page->mainFrame()->load (QUrl(url));

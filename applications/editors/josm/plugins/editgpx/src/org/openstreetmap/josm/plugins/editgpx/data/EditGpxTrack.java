@@ -42,7 +42,7 @@ public class EditGpxTrack {
                     if (anonTime) {
                         // convert to anonymous time
                         for (WayPoint w : points) {
-                            w.attr.put("time", "1970-00-00T00:00:00.000Z");
+                            w.attr.put("time", "1970-01-01T00:00:00.000Z");
                             w.setTime();
                         }
                     }

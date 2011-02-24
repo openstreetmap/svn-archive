@@ -1326,6 +1326,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         // I doubt anyone will have a legal reason to search for a security camera
         
         strcmp (i->first, "note:ja") != 0 &&
+        strcmp (i->first, "ncat") != 0 &&
         
         !(strcmp (i->first, "ref") == 0 && strncmp (i->second, "http://", 7) == 0) &&
         // Abused during the EPA import
@@ -1398,12 +1399,8 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "type") != 0 &&
         /* "type=..." is only allow for boules grounds. We block it because it
         is often misused. */
-         0 != strcmp (i->second, 
-  "National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
-         0 != strcmp (i->second, 
-  "National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
-         0 != strcmp (i->second, 
-  "National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
+         0 != strncmp (i->second, "National-Land Numerical Information ", 36) &&
+         // Import in Japan setting the source as note / note:en / note:ja
          strcmp (i->second, "coastline_old") != 0 &&
          strcmp (i->first, "upload_tag") != 0 &&
          strcmp (i->first, "admin_level") != 0 &&

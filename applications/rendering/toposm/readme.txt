@@ -48,14 +48,14 @@ Setup
 Render an area:
 ---------------
 This example will render the area UTM19T (defined in areas.py) from
-zoom level 5 through 16:
+zoom level 5 through 15:
 
 $ source set-toposm-env
 $ python
->>> from toposm import *
->>> from areas import *
->>> prepare_data(UTM19T, 10, 16)
->>> render_tiles(UTM19T, 5, 16)
+>>> import toposm
+>>> import areas
+>>> toposm.prepareData(areas.UTM19T)
+>>> toposm.renderTiles(areas.UTM19T, 5, 15)
 $ optimize_png.py tile/contours
 $ optimize_png.py tile/features
 
@@ -65,17 +65,13 @@ Notes:
 Make sure that you have plenty of disk space for temporary
 files and tiles, and database space for contour lines.
 
-The prepare_data* methods will "expand" the area to cover a full tile
-at the lowest zoom level. This is why the example prepares zoom levels
-10 through 16. Otherwise the area may be unnecessarily large.
-
-The multi-threaded code may still suffer from a memory leak. If you
-experience this, use the *_single methods to run several single-threaded
-instances rendering different areas.
-
-Don't run prepare_data* on the same area twice or on overlapping
-areas. You'll end up with duplicated contour lines, which is
-not pretty.
+Preprocessed data files (such as the hillshade and colormap
+images) are stored in the temp directory. Empty .shp files are also
+left here to mark areas where contours have already been imported
+into the database. NOTE: If you clear the data in this directory,
+you should also delete all data from the contours table, or you
+risk ending up with duplicated contours the next time you run
+prepareData.
 
 In TopOSM, rendering quality takes precedence over speed. You'll
 notice.

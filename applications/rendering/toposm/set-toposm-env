@@ -30,9 +30,12 @@ export COLORFILE="colors.txt" # elevation-to-color mapping
 
 # Render settings
 export RENDER_THREADS=4 # typically equal to # of cores
-export SUBTILE_SIZE=256
+export TILE_SIZE=256
 export BORDER_WIDTH=128
 export ERROR_LOG="errors.log"
+
+# Quality setting for combined JPEG layer
+export JPEG_QUALITY=90
 
 # The area we're interested in
 # (this setting limits both import and rendering)

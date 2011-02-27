@@ -92,15 +92,7 @@ public class ViaList extends JList{
         
         addMouseListener(new ViaListPopupMenuLaucher());            
     }
-    
-    @Override
-	public Dimension getPreferredScrollableViewportSize() {
-		//return super.getPreferredSize();
-    	Dimension d = getPreferredSize();
-    	d.height = Math.max(d.height, 100);
-    	return d;
-	}
-
+   
 	/**
      * The transfer handler for Drag-and-Drop. 
      */

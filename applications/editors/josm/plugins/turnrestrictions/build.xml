@@ -30,7 +30,7 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Fixing #5614 - JOSM Plugin turn Restrictions" />
+	<property name="commit.message" value="Fixing #6016  - Scrollbar hides field entry" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3835" />
 

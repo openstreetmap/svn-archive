@@ -1,1 +1,4 @@
+josm.version=3773
 osm-server.url=http://localhost:8080/api
+scripting.RunScriptDialog.file-history=asdfasdfasdfsdf
+scripting.RunScriptDialog.last-file=asdfasdfasdfsdf

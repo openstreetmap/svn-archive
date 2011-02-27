@@ -2,6 +2,8 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -87,8 +89,15 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
         
         gc.gridx = 1;
         gc.weightx = 1.0;
+        gc.weighty = 1.0;
         DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-        add(spVias = new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)),gc);
+        spVias = new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)) {
+        	// fixes #6016 : Scrollbar hides field entry
+        	public Dimension getPreferredSize() {
+        		return new Dimension(100, 80); // only height is relevant, 80 is just a heuristical value
+             }
+        };
+        add(spVias,gc);
         if (!Main.pref.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false)) {
             lblVias.setVisible(false);
             spVias.setVisible(false);
@@ -99,6 +108,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
         gc.gridx = 0;
         gc.gridy = 4;
         gc.weightx = 1.0;
+        gc.weighty = 0.0;
         gc.gridwidth = 2;
         gc.insets = new Insets(0,0,5,5);    
         add(vehicleExceptionsEditor, gc);

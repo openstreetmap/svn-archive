@@ -110,7 +110,7 @@
         ************************************************
     -->
             <manifest>
-                <attribute name="Author" value="Josh Doe <josh@joshdoe.com>"/>
+                <attribute name="Author" value="Josh Doe &lt;josh@joshdoe.com&gt;"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.proj4j.Proj4J"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="adds projections from Proj4J"/>

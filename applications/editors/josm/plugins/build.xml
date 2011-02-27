@@ -33,6 +33,7 @@
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
+        <ant antfile="build.xml" target="dist" dir="irsrectify"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
@@ -48,6 +49,7 @@
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="dist" dir="proj4j"/>
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="restart"/>
         <ant antfile="build.xml" target="dist" dir="reverter"/>
@@ -74,8 +76,6 @@
         <ant antfile="build.xml" target="dist" dir="waypoint_search"/>
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
-        <!-- behind wms plugin! -->
-        <ant antfile="build.xml" target="dist" dir="irsrectify"/>
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="rgisopen"/>
@@ -122,6 +122,7 @@
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="clean" dir="proj4j"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="restart"/>
         <ant antfile="build.xml" target="clean" dir="reverter"/>

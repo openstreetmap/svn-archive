@@ -3103,6 +3103,23 @@
 				</else>
 			</rule>
 		</rule>
+		<!-- piste nodes -->
+		<rule e="node" k="piste:type" v="downhill">
+			<rule e="node" k="name|ref" v="*">
+				<!-- prefer to render name, otherwise render ref -->
+				<rule e="node" k="name" v="~">
+					<rule e="node" k="ref" v="*">
+						<caption k="ref" dy="2px" class="piste-downhill-ref" />
+					</rule>
+				</rule>
+				<else>
+					<rule e="node" k="name" v="*">
+						<caption k="name" dy="2px" class="piste-downhill-name" />
+					</rule>
+				</else>
+			</rule>
+		</rule>
+
 		<rule e="way" k="piste:type" v="sled">
 			<line class="piste-type-sled"/>
 		</rule>

@@ -29,9 +29,9 @@ package org.openstreetmap.josm.plugins.osb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
@@ -160,6 +160,17 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void updateData() {
+        // disable the dialog
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    dialog.setEnabled(false);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         // store the current selected node
         Node selectedNode = getDialog().getSelectedNode();
 
@@ -172,6 +183,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             System.err.println("OpenStreetBugs: Couldn't determine bounds of currently visible rect. Cancel auto update");
             return;
         }
+        
 
         // download data for the new bounds, if the plugin is not in offline mode
         if(!Main.pref.getBoolean(ConfigKeys.OSB_API_OFFLINE)) {
@@ -200,8 +212,20 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             }
         }
 
+        
         // restore node selection
         dialog.setSelectedNode(selectedNode);
+        
+        // enable the dialog
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    dialog.setEnabled(true);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
     }
 
     public void updateGui() {

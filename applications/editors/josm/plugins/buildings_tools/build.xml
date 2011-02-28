@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="update (23630 was committed together with the code which is not right)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3835" />
+	<property name="plugin.main.version" value="3922" />
 
 
 	<!--

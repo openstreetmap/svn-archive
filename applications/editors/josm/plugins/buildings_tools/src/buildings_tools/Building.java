@@ -27,7 +27,6 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 
 class Building {
-    private static final double eqlen = 40075004; // length of equator in metres
     private final EastNorth[] en = new EastNorth[4];
 
     double meter = 0;
@@ -82,7 +81,7 @@ class Building {
     }
 
     private void updMetrics() {
-        meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat())) * eqlen);
+        meter = 1 / Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat()));
         len = 0;
     }
 

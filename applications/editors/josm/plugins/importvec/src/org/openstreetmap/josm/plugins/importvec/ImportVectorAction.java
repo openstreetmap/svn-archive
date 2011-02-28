@@ -148,7 +148,6 @@ public class ImportVectorAction extends JosmAction {
         protected void finish() {
         }
 
-        private static final double eqlen = 40075004; // length of equator in metres
         Mercator projection = new Mercator();
         EastNorth center;
         double scale;
@@ -217,7 +216,7 @@ public class ImportVectorAction extends JosmAction {
                         appendNode(coords[0],coords[1]);
                         break;
                     case PathIterator.SEG_CLOSE:
-                        if (currentway.firstNode().getCoor().equals(nodes.getLast().getCoor())) {
+                        if (currentway.firstNode().getCoor().equalsEpsilon(nodes.getLast().getCoor())) {
                             currentway.removeNode(nodes.removeLast());
                         }
                         currentway.addNode(currentway.firstNode());
@@ -246,8 +245,7 @@ public class ImportVectorAction extends JosmAction {
         @Override
         protected void realRun() throws SAXException, IOException, OsmTransferException {
             LatLon center = Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
-            scale = 2 * Math.PI / (Math.cos(Math.toRadians(center.lat())) * eqlen)
-                    * Settings.getScaleNumerator() / Settings.getScaleDivisor();
+            scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
             this.center = projection.latlon2eastNorth(center);
             try {
                 for (File f : files) {
@@ -256,6 +254,7 @@ public class ImportVectorAction extends JosmAction {
                     XMLReader rdr = XMLReaderFactory.createXMLReader();
                     rdr.setContentHandler(loader);
                     rdr.setEntityResolver(new EntityResolver() {
+                                @Override
                                 public InputSource resolveEntity(String publicId, String systemId) {
                                     //Ignore all DTDs
                                     return new InputSource(new ByteArrayInputStream(new byte[0]));

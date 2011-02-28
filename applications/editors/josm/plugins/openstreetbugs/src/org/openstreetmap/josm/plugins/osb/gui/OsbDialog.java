@@ -479,4 +479,14 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     public ActionQueue getActionQueue() {
         return actionQueue;
     }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        
+        bugList.setEnabled(enabled);
+        queueList.setEnabled(enabled);
+        addComment.setEnabled(enabled);
+        closeIssue.setEnabled(enabled);
+    }
 }

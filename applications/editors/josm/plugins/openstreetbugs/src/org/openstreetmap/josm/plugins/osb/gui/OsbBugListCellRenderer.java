@@ -59,6 +59,10 @@ public class OsbBugListCellRenderer implements ListCellRenderer {
             label.setBackground(index % 2 == 0 ? background : altBackground);
         }
 
+        if(!list.isEnabled()) {
+            label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        }
+
         OsbListItem item = (OsbListItem) value;
         Node n = item.getNode();
         Icon icon = null;
@@ -78,6 +82,7 @@ public class OsbBugListCellRenderer implements ListCellRenderer {
         d.height += 10;
         label.setPreferredSize(d);
 
+        label.setEnabled(list.isEnabled());
         return label;
     }
 

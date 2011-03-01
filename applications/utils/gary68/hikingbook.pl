@@ -4,14 +4,9 @@
 
 # todo
 # - print parameters
-# - split overview and temp osm generation
 # - parameter strings for mapgen
 #
-# - mapgen copyright kleiner
-# - mapgen colors
-# - mapgen rel id, just draw one route
-#
-# - tile server
+# - tile server support
 #
 
 use strict ;
@@ -20,12 +15,12 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.2" ;
+my $version = "0.3" ;
 
-# my $inFileName = "hofheim.osm" ;
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
-my $styleFileName = "hikingRules.csv" ;
+my $overviewStyleFileName = "hikingRules.csv" ;
+my $detailStyleFileName = "hikingRules.csv" ;
 # my $relationId = 86835 ; # fulda diemel > 1 seg 60 nodes 2.4km
 # my $relationId = 223649 ; # HW20 ways MISSING
 # my $relationId = 70544 ; # taunus 45 ; > 1 seg
@@ -34,13 +29,14 @@ my $styleFileName = "hikingRules.csv" ;
 # my $relationId = 23088 ; # bonifatius 21km
 # my $relationId = 149386 ; # one segment !!!
 my $relationId = 0 ;
-my $scale = 10000 ;
+my $scale = 10000 ; # default detail scale 
 my %pageHeight = () ;
 $pageHeight{"A4"} = 27.7 ;
 $pageHeight{"A5"} = 19 ;
 my %pageWidth = () ;
 $pageWidth{"A4"} = 19 ;
 $pageWidth{"A5"} = 13.8 ;
+my @overviewScales = (10000,25000,50000,75000,100000,200000,500000,1000000) ; # best fit will be taken
 my $title = "Hiking book" ;
 my $workDir = "" ;
 
@@ -50,30 +46,33 @@ my @ways ;
 my @nodes ;
 my %wayNodesHash = () ;
 my %wayNameHash = () ;
-my $mapNumber = 0 ;
-
+my $mapNumber = 0 ; # counts detail maps
+my $scaleOverview = 0 ;
+my $rectangles = "" ; # collect data for overview map
 
 my $languageOpt = "EN" ;
 my $noOutputOpt = 0 ;
 my $verboseOpt = 1 ;
-my $dirNumberOpt = 8 ;
+my $dirNumberOpt = 8 ; # number of different directions used (N,S,SW...)
 my $pageSizeOpt = "A4" ;
 my $overlapOpt = 10 ; # in percent
 
-my $extraMapData1 = 0.3 ;
-my $extraMapData2 = 0.2 ;
+my $extraMapData1 = 0.3 ; # overlap for osm temp file 1
+my $extraMapData2 = 0.2 ; # for temp file 2s
 
-# relation bounding box
+# relation bounding box. all data.
 my $relLonMax = -999 ;
 my $relLonMin = 999 ;
 my $relLatMax = -999 ;
 my $relLatMin = 999 ;
 
+# initial file
 my $fileLonMax = -999 ;
 my $fileLonMin = 999 ;
 my $fileLatMax = -999 ;
 my $fileLatMin = 999 ;
 
+# temp osm file 1 data
 my $file1LonMax = -999 ;
 my $file1LonMin = 999 ;
 my $file1LatMax = -999 ;
@@ -91,22 +90,19 @@ getProgramOptions () ;
 
 getRelationData() ;
 
+createTemp1 () ;
+
 buildCompleteWay() ;
 
-createOverviewMap() ;
-
 createDetailMaps() ;
+
+createOverviewMap() ;
 
 createDirections() ;
 
 createTitlePage () ;
 
 mergeAllFiles() ;
-
-# create title page
-# create POI pages
-# merge all maps to one pdf
-
 
 
 
@@ -121,11 +117,8 @@ sub getRelationData {
 	print "\nget data from file...\n" ;
 	print "parsing relations...\n" ;
 	openOsmFile ($inFileName) ;
-	# print "- skipping nodes...\n" ;
 	skipNodes() ;
-	# print "- skipping ways...\n" ;
 	skipWays() ;
-	# print "- reading relations...\n" ;
 
 	my $propRef ; my $membersRef ; my $tagsRef ;
 	($propRef, $membersRef, $tagsRef) = getRelation3() ;
@@ -179,9 +172,7 @@ sub getRelationData {
 
 	print "parsing ways...\n" ;
 	openOsmFile ($inFileName) ;
-	# print "- skipping nodes...\n" ;
 	skipNodes() ;
-	# print "- reading ways...\n" ;
 
 	my $nodesRef ; 
 	($propRef, $nodesRef, $tagsRef) = getWay3() ;
@@ -192,7 +183,6 @@ sub getRelationData {
 
 			if (scalar @$nodesRef < 2) { print "ERROR: needed way $$propRef{'id'} has less than 2 nodes!\n" ; } 
 
-			# print "NEEDED NODES: @$nodesRef\n" ;
 			foreach my $n (@$nodesRef) {
 				$neededNodes{$n} = 1 ;
 			}
@@ -250,6 +240,7 @@ sub getRelationData {
 	
 		}
 
+		# also collect data of big file
 		if ( $$propRef{"lon"} > $fileLonMax ) { $fileLonMax = $$propRef{"lon"} ; }
 		if ( $$propRef{"lon"} < $fileLonMin ) { $fileLonMin = $$propRef{"lon"} ; }
 		if ( $$propRef{"lat"} > $fileLatMax ) { $fileLatMax = $$propRef{"lat"} ; }
@@ -277,9 +268,8 @@ sub getRelationData {
 }
 
 
-sub createOverviewMap {
-	print "\ncreate overview map...\n" ;
-	my $outName = $workDir . "overview.svg" ;
+sub createTemp1 {
+	print "\ncreate temp file 1...\n" ;
 
 	my $scale ;
 	my $distLon = distance ($relLonMin, $relLatMin, $relLonMax, $relLatMin) ; # in km
@@ -301,8 +291,19 @@ sub createOverviewMap {
 		print "scales W/H: $scaleWidth / $scaleHeight\n" ;
 	}
 
+	# select min scale
 	$scale = $scaleWidth ;
 	if ($scaleHeight > $scale) { $scale = $scaleHeight ; }
+
+	# select fitting scale
+	foreach my $s (@overviewScales) {
+		if ($s > $scale) {
+			$scale = $s ;
+			last ;
+		}
+	}
+
+	$scaleOverview = $scale ;
 
 	if ($verboseOpt eq "1") {
 		print "selected scale: $scale\n" ;
@@ -327,20 +328,41 @@ sub createOverviewMap {
 			($propRef, $tagsRef) = getNode3() ;
 		}
 		closeOsmFile() ;
-		print "done.\n" ;
 
 		# print "temp1: $file1LonMin, $file1LatMin, $file1LonMax, $file1LatMax\n" ;
 
+	}
+}
+
+sub createOverviewMap {
+	print "\ncreate overview map...\n" ;
+	my $outName = $workDir . "overview.svg" ;
+	if ($noOutputOpt eq "0") {
+
+		# allow for some more data than just the relation
+		my $ovLonMin = $relLonMin - 0.005 ;
+		my $ovLonMax = $relLonMax + 0.005 ;
+		my $ovLatMin = $relLatMin - 0.005 ;
+		my $ovLatMax = $relLatMax + 0.005 ;
+
+		# but check if data is present
+		if ($ovLonMin < $file1LonMin) { $ovLonMin = $file1LonMin ; }
+		if ($ovLonMax > $file1LonMax) { $ovLonMax = $file1LonMax ; }
+		if ($ovLatMin < $file1LatMin) { $ovLatMin = $file1LatMin ; }
+		if ($ovLatMax > $file1LatMax) { $ovLatMax = $file1LatMax ; }
+
 		print "call mapgen...\n" ;
-		`perl mapgen.pl -in=$temp1FileName -out=$outName -style=$styleFileName -scaleset=$scale -pdf -clipbbox=$relLonMin,$relLatMin,$relLonMax,$relLatMax -declutter -legend=0` ;
+		`perl mapgen.pl -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -pdf -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -declutter -legend=0 -relid=$relationId $rectangles -scale` ;
+		print "done.\n" ;
 	}
 }
 
 
 
-
-
 sub buildCompleteWay {
+#
+# this function tries to make sense of all the ways collected from the relation
+#
 	my %leftWays = () ;
 
 	my @orderedWays ;
@@ -420,12 +442,14 @@ sub buildCompleteWay {
 		@ways = reverse @ways ;
 	} 
 	
+	# get names of ways to nodes for directions
 	foreach my $w (@ways) {
 		foreach my $n (@{$wayNodesHash{$w}}) {
 			$nodeName{$n} = $wayNameHash{$w} ;
 		}
 	}
 
+	# calc distances
 	my $dist = 0 ;
 	$nodeInfo{0}{"distance"} = 0 ;
 	for (my $i = 1;  $i<=$#nodes; $i++) {
@@ -435,6 +459,7 @@ sub buildCompleteWay {
 	$dist = int ($dist * 1000) / 1000 ;
 	print "segment is $dist km long.\n" ;
 
+	# nodeinfo is indexed by nodeNumber, NOT id!
 	for (my $i = 0;  $i<$#nodes; $i++) {
 		$nodeInfo{$i}{"direction"} = direction ($nodes[$i], $nodes[$i+1]) ;		
 		$nodeInfo{$i}{"name"} = $nodeName{ $nodes[$i] } ;		
@@ -464,6 +489,8 @@ sub buildCompleteWay {
 sub createDetailMaps {
 
 	print "\ncreate detail maps...\n" ;
+
+	my $first = 1 ;
 
 	my $maxDistLon = $pageWidth{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
 	my $maxDistLat = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
@@ -590,9 +617,17 @@ sub createDetailMaps {
 
 			# print "DETAIL: bbox before mapgen = $lonMin,$latMin,$lonMax,$latMax\n" ;
 
+			if ($first) {
+				$first = 0 ;
+				$rectangles = "-rectangles=" ;
+			}
+			else {
+				$rectangles .= "#" ;
+			}
+			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
 
 			print "call mapgen...\n" ;
-			`perl mapgen.pl -in=$temp2FileName -out=$outName -style=$styleFileName -scaleset=$actualScale -pdf -clipbbox=$lonMin,$latMin,$lonMax,$latMax -declutter -legend=0 -poifile=step.txt` ;
+			`perl mapgen.pl -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -pdf -clipbbox=$lonMin,$latMin,$lonMax,$latMax -declutter -legend=0 -poifile=step.txt -relid=$relationId -scale` ;
 		}
 
 		# next
@@ -848,6 +883,9 @@ sub createTitlePage {
 	print $texFile "\\vspace*{8cm}\n" ;
 	print $texFile "\\Huge\n" ;
 	print $texFile "$title\n" ;
+	print $texFile "\\newline\n" ;
+	print $texFile "\\normalsize\n" ;
+	print $texFile "created with hikingbook.pl\n" ;
 	
 
 	print $texFile "\\end{document}\n" ;
@@ -880,7 +918,8 @@ sub getProgramOptions {
 	my $helpOpt = 0 ;
 	my $optResult = GetOptions ( 	"in=s" 		=> \$inFileName,
 					"out=s"		=> \$outFileName,		# output file
-					"style=s"	=> \$styleFileName,
+					"detailstyle=s"	=> \$detailStyleFileName,
+					"overviewstyle=s"	=> \$overviewStyleFileName,
 					"title=s"	=> \$title,
 					"language=s"	=> \$languageOpt,
 					"pagesize=s"	=> \$pageSizeOpt,
@@ -914,7 +953,8 @@ sub usage {
 	print "$programName version $version\n" ;
 	print "-in=<infile.osm>\n" ;
 	print "-out=<outfile.pdf>\n" ;
-	print "-style=<mapgen rules file>\n" ;
+	print "-detailstyle=<mapgen rules file for detail maps>\n" ;
+	print "-overviewstyle=<mapgen rules file for overview maps>\n" ;
 	print "-title=\"title text\" (for title page)\n" ;
 	print "-language=EN|DE\n" ;
 	print "-pagesize=A4|A5\n" ;

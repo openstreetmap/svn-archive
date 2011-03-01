@@ -1,0 +1,122 @@
+"SECTION" "NODES" "color" "thickness" "label" "label-color" "label-size" "label-font" "label-offset" "Legend" "Icon" "Size"      
+"place" "city" "black" 0 "name" "black" 60 "FreeSerif" 0 0 "icons-topo/ort-4-64.png" 24 0 9999999    
+"place" "town" "black" 0 "name" "black" 50 "FreeSerif" 0 0 "icons-topo/ort-3-64.png" 24 0 500000    
+"place" "suburb" "black" 0 "name" "black" 40 "FreeSerif" 0 0 "icons-topo/ort-2-64.png" 24 0 100000    
+"place" "village" "black" 0 "name" "black" 40 "FreeSerif" 0 0 "icons-topo/ort-2-64.png" 24 0 100000    
+"place" "hamlet" "black" 0 "name" "black" 25 "FreeSerif" 0 0 "icons-topo/ort-1-32.png" 12 0 100000    
+"place" "locality" "black" 0 "name" "forestgreen" 25 "FreeSerif" 0 0 "icons-topo/ort-0-32.png" 12 0 50000    
+"amenity|fireplace" "shelter|yes" "red" 0 "name!ele" "red" 16 "sans-serif" 16 0 "icons-topo/shelter-fire-32.png" 32 0 50000    
+"amenity" "shelter" "red" 0 "name!ele" "red" 16 "sans-serif" 16 0 "icons-topo/shelter-32.png" 32 0 50000    
+"amenity" "restaurant" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/restaurant.png" 32 0 50000    
+"amenity" "fast_food" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/imbiss.png" 32 0 50000    
+"amenity" "cafe" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/cafe.png" 32 0 50000    
+"amenity" "pub" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/gaststaette.png" 32 0 50000    
+"amenity" "kiosk" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/kiosk.png" 32 0 50000    
+"amenity" "biergarten" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/biergarten.png" 32 0 50000    
+"amenity" "place_of_worship" "black" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/kirche-32.png" 32 0 100000    
+"amenity" "fuel" "black" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/tankstelle.png" 32 0 50000    
+"amenity" "drinking_water" "black" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/trinkwasser.png" 32 0 50000    
+"tourism" "hotel" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/hotel.png" 32 0 50000    
+"tourism" "hostel" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/jugendherberge.png" 32 0 50000    
+"tourism" "camp_site" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/camping.png" 32 0 50000    
+"tourism" "information" "red" 0 "none" "red" 10 "sans-serif" 0 0 "icons-topo/information.png" 32 0 25000    
+"tourism" "viewpoint" "red" 0 "name!ele" "red" 16 "sans-serif" 16 0 "icons-topo/aussicht-64.png" 32 0 50000    
+"natural" "peak" "black" 0 "name!ele" "black" 16 "sans-serif" 16 0 "icons-topo/gipfel-20.png" 20 0 100000    
+"natural" "tree" "black" 0 "name" "black" 16 "sans-serif" 0 0 "icons-topo/baum-32.png" 32 0 50000    
+"natural" "cave_entrance" "black" 0 "name" "black" 16 "sans-serif" 0 0 "icons-topo/hoehle.png" 32 0 50000    
+"natural" "spring" "blue" 0 "name" "blue" 16 "sans-serif" 0 0 "icons-topo/quelle-64.png" 32 0 50000    
+"man_made" "tower" "black" 0 "name!ele" "black" 16 "sans-serif" 0 0 "icons-topo/turm-32.png" 32 0 100000    
+"historic" "ruins" "black" 0 "name!ele" "red" 16 "sans-serif" 16 0 "icons-topo/burg-ruine-64.png" 32 0 100000    
+"historic" "castle" "black" 0 "name!ele" "red" 16 "sans-serif" 16 0 "icons-topo/burg-32.png" 32 0 100000    
+"historic" "monument" "black" 0 "none" "red" 12 "sans-serif" 16 0 "icons-topo/denkmal-64.png" 32 0 50000    
+"highway" "bus_stop" "black" 0 "name" "black" 16 "sans-serif" 16 0 "icons-topo/haltestelle-64.png" 32 0 25000    
+"highway" "bus_station" "black" 0 "name" "black" 18 "sans-serif" 18 0 "icons-topo/haltestelle-64.png" 40 0 50000    
+"railway" "station" "black" 0 "name" "black" 18 "sans-serif" 18 0 "icons-topo/haltestelle-64.png" 40 0 100000    
+"railway" "halt" "black" 0 "name" "black" 16 "sans-serif" 16 0 "icons-topo/haltestelle-64.png" 32 0 50000    
+"site_type" "tumulus" "black" 0 "name" "black" 16 "sans-serif" 16 0 "icons-topo/hgg-20.png" 20 0 50000    
+"amenity" "parking" "black" 0 "none" "red" 16 "sans-serif" 0 0 "icons-topo/parkplatz-40.png" 20 0 50000    
+"addr:housenumber" "*" "black" 0 "addr:housenumber" "black" 16 "sans-serif" 16 0 "none" 0 0 12500    
+"SECTION" "WAYS" "color" "thickness" "DashStyle" "BorderColor" "BorderThickness" "fill" "label" "label-color" "label-size" "label-font" "label-offset" "Legend" "BaseLayer"   
+"highway" "motorway" "yellow" 4 0 "firebrick" 4 0 "ref!name" "black" 16 "sans-serif" 3 1 0 "none" 0 999999
+"highway" "trunk" "yellow" 4 0 "firebrick" 4 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 999999
+"highway" "motorway_link" "yellow" 4 0 "firebrick" 3 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 999999
+"highway" "trunk_link" "yellow" 4 0 "firebrick" 3 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 999999
+"highway" "primary" "orange" 5 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 1 0 "none" 0 999999
+"highway" "primary_link" "orange" 4 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 999999
+"highway" "secondary" "gold" 5 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 1 0 "none" 0 100000
+"highway" "secondary_link" "gold" 4 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 100000
+"highway" "tertiary" "gold" 4 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 1 0 "none" 0 100000
+"highway" "tertiary_link" "gold" 4 0 "black" 2 0 "ref!name" "black" 16 "sans-serif" 3 0 0 "none" 0 100000
+"highway" "residential" "white" 4 0 "black" 1 0 "name" "black" 16 "sans-serif" 3 1 0 "none" 0 50000
+"highway" "unclassified" "white" 4 0 "black" 1 0 "name" "black" 16 "sans-serif" 3 0 0 "none" 0 50000
+"highway" "living_street" "white" 4 0 "black" 1 0 "name" "black" 16 "sans-serif" 3 0 0 "none" 0 50000
+"highway" "pedestrian" "white" 4 0 "black" 1 0 "name" "black" 16 "sans-serif" 3 0 0 "none" 0 50000
+"highway" "service" "white" 3 0 "black" 1 0 "name" "black" 16 "sans-serif" 3 1 0 "none" 0 50000
+"highway|tracktype" "track|grade1" "black" 4 0 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 0 50000
+"highway|tracktype" "track|grade3" "black" 4 11 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 0 50000
+"highway|tracktype" "track|grade4" "black" 4 12 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 0 50000
+"highway|tracktype" "track|grade5" "black" 4 13 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 0 50000
+"highway" "track" "black" 4 10 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 0 50000
+"bicycle" "designated" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -4 0 0 "none" 0 50000
+"highway" "cycleway" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -4 0 0 "none" 0 50000
+"highway|surface" "*|paved" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -4 1 0 "none" 0 50000
+"highway" "path" "black" 2 10 "none" 0 0 "name" "black" 16 "sans-serif" -4 1 0 "none" 0 50000
+"highway" "footway" "black" 2 10 "none" 0 0 "name" "black" 16 "sans-serif" -4 0 0 "none" 0 50000
+"highway" "bridleway" "black" 2 10 "none" 0 0 "name" "black" 16 "sans-serif" -4 0 0 "none" 0 50000
+"highway" "steps" "black" 6 30 "none" 0 0 "name" "black" 16 "sans-serif" -4 1 0 "none" 0 50000
+"highway" "track" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "service" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "residential" "white" 1 0 "black" 1 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "unclassified" "white" 1 0 "black" 1 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "pedestrian" "white" 1 0 "black" 1 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "living_street" "white" 1 0 "black" 1 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"highway" "*" "black" 1 10 "none" 0 0 "name" "black" 16 "sans-serif" -5 1 0 "none" 50001 100000
+"railway" "disused" "white" 3 12 "grey" 2 0 "none" "black" 16 "sans-serif" -1 1 1 "none" 0 100000
+"railway" "abandoned" "white" 3 12 "grey" 2 0 "none" "black" 16 "sans-serif" -1 1 1 "none" 0 100000
+"railway" "platform" "black" 2 0 "none" 0 0 "name" "black" 16 "sans-serif" -4 0 0 "none" 0 50000
+"railway" "*" "white" 3 12 "black" 2 0 "none" "black" 16 "sans-serif" -1 1 1 "none" 0 100000
+"route" "ferry" "blue" 2 10 "none" 0 0 "name" "blue" 16 "sans-serif" -3 1 0 "none" 0 100000
+"waterway" "stream" "deepskyblue" 2 0 "none" 0 0 "name" "blue" 16 "sans-serif" -3 1 0 "none" 0 100000
+"waterway" "drain" "deepskyblue" 2 0 "none" 0 0 "name" "blue" 16 "sans-serif" -1 0 0 "none" 0 100000
+"waterway" "canal" "deepskyblue" 5 0 "none" 0 0 "name" "blue" 20 "sans-serif" -1 1 0 "none" 0 500000
+"waterway" "river" "deepskyblue" 5 0 "none" 0 0 "name" "blue" 20 "sans-serif" -1 1 0 "none" 0 500000
+"barrier" "wall" "red" 2 0 "none" 0 0 "none" "red" 10 "sans-serif" -1 1 0 "none" 0 50000
+"barrier" "fence" "red" 1 0 "none" 0 0 "none" "red" 10 "sans-serif" -1 1 0 "none" 0 50000
+"contour_ext" "elevation_minor" "orangered" 2 13 "none" 0 0 "ele" "orangered" 16 "sans-serif" -4 1 0 "none" 0 50000
+"contour_ext" "elevation_medium" "orangered" 2 0 "none" 0 0 "ele" "orangered" 16 "sans-serif" -4 1 0 "none" 0 100000
+"contour_ext" "elevation_major" "orangered" 3 0 "none" 0 0 "ele" "orangered" 20 "FreeSerif" -4 1 0 "none" 0 500000
+"natural" "water" "deepskyblue" 0 0 "none" 0 1 "name" "blue" 20 "FreeSerif" 3 1 0 "none" 0 500000
+"wood" "coniferous" "none" 0 0 "none" 0 1 "name" "forestgreen" 20 "FreeSerif" 3 0 1 "icons-topo/forest-nadel-64.png" 0 500000
+"wood" "deciduous" "none" 0 0 "none" 0 1 "name" "forestgreen" 20 "FreeSerif" 3 0 1 "icons-topo/forest-laub-64.png" 0 500000
+"landuse" "residential" "lightpink" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 3 1 1 "none" 0 500000
+"landuse" "industrial" "lightpink" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 3 0 1 "none" 0 500000
+"landuse" "commercial" "lightpink" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 3 0 1 "none" 0 500000
+"landuse" "farmyard" "lightpink" 0 0 "none" 0 1 "none" "black" 30 "FreeSerif" 3 0 1 "none" 0 500000
+"landuse" "retail" "lightpink" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 3 0 1 "none" 0 100000
+"landuse" "farm" "linen" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 3 0 1 "none" 0 100000
+"landuse" "farmland" "linen" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 3 1 1 "none" 0 100000
+"landuse" "vineyard" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/vineyard-64.png" 0 500000
+"landuse" "orchard" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/orchard-64.png" 0 100000
+"landuse" "allotments" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/orchard-64.png" 0 100000
+"landuse" "forest" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 3 1 1 "icons-topo/forest-64.png" 0 500000
+"landuse" "cemetery" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 3 1 0 "icons-topo/cemetery-64.png" 0 100000
+"natural" "grass" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 0 "icons-topo/grass-64.png" 0 100000
+"landuse" "meadow" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 0 0 "icons-topo/grass-64.png" 0 100000
+"leisure" "park" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 0 0 0 "icons-topo/grass-64.png" 0 100000
+"leisure" "golf_course" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 0 0 0 "icons-topo/grass-64.png" 0 100000
+"landuse" "village_green" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 0 0 0 "icons-topo/grass-64.png" 0 100000
+"landuse" "grass" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "sans-serif" 0 0 0 "icons-topo/grass-64.png" 0 100000
+"natural" "wood" "none" 0 0 "none" 0 1 "name" "forestgreen" 16 "FreeSerif" 3 0 1 "icons-topo/forest-64.png" 0 500000
+"natural" "scrub" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 0 "icons-topo/scrub-64.png" 0 500000
+"natural" "sand" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 0 "icons-topo/sand.png" 0 100000
+"natural" "beach" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 0 0 "icons-topo/sand.png" 0 100000
+"natural" "heath" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 0 "icons-topo/heath-64.png" 0 100000
+"landuse" "quarry" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/quarry-64.png" 0 500000
+"natural" "wetland" "none" 0 0 "none" 0 1 "name" "blue" 16 "sans-serif" 3 1 0 "icons-topo/swamp.png" 0 500000
+"leisure" "nature_reserve" "none" 0 0 "none" 0 1 "name" "forestgreen" 30 "FreeSerif" 3 1 0 "icons-topo/reserve.png" 0 500000
+"landuse" "military" "none" 0 0 "none" 0 1 "name" "red" 20 "FreeSerif" 3 1 0 "icons-topo/military.png" 0 500000
+"building" "*" "dimgrey" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 0 0 0 "none" 0 50000
+"sport" "*" "lavender" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 0 0 0 "none" 0 100000
+"SECTION" "ROUTES" "ThicknessLine" "DashStyle" "Opacity" "Label" "StopNodeThickness"           
+"hiking" "red;magenta;yellow;aqua;lime;purple" 10 1 50 "ref" 10 0 50000         
+"SECTION" "END"                

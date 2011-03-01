@@ -77,6 +77,7 @@
 #      rounding error when scaling eliminated
 # 1.12 clip box parameter order changed to standard (left, bottom, right, top)
 #      -nolabel option
+# 1.13 
 #
 #
 # TODO
@@ -99,11 +100,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.12 ;
-use OSM::mapgenRules 1.12 ;
+use OSM::mapgen 1.13 ;
+use OSM::mapgenRules 1.13 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.12" ;
+my $version = "1.13" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -172,6 +173,9 @@ perl mapgen.pl
 -png (also produce png, inkscape must be installed, very big)
 -pdf (also produce pdf, inkscape must be installed)
 
+-relid=INTEGER (route to be drawn for hikingbook)
+-rectangles=R1#R2'R3... where R1=left,bottom,right,top example -rectangles=1,2,3,4#3,4,5,6 - for hikingbook overview
+
 -verbose
 -multionly (draws only areas of multipolygons; for test purposes)
 -ra=TEXT (TEXT = types and/or ids, separated by commas; add relation analyzer layer; keep normal elements in map in light colors)
@@ -236,6 +240,8 @@ my $nolabelOpt = 0 ;
 my $halo = 0 ;
 my $extPoiFileName = "" ;
 my @circles = () ;
+my $hikingbookId = 0 ; # id of hikingbook route
+my $rectangles = "" ;
 
 
 # keys from tags listed here will not be shown in tag stat
@@ -417,6 +423,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"routeiconscale:f"	=> \$routeIconScale,
 				"icondir:s"		=> \$iconDir,
 				"poifile:s"	=> \$extPoiFileName,		
+				"relid:i"	=> \$hikingbookId,
+				"rectangles:s"	=> \$rectangles,
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"ra:s"		=> \$ra,		# 
 				"verbose" 	=> \$verbose) ;		# turns twitter on
@@ -720,6 +728,8 @@ processCoastLines() ;
 
 processRoutes () ;
 
+processRectangles() ;
+
 processMultipolygons () ; # multipolygons, (routes)
 
 # BG AREAS
@@ -803,7 +813,9 @@ foreach my $nodeId (keys %memNodeTags) {
 			}
 			else {
 				$poiHash{$dirName} = 1 ;
-			}		}
+			}
+		}
+
 		if ($test->[$nodeIndexThickness] > 0) {
 			drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
 		}
@@ -1075,7 +1087,7 @@ if ($rulerOpt == 1) {
 	drawRuler ($rulerColor) ;
 }
 
-drawFoot ("gary68's $programName $version ($projection $ellipsoid) - data CC-BY-SA www.openstreetmap.org", "black", 48, "sans-serif") ;
+drawFoot ("gary68's $programName $version ($projection $ellipsoid) - data CC-BY-SA www.openstreetmap.org", "black", 24, "sans-serif") ;
 
 writeSVG ($svgName) ;
 
@@ -1767,7 +1779,8 @@ sub isIn {
 	}
 }
 
-sub processRoutes {
+
+sub processRoutes {
 #
 # process route data
 #
@@ -1793,7 +1806,8 @@ sub isIn {
 
 	foreach my $relId (keys %memRelationTags) {
 		my $relationType = getValue ("type", \@{$memRelationTags{$relId}}) ;
-		if ( $relationType eq "route" ) {
+		if ( ( $relationType eq "route" ) and ( ($hikingbookId == $relId) or ($hikingbookId == 0) ) ) {
+		# if ( $relationType eq "route" ) {
 			# look for rule
 			my $routeType = getValue ("route", \@{$memRelationTags{$relId}}) ;
 
@@ -2385,7 +2399,8 @@ sub nextPointOnBorder {
 
 	return ($xn, $yn, $corner) ;
 }
-sub addWayLabel {
+
+sub addWayLabel {
 #
 # collect all way label data before actual labeling
 #
@@ -2494,4 +2509,29 @@ sub checkCircleOpt {
 	}
 }
 
+sub processRectangles {
+
+	if ($rectangles ne "") {
+		my @rects ;
+		@rects = split /#/, $rectangles ;
+		foreach my $r (@rects) {
+			my @coords ;
+			@coords = split /,/, $r ;
+
+			my $left = $coords[0] ;
+			my $bottom = $coords[1] ;
+			my $right = $coords[2] ;
+			my $top = $coords[3] ;
+
+			my @nodes ;
+			push @nodes, ($left, $bottom) ;
+			push @nodes, ($right, $bottom) ;
+			push @nodes, ($right, $top) ;
+			push @nodes, ($left, $top) ;
+			push @nodes, ($left, $bottom) ;
+	
+			drawWay (10, "black", 5, 0, @nodes) ;
+		}
+	}
+}
 

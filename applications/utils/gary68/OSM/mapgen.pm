@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.12' ;
+$VERSION = '1.13' ;
 
 require Exporter ;
 

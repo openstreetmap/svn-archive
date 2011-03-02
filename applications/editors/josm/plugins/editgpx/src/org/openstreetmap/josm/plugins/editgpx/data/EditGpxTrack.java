@@ -44,10 +44,18 @@ public class EditGpxTrack {
                         for (WayPoint w : points) {
                             w.attr.put("time", "1970-01-01T00:00:00.000Z");
                             w.setTime();
+                            if (w.attr.containsKey("name")) {
+                                w.attr.put("name", "anon"); //time information can also be in "name" field. so delete time information
+                            }
                         }
                     }
                     wayPoints.add(points);
                 }
+            }
+        }
+        if (anonTime) {
+            if (attributes.containsKey("name")) {
+                attributes.put("name", "anon");//time information can also be in "name" field. so delete time information
             }
         }
 

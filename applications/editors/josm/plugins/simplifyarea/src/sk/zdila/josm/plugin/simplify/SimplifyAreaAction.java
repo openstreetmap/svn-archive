@@ -9,12 +9,15 @@ import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -43,8 +46,9 @@ public class SimplifyAreaAction extends JosmAction {
 
     public SimplifyAreaAction() {
         super(tr("Simplify Area"), "simplify", tr("Delete unnecessary nodes from an area."),
-                Shortcut.registerShortcut("tools:simplifyArea", tr("Tool: {0}", tr("Simplify Area")), KeyEvent.VK_A, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+                Shortcut.registerShortcut("tools:simplifyArea", tr("Tool: {0}", tr("Simplify Area")), KeyEvent.VK_F, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
+
 
 
     private List<Bounds> getCurrentEditBounds() {
@@ -118,7 +122,7 @@ public class SimplifyAreaAction extends JosmAction {
                 }
             }
         }
-        final List<Way> ways = OsmPrimitive.getFilteredList(selection, Way.class);
+        final Collection<Way> ways = OsmPrimitive.getFilteredSet(selection, Way.class);
         if (ways.isEmpty()) {
             alertSelectAtLeastOneWay();
             return;
@@ -128,13 +132,64 @@ public class SimplifyAreaAction extends JosmAction {
             }
         }
 
-        final Collection<Command> allCommands = new LinkedList<Command>();
+        final List<Node> nodesToDelete = new ArrayList<Node>(); // can contain duplicate instances
+
         for (final Way way : ways) {
-            final SequenceCommand simplifyCommand = simplifyWay(way);
-            if (simplifyCommand == null) {
-                continue;
+            addNodesToDelete(nodesToDelete, way);
+        }
+
+        class Count {
+            int count;
+        }
+
+        final Map<Node, Count> nodeCountMap = new HashMap<Node, Count>();
+        for (final Node node : nodesToDelete) {
+            Count count = nodeCountMap.get(node);
+            if (count == null) {
+                count = new Count();
+                nodeCountMap.put(node, count);
             }
-            allCommands.add(simplifyCommand);
+            count.count++;
+        }
+
+        final Collection<Node> nodesReallyToRemove = new ArrayList<Node>();
+
+        for (final Entry<Node, Count> entry : nodeCountMap.entrySet()) {
+            final Node node = entry.getKey();
+            final int count = entry.getValue().count;
+
+            if (!node.isTagged() && node.getReferrers().size() == count) {
+                nodesReallyToRemove.add(node);
+            }
+        }
+
+        final Collection<Command> allCommands = new ArrayList<Command>();
+
+        if (!nodesReallyToRemove.isEmpty()) {
+            for (final Way way : ways) {
+                final List<Node> nodes = way.getNodes();
+                final boolean closed = nodes.get(0).equals(nodes.get(nodes.size() - 1));
+                if (closed) {
+                    nodes.remove(nodes.size() - 1);
+                }
+
+                if (nodes.removeAll(nodesReallyToRemove)) {
+                    if (closed) {
+                        nodes.add(nodes.get(0));
+                    }
+
+                    final Way newWay = new Way(way);
+                    newWay.setNodes(nodes);
+                    allCommands.add(new ChangeCommand(way, newWay));
+                }
+            }
+
+            allCommands.add(new DeleteCommand(nodesReallyToRemove));
+        }
+
+        final Collection<Command> avgCommands = averageNearbyNodes(ways, nodesReallyToRemove);
+        if (avgCommands != null) {
+            allCommands.add(new SequenceCommand("average nearby nodes", avgCommands));
         }
 
         if (!allCommands.isEmpty()) {
@@ -145,32 +200,125 @@ public class SimplifyAreaAction extends JosmAction {
     }
 
 
-    /**
-     * Replies true if <code>node</code> is a required node which can't be removed in order to simplify the way.
-     *
-     * @param way
-     *            the way to be simplified
-     * @param node
-     *            the node to check
-     * @return true if <code>node</code> is a required node which can't be removed in order to simplify the way.
-     */
-    private boolean isRequiredNode(final Way way, final Node node) {
-        final List<OsmPrimitive> parents = new LinkedList<OsmPrimitive>(node.getReferrers());
-        parents.remove(way);
-        return !parents.isEmpty() || node.isTagged();
+    // average nearby nodes
+    private Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
+        final double mergeThreshold = Main.pref.getDouble("simplify-area.merge.threshold", 0.2);
+
+        final Map<Node, LatLon> coordMap = new HashMap<Node, LatLon>();
+        for (final Way way : ways) {
+            for (final Node n : way.getNodes()) {
+                coordMap.put(n, n.getCoor());
+            }
+        }
+
+        coordMap.keySet().removeAll(nodesAlreadyDeleted);
+
+        for (final Way w : ways) {
+            final List<Node> nodes = w.getNodes();
+
+            final Node lastNode = nodes.get(nodes.size() - 1);
+            final boolean closed = nodes.get(0).equals(lastNode);
+            if (closed) {
+                nodes.remove(lastNode);
+            }
+
+            nodes.retainAll(coordMap.keySet()); // removes already deleted nodes
+
+            while (true) {
+                double minDist = Double.MAX_VALUE;
+                Node node1 = null;
+                Node node2 = null;
+
+                // find smallest distance
+                for (int i = 0, len = nodes.size(); i <= len; i++) {
+                    final Node n1 = nodes.get(i % len);
+                    final Node n2 = nodes.get((i + 1) % len);
+
+                    if (n1.isTagged() || n2.isTagged()) {
+                        continue;
+                    }
+
+                    // test if both nodes are on the same ways
+                    final List<OsmPrimitive> referrers = n1.getReferrers();
+                    if (!ways.containsAll(referrers)) {
+                        continue;
+                    }
+
+                    final List<OsmPrimitive> referrers2 = n2.getReferrers();
+                    if (!ways.containsAll(referrers2)) {
+                        continue;
+                    }
+
+                    // test if both nodes have same parents
+                    if (!referrers.containsAll(referrers2) || !referrers2.containsAll(referrers)) {
+                        continue;
+                    }
+
+                    final double dist = coordMap.get(n1).greatCircleDistance(coordMap.get(n2));
+                    if (dist < minDist && dist < mergeThreshold) {
+                        minDist = dist;
+                        node1 = n1;
+                        node2 = n2;
+                    }
+                }
+
+                if (node1 == null || node2 == null) {
+                    break;
+                }
+
+                final LatLon coord = coordMap.get(node1).getCenter(coordMap.get(node2));
+                coordMap.put(node1, coord);
+
+                nodes.remove(node2);
+                coordMap.remove(node2);
+            }
+        }
+
+
+        final Collection<Command> commands = new ArrayList<Command>();
+        final Set<Node> nodesToDelete2 = new HashSet<Node>();
+        for (final Way way : ways) {
+            final List<Node> nodesToDelete = way.getNodes();
+            nodesToDelete.removeAll(nodesAlreadyDeleted);
+            if (nodesToDelete.removeAll(coordMap.keySet())) {
+                nodesToDelete2.addAll(nodesToDelete);
+                final Way newWay = new Way(way);
+                final List<Node> nodes = way.getNodes();
+                final boolean closed = nodes.get(0).equals(nodes.get(nodes.size() - 1));
+                if (closed) {
+                    nodes.remove(nodes.size() - 1);
+                }
+                nodes.retainAll(coordMap.keySet());
+                if (closed) {
+                    nodes.add(nodes.get(0));
+                }
+
+                newWay.setNodes(nodes);
+                commands.add(new ChangeCommand(way, newWay));
+            }
+        }
+
+        if (!nodesToDelete2.isEmpty()) {
+            commands.add(new DeleteCommand(nodesToDelete2));
+        }
+
+        for (final Entry<Node, LatLon> entry : coordMap.entrySet()) {
+            final Node node = entry.getKey();
+            final LatLon coord = entry.getValue();
+            if (!node.getCoor().equals(coord)) {
+                commands.add(new MoveCommand(node, coord));
+            }
+        }
+
+        return commands;
     }
 
 
-    /**
-     * Simplifies a way
-     *
-     * @param w
-     *            the way to simplify
-     */
-    private SequenceCommand simplifyWay(final Way w) {
+    private void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
+//        System.out.println("---------------- " + w.getId());
+
         final double angleThreshold = Main.pref.getDouble("simplify-area.angle.threshold", 10);
         final double angleFactor = Main.pref.getDouble("simplify-area.angle.factor", 1.0);
-        final double mergeThreshold = Main.pref.getDouble("simplify-area.merge.threshold", 0.2);
         final double areaThreshold = Main.pref.getDouble("simplify-area.area.threshold", 5.0);
         final double areaFactor = Main.pref.getDouble("simplify-area.area.factor", 1.0);
         final double distanceThreshold = Main.pref.getDouble("simplify-area.dist.threshold", 3);
@@ -180,7 +328,7 @@ public class SimplifyAreaAction extends JosmAction {
         final int size = nodes.size();
 
         if (size == 0) {
-            return null;
+            return;
         }
 
         final boolean closed = nodes.get(0).equals(nodes.get(size - 1));
@@ -191,7 +339,13 @@ public class SimplifyAreaAction extends JosmAction {
 
         // remove nodes within threshold
 
+        final List<Double> weightList = new ArrayList<Double>(nodes.size()); // weight cache
+        for (int i = 0; i < nodes.size(); i++) {
+            weightList.add(null);
+        }
+
         while (true) {
+//            System.out.println(nodes.size());
             Node prevNode = null;
             LatLon coord1 = null;
             LatLon coord2 = null;
@@ -200,18 +354,28 @@ public class SimplifyAreaAction extends JosmAction {
             Node bestMatch = null;
 
             for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
-                final Node n = nodes.get(i % nodes.size());
+                final int index = i % nodes.size();
+
+                final Node n = nodes.get(index);
                 final LatLon coord3 = n.getCoor();
 
                 if (coord1 != null) {
-                    final double angleWeight = computeConvectAngle(coord1, coord2, coord3) / angleThreshold;
-                    final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
-                    final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
+                    final double weight;
 
-                    final double weight = isRequiredNode(w, prevNode) ||
-                    !closed && i == len - 1 || // don't remove last node of the not closed way
-                    angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
-                        angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
+                    if (weightList.get(index) == null) {
+                        final double angleWeight = computeConvectAngle(coord1, coord2, coord3) / angleThreshold;
+                        final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
+                        final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
+
+                        weight = /*isRequiredNode(w, prevNode, minUse) ||*/
+                        !closed && i == len - 1 || // don't remove last node of the not closed way
+                        angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
+                            angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
+
+                        weightList.set(index, weight);
+                    } else {
+                        weight = weightList.get(index);
+                    }
 
                     if (weight < minWeight) {
                         minWeight = weight;
@@ -228,74 +392,19 @@ public class SimplifyAreaAction extends JosmAction {
                 break;
             }
 
-            nodes.remove(bestMatch);
-        }
+            final int index = nodes.indexOf(bestMatch);
 
-
-        // average nearby nodes
-
-        final Map<Node, LatLon> coordMap = new HashMap<Node, LatLon>();
-        for (final Node n : nodes) {
-            coordMap.put(n, n.getCoor());
-        }
-
-        final Map<Node, MoveCommand> moveCommandList = new HashMap<Node, MoveCommand>();
-
-        while (true) {
-            double minDist = Double.MAX_VALUE;
-            Node node1 = null;
-            Node node2 = null;
-
-            for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
-                final Node n1 = nodes.get(i % nodes.size());
-                final Node n2 = nodes.get((i + 1) % nodes.size());
-
-                if (isRequiredNode(w, n1) || isRequiredNode(w, n2)) {
-                    continue;
-                }
-
-                final double dist = coordMap.get(n1).greatCircleDistance(coordMap.get(n2));
-                if (dist < minDist && dist < mergeThreshold) {
-                    minDist = dist;
-                    node1 = n1;
-                    node2 = n2;
-                }
-            }
-
-            if (node1 == null || node2 == null) {
-                break;
-            }
-
-
-            final LatLon coord = coordMap.get(node1).getCenter(coordMap.get(node2));
-            coordMap.put(node1, coord);
-            moveCommandList.put(node1, new MoveCommand(node1, coord));
-
-            nodes.remove(node2);
-            coordMap.remove(node2);
-            moveCommandList.remove(node2);
-        }
-
-
-        if (closed) {
-            nodes.add(nodes.get(0)); // set end node ( = start node)
+            final int size2 = nodes.size();
+            weightList.set((index - 1 + size2) % size2, null);
+            weightList.set((index + 1 + size2) % size2, null);
+            weightList.remove(index);
+            nodes.remove(index);
         }
 
         final HashSet<Node> delNodes = new HashSet<Node>(w.getNodes());
         delNodes.removeAll(nodes);
 
-        if (delNodes.isEmpty()) {
-            return null;
-        }
-
-        final Collection<Command> cmds = new LinkedList<Command>();
-        final Way newWay = new Way(w);
-        newWay.setNodes(nodes);
-
-        cmds.addAll(moveCommandList.values());
-        cmds.add(new ChangeCommand(w, newWay));
-        cmds.add(new DeleteCommand(delNodes));
-        return new SequenceCommand(trn("Simplify Area (remove {0} node)", "Simplify Area (remove {0} nodes)", delNodes.size(), delNodes.size()), cmds);
+        nodesToDelete.addAll(delNodes);
     }
 
 

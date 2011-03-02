@@ -15,19 +15,13 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.3" ;
+my $version = "0.4" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
 my $overviewStyleFileName = "hikingRules.csv" ;
 my $detailStyleFileName = "hikingRules.csv" ;
-# my $relationId = 86835 ; # fulda diemel > 1 seg 60 nodes 2.4km
-# my $relationId = 223649 ; # HW20 ways MISSING
-# my $relationId = 70544 ; # taunus 45 ; > 1 seg
-# my $relationId = 70705 ; # E 1 - error way?
-# my $relationId = 76002 ; # mainwanderweg
-# my $relationId = 23088 ; # bonifatius 21km
-# my $relationId = 149386 ; # one segment !!!
+my $poiFileName = "hikingbook.poi" ;
 my $relationId = 0 ;
 my $scale = 10000 ; # default detail scale 
 my %pageHeight = () ;
@@ -39,7 +33,7 @@ $pageWidth{"A5"} = 13.8 ;
 my @overviewScales = (10000,25000,50000,75000,100000,200000,500000,1000000) ; # best fit will be taken
 my $title = "Hiking book" ;
 my $workDir = "" ;
-
+my $logFileName = "hikingbooklog.txt" ;
 
 my %lon ; my %lat ;
 my @ways ;
@@ -52,13 +46,14 @@ my $rectangles = "" ; # collect data for overview map
 
 my $languageOpt = "EN" ;
 my $noOutputOpt = 0 ;
-my $verboseOpt = 1 ;
+my $verboseOpt = 0 ;
 my $dirNumberOpt = 8 ; # number of different directions used (N,S,SW...)
 my $pageSizeOpt = "A4" ;
-my $overlapOpt = 10 ; # in percent
+my $overlapOpt = 5 ; # in percent
+my $landscapeOpt = 0 ;
 
-my $extraMapData1 = 0.3 ; # overlap for osm temp file 1
-my $extraMapData2 = 0.2 ; # for temp file 2s
+my $extraMapData1 = 0.4 ; # overlap for osm temp file 1
+my $extraMapData2 = 0.3 ; # for temp file 2s
 
 # relation bounding box. all data.
 my $relLonMax = -999 ;
@@ -84,15 +79,23 @@ my $temp2FileName = "temp2.osm" ;
 my %nodeName = () ;
 my %nodeElevation = () ;
 my %nodeInfo = () ;
+my $segmentLength = 0 ;
+
+my @poiList ;   # POIs actually found
+my @pois = () ; # POIs to be used
 
 
 getProgramOptions () ;
+
+getPoiFiledata () ;
 
 getRelationData() ;
 
 createTemp1 () ;
 
 buildCompleteWay() ;
+
+addPois() ;
 
 createDetailMaps() ;
 
@@ -138,6 +141,8 @@ sub getRelationData {
 	if ($found == 0) {
 		die ("relation not found!\n") ;
 	}
+
+	# TODO ROLES
 
 	my $wc = 0 ;
 	my %types = () ;
@@ -202,6 +207,7 @@ sub getRelationData {
 			# print "name: $name\n" ;
 
 		}
+
 
 		($propRef, $nodesRef, $tagsRef) = getWay3() ;
 	}
@@ -269,6 +275,7 @@ sub getRelationData {
 
 
 sub createTemp1 {
+	# this file is used to draw the overview and further osm files for details are generated from this one to save time.
 	print "\ncreate temp file 1...\n" ;
 
 	my $scale ;
@@ -306,7 +313,7 @@ sub createTemp1 {
 	$scaleOverview = $scale ;
 
 	if ($verboseOpt eq "1") {
-		print "selected scale: $scale\n" ;
+		print "selected overview scale: $scale\n" ;
 	}
 
 
@@ -324,6 +331,20 @@ sub createTemp1 {
 			if ( $$propRef{"lon"} < $file1LonMin ) { $file1LonMin = $$propRef{"lon"} ; }
 			if ( $$propRef{"lat"} > $file1LatMax ) { $file1LatMax = $$propRef{"lat"} ; }
 			if ( $$propRef{"lat"} < $file1LatMin ) { $file1LatMin = $$propRef{"lat"} ; }
+
+			# poi check and data collection
+			foreach my $t (@$tagsRef) {
+				foreach my $p (@pois) {
+					if ( ($t->[0] eq $p->[0]) and ($t->[1] eq $p->[1]) ) {
+						my $info ;
+						if ($languageOpt eq "EN") { $info = $p->[3] ; }
+						if ($languageOpt eq "DE") { $info = $p->[4] ; }
+						push @poiList, [ $info, "", $$propRef{"id"}, $p->[2] ] ;
+						$lon{ $$propRef{"id"} } = $$propRef{"lon"} ;
+						$lat{ $$propRef{"id"} } = $$propRef{"lat"} ;
+					}
+				}
+			}
 
 			($propRef, $tagsRef) = getNode3() ;
 		}
@@ -351,8 +372,8 @@ sub createOverviewMap {
 		if ($ovLatMin < $file1LatMin) { $ovLatMin = $file1LatMin ; }
 		if ($ovLatMax > $file1LatMax) { $ovLatMax = $file1LatMax ; }
 
-		print "call mapgen...\n" ;
-		`perl mapgen.pl -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -pdf -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -declutter -legend=0 -relid=$relationId $rectangles -scale` ;
+		print "call mapgen and log to $logFileName...\n" ;
+		`perl mapgen.pl -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -pdf -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -declutter -legend=0 -relid=$relationId $rectangles -scale >> $logFileName 2>&1` ;
 		print "done.\n" ;
 	}
 }
@@ -449,15 +470,16 @@ sub buildCompleteWay {
 		}
 	}
 
-	# calc distances
+	# calc distances // nodeinfo is indexed by node number, not ID!
 	my $dist = 0 ;
 	$nodeInfo{0}{"distance"} = 0 ;
 	for (my $i = 1;  $i<=$#nodes; $i++) {
 		$dist += distance ($lon{$nodes[$i-1]}, $lat{$nodes[$i-1]}, $lon{$nodes[$i]}, $lat{$nodes[$i]}) ;
 		$nodeInfo{$i}{"distance"} = int ($dist * 100) / 100 ;
 	}
+	$segmentLength = $dist ;
 	$dist = int ($dist * 1000) / 1000 ;
-	print "segment is $dist km long.\n" ;
+	print "route segment is $dist km long.\n" ;
 
 	# nodeinfo is indexed by nodeNumber, NOT id!
 	for (my $i = 0;  $i<$#nodes; $i++) {
@@ -465,6 +487,15 @@ sub buildCompleteWay {
 		$nodeInfo{$i}{"name"} = $nodeName{ $nodes[$i] } ;		
 		$nodeInfo{$i}{"ele"} = $nodeElevation{ $nodes[$i] } ;		
 	}
+
+	# TODO REMOVE
+	$nodeInfo{1}{"ele"} = 220 ;
+	$nodeInfo{10}{"ele"} = 270 ;
+	$nodeInfo{20}{"ele"} = 350 ;
+	$nodeInfo{30}{"ele"} = 250 ;
+	$nodeInfo{40}{"ele"} = 210 ;
+	$nodeInfo{50}{"ele"} = 290 ;
+
 
 	$nodeInfo{$#nodes}{"ele"} = $nodeElevation{ $nodes[ -1 ] } ;
 	$nodeInfo{$#nodes}{"direction"} = "" ;
@@ -480,7 +511,7 @@ sub buildCompleteWay {
 
 	if ($verboseOpt eq "1") {
 		print "ordered ways: @ways\n" ;
-		print "ordered nodes: @nodes\n" ;
+		print "\nordered nodes: @nodes\n\n" ;
 	}
 }
 
@@ -626,8 +657,9 @@ sub createDetailMaps {
 			}
 			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
 
-			print "call mapgen...\n" ;
-			`perl mapgen.pl -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -pdf -clipbbox=$lonMin,$latMin,$lonMax,$latMax -declutter -legend=0 -poifile=step.txt -relid=$relationId -scale` ;
+			print "call mapgen and log to $logFileName...\n" ;
+			`perl mapgen.pl -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -pdf -clipbbox=$lonMin,$latMin,$lonMax,$latMax -declutter -legend=0 -poifile=step.txt -relid=$relationId -scale >> $logFileName 2>&1` ;
+			print "done.\n" ;
 		}
 
 		# next
@@ -667,8 +699,8 @@ sub shrinkFile {
 
 
 	# call osmosis
-	print "call osmosis...\n" ;
-	`osmosis --read-xml $inFileName  --bounding-box clipIncompleteEntities=true bottom=$outLatMin top=$outLatMax left=$outLonMin right=$outLonMax --write-xml $outFileName` ;
+	print "call osmosis and log to $logFileName...\n" ;
+	`osmosis --read-xml $inFileName  --bounding-box clipIncompleteEntities=true bottom=$outLatMin top=$outLatMax left=$outLonMin right=$outLonMax --write-xml $outFileName >> $logFileName 2>&1` ;
 	print "osmosis done.\n" ;
 
 }
@@ -732,11 +764,11 @@ sub mergeAllFiles {
 		$name = " " . $workDir . "detail" . $i . ".pdf" ; 
 		$files .= $name ;
 	}
-	print "\ncall ghostscript to merge pdfs.\n" ;
+	print "\ncall ghostscript to merge pdfs and log to $logFileName\n" ;
 	if ($verboseOpt eq "1") {
 		print "gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files\n" ;
 	}
-	`gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files` ;
+	`gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files >> $logFileName 2>&1` ;
 }
 
 sub createDirections {
@@ -750,8 +782,8 @@ sub createDirections {
 	my %label = () ;
 	$label{"EN"}{"directions"} = "Directions" ;
 	$label{"DE"}{"directions"} = "Wegbeschreibung" ;
-	$label{"EN"}{"number"} = "Number" ;
-	$label{"DE"}{"number"} = "Nummer" ;
+	$label{"EN"}{"number"} = "Nr" ;
+	$label{"DE"}{"number"} = "Nr" ;
 	$label{"EN"}{"distance"} = "Distance" ;
 	$label{"DE"}{"distance"} = "Entfernung" ;
 	$label{"EN"}{"name"} = "Name" ;
@@ -762,6 +794,8 @@ sub createDirections {
 	$label{"DE"}{"elevation"} = "Höhe" ;
 	$label{"EN"}{"info"} = "Information" ;
 	$label{"DE"}{"info"} = "Informationen" ;
+	$label{"EN"}{"eleprofile"} = "Elevation profile" ;
+	$label{"DE"}{"eleprofile"} = "Höhenprofil" ;
 
 	open (my $texFile, ">", $texFileName) or die ("can't open tex output file") ;
 	if ($pageSizeOpt eq "A5") {
@@ -774,7 +808,7 @@ sub createDirections {
 	print $texFile "\\usepackage{longtable}\n" ;
 	print $texFile "\\begin{document}\n" ;
 	print $texFile "\\section*{" .  $label{$languageOpt}{"directions"} . "}\n" ;
-	print $texFile "\n" ;
+	print $texFile "\\footnotesize\n" ;
 
 	print $texFile "\\begin{longtable}{|l|l|l|l|l|l|}\n" ;
 	print $texFile "\\hline\n" ;
@@ -789,6 +823,7 @@ sub createDirections {
 		if ($nodeInfo{$i-1}{"direction"} ne $nodeInfo{$i}{"direction"}) { $toPrint{$i} = 1 ; }
 		if ($nodeInfo{$i-1}{"name"} ne $nodeInfo{$i}{"name"}) { $toPrint{$i} = 1 ; }
 		if ($nodeInfo{$i}{"ele"} ne "") { $toPrint{$i} = 1 ; }
+		if ( defined $nodeInfo{$i}{"information"} ) { $toPrint{$i} = 1 ; }
 	}
 
 	# prepare information
@@ -815,11 +850,11 @@ sub createDirections {
 			$line++ ;
 			my $stepDist = $nodeInfo{$i}{"distance"} - $lastDist ;
 			$stepDist = int ($stepDist * 100) / 100 ;
-			print $texFile "$line ($i) & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
+			print $texFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
 			print $texFile "\\hline\n" ;
 			$lastDist = $nodeInfo{$i}{"distance"} ;
 
-			if ( ($i == 0 ) or ($i == $#nodes) or ($stepDist > 0.3) ) {
+			if ( (defined $nodeInfo{$i}{'information'}) or ($stepDist > 0.3) ) {
 				print $stepFile $lon{ $nodes[$i] } . " " ;
 				print $stepFile $lat{ $nodes[$i] } . " " ;
 				print $stepFile "25 " ;
@@ -833,6 +868,50 @@ sub createDirections {
 
 	print $texFile "\\end{longtable}\n" ;
 
+
+	my $countEle = 0 ; my $eleMin = 999 ; my $eleMax = -999 ;
+	for (my $i=0; $i<=$#nodes; $i++) {
+		if ($nodeInfo{$i}{'ele'} ne "") { 
+			$countEle++ ; 
+			if ($nodeInfo{$i}{'ele'} > $eleMax) { $eleMax = $nodeInfo{$i}{'ele'} ; }
+			if ($nodeInfo{$i}{'ele'} < $eleMin) { $eleMin = $nodeInfo{$i}{'ele'} ; }
+		}
+	}
+
+	if ($countEle >= 2) {
+		print $texFile "\\section*{" .  $label{$languageOpt}{"eleprofile"} . "}\n" ;
+		print $texFile "\\setlength{\\unitlength}{1mm}\n" ;
+		my $height = int ( ($eleMax - $eleMin) / 10 ) ;
+		my $lh = $height + 10 ;
+		print $texFile "\\begin{picture} ($lh,110)\n" ;
+
+		my $width = 0 ;
+		foreach my $d (1, 5, 10, 20, 50, 100, 200, 500, 1000) {
+			if ($d > $segmentLength) {
+				$width = $d ;
+				last ;
+			} 
+		}
+		print $texFile "\\put(10,10){\\line(110,0){100}}\n" ;
+		print $texFile "\\put(10,10){\\line(0,$height){$height}}\n" ;
+		my $h1 = int ($eleMin) ;
+		my $h2 = int ($eleMax) ;
+		my $pos2 = $height + 10 ;
+		print $texFile "\\put(0,12){\\tiny $h1 m}\n" ;
+		print $texFile "\\put(0,$pos2){\\tiny $h2 m}\n" ;
+		print $texFile "\\put(100,2){\\tiny $width km}\n" ;
+
+
+		for (my $i=0; $i<=$#nodes; $i++) {
+			if ($nodeInfo{$i}{"ele"} ne "") {
+				my $x = int ($nodeInfo{$i}{"distance"} / $width * 100) + 10 ;
+				my $y = ($nodeInfo{$i}{"ele"} - $eleMin) / 10 + 10 ;
+				print $texFile "\\put($x,$y){\\circle*{1}}\n" ;
+			}
+		}
+		print $texFile "\\end{picture}\n" ;
+	}
+
 	print $texFile "\\end{document}\n" ;
 	close ($texFile) ;
 
@@ -844,12 +923,13 @@ sub createDirections {
 	$psFileName =~ s/.tex/.ps/ ;
 	my $pdfFileName = "directions.pdf" ;
 
-	`latex $texFileName` ;
-	`latex $texFileName` ;
+	print "call latex and log to $logFileName\n" ;
+	`latex $texFileName >> $logFileName 2>&1` ;
+	`latex $texFileName >> $logFileName 2>&1` ;
 	print "directory dvi file created.\n" ;
-	`dvips -D600 $dviFileName -o` ;
+	`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
 	print "directory ps file created.\n" ;
-	`ps2pdf $psFileName $pdfFileName` ;
+	`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
 	print "directory pdf file created.\n" ;
 	`rm *.dvi` ;
 	# `rm *.tex` ;
@@ -882,8 +962,9 @@ sub createTitlePage {
 	print $texFile "\\thispagestyle{empty}\n" ;
 	print $texFile "\\vspace*{8cm}\n" ;
 	print $texFile "\\Huge\n" ;
-	print $texFile "$title\n" ;
-	print $texFile "\\newline\n" ;
+	print $texFile "$title \\par\n" ;
+	# print $texFile "\\newline\n" ;
+	print $texFile "\\vspace*{2cm}\n" ;
 	print $texFile "\\normalsize\n" ;
 	print $texFile "created with hikingbook.pl\n" ;
 	
@@ -897,12 +978,13 @@ sub createTitlePage {
 	$psFileName =~ s/.tex/.ps/ ;
 	my $pdfFileName = "title.pdf" ;
 
-	`latex $texFileName` ;
-	`latex $texFileName` ;
+	print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
+	`latex $texFileName >> $logFileName 2>&1` ;
+	`latex $texFileName >> $logFileName 2>&1` ;
 	print "directory dvi file created.\n" ;
-	`dvips -D600 $dviFileName -o` ;
+	`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
 	print "directory ps file created.\n" ;
-	`ps2pdf $psFileName $pdfFileName` ;
+	`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
 	print "directory pdf file created.\n" ;
 	`rm *.dvi` ;
 	# `rm *.tex` ;
@@ -927,6 +1009,7 @@ sub getProgramOptions {
 					"overlap=i"	=> \$overlapOpt,
 					"dirnumber=i"	=> \$dirNumberOpt,
 					"scale=i"	=> \$scale,
+					"landscape"	=> \$landscapeOpt,
 					"help"		=> \$helpOpt,
 					"verbose" 	=> \$verboseOpt ) ;
 
@@ -941,6 +1024,14 @@ sub getProgramOptions {
 	}
 	else {
 		$pageSizeOpt = "A4" ;
+	}
+
+	if ($landscapeOpt eq "1") {
+		foreach my $f (keys %pageHeight) {
+			my $temp = $pageHeight{$f} ;
+			$pageHeight{$f} = $pageWidth{$f} ;
+			$pageWidth{$f} = $temp ;
+		}
 	}
 
 	if ($helpOpt eq "1") {
@@ -958,8 +1049,9 @@ sub usage {
 	print "-title=\"title text\" (for title page)\n" ;
 	print "-language=EN|DE\n" ;
 	print "-pagesize=A4|A5\n" ;
+	print "-landscape\n" ;
 	print "-relation=<relation id>\n" ;
-	print "-overlap=<percent> (10 for 10\% overlap on each side; default=10)\n" ;
+	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
 	print "-scale=<integer> (scale for detail maps); default = 10000\n" ;
 	print "-verbose\n" ;
@@ -967,3 +1059,47 @@ sub usage {
 	print "\n" ;
 }
 
+
+sub addPois {
+	print "\nadding POIs to description...\n" ;
+	foreach my $p (@poiList) {
+		my $minDist = 999 ;
+		my $nodeNumber = -1 ;
+		my $dir = "" ;
+		for (my $i = 0; $i <= $#nodes; $i++) {
+			my $dist = distance ( $lon {$p->[2]}, $lat {$p->[2]}, $lon{ $nodes[$i] }, $lat{ $nodes[$i] }) ;
+			if ($dist < $minDist) {
+				$minDist = $dist ;
+				$nodeNumber = $i ;
+				$dir = direction ( $nodes[$i], $p->[2] ) ;
+			}
+		}
+		if ($minDist < $p->[3]) {
+			my $info = $p->[0] ;
+			$minDist = int ($minDist * 100) / 100 ;
+			push @{$nodeInfo{$nodeNumber}{"information"}}, "$info ($dir $minDist)" ;
+		}
+	}
+}
+
+sub getPoiFiledata {
+	print "\nreading poi file...\n" ;
+	my $result = open (my $file, "<", $poiFileName) ;
+	if ($result) {
+		my $line = "" ;
+		my $count = 0 ;
+		while ($line = <$file>) {
+			my ($k, $v, $d, $en, $de) = ( $line =~ /(.+),(.+),(.+),(.+),(.+)/ ) ;
+			if ( (defined $k) and (defined $v) and (defined $d) and (defined $en) and (defined $de) ) {
+				$count++ ;
+				push @pois, [$k, $v, $d, $en, $de] ;
+				if ($verboseOpt eq "1") { print "POI $k=$v read from file.\n" ; }
+			}
+		}
+		close ($file) ;
+		print "$count pois read.\n" ;
+	}
+	else {
+		print "WARNING: poi file $poiFileName could not be opened!\n" ;
+	}
+}

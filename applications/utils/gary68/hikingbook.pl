@@ -488,15 +488,6 @@ sub buildCompleteWay {
 		$nodeInfo{$i}{"ele"} = $nodeElevation{ $nodes[$i] } ;		
 	}
 
-	# TODO REMOVE
-	$nodeInfo{1}{"ele"} = 220 ;
-	$nodeInfo{10}{"ele"} = 270 ;
-	$nodeInfo{20}{"ele"} = 350 ;
-	$nodeInfo{30}{"ele"} = 250 ;
-	$nodeInfo{40}{"ele"} = 210 ;
-	$nodeInfo{50}{"ele"} = 290 ;
-
-
 	$nodeInfo{$#nodes}{"ele"} = $nodeElevation{ $nodes[ -1 ] } ;
 	$nodeInfo{$#nodes}{"direction"} = "" ;
 	$nodeInfo{$#nodes}{"name"} = "" ;

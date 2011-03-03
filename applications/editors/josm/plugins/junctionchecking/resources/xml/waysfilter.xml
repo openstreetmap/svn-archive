@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<highway entity="k">
+	<motorway entity="v" />
+	<motorway_link entity="v" />
+	<trunk entity="v" />
+	<trunk_link entity="v" />
+	<primary entity="v" />
+	<primary_link entity="v" />
+	<secondary entity="v" />
+	<tertiary entity="v" />
+	<residential entity="v" />
+	<living_street entity="v" />
+	<unclassified entity="v" />
+	<track entity="v" />
+</highway>

@@ -4,7 +4,6 @@
 
 # todo
 # - print parameters
-# - parameter strings for mapgen
 #
 # - tile server support
 #
@@ -15,7 +14,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.4" ;
+my $version = "0.5" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -54,6 +53,9 @@ my $landscapeOpt = 0 ;
 
 my $extraMapData1 = 0.4 ; # overlap for osm temp file 1
 my $extraMapData2 = 0.3 ; # for temp file 2s
+
+my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
+my $mapgenCommandDetail = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
 
 # relation bounding box. all data.
 my $relLonMax = -999 ;
@@ -286,7 +288,7 @@ sub createTemp1 {
 	$distLat = int ($distLat * 1000) / 1000 ;
 
 	if ($verboseOpt eq "1") {
-		print "distances lon / lat in km: $distLon $distLat\n" ;
+		print "overview distances lon / lat in km: $distLon $distLat\n" ;
 	}
 
 	my $distWidth = $pageWidth{$pageSizeOpt} / 100 / 1000 ;
@@ -295,7 +297,7 @@ sub createTemp1 {
 	my $scaleHeight =  int ($distLat / $distHeight) ;
 
 	if ($verboseOpt eq "1") {
-		print "scales W/H: $scaleWidth / $scaleHeight\n" ;
+		print "overview scales W/H: $scaleWidth / $scaleHeight\n" ;
 	}
 
 	# select min scale
@@ -373,7 +375,9 @@ sub createOverviewMap {
 		if ($ovLatMax > $file1LatMax) { $ovLatMax = $file1LatMax ; }
 
 		print "call mapgen and log to $logFileName...\n" ;
-		`perl mapgen.pl -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -pdf -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -declutter -legend=0 -relid=$relationId $rectangles -scale >> $logFileName 2>&1` ;
+
+		`$mapgenCommandOverview -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -relid=$relationId $rectangles >> $logFileName 2>&1` ;
+
 		print "done.\n" ;
 	}
 }
@@ -453,8 +457,10 @@ sub buildCompleteWay {
 	if ( scalar (keys %leftWays) > 0) { print "WARNING: relation consists of more than one segment. using only first one.\n" ; }
 
 	my $nc = scalar @nodes ;
-	print "used segment consists of $nc nodes.\n" ;
 
+	if ($verboseOpt eq "1") {
+		print "used segment consists of $nc nodes.\n" ;
+	}
 
 	@ways = @orderedWays ;
 
@@ -479,7 +485,7 @@ sub buildCompleteWay {
 	}
 	$segmentLength = $dist ;
 	$dist = int ($dist * 1000) / 1000 ;
-	print "route segment is $dist km long.\n" ;
+	print "used route segment is $dist km long.\n" ;
 
 	# nodeinfo is indexed by nodeNumber, NOT id!
 	for (my $i = 0;  $i<$#nodes; $i++) {
@@ -649,7 +655,7 @@ sub createDetailMaps {
 			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
 
 			print "call mapgen and log to $logFileName...\n" ;
-			`perl mapgen.pl -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -pdf -clipbbox=$lonMin,$latMin,$lonMax,$latMax -declutter -legend=0 -poifile=step.txt -relid=$relationId -scale >> $logFileName 2>&1` ;
+			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId >> $logFileName 2>&1` ;
 			print "done.\n" ;
 		}
 
@@ -769,7 +775,9 @@ sub createDirections {
 	open (my $stepFile, ">", $stepFileName) or die ("can't open step output file") ;
 
 	my $texFileName ; 
+	my $ltxFileName ; 
 	$texFileName = "directions.tex" ;
+	$ltxFileName = "directionsltx.tex" ;
 	my %label = () ;
 	$label{"EN"}{"directions"} = "Directions" ;
 	$label{"DE"}{"directions"} = "Wegbeschreibung" ;
@@ -789,6 +797,7 @@ sub createDirections {
 	$label{"DE"}{"eleprofile"} = "Höhenprofil" ;
 
 	open (my $texFile, ">", $texFileName) or die ("can't open tex output file") ;
+	open (my $ltxFile, ">", $ltxFileName) or die ("can't open tex ltx output file") ;
 	if ($pageSizeOpt eq "A5") {
 		print $texFile "\\documentclass[a5paper,12pt]{book}\n" ;
 	}
@@ -797,14 +806,16 @@ sub createDirections {
 	}
 	print $texFile "\\usepackage[utf8]{inputenc}\n" ;
 	print $texFile "\\usepackage{longtable}\n" ;
+	print $texFile "\\usepackage{ltxtable}\n" ;
 	print $texFile "\\begin{document}\n" ;
 	print $texFile "\\section*{" .  $label{$languageOpt}{"directions"} . "}\n" ;
-	print $texFile "\\footnotesize\n" ;
+	print $texFile "\\LTXtable{\\textwidth}{directionsltx}\n" ;
 
-	print $texFile "\\begin{longtable}{|l|l|l|l|l|l|}\n" ;
-	print $texFile "\\hline\n" ;
-	print $texFile "$label{$languageOpt}{'number'} & $label{$languageOpt}{'distance'} & $label{$languageOpt}{'elevation'} & $label{$languageOpt}{'name'} & $label{$languageOpt}{'direction'} & $label{$languageOpt}{'info'} \\\\ \n" ;
-	print $texFile "\\hline\n" ;
+	print $ltxFile "\\tiny\n" ;
+	print $ltxFile "\\begin{longtable}{|p{1cm}|p{2cm}|p{1.5cm}|p{3cm}|p{2cm}|p{3cm}|}\n" ;
+	print $ltxFile "\\hline\n" ;
+	print $ltxFile "$label{$languageOpt}{'number'} & $label{$languageOpt}{'distance'} & $label{$languageOpt}{'elevation'} & $label{$languageOpt}{'name'} & $label{$languageOpt}{'direction'} & $label{$languageOpt}{'info'} \\\\ \n" ;
+	print $ltxFile "\\hline\n" ;
 
 
 	my %toPrint = () ;
@@ -841,8 +852,8 @@ sub createDirections {
 			$line++ ;
 			my $stepDist = $nodeInfo{$i}{"distance"} - $lastDist ;
 			$stepDist = int ($stepDist * 100) / 100 ;
-			print $texFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
-			print $texFile "\\hline\n" ;
+			print $ltxFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
+			print $ltxFile "\\hline\n" ;
 			$lastDist = $nodeInfo{$i}{"distance"} ;
 
 			if ( (defined $nodeInfo{$i}{'information'}) or ($stepDist > 0.3) ) {
@@ -857,7 +868,7 @@ sub createDirections {
 		}		
 	}
 
-	print $texFile "\\end{longtable}\n" ;
+	print $ltxFile "\\end{longtable}\n" ;
 
 
 	my $countEle = 0 ; my $eleMin = 999 ; my $eleMax = -999 ;
@@ -874,10 +885,10 @@ sub createDirections {
 		print $texFile "\\setlength{\\unitlength}{1mm}\n" ;
 		my $height = int ( ($eleMax - $eleMin) / 10 ) ;
 		my $lh = $height + 10 ;
-		print $texFile "\\begin{picture} ($lh,110)\n" ;
+		print $texFile "\\begin{picture} (110,$lh)\n" ;
 
 		my $width = 0 ;
-		foreach my $d (1, 5, 10, 20, 50, 100, 200, 500, 1000) {
+		foreach my $d (1, 5, 10, 15, 20, 30, 50, 75, 100, 150, 200, 300, 500, 750, 1000) {
 			if ($d > $segmentLength) {
 				$width = $d ;
 				last ;
@@ -905,6 +916,7 @@ sub createDirections {
 
 	print $texFile "\\end{document}\n" ;
 	close ($texFile) ;
+	close ($ltxFile) ;
 
 	close ($stepFile) ;
 
@@ -914,14 +926,11 @@ sub createDirections {
 	$psFileName =~ s/.tex/.ps/ ;
 	my $pdfFileName = "directions.pdf" ;
 
-	print "call latex and log to $logFileName\n" ;
+	print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
 	`latex $texFileName >> $logFileName 2>&1` ;
 	`latex $texFileName >> $logFileName 2>&1` ;
-	print "directory dvi file created.\n" ;
 	`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
-	print "directory ps file created.\n" ;
 	`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
-	print "directory pdf file created.\n" ;
 	`rm *.dvi` ;
 	# `rm *.tex` ;
 	`rm *.ps` ;
@@ -929,11 +938,12 @@ sub createDirections {
 	`rm *.log` ;
 	my $target = $workDir . "directions.pdf" ;
 	# `mv directions.pdf $target` ;
-
+	print "done\n" ;
 }
 
 sub createTitlePage {
 	
+	print "create title page...\n" ;
 	my $texFileName ; 
 	$texFileName = "title.tex" ;
 
@@ -972,11 +982,8 @@ sub createTitlePage {
 	print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
 	`latex $texFileName >> $logFileName 2>&1` ;
 	`latex $texFileName >> $logFileName 2>&1` ;
-	print "directory dvi file created.\n" ;
 	`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
-	print "directory ps file created.\n" ;
 	`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
-	print "directory pdf file created.\n" ;
 	`rm *.dvi` ;
 	# `rm *.tex` ;
 	`rm *.ps` ;
@@ -984,6 +991,7 @@ sub createTitlePage {
 	`rm *.log` ;
 	my $target = $workDir . "title.pdf" ;
 	# `mv title.pdf $target` ;
+	print "done.\n" ;
 }
 
 
@@ -1094,3 +1102,4 @@ sub getPoiFiledata {
 		print "WARNING: poi file $poiFileName could not be opened!\n" ;
 	}
 }
+

@@ -77,7 +77,8 @@
 #      rounding error when scaling eliminated
 # 1.12 clip box parameter order changed to standard (left, bottom, right, top)
 #      -nolabel option
-# 1.13 
+# 1.13 -relid and -rectangles
+# 1.14 -pagenumbers
 #
 #
 # TODO
@@ -100,11 +101,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.13 ;
-use OSM::mapgenRules 1.13 ;
+use OSM::mapgen 1.14 ;
+use OSM::mapgenRules 1.14 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.13" ;
+my $version = "1.14" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -175,6 +176,7 @@ perl mapgen.pl
 
 -relid=INTEGER (route to be drawn for hikingbook)
 -rectangles=R1#R2'R3... where R1=left,bottom,right,top example -rectangles=1,2,3,4#3,4,5,6 - for hikingbook overview
+-pagenumbers=SIZE,COLOR,NUMBER[,LEFT,BOTTOM,RIGHT,TOP]
 
 -verbose
 -multionly (draws only areas of multipolygons; for test purposes)
@@ -242,7 +244,9 @@ my $extPoiFileName = "" ;
 my @circles = () ;
 my $hikingbookId = 0 ; # id of hikingbook route
 my $rectangles = "" ;
-
+my $pageNumbers = "" ;
+my $pnSize = 24 ;
+my $pnColor = "black" ;
 
 # keys from tags listed here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
@@ -425,6 +429,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"poifile:s"	=> \$extPoiFileName,		
 				"relid:i"	=> \$hikingbookId,
 				"rectangles:s"	=> \$rectangles,
+				"pagenumbers:s"	=> \$pageNumbers,
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"ra:s"		=> \$ra,		# 
 				"verbose" 	=> \$verbose) ;		# turns twitter on
@@ -727,6 +732,8 @@ else {
 processCoastLines() ;
 
 processRoutes () ;
+
+processPageNumbers() ;
 
 processRectangles() ;
 
@@ -1087,7 +1094,7 @@ if ($rulerOpt == 1) {
 	drawRuler ($rulerColor) ;
 }
 
-drawFoot ("gary68's $programName $version ($projection $ellipsoid) - data CC-BY-SA www.openstreetmap.org", "black", 24, "sans-serif") ;
+drawFoot ("gary68's $programName $version ($projection $ellipsoid) - data CC-BY-SA www.openstreetmap.org", "black", scalePoints ( scaleBase (24)), "sans-serif") ;
 
 writeSVG ($svgName) ;
 
@@ -2510,11 +2517,13 @@ sub checkCircleOpt {
 }
 
 sub processRectangles {
+	my $no = 0 ;
 
 	if ($rectangles ne "") {
 		my @rects ;
 		@rects = split /#/, $rectangles ;
 		foreach my $r (@rects) {
+			$no++ ;
 			my @coords ;
 			@coords = split /,/, $r ;
 
@@ -2531,7 +2540,47 @@ sub processRectangles {
 			push @nodes, ($left, $bottom) ;
 	
 			drawWay (10, "black", 5, 0, @nodes) ;
+
+			if ($pageNumbers ne "") {
+				my $x = ($right + $left) / 2 ;
+				my $y = ($bottom + $top) / 2 ;
+				my $xp ; my $yp ;
+				($xp, $yp) = convert ($x, $y) ;
+				drawTextPixGrid ($xp, $yp, $no, $pnColor, scalePoints ( scaleBase ($pnSize) ) ) ;
+			}
+
 		}
 	}
 }
+
+sub processPageNumbers {
+	if ($pageNumbers ne "") {
+		my @a = split /,/, $pageNumbers ;
+		if (scalar @a >= 3) {
+			$pnSize = $a[0] ;
+			$pnColor = $a[1] ;
+			my $pnNumber = $a[2] ;
+
+			if ($pnNumber != 0) {
+				drawPageNumber ($pnSize, $pnColor, $pnNumber) ;
+			}
+		}
+		if (scalar @a == 7) {
+			# draw 4 other positions if ne 0!!!
+			if ($a[3] != 0) { # left
+				drawPageNumberLeft ($pnSize, $pnColor, $a[3]) ;
+			}
+			if ($a[4] != 0) { # bottom
+				drawPageNumberBottom ($pnSize, $pnColor, $a[4]) ;
+			}
+			if ($a[5] != 0) { # right
+				drawPageNumberRight ($pnSize, $pnColor, $a[5]) ;
+			}
+			if ($a[6] != 0) { # top
+				drawPageNumberTop ($pnSize, $pnColor, $a[6]) ;
+			}
+		}
+	}
+}
+
 

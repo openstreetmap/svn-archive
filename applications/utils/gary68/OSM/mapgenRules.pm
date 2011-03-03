@@ -20,11 +20,11 @@ use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm ;
-use OSM::mapgen 1.13 ;
+use OSM::mapgen 1.14 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.13' ;
+$VERSION = '1.14' ;
 
 require Exporter ;
 
@@ -75,7 +75,8 @@ sub readRules {
 		$line = <$csvFile> ;
 	}
 
-	# READ ROUTE RULES	#print "ROUTE LINE: $line\n" ;
+	# READ ROUTE RULES
+	#print "ROUTE LINE: $line\n" ;
 	$line = <$csvFile> ; # omit SECTION
 	#print "ROUTE LINE: $line\n" ;
 	while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
@@ -83,8 +84,10 @@ sub readRules {
 			#print "ROUTE LINE: $line\n" ;
 			my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
 			$opacity = $opacity / 100 ;
-			push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;		}
-		$line = <$csvFile> ;	}
+			push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;
+		}
+		$line = <$csvFile> ;
+	}
 	close ($csvFile) ;
 
 	foreach my $node (@nodes) {
@@ -116,10 +119,17 @@ sub printRules {
 		printf "%-20s %-20s %-10s %-6s %-6s %-10s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15], $way->[16], $way->[17] ;
 	}
 	print "\n" ;
-	print "NODES\n" ;	foreach my $node (@nodes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13] ;	}
+	print "NODES\n" ;
+	foreach my $node (@nodes) {
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13] ;
+	}
 	print "\n" ;
 
-	print "ROUTES\n" ;	foreach my $route (@routes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $route->[0], $route->[1], $route->[2], $route->[3], $route->[4], $route->[5], $route->[6], $route->[7], $route->[8] ;	}	print "\n" ;
+	print "ROUTES\n" ;
+	foreach my $route (@routes) {
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $route->[0], $route->[1], $route->[2], $route->[3], $route->[4], $route->[5], $route->[6], $route->[7], $route->[8] ;
+	}
+	print "\n" ;
 }
 
 

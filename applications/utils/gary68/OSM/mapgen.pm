@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.13' ;
+$VERSION = '1.14' ;
 
 require Exporter ;
 
@@ -74,9 +74,15 @@ require Exporter ;
 			drawNodeDotPix 
 			drawNodeCircle 
 			drawNodeCirclePix 
+			drawPageNumber
+			drawPageNumberTop
+			drawPageNumberBottom
+			drawPageNumberLeft
+			drawPageNumberRight
 			drawRuler 
 			drawTextPix 
 			drawTextPix2 
+			drawTextPixGrid
 			drawWay 
 			drawWayBridge 
 			drawWayPix 
@@ -292,7 +298,8 @@ sub convert {
 	my $y2 = $sizeY - int ( ($y1 - $projBottom) / ($projTop - $projBottom) * $sizeY ) ;
 
 	return ($x2, $y2) ;
-}
+}
+
 sub gridSquare {
 #
 # returns grid square of given coordinates for directories
@@ -396,7 +403,7 @@ sub drawFoot {
 #
 	my ($text, $col, $size, $font) = @_ ;
 	my $posX = 80 ;
-	my $posY = 80 ;
+	my $posY = 40 ;
 	push @svgOutputText, svgElementText (
 		scalePoints ( scaleBase ($posX) ), 
 		$sizeY - ( scalePoints ( scaleBase ($posY) ) ), 
@@ -842,7 +849,8 @@ sub subWay {
 	
 	return (\@finalWay, $finalAngle) ;	
 }
-sub intersection {
+
+sub intersection {
 #
 # returns intersection point of two lines, else (0,0)
 #
@@ -1667,7 +1675,8 @@ sub addAreaIcon {
 		print "WARNING: area icon $fileNameOriginal not found!\n" ;
 	}
 }
-
+
+
 
 
 sub svgEle {
@@ -2072,6 +2081,46 @@ sub simplifyPoints {
 sub simplifiedPercent {
 	return ( int ($simplified / $simplifyTotal * 100) ) ;
 }
+
+sub drawPageNumber {
+	my ($size, $col, $num) = @_ ;
+	my $x = $sizeX - scalePoints (scaleBase (80)) ;
+	my $y = $sizeY - scalePoints (scaleBase (80)) ;
+	drawTextPixGrid ($x, $y, $num, $col, scalePoints ( scaleBase ($size) ) ) ;
+}
+
+sub drawPageNumberLeft {
+	my ($size, $col, $num) = @_ ;
+	my $x = scalePoints (scaleBase (80)) ;
+	my $y = $sizeY / 2 ;
+	drawTextPixGrid ($x, $y, $num, $col, scalePoints ( scaleBase ($size) ) ) ;
+
+}
+
+sub drawPageNumberBottom {
+	my ($size, $col, $num) = @_ ;
+	my $x = $sizeX / 2 ;
+	my $y = $sizeY - scalePoints (scaleBase (80)) ;
+	drawTextPixGrid ($x, $y, $num, $col, scalePoints ( scaleBase ($size) ) ) ;
+
+}
+
+sub drawPageNumberRight {
+	my ($size, $col, $num) = @_ ;
+	my $x = $sizeX - scalePoints (scaleBase (80)) ;
+	my $y = $sizeY / 2 ;
+	drawTextPixGrid ($x, $y, $num, $col, scalePoints ( scaleBase ($size) ) ) ;
+
+}
+
+sub drawPageNumberTop {
+	my ($size, $col, $num) = @_ ;
+	my $x = $sizeX / 2 ;
+	my $y = scalePoints (scaleBase (80)) ;
+	drawTextPixGrid ($x, $y, $num, $col, scalePoints ( scaleBase ($size) ) ) ;
+
+}
+
 
 
 

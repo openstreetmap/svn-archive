@@ -4,7 +4,9 @@
 
 # todo
 # - reverse
-#
+# - delete files and -nodelete files option
+# - second page with details, program version etc.
+# - mapgen rules adapt way thickness
 # - print parameters
 #
 # - tile server support
@@ -16,7 +18,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.6" ;
+my $version = "0.61" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -52,6 +54,7 @@ my $dirNumberOpt = 8 ; # number of different directions used (N,S,SW...)
 my $pageSizeOpt = "A4" ;
 my $overlapOpt = 5 ; # in percent
 my $landscapeOpt = 0 ;
+my $reverseOpt = 0 ;
 my $pnSizeOverview = 48 ;
 my $pnSizeDetail = 64 ;
 
@@ -103,11 +106,11 @@ buildCompleteWay() ;
 
 addPois() ;
 
+createDirections() ;
+
 createDetailMaps() ;
 
 createOverviewMap() ;
-
-createDirections() ;
 
 createTitlePage () ;
 
@@ -473,6 +476,12 @@ sub buildCompleteWay {
 		@nodes = reverse @nodes ; 
 		@ways = reverse @ways ;
 	} 
+
+	if ($reverseOpt eq "1") {
+		print "reversing ways and nodes.\n" ;
+		@nodes = reverse @nodes ; 
+		@ways = reverse @ways ;
+	}
 	
 	# get names of ways to nodes for directions
 	foreach my $w (@ways) {
@@ -1016,6 +1025,7 @@ sub getProgramOptions {
 					"pnsizeoverview=i"	=> \$pnSizeOverview,
 					"pnsizedetail=i"	=> \$pnSizeDetail,
 					"landscape"	=> \$landscapeOpt,
+					"reverse"	=> \$reverseOpt,
 					"help"		=> \$helpOpt,
 					"verbose" 	=> \$verboseOpt ) ;
 
@@ -1059,6 +1069,7 @@ sub usage {
 	print "-pnsizedetail=INTEGER (size of page numbers in detail maps)\n" ;
 	print "-landscape\n" ;
 	print "-relation=<relation id>\n" ;
+	print "-reverse (reverse direction of relation/route)\n" ;
 	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
 	print "-scale=<integer> (scale for detail maps); default = 10000\n" ;

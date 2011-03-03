@@ -3,6 +3,8 @@
 
 
 # todo
+# - reverse
+#
 # - print parameters
 #
 # - tile server support
@@ -14,7 +16,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.5" ;
+my $version = "0.6" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -50,11 +52,13 @@ my $dirNumberOpt = 8 ; # number of different directions used (N,S,SW...)
 my $pageSizeOpt = "A4" ;
 my $overlapOpt = 5 ; # in percent
 my $landscapeOpt = 0 ;
+my $pnSizeOverview = 48 ;
+my $pnSizeDetail = 64 ;
 
 my $extraMapData1 = 0.4 ; # overlap for osm temp file 1
 my $extraMapData2 = 0.3 ; # for temp file 2s
 
-my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
+my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove -pagenumbers=$pnSizeOverview,black,0" ;
 my $mapgenCommandDetail = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
 
 # relation bounding box. all data.
@@ -146,6 +150,8 @@ sub getRelationData {
 
 	# TODO ROLES
 
+	@ways = () ;
+
 	my $wc = 0 ;
 	my %types = () ;
 	foreach my $m (@relationMembers) {
@@ -153,6 +159,7 @@ sub getRelationData {
 			$wc++ ;
 			$neededWays{$m->[1]} = 1 ;
 			$types{$m->[2]} = 1 ;
+			push @ways, $m->[1] ;
 		}
 	}
 	if ($verboseOpt eq "1") {
@@ -172,8 +179,6 @@ sub getRelationData {
 			print "TAG: $m->[0] : $m->[1]\n" ;
 		}
 	}
-
-	@ways = keys %neededWays ;
 
 	# get way data
 
@@ -655,7 +660,7 @@ sub createDetailMaps {
 			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
 
 			print "call mapgen and log to $logFileName...\n" ;
-			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId >> $logFileName 2>&1` ;
+			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber >> $logFileName 2>&1` ;
 			print "done.\n" ;
 		}
 
@@ -1008,6 +1013,8 @@ sub getProgramOptions {
 					"overlap=i"	=> \$overlapOpt,
 					"dirnumber=i"	=> \$dirNumberOpt,
 					"scale=i"	=> \$scale,
+					"pnsizeoverview=i"	=> \$pnSizeOverview,
+					"pnsizedetail=i"	=> \$pnSizeDetail,
 					"landscape"	=> \$landscapeOpt,
 					"help"		=> \$helpOpt,
 					"verbose" 	=> \$verboseOpt ) ;
@@ -1048,6 +1055,8 @@ sub usage {
 	print "-title=\"title text\" (for title page)\n" ;
 	print "-language=EN|DE\n" ;
 	print "-pagesize=A4|A5\n" ;
+	print "-pnsizeoverview=INTEGER (size of page numbers in overview map)\n" ;
+	print "-pnsizedetail=INTEGER (size of page numbers in detail maps)\n" ;
 	print "-landscape\n" ;
 	print "-relation=<relation id>\n" ;
 	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;

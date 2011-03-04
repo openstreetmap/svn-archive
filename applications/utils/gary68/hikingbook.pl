@@ -3,9 +3,6 @@
 
 
 # todo
-# - reverse
-# - delete files and -nodelete files option
-# - second page with details, program version etc.
 # - mapgen rules adapt way thickness
 # - print parameters
 #
@@ -18,7 +15,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.61" ;
+my $version = "0.7" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -37,10 +34,12 @@ my @overviewScales = (10000,25000,50000,75000,100000,200000,500000,1000000) ; # 
 my $title = "Hiking book" ;
 my $workDir = "" ;
 my $logFileName = "hikingbooklog.txt" ;
+my @tempFiles = () ; # to be deleted later
 
 my %lon ; my %lat ;
 my @ways ;
 my @nodes ;
+my %nodeDirCount ; 
 my %wayNodesHash = () ;
 my %wayNameHash = () ;
 my $mapNumber = 0 ; # counts detail maps
@@ -55,6 +54,8 @@ my $pageSizeOpt = "A4" ;
 my $overlapOpt = 5 ; # in percent
 my $landscapeOpt = 0 ;
 my $reverseOpt = 0 ;
+my $roundtripOpt = 0 ;
+my $noDeleteOpt = 0 ;
 my $pnSizeOverview = 48 ;
 my $pnSizeDetail = 64 ;
 
@@ -116,6 +117,14 @@ createTitlePage () ;
 
 mergeAllFiles() ;
 
+print "\ndeleting temp files (disable with -nodelete)...\n" ;
+if ($noDeleteOpt == 0) {
+	push @tempFiles, $temp2FileName ;
+	foreach my $f (@tempFiles) {
+		`rm $f` ;
+	}
+}
+print "done.\n\n" ;
 
 
 sub getRelationData {
@@ -330,11 +339,42 @@ sub createTemp1 {
 	if ($noOutputOpt eq "0") {
 		shrinkFile ($inFileName, $temp1FileName, $fileLonMin, $fileLatMin, $fileLonMax, $fileLatMax, $relLonMin, $relLatMin, $relLonMax, $relLatMax, $extraMapData1) ;
 
-		# store min / max of temp file
-		openOsmFile ($temp1FileName) ;
-		print "reading temp file nodes...\n" ;
+		push @tempFiles, $temp1FileName ;
 
-		my $propRef ; my $tagsRef ;
+		print "reading temp file...\n" ;
+
+		openOsmFile ($inFileName) ;
+		skipNodes() ;
+
+		my $nodesRef ; my $propRef ; my $tagsRef ;
+		($propRef, $nodesRef, $tagsRef) = getWay3() ;
+		while (defined $propRef) {
+			my $needed = 0 ;
+			foreach my $t (@$tagsRef) {
+				if ($t->[0] eq "highway") { $needed = 1 ; }
+			}
+
+			if ($needed) {
+				@nodes = @$nodesRef ;
+				for (my $i=0 ; $i <= $#nodes; $i++) {
+					my $n = $nodes[$i] ;
+					if ( ($i == 0) or ($i ==$#nodes) ) {
+						$nodeDirCount{$n} += 1 ;
+					}
+					else {
+						$nodeDirCount{$n} += 2 ;
+					}
+				}
+			}
+
+			($propRef, $nodesRef, $tagsRef) = getWay3() ;
+		}
+		closeOsmFile() ;
+
+		# store min / max of temp file
+
+
+		openOsmFile ($temp1FileName) ;
 		($propRef, $tagsRef) = getNode3() ;
 		while (defined $propRef) {
 			if ( $$propRef{"lon"} > $file1LonMax ) { $file1LonMax = $$propRef{"lon"} ; }
@@ -369,6 +409,12 @@ sub createOverviewMap {
 	print "\ncreate overview map...\n" ;
 	my $outName = $workDir . "overview.svg" ;
 	if ($noOutputOpt eq "0") {
+
+		my $pdfName = $outName ; $pdfName =~ s/\.svg/\.pdf/ ;
+		my $ndlName = $outName ; $ndlName =~ s/\.svg/\_NotDrawnLabels\.txt/ ;
+		push @tempFiles, $outName ;
+		push @tempFiles, $pdfName ;
+		push @tempFiles, $ndlName ;
 
 		# allow for some more data than just the relation
 		my $ovLonMin = $relLonMin - 0.005 ;
@@ -405,6 +451,21 @@ sub buildCompleteWay {
 	my $firstWay = shift @ways ;
 	@orderedWays = ($firstWay) ;
 
+	if ($roundtripOpt eq "1") {
+		# assure that first way can be expanded at the end
+		my @n = @{$wayNodesHash{ $firstWay }} ;
+		my $end = $n[-1] ;
+		my $found = 0 ;
+		foreach my $w (@ways) {
+			my @tn = @{$wayNodesHash{ $w }} ;
+			if ( ($tn[0] == $end) or ($tn[-1] == $end) ) { $found = 1 ; }
+		}
+		if ($found == 0) {
+			@{$wayNodesHash{ $firstWay }} = reverse @{$wayNodesHash{ $firstWay }} ;
+		}
+	}
+
+
 	@nodes = @{$wayNodesHash{ $firstWay }} ;
 
 	foreach my $w (@ways) { $leftWays{ $w } = 1 ; }
@@ -416,7 +477,8 @@ sub buildCompleteWay {
 		foreach my $w (keys %leftWays) {
 			my @wayNodes = @{$wayNodesHash{$w}} ;
 
-			if ( $nodes[0] == $wayNodes[0] ) {
+			if ( ( $nodes[0] == $wayNodes[0] ) and ($roundtripOpt == 0) ) {
+			# if ( ( $nodes[0] == $wayNodes[0] ) ) {
 				# reverse unshift
 				@wayNodes = reverse @wayNodes ;
 				pop @wayNodes ; # remove last element
@@ -427,7 +489,8 @@ sub buildCompleteWay {
 				last ;
 			}
 
-			if ( $nodes[0] == $wayNodes[-1] ) {
+			if ( ( $nodes[0] == $wayNodes[-1] ) and ($roundtripOpt == 0) ) {
+			# if ( ( $nodes[0] == $wayNodes[-1] ) ) {
 				# unshift
 				pop @wayNodes ; # remove last element
 				unshift @nodes, @wayNodes ;
@@ -506,9 +569,11 @@ sub buildCompleteWay {
 		$nodeInfo{$i}{"direction"} = direction ($nodes[$i], $nodes[$i+1]) ;		
 		$nodeInfo{$i}{"name"} = $nodeName{ $nodes[$i] } ;		
 		$nodeInfo{$i}{"ele"} = $nodeElevation{ $nodes[$i] } ;		
+		$nodeInfo{$i}{"dirs"} = $nodeDirCount{ $nodes[$i] } ;		
 	}
 
 	$nodeInfo{$#nodes}{"ele"} = $nodeElevation{ $nodes[ -1 ] } ;
+	$nodeInfo{$#nodes}{"dirs"} = $nodeDirCount{ $nodes[ -1 ] } ;
 	$nodeInfo{$#nodes}{"direction"} = "" ;
 	$nodeInfo{$#nodes}{"name"} = "" ;
 
@@ -519,6 +584,8 @@ sub buildCompleteWay {
 	$info{"DE"}{"end"} = "Ende" ;
 	@{$nodeInfo{0}{"information"}} = ( $info{$languageOpt}{"start"} ) ;
 	@{$nodeInfo{$#nodes}{"information"}} = ( $info{$languageOpt}{"end"} ) ;
+
+	
 
 	if ($verboseOpt eq "1") {
 		print "ordered ways: @ways\n" ;
@@ -668,6 +735,12 @@ sub createDetailMaps {
 			}
 			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
 
+			my $pdfName = $outName ; $pdfName =~ s/\.svg/\.pdf/ ;
+			my $ndlName = $outName ; $ndlName =~ s/\.svg/\_NotDrawnLabels\.txt/ ;
+			push @tempFiles, $outName ;
+			push @tempFiles, $pdfName ;
+			push @tempFiles, $ndlName ;
+
 			print "call mapgen and log to $logFileName...\n" ;
 			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber >> $logFileName 2>&1` ;
 			print "done.\n" ;
@@ -792,6 +865,9 @@ sub createDirections {
 	my $ltxFileName ; 
 	$texFileName = "directions.tex" ;
 	$ltxFileName = "directionsltx.tex" ;
+	push @tempFiles, $texFileName ;
+	push @tempFiles, $stepFileName ;
+	push @tempFiles, $ltxFileName ;
 	my %label = () ;
 	$label{"EN"}{"directions"} = "Directions" ;
 	$label{"DE"}{"directions"} = "Wegbeschreibung" ;
@@ -836,7 +912,8 @@ sub createDirections {
 	$toPrint{0} = 1 ; 
 	$toPrint{ $#nodes } = 1 ; 
 	for (my $i=1; $i<$#nodes; $i++) {
-		if ($nodeInfo{$i-1}{"direction"} ne $nodeInfo{$i}{"direction"}) { $toPrint{$i} = 1 ; }
+		# if ($nodeInfo{$i-1}{"direction"} ne $nodeInfo{$i}{"direction"}) { $toPrint{$i} = 1 ; }
+		if ($nodeInfo{$i}{"dirs"} > 2) { $toPrint{$i} = 1 ; }
 		if ($nodeInfo{$i-1}{"name"} ne $nodeInfo{$i}{"name"}) { $toPrint{$i} = 1 ; }
 		if ($nodeInfo{$i}{"ele"} ne "") { $toPrint{$i} = 1 ; }
 		if ( defined $nodeInfo{$i}{"information"} ) { $toPrint{$i} = 1 ; }
@@ -870,15 +947,15 @@ sub createDirections {
 			print $ltxFile "\\hline\n" ;
 			$lastDist = $nodeInfo{$i}{"distance"} ;
 
-			if ( (defined $nodeInfo{$i}{'information'}) or ($stepDist > 0.3) ) {
+			# if ( (defined $nodeInfo{$i}{'information'}) or ($stepDist > 0.3) ) {
 				print $stepFile $lon{ $nodes[$i] } . " " ;
 				print $stepFile $lat{ $nodes[$i] } . " " ;
-				print $stepFile "25 " ;
+				print $stepFile "18 " ;
 				print $stepFile "\"black\" " ;
 				print $stepFile "\"$line\" " ;
 				print $stepFile "35" ;
 				print $stepFile "\n" ;
-			}
+			# }
 		}		
 	}
 
@@ -940,6 +1017,8 @@ sub createDirections {
 	$psFileName =~ s/.tex/.ps/ ;
 	my $pdfFileName = "directions.pdf" ;
 
+	push @tempFiles, $pdfFileName ;
+
 	print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
 	`latex $texFileName >> $logFileName 2>&1` ;
 	`latex $texFileName >> $logFileName 2>&1` ;
@@ -956,11 +1035,28 @@ sub createDirections {
 }
 
 sub createTitlePage {
+
+	my %heading = () ;
+	$heading{"EN"} = "Disclaimer" ;
+	$heading{"DE"} = "Haftungsauschluss" ;
+	my %disclaimer = () ;
+	$disclaimer{"EN"} = << "END1" ;
+The user of this book is always responsible for all his steps and actions.
+The authors of this documentation are not responsible for the correctness and completeness of the data.
+Data is derived from www.openstreetmap.org and is licensed by CC-BY-SA.
+END1
+	$disclaimer{"DE"} = << "END2" ;
+Der Nutzer dieses Werkes ist stets selbst für seine Schritte und Aktionen ver\\-antwortlich.
+Die Ersteller dieser Dokumentation übernehmen keine Garantie für Richtigkeit und Vollständigkeit selbiger.
+Die Daten stammen aus www.openstreetmap.org und stehen unter der CC-BY-SA Lizenz.
+END2
+
 	
 	print "create title page...\n" ;
 	my $texFileName ; 
 	$texFileName = "title.tex" ;
 
+	push @tempFiles, $texFileName ;
 
 	open (my $texFile, ">", $texFileName) or die ("can't open tex output file") ;
 
@@ -982,6 +1078,10 @@ sub createTitlePage {
 	print $texFile "\\vspace*{2cm}\n" ;
 	print $texFile "\\normalsize\n" ;
 	print $texFile "created with hikingbook.pl\n" ;
+	print $texFile "\\newpage\n" ;
+	print $texFile "\\thispagestyle{empty}\n" ;
+	print $texFile "\\textbf{$heading{$languageOpt}}\\par\n" ;
+	print $texFile "$disclaimer{$languageOpt}\n" ;
 	
 
 	print $texFile "\\end{document}\n" ;
@@ -992,6 +1092,8 @@ sub createTitlePage {
 	my $psFileName = $texFileName ;
 	$psFileName =~ s/.tex/.ps/ ;
 	my $pdfFileName = "title.pdf" ;
+
+	push @tempFiles, $pdfFileName ;
 
 	print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
 	`latex $texFileName >> $logFileName 2>&1` ;
@@ -1026,6 +1128,8 @@ sub getProgramOptions {
 					"pnsizedetail=i"	=> \$pnSizeDetail,
 					"landscape"	=> \$landscapeOpt,
 					"reverse"	=> \$reverseOpt,
+					"nodelete"	=> \$noDeleteOpt,
+					"roundtrip"	=> \$roundtripOpt,
 					"help"		=> \$helpOpt,
 					"verbose" 	=> \$verboseOpt ) ;
 
@@ -1070,10 +1174,12 @@ sub usage {
 	print "-landscape\n" ;
 	print "-relation=<relation id>\n" ;
 	print "-reverse (reverse direction of relation/route)\n" ;
+	print "-roundtrip (force route to begin/end with first way in relation)\n" ;
 	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
 	print "-scale=<integer> (scale for detail maps); default = 10000\n" ;
 	print "-verbose\n" ;
+	print "-nodelete (temp files will not be deleted)\n" ;
 	print "-help\n" ;
 	print "\n" ;
 }

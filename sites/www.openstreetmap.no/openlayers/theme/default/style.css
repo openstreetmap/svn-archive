@@ -11,15 +11,22 @@ div.olMapViewport {
 
 div.olLayerDiv {
    -moz-user-select: none;
+   -khtml-user-select: none;
 }
 
 .olLayerGoogleCopyright {
     left: 2px;
-    bottom: 2px;  
+    bottom: 2px;
+}
+.olLayerGoogleV3.olLayerGoogleCopyright {
+    right: auto !important;
 }
 .olLayerGooglePoweredBy {
     left: 2px;
     bottom: 15px;   
+}
+.olLayerGoogleV3.olLayerGooglePoweredBy {
+    bottom: 15px !important;
 }
 .olControlAttribution {
     font-size: smaller; 
@@ -86,11 +93,13 @@ div.olControlMousePosition {
 .olControlOverviewMapMinimizeButton {
     right: 0px;
     bottom: 80px;
+    cursor: pointer;
 }    
 
 .olControlOverviewMapMaximizeButton {
     right: 0px;
     bottom: 80px;
+    cursor: pointer;
 }
 
 .olControlOverviewMapExtentRectangle {
@@ -322,6 +331,7 @@ div.olControlSaveFeaturesItemInactive {
 
 .olControlNoSelect {
  -moz-user-select: none;
+ -khtml-user-select: none;
 }
 
 .olImageLoadError {
@@ -394,4 +404,12 @@ div.olControlSaveFeaturesItemInactive {
 .olControlLayerSwitcher .minimizeDiv {
     top: 5px;
     right: 0px;
+    cursor: pointer;
+}
+
+.olBingAttribution {
+    color: #DDD;
+}
+.olBingAttribution.road {
+    color: #333;
 }

@@ -28,7 +28,7 @@ sub loadfiles($@)
     my $linenum = 0;
 
     my $cnt = -1; # don't count translators info
-    if($file =~ /\/(.._..)\.po$/ || $file =~ /\/(..)\.po$/)
+    if($file =~ /\/(.._..)\.po$/ || $file =~ /\/(...?)\.po$/)
     {
       my $l = $1;
       ++$lang->{$l};
@@ -208,7 +208,7 @@ sub createlang($@)
     my $la;
     my $cnt = 0;
     if($file =~ /[-_](.._..)\.lang$/ || $file =~ /^(?:.*\/)?(.._..)\.lang$/ ||
-    $file =~ /[-_](...?)\.lang$/ || $file =~ /^(?:.*\/)?(..)\.lang$/)
+    $file =~ /[-_](...?)\.lang$/ || $file =~ /^(?:.*\/)?(...?)\.lang$/)
     {
       $la = $1;
     }
@@ -276,7 +276,15 @@ sub createlang($@)
       }
     }
     close FILE;
-    print "Created file $file: Added $cnt strings out of $maxcount.\n";
+    if(!$cnt)
+    {
+      unlink $file;
+      print "Skipped file $file: Contained 0 strings out of $maxcount.\n";
+    }
+    else
+    {
+      print "Created file $file: Added $cnt strings out of $maxcount.\n";
+    }
   }
 }
 

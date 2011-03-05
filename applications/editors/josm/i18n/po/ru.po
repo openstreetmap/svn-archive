@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 23:37+0100\n"
-"PO-Revision-Date: 2011-03-04 16:17+0000\n"
+"POT-Creation-Date: 2011-03-05 23:09+0100\n"
+"PO-Revision-Date: 2011-03-05 20:39+0000\n"
 "Last-Translator: Sergey Astakhov <Unknown>\n"
 "Language-Team: Koptev Oleg <koptev.oleg@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-03-04 21:07+0000\n"
+"X-Launchpad-Export-Date: 2011-03-05 21:22+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-Language: Russian\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/Main.java:233
+#: ../core/src/org/openstreetmap/josm/Main.java:235
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
@@ -37,14 +37,14 @@ msgstr ""
 msgid "Help"
 msgstr "Справка"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:473
+#: ../core/src/org/openstreetmap/josm/Main.java:475
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Некорректный файловый URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:474
-#: ../core/src/org/openstreetmap/josm/Main.java:507
-#: ../core/src/org/openstreetmap/josm/Main.java:594
+#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:509
+#: ../core/src/org/openstreetmap/josm/Main.java:596
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -111,17 +111,17 @@ msgstr "Некорректный файловый URL: \"{0}\""
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:506
+#: ../core/src/org/openstreetmap/josm/Main.java:508
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr ""
 "Параметр \"downloadgps\" не может использовать имена файлов или файловые URL"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:593
+#: ../core/src/org/openstreetmap/josm/Main.java:595
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Некорректный URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:744
+#: ../core/src/org/openstreetmap/josm/Main.java:746
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -132,15 +132,15 @@ msgstr ""
 "{0}.<br>Вам надо <ul><li>обновить Java (JRE) или</li><li>использовать более "
 "раннюю версию JOSM (совместимую с Java 5).</li></ul>Больше информации:"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:759
+#: ../core/src/org/openstreetmap/josm/Main.java:761
 msgid "Exit JOSM"
 msgstr "Выйти из JOSM"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:760
+#: ../core/src/org/openstreetmap/josm/Main.java:762
 msgid "Continue, try anyway"
 msgstr "Все равно продолжить"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:761
+#: ../core/src/org/openstreetmap/josm/Main.java:763
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
@@ -21136,23 +21136,20 @@ msgid "Channel-Digraph created from the active OSM-Layer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:42
-#, fuzzy
 msgid "Create Channel Digraph"
-msgstr "Создать новую карту."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:68
-#, fuzzy
 msgid "this layer is no osm data layer"
-msgstr "этот слой является активным"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:81
 msgid "Converting OSM graph into Channel Digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
-#, fuzzy
 msgid "filtering ways"
-msgstr "Линии, пересекающие сами себя"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -21171,24 +21168,20 @@ msgid "creating DigraphLayer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "JunctionChecking"
-msgstr "Перекрёсток"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "Open the junctionchecking window."
-msgstr "Открыть окно проверки"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
-#, fuzzy
 msgid "junctions"
-msgstr "Перекрёсток"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
-#, fuzzy
 msgid "Channel-Digraph creation"
-msgstr "Изменить отношение"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:54
 msgid "seal Channel Digraph"
@@ -21218,9 +21211,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
-#, fuzzy
 msgid "Create"
-msgstr "Создано"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -21231,9 +21223,8 @@ msgid "create the channel digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
-#, fuzzy
 msgid "Check "
-msgstr "Проверить"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "check a marked subset if it is a junction"
@@ -21244,9 +21235,8 @@ msgid "check the subust for junction properties"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
-#, fuzzy
 msgid "Search "
-msgstr "Поиск: "
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -26058,7 +26048,7 @@ msgstr "Свойства автомагистрали"
 #: build/trans_presets.java:2563 build/trans_presets.java:3092
 #: build/trans_presets.java:3108 build/trans_presets.java:4128
 msgid "Reference"
-msgstr "Обозначение"
+msgstr "Обозначение (ref)"
 
 #. item "Highways/Streets/Motorway" combo "Lanes"
 #. item "Highways/Streets/Motorway Link" combo "Lanes"
@@ -36139,7 +36129,7 @@ msgstr "высоковольтная"
 #: build/trans_presets.java:3131
 msgctxt "Power Line"
 msgid "minor_line"
-msgstr "minor_line"
+msgstr "среднего/низкого напряжения"
 
 #. item "Power/Power Line" text "Amount of Cables"
 #: build/trans_presets.java:3136
@@ -41333,12 +41323,6 @@ msgstr "Кемпинг"
 msgid "Test"
 msgstr "Тест"
 
-#~ msgid "Simplify Area (remove {0} node)"
-#~ msgid_plural "Simplify Area (remove {0} nodes)"
-#~ msgstr[0] "Упростить область (удалить {0} точку)"
-#~ msgstr[1] "Упростить точку (удалить {0} точки)"
-#~ msgstr[2] "Упростить область (удалить {0} точек)"
-
 #~ msgid "No data imported."
 #~ msgstr "Данные не импортированы"
 
@@ -41453,6 +41437,9 @@ msgstr "Тест"
 
 #~ msgid "Open in Browser"
 #~ msgstr "Открыть в браузере"
+
+#~ msgid "Create a new map."
+#~ msgstr "Создать новую карту."
 
 #~ msgid "Could not rename the file \"{0}\"."
 #~ msgstr "Невозможно переименовать файл \"{0}\"."
@@ -47129,6 +47116,12 @@ msgstr "Тест"
 
 #~ msgid "mapping seamarks"
 #~ msgstr "нанесение навигациних знаков"
+
+#~ msgid "Simplify Area (remove {0} node)"
+#~ msgid_plural "Simplify Area (remove {0} nodes)"
+#~ msgstr[0] "Упростить область (удалить {0} точку)"
+#~ msgstr[1] "Упростить точку (удалить {0} точки)"
+#~ msgstr[2] "Упростить область (удалить {0} точек)"
 
 #~ msgid "replaced by {0} plugin"
 #~ msgstr "заменено на {0} модул."

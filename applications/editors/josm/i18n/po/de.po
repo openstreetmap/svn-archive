@@ -8,20 +8,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 23:37+0100\n"
-"PO-Revision-Date: 2011-03-04 20:00+0000\n"
+"POT-Creation-Date: 2011-03-05 23:09+0100\n"
+"PO-Revision-Date: 2011-03-05 21:03+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-03-04 21:07+0000\n"
+"X-Launchpad-Export-Date: 2011-03-05 21:19+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/Main.java:233
+#: ../core/src/org/openstreetmap/josm/Main.java:235
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
@@ -34,14 +34,14 @@ msgstr ""
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:473
+#: ../core/src/org/openstreetmap/josm/Main.java:475
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignoriere die ungültige Datei-URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:474
-#: ../core/src/org/openstreetmap/josm/Main.java:507
-#: ../core/src/org/openstreetmap/josm/Main.java:594
+#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:509
+#: ../core/src/org/openstreetmap/josm/Main.java:596
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -108,16 +108,16 @@ msgstr "Ignoriere die ungültige Datei-URL: \"{0}\""
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:506
+#: ../core/src/org/openstreetmap/josm/Main.java:508
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr "Der Parameter \"downloadgps\" unterstützt keine Dateinamen oder URLs."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:593
+#: ../core/src/org/openstreetmap/josm/Main.java:595
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Ignoriere die ungültige URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:744
+#: ../core/src/org/openstreetmap/josm/Main.java:746
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -128,15 +128,15 @@ msgstr ""
 "<ul><li>Java aktualisieren(JRE) oder</li><li>eine frühere (Java 5 "
 "Kompatible) Version des JOSM nutzen.</li></ul>Weitere Informationen:"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:759
+#: ../core/src/org/openstreetmap/josm/Main.java:761
 msgid "Exit JOSM"
 msgstr "JOSM Verlassen"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:760
+#: ../core/src/org/openstreetmap/josm/Main.java:762
 msgid "Continue, try anyway"
 msgstr "Fortfahren, trotzdem versuchen"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:761
+#: ../core/src/org/openstreetmap/josm/Main.java:763
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
@@ -740,7 +740,7 @@ msgstr "Offene Änderungssätze herunterladen..."
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:54
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:55
 msgid "Combine Way"
-msgstr "Weg verbinden"
+msgstr "Wege verbinden"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:54
 msgid "Combine several ways into one."
@@ -16745,6 +16745,8 @@ msgstr "Kommunikation mit {0} mittels Protokollversion {1} etabliert."
 #, java-format
 msgid "Removed layer {0} because it is not allowed by the configured API."
 msgstr ""
+"Ebene {0} entfernt, da diese vom konfigurierenten API-Server nicht erlaubt "
+"wird."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:286
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:350
@@ -20797,7 +20799,7 @@ msgstr ""
 #: ../plugins/ext_tools/src/ext_tools/ExtToolAction.java:24
 #, java-format
 msgid "exttool:{0}"
-msgstr ""
+msgstr "exttool:{0}"
 
 #: ../plugins/ext_tools/src/ext_tools/ExtToolAction.java:24
 #, java-format
@@ -21138,23 +21140,20 @@ msgid "Channel-Digraph created from the active OSM-Layer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:42
-#, fuzzy
 msgid "Create Channel Digraph"
-msgstr "Eine neue Karte erstellen."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:68
-#, fuzzy
 msgid "this layer is no osm data layer"
-msgstr "diese Ebene ist die aktive Ebene"
+msgstr "Die Ebene ist keine OSM-Datenebene"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:81
 msgid "Converting OSM graph into Channel Digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
-#, fuzzy
 msgid "filtering ways"
-msgstr "Wege, die sich selbst überschneiden"
+msgstr "Wege filtern"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -21173,24 +21172,20 @@ msgid "creating DigraphLayer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "JunctionChecking"
-msgstr "Kreuzung"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "Open the junctionchecking window."
-msgstr "Fenster mit dem Ergebnis der Prüfung öffnen."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
-#, fuzzy
 msgid "junctions"
-msgstr "Kreuzung"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
-#, fuzzy
 msgid "Channel-Digraph creation"
-msgstr "Relation ändern"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:54
 msgid "seal Channel Digraph"
@@ -21220,9 +21215,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
-#, fuzzy
 msgid "Create"
-msgstr "Erstellt"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -21233,9 +21227,8 @@ msgid "create the channel digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
-#, fuzzy
 msgid "Check "
-msgstr "Prüfen"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "check a marked subset if it is a junction"
@@ -21246,9 +21239,8 @@ msgid "check the subust for junction properties"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
-#, fuzzy
 msgid "Search "
-msgstr "Suche: "
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -22071,11 +22063,11 @@ msgstr "Projektionseinstellungen"
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:478
 msgid "Close the dialog and apply projection preferences"
-msgstr ""
+msgstr "Dialog schließen und Projektionseinstellungen aktivieren"
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:491
 msgid "Close the dialog, discard projection preference changes"
-msgstr ""
+msgstr "Dialog schließen und Änderungen der Projektionseinstellungen verwerfen"
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:544
 msgid "Loading..."
@@ -41344,11 +41336,6 @@ msgstr "Camping"
 msgid "Test"
 msgstr "Test"
 
-#~ msgid "Simplify Area (remove {0} node)"
-#~ msgid_plural "Simplify Area (remove {0} nodes)"
-#~ msgstr[0] "Fläche vereinfachen ({0} Knoten löschen)"
-#~ msgstr[1] "Fläche vereinfachen ({0} Knoten löschen)"
-
 #~ msgid "Move"
 #~ msgstr "Verschieben"
 
@@ -41453,6 +41440,9 @@ msgstr "Test"
 
 #~ msgid "Merge nodes with different memberships?"
 #~ msgstr "Knotenpunkte mit unterschiedlicher Mitgliedschaft vereinen?"
+
+#~ msgid "Create a new map."
+#~ msgstr "Eine neue Karte erstellen."
 
 #~ msgid ""
 #~ "Internal Error: cannot check conditions for no layer. Please report this "
@@ -47888,6 +47878,11 @@ msgstr "Test"
 
 #~ msgid "Close bug"
 #~ msgstr "Fehler schließen"
+
+#~ msgid "Simplify Area (remove {0} node)"
+#~ msgid_plural "Simplify Area (remove {0} nodes)"
+#~ msgstr[0] "Fläche vereinfachen ({0} Knoten löschen)"
+#~ msgstr[1] "Fläche vereinfachen ({0} Knoten löschen)"
 
 #~ msgid "Experimental union of SlippyMap plugin and WMSPlugin"
 #~ msgstr ""

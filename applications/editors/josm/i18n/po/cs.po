@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 23:37+0100\n"
+"POT-Creation-Date: 2011-03-05 23:09+0100\n"
 "PO-Revision-Date: 2011-02-24 20:18+0000\n"
 "Last-Translator: hanoj <ehanoj@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-03-04 20:55+0000\n"
+"X-Launchpad-Export-Date: 2011-03-05 21:13+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/Main.java:233
+#: ../core/src/org/openstreetmap/josm/Main.java:235
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
@@ -34,14 +34,14 @@ msgstr ""
 msgid "Help"
 msgstr "Nápověda"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:473
+#: ../core/src/org/openstreetmap/josm/Main.java:475
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignoruji poškozený soubor z URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:474
-#: ../core/src/org/openstreetmap/josm/Main.java:507
-#: ../core/src/org/openstreetmap/josm/Main.java:594
+#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:509
+#: ../core/src/org/openstreetmap/josm/Main.java:596
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -108,16 +108,16 @@ msgstr "Ignoruji poškozený soubor z URL: \"{0}\""
 msgid "Warning"
 msgstr "Varování"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:506
+#: ../core/src/org/openstreetmap/josm/Main.java:508
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr "Parametr \"downloadgps\" neakceptuje jména souborů nebo URL"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:593
+#: ../core/src/org/openstreetmap/josm/Main.java:595
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Ignorují se nekorektní URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:744
+#: ../core/src/org/openstreetmap/josm/Main.java:746
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -128,15 +128,15 @@ msgstr ""
 "<ul><li>aktualizovat vaši Javu (JRE) nebo</li><li>použít starší verzi JOSM "
 "(kompatibilní s Java 5).</li></ul>Více informací:"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:759
+#: ../core/src/org/openstreetmap/josm/Main.java:761
 msgid "Exit JOSM"
 msgstr "Ukončit JOSM"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:760
+#: ../core/src/org/openstreetmap/josm/Main.java:762
 msgid "Continue, try anyway"
 msgstr "Pokračovat, zkusit znovu"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:761
+#: ../core/src/org/openstreetmap/josm/Main.java:763
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
@@ -20194,23 +20194,20 @@ msgid "Channel-Digraph created from the active OSM-Layer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:42
-#, fuzzy
 msgid "Create Channel Digraph"
-msgstr "Vytvořit novou mapu"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:68
-#, fuzzy
 msgid "this layer is no osm data layer"
-msgstr "tato vrstva je aktivní"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:81
 msgid "Converting OSM graph into Channel Digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
-#, fuzzy
 msgid "filtering ways"
-msgstr "Cesty protínající seba sama"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -20229,24 +20226,20 @@ msgid "creating DigraphLayer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "JunctionChecking"
-msgstr "Križovatka"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "Open the junctionchecking window."
-msgstr "Otevřít okno s výsledkem kontroly."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
-#, fuzzy
 msgid "junctions"
-msgstr "Križovatka"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
-#, fuzzy
 msgid "Channel-Digraph creation"
-msgstr "Změnit relaci"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:54
 msgid "seal Channel Digraph"
@@ -20276,9 +20269,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
-#, fuzzy
 msgid "Create"
-msgstr "Vytvořeno"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -20289,9 +20281,8 @@ msgid "create the channel digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
-#, fuzzy
 msgid "Check "
-msgstr "Zkontrolovat"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "check a marked subset if it is a junction"
@@ -20302,9 +20293,8 @@ msgid "check the subust for junction properties"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
-#, fuzzy
 msgid "Search "
-msgstr "Hledání: "
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -40179,12 +40169,6 @@ msgstr "Tábořiště"
 msgid "Test"
 msgstr "Test"
 
-#~ msgid "Simplify Area (remove {0} node)"
-#~ msgid_plural "Simplify Area (remove {0} nodes)"
-#~ msgstr[0] "Zjednodušení plochy (odstraněn {0} uzel)"
-#~ msgstr[1] "Zjednodušení plochy (odstraněny {0} uzly)"
-#~ msgstr[2] "Zjednodušení plochy (odstraněno {0} uzlů)"
-
 #~ msgid "File could not be found."
 #~ msgstr "Soubor nebyl nalezen"
 
@@ -40238,6 +40222,9 @@ msgstr "Test"
 
 #~ msgid "unnamed"
 #~ msgstr "nepojmenováno"
+
+#~ msgid "Create a new map."
+#~ msgstr "Vytvořit novou mapu"
 
 #~ msgid "Unknown file extension."
 #~ msgstr "Neznámá přípona souboru."
@@ -43870,6 +43857,12 @@ msgstr "Test"
 
 #~ msgid "Current projection is set to {0}"
 #~ msgstr "Aktuální projekce je nastavena na {0}"
+
+#~ msgid "Simplify Area (remove {0} node)"
+#~ msgid_plural "Simplify Area (remove {0} nodes)"
+#~ msgstr[0] "Zjednodušení plochy (odstraněn {0} uzel)"
+#~ msgstr[1] "Zjednodušení plochy (odstraněny {0} uzly)"
+#~ msgstr[2] "Zjednodušení plochy (odstraněno {0} uzlů)"
 
 #~ msgid "Internal Style"
 #~ msgstr "Interní styl"

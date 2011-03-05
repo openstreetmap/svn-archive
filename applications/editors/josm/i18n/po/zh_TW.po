@@ -8,21 +8,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 23:37+0100\n"
-"PO-Revision-Date: 2011-03-01 13:54+0000\n"
+"POT-Creation-Date: 2011-03-05 23:09+0100\n"
+"PO-Revision-Date: 2011-03-05 09:23+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-03-04 20:54+0000\n"
+"X-Launchpad-Export-Date: 2011-03-05 21:11+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 "Language: zh_TW\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/Main.java:233
+#: ../core/src/org/openstreetmap/josm/Main.java:235
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
@@ -35,14 +35,14 @@ msgstr ""
 msgid "Help"
 msgstr "說明"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:473
+#: ../core/src/org/openstreetmap/josm/Main.java:475
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "忽略格式不良的檔案 URL： \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:474
-#: ../core/src/org/openstreetmap/josm/Main.java:507
-#: ../core/src/org/openstreetmap/josm/Main.java:594
+#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:509
+#: ../core/src/org/openstreetmap/josm/Main.java:596
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -109,16 +109,16 @@ msgstr "忽略格式不良的檔案 URL： \"{0}\""
 msgid "Warning"
 msgstr "警告"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:506
+#: ../core/src/org/openstreetmap/josm/Main.java:508
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr "參數「downloadgps」不能使用檔案名稱或檔案 URL"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:593
+#: ../core/src/org/openstreetmap/josm/Main.java:595
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "忽略不正確的 URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:744
+#: ../core/src/org/openstreetmap/josm/Main.java:746
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -129,15 +129,15 @@ msgstr ""
 "<ul><li>更新您的 Java (JRE) 或是</li><li>使用較舊的 (Java 5 相容的)  JOSM 版"
 "本。</li></ul>更多資訊："
 
-#: ../core/src/org/openstreetmap/josm/Main.java:759
+#: ../core/src/org/openstreetmap/josm/Main.java:761
 msgid "Exit JOSM"
 msgstr "結束 JOSM"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:760
+#: ../core/src/org/openstreetmap/josm/Main.java:762
 msgid "Continue, try anyway"
 msgstr "繼續，強制再試一次"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:761
+#: ../core/src/org/openstreetmap/josm/Main.java:763
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
@@ -20059,23 +20059,20 @@ msgid "Channel-Digraph created from the active OSM-Layer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:42
-#, fuzzy
 msgid "Create Channel Digraph"
-msgstr "建立新地圖"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:68
-#, fuzzy
 msgid "this layer is no osm data layer"
-msgstr "這個圖層是使用中的圖層"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:81
 msgid "Converting OSM graph into Channel Digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
-#, fuzzy
 msgid "filtering ways"
-msgstr "自我交叉的路徑"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -20094,24 +20091,20 @@ msgid "creating DigraphLayer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "JunctionChecking"
-msgstr "交叉點"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "Open the junctionchecking window."
-msgstr "開啟驗證視窗。"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
-#, fuzzy
 msgid "junctions"
-msgstr "交叉點"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
-#, fuzzy
 msgid "Channel-Digraph creation"
-msgstr "改變關係"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:54
 msgid "seal Channel Digraph"
@@ -20141,9 +20134,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
-#, fuzzy
 msgid "Create"
-msgstr "已建立"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -20154,9 +20146,8 @@ msgid "create the channel digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
-#, fuzzy
 msgid "Check "
-msgstr "檢查"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "check a marked subset if it is a junction"
@@ -20167,9 +20158,8 @@ msgid "check the subust for junction properties"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
-#, fuzzy
 msgid "Search "
-msgstr "搜尋： "
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -28042,23 +28032,23 @@ msgstr ""
 #. item "Water/Water/Reservoir"
 #: build/trans_presets.java:1108
 msgid "Reservoir"
-msgstr "貯水處"
+msgstr "水庫"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=reservoir" />
 #. item "Water/Water/Reservoir" label "Edit Reservoir Landuse"
 #: build/trans_presets.java:1110
 msgid "Edit Reservoir Landuse"
-msgstr "編輯貯水處"
+msgstr "編輯水庫"
 
 #. item "Water/Water/Covered Reservoir"
 #: build/trans_presets.java:1115
 msgid "Covered Reservoir"
-msgstr "有覆蓋的貯水處"
+msgstr "有覆蓋的水庫"
 
 #. item "Water/Water/Covered Reservoir" label "Edit Covered Reservoir"
 #: build/trans_presets.java:1116
 msgid "Edit Covered Reservoir"
-msgstr "編輯有覆蓋的貯水處"
+msgstr "編輯有覆蓋的水庫"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=water" />
 #. item "Water/Water/Water" label "Edit Water"
@@ -36335,12 +36325,12 @@ msgstr ""
 #. item "Land use/Quarry"
 #: build/trans_presets.java:4029
 msgid "Quarry"
-msgstr ""
+msgstr "露天採礦"
 
 #. item "Land use/Quarry" label "Edit Quarry Landuse"
 #: build/trans_presets.java:4030
 msgid "Edit Quarry Landuse"
-msgstr ""
+msgstr "編輯露天採礦土地利用"
 
 #. group "Annotation"
 #: build/trans_presets.java:4037
@@ -39412,7 +39402,7 @@ msgstr "歷史地區"
 #. color quarry
 #: build/trans_style.java:2662
 msgid "quarry"
-msgstr ""
+msgstr "露天採礦"
 
 #. <icon src="misc/landmark/mine.png"/>
 #. </rule>
@@ -40052,10 +40042,6 @@ msgstr "露營"
 msgid "Test"
 msgstr "測試"
 
-#~ msgid "Simplify Area (remove {0} node)"
-#~ msgid_plural "Simplify Area (remove {0} nodes)"
-#~ msgstr[0] "簡化區域（移除 {0} 個節點）"
-
 #~ msgid "bridge tag on a node"
 #~ msgstr "節點上有橋樑標籤"
 
@@ -40100,6 +40086,9 @@ msgstr "測試"
 
 #~ msgid "Please select at least two nodes to merge."
 #~ msgstr "請至少選取兩個節點來合併"
+
+#~ msgid "Create a new map."
+#~ msgstr "建立新地圖"
 
 #~ msgid "unnamed"
 #~ msgstr "未命名的"
@@ -43299,6 +43288,10 @@ msgstr "測試"
 
 #~ msgid "EPSG31287"
 #~ msgstr "EPSG31287"
+
+#~ msgid "Simplify Area (remove {0} node)"
+#~ msgid_plural "Simplify Area (remove {0} nodes)"
+#~ msgstr[0] "簡化區域（移除 {0} 個節點）"
 
 #~ msgid "White"
 #~ msgstr "純"

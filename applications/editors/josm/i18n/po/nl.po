@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 23:37+0100\n"
+"POT-Creation-Date: 2011-03-05 23:09+0100\n"
 "PO-Revision-Date: 2011-03-02 09:38+0000\n"
 "Last-Translator: Polyglot <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-03-04 20:57+0000\n"
+"X-Launchpad-Export-Date: 2011-03-05 21:15+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/Main.java:233
+#: ../core/src/org/openstreetmap/josm/Main.java:235
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
@@ -34,14 +34,14 @@ msgstr ""
 msgid "Help"
 msgstr "Help"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:473
+#: ../core/src/org/openstreetmap/josm/Main.java:475
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ongeldige bestands-URL negeren: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:474
-#: ../core/src/org/openstreetmap/josm/Main.java:507
-#: ../core/src/org/openstreetmap/josm/Main.java:594
+#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:509
+#: ../core/src/org/openstreetmap/josm/Main.java:596
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -108,17 +108,17 @@ msgstr "Ongeldige bestands-URL negeren: \"{0}\""
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:506
+#: ../core/src/org/openstreetmap/josm/Main.java:508
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr ""
 "Parameter \"downloadgps\" accepteert geen bestandsnamen of bestands-URLs"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:593
+#: ../core/src/org/openstreetmap/josm/Main.java:595
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Ongeldige URL negeren: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:744
+#: ../core/src/org/openstreetmap/josm/Main.java:746
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -129,15 +129,15 @@ msgstr ""
 "<br>U kan <ul><li>uw Java (JRE) bijwerken of</li><li>een oudere (Java 5 "
 "compatible) versie van JOSM gebruiken.</li></ul>"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:759
+#: ../core/src/org/openstreetmap/josm/Main.java:761
 msgid "Exit JOSM"
 msgstr "JOSM verlaten"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:760
+#: ../core/src/org/openstreetmap/josm/Main.java:762
 msgid "Continue, try anyway"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:761
+#: ../core/src/org/openstreetmap/josm/Main.java:763
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
@@ -20060,9 +20060,8 @@ msgid "Channel-Digraph created from the active OSM-Layer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:42
-#, fuzzy
 msgid "Create Channel Digraph"
-msgstr "Een nieuwe kaart aanmaken."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:68
 msgid "this layer is no osm data layer"
@@ -20073,9 +20072,8 @@ msgid "Converting OSM graph into Channel Digraph"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
-#, fuzzy
 msgid "filtering ways"
-msgstr "Zelfkruisende wegen"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -20094,24 +20092,20 @@ msgid "creating DigraphLayer"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "JunctionChecking"
-msgstr "Splitsing"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
-#, fuzzy
 msgid "Open the junctionchecking window."
-msgstr "Het validatiescherm openen."
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
-#, fuzzy
 msgid "junctions"
-msgstr "Splitsing"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
-#, fuzzy
 msgid "Channel-Digraph creation"
-msgstr "Relatie wijzigen"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:54
 msgid "seal Channel Digraph"
@@ -20141,9 +20135,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
-#, fuzzy
 msgid "Create"
-msgstr "Correleer"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -20166,9 +20159,8 @@ msgid "check the subust for junction properties"
 msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
-#, fuzzy
 msgid "Search "
-msgstr "Zoeken"
+msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -41231,6 +41223,9 @@ msgstr "Test"
 
 #~ msgid "Please select at least one task to download"
 #~ msgstr "Selecteer tenminste één taak om te downloaden"
+
+#~ msgid "Create a new map."
+#~ msgstr "Een nieuwe kaart aanmaken."
 
 #~ msgid "There are unresolved conflicts. You have to resolve these first."
 #~ msgstr ""

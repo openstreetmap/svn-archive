@@ -19,6 +19,8 @@ else
       my $a=$name;
       $a =~ s/.*-//;
       system "mv -v $name po/$a" if -f "po/$a";
+      # activate in case we need a "clean all upstream texts launchpad upload"
+      # system "touch po/$a" if ! -f "po/$a";
     }
 }
 system "ant";

@@ -239,7 +239,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         Main.map.mapView.repaint();
     }
 
-    private void updateLayer(DataSet osbData) {
+    private synchronized void updateLayer(DataSet osbData) {
         if(layer == null) {
             layer = new OsbLayer(osbData, "OpenStreetBugs", dialog);
             Main.main.addLayer(layer);
@@ -261,8 +261,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void layerRemoved(Layer oldLayer) {
         if(oldLayer == layer) {
-            MapView.removeLayerChangeListener(this);
-            MapView.removeLayerChangeListener(dialog);
             layer = null;
         }
     }

@@ -111,10 +111,6 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     private boolean buttonLabels = Main.pref.getBoolean(ConfigKeys.OSB_BUTTON_LABELS);
 
     public OsbDialog(final OsbPlugin plugin) {
-//        super(tr("Open OpenStreetBugs"), "icon_error24",
-//                tr("Opens the OpenStreetBugs window and activates the automatic download"), Shortcut.registerShortcut(
-//                        "view:openstreetbugs", tr("Toggle: {0}", tr("Open OpenStreetBugs")), KeyEvent.VK_O,
-//                        Shortcut.GROUP_LAYER, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), 150);
         super(tr("Open OpenStreetBugs"), "icon_error24",
                 tr("Opens the OpenStreetBugs window and activates the automatic download"), Shortcut.registerShortcut(
                         "view:openstreetbugs", tr("Toggle: {0}", tr("Open OpenStreetBugs")), KeyEvent.VK_B,

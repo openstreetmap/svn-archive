@@ -3,6 +3,8 @@
 
 
 # todo
+# - autorotate
+# - enhance elevation profile
 # - mapgen rules adapt way thickness
 # - print parameters
 #
@@ -15,7 +17,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.7" ;
+my $version = "0.8" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -23,6 +25,8 @@ my $overviewStyleFileName = "hikingRules.csv" ;
 my $detailStyleFileName = "hikingRules.csv" ;
 my $poiFileName = "hikingbook.poi" ;
 my $relationId = 0 ;
+my $relationName = "" ;
+my $relationRef = "" ;
 my $scale = 10000 ; # default detail scale 
 my %pageHeight = () ;
 $pageHeight{"A4"} = 27.7 ;
@@ -58,9 +62,12 @@ my $roundtripOpt = 0 ;
 my $noDeleteOpt = 0 ;
 my $pnSizeOverview = 48 ;
 my $pnSizeDetail = 64 ;
+my $descName = "" ;
+my $stepDescName = "" ;
+my $autorotateOpt = 0 ;
 
-my $extraMapData1 = 0.4 ; # overlap for osm temp file 1
-my $extraMapData2 = 0.3 ; # for temp file 2s
+my $extraMapData1 = 0.05 ; # overlap for osm temp file 1
+my $extraMapData2 = 0.05 ; # for temp file 2s
 
 my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove -pagenumbers=$pnSizeOverview,black,0" ;
 my $mapgenCommandDetail = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
@@ -90,6 +97,7 @@ my %nodeName = () ;
 my %nodeElevation = () ;
 my %nodeInfo = () ;
 my $segmentLength = 0 ;
+my %stepInformation = () ;
 
 my @poiList ;   # POIs actually found
 my @pois = () ; # POIs to be used
@@ -100,6 +108,8 @@ getProgramOptions () ;
 getPoiFiledata () ;
 
 getRelationData() ;
+
+getStepInformation() ;
 
 createTemp1 () ;
 
@@ -152,6 +162,29 @@ sub getRelationData {
 			@relationTags = @$tagsRef ;
 		}
 
+		my $name = "" ; my $ref = "" ;
+		foreach my $t (@$tagsRef) {
+			if ($t->[0] eq "name") { $name = $t->[1] ; }
+			if ($t->[0] eq "ref") { $ref = $t->[1] ; }
+		}
+
+		if ( ($relationName ne "") and (grep /^$relationName$/i, $name) ) {
+			$found = 1 ;
+			@relationMembers = @$membersRef ;
+			@relationTags = @$tagsRef ;
+		}
+		if ( ($relationRef ne "") and (grep /^$relationRef$/i, $ref) ) {
+			$found = 1 ;
+			@relationMembers = @$membersRef ;
+			@relationTags = @$tagsRef ;
+		}
+
+		if ($found) {
+			print "\nRelation $$propRef{'id'} found.\n" ;
+			print "Name: $name\n" ;
+			print "Ref: $ref\n\n" ;
+		}
+
 		($propRef, $membersRef, $tagsRef) = getRelation3() ;
 	}
 	closeOsmFile() ;
@@ -184,12 +217,6 @@ sub getRelationData {
 		print "ROLES: " ;
 		foreach my $r (keys %types) { print $r, " " ; }
 		print "\n" ;
-	}
-
-	foreach my $m (@relationTags) {
-		if ( ($m->[0] eq "name") or ($m->[0] eq "ref") ) {
-			print "TAG: $m->[0] : $m->[1]\n" ;
-		}
 	}
 
 	# get way data
@@ -616,6 +643,7 @@ sub createDetailMaps {
 	while ( ! $finished ) {
 		
 		my $actual = $start ;
+		my $rotated = 0 ;
 		my $lonMin = $lon{$nodes[$start]} ;
 		my $lonMax = $lon{$nodes[$start]} ;
 		my $latMin = $lat{$nodes[$start]} ;
@@ -642,7 +670,23 @@ sub createDetailMaps {
 
 			# print "  $distLon / $distLat\n" ;
 
+			# autorotate
+			if ( ($autorotateOpt eq "1") and ( ! $rotated) ) {
+				if 	( ( ($distLon > $maxDistLonOverlap) and ( $maxDistLatOverlap > $maxDistLonOverlap) )
+					or ( ($distLat > $maxDistLatOverlap) and ( $maxDistLonOverlap > $maxDistLatOverlap) )
+					) { 
+					if ($verboseOpt eq "1") { print "actual page automatically rotated.\n" ; }
+					$rotated = 1 ;
+					$maxDistLon = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+					$maxDistLat = $pageWidth{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+
+					$maxDistLonOverlap = $maxDistLon * ( 1 - 2 * $overlapOpt / 100) ;
+					$maxDistLatOverlap  = $maxDistLat * ( 1 - 2 * $overlapOpt / 100) ;
+				}
+			}	
+
 			if ( ($distLon > $maxDistLonOverlap) or ($distLat > $maxDistLatOverlap) ) { 
+
 				$busted = 1 ; 
 				$actual-- ;
 				# restore max and min
@@ -749,6 +793,14 @@ sub createDetailMaps {
 		# next
 		$start = $actual ;
 
+		# restore sizes (after rotate)
+		$maxDistLon = $pageWidth{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+		$maxDistLat = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+
+		$maxDistLonOverlap = $maxDistLon * ( 1 - 2 * $overlapOpt / 100) ;
+		$maxDistLatOverlap  = $maxDistLat * ( 1 - 2 * $overlapOpt / 100) ;
+
+
 	}
 
 }
@@ -784,7 +836,11 @@ sub shrinkFile {
 
 	# call osmosis
 	print "call osmosis and log to $logFileName...\n" ;
-	`osmosis --read-xml $inFileName  --bounding-box clipIncompleteEntities=true bottom=$outLatMin top=$outLatMax left=$outLonMin right=$outLonMax --write-xml $outFileName >> $logFileName 2>&1` ;
+
+	# `osmosis --read-xml $inFileName  --bounding-box clipIncompleteEntities=true bottom=$outLatMin top=$outLatMax left=$outLonMin right=$outLonMax --write-xml $outFileName >> $logFileName 2>&1` ;
+
+	`osmosis --read-xml $inFileName  --bounding-box completeWays=yes completeRelations=yes bottom=$outLatMin top=$outLatMax left=$outLonMin right=$outLonMax --write-xml $outFileName >> $logFileName 2>&1` ;
+
 	print "osmosis done.\n" ;
 
 }
@@ -848,11 +904,16 @@ sub mergeAllFiles {
 		$name = " " . $workDir . "detail" . $i . ".pdf" ; 
 		$files .= $name ;
 	}
-	print "\ncall ghostscript to merge pdfs and log to $logFileName\n" ;
+	print "\nmerge pdfs and log to $logFileName\n" ;
 	if ($verboseOpt eq "1") {
-		print "gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files\n" ;
+		print "merging files (gs/pdfjoin)...\n" ;
 	}
 	`gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files >> $logFileName 2>&1` ;
+
+	my $outFileName2 = $outFileName ;
+	$outFileName2 =~ s/\.pdf/2\.pdf/ ;
+	`pdfjoin --outfile $outFileName2 $files >> $logFileName 2>&1` ;
+
 }
 
 sub createDirections {
@@ -901,10 +962,28 @@ sub createDirections {
 	print $texFile "\\section*{" .  $label{$languageOpt}{"directions"} . "}\n" ;
 	print $texFile "\\LTXtable{\\textwidth}{directionsltx}\n" ;
 
+	my $elevationDataPresent = 0 ;
+	for (my $i=0; $i <= $#nodes; $i++) {
+		if ($nodeInfo{$i}{'ele'} ne "") { $elevationDataPresent = 1 ; }
+	}
+
 	print $ltxFile "\\tiny\n" ;
-	print $ltxFile "\\begin{longtable}{|p{1cm}|p{2cm}|p{1.5cm}|p{3cm}|p{2cm}|p{3cm}|}\n" ;
+
+	if ($elevationDataPresent) {
+		print $ltxFile "\\begin{longtable}{|p{1cm}|p{2cm}|p{1.5cm}|p{3cm}|p{2cm}|p{3cm}|}\n" ;
+	}
+	else {
+		print $ltxFile "\\begin{longtable}{|p{1cm}|p{2cm}|p{3cm}|p{2cm}|p{4.5cm}|}\n" ;
+	}
+
 	print $ltxFile "\\hline\n" ;
-	print $ltxFile "$label{$languageOpt}{'number'} & $label{$languageOpt}{'distance'} & $label{$languageOpt}{'elevation'} & $label{$languageOpt}{'name'} & $label{$languageOpt}{'direction'} & $label{$languageOpt}{'info'} \\\\ \n" ;
+
+	if ($elevationDataPresent) {
+		print $ltxFile "$label{$languageOpt}{'number'} & $label{$languageOpt}{'distance'} & $label{$languageOpt}{'elevation'} & $label{$languageOpt}{'name'} & $label{$languageOpt}{'direction'} & $label{$languageOpt}{'info'} \\\\ \n" ;
+	}
+	else {
+		print $ltxFile "$label{$languageOpt}{'number'} & $label{$languageOpt}{'distance'} & $label{$languageOpt}{'name'} & $label{$languageOpt}{'direction'} & $label{$languageOpt}{'info'} \\\\ \n" ;
+	}
 	print $ltxFile "\\hline\n" ;
 
 
@@ -943,7 +1022,24 @@ sub createDirections {
 			$line++ ;
 			my $stepDist = $nodeInfo{$i}{"distance"} - $lastDist ;
 			$stepDist = int ($stepDist * 100) / 100 ;
-			print $ltxFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
+
+			if (defined $stepInformation{$line}) {
+				if ($info{$i} eq "") {
+					$info{$i} = $stepInformation{$line} ;
+				}
+				else {
+					$info{$i} .= " * " . $stepInformation{$line} ;
+				} 
+			}
+
+
+			if ($elevationDataPresent) {
+				print $ltxFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"ele"} . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
+			}
+			else {
+				print $ltxFile "$line & " . $nodeInfo{$i}{"distance"} . " ($stepDist)" . " & " . $nodeInfo{$i}{"name"} . " & " . $nodeInfo{$i}{"direction"} . " & " . $info{$i} . "\\\\\n" ;
+			}
+
 			print $ltxFile "\\hline\n" ;
 			$lastDist = $nodeInfo{$i}{"distance"} ;
 
@@ -1039,6 +1135,9 @@ sub createTitlePage {
 	my %heading = () ;
 	$heading{"EN"} = "Disclaimer" ;
 	$heading{"DE"} = "Haftungsauschluss" ;
+	my %heading2 = () ;
+	$heading2{"EN"} = "Tour description" ;
+	$heading2{"DE"} = "Tourenbeschreibung" ;
 	my %disclaimer = () ;
 	$disclaimer{"EN"} = << "END1" ;
 The user of this book is always responsible for all his steps and actions.
@@ -1077,10 +1176,28 @@ END2
 	# print $texFile "\\newline\n" ;
 	print $texFile "\\vspace*{2cm}\n" ;
 	print $texFile "\\normalsize\n" ;
-	print $texFile "created with hikingbook.pl\n" ;
+	my %created = () ;
+	$created{"EN"} = "created with hikingbook.pl" ;
+	$created{"DE"} = "erstellt mit hikingbook.pl" ;
+	print $texFile "$created{$languageOpt}\n" ;
+
+	if ($descName ne "") {
+		print $texFile "\\newpage\n" ;
+		print "\nreading description file...\n" ;
+		open (my $file, "<", $descName) or die ("ERROR: could not open description file $descName\n") ;
+			print $texFile "\\section*{$heading2{$languageOpt}}\n" ;
+			my $line = "" ; my $c = 0 ;
+			while ($line = <$file>) {
+				print $texFile $line ;
+				$c++ ;
+			}
+		close ($file) ;	
+		print "done. $c lines read.\n" ;
+	}
+
 	print $texFile "\\newpage\n" ;
 	print $texFile "\\thispagestyle{empty}\n" ;
-	print $texFile "\\textbf{$heading{$languageOpt}}\\par\n" ;
+	print $texFile "\\section*{$heading{$languageOpt}}\n" ;
 	print $texFile "$disclaimer{$languageOpt}\n" ;
 	
 
@@ -1121,6 +1238,10 @@ sub getProgramOptions {
 					"language=s"	=> \$languageOpt,
 					"pagesize=s"	=> \$pageSizeOpt,
 					"relation=i"	=> \$relationId,
+					"name=s"	=> \$relationName,
+					"desc=s"	=> \$descName,
+					"steps=s"	=> \$stepDescName,
+					"ref=s"	=> \$relationRef,
 					"overlap=i"	=> \$overlapOpt,
 					"dirnumber=i"	=> \$dirNumberOpt,
 					"scale=i"	=> \$scale,
@@ -1128,6 +1249,7 @@ sub getProgramOptions {
 					"pnsizedetail=i"	=> \$pnSizeDetail,
 					"landscape"	=> \$landscapeOpt,
 					"reverse"	=> \$reverseOpt,
+					"autorotate"	=> \$autorotateOpt,
 					"nodelete"	=> \$noDeleteOpt,
 					"roundtrip"	=> \$roundtripOpt,
 					"help"		=> \$helpOpt,
@@ -1164,6 +1286,11 @@ sub usage {
 	print "$programName version $version\n" ;
 	print "-in=<infile.osm>\n" ;
 	print "-out=<outfile.pdf>\n" ;
+	print "-relation=<relation id>\n" ;
+	print "-name=<relation id>\n" ;
+	print "-ref=<relation id>\n" ;
+	print "-desc=<tex file> (for long text after title page; tex format, max heading subsection\n" ;
+	print "-steps=<step description file> (for descriptions of single steps or nodes; format: stepNr<space>TEXT)\n" ;
 	print "-detailstyle=<mapgen rules file for detail maps>\n" ;
 	print "-overviewstyle=<mapgen rules file for overview maps>\n" ;
 	print "-title=\"title text\" (for title page)\n" ;
@@ -1172,8 +1299,8 @@ sub usage {
 	print "-pnsizeoverview=INTEGER (size of page numbers in overview map)\n" ;
 	print "-pnsizedetail=INTEGER (size of page numbers in detail maps)\n" ;
 	print "-landscape\n" ;
-	print "-relation=<relation id>\n" ;
 	print "-reverse (reverse direction of relation/route)\n" ;
+	print "-autorotate (rotate paper format automatically)\n" ;
 	print "-roundtrip (force route to begin/end with first way in relation)\n" ;
 	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
@@ -1226,6 +1353,29 @@ sub getPoiFiledata {
 	}
 	else {
 		print "WARNING: poi file $poiFileName could not be opened!\n" ;
+	}
+}
+
+sub getStepInformation {
+	if ($stepDescName ne "") {
+		print "\nreading step information file...\n" ;
+		open (my $file, "<", $stepDescName) or die ("ERROR: step information file $stepDescName could not be opened!\n") ;
+		my $line = "" ; my $c = 0 ;
+		while ($line = <$file>) {
+			my ($nr, $text) = ($line =~ /([\d\-]+)\s(.+)/ ) ;
+			if ( (defined $nr) and (defined $text) ) {
+				$c++ ;
+				$stepInformation{$nr} = $text ;
+				if ($verboseOpt eq "1") {
+					print "$nr $text\n" ;
+				}
+			}
+			else {
+				print "problem reading line from step information file:\n$line\n" ;
+			}
+		}
+		close ($file) ;
+		print "done. $c lines read.\n" ;
 	}
 }
 

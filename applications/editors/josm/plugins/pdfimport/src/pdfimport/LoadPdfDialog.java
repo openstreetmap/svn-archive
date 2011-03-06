@@ -784,7 +784,7 @@ public class LoadPdfDialog extends JFrame{
 
 	private PathOptimizer loadPDF(File fileName, ProgressMonitor monitor) {
 
-		monitor.beginTask(tr(""), 100);
+		monitor.beginTask("", 100);
 		monitor.setTicks(0);
 		monitor.setCustomText(tr("Preparing"));
 

@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the josm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:787
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-05 23:09+0100\n"
+"POT-Creation-Date: 2011-03-06 16:33+0100\n"
 "PO-Revision-Date: 2011-03-02 08:10+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -17,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-03-05 21:11+0000\n"
+"X-Launchpad-Export-Date: 2011-03-06 15:14+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -238,7 +237,7 @@ msgstr "Показати інформацію про програму"
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:69
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:103
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:77
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:222
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:218
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:816
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:818
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:60
@@ -368,7 +367,7 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:118
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:222
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:52
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:346
@@ -5889,28 +5888,28 @@ msgstr "Завантаження ранніх втулків"
 msgid "Setting defaults"
 msgstr "Типові налаштування"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:221
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:217
 msgid "Creating main GUI"
 msgstr "Створення головного вікна"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:228
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:224
 msgid "Loading plugins"
 msgstr "Завантаження втулків"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:253
 msgid "Unsaved osm data"
 msgstr "Незбережені osm-дані"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 msgid "Restore"
 msgstr "Відновити"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:250
 msgid "Discard"
 msgstr "Скасувати"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:261
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
 #, java-format
 msgid "JOSM found {0} unsaved osm data layer. "
 msgid_plural "JOSM found {0} unsaved osm data layers. "
@@ -5918,11 +5917,11 @@ msgstr[0] "JOSM знайшов {0} незбережений шар даних os
 msgstr[1] "JOSM знайшов {0} незбережених шари даних osm. "
 msgstr[2] "JOSM знайшов {0} незбережениих шарів даних osm. "
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:263
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 msgid "It looks like JOSM crashed last time. Do you like to restore the data?"
 msgstr "Можливо JOSM впав останього разу. Ви бажаєте відновити ці дані?"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:294
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:296
 #, java-format
 msgid "Preference setting {0} has been removed since it is no longer used."
 msgstr ""

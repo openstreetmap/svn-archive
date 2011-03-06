@@ -3,20 +3,19 @@
 # This file is distributed under the same license as the josm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:787
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-05 23:09+0100\n"
-"PO-Revision-Date: 2011-03-02 09:38+0000\n"
+"POT-Creation-Date: 2011-03-06 16:33+0100\n"
+"PO-Revision-Date: 2011-03-06 12:36+0000\n"
 "Last-Translator: Polyglot <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-03-05 21:15+0000\n"
+"X-Launchpad-Export-Date: 2011-03-06 15:18+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -238,7 +237,7 @@ msgstr "Het informatiescherm tonen."
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:69
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:103
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:77
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:222
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:218
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:816
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:818
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:60
@@ -368,7 +367,7 @@ msgstr "Klik om door te gaan en om {0} browsers te openen"
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:118
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:222
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:52
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:346
@@ -2304,8 +2303,8 @@ msgstr "Duplicaat in {0} knopen"
 #, java-format
 msgid "Dupe {0} node into {1} nodes"
 msgid_plural "Dupe {0} nodes into {1} nodes"
-msgstr[0] ""
-msgstr[1] "{0} knopen in {1} knopen verdubbelen"
+msgstr[0] "{0} knooppunt in {1} knooppunten ontdubbelen"
+msgstr[1] "{0} knooppunten in {1} knooppunten ontdubbelen"
 
 #: ../core/src/org/openstreetmap/josm/actions/UndoAction.java:24
 #: ../core/src/org/openstreetmap/josm/actions/UndoAction.java:25
@@ -3983,6 +3982,9 @@ msgid ""
 "Warning: Failed to initialize preferences.Failed to reset preference file to "
 "default: {0}"
 msgstr ""
+"Waarschuwing: Het was niet mogelijk om de voorkeursinstellingen te "
+"initialiseren. Het voorkeursinstellingenbestand kon niet worden teruggezet "
+"naar de standaardinstellingen: {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/ServerSidePreferences.java:105
 #, java-format
@@ -4001,7 +4003,7 @@ msgstr "Kan geen voorkeuren van server laden."
 #: ../core/src/org/openstreetmap/josm/data/Version.java:47
 #, java-format
 msgid "Failed to load resource ''{0}'', error is {1}."
-msgstr ""
+msgstr "resource ''{0}'' kon niet worden geladen, foutmelding is {1}."
 
 #: ../core/src/org/openstreetmap/josm/data/Version.java:98
 #: ../core/src/org/openstreetmap/josm/data/Version.java:161
@@ -4013,15 +4015,17 @@ msgstr "ONBEKEND"
 msgid ""
 "Warning: unexpected JOSM version number in revison file, value is ''{0}''"
 msgstr ""
+"Waarschuwing; onverwacht JOSM-versienummer in revisiebestand, waarde is "
+"''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/data/Version.java:145
 msgid "Warning: the revision file ''/REVISION'' is missing."
-msgstr ""
+msgstr "Waarschuwing; het revisiebestand ''/REVISION'' ontbreekt."
 
 #: ../core/src/org/openstreetmap/josm/data/conflict/ConflictCollection.java:76
 #, java-format
 msgid "Already registered a conflict for primitive ''{0}''."
-msgstr ""
+msgstr "Er werd reeds een conflict geregistreerd voor primitief ''{0}''."
 
 #. *
 #. * the decimal format 999.999
@@ -4035,21 +4039,21 @@ msgstr "Decimale graden"
 #.
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:20
 msgid "deg° min'' sec\""
-msgstr ""
+msgstr "grd° min'' sec\""
 
 #. *
 #. * the nautical format
 #.
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:25
 msgid "deg° min'' (Nautical)"
-msgstr ""
+msgstr "grd° min'' (Scheepvaart)"
 
 #. *
 #. * coordinates East/North
 #.
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:30
 msgid "Projected Coordinates"
-msgstr ""
+msgstr "Geprojecteerde coördinaten"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:101
 msgctxt "compass"
@@ -4073,18 +4077,21 @@ msgstr "O"
 
 #: ../core/src/org/openstreetmap/josm/data/imagery/GeorefImage.java:90
 msgid "Not in cache"
-msgstr ""
+msgstr "Niet aanwezig in de cache"
 
 #: ../core/src/org/openstreetmap/josm/data/imagery/OffsetBookmark.java:70
 #, java-format
 msgid "Projection ''{0}'' is not found, bookmark ''{1}'' is not usable"
 msgstr ""
+"Projectie ''{0}'' werd niet gevonden, bladwijzer ''{1}'' is niet bruikbaar"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:295
 #, java-format
 msgid ""
 "Unable to add primitive {0} to the dataset because it is already included"
 msgstr ""
+"Het was niet mogelijk om primitief {0} toe te voegen aan de dataset, omdat "
+"deze er al deel van uitmaakt"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:703
 #, java-format
@@ -4093,6 +4100,10 @@ msgid ""
 "Please report this  at http://josm.openstreetmap.de . This is not a critical "
 "error, it should be safe to continue in your work."
 msgstr ""
+"JOSM verwachtte om primitief [{0} {1}] in de dataset te vinden, maar deze is "
+"net aanwezig. Gelieve dit te melden op http://josm.openstreetmap.de . Dit is "
+"geen kritieke fout, het zou veilig moeten zijn om verder te werken zonder "
+"JOSM opnieuw te starten."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:147
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:235
@@ -4101,7 +4112,7 @@ msgstr ""
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:121
 #, java-format
 msgid "Missing merge target for way with id {0}"
-msgstr "Samenvoeg doel voor weg met id {0} ontbreekt"
+msgstr "Samenvoegdoel voor weg met id {0} ontbreekt"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:182
 #, java-format
@@ -4109,19 +4120,21 @@ msgid ""
 "Object of type {0} with id {1} was marked to be deleted, but it's missing in "
 "the source dataset"
 msgstr ""
+"Een object van type {0} met id {1} werd gemarkeerd om verwijderd te worden, "
+"maar het maakt geen deel uit van de brondataset"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:247
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:117
 #, java-format
 msgid "Missing merge target for node with id {0}"
-msgstr "Samenvoeg doel voor knooppunt met id {0} ontbreekt"
+msgstr "Samenvoegdoel voor knooppunt met id {0} ontbreekt"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:262
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:144
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:148
 #, java-format
 msgid "Missing merge target for relation with id {0}"
-msgstr "Samenvoeg doel voor relatie met id {0} ontbreekt"
+msgstr "Samenvoegdoel voor relatie met id {0} ontbreekt"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:267
 #: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:155
@@ -4129,7 +4142,7 @@ msgstr "Samenvoeg doel voor relatie met id {0} ontbreekt"
 #: ../plugins/reverter/src/reverter/DataSetCommandMerger.java:47
 #, java-format
 msgid "Missing merge target of type {0} with id {1}"
-msgstr "Samenvoeg doel van type {0} met id {1} ontbreekt"
+msgstr "Samenvoegdoel van type {0} met id {1} ontbreekt"
 
 #. Same version, but different "visible" attribute. It indicates a serious problem in datasets.
 #. For example, datasets can be fetched from different OSM servers or badly hand-modified.
@@ -4138,29 +4151,31 @@ msgstr "Samenvoeg doel van type {0} met id {1} ontbreekt"
 #, java-format
 msgid "Conflict in 'visible' attribute for object of type {0} with id {1}"
 msgstr ""
+"Ernstig conflict in het  'zichtbare' attribuut voor object van type {0} met "
+"id {1} (versienummer is gelijk, maar attributen komen niet overeen)"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/MultipolygonCreate.java:118
 #, java-format
 msgid "Cannot add a way with only {0} nodes."
-msgstr ""
+msgstr "Een weg met slechts {0} knooppunten kan niet worden toegevoegd"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/MultipolygonCreate.java:163
 msgid "Each node must connect exactly 2 ways"
-msgstr ""
+msgstr "Elk knooppunt moet exact 2 wegen met elkaar verbinden"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/MultipolygonCreate.java:195
 msgid "There is an intersection between ways."
-msgstr ""
+msgstr "Er zijn wegen die elkaar kruisen."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:455
 #, java-format
 msgid "ID > 0 expected. Got {0}."
-msgstr ""
+msgstr "Een ID > 0 werd verwacht. In de plaats daarvan is ID = {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:457
 #, java-format
 msgid "Version > 0 expected. Got {0}."
-msgstr ""
+msgstr "Een versie > 0 werd verwacht. In de plaats daarvan is versie = {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:543
 #, java-format
@@ -4168,16 +4183,20 @@ msgid ""
 "Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
 "{0}"
 msgstr ""
+"Er kan geen changesetId > 0 aan een nieuw primitief worden toegekend. De "
+"waarde van de changesetId is {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:755
 msgid "A primitive with ID = 0 cannot be invisible."
-msgstr ""
+msgstr "Een primitief met ID = 0 kan niet onzichtbaar zijn."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1393
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr ""
+"Deze primitieven kunnen niet worden samengevoegd, aangezien één ervan nieuw "
+"is en de andere niet"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1395
 #, java-format
@@ -4190,8 +4209,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:132
 msgid "node"
 msgid_plural "nodes"
-msgstr[0] "knoop"
-msgstr[1] "knopen"
+msgstr[0] "knooppunt"
+msgstr[1] "knooppunten"
 
 #. light cyan
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:11
@@ -4216,11 +4235,11 @@ msgstr[1] "relaties"
 #. only for display, no real type
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:15
 msgid "closedway"
-msgstr "afgesloten weg"
+msgstr "geslotenveelhoek"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:16
 msgid "multipolygon"
-msgstr ""
+msgstr "multipolygoon"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/TagCollection.java:587
 #: ../core/src/org/openstreetmap/josm/data/osm/TagCollection.java:608
@@ -4230,22 +4249,27 @@ msgid ""
 "Tag collection cannot be applied to a primitive because there are keys with "
 "multiple values."
 msgstr ""
+"Deze groep tags kan niet worden toegepast op een primitief aangezien er "
+"sleutel zijn met meerdere waardes."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:324
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:352
 #, java-format
 msgid "Cannot add node {0} to incomplete way {1}."
 msgstr ""
+"Knooppunt {0} kan niet aan onvolledig afgehaalde weg {1} worden toegevoegd."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/history/HistoryOsmPrimitive.java:112
 #, java-format
 msgid "Cannot compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
 msgstr ""
+"Primitief met ID ''{0}'' kan niet worden vergeleken met primitief met ID "
+"''{1}''."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/history/HistoryWay.java:48
 #, java-format
 msgid "Parameter {0} not in range 0..{1}. Got ''{2}''."
-msgstr ""
+msgstr "Parameter {0} met als waarde ''{2}'' valt niet in het bereik 0..{1}."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
 msgid "inactive"
@@ -4259,19 +4283,19 @@ msgstr "geselecteerd"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:19
 msgid "Relation: selected"
-msgstr ""
+msgstr "Relatie: geselecteerd"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
 msgid "Node: standard"
-msgstr ""
+msgstr "Knooppunt: standaard"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
 msgid "Node: connection"
-msgstr ""
+msgstr "Knooppunt: verbinding"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:22
 msgid "Node: tagged"
-msgstr ""
+msgstr "Knooppunt: met tag"
 
 #. teal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
@@ -4305,15 +4329,15 @@ msgstr "tekst"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:32
 msgid "areatext"
-msgstr ""
+msgstr "Tekst voor gebied"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Epsg3008.java:29
 msgid "SWEREF99 13 30 / EPSG:3008 (Sweden)"
-msgstr ""
+msgstr "SWEREF99 13 30 / EPSG:3008 (Zweden)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Epsg4326.java:26
 msgid "WGS84 Geographic"
-msgstr ""
+msgstr "WGS84 Geographisch"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:102
 #, java-format
@@ -4321,10 +4345,12 @@ msgid ""
 "Warning: failed to open input stream for resource ''/data/{0}''. Cannot load "
 "NTF<->RGF93 grid"
 msgstr ""
+"Waarschuwing: invoerstream voor resource ''/data/{0}'' kon niet worden "
+"geopend . NTF<->RGF93 grid kan niet worden geladen"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:139
 msgid "Lambert 4 Zones (France)"
-msgstr ""
+msgstr "Lambert 4 Zones (Frankrijk)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:251
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:252
@@ -4340,21 +4366,21 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/data/projection/LambertCC9Zones.java:184
 #, java-format
 msgid "{0} ({1} to {2} degrees)"
-msgstr ""
+msgstr "{0} ({1} tot {2} graden)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:254
 #, java-format
 msgid "{0} (Corsica)"
-msgstr ""
+msgstr "{0} (Corsica)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:263
 #: ../core/src/org/openstreetmap/josm/data/projection/LambertCC9Zones.java:193
 msgid "Lambert CC Zone"
-msgstr ""
+msgstr "Lambert CC-zone"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/LambertCC9Zones.java:132
 msgid "Lambert CC9 Zone (France)"
-msgstr ""
+msgstr "Lambert CC9-zone (Frankrijk)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/LambertEST.java:96
 msgid "Lambert Zone (Estonia)"
@@ -4367,7 +4393,7 @@ msgstr "Mercator"
 #: ../core/src/org/openstreetmap/josm/data/projection/ProjectionInfo.java:17
 #, java-format
 msgid "Cannot instantiate projection ''{0}''"
-msgstr ""
+msgstr "Projectie {0} kan niet geïnstantieerd worden"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/ProjectionInfo.java:41
 #, java-format
@@ -4375,6 +4401,8 @@ msgid ""
 "Projection code mismatch in ''{0}'': toCode() returns ''{1}'', expected "
 "''{2}''."
 msgstr ""
+"Projectiecode ''{0}'' kan niet in overeenstemming gebracht worden toCode() "
+"heeft ''{1}'' als resultaat, terwijl er ''{2}'' verwacht werd."
 
 #: ../core/src/org/openstreetmap/josm/data/projection/ProjectionInfo.java:50
 #, java-format
@@ -4385,20 +4413,20 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Puwg.java:64
 msgid "PUWG (Poland)"
-msgstr ""
+msgstr "PUWG (Polen)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Puwg.java:107
 msgid "PUWG Zone"
-msgstr ""
+msgstr "PUWG Zone"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Puwg.java:188
 msgid "PUWG 1992 (Poland)"
-msgstr ""
+msgstr "PUWG 1992 (Polen)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Puwg.java:223
 #, java-format
 msgid "PUWG 2000 Zone {0} (Poland)"
-msgstr ""
+msgstr "PUWG 2000 Zone {0} (Polen)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/SwissGrid.java:125
 msgid "Swiss Grid (Switzerland)"
@@ -4406,60 +4434,60 @@ msgstr "Zwitsers raster (Zwitserland)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/TransverseMercatorLV.java:23
 msgid "LKS-92 (Latvia TM)"
-msgstr ""
+msgstr "LKS-92 (Letland TM)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:64
 msgid "UTM"
-msgstr ""
+msgstr "UTM"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:126
 msgid "UTM Zone"
-msgstr ""
+msgstr "UTM Zone"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:145
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:297
 msgid "North"
-msgstr ""
+msgstr "Noorden"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:148
 msgid "South"
-msgstr ""
+msgstr "Zuiden"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:152
 msgid "Hemisphere"
-msgstr ""
+msgstr "Halfrond"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM.java:161
 msgid "Offset 3.000.000m east"
-msgstr ""
+msgstr "Offset 3.000.000m oostelijk"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:26
 msgid "Guadeloupe Fort-Marigot 1949"
-msgstr ""
+msgstr "Guadeloupe Fort-Marigot 1949"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:27
 msgid "Guadeloupe Ste-Anne 1948"
-msgstr ""
+msgstr "Guadeloupe Ste-Anne 1948"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:28
 msgid "Martinique Fort Desaix 1952"
-msgstr ""
+msgstr "Martinique Fort Desaix 1952"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:29
 msgid "Reunion RGR92"
-msgstr ""
+msgstr "Réunion RGR92"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:30
 msgid "Guyane RGFG95"
-msgstr ""
+msgstr "Guyane RGFG95"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:406
 msgid "UTM France (DOM)"
-msgstr ""
+msgstr "UTM Frankrijk (DOM)"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:419
 msgid "UTM Geodesic system"
-msgstr ""
+msgstr "UTM Geodesisch systeem"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/OsmValidator.java:264
 #, java-format
@@ -4506,7 +4534,7 @@ msgstr "Validatie andere"
 #: ../core/src/org/openstreetmap/josm/data/validation/Test.java:100
 #, java-format
 msgid "Running test {0}"
-msgstr ""
+msgstr "Uitvoeren test {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/ChangePropertyKeyCommand.java:74
 #, java-format
@@ -4530,7 +4558,7 @@ msgstr "Deze test controleert of kustlijnen correct zijn."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:163
 msgid "Unconnected coastline"
-msgstr ""
+msgstr "Niet-verbonden kustlijn"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:192
 msgid "Unordered coastline"
@@ -4538,7 +4566,7 @@ msgstr "Ongeordende kustlijn"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:196
 msgid "Reversed coastline"
-msgstr ""
+msgstr "Omgekeerde kustlijn"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:44
 msgid "Crossing ways."
@@ -4549,10 +4577,12 @@ msgid ""
 "This test checks if two roads, railways, waterways or buildings crosses in "
 "the same layer, but are not connected by a node."
 msgstr ""
+"Deze test kijkt na of 2 (spoor/water)wegen of gebouwen elkaar kruisen in "
+"dezelfde laag, zonder dat er een knooppunt ze verbindt."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:119
 msgid "Crossing buildings"
-msgstr ""
+msgstr "Overlappende gebouwen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:119
 msgid "Crossing ways"
@@ -4580,66 +4610,68 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:197
 msgid "Duplicate nodes in two un-closed ways"
-msgstr ""
+msgstr "Dubbele knooppunten in twee niet-gesloten wegen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:208
 msgid "Mixed type duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten van verschillend type"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:219
 msgid "Highway duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in weg"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:230
 msgid "Railway duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in spoorweg"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:241
 msgid "Waterway duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in waterweg"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:252
 msgid "Boundary duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in grens"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:263
 msgid "Power duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in hoogspanningsleiding"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:274
 msgid "Natural duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in natuur (bos, water)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:285
 msgid "Building duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in gebouw"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:296
 msgid "Landuse duplicated nodes"
-msgstr ""
+msgstr "Gedupliceerde knooppunten in grondgebruik"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:307
 msgid "Other duplicated nodes"
-msgstr ""
+msgstr "Andere gedupliceerde knooppunten"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:335
 msgid "Nodes at same position"
-msgstr ""
+msgstr "Knooppunten op exact dezelfde positie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:67
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:83
 msgid "Duplicated ways"
-msgstr ""
+msgstr "Gedupliceerde wegen op dezelfde positie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:68
 msgid ""
 "This test checks that there are no ways with same tags and same node "
 "coordinates."
 msgstr ""
+"Deze test kijkt na of er wegen zijn met dezelfde tags en waarvan de "
+"knooppuntn op dezelfde coördinaten liggen."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:168
 msgid "Delete duplicate ways"
-msgstr ""
+msgstr "Gedupliceerde wegen verwijderen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicatedWayNodes.java:23
 msgid "Duplicated way nodes."
@@ -4661,27 +4693,28 @@ msgstr "Multipolygoon"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:52
 msgid "This test checks if multipolygons are valid"
-msgstr ""
+msgstr "Deze test kijkt na of multipolygons geldig zijn"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:120
 msgid "Area style way is not closed"
-msgstr ""
+msgstr "Gebied is niet gesloten"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:137
 msgid "No outer way for multipolygon"
-msgstr ""
+msgstr "Multipolygoonrelatie ontbreekt een lid met als rol outer"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:173
 msgid "No style for multipolygon"
-msgstr ""
+msgstr "Multipolygoonrelatie ontbreekt stijlinformatie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:175
 msgid "No style in multipolygon relation"
-msgstr ""
+msgstr "Multipolygoonrelatie ontbreekt stijlinformatie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:193
 msgid "Style for inner way equals multipolygon"
 msgstr ""
+"De stijl voor één van de wegen met als rol inner is gelijk aan multipolygon"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:210
 msgid "Style for outer way mismatches"
@@ -4689,27 +4722,28 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:219
 msgid "Multipolygon is not closed"
-msgstr ""
+msgstr "Multipolygoon is niet gesloten"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:241
 msgid "Multipolygon inner way is outside"
 msgstr ""
+"Het lid van de multipolygoonrelatie met als rol inner ligt aan de buitenkant"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:244
 msgid "Intersection between multipolygon ways"
-msgstr ""
+msgstr "Wegen die lid zijn van een multipolygoonrelatie kruisen elkaar"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:255
 msgid "No useful role for multipolygon member"
-msgstr ""
+msgstr "Een lid van een multipolygoonrelatie heeft een niet-geschikte rol"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:258
 msgid "Non-Way in multipolygon"
-msgstr ""
+msgstr "Multipolygoonrelatie bevat een lid dat geen 'weg' is"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:36
 msgid "Missing name:* translation."
-msgstr ""
+msgstr "Er ontbreekt een name:*-vertaling"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:37
 msgid ""
@@ -4717,14 +4751,17 @@ msgid ""
 "some 'name:*' attribute and not a composition of 'name:*' attributes, e.g., "
 "Italia - Italien - Italy."
 msgstr ""
+"Deze test vindt meertalige objecten waarvan het naam-attribuut niet gelijk  "
+"is aan een 'name:*'-attribuut of geen samenstelling is van meerdere 'name:*' "
+"attributen, e.g., Italia - Italien - Italy."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:47
 msgid "A name:* translation is missing."
-msgstr ""
+msgstr "Een name:*-vertaling ontbreekt."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:74
 msgid "A name is missing, even though name:* exists."
-msgstr ""
+msgstr "name zelf ontbreekt, terwijl er wel name:*-velden gedefinieerd zijn."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NodesWithSameName.java:24
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NodesWithSameName.java:62
@@ -4757,11 +4794,11 @@ msgstr "Overlappende snelwegen (met oppervlak)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:109
 msgid "Overlapping railways (with area)"
-msgstr "Overlappende spoorwegen (met oppervlak)"
+msgstr "Spoorwegen die overlappen met een gebied"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:112
 msgid "Overlapping ways (with area)"
-msgstr "Overlappende wegen (met oppervlak)"
+msgstr "Wegen die overlappen met een gebied"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:117
 msgid "Overlapping highways"
@@ -4777,28 +4814,28 @@ msgstr "Overlappende wegen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:40
 msgid "Relation checker :"
-msgstr ""
+msgstr "Foutenopspoorder in relaties:"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:41
 msgid "This plugin checks for errors in relations."
-msgstr ""
+msgstr "Deze plugin zoekt naar fouten in relaties."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:100
 msgid "Relation type is unknown"
-msgstr ""
+msgstr "Relatietype is onbekend"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:130
 msgid "Relation is empty"
-msgstr ""
+msgstr "Lege relatie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
 msgid "<empty>"
-msgstr ""
+msgstr "<leeg>"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:145
 #, java-format
 msgid "Role {0} missing"
-msgstr ""
+msgstr "Rol {0} ontbreekt"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:146
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:151
@@ -4807,31 +4844,31 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:171
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:175
 msgid "Role verification problem"
-msgstr ""
+msgstr "Verificatieprobleem voor rol"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:150
 #, java-format
 msgid "Number of {0} roles too low ({1})"
-msgstr ""
+msgstr "Het aantal {0} rollen is te laag ({1})"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:154
 #, java-format
 msgid "Number of {0} roles too high ({1})"
-msgstr ""
+msgstr "Het aantal {0} rollen is te hoog ({1})"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:162
 #, java-format
 msgid "Member for role {0} of wrong type"
-msgstr ""
+msgstr "Lid van relatie voor rol {0} is van het verkeerde type"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:170
 #, java-format
 msgid "Role {0} unknown"
-msgstr ""
+msgstr "Rol {0} onbekend"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:174
 msgid "Empty role found"
-msgstr ""
+msgstr "Leden zonder rol gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SelfIntersectingWay.java:23
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SelfIntersectingWay.java:35
@@ -4898,19 +4935,19 @@ msgstr "Toets ''{0}'' is ongeldig."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:423
 msgid "Tag value contains character with code less than 0x20"
-msgstr ""
+msgstr "Tagwaarde bevat karakter met een code lager dan 0x20"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:428
 msgid "Tag key contains character with code less than 0x20"
-msgstr ""
+msgstr "Tagwaarde bevat karakter met een code lager dan 0x20"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:433
 msgid "Tag value longer than allowed"
-msgstr ""
+msgstr "Tagwaarde is langer dan toegestaan"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:438
 msgid "Tag key longer than allowed"
-msgstr ""
+msgstr "Tagwaarde is langer dan toegestaan"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:443
 msgid "Tags with empty values"
@@ -5096,7 +5133,7 @@ msgstr "Kan elementsoort niet vinden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:907
 msgid "Incorrect number of parameters"
-msgstr ""
+msgstr "Fout aantal parameters"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:919
 msgid "Could not find warning level"
@@ -5114,60 +5151,70 @@ msgstr "Ongeldige reguliere expressie ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:35
 msgid "Turnrestriction"
-msgstr ""
+msgstr "Beperking op afslaan"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:35
 msgid "This test checks if turnrestrictions are valid"
 msgstr ""
+"Deze test kijkt na of relaties die aangeven hoe er mag afgeslagen worden op "
+"kruispunten, correct kunnen zijn"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:84
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:96
 msgid "Unknown role"
-msgstr ""
+msgstr "Onbekende rol"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:100
 msgid "Unknown member type"
-msgstr ""
+msgstr "Onbekend type voor lid van relatie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:105
 msgid "More than one \"from\" way found"
-msgstr ""
+msgstr "Er werd meer dan 1 lid met als rol \"from\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:108
 msgid "More than one \"to\" way found"
-msgstr ""
+msgstr "Er werd meer dan 1 lid met als rol \"to\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:111
 msgid "More than one \"via\" way found"
-msgstr ""
+msgstr "Er werd meer dan 1 lid met als rol \"via\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:115
 msgid "No \"from\" way found"
-msgstr ""
+msgstr "Er werd geen lid met als rol \"from\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:119
 msgid "No \"to\" way found"
-msgstr ""
+msgstr "Er werd geen lid met als rol \"to\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:123
 msgid "No \"via\" node or way found"
-msgstr ""
+msgstr "Er werd geen lid met als rol \"via\" gevonden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:132
 msgid "The \"from\" way does not start or end at a \"via\" node"
 msgstr ""
+"Het lid met als rol \"from\" start of eindigt niet bij een lid met als rol "
+"\"via\""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:137
 msgid "The \"to\" way does not start or end at a \"via\" node"
 msgstr ""
+"Het lid met als rol \"to\" start of eindigt niet bij een lid met als rol "
+"\"via\""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:167
 msgid "The \"from\" way does not start or end at a \"via\" way."
 msgstr ""
+"Het lid met als rol \"from\" start of eindigt niet bij een lid met als rol "
+"\"via\""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:172
 msgid "The \"to\" way does not start or end at a \"via\" way."
 msgstr ""
+"Het lid met als rol \"to\" start of eindigt niet bij een lid met als rol "
+"\"via\""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:32
 msgid "Unclosed Ways."
@@ -5317,7 +5364,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:61
 msgid "No tags"
-msgstr ""
+msgstr "Geen tags"
 
 #. Does not happen, but just to be sure. Maybe definition of uninteresting tags changes in future.
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:62
@@ -5330,27 +5377,27 @@ msgstr ""
 #. translation note: don't translate quoted words
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:69
 msgid "Has tag containing ''fixme'' or ''FIXME''"
-msgstr ""
+msgstr "Bevat tag met als waarde ''fixme'' of ''FIXME''"
 
 #. translation note: don't translate quoted words
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:79
 msgid "Has key ''note'' or ''comment'' or ''description''"
-msgstr ""
+msgstr "Bevat tag met als waarde ''note'' of ''comment'' of ''description''"
 
 #. translation note: don't translate quoted words
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:83
 msgid "Has key ''created_by'' or ''converted_by''"
-msgstr ""
+msgstr "Bevat tag met als waarde ''created_by'' of ''converted_by''"
 
 #. translation note: don't translate quoted words
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:87
 msgid "Has key ''watch''"
-msgstr ""
+msgstr "Bevat sleutel ''watch''"
 
 #. translation note: don't translate quoted words
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:91
 msgid "Has key ''source''"
-msgstr ""
+msgstr "Bevat sleutel ''source''"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:60
 msgid "Untagged, empty and one node ways."
@@ -5366,11 +5413,11 @@ msgstr "Onbenoemde wegen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:90
 msgid "Unnamed junction"
-msgstr ""
+msgstr "Onbenoemde wegkruising/rond punt"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:98
 msgid "Untagged ways (commented)"
-msgstr ""
+msgstr "ongetagde wegen (voorzien van commentaar)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:100
 msgid "Untagged ways"
@@ -5419,27 +5466,29 @@ msgstr " [id: {0}]"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:52
 msgid "Wrong number of arguments for bookmark"
-msgstr ""
+msgstr "Fout aantal argumenten voor bladwijzer"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:116
 msgid "Error reading bookmark entry: %s"
-msgstr ""
+msgstr "Fout bij het inlezen van bladwijzer: %s"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:136
 #, java-format
 msgid "Error: Unexpected line ''{0}'' in bookmark file ''{1}''"
-msgstr ""
+msgstr "Fout: Onverwachte lijn ''{0}'' in bladwijzerbestand ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:146
 #, java-format
 msgid ""
 "Error: Illegal double value ''{0}'' on line ''{1}'' in bookmark file ''{2}''"
 msgstr ""
+"Fout: Illegale dubbele waarde''{0}'' op lijn ''{1}'' in bladwijzerbestand "
+"''{2}''"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:166
 #, java-format
 msgid "<html>Could not read bookmarks from<br>''{0}''<br>Error was: {1}</html>"
-msgstr ""
+msgstr "<html>Kon bladwijzers van<br>''{0}''<br>Foutmelding was: {1}</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/ConditionalOptionPaneUtil.java:201
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:65
@@ -5458,7 +5507,7 @@ msgstr "onvolledig"
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:171
 #, java-format
 msgid "House {0}"
-msgstr ""
+msgstr "Huisnaam {0}"
 
 #. I18n: house number, street as parameter, number should remain
 #. before street for better visibility
@@ -5466,14 +5515,14 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:178
 #, java-format
 msgid "House number {0} at {1}"
-msgstr ""
+msgstr "Huisnummer {0} op {1}"
 
 #. I18n: house number as parameter
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:126
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:182
 #, java-format
 msgid "House number {0}"
-msgstr ""
+msgstr "Huisnummer {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:161
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:400
@@ -5528,7 +5577,7 @@ msgstr[1] "{0} leden"
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:62
 #, java-format
 msgid "Changeset {0}"
-msgstr ""
+msgstr "Wijzigingenverzameling {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:76
 msgid "Precondition violation"
@@ -5540,23 +5589,23 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:122
 msgid "Network exception"
-msgstr ""
+msgstr "Netwerkuitzondering"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:140
 msgid "IO Exception"
-msgstr ""
+msgstr "Invoer/uitvoer-uitzondering"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:157
 msgid "Illegal Data"
-msgstr ""
+msgstr "Foute gegevens"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:190
 msgid "Internal Server Error"
-msgstr ""
+msgstr "Interne serverfout"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:206
 msgid "Bad Request"
-msgstr ""
+msgstr "Ongeldig verzoek"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:222
 msgid "Not Found"
@@ -5571,23 +5620,23 @@ msgstr "Conflict"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:261
 msgid "Authentication Failed"
-msgstr ""
+msgstr "Authenticatie mislukt"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:277
 msgid "Authorisation Failed"
-msgstr ""
+msgstr "Authorisatie mislukt"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:293
 msgid "Client Time Out"
-msgstr ""
+msgstr "Client Time Out"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:309
 msgid "Communication with OSM server failed"
-msgstr ""
+msgstr "Communicatie met OSM-server mislukt"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:325
 msgid "Authentication failed"
-msgstr ""
+msgstr "Authenticatie mislukt"
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:343
 msgid "Unknown host"
@@ -5618,12 +5667,12 @@ msgstr "Klik om de dialoog te sluiten"
 
 #: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:31
 msgid "Imagery offset"
-msgstr ""
+msgstr "Verschuiving van achtergrondafbeelding/luchtfoto"
 
 #: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:73
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:185
 msgid "Imagery"
-msgstr ""
+msgstr "achtergrondafbeelding/luchtfoto"
 
 #: ../core/src/org/openstreetmap/josm/gui/ImageryMenu.java:92
 #: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:112
@@ -5639,7 +5688,7 @@ msgstr "Een lege WMS-laag openen om gegevens uit een bestand in te laden"
 #: ../core/src/org/openstreetmap/josm/gui/layer/ImageryLayer.java:187
 msgctxt "layer"
 msgid "Offset"
-msgstr ""
+msgstr "Verschuiving"
 
 #: ../core/src/org/openstreetmap/josm/gui/JosmUserIdentityManager.java:104
 #, java-format
@@ -5750,6 +5799,7 @@ msgstr "De locatie in de URL (met lat=x&lon=y&zoom=z) downloaden"
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:85
 msgid "Open a file (any file type that can be opened with File/Open)"
 msgstr ""
+"Bestand openen (elk type bestand dat kan worden geopend met Bestand/Openen)"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:86
 msgid "Download the bounding box as raw gps"
@@ -5758,6 +5808,8 @@ msgstr "Het omgrensde gebied downloaden als rawe GPS"
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:87
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z) as raw gps"
 msgstr ""
+"Haal de locatie aan de URL (met lat=x&lon=y&zoom=z) af als onbewerkte GPS-"
+"punten"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:88
 msgid "Select with the given search"
@@ -5777,15 +5829,15 @@ msgstr "Kies taal"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:92
 msgid "options provided as Java system properties"
-msgstr ""
+msgstr "opties ter beschikking gesteld als systeemeigenschappen"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:93
 msgid "/PATH/TO/JOSM/FOLDER/         "
-msgstr ""
+msgstr "/PAD/NAAR/JOSM/FOLDER/         "
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:93
 msgid "Change the folder for all user settings"
-msgstr ""
+msgstr "Wijzig de map voor alle gebruikersinstellingen"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:94
 msgid ""
@@ -5794,6 +5846,10 @@ msgid ""
 "      Java option to specify the maximum size of allocated memory in "
 "megabytes"
 msgstr ""
+"opmerking: Voor bepaalde taken heeft JOSM veel geheugen nodig. Het kan "
+"noodzakelijk zijn om de volgende\n"
+"       JAVA-optie te specifiëren om de maximale grootte van het "
+"geheugengebruik in megabytes in te stellen"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:97
 msgid "examples"
@@ -5804,10 +5860,12 @@ msgid ""
 "Parameters --download, --downloadgps, and --selection are processed in this "
 "order."
 msgstr ""
+"De parameters --download, --downloadgps, en --selection worden in de "
+"opgegeven volgorde behandeld."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:105
 msgid "Make sure you load some data if you use --selection."
-msgstr ""
+msgstr "Zorg dat u wat gegevens inlaadt, als u --selection gebruikt."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:193
 msgid "Initializing"
@@ -5829,39 +5887,41 @@ msgstr "Vroege plugins laden"
 msgid "Setting defaults"
 msgstr "Standaarden instellen"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:221
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:217
 msgid "Creating main GUI"
 msgstr "Hoofdscherm aanmaken"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:228
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:224
 msgid "Loading plugins"
 msgstr "Plugins laden"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:253
 msgid "Unsaved osm data"
-msgstr ""
+msgstr "Niet-opgeslagen OSM-gegevens"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 msgid "Restore"
 msgstr "Herstellen"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:250
 msgid "Discard"
 msgstr "Negeren"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:261
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
 #, java-format
 msgid "JOSM found {0} unsaved osm data layer. "
 msgid_plural "JOSM found {0} unsaved osm data layers. "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "JOSM vond {0} een niet-opgeslagen OSM-gegevenslaag. "
+msgstr[1] "JOSM vond {0} niet-opgeslagen OSM-gegevenslagen. "
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:263
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 msgid "It looks like JOSM crashed last time. Do you like to restore the data?"
 msgstr ""
+"Het lijkt erop dat JOSM de vorige keer niet correct werd afgesloten. Wenst u "
+"de gegevens te herstellen?"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:294
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:296
 #, java-format
 msgid "Preference setting {0} has been removed since it is no longer used."
 msgstr ""
@@ -5910,11 +5970,11 @@ msgstr "Verberg deze knop"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapFrame.java:266
 msgid "Click the arrow at the bottom to show it again."
-msgstr ""
+msgstr "Klik op de pijl onderaan om het opnieuw te tonen."
 
 #: ../core/src/org/openstreetmap/josm/gui/MapFrame.java:377
 msgid "Hide or show this toggle button"
-msgstr ""
+msgstr "Deze omschakelknop verbergen of tonen"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:83
 msgid "Move right"
@@ -5987,6 +6047,8 @@ msgid ""
 "Middle click again to cycle through.<br>Hold CTRL to select directly from "
 "this list with the mouse.<hr>"
 msgstr ""
+"Druk nogmaals op de middelste muisknop (of -wieltje).<br>Houd CTRL ingedrukt "
+"om rechtstreeks uit deze lijst te selecteren m.b.v. de muis.<hr>"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:327
 msgid "(no object)"
@@ -5995,7 +6057,7 @@ msgstr "(geen object)"
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:463
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/ProxyPreferencesPanel.java:133
 msgid "User:"
-msgstr ""
+msgstr "Gebruikersnaam:"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:390
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:407
@@ -6005,7 +6067,7 @@ msgstr "laag niet in lijst."
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:708
 #, java-format
 msgid "Layer ''{0}'' must be in list of layers"
-msgstr ""
+msgstr "De laag ''{0}'' moet deel uitmaken van de lijst beschikbare lagen"
 
 #: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1212
 msgid "Metric"
@@ -6017,7 +6079,7 @@ msgstr "Chinees"
 
 #: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1214
 msgid "Imperial"
-msgstr ""
+msgstr "Brits-Amerikaans"
 
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:50
 msgid "Click to cancel the current operation"
@@ -6048,6 +6110,8 @@ msgid ""
 "<html>Please confirm to remove <strong>1 object</strong> from <strong>1 "
 "relation</strong>.</html>"
 msgstr ""
+"<html>Gelieve de verwijdering van <strong>1 object</strong> uit <strong>1 "
+"relatie</strong> te bevestigen.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:152
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:154
@@ -6056,6 +6120,8 @@ msgid ""
 "<html>Please confirm to remove <strong>1 object</strong> from <strong>{0} "
 "relations</strong>.</html>"
 msgstr ""
+"<html>Gelieve de verwijdering van <strong>1 object</strong> uit <strong>{0} "
+"relaties</strong> te bevestigen.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:156
 #, java-format
@@ -6063,17 +6129,19 @@ msgid ""
 "<html>Please confirm to remove <strong>{0} objects</strong> from <strong>{1} "
 "relations</strong>.</html>"
 msgstr ""
+"<html>Gelieve de verwijdering van <strong>{0} objecten</strong> uit <strong>"
+"{1} relaties</strong> te bevestigen.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:165
 #, java-format
 msgid "Deleting {0} object"
 msgid_plural "Deleting {0} objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} object wordt verwijderd"
+msgstr[1] "{0} objecten worden verwijderd"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:167
 msgid "Delete objects"
-msgstr ""
+msgstr "Objecten worden verwijderd"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:310
 msgid "To delete"

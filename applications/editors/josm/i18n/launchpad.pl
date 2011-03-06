@@ -2,6 +2,8 @@
 
 use strict;
 
+my $count = 0;#11;
+my $cleanall = 0;#1;
 
 if($#ARGV != 0)
 {
@@ -18,9 +20,21 @@ else
     {
       my $a=$name;
       $a =~ s/.*-//;
-      system "mv -v $name po/$a" if -f "po/$a";
-      # activate in case we need a "clean all upstream texts launchpad upload"
-      # system "touch po/$a" if ! -f "po/$a";
+      if(-f "po/$a")
+      {
+        system "mv -v $name po/$a";
+      }
+      elsif($cleanall)
+      {
+        local $/; undef $/;
+        open FILE,"<",$name or die;
+        my $x = <FILE>;
+        close FILE;
+        $x =~ s/\n\n.*$/\n/s;
+        open FILE,">","po/$a" or die;
+        print FILE $x;
+        close FILE;
+      }
     }
 }
 system "ant";
@@ -28,5 +42,19 @@ my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
 chomp $outdate;
 mkdir "josm";
 system "cp po/*.po po/josm.pot josm";
-system "tar -czf launchpad_upload_josm_$outdate.tgz josm";
+if(!$count)
+{
+  system "tar -cjf launchpad_upload_josm_$outdate.tar.bz2 josm";
+}
+else
+{
+  my @files = sort glob("josm/*.po");
+  my $num = 1;
+  while($#files >= 0)
+  {
+     my @f = splice(@files, 0, $count);
+     system "tar -cjf launchpad_upload_josm_${outdate}_$num.tar.bz2 josm/josm.pot ".join(" ",@f);
+     ++$num;
+  }
+}
 system "rm -rv josm new";

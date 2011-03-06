@@ -5,12 +5,11 @@
 #
 # Cezmi Topaloğlu <cezmi.topaloglu@ikinokta.com>, 2009.
 #
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:787
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-05 23:09+0100\n"
+"POT-Creation-Date: 2011-03-06 16:33+0100\n"
 "PO-Revision-Date: 2011-02-10 16:51+0000\n"
 "Last-Translator: Bekir DURAK <by.jigs4w@gmail.com>\n"
 "Language-Team: Türkçe\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-03-05 21:21+0000\n"
+"X-Launchpad-Export-Date: 2011-03-06 15:17+0000\n"
 "X-Generator: Launchpad (build 12515)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -238,7 +237,7 @@ msgstr "Hakkında penceresini göster."
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:69
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:103
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:77
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:222
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:218
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:816
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:818
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:60
@@ -360,7 +359,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:118
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:222
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:52
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:346
@@ -5606,39 +5605,39 @@ msgstr "Eski eklentiler yükleniyor"
 msgid "Setting defaults"
 msgstr "Varsayılan ayarlar alınıyor"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:221
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:217
 msgid "Creating main GUI"
 msgstr "Arayüz Oluşturuluyor."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:228
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:224
 msgid "Loading plugins"
 msgstr "Eklentiler yükleniyor"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:253
 msgid "Unsaved osm data"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 msgid "Restore"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:254
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:250
 msgid "Discard"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:261
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:257
 #, java-format
 msgid "JOSM found {0} unsaved osm data layer. "
 msgid_plural "JOSM found {0} unsaved osm data layers. "
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:263
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 msgid "It looks like JOSM crashed last time. Do you like to restore the data?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:294
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:296
 #, java-format
 msgid "Preference setting {0} has been removed since it is no longer used."
 msgstr ""

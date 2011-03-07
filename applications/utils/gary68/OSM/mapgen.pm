@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.14' ;
+$VERSION = '1.15' ;
 
 require Exporter ;
 
@@ -309,7 +309,12 @@ sub gridSquare {
 	# my $partsY = $sizeY / ($sizeX / $parts) ;
 	my $xi = int ($x / ($sizeX / $parts)) + 1 ;
 	my $yi = int ($y / ($sizeX / $parts)) + 1 ;
-	return (chr($xi+64) . $yi) ;
+	if ( ($x >= 0) and ($x <= $sizeX) and ($y >= 0) and ($y <= $sizeY) ) {
+		return (chr($xi+64) . $yi) ;
+	}
+	else {
+		return undef ;
+	}
 }
 
 
@@ -1087,12 +1092,12 @@ sub drawGrid {
 	# vertical lines
 	for (my $i = 1; $i <= $number; $i++) {
 		drawWayPixGrid ($color, 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
-		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), $color, scalePoints(scaleBase(80))) ;
+		drawTextPixGrid (($i-1)*$part+$part/2, scalePoints(scaleBase(80)), chr($i+64), $color, scalePoints(scaleBase(60))) ;
 	}
 	# hor. lines
 	for (my $i = 1; $i <= $numY; $i++) {
 		drawWayPixGrid ($color, 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
-		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, $color, scalePoints(scaleBase(80))) ;
+		drawTextPixGrid (scalePoints(scaleBase(20)), ($i-1)*$part+$part/2, $i, $color, scalePoints(scaleBase(60))) ;
 	}
 }
 
@@ -1499,6 +1504,9 @@ sub fitsPaper {
 # takes dpi and calculates on what paper size the map will fit. sizes are taken from global variables
 #
 	my ($dpi) = shift ;
+
+
+
 	my @sizes = () ;
 	my $width = $sizeX / $dpi * 2.54 ;
 	my $height = $sizeY / $dpi * 2.54 ;

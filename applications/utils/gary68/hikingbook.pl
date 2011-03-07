@@ -3,7 +3,7 @@
 
 
 # todo
-# - autorotate
+# - print details about route into book
 # - enhance elevation profile
 # - mapgen rules adapt way thickness
 # - print parameters
@@ -17,7 +17,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.8" ;
+my $version = "0.9" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -66,6 +66,10 @@ my $descName = "" ;
 my $stepDescName = "" ;
 my $autorotateOpt = 0 ;
 
+my $poiOpt = 0 ;
+my $gridNumber = 5 ;
+my %pois = () ;
+
 my $extraMapData1 = 0.05 ; # overlap for osm temp file 1
 my $extraMapData2 = 0.05 ; # for temp file 2s
 
@@ -102,6 +106,29 @@ my %stepInformation = () ;
 my @poiList ;   # POIs actually found
 my @pois = () ; # POIs to be used
 
+my %translations = () ;
+$translations{"DE"}{"station"} = "Bahnhof" ;
+$translations{"DE"}{"bus_stop"} = "Bushaltestelle" ;
+$translations{"DE"}{"viewpoint"} = "Aussichtspunkt" ;
+$translations{"DE"}{"restaurant"} = "Restaurant" ;
+$translations{"DE"}{"pharmacy"} = "Apotheke" ;
+$translations{"DE"}{"hospital"} = "Krankenhaus" ;
+$translations{"DE"}{"peak"} = "Gipfel" ;
+$translations{"DE"}{"fuel"} = "Tankstelle" ;
+$translations{"DE"}{"place_of_worship"} = "Kirche" ;
+$translations{"DE"}{"bar"} = "Bar" ;
+$translations{"DE"}{"hotel"} = "Hotel" ;
+$translations{"DE"}{"attraction"} = "Attraktion" ;
+$translations{"DE"}{"supermarket"} = "Supermarkt" ;
+$translations{"DE"}{"fast food"} = "Fast Food" ;
+$translations{"DE"}{"suburb"} = "Vorort" ;
+$translations{"DE"}{"hamlet"} = "Weiler" ;
+$translations{"DE"}{"city"} = "Großstadt" ;
+$translations{"DE"}{"town"} = "Stadt" ;
+$translations{"DE"}{"information"} = "Information" ;
+$translations{"DE"}{"spring"} = "Quelle" ;
+$translations{"DE"}{"parking"} = "Parkplatz" ;
+# $translations{"DE"}{""} = "" ;
 
 getProgramOptions () ;
 
@@ -124,6 +151,8 @@ createDetailMaps() ;
 createOverviewMap() ;
 
 createTitlePage () ;
+
+createDirectory () ;
 
 mergeAllFiles() ;
 
@@ -455,6 +484,7 @@ sub createOverviewMap {
 		if ($ovLatMin < $file1LatMin) { $ovLatMin = $file1LatMin ; }
 		if ($ovLatMax > $file1LatMax) { $ovLatMax = $file1LatMax ; }
 
+
 		print "call mapgen and log to $logFileName...\n" ;
 
 		`$mapgenCommandOverview -in=$temp1FileName -out=$outName -style=$overviewStyleFileName -scaleset=$scaleOverview -clipbbox=$ovLonMin,$ovLatMin,$ovLonMax,$ovLatMax -relid=$relationId $rectangles >> $logFileName 2>&1` ;
@@ -785,9 +815,46 @@ sub createDetailMaps {
 			push @tempFiles, $pdfName ;
 			push @tempFiles, $ndlName ;
 
+			my $poiParams = "" ;
+			if ($poiOpt > 0) {
+				$poiParams = "-poi -grid=$gridNumber" ;
+			}
+
+
 			print "call mapgen and log to $logFileName...\n" ;
-			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber >> $logFileName 2>&1` ;
+			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber $poiParams >> $logFileName 2>&1` ;
 			print "done.\n" ;
+
+			my $poiName = $outName ;
+			if ($poiOpt > 0) {
+				$poiName =~ s/\.svg/\_pois\.txt/ ;
+				open (my $file, "<", $poiName) or die ("ERRROR: could not open poi file name $poiName\n") ;
+				my $line = "" ;
+				while ($line = <$file>) {
+					# print "POI line read : $line" ;
+					my ($poi, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
+					if ( (defined $poi) and (defined $fields) ) {
+						my @f = split / /, $fields ;
+						foreach my $sq (@f) {
+							$poi = convertHTML ($poi) ;
+
+							# translation German
+							if ($languageOpt ne "EN") {
+								foreach my $k (keys %{ $translations{$languageOpt} } ) {
+									my $v = $translations{$languageOpt}{$k} ;
+									$poi =~ s/\($k\)/\($v\)/gi ;
+								}
+							}
+
+							$poi =~ s/\_/ /g ;
+							push @{$pois{$poi}}, $mapNumber . "-" . $sq ;
+						}
+					}
+				}
+				close ($file) ;
+				push @tempFiles, $poiName ;
+			}
+
 		}
 
 		# next
@@ -904,7 +971,8 @@ sub mergeAllFiles {
 		$name = " " . $workDir . "detail" . $i . ".pdf" ; 
 		$files .= $name ;
 	}
-	print "\nmerge pdfs and log to $logFileName\n" ;
+	$files .= " " . $workDir . "directory.pdf" ; 
+	print "\nmerge pdfs ($files) and log to $logFileName\n" ;
 	if ($verboseOpt eq "1") {
 		print "merging files (gs/pdfjoin)...\n" ;
 	}
@@ -958,6 +1026,7 @@ sub createDirections {
 	print $texFile "\\usepackage[utf8]{inputenc}\n" ;
 	print $texFile "\\usepackage{longtable}\n" ;
 	print $texFile "\\usepackage{ltxtable}\n" ;
+	print $texFile "\\columnsep7mm\n" ;
 	print $texFile "\\begin{document}\n" ;
 	print $texFile "\\section*{" .  $label{$languageOpt}{"directions"} . "}\n" ;
 	print $texFile "\\LTXtable{\\textwidth}{directionsltx}\n" ;
@@ -1100,6 +1169,7 @@ sub createDirections {
 		}
 		print $texFile "\\end{picture}\n" ;
 	}
+
 
 	print $texFile "\\end{document}\n" ;
 	close ($texFile) ;
@@ -1244,6 +1314,7 @@ sub getProgramOptions {
 					"ref=s"	=> \$relationRef,
 					"overlap=i"	=> \$overlapOpt,
 					"dirnumber=i"	=> \$dirNumberOpt,
+					"poi=i"		=> \$poiOpt,
 					"scale=i"	=> \$scale,
 					"pnsizeoverview=i"	=> \$pnSizeOverview,
 					"pnsizedetail=i"	=> \$pnSizeDetail,
@@ -1287,28 +1358,35 @@ sub usage {
 	print "-in=<infile.osm>\n" ;
 	print "-out=<outfile.pdf>\n" ;
 	print "-relation=<relation id>\n" ;
-	print "-name=<relation id>\n" ;
-	print "-ref=<relation id>\n" ;
-	print "-desc=<tex file> (for long text after title page; tex format, max heading subsection\n" ;
-	print "-steps=<step description file> (for descriptions of single steps or nodes; format: stepNr<space>TEXT)\n" ;
+	print "-name=<relation name>\n" ;
+	print "-ref=<relation ref>\n" ;
 	print "-detailstyle=<mapgen rules file for detail maps>\n" ;
 	print "-overviewstyle=<mapgen rules file for overview maps>\n" ;
-	print "-title=\"title text\" (for title page)\n" ;
+	print "-scale=<integer> (scale for detail maps); default = 10000\n\n" ;
+
 	print "-language=EN|DE\n" ;
+	print "-title=\"title text\" (for title page)\n" ;
+	print "-desc=<tex file> (for long text after title page; tex format, max heading subsection\n" ;
+	print "-steps=<step description file> (for descriptions of single steps or nodes; format: stepNr<space>TEXT)\n" ;
+	print "-poi=<integer> (add poi directory to description, specify column number like 1,2,3)\n" ;
+	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
+	print "\n" ;
+
 	print "-pagesize=A4|A5\n" ;
+	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
 	print "-pnsizeoverview=INTEGER (size of page numbers in overview map)\n" ;
 	print "-pnsizedetail=INTEGER (size of page numbers in detail maps)\n" ;
 	print "-landscape\n" ;
-	print "-reverse (reverse direction of relation/route)\n" ;
 	print "-autorotate (rotate paper format automatically)\n" ;
+	print "\n" ;
+
+	print "-reverse (reverse direction of relation/route)\n" ;
 	print "-roundtrip (force route to begin/end with first way in relation)\n" ;
-	print "-overlap=<percent> (10 for 10\% overlap on each side; default=5)\n" ;
-	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
-	print "-scale=<integer> (scale for detail maps); default = 10000\n" ;
+	print "\n" ;
+
 	print "-verbose\n" ;
 	print "-nodelete (temp files will not be deleted)\n" ;
 	print "-help\n" ;
-	print "\n" ;
 }
 
 
@@ -1378,4 +1456,112 @@ sub getStepInformation {
 		print "done. $c lines read.\n" ;
 	}
 }
+
+
+
+
+sub createDirectory {
+
+	if ($poiOpt > 0) {
+
+		if ($poiOpt < 1) { $poiOpt = 1 ; } 
+		if ($poiOpt > 3) { $poiOpt = 3 ; } 
+		$poiOpt = int $poiOpt ;
+
+		print "create directory...\n" ;
+		my $texFileName ; 
+		$texFileName = "directory.tex" ;
+
+		push @tempFiles, $texFileName ;
+
+		open (my $texFile, ">", $texFileName) or die ("can't open tex output file") ;
+
+		if ($pageSizeOpt eq "A5") {
+			print $texFile "\\documentclass[a5paper,12pt]{book}\n" ;
+		}
+		else {
+			print $texFile "\\documentclass[a4paper,12pt]{book}\n" ;
+		}
+
+		print $texFile "\\usepackage[utf8]{inputenc}\n" ;
+		print $texFile "\\usepackage{multicol}\n" ;
+		print $texFile "\\begin{document}\n" ;
+
+		print $texFile "\\thispagestyle{empty}\n" ;
+
+		my %heading3 = () ;
+		$heading3{"EN"} = "Points of interest" ;
+		$heading3{"DE"} = "Interessante Punkte" ;
+
+		if ($poiOpt > 1) {
+			print $texFile "\\begin{multicols}{$poiOpt}[\\section*{$heading3{$languageOpt}}]\n" ;
+		}
+		else {
+			print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
+		}
+		print $texFile "\\tiny\n" ;
+
+		foreach my $poi (sort keys %pois) {
+			my $sqText = "" ; my $first = 1 ;
+			foreach my $sq ( @{$pois{$poi}} ) {
+				if ($first) {
+					$first = 0 ;
+					$sqText .= $sq ;
+				}
+				else {
+					$sqText .= " " ;
+					$sqText .= $sq ;
+				}
+			}
+			print $texFile $poi ;
+			print $texFile " \\dotfill " ;
+			print $texFile $sqText, "\\\\\n" ;
+		}
+
+		if ($poiOpt > 1) {
+			print $texFile "\\end{multicols}\n" ;
+		}
+		print $texFile "\\normalsize\n" ;
+	
+
+		print $texFile "\\end{document}\n" ;
+		close ($texFile) ;
+
+		my $dviFileName = $texFileName ;
+		$dviFileName =~ s/.tex/.dvi/ ;
+		my $psFileName = $texFileName ;
+		$psFileName =~ s/.tex/.ps/ ;
+		my $pdfFileName = "directory.pdf" ;
+
+		push @tempFiles, $pdfFileName ;
+
+		print "call latex, dvips and ps2pdf and log to $logFileName\n" ;
+		`latex $texFileName >> $logFileName 2>&1` ;
+		`latex $texFileName >> $logFileName 2>&1` ;
+		`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
+		`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
+		`rm *.dvi` ;
+		# `rm *.tex` ;
+		`rm *.ps` ;
+		`rm *.aux` ;
+		`rm *.log` ;
+		my $target = $workDir . "title.pdf" ;
+		# `mv title.pdf $target` ;
+		print "done.\n" ;
+
+	}
+}
+
+
+sub convertHTML {
+	my $line = shift ;
+
+	($line) = ($line =~ /^(.*)$/ ) ;
+
+	$line =~ s/\&apos;/\'/g ;
+	$line =~ s/\&quot;/\'/g ;
+
+	return $line ;
+}
+
 

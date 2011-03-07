@@ -101,11 +101,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.14 ;
-use OSM::mapgenRules 1.14 ;
+use OSM::mapgen 1.15 ;
+use OSM::mapgenRules 1.15 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.14" ;
+my $version = "1.15" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -813,10 +813,15 @@ foreach my $nodeId (keys %memNodeTags) {
 
 	my $test = getNodeRule (\@{$memNodeTags{$nodeId}}, \@nodes, $ruleScaleSet) ;
 	if (defined $test) {
+		my $thing = $test->[$nodeIndexValue] ;
 		$dirName = getValue ("name", \@{$memNodeTags{$nodeId}}) ;
 		if ( ($poiOpt eq "1") and ($dirName ne "") ){
+			$dirName .=  " ($thing)" ;
 			if ($grid > 0) {
-				$poiHash{$dirName}{gridSquare($lon{$nodeId}, $lat{$nodeId}, $grid)} = 1 ;
+				my $sq = gridSquare($lon{$nodeId}, $lat{$nodeId}, $grid) ;
+				if (defined $sq) {
+					$poiHash{$dirName}{ $sq } = 1 ;
+				}
 			}
 			else {
 				$poiHash{$dirName} = 1 ;
@@ -909,7 +914,10 @@ foreach my $wayId (keys %memWayTags) {
 					if ($grid > 0) {
 						foreach my $node (@{$memWayNodes{$wayId}}) {
 							foreach my $name (@names) {
-								$directory{$name}{gridSquare($lon{$node}, $lat{$node}, $grid)} = 1 ;
+								my $sq = gridSquare($lon{$node}, $lat{$node}, $grid) ;
+								if (defined $sq) {
+									$directory{$name}{$sq} = 1 ;
+								}
 							}
 						}
 					}

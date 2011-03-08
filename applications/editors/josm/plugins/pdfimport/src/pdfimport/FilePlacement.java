@@ -4,13 +4,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Properties;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionSubPrefs;
 import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.tools.Utils;
 
 public class FilePlacement {
 	public Projection projection = null;
@@ -41,10 +45,32 @@ public class FilePlacement {
 		this.maxNorth = maxNorth;
 	}
 
+	private String fromCollection(Collection<String> val) {
+		if (val != null && !val.isEmpty())
+		    return Utils.join("\u001e", val);
+		return null;
+	}
+
+	private Collection<String> toCollection(String s) {
+		if (s != null && s.length() != 0) {
+			return Arrays.asList(s.split("\u001e", -1));
+		}
+		return null;
+	}
+
 	public Properties toProperties() {
 		Properties p = new Properties();
 		if (projection != null) {
 			p.setProperty("Projection", projection.getClass().getCanonicalName());
+
+			if (projection instanceof ProjectionSubPrefs) {
+				ProjectionSubPrefs projPrefs = (ProjectionSubPrefs) projection;
+				String code = projection.toCode();
+				String prefs = fromCollection(projPrefs.getPreferencesFromCode(code));
+				if (prefs != null) {
+				    p.setProperty("ProjectionPrefs", prefs);
+				}
+			}
 		}
 
 		p.setProperty("minX", Double.toString(minX));
@@ -69,6 +95,16 @@ public class FilePlacement {
 				if (proj.getClass().getCanonicalName().equals(className)){
 					projection = proj;
 					break;
+				}
+			}
+			if (projection instanceof ProjectionSubPrefs) {
+				ProjectionSubPrefs projPrefs = (ProjectionSubPrefs) projection;
+
+				String s;
+				s = p.getProperty("ProjectionPrefs", null);
+				Collection<String> prefs = toCollection(s);
+				if (prefs != null) {
+				    projPrefs.setPreferences(prefs);
 				}
 			}
 		}

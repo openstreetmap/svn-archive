@@ -3,6 +3,7 @@
 
 
 # todo
+# - negative ids for steps
 # - print details about route into book
 # - enhance elevation profile
 # - mapgen rules adapt way thickness
@@ -17,7 +18,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.9" ;
+my $version = "0.91" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -128,6 +129,7 @@ $translations{"DE"}{"town"} = "Stadt" ;
 $translations{"DE"}{"information"} = "Information" ;
 $translations{"DE"}{"spring"} = "Quelle" ;
 $translations{"DE"}{"parking"} = "Parkplatz" ;
+$translations{"DE"}{"pub"} = "Kneipe" ;
 # $translations{"DE"}{""} = "" ;
 
 getProgramOptions () ;
@@ -199,11 +201,13 @@ sub getRelationData {
 
 		if ( ($relationName ne "") and (grep /^$relationName$/i, $name) ) {
 			$found = 1 ;
+			$relationId = $$propRef{'id'} ;
 			@relationMembers = @$membersRef ;
 			@relationTags = @$tagsRef ;
 		}
 		if ( ($relationRef ne "") and (grep /^$relationRef$/i, $ref) ) {
 			$found = 1 ;
+			$relationId = $$propRef{'id'} ;
 			@relationMembers = @$membersRef ;
 			@relationTags = @$tagsRef ;
 		}
@@ -971,16 +975,20 @@ sub mergeAllFiles {
 		$name = " " . $workDir . "detail" . $i . ".pdf" ; 
 		$files .= $name ;
 	}
-	$files .= " " . $workDir . "directory.pdf" ; 
+
+	if ($poiOpt > 0) {
+		$files .= " " . $workDir . "directory.pdf" ; 
+	}
+
 	print "\nmerge pdfs ($files) and log to $logFileName\n" ;
 	if ($verboseOpt eq "1") {
-		print "merging files (gs/pdfjoin)...\n" ;
+		print "merging files (pdfjoin)...\n" ;
 	}
-	`gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName -dBATCH $files >> $logFileName 2>&1` ;
 
 	my $outFileName2 = $outFileName ;
 	$outFileName2 =~ s/\.pdf/2\.pdf/ ;
-	`pdfjoin --outfile $outFileName2 $files >> $logFileName 2>&1` ;
+	`pdfjoin --outfile $outFileName $files >> $logFileName 2>&1` ;
+	# `gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName2 -dBATCH $files >> $logFileName 2>&1` ;
 
 }
 

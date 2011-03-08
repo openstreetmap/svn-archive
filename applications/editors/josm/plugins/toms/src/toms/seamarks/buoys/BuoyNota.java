@@ -46,6 +46,15 @@ public class BuoyNota extends Buoy {
 		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:name")); //$NON-NLS-1$
 
+		if (keys.containsKey("seamark:longname")) //$NON-NLS-1$
+			setLongname(keys.get("seamark:longname")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:fixme")) //$NON-NLS-1$
+			setFixme(keys.get("seamark:fixme")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:landmark:height")) //$NON-NLS-1$
+			setLMheight(keys.get("seamark:landmark:height")); //$NON-NLS-1$
+
 		if (keys.containsKey("seamark:landmark:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:landmark:name")); //$NON-NLS-1$
 		else if (keys.containsKey("seamark:light_major:name")) //$NON-NLS-1$
@@ -150,6 +159,8 @@ public class BuoyNota extends Buoy {
 			break;
 		default:
 		}
+		if (!getLMheight().isEmpty())
+			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:landmark:height", getLMheight()));
 		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}

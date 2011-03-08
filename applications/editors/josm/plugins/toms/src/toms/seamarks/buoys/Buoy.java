@@ -28,6 +28,56 @@ abstract public class Buoy extends SeaMark {
 	 * private Variablen
 	 */
 
+	private String Longname = "";
+
+	public String getLongname() {
+		return Longname;
+	}
+
+	public void setLongname(String name) {
+		Longname = name;
+	}
+
+	private String Ref = "";
+
+	public String getRef() {
+		return Ref;
+	}
+
+	public void setRef(String ref) {
+		Ref = ref;
+	}
+
+	private String Inf = "";
+
+	public String getInf() {
+		return Inf;
+	}
+
+	public void setInf(String inf) {
+		Inf = inf;
+	}
+
+	private String Fixme = "";
+
+	public String getFixme() {
+		return Fixme;
+	}
+
+	public void setFixme(String name) {
+		Fixme = name;
+	}
+
+	private String LMheight = "";
+
+	public String getLMheight() {
+		return LMheight;
+	}
+
+	public void setLMheight(String height) {
+		LMheight = height;
+	}
+
 	private int BuoyIndex = 0;
 
 	public int getBuoyIndex() {
@@ -168,6 +218,7 @@ abstract public class Buoy extends SeaMark {
 			setBearing1("");
 			setBearing2("");
 			setRadius("");
+			setSeq("");
 		}
 	}
 
@@ -257,6 +308,20 @@ abstract public class Buoy extends SeaMark {
 		if (SectorIndex == 0)
 			Range = new String[10];
 		Range[SectorIndex] = range;
+	}
+
+	private String[] Sequence = new String[10];
+
+	public String getSeq() {
+		if (Sequence[SectorIndex] == null)
+			return (Sequence[0]);
+		return Sequence[SectorIndex];
+	}
+
+	public void setSeq(String seq) {
+		if (SectorIndex == 0)
+			Sequence = new String[10];
+		Sequence[SectorIndex] = seq;
 	}
 
 	private String[] Bearing1 = new String[10];
@@ -417,6 +482,10 @@ abstract public class Buoy extends SeaMark {
 				}
 				if (index != 0)
 					setSectored(true);
+				if (key.equals("ref"))
+					setRef(value);
+				if (key.equals("inform"))
+					setInf(value);
 				if (key.equals("colour")) {
 					if (value.equals("red"))
 						LightColour[index] = "R";
@@ -434,6 +503,12 @@ abstract public class Buoy extends SeaMark {
 					Height[index] = value;
 				} else if (key.equals("range")) {
 					Range[index] = value;
+				} else if (key.equals("sequence")) {
+					Sequence[index] = value;
+				} else if (key.equals("sector_start")) {
+					Bearing1[index] = value;
+				} else if (key.equals("sector_end")) {
+					Bearing2[index] = value;
 				}
 			}
 		}
@@ -800,8 +875,11 @@ abstract public class Buoy extends SeaMark {
 
 		String str = dlg.tfM01Name.getText();
 		if (!str.isEmpty())
-			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:name",
-					str));
+			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:name", str));
+		if (!Longname.isEmpty())
+			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:longname", Longname));
+		if (!Fixme.isEmpty())
+			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:fixme", Fixme));
 		Main.main.undoRedo
 				.add(new ChangePropertyCommand(Node, "seamark:type", type));
 	}
@@ -809,7 +887,7 @@ abstract public class Buoy extends SeaMark {
 	protected void saveLightData() {
 		String colour;
 		if (dlg.cM01Fired.isSelected()) {
-			if (!(colour = LightColour[0]).isEmpty())
+			if (!(colour = LightColour[0]).isEmpty() && !Sectored)
 				if (colour.equals("R")) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:colour", "red"));
@@ -820,6 +898,14 @@ abstract public class Buoy extends SeaMark {
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:colour", "white"));
 				}
+
+			if (!Ref.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:ref", Ref));
+
+			if (!Inf.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:inform", Inf));
 
 			if (!LightPeriod[0].isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -840,6 +926,10 @@ abstract public class Buoy extends SeaMark {
 			if (!Range[0].isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:range", Range[0]));
+
+			if (!Sequence[0].isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:sequence", Sequence[0]));
 
 			for (int i = 1; i < 10; i++) {
 				if ((colour = LightColour[i]) != null)
@@ -884,6 +974,10 @@ abstract public class Buoy extends SeaMark {
 				if (Height[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:" + i + ":height", Height[i]));
+
+				if (Sequence[i] != null)
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:" + i + ":sequence", Sequence[i]));
 
 				if (Range[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -1025,6 +1119,10 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01Name.setText("");
 		dlg.tfM01Name.setEnabled(false);
 		setName("");
+		setLongname("");
+		setFixme("");
+		setRef("");
+		setInf("");
 		dlg.cM01TopMark.setSelected(false);
 		dlg.cM01TopMark.setVisible(false);
 		dlg.cbM01TopMark.setVisible(false);

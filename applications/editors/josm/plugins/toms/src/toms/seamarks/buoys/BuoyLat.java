@@ -54,6 +54,12 @@ public class BuoyLat extends Buoy {
 		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:name")); //$NON-NLS-1$
 
+		if (keys.containsKey("seamark:longname")) //$NON-NLS-1$
+			setLongname(keys.get("seamark:longname")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:fixme")) //$NON-NLS-1$
+			setFixme(keys.get("seamark:fixme")); //$NON-NLS-1$
+
 		if (keys.containsKey("seamark:buoy_lateral:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:buoy_lateral:name")); //$NON-NLS-1$
 		else if (keys.containsKey("seamark:beacon_lateral:name")) //$NON-NLS-1$
@@ -273,6 +279,13 @@ public class BuoyLat extends Buoy {
 				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			setStyleIndex(LAT_FLOAT);
 		}
+
+		if (keys.containsKey("seamark:buoy_lateral:marsys")) //$NON-NLS-1$
+			setRegion(keys.get("seamark:buoy_lateral:marsys").equals("B")); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:beacon_lateral:marsys")) //$NON-NLS-1$
+			setRegion(keys.get("seamark:beacon_lateral:marsys").equals("B")); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:light_float:marsys")) //$NON-NLS-1$
+			setRegion(keys.get("seamark:light_float:marsys").equals("B")); //$NON-NLS-1$
 
 		refreshStyles();
 		refreshLights();
@@ -912,8 +925,6 @@ public class BuoyLat extends Buoy {
 				break;
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral"); //$NON-NLS-1$
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "stake")); //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral"); //$NON-NLS-1$
@@ -998,8 +1009,6 @@ public class BuoyLat extends Buoy {
 				break;
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral"); //$NON-NLS-1$
-				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "stake")); //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral"); //$NON-NLS-1$
@@ -1064,6 +1073,26 @@ public class BuoyLat extends Buoy {
 
 		default:
 		}
+
+		switch (getStyleIndex()) {
+		case LAT_CAN:
+//		case LAT_CONE:
+		case LAT_PILLAR:
+		case LAT_SPAR:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_lateral:marsys", (getRegion() ? "B" : "A"))); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case LAT_BEACON:
+		case LAT_TOWER:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_lateral:marsys", (getRegion() ? "B" : "A"))); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case LAT_FLOAT:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:marsys", (getRegion() ? "B" : "A"))); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		}
+		
 		saveTopMarkData(shape, colour);
 		saveLightData();
 		saveRadarFogData();

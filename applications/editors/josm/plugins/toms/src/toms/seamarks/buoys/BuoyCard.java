@@ -56,6 +56,12 @@ public class BuoyCard extends Buoy {
 		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:name")); //$NON-NLS-1$
 
+		if (keys.containsKey("seamark:longname")) //$NON-NLS-1$
+			setLongname(keys.get("seamark:longname")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:fixme")) //$NON-NLS-1$
+			setFixme(keys.get("seamark:fixme")); //$NON-NLS-1$
+
 		if (keys.containsKey("seamark:buoy_cardinal:name")) //$NON-NLS-1$
 			setName(keys.get("seamark:buoy_cardinal:name")); //$NON-NLS-1$
 		else if (keys.containsKey("seamark:beacon_cardinal:name")) //$NON-NLS-1$

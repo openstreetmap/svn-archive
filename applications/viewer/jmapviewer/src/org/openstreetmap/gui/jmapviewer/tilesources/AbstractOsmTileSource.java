@@ -79,19 +79,22 @@ public abstract class AbstractOsmTileSource implements TileSource {
     }
 
     public boolean requiresAttribution() {
-        return true;
+        return false;
     }
 
     public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
-        return "© OpenStreetMap contributors, CC-BY-SA ";
+        throw new UnsupportedOperationException("no attribution");
+        //return "\u00a9 OpenStreetMap contributors, CC-BY-SA ";
     }
 
     public String getAttributionLinkURL() {
-        return "http://openstreetmap.org/";
+        throw new UnsupportedOperationException("no attribution");
+        //return "http://openstreetmap.org/";
     }
 
     public String getTermsOfUseURL() {
-        return "http://www.openstreetmap.org/copyright";
+        throw new UnsupportedOperationException("no attribution");
+        //return "http://www.openstreetmap.org/copyright";
     }
 
     public double latToTileY(double lat, int zoom) {

@@ -89,6 +89,8 @@
 "contour_ext" "elevation_medium" "orangered" 2 0 "none" 0 0 "ele" "orangered" 16 "sans-serif" -4 1 0 "none" 0 100000
 "contour_ext" "elevation_major" "orangered" 3 0 "none" 0 0 "ele" "orangered" 20 "FreeSerif" -4 1 0 "none" 0 500000
 "natural" "water" "deepskyblue" 0 0 "none" 0 1 "name" "blue" 20 "FreeSerif" 3 1 0 "none" 0 500000
+"natural" "rock" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/rock-64.png" 0 500000
+"natural" "scree" "none" 0 0 "none" 0 1 "name" "black" 16 "sans-serif" 0 1 1 "icons-topo/scree-64.png" 0 500000
 "wood" "coniferous" "none" 0 0 "none" 0 1 "name" "forestgreen" 20 "FreeSerif" 3 0 1 "icons-topo/forest-nadel-64.png" 0 500000
 "wood" "deciduous" "none" 0 0 "none" 0 1 "name" "forestgreen" 20 "FreeSerif" 3 0 1 "icons-topo/forest-laub-64.png" 0 500000
 "landuse" "residential" "lightpink" 0 0 "none" 0 1 "none" "black" 8 "sans-serif" 3 1 1 "none" 0 500000

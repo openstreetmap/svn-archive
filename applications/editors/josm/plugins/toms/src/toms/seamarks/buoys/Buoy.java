@@ -38,26 +38,6 @@ abstract public class Buoy extends SeaMark {
 		Longname = name;
 	}
 
-	private String Ref = "";
-
-	public String getRef() {
-		return Ref;
-	}
-
-	public void setRef(String ref) {
-		Ref = ref;
-	}
-
-	private String Inf = "";
-
-	public String getInf() {
-		return Inf;
-	}
-
-	public void setInf(String inf) {
-		Inf = inf;
-	}
-
 	private String Fixme = "";
 
 	public String getFixme() {
@@ -196,6 +176,46 @@ abstract public class Buoy extends SeaMark {
 
 	public void setFired(boolean fired) {
 		Fired = fired;
+	}
+
+	private String LitRef = "";
+
+	public String getLitRef() {
+		return LitRef;
+	}
+
+	public void setLitRef(String ref) {
+		LitRef = ref;
+	}
+
+	private String LitInf = "";
+
+	public String getLitInf() {
+		return LitInf;
+	}
+
+	public void setLitInf(String inf) {
+		LitInf = inf;
+	}
+
+	private String LitCat = "";
+
+	public String getLitCat() {
+		return LitCat;
+	}
+
+	public void setLitCat(String cat) {
+		LitCat = cat;
+	}
+
+	private String LitMul = "";
+
+	public String getLitMul() {
+		return LitMul;
+	}
+
+	public void setLitMul(String mul) {
+		LitMul = mul;
 	}
 
 	private boolean Sectored = false;
@@ -483,9 +503,13 @@ abstract public class Buoy extends SeaMark {
 				if (index != 0)
 					setSectored(true);
 				if (key.equals("ref"))
-					setRef(value);
+					setLitRef(value);
 				if (key.equals("inform"))
-					setInf(value);
+					setLitInf(value);
+				if (key.equals("category"))
+					setLitCat(value);
+				if (key.equals("multiple"))
+					setLitMul(value);
 				if (key.equals("colour")) {
 					if (value.equals("red"))
 						LightColour[index] = "R";
@@ -899,13 +923,21 @@ abstract public class Buoy extends SeaMark {
 							"seamark:light:colour", "white"));
 				}
 
-			if (!Ref.isEmpty())
+			if (!LitRef.isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:ref", Ref));
+						"seamark:light:ref", LitRef));
 
-			if (!Inf.isEmpty())
+			if (!LitInf.isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:inform", Inf));
+						"seamark:light:inform", LitInf));
+
+			if (!LitCat.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:category", LitCat));
+
+			if (!LitMul.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:multiple", LitMul));
 
 			if (!LightPeriod[0].isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -1121,8 +1153,10 @@ abstract public class Buoy extends SeaMark {
 		setName("");
 		setLongname("");
 		setFixme("");
-		setRef("");
-		setInf("");
+		setLitRef("");
+		setLitInf("");
+		setLitCat("");
+		setLitMul("");
 		dlg.cM01TopMark.setSelected(false);
 		dlg.cM01TopMark.setVisible(false);
 		dlg.cbM01TopMark.setVisible(false);

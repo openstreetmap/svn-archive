@@ -208,6 +208,7 @@ public class ColumbusCSVReader {
 
 		String desc = String.format("Converted by ColumbusCSV plugin from track file '%s'", f.getName());
 		gpxData.attr.put(GpxData.META_DESC, desc);
+		gpxData.storageFile = f;
 		return gpxData;
 	}
 	

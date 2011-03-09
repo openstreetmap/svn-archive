@@ -3,9 +3,6 @@
 
 
 # todo
-# VERSION 1.0
-# - bigger overview map
-# - problem overlap martin (autorotate) 
 #
 # LATER
 # - negative ids for steps
@@ -16,6 +13,7 @@
 
 # history
 # 0.91 autorotate corrected
+# 0.92 bigger overview and detail maps; added names to pois in description; less steps
 # 
 
 use strict ;
@@ -24,7 +22,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.91" ;
+my $version = "0.92" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -72,13 +70,14 @@ my $pnSizeDetail = 64 ;
 my $descName = "" ;
 my $stepDescName = "" ;
 my $autorotateOpt = 0 ;
+my $lessStepsOpt = 0 ;
 
 my $poiOpt = 0 ;
 my $gridNumber = 5 ;
 my %pois = () ;
 
-my $extraMapData1 = 0.1 ; # overlap for osm temp file 1
-my $extraMapData2 = 0.1 ; # for temp file 2s
+my $extraMapData1 = 0.1 ; # overlap for osm temp file 1 in degrees
+my $extraMapData2 = 0.005 ; # for temp file 2s
 
 my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove -pagenumbers=$pnSizeOverview,black,0" ;
 my $mapgenCommandDetail = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
@@ -88,6 +87,12 @@ my $relLonMax = -999 ;
 my $relLonMin = 999 ;
 my $relLatMax = -999 ;
 my $relLatMin = 999 ;
+
+# detail boxes outer bounds 0.92
+my $detailLonMax = -999 ;
+my $detailLonMin = 999 ;
+my $detailLatMax = -999 ;
+my $detailLatMin = 999 ;
 
 # initial file
 my $fileLonMax = -999 ;
@@ -370,44 +375,6 @@ sub createTemp1 {
 	# this file is used to draw the overview and further osm files for details are generated from this one to save time.
 	print "\ncreate temp file 1...\n" ;
 
-	my $scale ;
-	my $distLon = distance ($relLonMin, $relLatMin, $relLonMax, $relLatMin) ; # in km
-	my $distLat = distance ($relLonMin, $relLatMin, $relLonMin, $relLatMax) ; # in km
-
-	$distLon = int ($distLon * 1000) / 1000 ;
-	$distLat = int ($distLat * 1000) / 1000 ;
-
-	if ($verboseOpt eq "1") {
-		print "overview distances lon / lat in km: $distLon $distLat\n" ;
-	}
-
-	my $distWidth = $pageWidth{$pageSizeOpt} / 100 / 1000 ;
-	my $distHeight = $pageHeight{$pageSizeOpt} / 100 / 1000 ;
-	my $scaleWidth =  int ($distLon / $distWidth) ;
-	my $scaleHeight =  int ($distLat / $distHeight) ;
-
-	if ($verboseOpt eq "1") {
-		print "overview scales W/H: $scaleWidth / $scaleHeight\n" ;
-	}
-
-	# select min scale
-	$scale = $scaleWidth ;
-	if ($scaleHeight > $scale) { $scale = $scaleHeight ; }
-
-	# select fitting scale
-	foreach my $s (@overviewScales) {
-		if ($s > $scale) {
-			$scale = $s ;
-			last ;
-		}
-	}
-
-	$scaleOverview = $scale ;
-
-	if ($verboseOpt eq "1") {
-		print "selected overview scale: $scale\n" ;
-	}
-
 
 	if ($noOutputOpt eq "0") {
 		shrinkFile ($inFileName, $temp1FileName, $fileLonMin, $fileLatMin, $fileLonMax, $fileLatMax, $relLonMin, $relLatMin, $relLonMax, $relLatMax, $extraMapData1) ;
@@ -416,7 +383,8 @@ sub createTemp1 {
 
 		print "reading temp file...\n" ;
 
-		openOsmFile ($inFileName) ;
+		# openOsmFile ($inFileName) ;
+		openOsmFile ($temp1FileName) ; # 0.92
 		skipNodes() ;
 
 		my $nodesRef ; my $propRef ; my $tagsRef ;
@@ -459,10 +427,14 @@ sub createTemp1 {
 			foreach my $t (@$tagsRef) {
 				foreach my $p (@pois) {
 					if ( ($t->[0] eq $p->[0]) and ($t->[1] eq $p->[1]) ) {
+						my $name = "" ;
+						foreach my $t1 (@$tagsRef) {
+							if ($t1->[0] eq "name") { $name = $t1->[1] ; }
+						}
 						my $info ;
 						if ($languageOpt eq "EN") { $info = $p->[3] ; }
 						if ($languageOpt eq "DE") { $info = $p->[4] ; }
-						push @poiList, [ $info, "", $$propRef{"id"}, $p->[2] ] ;
+						push @poiList, [ $info, $name, $$propRef{"id"}, $p->[2] ] ;
 						$lon{ $$propRef{"id"} } = $$propRef{"lon"} ;
 						$lat{ $$propRef{"id"} } = $$propRef{"lat"} ;
 					}
@@ -480,6 +452,49 @@ sub createTemp1 {
 
 sub createOverviewMap {
 	print "\ncreate overview map...\n" ;
+
+	my $scale ;
+	# my $distLon = distance ($relLonMin, $relLatMin, $relLonMax, $relLatMin) ; # in km
+	# my $distLat = distance ($relLonMin, $relLatMin, $relLonMin, $relLatMax) ; # in km
+	# 0.92
+	my $distLon = distance ($detailLonMin, $detailLatMin, $detailLonMax, $detailLatMin) ; # in km
+	my $distLat = distance ($detailLonMin, $detailLatMin, $detailLonMin, $detailLatMax) ; # in km
+
+	$distLon = int ($distLon * 1000) / 1000 ;
+	$distLat = int ($distLat * 1000) / 1000 ;
+
+	if ($verboseOpt eq "1") {
+		print "overview distances lon / lat in km: $distLon $distLat\n" ;
+	}
+
+	my $distWidth = $pageWidth{$pageSizeOpt} / 100 / 1000 ;
+	my $distHeight = $pageHeight{$pageSizeOpt} / 100 / 1000 ;
+	my $scaleWidth =  int ($distLon / $distWidth) ;
+	my $scaleHeight =  int ($distLat / $distHeight) ;
+
+	if ($verboseOpt eq "1") {
+		print "overview scales W/H: $scaleWidth / $scaleHeight\n" ;
+	}
+
+	# select min scale
+	$scale = $scaleWidth ;
+	if ($scaleHeight > $scale) { $scale = $scaleHeight ; }
+
+	# select fitting scale
+	foreach my $s (@overviewScales) {
+		if ($s > $scale) {
+			$scale = $s ;
+			last ;
+		}
+	}
+
+	$scaleOverview = $scale ;
+
+	if ($verboseOpt eq "1") {
+		print "selected overview scale: $scale\n" ;
+	}
+
+
 	my $outName = $workDir . "overview.svg" ;
 	if ($noOutputOpt eq "0") {
 
@@ -489,11 +504,12 @@ sub createOverviewMap {
 		push @tempFiles, $pdfName ;
 		push @tempFiles, $ndlName ;
 
-		# allow for some more data than just the relation
-		my $ovLonMin = $relLonMin  ;
-		my $ovLonMax = $relLonMax  ;
-		my $ovLatMin = $relLatMin  ;
-		my $ovLatMax = $relLatMax  ;
+		# allow for some more data than just the relation 0.92
+		my $more = 0.005 ;
+		my $ovLonMin = $detailLonMin - $more ;
+		my $ovLonMax = $detailLonMax + $more ;
+		my $ovLatMin = $detailLatMin - $more ;
+		my $ovLatMax = $detailLatMax + $more ;
 
 		# but check if data is present
 		if ($ovLonMin < $file1LonMin) { $ovLonMin = $file1LonMin ; }
@@ -641,6 +657,7 @@ sub buildCompleteWay {
 	# nodeinfo is indexed by nodeNumber, NOT id!
 	for (my $i = 0;  $i<$#nodes; $i++) {
 		$nodeInfo{$i}{"direction"} = direction ($nodes[$i], $nodes[$i+1]) ;		
+		$nodeInfo{$i}{"angle"} = angle ($lon{$nodes[$i]}, $lat{$nodes[$i]}, $lon{$nodes[$i+1]}, $lat{$nodes[$i+1]}) ;
 		$nodeInfo{$i}{"name"} = $nodeName{ $nodes[$i] } ;		
 		$nodeInfo{$i}{"ele"} = $nodeElevation{ $nodes[$i] } ;		
 		$nodeInfo{$i}{"dirs"} = $nodeDirCount{ $nodes[$i] } ;		
@@ -649,6 +666,7 @@ sub buildCompleteWay {
 	$nodeInfo{$#nodes}{"ele"} = $nodeElevation{ $nodes[ -1 ] } ;
 	$nodeInfo{$#nodes}{"dirs"} = $nodeDirCount{ $nodes[ -1 ] } ;
 	$nodeInfo{$#nodes}{"direction"} = "" ;
+	$nodeInfo{$#nodes}{"angle"} = 0 ;
 	$nodeInfo{$#nodes}{"name"} = "" ;
 
 	my %info = () ;
@@ -715,7 +733,7 @@ sub createDetailMaps {
 			my $distLon = distance ($lonMin, $latMin, $lonMax, $latMin) ;
 			my $distLat = distance ($lonMin, $latMin, $lonMin, $latMax) ;
 
-			print "$actual:  $distLon / $distLat\n" ;
+			# print "$actual:  $distLon / $distLat\n" ;
 
 			# autorotate
 			if ( ($autorotateOpt eq "1") and ( ! $rotated) ) {
@@ -724,7 +742,7 @@ sub createDetailMaps {
 					) { 
 					if ($verboseOpt eq "1") { print "actual page automatically rotated.\n" ; }
 
-					print "rotated\n" ;
+					# print "rotated\n" ;
 
 					$rotated = 1 ;
 					$maxDistLon = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
@@ -736,7 +754,7 @@ sub createDetailMaps {
 			}	
 
 			if ( ($distLon > $maxDistLonOverlap) or ($distLat > $maxDistLatOverlap) ) { 
-				print "BUSTED\n" ;
+				# print "BUSTED\n" ;
 				$busted = 1 ; 
 				$actual-- ;
 				# restore max and min
@@ -816,6 +834,12 @@ sub createDetailMaps {
 			if ($latMin < $file2LatMin) { $latMin = $file2LatMin ; }
 			if ($latMax > $file2LatMax) { $latMax = $file2LatMax ; }
 
+			# maintain details outer box 0.92
+			if ($lonMin < $detailLonMin) { $detailLonMin = $lonMin ; }
+			if ($lonMax > $detailLonMax) { $detailLonMax = $lonMax ; }
+			if ($latMin < $detailLatMin) { $detailLatMin = $latMin ; }
+			if ($latMax > $detailLatMax) { $detailLatMax = $latMax ; }
+
 			# print "DETAIL: bbox before mapgen = $lonMin,$latMin,$lonMax,$latMax\n" ;
 
 			if ($first) {
@@ -892,22 +916,16 @@ sub createDetailMaps {
 
 
 sub shrinkFile {
-	my ($inFileName, $outFileName, $inLonMin, $inLatMin, $inLonMax, $inLatMax, $outLonMin, $outLatMin, $outLonMax, $outLatMax, $percentPad) = @_ ;
+	my ($inFileName, $outFileName, $inLonMin, $inLatMin, $inLonMax, $inLatMax, $outLonMin, $outLatMin, $outLonMax, $outLatMax, $pad) = @_ ;
 
 	# print "SHRINK:\n" ;
 	# print "$inFileName, $outFileName, $inLonMin, $inLatMin, $inLonMax, $inLatMax, $outLonMin, $outLatMin, $outLonMax, $outLatMax, $percentPad\n" ;
 
 	# calc new bbox
-	my $distLon ;
-	$distLon = $outLonMax - $outLonMin ;
-	$distLon = $distLon * $percentPad ;
-	$outLonMax += $distLon ;
-	$outLonMin -= $distLon ;
-	my $distLat ; 
-	$distLat = $outLatMax - $outLatMin ;
-	$distLat = $distLat * $percentPad ;
-	$outLatMax += $distLat ;
-	$outLatMin -= $distLat ;
+	$outLonMax += $pad ; # 0.92
+	$outLonMin -= $pad ;
+	$outLatMax += $pad ;
+	$outLatMin -= $pad ;
 	
 	# check against source bbox
 	if ($outLonMin < $inLonMin) { $outLonMin = $inLonMin ; }
@@ -1083,7 +1101,10 @@ sub createDirections {
 	$toPrint{ $#nodes } = 1 ; 
 	for (my $i=1; $i<$#nodes; $i++) {
 		# if ($nodeInfo{$i-1}{"direction"} ne $nodeInfo{$i}{"direction"}) { $toPrint{$i} = 1 ; }
-		if ($nodeInfo{$i}{"dirs"} > 2) { $toPrint{$i} = 1 ; }
+
+		# if ($nodeInfo{$i}{"dirs"} > 2) { $toPrint{$i} = 1 ; } #0.92
+		if ( ($nodeInfo{$i}{"dirs"} > 2) and ( dirChange ($nodeInfo{$i-1}{"angle"}, $nodeInfo{$i}{"angle"}) > $lessStepsOpt) ) { $toPrint{$i} = 1 ; } #0.92
+
 		if ($nodeInfo{$i-1}{"name"} ne $nodeInfo{$i}{"name"}) { $toPrint{$i} = 1 ; }
 		if ($nodeInfo{$i}{"ele"} ne "") { $toPrint{$i} = 1 ; }
 		if ( defined $nodeInfo{$i}{"information"} ) { $toPrint{$i} = 1 ; }
@@ -1349,6 +1370,7 @@ sub getProgramOptions {
 					"ref=s"	=> \$relationRef,
 					"overlap=i"	=> \$overlapOpt,
 					"dirnumber=i"	=> \$dirNumberOpt,
+					"lesssteps=i"	=> \$lessStepsOpt,
 					"poi=i"		=> \$poiOpt,
 					"scale=i"	=> \$scale,
 					"pnsizeoverview=i"	=> \$pnSizeOverview,
@@ -1405,6 +1427,7 @@ sub usage {
 	print "-steps=<step description file> (for descriptions of single steps or nodes; format: stepNr<space>TEXT)\n" ;
 	print "-poi=<integer> (add poi directory to description, specify column number like 1,2,3)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
+	print "-lesssteps=INTEGER (reduce number of steps in description, step only if direction change > integer degrees)\n" ;
 	print "\n" ;
 
 	print "-pagesize=A4|A5\n" ;
@@ -1440,9 +1463,9 @@ sub addPois {
 			}
 		}
 		if ($minDist < $p->[3]) {
-			my $info = $p->[0] ;
+			my $info = $p->[0] ; my $name = $p->[1] ;
 			$minDist = int ($minDist * 100) / 100 ;
-			push @{$nodeInfo{$nodeNumber}{"information"}}, "$info ($dir $minDist)" ;
+			push @{$nodeInfo{$nodeNumber}{"information"}}, "$info $name ($dir $minDist)" ;
 		}
 	}
 }
@@ -1599,4 +1622,33 @@ sub convertHTML {
 	return $line ;
 }
 
+sub dirChange {
+	my ($a, $b) = @_ ;
 
+	my $c1 = abs ($a - $b) ;
+	my $c2 = 360 - max ($a, $b) + min ($a, $b) ;
+
+	my $c3 = min ($c1, $c2) ;
+	return $c3 ;
+}
+
+
+sub min {
+	my ($a, $b) = @_ ;
+	if ($a < $b) {
+		return $a ;
+	}
+	else {
+		return $b ;
+	}
+}
+
+sub max {
+	my ($a, $b) = @_ ;
+	if ($a > $b) {
+		return $a ;
+	}
+	else {
+		return $b ;
+	}
+}

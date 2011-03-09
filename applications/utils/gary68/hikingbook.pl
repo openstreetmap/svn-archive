@@ -3,14 +3,20 @@
 
 
 # todo
+# VERSION 1.0
+# - bigger overview map
+# - problem overlap martin (autorotate) 
+#
+# LATER
 # - negative ids for steps
 # - print details about route into book
-# - enhance elevation profile
 # - mapgen rules adapt way thickness
 # - print parameters
 #
-# - tile server support
-#
+
+# history
+# 0.91 autorotate corrected
+# 
 
 use strict ;
 use warnings ;
@@ -71,8 +77,8 @@ my $poiOpt = 0 ;
 my $gridNumber = 5 ;
 my %pois = () ;
 
-my $extraMapData1 = 0.05 ; # overlap for osm temp file 1
-my $extraMapData2 = 0.05 ; # for temp file 2s
+my $extraMapData1 = 0.1 ; # overlap for osm temp file 1
+my $extraMapData2 = 0.1 ; # for temp file 2s
 
 my $mapgenCommandOverview = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove -pagenumbers=$pnSizeOverview,black,0" ;
 my $mapgenCommandDetail = "perl mapgen.pl -pdf -declutter -legend=0 -scale -allowiconmove" ;
@@ -325,6 +331,13 @@ sub getRelationData {
 	
 		}
 
+		my $extra = 0.000 ;
+		$relLonMin = $relLonMin - $extra ;
+		$relLonMax = $relLonMax + $extra ;
+		$relLatMin = $relLatMin - $extra ;
+		$relLatMax = $relLatMax + $extra ;
+
+
 		# also collect data of big file
 		if ( $$propRef{"lon"} > $fileLonMax ) { $fileLonMax = $$propRef{"lon"} ; }
 		if ( $$propRef{"lon"} < $fileLonMin ) { $fileLonMin = $$propRef{"lon"} ; }
@@ -477,10 +490,10 @@ sub createOverviewMap {
 		push @tempFiles, $ndlName ;
 
 		# allow for some more data than just the relation
-		my $ovLonMin = $relLonMin - 0.005 ;
-		my $ovLonMax = $relLonMax + 0.005 ;
-		my $ovLatMin = $relLatMin - 0.005 ;
-		my $ovLatMax = $relLatMax + 0.005 ;
+		my $ovLonMin = $relLonMin  ;
+		my $ovLonMax = $relLonMax  ;
+		my $ovLatMin = $relLatMin  ;
+		my $ovLatMax = $relLatMax  ;
 
 		# but check if data is present
 		if ($ovLonMin < $file1LonMin) { $ovLonMin = $file1LonMin ; }
@@ -702,14 +715,17 @@ sub createDetailMaps {
 			my $distLon = distance ($lonMin, $latMin, $lonMax, $latMin) ;
 			my $distLat = distance ($lonMin, $latMin, $lonMin, $latMax) ;
 
-			# print "  $distLon / $distLat\n" ;
+			print "$actual:  $distLon / $distLat\n" ;
 
 			# autorotate
 			if ( ($autorotateOpt eq "1") and ( ! $rotated) ) {
-				if 	( ( ($distLon > $maxDistLonOverlap) and ( $maxDistLatOverlap > $maxDistLonOverlap) )
-					or ( ($distLat > $maxDistLatOverlap) and ( $maxDistLonOverlap > $maxDistLatOverlap) )
+				if 	( ( ($distLon > $maxDistLonOverlap) and ( $distLat < $maxDistLonOverlap) and ($maxDistLatOverlap > $maxDistLonOverlap) )
+					or ( ($distLat > $maxDistLatOverlap) and ( $distLon < $maxDistLatOverlap)  and ($maxDistLatOverlap < $maxDistLonOverlap) )
 					) { 
 					if ($verboseOpt eq "1") { print "actual page automatically rotated.\n" ; }
+
+					print "rotated\n" ;
+
 					$rotated = 1 ;
 					$maxDistLon = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
 					$maxDistLat = $pageWidth{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
@@ -720,7 +736,7 @@ sub createDetailMaps {
 			}	
 
 			if ( ($distLon > $maxDistLonOverlap) or ($distLat > $maxDistLatOverlap) ) { 
-
+				print "BUSTED\n" ;
 				$busted = 1 ; 
 				$actual-- ;
 				# restore max and min
@@ -736,36 +752,34 @@ sub createDetailMaps {
 		# create map
 		my $percent = int ($actual / $#nodes * 100) ;
 		print "\ncreate map for nodes $start to $actual ($percent \%).\n" ;
-		# print "DETAIL: initial bbox = $lonMin,$latMin,$lonMax,$latMax\n" ;
 
-		# expand bbox
+		# print "DETAIL: initial bbox = $lonMin,$latMin,$lonMax,$latMax\n" ;
+		# print "DETAIL: max dists = $maxDistLon $maxDistLat\n" ;
+
 		my $distLon = distance ($lonMin, $latMin, $lonMax, $latMin) ;
 		my $distLat = distance ($lonMin, $latMin, $lonMin, $latMax) ;
-		# print "DETAIL:   initial dists $distLon / $distLat\n" ;
+		# print "DETAIL: actual dists: $distLon, $distLat\n" ;
 
-		my $factorLon ; my $factorLat ;
-		$factorLon = 1 / ( $distLon / $maxDistLon ) ; 		
-		$factorLat = 1 / ( $distLat / $maxDistLat ) ;
-		# print "DETAIL: factors $factorLon / $factorLat\n" ;
 
-		my $latMean ; my $lonMean ;
-		$lonMean = ( $lonMax + $lonMin) / 2 ;
-		$latMean = ( $latMax + $latMin) / 2 ;
-		# print "DETAIL: means $lonMean / $latMean\n" ;
+		my $missingLat = $maxDistLat - $distLat ;
+		my $missingLatFactor = $missingLat / $distLat ;
+		my $additionalLat = ($latMax-$latMin) * $missingLatFactor / 2 ;
+		# print "DETAIL: LAT: $missingLat $missingLatFactor $additionalLat\n" ;
 		
-		my $oldDistLon = $lonMax-$lonMin ;
-		my $oldDistLat = $latMax-$latMin ;
-		$lonMin = $lonMean - ( $oldDistLon * $factorLon / 2) ;
-		$lonMax = $lonMean + ( $oldDistLon * $factorLon / 2) ;
-		$latMin = $latMean - ( $oldDistLat * $factorLat / 2) ;
-		$latMax = $latMean + ( $oldDistLat * $factorLat / 2) ;
+		$latMin = $latMin - $additionalLat ;
+		$latMax = $latMax + $additionalLat ;
+
+		my $missingLon = $maxDistLon - $distLon ;
+		my $missingLonFactor = $missingLon / $distLon ;
+		my $additionalLon = ($lonMax-$lonMin) * $missingLonFactor / 2 ;
+		# print "DETAIL: LON: $missingLon $missingLonFactor $additionalLon\n" ;
+
+		$lonMin = $lonMin - $additionalLon ;
+		$lonMax = $lonMax + $additionalLon ;
 
 		# print "DETAIL: bbox after factor = $lonMin,$latMin,$lonMax,$latMax\n" ;
 
 
-		$distLon = distance ($lonMin, $latMin, $lonMax, $latMin) ;
-		$distLat = distance ($lonMin, $latMin, $lonMin, $latMax) ;
-		# print "DETAIL: dists after factor $distLon / $distLat\n" ;
 
 		$mapNumber++ ;
 		my $outName = $workDir . $mapName . $mapNumber . ".svg" ;
@@ -1145,33 +1159,46 @@ sub createDirections {
 	}
 
 	if ($countEle >= 2) {
+
+		my $picWidth = 110 ;
+		my $xOffset = 10 ;
+		my $yOffset = 10 ;
+		
 		print $texFile "\\section*{" .  $label{$languageOpt}{"eleprofile"} . "}\n" ;
 		print $texFile "\\setlength{\\unitlength}{1mm}\n" ;
 		my $height = int ( ($eleMax - $eleMin) / 10 ) ;
 		my $lh = $height + 10 ;
-		print $texFile "\\begin{picture} (110,$lh)\n" ;
+		print $texFile "\\begin{picture} ($picWidth,$lh)\n" ;
 
 		my $width = 0 ;
-		foreach my $d (1, 5, 10, 15, 20, 30, 50, 75, 100, 150, 200, 300, 500, 750, 1000) {
+		foreach my $d (1, 2, 3, 5, 7, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100, 150, 200, 300, 500, 750, 1000) {
 			if ($d > $segmentLength) {
 				$width = $d ;
 				last ;
 			} 
 		}
-		print $texFile "\\put(10,10){\\line(110,0){100}}\n" ;
-		print $texFile "\\put(10,10){\\line(0,$height){$height}}\n" ;
+		my $tx = $picWidth-$xOffset ;
+
+		print $texFile "\\put($xOffset,$yOffset){\\line($picWidth,0){$tx}}\n" ;
+		print $texFile "\\put($xOffset,$lh){\\line($picWidth,0){$tx}}\n" ;
+
+		print $texFile "\\put($xOffset,$yOffset){\\line(0,$height){$height}}\n" ;
+		print $texFile "\\put($picWidth,$yOffset){\\line(0,$height){$height}}\n" ;
+
 		my $h1 = int ($eleMin) ;
 		my $h2 = int ($eleMax) ;
-		my $pos2 = $height + 10 ;
-		print $texFile "\\put(0,12){\\tiny $h1 m}\n" ;
+		my $pos2 = $height + $yOffset ;
+		my $ty = $yOffset + 2 ;
+		print $texFile "\\put(0,$ty){\\tiny $h1 m}\n" ;
 		print $texFile "\\put(0,$pos2){\\tiny $h2 m}\n" ;
-		print $texFile "\\put(100,2){\\tiny $width km}\n" ;
+		$tx = $picWidth-$xOffset ;
+		print $texFile "\\put($tx,2){\\tiny $width km}\n" ;
 
 
 		for (my $i=0; $i<=$#nodes; $i++) {
 			if ($nodeInfo{$i}{"ele"} ne "") {
-				my $x = int ($nodeInfo{$i}{"distance"} / $width * 100) + 10 ;
-				my $y = ($nodeInfo{$i}{"ele"} - $eleMin) / 10 + 10 ;
+				my $x = int ($nodeInfo{$i}{"distance"} / $width * ($picWidth - $xOffset)) + $xOffset ;
+				my $y = ($nodeInfo{$i}{"ele"} - $eleMin) / 10 + $yOffset ;
 				print $texFile "\\put($x,$y){\\circle*{1}}\n" ;
 			}
 		}

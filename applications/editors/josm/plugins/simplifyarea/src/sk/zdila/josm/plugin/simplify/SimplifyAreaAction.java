@@ -315,8 +315,6 @@ public class SimplifyAreaAction extends JosmAction {
 
 
     private void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
-//        System.out.println("---------------- " + w.getId());
-
         final double angleThreshold = Main.pref.getDouble("simplify-area.angle.threshold", 10);
         final double angleFactor = Main.pref.getDouble("simplify-area.angle.factor", 1.0);
         final double areaThreshold = Main.pref.getDouble("simplify-area.area.threshold", 5.0);
@@ -345,16 +343,18 @@ public class SimplifyAreaAction extends JosmAction {
         }
 
         while (true) {
-//            System.out.println(nodes.size());
             Node prevNode = null;
             LatLon coord1 = null;
             LatLon coord2 = null;
+            int prevIndex = -1;
 
             double minWeight = Double.MAX_VALUE;
             Node bestMatch = null;
 
-            for (int i = 0, len = nodes.size() + (closed ? 2 : 1); i < len; i++) {
-                final int index = i % nodes.size();
+            final int size2 = nodes.size();
+
+            for (int i = 0, len = size2 + (closed ? 2 : 1); i < len; i++) {
+                final int index = i % size2;
 
                 final Node n = nodes.get(index);
                 final LatLon coord3 = n.getCoor();
@@ -362,19 +362,18 @@ public class SimplifyAreaAction extends JosmAction {
                 if (coord1 != null) {
                     final double weight;
 
-                    if (weightList.get(index) == null) {
+                    if (weightList.get(prevIndex) == null) {
                         final double angleWeight = computeConvectAngle(coord1, coord2, coord3) / angleThreshold;
                         final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
                         final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
 
-                        weight = /*isRequiredNode(w, prevNode, minUse) ||*/
-                        !closed && i == len - 1 || // don't remove last node of the not closed way
-                        angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
-                            angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
+                        weight = !closed && i == len - 1 || // don't remove last node of the not closed way
+                                angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
+                                angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
 
-                        weightList.set(index, weight);
+                        weightList.set(prevIndex, weight);
                     } else {
-                        weight = weightList.get(index);
+                        weight = weightList.get(prevIndex);
                     }
 
                     if (weight < minWeight) {
@@ -386,6 +385,7 @@ public class SimplifyAreaAction extends JosmAction {
                 coord1 = coord2;
                 coord2 = coord3;
                 prevNode = n;
+                prevIndex = index;
             }
 
             if (bestMatch == null) {
@@ -394,7 +394,6 @@ public class SimplifyAreaAction extends JosmAction {
 
             final int index = nodes.indexOf(bestMatch);
 
-            final int size2 = nodes.size();
             weightList.set((index - 1 + size2) % size2, null);
             weightList.set((index + 1 + size2) % size2, null);
             weightList.remove(index);

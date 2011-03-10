@@ -3,14 +3,9 @@
 
 
 # todo
-# tag info -> pdf
-# punktestärke variabel
-#
 #
 # LATER
 # - negative ids for steps
-# - print details about route into book
-# - mapgen rules adapt way thickness
 # - print parameters
 #
 
@@ -18,7 +13,7 @@
 # 0.91 autorotate corrected
 # 0.92 bigger overview and detail maps; added names to pois in description; less steps
 # 0.93 variable discs, taginfo -> pdf
-#
+# 0.94 role selection
 #
 
 
@@ -28,7 +23,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.93" ;
+my $version = "0.94" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -211,6 +206,7 @@ sub getRelationData {
 	($propRef, $membersRef, $tagsRef) = getRelation3() ;
 
 	my $found = 0 ;
+	my $name = "" ; my $ref = "" ;
 	while ( (defined $propRef) and (! $found) ) {
 		if ($$propRef{"id"} == $relationId) {
 			$found = 1 ;
@@ -218,7 +214,6 @@ sub getRelationData {
 			@relationTags = @$tagsRef ;
 		}
 
-		my $name = "" ; my $ref = "" ;
 		foreach my $t (@$tagsRef) {
 			if ($t->[0] eq "name") { $name = $t->[1] ; }
 			if ($t->[0] eq "ref") { $ref = $t->[1] ; }
@@ -241,17 +236,19 @@ sub getRelationData {
 			print "\nRelation $$propRef{'id'} found.\n" ;
 			print "Name: $name\n" ;
 			print "Ref: $ref\n\n" ;
+
 		}
 
 		($propRef, $membersRef, $tagsRef) = getRelation3() ;
 	}
 	closeOsmFile() ;
 
+	if ( ($name ne "") and ($title eq "Hiking book") ) { $title = $name ; } # 0.94
+	if ( ($name ne "") and ($outFileName eq "hikingbook.pdf") ) { $outFileName = $name . ".pdf" ; }
+
 	if ($found == 0) {
 		die ("relation not found!\n") ;
 	}
-
-	# TODO ROLES
 
 	@ways = () ;
 
@@ -259,10 +256,20 @@ sub getRelationData {
 	my %types = () ;
 	foreach my $m (@relationMembers) {
 		if ($m->[0] eq "way") {
-			$wc++ ;
-			$neededWays{$m->[1]} = 1 ;
 			$types{$m->[2]} = 1 ;
-			push @ways, $m->[1] ;
+			my $validRole = 0 ; # 0.94
+			foreach my $r (qw (none forward route) ) { 
+				if ( $m->[2] eq $r ) { $validRole = 1 ; }
+			}
+			if ($validRole) {
+				$wc++ ;
+				$neededWays{$m->[1]} = 1 ;
+				push @ways, $m->[1] ;
+			}
+			else {
+				my $role = $m->[2] ;
+				print "WARNING: invalid role $role detected.\n" ;
+			}
 		}
 	}
 	if ($verboseOpt eq "1") {
@@ -1033,7 +1040,7 @@ sub mergeAllFiles {
 
 	my $outFileName2 = $outFileName ;
 	$outFileName2 =~ s/\.pdf/2\.pdf/ ;
-	`pdfjoin --outfile $outFileName $files >> $logFileName 2>&1` ;
+	`pdfjoin --outfile \"$outFileName\" $files >> $logFileName 2>&1` ;
 	# `gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName2 -dBATCH $files >> $logFileName 2>&1` ;
 
 }

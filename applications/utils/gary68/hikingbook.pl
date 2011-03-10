@@ -3,6 +3,9 @@
 
 
 # todo
+# tag info -> pdf
+# punktestärke variabel
+#
 #
 # LATER
 # - negative ids for steps
@@ -14,7 +17,10 @@
 # history
 # 0.91 autorotate corrected
 # 0.92 bigger overview and detail maps; added names to pois in description; less steps
-# 
+# 0.93 variable discs, taginfo -> pdf
+#
+#
+
 
 use strict ;
 use warnings ;
@@ -22,7 +28,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.92" ;
+my $version = "0.93" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -32,6 +38,7 @@ my $poiFileName = "hikingbook.poi" ;
 my $relationId = 0 ;
 my $relationName = "" ;
 my $relationRef = "" ;
+my @relationTags ;
 my $scale = 10000 ; # default detail scale 
 my %pageHeight = () ;
 $pageHeight{"A4"} = 27.7 ;
@@ -71,6 +78,9 @@ my $descName = "" ;
 my $stepDescName = "" ;
 my $autorotateOpt = 0 ;
 my $lessStepsOpt = 0 ;
+my $stepSizeOpt = 18 ;
+my $stepColorOpt = "black" ;
+my $stepFontSizeOpt = 35 ;
 
 my $poiOpt = 0 ;
 my $gridNumber = 5 ;
@@ -141,6 +151,10 @@ $translations{"DE"}{"information"} = "Information" ;
 $translations{"DE"}{"spring"} = "Quelle" ;
 $translations{"DE"}{"parking"} = "Parkplatz" ;
 $translations{"DE"}{"pub"} = "Kneipe" ;
+$translations{"DE"}{"bank"} = "Bank" ;
+$translations{"DE"}{"castle"} = "Burg" ;
+$translations{"DE"}{"village"} = "Dorf" ;
+$translations{"DE"}{"hostel"} = "Herberge" ;
 # $translations{"DE"}{""} = "" ;
 
 getProgramOptions () ;
@@ -183,7 +197,7 @@ sub getRelationData {
 	my %neededWays = () ;
 	my %neededNodes = () ;
 	my @relationMembers = () ;
-	my @relationTags = () ;
+	# my @relationTags = () ; # now GLOBAL
 
 	# get relation data
 
@@ -1155,15 +1169,15 @@ sub createDirections {
 			print $ltxFile "\\hline\n" ;
 			$lastDist = $nodeInfo{$i}{"distance"} ;
 
-			# if ( (defined $nodeInfo{$i}{'information'}) or ($stepDist > 0.3) ) {
+			if ($stepSizeOpt > 0) {
 				print $stepFile $lon{ $nodes[$i] } . " " ;
 				print $stepFile $lat{ $nodes[$i] } . " " ;
-				print $stepFile "18 " ;
-				print $stepFile "\"black\" " ;
+				print $stepFile "$stepSizeOpt " ;
+				print $stepFile "\"$stepColorOpt\" " ;
 				print $stepFile "\"$line\" " ;
-				print $stepFile "35" ;
+				print $stepFile "$stepFontSizeOpt" ;
 				print $stepFile "\n" ;
-			# }
+			}
 		}		
 	}
 
@@ -1264,16 +1278,19 @@ sub createTitlePage {
 	my %heading2 = () ;
 	$heading2{"EN"} = "Tour description" ;
 	$heading2{"DE"} = "Tourenbeschreibung" ;
+	my %heading3 = () ;
+	$heading3{"EN"} = "Basic route data" ;
+	$heading3{"DE"} = "Basisroutendaten" ;
 	my %disclaimer = () ;
 	$disclaimer{"EN"} = << "END1" ;
 The user of this book is always responsible for all his steps and actions.
 The authors of this documentation are not responsible for the correctness and completeness of the data.
-Data is derived from www.openstreetmap.org and is licensed by CC-BY-SA.
+Data is derived from openstreetmap and is licensed by CC-BY-SA.
 END1
 	$disclaimer{"DE"} = << "END2" ;
 Der Nutzer dieses Werkes ist stets selbst für seine Schritte und Aktionen ver\\-antwortlich.
 Die Ersteller dieser Dokumentation übernehmen keine Garantie für Richtigkeit und Vollständigkeit selbiger.
-Die Daten stammen aus www.openstreetmap.org und stehen unter der CC-BY-SA Lizenz.
+Die Daten stammen von openstreetmap und stehen unter der CC-BY-SA Lizenz.
 END2
 
 	
@@ -1323,6 +1340,25 @@ END2
 
 	print $texFile "\\newpage\n" ;
 	print $texFile "\\thispagestyle{empty}\n" ;
+
+	print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
+	my %tags = () ;
+	foreach my $t (@relationTags) {
+		my $temp = $t->[1] ;
+		$temp =~ s/\_/ /g ;
+		$temp = convertHTML ($temp) ; 
+		$tags{ $t->[0] } = $temp ; 
+	}
+	print $texFile "\\begin{tabular}{|p{4cm}|p{10cm}|}\n" ;
+	print $texFile "\\hline\n" ;
+	print $texFile "Key & Value \\\\ \n" ;
+	print $texFile "\\hline\n" ;
+	foreach my $t (sort keys %tags) {
+		print $texFile "$t & $tags{$t} \\\\ \n" ;
+		print $texFile "\\hline\n" ;
+	}
+	print $texFile "\\end{tabular}\n" ;
+	
 	print $texFile "\\section*{$heading{$languageOpt}}\n" ;
 	print $texFile "$disclaimer{$languageOpt}\n" ;
 	
@@ -1373,6 +1409,9 @@ sub getProgramOptions {
 					"lesssteps=i"	=> \$lessStepsOpt,
 					"poi=i"		=> \$poiOpt,
 					"scale=i"	=> \$scale,
+					"stepsize=i"		=> \$stepSizeOpt,
+					"stepcolor=s"		=> \$stepColorOpt,
+					"stepfontsize=i"	=> \$stepFontSizeOpt,
 					"pnsizeoverview=i"	=> \$pnSizeOverview,
 					"pnsizedetail=i"	=> \$pnSizeDetail,
 					"landscape"	=> \$landscapeOpt,
@@ -1428,6 +1467,9 @@ sub usage {
 	print "-poi=<integer> (add poi directory to description, specify column number like 1,2,3)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
 	print "-lesssteps=INTEGER (reduce number of steps in description, step only if direction change > integer degrees)\n" ;
+	print "-stepsize=INTEGER (size of step disc in map; 0 will suppress discs and labels)\n" ;
+	print "-stepcolor=TEXT (color of step disc in map)\n" ;
+	print "-stepfontsize=INTEGER (size of label for step disc in map)\n" ;
 	print "\n" ;
 
 	print "-pagesize=A4|A5\n" ;

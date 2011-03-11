@@ -1,0 +1,893 @@
+﻿<administrative-levels>
+    <country name="Poland">
+        <level1>Wojewodztwo</level1>
+        <level2>Powiat</level2>
+        <level3>Gmina</level3>
+        <level4>Miasto</level4>
+        <level5>Dzielnica</level5>
+    </country>
+    <country name="Abkhazia">
+        <level1>raion</level1>
+        <level2>town</level2>
+        <level3>settlement</level3>
+    </country>
+    <country name="Afghanistan">
+        <level1>Welayat</level1>
+        <level2>District</level2>
+        <level3>Township</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Albania">
+        <level1>Qark</level1>
+        <level2>Rreth</level2>
+        <level3>Komune</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Algeria">
+        <level1>Wilaya</level1>
+        <level2>Daïra</level2>
+        <level3>Baladiyah</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Andorra">
+        <level1>Parròquia</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Angola">
+        <level1>Provincia</level1>
+        <level2>Municipio</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Armenia">
+        <level1>Marz</level1>
+        <level2>Hamayank</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Australia">
+        <level1>State</level1>
+        <level2>Local Government Area</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Austria">
+        <level1>Bundesland</level1>
+        <level2>Bezirk</level2>
+        <level3>Gemeinde</level3>
+        <level4>Ort</level4>
+        <level5>Ortsteil</level5>
+        <level6>Ortsteil-Abschnitt</level6>
+    </country>
+    <country name="Azerbaijan">
+        <level1>Rayon</level1>
+        <level2>seher</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Bahamas">
+        <level1>Island</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Bahrain">
+        <level1>Municipality</level1>
+        <level2>Area/Section</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Bangladesh">
+        <level1>Bighag</level1>
+        <level2>Zila</level2>
+        <level3>Upazila</level3>
+    </country>
+    <country name="Barbados">
+        <level1>Parish</level1>
+    </country>
+    <country name="Belarus">
+        <level1>Voblast</level1>
+        <level2>Rayon</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Belgium">
+        <level1>Gewest</level1>
+        <level2>Provincie</level2>
+        <level3>Gemeente</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Belize">
+        <level1>District</level1>
+        <level2>Constituency</level2>
+    </country>
+    <country name="Benin">
+        <level1>Department</level1>
+        <level2>Commune</level2>
+    </country>
+    <country name="Bermuda">
+        <level1>Parish</level1>
+        <level2>Municipality</level2>
+    </country>
+    <country name="Bhutan">
+        <level1>Dzongdey</level1>
+        <level2>Dzonghag</level2>
+        <level3>Gewog</level3>
+    </country>
+    <country name="Bolivia">
+        <level1>Department</level1>
+        <level2>Provincia</level2>
+        <level3>Municipio</level3>
+        <level4>Canton</level4>
+    </country>
+    <country name="Bosnia/Herzegovina">
+        <level1>Region</level1>
+        <level2>Kanton</level2>
+        <level3>Opstine</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Botswana">
+        <level1>Region</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Brazil">
+        <level1>Região</level1>
+        <level2>Estado</level2>
+        <level3>Munícipio</level3>
+    </country>
+    <country name="Brunei">
+        <level1>Daerah</level1>
+        <level2>Mukim</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Bulgaria">
+        <level1>Oblast</level1>
+        <level2>Obshtina</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Burkina Faso">
+        <level1>Region</level1>
+        <level2>Province</level2>
+        <level3>Department</level3>
+    </country>
+    <country name="Cameroon">
+        <level1>Region</level1>
+        <level2>Department</level2>
+        <level3>Arrondissement</level3>
+        <level4>District</level4>
+    </country>
+    <country name="Cape Verde">
+        <level1>Municipality</level1>
+        <level2>Parish</level2>
+    </country>
+    <country name="Canada">
+        <level1>Province</level1>
+        <level2>Country/District/Region</level2>
+        <level3>Municipality</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Chile">
+        <level1>Región</level1>
+        <level2>Provincia</level2>
+        <level3>Comuna</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="China">
+        <level1>Province/Municipality</level1>
+        <level2>Prefecture/City</level2>
+        <level3>County/District</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Colombia">
+        <level1>Departments/Capital District</level1>
+        <level2>Municipality</level2>
+        <level3>Corregimiento</level3>
+    </country>
+    <country name="Costa Rica">
+        <level1>Province</level1>
+        <level2>Canton</level2>
+        <level3>District</level3>
+    </country>
+    <country name="Côte d'Ivoire">
+        <level1>Region</level1>
+        <level2>Departement</level2>
+    </country>
+    <country name="Croatia">
+        <level1>Zupanije</level1>
+        <level2>Grad</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Cuba">
+        <level1>Province</level1>
+        <level2>Municipality</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Cyprus">
+        <level1>District</level1>
+        <level2>Municipality</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Czech Republic">
+        <level1>Kraj</level1>
+        <level2>Okres</level2>
+        <level3>Obec</level3>
+    </country>
+    <country name="Denmark">
+        <level1>Region</level1>
+        <level2>Kommune</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Dominica">
+        <level1>Parish</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Dominican Republic">
+        <level1>Province</level1>
+        <level2>District</level2>
+        <level3>Municipio</level3>
+    </country>
+    <country name="East Timor">
+        <level1>Districts</level1>
+        <level2>Subdistrics</level2>
+        <level3>Sucos</level3>
+    </country>
+    <country name="Ecuador">
+        <level1>Province</level1>
+        <level2>Canton</level2>
+        <level3>Parish</level3>
+    </country>
+    <country name="Egypt">
+        <level1>Mahafaza</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="England">
+        <level1>County</level1>
+        <level2>Township</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Estonia">
+        <level1>Makoond</level1>
+        <level2>Omavalitsus</level2>
+        <level3>District</level3>
+    </country>
+    <country name="Ethopia">
+        <level1>County</level1>
+        <level2>Zones</level2>
+        <level3>Woredas</level3>
+        <level4>Kebele</level4>
+    </country>
+    <country name="Faroe Islands">
+        <level1>Municipality</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Fijj">
+        <level1>Division</level1>
+        <level2>Province</level2>
+    </country>
+    <country name="Finland">
+        <level1>Lääni</level1>
+        <level2>Maakunta</level2>
+        <level3>Kunta</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="French Guiana">
+        <level1>Arrondissement</level1>
+        <level2>Canton</level2>
+        <level3>Commune</level3>
+    </country>
+    <country name="France">
+        <level1>Région</level1>
+        <level2>Département</level2>
+        <level3>Commune</level3>
+    </country>
+    <country name="Gabon">
+        <level1>Arrondissement</level1>
+        <level2>Canton</level2>
+        <level3>Commune</level3>
+    </country>
+    <country name="Germany">
+        <level1>Bundesland</level1>
+        <level2>Kreis</level2>
+        <level3>Gemeinde</level3>
+        <level4>Stadt</level4>
+        <level5>Stadtteil</level5>
+        <level6>Stadteil Abschnitt</level6>
+    </country>
+    <country name="Ghana">
+        <level1>Region</level1>
+        <level2>District</level2>
+    </country>
+    <country name="Gibraltar">
+        <level1>City</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Greece">
+        <level1>Periferia</level1>
+        <level2>Nomi</level2>
+        <level3>Dimotika</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Guadeloupe-France">
+        <level1>Région</level1>
+        <level2>Département</level2>
+        <level3>Commune</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Guatemala">
+        <level1>Départemento</level1>
+        <level2>Municipio</level2>
+    </country>
+    <country name="Guinea Equatorial">
+        <level1>Province</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Guyane-France">
+        <level1>Région</level1>
+        <level2>Département</level2>
+        <level3>Commune</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Haiti">
+        <level1>Departments</level1>
+        <level2>arrondissements</level2>
+        <level3>communes</level3>
+    </country>
+    <country name="Hondurras">
+        <level1>Departments</level1>
+        <level2>municipalities</level2>
+        <level3>aldeas</level3>
+    </country>
+    <country name="Hong Kong-China">
+        <level1>Province</level1>
+        <level2>Municipality</level2>
+        <level3>District</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Hungary">
+        <level1>Megye</level1>
+        <level2>Település</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Iceland">
+        <level1>Region</level1>
+        <level2>Constituencies</level2>
+        <level3>Counties</level3>
+        <level4>Municipality</level4>
+    </country>
+    <country name="India">
+        <level1>State/Territory</level1>
+        <level2>District</level2>
+        <level3>Subistrict</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Indonesia">
+        <level1>Provinsi</level1>
+        <level2>Kabupaten</level2>
+        <level3>Kecamatan</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Iran">
+        <level1>ostan</level1>
+        <level2>sharestan</level2>
+        <level3>bakhsh</level3>
+    </country>
+    <country name="Iraq">
+        <level1>muhafadhah</level1>
+        <level2>qadhas</level2>
+    </country>
+    <country name="Ireland">
+        <level1>PostCounty</level1>
+        <level2>Post Town</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Israel">
+        <level1>mechoz</level1>
+        <level2>nafa</level2>
+        <level3>Sub-district</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Italy">
+        <level1>Regione</level1>
+        <level2>Provincia</level2>
+        <level3>Comune</level3>
+    </country>
+    <country name="Jamaica">
+        <level1>Parish</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Japan">
+        <level1>Pefecture</level1>
+        <level2>City</level2>
+        <level3>Town</level3>
+        <level4>Village</level4>
+    </country>
+    <country name="Jordan">
+        <level1>Governorate</level1>
+        <level2>Nahia</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Kazakhstan">
+        <level1>oblıstar</level1>
+        <level2>awandar</level2>
+    </country>
+    <country name="Kenya">
+        <level1>mkoa</level1>
+        <level2>wilaya</level2>
+        <level3>taarafa</level3>
+        <level4>mtaa mdogo</level4>
+    </country>
+    <country name="Kiribati">
+        <level1>islands</level1>
+    </country>
+    <country name="Korea North">
+        <level1>Do/Chikhalsi</level1>
+        <level2>Kun</level2>
+        <level3>Up</level3>
+    </country>
+    <country name="Korea South">
+        <level1>Do/gwangyeoksi/teukbyeolsi</level1>
+        <level2>Si/Gun</level2>
+        <level3>Gu/Eup</level3>
+    </country>
+    <country name="Kuwait">
+        <level1>Governate</level1>
+        <level2>Neighborhood</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Kyrgyzstan">
+        <level1>oblast</level1>
+        <level2>raion</level2>
+        <level3>aiyl okmotus</level3>
+    </country>
+    <country name="Laos">
+        <level1>Na Kone Luang Vientiane</level1>
+        <level2>qwang</level2>
+        <level3>muang</level3>
+        <level4>baan</level4>
+    </country>
+    <country name="Latvia">
+        <level1>Rajons</level1>
+        <level2>Novads</level2>
+        <level3>Pagasts</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Lebanon">
+        <level1>Mohafazah</level1>
+        <level2>Qadaa</level2>
+        <level3>Municipality</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Lesotho">
+        <level1>District</level1>
+        <level2>Council</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Liechtenstein">
+        <level1>Wahlkreis</level1>
+        <level2>Gemeinde</level2>
+        <level3>Ortschaft</level3>
+    </country>
+    <country name="Lithuania">
+        <level1>Apskritis</level1>
+        <level2>Savivaldybe</level2>
+        <level3>Seniunija</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Luxembourg">
+        <level1>District</level1>
+        <level2>Canton</level2>
+        <level3>Commune</level3>
+    </country>
+    <country name="Macedonia">
+        <level1>Opcina</level1>
+        <level2>Opstina</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Madagascar">
+        <level1>faritany mizakatena</level1>
+        <level2>faritra</level2>
+    </country>
+    <country name="Macau China">
+        <level1>Provincia</level1>
+        <level2>Distrito</level2>
+        <level3>Concelhos</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Malawie">
+        <level1>Region</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Malaysia">
+        <level1>State</level1>
+        <level2>District</level2>
+        <level3>Mukim</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Maldives">
+        <level1>atoll</level1>
+    </country>
+    <country name="Mali">
+        <level1>Region</level1>
+        <level2>cercles</level2>
+        <level3>arrondissements</level3>
+    </country>
+    <country name="Mauritania">
+        <level1>wilaya</level1>
+        <level2>Nouakchott</level2>
+        <level3>moughataa</level3>
+    </country>
+    <country name="Mauritius">
+        <level1>district</level1>
+        <level2>depencies</level2>
+    </country>
+    <country name="Mexico">
+        <level1>Estado</level1>
+        <level2>Municipios</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Mongolia">
+        <level1>Aimags</level1>
+        <level2>Khot</level2>
+        <level3>Sums</level3>
+    </country>
+    <country name="Monaco">
+        <level1>Quartier</level1>
+        <level2>Settlement</level2>
+    </country>
+    <country name="Montenegro">
+        <level1>Region</level1>
+        <level2>Okrug</level2>
+        <level3>Opstine</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Morroco">
+        <level1>Region</level1>
+        <level2>Province</level2>
+        <level3>Commune</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Mozambique">
+        <level1>Provincia</level1>
+        <level2>Distrito</level2>
+        <level3>Posto</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Namibia">
+        <level1>District</level1>
+        <level2>Constituency</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Nauru">
+        <level1>island</level1>
+    </country>
+    <country name="Nepal">
+        <level1>region</level1>
+        <level2>zone</level2>
+        <level3>district</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Netherlands,the">
+        <level1>provincie</level1>
+        <level2>gemeente</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="New Zealand">
+        <level1>Region</level1>
+        <level2>District</level2>
+        <level3>City/Town</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Nicaragua">
+        <level1>departmento</level1>
+        <level2>municipio</level2>
+    </country>
+    <country name="Niger">
+        <level1>Region</level1>
+        <level2>Department</level2>
+        <level3>Commune</level3>
+    </country>
+    <country name="Nigeria">
+        <level1>Federal Capital Territory</level1>
+        <level2>State</level2>
+        <level3>Local Goverment Area</level3>
+    </country>
+    <country name="Northern Ireland">
+        <level1>Countie</level1>
+        <level2>Posttown</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Norway">
+        <level1>Fylke</level1>
+        <level2>Kommune</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Oman">
+        <level1>Governate</level1>
+        <level2>Wilayats</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Pakistan">
+        <level1>Province/Federal Territory/Autonomous State/Territory
+        </level1>
+        <level2>Zillah/Takula</level2>
+        <level3>Tehsil</level3>
+    </country>
+    <country name="Palau">
+        <level1>state</level1>
+    </country>
+    <country name="Palestine">
+        <level1>District</level1>
+        <level2>Commune</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Panama">
+        <level1>Provincia/Comarca indigena</level1>
+        <level2>Corregimiento</level2>
+    </country>
+    <country name="Papua New Guinea">
+        <level1>Region</level1>
+        <level2>Province</level2>
+        <level3>District</level3>
+    </country>
+    <country name="Paraguay">
+        <level1>departmiento</level1>
+        <level2>distritio</level2>
+        <level3>municipio</level3>
+    </country>
+    <country name="Portugal">
+        <level1>Distrito</level1>
+        <level2>concelho</level2>
+        <level3>freguesia</level3>
+    </country>
+    <country name="Romania">
+        <level1>judet/Bucuresti</level1>
+        <level2>comuna</level2>
+    </country>
+    <country name="Russia">
+        <level1>Okrug</level1>
+        <level2>Sub'ekt</level2>
+        <level3>Rayon</level3>
+    </country>
+    <country name="Rwanda">
+        <level1>intara</level1>
+        <level2>akarere</level2>
+    </country>
+    <country name="Federation of Saint Kitts and Nevis ">
+        <level1>parish</level1>
+    </country>
+    <country name="Saint Luca">
+        <level1>Quarter</level1>
+    </country>
+    <country name="Saint Vincent and the Grenadines ">
+        <level1>parish</level1>
+    </country>
+    <country name="Samoa">
+        <level1>itumalo</level1>
+    </country>
+    <country name="San Marino">
+        <level1>castelli</level1>
+    </country>
+    <country name="São Tomé and Príncipe ">
+        <level1>province</level1>
+        <level2>district</level2>
+    </country>
+    <country name="Saudi Arabia">
+        <level1>mintaqah</level1>
+        <level2>governorates</level2>
+        <level3>settlement</level3>
+    </country>
+    <country name="Scotland">
+        <level1>county</level1>
+        <level2>township</level2>
+        <level3>settlement</level3>
+    </country>
+    <country name="Senegal">
+        <level1>Region</level1>
+        <level2>Department</level2>
+        <level3>Arrondissement</level3>
+    </country>
+    <country name="Serbia">
+        <level1>Okrug/Kosovo</level1>
+        <level2>grad</level2>
+        <level3>opstine</level3>
+    </country>
+    <country name="Seychelles">
+        <level1>district</level1>
+    </country>
+    <country name="Sierra Leone">
+        <level1>Province</level1>
+        <level2>District</level2>
+        <level3>Chiefdom</level3>
+    </country>
+    <country name="Singapore">
+        <level1>County</level1>
+        <level2>City</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Slovak Republic">
+        <level1>Kray</level1>
+        <level2>Okres</level2>
+        <level3>Obec</level3>
+    </country>
+    <country name="Slovenia">
+        <level1>Upravna Enota</level1>
+        <level2>Obcina</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Solomon Islands">
+        <level1>district</level1>
+    </country>
+    <country name="Somalia">
+        <level1>gobol</level1>
+        <level2>district</level2>
+    </country>
+    <country name="South Africa">
+        <level1>Province</level1>
+        <level2>District Municipality</level2>
+        <level3>Local Municipality</level3>
+        <level4>Settlement</level4>
+    </country>
+    <country name="Spain">
+        <level1>Autonomia</level1>
+        <level2>Provincia</level2>
+        <level3>Municipio</level3>
+        <level4>Barrio</level4>
+    </country>
+    <country name="Sri Lanka">
+        <level1>Province</level1>
+        <level2>District</level2>
+    </country>
+    <country name="Sudan">
+        <level1>wilayah</level1>
+        <level2>District</level2>
+        <level3>county</level3>
+    </country>
+    <country name="Suriname">
+        <level1>District</level1>
+        <level2>Resort</level2>
+    </country>
+    <country name="Swaziland">
+        <level1>District</level1>
+        <level2>tinkhundla</level2>
+    </country>
+    <country name="Sweden">
+        <level1>län</level1>
+        <level2>Kommun</level2>
+        <level3>församlingar</level3>
+    </country>
+    <country name="Switzerland">
+        <level1>Kanton</level1>
+        <level2>Bezirk</level2>
+        <level3>Gemeinde</level3>
+        <level4>Stadtteil</level4>
+    </country>
+    <country name="Syria">
+        <level1>muhafazat</level1>
+        <level2>mintaqah</level2>
+        <level3>nahiya</level3>
+    </country>
+    <country name="Tajikistan">
+        <level1>viloyat</level1>
+        <level2>raion</level2>
+        <level3>jamoats</level3>
+        <level4>qyshloqs</level4>
+    </country>
+    <country name="Tanzania">
+        <level1>mkoa</level1>
+        <level2>wilaya</level2>
+        <level3>county</level3>
+    </country>
+    <country name="Taiwan">
+        <level1>County</level1>
+        <level2>City</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Thailand">
+        <level1>changwat</level1>
+        <level2>tambon</level2>
+        <level3>amphoe</level3>
+    </country>
+    <country name="Togo">
+        <level1>province</level1>
+        <level2>prefectur</level2>
+        <level3>commune</level3>
+    </country>
+    <country name="Tonga">
+        <level1>Division</level1>
+        <level2>island</level2>
+    </country>
+    <country name="Trinidad and Tobago">
+        <level1>Regional Cooperation</level1>
+        <level2>Municipality</level2>
+    </country>
+    <country name="Tunesia">
+        <level1>governorate</level1>
+        <level2>mutamadiyat</level2>
+        <level3>shaykhats</level3>
+        <level4>imadats</level4>
+    </country>
+    <country name="Turkey">
+        <level1>böge</level1>
+        <level2>il</level2>
+        <level3>ilce</level3>
+        <level4>mahalle</level4>
+    </country>
+    <country name="Turkmenistan">
+        <level1>welayat</level1>
+        <level2>etrap</level2>
+        <level3>county</level3>
+        <level4>city</level4>
+    </country>
+    <country name="Tuvalu">
+        <level1>District</level1>
+        <level2>Island</level2>
+    </country>
+    <country name="Uganda">
+        <level1>district</level1>
+        <level2>county</level2>
+        <level3>city</level3>
+        <level4>town</level4>
+    </country>
+    <country name="Ukraine">
+        <level1>oblast</level1>
+        <level2>avtonomna respublika</level2>
+        <level3>raion</level3>
+        <level4>settlement</level4>
+    </country>
+    <country name="UAE">
+        <level1>Emirate</level1>
+        <level2>City</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="USA">
+        <level1>state</level1>
+        <level2>county</level2>
+        <level3>city/township</level3>
+    </country>
+    <country name="Urugay">
+        <level1>Departamento</level1>
+        <level2>Municipio</level2>
+    </country>
+    <country name="Uzbekistan">
+        <level1>viloyat</level1>
+        <level2>resubliblika</level2>
+        <level3>shahar</level3>
+        <level4>tuman</level4>
+    </country>
+    <country name="Vanatu">
+        <level1>province</level1>
+    </country>
+    <country name="Vatikan City">
+        <level1>Vatikan City</level1>
+    </country>
+    <country name="Venezuela">
+        <level1>estado</level1>
+        <level2>distrito capital</level2>
+        <level3>municipio</level3>
+        <level4>parroquia</level4>
+    </country>
+    <country name="Vietnam">
+        <level1>tinh</level1>
+        <level2>thành phố trực thuộc trung ương</level2>
+        <level3>thị xã/huyện</level3>
+        <level4>thị trấn/xã</level4>
+        <level5>quận</level5>
+    </country>
+    <country name="Wales">
+        <level1>County</level1>
+        <level2>Township</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Yemen">
+        <level1>muhafazah</level1>
+        <level2>muderiah</level2>
+        <level3>settlement</level3>
+    </country>
+    <country name="Zambia">
+        <level1>Province</level1>
+        <level2>District</level2>
+        <level3>Settlement</level3>
+    </country>
+    <country name="Zimbabwe">
+        <level1>Province</level1>
+        <level2>District</level2>
+        <level3>Municipality</level3>
+    </country>
+</administrative-levels>

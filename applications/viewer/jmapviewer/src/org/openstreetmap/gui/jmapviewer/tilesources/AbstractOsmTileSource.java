@@ -24,6 +24,9 @@ public abstract class AbstractOsmTileSource implements TileSource {
     public AbstractOsmTileSource(String name, String base_url, String attr_img_url) {
         this.name = name;
         this.baseUrl = base_url;
+        if(baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0,baseUrl.length()-1);
+        }
         attrImgUrl = attr_img_url;
     }
 

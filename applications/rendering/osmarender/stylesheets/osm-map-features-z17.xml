@@ -2150,6 +2150,9 @@
 							</else>
 						</else>
 					</else>
+					<rule e="way" k="electrified" v="contact_line|yes|rail|contact_rail|line">
+						<line class="electrified" smart-linecap="no" />
+					</rule>
 				</rule>
 
 				<rule e="way" k="aeroway" v="runway">
@@ -4906,6 +4909,8 @@
 			stroke: #b0b0b0;
 			stroke-width: 1.5px;
 			}
+
+			.electrified                       { stroke-width: 0.033px; stroke: #ff0000; stroke-dasharray: 0.1, 0.4; }
 
 			.railway-bridge-casing             { stroke-width: 1.5px; }
 			.railway-bridge-core               { stroke-width: 1.0px; }

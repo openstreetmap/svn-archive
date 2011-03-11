@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="Notepad2">
+	<!--
+		changesets
+			1: created node 1v1, 2v1, 3v1, 4v1 and way 100v1 (1v1, 2v1, 3v1)
+			2: created way 200v1 (2v1, 4v1)
+			3: moved node 2v2
+			4: moved node 2v3
+			   minor version between 100v1 and 100v2: (1v1, 2v2, 3v1)
+			5: change way 100v2 (1v1, 2v3 3v1)
+			6: moved node 2v4
+			   minor version between way 100v2 and end: (1v1, 2v4, 3v1)
+			   minor versions of way 200v1 and end: (2v2, 4v1), (2v3, 4v1), (2v4, 4v1)
+	-->
+	
+	
+	<!-- changeset 1, created node 1, 2, 3, 4 and way 100 -->
+	<node id="1" lat="10" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	<node id="2" lat="15" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	<node id="3" lat="20" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	<node id="4" lat="25" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	
+	<way id="100" visible="true" version="1" changeset="1" user="aaa" uid="1" timestamp="2009-01-01T00:00:00Z">
+		<nd ref="1" />
+		<nd ref="2" />
+		<nd ref="3" />
+	</way>
+	
+	
+	<!-- changeset 2, created way 200 -->
+	<way id="200" visible="true" version="1" changeset="2" user="aaa" uid="1" timestamp="2009-01-01T01:00:00Z">
+		<nd ref="2" />
+		<nd ref="4" />
+	</way>
+	
+	
+	<!-- changeset 3, moved node 2 -->
+	<node id="2" lat="15" lon="5" version="2" changeset="3" user="aaa" uid="1" visible="true" timestamp="2009-01-01T02:00:00Z" />
+	
+	
+	<!-- changeset 4, moved node 2 -->
+	<node id="2" lat="20" lon="5" version="3" changeset="4" user="aaa" uid="1" visible="true" timestamp="2009-01-01T03:00:00Z" />
+	
+	
+	<!-- changeset 5, change way 100 -->
+	<way id="100" visible="true" version="2" changeset="5" user="aaa" uid="1" timestamp="2009-01-01T04:00:00Z">
+		<nd ref="1" />
+		<nd ref="2" />
+		<nd ref="3" />
+		<tag k="foo" v="bar" />
+	</way>
+	
+	
+	<!-- changeset 6, moved node 2 -->
+	<node id="2" lat="20" lon="0" version="4" changeset="6" user="aaa" uid="1" visible="true" timestamp="2009-01-01T05:00:00Z" />
+</osm>

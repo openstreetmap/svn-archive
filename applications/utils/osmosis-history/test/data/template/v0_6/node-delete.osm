@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="Notepad2">
+	<!--
+		changesets
+			1: created node 1, 2, 3						2009-01-01T00:00:00Z
+			2: created way 100							2009-01-01T01:00:00Z
+			3: delete node 2, thus modifying way 100	2009-01-01T02:00:00Z
+	-->
+	<node id="1" lat="10" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	<node id="2" lat="15" lon="5" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	<node id="3" lat="20" lon="10" version="1" changeset="1" user="aaa" uid="1" visible="true" timestamp="2009-01-01T00:00:00Z" />
+	
+	<node id="2" lat="15" lon="5" version="2" changeset="3" user="aaa" uid="1" visible="false" timestamp="2009-01-01T02:00:00Z" />
+	
+	<way id="100" visible="true" timestamp="2009-01-01T01:00:00Z" version="1" changeset="2" user="aaa" uid="1">
+		<nd ref="1" />
+		<nd ref="2" />
+		<nd ref="3" />
+	</way>
+	
+	<way id="100" visible="true" timestamp="2009-01-01T02:00:00Z" version="2" changeset="3" user="aaa" uid="1">
+		<nd ref="1" />
+		<nd ref="3" />
+	</way>
+</osm>

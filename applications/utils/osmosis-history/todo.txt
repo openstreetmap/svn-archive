@@ -1,0 +1,13 @@
+[x] History Loading
+[x] Way-Node-Version Builder
+[x] Way Geometry Builder
+[x] Test Sort Task
+[ ] Steeam Dump Loader
+[ ] Minor Way Version Builder
+[ ] Minor Way Version Geometry Builder
+[ ] Database Backed Node Store
+[ ] Partitial Import
+[ ] Changefile Import
+[ ] Database Node Store
+
+[ ] Relation support

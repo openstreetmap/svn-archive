@@ -3,6 +3,7 @@
 
 
 # todo
+# - translate keys (relation data)
 #
 # LATER
 # - negative ids for steps
@@ -13,8 +14,9 @@
 # 0.91 autorotate corrected
 # 0.92 bigger overview and detail maps; added names to pois in description; less steps
 # 0.93 variable discs, taginfo -> pdf
-# 0.94 role selection
-#
+# 0.94 role selection; title and outName defaults
+# 0.95 sanitize
+# 
 
 
 use strict ;
@@ -23,7 +25,7 @@ use Getopt::Long ;
 use OSM::osm ;
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.94" ;
+my $version = "0.95" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -73,7 +75,7 @@ my $descName = "" ;
 my $stepDescName = "" ;
 my $autorotateOpt = 0 ;
 my $lessStepsOpt = 0 ;
-my $stepSizeOpt = 18 ;
+my $stepSizeOpt = 15 ;
 my $stepColorOpt = "black" ;
 my $stepFontSizeOpt = 35 ;
 
@@ -151,6 +153,11 @@ $translations{"DE"}{"castle"} = "Burg" ;
 $translations{"DE"}{"village"} = "Dorf" ;
 $translations{"DE"}{"hostel"} = "Herberge" ;
 # $translations{"DE"}{""} = "" ;
+
+my %validLatex = () ;
+my %replaceLatex = () ;
+
+initializeLatex() ;
 
 getProgramOptions () ;
 
@@ -455,6 +462,7 @@ sub createTemp1 {
 						my $info ;
 						if ($languageOpt eq "EN") { $info = $p->[3] ; }
 						if ($languageOpt eq "DE") { $info = $p->[4] ; }
+						$name = sanitizeLatexString ($name) ;
 						push @poiList, [ $info, $name, $$propRef{"id"}, $p->[2] ] ;
 						$lon{ $$propRef{"id"} } = $$propRef{"lon"} ;
 						$lat{ $$propRef{"id"} } = $$propRef{"lat"} ;
@@ -679,7 +687,7 @@ sub buildCompleteWay {
 	for (my $i = 0;  $i<$#nodes; $i++) {
 		$nodeInfo{$i}{"direction"} = direction ($nodes[$i], $nodes[$i+1]) ;		
 		$nodeInfo{$i}{"angle"} = angle ($lon{$nodes[$i]}, $lat{$nodes[$i]}, $lon{$nodes[$i+1]}, $lat{$nodes[$i+1]}) ;
-		$nodeInfo{$i}{"name"} = $nodeName{ $nodes[$i] } ;		
+		$nodeInfo{$i}{"name"} = sanitizeLatexString ( $nodeName{ $nodes[$i] } ) ;		
 		$nodeInfo{$i}{"ele"} = $nodeElevation{ $nodes[$i] } ;		
 		$nodeInfo{$i}{"dirs"} = $nodeDirCount{ $nodes[$i] } ;		
 	}
@@ -1322,6 +1330,7 @@ END2
 	print $texFile "\\thispagestyle{empty}\n" ;
 	print $texFile "\\vspace*{8cm}\n" ;
 	print $texFile "\\Huge\n" ;
+	$title = sanitizeLatexString ($title) ;
 	print $texFile "$title \\par\n" ;
 	# print $texFile "\\newline\n" ;
 	print $texFile "\\vspace*{2cm}\n" ;
@@ -1352,7 +1361,7 @@ END2
 	my %tags = () ;
 	foreach my $t (@relationTags) {
 		my $temp = $t->[1] ;
-		$temp =~ s/\_/ /g ;
+		$temp = sanitizeLatexString ($temp) ;
 		$temp = convertHTML ($temp) ; 
 		$tags{ $t->[0] } = $temp ; 
 	}
@@ -1620,6 +1629,7 @@ sub createDirectory {
 					$sqText .= $sq ;
 				}
 			}
+			$poi = sanitizeLatexString ($poi) ;
 			print $texFile $poi ;
 			print $texFile " \\dotfill " ;
 			print $texFile $sqText, "\\\\\n" ;
@@ -1700,4 +1710,65 @@ sub max {
 	else {
 		return $b ;
 	}
+}
+
+sub initializeLatex {
+
+	$replaceLatex{'_'} = '\\_' ;	
+	$replaceLatex{'&'} = '\\&' ;	
+	$replaceLatex{'$'} = '\\$' ;	
+	$replaceLatex{'%'} = '\\%' ;	
+	$replaceLatex{'{'} = '\\{' ;	
+	$replaceLatex{'}'} = '\\}' ;	
+	$replaceLatex{'#'} = '\\#' ;	
+
+	foreach my $c (0..9) {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ("a".."z") {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ("A".."Z") {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ( qw (! + * - : . ; § / = ?) ) {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ( ' ', '"', "\'", '(', ')', '[', ']', ',' ) {
+		$validLatex{$c} = 1 ;
+	}
+}
+
+sub sanitizeLatexString {
+	my $text = shift ;
+
+	my $out = "" ;
+	my @chars ;
+	@chars = split //, $text ;
+
+	for (my $i=0; $i<=$#chars; $i++) {
+		my $c = $chars[$i] ;
+		# print "$c ", ord ($c), "\n" ;
+		if (defined $validLatex{$c}) {
+			$out .= $c ;
+		}
+		elsif (defined $replaceLatex{$c}) {
+			$out .= $replaceLatex{$c} ;
+		}
+		else {
+			if ( ($i < $#chars) and ($c eq chr (195)) ) {
+				my $found = 0 ;
+				foreach my $c2 (164, 182, 188, 132, 150, 156, 159) {
+					if ($chars[$i+1] eq chr($c2)) {
+						$found = 1 ;
+					}
+				}
+				if ($found) {
+					$out .= $c . $chars[$i+1] ;
+					$i++ ;
+				}
+			}
+		}
+	} 
+	return $out ;
 }

@@ -1,5 +1,7 @@
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
+import java.util.Random;
+
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 
 public class ScanexTileSource extends AbstractOsmTileSource {
@@ -80,29 +82,50 @@ public class ScanexTileSource extends AbstractOsmTileSource {
     }
 
     /*
-     * DIRTY HACK ALERT!
-     *
-     * Until I can't solve the equation, use dihotomy :(
+     * To solve inverse formula latitude = f(y) we use
+     * Newton's method. We cache previous calculated latitude,
+     * because new one is usually close to the old one. In case
+     * if solution gets out of bounds, we reset to a new random
+     * value.
      */
+    private double cached_lat = 0;
+
     @Override
     public double tileYToLat(int y, int zoom) {
-        double lat = 0;
-        double minl = OsmMercator.MIN_LAT;
-        double maxl = OsmMercator.MAX_LAT;
-        double c;
+	Random r= new Random();
+        double lat0, lat;
 
-        for (int i=0; i < 60; i++) {
-            c = latToTileY(lat, zoom);
-            if (c < y) {
-                maxl = lat;
-                lat -= (lat - minl)/2;
-            } else {
-                minl = lat;
-                lat += (maxl - lat)/2;
+	lat = cached_lat;
+	do {
+	    lat0 = lat;
+            lat = lat - Math.toDegrees(NextTerm(Math.toRadians(lat), y, zoom));
+            if (lat > OsmMercator.MAX_LAT || lat < OsmMercator.MIN_LAT) {
+                lat = OsmMercator.MIN_LAT +
+                    (double )r.nextInt((int )(OsmMercator.MAX_LAT -
+                    OsmMercator.MIN_LAT));
             }
-        }
+	} while ((Math.abs(lat0 - lat) > 0.000001));
 
-        return lat;
+	cached_lat = lat;
+
+        return (lat);
+    }
+
+    /* Next term in Newton's polynomial */
+    private double NextTerm(double lat, double y, int zoom) {
+        double sinl=Math.sin(lat);
+        double cosl=Math.cos(lat);
+	double ec, f, df;
+
+        zoom = (int )Math.pow(2.0, zoom - 1);
+	ec = Math.exp((1 - y/zoom)*Math.PI);
+
+	f = (Math.tan(Math.PI/4+lat/2) -
+	    ec * Math.pow(Math.tan(Math.PI/4 + Math.asin(E * sinl)/2), E));
+        df = 1/(1 - sinl) - ec * E * cosl/((1 - E * sinl) *
+            (Math.sqrt (1 - E * E * sinl * sinl)));
+
+        return (f/df);
     }
 
     @Override

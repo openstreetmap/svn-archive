@@ -30,7 +30,7 @@
 <project name="reverter" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="fix bug with handling for incomplete relation members" />
+	<property name="commit.message" value="avoid shortcut conflict (see josm bug 6029)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3835" />
 

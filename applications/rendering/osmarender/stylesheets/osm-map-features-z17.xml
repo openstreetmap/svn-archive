@@ -7196,7 +7196,7 @@
 			<svg:path d="M 1,2 L 1,8"/>
 		</svg:marker>
 		<svg:marker fill="none" id="noexit-rail" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="1.5px" stroke-opacity="0.7" viewBox="0 0 10 10">
-			<svg:path d="M 1,2 L 1,8"/>
+			<svg:path d="M 1,3 L 1,7"/>
 		</svg:marker>
 		<svg:marker fill="none" id="canal-lock" markerHeight="2px" markerUnits="userSpaceOnUse" markerWidth="2px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="1px" stroke-opacity="1" viewBox="0 0 10 10">
 			<svg:path d="M 1,0 L -2,5 L 1,10"/>

@@ -4910,7 +4910,7 @@
 			stroke-width: 1.5px;
 			}
 
-			.electrified { stroke-width: 0.033px; stroke: #ff0000; stroke-dasharray: 0.1, 0.4; stroke-linecap: butt; stroke-linejoin: round; fill: none;  }
+			.electrified { stroke-width: 0.067px; stroke: #ff0000; stroke-dasharray: 0.1, 0.4; stroke-linecap: butt; stroke-linejoin: round; fill: none;  }
 
 			.railway-bridge-casing             { stroke-width: 1.5px; }
 			.railway-bridge-core               { stroke-width: 1.0px; }

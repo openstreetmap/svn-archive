@@ -30,51 +30,51 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector;
 
 /**
  * Defines the exception type for the <code>MapdustConnector</code> object.
- * 
+ *
  * @author Bea
- * 
+ *
  */
 public class MapdustConnectorException extends Exception {
-    
+
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = 6222042834700541233L;
+
     /**
      * Builds a <code>MapdustConnectorException</code> object.
      */
     public MapdustConnectorException() {
         super();
     }
-    
+
     /**
      * Builds a <code>MapdustConnectorException</code> object based on the given
      * argument.
-     * 
+     *
      * @param message The message of the exception
      */
     public MapdustConnectorException(String message) {
         super(message);
     }
-    
+
     /**
      * Builds a <code>MapdustConnectorException</code> object based on the given
      * argument.
-     * 
+     *
      * @param cause The cause of the exception
      */
     public MapdustConnectorException(Throwable cause) {
         super(cause);
     }
-    
+
     /**
      * Builds a <code>MapdustConnectorException</code> object based on the given
      * arguments.
-     * 
+     *
      * @param message The message of the exception
      * @param cause The cause of the exception
      */
     public MapdustConnectorException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
 }

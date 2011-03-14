@@ -39,63 +39,65 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustActionPanel;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustBugListPanel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustBugPropertiesPanel;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustPanel;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObserver;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustInitialUpdateObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustInitialUpdateObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustServiceCommand;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 import org.openstreetmap.josm.tools.Shortcut;
 
 
 /**
  * This class is the main graphical user interface class.
- * 
+ *
  * @author Bea
  */
-public class MapdustGUI extends ToggleDialog implements
-        MapdustActionListObserver, MapdustBugDetailsObservable,
-        MapdustInitialUpdateObservable {
-    
+public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
+        MapdustBugDetailsObservable, MapdustUpdateObservable {
+
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = -1194197412364335190L;
+
     /** The list of MapDust bug details observers */
     private final ArrayList<MapdustBugDetailsObserver> bugDetailsObservers =
             new ArrayList<MapdustBugDetailsObserver>();
-    
+
     /** The list of MapDust initial update observers */
-    private final ArrayList<MapdustInitialUpdateObserver> initialUpdateObservers =
-            new ArrayList<MapdustInitialUpdateObserver>();
-    
-    /** The <code>MapdustPanel</code> object */
-    private MapdustPanel panel;
-    
-    /** The <code>MapdustActionPanel</code> object */
-    private MapdustActionPanel queuePanel;
-    
-    /** The <code>JTabbedPanel</code> object */
-    private JTabbedPane tabbedPane;
-    
+    private final ArrayList<MapdustUpdateObserver> initialUpdateObservers =
+            new ArrayList<MapdustUpdateObserver>();
+
     /** The <code>MapdustPlugin</code> plugin */
     private MapdustPlugin mapdustPlugin;
-    
+
     /** The <code>MapdustBugPropertiesPanel</code> */
     private MapdustBugPropertiesPanel detailsPanel;
-    
+
+    /** The <code>MapdustBugListPanel</code> object */
+    private MapdustBugListPanel panel;
+
+    /** The <code>MapdustActionPanel</code> object */
+    private MapdustActionPanel actionPanel;
+
+    /** The <code>JTabbedPanel</code> object */
+    private JTabbedPane tabbedPane;
+
     /** The <code>JPanel</code> */
     private JPanel mainPanel;
-    
+
     /** Specifies if the MapDust data was or not downloaded */
     private boolean downloaded = false;
-    
+
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
-     * 
+     *
      * @param name The name of the GUI
      * @param iconName The name of the icon
      * @param tooltip The tool tip
@@ -108,146 +110,232 @@ public class MapdustGUI extends ToggleDialog implements
         super(tr(name), iconName, tr(tooltip), shortcut, preferredHeight);
         this.mapdustPlugin = mapdustPlugin;
     }
-    
+
     /**
-     * Updates the MapDust GUI with the given list of <code>MapdustBug</code>
-     * objects.
-     * 
-     * @param mapdustBugs The list of <code>MapdustBug</code> objects
-     * @param mapdustPlugin The <code>MapdustPlugin</code> object
+     * Displays the <code>MapdustGUI</code> dialog window in the JOSM editor. If
+     * the MapDust data was not downloaded yet, it will donwload the data and
+     * also update the MapDust plugin with the data. If the MapDust data was
+     * already downloaded, then the <code>MapdustGUI</code> will be displayed.
      */
-    public synchronized void update(List<MapdustBug> mapdustBugs,
-            MapdustPlugin mapdustPlugin) {
-        this.mapdustPlugin = mapdustPlugin;
-        String pluginState = Main.pref.get("mapdust.pluginState");
-        if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
-            /* remove the panels */
-            if (tabbedPane != null) {
-                /* offline to online */
-                remove(mainPanel);
-                queuePanel = null;
-            } else {
-                /* online to online */
-                if (mainPanel != null) {
-                    remove(mainPanel);
-                }
-            }
-            /* add panels with updated data */
-            panel = new MapdustPanel(mapdustBugs, "Bug reports", mapdustPlugin);
-            MapdustBug selectedBug = (mapdustBugs != null && mapdustBugs.size() 
-                    > 0) ? mapdustBugs.get(0) : null;
-            if (detailsPanel == null) {
-                detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
-                panel.addObserver(detailsPanel);
-                addObserver(detailsPanel);
-            }
-            notifyObservers(selectedBug);
-            panel.addObserver(detailsPanel);
-            mainPanel = new JPanel();
-            mainPanel.setAutoscrolls(true);
-            mainPanel.setLayout(new BorderLayout());
-            if (mapdustBugs != null) {
-                mainPanel.add(detailsPanel, BorderLayout.NORTH);
-            }
-            mainPanel.add(panel, BorderLayout.CENTER);
-            add(mainPanel, BorderLayout.CENTER);
-        } else {
-            List<MapdustAction> list = new ArrayList<MapdustAction>();
-            /* remove panels */
-            if (queuePanel == null) {
-                /* from online to offline */
-                remove(mainPanel);
-            } else {
-                list = queuePanel.getActionList();
-                remove(mainPanel);
-            }
-            /* add panels with updated data */
-            tabbedPane = new JTabbedPane();
-            queuePanel = new MapdustActionPanel(list, "Offline Contribution",
-                    mapdustPlugin);
-            panel = new MapdustPanel(mapdustBugs, "Bug reports (offline)",
-                    mapdustPlugin);
-            MapdustBug selectedBug = (mapdustBugs != null && mapdustBugs.size() 
-                    > 0) ? mapdustBugs.get(0) : null;
-            if (detailsPanel == null) {
-                detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
-                panel.addObserver(detailsPanel);
-                addObserver(detailsPanel);
-            }
-            notifyObservers(selectedBug);
-            panel.addObserver(detailsPanel);
-            mainPanel = new JPanel();
-            mainPanel.setAutoscrolls(true);
-            mainPanel.setLayout(new BorderLayout());
-            if (mapdustBugs != null) {
-                mainPanel.add(detailsPanel, BorderLayout.NORTH);
-            }
-            tabbedPane.add(panel, 0);
-            tabbedPane.add(queuePanel);
-            mainPanel.add(tabbedPane, BorderLayout.CENTER);
-            add(mainPanel, BorderLayout.CENTER);
+    @Override
+    public void showDialog() {
+        if (!downloaded) {
+            notifyObservers(null, true);
+            downloaded = true;
         }
+        super.showDialog();
     }
-    
+
     /**
      * Adds the given <code>MapdustAction</code> object to the list of actions.
-     * 
+     *
      * @param action The <code>MapdustAction</code> object
      */
     @Override
     public synchronized void addAction(MapdustAction action) {
         /* add the action */
-        List<MapdustAction> list = queuePanel.getActionList();
+        List<MapdustAction> actionList = actionPanel.getActionList();
+        actionList.add(action);
         List<MapdustBug> mapdustBugs = panel.getMapdustBugsList();
-        mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug());
-        
-        /* remove panels */
-        if (mainPanel != null) {
-            remove(mainPanel);
+        boolean showBug = shouldDisplay(action.getMapdustBug(),
+                mapdustPlugin.getFilter());
+        mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug(), showBug);
+
+        /* update panels */
+        updateMapdustPanel(mapdustBugs);
+        updateMapdustActionPanel(actionList);
+        if (showBug &&
+                !action.getCommand().equals(MapdustServiceCommand.ADD_BUG)) {
+            panel.resetSelectedBug(0);
+        } else {
+            mapdustPlugin.getMapdustLayer().setBugSelected(null);
         }
-        /* create new tabbed pane */
-        tabbedPane = new JTabbedPane();
-        list.add(action);
-        queuePanel = new MapdustActionPanel(list, "Offline Contribution",
-                mapdustPlugin);
-        panel = new MapdustPanel(mapdustBugs, "Bug reports (offline)",
-                mapdustPlugin);
+        revalidate();
+        Main.map.mapView.revalidate();
+        Main.map.repaint();
+    }
+
+    /**
+     * Verifies if the given <code>MapdustBug</code> should be shown on the
+     * MapDust bug list/ map. Any <code>MapdustBug</code> should be shown on the
+     * MapDust bug list / map only if it is permitted by the selected filters.
+     *
+     * @param modifiedBug The <code>MapdustBug</code> object
+     * @param filter The <code>MapdustBugFilter</code> object
+     * @return true if the given MapDust bug should be shown in the list/map
+     * false otherwise
+     */
+    private boolean shouldDisplay(MapdustBug modifiedBug,
+            MapdustBugFilter filter) {
+        boolean result = false;
+        if (filter != null && filter.getStatuses() != null
+                && !filter.getStatuses().isEmpty()) {
+            if (filter.getStatuses().contains(modifiedBug.getStatus().getKey())) {
+                result = true;
+            }
+        } else {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Updates the MapDust GUI with the given list of <code>MapdustBug</code>
+     * objects.
+     *
+     * @param mapdustBugs The list of <code>MapdustBug</code> objects
+     * @param mapdustPlugin The <code>MapdustPlugin</code> object
+     */
+    public synchronized void update(List<MapdustBug> mapdustBugs,
+            MapdustPlugin mapdustPlugin) {
+        setMapdustPlugin(mapdustPlugin);
+        String pluginState = Main.pref.get("mapdust.pluginState");
+        if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
+            if (tabbedPane != null) {
+                /* from offline to online */
+                remove(mainPanel);
+                tabbedPane = null;
+                actionPanel = null;
+                mainPanel = null;
+                panel = null;
+            }
+            updateMapdustPanel(mapdustBugs);
+            if (mainPanel == null) {
+                createMainPanel();
+            }
+        } else {
+            if (tabbedPane == null) {
+                /* from online to offline */
+                remove(mainPanel);
+                mainPanel = null;
+                panel = null;
+            }
+            List<MapdustAction> actionList =
+                    actionPanel != null ? actionPanel.getActionList()
+                            : new ArrayList<MapdustAction>();
+
+            /* update panels */
+            List<MapdustBug> bugs =
+                    filterMapdustBugList(mapdustBugs, actionList,
+                            mapdustPlugin.getFilter());
+            updateMapdustPanel(bugs);
+            updateMapdustActionPanel(actionList);
+            if (mainPanel == null) {
+                createMainPanel();
+            }
+        }
+    }
+
+
+    /**
+     * Updates the MapDust bugs panel with the new list of data.
+     *
+     * @param mapdustBugs The list of <code>MapdustBug</code> objects
+     */
+    private void updateMapdustPanel(List<MapdustBug> mapdustBugs) {
+        MapdustBug selectedBug =
+                (mapdustBugs != null && mapdustBugs.size() > 0) ? mapdustBugs
+                        .get(0) : null;
+        if (detailsPanel == null) {
+            detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
+            addObserver(detailsPanel);
+        }
+        if (panel == null) {
+            panel = new MapdustBugListPanel(mapdustBugs, "Bug reports",
+                    mapdustPlugin);
+            panel.addObserver(detailsPanel);
+        } else {
+            panel.updateComponents(mapdustBugs);
+            notifyObservers(selectedBug);
+        }
+    }
+
+    /**
+     * Updates the MapDust action panel with the new list of data.
+     *
+     * @param actionList The list of <code>MapdustAction</code> objects
+     */
+    private void updateMapdustActionPanel(List<MapdustAction> actionList) {
+        if (actionPanel == null) {
+            actionPanel = new MapdustActionPanel(actionList,
+                    "Offline Contribution", mapdustPlugin);
+        } else {
+            actionPanel.updateComponents(actionList);
+        }
+    }
+
+    /**
+     * Creates the main panel of the plugin and adds to the content pane.
+     */
+    private void createMainPanel() {
         mainPanel = new JPanel();
         mainPanel.setAutoscrolls(true);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(detailsPanel, BorderLayout.NORTH);
-        tabbedPane.add(panel, 0);
-        tabbedPane.add(queuePanel);
-        mainPanel.add(tabbedPane, BorderLayout.CENTER);
+        if (actionPanel == null) {
+            mainPanel.add(panel, BorderLayout.CENTER);
+        } else {
+            tabbedPane = new JTabbedPane();
+            tabbedPane.add(panel, 0);
+            tabbedPane.add(actionPanel);
+            mainPanel.add(tabbedPane, BorderLayout.CENTER);
+        }
         add(mainPanel, BorderLayout.CENTER);
-        revalidate();
     }
-    
+
+
     /**
-     * Disables the buttons from the <code>MapdustButtonPanel</code> buttons.
-     * 
+     * Filters the given list of <code>MapdustBug</code>s based on the given
+     * list of <code>MapdustAction</code>s. The filtering is done in order to
+     * show the modified bugs ( but not already committed operations) if they
+     * also appears in the new list of bugs, according to the latest
+     * modifications.
+     *
+     * @param bugList The list of <code>MapdustBug</code> objects
+     * @param actionList The list of <code>MapdustAction</code> objects
+     * @param filter The <code>MapdustBugFilter</code> object
+     * @return A filtered list of <code>MapdustBug</code>s
      */
-    public void disableBtnPanel() {
-        panel.getBtnPanel().getBtnWorkOffline().setEnabled(false);
-        panel.getBtnPanel().getBtnRefresh().setEnabled(false);
-        panel.getBtnPanel().getBtnAddComment().setEnabled(false);
-        panel.getBtnPanel().getBtnFixBugReport().setEnabled(false);
-        panel.getBtnPanel().getBtnInvalidateBugReport().setEnabled(false);
-        panel.getBtnPanel().getBtnReOpenBugReport().setEnabled(false);
+    private List<MapdustBug> filterMapdustBugList(List<MapdustBug> bugList,
+            List<MapdustAction> actionList, MapdustBugFilter filter) {
+        if (bugList != null && actionList != null) {
+            for (MapdustAction action : actionList) {
+                int index = bugList.indexOf(action.getMapdustBug());
+                if (index >= 0) {
+                    if (action.getNewStatus() != null) {
+                        Status newStatus =
+                                Status.getStatus(action.getNewStatus());
+                        if (filter != null && filter.getStatuses() != null
+                                && !filter.getStatuses().isEmpty()) {
+                            if (filter.getStatuses().contains(
+                                    newStatus.getKey())) {
+                                bugList.get(index).setStatus(newStatus);
+                            } else {
+                                bugList.remove(index);
+                            }
+                        } else {
+                            bugList.get(index).setStatus(newStatus);
+                        }
+                    }
+                }
+            }
+        }
+        return bugList;
     }
-    
-    
+
     /**
      * Modifies the given <code>MapdustBug</code> in the given list of
      * <code>MapdustBug</code> objects. Returns the list of bugs containing the
      * modified bug.
-     * 
+     *
      * @param mapdustBugs The list of <code>MapdustBug</code> objects
      * @param modifiedBug The <code>MapdustBug</code> object
+     * @param showBug A flag indicating if the given modified bug should be
+     * displayed on the map and on the list of bugs
      * @return the modified list
      */
     private List<MapdustBug> modifyBug(List<MapdustBug> mapdustBugs,
-            MapdustBug modifiedBug) {
+            MapdustBug modifiedBug, boolean showBug) {
         int index = -1;
         for (int i = 0; i < mapdustBugs.size(); i++) {
             if (modifiedBug.getId() != null) {
@@ -259,29 +347,75 @@ public class MapdustGUI extends ToggleDialog implements
         if (index != -1) {
             /* remove, and add to the top of the list */
             mapdustBugs.remove(index);
-            mapdustBugs.add(0, modifiedBug);
+            if (showBug) {
+                mapdustBugs.add(0, modifiedBug);
+            }
         }
         return mapdustBugs;
     }
-    
+
     /**
-     * Displays the <code>MapdustGUI</code> dialog window in the JOSM editor. If
-     * the MapDust data was not downloaded yet, it will donwload the data and
-     * also update the MapDust plugin with the data. If the MapDust data was
-     * already downloaded, then the <code>MapdustGUI</code> will be displayed.
+     * Returns the selected bug from the list of bugs. If there is no bug
+     * selected then the returned result is null.
+     *
+     * @return The selected bug
      */
-    @Override
-    public void showDialog() {
-        if (!downloaded) {
-            notifyObservers();
-            downloaded = true;
+    public MapdustBug getSelectedBug() {
+        MapdustBug selectedBug = null;
+        if (panel != null) {
+            selectedBug = panel.getSelectedBug();
         }
-        super.showDialog();
+        return selectedBug;
     }
-    
+
+    /**
+     * Sets the given <code>MapdustBug</code> to be selected from the list of
+     * bugs.
+     *
+     * @param mapdustBug The <code>MapdustBug</code> object
+     */
+    public void setSelectedBug(MapdustBug mapdustBug) {
+        if (panel != null) {
+            panel.setSelectedBug(mapdustBug);
+        }
+    }
+
+    /**
+     * Disables the buttons from the <code>MapdustPanel</code>.
+     *
+     */
+    public void disableBtnPanel() {
+        if (panel != null) {
+            panel.disableBtnPanel();
+        }
+    }
+
+    /**
+     * Enables the basic components from the <code>MapdustButtonPanel</code>.
+     * Basic components are considered the following buttons: work offline,
+     * filter bug report, and refresh.If the onlyBasic flag is true then the
+     * other buttons will be disabled.
+     *
+     * @param onlyBasic If true then the not basic buttons will be disabled
+     */
+    public void enableBtnPanel(boolean onlyBasic) {
+        if (panel != null) {
+            panel.enableBtnPanel(onlyBasic);
+        }
+    }
+
+    /**
+     * Returns the list of <code>MapdustAction</code> objects.
+     *
+     * @return list of <code>MapdustAction</code>
+     */
+    public List<MapdustAction> getMapdustActionList() {
+        return getActionPanel().getActionList();
+    }
+
     /**
      * Adds a new MapDust bug details observer to the list of observers.
-     * 
+     *
      * @param observer The <code>MapdustBugDetailsObserver</code> object
      */
     @Override
@@ -290,43 +424,43 @@ public class MapdustGUI extends ToggleDialog implements
             this.bugDetailsObservers.add(observer);
         }
     }
-    
+
     /**
-     * Adds a new MapDust initial update observer to the list of observers.
-     * 
-     * @param observer The <code>MapdustInitialUpdateObserver</code> object
+     * Adds a new MapDust update observer to the list of observers.
+     *
+     * @param observer The <code>MapdustUpdateObserver</code> object
      */
     @Override
-    public void addObserver(MapdustInitialUpdateObserver observer) {
+    public void addObserver(MapdustUpdateObserver observer) {
         if (!this.initialUpdateObservers.contains(observer)) {
             this.initialUpdateObservers.add(observer);
         }
     }
-    
+
     /**
      * Removes the given MapDust bug details observer from the list of
      * observers.
-     * 
+     *
      * @param observer The <code>MapdustBugDetailsObserver</code> object
      */
     @Override
     public void removeObserver(MapdustBugDetailsObserver observer) {
         this.bugDetailsObservers.remove(observer);
-        
+
     }
-    
+
     /**
      * Removes the given MapDust initial update observer from the list of
      * observers.
-     * 
+     *
      * @param observer The <code>MapdustInitialUpdateObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustInitialUpdateObserver observer) {
+    public void removeObserver(MapdustUpdateObserver observer) {
         this.initialUpdateObservers.remove(observer);
-        
+
     }
-    
+
     /**
      * Notifies the <code>MapdustBugDetailsObserver</code> objects observing the
      * given <code>MapdustBug</code> object.
@@ -339,36 +473,50 @@ public class MapdustGUI extends ToggleDialog implements
             (elements.next()).showDetails(mapdustBug);
         }
     }
-    
+
     /**
      * Notifies the <code>MapdustInitialUpdateObserver</code> objects waiting
      * for the initial download, and update of plugin.
      */
     @Override
-    public void notifyObservers() {
-        Iterator<MapdustInitialUpdateObserver> elements =
+    public void notifyObservers(MapdustBugFilter filter, boolean first) {
+        Iterator<MapdustUpdateObserver> elements =
                 this.initialUpdateObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).initialUpdate();
+            (elements.next()).update(null, true);
         }
     }
-    
+
     /**
      * Returns the <code>MapdustPanel</code> object
-     * 
+     *
      * @return the panel
      */
-    public MapdustPanel getPanel() {
+    public MapdustBugListPanel getPanel() {
         return panel;
     }
-    
+
     /**
      * Returns the <code>MapdustActionPanel</code> object
-     * 
+     *
      * @return the queuePanel
      */
-    public MapdustActionPanel getQueuePanel() {
-        return queuePanel;
+    public MapdustActionPanel getActionPanel() {
+        return actionPanel;
     }
-    
+
+    /**
+     * @return the mapdustPlugin
+     */
+    public MapdustPlugin getMapdustPlugin() {
+        return mapdustPlugin;
+    }
+
+    /**
+     * @param mapdustPlugin the mapdustPlugin to set
+     */
+    public void setMapdustPlugin(MapdustPlugin mapdustPlugin) {
+        this.mapdustPlugin = mapdustPlugin;
+    }
+
 }

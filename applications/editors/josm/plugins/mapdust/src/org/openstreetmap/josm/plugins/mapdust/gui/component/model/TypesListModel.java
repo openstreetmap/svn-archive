@@ -42,7 +42,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
 public class TypesListModel extends AbstractListModel implements ComboBoxModel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4005728061902494996L;
 
     /** The array of types */
     private final Type[] types;
@@ -57,21 +57,42 @@ public class TypesListModel extends AbstractListModel implements ComboBoxModel {
         this.types = Type.getTypes();
     }
 
+    /**
+     * Returns the <code>Type</code> from the given position.
+     *
+     * @param index The position of the element
+     * @return <code>Type</code> from the given position
+     */
     @Override
     public Object getElementAt(int index) {
         return types[index];
     }
 
+    /**
+     * Returns the size of the list of objects.
+     *
+     * @return size
+     */
     @Override
     public int getSize() {
         return types.length;
     }
 
+    /**
+     * Returns the selected <code>Type</code> object.
+     *
+     * @return selected item
+     */
     @Override
     public Object getSelectedItem() {
         return selection;
     }
 
+    /**
+     * Sets the selected <code>Type</code> object.
+     *
+     * @param anItem The selected item
+     */
     @Override
     public void setSelectedItem(Object anItem) {
         selection = (Type) anItem;

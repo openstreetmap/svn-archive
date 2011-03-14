@@ -37,7 +37,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Paging;
  * @author Bea
  *
  */
-public class MapdustGetResponse  {
+public class MapdustGetResponse {
 
     /**
      * The <code>Paging</code> object
@@ -59,6 +59,8 @@ public class MapdustGetResponse  {
     }
 
     /**
+     * Returns the <code>Paging</code> object
+     *
      * @return the paging
      */
     public Paging getPaging() {
@@ -66,6 +68,8 @@ public class MapdustGetResponse  {
     }
 
     /**
+     * Sets the <code>Paging</code> object
+     *
      * @param paging the paging to set
      */
     public void setPaging(Paging paging) {

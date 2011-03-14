@@ -48,7 +48,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class ActionListCellRenderer extends DefaultListCellRenderer {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7552949107018269769L;
 
     /**
      * Returns the cell renderer component of the action list.

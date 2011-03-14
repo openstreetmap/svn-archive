@@ -25,21 +25,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openstreetmap.josm.plugins.mapdust.gui.observer;
+package org.openstreetmap.josm.plugins.mapdust.service.connector.parser;
+
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 
 
 /**
- * The observer interface used for the initial MapDust data download and plugin
- * update.
+ * The <code>MapdustParser</code> object parses the given JSON format into the
+ * given object.
  *
  * @author Bea
  *
  */
-public interface MapdustInitialUpdateObserver {
+public class MapdustParser {
 
     /**
-     * Downloads initially the MapDust Bugs and updates the plugin.
+     * Parses the given JSON response of the given type.
+     *
+     * @param response A string containing a JSON response
+     * @param responseClass The type of the result.
+     * @return A <code>MapdustGeneralResponse</code> object
+     * @throws MapdustParserException In the case of an error
      */
-    public void initialUpdate();
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Object parseResponse(String response, Class responseClass)
+            throws MapdustParserException {
+        Object result = null;
+        FieldNamingPolicy policy = FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        gsonBuilder.setFieldNamingPolicy(policy);
+        Gson gson = gsonBuilder.create();
+        try {
+            result = gson.fromJson(response, responseClass);
+        } catch (JsonParseException e) {
+            throw new MapdustParserException();
+        }
+        return result;
+    }
 
 }

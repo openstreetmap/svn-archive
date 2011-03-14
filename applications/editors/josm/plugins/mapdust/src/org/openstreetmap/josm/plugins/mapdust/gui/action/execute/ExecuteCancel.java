@@ -46,7 +46,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 public class ExecuteCancel extends MapdustExecuteAction {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5357125707042485489L;
 
     /**
      * Builds a <code>CancelAction</code> object
@@ -66,7 +66,7 @@ public class ExecuteCancel extends MapdustExecuteAction {
 
     /**
      * Cancels the executed action, and closes the visible dialog window.
-     * 
+     *
      * @param event The action event which fires this action
      */
     @Override
@@ -75,9 +75,11 @@ public class ExecuteCancel extends MapdustExecuteAction {
             String pluginState = Main.pref.get("mapdust.pluginState");
             String status = Main.pref.get("selectedBug.status");
             /* enable buttons */
-            MapdustButtonPanel btnPanel = getMapdustGUI().getPanel().getBtnPanel();
+            MapdustButtonPanel btnPanel =
+                    getMapdustGUI().getPanel().getBtnPanel();
             if (btnPanel != null) {
                 btnPanel.getBtnWorkOffline().setEnabled(true);
+                btnPanel.getBtnWorkOffline().setFocusable(false);
                 btnPanel.getBtnWorkOffline().setSelected(false);
                 if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                     btnPanel.getBtnRefresh().setEnabled(false);
@@ -101,23 +103,30 @@ public class ExecuteCancel extends MapdustExecuteAction {
                             btnPanel.getBtnInvalidateBugReport().setEnabled(
                                     false);
                             btnPanel.getBtnReOpenBugReport().setEnabled(true);
-
                             btnPanel.getBtnAddComment().setEnabled(true);
                         } else {
-                            // created bug, then close dialog
-                            btnPanel.getBtnFixBugReport().setEnabled(false);
-                            btnPanel.getBtnInvalidateBugReport().setEnabled(
-                                    false);
-                            btnPanel.getBtnReOpenBugReport().setEnabled(false);
-                            btnPanel.getBtnAddComment().setEnabled(false);
+                            if (!status.isEmpty()) {
+                                btnPanel.getBtnFixBugReport().setEnabled(false);
+                                btnPanel.getBtnInvalidateBugReport()
+                                        .setEnabled(false);
+                                btnPanel.getBtnReOpenBugReport().setEnabled(
+                                        false);
+                                btnPanel.getBtnAddComment().setEnabled(false);
+                            }
                         }
                     }
                 }
-                btnPanel.getBtnRefresh().setSelected(false);
+                btnPanel.getBtnFilter().setEnabled(true);
+                btnPanel.getBtnFilter().setSelected(false);
+                btnPanel.getBtnFilter().setFocusable(false);
                 btnPanel.getBtnAddComment().setSelected(false);
+                btnPanel.getBtnAddComment().setFocusable(false);
                 btnPanel.getBtnFixBugReport().setSelected(false);
+                btnPanel.getBtnFixBugReport().setFocusable(false);
                 btnPanel.getBtnInvalidateBugReport().setSelected(false);
+                btnPanel.getBtnInvalidateBugReport().setFocusable(false);
                 btnPanel.getBtnReOpenBugReport().setSelected(false);
+                btnPanel.getBtnReOpenBugReport().setFocusable(false);
             }
         }
 

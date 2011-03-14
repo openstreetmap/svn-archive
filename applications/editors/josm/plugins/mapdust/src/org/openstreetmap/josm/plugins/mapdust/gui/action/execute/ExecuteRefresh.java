@@ -34,8 +34,9 @@ import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 
 
 /**
@@ -46,14 +47,14 @@ import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObserve
  *
  */
 public class ExecuteRefresh extends AbstractAction implements
-        MapdustRefreshObservable {
+        MapdustUpdateObservable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1507634893685333278L;
 
     /** The list of MapDust refresh observers */
-    private final ArrayList<MapdustRefreshObserver> observers =
-            new ArrayList<MapdustRefreshObserver>();
+    private final ArrayList<MapdustUpdateObserver> observers =
+            new ArrayList<MapdustUpdateObserver>();
 
     /**
      * Builds a <code>EexecuteRefresh<code> object
@@ -61,8 +62,8 @@ public class ExecuteRefresh extends AbstractAction implements
     public ExecuteRefresh() {}
 
     /**
-     * Updates the Mapdust data.
-     * 
+     * Updates the MapDust data.
+     *
      * @param event The event which fires this action
      */
     @Override
@@ -71,8 +72,9 @@ public class ExecuteRefresh extends AbstractAction implements
             JToggleButton btn = (JToggleButton) event.getSource();
             /* update the bugs */
             Main.pref.put("mapdust.showError", true);
-            notifyObservers();
+            notifyObservers(null, false);
             btn.setSelected(false);
+            btn.setFocusable(false);
         }
     }
 
@@ -82,7 +84,7 @@ public class ExecuteRefresh extends AbstractAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void addObserver(MapdustRefreshObserver observer) {
+    public void addObserver(MapdustUpdateObserver observer) {
         if (!this.observers.contains(observer)) {
             this.observers.add(observer);
         }
@@ -94,7 +96,7 @@ public class ExecuteRefresh extends AbstractAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustRefreshObserver observer) {
+    public void removeObserver(MapdustUpdateObserver observer) {
         this.observers.remove(observer);
     }
 
@@ -102,11 +104,11 @@ public class ExecuteRefresh extends AbstractAction implements
      * Notifies the observers observing this action.
      */
     @Override
-    public void notifyObservers() {
-        Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
+    public void notifyObservers(MapdustBugFilter filter, boolean first) {
+        Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).refreshData();
+            (elements.next()).update(filter, false);
         }
     }
-    
+
 }

@@ -64,7 +64,6 @@ public class MapdustConverter {
         if (bugResponse != null) {
             /* sets the id */
             bug.setId(bugResponse.getId());
-
             /* sets the coordinates */
             Geometry geometry = bugResponse.getGeometry();
             LatLon latLon = null;
@@ -75,7 +74,6 @@ public class MapdustConverter {
                 latLon = new LatLon(latitude, longitude);
             }
             bug.setLatLon(latLon);
-
             /* sets the properties of the bug */
             MapdustBugProperties bugProperties = bugResponse.getProperties();
             if (bugProperties != null) {
@@ -93,6 +91,9 @@ public class MapdustConverter {
                 bug.setDateUpdated(bugProperties.getDateUpdated());
                 /* sets the description */
                 bug.setDescription(bugProperties.getDescription());
+                /* sets the isDefaultDescription */
+                bug.setIsDefaultDescription(bugProperties
+                        .getIsDefaultDescription());
                 /* sets the skobbler user id */
                 bug.setSkoUid(bugProperties.getSkoUid());
                 /* sets the external user id */

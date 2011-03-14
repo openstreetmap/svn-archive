@@ -37,6 +37,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -48,6 +49,7 @@ import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.ActionListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.BugsListModel;
@@ -73,7 +75,7 @@ public class ComponentUtil {
      * @param text The text of the label
      * @param font The font of the label
      * @param bounds The bounds of the element
-     * @return A <code>JLabel</code> label
+     * @return A <code>JLabel</code> object
      */
     public static JLabel createJLabel(String text, Font font, Rectangle bounds) {
         JLabel jLabel = new JLabel();
@@ -82,6 +84,23 @@ public class ComponentUtil {
         }
         jLabel.setText(text);
         jLabel.setFont(font);
+        return jLabel;
+    }
+
+    /**
+     * Creates a <code>JLabel</code> object with the given properties.
+     *
+     * @param text The text of the label
+     * @param iconName The name of the label icon
+     * @param bounds The dimension of the label
+     * @return A <code>JLabel</code> object
+     */
+    public static JLabel createJLabel(String text, String iconName,
+            Rectangle bounds) {
+        JLabel jLabel = new JLabel(text, ImageProvider.get(iconName),
+                SwingConstants.LEFT);
+        jLabel.setBounds(bounds);
+        jLabel.setFont(new Font("Times New Roman", Font.BOLD, 12));
         return jLabel;
     }
 
@@ -283,6 +302,18 @@ public class ComponentUtil {
             jComboBox.setMaximumRowCount(7);
         }
         return jComboBox;
+    }
+
+    /**
+     * Creates a new <code>JCheckBox</code> object with the given properties.
+     *
+     * @param bounds The dimension of the check box
+     * @return A <code>JCheckBox</code> object
+     */
+    public static JCheckBox createJCheckBox(Rectangle bounds) {
+        JCheckBox jCheckBox = new JCheckBox();
+        jCheckBox.setBounds(bounds);
+        return jCheckBox;
     }
 
 }

@@ -43,14 +43,14 @@ public interface MapdustBugObservable {
     /**
      * Adds a new observer to the list of observers.
      *
-     * @param observer The <code>MapdustBugObservable</code> object
+     * @param observer The <code>MapdustBugObserver</code> object
      */
     public void addObserver(MapdustBugObserver observer);
 
     /**
      * Removes the given observer from the list of observers.
      *
-     * @param observer The <code>MapdustBugObservable</code> object
+     * @param observer The <code>MapdustBugObserver</code> object
      */
     public void removeObserver(MapdustBugObserver observer);
 
@@ -61,4 +61,5 @@ public interface MapdustBugObservable {
      * @param mapdustBug The <code>MapdustBug</code> object
      */
     public void notifyObservers(MapdustBug mapdustBug);
+
 }

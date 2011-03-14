@@ -25,35 +25,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openstreetmap.josm.plugins.mapdust.gui.observer;
+package org.openstreetmap.josm.plugins.mapdust.service.connector.parser;
 
 
 /**
- * The observable interface used for the initial MapDust data download and
- * plugin update.
+ * Defines the exception for the <code>MapdustParser</code> object.
  *
  * @author Bea
+ *
  */
-public interface MapdustInitialUpdateObservable {
+public class MapdustParserException extends Exception {
 
-
-    /**
-     * Adds a new observer to the list of observers.
-     *
-     * @param observer The <code>MapdustInitialUpdateObserver</code> object
-     */
-    public void addObserver(MapdustInitialUpdateObserver observer);
+    /** The serial version UID */
+    private static final long serialVersionUID = 3365429227063310977L;
 
     /**
-     * Removes the given observer from the list of observers.
-     *
-     * @param observer The <code>MapdustInitialUpdateObserver</code> object
+     * Builds a <code>MapdustParserException</code> object.
      */
-    public void removeObserver(MapdustInitialUpdateObserver observer);
+    public MapdustParserException() {
+        super();
+    }
 
     /**
-     * Notifies all the observers observing the initial download action.
+     * Builds a <code>MapdustParserException</code> object based on the given
+     * arguments.
      *
+     * @param message The message of the exception
      */
-    public void notifyObservers();
+    public MapdustParserException(String message) {
+        super(message);
+    }
+
+    /**
+     * Builds a <code>MapdustParserException</code> object based on the given
+     * arguments.
+     *
+     * @param cause The cause of the exception
+     */
+    public MapdustParserException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * Builds a <code>MapdustParserException</code> object based on the given
+     * arguments.
+     *
+     * @param message The message of the exception
+     * @param cause The cause of the exception
+     */
+    public MapdustParserException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

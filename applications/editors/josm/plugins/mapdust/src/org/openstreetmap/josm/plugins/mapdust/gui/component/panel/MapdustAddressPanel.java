@@ -47,7 +47,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Address;
 public class MapdustAddressPanel extends JPanel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8388870946800544374L;
 
     /**
      * Builds a new <code>MapdustBugDetailsPanel</code> object.
@@ -62,6 +62,18 @@ public class MapdustAddressPanel extends JPanel {
     }
 
     /**
+     * Updates the components of the <code>MapdustAddressPanel</code> based
+     * on the given parameters.
+     *
+     * @param address The <code>Address</code> of a MapDust bug
+     * @param coordinates The <code>LatLon</code> of a MapDust bug
+     */
+    public void updateComponents(Address address,LatLon coordinates){
+    	removeAll();
+    	addComponents(address, coordinates);
+    }
+
+    /**
      * Creates the components of the panel, and adds to the parent panel.
      *
      * @param address The address of the <code>MapdustBug</code> object
@@ -72,42 +84,42 @@ public class MapdustAddressPanel extends JPanel {
         Font fontLabel = new Font("Times New Roman", Font.BOLD, 12);
         Font fontLabelVal = new Font("Times New Roman", Font.PLAIN, 12);
 
-        /* add country */
+        /* country */
         add(ComponentUtil.createJLabel("Country: ", fontLabel, null));
         String country = address != null ? address.getCountryCode() : "";
         add(ComponentUtil.createJLabel(country, fontLabelVal, null));
 
-        /* add label */
+        /* label */
         add(ComponentUtil.createJLabel("City: ", fontLabel, null));
         String city = address != null ? address.getCity() : "";
         add(ComponentUtil.createJLabel(city, fontLabelVal, null));
 
-        /* add statecode */
+        /* statecode */
         add(ComponentUtil.createJLabel("State code: ", fontLabel, null));
         String state = address != null ? address.getStateCode() : "";
         add(ComponentUtil.createJLabel(state, fontLabelVal, null));
 
-        /* add label */
+        /* label */
         add(ComponentUtil.createJLabel("Zip code: ", fontLabel, null));
         String zip = address != null ? address.getZipCode() : "";
         add(ComponentUtil.createJLabel(zip, fontLabelVal, null));
 
-        /* add street name */
+        /* street name */
         add(ComponentUtil.createJLabel("Street: ", fontLabel, null));
         String street = address != null ? address.getStreetName() : "";
         add(ComponentUtil.createJLabel(street, fontLabelVal, null));
 
-        /* add house number */
+        /* house number */
         add(ComponentUtil.createJLabel("House number: ", fontLabel, null));
         String houseNr = address != null ? address.getHouseNumber() : "";
         add(ComponentUtil.createJLabel(houseNr, fontLabelVal, null));
 
-        /* add lat */
+        /* lat */
         add(ComponentUtil.createJLabel("Latitude: ", fontLabel, null));
         String lat = coordinates != null ? ("" + coordinates.lat()) : "";
         add(ComponentUtil.createJLabel(lat, fontLabelVal, null));
 
-        /* add lon */
+        /*  lon */
         add(ComponentUtil.createJLabel("Longitude: ", fontLabel, null));
         String lon = coordinates != null ? ("" + coordinates.lon()) : "";
         add(ComponentUtil.createJLabel(lon, fontLabelVal, null));

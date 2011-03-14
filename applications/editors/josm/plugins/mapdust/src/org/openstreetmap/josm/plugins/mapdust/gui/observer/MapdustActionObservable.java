@@ -28,31 +28,36 @@
 package org.openstreetmap.josm.plugins.mapdust.gui.observer;
 
 
+import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
+
+
 /**
- * The observable interface for the refresh action.
+ * Observable interface for the <code>MapdustAction</code> object.
  *
  * @author Bea
  * @version $Revision$
  */
-public interface MapdustRefreshObservable {
+public interface MapdustActionObservable {
 
     /**
      * Adds a new observer to the list of observers.
      *
-     * @param observer The <code>MapdustRefreshObserver</code>
+     * @param observer The <code>MapdustActionObserver</code> object
      */
-    public void addObserver(MapdustRefreshObserver observer);
+    public void addObserver(MapdustActionObserver observer);
 
     /**
      * Removes the given observer from the list of observers.
      *
-     * @param observer the <code>MapdustRefreshObserver</code>
+     * @param observer The <code>MapdustActionObserver</code> object
      */
-    public void removeObserver(MapdustRefreshObserver observer);
+    public void removeObserver(MapdustActionObserver observer);
 
     /**
-     * Notifies all the observers observing this action.
+     * Notifies all the observers observing the given <code>MapdustAction</code>
+     * object.
+     *
+     * @param mapdustAction The <code>MapdustAction</code> object
      */
-    public void notifyObservers();
-
+    public void notifyObservers(MapdustAction mapdustAction);
 }

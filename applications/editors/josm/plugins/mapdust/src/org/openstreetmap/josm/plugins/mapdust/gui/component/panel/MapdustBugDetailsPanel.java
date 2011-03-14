@@ -57,10 +57,10 @@ import org.openstreetmap.josm.tools.OpenBrowser;
 public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 65974543949362926L;
 
     /** The <code>MapdustBug</code> object */
-    private final MapdustBug bug;
+    private MapdustBug bug;
 
     /**
      * Builds a new <code>MapdustBugDetailsPanel</code> object.
@@ -75,17 +75,29 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
     }
 
     /**
+     * Updates the components of the <code>MapdustBugDetailsPanel</code> based
+     * on the given parameter.
+     *
+     * @param bug The <code>MapdustBug</code>
+     */
+    public void updateComponents(MapdustBug bug) {
+        this.bug = bug;
+        removeAll();
+        addComponents();
+    }
+
+    /**
      * Add the components to the panel.
      */
     private void addComponents() {
         /* the font of the label and label value */
         Font fontLabel = new Font("Times New Roman", Font.BOLD, 12);
-        Font fontLabelVal = new Font("Times New Roman", Font.PLAIN,12);
+        Font fontLabelVal = new Font("Times New Roman", Font.PLAIN, 12);
         /* date formatter */
-        DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT,
+        DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,
                 Locale.getDefault());
 
-        /* add the id */
+        /* the id */
         add(ComponentUtil.createJLabel("Id: ", fontLabel, null));
         String idStr = bug != null ? bug.getId().toString() : "";
         String txt = "<html>";
@@ -100,38 +112,37 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
         txtId.addHyperlinkListener(this);
         add(txtId);
 
-        /* add the type */
+        /* the type */
         add(ComponentUtil.createJLabel("Type: ", fontLabel, null));
         String typeStr = bug != null ? bug.getType().getValue() : "";
         add(ComponentUtil.createJLabel(typeStr, fontLabelVal, null));
 
-        /* add the status */
+        /* the status */
         add(ComponentUtil.createJLabel("Status: ", fontLabel, null));
         String statusStr = bug != null ? bug.getStatus().getValue() : "";
         add(ComponentUtil.createJLabel(statusStr, fontLabelVal, null));
 
-        /* add the source */
+        /* the source */
         add(ComponentUtil.createJLabel("Source: ", fontLabel, null));
         String sourceStr = bug != null ? bug.getSource() : "";
         add(ComponentUtil.createJLabel(sourceStr, fontLabelVal, null));
 
-        /* add the nickname */
+        /* the nickname */
         add(ComponentUtil.createJLabel("Created by: ", fontLabel, null));
         String nicknameStr = bug != null ? bug.getNickname() : "";
         add(ComponentUtil.createJLabel(nicknameStr, fontLabelVal, null));
 
-        /* add the date created */
+        /* the date created */
         add(ComponentUtil.createJLabel("Date created: ", fontLabel, null));
         String dateCreatedStr =
                 bug != null ? df.format(bug.getDateCreated()) : "";
         add(ComponentUtil.createJLabel(dateCreatedStr, fontLabelVal, null));
 
-        /* add the date updated */
+        /* the date updated */
         add(ComponentUtil.createJLabel("Date updated: ", fontLabel, null));
         String dateUpdatedStr =
                 bug != null ? df.format(bug.getDateUpdated()) : "";
         add(ComponentUtil.createJLabel(dateUpdatedStr, fontLabelVal, null));
-
     }
 
     @Override
@@ -140,7 +151,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
             String bugDetailsUrl = null;
             if (bug != null) {
                 String mapdustSite =
-                        Configuration.getInstance().getMapdustBugDetailsUrl();
+                    Configuration.getInstance().getMapdustBugDetailsUrl();
                 bugDetailsUrl = mapdustSite + bug.getId().toString();
             }
             if (bugDetailsUrl != null) {
@@ -149,9 +160,8 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
                 } catch (Exception e) {
                     String errorMessage = "Error opening the MapDust bug ";
                     errorMessage += "details page";
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr(errorMessage), tr("Error"),
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                            tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
 

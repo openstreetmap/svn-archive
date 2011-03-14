@@ -32,13 +32,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.openstreetmap.josm.plugins.mapdust.service.connector.parser.MapdustParser;
+import org.openstreetmap.josm.plugins.mapdust.service.connector.parser.MapdustParserException;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugsResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustPostResponse;
-import org.openstreetmap.josm.plugins.mapdust.service.parser.MapdustParser;
-import org.openstreetmap.josm.plugins.mapdust.service.parser.MapdustParserException;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BoundingBox;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustResponseStatusCode;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Paging;
@@ -84,28 +87,27 @@ public class MapdustConnector {
     }
 
     /**
-     * Searches for the OSM Mapdust bugs in the given bounding box. The method
-     * executes the 'getBugs' Mapdust service method, parses the obtained
+     * Searches for the OSM MapDust bugs in the given bounding box. The method
+     * executes the 'getBugs' MapDust service method, parses the obtained
      * response object and return a <code>MapdustGetBugsResponse</code> object
      * containing the pagination information and the array of bugs. In the case
      * if the response code is not 200,201 or 204, a corresponding exception
      * will be thrown.
      *
-     * @param minLon The minimum longitude. This parameter is required.
-     * @param minLat The minimum latitude.This parameter is required.
-     * @param maxLon The maximum longitude.This parameter is required.
-     * @param maxLat The maximum latitude.This parameter is required.
+     * @param bBox The bounding box where the bugs are searched.
+     * @param filter The MapDust bug filter. The bugs can be filtered based on
+     * the status, type and description. This parameter is not required.
      * @return A <code>MapdustGetBugsResponse</code> object, containing the
      * pagination information and an array of <code>MapdustBugContent</code>
      * object.
      * @throws MapdustConnectorException In the case of an error.
      */
-    public MapdustGetBugsResponse getBugs(Double minLon, Double minLat,
-            Double maxLon, Double maxLat) throws MapdustConnectorException {
+    public MapdustGetBugsResponse getBugs(BoundingBox bBox,
+            MapdustBugFilter filter) throws MapdustConnectorException {
         /* execute GET method and get the response */
         HttpResponse httpResponse = null;
         try {
-            httpResponse = executeGetBugs(minLon, minLat, maxLon, maxLat);
+            httpResponse = executeGetBugs(bBox, filter);
         } catch (MalformedURLException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         } catch (IOException e) {
@@ -113,13 +115,12 @@ public class MapdustConnector {
         } catch (Exception e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         }
-
         /* parse HttpResponse */
         MapdustGetBugsResponse result = null;
         try {
             /* verify status codes */
             handleStatusCode(httpResponse);
-            result =(MapdustGetBugsResponse) getParser().parseResponse(
+            result = (MapdustGetBugsResponse) getParser().parseResponse(
                             httpResponse.getContent(),
                             MapdustGetBugsResponse.class);
         } catch (MapdustConnectorException e) {
@@ -130,10 +131,11 @@ public class MapdustConnector {
         return result;
     }
 
+
     /**
      * Returns the OSM bug with the given id. If the <code>Paging</code> object
      * is set, then the comments of the bug will be paginated. The method
-     * executes the 'getBug' Mapdust service method, parses the obtained
+     * executes the 'getBug' MapDust service method, parses the obtained
      * response object and return a <code>MapdustGetBugResponse</code> object.
      * In the case if the response code is not 2
      *
@@ -155,14 +157,12 @@ public class MapdustConnector {
         } catch (Exception e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         }
-
         /* parse result */
         MapdustGetBugResponse result = null;
         try {
             handleStatusCode(httpResponse);
-            result =(MapdustGetBugResponse) parser.parseResponse(
-                            httpResponse.getContent(),
-                            MapdustGetBugResponse.class);
+            result = (MapdustGetBugResponse) getParser().parseResponse(
+                    httpResponse.getContent(), MapdustGetBugResponse.class);
         } catch (MapdustConnectorException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         } catch (MapdustParserException e) {
@@ -173,7 +173,7 @@ public class MapdustConnector {
 
     /**
      * Creates a new OSM bug with the specified arguments. The method executes
-     * the 'addBug' Mapdust service method, parses the obtained response object
+     * the 'addBug' MapDust service method, parses the obtained response object
      * and return a <code>MapdustPostResponse</code> object containing the id of
      * the created comment. In the case if the response code is not 200,201 or
      * 204, a corresponding exception will be thrown.
@@ -201,9 +201,8 @@ public class MapdustConnector {
         MapdustPostResponse result = null;
         try {
             handleStatusCode(httpResponse);
-            result =(MapdustPostResponse) parser.parseResponse(
-                            httpResponse.getContent(),
-                            MapdustPostResponse.class);
+            result = (MapdustPostResponse) getParser().parseResponse(
+                    httpResponse.getContent(), MapdustPostResponse.class);
         } catch (MapdustConnectorException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         } catch (MapdustParserException e) {
@@ -214,7 +213,7 @@ public class MapdustConnector {
 
     /**
      * Creates a new comment for the given bug. The method executes the
-     * 'commentBug' Mapdust service method, parses the obtained response object
+     * 'commentBug' MapDust service method, parses the obtained response object
      * and return a <code>MapdustPostResponse</code> object containing the id of
      * the created comment. In the case if the response code is not 200,201 or
      * 204, a corresponding exception will be thrown.
@@ -236,14 +235,12 @@ public class MapdustConnector {
         } catch (Exception e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         }
-
         /* parse result */
         MapdustPostResponse result = null;
         try {
             handleStatusCode(httpResponse);
-            result = (MapdustPostResponse) parser.parseResponse(
-                            httpResponse.getContent(),
-                            MapdustPostResponse.class);
+            result = (MapdustPostResponse) getParser().parseResponse(
+                    httpResponse.getContent(), MapdustPostResponse.class);
         } catch (MapdustConnectorException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         } catch (MapdustParserException e) {
@@ -254,7 +251,7 @@ public class MapdustConnector {
 
     /**
      * Changes the status of a given bug. The method executes the
-     * 'changeBugStatus' Mapdust service method, parses the obtained response
+     * 'changeBugStatus' MapDust service method, parses the obtained response
      * object and return a <code>MapdustPostResponse</code> object containing
      * the id of the created comment. In the case if the response code is not
      * 200,201 or 204, a corresponding exception will be thrown.
@@ -282,7 +279,7 @@ public class MapdustConnector {
         MapdustPostResponse result = null;
         try {
             handleStatusCode(httpResponse);
-            result = (MapdustPostResponse) parser.parseResponse(
+            result = (MapdustPostResponse) getParser().parseResponse(
                     httpResponse.getContent(), MapdustPostResponse.class);
         } catch (MapdustConnectorException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
@@ -293,21 +290,19 @@ public class MapdustConnector {
     }
 
     /**
-     * Executes the 'getBugs' Mapdust service method.
+     * Executes the 'getBugs' MapDust service method.
      *
-     * @param minLon The minimum longitude. This parameter is required.
-     * @param minLat The minimum latitude.This parameter is required.
-     * @param maxLon The maximum longitude.This parameter is required.
-     * @param maxLat The maximum latitude.This parameter is required.
-     *
+     * @param bBox The bounding box where the bugs are searched. This parameter
+     * it is a required parameter.
+     * @param filter The MapDust bug filter. The bugs can be filtered based on
+     * the status, type and description. This parameter is not required.
      * @return A <code>HttpResponse</code> object containing the JSON response.
      * @throws MalformedURLException In the case if the format of the URL is
      * invalid
      * @throws IOException In the case of an IO error
      */
-    private HttpResponse executeGetBugs(Double minLon, Double minLat,
-            Double maxLon, Double maxLat) throws MalformedURLException,
-            IOException {
+    private HttpResponse executeGetBugs(BoundingBox bBox,
+            MapdustBugFilter filter) throws MalformedURLException, IOException {
         HttpResponse httpResponse = null;
         String mapdustUri = Configuration.getInstance().getMapdustUrl();
         String mapdustApiKey = Configuration.getInstance().getMapdustKey();
@@ -316,20 +311,39 @@ public class MapdustConnector {
             urlString = mapdustUri;
             urlString += "/getBugs?";
             urlString += "key=" + mapdustApiKey;
-            urlString += "&bbox=" + minLon + "," + minLat + ",";
-            urlString += maxLon + "," + maxLat;
+            urlString += "&bbox=" + bBox.getMinLon();
+            urlString += "," + bBox.getMinLat();
+            urlString += "," + bBox.getMaxLon();
+            urlString += "," + bBox.getMaxLat();
+            if (filter != null) {
+                if (filter.getStatuses() != null
+                        && filter.getStatuses().size() > 0) {
+                    String paramStatus = buildParameter(filter.getStatuses());
+                    if (!paramStatus.isEmpty()) {
+                        urlString += "&fs=" + paramStatus;
+                    }
+                }
+                if (filter.getTypes() != null && filter.getTypes().size() > 0) {
+                    String paramTypes = buildParameter(filter.getTypes());
+                    if (!paramTypes.isEmpty()) {
+                        urlString += "&ft=" + paramTypes;
+                    }
+                }
+                if (filter.getDescr() != null && filter.getDescr()) {
+                    urlString += "&idd=" + "0";
+                }
+            }
         }
         URL url = null;
         if (urlString != null) {
             url = new URL(urlString);
-            httpResponse = httpConnector.executeGET(url);
-
+            httpResponse = getHttpConnector().executeGET(url);
         }
         return httpResponse;
     }
 
     /**
-     * Executes the 'getBug' Mapdust service method.
+     * Executes the 'getBug' MapDust service method.
      *
      * @param id The id of the object
      * @param paging The <code>Paging</code> object
@@ -362,18 +376,17 @@ public class MapdustConnector {
         URL url = null;
         if (urlString != null) {
             url = new URL(urlString);
-            httpResponse = httpConnector.executeGET(url);
-
+            httpResponse = getHttpConnector().executeGET(url);
         }
         return httpResponse;
     }
 
     /**
-     * Executes the 'addBug' Mapdust service method.
+     * Executes the 'addBug' MapDust service method.
      *
      * @param bug A <code>MapdustBug</code> object
      * @return A <code>HttpResponse</code> containing the JSON response of the
-     * Mapdust method.
+     * MapDust method.
      *
      * @throws MalformedURLException In the case if the format of the URL is
      * invalid
@@ -390,8 +403,8 @@ public class MapdustConnector {
             urlString = mapdustUri;
             urlString += "/addBug";
             requestParameters.put("key", mapdustApiKey);
-            String coordinatesStr =
-                    bug.getLatLon().getX() + "," + bug.getLatLon().getY();
+            String coordinatesStr = "" + bug.getLatLon().getX();
+            coordinatesStr += "," + bug.getLatLon().getY();
             requestParameters.put("coordinates", coordinatesStr);
             requestParameters.put("type", bug.getType().getKey());
             requestParameters.put("description", bug.getDescription());
@@ -400,19 +413,18 @@ public class MapdustConnector {
         URL url = null;
         if (urlString != null) {
             url = new URL(urlString);
-            httpResponse = httpConnector.executePOST(url, null,
+            httpResponse = getHttpConnector().executePOST(url, null,
                     requestParameters);
-
         }
         return httpResponse;
     }
 
     /**
-     * Executes the 'commentBug' Mapdust service method.
+     * Executes the 'commentBug' MapDust service method.
      *
      * @param comment The <code>MapdustComment</code> object
      * @return A <code>HttpResponse</code> containing the JSON response of the
-     * Mapdust method.
+     * MapDust method.
      * @throws MalformedURLException In the case if the format of the URL is
      * invalid
      * @throws IOException In the case of an IO error
@@ -435,20 +447,19 @@ public class MapdustConnector {
         URL url = null;
         if (urlString != null) {
             url = new URL(urlString);
-            httpResponse = httpConnector.executePOST(url, null,
+            httpResponse = getHttpConnector().executePOST(url, null,
                     requestParameters);
-
         }
         return httpResponse;
     }
 
     /**
-     * Executes the 'changeBugStatus' Mapdust service method.
+     * Executes the 'changeBugStatus' MapDust service method.
      *
      * @param statusId The id of the status.
      * @param comment A <code>MapdustComment</code> object.
      * @return A <code>HttpResponse</code> containing the JSON response of the
-     * Mapdust method.
+     * MapDust method.
      *
      * @throws MalformedURLException In the case if the format of the URL is
      * invalid
@@ -473,11 +484,28 @@ public class MapdustConnector {
         URL url = null;
         if (urlString != null) {
             url = new URL(urlString);
-            httpResponse = httpConnector.executePOST(url, null,
+            httpResponse = getHttpConnector().executePOST(url, null,
                     requestParameters);
-
         }
         return httpResponse;
+    }
+
+    /**
+     * Builds a string containing the elements of the given list. The elements
+     * will be separated by a comma. If the list does not contains any element
+     * the returned result will be an empty string.
+     *
+     * @param list The list of objects.
+     * @return a string
+     */
+    private String buildParameter(List<? extends Object> list) {
+        StringBuffer sb = new StringBuffer();
+        for (Object obj : list) {
+            if (obj != null) {
+                sb.append(obj).append(",");
+            }
+        }
+        return sb.substring(0, sb.length() - 1);
     }
 
     /**
@@ -507,41 +535,35 @@ public class MapdustConnector {
         switch (statusCode) {
             case 400:
                 errorMessage = statusMessage + " ";
-                errorMessage+= MapdustResponseStatusCode.Status400.getDescription();
+                errorMessage += MapdustResponseStatusCode.Status400.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 401:
-                errorMessage = statusMessage+ " ";
-                errorMessage+= MapdustResponseStatusCode.Status401.getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status401.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 403:
-                errorMessage = statusMessage   + " ";
-                errorMessage+= MapdustResponseStatusCode.Status403
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status403.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 404:
-                errorMessage = statusMessage+ " ";
-                errorMessage+=MapdustResponseStatusCode.Status404
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status404.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 405:
-                errorMessage = statusMessage+ " ";
-                errorMessage+= MapdustResponseStatusCode.Status405
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status405.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 500:
-                errorMessage = statusMessage  + " ";
-                errorMessage+=MapdustResponseStatusCode.Status500
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status500.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 601:
-                errorMessage = statusMessage  + " ";
-                errorMessage+=MapdustResponseStatusCode.Status601
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status601.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             case 602:
-                errorMessage = statusMessage+ " ";
-                errorMessage+= MapdustResponseStatusCode.Status602
-                                        .getDescription();
+                errorMessage = statusMessage + " ";
+                errorMessage += MapdustResponseStatusCode.Status602.getDescription();
                 throw new MapdustConnectorException(errorMessage);
             default:
                 throw new MapdustConnectorException(
@@ -550,6 +572,8 @@ public class MapdustConnector {
     }
 
     /**
+     * Returns the <code>HttpConnector</code>
+     *
      * @return the httpConnector
      */
     public HttpConnector getHttpConnector() {
@@ -557,6 +581,8 @@ public class MapdustConnector {
     }
 
     /**
+     * Sets the <code>MapdustParser</code>
+     *
      * @return the parser
      */
     public MapdustParser getParser() {

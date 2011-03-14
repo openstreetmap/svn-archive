@@ -54,10 +54,11 @@ public interface MapdustBugDetailsObservable {
     public void removeObserver(MapdustBugDetailsObserver observer);
 
     /**
-     * Notifies all the observers observing the given <code>MapdustAction</code>
-     * object.
+     * Notifies all the observers observing the details of the given
+     * <code>MapdustBug</code> object.
      *
      * @param mapdustBug The <code>MapdustBug</code> object
      */
     public void notifyObservers(MapdustBug mapdustBug);
+
 }

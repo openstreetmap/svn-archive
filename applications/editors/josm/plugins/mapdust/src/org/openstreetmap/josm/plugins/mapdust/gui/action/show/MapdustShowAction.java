@@ -43,7 +43,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 public abstract class MapdustShowAction extends AbstractAction {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4894445690647156702L;
 
     /** The title of the dialog window */
     protected String title;

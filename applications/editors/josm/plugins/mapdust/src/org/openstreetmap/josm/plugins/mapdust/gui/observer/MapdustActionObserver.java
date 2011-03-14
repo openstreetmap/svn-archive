@@ -32,32 +32,17 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
 
 
 /**
- * Observable interface for the MapdustAction list.
+ * The observer interface for the <code>MapdustAction</code> object.
  *
  * @author Bea
  * @version $Revision$
  */
-public interface MapdustActionListObservable {
+public interface MapdustActionObserver {
 
     /**
-     * Adds a new observer to the list of observers.
+     * Adds a new <code>MapdustAction</code> object to the MapDust action list
      *
-     * @param observer The <code>MapdustActionListObserver</code> object
+     * @param mapdustAction The <code>MapdustAction</code> list
      */
-    public void addObserver(MapdustActionListObserver observer);
-
-    /**
-     * Removes the given observer from the list of observers.
-     *
-     * @param observer The <code>MapdustActionListObserver</code> object
-     */
-    public void removeObserver(MapdustActionListObserver observer);
-
-    /**
-     * Notifies all the observers observing the given <code>MapdustAction</code>
-     * object.
-     *
-     * @param mapdustAction The <code>MapdustAction</code> object
-     */
-    public void notifyObservers(MapdustAction mapdustAction);
+    public void addAction(MapdustAction mapdustAction);
 }

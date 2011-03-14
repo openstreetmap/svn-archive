@@ -29,7 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.value;
 
 
 /**
- * Enum representing the MapDust plugin state. The plugin can be in the
+ * Enumeration representing the MapDust plugin state. The plugin can be in the
  * following 2 states: online and offline.
  *
  * @author Bea

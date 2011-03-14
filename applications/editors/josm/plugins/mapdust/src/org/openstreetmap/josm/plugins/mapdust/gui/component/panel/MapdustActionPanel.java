@@ -38,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteActionList;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.model.ActionListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
 
@@ -51,16 +52,16 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
 public class MapdustActionPanel extends JPanel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -6648507056357610823L;
 
     /** The scroll pane */
     private JScrollPane cmpActionList;
 
     /** The JList containing the MapDust action objects */
-    private JList queueList;
+    private JList actionJList;
 
     /** The list of <code>MapdustAction</code> objects */
-    private final List<MapdustAction> actionList;
+    private List<MapdustAction> actionList;
 
     /**
      * Builds a <code>MapdustActionPanel</code> object based on the given
@@ -87,20 +88,35 @@ public class MapdustActionPanel extends JPanel {
     private void addComponents(List<MapdustAction> list,
             MapdustPlugin mapdustPlugin) {
         /* create components */
-        AbstractAction action = new ExecuteActionList(mapdustPlugin.getMapdustGUI());
+        AbstractAction action = new ExecuteActionList
+        (mapdustPlugin.getMapdustGUI());
         JToggleButton btnUpload = ComponentUtil.createJButton("Upload list data",
                 null, null, action);
         ((ExecuteActionList) action).addObserver(mapdustPlugin);
         if (cmpActionList == null) {
-            queueList = ComponentUtil.createJList(list);
-            cmpActionList = ComponentUtil.createJScrollPane(queueList);
+            actionJList = ComponentUtil.createJList(list);
+            cmpActionList = ComponentUtil.createJScrollPane(actionJList);
         }
         add(cmpActionList, BorderLayout.CENTER);
         add(btnUpload, BorderLayout.SOUTH);
     }
 
     /**
-     * Returns the list of <code>MapdustAction</code> object
+     * Updates the <code>MapdustActionPanel</code> with the given list of
+     * <code>MapdustAction</code>s.
+     *
+     * @param actionList The list of <code>MapdustAction</code> objects
+     */
+    public void updateComponents(List<MapdustAction> actionList) {
+        setActionList(actionList);
+        actionJList.setModel(new ActionListModel(actionList));
+        cmpActionList.getViewport().setView(actionJList);
+        cmpActionList.invalidate();
+
+    }
+
+    /**
+     * Returns the list of <code>MapdustAction</code>s
      *
      * @return the actionList
      */
@@ -109,21 +125,12 @@ public class MapdustActionPanel extends JPanel {
     }
 
     /**
-     * Returns the action list <code>JScrollPane</code> object
+     * Sets the list of <code>MapdustAction</code>s
      *
-     * @return the cmpActionList
+     * @param actionList the actionList to set
      */
-    public JScrollPane getCmpActionList() {
-        return cmpActionList;
-    }
-
-    /**
-     * Returns the action list <code>JList</code> object
-     *
-     * @return the queueList
-     */
-    public JList getQueueList() {
-        return queueList;
+    public void setActionList(List<MapdustAction> actionList) {
+        this.actionList = actionList;
     }
 
 }

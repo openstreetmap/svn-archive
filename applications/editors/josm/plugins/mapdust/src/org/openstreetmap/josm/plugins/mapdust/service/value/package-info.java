@@ -1,4 +1,4 @@
 /**
- * Contains the objects used by representing the Mapdust data.
+ * Contains the objects used for representing the MapDust data.
  */
 package org.openstreetmap.josm.plugins.mapdust.service.value;

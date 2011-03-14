@@ -50,7 +50,7 @@ import org.openstreetmap.josm.plugins.mapdust.util.retry.RetrySetup;
 public class HttpConnector {
 
     /** The timeout */
-    private final int timeout = 10000;
+    private final int timeout = 20000;
 
     /** The <code>RetrySetup</code> */
     private final RetrySetup retrySetup;

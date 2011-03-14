@@ -38,9 +38,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploader;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploaderException;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 
 
 /**
@@ -52,14 +53,14 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
  *
  */
 public class ExecuteActionList extends MapdustExecuteAction implements
-        MapdustRefreshObservable {
+        MapdustUpdateObservable {
 
     /** Serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7487830542214611774L;
 
     /** List of MapdustRefreshObserver objects */
-    private final ArrayList<MapdustRefreshObserver> observers =
-            new ArrayList<MapdustRefreshObserver>();
+    private final ArrayList<MapdustUpdateObserver> observers =
+            new ArrayList<MapdustUpdateObserver>();
 
     /**
      * Builds a <code>ExceuteActionList</code> object
@@ -71,8 +72,8 @@ public class ExecuteActionList extends MapdustExecuteAction implements
     }
 
     /**
-     * Uploads the content of the action list to the MapDust service. 
-     * 
+     * Uploads the content of the action list to the MapDust service.
+     *
      * @param event The event which fires this action
      */
     @Override
@@ -80,16 +81,16 @@ public class ExecuteActionList extends MapdustExecuteAction implements
         if (event.getSource() instanceof JToggleButton) {
             try {
                 MapdustActionUploader.getInstance().uploadData(
-                        getMapdustGUI().getQueuePanel().getActionList());
+                        getMapdustGUI().getMapdustActionList());
             } catch (MapdustActionUploaderException e) {
                 String errorMessage = "There was an error uploading the ";
                 errorMessage += "action list.";
                 JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
                         tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
-            Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
-            getMapdustGUI().getPanel().getBtnPanel().getBtnRefresh().setEnabled(true);
-            notifyObservers();
+            Main.pref.put("mapdust.pluginState",
+                    MapdustPluginState.ONLINE.getValue());
+            notifyObservers(null, false);
         }
     }
 
@@ -99,7 +100,7 @@ public class ExecuteActionList extends MapdustExecuteAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void addObserver(MapdustRefreshObserver observer) {
+    public void addObserver(MapdustUpdateObserver observer) {
         if (!this.observers.contains(observer)) {
             this.observers.add(observer);
         }
@@ -111,7 +112,7 @@ public class ExecuteActionList extends MapdustExecuteAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustRefreshObserver observer) {
+    public void removeObserver(MapdustUpdateObserver observer) {
         this.observers.remove(observer);
     }
 
@@ -119,10 +120,10 @@ public class ExecuteActionList extends MapdustExecuteAction implements
      * Notifies the observers observing this action.
      */
     @Override
-    public void notifyObservers() {
-        Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
+    public void notifyObservers(MapdustBugFilter filter, boolean first) {
+        Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).refreshData();
+            (elements.next()).update(filter, false);
         }
     }
 

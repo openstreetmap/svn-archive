@@ -34,7 +34,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 
 
 /**
- * List model for <code>MapdustComment</code> objects
+ * List model for <code>MapdustComment</code> objects.
  *
  * @author Bea
  *
@@ -60,20 +60,34 @@ public class CommentListModel implements ListModel {
         this.comments = comments;
     }
 
-    @Override
-    public void addListDataListener(ListDataListener l) {}
-
+    /**
+     * Returns the <code>MapdustComment</code> from the given position.
+     *
+     * @param index The position of the element
+     * @return <code>MapdustComment</code> from the given position
+     */
     @Override
     public Object getElementAt(int index) {
-        return comments[index];
+        if (index > 0 && index < comments.length) {
+            return comments[index];
+        }
+        return null;
     }
 
+    /**
+     * Returns the size of the list of objects.
+     *
+     * @return size
+     */
     @Override
     public int getSize() {
-        return comments.length;
+        return (comments != null ? comments.length : 0);
     }
 
     @Override
     public void removeListDataListener(ListDataListener l) {}
+
+    @Override
+    public void addListDataListener(ListDataListener l) {}
 
 }

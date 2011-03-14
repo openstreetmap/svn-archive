@@ -40,7 +40,7 @@ import java.util.HashMap;
 public class Status implements Serializable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5534551701260061940L;
 
     /** The key of the <code>Status</code> */
     private Integer key;

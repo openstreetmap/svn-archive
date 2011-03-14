@@ -30,7 +30,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.adapter;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JToggleButton;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.AbstractDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
@@ -47,16 +46,12 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 public class WindowClose extends WindowAdapter {
 
     /** Serial version UID */
-    private static final long serialVersionUID = 1L;
 
     /** A <code>AbstractDialog</code> object */
     private AbstractDialog dialog;
 
     /** The <code>MapdustButtonPanel</code> object */
     private MapdustButtonPanel btnPanel;
-
-    /** The <code>JToggleButton</code> which had fired the dialog */
-    private JToggleButton btnFired;
 
     /**
      * Builds a <code>WindowClose</code> object
@@ -68,13 +63,10 @@ public class WindowClose extends WindowAdapter {
      *
      * @param dialog The dialog which will be closed
      * @param btnPanel The button panel
-     * @param btnFired The button which fired the display dialog action
      */
-    public WindowClose(AbstractDialog dialog, MapdustButtonPanel btnPanel,
-            JToggleButton btnFired) {
+    public WindowClose(AbstractDialog dialog, MapdustButtonPanel btnPanel ) {
         this.dialog = dialog;
         this.btnPanel = btnPanel;
-        this.btnFired = btnFired;
     }
 
     @Override
@@ -85,49 +77,44 @@ public class WindowClose extends WindowAdapter {
         if (btnPanel != null) {
             btnPanel.getBtnWorkOffline().setEnabled(true);
             btnPanel.getBtnWorkOffline().setSelected(false);
+            btnPanel.getBtnWorkOffline().setFocusable(false);
+            btnPanel.getBtnFilter().setEnabled(true);
+            btnPanel.getBtnFilter().setSelected(false);
+            btnPanel.getBtnFilter().setFocusable(false);
             if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                 btnPanel.getBtnRefresh().setEnabled(false);
             } else {
                 btnPanel.getBtnRefresh().setEnabled(true);
+                btnPanel.getBtnRefresh().setSelected(false);
+                btnPanel.getBtnRefresh().setFocusable(false);
             }
             if (status.equals(Status.OPEN.getValue())) {
                 btnPanel.getBtnFixBugReport().setEnabled(true);
                 btnPanel.getBtnInvalidateBugReport().setEnabled(true);
-                btnPanel.getBtnReOpenBugReport().setEnabled(false);
                 btnPanel.getBtnAddComment().setEnabled(true);
             } else {
                 if (status.equals(Status.FIXED.getValue())) {
-                    btnPanel.getBtnFixBugReport().setEnabled(false);
-                    btnPanel.getBtnInvalidateBugReport().setEnabled(false);
                     btnPanel.getBtnReOpenBugReport().setEnabled(true);
                     btnPanel.getBtnAddComment().setEnabled(true);
                 } else {
                     if (status.equals(Status.INVALID.getValue())) {
-                        btnPanel.getBtnFixBugReport().setEnabled(false);
-                        btnPanel.getBtnInvalidateBugReport().setEnabled(false);
                         btnPanel.getBtnReOpenBugReport().setEnabled(true);
                         btnPanel.getBtnAddComment().setEnabled(true);
-                    } else {
-                        btnPanel.getBtnFixBugReport().setEnabled(false);
-                        btnPanel.getBtnInvalidateBugReport().setEnabled(false);
-                        btnPanel.getBtnReOpenBugReport().setEnabled(false);
-                        btnPanel.getBtnAddComment().setEnabled(false);
                     }
                 }
             }
-            btnPanel.getBtnRefresh().setSelected(false);
-            btnPanel.getBtnAddComment().setSelected(false);
-            btnPanel.getBtnFixBugReport().setSelected(false);
-            btnPanel.getBtnInvalidateBugReport().setSelected(false);
-            btnPanel.getBtnReOpenBugReport().setSelected(false);
         }
-        /* enable fired button */
-        if (btnFired != null) {
-            btnFired.setEnabled(true);
-            btnFired.setSelected(false);
-        }
+
+        btnPanel.getBtnAddComment().setSelected(false);
+        btnPanel.getBtnAddComment().setFocusable(false);
+        btnPanel.getBtnFixBugReport().setSelected(false);
+        btnPanel.getBtnFixBugReport().setFocusable(false);
+        btnPanel.getBtnInvalidateBugReport().setSelected(false);
+        btnPanel.getBtnInvalidateBugReport().setFocusable(false);
+        btnPanel.getBtnReOpenBugReport().setSelected(false);
+        btnPanel.getBtnReOpenBugReport().setFocusable(false);
+
         /* dispose dialog */
-        dialog.setVisible(false);
         dialog.dispose();
     }
 

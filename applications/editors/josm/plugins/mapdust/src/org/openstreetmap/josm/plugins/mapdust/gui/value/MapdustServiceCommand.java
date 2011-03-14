@@ -29,7 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.value;
 
 
 /**
- * Enum representing the MapDust service "commands".
+ * Enumeration representing the MapDust service "commands".
  *
  * @author Bea
  * @version $Revision$

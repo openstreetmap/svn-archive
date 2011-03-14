@@ -27,6 +27,7 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
+
 import java.util.Date;
 
 
@@ -188,4 +189,5 @@ public class MapdustCommentProperties {
     public void setSource(String source) {
         this.source = source;
     }
+
 }

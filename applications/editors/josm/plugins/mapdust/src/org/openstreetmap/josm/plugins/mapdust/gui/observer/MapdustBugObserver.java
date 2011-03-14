@@ -45,4 +45,5 @@ public interface MapdustBugObserver {
      * @param mapdustBug A <code>MapdustBug</code> object
      */
     public void changedData(MapdustBug mapdustBug);
+
 }

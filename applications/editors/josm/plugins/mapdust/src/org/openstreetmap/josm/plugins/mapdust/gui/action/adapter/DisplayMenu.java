@@ -91,19 +91,16 @@ public class DisplayMenu extends MouseAdapter {
      */
     private void showMenu(MouseEvent event) {
         if (event.isPopupTrigger()) {
-            JList c = (JList) event.getComponent();
             int x = event.getX();
             int y = event.getY();
             int locationToIndex = listBugs.locationToIndex(event.getPoint());
             int selectedIndex = listBugs.getSelectedIndex();
             if (!listBugs.isSelectionEmpty()
                     && locationToIndex == selectedIndex) {
-                int count = c.getModel().getSize();
-                int cal = count * 18;
-                if (y <= cal) {
-                    menu.show(listBugs, x, y);
-                }
+                menu.show(listBugs, x, y);
+
             }
         }
     }
+
 }

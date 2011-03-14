@@ -38,8 +38,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateIssueDialog;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
@@ -63,18 +63,18 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
  *
  */
 public class ExecuteAddBug extends MapdustExecuteAction implements
-        MapdustBugObservable, MapdustActionListObservable {
+        MapdustBugObservable, MapdustActionObservable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8023875766573474513L;
 
-    /** The list of Mapdust bug observers */
+    /** The list of MapDust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
             new ArrayList<MapdustBugObserver>();
 
-    /** The list of Mapdust action observers */
-    private final ArrayList<MapdustActionListObserver> actionObservers =
-            new ArrayList<MapdustActionListObserver>();
+    /** The list of MapDust action observers */
+    private final ArrayList<MapdustActionObserver> actionObservers =
+            new ArrayList<MapdustActionObserver>();
 
     /**
      * Builds a <code>ExecuteAddBug</code> object
@@ -96,7 +96,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      * Creates a new <code>MapdustBug</code> object if the entered informations
      * are valid. Otherwise a corresponding warning message will be shown to the
      * user.
-     * 
+     *
      * @param event The action event which fires this action
      */
     @Override
@@ -121,19 +121,21 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
             if (p != null) {
                 latlon = Main.map.mapView.getLatLon(p.x, p.y);
             }
-            MapdustBug bug = new MapdustBug(latlon, type, commentText, nickname);
+            MapdustBug bug = new MapdustBug(latlon, type, commentText,
+                    nickname);
             String pluginState = Main.pref.get("mapdust.pluginState");
             if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                 /* offline state */
-                int index = getSelectedBugIndex();
                 bug.setStatus(Status.OPEN);
                 String iconPath = getIconPath(bug);
                 MapdustAction mapdustAction = new MapdustAction(
                         MapdustServiceCommand.ADD_BUG, iconPath, bug);
-                if (getMapdustGUI().getQueuePanel() != null) {
+                /* destroy dialog */
+                getDialog().dispose();
+                mapdustGUI.enableBtnPanel(false);
+                if (getMapdustGUI().getActionPanel() != null) {
                     notifyObservers(mapdustAction);
                 }
-                resetSelectedBug(index);
             } else {
                 /* online state */
                 MapdustServiceHandler handler = new MapdustServiceHandler();
@@ -142,7 +144,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
                     id = handler.addBug(bug);
                 } catch (MapdustServiceHandlerException e) {
                     errorMessage = "There was a Mapdust service error.";
-                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage), 
+                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
                             tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
                 if (id != null) {
@@ -152,18 +154,18 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
                         newMapdustBug = handler.getBug(id, null);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent, tr(errorMessage), 
-                                tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr(errorMessage), tr("Error"),
+                                JOptionPane.ERROR_MESSAGE);
                     }
+                    /* destroy dialog */
+                    getDialog().dispose();
+                    mapdustGUI.enableBtnPanel(false);
                     if (newMapdustBug != null) {
                         notifyObservers(newMapdustBug);
                     }
                 }
-                resetSelectedBug(0);
             }
-            /* destroy dialog */
-            getDialog().dispose();
-            return;
         }
     }
 
@@ -208,7 +210,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void addObserver(MapdustActionListObserver observer) {
+    public void addObserver(MapdustActionObserver observer) {
         if (!this.actionObservers.contains(observer)) {
             this.actionObservers.add(observer);
         }
@@ -221,7 +223,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustActionListObserver observer) {
+    public void removeObserver(MapdustActionObserver observer) {
         this.actionObservers.remove(observer);
 
     }
@@ -233,7 +235,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      */
     @Override
     public void notifyObservers(MapdustAction mapdustAction) {
-        Iterator<MapdustActionListObserver> elements =
+        Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
             (elements.next()).addAction(mapdustAction);

@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 
 import java.awt.event.ActionEvent;
+import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentIssueDialog;
@@ -36,7 +37,9 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 
 
 /**
- * Displays the comment bug dialog.
+ * Displays the <code>CommentIssueDialog</code> dialog window. This action is
+ * executed whenever the user clicks on the "Create bug report comment" button
+ * or selects the "Add comment" option from the pop-up menu.
  *
  * @author Bea
  *
@@ -44,7 +47,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 public class ShowCommentBugAction extends MapdustShowAction {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8174561825477499474L;
 
     /**
      * Builds a <code>ShowCommentBugAction</code> object
@@ -66,13 +69,22 @@ public class ShowCommentBugAction extends MapdustShowAction {
         setMessageText(text);
     }
 
+    /**
+     * Builds a <code>CommentIssueDialog</code> dialog window and displays
+     * on the screen.
+     *
+     * @param event The <code>ActionEvent</code> object
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
             JToggleButton btn = null;
             if (event.getSource() instanceof JToggleButton) {
                 btn = (JToggleButton) event.getSource();
-                btn.setEnabled(false);
+            } else {
+                if (event.getSource() instanceof JMenuItem) {
+                    getButtonPanel().getBtnAddComment().setSelected(true);
+                }
             }
             disableButtons(getButtonPanel());
             CommentIssueDialog dialog = new CommentIssueDialog(getTitle(),
@@ -84,13 +96,33 @@ public class ShowCommentBugAction extends MapdustShowAction {
         }
     }
 
+    /**
+     * Disables the buttons from the <code>MapdustButtonPanel</code> according
+     * to the executed action type. The only enabled button will be the "Create
+     * bug report comment" button.
+     *
+     * @param buttonPanel The <code>MapdustButtonPanel</code> object
+     */
     @Override
     void disableButtons(MapdustButtonPanel buttonPanel) {
         buttonPanel.getBtnWorkOffline().setEnabled(false);
+        buttonPanel.getBtnWorkOffline().setSelected(false);
+        buttonPanel.getBtnWorkOffline().setFocusable(false);
         buttonPanel.getBtnRefresh().setEnabled(false);
-        buttonPanel.getBtnFixBugReport().setEnabled(false);
+        buttonPanel.getBtnRefresh().setSelected(false);
+        buttonPanel.getBtnRefresh().setFocusable(false);
+        buttonPanel.getBtnFilter().setEnabled(false);
+        buttonPanel.getBtnFilter().setSelected(false);
+        buttonPanel.getBtnFilter().setFocusable(false);
         buttonPanel.getBtnInvalidateBugReport().setEnabled(false);
+        buttonPanel.getBtnInvalidateBugReport().setSelected(false);
+        buttonPanel.getBtnInvalidateBugReport().setFocusable(false);
         buttonPanel.getBtnReOpenBugReport().setEnabled(false);
+        buttonPanel.getBtnReOpenBugReport().setSelected(false);
+        buttonPanel.getBtnReOpenBugReport().setFocusable(false);
+        buttonPanel.getBtnFixBugReport().setEnabled(false);
+        buttonPanel.getBtnFixBugReport().setSelected(false);
+        buttonPanel.getBtnFixBugReport().setFocusable(false);
     }
 
 }

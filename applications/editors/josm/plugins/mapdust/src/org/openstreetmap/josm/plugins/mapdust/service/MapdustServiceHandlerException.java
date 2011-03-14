@@ -30,45 +30,45 @@ package org.openstreetmap.josm.plugins.mapdust.service;
 
 /**
  * Defines the exception type for <code>MapdustServiceHandler</code> object.
- * 
+ *
  * @author Bea
  */
 public class MapdustServiceHandlerException extends Exception {
-    
+
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = -2860059748215555626L;
+
     /**
      * Builds an empty <code>MapdustServiceHandlerException</code> object.
      */
     public MapdustServiceHandlerException() {
         super();
     }
-    
+
     /**
      * Builds a <code>MapdustServiceHandlerException</code> object based on the
      * given argument.
-     * 
+     *
      * @param message The message of the exception.
      */
     public MapdustServiceHandlerException(String message) {
         super(message);
     }
-    
+
     /**
      * Builds a <code>MapdustServiceHandlerException</code> object based on the
      * given argument.
-     * 
+     *
      * @param cause The cause of the exception.
      */
     public MapdustServiceHandlerException(Throwable cause) {
         super(cause);
     }
-    
+
     /**
      * Builds a <code>MapdustServiceHandlerException</code> object based on the
      * given arguments.
-     * 
+     *
      * @param message The message of the exception.
      * @param cause The cause of the exception.
      */

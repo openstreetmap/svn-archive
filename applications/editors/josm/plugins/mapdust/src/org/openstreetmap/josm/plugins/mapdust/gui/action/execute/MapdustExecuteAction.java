@@ -29,7 +29,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
 
 import javax.swing.AbstractAction;
-import javax.swing.JList;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.AbstractDialog;
@@ -46,7 +45,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 public abstract class MapdustExecuteAction extends AbstractAction {
 
     /** Serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4318259806647818543L;
 
     /** The abstract dialog object */
     protected AbstractDialog dialog;
@@ -112,38 +111,6 @@ public abstract class MapdustExecuteAction extends AbstractAction {
     }
 
     /**
-     * Returns the selected MapDust bug from the MapDust bugs list.
-     *
-     * @return A <code>MapdustBug</code> object
-     */
-    protected MapdustBug getSelectedBug() {
-        JList listBugs = this.mapdustGUI.getPanel().getListBugs();
-        MapdustBug selectedBug = (MapdustBug) listBugs.getSelectedValue();
-        return selectedBug;
-    }
-
-    /**
-     * Returns the index of the MapDust bug selected from the MapDust bugs list.
-     *
-     * @return index
-     */
-    protected int getSelectedBugIndex() {
-        JList listBugs = this.mapdustGUI.getPanel().getListBugs();
-        int index = listBugs.getSelectedIndex();
-        return index;
-    }
-
-    /**
-     * Sets the given object from the given index to be selected.
-     *
-     * @param index The index of the element from the list of bugs
-     */
-    protected void resetSelectedBug(int index) {
-        JList listBugs = this.mapdustGUI.getPanel().getListBugs();
-        listBugs.setSelectedIndex(index);
-    }
-
-    /**
      * Enables the given button. This button had fired a corresponding action,
      * and after the action finishes, the button need to become enabled.
      *
@@ -151,8 +118,8 @@ public abstract class MapdustExecuteAction extends AbstractAction {
      */
     protected void enableFiredButton(JToggleButton button) {
         if (button != null) {
-            button.setEnabled(true);
             button.setSelected(false);
+            button.setFocusable(false);
         }
     }
 

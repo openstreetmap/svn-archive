@@ -35,7 +35,7 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
  * @author Bea
  *
  */
-public class MapdustGetBugsResponse  {
+public class MapdustGetBugsResponse {
 
     /** The array of <code>MapdustBugContent</code> object */
     private MapdustBugContent[] features;
@@ -71,6 +71,5 @@ public class MapdustGetBugsResponse  {
     public void setFeatures(MapdustBugContent[] features) {
         this.features = features;
     }
-
 
 }

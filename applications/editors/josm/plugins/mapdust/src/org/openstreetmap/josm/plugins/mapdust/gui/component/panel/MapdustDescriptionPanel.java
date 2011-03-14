@@ -48,7 +48,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 public class MapdustDescriptionPanel extends JPanel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4246874841836269643L;
 
     /**
      * Builds a <code>MapdustDescriptionPanel</code> object
@@ -59,13 +59,33 @@ public class MapdustDescriptionPanel extends JPanel {
         setLayout(new BorderLayout());
         String name = "Description ";
         setName(name);
+        addComponents(description);
+    }
+
+    /**
+     * Updates the components of the <code>MapdustDescriptionPanel</code> based
+     * on the given parameter
+     *
+     * @param description The description
+     */
+    public void updateComponents(String description) {
+        removeAll();
+        addComponents(description);
+    }
+
+    /**
+     * Adds the components to the <code>MapdustDescriptionPanel</code>.
+     *
+     * @param description the description
+     */
+    private void addComponents(String description) {
         if (description != null && !description.isEmpty()) {
             JTextArea txtDescription = new JTextArea(description);
             txtDescription.setLineWrap(true);
             txtDescription.setFont(new Font("Times New Roman", Font.BOLD, 12));
             txtDescription.setEditable(false);
-            JScrollPane cmpDescription = ComponentUtil.createJScrollPane(txtDescription,
-                    null, Color.white, true, true);
+            JScrollPane cmpDescription = ComponentUtil.createJScrollPane(
+                    txtDescription, null, Color.white, true, true);
             cmpDescription.setPreferredSize(new Dimension(100, 100));
             add(cmpDescription, BorderLayout.CENTER);
         }

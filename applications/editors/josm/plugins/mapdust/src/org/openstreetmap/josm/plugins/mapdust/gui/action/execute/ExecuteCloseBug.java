@@ -37,8 +37,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
@@ -62,18 +62,18 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
  *
  */
 public class ExecuteCloseBug extends MapdustExecuteAction implements
-        MapdustBugObservable, MapdustActionListObservable {
+        MapdustBugObservable, MapdustActionObservable {
 
     /** Serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3468827127588061014L;
 
     /** The list of Mapdust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
             new ArrayList<MapdustBugObserver>();
 
     /** The list of Mapdust action observers */
-    private final ArrayList<MapdustActionListObserver> actionObservers =
-            new ArrayList<MapdustActionListObserver>();
+    private final ArrayList<MapdustActionObserver> actionObservers =
+            new ArrayList<MapdustActionObserver>();
 
     /**
      * Builds a <code>ExecuteCloseBug</code> object.
@@ -94,7 +94,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
     /**
      * Closes the given MapDust bug. If the entered informations are invalid a
      * corresponding warning message will be displayed.
-     * 
+     *
      * @param event The action event which fires this action
      */
     @Override
@@ -117,7 +117,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                 }
                 /* valid input data */
                 Main.pref.put("mapdust.nickname", nickname);
-                MapdustBug selectedBug = getSelectedBug();
+                MapdustBug selectedBug = mapdustGUI.getSelectedBug();
                 MapdustComment comment = new MapdustComment(selectedBug.getId(),
                         commentText, nickname);
                 String pluginState = Main.pref.get("mapdust.pluginState");
@@ -128,7 +128,11 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                     MapdustAction mapdustAction = new MapdustAction(
                             MapdustServiceCommand.CHANGE_BUG_STATUS, iconPath,
                             selectedBug, comment, 2);
-                    if (getMapdustGUI().getQueuePanel() != null) {
+                    /* destroy dialog */
+                    enableFiredButton(issueDialog.getFiredButton());
+                    mapdustGUI.enableBtnPanel(false);
+                    issueDialog.dispose();
+                    if (getMapdustGUI().getActionPanel()!= null) {
                         notifyObservers(mapdustAction);
                     }
                 } else {
@@ -139,29 +143,31 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                         id = handler.changeBugStatus(2, comment);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                                tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr(errorMessage), tr("Error"),
+                                JOptionPane.ERROR_MESSAGE);
                     }
                     if (id != null) {
                         // success
                         MapdustBug newMapdustBug = null;
                         try {
-                            newMapdustBug = handler.getBug(selectedBug.getId(), null);
+                            newMapdustBug = handler.getBug(selectedBug.getId(),
+                                    null);
                         } catch (MapdustServiceHandlerException e) {
                             errorMessage = "There was a Mapdust service error.";
-                            JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                                    tr("Error"), JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(Main.parent,
+                                    tr(errorMessage), tr("Error"),
+                                    JOptionPane.ERROR_MESSAGE);
                         }
+                        /* destroy dialog */
+                        enableFiredButton(issueDialog.getFiredButton());
+                        mapdustGUI.enableBtnPanel(false);
+                        issueDialog.dispose();
                         if (newMapdustBug != null) {
                             notifyObservers(newMapdustBug);
                         }
                     }
                 }
-                /* enable buttons */
-                enableFiredButton(issueDialog.getFiredButton());
-                resetSelectedBug(0);
-                /* destroy dialog */
-                issueDialog.dispose();
             }
         }
     }
@@ -184,7 +190,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void addObserver(MapdustActionListObserver observer) {
+    public void addObserver(MapdustActionObserver observer) {
         if (!this.actionObservers.contains(observer)) {
             this.actionObservers.add(observer);
         }
@@ -200,13 +206,15 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
         this.bugObservers.remove(observer);
 
     }
+
     /**
-     * Removes the MapDust action list observer object from the list of observers.
+     * Removes the MapDust action list observer object from the list of
+     * observers.
      *
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustActionListObserver observer) {
+    public void removeObserver(MapdustActionObserver observer) {
         this.actionObservers.remove(observer);
 
     }
@@ -227,7 +235,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
      */
     @Override
     public void notifyObservers(MapdustAction mapdustAction) {
-        Iterator<MapdustActionListObserver> elements =
+        Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
             (elements.next()).addAction(mapdustAction);

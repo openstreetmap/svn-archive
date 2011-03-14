@@ -35,7 +35,9 @@ import org.openstreetmap.josm.plugins.mapdust.service.connector.response.Mapdust
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugsResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustPostResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.converter.MapdustConverter;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BoundingBox;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Paging;
 
@@ -77,25 +79,23 @@ public class MapdustServiceHandler {
      * then an empty list will be returned. If one of the coordinates is missing
      * a corresponding exception will be thrown.
      *
-     * @param minLon The minimum longitude. This parameter is required.
-     * @param minLat The minimum latitude.This parameter is required.
-     * @param maxLon The maximum longitude.This parameter is required.
-     * @param maxLat The maximum latitude.This parameter is required.
+     * @param bBox The bounding box where the bugs are searched.
+     * @param filter The MapDust bug filter. The bugs can be filtered based on
+     * the status, type and description. This parameter is not required.
      * @return A list of <code>MapdustBug</code> objects.
-     *
      * @throws MapdustServiceHandlerException In the case of an error
      */
-    public List<MapdustBug> getBugs(Double minLon, Double minLat,
-            Double maxLon, Double maxLat) throws MapdustServiceHandlerException {
+    public List<MapdustBug> getBugs(BoundingBox bBox, MapdustBugFilter filter)
+            throws MapdustServiceHandlerException {
         MapdustGetBugsResponse getBugsResponse = null;
         /* validates the coordinates */
-        if (minLon == null || minLat == null || maxLon == null
-                || maxLat == null) {
+        if (bBox.getMinLon() == null || bBox.getMinLat() == null
+                || bBox.getMaxLon() == null || bBox.getMaxLat() == null) {
             throw new MapdustServiceHandlerException("Invalid coordinates!");
         }
         /* executes the getBug MapDust method */
         try {
-            getBugsResponse = connector.getBugs(minLon, minLat, maxLon, maxLat);
+            getBugsResponse = connector.getBugs(bBox, filter);
         } catch (MapdustConnectorException e) {
             throw new MapdustServiceHandlerException(e.getMessage(), e);
         }
@@ -151,7 +151,7 @@ public class MapdustServiceHandler {
             String errorMessage = "Invalid bug. The bug cannot be null!";
             throw new MapdustServiceHandlerException(errorMessage);
         }
-        /* executes the addbug MapDust method */
+        /* executes the addBug MapDust method */
         try {
             postResponse = connector.addBug(bug);
         } catch (MapdustConnectorException e) {
@@ -180,7 +180,7 @@ public class MapdustServiceHandler {
         MapdustPostResponse postResponse = null;
         /* validates comment */
         if (comment == null) {
-            String errorMessage="Invalid comment. The comment cannot be null!";
+            String errorMessage = "Invalid comment. The comment cannot be null!";
             throw new MapdustServiceHandlerException(errorMessage);
         }
         /* execute commentBug MapDust method */
@@ -218,7 +218,8 @@ public class MapdustServiceHandler {
         }
         /* validates comment */
         if (comment == null) {
-            String errorMessage="Invalid comment. The comment cannot be null!";
+            String errorMessage =
+                    "Invalid comment. The comment cannot be null!";
             throw new MapdustServiceHandlerException(errorMessage);
         }
         /* executes changeBugStatus MapDust method */

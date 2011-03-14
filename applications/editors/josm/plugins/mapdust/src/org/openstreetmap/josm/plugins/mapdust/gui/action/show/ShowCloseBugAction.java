@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 
 import java.awt.event.ActionEvent;
+import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
@@ -36,7 +37,10 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 
 
 /**
- * Displays the close bug action dialog window.
+ * Displays the <code>ChangeIssueStatusDialog</code> dialog window of type
+ * 'close'. This action is executed whenever the user clicks on the
+ * "Close bug report" button or selects the "Close bug" option from the pop-up
+ * menu.
  *
  * @author Bea
  *
@@ -44,7 +48,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 public class ShowCloseBugAction extends MapdustShowAction {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6459224244170352152L;
 
     /**
      * Builds a <code>ShowCloseBugAction</code> object
@@ -52,7 +56,8 @@ public class ShowCloseBugAction extends MapdustShowAction {
     public ShowCloseBugAction() {}
 
     /**
-     * Builds a <code>ShowCloseBugAction</code> object
+     * Builds a <code>ShowCloseBugAction</code> object based on the given
+     * argument.
      *
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
@@ -65,13 +70,22 @@ public class ShowCloseBugAction extends MapdustShowAction {
         setMessageText(text);
     }
 
+    /**
+     * Builds a <code>ChangeIssueStatusDialog</code> dialog window of type
+     * "close" and displays on the screen.
+     *
+     * @param event The <code>ActionEvent</code> object
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
             JToggleButton btn = null;
             if (event.getSource() instanceof JToggleButton) {
                 btn = (JToggleButton) event.getSource();
-                btn.setEnabled(false);
+            } else {
+                if (event.getSource() instanceof JMenuItem) {
+                    getButtonPanel().getBtnFixBugReport().setSelected(true);
+                }
             }
             disableButtons(getButtonPanel());
             ChangeIssueStatusDialog dialog = new ChangeIssueStatusDialog(
@@ -84,14 +98,33 @@ public class ShowCloseBugAction extends MapdustShowAction {
         }
     }
 
+    /**
+     * Disables the buttons from the <code>MapdustButtonPanel</code> according
+     * to the executed action type. The only enabled button will be close bug
+     * report button.
+     *
+     * @param buttonPanel The <code>MapdustButtonPanel</code> object
+     */
     @Override
     void disableButtons(MapdustButtonPanel buttonPanel) {
         buttonPanel.getBtnWorkOffline().setEnabled(false);
+        buttonPanel.getBtnWorkOffline().setSelected(false);
+        buttonPanel.getBtnWorkOffline().setFocusable(false);
         buttonPanel.getBtnRefresh().setEnabled(false);
+        buttonPanel.getBtnRefresh().setSelected(false);
+        buttonPanel.getBtnRefresh().setFocusable(false);
+        buttonPanel.getBtnFilter().setEnabled(false);
+        buttonPanel.getBtnFilter().setSelected(false);
+        buttonPanel.getBtnFilter().setFocusable(false);
         buttonPanel.getBtnAddComment().setEnabled(false);
+        buttonPanel.getBtnAddComment().setSelected(false);
+        buttonPanel.getBtnAddComment().setFocusable(false);
         buttonPanel.getBtnInvalidateBugReport().setEnabled(false);
+        buttonPanel.getBtnInvalidateBugReport().setSelected(false);
+        buttonPanel.getBtnInvalidateBugReport().setFocusable(false);
         buttonPanel.getBtnReOpenBugReport().setEnabled(false);
-
+        buttonPanel.getBtnReOpenBugReport().setSelected(false);
+        buttonPanel.getBtnReOpenBugReport().setFocusable(false);
     }
 
 }

@@ -42,7 +42,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
 public class ActionListModel extends AbstractListModel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4919264544683489112L;
 
     /**
      * The list of <code>MapdustAction</code> objects
@@ -50,28 +50,43 @@ public class ActionListModel extends AbstractListModel {
     private final List<MapdustAction> list;
 
     /**
-     * Builds a <code>MapdustAction</code> object
+     * Builds an empty <code>MapdustAction</code> object
      */
     public ActionListModel() {
         this.list = null;
     }
 
     /**
-     * Builds a <code>MapdustAction</code> object
+     * Builds a <code>MapdustAction</code> object based on the given argument
+     *
      * @param list A list of <code>MapdustAction</code> objects
      */
     public ActionListModel(List<MapdustAction> list) {
         this.list = list;
     }
 
+    /**
+     * Returns the <code>MapdustAction</code> from the given position.
+     *
+     * @param index The position of the element
+     * @return <code>MapdustAction</code> from the given position
+     */
     @Override
     public Object getElementAt(int index) {
-        return list.get(index);
+        if (index >= 0 && index < list.size()) {
+            return list.get(index);
+        }
+        return null;
     }
 
+    /**
+     * Returns the size of the list of objects.
+     *
+     * @return size
+     */
     @Override
     public int getSize() {
-        return list.size();
+        return (list != null ? list.size() : 0);
     }
 
 }

@@ -48,7 +48,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class BugListCellRenderer extends DefaultListCellRenderer {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5888587819204364046L;
 
     /**
      * Returns the cell renderer component of the MapDust bug list.
@@ -77,7 +77,10 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
             String text = "" + mapdustBug.getId() + ": ";
             text += mapdustBug.getType().getValue();
             if (mapdustBug.getAddress() != null) {
-                text += " (" + mapdustBug.getAddress().toString() + " )";
+                String addressStr=mapdustBug.getAddress().toString();
+                if (!addressStr.trim().isEmpty()) {
+                    text += " (" + mapdustBug.getAddress().toString() + " )";
+                }
             }
             DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,
                     Locale.getDefault());
@@ -85,6 +88,7 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
             text += df.format(mapdustBug.getDateUpdated());
             label.setText(text);
             label.setFont(new Font("Times New Roman", Font.BOLD, 12));
+            label.setSize(200, 20);
         }
         if (value instanceof String){
             /* show default text in the list */

@@ -42,7 +42,7 @@ import java.util.HashMap;
 public class Type implements Serializable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4022464908172242274L;
 
     /** The key of the <code>Type</code> */
     private String key;

@@ -54,7 +54,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
 public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8366853437915060878L;
 
     /**
      * Builds a <code>MapdustDescriptionPanel</code> object
@@ -93,7 +93,8 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
      * Builds the text of the Help panel. This text contains general information
      * related to the MapDust plugin.
      *
-     * @return
+     * @return a string containing the text which will be displayed on the Help
+     * tab
      */
     private String buildText() {
         String version = Main.pref.get("mapdust.version");

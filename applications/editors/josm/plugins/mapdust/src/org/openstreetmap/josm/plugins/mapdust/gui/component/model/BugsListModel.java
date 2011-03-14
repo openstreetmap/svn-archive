@@ -29,8 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.model;
 
 
 import java.util.List;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
+import javax.swing.AbstractListModel;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 
 
@@ -40,7 +39,10 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
  * @author Bea
  *
  */
-public class BugsListModel implements ListModel {
+public class BugsListModel extends AbstractListModel {
+
+    /** The serial version UID */
+    private static final long serialVersionUID = 3451277352571392219L;
 
     /** The list of <code>MapdustBug</code> objects */
     private final List<MapdustBug> bugs;
@@ -61,20 +63,35 @@ public class BugsListModel implements ListModel {
         this.bugs = bugs;
     }
 
-    @Override
-    public void addListDataListener(ListDataListener l) {}
-
+    /**
+     * Returns the <code>MapdustBug</code> from the given position.
+     *
+     * @param index The position of the element
+     * @return <code>MapdustBug</code> from the given position
+     */
     @Override
     public Object getElementAt(int index) {
-        return bugs.get(index);
+        if (index >= 0 && index < bugs.size()) {
+            return bugs.get(index);
+        }
+        return null;
     }
 
+    /**
+     * Returns the size of the list of objects.
+     *
+     * @return size
+     */
     @Override
     public int getSize() {
         return (bugs != null ? bugs.size() : 0);
     }
 
-    @Override
-    public void removeListDataListener(ListDataListener l) {}
+    /**
+     * Updates the bugs list model.
+     */
+    public void update() {
+        this.fireContentsChanged(this, 0, bugs.size() - 1);
+    }
 
 }

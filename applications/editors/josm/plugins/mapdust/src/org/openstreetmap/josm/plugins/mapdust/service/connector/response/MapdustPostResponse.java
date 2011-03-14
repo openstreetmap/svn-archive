@@ -72,4 +72,5 @@ public class MapdustPostResponse {
     public void setId(Long id) {
         this.id = id;
     }
+
 }

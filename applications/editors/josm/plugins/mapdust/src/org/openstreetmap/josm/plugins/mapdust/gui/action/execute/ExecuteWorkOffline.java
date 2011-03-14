@@ -38,13 +38,14 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploader;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploaderException;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustRefreshObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 
 
 /**
- * Executes the work offline action. In the offline mode the user actions will
+ * Executes the "work offline" action. In the offline mode the user actions will
  * not be uploaded immediately to the MapDust service. The user can perform the
  * following actions in offline mode: add bug, comment bug and change bug
  * status. After de-activating the offline mode the user's modifications will be
@@ -54,14 +55,14 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
  *
  */
 public class ExecuteWorkOffline extends MapdustExecuteAction implements
-        MapdustRefreshObservable {
+        MapdustUpdateObservable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8792828131813689548L;
 
-    /** The list of mapdust refresh observers */
-    private final ArrayList<MapdustRefreshObserver> observers =
-            new ArrayList<MapdustRefreshObserver>();
+    /** The list of MapDust refresh observers */
+    private final ArrayList<MapdustUpdateObserver> observers =
+            new ArrayList<MapdustUpdateObserver>();
 
     /**
      * Builds a <code>ExecuteWorkOffline</code> object.
@@ -80,7 +81,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
 
     /**
      * Sets the 'offline' mode for the plugin.
-     * 
+     *
      * @param event The event which fires this action
      */
     @Override
@@ -101,12 +102,12 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                     int result = JOptionPane.showConfirmDialog(Main.parent,
                             tr(message), tr(title), JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
-                        // process data
                         try {
                             MapdustActionUploader.getInstance().uploadData(
-                                    getMapdustGUI().getQueuePanel().getActionList());
+                                    getMapdustGUI().getMapdustActionList());
                         } catch (MapdustActionUploaderException e) {
-                            String errorMessage = "There was a Mapdust service error.";
+                            String errorMessage = "There was a Mapdust service";
+                            errorMessage+=" error.";
                             JOptionPane.showMessageDialog(Main.parent,
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
@@ -116,7 +117,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                             MapdustPluginState.ONLINE.getValue());
                     btn.setSelected(false);
                 }
-                notifyObservers();
+                notifyObservers(null, false);
             }
         }
     }
@@ -127,7 +128,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void addObserver(MapdustRefreshObserver observer) {
+    public void addObserver(MapdustUpdateObserver observer) {
         if (!this.observers.contains(observer)) {
             this.observers.add(observer);
         }
@@ -139,7 +140,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
      * @param observer The <code>MapdustRefreshObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustRefreshObserver observer) {
+    public void removeObserver(MapdustUpdateObserver observer) {
         this.observers.remove(observer);
     }
 
@@ -147,11 +148,11 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
      * Notifies the observers observing this action.
      */
     @Override
-    public void notifyObservers() {
-        Iterator<MapdustRefreshObserver> elements = this.observers.iterator();
+    public void notifyObservers(MapdustBugFilter filter, boolean first) {
+        Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).refreshData();
+            (elements.next()).update(filter, false);
         }
     }
-    
+
 }

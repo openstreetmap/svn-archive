@@ -55,6 +55,9 @@ public class MapdustBugProperties {
     /** The description of the bug */
     private String description;
 
+    /** Flag indicating if the description is default or not */
+    private boolean isDefaultDescription;
+
     /** The nickname of the bug */
     private String nickname;
 
@@ -92,6 +95,8 @@ public class MapdustBugProperties {
      * @param status The status of the bug
      * @param type The type of the bug
      * @param description The description of the bug
+     * @param isDefaultDescription Flag indicating if the description is default
+     * or not
      * @param nickname The nickname
      * @param skoUid The skobbler user id
      * @param extUid The external user id
@@ -102,15 +107,16 @@ public class MapdustBugProperties {
      * @param comments The array of comments
      */
     public MapdustBugProperties(Date dateCreated, Date dateUpdated,
-            Integer status, String type, String description, String nickname,
-            String skoUid, String extUid, String source, String kmlUrl,
-            Address address, Integer numberOfComments,
-            MapdustCommentProperties[] comments) {
+            Integer status, String type, String description,
+            boolean isDefaultDescription, String nickname, String skoUid,
+            String extUid, String source, String kmlUrl, Address address,
+            Integer numberOfComments, MapdustCommentProperties[] comments) {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.status = status;
         this.type = type;
         this.description = description;
+        this.isDefaultDescription = isDefaultDescription;
         this.nickname = nickname;
         this.skoUid = skoUid;
         this.extUid = extUid;
@@ -209,6 +215,24 @@ public class MapdustBugProperties {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns the isDefaultDescription flag
+     *
+     * @return the isDefaultDescription
+     */
+    public boolean getIsDefaultDescription() {
+        return isDefaultDescription;
+    }
+
+    /**
+     * Sets the isDefaultDescription flag
+     *
+     * @param isDefaultDescription the isDefaultDescription to set
+     */
+    public void setIsDefaultDescription(boolean isDefaultDescription) {
+        this.isDefaultDescription = isDefaultDescription;
     }
 
     /**
@@ -354,4 +378,5 @@ public class MapdustBugProperties {
     public void setComments(MapdustCommentProperties[] comments) {
         this.comments = comments;
     }
+
 }

@@ -60,7 +60,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class CommentIssueDialog extends AbstractDialog {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7788698281871951326L;
 
     /** The message text */
     private final String messageText;
@@ -117,19 +117,21 @@ public class CommentIssueDialog extends AbstractDialog {
         setForeground(Color.black);
         setLayout(null);
         addComponents(mapdustPlugin);
-        MapdustButtonPanel btnPanel = mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
-        addWindowListener(new WindowClose(this, btnPanel, getFiredButton()));
+        MapdustButtonPanel btnPanel =
+                mapdustPlugin.getMapdustGUI().getPanel().getBtnPanel();
+        addWindowListener(new WindowClose(this, btnPanel));
     }
 
     /**
-     * Add the components to the panel
+     * Add the components to the dialog window.
+     *
+     * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
     @Override
     public void addComponents(MapdustPlugin mapdustPlugin) {
-        /* initialize components of the JDialog */
         Color backgroundColor = getContentPane().getBackground();
         Font font = new Font("Times New Roman", Font.BOLD, 14);
-        /* create the message cmp */
+        /* message text */
         if (cmpMessage == null) {
             JTextPane txtPane = ComponentUtil.createJTextPane(messageText,
                     backgroundColor);
@@ -137,7 +139,7 @@ public class CommentIssueDialog extends AbstractDialog {
             cmpMessage = ComponentUtil.createJScrollPane(txtPane, bounds,
                     backgroundColor, true, true);
         }
-        /* create the nickname label and text field */
+        /* nickaname */
         if (lblNickname == null) {
             Rectangle bounds = new Rectangle(10, 70, 91, 25);
             lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds);
@@ -155,7 +157,7 @@ public class CommentIssueDialog extends AbstractDialog {
                 txtNickname.setText(nickname);
             }
         }
-        /* creates the comment label and text area */
+        /* comment */
         if (lblComment == null) {
             Rectangle bounds = new Rectangle(10, 110, 79, 25);
             lblComment = ComponentUtil.createJLabel("Comment", font, bounds);
@@ -168,14 +170,15 @@ public class CommentIssueDialog extends AbstractDialog {
             cmpComment = ComponentUtil.createJScrollPane(txtComment, bounds,
                     backgroundColor, false, true);
         }
-        /* creates the cancel button */
+        /* cancel button */
         if (btnCancel == null) {
             Rectangle bounds = new Rectangle(240, 170, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
-            btnCancel = ComponentUtil.createJButton("Cancel", bounds, cancelAction);
+            btnCancel = ComponentUtil.createJButton("Cancel", bounds,
+                    cancelAction);
         }
-        /* creates the ok button */
+        /* ok button */
         if (btnOk == null) {
             Rectangle bounds = new Rectangle(170, 170, 60, 25);
             ExecuteCommentBug okAction = new ExecuteCommentBug(this,
@@ -184,7 +187,7 @@ public class CommentIssueDialog extends AbstractDialog {
             okAction.addObserver(mapdustPlugin.getMapdustGUI());
             btnOk = ComponentUtil.createJButton("OK", bounds, okAction);
         }
-        /* add components to the frame */
+        /* add components */
         add(cmpMessage);
         add(lblNickname);
         add(txtNickname);

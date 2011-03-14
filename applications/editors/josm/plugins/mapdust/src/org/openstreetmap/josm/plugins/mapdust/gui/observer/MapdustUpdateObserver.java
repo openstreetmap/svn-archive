@@ -1,4 +1,5 @@
-/* Copyright (c) 2010, skobbler GmbH
+/*
+ * Copyright (c) 2010, skobbler GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,22 +25,33 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Created on Feb 10, 2011 by Bea
+ * Modified on $DateTime$ by $Author$
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.observer;
 
 
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+
+
 /**
- * The observer interface for the refresh action. Updates the MapDust plugin
- * with new MapDust data.
+ * The observer interface for the MapDust bug update action.
  *
  * @author Bea
  * @version $Revision$
  */
-public interface MapdustRefreshObserver {
+public interface MapdustUpdateObserver {
 
     /**
-     * Refreshes the MapDust data. Downloads the bugs from the current view, and
-     * updates the plugin with the new data.
+     * Updates the MapDust bugs based on the given filters. If the initialUpdate
+     * flag is true then the filters will not be applied to the MapDust bug
+     * data.
+     *
+     * @param filter The <code>MapdustBugFilter</code> object
+     * @param initialUpdate Indicates if the update action is for the first time
+     * or not.
      */
-    public void refreshData();
+    public void update(MapdustBugFilter filter, boolean initialUpdate);
+
 }

@@ -41,7 +41,7 @@ import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 public abstract class AbstractDialog extends JDialog {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7543537884312236858L;
 
     /** The button which opened the dialog window */
     private JToggleButton firedButton;
@@ -70,4 +70,5 @@ public abstract class AbstractDialog extends JDialog {
     public void setFiredButton(JToggleButton firedButton) {
         this.firedButton = firedButton;
     }
+
 }

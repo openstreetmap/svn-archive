@@ -37,8 +37,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentIssueDialog;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
@@ -53,7 +53,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 /**
  * Comments the given <code>MapdustBug</code> object. Validates the input data,
  * and based on the plugin state executes the corresponding action. If the
- * plugin is in the "ONLINE" state then executes the Mapdust Service
+ * plugin is in the "ONLINE" state then executes the MapDust Service
  * 'commentBug' method with the given input parameters. If the plugin is in the
  * "OFFLINE" state then the given action is added to the actions list.
  *
@@ -61,18 +61,18 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
  *
  */
 public class ExecuteCommentBug extends MapdustExecuteAction implements
-        MapdustBugObservable, MapdustActionListObservable {
+        MapdustBugObservable, MapdustActionObservable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4391634740784919337L;
 
-    /** The list of Mapdust bug observers */
+    /** The list of MapDust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
             new ArrayList<MapdustBugObserver>();
 
     /** The list of mapdust action observers */
-    private final ArrayList<MapdustActionListObserver> actionObservers =
-            new ArrayList<MapdustActionListObserver>();
+    private final ArrayList<MapdustActionObserver> actionObservers =
+            new ArrayList<MapdustActionObserver>();
 
     /**
      * Builds a <code>ExecuteCommentBug</code> object
@@ -93,7 +93,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
     /**
      * Creates a comment for the given MapDust bug. If the entered informations
      * are invalid a corresponding warning message will be displayed.
-     * 
+     *
      * @param event The action event which fires this action
      */
     @Override
@@ -116,7 +116,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                 }
                 /* valid */
                 Main.pref.put("mapdust.nickname", nickname);
-                MapdustBug selectedBug = getSelectedBug();
+                MapdustBug selectedBug = mapdustGUI.getSelectedBug();
                 MapdustComment comment = new MapdustComment(selectedBug.getId(),
                         commentText, nickname);
                 String pluginState = Main.pref.get("mapdust.pluginState");
@@ -126,7 +126,8 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                     MapdustAction mapdustAction = new MapdustAction(
                             MapdustServiceCommand.COMMENT_BUG, iconPath,
                             selectedBug, comment);
-                    if (getMapdustGUI().getQueuePanel() != null) {
+                    if (getMapdustGUI().getActionPanel() != null) {
+                        issueDialog.dispose();
                         notifyObservers(mapdustAction);
                     }
                 } else {
@@ -137,14 +138,16 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                         id = handler.commentBug(comment);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                                tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr(errorMessage), tr("Error"),
+                                JOptionPane.ERROR_MESSAGE);
                     }
                     if (id != null) {
                         // success
                         MapdustBug newMapdustBug = null;
                         try {
-                            newMapdustBug = handler.getBug(selectedBug.getId(), null);
+                            newMapdustBug = handler.getBug(selectedBug.getId(),
+                                    null);
                         } catch (MapdustServiceHandlerException e) {
                             errorMessage = "There was a Mapdust service error.";
                             JOptionPane.showMessageDialog(Main.parent,
@@ -158,7 +161,8 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                 }
                 /* enable buttons */
                 enableFiredButton(issueDialog.getFiredButton());
-                resetSelectedBug(0);
+                mapdustGUI.enableBtnPanel(false);
+                mapdustGUI.getPanel().resetSelectedBug(0);
                 /* destroy dialog */
                 issueDialog.dispose();
             }
@@ -183,7 +187,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void addObserver(MapdustActionListObserver observer) {
+    public void addObserver(MapdustActionObserver observer) {
         if (!this.actionObservers.contains(observer)) {
             this.actionObservers.add(observer);
         }
@@ -201,12 +205,13 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
     }
 
     /**
-     * Removes the MapDust action list observer object from the list of observers.
+     * Removes the MapDust action list observer object from the list of
+     * observers.
      *
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustActionListObserver observer) {
+    public void removeObserver(MapdustActionObserver observer) {
         this.actionObservers.remove(observer);
     }
 
@@ -226,11 +231,11 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
      */
     @Override
     public void notifyObservers(MapdustAction mapdustAction) {
-        Iterator<MapdustActionListObserver> elements =
+        Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
             (elements.next()).addAction(mapdustAction);
         }
     }
-    
+
 }

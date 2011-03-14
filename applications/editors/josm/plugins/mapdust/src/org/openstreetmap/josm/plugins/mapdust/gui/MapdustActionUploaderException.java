@@ -30,46 +30,46 @@ package org.openstreetmap.josm.plugins.mapdust.gui;
 
 /**
  * Specific exception for the <code>MapdustActionUploader</code> object
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 public class MapdustActionUploaderException extends Exception {
-    
+
     /** Serial version UID */
-    private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = -6128820229665805478L;
+
     /**
      * Builds an empty <code>MapdustActionUploaderException</code> object.
      */
     public MapdustActionUploaderException() {
         super();
     }
-    
+
     /**
      * Builds a <code>MapdustActionUploaderException</code> object based on the
      * given argument.
-     * 
+     *
      * @param message The message of the exception.
      */
     public MapdustActionUploaderException(String message) {
         super(message);
     }
-    
+
     /**
      * Builds a <code>MapdustActionUploaderException</code> object based on the
      * given argument.
-     * 
+     *
      * @param cause The cause of the exception.
      */
     public MapdustActionUploaderException(Throwable cause) {
         super(cause);
     }
-    
+
     /**
      * Builds a <code>MapdustActionUploaderException</code> object based on the
      * given arguments.
-     * 
+     *
      * @param message The message of the exception.
      * @param cause The cause of the exception.
      */

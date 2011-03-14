@@ -37,8 +37,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionListObserver;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
+import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
@@ -63,18 +63,18 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
  *
  */
 public class ExecuteReOpenBug extends MapdustExecuteAction implements
-        MapdustBugObservable, MapdustActionListObservable {
+        MapdustBugObservable, MapdustActionObservable {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8275121997644127251L;
 
-    /** The list of mapdust bug observers */
+    /** The list of MapDust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
             new ArrayList<MapdustBugObserver>();
 
-    /** The list of mapdust action observers */
-    private final ArrayList<MapdustActionListObserver> actionObservers =
-            new ArrayList<MapdustActionListObserver>();
+    /** The list of MapDust action observers */
+    private final ArrayList<MapdustActionObserver> actionObservers =
+            new ArrayList<MapdustActionObserver>();
 
     /**
      * Builds a <code>ExecuteReOpenBug</code> object
@@ -94,7 +94,7 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
     }
 
     /**
-     * 
+     *
      * @param event The event which fires this action
      */
     @Override
@@ -111,31 +111,32 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
                 String errorMessage = validate(nickname, commentText);
                 if (errorMessage != null) {
                     /* invalid data */
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr(errorMessage), tr("Missing input data"),
-                            JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                            tr("Missing input data"), JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 /* valid */
                 Main.pref.put("mapdust.nickname", nickname);
-                MapdustBug selectedBug = getSelectedBug();
-                MapdustComment comment =
-                        new MapdustComment(selectedBug.getId(), commentText,
-                                nickname);
+                MapdustBug selectedBug = mapdustGUI.getSelectedBug();
+                MapdustComment comment = new MapdustComment(selectedBug.getId(),
+                        commentText, nickname);
                 String pluginState = Main.pref.get("mapdust.pluginState");
                 if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                     /* offline , save to action list */
                     selectedBug.setStatus(Status.OPEN);
                     String iconPath = getIconPath(selectedBug);
-                    MapdustAction mapdustAction =
-                            new MapdustAction(
-                                    MapdustServiceCommand.CHANGE_BUG_STATUS,
-                                    iconPath, selectedBug, comment, 1);
-                    if (getMapdustGUI().getQueuePanel() != null) {
+                    MapdustAction mapdustAction = new MapdustAction(
+                            MapdustServiceCommand.CHANGE_BUG_STATUS, iconPath,
+                            selectedBug, comment, 1);
+                    /* destroy dialog */
+                    mapdustGUI.enableBtnPanel(false);
+                    enableFiredButton(issueDialog.getFiredButton());
+                    issueDialog.dispose();
+                    if (getMapdustGUI().getActionPanel() != null) {
                         notifyObservers(mapdustAction);
                     }
                 } else {
-                    /* online, call Mapdust service method */
+                    /* online, call MapDust service method */
                     MapdustServiceHandler handler = new MapdustServiceHandler();
                     Long id = null;
                     try {
@@ -148,11 +149,10 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
                                 JOptionPane.ERROR_MESSAGE);
                     }
                     if (id != null) {
-                        // success
                         MapdustBug newMapdustBug = null;
                         try {
-                            newMapdustBug =
-                                    handler.getBug(selectedBug.getId(), null);
+                            newMapdustBug = handler.getBug(selectedBug.getId(),
+                                    null);
                         } catch (MapdustServiceHandlerException e) {
                             errorMessage = "There was a Mapdust service error.";
                             errorMessage += "Mapdust bug report.";
@@ -160,16 +160,14 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
                         }
+                        mapdustGUI.enableBtnPanel(false);
+                        enableFiredButton(issueDialog.getFiredButton());
+                        issueDialog.dispose();
                         if (newMapdustBug != null) {
                             notifyObservers(newMapdustBug);
                         }
                     }
                 }
-                /* enable buttons */
-                enableFiredButton(issueDialog.getFiredButton());
-                resetSelectedBug(0);
-                /* destroy dialog */
-                issueDialog.dispose();
             }
         }
     }
@@ -192,7 +190,7 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void addObserver(MapdustActionListObserver observer) {
+    public void addObserver(MapdustActionObserver observer) {
         if (!this.actionObservers.contains(observer)) {
             this.actionObservers.add(observer);
         }
@@ -210,12 +208,13 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
     }
 
     /**
-     * Removes the MapDust action list observer object from the list of observers.
+     * Removes the MapDust action list observer object from the list of
+     * observers.
      *
      * @param observer The <code>MapdustActionListObserver</code> object
      */
     @Override
-    public void removeObserver(MapdustActionListObserver observer) {
+    public void removeObserver(MapdustActionObserver observer) {
         this.actionObservers.remove(observer);
 
     }
@@ -236,11 +235,11 @@ public class ExecuteReOpenBug extends MapdustExecuteAction implements
      */
     @Override
     public void notifyObservers(MapdustAction mapdustAction) {
-        Iterator<MapdustActionListObserver> elements =
+        Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
             (elements.next()).addAction(mapdustAction);
         }
     }
-    
+
 }

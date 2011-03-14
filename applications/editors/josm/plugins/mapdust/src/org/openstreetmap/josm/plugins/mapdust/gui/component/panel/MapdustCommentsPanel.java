@@ -51,7 +51,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 public class MapdustCommentsPanel extends JPanel {
 
     /** The serial version UID */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5730420562553912697L;
 
     /**
      * Builds a <code>MapdustCommentsPanel</code> object based on the given
@@ -61,9 +61,17 @@ public class MapdustCommentsPanel extends JPanel {
      */
     public MapdustCommentsPanel(MapdustComment[] comments) {
         setLayout(new BorderLayout());
-        String name = "Bug Comments (";
-        name += comments.length + " )";
-        setName(name);
+        addComponents(comments);
+    }
+
+    /**
+     * Updates the components of the <code>MapdustCommentsPanel</code> based on
+     * the given parameter.
+     *
+     * @param comments The array of <code>MapdustComment</code>s
+     */
+    public void updateComponents(MapdustComment[] comments) {
+        removeAll();
         addComponents(comments);
     }
 
@@ -73,6 +81,9 @@ public class MapdustCommentsPanel extends JPanel {
      * @param comments The array of <code>MapdustComment</code> objects
      */
     private void addComponents(MapdustComment[] comments) {
+        String name = "Bug Comments (";
+        name += comments.length + " )";
+        setName(name);
         JTextArea txt = new JTextArea();
         txt.setAutoscrolls(true);
         txt.setEditable(false);

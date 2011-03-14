@@ -64,6 +64,9 @@ public class MapdustBug {
     /** The description of the bug */
     private String description;
 
+    /** Flag indicating if the description is default or not */
+    private boolean isDefaultDescription;
+
     /** The nickname of the user who created the bug */
     private String nickname;
 
@@ -119,6 +122,8 @@ public class MapdustBug {
      * @param status The status of the bug
      * @param type The type of the bug
      * @param description The description of the bug
+     * @param isDefaultDescription Flag indicating if the description is default
+     * or not
      * @param nickname The nickname
      * @param skoUid The skobbler user id
      * @param extUid The external user id
@@ -129,9 +134,9 @@ public class MapdustBug {
      */
     public MapdustBug(Long id, LatLon latLon, Address address,
             Date dateCreated, Date dateUpdated, Status status, Type type,
-            String description, String nickname, String skoUid, String extUid,
-            String source, String kmlUrl, Integer numberOfComments,
-            MapdustComment[] comments) {
+            String description, boolean isDefaultDescription, String nickname,
+            String skoUid, String extUid, String source, String kmlUrl,
+            Integer numberOfComments, MapdustComment[] comments) {
         this.id = id;
         this.latLon = latLon;
         this.address = address;
@@ -140,6 +145,7 @@ public class MapdustBug {
         this.status = status;
         this.type = type;
         this.description = description;
+        this.isDefaultDescription = isDefaultDescription;
         this.nickname = nickname;
         this.skoUid = skoUid;
         this.extUid = extUid;
@@ -273,6 +279,24 @@ public class MapdustBug {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns the isDefaultDescription flag
+     *
+     * @return the isDefaultDescription
+     */
+    public boolean getIsDefaultDescription() {
+        return isDefaultDescription;
+    }
+
+    /**
+     * Sets the isDefaultDescription flag
+     *
+     * @param isDefaultDescription the isDefaultDescription to set
+     */
+    public void setIsDefaultDescription(boolean isDefaultDescription) {
+        this.isDefaultDescription = isDefaultDescription;
     }
 
     /**
@@ -417,5 +441,37 @@ public class MapdustBug {
     public void setComments(MapdustComment[] comments) {
         this.comments = comments;
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MapdustBug other = (MapdustBug) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
 
 }

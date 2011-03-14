@@ -35,11 +35,11 @@
 				<attribute name="Author" value="Rafal Jachowicz: rjachow@gmail.com" />
 				<attribute name="Main-Class" value="org.openstreetmap.josm.plugins.namemanager.NameManagerMain" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.namemanager.NameManagerPlugin" />
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
+				<attribute name="Plugin-Date" value="12-03-2011" />
 				<attribute name="Plugin-Description" value="Allows to attribute tags to all objects in any selected area at once" />
 				<attribute name="pl_Plugin-Description" value="Pozwala na dodawanie, edycję i usuwanie tagów znajdujących się we wskazanym obszarze na raz" />
 				<attribute name="Plugin-Mainversion" value="3966" />
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
+				<attribute name="Plugin-Version" value="1.1" />
 			</manifest>
 		</jar>
 	</target>

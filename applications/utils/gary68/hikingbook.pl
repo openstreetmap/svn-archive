@@ -16,16 +16,18 @@
 # 0.93 variable discs, taginfo -> pdf
 # 0.94 role selection; title and outName defaults
 # 0.95 sanitize
-# 
+# 0.96 contour data
 
 
 use strict ;
 use warnings ;
 use Getopt::Long ;
 use OSM::osm ;
+use OSM::QuadTree ;
+
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.95" ;
+my $version = "0.96" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -121,6 +123,9 @@ my %nodeElevation = () ;
 my %nodeInfo = () ;
 my $segmentLength = 0 ;
 my %stepInformation = () ;
+my %contourData = () ;
+my %contourWays = () ;
+my $qt ;
 
 my @poiList ;   # POIs actually found
 my @pois = () ; # POIs to be used
@@ -170,6 +175,8 @@ getStepInformation() ;
 createTemp1 () ;
 
 buildCompleteWay() ;
+
+compileElevationData () ;
 
 addPois() ;
 
@@ -411,6 +418,9 @@ sub createTemp1 {
 
 		print "reading temp file...\n" ;
 
+		my $contourCount = 0 ;
+		my %neededNodes = () ;
+
 		# openOsmFile ($inFileName) ;
 		openOsmFile ($temp1FileName) ; # 0.92
 		skipNodes() ;
@@ -419,8 +429,12 @@ sub createTemp1 {
 		($propRef, $nodesRef, $tagsRef) = getWay3() ;
 		while (defined $propRef) {
 			my $needed = 0 ;
+			my $contourNeeded = 0 ;
+			my $ele = -999 ;
 			foreach my $t (@$tagsRef) {
 				if ($t->[0] eq "highway") { $needed = 1 ; }
+				if ($t->[0] eq "contour_ext") { $contourNeeded = 1 ; }
+				if ($t->[0] eq "ele") { $ele = $t->[1] ; }
 			}
 
 			if ($needed) {
@@ -436,9 +450,19 @@ sub createTemp1 {
 				}
 			}
 
+			if ( ($contourNeeded) and ($ele != -999) and (scalar @$nodesRef > 1) ) {
+				$contourCount++ ;
+				@{ $wayNodesHash{ $$propRef{"id"} } } = @$nodesRef ;
+				$contourWays { $$propRef{"id"} } = $ele ;
+				foreach my $n ( @$nodesRef ) {
+					$neededNodes{$n} = 1 ;
+				}
+			}
+
 			($propRef, $nodesRef, $tagsRef) = getWay3() ;
 		}
 		closeOsmFile() ;
+		print "$contourCount contour ways found.\n" ;
 
 		# store min / max of temp file
 
@@ -446,6 +470,12 @@ sub createTemp1 {
 		openOsmFile ($temp1FileName) ;
 		($propRef, $tagsRef) = getNode3() ;
 		while (defined $propRef) {
+
+			if (defined $neededNodes { $$propRef{"id"} }) {
+				$lon { $$propRef{"id"} } = $$propRef{"lon"} ;
+				$lat { $$propRef{"id"} } = $$propRef{"lat"} ;
+			}
+
 			if ( $$propRef{"lon"} > $file1LonMax ) { $file1LonMax = $$propRef{"lon"} ; }
 			if ( $$propRef{"lon"} < $file1LonMin ) { $file1LonMin = $$propRef{"lon"} ; }
 			if ( $$propRef{"lat"} > $file1LatMax ) { $file1LatMax = $$propRef{"lat"} ; }
@@ -475,6 +505,13 @@ sub createTemp1 {
 		closeOsmFile() ;
 
 		# print "temp1: $file1LonMin, $file1LatMin, $file1LonMax, $file1LatMax\n" ;
+
+		$qt = OSM::QuadTree->new (	-xmin => $file1LonMin, 
+						-xmax => $file1LonMax, 
+						-ymin => $file1LatMin, 
+						-ymax => $file1LatMax, 
+						-depth => 6) ;
+
 
 	}
 }
@@ -1208,6 +1245,13 @@ sub createDirections {
 		}
 	}
 
+	foreach my $d (keys %contourData) {
+		$countEle++ ; 
+		if ($contourData{$d} > $eleMax) { $eleMax = $contourData{$d} ; }
+		if ($contourData{$d} < $eleMin) { $eleMin = $contourData{$d} ; }
+
+	}
+
 	if ($countEle >= 2) {
 
 		my $picWidth = 110 ;
@@ -1252,6 +1296,13 @@ sub createDirections {
 				print $texFile "\\put($x,$y){\\circle*{1}}\n" ;
 			}
 		}
+
+		foreach my $d (keys %contourData) {
+			my $x = int ($d / $width * ($picWidth - $xOffset)) + $xOffset ;
+			my $y = ($contourData{$d} - $eleMin) / 10 + $yOffset ;
+			print $texFile "\\put($x,$y){\\circle*{1}}\n" ;
+		}
+
 		print $texFile "\\end{picture}\n" ;
 	}
 
@@ -1772,3 +1823,72 @@ sub sanitizeLatexString {
 	} 
 	return $out ;
 }
+
+
+sub compileElevationData {
+	print "evaluating contour data...\n" ;
+
+	foreach my $wayId (keys %contourWays) {
+
+		my ($x1, $x2, $y1, $y2) = getArea ( @{$wayNodesHash{$wayId}} );
+
+		$qt->add ($wayId, $x1, $y1, $x2, $y2) ;
+	}
+
+
+	my $count = 0 ;
+	for (my $a = 0; $a < $#nodes; $a++) { #way 1
+		# print "a = $a\n" ;
+
+		my $ref = $qt->getEnclosedObjects ( 	min( $lon{$nodes[$a]}, $lon{$nodes[$a+1]}),
+							min( $lat{$nodes[$a]}, $lat{$nodes[$a+1]}),
+							max( $lon{$nodes[$a]}, $lon{$nodes[$a+1]}),
+							max( $lat{$nodes[$a]}, $lat{$nodes[$a+1]}) ) ;
+		my @temp = @$ref ;
+
+		foreach my $cw ( @temp ) { #way 2
+		# foreach my $cw (keys %contourWays) { #way 2
+			for ($b=0; $b<$#{$wayNodesHash{$cw}}; $b++) {
+				# print "cw= $cw\n" ;
+				# print "b = $b\n" ;
+				my ($x, $y) = crossing ($lon{ $nodes[$a] }, 
+						$lat{ $nodes[$a] }, 
+						$lon{ $nodes[$a+1] }, 
+						$lat{ $nodes[$a+1] }, 
+						$lon{$wayNodesHash{$cw}[$b]}, 
+						$lat{$wayNodesHash{$cw}[$b]}, 
+						$lon{$wayNodesHash{$cw}[$b+1]}, 
+						$lat{$wayNodesHash{$cw}[$b+1]}) ;
+				if (($x != 0) and ($y != 0)) {
+					$count ++ ;
+					my $dist = $nodeInfo{$a}{"distance"} + distance ($lon{$nodes[$a]}, $lat{$nodes[$a]}, $x, $y) ;
+					$contourData{$dist} = $contourWays { $cw } ;
+					if ($verboseOpt eq "1") {
+						print "contour intersection found: ($x, $y), $dist, $contourWays{$cw}\n" ;
+					}
+				}
+			}
+		}
+	}
+	print "done. $count intersections found.\n" ;
+}
+
+
+sub getArea {
+	my @nodes = @_ ;
+
+	my $minLon = 999 ;
+	my $maxLon = -999 ;
+	my $minLat = 999 ;
+	my $maxLat = -999 ;
+
+
+	foreach my $node (@nodes) {
+		if ($lon{$node} > $maxLon) { $maxLon = $lon{$node} ; }
+		if ($lon{$node} < $minLon) { $minLon = $lon{$node} ; }
+		if ($lat{$node} > $maxLat) { $maxLat = $lat{$node} ; }
+		if ($lat{$node} < $minLat) { $minLat = $lat{$node} ; }
+	}	
+	return ($minLon, $maxLon, $minLat, $maxLat) ;
+}
+

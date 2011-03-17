@@ -106,7 +106,7 @@
 				<!--<attribute name="Plugin-Icon" value="..." />-->
 				<!--<attribute name="Plugin-Link" value="..." />-->
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
-				<attribute name="Plugin-Version" value="1" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 			</manifest>
 		</jar>
 	</target>

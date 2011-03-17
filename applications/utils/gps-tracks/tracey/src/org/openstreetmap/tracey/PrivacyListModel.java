@@ -10,7 +10,7 @@ import javax.swing.ComboBoxModel;
 
 /**
  *
- * @author jono
+ * @author Jonathan Bennett	
  */
 public class PrivacyListModel extends AbstractListModel implements ComboBoxModel  {
 
@@ -20,7 +20,7 @@ public class PrivacyListModel extends AbstractListModel implements ComboBoxModel
 		this.privacy = Privacy.PRIVATE;
 	}
 
-		public Privacy getSelectedItem() {
+	public Privacy getSelectedItem() {
 		return this.privacy;
 	}
 

@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.DefaultListModel;
 
 /**
  * The application's main frame.
@@ -175,10 +174,13 @@ public class TraceyView extends FrameView {
 			for (File fileToUpload : traceListModel) {
 				try {
 					uploader.upload(description, tags, privacy, fileToUpload);
+					Thread.sleep(60000);
 					//traceListModel.remove(fileToUpload);
 				}
 				catch (IOException fault) {
 					System.err.println("IOException: " + fault.getMessage());
+				}
+				catch (InterruptedException interruption) {
 				}
 			}
 			traceListModel.clear();

@@ -50,12 +50,12 @@ function init() {
 
   map = new OpenLayers.Map ("map", {
     controls: [
+      new OpenLayers.Control.ArgParser(),
       new OpenLayers.Control.Navigation(),
       new OpenLayers.Control.PanZoomBar(),
       new OpenLayers.Control.LayerSwitcher(),
       new OpenLayers.Control.Attribution(),
-      new OpenLayers.Control.Permalink(),
-      new OpenLayers.Control.ArgParser()
+      new OpenLayers.Control.Permalink()
     ],
     projection: "EPSG:900913",
     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
@@ -129,10 +129,9 @@ function init() {
     epsg4326, map.getProjectionObject());
   if( ! map.getCenter() ){
     map.setCenter(lonLat, zoom);
+    if(layers){ setActiveLayers(layers); }
   }
-  if (layers) {
-    setActiveLayers(layers);
-  }
+
   updatelinks();
   map.events.register("moveend", map, updatelinks);
   map.events.register("changelayer", map, updatelinks);
@@ -244,7 +243,7 @@ function setArgs(url, args) {
 function updatelinks() {
   var lonlat = map.getCenter().clone().transform(map.getProjectionObject(), epsg4326);
   var zoom = map.getZoom();
-  var osmorg = 'http://www.openstreetmap.org'
+  var osmorg = 'http://www.openstreetmap.org';
   var node;
   var decimals = Math.pow(10, Math.floor(zoom/3));
   lat = Math.round(lonlat.lat * decimals) / decimals;

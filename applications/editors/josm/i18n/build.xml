@@ -5,8 +5,8 @@
   <property name="josm.presets"      value="${josm.build.dir}/data/defaultpresets.xml"/>
   <property name="josm.style"        value="${josm.build.dir}/styles/standard/elemstyles.xml"/>
   <property name="plugin.dir"        value="../plugins"/>
-  <property name="validator.tagfile" value="${plugin.dir}/validator/tagchecker.cfg"/>
-  <property name="wms.srcfile"       value="${plugin.dir}/wmsplugin/sources.cfg"/>
+  <property name="validator.tagfile" value="${josm.build.dir}/data/tagchecker.cfg"/>
+  <property name="wms.srcfile"       value="http://josm.openstreetmap.de/maps"/>
   <property name="surveyor.srcfile"  value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
   <property name="i18n.build.dir"    value="build"/>
   <property name="i18n.install.dir"  value="${josm.build.dir}/data"/>

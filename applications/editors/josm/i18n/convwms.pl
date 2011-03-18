@@ -4,6 +4,7 @@
 # Public domain, no rights reserved.
 
 use strict;
+use LWP::Simple;
 
 my $item;
 my $comment = 0;
@@ -15,8 +16,19 @@ my $comment = 0;
 # so that the input and output line numbers will match.
 print "class trans_wms { void tr(String s){} void f() {";
 
-while(my $line = <>)
+my @lines;
+if($ARGV[0] && $ARGV[0] =~ /^http:\/\//)
 {
+  @lines = split("\r?\n", get($ARGV[0]));
+}
+else
+{
+  @lines = <>;
+}
+
+for my $line (@lines)
+{
+  $line =~ s/\r//g;
   chomp($line);
   if($line =~ /^#(.*)$/)
   {

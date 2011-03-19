@@ -33,10 +33,10 @@
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <PolygonSymbolizer>
+    <LineSymbolizer>
       <CssParameter name="stroke">#000</CssParameter>
       <CssParameter name="stroke-width">0.2</CssParameter>
-    </PolygonSymbolizer>
+    </LineSymbolizer>
   </Rule>
 </Style>
 

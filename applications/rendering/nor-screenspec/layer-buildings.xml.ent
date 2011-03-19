@@ -31,6 +31,13 @@
       <CssParameter name="fill">#9a5f21</CssParameter>
     </PolygonSymbolizer>
   </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <PolygonSymbolizer>
+      <CssParameter name="stroke">#000</CssParameter>
+      <CssParameter name="stroke-width">0.2</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
 </Style>
 
 <Layer name="buildings" status="on" srs="&osm2pgsql_projection;">

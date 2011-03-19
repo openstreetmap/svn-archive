@@ -24,7 +24,7 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable;
  *
  */
 public class ContourMergeView implements MapViewPaintable{
-	static private final Logger logger = Logger.getLogger(ContourMergeView.class.getName());
+	//static private final Logger logger = Logger.getLogger(ContourMergeView.class.getName());
 	
 	static private ContourMergeView instance;
 	
@@ -47,7 +47,7 @@ public class ContourMergeView implements MapViewPaintable{
 	protected void decorateFeedbackNode(Graphics2D g, MapView mv, Bounds bbox){
 		Node n = ContourMergePlugin.getModelManager().getActiveModel().getFeedbackNode();
 		if (n == null) return;
-		/* currently no decoration - mouse pointer is chaning if mouse over a node */
+		/* currently no decoration - mouse pointer is changing if mouse over a node */
 	}
 	
 	protected void decorateSelectedNode(Graphics2D g, MapView mv, Bounds bbox, Node node){
@@ -321,6 +321,7 @@ public class ContourMergeView implements MapViewPaintable{
 		if (!ContourMergePlugin.isEnabled()) return;
 		ContourMergeModel model = ContourMergePlugin.getModelManager().getActiveModel();
 		if (model == null) return;
+		if (!model.getLayer().isVisible()) return;
 		decorateSelectedNodes(g, mv, bbox);
 		decorateFeedbackNode(g, mv, bbox);		
 		WaySlice dragSourceSlice = model.getDragSource();

@@ -38,7 +38,7 @@ import org.openstreetmap.josm.plugins.contourmerge.util.Assert;
  * if the <tt>contourmerge</tt> map mode is enabled.</p>
  */
 public class ContourMergeModel implements DataSetListener{
-	static private final Logger logger = Logger.getLogger(ContourMergeModel.class.getName());
+	//static private final Logger logger = Logger.getLogger(ContourMergeModel.class.getName());
 	
 	private OsmDataLayer layer;	
 	private Node feedbackNode;
@@ -397,14 +397,13 @@ public class ContourMergeModel implements DataSetListener{
 		if (dropTarget == null) return null;
 		List<Node> targetNodes = dropTarget.getNodes();
 		if (! areDirectionAligned(dragSource, dropTarget)) {
-			logger.info("not direction aligned !");
 			Collections.reverse(targetNodes);
 		}
 		List<Command> cmds = new ArrayList<Command>();
 		// the command to change the source way
 		cmds.add(new ChangeCommand(dragSource.getWay(), dragSource.replaceNodes(targetNodes)));
 		
-		// the command to delete nodes we don't need anymore 
+		// the commands to delete nodes we don't need anymore 
 		for (Node n: dragSource.getNodes()) {
 			List<OsmPrimitive> parents = n.getReferrers();
 			parents.remove(dragSource.getWay());
@@ -415,6 +414,14 @@ public class ContourMergeModel implements DataSetListener{
 		
 		SequenceCommand cmd = new SequenceCommand(tr("Merging Contour"), cmds);
 		return cmd;
+	}
+	
+	protected boolean haveSameStartAndEndNode(List<Node> n1, List<Node> n2) {
+		return n1.get(0) == n2.get(0) && n1.get(n1.size()-1) == n2.get(n2.size()-1);
+	}
+	
+	protected boolean haveReversedStartAndEndeNode(List<Node> n1, List<Node> n2) {
+		return n1.get(0) == n2.get(n2.size()-1) && n1.get(n1.size()-1) == n2.get(0);
 	}
 	
 	/**
@@ -428,6 +435,16 @@ public class ContourMergeModel implements DataSetListener{
 	 * @return true, if the two polylines are "direction aligned".
 	 */
 	protected boolean areDirectionAligned(List<Node> n1, List<Node> n2) {
+		/*
+		 * Check whether n1 and n2 start and end at the same nodes
+		 */
+		if (haveSameStartAndEndNode(n1, n2)) return true;
+		if (haveReversedStartAndEndeNode(n1,n2)) return false;
+		/*
+		 * n1 and n2 have different start or end nodes. Draw an imaginary line
+		 * from the start of n1 to start of n2 and from the end of n1 to the end
+		 * of n2 and check whether they intersect. 
+		 */
 		EastNorth s1 = n1.get(0).getEastNorth();
 		EastNorth s2 = n1.get(n1.size()-1).getEastNorth();
 		
@@ -437,7 +454,6 @@ public class ContourMergeModel implements DataSetListener{
 		Line2D l1 = new Line2D.Double(s1.getX(), s1.getY(), t1.getX(),t1.getY());
 		Line2D l2 = new Line2D.Double(s2.getX(), s2.getY(), t2.getX(),t2.getY());
 		return ! l1.intersectsLine(l2);
-
 	}
 	
 	/**
@@ -451,6 +467,7 @@ public class ContourMergeModel implements DataSetListener{
 	protected boolean areDirectionAligned(WaySlice dragSource, WaySlice dropTarget){
 		if (dragSource == null) return false;
 		if (dropTarget == null) return false;
+		
 		return areDirectionAligned(dragSource.getNodes(), dropTarget.getNodes());
 	}
 

@@ -26,7 +26,7 @@
 -->
 <project name="contourmerge" default="dist" basedir=".">
 
-	<property name="commit.message" value="Fixed: unexpected intersections after drag-and-drop" />
+	<property name="commit.message" value="fixed broken test cases submitted by Lennard; fixed ant script again" />
 	<property name="plugin.main.version" value="3835" />
 
 	<!--
@@ -71,7 +71,7 @@
     -->
 	<target name="dist" depends="compile,revision">
 		<echo message="creating ${plugin.jar} for version ${version.entry.commit.revision} ... " />
-		<copy todir="${plugin.build.dir}/images">
+		<copy todir="${plugin.build.dir}">
 			<fileset dir="images">
 				<exclude name="*.svg" />
 			</fileset>

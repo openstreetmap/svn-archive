@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.contourmerge.util.Assert;
  * 
  */
 public class WaySlice {
-	static private final Logger logger = Logger.getLogger(WaySlice.class.getName());
+	//static private final Logger logger = Logger.getLogger(WaySlice.class.getName());
 
 	private Way w;
 	private int start;
@@ -287,9 +287,9 @@ public class WaySlice {
 			if (inDirection) {
 				nodes.addAll(w.getNodes().subList(start, end+1));
 			} else {
-				for (int i=start; i>=0; i--) nodes.add(w.getNode(i));
 				// do not add the last node which is the join node common to the node at index 0
-				for (int i=w.getNodesCount()-2; i>=end; i--) nodes.add(w.getNode(i));
+				for (int i=end; i<=w.getNodesCount()-2;i++)nodes.add(w.getNode(i));
+				for (int i=0; i <= start; i++) nodes.add(w.getNode(i));
 			}
 		}
 		return nodes;

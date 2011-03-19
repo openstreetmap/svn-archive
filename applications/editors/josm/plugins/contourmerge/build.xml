@@ -71,7 +71,7 @@
     -->
 	<target name="dist" depends="compile,revision">
 		<echo message="creating ${plugin.jar} for version ${version.entry.commit.revision} ... " />
-		<copy todir="${plugin.build.dir}">
+		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images">
 				<exclude name="*.svg" />
 			</fileset>

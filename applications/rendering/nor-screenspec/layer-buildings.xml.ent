@@ -35,7 +35,7 @@
     &maxscale_zoom16;
     <LineSymbolizer>
       <CssParameter name="stroke">#000</CssParameter>
-      <CssParameter name="stroke-width">0.2</CssParameter>
+      <CssParameter name="stroke-width">0.4</CssParameter>
     </LineSymbolizer>
   </Rule>
 </Style>

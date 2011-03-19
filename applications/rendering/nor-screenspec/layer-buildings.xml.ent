@@ -37,7 +37,7 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,man_made,amenity,railway,aeroway,military,leisure,shop,tourism,historic
+    (select way,building,man_made,amenity,railway,aeroway,military,leisure,shop,tourism,historic,
       case
         when building in ('house','detached','terrace','apartments','garage','garages') then 'residential'::text
         when building in ('office','manufacture','factory','industrial','greenhouse','hangar','supermarket','store','retail','public','hall','service') then 'commercial'::text

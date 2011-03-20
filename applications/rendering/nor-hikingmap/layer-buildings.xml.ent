@@ -1,10 +1,49 @@
-
 <Style name="buildings">
   <Rule>
+    <Filter>[building]='commercial' or [man_made]='works' or [amenity]!='' or [shop]!='' or [tourism]!='' or [leisure]='stadium' or [leisure]='sports_centre' or [railway]='station' or [aeroway]='terminal' or [aeroway]='hangar'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#333</CssParameter>
     </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[building]='residential'</Filter>
+    &maxscale_zoom15;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">#666</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[building]='hut'</Filter>
+    &maxscale_zoom15;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">#666</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>([building]!='' and not ([building]='commercial' or [building]='residential' or [building]='hut' or [amenity]!='' or [shop]!='' or [tourism]!='' or [leisure]!='' or [man_made]!='' or [railway]!='' or [aeroway]!='')) or [military]!='' or [historic]='castle'</Filter>
+    &maxscale_zoom13;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">#444</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#000</CssParameter>
+      <CssParameter name="stroke-width">0.5</CssParamete>r
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[man_made]='water_tower' or [man_made]='storage_tank' or [man_made]='silo'</Filter>
+    &maxscale_zoom15;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">#999</CssParameter>
+    </PolygonSymbolizer>
+    <LineSymbolizer>
+      <CssParameter name="stroke">#000</CssParameter>
+      <CssParameter name="stroke-width">0.4</CssParameter>
+    </LineSymbolizer>
   </Rule>
 </Style>
 
@@ -12,15 +51,22 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,leisure,railway,amenity,aeroway,landuse,historic,military from &prefix;_polygon
+    (select way,man_made,amenity,railway,aeroway,military,leisure,shop,tourism,historic,
+      case
+        when building in ('house','detached','terrace','apartments','garage','garages') then 'residential'::text
+        when building in ('office','manufacture','factory','industrial','greenhouse','hangar','supermarket','store','retail','public','hall','school','university','service') then 'commercial'::text
+        when building in ('cabin','pavilion','canopy') then 'hut'::text
+        else building
+      end as building
+     from &prefix;_polygon
      where building is not null
-        or landuse='building'
-        or leisure in ('sports_centre','stadium')
-        or historic='castle'
-        or amenity in ('place_of_worship','townhall')
-        or military='barracks'
+        and building!='no'
+        or man_made in ('works','storage_tank','silo','water_tower')
+        or amenity in ('place_of_worship','public_building','townhall','courthouse')
         or railway='station'
-        or aeroway='terminal'
+        or aeroway in ('terminal','hangar')
+        or military in ('barracks','bunker')
+        or historic='castle'
      order by z_order,way_area desc) as buildings
     </Parameter>
     &datasource-settings;

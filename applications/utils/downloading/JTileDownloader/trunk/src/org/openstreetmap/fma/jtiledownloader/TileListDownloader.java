@@ -56,8 +56,6 @@ public class TileListDownloader
 
     private boolean paused = false;
 
-    final static private int THREADS = 1;
-
     private int _numberOfTilesToDownload = 0;
     private int _errorCount = 0;
     private int _updatedTilesCount = 0;
@@ -93,7 +91,7 @@ public class TileListDownloader
     public void start()
     {
         paused = false;
-        for (int i = 0; i < THREADS; i++)
+        for (int i = 0; i < AppConfiguration.getInstance().getDownloadThreads(); i++)
         {
             TileListDownloaderThread downloaderThread = new TileListDownloaderThread();
             downloaderThread.start();

@@ -51,6 +51,7 @@ public class AppConfiguration
     private String _lastZoom = "12";
     private String _outputFolder = "tiles";
 
+    private int _downloadThreads = 1;
     private boolean _overwriteExistingFiles = true;
 
     private int _minimumAgeInDays = 7;
@@ -77,6 +78,7 @@ public class AppConfiguration
     private static final String LAST_ZOOM = "LastZoom";
     private static final String LAST_OUTPUTFOLDER = "LastOutoutFolder";
 
+    private static final String DOWNLOAD_THREADS = "DownloadThreads";
     private static final String OVERWRITE_EXISTING_FILES = "OverwriteExistingFiles";
 
     private static final String MINIMUM_AGE_IN_DAYS = "MinimumAgeInDays";
@@ -139,6 +141,7 @@ public class AppConfiguration
         setLastZoom(prop.getProperty(LAST_ZOOM, _lastZoom));
         setOutputFolder(prop.getProperty(LAST_OUTPUTFOLDER, _outputFolder));
 
+        setDownloadThreads(Integer.parseInt(prop.getProperty(DOWNLOAD_THREADS, String.valueOf(getDownloadThreads()))));
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, String.valueOf(isOverwriteExistingFiles()))).booleanValue());
 
         setSlippyMap_NoDownload(Boolean.valueOf(prop.getProperty(SLIPPYMAP_NODOWNLOAD, String.valueOf(isSlippyMap_NoDownload()))).booleanValue());
@@ -533,5 +536,27 @@ public class AppConfiguration
     {
         _slippyMap_SaveTiles = slippyMapSaveTiles;
         setProperty(prop, SLIPPYMAP_SAVETILES, "" + _slippyMap_SaveTiles);
+    }
+
+    /**
+     * Getter for downloadThreads
+     * @return the downloadThreads
+     */
+    public int getDownloadThreads()
+    {
+        return _downloadThreads;
+    }
+
+    /**
+     * Setter for downloadThreads
+     * @param downloadThreads the downloadThreads to set
+     */
+    public void setDownloadThreads(int downloadThreads)
+    {
+        if (downloadThreads >= 1)
+        {
+            _downloadThreads = downloadThreads;
+        }
+        setProperty(prop, DOWNLOAD_THREADS, "" + _downloadThreads);
     }
 }

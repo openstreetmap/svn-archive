@@ -1,6 +1,6 @@
 <Style name="buildings">
   <Rule>
-    <Filter>([building]!='' and not ([building]='residential' or [building]='hut')) or [man_made]='works' or [amenity]!='' or [shop]!='' or [tourism]!='' or [leisure]='stadium' or [leisure]='sports_centre' or [railway]='station' or [aeroway]!='' or [military]!='' or [historic]='castle'</Filter>
+    <Filter>([building]!='' and not ([building]='residential' or [building]='hut')) or [man_made]='works' or [amenity]!='' or [railway]='station' or [aeroway]!='' or [military]!='' or [historic]='castle'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#333</CssParameter>
@@ -33,7 +33,7 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,man_made,amenity,railway,aeroway,military,leisure,shop,tourism,historic,
+    (select way,man_made,amenity,railway,aeroway,military,historic,
       case
         when building in ('house','detached','terrace','apartments','garage','garages') then 'residential'::text
         when building in ('cabin','pavilion','canopy') then 'hut'::text

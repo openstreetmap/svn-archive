@@ -23,7 +23,7 @@ package org.openstreetmap.fma.jtiledownloader;
 
 public class Constants
 {
-    public static final String VERSION = "0.5pre";
+    public static final String VERSION = "0.5";
 
     public static final double EARTH_CIRC_POLE = 40.007863 * Math.pow(10, 6);
     public static final double EARTH_CIRC_EQUATOR = 40.075016 * Math.pow(10, 6);

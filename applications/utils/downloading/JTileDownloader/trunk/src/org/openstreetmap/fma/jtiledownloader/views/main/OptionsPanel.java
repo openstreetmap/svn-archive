@@ -85,79 +85,70 @@ public class OptionsPanel
     {
         setLayout(new GridBagLayout());
 
+        GridBagConstraints outerConstraints = new GridBagConstraints();
+        outerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        outerConstraints.weightx = 1.0;
+        outerConstraints.fill = GridBagConstraints.HORIZONTAL;
+        outerConstraints.insets = new Insets(10, 5, 0, 5);
+
+        GridBagConstraints innerConstraints = new GridBagConstraints();
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        innerConstraints.weightx = 1.0;
+        innerConstraints.fill = GridBagConstraints.HORIZONTAL;
+        innerConstraints.insets = new Insets(5, 5, 0, 5);
+
+
         JPanel panelWaitOptions = new JPanel();
-
-        GridBagConstraints constraintsWaitOptions = new GridBagConstraints();
-        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
-        constraintsWaitOptions.weightx = 1.0;
-        constraintsWaitOptions.fill = GridBagConstraints.HORIZONTAL;
-        constraintsWaitOptions.insets = new Insets(5, 5, 0, 5);
-
         panelWaitOptions.setLayout(new GridBagLayout());
         Border borderWaitOptions = new TitledBorder("Wait Options");
         panelWaitOptions.setBorder(borderWaitOptions);
 
-        panelWaitOptions.add(_chkWaitAfterNrTiles, constraintsWaitOptions);
+        panelWaitOptions.add(_chkWaitAfterNrTiles, innerConstraints);
 
-        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
-        panelWaitOptions.add(_labelWaitSeconds, constraintsWaitOptions);
-        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
-        panelWaitOptions.add(_textWaitSeconds, constraintsWaitOptions);
-        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
-        panelWaitOptions.add(_labelWaitNrTiles, constraintsWaitOptions);
-        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
-        panelWaitOptions.add(_textWaitNrTiles, constraintsWaitOptions);
+        innerConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        panelWaitOptions.add(_labelWaitSeconds, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        panelWaitOptions.add(_textWaitSeconds, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        panelWaitOptions.add(_labelWaitNrTiles, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        panelWaitOptions.add(_textWaitNrTiles, innerConstraints);
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        constraints.weightx = 1.0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(10, 5, 0, 5);
-        add(panelWaitOptions, constraints);
+        add(panelWaitOptions, outerConstraints);
 
-        GridBagConstraints constraintsSlippyMapOptions = new GridBagConstraints();
-        constraintsSlippyMapOptions.gridwidth = GridBagConstraints.REMAINDER;
-        constraintsSlippyMapOptions.weightx = 1.0;
-        constraintsSlippyMapOptions.fill = GridBagConstraints.HORIZONTAL;
-        constraintsSlippyMapOptions.insets = new Insets(5, 5, 0, 5);
 
         JPanel slippyMapOptions = new JPanel();
         slippyMapOptions.setLayout(new GridBagLayout());
         Border borderSlippyMapOptions = new TitledBorder("SlippyMap Options");
         slippyMapOptions.setBorder(borderSlippyMapOptions);
 
-        constraintsSlippyMapOptions.gridwidth = GridBagConstraints.REMAINDER;
-        slippyMapOptions.add(_slippyMapNoDownload, constraintsSlippyMapOptions);
-        slippyMapOptions.add(_slippyMapSaveTiles, constraintsSlippyMapOptions);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        slippyMapOptions.add(_slippyMapNoDownload, innerConstraints);
+        slippyMapOptions.add(_slippyMapSaveTiles, innerConstraints);
 
-        add(slippyMapOptions, constraints);
+        add(slippyMapOptions, outerConstraints);
 
-        GridBagConstraints constraintsOtherOptions = new GridBagConstraints();
-        constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
-        constraintsOtherOptions.weightx = 1.0;
-        constraintsOtherOptions.fill = GridBagConstraints.HORIZONTAL;
-        constraintsOtherOptions.insets = new Insets(5, 5, 0, 5);
 
         JPanel otherOptions = new JPanel();
         otherOptions.setLayout(new GridBagLayout());
         Border borderOtherOptions = new TitledBorder("Other Options");
         otherOptions.setBorder(borderOtherOptions);
 
-        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
-        otherOptions.add(_labelMinimumAgeInDays, constraintsWaitOptions);
-        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
-        otherOptions.add(_textMinimumAgeInDays, constraintsWaitOptions);
+        innerConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_labelMinimumAgeInDays, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_textMinimumAgeInDays, innerConstraints);
 
-        constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
-        otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_chkOverwriteExistingFiles, innerConstraints);
 
-        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
-        otherOptions.add(_labelDownloadThreads, constraintsWaitOptions);
-        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
-        otherOptions.add(_sliderDownloadThreads, constraintsWaitOptions);
-        add(otherOptions, constraints);
+        innerConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_labelDownloadThreads, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_sliderDownloadThreads, innerConstraints);
+        add(otherOptions, outerConstraints);
 
-        constraints.weighty = 1.0;
+        outerConstraints.weighty = 1.0;
     }
 
     /**

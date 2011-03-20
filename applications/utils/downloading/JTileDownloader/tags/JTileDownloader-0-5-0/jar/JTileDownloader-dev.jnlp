@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc.//DTD JNLP 1.5//EN" "http://www.netbeans.org/jnlp/DTD/jnlp.dtd"> 
+<jnlp codebase="http://svn.openstreetmap.org/applications/utils/downloading/JTileDownloader/trunk/jar/" href="JTileDownloader-dev.jnlp">
+    <information>
+        <title>JTileDownloader</title>
+        <vendor>OpenStreetMap</vendor> 
+        <homepage href="http://wiki.openstreetmap.org/index.php/JTileDownloader/"/> 
+        <description>Java Tile Downloader for OpenStreetMap</description>
+        <description kind="one-line">JTileDownloader</description>
+        <description kind="tooltip">JTileDownloader</description>
+        <shortcut>
+            <desktop/> <menu/>
+        </shortcut>
+        <offline-allowed/>
+    </information>
+    <resources>
+        <j2se version="1.5+"/>
+        <jar href="JTileDownloader-dev.jar"/>
+    </resources>
+    <security>
+        <all-permissions/>
+    </security>
+    <application-desc main-class="org.openstreetmap.fma.jtiledownloader.JTileDownloaderStart"/>
+</jnlp> 

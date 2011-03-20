@@ -28,9 +28,12 @@ import java.awt.Insets;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 
@@ -48,6 +51,9 @@ public class OptionsPanel
     JLabel _labelMinimumAgeInDays = new JLabel("Minimum age in days:");
     JTextField _textMinimumAgeInDays = new JTextField();
 
+    JLabel _labelDownloadThreads = new JLabel("Download Threads");
+    JSlider _sliderDownloadThreads = new JSlider(1, 4);
+
     JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
     JCheckBox _slippyMapNoDownload = new JCheckBox("Do not download new tiles");
@@ -62,6 +68,14 @@ public class OptionsPanel
 
         createOptionsPanel();
         initializeOptionsPanel();
+
+        _labelDownloadThreads.setText("Download Threads: " + _sliderDownloadThreads.getValue());
+        _sliderDownloadThreads.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e)
+            {
+                _labelDownloadThreads.setText("Download Threads: " + _sliderDownloadThreads.getValue());
+            }
+        });
     }
 
     /**
@@ -136,6 +150,10 @@ public class OptionsPanel
         constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
 
+        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_labelDownloadThreads, constraintsWaitOptions);
+        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_sliderDownloadThreads, constraintsWaitOptions);
         add(otherOptions, constraints);
 
         constraints.weighty = 1.0;
@@ -152,6 +170,7 @@ public class OptionsPanel
 
         _textMinimumAgeInDays.setText("" + AppConfiguration.getInstance().getMinimumAgeInDays());
 
+        _sliderDownloadThreads.setValue(AppConfiguration.getInstance().getDownloadThreads());
         _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
         _slippyMapNoDownload.setSelected(AppConfiguration.getInstance().isSlippyMap_NoDownload());
@@ -214,4 +233,11 @@ public class OptionsPanel
         return _slippyMapSaveTiles.isSelected();
     }
 
+    /**
+     * @return downloadThreads
+     */
+    public int getDownloadThreads()
+    {
+        return _sliderDownloadThreads.getValue();
+    }
 }

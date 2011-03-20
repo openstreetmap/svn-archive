@@ -138,17 +138,17 @@ public class JTileDownloaderMainView
     }
 
     /**
-     * 
+     * Saves the selected AppConfigurations
      */
     public void updateAppConfig()
     {
-
         AppConfiguration.getInstance().setUseProxyServer(_networkPanel.isUseProxyServer());
         AppConfiguration.getInstance().setProxyServer(_networkPanel.getProxyServer());
         AppConfiguration.getInstance().setProxyServerPort(_networkPanel.getProxyServerPort());
         AppConfiguration.getInstance().setProxyServerRequiresAuthentitication(_networkPanel.isUseProxyServerAuth());
         AppConfiguration.getInstance().setProxyServerUser(_networkPanel.getProxyServerUser());
         AppConfiguration.getInstance().setProxyServerPassword(_networkPanel.getProxyServerPassword());
+        AppConfiguration.getInstance().setDownloadThreads(_optionsPanel.getDownloadThreads());
         AppConfiguration.getInstance().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
         AppConfiguration.getInstance().setTileServer(_mainPanel.getSelectedTileProvider().getName());
         AppConfiguration.getInstance().setLastZoom(_mainPanel.getOutputZoomLevelString());
@@ -159,7 +159,6 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setSlippyMap_NoDownload(_optionsPanel.isSlippyMapNoDownload());
         AppConfiguration.getInstance().setSlippyMap_SaveTiles(_optionsPanel.isSlippyMapSaveTiles());
         AppConfiguration.getInstance().saveToFile();
-
     }
 
     /**

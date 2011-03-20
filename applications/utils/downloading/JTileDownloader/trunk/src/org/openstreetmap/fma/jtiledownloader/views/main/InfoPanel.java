@@ -36,7 +36,7 @@ public class InfoPanel
 {
     private static final long serialVersionUID = 1L;
 
-    JTextArea _textInfo = new JTextArea();
+    private JTextArea _textInfo = new JTextArea();
 
     /**
      * 

@@ -1,5 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
+ * Copyright 2009-2011, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -42,22 +43,22 @@ public class OptionsPanel
 {
     private static final long serialVersionUID = 1L;
 
-    JCheckBox _chkWaitAfterNrTiles = new JCheckBox("Wait <n> sec after downloading <m> tiles?");
-    JLabel _labelWaitSeconds = new JLabel("Seconds <n> to wait:");
-    JTextField _textWaitSeconds = new JTextField();
-    JLabel _labelWaitNrTiles = new JLabel("Wait after <m> tiles:");
-    JTextField _textWaitNrTiles = new JTextField();
+    private JCheckBox _chkWaitAfterNrTiles = new JCheckBox("Wait <n> sec after downloading <m> tiles?");
+    private JLabel _labelWaitSeconds = new JLabel("Seconds <n> to wait:");
+    private JTextField _textWaitSeconds = new JTextField();
+    private JLabel _labelWaitNrTiles = new JLabel("Wait after <m> tiles:");
+    private JTextField _textWaitNrTiles = new JTextField();
 
-    JLabel _labelMinimumAgeInDays = new JLabel("Minimum age in days:");
-    JTextField _textMinimumAgeInDays = new JTextField();
+    private JLabel _labelMinimumAgeInDays = new JLabel("Minimum age in days:");
+    private JTextField _textMinimumAgeInDays = new JTextField();
 
-    JLabel _labelDownloadThreads = new JLabel("Download Threads");
-    JSlider _sliderDownloadThreads = new JSlider(1, 4);
+    private JLabel _labelDownloadThreads = new JLabel("Download Threads");
+    private JSlider _sliderDownloadThreads = new JSlider(1, 4);
 
-    JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
+    private JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
-    JCheckBox _slippyMapNoDownload = new JCheckBox("Do not download new tiles");
-    JCheckBox _slippyMapSaveTiles = new JCheckBox("Save downloaded tiles");
+    private JCheckBox _slippyMapNoDownload = new JCheckBox("Do not download new tiles");
+    private JCheckBox _slippyMapSaveTiles = new JCheckBox("Save downloaded tiles");
 
     /**
      * 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
- * Copyright 2009, Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -58,14 +58,14 @@ public class UpdateTilesPanel
 
     private JTable _updateTilesTable;
 
-    JLabel _labelFolder = new JLabel("Folder:");
-    JLabel _textFolder = new JLabel();
-    JLabel _labelTileServer = new JLabel("TileServer:");
-    JLabel _textTileServer = new JLabel();
+    private JLabel _labelFolder = new JLabel("Folder:");
+    private JLabel _textFolder = new JLabel();
+    private JLabel _labelTileServer = new JLabel("TileServer:");
+    private JLabel _textTileServer = new JLabel();
 
-    JButton _buttonSearch = new JButton("Search");
+    private JButton _buttonSearch = new JButton("Search");
     public static final String UPDATE = "Update";
-    JButton _buttonUpdate = new JButton(UPDATE);
+    private JButton _buttonUpdate = new JButton(UPDATE);
 
     public static final String COMMAND_SEARCH = "search";
     public static final String COMMAND_UPDATE = "update";

@@ -40,16 +40,16 @@ public class NetworkPanel
 {
     private static final long serialVersionUID = 1L;
 
-    JCheckBox _chkUseProxyServer = new JCheckBox("Use Proxy Server?");
-    JLabel _labelProxyServer = new JLabel("Proxy Server:");
-    JTextField _textProxyServer = new JTextField();
-    JLabel _labelProxyPort = new JLabel("Proxy Port:");
-    JTextField _textProxyPort = new JTextField();
-    JCheckBox _chkAuthRequired = new JCheckBox("Authentication required?");
-    JLabel _labelProxyUser = new JLabel("Proxy User:");
-    JTextField _textProxyUser = new JTextField();
-    JLabel _labelProxyPassword = new JLabel("Proxy Password:");
-    JTextField _textProxyPassWord = new JPasswordField();
+    private JCheckBox _chkUseProxyServer = new JCheckBox("Use Proxy Server?");
+    private JLabel _labelProxyServer = new JLabel("Proxy Server:");
+    private JTextField _textProxyServer = new JTextField();
+    private JLabel _labelProxyPort = new JLabel("Proxy Port:");
+    private JTextField _textProxyPort = new JTextField();
+    private JCheckBox _chkAuthRequired = new JCheckBox("Authentication required?");
+    private JLabel _labelProxyUser = new JLabel("Proxy User:");
+    private JTextField _textProxyUser = new JTextField();
+    private JLabel _labelProxyPassword = new JLabel("Proxy Password:");
+    private JTextField _textProxyPassWord = new JPasswordField();
 
     /**
      * 

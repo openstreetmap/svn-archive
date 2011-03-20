@@ -36,7 +36,7 @@
     <Filter>[man_made]='storage_tank' or [man_made]='silo' or [man_made]='water_tower'</Filter>
     &maxscale_zoom15;
     <PolygonSymbolizer>
-      <CssParameter name="fill">#73a3d4</CssParameter>
+      <CssParameter name="fill">#828282</CssParameter>
     </PolygonSymbolizer>
   </Rule>
   <Rule>

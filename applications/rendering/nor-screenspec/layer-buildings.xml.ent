@@ -36,7 +36,7 @@
     <Filter>[man_made]='storage_tank' or [man_made]='silo' or [man_made]='water_tower'</Filter>
     &maxscale_zoom15;
     <PolygonSymbolizer>
-      <CssParameter name="fill">#ccc</CssParameter>
+      <CssParameter name="fill">#73a3d4</CssParameter>
     </PolygonSymbolizer>
   </Rule>
   <Rule>
@@ -55,7 +55,7 @@
     (select way,man_made,amenity,railway,aeroway,military,leisure,shop,tourism,historic,
       case
         when building in ('house','detached','terrace','apartments','garage','garages') then 'residential'::text
-        when building in ('office','manufacture','factory','industrial','greenhouse','hangar','supermarket','store','retail','public','hall','service') then 'commercial'::text
+        when building in ('office','manufacture','factory','industrial','greenhouse','hangar','supermarket','store','retail','public','school','university','hall','service') then 'commercial'::text
         when building in ('cabin','pavilion','canopy') then 'hut'::text
         else building
       end as building

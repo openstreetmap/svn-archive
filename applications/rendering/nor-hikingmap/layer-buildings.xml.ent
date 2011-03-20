@@ -1,6 +1,6 @@
 <Style name="buildings">
   <Rule>
-    <Filter>[building]='commercial' or [man_made]='works' or [amenity]!='' or [shop]!='' or [tourism]!='' or [leisure]='stadium' or [leisure]='sports_centre' or [railway]='station' or [aeroway]='terminal' or [aeroway]='hangar'</Filter>
+    <Filter>[building]='commercial' or [man_made]='works' or [amenity]!='' or [shop]!='' or [tourism]!='' or [leisure]='stadium' or [leisure]='sports_centre' or [railway]='station' or [aeroway]!=''</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#333</CssParameter>
@@ -28,21 +28,17 @@
     </PolygonSymbolizer>
   </Rule>
   <Rule>
-    &maxscale_zoom16;
-    <LineSymbolizer>
-      <CssParameter name="stroke">#000</CssParameter>
-      <CssParameter name="stroke-width">0.5</CssParamete>r
-    </LineSymbolizer>
-  </Rule>
-  <Rule>
-    <Filter>[man_made]='water_tower' or [man_made]='storage_tank' or [man_made]='silo'</Filter>
+    <Filter>[man_made]='storage_tank' or [man_made]='silo' or [man_made]='water_tower'</Filter>
     &maxscale_zoom15;
     <PolygonSymbolizer>
       <CssParameter name="fill">#999</CssParameter>
     </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
     <LineSymbolizer>
       <CssParameter name="stroke">#000</CssParameter>
-      <CssParameter name="stroke-width">0.4</CssParameter>
+      <CssParameter name="stroke-width">0.5</CssParameter>
     </LineSymbolizer>
   </Rule>
 </Style>

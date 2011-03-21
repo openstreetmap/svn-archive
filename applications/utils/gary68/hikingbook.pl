@@ -17,7 +17,7 @@
 # 0.94 role selection; title and outName defaults
 # 0.95 sanitize
 # 0.96 contour data
-
+# 0.97 street directory
 
 use strict ;
 use warnings ;
@@ -27,7 +27,7 @@ use OSM::QuadTree ;
 
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.96" ;
+my $version = "0.97" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -84,6 +84,8 @@ my $stepFontSizeOpt = 35 ;
 my $poiOpt = 0 ;
 my $gridNumber = 5 ;
 my %pois = () ;
+my $streetOpt = 0 ;
+my %streets = () ;
 
 my $extraMapData1 = 0.1 ; # overlap for osm temp file 1 in degrees
 my $extraMapData2 = 0.005 ; # for temp file 2s
@@ -928,9 +930,13 @@ sub createDetailMaps {
 				$poiParams = "-poi -grid=$gridNumber" ;
 			}
 
+			my $streetParams = "" ;
+			if ($streetOpt > 0) {
+				$streetParams = "-dir -grid=$gridNumber" ;
+			}
 
 			print "call mapgen and log to $logFileName...\n" ;
-			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber $poiParams >> $logFileName 2>&1` ;
+			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber $poiParams $streetParams >> $logFileName 2>&1` ;
 			print "done.\n" ;
 
 			my $poiName = $outName ;
@@ -962,6 +968,29 @@ sub createDetailMaps {
 				close ($file) ;
 				push @tempFiles, $poiName ;
 			}
+
+			my $streetName = $outName ;
+			if ($streetOpt > 0) {
+				$streetName =~ s/\.svg/\_streets\.txt/ ;
+				open (my $file, "<", $streetName) or die ("ERRROR: could not open street file name $streetName\n") ;
+				my $line = "" ;
+				while ($line = <$file>) {
+					# print "STREET line read : $line" ;
+					my ($street, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
+					if ( (defined $street) and (defined $fields) ) {
+						my @f = split / /, $fields ;
+						foreach my $sq (@f) {
+							$street = convertHTML ($street) ;
+							push @{$streets{$street}}, $mapNumber . "-" . $sq ;
+						}
+					}
+				}
+				close ($file) ;
+				push @tempFiles, $streetName ;
+			}
+
+
+
 
 		}
 
@@ -1475,6 +1504,7 @@ sub getProgramOptions {
 					"dirnumber=i"	=> \$dirNumberOpt,
 					"lesssteps=i"	=> \$lessStepsOpt,
 					"poi=i"		=> \$poiOpt,
+					"street=i"		=> \$streetOpt,
 					"scale=i"	=> \$scale,
 					"stepsize=i"		=> \$stepSizeOpt,
 					"stepcolor=s"		=> \$stepColorOpt,
@@ -1532,6 +1562,7 @@ sub usage {
 	print "-desc=<tex file> (for long text after title page; tex format, max heading subsection\n" ;
 	print "-steps=<step description file> (for descriptions of single steps or nodes; format: stepNr<space>TEXT)\n" ;
 	print "-poi=<integer> (add poi directory to description, specify column number like 1,2,3)\n" ;
+	print "-street=<integer> (add street directory to description, specify column number like 1,2,3)\n" ;
 	print "-dirnumber=4|8 (4 or 8 different directions like N, S, E, W...); default=8\n" ;
 	print "-lesssteps=INTEGER (reduce number of steps in description, step only if direction change > integer degrees)\n" ;
 	print "-stepsize=INTEGER (size of step disc in map; 0 will suppress discs and labels)\n" ;
@@ -1629,11 +1660,14 @@ sub getStepInformation {
 
 sub createDirectory {
 
-	if ($poiOpt > 0) {
+	if ( ($poiOpt > 0) or ($streetOpt > 0) ) {
 
 		if ($poiOpt < 1) { $poiOpt = 1 ; } 
 		if ($poiOpt > 3) { $poiOpt = 3 ; } 
+		if ($streetOpt < 1) { $streetOpt = 1 ; } 
+		if ($streetOpt > 3) { $streetOpt = 3 ; } 
 		$poiOpt = int $poiOpt ;
+		$streetOpt = int $streetOpt ;
 
 		print "create directory...\n" ;
 		my $texFileName ; 
@@ -1654,42 +1688,83 @@ sub createDirectory {
 		print $texFile "\\usepackage{multicol}\n" ;
 		print $texFile "\\begin{document}\n" ;
 
-		print $texFile "\\thispagestyle{empty}\n" ;
+		if ($poiOpt > 0) {
+			print $texFile "\\thispagestyle{empty}\n" ;
 
-		my %heading3 = () ;
-		$heading3{"EN"} = "Points of interest" ;
-		$heading3{"DE"} = "Interessante Punkte" ;
+			my %heading3 = () ;
+			$heading3{"EN"} = "Points of interest" ;
+			$heading3{"DE"} = "Interessante Punkte" ;
 
-		if ($poiOpt > 1) {
-			print $texFile "\\begin{multicols}{$poiOpt}[\\section*{$heading3{$languageOpt}}]\n" ;
-		}
-		else {
-			print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
-		}
-		print $texFile "\\tiny\n" ;
-
-		foreach my $poi (sort keys %pois) {
-			my $sqText = "" ; my $first = 1 ;
-			foreach my $sq ( @{$pois{$poi}} ) {
-				if ($first) {
-					$first = 0 ;
-					$sqText .= $sq ;
-				}
-				else {
-					$sqText .= " " ;
-					$sqText .= $sq ;
-				}
+			if ($poiOpt > 1) {
+				print $texFile "\\begin{multicols}{$poiOpt}[\\section*{$heading3{$languageOpt}}]\n" ;
 			}
-			$poi = sanitizeLatexString ($poi) ;
-			print $texFile $poi ;
-			print $texFile " \\dotfill " ;
-			print $texFile $sqText, "\\\\\n" ;
-		}
+			else {
+				print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
+			}
+			print $texFile "\\tiny\n" ;
 
-		if ($poiOpt > 1) {
-			print $texFile "\\end{multicols}\n" ;
-		}
-		print $texFile "\\normalsize\n" ;
+			foreach my $poi (sort keys %pois) {
+				my $sqText = "" ; my $first = 1 ;
+				foreach my $sq ( @{$pois{$poi}} ) {
+					if ($first) {
+						$first = 0 ;
+						$sqText .= $sq ;
+					}
+					else {
+						$sqText .= " " ;
+						$sqText .= $sq ;
+					}
+				}
+				$poi = sanitizeLatexString ($poi) ;
+				print $texFile $poi ;
+				print $texFile " \\dotfill " ;
+				print $texFile $sqText, "\\\\\n" ;
+			}
+
+			if ($poiOpt > 1) {
+				print $texFile "\\end{multicols}\n" ;
+			}
+			print $texFile "\\normalsize\n" ;
+		} # poiOpt > 0
+	
+		if ($streetOpt > 0) {
+			print $texFile "\\thispagestyle{empty}\n" ;
+
+			my %heading4 = () ;
+			$heading4{"EN"} = "Street Directory" ;
+			$heading4{"DE"} = "Straßenverzeichnis" ; 
+
+			if ($streetOpt > 1) {
+				print $texFile "\\begin{multicols}{$streetOpt}[\\section*{$heading4{$languageOpt}}]\n" ;
+			}
+			else {
+				print $texFile "\\section*{$heading4{$languageOpt}}\n" ;
+			}
+			print $texFile "\\tiny\n" ;
+
+			foreach my $street (sort keys %streets) {
+				my $sqText = "" ; my $first = 1 ;
+				foreach my $sq ( @{$streets{$street}} ) {
+					if ($first) {
+						$first = 0 ;
+						$sqText .= $sq ;
+					}
+					else {
+						$sqText .= " " ;
+						$sqText .= $sq ;
+					}
+				}
+				$street = sanitizeLatexString ($street) ;
+				print $texFile $street ;
+				print $texFile " \\dotfill " ;
+				print $texFile $sqText, "\\\\\n" ;
+			}
+
+			if ($streetOpt > 1) {
+				print $texFile "\\end{multicols}\n" ;
+			}
+			print $texFile "\\normalsize\n" ;
+		} # streetOpt > 0
 	
 
 		print $texFile "\\end{document}\n" ;
@@ -1709,12 +1784,9 @@ sub createDirectory {
 		`dvips -D600 $dviFileName -o >> $logFileName 2>&1` ;
 		`ps2pdf $psFileName $pdfFileName >> $logFileName 2>&1` ;
 		`rm *.dvi` ;
-		# `rm *.tex` ;
 		`rm *.ps` ;
 		`rm *.aux` ;
 		`rm *.log` ;
-		my $target = $workDir . "title.pdf" ;
-		# `mv title.pdf $target` ;
 		print "done.\n" ;
 
 	}

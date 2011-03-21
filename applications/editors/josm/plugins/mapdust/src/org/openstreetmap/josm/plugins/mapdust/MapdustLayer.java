@@ -43,7 +43,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToolTip;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -169,7 +168,7 @@ public class MapdustLayer extends Layer {
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         JToolTip tooltip = new JToolTip();
-        if (mapdustBugList != null) {
+        if (mapdustBugList != null && mapdustBugList.size()>0) {
             /* draw the current visible bugs */
             for (MapdustBug bug : mapdustBugList) {
                 LatLon ll = bug.getLatLon();
@@ -199,13 +198,11 @@ public class MapdustLayer extends Layer {
 
             /* draw the selected bug description */
             /* selected by clicking */
-            MapdustBug bug1 = getBugSelected();
+            MapdustBug clickedBug = getBugSelected();
             /* selected from the list */
             MapdustBug bugSelected = getMapdustGUI().getSelectedBug();
             if (bugSelected == null) {
-                if (Main.map.mapView.getActiveLayer() == this) {
-                    bugSelected = bug1;
-                }
+                    bugSelected = clickedBug;
             }
             setBugSelected(bugSelected);
             if (bugSelected != null) {

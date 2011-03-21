@@ -125,13 +125,14 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         String shortTxt = "MapDust";
         String longTxt = tr("Toggle: {0}", tr("Open MapDust"));
         Shortcut shortcut = Shortcut.registerShortcut(shortTxt, longTxt,
-                KeyEvent.VK_0, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT);
+                KeyEvent.VK_0, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT);
         String name = "MapDust bug reports";
         String tooltip = "Activates the MapDust bug reporter plugin";
         mapdustGUI = new MapdustGUI(tr(name), "mapdust_icon.png", tr(tooltip),
                 shortcut, 150, this);
         /* add default values for static variables */
-        Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
+        Main.pref.put("mapdust.pluginState",
+                MapdustPluginState.ONLINE.getValue());
         Main.pref.put("mapdust.nickname", "");
         Main.pref.put("mapdust.showError", true);
         Main.pref.put("mapdust.version", getPluginInformation().version);
@@ -293,8 +294,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 containsType = true;
             }
             if (filter.getDescr() != null && filter.getDescr()) {
-                if (!mapdustBug.getIsDefaultDescription()) {
+                /* show only bugs with isDefaultDescription = false */
+                if (mapdustBug.getIsDefaultDescription()) {
                     result = false;
+                } else {
+                    result = containsStatus && containsType;
                 }
             } else {
                 result = containsStatus && containsType;
@@ -435,13 +439,10 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             /* remove the layer */
             Main.pref.put("mapdust.pluginState",
                     MapdustPluginState.ONLINE.getValue());
-            MapView.removeLayerChangeListener(this);
             NavigatableComponent.removeZoomChangeListener(this);
             Main.map.mapView.removeLayer(layer);
             Main.map.remove(mapdustGUI);
             if (mapdustGUI != null) {
-                mapdustGUI.update(new ArrayList<MapdustBug>(), this);
-                mapdustGUI.setVisible(false);
                 mapdustGUI.destroy();
             }
             mapdustLayer = null;
@@ -575,7 +576,6 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             Main.main.addLayer(this.mapdustLayer);
             Main.map.mapView.moveLayer(this.mapdustLayer, 0);
             Main.map.mapView.addMouseListener(this);
-            MapView.addLayerChangeListener(this);
             NavigatableComponent.addZoomChangeListener(this);
         } else {
             /* re-set the properties */

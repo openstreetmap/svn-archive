@@ -95,6 +95,9 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     /** Specifies if the MapDust data was or not downloaded */
     private boolean downloaded = false;
 
+    /** Specifies if the MapDust layer was or not before deleted */
+    boolean wasDeleted = false;
+
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
      *
@@ -113,9 +116,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
 
     /**
      * Displays the <code>MapdustGUI</code> dialog window in the JOSM editor. If
-     * the MapDust data was not downloaded yet, it will donwload the data and
-     * also update the MapDust plugin with the data. If the MapDust data was
-     * already downloaded, then the <code>MapdustGUI</code> will be displayed.
+     * the MapDust data was not downloaded yet or the MapDust layer was added
+     * after a previous deletion, then the bug reports data will be deleted.
      */
     @Override
     public void showDialog() {
@@ -123,7 +125,35 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             notifyObservers(null, true);
             downloaded = true;
         }
+        if (wasDeleted) {
+            notifyObservers(null, true);
+            wasDeleted = false;
+        }
         super.showDialog();
+    }
+
+    /**
+     * Destroys the <code>MapdustGUI</code> dialog window.
+     */
+    @Override
+    public void destroy() {
+        setVisible(false);
+        /* remove panels */
+        if (tabbedPane != null) {
+            /* from offline to online */
+            remove(mainPanel);
+            tabbedPane = null;
+            actionPanel = null;
+            mainPanel = null;
+            panel = null;
+        } else {
+            /* from online to offline */
+            remove(mainPanel);
+            mainPanel = null;
+            panel = null;
+        }
+        wasDeleted = true;
+        super.destroy();
     }
 
     /**
@@ -137,15 +167,15 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         List<MapdustAction> actionList = actionPanel.getActionList();
         actionList.add(action);
         List<MapdustBug> mapdustBugs = panel.getMapdustBugsList();
-        boolean showBug = shouldDisplay(action.getMapdustBug(),
-                mapdustPlugin.getFilter());
+        boolean showBug =
+                shouldDisplay(action.getMapdustBug(), mapdustPlugin.getFilter());
         mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug(), showBug);
 
         /* update panels */
         updateMapdustPanel(mapdustBugs);
         updateMapdustActionPanel(actionList);
-        if (showBug &&
-                !action.getCommand().equals(MapdustServiceCommand.ADD_BUG)) {
+        if (showBug
+                && !action.getCommand().equals(MapdustServiceCommand.ADD_BUG)) {
             panel.resetSelectedBug(0);
         } else {
             mapdustPlugin.getMapdustLayer().setBugSelected(null);
@@ -241,8 +271,9 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             addObserver(detailsPanel);
         }
         if (panel == null) {
-            panel = new MapdustBugListPanel(mapdustBugs, "Bug reports",
-                    mapdustPlugin);
+            panel =
+                    new MapdustBugListPanel(mapdustBugs, "Bug reports",
+                            mapdustPlugin);
             panel.addObserver(detailsPanel);
         } else {
             panel.updateComponents(mapdustBugs);
@@ -257,8 +288,9 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
      */
     private void updateMapdustActionPanel(List<MapdustAction> actionList) {
         if (actionPanel == null) {
-            actionPanel = new MapdustActionPanel(actionList,
-                    "Offline Contribution", mapdustPlugin);
+            actionPanel =
+                    new MapdustActionPanel(actionList, "Offline Contribution",
+                            mapdustPlugin);
         } else {
             actionPanel.updateComponents(actionList);
         }

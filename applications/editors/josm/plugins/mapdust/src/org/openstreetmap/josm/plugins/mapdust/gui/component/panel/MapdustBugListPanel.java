@@ -249,6 +249,11 @@ public class MapdustBugListPanel extends JPanel implements ListSelectionListener
                     getMenuInvalidate().setEnabled(false);
                     getMenuFixed().setEnabled(false);
                 }
+
+                btnPanel.getBtnAddComment().setSelected(false);
+                btnPanel.getBtnReOpenBugReport().setSelected(false);
+                btnPanel.getBtnFixBugReport().setSelected(false);
+                btnPanel.getBtnInvalidateBugReport().setSelected(false);
                 notifyObservers(selectedBug);
             } else {
                 btnPanel.getBtnWorkOffline().setSelected(false);

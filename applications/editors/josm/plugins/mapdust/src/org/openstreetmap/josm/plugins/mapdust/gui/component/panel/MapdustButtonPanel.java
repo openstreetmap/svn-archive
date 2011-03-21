@@ -245,10 +245,13 @@ public class MapdustButtonPanel extends JPanel {
     public void enableBasicComponents(boolean onlyBasic) {
         btnWorkOffline.setEnabled(true);
         btnWorkOffline.setSelected(false);
+        btnWorkOffline.setFocusable(false);
         btnFilter.setEnabled(true);
         btnFilter.setSelected(false);
+        btnFilter.setFocusable(false);
         btnRefresh.setEnabled(true);
         btnRefresh.setSelected(false);
+        btnRefresh.setFocusable(false);
         if (onlyBasic) {
             btnAddComment.setEnabled(false);
             btnAddComment.setSelected(false);

@@ -30,7 +30,7 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,8 +107,7 @@ public abstract class OsbAction extends AbstractAction {
         String info = nickname;
         if(Main.pref.getBoolean(ConfigKeys.OSB_INCLUDE_DATE)) {
             // get the date
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.getDefault());
-            String date = df.format(new Date());
+            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH).format(new Date());
 
             // concatenate nickname and date
             info = info.concat(", ").concat(date);

@@ -1,43 +1,33 @@
 package relcontext;
 
-import java.awt.event.MouseEvent;
-import java.util.Collection;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import java.beans.PropertyChangeEvent;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
-
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.Shortcut;
-import relcontext.actions.AddRemoveMemberAction;
-import relcontext.actions.ClearChosenRelationAction;
-import relcontext.actions.CreateRelationAction;
-import relcontext.actions.DownloadChosenRelationAction;
-import relcontext.actions.EditChosenRelationAction;
+
+import java.util.*;
+import javax.swing.*;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import relcontext.actions.*;
 
 /**
  * The new, advanced relation editing panel.
@@ -48,6 +38,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private JList relationsList;
     private final DefaultListModel relationsData;
     private ChosenRelation chosenRelation;
+    private JPanel topLine;
 
     public RelContextDialog() {
         super(tr("Advanced Relation Editor"), "icon_relcontext",
@@ -83,21 +74,32 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rcPanel.add(new JScrollPane(relationsList), BorderLayout.CENTER);
 
         // [±][X] relation U [AZ][Down][Edit]
-        JPanel topLine = new JPanel(new BorderLayout());
+        topLine = new JPanel(new BorderLayout());
         JPanel topLeftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topLeftButtons.add(new JButton(new AddRemoveMemberAction(chosenRelation)));
         topLeftButtons.add(new JButton(new ClearChosenRelationAction(chosenRelation)));
         topLine.add(topLeftButtons, BorderLayout.WEST);
         topLine.add(new ChosenRelationComponent(chosenRelation), BorderLayout.CENTER);
         JPanel topRightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        topRightButtons.add(new JButton(new DownloadChosenRelationAction(chosenRelation)));
+        final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
+        final JButton downloadButton = new JButton(downloadChosenRelationAction);
+        topRightButtons.add(downloadButton);
         topRightButtons.add(new JButton(new EditChosenRelationAction(chosenRelation)));
         topLine.add(topRightButtons, BorderLayout.EAST);
         rcPanel.add(topLine, BorderLayout.NORTH);
 
+        downloadChosenRelationAction.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange( PropertyChangeEvent evt ) {
+                downloadButton.setVisible(downloadChosenRelationAction.isEnabled());
+            }
+        });
+        downloadButton.setVisible(false);
+        topLine.setVisible(false);
+
         // [+][Multi] [X]Adm [X]Tags [X]1
         JPanel bottomLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottomLine.add(new JButton(new CreateRelationAction(chosenRelation)));
+        bottomLine.add(new JButton(new CreateMultipolygonAction(chosenRelation)));
         rcPanel.add(bottomLine, BorderLayout.SOUTH);
 
         add(rcPanel, BorderLayout.CENTER);
@@ -107,21 +109,23 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     public void hideNotify() {
         SelectionEventManager.getInstance().removeSelectionListener(this);
         MapView.removeEditLayerChangeListener(this);
+        DatasetEventManager.getInstance().removeDatasetListener(chosenRelation);
     }
 
     @Override
     public void showNotify() {
         SelectionEventManager.getInstance().addSelectionListener(this, FireMode.IN_EDT_CONSOLIDATED);
         MapView.addEditLayerChangeListener(this);
+        DatasetEventManager.getInstance().addDatasetListener(chosenRelation, FireMode.IN_EDT);
     }
-
-
 
     public ChosenRelation getChosenRelation() {
         return chosenRelation;
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+        if( topLine != null )
+            topLine.setVisible(newRelation != null);
         // ?
     }
 

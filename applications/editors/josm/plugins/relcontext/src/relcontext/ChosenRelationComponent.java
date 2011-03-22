@@ -31,13 +31,48 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
             @Override
             public void mouseClicked( MouseEvent e ) {
                 if( chRel.get() != null && Main.map.mapView.getEditLayer() != null )
-                    Main.map.mapView.getEditLayer().data.setSelected(chRel.get().getMemberPrimitives());
+                    Main.map.mapView.getEditLayer().data.setSelected(chRel.get());
             }
         });
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setText(newRelation == null ? "" : newRelation.getDisplayName(DefaultNameFormatter.getInstance()));
+        setText(prepareText(newRelation));
         repaint();
+    }
+    
+    private final static String[] typeKeys = new String[] {
+        "natural", "landuse", "place", "waterway", "leisure", "amenity"
+    };
+
+    protected String prepareText( Relation rel ) {
+        if( rel == null )
+            return "";
+
+        String type = rel.get("type");
+        if( type == null || type.length() == 0 )
+            type = "-";
+
+        String tag = null;
+        for( int i = 0; i < typeKeys.length && tag == null; i++ )
+            if( rel.hasKey(typeKeys[i]))
+                tag = typeKeys[i];
+        if( tag != null )
+            tag = tag.substring(0, 2) + "=" + rel.get(tag);
+
+        String name = rel.get("name");
+        if( name == null && rel.hasKey("place_name") )
+            name = rel.get("place_name");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(type.substring(0, 1));
+        if( type.equals("boundary") && rel.hasKey("admin_level") )
+            sb.append(rel.get("admin_level"));
+        if( name != null )
+            sb.append(" \"").append(name).append('"');
+        if( tag != null )
+            sb.append("; ").append(tag);
+
+        return sb.toString();
     }
 }

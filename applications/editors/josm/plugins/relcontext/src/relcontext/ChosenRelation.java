@@ -1,26 +1,14 @@
 package relcontext;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.geom.GeneralPath;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
@@ -29,9 +17,9 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  *
  * @author Zverik
  */
-public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable {
+public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable, DataSetListener {
     private Relation chosenRelation = null;
-    private List<ChosenRelationListener> chosenRelationListeners = new ArrayList<ChosenRelationListener>();
+    private Set<ChosenRelationListener> chosenRelationListeners = new HashSet<ChosenRelationListener>();
 
     public void set( Relation rel ) {
         if( rel == chosenRelation || (rel != null && chosenRelation != null && rel.equals(chosenRelation)) ) {
@@ -41,10 +29,12 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         chosenRelation = rel;
         analyse();
         Main.map.mapView.repaint();
-        for( ChosenRelationListener listener : chosenRelationListeners ) {
+        fireRelationChanged(oldRel);
+    }
+
+    protected void fireRelationChanged( Relation oldRel ) {
+        for( ChosenRelationListener listener : chosenRelationListeners )
             listener.chosenRelationChanged(oldRel, chosenRelation);
-        }
-        return;
     }
 
     public Relation get() {
@@ -90,6 +80,8 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             return;
         }
 
+        Stroke oldStroke = g.getStroke();
+        Composite oldComposite = g.getComposite();
         g.setColor(Color.yellow);
         g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
@@ -115,6 +107,28 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             }
             // todo: closedway, multipolygon - ?
         }
-        g.setStroke(new BasicStroke(1)); // from building_tools; is it really needed?
+        g.setStroke(oldStroke);
+        g.setComposite(oldComposite);
     }
+
+    public void relationMembersChanged( RelationMembersChangedEvent event ) {
+        if( chosenRelation != null && event.getRelation().equals(chosenRelation) )
+            fireRelationChanged(chosenRelation);
+    }
+    
+    public void tagsChanged( TagsChangedEvent event ) {
+        if( chosenRelation != null && event.getPrimitive().equals(chosenRelation) )
+            fireRelationChanged(chosenRelation);
+    }
+
+    public void dataChanged( DataChangedEvent event ) {
+        if( chosenRelation != null )
+            fireRelationChanged(chosenRelation);
+    }
+
+    public void nodeMoved( NodeMovedEvent event ) {}
+    public void otherDatasetChange( AbstractDatasetChangedEvent event ) {}
+    public void primtivesAdded( PrimitivesAddedEvent event ) {}
+    public void primtivesRemoved( PrimitivesRemovedEvent event ) {}
+    public void wayNodesChanged( WayNodesChangedEvent event ) {}
 }

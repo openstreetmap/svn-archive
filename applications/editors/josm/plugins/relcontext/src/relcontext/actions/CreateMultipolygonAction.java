@@ -11,40 +11,39 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import relcontext.ChosenRelation;
 
 /**
- * Simple create relation with no tags and all selected objects in it with no roles.
+ * Creates new multipolygon from selected ways.
  * Choose relation afterwards.
  *
  * @author Zverik
  */
-public class CreateRelationAction extends JosmAction {
+public class CreateMultipolygonAction extends JosmAction {
     private static final String ACTION_NAME = "Create relation";
     protected ChosenRelation chRel;
 
-    public CreateRelationAction( ChosenRelation chRel ) {
-        super("+", null, "Create a relation from selected objects", null, false);
+    public CreateMultipolygonAction( ChosenRelation chRel ) {
+        super("Multi", null, "Create a multipolygon from selected objects", null, false);
         this.chRel = chRel;
         updateEnabledState();
     }
 
-    public CreateRelationAction() {
+    public CreateMultipolygonAction() {
         this(null);
     }
 
     public void actionPerformed( ActionEvent e ) {
-        // todo: ask user for relation type
-        String type = "";
-
+        // todo!
+        
         Relation rel = new Relation();
-        if( type != null && type.length() > 0 ) {
-            rel.put("type", type);
-        }
+        rel.put("type", "multipolygon");
         for( OsmPrimitive selected : getCurrentDataSet().getSelected() ) {
             rel.addMember(new RelationMember("", selected));
         }
 
+        Collection<Command> cmds = new LinkedList<Command>();
         Main.main.undoRedo.add(new AddCommand(rel));
 
         if( chRel != null ) {
@@ -63,6 +62,16 @@ public class CreateRelationAction extends JosmAction {
 
     @Override
     protected void updateEnabledState( Collection<? extends OsmPrimitive> selection ) {
-        setEnabled(selection != null && !selection.isEmpty());
+        boolean enabled = true;
+        if( selection == null || selection.isEmpty() )
+            enabled = false;
+        else {
+            for( OsmPrimitive p : selection )
+                if( !(p instanceof Way) ) {
+                    enabled = false;
+                    break;
+                }
+        }
+        setEnabled(enabled);
     }
 }

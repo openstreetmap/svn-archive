@@ -8,6 +8,7 @@ import javax.swing.AbstractAction;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationTask;
 import relcontext.ChosenRelation;
@@ -30,17 +31,26 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
 
     public void actionPerformed( ActionEvent e ) {
         Relation relation = rel.get();
-        if( relation == null || relation.isNew() || !relation.isIncomplete() ) return;
+        if( relation == null || relation.isNew() ) return;
         int total = relation.getMembersCount();
         int incomplete = relation.getIncompleteMembers().size();
-        if( incomplete <= 5 && incomplete * 2 < total )
+        if( incomplete <= 5 || (incomplete <= 10 && incomplete * 3 < total) )
             downloadIncomplete(relation);
         else
             downloadMembers(relation);
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setEnabled(newRelation != null && newRelation.isIncomplete());
+        boolean incomplete = false;
+        if( newRelation != null ) {
+            for( RelationMember m : newRelation.getMembers()) {
+                if( m.getMember().isIncomplete() ) {
+                    incomplete = true;
+                    break;
+                }
+            }
+        }
+        setEnabled(newRelation != null && incomplete);
     }
 
     protected void downloadMembers( Relation rel ) {

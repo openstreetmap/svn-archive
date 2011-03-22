@@ -21,9 +21,10 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
     private ChosenRelation rel;
 
     public AddRemoveMemberAction( ChosenRelation rel ) {
-        super(tr(ACTION_NAME), "add_remove_member", "Add/remove member from the chosen relation",
-                null, false);
+        super("±", null, "Add/remove member from the chosen relation", null, false);
         this.rel = rel;
+        rel.addChosenRelationListener(this);
+        updateEnabledState();
     }
 
     public void actionPerformed( ActionEvent e ) {

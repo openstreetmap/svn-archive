@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="myPluginName" default="dist" basedir=".">
+<project name="RelContext" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="RelContext" />
@@ -43,9 +43,8 @@
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.src.dir"         value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.dist.dir"        value="/Users/Zverik/AppData/Roaming/JOSM/plugins"/>
     <property name="ant.build.javac.target" value="1.5"/>
-    <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
     <!--
@@ -77,9 +76,6 @@
     -->
     <target name="dist" depends="compile,revision">
         <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>

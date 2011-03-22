@@ -40,6 +40,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         Relation oldRel = chosenRelation;
         chosenRelation = rel;
         analyse();
+        Main.map.mapView.repaint();
         for( ChosenRelationListener listener : chosenRelationListeners ) {
             listener.chosenRelationChanged(oldRel, chosenRelation);
         }
@@ -91,7 +92,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
 
         g.setColor(Color.yellow);
         g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         for( OsmPrimitive element : chosenRelation.getMemberPrimitives() ) {
             if( element.getType() == OsmPrimitiveType.NODE ) {
                 Node node = (Node)element;
@@ -104,7 +105,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
                     Point p = mv.getPoint(way.getNode(0));
                     b.moveTo(p.x, p.y);
                     for( int i = 1; i < way.getNodesCount(); i++ ) {
-                        p = mv.getPoint(way.getNode(1));
+                        p = mv.getPoint(way.getNode(i));
                         b.lineTo(p.x, p.y);
                     }
                     g.draw(b);

@@ -1,16 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package relcontext;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 
 /**
  * Renderer for chosen relation.
@@ -27,13 +18,6 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
         super("");
         this.chRel = rel;
         rel.addChosenRelationListener(this);
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked( MouseEvent e ) {
-                if( chRel.get() != null && Main.map.mapView.getEditLayer() != null )
-                    Main.map.mapView.getEditLayer().data.setSelected(chRel.get());
-            }
-        });
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

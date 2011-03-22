@@ -25,7 +25,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 import java.util.*;
 import javax.swing.*;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import relcontext.actions.*;
 
@@ -39,6 +38,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private final DefaultListModel relationsData;
     private ChosenRelation chosenRelation;
     private JPanel topLine;
+    private ChosenRelationPopupMenu popupMenu;
 
     public RelContextDialog() {
         super(tr("Advanced Relation Editor"), "icon_relcontext",
@@ -79,7 +79,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         topLeftButtons.add(new JButton(new AddRemoveMemberAction(chosenRelation)));
         topLeftButtons.add(new JButton(new ClearChosenRelationAction(chosenRelation)));
         topLine.add(topLeftButtons, BorderLayout.WEST);
-        topLine.add(new ChosenRelationComponent(chosenRelation), BorderLayout.CENTER);
+        final ChosenRelationComponent chosenRelationComponent = new ChosenRelationComponent(chosenRelation);
+        chosenRelationComponent.addMouseListener(new ChosenRelationMouseAdapter());
+        topLine.add(chosenRelationComponent, BorderLayout.CENTER);
         JPanel topRightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
         final JButton downloadButton = new JButton(downloadChosenRelationAction);
@@ -103,6 +105,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rcPanel.add(bottomLine, BorderLayout.SOUTH);
 
         add(rcPanel, BorderLayout.CENTER);
+
+        popupMenu = new ChosenRelationPopupMenu();
     }
 
     @Override
@@ -158,5 +162,37 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     public void editLayerChanged( OsmDataLayer oldLayer, OsmDataLayer newLayer ) {
         updateSelection();
+    }
+
+    private class ChosenRelationMouseAdapter extends MouseAdapter {
+        @Override
+        public void mouseClicked( MouseEvent e ) {
+            if( SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.map.mapView.getEditLayer() != null ) {
+                Main.map.mapView.getEditLayer().data.setSelected(chosenRelation.get());
+            }
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e ) {
+            checkPopup(e);
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e ) {
+            checkPopup(e);
+        }
+
+        private void checkPopup( MouseEvent e ) {
+            if( e.isPopupTrigger() && chosenRelation.get() != null ) {
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+    }
+
+    private class ChosenRelationPopupMenu extends JPopupMenu {
+        public ChosenRelationPopupMenu() {
+            add(new SelectMembersAction(chosenRelation));
+            add(new DeleteChosenRelationAction(chosenRelation));
+        }
     }
 }

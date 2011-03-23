@@ -7,9 +7,11 @@ import java.beans.PropertyChangeEvent;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.FocusAdapter;
 import java.awt.event.KeyEvent;
@@ -98,15 +100,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rolePanel.add(toggleRolePanelButtonIn, GBC.std());
         crRoleIndicator = new JLabel();
         rolePanel.add(crRoleIndicator, GBC.std().insets(5, 0, 5, 0));
-
-        // autocompleting role chooser
         roleBox = new AutoCompletingComboBox();
-        final Action applyNewRoleAction = new ApplyNewRoleAction();
-//        roleBox.getEditor().addActionListener(applyNewRoleAction);
         roleBox.setEditable(false);
         rolePanel.add(roleBox, GBC.std().fill(GBC.HORIZONTAL));
-        rolePanel.add(new JButton(applyNewRoleAction), GBC.eol());
-        rolePanel.setVisible(false);
+        rolePanel.add(new JButton(new ApplyNewRoleAction()), GBC.std());
+        rolePanel.add(new JButton(new EnterNewRoleAction()), GBC.eol());
+//        rolePanel.setVisible(false); // todo: take from preferences
 
         // [±][X] relation U [AZ][Down][Edit]
         JPanel topLine = new JPanel(new BorderLayout());
@@ -143,6 +142,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 toggleRolePanelButtonTop.setVisible(false);
             }
         });
+        toggleRolePanelButtonTop.setVisible(!rolePanel.isVisible());
 
         sortAndFixAction.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange( PropertyChangeEvent evt ) {
@@ -259,6 +259,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     private void updateRoleAutoCompletionList() {
+        String currentRole = roleBox.getSelectedItem() == null ? null : ((AutoCompletionListItem)roleBox.getSelectedItem()).getValue();
         List<String> items = new ArrayList<String>();
         items.add("");
         if( chosenRelation != null && chosenRelation.get() != null ) {
@@ -272,12 +273,61 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                     for( String value : values )
                         items.add(value);
             }
-        } else if( roleBox.getSelectedItem() != null ) {
-            lastSelectedRole = ((AutoCompletionListItem)roleBox.getSelectedItem()).getValue();
+            for( RelationMember m : chosenRelation.get().getMembers() )
+                if( !items.contains(m.getRole()) )
+                    items.add(m.getRole());
+            lastSelectedRole = currentRole;
+        } else if( currentRole != null && currentRole.length() > 0 ) {
+            lastSelectedRole = currentRole;
         }
         roleBox.setPossibleItems(items);
-        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
-            roleBox.setSelectedItem(lastSelectedRole);
+        // todo: store last non-empty role and try to select it if present, but do not store if empty role was chosen
+//        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
+//            roleBox.setSelectedItem(lastSelectedRole);
+//        else if( lastSelectedRole == null && items.contains("outer") )
+//            roleBox.setSelectedItem("outer");
+    }
+
+    private String askForRoleName() {
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        final AutoCompletingComboBox role = new AutoCompletingComboBox();
+        List<AutoCompletionListItem> items = new ArrayList<AutoCompletionListItem>();
+        for( int i = 0; i < roleBox.getModel().getSize(); i++ )
+            items.add((AutoCompletionListItem)roleBox.getModel().getElementAt(i));
+        role.setPossibleACItems(items);
+        role.setEditable(true);
+
+        panel.add(new JLabel(tr("Role")), GBC.std());
+        panel.add(Box.createHorizontalStrut(10), GBC.std());
+        panel.add(role, GBC.eol().fill(GBC.HORIZONTAL));
+
+        final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+            @Override
+            public void selectInitialValue() {
+                role.requestFocusInWindow();
+                role.getEditor().selectAll();
+            }
+        };
+        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Specify role"));
+        dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
+
+        role.getEditor().addActionListener(new ActionListener() {
+            public void actionPerformed( ActionEvent e ) {
+                dlg.setVisible(false);
+                optionPane.setValue(JOptionPane.OK_OPTION);
+            }
+        });
+
+        dlg.setVisible(true);
+
+        Object answer = optionPane.getValue();
+        if( answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
+                || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION) ) {
+            return null;
+        }
+
+        return role.getEditor().getItem().toString().trim();
     }
 
     private class ChosenRelationMouseAdapter extends MouseAdapter {
@@ -325,6 +375,25 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         }
     }
 
+    protected void applyRoleToSelection( String role ) {
+        if( chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
+            Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+            Relation r = new Relation(chosenRelation.get());
+            boolean fixed = false;
+            for( int i = 0; i < r.getMembersCount(); i++ ) {
+                RelationMember m = r.getMember(i);
+                if( selected.contains(m.getMember()) ) {
+                    if( !role.equals(m.getRole()) ) {
+                        r.setMember(i, new RelationMember(role, m.getMember()));
+                        fixed = true;
+                    }
+                }
+            }
+            if( fixed )
+                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+        }
+    }
+
     private class ApplyNewRoleAction extends AbstractAction {
         public ApplyNewRoleAction() {
             super("OK");
@@ -332,26 +401,23 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         public void actionPerformed( ActionEvent e ) {
             Object selectedItem = roleBox == null ? null : roleBox.getSelectedItem();
-            if( selectedItem != null && chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
-//                String role = roleBox.getEditor().getItem().toString().trim();
+            if( selectedItem != null ) {
                 if( selectedItem instanceof AutoCompletionListItem )
                     selectedItem = ((AutoCompletionListItem)selectedItem).getValue();
-                String role = selectedItem.toString().trim();
-                Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
-                Relation r = new Relation(chosenRelation.get());
-                boolean fixed = false;
-                for( int i = 0; i < r.getMembersCount(); i++ ) {
-                    RelationMember m = r.getMember(i);
-                    if( selected.contains(m.getMember()) ) {
-                        if( !role.equals(m.getRole()) ) {
-                            r.setMember(i, new RelationMember(role, m.getMember()));
-                            fixed = true;
-                        }
-                    }
-                }
-                if( fixed )
-                    Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+                applyRoleToSelection(selectedItem.toString().trim());
             }
+        }
+    }
+
+    private class EnterNewRoleAction extends AbstractAction {
+        public EnterNewRoleAction() {
+            super("+");
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            String role = askForRoleName();
+            if( role != null )
+                applyRoleToSelection(role);
         }
     }
 }

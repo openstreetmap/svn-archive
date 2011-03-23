@@ -44,6 +44,25 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
     public void clear() {
         set(null);
     }
+    
+    private final static String[] MULTIPOLYGON_TYPES = new String[] {
+        "multipolygon", "boundary", "natural_reserve"
+    };
+
+    /**
+     * Check if the relation type assumes all ways inside it form a multipolygon.
+     */
+    public boolean isMultipolygon() {
+        if( chosenRelation == null )
+            return false;
+        String type = chosenRelation.get("type");
+        if( type == null )
+            return false;
+        for( String t : MULTIPOLYGON_TYPES )
+            if( t.equals(type) )
+                return true;
+        return false;
+    }
 
     public int getSegmentsCount() {
         return 0;
@@ -126,9 +145,13 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             fireRelationChanged(chosenRelation);
     }
 
+    public void primtivesRemoved( PrimitivesRemovedEvent event ) {
+        if( chosenRelation != null && event.getPrimitives().contains(chosenRelation) )
+            clear();
+    }
+
     public void nodeMoved( NodeMovedEvent event ) {}
     public void otherDatasetChange( AbstractDatasetChangedEvent event ) {}
     public void primtivesAdded( PrimitivesAddedEvent event ) {}
-    public void primtivesRemoved( PrimitivesRemovedEvent event ) {}
     public void wayNodesChanged( WayNodesChangedEvent event ) {}
 }

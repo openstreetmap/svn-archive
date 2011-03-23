@@ -83,12 +83,22 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelationComponent.addMouseListener(new ChosenRelationMouseAdapter());
         topLine.add(chosenRelationComponent, BorderLayout.CENTER);
         JPanel topRightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        final Action sortAndFixAction = new SortAndFixAction(chosenRelation);
+        final JButton sortAndFixButton = new JButton(sortAndFixAction);
+        topRightButtons.add(sortAndFixButton);
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
         final JButton downloadButton = new JButton(downloadChosenRelationAction);
         topRightButtons.add(downloadButton);
         topRightButtons.add(new JButton(new EditChosenRelationAction(chosenRelation)));
         topLine.add(topRightButtons, BorderLayout.EAST);
         rcPanel.add(topLine, BorderLayout.NORTH);
+
+        sortAndFixAction.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange( PropertyChangeEvent evt ) {
+                sortAndFixButton.setVisible(sortAndFixAction.isEnabled());
+            }
+        });
+        sortAndFixButton.setVisible(false);
 
         downloadChosenRelationAction.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange( PropertyChangeEvent evt ) {
@@ -130,6 +140,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
         if( topLine != null )
             topLine.setVisible(newRelation != null);
+        if( oldRelation != newRelation && Main.main.getCurrentDataSet() != null )
+            selectionChanged(Main.main.getCurrentDataSet().getSelected());
         // ?
     }
 

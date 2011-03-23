@@ -20,11 +20,11 @@ use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm ;
-use OSM::mapgen 1.15 ;
+use OSM::mapgen 1.16 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.15' ;
+$VERSION = '1.16' ;
 
 require Exporter ;
 

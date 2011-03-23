@@ -79,15 +79,12 @@
 #      -nolabel option
 # 1.13 -relid and -rectangles
 # 1.14 -pagenumbers
-#
+# 1.16 dpi removed from map; route label scaling corrected; osmosis complete ways and complete relations
 #
 # TODO
 # ------------------
-# order of parameters clip and area selection
-# -noname
 # [ ] reading rule check for right number of keys and values ! else ERROR
 # grid distance in meters
-# -viewpng -viewpdf -viewsvg
 # STDERR outputs
 # style file error handling
 # style file check, color check, error messages, array for regex? Defaults
@@ -101,11 +98,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.15 ;
-use OSM::mapgenRules 1.15 ;
+use OSM::mapgen 1.16 ;
+use OSM::mapgenRules 1.16 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.15" ;
+my $version = "1.16" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -448,10 +445,14 @@ setdpi ($scaleDpi) ;
 setBaseDpi ($baseDpi) ;
 
 $halo = scalePoints (scaleBase($halo)) ;
-$routeLabelSize = scalePoints (scaleBase($routeLabelSize)) ;
-$routeLabelOffset = scalePoints (scaleBase($routeLabelOffset)) ;
-$routeIconDist = scalePoints (scaleBase($routeIconDist)) ;
+# $routeLabelSize = scalePoints (scaleBase($routeLabelSize)) ;
+# $routeLabelOffset = scalePoints (scaleBase($routeLabelOffset)) ;
+# $routeIconDist = scalePoints (scaleBase($routeIconDist)) ;
+$routeLabelSize = scalePoints ($routeLabelSize) ;
+$routeLabelOffset = scalePoints ($routeLabelOffset) ;
+$routeIconDist = scalePoints ($routeIconDist) ;
 
+# print "\n***\n***\nbase $baseDpi scale $scaleDpi  RLS: $routeLabelSize\n\n" ;
 
 if ($grid > 26) { 
 	# max 26 because then letters are running out
@@ -571,11 +572,12 @@ if ($place ne "") {
 		my $top = $placeLat + $latrad/111.11 ; 
 		my $bottom = $placeLat - $latrad/111.11 ;
 
-		print "OSMOSIS STRING: --bounding-box-0.6 clipIncompleteEntities=true bottom=$bottom top=$top left=$left right=$right --write-xml-0.6\n" ;
+		print "OSMOSIS STRING: --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right\n" ;
 		print "call osmosis...\n" ;
-		`osmosis --read-xml-0.6 $osmName  --bounding-box-0.6 clipIncompleteEntities=true bottom=$bottom top=$top left=$left right=$right --write-xml-0.6 ./temp.osm` ;
+		`osmosis --read-xml $osmName  --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right --write-xml ./temp.osm` ;
 		print "osmosis done.\n" ;
 		$osmName = "./temp.osm" ;
+		$clipbbox = "$left,$bottom,$right,$top" ;
 	}
 	else {
 		print "ERROR: place $place not found.\n" ;

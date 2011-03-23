@@ -151,6 +151,6 @@
 "aeroway" "runway" "gray" 0 0 "none" 0 1 "none" "black" 40 "sans-serif" 0 0 1 "none" 0 100000
 "aeroway" "taxiway" "gray" 0 0 "none" 0 1 "none" "black" 40 "sans-serif" 0 0 1 "none" 0 100000
 "SECTION" "ROUTES" "ThicknessLine" "DashStyle" "Opacity" "Label" "StopNodeThickness" "FromScale" "ToScale"         
-"hiking" "red;pink;yellow" 16 3 55 "ref" 16 0 50000         
+"hiking" "red;pink;yellow" 16 3 55 "name!ref" 16 0 50000         
 "bus" "red;pink;yellow" 8 0 100 "ref" 16 0 50000         
 "SECTION" "END"                

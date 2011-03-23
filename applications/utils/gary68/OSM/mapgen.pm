@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.15' ;
+$VERSION = '1.16' ;
 
 require Exporter ;
 
@@ -1470,7 +1470,7 @@ sub printScale {
 	my $cm = $inches * 2.54 ;
 	my $scale = int ( $dist / ($cm/100/1000)  ) ;
 	$scale = int ($scale / 100) * 100 ;
-	my $text = "1 : $scale ($dpi dpi)" ;
+	my $text = "1 : $scale" ;
 	# sizes for 300 dpi
 	my $posX = 650 ;
 	my $posY = 200 ;

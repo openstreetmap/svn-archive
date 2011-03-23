@@ -160,9 +160,11 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelationPanel.setVisible(false);
 
         // [+][Multi] [X]Adm [X]Tags [X]1
-        JPanel bottomLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        bottomLine.add(new JButton(new CreateRelationAction(chosenRelation)));
-        bottomLine.add(new JButton(new CreateMultipolygonAction(chosenRelation)));
+        JPanel bottomLine = new JPanel(new GridBagLayout());
+        bottomLine.add(new JButton(new CreateRelationAction(chosenRelation)), GBC.std());
+        bottomLine.add(new JButton(new CreateMultipolygonAction(chosenRelation)), GBC.std());
+        bottomLine.add(Box.createHorizontalGlue(), GBC.std().fill());
+        bottomLine.add(new JButton(new FindRelationAction(chosenRelation)), GBC.eol());
         rcPanel.add(bottomLine, BorderLayout.SOUTH);
 
         add(rcPanel, BorderLayout.CENTER);

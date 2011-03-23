@@ -34,7 +34,8 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
         if( relation == null || relation.isNew() ) return;
         int total = relation.getMembersCount();
         int incomplete = relation.getIncompleteMembers().size();
-        if( incomplete <= 5 || (incomplete <= 10 && incomplete * 3 < total) )
+//        if( incomplete <= 5 || (incomplete <= 10 && incomplete * 3 < total) )
+        if( incomplete <= 10 && incomplete * 3 < total )
             downloadIncomplete(relation);
         else
             downloadMembers(relation);

@@ -150,8 +150,12 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             clear();
     }
 
+    public void wayNodesChanged( WayNodesChangedEvent event ) {
+        if( chosenRelation != null )
+            fireRelationChanged(chosenRelation); // download incomplete primitives doesn't cause dataChanged event
+    }
+
+    public void primtivesAdded( PrimitivesAddedEvent event ) {}
     public void nodeMoved( NodeMovedEvent event ) {}
     public void otherDatasetChange( AbstractDatasetChangedEvent event ) {}
-    public void primtivesAdded( PrimitivesAddedEvent event ) {}
-    public void wayNodesChanged( WayNodesChangedEvent event ) {}
 }

@@ -1,5 +1,6 @@
 package relcontext.actions;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationTask;
+import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
@@ -23,7 +25,10 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
     private ChosenRelation rel;
 
     public DownloadChosenRelationAction( ChosenRelation rel ) {
-        super("D");
+        super();
+//        putValue(NAME, "D");
+        putValue(SMALL_ICON, ImageProvider.get("relcontext", "download"));
+        putValue(SHORT_DESCRIPTION, tr("Download all incomplete members for chosen relation"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

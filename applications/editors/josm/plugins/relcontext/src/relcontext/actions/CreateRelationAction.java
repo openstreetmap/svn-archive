@@ -34,7 +34,7 @@ public class CreateRelationAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public CreateRelationAction( ChosenRelation chRel ) {
-        super("+", null, "Create a relation from selected objects", null, false);
+        super(tr("New"), "data/relation", tr("Create a relation from selected objects"), null, false);
         this.chRel = chRel;
         updateEnabledState();
     }

@@ -3,12 +3,14 @@ package relcontext.actions;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
@@ -16,7 +18,10 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     private ChosenRelation rel;
 
     public SortAndFixAction( ChosenRelation rel ) {
-        super("AZ");
+        super();
+//        putValue(Action.NAME, "AZ");
+        putValue(Action.SMALL_ICON, ImageProvider.get("data", "warning"));
+        putValue(Action.SHORT_DESCRIPTION, tr("Sort members and fix their roles"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

@@ -4,12 +4,12 @@ import java.util.*;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
@@ -25,7 +25,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
     private ChosenRelation rel;
 
     public AddRemoveMemberAction( ChosenRelation rel ) {
-        super("±", null, "Add/remove member from the chosen relation", null, false);
+        super(null, "relcontext/addremove", tr("Add/remove members from the chosen relation"), null, false);
         this.rel = rel;
         rel.addChosenRelationListener(this);
         updateEnabledState();
@@ -78,26 +78,35 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
     protected void updateIcon() {
         // todo: change icon based on selection
-        String name = "";
+        int state = 0; // 0=unknown, 1=add, 2=remove, 3=both
         if( getCurrentDataSet() == null || getCurrentDataSet().getSelected() == null
-                || getCurrentDataSet().getSelected().size() == 0 || rel == null || rel.get() == null )
-            name = "?";
+                || getCurrentDataSet().getSelected().isEmpty() || rel == null || rel.get() == null )
+            state = 0;
         else {
             Collection<OsmPrimitive> toAdd = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
             toAdd.remove(rel.get());
             int selectedSize = toAdd.size();
             if( selectedSize == 0 )
-                name = "?";
+                state = 0;
             else {
                 toAdd.removeAll(rel.get().getMemberPrimitives());
                 if( toAdd.isEmpty() )
-                    name = "-";
+                    state = 2;
                 else if( toAdd.size() < selectedSize )
-                    name = "±";
+                    state = 3;
                 else
-                    name = "+";
+                    state = 1;
             }
         }
-        putValue(Action.NAME, name);
+//        String name = state == 0 ? "?" : state == 1 ? "+" : state == 2 ? "-" : "±";
+//        putValue(Action.NAME, name);
+        if( state == 0 ) {
+//            putValue(NAME, "?");
+            putValue(SMALL_ICON, ImageProvider.get("relcontext", "addremove"));
+        } else {
+            String iconName = state == 1 ? "add" : state == 2 ? "remove" : "addremove";
+            putValue(NAME, null);
+            putValue(SMALL_ICON, ImageProvider.get("relcontext", iconName));
+        }
     }
 }

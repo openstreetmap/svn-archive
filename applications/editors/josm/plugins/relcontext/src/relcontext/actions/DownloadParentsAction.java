@@ -30,6 +30,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
     public DownloadParentsAction( ChosenRelation rel ) {
         super(tr("Download all referrers"));
         putValue(SMALL_ICON, ImageProvider.get("downloadreferrers"));
+        putValue(SHORT_DESCRIPTION, tr("Download referrers for the relation and its members"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

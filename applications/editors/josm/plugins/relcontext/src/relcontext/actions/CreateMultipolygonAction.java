@@ -28,7 +28,7 @@ public class CreateMultipolygonAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public CreateMultipolygonAction( ChosenRelation chRel ) {
-        super("Multi", null, "Create a multipolygon from selected objects", null, false);
+        super("Multi", "data/multipolygon", tr("Create a multipolygon from selected objects"), null, false);
         this.chRel = chRel;
         updateEnabledState();
     }

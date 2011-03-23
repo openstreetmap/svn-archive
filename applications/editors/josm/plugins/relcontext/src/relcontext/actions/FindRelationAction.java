@@ -25,7 +25,7 @@ public class FindRelationAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public FindRelationAction( ChosenRelation chRel ) {
-        super("?", null, "Find a relation", null, false);
+        super("Find", "relcontext/find", "Find a relation", null, false);
         this.chRel = chRel;
     }
 

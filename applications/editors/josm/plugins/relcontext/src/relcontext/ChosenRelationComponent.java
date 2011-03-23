@@ -56,6 +56,7 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
             sb.append(" \"").append(name).append('"');
         if( tag != null )
             sb.append("; ").append(tag);
+        sb.append(" (").append(rel.getMembersCount()).append(')');
 
         return sb.toString();
     }

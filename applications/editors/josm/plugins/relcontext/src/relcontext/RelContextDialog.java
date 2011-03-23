@@ -1,10 +1,10 @@
 package relcontext;
 
+import java.awt.Dimension;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.NameFormatter;
-import java.awt.Component;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
@@ -36,6 +36,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -59,7 +60,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         super(tr("Advanced Relation Editor"), "icon_relcontext",
                 tr("Opens advanced relation/multipolygon editor panel"),
                 Shortcut.registerShortcut("view:relcontext", tr("Toggle: {0}", tr("Open Relation Editor")),
-                KeyEvent.VK_R, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
+                KeyEvent.VK_R, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150, true);
+
+        // todo: shrink all panels to ~20 pixels
 
         JPanel rcPanel = new JPanel(new BorderLayout());
 
@@ -77,37 +80,45 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         // [^] roles [new role][V][Apply]
         final JPanel rolePanel = new JPanel(new GridBagLayout());
-        final JButton toggleRolePanelButtonTop = new JButton(new TogglePanelAction(rolePanel));
-        final JButton toggleRolePanelButtonIn = new JButton(new TogglePanelAction(rolePanel));
-        rolePanel.add(toggleRolePanelButtonIn, GBC.std());
+        final JButton toggleRolePanelButtonTop = new JButton(new TogglePanelAction(rolePanel) {
+            @Override
+            protected void init() {
+                putValue(Action.SMALL_ICON, ImageProvider.get("svpDown"));
+                putValue(Action.SHORT_DESCRIPTION, tr("Show role panel"));
+            }
+        });
+        final JButton toggleRolePanelButtonIn = new JButton(new TogglePanelAction(rolePanel) {
+            @Override
+            protected void init() {
+                putValue(Action.SMALL_ICON, ImageProvider.get("svpUp"));
+                putValue(Action.SHORT_DESCRIPTION, tr("Hide role panel"));
+            }
+        });
+        rolePanel.add(sizeButton(toggleRolePanelButtonIn, 16, 20), GBC.std());
         crRoleIndicator = new JLabel();
         rolePanel.add(crRoleIndicator, GBC.std().insets(5, 0, 5, 0));
         roleBox = new AutoCompletingComboBox();
         roleBox.setEditable(false);
         rolePanel.add(roleBox, GBC.std().fill(GBC.HORIZONTAL));
-        rolePanel.add(new JButton(new ApplyNewRoleAction()), GBC.std());
-        rolePanel.add(new JButton(new EnterNewRoleAction()), GBC.eol());
+        rolePanel.add(sizeButton(new JButton(new ApplyNewRoleAction()), 40, 20), GBC.std());
+        rolePanel.add(sizeButton(new JButton(new EnterNewRoleAction()), 40, 20), GBC.eol());
 //        rolePanel.setVisible(false); // todo: take from preferences
 
         // [±][X] relation U [AZ][Down][Edit]
-        JPanel topLine = new JPanel(new BorderLayout());
-        JPanel topLeftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topLeftButtons.add(new JButton(new AddRemoveMemberAction(chosenRelation)));
-        topLeftButtons.add(toggleRolePanelButtonTop);
-        topLeftButtons.add(new JButton(new ClearChosenRelationAction(chosenRelation)));
-        topLine.add(topLeftButtons, BorderLayout.WEST);
+        JPanel topLine = new JPanel(new GridBagLayout());
+        topLine.add(new JButton(new AddRemoveMemberAction(chosenRelation)), GBC.std());
+        topLine.add(sizeButton(toggleRolePanelButtonTop, 16, 24), GBC.std());
+        topLine.add(sizeButton(new JButton(new ClearChosenRelationAction(chosenRelation)), 32, 0), GBC.std());
         final ChosenRelationComponent chosenRelationComponent = new ChosenRelationComponent(chosenRelation);
         chosenRelationComponent.addMouseListener(new ChosenRelationMouseAdapter());
-        topLine.add(chosenRelationComponent, BorderLayout.CENTER);
-        JPanel topRightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topLine.add(chosenRelationComponent, GBC.std().fill().insets(5, 0, 5, 0));
         final Action sortAndFixAction = new SortAndFixAction(chosenRelation);
         final JButton sortAndFixButton = new JButton(sortAndFixAction);
-        topRightButtons.add(sortAndFixButton);
+        topLine.add(sortAndFixButton, GBC.std());
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
         final JButton downloadButton = new JButton(downloadChosenRelationAction);
-        topRightButtons.add(downloadButton);
-        topRightButtons.add(new JButton(new EditChosenRelationAction(chosenRelation)));
-        topLine.add(topRightButtons, BorderLayout.EAST);
+        topLine.add(downloadButton, GBC.std());
+        topLine.add(new JButton(new EditChosenRelationAction(chosenRelation)), GBC.eol());
 
         chosenRelationPanel.add(topLine, BorderLayout.CENTER);
         chosenRelationPanel.add(rolePanel, BorderLayout.SOUTH);
@@ -147,31 +158,11 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         bottomLine.add(new JButton(new CreateMultipolygonAction(chosenRelation)), GBC.std());
         bottomLine.add(Box.createHorizontalGlue(), GBC.std().fill());
         bottomLine.add(new JButton(new FindRelationAction(chosenRelation)), GBC.eol());
-        rcPanel.add(bottomLine, BorderLayout.SOUTH);
+        rcPanel.add(sizeButton(bottomLine, 0, 24), BorderLayout.SOUTH);
 
         add(rcPanel, BorderLayout.CENTER);
 
         popupMenu = new ChosenRelationPopupMenu();
-    }
-
-    private void configureRelationList( final JList relationsList ) {
-        relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        relationsList.setCellRenderer(new OsmPrimitivRenderer() {
-            @Override
-            protected String getComponentToolTipText( OsmPrimitive value ) {
-                return null;
-            }
-        });
-        relationsList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked( MouseEvent e ) {
-                if( Main.main.getEditLayer() == null ) {
-                    return;
-                }
-                chosenRelation.set((Relation)relationsList.getSelectedValue());
-                relationsList.clearSelection();
-            }
-        });
     }
 
     private void configureRelationsTable( final JTable relationsTable ) {
@@ -197,6 +188,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         });
     }
 
+    private JComponent sizeButton( JComponent b, int width, int height ) {
+        Dimension pref = b.getPreferredSize();
+        b.setPreferredSize(new Dimension(width <= 0 ? pref.width : width, height <= 0 ? pref.height : height));
+        return b;
+    }
+
     @Override
     public void hideNotify() {
         SelectionEventManager.getInstance().removeSelectionListener(this);
@@ -218,7 +215,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
         if( chosenRelationPanel != null )
             chosenRelationPanel.setVisible(newRelation != null);
-        if( oldRelation != newRelation && Main.main.getCurrentDataSet() != null )
+        if( Main.main.getCurrentDataSet() != null )
             selectionChanged(Main.main.getCurrentDataSet().getSelected());
         updateRoleIndicator();
         updateRoleAutoCompletionList();
@@ -420,9 +417,14 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         private JComponent component;
 
         public TogglePanelAction( JPanel panel ) {
-            super("R");
+            super();
             this.component = panel;
+            init();
+            if( getValue(Action.SMALL_ICON) == null )
+                putValue(Action.NAME, "R");
         }
+
+        protected void init() {}
 
         public void actionPerformed( ActionEvent e ) {
             component.setVisible(!component.isVisible());
@@ -450,7 +452,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     private class ApplyNewRoleAction extends AbstractAction {
         public ApplyNewRoleAction() {
-            super("OK");
+            super(null, ImageProvider.get("apply"));
+            putValue(Action.SHORT_DESCRIPTION, tr("Apply chosen role to selected relation members"));
         }
 
         public void actionPerformed( ActionEvent e ) {
@@ -465,7 +468,10 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     private class EnterNewRoleAction extends AbstractAction {
         public EnterNewRoleAction() {
-            super("+");
+            super();
+            putValue(Action.NAME, "…");
+//            putValue(SMALL_ICON, ImageProvider.get("dialogs/mappaint", "pencil"));
+            putValue(SHORT_DESCRIPTION, tr("Enter new role for selected relation members"));
         }
 
         public void actionPerformed( ActionEvent e ) {

@@ -1,23 +1,24 @@
 package relcontext;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.data.osm.NameFormatter;
+import java.awt.Component;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+import relcontext.actions.*;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.FocusAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -25,23 +26,19 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
-
-import java.util.*;
-import javax.swing.*;
+import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
-import org.openstreetmap.josm.tools.GBC;
-import relcontext.actions.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * The new, advanced relation editing panel.
@@ -49,8 +46,8 @@ import relcontext.actions.*;
  * @author Zverik
  */
 public class RelContextDialog extends ToggleDialog implements EditLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
-    private JList relationsList;
-    private final DefaultListModel relationsData;
+
+    private final DefaultTableModel relationsData;
     private ChosenRelation chosenRelation;
     private JPanel chosenRelationPanel;
     private ChosenRelationPopupMenu popupMenu;
@@ -70,26 +67,11 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelation.addChosenRelationListener(this);
         MapView.addEditLayerChangeListener(chosenRelation);
 
-        relationsData = new DefaultListModel();
-        relationsList = new JList(relationsData);
-        relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        relationsList.setCellRenderer(new OsmPrimitivRenderer() {
-            @Override
-            protected String getComponentToolTipText( OsmPrimitive value ) {
-                return null;
-            }
-        });
-        relationsList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked( MouseEvent e ) {
-                if( Main.main.getEditLayer() == null ) {
-                    return;
-                }
-                chosenRelation.set((Relation)relationsList.getSelectedValue());
-                relationsList.clearSelection();
-            }
-        });
-        rcPanel.add(new JScrollPane(relationsList), BorderLayout.CENTER);
+        relationsData = new RelationTableModel();
+        relationsData.setColumnIdentifiers(new String[] {tr("Member Of"), tr("Role")});
+        final JTable relationsTable = new JTable(relationsData);
+        configureRelationsTable(relationsTable);
+        rcPanel.add(new JScrollPane(relationsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 
         chosenRelationPanel = new JPanel(new BorderLayout());
 
@@ -172,6 +154,49 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         popupMenu = new ChosenRelationPopupMenu();
     }
 
+    private void configureRelationList( final JList relationsList ) {
+        relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        relationsList.setCellRenderer(new OsmPrimitivRenderer() {
+            @Override
+            protected String getComponentToolTipText( OsmPrimitive value ) {
+                return null;
+            }
+        });
+        relationsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked( MouseEvent e ) {
+                if( Main.main.getEditLayer() == null ) {
+                    return;
+                }
+                chosenRelation.set((Relation)relationsList.getSelectedValue());
+                relationsList.clearSelection();
+            }
+        });
+    }
+
+    private void configureRelationsTable( final JTable relationsTable ) {
+        relationsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        relationsTable.setTableHeader(null);
+        TableColumnModel columns = relationsTable.getColumnModel();
+        columns.getColumn(0).setCellRenderer(new OsmPrimitivRenderer() {
+            @Override
+            protected String getComponentToolTipText( OsmPrimitive value ) {
+                return null;
+            }
+        });
+        columns.getColumn(1).setPreferredWidth(40);
+        columns.getColumn(0).setPreferredWidth(220);
+        relationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged( ListSelectionEvent e ) {
+                int selectedRow = relationsTable.getSelectedRow();
+                if( selectedRow >= 0 ) {
+                    chosenRelation.set((Relation)relationsData.getValueAt(selectedRow, 0));
+                    relationsTable.clearSelection();
+                }
+            }
+        });
+    }
+
     @Override
     public void hideNotify() {
         SelectionEventManager.getInstance().removeSelectionListener(this);
@@ -225,19 +250,40 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return;
         updateRoleIndicator();
         // repopulate relations table
-        relationsData.clear();
+        relationsData.setRowCount(0);
         if( newSelection == null )
             return;
-        Set<Relation> rels = new HashSet<Relation>();
+
+        final NameFormatter formatter = DefaultNameFormatter.getInstance();
+        Set<Relation> relations = new TreeSet<Relation>(new Comparator<Relation>() {
+            public int compare( Relation r1, Relation r2 ) {
+                return r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
+            }
+        });
         for( OsmPrimitive element : newSelection ) {
             for( OsmPrimitive ref : element.getReferrers() ) {
                 if( ref instanceof Relation && !ref.isIncomplete() && !ref.isDeleted() ) {
-                    rels.add((Relation) ref);
+                    relations.add((Relation) ref);
                 }
             }
         }
-        for( Relation rel : rels )
-            relationsData.addElement(rel);
+
+        for( Relation rel : relations ) {
+            String role = null;
+            for( RelationMember m : rel.getMembers() ) {
+                for( OsmPrimitive element : newSelection ) {
+                    if( m.getMember().equals(element) ) {
+                        if( role == null )
+                            role = m.getRole();
+                        else if( !role.equals(m.getRole()) ) {
+                            role = tr("<different>");
+                            break;
+                        }
+                    }
+                }
+            }
+            relationsData.addRow(new Object[] {rel, role == null ? "" : role});
+        }
     }
 
     private void updateSelection() {
@@ -256,12 +302,19 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     {
         possibleRoles.put("boundary", new String[] {"admin_centre", "label", "subarea"});
         possibleRoles.put("route", new String[] {"forward", "backward", "stop", "platform"});
+        possibleRoles.put("restriction", new String[] {"from", "to", "via", "location_hint"});
+        possibleRoles.put("enforcement", new String[] {"device", "from", "to", "force"});
+        possibleRoles.put("destination_sign", new String[] {"to", "from", "intersection", "sign"});
+        possibleRoles.put("site", new String[] {"perimeter", "entrance", "label"});
+        possibleRoles.put("bridge", new String[] {"across", "under", "outline", "edge"});
+        possibleRoles.put("tunnel", new String[] {"through", "outline", "edge"});
+        possibleRoles.put("surveillance", new String[] {"camera", "extent", "visible", "hidden"});
     }
 
     private void updateRoleAutoCompletionList() {
         String currentRole = roleBox.getSelectedItem() == null ? null : ((AutoCompletionListItem)roleBox.getSelectedItem()).getValue();
         List<String> items = new ArrayList<String>();
-        items.add("");
+        items.add(" ");
         if( chosenRelation != null && chosenRelation.get() != null ) {
             if( chosenRelation.isMultipolygon() ) {
                 items.add("outer");
@@ -270,22 +323,19 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             if( chosenRelation.get().get("type") != null ) {
                 String[] values = possibleRoles.get(chosenRelation.get().get("type"));
                 if( values != null )
-                    for( String value : values )
-                        items.add(value);
+                    items.addAll(Arrays.asList(values));
             }
             for( RelationMember m : chosenRelation.get().getMembers() )
                 if( !items.contains(m.getRole()) )
                     items.add(m.getRole());
-            lastSelectedRole = currentRole;
-        } else if( currentRole != null && currentRole.length() > 0 ) {
+        }
+        if( currentRole != null && currentRole.length() > 1 ) {
             lastSelectedRole = currentRole;
         }
         roleBox.setPossibleItems(items);
-        // todo: store last non-empty role and try to select it if present, but do not store if empty role was chosen
-//        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
-//            roleBox.setSelectedItem(lastSelectedRole);
-//        else if( lastSelectedRole == null && items.contains("outer") )
-//            roleBox.setSelectedItem("outer");
+        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
+            roleBox.setSelectedItem(lastSelectedRole);
+        // todo: do we really want empty role as default one? Maybe, store last selected role in preferences
     }
 
     private String askForRoleName() {
@@ -350,7 +400,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         private void checkPopup( MouseEvent e ) {
             if( e.isPopupTrigger() && chosenRelation.get() != null ) {
-                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                popupMenu.show(e.getComponent(), e.getX(), e.getY() - 5);
             }
         }
     }
@@ -359,6 +409,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public ChosenRelationPopupMenu() {
             add(new SelectMembersAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));
+            add(new DownloadParentsAction(chosenRelation));
         }
     }
 
@@ -418,6 +469,18 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             String role = askForRoleName();
             if( role != null )
                 applyRoleToSelection(role);
+        }
+    }
+
+    private static class RelationTableModel extends DefaultTableModel {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return columnIndex == 0 ? Relation.class : String.class;
         }
     }
 }

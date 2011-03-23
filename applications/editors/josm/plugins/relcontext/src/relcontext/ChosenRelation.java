@@ -46,7 +46,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
     }
     
     private final static String[] MULTIPOLYGON_TYPES = new String[] {
-        "multipolygon", "boundary", "natural_reserve"
+        "multipolygon", "boundary"
     };
 
     /**

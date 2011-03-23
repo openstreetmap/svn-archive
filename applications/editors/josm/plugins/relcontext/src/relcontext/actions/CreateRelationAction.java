@@ -75,8 +75,11 @@ public class CreateRelationAction extends JosmAction {
         setEnabled(selection != null && !selection.isEmpty());
     }
 
+    // Thanks to TagInfo for the list
     private static final List<String> RELATION_TYPES = Arrays.asList(new String[] {
-        "multipolygon", "boundary", "route"
+        "multipolygon", "boundary", "route", "site", "restriction", "associatedStreet", "public_transport",
+        "street", "collection", "address", "enforcement", "destination_sign", "route_master", "junction", "site",
+        "waterway", "bridge", "tunnel", "surveillance"
     });
 
     private String askForType() {

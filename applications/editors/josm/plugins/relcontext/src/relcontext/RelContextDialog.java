@@ -1,10 +1,17 @@
 package relcontext;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.FocusAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
@@ -25,7 +32,13 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 import java.util.*;
 import javax.swing.*;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
+import org.openstreetmap.josm.tools.GBC;
 import relcontext.actions.*;
 
 /**
@@ -37,8 +50,11 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private JList relationsList;
     private final DefaultListModel relationsData;
     private ChosenRelation chosenRelation;
-    private JPanel topLine;
+    private JPanel chosenRelationPanel;
     private ChosenRelationPopupMenu popupMenu;
+    private JLabel crRoleIndicator;
+    private AutoCompletingComboBox roleBox;
+    private String lastSelectedRole;
 
     public RelContextDialog() {
         super(tr("Advanced Relation Editor"), "icon_relcontext",
@@ -73,10 +89,30 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         });
         rcPanel.add(new JScrollPane(relationsList), BorderLayout.CENTER);
 
+        chosenRelationPanel = new JPanel(new BorderLayout());
+
+        // [^] roles [new role][V][Apply]
+        final JPanel rolePanel = new JPanel(new GridBagLayout());
+        final JButton toggleRolePanelButtonTop = new JButton(new TogglePanelAction(rolePanel));
+        final JButton toggleRolePanelButtonIn = new JButton(new TogglePanelAction(rolePanel));
+        rolePanel.add(toggleRolePanelButtonIn, GBC.std());
+        crRoleIndicator = new JLabel();
+        rolePanel.add(crRoleIndicator, GBC.std().insets(5, 0, 5, 0));
+
+        // autocompleting role chooser
+        roleBox = new AutoCompletingComboBox();
+        final Action applyNewRoleAction = new ApplyNewRoleAction();
+//        roleBox.getEditor().addActionListener(applyNewRoleAction);
+        roleBox.setEditable(false);
+        rolePanel.add(roleBox, GBC.std().fill(GBC.HORIZONTAL));
+        rolePanel.add(new JButton(applyNewRoleAction), GBC.eol());
+        rolePanel.setVisible(false);
+
         // [±][X] relation U [AZ][Down][Edit]
-        topLine = new JPanel(new BorderLayout());
+        JPanel topLine = new JPanel(new BorderLayout());
         JPanel topLeftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topLeftButtons.add(new JButton(new AddRemoveMemberAction(chosenRelation)));
+        topLeftButtons.add(toggleRolePanelButtonTop);
         topLeftButtons.add(new JButton(new ClearChosenRelationAction(chosenRelation)));
         topLine.add(topLeftButtons, BorderLayout.WEST);
         final ChosenRelationComponent chosenRelationComponent = new ChosenRelationComponent(chosenRelation);
@@ -91,7 +127,22 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         topRightButtons.add(downloadButton);
         topRightButtons.add(new JButton(new EditChosenRelationAction(chosenRelation)));
         topLine.add(topRightButtons, BorderLayout.EAST);
-        rcPanel.add(topLine, BorderLayout.NORTH);
+
+        chosenRelationPanel.add(topLine, BorderLayout.CENTER);
+        chosenRelationPanel.add(rolePanel, BorderLayout.SOUTH);
+        rcPanel.add(chosenRelationPanel, BorderLayout.NORTH);
+
+        rolePanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentHidden( ComponentEvent e ) {
+                toggleRolePanelButtonTop.setVisible(true);
+            }
+
+            @Override
+            public void componentShown( ComponentEvent e ) {
+                toggleRolePanelButtonTop.setVisible(false);
+            }
+        });
 
         sortAndFixAction.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange( PropertyChangeEvent evt ) {
@@ -106,7 +157,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         downloadButton.setVisible(false);
-        topLine.setVisible(false);
+        chosenRelationPanel.setVisible(false);
 
         // [+][Multi] [X]Adm [X]Tags [X]1
         JPanel bottomLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -138,16 +189,39 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        if( topLine != null )
-            topLine.setVisible(newRelation != null);
+        if( chosenRelationPanel != null )
+            chosenRelationPanel.setVisible(newRelation != null);
         if( oldRelation != newRelation && Main.main.getCurrentDataSet() != null )
             selectionChanged(Main.main.getCurrentDataSet().getSelected());
+        updateRoleIndicator();
+        updateRoleAutoCompletionList();
         // ?
+    }
+
+    private void updateRoleIndicator() {
+        if( crRoleIndicator == null )
+            return;
+        String role = "";
+        if( chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
+            Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+            for( RelationMember m : chosenRelation.get().getMembers() ) {
+                if( selected.contains(m.getMember()) ) {
+                    if( role.length() == 0 && m.getRole() != null )
+                        role = m.getRole();
+                    else if( !role.equals(m.getRole()) ) {
+                        role = tr("<different>");
+                        break;
+                    }
+                }
+            }
+        }
+        crRoleIndicator.setText(role);
     }
 
     public void selectionChanged( Collection<? extends OsmPrimitive> newSelection ) {
         if( !isVisible() || relationsData == null )
             return;
+        updateRoleIndicator();
         // repopulate relations table
         relationsData.clear();
         if( newSelection == null )
@@ -174,6 +248,34 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     public void editLayerChanged( OsmDataLayer oldLayer, OsmDataLayer newLayer ) {
         updateSelection();
+    }
+
+    private static final Map<String, String[]> possibleRoles = new HashMap<String, String[]>();
+    {
+        possibleRoles.put("boundary", new String[] {"admin_centre", "label", "subarea"});
+        possibleRoles.put("route", new String[] {"forward", "backward", "stop", "platform"});
+    }
+
+    private void updateRoleAutoCompletionList() {
+        List<String> items = new ArrayList<String>();
+        items.add("");
+        if( chosenRelation != null && chosenRelation.get() != null ) {
+            if( chosenRelation.isMultipolygon() ) {
+                items.add("outer");
+                items.add("inner");
+            }
+            if( chosenRelation.get().get("type") != null ) {
+                String[] values = possibleRoles.get(chosenRelation.get().get("type"));
+                if( values != null )
+                    for( String value : values )
+                        items.add(value);
+            }
+        } else if( roleBox.getSelectedItem() != null ) {
+            lastSelectedRole = ((AutoCompletionListItem)roleBox.getSelectedItem()).getValue();
+        }
+        roleBox.setPossibleItems(items);
+        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
+            roleBox.setSelectedItem(lastSelectedRole);
     }
 
     private class ChosenRelationMouseAdapter extends MouseAdapter {
@@ -205,6 +307,49 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public ChosenRelationPopupMenu() {
             add(new SelectMembersAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));
+        }
+    }
+
+    private class TogglePanelAction extends AbstractAction {
+        private JComponent component;
+
+        public TogglePanelAction( JPanel panel ) {
+            super("R");
+            this.component = panel;
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            component.setVisible(!component.isVisible());
+        }
+    }
+
+    private class ApplyNewRoleAction extends AbstractAction {
+        public ApplyNewRoleAction() {
+            super("OK");
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            Object selectedItem = roleBox == null ? null : roleBox.getSelectedItem();
+            if( selectedItem != null && chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
+//                String role = roleBox.getEditor().getItem().toString().trim();
+                if( selectedItem instanceof AutoCompletionListItem )
+                    selectedItem = ((AutoCompletionListItem)selectedItem).getValue();
+                String role = selectedItem.toString().trim();
+                Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+                Relation r = new Relation(chosenRelation.get());
+                boolean fixed = false;
+                for( int i = 0; i < r.getMembersCount(); i++ ) {
+                    RelationMember m = r.getMember(i);
+                    if( selected.contains(m.getMember()) ) {
+                        if( !role.equals(m.getRole()) ) {
+                            r.setMember(i, new RelationMember(role, m.getMember()));
+                            fixed = true;
+                        }
+                    }
+                }
+                if( fixed )
+                    Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+            }
         }
     }
 }

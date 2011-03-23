@@ -299,7 +299,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     private static final Map<String, String[]> possibleRoles = new HashMap<String, String[]>();
-    {
+    static {
         possibleRoles.put("boundary", new String[] {"admin_centre", "label", "subarea"});
         possibleRoles.put("route", new String[] {"forward", "backward", "stop", "platform"});
         possibleRoles.put("restriction", new String[] {"from", "to", "via", "location_hint"});
@@ -410,6 +410,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             add(new SelectMembersAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));
             add(new DownloadParentsAction(chosenRelation));
+            addSeparator();
+            add(new SelectInRelationPanelAction(chosenRelation));
+            add(new RelationHelpAction(chosenRelation));
         }
     }
 

@@ -102,7 +102,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         Stroke oldStroke = g.getStroke();
         Composite oldComposite = g.getComposite();
         g.setColor(Color.yellow);
-        g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(9, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         for( OsmPrimitive element : chosenRelation.getMemberPrimitives() ) {
             if( element.getType() == OsmPrimitiveType.NODE ) {

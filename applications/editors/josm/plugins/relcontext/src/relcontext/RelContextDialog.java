@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
@@ -518,12 +519,15 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 RelationMember m = r.getMember(i);
                 if( selected.contains(m.getMember()) ) {
                     if( !role.equals(m.getRole()) ) {
+                        r.setMember(i, new RelationMember(role, m.getMember()));
                         commands.add(new ChangeRelationMemberRoleCommand(r, i, role));
                     }
                 }
             }
-            if( !commands.isEmpty() )
-                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
+            if( !commands.isEmpty() ) {
+                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+//                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
+            }
         }
     }
 

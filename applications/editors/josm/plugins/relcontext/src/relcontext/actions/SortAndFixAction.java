@@ -19,7 +19,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         super();
 //        putValue(Action.NAME, "AZ");
         putValue(Action.SMALL_ICON, ImageProvider.get("data", "warning"));
-        putValue(Action.SHORT_DESCRIPTION, tr("Sort members and fix their roles"));
+        putValue(Action.SHORT_DESCRIPTION, tr("Fix roles of the chosen relation members"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

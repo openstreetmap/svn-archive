@@ -1,5 +1,6 @@
 package relcontext;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
@@ -13,12 +14,13 @@ import javax.swing.*;
 import relcontext.actions.*;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dialog.ModalityType;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -36,7 +38,6 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -57,12 +58,10 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private String lastSelectedRole;
 
     public RelContextDialog() {
-        super(tr("Advanced Relation Editor"), "icon_relcontext",
-                tr("Opens advanced relation/multipolygon editor panel"),
-                Shortcut.registerShortcut("view:relcontext", tr("Toggle: {0}", tr("Open Relation Editor")),
+        super(tr("Relation Toolbox"), "reltoolbox",
+                tr("Open relation/multipolygon editor panel"),
+                Shortcut.registerShortcut("subwindow:reltoolbox", tr("Toggle: {0}", tr("Relation Toolbox")),
                 KeyEvent.VK_R, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150, true);
-
-        // todo: shrink all panels to ~20 pixels
 
         JPanel rcPanel = new JPanel(new BorderLayout());
 
@@ -165,6 +164,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         popupMenu = new ChosenRelationPopupMenu();
     }
 
+    private static final Color CHOSEN_RELATION_COLOR = new Color(255, 255, 128);
+
     private void configureRelationsTable( final JTable relationsTable ) {
         relationsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         relationsTable.setTableHeader(null);
@@ -173,6 +174,28 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             @Override
             protected String getComponentToolTipText( OsmPrimitive value ) {
                 return null;
+            }
+
+            @Override
+            public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column ) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if( !isSelected && value instanceof Relation && chosenRelation.get() != null && value.equals(chosenRelation.get()) )
+                    c.setBackground(CHOSEN_RELATION_COLOR);
+                else
+                    c.setBackground(table.getBackground());
+                return c;
+            }
+
+        });
+        columns.getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column ) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if( !isSelected && chosenRelation.get() != null && table.getValueAt(row, 0).equals(chosenRelation.get()) )
+                    c.setBackground(CHOSEN_RELATION_COLOR);
+                else
+                    c.setBackground(table.getBackground());
+                return c;
             }
         });
         columns.getColumn(1).setPreferredWidth(40);
@@ -306,6 +329,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         possibleRoles.put("bridge", new String[] {"across", "under", "outline", "edge"});
         possibleRoles.put("tunnel", new String[] {"through", "outline", "edge"});
         possibleRoles.put("surveillance", new String[] {"camera", "extent", "visible", "hidden"});
+        possibleRoles.put("street", new String[] {"street", "address", "house", "associated"});
+        possibleRoles.put("collection", new String[] {"member", "street", "river", "railway", "address", "associated"});
     }
 
     private void updateRoleAutoCompletionList() {
@@ -340,8 +365,11 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         final AutoCompletingComboBox role = new AutoCompletingComboBox();
         List<AutoCompletionListItem> items = new ArrayList<AutoCompletionListItem>();
-        for( int i = 0; i < roleBox.getModel().getSize(); i++ )
-            items.add((AutoCompletionListItem)roleBox.getModel().getElementAt(i));
+        for( int i = 0; i < roleBox.getModel().getSize(); i++ ) {
+            final AutoCompletionListItem item = (AutoCompletionListItem)roleBox.getModel().getElementAt(i);
+            if( item.getValue().length() > 1 )
+                items.add(item);
+        }
         role.setPossibleACItems(items);
         role.setEditable(true);
 

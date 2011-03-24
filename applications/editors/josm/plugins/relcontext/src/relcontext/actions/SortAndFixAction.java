@@ -7,8 +7,6 @@ import javax.swing.Action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
@@ -30,31 +28,63 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     public void actionPerformed( ActionEvent e ) {
         if( rel.get() == null ) return;
         Relation r = rel.get();
-        List<Command> commands = new ArrayList<Command>();
+        boolean fixed = false;
         // todo: sort members
         // todo: set roles for multipolygon members
-        Relation fixed = fixMultipolygonRoles(rel.get());
-        if( fixed != null ) {
-            commands.add(new ChangeCommand(r, fixed));
-            r = fixed;
+        Relation rr = fixMultipolygonRoles(r);
+        if( rr != null ) {
+            r = rr;
+            fixed = true;
         }
         // todo: set roles for boundary members
+        rr= fixBoundaryRoles(r);
+        if( rr != null ) {
+            r = rr;
+            fixed = true;
+        }
 
-        if( !commands.isEmpty() )
-            Main.main.undoRedo.add(new SequenceCommand(tr("Sort and fix relation"), commands));
+        if( fixed )
+            Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setEnabled(newRelation != null && areMultipolygonTagsEmpty());
-        // todo: enable when needs fixing (empty roles or not ordered members)
+        setEnabled(newRelation != null && !isIncomplete(newRelation) && (areMultipolygonTagsEmpty() || areBoundaryTagsNotRight()));
     }
 
+    protected boolean isIncomplete( Relation r ) {
+        if( r == null || r.isIncomplete() || r.isDeleted() )
+            return true;
+        for( RelationMember m : r.getMembers())
+            if( m.getMember().isIncomplete() )
+                return true;
+        return false;
+    }
+
+    /**
+     * Check for ways that have roles different from "outer" and "inner".
+     */
     private boolean areMultipolygonTagsEmpty() {
         Relation r = rel == null ? null : rel.get();
         if( r == null || r.getMembersCount() == 0 || !rel.isMultipolygon() )
             return false;
         for( RelationMember m : r.getMembers() ) {
             if( m.getType().equals(OsmPrimitiveType.WAY) && (m.getRole() == null || (!m.getRole().equals("outer") && !m.getRole().equals("inner"))) )
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check for nodes and relations without needed roles.
+     */
+    private boolean areBoundaryTagsNotRight() {
+        Relation r = rel == null ? null : rel.get();
+        if( r == null || r.getMembersCount() == 0 || !r.hasKey("type") || !r.get("type").equals("boundary") )
+            return false;
+        for( RelationMember m : r.getMembers() ) {
+            if( m.getType().equals(OsmPrimitiveType.RELATION) && (m.getRole() == null || !m.getRole().equals("subarea")) )
+                return true;
+            else if(m.getType().equals(OsmPrimitiveType.NODE) && (m.getRole() == null || (!m.getRole().equals("label") && !m.getRole().equals("admin_centre"))) )
                 return true;
         }
         return false;
@@ -87,14 +117,39 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
             RelationMember m = r.getMember(i);
             if( m.getType().equals(OsmPrimitiveType.WAY) ) {
                 String role = null;
-                if( outerWays.contains(m.getMember()) )
+                if( outerWays.contains((Way)m.getMember()) )
                     role = "outer";
-                else if( innerWays.contains(m.getMember()) )
+                else if( innerWays.contains((Way)m.getMember()) )
                     role = "inner";
                 if( role != null && !role.equals(m.getRole()) ) {
                     r.setMember(i, new RelationMember(role, m.getMember()));
                     fixed = true;
                 }
+            }
+        }
+        return fixed ? r : null;
+    }
+
+    private Relation fixBoundaryRoles( Relation source ) {
+        Relation r = new Relation(source);
+        boolean fixed = false;
+        for( int i = 0; i < r.getMembersCount(); i++ ) {
+            RelationMember m = r.getMember(i);
+            String role = null;
+            if( m.getType().equals(OsmPrimitiveType.RELATION) )
+                role = "subarea";
+            else if( m.getType().equals(OsmPrimitiveType.NODE) ) {
+                Node n = (Node)m.getMember();
+                if( !n.isIncomplete() ) {
+                    if( n.hasKey("place") )
+                        role = "admin_centre";
+                    else
+                        role = "label";
+                }
+            }
+            if( role != null && !role.equals(m.getRole()) ) {
+                r.setMember(i, new RelationMember(role, m.getMember()));
+                fixed = true;
             }
         }
         return fixed ? r : null;

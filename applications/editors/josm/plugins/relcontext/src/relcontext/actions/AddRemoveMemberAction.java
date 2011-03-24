@@ -7,8 +7,11 @@ import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
@@ -46,11 +49,37 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
         // 2. add all new members
         for( OsmPrimitive p : toAdd ) {
-            r.addMember(new RelationMember("", p));
+            int pos = -1; //p instanceof Way ? findAdjacentMember(p, r) : -1;
+            if( pos < 0 )
+                r.addMember(new RelationMember("", p));
+            else
+                r.addMember(pos, new RelationMember("", p));
         }
 
         if( !r.getMemberPrimitives().equals(rel.get().getMemberPrimitives()) )
             Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));
+    }
+
+    /**
+     * Finds two relation members between which to place given way. Incomplete.
+     * @see org.openstreetmap.josm.gui.dialogs.relation.MemberTableModel#determineDirection
+     */
+    protected int findAdjacentMember( Way w, Relation r ) {
+        Node firstNode = w.firstNode();
+        Node lastNode = w.lastNode();
+
+        if( firstNode != null && !firstNode.equals(lastNode) ) {
+            for( int i = 0; i < r.getMembersCount(); i++ ) {
+                if( r.getMember(i).getType().equals(OsmPrimitiveType.WAY) ) {
+                    Way rw = (Way)r.getMember(i).getMember();
+                    Node firstNodeR = rw.firstNode();
+                    Node lastNodeR = rw.lastNode();
+                    if( firstNode.equals(firstNodeR) || firstNode.equals(lastNodeR) || lastNode.equals(firstNodeR) || lastNode.equals(lastNodeR) )
+                        return i + 1;
+                }
+            }
+        }
+        return -1;
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

@@ -27,10 +27,10 @@
 **
 **
 -->
-<project name="RelContext" default="dist" basedir=".">
+<project name="reltoolbox" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="RelContext" />
+    <property name="commit.message" value="RelToolbox" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3835" />
 
@@ -98,10 +98,10 @@
                 <attribute name="Author" value="Ilya Zverev"/>
                 <attribute name="Plugin-Class" value="relcontext.RelContextPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Advanced relation editing panel."/>
-                <attribute name="ru_Plugin-Description" value="Нечеловечески прекрасная панель редактирования отношений."/>
-                <attribute name="Plugin-Icon" value="images/relcontext.png"/>
-                <attribute name="Plugin-Link" value="http://google.com/"/>
+                <attribute name="Plugin-Description" value="Relation and multipolygon creating and editing panel."/>
+                <attribute name="ru_Plugin-Description" value="Панель создания и редактирования отношений, особенно мультиполигонов."/>
+                <attribute name="Plugin-Icon" value="images/reltoolbox.png"/>
+                <!--attribute name="Plugin-Link" value="http://josm.openstreetmap.de/"/-->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

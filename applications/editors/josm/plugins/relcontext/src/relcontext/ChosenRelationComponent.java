@@ -1,6 +1,9 @@
 package relcontext;
 
+import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import org.openstreetmap.josm.data.osm.Relation;
 
 /**
@@ -16,6 +19,9 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
 
     public ChosenRelationComponent(ChosenRelation rel) {
         super("");
+/*        setBackground(Color.white);
+        setOpaque(true);
+        setBorder(new LineBorder(Color.black, 1, true));*/
         this.chRel = rel;
         rel.addChosenRelationListener(this);
     }

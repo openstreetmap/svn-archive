@@ -1,8 +1,6 @@
-- Choose less pompous and more suitable name for the plugin
+- Create plugin icon
 - Store all settings in preferences
-- Highlight chosen relation in relations list
 - Fix everything to work with multiple [editor] layers
-- "Add members" should search for connecting nodes among already present members
 - Create multipolygon settings button ">"
 - After creating multipolygon, move tags from outer to relation (setting "tags")
 - Choose whether creating multipoly or administrative boundary
@@ -11,6 +9,9 @@
 
 == BETA ==
 
+- Analyze chosen relation and display corresponding symbol next to its name
+- Make chosen relation name pretty
+- "Add members" should search for connecting nodes among already present members
 - Implement algorithm to construct rings from selection
 - Classify those rings (inner/outer) based on node tracing
 - Break touching rings of multipolygons

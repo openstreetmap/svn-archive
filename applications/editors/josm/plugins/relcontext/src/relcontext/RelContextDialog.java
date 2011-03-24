@@ -113,12 +113,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelationComponent.addMouseListener(new ChosenRelationMouseAdapter());
         topLine.add(chosenRelationComponent, GBC.std().fill().insets(5, 0, 5, 0));
         final Action sortAndFixAction = new SortAndFixAction(chosenRelation);
-        final JButton sortAndFixButton = new JButton(sortAndFixAction);
+        final JButton sortAndFixButton = (JButton) sizeButton(new JButton(sortAndFixAction), 32, 24);
         topLine.add(sortAndFixButton, GBC.std());
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
-        final JButton downloadButton = new JButton(downloadChosenRelationAction);
+        final JButton downloadButton = (JButton) sizeButton(new JButton(downloadChosenRelationAction), 32, 24);
         topLine.add(downloadButton, GBC.std());
-        topLine.add(new JButton(new EditChosenRelationAction(chosenRelation)), GBC.eol());
+        topLine.add(new JButton(new EditChosenRelationAction(chosenRelation)), GBC.eol().fill(GBC.VERTICAL));
 
         chosenRelationPanel.add(topLine, BorderLayout.CENTER);
         chosenRelationPanel.add(rolePanel, BorderLayout.SOUTH);

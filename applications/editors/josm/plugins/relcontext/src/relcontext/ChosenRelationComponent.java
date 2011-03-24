@@ -25,8 +25,12 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
         repaint();
     }
     
-    private final static String[] typeKeys = new String[] {
-        "natural", "landuse", "place", "waterway", "leisure", "amenity"
+    private final static String[] TYPE_KEYS = new String[] {
+        "natural", "landuse", "place", "waterway", "leisure", "amenity", "restriction", "public_transport"
+    };
+
+    private final static String[] NAMING_TAGS = new String[] {
+        "name", "place_name", "ref", "note"
     };
 
     protected String prepareText( Relation rel ) {
@@ -38,15 +42,16 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
             type = "-";
 
         String tag = null;
-        for( int i = 0; i < typeKeys.length && tag == null; i++ )
-            if( rel.hasKey(typeKeys[i]))
-                tag = typeKeys[i];
+        for( int i = 0; i < TYPE_KEYS.length && tag == null; i++ )
+            if( rel.hasKey(TYPE_KEYS[i]))
+                tag = TYPE_KEYS[i];
         if( tag != null )
             tag = tag.substring(0, 2) + "=" + rel.get(tag);
 
-        String name = rel.get("name");
-        if( name == null && rel.hasKey("place_name") )
-            name = rel.get("place_name");
+        String name = null;
+        for( int i = 0; i < NAMING_TAGS.length && name == null; i++ )
+            if( rel.hasKey(NAMING_TAGS[i]) )
+                name = rel.get(NAMING_TAGS[i]);
 
         StringBuilder sb = new StringBuilder();
         sb.append(type.substring(0, 1));

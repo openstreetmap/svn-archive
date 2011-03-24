@@ -1,0 +1,23 @@
+- Choose less pompous and more suitable name for the plugin
+- Store all settings in preferences
+- Highlight chosen relation in relations list
+- Fix everything to work with multiple [editor] layers
+- "Add members" should search for connecting nodes among already present members
+- Create multipolygon settings button ">"
+- After creating multipolygon, move tags from outer to relation (setting "tags")
+- Choose whether creating multipoly or administrative boundary
+- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
+- Check all strings to be properly formulated, search for similar ones in josm core and plugins
+
+== BETA ==
+
+- Implement algorithm to construct rings from selection
+- Classify those rings (inner/outer) based on node tracing
+- Break touching rings of multipolygons
+- Option to create separate multipolygon for every outer ring
+
+== RELEASE ==
+
+- Construct rings using middle points of ways and break those ways (as an option)
+- Convert adjacing rings that need to be broken to multipolygons
+- Option to autodownload all ways that are being broken

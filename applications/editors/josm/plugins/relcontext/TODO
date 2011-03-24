@@ -1,8 +1,6 @@
-- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
-- Draw icons for multipoly settings menu
-
 == BETA ==
 
+- Draw icons for multipoly settings menu
 - Analyze chosen relation and display corresponding symbol next to its name
 - Make chosen relation name pretty
 - "Add members" should search for connecting nodes among already present members
@@ -11,6 +9,7 @@
 - Break touching rings of multipolygons
 - Option to create separate multipolygon for every outer ring
 - Solve multipolygon settings button width problem
+- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 
 == RELEASE ==
 

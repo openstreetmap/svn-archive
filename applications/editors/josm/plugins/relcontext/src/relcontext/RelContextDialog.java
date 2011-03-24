@@ -2,10 +2,8 @@ package relcontext;
 
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.Command;
-import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.Reader;
 import java.io.InputStreamReader;
 import java.awt.Point;
 import java.awt.Component;
@@ -45,7 +43,6 @@ import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;

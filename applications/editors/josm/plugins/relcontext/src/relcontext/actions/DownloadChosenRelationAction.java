@@ -28,7 +28,7 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
         super();
 //        putValue(NAME, "D");
         putValue(SMALL_ICON, ImageProvider.get("relcontext", "download"));
-        putValue(SHORT_DESCRIPTION, tr("Download all incomplete members for chosen relation"));
+        putValue(SHORT_DESCRIPTION, tr("Download incomplete members for the chosen relation"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

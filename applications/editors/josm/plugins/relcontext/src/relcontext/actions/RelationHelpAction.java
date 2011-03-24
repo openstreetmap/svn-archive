@@ -21,12 +21,16 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
 
     public RelationHelpAction( ChosenRelation rel ) {
         super();
-        putValue(NAME, tr("Relation wiki page"));
+        putValue(NAME, tr("Open relation wiki page"));
         putValue(SHORT_DESCRIPTION, tr("Launch browser with wiki help for selected object"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "search"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);
+    }
+
+    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+        setEnabled(newRelation != null);
     }
 
     /**
@@ -95,9 +99,5 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    }
-
-    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setEnabled(newRelation != null);
     }
 }

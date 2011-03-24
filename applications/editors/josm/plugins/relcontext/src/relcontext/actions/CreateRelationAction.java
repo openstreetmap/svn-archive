@@ -31,7 +31,6 @@ import relcontext.RelContextDialog;
  * @author Zverik
  */
 public class CreateRelationAction extends JosmAction {
-    private static final String ACTION_NAME = "Create relation";
     private static final String PREF_LASTTYPE = "reltoolbox.createrelation.lasttype";
     protected ChosenRelation chRel;
 
@@ -86,7 +85,7 @@ public class CreateRelationAction extends JosmAction {
 
     private String askForType() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.add(new JLabel(tr("Choose type for the new relation:")), GBC.eol().insets(0, 0, 0, 5));
+        panel.add(new JLabel(tr("Choose a type for the relation:")), GBC.eol().insets(0, 0, 0, 5));
 
         final AutoCompletingComboBox keys = new AutoCompletingComboBox();
         keys.setPossibleItems(RELATION_TYPES);
@@ -104,7 +103,7 @@ public class CreateRelationAction extends JosmAction {
                 keys.getEditor().selectAll();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create relation"));
+        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create a new relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         keys.getEditor().addActionListener(new ActionListener() {

@@ -286,7 +286,7 @@ public class CreateMultipolygonAction extends JosmAction {
         admin.setText(Main.pref.get(PREF_MULTIPOLY + "lastadmin", ""));
         panel.add(new JLabel(tr("Admin level")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
-        panel.add(admin, GBC.eol().fill(GBC.HORIZONTAL));
+        panel.add(admin, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 5));
 
         final JTextField name = new JTextField();
         panel.add(new JLabel(tr("Name")), GBC.std());
@@ -300,7 +300,7 @@ public class CreateMultipolygonAction extends JosmAction {
                 admin.selectAll();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create relation"));
+        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create a new relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         name.addActionListener(new ActionListener() {

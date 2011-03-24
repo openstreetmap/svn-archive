@@ -16,7 +16,7 @@ public class ClearChosenRelationAction extends AbstractAction implements ChosenR
         super();
 //        putValue(Action.NAME, "X");
         putValue(Action.SMALL_ICON, ImageProvider.get("relcontext", "clear"));
-        putValue(Action.SHORT_DESCRIPTION, tr("Clear chosen relation"));
+        putValue(Action.SHORT_DESCRIPTION, tr("Clear the chosen relation"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);

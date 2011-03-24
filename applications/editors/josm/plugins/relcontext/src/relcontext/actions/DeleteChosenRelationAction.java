@@ -14,7 +14,7 @@ public class DeleteChosenRelationAction extends AbstractAction implements Chosen
     private ChosenRelation rel;
 
     public DeleteChosenRelationAction( ChosenRelation rel ) {
-        super(tr("Delete relation"));
+        super(tr("Delete the chosen relation"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
         this.rel = rel;
         rel.addChosenRelationListener(this);

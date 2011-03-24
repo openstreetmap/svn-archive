@@ -32,11 +32,11 @@ public class ChosenRelationComponent extends JLabel implements ChosenRelationLis
     }
     
     private final static String[] TYPE_KEYS = new String[] {
-        "natural", "landuse", "place", "waterway", "leisure", "amenity", "restriction", "public_transport"
+        "natural", "landuse", "place", "waterway", "leisure", "amenity", "restriction", "public_transport", "route", "enforcement"
     };
 
     private final static String[] NAMING_TAGS = new String[] {
-        "name", "place_name", "ref", "note"
+        "name", "place_name", "ref", "destination", "note"
     };
 
     protected String prepareText( Relation rel ) {

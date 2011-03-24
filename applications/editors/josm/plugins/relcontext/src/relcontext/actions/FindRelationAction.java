@@ -47,7 +47,7 @@ public class FindRelationAction extends JosmAction {
                 searchField.requestFocusInWindow();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Find relation"));
+        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Find a relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         relationsList.addMouseListener(new MouseAdapter() {

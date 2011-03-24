@@ -1,4 +1,23 @@
 README 
 ======
 
-Readme for my plugin 
+License: GPL v2 or later
+
+Readme for my plugin:
+
+Usability:
+
+Plugin NameManager should be used in situations where user is forced to put/modify/delete a big amount of tags to objects placed in selected area.
+Example:
+I have mapped a small town and figured that every highway and building should have addr:cityname tag with proper value. Solution is simple. I use NameManager which automatically put those tags to the objects.
+
+Interface:
+
+Plugin has three tabs:
+Add/Modify - for adding tags or (when tags with the given key already exists) for modifying tags.
+Delete - for deleting tags with the given key.
+Administrative - for putting administrative tags to objects. This functionality was developed by the demand of the Harman/Becker Automotive Systems. By this tab user can put administrative tags, such as districts, states etc. regarding to selected country.
+
+How can I use NameManager?
+
+To use NameManager user should select closed way (it could be the temporary way drawn just for usage of the plugin) and select NameManage from the Tools Menu.

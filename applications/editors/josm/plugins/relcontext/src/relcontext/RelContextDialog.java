@@ -1,5 +1,7 @@
 package relcontext;
 
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.Command;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -513,18 +516,17 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
             Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
             Relation r = new Relation(chosenRelation.get());
-            boolean fixed = false;
+            List<Command> commands = new ArrayList<Command>();
             for( int i = 0; i < r.getMembersCount(); i++ ) {
                 RelationMember m = r.getMember(i);
                 if( selected.contains(m.getMember()) ) {
                     if( !role.equals(m.getRole()) ) {
-                        r.setMember(i, new RelationMember(role, m.getMember()));
-                        fixed = true;
+                        commands.add(new ChangeRelationMemberRoleCommand(r, i, role));
                     }
                 }
             }
-            if( fixed )
-                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+            if( !commands.isEmpty() )
+                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
         }
     }
 
@@ -590,7 +592,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             super();
             addMenuItem("boundary", "Create administrative boundary relations");
             addMenuItem("boundaryways", "Add tags boundary and admin_level to boundary relation ways");
-            addMenuItem("tags", "Move area tags from contour to relation").setEnabled(false);
+            addMenuItem("tags", "Move area tags from contour to relation");
             addMenuItem("single", "Create a single multipolygon for multiple outer contours").setEnabled(false);
         }
 

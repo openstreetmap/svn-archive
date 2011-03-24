@@ -1,4 +1,3 @@
-- After creating multipolygon, move tags from outer to relation (setting "tags")
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 - Check all strings to be properly formulated, search for similar ones in josm core and plugins
 - Draw icons for multipoly settings menu

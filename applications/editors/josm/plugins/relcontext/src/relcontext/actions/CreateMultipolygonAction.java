@@ -177,6 +177,8 @@ public class CreateMultipolygonAction extends JosmAction {
         return commands;
     }
 
+    static public final String[] DEFAULT_LINEAR_TAGS = {"barrier", "source"};
+
     /**
      * This method removes tags/value pairs from inner ways that are present in relation or outer ways.
      * It was copypasted from the standard {@link org.openstreetmap.josm.actions.CreateMultipolygonAction}.
@@ -192,6 +194,8 @@ public class CreateMultipolygonAction extends JosmAction {
         }
 
         List<Way> innerWays = new ArrayList<Way>();
+        List<Way> outerWays = new ArrayList<Way>();
+        Set<String> conflictingKeys = new TreeSet<String>();
 
         for (RelationMember m: relation.getMembers()) {
 
@@ -201,15 +205,37 @@ public class CreateMultipolygonAction extends JosmAction {
 
             if (m.hasRole() && m.getRole() == "outer" && m.isWay() && m.getWay().hasKeys()) {
                 Way way = m.getWay();
+                outerWays.add(way);
                 for (String key: way.keySet()) {
                     if (!values.containsKey(key)) { //relation values take precedence
                         values.put(key, way.get(key));
+                    } else if( !relation.hasKey(key) && !values.get(key).equals(way.get(key)) ) {
+                        conflictingKeys.add(key);
                     }
                 }
             }
         }
 
+        // filter out empty key conflicts - we need second iteration
+        for( RelationMember m: relation.getMembers() )
+            if( m.hasRole() && m.getRole().equals("outer") && m.isWay() )
+                for( String key : values.keySet() )
+                    if( !m.getWay().hasKey(key) && !relation.hasKey(key) )
+                        conflictingKeys.add(key);
+
+        for( String key : conflictingKeys )
+            values.remove(key);
+
+        for( String linearTag : Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", Arrays.asList(DEFAULT_LINEAR_TAGS)))
+            values.remove(linearTag);
+
+        if( values.containsKey("natural") && values.get("natural").equals("coastline") )
+            values.remove("natural");
+
+        values.put("area", "yes");
+
         List<Command> commands = new ArrayList<Command>();
+        boolean moveTags = getPref("tags");
 
         for(String key: values.keySet()) {
             List<OsmPrimitive> affectedWays = new ArrayList<OsmPrimitive>();
@@ -221,9 +247,32 @@ public class CreateMultipolygonAction extends JosmAction {
                 }
             }
 
+            if( moveTags ) {
+                // remove duplicated tags from outer ways
+                for (Way way: outerWays) {
+                    if (way.hasKey(key)) {
+                        affectedWays.add(way);
+                    }
+                }
+            }
+
             if (affectedWays.size() > 0) {
                 commands.add(new ChangePropertyCommand(affectedWays, key, null));
             }
+        }
+
+        if( moveTags ) {
+            // add those tag values to the relation
+            boolean fixed = false;
+            Relation r2 = new Relation(relation);
+            for( String key : values.keySet() ) {
+                if( !r2.hasKey(key) && !key.equals("area") ) {
+                    r2.put(key, values.get(key));
+                    fixed = true;
+                }
+            }
+            if( fixed )
+                commands.add(new ChangeCommand(relation, r2));
         }
 
         return commands;

@@ -1,11 +1,7 @@
-- Create plugin icon
-- Store all settings in preferences
-- Fix everything to work with multiple [editor] layers
-- Create multipolygon settings button ">"
 - After creating multipolygon, move tags from outer to relation (setting "tags")
-- Choose whether creating multipoly or administrative boundary
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 - Check all strings to be properly formulated, search for similar ones in josm core and plugins
+- Draw icons for multipoly settings menu
 
 == BETA ==
 
@@ -16,6 +12,7 @@
 - Classify those rings (inner/outer) based on node tracing
 - Break touching rings of multipolygons
 - Option to create separate multipolygon for every outer ring
+- Solve multipolygon settings button width problem
 
 == RELEASE ==
 

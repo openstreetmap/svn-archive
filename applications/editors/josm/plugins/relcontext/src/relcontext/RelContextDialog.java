@@ -1,5 +1,11 @@
 package relcontext;
 
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.InputStreamReader;
+import java.awt.Point;
 import java.awt.Component;
 import java.awt.Dimension;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -49,25 +55,32 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class RelContextDialog extends ToggleDialog implements EditLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
 
+    public final static String PREF_PREFIX = "reltoolbox";
+    private static final String PREF_ROLEBOX = PREF_PREFIX + ".rolebox";
+
     private final DefaultTableModel relationsData;
     private ChosenRelation chosenRelation;
     private JPanel chosenRelationPanel;
     private ChosenRelationPopupMenu popupMenu;
+    private MultipolygonSettingsPopup multiPopupMenu;
     private JLabel crRoleIndicator;
     private AutoCompletingComboBox roleBox;
     private String lastSelectedRole;
 
     public RelContextDialog() {
-        super(tr("Relation Toolbox"), "reltoolbox",
+        super(tr("Relation Toolbox"), PREF_PREFIX,
                 tr("Open relation/multipolygon editor panel"),
                 Shortcut.registerShortcut("subwindow:reltoolbox", tr("Toggle: {0}", tr("Relation Toolbox")),
                 KeyEvent.VK_R, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150, true);
 
-        JPanel rcPanel = new JPanel(new BorderLayout());
-
         chosenRelation = new ChosenRelation();
         chosenRelation.addChosenRelationListener(this);
         MapView.addEditLayerChangeListener(chosenRelation);
+
+        popupMenu = new ChosenRelationPopupMenu();
+        multiPopupMenu = new MultipolygonSettingsPopup();
+
+        JPanel rcPanel = new JPanel(new BorderLayout());
 
         relationsData = new RelationTableModel();
         relationsData.setColumnIdentifiers(new String[] {tr("Member Of"), tr("Role")});
@@ -126,15 +139,19 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rolePanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentHidden( ComponentEvent e ) {
+                Main.pref.put(PREF_ROLEBOX + ".visible", false);
                 toggleRolePanelButtonTop.setVisible(true);
             }
 
             @Override
             public void componentShown( ComponentEvent e ) {
+                Main.pref.put(PREF_ROLEBOX + ".visible", true);
                 toggleRolePanelButtonTop.setVisible(false);
             }
         });
+        rolePanel.setVisible(Main.pref.getBoolean(PREF_ROLEBOX + ".visible", true));
         toggleRolePanelButtonTop.setVisible(!rolePanel.isVisible());
+        lastSelectedRole = Main.pref.get(PREF_ROLEBOX + ".lastrole");
 
         sortAndFixAction.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange( PropertyChangeEvent evt ) {
@@ -154,14 +171,31 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         // [+][Multi] [X]Adm [X]Tags [X]1
         JPanel bottomLine = new JPanel(new GridBagLayout());
         bottomLine.add(new JButton(new CreateRelationAction(chosenRelation)), GBC.std());
-        bottomLine.add(new JButton(new CreateMultipolygonAction(chosenRelation)), GBC.std());
+        final JButton multipolygonButton = new JButton(new CreateMultipolygonAction(chosenRelation));
+        bottomLine.add(multipolygonButton, GBC.std());
+//        bottomLine.add(sizeButton(new JButton(new MultipolygonSettingsAction()), 16, 0), GBC.std().fill(GBC.VERTICAL));
         bottomLine.add(Box.createHorizontalGlue(), GBC.std().fill());
         bottomLine.add(new JButton(new FindRelationAction(chosenRelation)), GBC.eol());
         rcPanel.add(sizeButton(bottomLine, 0, 24), BorderLayout.SOUTH);
 
-        add(rcPanel, BorderLayout.CENTER);
+        multipolygonButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed( MouseEvent e ) {
+                checkPopup(e);
+            }
 
-        popupMenu = new ChosenRelationPopupMenu();
+            @Override
+            public void mouseReleased( MouseEvent e ) {
+                checkPopup(e);
+            }
+
+            private void checkPopup( MouseEvent e ) {
+                if( e.isPopupTrigger() )
+                    multiPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+
+        add(rcPanel, BorderLayout.CENTER);
     }
 
     private static final Color CHOSEN_RELATION_COLOR = new Color(255, 255, 128);
@@ -222,6 +256,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         SelectionEventManager.getInstance().removeSelectionListener(this);
         MapView.removeEditLayerChangeListener(this);
         DatasetEventManager.getInstance().removeDatasetListener(chosenRelation);
+        chosenRelation.clear();
     }
 
     @Override
@@ -318,19 +353,32 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         updateSelection();
     }
 
-    private static final Map<String, String[]> possibleRoles = new HashMap<String, String[]>();
-    static {
-        possibleRoles.put("boundary", new String[] {"admin_centre", "label", "subarea"});
-        possibleRoles.put("route", new String[] {"forward", "backward", "stop", "platform"});
-        possibleRoles.put("restriction", new String[] {"from", "to", "via", "location_hint"});
-        possibleRoles.put("enforcement", new String[] {"device", "from", "to", "force"});
-        possibleRoles.put("destination_sign", new String[] {"to", "from", "intersection", "sign"});
-        possibleRoles.put("site", new String[] {"perimeter", "entrance", "label"});
-        possibleRoles.put("bridge", new String[] {"across", "under", "outline", "edge"});
-        possibleRoles.put("tunnel", new String[] {"through", "outline", "edge"});
-        possibleRoles.put("surveillance", new String[] {"camera", "extent", "visible", "hidden"});
-        possibleRoles.put("street", new String[] {"street", "address", "house", "associated"});
-        possibleRoles.put("collection", new String[] {"member", "street", "river", "railway", "address", "associated"});
+    private static final String POSSIBLE_ROLES_FILE = "relcontext/possible_roles.txt";
+    private static final Map<String, List<String>> possibleRoles = loadRoles();
+
+    private static Map<String, List<String>> loadRoles() {
+        Map<String, List<String>> result = new HashMap<String, List<String>>();
+        try {
+            ClassLoader classLoader = RelContextDialog.class.getClassLoader();
+            final InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
+            BufferedReader r = new BufferedReader(new InputStreamReader(possibleRolesStream));
+            while( r.ready() ) {
+                String line = r.readLine();
+                StringTokenizer t = new StringTokenizer(line, " ,;:\"");
+                if( t.hasMoreTokens() ) {
+                    String type = t.nextToken();
+                    List<String> roles = new ArrayList<String>();
+                    while( t.hasMoreTokens() )
+                        roles.add(t.nextToken());
+                    result.put(type, roles);
+                }
+            }
+            r.close();
+        } catch( Exception e ) {
+            System.err.println("[RelToolbox] Error reading possible roles file.");
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private void updateRoleAutoCompletionList() {
@@ -343,9 +391,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 items.add("inner");
             }
             if( chosenRelation.get().get("type") != null ) {
-                String[] values = possibleRoles.get(chosenRelation.get().get("type"));
+                List<String> values = possibleRoles.get(chosenRelation.get().get("type"));
                 if( values != null )
-                    items.addAll(Arrays.asList(values));
+                    items.addAll(values);
             }
             for( RelationMember m : chosenRelation.get().getMembers() )
                 if( !items.contains(m.getRole()) )
@@ -353,6 +401,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         }
         if( currentRole != null && currentRole.length() > 1 ) {
             lastSelectedRole = currentRole;
+            Main.pref.put(PREF_ROLEBOX + ".lastrole", lastSelectedRole);
         }
         roleBox.setPossibleItems(items);
         if( lastSelectedRole != null && items.contains(lastSelectedRole) )
@@ -455,6 +504,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         protected void init() {}
 
         public void actionPerformed( ActionEvent e ) {
+            Main.pref.put(PREF_ROLEBOX + ".visible", !component.isVisible());
             component.setVisible(!component.isVisible());
         }
     }
@@ -518,6 +568,49 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             return columnIndex == 0 ? Relation.class : String.class;
+        }
+    }
+
+    private class MultipolygonSettingsAction extends AbstractAction {
+        public MultipolygonSettingsAction() {
+            super();
+            putValue(SMALL_ICON, ImageProvider.get("svpRight"));
+            putValue(SHORT_DESCRIPTION, tr("Change multipolygon creation settings"));
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            Component c = e.getSource() instanceof Component ? (Component)e.getSource() : Main.parent;
+            Point p = getMousePosition();
+            multiPopupMenu.show(c, 0, 0);
+        }
+    }
+
+    private class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
+        public MultipolygonSettingsPopup() {
+            super();
+            addMenuItem("boundary", "Create administrative boundary relations");
+            addMenuItem("boundaryways", "Add tags boundary and admin_level to boundary relation ways");
+            addMenuItem("tags", "Move area tags from contour to relation").setEnabled(false);
+            addMenuItem("single", "Create a single multipolygon for multiple outer contours").setEnabled(false);
+        }
+
+        protected final JCheckBoxMenuItem addMenuItem( String property, String title ) {
+            String fullProperty = PREF_PREFIX + ".multipolygon." + property;
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(tr(title));
+            item.setSelected(Main.pref.getBoolean(fullProperty, CreateMultipolygonAction.getDefaultPropertyValue(property)));
+            item.setActionCommand(fullProperty);
+            item.addActionListener(this);
+            add(item);
+            return item;
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            String property = e.getActionCommand();
+            if( property != null && property.length() > 0 && e.getSource() instanceof JCheckBoxMenuItem ) {
+                boolean value = ((JCheckBoxMenuItem)e.getSource()).isSelected();
+                Main.pref.put(property, value);
+                show(getInvoker(), getX(), getY());
+            }
         }
     }
 }

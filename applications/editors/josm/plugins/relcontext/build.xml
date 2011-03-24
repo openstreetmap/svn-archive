@@ -80,6 +80,9 @@
             <fileset dir="images"/>
         </copy>
         <copy todir="${plugin.build.dir}">
+            <fileset dir="src" includes="**/*.txt" />
+        </copy>
+        <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README" />
                 <include name="LICENSE" />

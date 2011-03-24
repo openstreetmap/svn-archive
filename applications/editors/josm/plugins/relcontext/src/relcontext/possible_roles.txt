@@ -1,0 +1,11 @@
+boundary: admin_centre, label, subarea
+route: forward, backward, stop, platform
+restriction: from, to, via, location_hint
+enforcement: device, from, to, force
+destination_sign: to, from, intersection, sign
+site: perimeter, entrance, label
+bridge: across, under, outline, edge
+tunnel: through, outline, edge
+surveillance: camera, extent, visible, hidden
+street: street, address, house, associated
+collection: member, street, river, railway, address, associated

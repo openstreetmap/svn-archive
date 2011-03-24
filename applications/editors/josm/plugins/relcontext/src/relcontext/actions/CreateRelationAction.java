@@ -22,6 +22,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
 import relcontext.ChosenRelation;
+import relcontext.RelContextDialog;
 
 /**
  * Simple create relation with no tags and all selected objects in it with no roles.
@@ -31,6 +32,7 @@ import relcontext.ChosenRelation;
  */
 public class CreateRelationAction extends JosmAction {
     private static final String ACTION_NAME = "Create relation";
+    private static final String PREF_LASTTYPE = "reltoolbox.createrelation.lasttype";
     protected ChosenRelation chRel;
 
     public CreateRelationAction( ChosenRelation chRel ) {
@@ -89,6 +91,7 @@ public class CreateRelationAction extends JosmAction {
         final AutoCompletingComboBox keys = new AutoCompletingComboBox();
         keys.setPossibleItems(RELATION_TYPES);
         keys.setEditable(true);
+        keys.getEditor().setItem(Main.pref.get(PREF_LASTTYPE, "multipolygon"));
 
         panel.add(new JLabel(tr("Type")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
@@ -119,6 +122,8 @@ public class CreateRelationAction extends JosmAction {
             return null;
         }
 
-        return keys.getEditor().getItem().toString().trim();
+        String result = keys.getEditor().getItem().toString().trim();
+        Main.pref.put(PREF_LASTTYPE, result);
+        return result;
     }
 }

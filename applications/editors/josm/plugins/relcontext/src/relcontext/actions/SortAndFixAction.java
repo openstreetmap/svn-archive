@@ -115,7 +115,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
                 innerWays.add(w);
         for( int i = 0; i < r.getMembersCount(); i++ ) {
             RelationMember m = r.getMember(i);
-            if( m.getType().equals(OsmPrimitiveType.WAY) ) {
+            if( m.isWay() ) {
                 String role = null;
                 if( outerWays.contains((Way)m.getMember()) )
                     role = "outer";
@@ -136,9 +136,9 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         for( int i = 0; i < r.getMembersCount(); i++ ) {
             RelationMember m = r.getMember(i);
             String role = null;
-            if( m.getType().equals(OsmPrimitiveType.RELATION) )
+            if( m.isRelation() )
                 role = "subarea";
-            else if( m.getType().equals(OsmPrimitiveType.NODE) ) {
+            else if( m.isNode() ) {
                 Node n = (Node)m.getMember();
                 if( !n.isIncomplete() ) {
                     if( n.hasKey("place") )

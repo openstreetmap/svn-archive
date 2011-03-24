@@ -82,10 +82,11 @@ public class CloseIssueAction extends OsbAction {
 
     @Override
     public void execute() throws IOException {
-        if (comment.length() > 0) {
+        // add empty comment anyway, it is required to store submitter's name
+//        if (comment.length() > 0) {
             comment = addMesgInfo(comment);
             commentAction.execute(node, comment);
-        }
+//        }
         closeAction.execute(node);
     }
 

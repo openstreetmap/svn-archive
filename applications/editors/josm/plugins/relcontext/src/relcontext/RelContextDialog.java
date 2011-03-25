@@ -1,5 +1,6 @@
 package relcontext;
 
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.Command;
@@ -66,10 +67,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private SortAndFixAction sortAndFixAction;
 
     public RelContextDialog() {
-        super(tr("Relation Toolbox"), PREF_PREFIX,
-                tr("Open relation/multipolygon editor panel"),
-                Shortcut.registerShortcut("subwindow:reltoolbox", tr("Toggle: {0}", tr("Relation Toolbox")),
-                KeyEvent.VK_R, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150, true);
+        super(tr("Relation Toolbox"), PREF_PREFIX, tr("Open relation/multipolygon editor panel"), null, 150, true);
 
         chosenRelation = new ChosenRelation();
         chosenRelation.addChosenRelationListener(this);
@@ -102,6 +100,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         roleBox.setVisible(false);
+        final Action enterRoleAction = new EnterRoleAction(); // just for the shorcut
 
         // [±][X] relation U [AZ][Down][Edit]
         chosenRelationPanel = new JPanel(new GridBagLayout());
@@ -509,6 +508,29 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 Main.pref.put(property, value);
                 show(getInvoker(), getX(), getY());
             }
+        }
+    }
+
+    private class EnterRoleAction extends JosmAction implements ChosenRelationListener {
+
+        public EnterRoleAction() {
+            super("…", null, tr("Enter role for selected members"),
+                    Shortcut.registerShortcut("reltoolbox:changerole", tr("Relation Toolbox: {0}", tr("Enter role for selected members")),
+                    KeyEvent.VK_R, Shortcut.GROUP_EDIT), true);
+            chosenRelation.addChosenRelationListener(this);
+            updateEnabledState();
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            if( roleBoxModel.membersRole != null ) {
+                String role = askForRoleName();
+                if( role != null )
+                    applyRoleToSelection(role);
+            }
+        }
+
+        public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+            setEnabled(newRelation != null);
         }
     }
 

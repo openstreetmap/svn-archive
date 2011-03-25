@@ -14,6 +14,7 @@ import org.openstreetmap.josm.data.osm.NameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.tools.Shortcut;
 import relcontext.ChosenRelation;
 
 /**
@@ -25,7 +26,9 @@ public class FindRelationAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public FindRelationAction( ChosenRelation chRel ) {
-        super("Find", "relcontext/find", "Find a relation", null, false);
+        super("Find", "relcontext/find", tr("Find a relation"),
+                Shortcut.registerShortcut("reltoolbox:find", tr("Relation Toolbox: {0}", tr("Find a relation")),
+                KeyEvent.VK_F, Shortcut.GROUP_EDIT), true);
         this.chRel = chRel;
     }
 

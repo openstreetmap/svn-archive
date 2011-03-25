@@ -63,6 +63,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private ChosenRelationPopupMenu popupMenu;
     private MultipolygonSettingsPopup multiPopupMenu;
     private RoleComboBoxModel roleBoxModel;
+    private SortAndFixAction sortAndFixAction;
 
     public RelContextDialog() {
         super(tr("Relation Toolbox"), PREF_PREFIX,
@@ -110,12 +111,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelationComponent.addMouseListener(relationMouseAdapter);
         chosenRelationPanel.add(chosenRelationComponent, GBC.std().fill().insets(5, 0, 5, 0));
         chosenRelationPanel.add(roleBox, GBC.std().fill().insets(5, 0, 5, 0));
-        final Action sortAndFixAction = new SortAndFixAction(chosenRelation);
-        final JButton sortAndFixButton = (JButton) sizeButton(new JButton(sortAndFixAction), 32, 24);
-        chosenRelationPanel.add(sortAndFixButton, GBC.std());
+        sortAndFixAction = new SortAndFixAction(chosenRelation);
+        final JButton sortAndFixButton = (JButton) sizeButton(new JButton(sortAndFixAction), 32, 0);
+        chosenRelationPanel.add(sortAndFixButton, GBC.std().fill(GBC.VERTICAL));
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);
-        final JButton downloadButton = (JButton) sizeButton(new JButton(downloadChosenRelationAction), 32, 24);
-        chosenRelationPanel.add(downloadButton, GBC.std());
+        final JButton downloadButton = (JButton) sizeButton(new JButton(downloadChosenRelationAction), 32, 0);
+        chosenRelationPanel.add(downloadButton, GBC.std().fill(GBC.VERTICAL));
         chosenRelationPanel.add(new JButton(new EditChosenRelationAction(chosenRelation)), GBC.eol().fill(GBC.VERTICAL));
 
         rcPanel.add(chosenRelationPanel, BorderLayout.NORTH);
@@ -273,6 +274,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         roleBoxModel.update();
         // repopulate relations table
         relationsData.setRowCount(0);
+        sortAndFixAction.chosenRelationChanged(chosenRelation.get(), chosenRelation.get());
         if( newSelection == null )
             return;
 

@@ -45,7 +45,7 @@ public class GTFSStopTableModel extends DefaultTableModel
     int i = 0;
     while (pos > -1)
     {
-      String title = columnConfig.substring(oldPos, pos);
+      String title = stripQuot(columnConfig.substring(oldPos, pos));
       if ("stop_id".equals(title))
     idCol = i;
       else if ("stop_name".equals(title))

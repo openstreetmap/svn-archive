@@ -65,7 +65,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private ChosenRelationPopupMenu popupMenu;
     private MultipolygonSettingsPopup multiPopupMenu;
     private JLabel crRoleIndicator;
-    private AutoCompletingComboBox roleBox;
+    private RoleComboBoxModel roleBoxModel;
     private String lastSelectedRole;
 
     public RelContextDialog() {
@@ -110,8 +110,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rolePanel.add(sizeButton(toggleRolePanelButtonIn, 16, 20), GBC.std());
         crRoleIndicator = new JLabel();
         rolePanel.add(crRoleIndicator, GBC.std().insets(5, 0, 5, 0));
-        roleBox = new AutoCompletingComboBox();
-        roleBox.setEditable(false);
+        roleBoxModel = new RoleComboBoxModel();
+        JComboBox roleBox = new JComboBox(roleBoxModel);
         rolePanel.add(roleBox, GBC.std().fill(GBC.HORIZONTAL));
         rolePanel.add(sizeButton(new JButton(new ApplyNewRoleAction()), 40, 20), GBC.std());
         rolePanel.add(sizeButton(new JButton(new EnterNewRoleAction()), 40, 20), GBC.eol());
@@ -277,7 +277,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( Main.main.getCurrentDataSet() != null )
             selectionChanged(Main.main.getCurrentDataSet().getSelected());
         updateRoleIndicator();
-        updateRoleAutoCompletionList();
+        roleBoxModel.update();
         // ?
     }
 
@@ -305,6 +305,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( !isVisible() || relationsData == null )
             return;
         updateRoleIndicator();
+        roleBoxModel.update();
         // repopulate relations table
         relationsData.setRowCount(0);
         if( newSelection == null )
@@ -382,45 +383,16 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         return result;
     }
 
-    private void updateRoleAutoCompletionList() {
-        String currentRole = roleBox.getSelectedItem() == null ? null : ((AutoCompletionListItem)roleBox.getSelectedItem()).getValue();
-        List<String> items = new ArrayList<String>();
-        items.add(" ");
-        if( chosenRelation != null && chosenRelation.get() != null ) {
-            if( chosenRelation.isMultipolygon() ) {
-                items.add("outer");
-                items.add("inner");
-            }
-            if( chosenRelation.get().get("type") != null ) {
-                List<String> values = possibleRoles.get(chosenRelation.get().get("type"));
-                if( values != null )
-                    items.addAll(values);
-            }
-            for( RelationMember m : chosenRelation.get().getMembers() )
-                if( !items.contains(m.getRole()) )
-                    items.add(m.getRole());
-        }
-        if( currentRole != null && currentRole.length() > 1 ) {
-            lastSelectedRole = currentRole;
-            Main.pref.put(PREF_ROLEBOX + ".lastrole", lastSelectedRole);
-        }
-        roleBox.setPossibleItems(items);
-        if( lastSelectedRole != null && items.contains(lastSelectedRole) )
-            roleBox.setSelectedItem(lastSelectedRole);
-        // todo: do we really want empty role as default one? Maybe, store last selected role in preferences
-    }
-
     private String askForRoleName() {
         JPanel panel = new JPanel(new GridBagLayout());
 
-        final AutoCompletingComboBox role = new AutoCompletingComboBox();
-        List<AutoCompletionListItem> items = new ArrayList<AutoCompletionListItem>();
-        for( int i = 0; i < roleBox.getModel().getSize(); i++ ) {
-            final AutoCompletionListItem item = (AutoCompletionListItem)roleBox.getModel().getElementAt(i);
-            if( item.getValue().length() > 1 )
-                items.add(item);
+        List<String> items = new ArrayList<String>();
+        for( String role : roleBoxModel.getRoles() ) {
+            if( role.length() > 1 )
+                items.add(role);
         }
-        role.setPossibleACItems(items);
+        final AutoCompletingComboBox role = new AutoCompletingComboBox();
+        role.setPossibleItems(items);
         role.setEditable(true);
 
         panel.add(new JLabel(tr("Role")), GBC.std());
@@ -513,20 +485,20 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     protected void applyRoleToSelection( String role ) {
         if( chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
             Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
-            Relation r = new Relation(chosenRelation.get());
+            Relation r = chosenRelation.get();
             List<Command> commands = new ArrayList<Command>();
             for( int i = 0; i < r.getMembersCount(); i++ ) {
                 RelationMember m = r.getMember(i);
                 if( selected.contains(m.getMember()) ) {
                     if( !role.equals(m.getRole()) ) {
-                        r.setMember(i, new RelationMember(role, m.getMember()));
+//                        r.setMember(i, new RelationMember(role, m.getMember()));
                         commands.add(new ChangeRelationMemberRoleCommand(r, i, role));
                     }
                 }
             }
             if( !commands.isEmpty() ) {
-                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
-//                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
+//                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
             }
         }
     }
@@ -538,12 +510,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         }
 
         public void actionPerformed( ActionEvent e ) {
-            Object selectedItem = roleBox == null ? null : roleBox.getSelectedItem();
-            if( selectedItem != null ) {
-                if( selectedItem instanceof AutoCompletionListItem )
-                    selectedItem = ((AutoCompletionListItem)selectedItem).getValue();
-                applyRoleToSelection(selectedItem.toString().trim());
-            }
+            String selectedRole = roleBoxModel.getSelectedRole();
+            if( selectedRole != null )
+                applyRoleToSelection(selectedRole.toString().trim());
         }
     }
 
@@ -614,6 +583,73 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 Main.pref.put(property, value);
                 show(getInvoker(), getX(), getY());
             }
+        }
+    }
+
+    private class RoleComboBoxModel extends AbstractListModel implements ComboBoxModel {
+        private List<String> roles = new ArrayList<String>();
+        private int selectedIndex = -1;
+
+        public RoleComboBoxModel() {
+            super();
+            update();
+        }
+
+        public void update() {
+            String currentRole = getSelectedRole();
+            List<String> items = new ArrayList<String>();
+            items.add(" ");
+            if( chosenRelation != null && chosenRelation.get() != null ) {
+                if( chosenRelation.isMultipolygon() ) {
+                    items.add("outer");
+                    items.add("inner");
+                }
+                if( chosenRelation.get().get("type") != null ) {
+                    List<String> values = possibleRoles.get(chosenRelation.get().get("type"));
+                    if( values != null )
+                        items.addAll(values);
+                }
+                for( RelationMember m : chosenRelation.get().getMembers() )
+                    if( !items.contains(m.getRole()) )
+                        items.add(m.getRole());
+            }
+            if( currentRole != null && currentRole.length() > 1 ) {
+                lastSelectedRole = currentRole;
+                Main.pref.put(PREF_ROLEBOX + ".lastrole", lastSelectedRole);
+            }
+            roles = Collections.unmodifiableList(items);
+            fireContentsChanged(this, 0, getSize());
+            if( lastSelectedRole != null && items.contains(lastSelectedRole) )
+                setSelectedItem(lastSelectedRole);
+            // todo: do we really want empty role as default one? Maybe, store last selected role in preferences
+        }
+
+        public List<String> getRoles() {
+            return roles;
+        }
+
+        public int getSize() {
+            return roles.size();
+        }
+
+        public Object getElementAt( int index ) {
+            return getRole(index);
+        }
+
+        public String getRole( int index ) {
+            return roles.get(index);
+        }
+
+        public void setSelectedItem( Object anItem ) {
+            selectedIndex = anItem == null ? -1 : roles.indexOf(anItem);
+        }
+
+        public Object getSelectedItem() {
+            return getSelectedRole();
+        }
+
+        public String getSelectedRole() {
+            return selectedIndex < 0 || selectedIndex >= getSize() ? null : getRole(selectedIndex);
         }
     }
 }

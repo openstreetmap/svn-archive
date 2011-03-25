@@ -11,6 +11,8 @@
 - Solve multipolygon settings button width problem
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 - Sort relation members button (now it's just role fixer)
+- Show role panel only when relation members are selected
+- Rethink role panel. Maybe, replace chosen relation title with role combobox?
 
 == RELEASE ==
 

@@ -142,7 +142,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         downloadButton.setVisible(false);
-        chosenRelationPanel.setVisible(false);
+        if( Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false) )
+            chosenRelationPanel.setVisible(false);
 
         // [+][Multi] [X]Adm [X]Tags [X]1
         JPanel bottomLine = new JPanel(new GridBagLayout());
@@ -260,7 +261,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        if( chosenRelationPanel != null )
+        if( chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false) )
             chosenRelationPanel.setVisible(newRelation != null);
         if( Main.main.getCurrentDataSet() != null )
             selectionChanged(Main.main.getCurrentDataSet().getSelected());

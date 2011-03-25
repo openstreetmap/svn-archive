@@ -81,6 +81,8 @@ public class CreateMultipolygonAction extends JosmAction {
         
         if( chRel != null )
             chRel.set(rel);
+
+        getCurrentDataSet().setSelected(rel);
     }
 
     @Override

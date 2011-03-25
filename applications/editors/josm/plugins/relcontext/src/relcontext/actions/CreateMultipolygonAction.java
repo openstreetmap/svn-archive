@@ -60,7 +60,6 @@ public class CreateMultipolygonAction extends JosmAction {
         if( isBoundary ) {
             rel.put("type", "boundary");
             rel.put("boundary", "administrative");
-            askForAdminLevelAndName(rel);
         } else
             rel.put("type", "multipolygon");
         for( MultipolygonCreate.JoinedPolygon poly : mpc.outerWays )
@@ -72,6 +71,8 @@ public class CreateMultipolygonAction extends JosmAction {
         if( isBoundary )
             addBoundaryMembers(rel);
         List<Command> list = removeTagsFromInnerWays(rel);
+        if( !askForAdminLevelAndName(rel) )
+            return;
         if( isBoundary && getPref("boundaryways") )
             list.addAll(fixWayTagsForBoundary(rel));
         list.add(new AddCommand(rel));
@@ -179,6 +180,10 @@ public class CreateMultipolygonAction extends JosmAction {
 
     static public final String[] DEFAULT_LINEAR_TAGS = {"barrier", "source"};
 
+    private static final Set<String> REMOVE_FROM_BOUNDARY_TAGS = new TreeSet<String>(Arrays.asList(new String[] {
+        "boundary", "boundary_type", "type", "admin_level"
+    }));
+
     /**
      * This method removes tags/value pairs from inner ways that are present in relation or outer ways.
      * It was copypasted from the standard {@link org.openstreetmap.josm.actions.CreateMultipolygonAction}.
@@ -195,6 +200,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
         List<Way> innerWays = new ArrayList<Way>();
         List<Way> outerWays = new ArrayList<Way>();
+
         Set<String> conflictingKeys = new TreeSet<String>();
 
         for (RelationMember m: relation.getMembers()) {
@@ -232,6 +238,16 @@ public class CreateMultipolygonAction extends JosmAction {
         if( values.containsKey("natural") && values.get("natural").equals("coastline") )
             values.remove("natural");
 
+        boolean isBoundary = getPref("boundary");
+        String name = values.get("name");
+        String adminLevel = values.get("admin_level");
+        if( isBoundary ) {
+            Set<String> keySet = new TreeSet<String>(values.keySet());
+            for( String key : keySet )
+                if( !REMOVE_FROM_BOUNDARY_TAGS.contains(key) )
+                    values.remove(key);
+        }
+
         values.put("area", "yes");
 
         List<Command> commands = new ArrayList<Command>();
@@ -242,7 +258,7 @@ public class CreateMultipolygonAction extends JosmAction {
             String value = values.get(key);
 
             for (Way way: innerWays) {
-                if (value.equals(way.get(key))) {
+                if( way.hasKey(key) && (isBoundary || value.equals(way.get(key))) ) {
                     affectedWays.add(way);
                 }
             }
@@ -263,32 +279,50 @@ public class CreateMultipolygonAction extends JosmAction {
 
         if( moveTags ) {
             // add those tag values to the relation
+            if( isBoundary )
+                values.put("name", name);
             boolean fixed = false;
             Relation r2 = new Relation(relation);
             for( String key : values.keySet() ) {
-                if( !r2.hasKey(key) && !key.equals("area") ) {
-                    r2.put(key, values.get(key));
+                if( !r2.hasKey(key) && !key.equals("area")
+                        && (!isBoundary || key.equals("admin_level") || key.equals("name"))) {
+                    if( relation.isNew() )
+                        relation.put(key, values.get(key));
+                    else
+                        r2.put(key, values.get(key));
                     fixed = true;
                 }
             }
-            if( fixed )
+            if( fixed && !relation.isNew() )
                 commands.add(new ChangeCommand(relation, r2));
         }
 
         return commands;
     }
 
-    private void askForAdminLevelAndName( Relation rel ) {
+    /**
+     *
+     * @param rel
+     * @return false if user pressed "cancel".
+     */
+    private boolean askForAdminLevelAndName( Relation rel ) {
+        String relAL = rel.get("admin_level");
+        String relName = rel.get("name");
+        if( relAL != null && relName != null )
+            return true;
+
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Enter admin level and name for the border relation:")), GBC.eol().insets(0, 0, 0, 5));
 
         final JTextField admin = new JTextField();
-        admin.setText(Main.pref.get(PREF_MULTIPOLY + "lastadmin", ""));
+        admin.setText(relAL != null ? relAL : Main.pref.get(PREF_MULTIPOLY + "lastadmin", ""));
         panel.add(new JLabel(tr("Admin level")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
         panel.add(admin, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 5));
 
         final JTextField name = new JTextField();
+        if( relName != null )
+            name.setText(relName);
         panel.add(new JLabel(tr("Name")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
         panel.add(name, GBC.eol().fill(GBC.HORIZONTAL));
@@ -315,7 +349,7 @@ public class CreateMultipolygonAction extends JosmAction {
         Object answer = optionPane.getValue();
         if( answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
                 || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION) ) {
-            return;
+            return false;
         }
 
         String admin_level = admin.getText().trim();
@@ -326,5 +360,6 @@ public class CreateMultipolygonAction extends JosmAction {
         }
         if( new_name.length() > 0 )
             rel.put("name", new_name);
+        return true;
     }
 }

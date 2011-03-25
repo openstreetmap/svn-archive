@@ -10,6 +10,7 @@
 - Option to create separate multipolygon for every outer ring
 - Solve multipolygon settings button width problem
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
+- Sort relation members button (now it's just role fixer)
 
 == RELEASE ==
 

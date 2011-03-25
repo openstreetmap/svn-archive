@@ -71,8 +71,9 @@ public class CreateMultipolygonAction extends JosmAction {
         if( isBoundary )
             addBoundaryMembers(rel);
         List<Command> list = removeTagsFromInnerWays(rel);
-        if( !askForAdminLevelAndName(rel) )
-            return;
+        if( isBoundary )
+            if( !askForAdminLevelAndName(rel) )
+                return;
         if( isBoundary && getPref("boundaryways") )
             list.addAll(fixWayTagsForBoundary(rel));
         list.add(new AddCommand(rel));

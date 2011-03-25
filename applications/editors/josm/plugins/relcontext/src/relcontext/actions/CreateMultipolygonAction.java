@@ -38,7 +38,7 @@ public class CreateMultipolygonAction extends JosmAction {
     public static boolean getDefaultPropertyValue( String property ) {
         if( property.equals("boundary") ) return false;
         else if( property.equals("boundaryways") ) return true;
-        else if( property.equals("tags") ) return false;
+        else if( property.equals("tags") ) return true;
         else if( property.equals("single") ) return true;
         throw new IllegalArgumentException(property);
     }

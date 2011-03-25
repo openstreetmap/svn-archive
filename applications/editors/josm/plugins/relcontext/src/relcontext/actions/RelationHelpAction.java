@@ -26,7 +26,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "search"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

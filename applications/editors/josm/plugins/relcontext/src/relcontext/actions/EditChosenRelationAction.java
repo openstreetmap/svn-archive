@@ -25,7 +25,7 @@ public class EditChosenRelationAction extends AbstractAction implements ChosenRe
         putValue(SHORT_DESCRIPTION, tr("Open relation editor for the chosen relation"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

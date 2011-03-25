@@ -17,7 +17,7 @@ public class SelectMembersAction extends AbstractAction implements ChosenRelatio
         putValue(SMALL_ICON, ImageProvider.get("selectall"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

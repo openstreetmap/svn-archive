@@ -18,7 +18,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * @author Zverik
  */
 public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable, DataSetListener {
-    private Relation chosenRelation = null;
+    protected Relation chosenRelation = null;
     private Set<ChosenRelationListener> chosenRelationListeners = new HashSet<ChosenRelationListener>();
 
     public void set( Relation rel ) {
@@ -72,7 +72,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         return 0;
     }
 
-    private void analyse() {
+    protected void analyse() {
         // todo
     }
 

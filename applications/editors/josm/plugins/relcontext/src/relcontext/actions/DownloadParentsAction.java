@@ -33,7 +33,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         putValue(SHORT_DESCRIPTION, tr("Download referrers for the the chosen relation and its members"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null && Main.map.mapView.getEditLayer() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

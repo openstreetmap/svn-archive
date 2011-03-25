@@ -18,7 +18,7 @@ public class DeleteChosenRelationAction extends AbstractAction implements Chosen
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

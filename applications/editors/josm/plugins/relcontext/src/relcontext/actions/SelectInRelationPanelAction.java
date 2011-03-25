@@ -19,7 +19,7 @@ public class SelectInRelationPanelAction extends AbstractAction implements Chose
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "relationlist"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

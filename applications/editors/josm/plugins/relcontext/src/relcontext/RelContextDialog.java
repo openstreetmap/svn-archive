@@ -1,5 +1,6 @@
 package relcontext;
 
+import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.Command;
 import java.io.BufferedReader;
@@ -73,7 +74,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         chosenRelation.addChosenRelationListener(this);
         MapView.addEditLayerChangeListener(chosenRelation);
 
-        popupMenu = new ChosenRelationPopupMenu();
+        popupMenu = new ChosenRelationPopupMenu(chosenRelation);
         multiPopupMenu = new MultipolygonSettingsPopup();
 
         JPanel rcPanel = new JPanel(new BorderLayout());
@@ -177,6 +178,19 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private void configureRelationsTable( final JTable relationsTable ) {
         relationsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         relationsTable.setTableHeader(null);
+        relationsTable.addMouseListener(new PopupMenuLauncher() {
+            @Override
+            public void launch(MouseEvent evt) {
+                Point p = evt.getPoint();
+                int row = relationsTable.rowAtPoint(p);
+                if (row > -1) {
+                    Relation relation = (Relation)relationsData.getValueAt(row, 0);
+                    JPopupMenu menu = new ChosenRelationPopupMenu(new StaticChosenRelation(relation));
+                    menu.show(relationsTable, p.x, p.y-5);
+                }
+            }
+        });
+
         TableColumnModel columns = relationsTable.getColumnModel();
         columns.getColumn(0).setCellRenderer(new OsmPrimitivRenderer() {
             @Override
@@ -292,6 +306,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
             relationsData.addRow(new Object[] {rel, role == null ? "" : role});
         }
+        for( OsmPrimitive element : newSelection )
+            if( element instanceof Relation && (chosenRelation.get() == null || !chosenRelation.get().equals(element) ) )
+                relationsData.addRow(new Object[] {element, ""});
     }
 
     private void updateSelection() {
@@ -405,7 +422,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     private class ChosenRelationPopupMenu extends JPopupMenu {
-        public ChosenRelationPopupMenu() {
+        public ChosenRelationPopupMenu( ChosenRelation chosenRelation ) {
             add(new SelectMembersAction(chosenRelation));
             add(new SelectRelationAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));

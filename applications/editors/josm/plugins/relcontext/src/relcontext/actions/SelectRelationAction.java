@@ -18,7 +18,7 @@ public class SelectRelationAction extends AbstractAction implements ChosenRelati
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "select"));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(false);
+        setEnabled(rel.get() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {

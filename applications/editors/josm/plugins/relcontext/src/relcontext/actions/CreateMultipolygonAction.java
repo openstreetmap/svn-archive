@@ -68,14 +68,14 @@ public class CreateMultipolygonAction extends JosmAction {
         for( MultipolygonCreate.JoinedPolygon poly : mpc.innerWays )
             for( Way w : poly.ways )
                 rel.addMember(new RelationMember("inner", w));
-        if( isBoundary )
-            addBoundaryMembers(rel);
         List<Command> list = removeTagsFromInnerWays(rel);
-        if( isBoundary )
+        if( isBoundary ) {
             if( !askForAdminLevelAndName(rel) )
                 return;
-        if( isBoundary && getPref("boundaryways") )
-            list.addAll(fixWayTagsForBoundary(rel));
+            addBoundaryMembers(rel);
+            if( getPref("boundaryways") )
+                list.addAll(fixWayTagsForBoundary(rel));
+        }
         list.add(new AddCommand(rel));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
         

@@ -516,7 +516,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public EnterRoleAction() {
             super("…", null, tr("Enter role for selected members"),
                     Shortcut.registerShortcut("reltoolbox:changerole", tr("Relation Toolbox: {0}", tr("Enter role for selected members")),
-                    KeyEvent.VK_R, Shortcut.GROUP_EDIT), true);
+                    KeyEvent.VK_R, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
             chosenRelation.addChosenRelationListener(this);
             updateEnabledState();
         }

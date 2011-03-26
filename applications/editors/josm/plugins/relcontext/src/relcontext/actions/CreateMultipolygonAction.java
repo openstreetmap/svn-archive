@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import javax.swing.*;
 import org.openstreetmap.josm.Main;
@@ -12,6 +13,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Shortcut;
 import relcontext.ChosenRelation;
 
 /**
@@ -26,7 +28,9 @@ public class CreateMultipolygonAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public CreateMultipolygonAction( ChosenRelation chRel ) {
-        super("Multi", "data/multipolygon", tr("Create a multipolygon from selected objects"), null, false);
+        super("Multi", "data/multipolygon", tr("Create a multipolygon from selected objects"),
+                Shortcut.registerShortcut("reltoolbox:multipolygon", tr("Relation Toolbox: {0}", tr("Create multipolygon")),
+                KeyEvent.VK_B, Shortcut.GROUP_HOTKEY), true);
         this.chRel = chRel;
         updateEnabledState();
     }

@@ -7,6 +7,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Box;
@@ -21,8 +22,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Shortcut;
 import relcontext.ChosenRelation;
-import relcontext.RelContextDialog;
 
 /**
  * Simple create relation with no tags and all selected objects in it with no roles.
@@ -35,7 +36,9 @@ public class CreateRelationAction extends JosmAction {
     protected ChosenRelation chRel;
 
     public CreateRelationAction( ChosenRelation chRel ) {
-        super(tr("New"), "data/relation", tr("Create a relation from selected objects"), null, false);
+        super(tr("New"), "data/relation", tr("Create a relation from selected objects"),
+                Shortcut.registerShortcut("reltoolbox:create", tr("Relation Toolbox: {0}", tr("Create a new relation")),
+                KeyEvent.VK_C, Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT), true);
         this.chRel = chRel;
         updateEnabledState();
     }

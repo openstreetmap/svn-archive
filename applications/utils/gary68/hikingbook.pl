@@ -3,7 +3,6 @@
 
 
 # todo
-# - translate keys (relation data)
 #
 # LATER
 # - negative ids for steps
@@ -18,6 +17,8 @@
 # 0.95 sanitize
 # 0.96 contour data
 # 0.97 street directory
+# 0.98 street atlas
+# 
 
 use strict ;
 use warnings ;
@@ -27,7 +28,7 @@ use OSM::QuadTree ;
 
 
 my $programName = "hikingbook.pl" ;
-my $version = "0.97" ;
+my $version = "0.98" ;
 
 my $inFileName = "hessen.osm" ;
 my $outFileName = "hikingbook.pdf" ;
@@ -80,6 +81,7 @@ my $lessStepsOpt = 0 ;
 my $stepSizeOpt = 15 ;
 my $stepColorOpt = "black" ;
 my $stepFontSizeOpt = 35 ;
+my $atlasOpt = "" ;
 
 my $poiOpt = 0 ;
 my $gridNumber = 5 ;
@@ -165,33 +167,56 @@ my %validLatex = () ;
 my %replaceLatex = () ;
 
 initializeLatex() ;
-
 getProgramOptions () ;
 
-getPoiFiledata () ;
+if ($atlasOpt eq "") {
+	print "HIKING/ROUTE MODE\n" ;
+	getPoiFiledata () ;
+	getRelationData() ;
+	getStepInformation() ;
+	createTemp1 () ;
+	buildCompleteWay() ;
+	compileElevationData () ;
+	addPois() ;
+	createDirections() ;
+	createDetailMaps() ;
+}
+else {
+	print "ATLAS MODE\n" ;
 
-getRelationData() ;
+	if ($title eq "Hiking book") { $title = "Atlas" ; }
 
-getStepInformation() ;
+	# print "opt = $atlasOpt\n" ;
+	($relLonMin, $relLatMin, $relLonMax, $relLatMax) = ( $atlasOpt =~ /([\-\d\.]+)\,([\-\d\.]+)\,([\-\d\.]+)\,([\-\d\.]+)/ ) ;
+	# print "$relLonMin, $relLatMin, $relLonMax, $relLatMax\n" ;
+	if ((! defined $relLonMin) or (! defined $relLatMin) or (! defined $relLonMax) or (! defined $relLatMax)) {
+		die "ERROR in atlas coordinates: $atlasOpt\n" ;
+	}
 
-createTemp1 () ;
+	openOsmFile ($inFileName) ;
+	print "reading nodes of input file...\n" ;
 
-buildCompleteWay() ;
+	my $propRef ; my $tagsRef ;	
+	($propRef, $tagsRef) = getNode3() ;
+	while (defined $propRef) {
+		# collect data of big file
+		if ( $$propRef{"lon"} > $fileLonMax ) { $fileLonMax = $$propRef{"lon"} ; }
+		if ( $$propRef{"lon"} < $fileLonMin ) { $fileLonMin = $$propRef{"lon"} ; }
+		if ( $$propRef{"lat"} > $fileLatMax ) { $fileLatMax = $$propRef{"lat"} ; }
+		if ( $$propRef{"lat"} < $fileLatMin ) { $fileLatMin = $$propRef{"lat"} ; }
 
-compileElevationData () ;
+		($propRef, $tagsRef) = getNode3() ;
+	}
+	closeOsmFile() ;
+	print "done.\n" ;
 
-addPois() ;
-
-createDirections() ;
-
-createDetailMaps() ;
+	createTemp1 () ;
+	createDetailMapsAtlas() ;
+}
 
 createOverviewMap() ;
-
 createTitlePage () ;
-
 createDirectory () ;
-
 mergeAllFiles() ;
 
 print "\ndeleting temp files (disable with -nodelete)...\n" ;
@@ -423,48 +448,53 @@ sub createTemp1 {
 		my $contourCount = 0 ;
 		my %neededNodes = () ;
 
-		# openOsmFile ($inFileName) ;
-		openOsmFile ($temp1FileName) ; # 0.92
-		skipNodes() ;
-
 		my $nodesRef ; my $propRef ; my $tagsRef ;
-		($propRef, $nodesRef, $tagsRef) = getWay3() ;
-		while (defined $propRef) {
-			my $needed = 0 ;
-			my $contourNeeded = 0 ;
-			my $ele = -999 ;
-			foreach my $t (@$tagsRef) {
-				if ($t->[0] eq "highway") { $needed = 1 ; }
-				if ($t->[0] eq "contour_ext") { $contourNeeded = 1 ; }
-				if ($t->[0] eq "ele") { $ele = $t->[1] ; }
-			}
 
-			if ($needed) {
-				@nodes = @$nodesRef ;
-				for (my $i=0 ; $i <= $#nodes; $i++) {
-					my $n = $nodes[$i] ;
-					if ( ($i == 0) or ($i ==$#nodes) ) {
-						$nodeDirCount{$n} += 1 ;
-					}
-					else {
-						$nodeDirCount{$n} += 2 ;
-					}
-				}
-			}
+		if ($atlasOpt eq "") {
 
-			if ( ($contourNeeded) and ($ele != -999) and (scalar @$nodesRef > 1) ) {
-				$contourCount++ ;
-				@{ $wayNodesHash{ $$propRef{"id"} } } = @$nodesRef ;
-				$contourWays { $$propRef{"id"} } = $ele ;
-				foreach my $n ( @$nodesRef ) {
-					$neededNodes{$n} = 1 ;
-				}
-			}
+			# openOsmFile ($inFileName) ;
+			openOsmFile ($temp1FileName) ; # 0.92
+			skipNodes() ;
 
 			($propRef, $nodesRef, $tagsRef) = getWay3() ;
+			while (defined $propRef) {
+				my $needed = 0 ;
+				my $contourNeeded = 0 ;
+				my $ele = -999 ;
+				foreach my $t (@$tagsRef) {
+					if ($t->[0] eq "highway") { $needed = 1 ; }
+					if ($t->[0] eq "contour_ext") { $contourNeeded = 1 ; }
+					if ($t->[0] eq "ele") { $ele = $t->[1] ; }
+				}
+
+				if ($needed) {
+					@nodes = @$nodesRef ;
+					for (my $i=0 ; $i <= $#nodes; $i++) {
+						my $n = $nodes[$i] ;
+						if ( ($i == 0) or ($i ==$#nodes) ) {
+							$nodeDirCount{$n} += 1 ;
+						}
+						else {
+							$nodeDirCount{$n} += 2 ;
+						}
+					}
+				}
+
+				if ( ($contourNeeded) and ($ele != -999) and (scalar @$nodesRef > 1) ) {
+					$contourCount++ ;
+					@{ $wayNodesHash{ $$propRef{"id"} } } = @$nodesRef ;
+					$contourWays { $$propRef{"id"} } = $ele ;
+					foreach my $n ( @$nodesRef ) {
+						$neededNodes{$n} = 1 ;
+					}
+				}
+
+				($propRef, $nodesRef, $tagsRef) = getWay3() ;
+			}
+			closeOsmFile() ;
+			print "$contourCount contour ways found.\n" ;
+
 		}
-		closeOsmFile() ;
-		print "$contourCount contour ways found.\n" ;
 
 		# store min / max of temp file
 
@@ -483,23 +513,27 @@ sub createTemp1 {
 			if ( $$propRef{"lat"} > $file1LatMax ) { $file1LatMax = $$propRef{"lat"} ; }
 			if ( $$propRef{"lat"} < $file1LatMin ) { $file1LatMin = $$propRef{"lat"} ; }
 
-			# poi check and data collection
-			foreach my $t (@$tagsRef) {
-				foreach my $p (@pois) {
-					if ( ($t->[0] eq $p->[0]) and ($t->[1] eq $p->[1]) ) {
-						my $name = "" ;
-						foreach my $t1 (@$tagsRef) {
-							if ($t1->[0] eq "name") { $name = $t1->[1] ; }
+			if ($atlasOpt eq "") {
+
+				# poi check and data collection
+				foreach my $t (@$tagsRef) {
+					foreach my $p (@pois) {
+						if ( ($t->[0] eq $p->[0]) and ($t->[1] eq $p->[1]) ) {
+							my $name = "" ;
+							foreach my $t1 (@$tagsRef) {
+								if ($t1->[0] eq "name") { $name = $t1->[1] ; }
+							}
+							my $info ;
+							if ($languageOpt eq "EN") { $info = $p->[3] ; }
+							if ($languageOpt eq "DE") { $info = $p->[4] ; }
+							$name = sanitizeLatexString ($name) ;
+							push @poiList, [ $info, $name, $$propRef{"id"}, $p->[2] ] ;
+							$lon{ $$propRef{"id"} } = $$propRef{"lon"} ;
+							$lat{ $$propRef{"id"} } = $$propRef{"lat"} ;
 						}
-						my $info ;
-						if ($languageOpt eq "EN") { $info = $p->[3] ; }
-						if ($languageOpt eq "DE") { $info = $p->[4] ; }
-						$name = sanitizeLatexString ($name) ;
-						push @poiList, [ $info, $name, $$propRef{"id"}, $p->[2] ] ;
-						$lon{ $$propRef{"id"} } = $$propRef{"lon"} ;
-						$lat{ $$propRef{"id"} } = $$propRef{"lat"} ;
 					}
 				}
+
 			}
 
 			($propRef, $tagsRef) = getNode3() ;
@@ -875,27 +909,7 @@ sub createDetailMaps {
 
 			shrinkFile ($temp1FileName, $temp2FileName, $file1LonMin, $file1LatMin, $file1LonMax, $file1LatMax, $lonMin, $latMin, $lonMax, $latMax, $extraMapData2) ;
 
-
-			# store min / max of temp file
-			openOsmFile ($temp2FileName) ;
-			print "reading temp file nodes...\n" ;
-
-			my $file2LonMax = -999 ;
-			my $file2LonMin = 999 ;
-			my $file2LatMax = -999 ;
-			my $file2LatMin = 999 ;
-			my $propRef ; my $tagsRef ;
-			($propRef, $tagsRef) = getNode3() ;
-			while (defined $propRef) {
-				if ( $$propRef{"lon"} > $file2LonMax ) { $file2LonMax = $$propRef{"lon"} ; }
-				if ( $$propRef{"lon"} < $file2LonMin ) { $file2LonMin = $$propRef{"lon"} ; }
-				if ( $$propRef{"lat"} > $file2LatMax ) { $file2LatMax = $$propRef{"lat"} ; }
-				if ( $$propRef{"lat"} < $file2LatMin ) { $file2LatMin = $$propRef{"lat"} ; }
-
-				($propRef, $tagsRef) = getNode3() ;
-			}
-			closeOsmFile() ;
-			print "done.\n" ;
+			my ($file2LonMin, $file2LatMin, $file2LonMax, $file2LatMax) = getMinMax ($temp2FileName)  ;
 
 			if ($lonMin < $file2LonMin) { $lonMin = $file2LonMin ; }
 			if ($lonMax > $file2LonMax) { $lonMax = $file2LonMax ; }
@@ -939,58 +953,7 @@ sub createDetailMaps {
 			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$actualScale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -poifile=step.txt -relid=$relationId -pagenumbers=$pnSizeDetail,black,$mapNumber $poiParams $streetParams >> $logFileName 2>&1` ;
 			print "done.\n" ;
 
-			my $poiName = $outName ;
-			if ($poiOpt > 0) {
-				$poiName =~ s/\.svg/\_pois\.txt/ ;
-				open (my $file, "<", $poiName) or die ("ERRROR: could not open poi file name $poiName\n") ;
-				my $line = "" ;
-				while ($line = <$file>) {
-					# print "POI line read : $line" ;
-					my ($poi, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
-					if ( (defined $poi) and (defined $fields) ) {
-						my @f = split / /, $fields ;
-						foreach my $sq (@f) {
-							$poi = convertHTML ($poi) ;
-
-							# translation German
-							if ($languageOpt ne "EN") {
-								foreach my $k (keys %{ $translations{$languageOpt} } ) {
-									my $v = $translations{$languageOpt}{$k} ;
-									$poi =~ s/\($k\)/\($v\)/gi ;
-								}
-							}
-
-							$poi =~ s/\_/ /g ;
-							push @{$pois{$poi}}, $mapNumber . "-" . $sq ;
-						}
-					}
-				}
-				close ($file) ;
-				push @tempFiles, $poiName ;
-			}
-
-			my $streetName = $outName ;
-			if ($streetOpt > 0) {
-				$streetName =~ s/\.svg/\_streets\.txt/ ;
-				open (my $file, "<", $streetName) or die ("ERRROR: could not open street file name $streetName\n") ;
-				my $line = "" ;
-				while ($line = <$file>) {
-					# print "STREET line read : $line" ;
-					my ($street, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
-					if ( (defined $street) and (defined $fields) ) {
-						my @f = split / /, $fields ;
-						foreach my $sq (@f) {
-							$street = convertHTML ($street) ;
-							push @{$streets{$street}}, $mapNumber . "-" . $sq ;
-						}
-					}
-				}
-				close ($file) ;
-				push @tempFiles, $streetName ;
-			}
-
-
-
+			loadExternalFiles($outName) ;
 
 		}
 
@@ -1007,6 +970,139 @@ sub createDetailMaps {
 
 	}
 
+}
+
+sub createDetailMapsAtlas {
+	my $mapName = "detail" ;
+	my $first = 1 ;
+
+	# calc dists 
+
+	my $maxDistLon = $pageWidth{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+	my $maxDistLat = $pageHeight{$pageSizeOpt} / 100 / 1000 * $scale ; # in km
+	my $sizeX = $maxDistLon / (111.11 * cos ($relLatMin / 360 * 3.14 * 2) ) ;
+	my $sizeY = $maxDistLat / 111.11 ;
+	if ($verboseOpt eq "1") {
+		print "MAX dists: $maxDistLon, $maxDistLat (km)   $sizeX, $sizeY (degrees)\n" ;	
+	}
+
+
+	my @hor = () ;
+	my @ver = () ;
+
+	my $x = $relLonMin ; 
+	my $x2 = $x + $sizeX ;
+	push @hor, [$x, $x2] ;
+	# print "$x $x2\n" ;
+	while ($x2 < $relLonMax) {
+		$x = $x2 - $sizeX * ($overlapOpt/100) ;
+		$x2 = $x + $sizeX ;
+		if ($x2 > $relLonMax) { $x2 = $relLonMax ; }
+		push @hor, [$x, $x2] ;
+		# print "$x $x2\n" ;
+	}
+
+	my $y = $relLatMax ; 
+	my $y2 = $y - $sizeY ;
+	push @ver, [$y2, $y] ;
+	# print "$y $y2\n" ;
+	while ($y2 > $relLatMin) {
+		$y = $y2 + $sizeY * ($overlapOpt/100) ;
+		$y2 = $y - $sizeY ;
+		if ($y2 < $relLatMin) { $y2 = $relLatMin ; }
+		push @ver, [$y2, $y] ;
+		# print "$y $y2\n" ;
+	}
+	my $nx = scalar @hor ;
+	my $ny = scalar @ver ;
+	print "Dimensions: $nx * $ny (width * height)\n" ;
+	my $ntot = $nx * $ny ;
+
+	my $page ; my $py = 1 ; my $tot ;
+	foreach my $v (@ver) {
+		my $px = 1 ; 
+		foreach my $h (@hor) {
+			$tot = ($py-1) * (scalar @hor) + $px ;
+			print "\n\ndetail maps progress: y=$py, x=$px  -  $h->[0] $v->[0] $h->[1] $v->[1]  -   page: $tot/$ntot\n" ;
+
+			my $left ; my $right ; my $top ; my $bottom ;
+			if ($px > 1) { $left = $px - 1 + ($py - 1) * (scalar @hor) ; } else { $left = 0 ; }
+			if ($px < scalar @hor) { $right = $px + 1 + ($py - 1) * scalar @hor ; } else { $right = 0 ; }
+			# print "TEST ", ($py - 2) * (scalar @hor) + $px, "\n" ;
+			if ($py > 1) { $top = ($py - 2) * (scalar @hor) + $px ; } else { $top = 0 ; }
+			if ($py < scalar @ver) { $bottom = ($py) * (scalar @hor) + $px ; } else { $bottom = 0 ; }
+			if ($verboseOpt eq "1") {
+				print "neighbour pages: $bottom $top // $left $right\n\n" ;
+			}
+
+			my $lonMin = $h->[0] ;
+			my $lonMax = $h->[1] ;
+			my $latMin = $v->[0] ;
+			my $latMax = $v->[1] ;
+	
+			#
+			# create map
+			#
+
+			$mapNumber++ ;
+			my $outName = $workDir . $mapName . $mapNumber . ".svg" ;
+
+			shrinkFile ($temp1FileName, $temp2FileName, $file1LonMin, $file1LatMin, $file1LonMax, $file1LatMax, $lonMin, $latMin, $lonMax, $latMax, $extraMapData2) ;
+
+			my ($file2LonMin, $file2LatMin, $file2LonMax, $file2LatMax) = getMinMax ($temp2FileName)  ;
+
+			if ($lonMin < $file2LonMin) { $lonMin = $file2LonMin ; }
+			if ($lonMax > $file2LonMax) { $lonMax = $file2LonMax ; }
+			if ($latMin < $file2LatMin) { $latMin = $file2LatMin ; }
+			if ($latMax > $file2LatMax) { $latMax = $file2LatMax ; }
+
+			# maintain details outer box
+			if ($lonMin < $detailLonMin) { $detailLonMin = $lonMin ; }
+			if ($lonMax > $detailLonMax) { $detailLonMax = $lonMax ; }
+			if ($latMin < $detailLatMin) { $detailLatMin = $latMin ; }
+			if ($latMax > $detailLatMax) { $detailLatMax = $latMax ; }
+
+			# print "DETAIL: bbox before mapgen = $lonMin,$latMin,$lonMax,$latMax\n" ;
+
+			if ($first) {
+				$first = 0 ;
+				$rectangles = "-rectangles=" ;
+			}
+			else {
+				$rectangles .= "#" ;
+			}
+			$rectangles .= "$lonMin,$latMin,$lonMax,$latMax" ;
+
+			my $pdfName = $outName ; $pdfName =~ s/\.svg/\.pdf/ ;
+			my $ndlName = $outName ; $ndlName =~ s/\.svg/\_NotDrawnLabels\.txt/ ;
+			push @tempFiles, $outName ;
+			push @tempFiles, $pdfName ;
+			push @tempFiles, $ndlName ;
+
+			my $poiParams = "" ;
+			if ($poiOpt > 0) {
+				$poiParams = "-poi -grid=$gridNumber" ;
+			}
+
+			my $streetParams = "" ;
+			if ($streetOpt > 0) {
+				$streetParams = "-dir -grid=$gridNumber" ;
+			}
+
+			my $pageNumbers = "$pnSizeDetail,black,$mapNumber,$left,$bottom,$right,$top" ;
+
+			print "call mapgen and log to $logFileName...\n" ;
+			`$mapgenCommandDetail -in=$temp2FileName -out=$outName -style=$detailStyleFileName -scaleset=$scale -clipbbox=$lonMin,$latMin,$lonMax,$latMax -pagenumbers=$pageNumbers $poiParams $streetParams >> $logFileName 2>&1` ;
+			print "done.\n" ;
+
+			loadExternalFiles($outName) ;
+
+
+
+			$px ++ ;
+		}
+		$py ++ ;
+	}
 }
 
 
@@ -1095,7 +1191,10 @@ sub mergeAllFiles {
 
 	$files .= $workDir . "title.pdf" ;
 	$files .= " " . $workDir . "overview.pdf" ;
-	$files .= " " . $workDir . "directions.pdf" ;
+
+	if ($atlasOpt eq "") {
+		$files .= " " . $workDir . "directions.pdf" ;
+	}
 
 	for (my $i = 1; $i <= $mapNumber; $i++) {
 		my $name ;
@@ -1103,21 +1202,16 @@ sub mergeAllFiles {
 		$files .= $name ;
 	}
 
-	if ($poiOpt > 0) {
+	if ( ($poiOpt > 0) or ($streetOpt > 0) ) {
 		$files .= " " . $workDir . "directory.pdf" ; 
 	}
 
-	print "\nmerge pdfs ($files) and log to $logFileName\n" ;
-	if ($verboseOpt eq "1") {
-		print "merging files (pdfjoin)...\n" ;
-	}
+	print "\nmerge pdfs ($files) into $outFileName and log to $logFileName\n" ;
 
-	my $outFileName2 = $outFileName ;
-	$outFileName2 =~ s/\.pdf/2\.pdf/ ;
 	`pdfjoin --outfile \"$outFileName\" $files >> $logFileName 2>&1` ;
-	# `gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$outFileName2 -dBATCH $files >> $logFileName 2>&1` ;
 
 }
+
 
 sub createDirections {
 	print "\ncreating directions...\n" ;
@@ -1407,6 +1501,11 @@ END2
 	print $texFile "\\usepackage[utf8]{inputenc}\n" ;
 	print $texFile "\\begin{document}\n" ;
 
+
+	#
+	# title
+	#
+
 	print $texFile "\\thispagestyle{empty}\n" ;
 	print $texFile "\\vspace*{8cm}\n" ;
 	print $texFile "\\Huge\n" ;
@@ -1419,6 +1518,11 @@ END2
 	$created{"EN"} = "created with hikingbook.pl" ;
 	$created{"DE"} = "erstellt mit hikingbook.pl" ;
 	print $texFile "$created{$languageOpt}\n" ;
+
+
+	#
+	# description
+	#
 
 	if ($descName ne "") {
 		print $texFile "\\newpage\n" ;
@@ -1434,27 +1538,40 @@ END2
 		print "done. $c lines read.\n" ;
 	}
 
+
+
+	#
+	# basic relation data
+	#
+
 	print $texFile "\\newpage\n" ;
 	print $texFile "\\thispagestyle{empty}\n" ;
 
-	print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
-	my %tags = () ;
-	foreach my $t (@relationTags) {
-		my $temp = $t->[1] ;
-		$temp = sanitizeLatexString ($temp) ;
-		$temp = convertHTML ($temp) ; 
-		$tags{ $t->[0] } = $temp ; 
-	}
-	print $texFile "\\begin{tabular}{|p{4cm}|p{10cm}|}\n" ;
-	print $texFile "\\hline\n" ;
-	print $texFile "Key & Value \\\\ \n" ;
-	print $texFile "\\hline\n" ;
-	foreach my $t (sort keys %tags) {
-		print $texFile "$t & $tags{$t} \\\\ \n" ;
+	if ($atlasOpt eq "") {
+		print $texFile "\\section*{$heading3{$languageOpt}}\n" ;
+		my %tags = () ;
+		foreach my $t (@relationTags) {
+			my $temp = $t->[1] ;
+			$temp = sanitizeLatexString ($temp) ;
+			$temp = convertHTML ($temp) ; 
+			$tags{ $t->[0] } = $temp ; 
+		}
+		print $texFile "\\begin{tabular}{|p{4cm}|p{10cm}|}\n" ;
 		print $texFile "\\hline\n" ;
+		print $texFile "Key & Value \\\\ \n" ;
+		print $texFile "\\hline\n" ;
+		foreach my $t (sort keys %tags) {
+			print $texFile "$t & $tags{$t} \\\\ \n" ;
+			print $texFile "\\hline\n" ;
+		}
+		print $texFile "\\end{tabular}\n" ;
 	}
-	print $texFile "\\end{tabular}\n" ;
-	
+
+
+	#
+	# disclaimer
+	#
+
 	print $texFile "\\section*{$heading{$languageOpt}}\n" ;
 	print $texFile "$disclaimer{$languageOpt}\n" ;
 	
@@ -1481,7 +1598,6 @@ END2
 	`rm *.aux` ;
 	`rm *.log` ;
 	my $target = $workDir . "title.pdf" ;
-	# `mv title.pdf $target` ;
 	print "done.\n" ;
 }
 
@@ -1496,6 +1612,7 @@ sub getProgramOptions {
 					"language=s"	=> \$languageOpt,
 					"pagesize=s"	=> \$pageSizeOpt,
 					"relation=i"	=> \$relationId,
+					"atlas=s"	=> \$atlasOpt,
 					"name=s"	=> \$relationName,
 					"desc=s"	=> \$descName,
 					"steps=s"	=> \$stepDescName,
@@ -1553,6 +1670,7 @@ sub usage {
 	print "-relation=<relation id>\n" ;
 	print "-name=<relation name>\n" ;
 	print "-ref=<relation ref>\n" ;
+	print "-atlas=FLOAT,FLOAT,FLOAT,FLOAT (create street atlas for bounding box)\n" ;
 	print "-detailstyle=<mapgen rules file for detail maps>\n" ;
 	print "-overviewstyle=<mapgen rules file for overview maps>\n" ;
 	print "-scale=<integer> (scale for detail maps); default = 10000\n\n" ;
@@ -1964,3 +2082,85 @@ sub getArea {
 	return ($minLon, $maxLon, $minLat, $maxLat) ;
 }
 
+
+sub getMinMax {
+	my $fileName = shift ;
+	# store min / max of temp file
+	openOsmFile ($fileName) ;
+	print "reading temp file nodes...\n" ;
+
+	my $file2LonMax = -999 ;
+	my $file2LonMin = 999 ;
+	my $file2LatMax = -999 ;
+	my $file2LatMin = 999 ;
+	my $propRef ; my $tagsRef ;
+	($propRef, $tagsRef) = getNode3() ;
+	while (defined $propRef) {
+		if ( $$propRef{"lon"} > $file2LonMax ) { $file2LonMax = $$propRef{"lon"} ; }
+
+		if ( $$propRef{"lon"} < $file2LonMin ) { $file2LonMin = $$propRef{"lon"} ; }
+		if ( $$propRef{"lat"} > $file2LatMax ) { $file2LatMax = $$propRef{"lat"} ; }
+		if ( $$propRef{"lat"} < $file2LatMin ) { $file2LatMin = $$propRef{"lat"} ; }
+
+		($propRef, $tagsRef) = getNode3() ;
+	}
+	closeOsmFile() ;
+	print "done.\n" ;
+	return ($file2LonMin, $file2LatMin, $file2LonMax, $file2LatMax) ;
+}
+
+
+sub loadExternalFiles {
+	my $outName = shift ;
+	my $poiName = $outName ;
+	if ($poiOpt > 0) {
+		$poiName =~ s/\.svg/\_pois\.txt/ ;
+		open (my $file, "<", $poiName) or die ("ERRROR: could not open poi file name $poiName\n") ;
+
+		my $line = "" ;
+		while ($line = <$file>) {
+			# print "POI line read : $line" ;
+			my ($poi, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
+			if ( (defined $poi) and (defined $fields) ) {
+				my @f = split / /, $fields ;
+				foreach my $sq (@f) {
+					$poi = convertHTML ($poi) ;
+
+					# translation German
+					if ($languageOpt ne "EN") {
+						foreach my $k (keys %{ $translations{$languageOpt} } ) {
+							my $v = $translations{$languageOpt}{$k} ;
+							$poi =~ s/\($k\)/\($v\)/gi ;
+						}
+					}
+
+					$poi =~ s/\_/ /g ;
+					push @{$pois{$poi}}, $mapNumber . "-" . $sq ;
+				}
+			}
+		}
+		close ($file) ;
+		push @tempFiles, $poiName ;
+	}
+
+	my $streetName = $outName ;
+	if ($streetOpt > 0) {
+		$streetName =~ s/\.svg/\_streets\.txt/ ;
+		open (my $file, "<", $streetName) or die ("ERRROR: could not open street file name $streetName\n") ;
+		my $line = "" ;
+		while ($line = <$file>) {
+			# print "STREET line read : $line" ;
+			my ($street, $fields) = ( $line =~ /(.+)\t(.*)/ ) ;
+			if ( (defined $street) and (defined $fields) ) {
+				my @f = split / /, $fields ;
+				foreach my $sq (@f) {
+					$street = convertHTML ($street) ;
+					push @{$streets{$street}}, $mapNumber . "-" . $sq ;
+				}
+			}
+		}
+		close ($file) ;
+		push @tempFiles, $streetName ;
+	}
+
+}

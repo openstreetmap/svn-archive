@@ -16,6 +16,6 @@ public class StaticChosenRelation extends ChosenRelation {
 
     @Override
     public void set( Relation rel ) {
-        throw new UnsupportedOperationException("Changing static relation is not supported.");
+//        throw new UnsupportedOperationException("Changing static relation is not supported.");
     }
 }

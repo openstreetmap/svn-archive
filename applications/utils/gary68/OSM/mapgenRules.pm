@@ -20,11 +20,11 @@ use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm ;
-use OSM::mapgen 1.16 ;
+use OSM::mapgen 1.17 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.16' ;
+$VERSION = '1.17' ;
 
 require Exporter ;
 
@@ -54,9 +54,9 @@ sub readRules {
 	$line = <$csvFile> ;
 	while (! grep /^\"SECTION/, $line) {
 		if (! grep /^\"COMMENT/i, $line) {
-			my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
-			# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale\n" ; 
-			push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale] ;
+			my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $icon, $iconSize, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
+			# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $icon, $iconSize, $fromScale, $toScale\n" ; 
+			push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $icon, $iconSize, $fromScale, $toScale] ;
 		}
 		$line = <$csvFile> ;
 	}
@@ -66,10 +66,10 @@ sub readRules {
 	while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
 		if (! grep /^\"COMMENT/i, $line) {
 			# print "way line: $line\n" ;
-			my ($key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale) = 
-			($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) (\d) \"(.+)\" (\d+) (\d+)/ ) ;
-			# print "W $key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale\n" ; 
-			push @ways, [$key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale] ;
+			my ($key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $baseLayer, $areaIcon, $fromScale, $toScale) = 
+			($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) \"(.+)\" (\d) \"(.+)\" (\d+) (\d+)/ ) ;
+			# print "W $key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $baseLayer, $areaIcon, $fromScale, $toScale\n" ; 
+			push @ways, [$key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $legendLabel, $baseLayer, $areaIcon, $fromScale, $toScale] ;
 			if (($areaIcon ne "") and ($areaIcon ne "none")) { addAreaIcon ($areaIcon) ; }
 		}
 		$line = <$csvFile> ;
@@ -82,7 +82,7 @@ sub readRules {
 	while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
 		if (! grep /^\"COMMENT/i, $line) {
 			#print "ROUTE LINE: $line\n" ;
-			my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
+			my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
 			$opacity = $opacity / 100 ;
 			push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;
 		}
@@ -94,7 +94,7 @@ sub readRules {
 		$node->[3] = scalePoints ($node->[3]) ;
 		$node->[6] = scalePoints ($node->[6]) ;
 		$node->[8] = scalePoints ($node->[8]) ;
-		$node->[11] = scalePoints ($node->[11]) ;
+		$node->[12] = scalePoints ($node->[12]) ;
 	}
 
 	foreach my $way (@ways) {
@@ -109,6 +109,48 @@ sub readRules {
 		$route->[6] = scalePoints ($route->[6]) ;
 	}
 
+	foreach my $way (@ways) {
+		if ($way->[4] ne "none") {
+			# print "DASH BEFORE $way->[4]\n" ;
+			my @dash = split /,/, $way->[4] ;
+			my $dashNew = "" ;
+			my $cap = pop @dash ;
+			my $validCap = 0 ;
+			foreach my $c ("butt", "round", "square") {
+				if ($cap eq $c) { $validCap = 1 ; }
+			}
+			if ($validCap == 0) { $cap = "round" ; }
+			if (scalar @dash % 2 != 0) { die "ERROR: odd number in dash definition $way->[4]\n" ; }
+			foreach my $v (@dash) {
+				$v = scalePoints ($v) ;
+				$dashNew .= $v . "," ; 
+			}
+			$dashNew .= $cap ;
+			$way->[4] = $dashNew ;
+			# print "DASH AFTER $way->[4]\n" ;
+		}
+	}
+
+	foreach my $route (@routes) {
+		if ($route->[3] ne "none") {
+			my @dash = split /,/, $route->[3] ;
+			my $dashNew = "" ;
+			my $cap = pop @dash ;
+			my $validCap = 0 ;
+			foreach my $c ("butt", "round", "square") {
+				if ($cap eq $c) { $validCap = 1 ; }
+			}
+			if ($validCap == 0) { $cap = "round" ; }
+			if (scalar @dash % 2 != 0) { die "ERROR: odd number in dash definition $route->[3]\n" ; }
+			foreach my $v (@dash) {
+				$v = scalePoints ($v) ;
+				$dashNew .= $v . "," ; 
+			}
+			$dashNew .= $cap ;
+			$route->[3] = $dashNew ;
+		}
+	}
+
 	return (\@nodes, \@ways, \@routes) ;
 }
 
@@ -116,12 +158,12 @@ sub readRules {
 sub printRules {
 	print "WAYS/AREAS\n" ;
 	foreach my $way (@ways) {
-		printf "%-20s %-20s %-10s %-6s %-6s %-10s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15], $way->[16], $way->[17] ;
+		printf "%-20s %-20s %-10s %-6s %-6s %-10s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-15s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15], $way->[16], $way->[17], $way->[18] ;
 	}
 	print "\n" ;
 	print "NODES\n" ;
 	foreach my $node (@nodes) {
-		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13] ;
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-15s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13], $node->[14] ;
 	}
 	print "\n" ;
 

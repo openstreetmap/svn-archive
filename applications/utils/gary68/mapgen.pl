@@ -80,6 +80,7 @@
 # 1.13 -relid and -rectangles
 # 1.14 -pagenumbers
 # 1.16 dpi removed from map; route label scaling corrected; osmosis complete ways and complete relations
+# 1.17 new dash definitions; position scale and ruler and grid letters; legend labels
 #
 # TODO
 # ------------------
@@ -98,11 +99,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.16 ;
-use OSM::mapgenRules 1.16 ;
+use OSM::mapgen 1.17 ;
+use OSM::mapgenRules 1.17 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.16" ;
+my $version = "1.17" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -289,10 +290,11 @@ my $nodeIndexLabelSize = 6 ;
 my $nodeIndexLabelFont = 7 ;
 my $nodeIndexLabelOffset = 8 ;
 my $nodeIndexLegend = 9 ;
-my $nodeIndexIcon = 10 ;
-my $nodeIndexIconSize = 11 ;
-my $nodeIndexFromScale = 12 ;
-my $nodeIndexToScale = 13 ;
+my $nodeIndexLegendLabel = 10 ;
+my $nodeIndexIcon = 11 ;
+my $nodeIndexIconSize = 12 ;
+my $nodeIndexFromScale = 13 ;
+my $nodeIndexToScale = 14 ;
 my @nodes = () ;
 
 
@@ -311,10 +313,11 @@ my $wayIndexLabelSize = 10 ;
 my $wayIndexLabelFont = 11 ;
 my $wayIndexLabelOffset = 12 ;
 my $wayIndexLegend = 13 ;
-my $wayIndexBaseLayer = 14 ;
-my $wayIndexIcon = 15 ;
-my $wayIndexFromScale = 16 ;
-my $wayIndexToScale = 17 ;
+my $wayIndexLegendLabel = 14 ;
+my $wayIndexBaseLayer = 15 ;
+my $wayIndexIcon = 16 ;
+my $wayIndexFromScale = 17 ;
+my $wayIndexToScale = 18 ;
 my @ways = () ;
 
 my $routeIndexRoute = 0 ;
@@ -842,6 +845,7 @@ foreach my $nodeId (keys %memNodeTags) {
 
 			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, 0, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
 				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt, $halo) ;
+			# print "TEST ICONS $nodeIndexIcon $nodeIndexIconSize $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize]\n" ;
 		}
 	} # defined $test
 } # nodes
@@ -886,16 +890,16 @@ foreach my $wayId (keys %memWayTags) {
 	if (defined $test) {
 		if ($test->[$wayIndexFilled] eq "0") {
 			if ( ($test->[$wayIndexBorderThickness] > 0) and ($test->[$wayIndexBorderColor ne "none"]) and ($tunnel ne "yes") and ($bridge ne "yes") ) {
-				drawWay ($layer-.3, $test->[$wayIndexBorderColor], $test->[$wayIndexThickness]+2*$test->[$wayIndexBorderThickness], 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWay ($layer-.3, $test->[$wayIndexBorderColor], $test->[$wayIndexThickness]+2*$test->[$wayIndexBorderThickness], "none", nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
 			my $thickness = 16 ;
 			if ($bridge eq "yes") {
-				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), "none", nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), "none", nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
 			if ($tunnel eq "yes") {
-				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), "11", nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), "none", nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
 			drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 
@@ -1046,7 +1050,7 @@ if ($ra ne "") {
 					# print "    DRAW way\n" ;
 					my @coords = nodes2Coordinates(@nodes) ;
 					# print "    @coords\n" ;
-					drawWay (10, $color, scalePoints( scaleBase (10)), 0, @coords) ;
+					drawWay (10, $color, scalePoints( scaleBase (10)), "none", @coords) ;
 					labelWay ($color, scalePoints( scaleBase (25)), "sans-serif", $text, scalePoints( scaleBase (25)), @coords) ;
 
 					foreach my $node (@nodes) {
@@ -1066,7 +1070,7 @@ if ($ra ne "") {
 					$maxLon, $maxLat,
 					$maxLon, $minLat,
 					$minLon, $minLat) ;
-				drawWay (11, "grey", scalePoints( scaleBase (5)), 0, @coords) ;
+				drawWay (11, "grey", scalePoints( scaleBase (5)), "none", @coords) ;
 				my $text = $relId . " " . $type ; 
 				placeLabelAndIcon ($minLon, $minLat, scalePoints( scaleBase (30)), 0, $text, "black", scalePoints( scaleBase (30)), "sans-serif", $ppc, "none", 0, 0, 0, 0) ;
 			}
@@ -1365,7 +1369,7 @@ sub createLegend {
 	foreach my $node (@nodes) { 
 		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $ruleScaleSet) and ($node->[$nodeIndexToScale] >= $ruleScaleSet) ) { 
 			drawNodeDotPix ($xOffset + $dotX, $yOffset+$currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
-			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend, "sans-serif") ;
+			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $node->[$nodeIndexLegendLabel], "black", $sizeLegend, "sans-serif") ;
 			$currentY += $step ;
 		}  
 	}
@@ -1374,7 +1378,7 @@ sub createLegend {
 		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $ruleScaleSet) and ($way->[$wayIndexToScale] >= $ruleScaleSet) ) { 
 			if ($way->[$wayIndexFilled] == 0) {
 				if ( ($way->[$wayIndexBorderThickness] > 0) and ($way->[$wayIndexBorderColor ne "none"]) ) {
-					drawWayPix ($way->[$wayIndexBorderColor], $way->[$wayIndexThickness]+2*$way->[$wayIndexBorderThickness], 0, $xOffset+$wayStartX, $yOffset+$currentY, $xOffset+$wayEndX, $yOffset+$currentY) ;
+					drawWayPix ($way->[$wayIndexBorderColor], $way->[$wayIndexThickness]+2*$way->[$wayIndexBorderThickness], "none", $xOffset+$wayStartX, $yOffset+$currentY, $xOffset+$wayEndX, $yOffset+$currentY) ;
 				}
 				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $way->[$wayIndexDash], $xOffset+$wayStartX, $yOffset+$currentY, $xOffset+$wayEndX, $yOffset+$currentY) ;
 			} 
@@ -1385,7 +1389,7 @@ sub createLegend {
 					$xOffset+$areaStartX, $yOffset+$currentY+$areaSize/2,
 					$xOffset+$areaStartX, $yOffset+$currentY-$areaSize/2) ;
 			}
-			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend, "sans-serif") ;
+			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $way->[$wayIndexLegendLabel], "black", $sizeLegend, "sans-serif") ;
 			$currentY += $step ;
 		}  
 	}
@@ -2549,7 +2553,7 @@ sub processRectangles {
 			push @nodes, ($left, $top) ;
 			push @nodes, ($left, $bottom) ;
 	
-			drawWay (10, "black", 5, 0, @nodes) ;
+			drawWay (10, "black", 5, "none", @nodes) ;
 
 			if ($pageNumbers ne "") {
 				my $x = ($right + $left) / 2 ;

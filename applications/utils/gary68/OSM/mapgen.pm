@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.16' ;
+$VERSION = '1.17' ;
 
 require Exporter ;
 
@@ -112,30 +112,14 @@ require Exporter ;
 
 my %dashStyle = () ;
 my %dashDefinition = () ; # for 300 dpi
-@{$dashDefinition{1}} = (60,20) ; # for tracks, path etc.
-@{$dashDefinition{2}} = (44,20) ;
-@{$dashDefinition{3}} = (28,20) ;
-@{$dashDefinition{4}} = (12,20) ;
-@{$dashDefinition{10}} = (8,8) ;
-@{$dashDefinition{11}} = (16,16) ;
-@{$dashDefinition{12}} = (24,24) ;
-@{$dashDefinition{13}} = (32,32) ;
-@{$dashDefinition{14}} = (40,40) ;
-@{$dashDefinition{20}} = (0,8,0,16) ; # for borders
-@{$dashDefinition{21}} = (0,16,0,32) ;
-@{$dashDefinition{22}} = (0,24,0,48) ;
-@{$dashDefinition{23}} = (0,32,0,48) ;
-@{$dashDefinition{30}} = (4,4) ; # for steps
-@{$dashDefinition{31}} = (8,8) ;
-@{$dashDefinition{32}} = (12,12) ;
-@{$dashDefinition{33}} = (4,12) ;
-@{$dashDefinition{34}} = (4,20) ;
-@{$dashDefinition{35}} = (8,20) ;
+@{$dashDefinition{1}} = (60,20,"round") ; #grid
+@{$dashDefinition{11}} = (16,16,"butt") ; # tunnel
 
 my $wayIndexLabelColor = 9 ;
 my $wayIndexLabelSize = 10 ;
 my $wayIndexLabelFont = 11 ;
 my $wayIndexLabelOffset = 12 ;
+my $wayIndexLegendLabel = 14 ;
 
 my $lineCap = "round" ;
 my $lineJoin = "round" ;
@@ -262,25 +246,18 @@ sub initGraph {
 
 sub initDashes {
 #
-# sub creates dash styles according to base definition, base dpi and scaledpi
+# sub creates internal dash styles according to base definition
 #
 	foreach my $style (keys %dashDefinition) {
 		my @array = @{$dashDefinition{$style}} ;
-		# print "DASH $style initially: @array\n" ;
+		my $lc = pop @array ;
 		my $dashString = "" ;
-		my $first = 1 ;
 		foreach my $entry (@array) {
-			my $entryScaled = scalePoints ( scaleBase ($entry)) ;
-			if (!$first) {
-				$dashString .= "," . $entryScaled ;
-			}
-			else {
-				$first = 0 ;
-				$dashString .= $entryScaled ;
-			}
+			my $entryScaled = scalePoints ( scaleBase ($entry) ) ;
+			$dashString .= "$entryScaled," ;
 		}
+		$dashString .= $lc ;
 		$dashStyle{$style} = $dashString ;
-		# print "DASH $style finally: \"$dashString\"\n\n" ;
 	}
 }
 
@@ -502,6 +479,8 @@ sub drawWayBridge {
 	my ($layer, $col, $size, $dash, @nodes) = @_ ;
 	my $i ;
 	my @points = () ;
+
+	if ($dash eq "11") { $dash = $dashStyle{11} ; }
 
 	for ($i=0; $i<$#nodes; $i+=2) {
 		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
@@ -1057,7 +1036,8 @@ sub drawRuler {
 	my $x ;
 	my $text ;
 	my $rx = $sizeX - scalePoints (scaleBase (80)) ;
-	my $ry = scalePoints (scaleBase (80)) ;
+	my $ry = scalePoints (scaleBase (60)) ; #v1.17
+	# my $ry = scalePoints (scaleBase (80)) ;
 	my $lineThickness = 8 ; # at 300dpi
 	my $textSize = 40 ; # at 300 dpi
 	my $textDist = 60 ; # at 300 dpi
@@ -1091,12 +1071,12 @@ sub drawGrid {
 	my $numY = $sizeY / $part ;
 	# vertical lines
 	for (my $i = 1; $i <= $number; $i++) {
-		drawWayPixGrid ($color, 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
-		drawTextPixGrid (($i-1)*$part+$part/2, scalePoints(scaleBase(80)), chr($i+64), $color, scalePoints(scaleBase(60))) ;
+		drawWayPixGrid ($color, 1, $dashStyle{1}, $i*$part, 0, $i*$part, $sizeY) ;
+		drawTextPixGrid (($i-1)*$part+$part/2, scalePoints(scaleBase(160)), chr($i+64), $color, scalePoints(scaleBase(60))) ;
 	}
 	# hor. lines
 	for (my $i = 1; $i <= $numY; $i++) {
-		drawWayPixGrid ($color, 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
+		drawWayPixGrid ($color, 1, $dashStyle{1}, 0, $i*$part, $sizeX, $i*$part) ;
 		drawTextPixGrid (scalePoints(scaleBase(20)), ($i-1)*$part+$part/2, $i, $color, scalePoints(scaleBase(60))) ;
 	}
 }
@@ -1221,6 +1201,8 @@ sub svgElementLine {
 }
 
 
+
+
 sub svgElementPolyline {
 #
 # draws way to svg
@@ -1230,22 +1212,24 @@ sub svgElementPolyline {
 	my $refp = simplifyPoints (\@points) ;
 	@points = @$refp ;
 
-	my $lc = $lineCap ;
-	if ($dash >= 30) { $lc = "butt" ; } 
 
 	my $svg = "<polyline points=\"" ;
 	my $i ;
 	for ($i=0; $i<scalar(@points)-1; $i+=2) {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
-	if ($dash == 0) { 
+	if ($dash eq "none") { 
+		my $lc = "round" ;
 		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lc . "\" stroke-linejoin=\"" . $lineJoin . "\" fill=\"none\" />" ;
 	}
 	else {
-		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lc . "\" stroke-linejoin=\"" . $lineJoin . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
+		my $lc = "" ; my $ds = "" ;
+		($lc, $ds) = getDashElements ($dash) ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lc . "\" stroke-linejoin=\"" . $lineJoin . "\" stroke-dasharray=\"" . $ds . "\" fill=\"none\" />" ;
 	}
 	return $svg ;
 }
+
 
 sub svgElementPolylineBridge {
 #
@@ -1261,14 +1245,38 @@ sub svgElementPolylineBridge {
 	for ($i=0; $i<scalar(@points)-1; $i+=2) {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
-	if ($dash == 0) { 
+	if ($dash eq "none") { 
 		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" fill=\"none\" />" ;
 	}
 	else {
-		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
+		my $lc = "" ; my $ds ;
+		($lc, $ds) = getDashElements ($dash) ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lc . "\" stroke-dasharray=\"" . $ds . "\" fill=\"none\" />" ;
 	}
 	return $svg ;
 }
+
+
+
+sub getDashElements {
+	my $string = shift ;
+	my @a = split /,/, $string ;
+	my $cap = pop @a ;
+	my $ds = "" ; my $first = 1 ;
+	foreach my $v (@a) {
+		if ($first) {
+			$first = 0 ;
+		}
+		else {
+			$ds .= "," ;
+		}
+		$ds .= $v ;
+	}
+	# print "GETDE $cap, $ds\n" ;
+	return ($cap, $ds) ;
+}
+
+
 
 sub svgElementPath {
 #
@@ -1472,8 +1480,8 @@ sub printScale {
 	$scale = int ($scale / 100) * 100 ;
 	my $text = "1 : $scale" ;
 	# sizes for 300 dpi
-	my $posX = 650 ;
-	my $posY = 200 ;
+	my $posX = 350 ;
+	my $posY = 50 ;
 	my $size = 56 ;
 	drawTextPix (
 		$sizeX-scalePoints( scaleBase($posX) ), 
@@ -1549,7 +1557,7 @@ sub drawCoords {
 		# print "actualX: $actual\n" ;
 		my ($x1, $y1) = convert ($actual, 0) ;
 		drawTextPixGrid ($x1+scalePoints(scaleBase(10)), $sizeY-scalePoints(scaleBase(50)), $actual, $color, scalePoints(scaleBase(40))) ;
-		drawWayPixGrid ($color, 1, 0, ($x1, 0, $x1, $sizeY) ) ;
+		drawWayPixGrid ($color, 1, "none", ($x1, 0, $x1, $sizeY) ) ;
 		$actual += $step ;
 	}
 
@@ -1560,7 +1568,7 @@ sub drawCoords {
 		# print "actualY: $actual\n" ;
 		my ($x1, $y1) = convert (0, $actual) ;
 		drawTextPixGrid ($sizeX-scalePoints(scaleBase(180)), $y1+scalePoints(scaleBase(30)), $actual, $color, scalePoints(scaleBase(40))) ;
-		drawWayPixGrid ($color, 1, 0, (0, $y1, $sizeX, $y1) ) ;
+		drawWayPixGrid ($color, 1, "none", (0, $y1, $sizeX, $y1) ) ;
 		$actual += $step ;
 	}
 }
@@ -1607,15 +1615,14 @@ sub svgElementPolylineOpacity {
 	my $refp = simplifyPoints (\@points) ;
 	@points = @$refp ;
 
-	my $lc = $lineCap ;
-	if ($dash >= 30) { $lc = "butt" ; } 
 
 	my $svg = "<polyline points=\"" ;
 	my $i ;
 	for ($i=0; $i<scalar(@points)-1; $i+=2) {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
-	if ($dash == 0) { 
+	if ($dash eq "none") { 
+		my $lc = "round" ;
 		$svg = $svg . "\" stroke=\"" . $col . 
 			"\" stroke-width=\"" . $size . 
 			"\" stroke-opacity=\"" . $opacity . 
@@ -1623,12 +1630,14 @@ sub svgElementPolylineOpacity {
 			"\" stroke-linejoin=\"" . $lineJoin . "\" fill=\"none\" />" ;
 	}
 	else {
+		my $lc = "" ; my $ds = "" ;
+		($lc, $ds) = getDashElements ($dash) ;
 		$svg = $svg . "\" stroke=\"" . $col . 
 			"\" stroke-width=\"" . $size . 
 			"\" stroke-opacity=\"" . $opacity . 
 			"\" stroke-linecap=\"" . $lc . 
 			"\" stroke-linejoin=\"" . $lineJoin . 
-			"\" stroke-dasharray=\"" . $dashStyle{$dash} . 
+			"\" stroke-dasharray=\"" . $ds . 
 			"\" fill=\"none\" />" ;
 	}
 	return $svg ;
@@ -1659,8 +1668,8 @@ sub addAreaIcon {
 
 		if (!defined $areaDef{$fileNameOriginal}) {
 
-			my $x1 = scalePoints( scaleBase( $x ) ) ; # scale area icons assuming a base dpi of 300 in files
-			my $y1 = scalePoints( scaleBase( $y ) ) ;
+			my $x1 = scalePoints( $x ) ; # scale area icons 
+			my $y1 = scalePoints( $y ) ;
 			my $fx = $x1 / $x ;
 			my $fy = $y1 / $y ;
 			
@@ -2020,6 +2029,7 @@ sub sizeSVG {
 			my ($y1) = ( $line =~ /^.*height=\"([\d]+)px\"/ ) ;
 			if (!defined $x1) {
 				($x1) = ( $line =~ /^\s*width=\"([\d]+)\"/ ) ; 
+
 			} 
 			if (!defined $y1) {
 				($y1) = ( $line =~ /^\s*height=\"([\d]+)\"/ ) ; 

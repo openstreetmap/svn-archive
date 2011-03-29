@@ -76,6 +76,7 @@ public class GPSVideoPlayer
                 //sync the GPS back
                 if(synced) {
                 	gps.jump(getGPSTime(time));
+                	gps.jumpIPO(getGPSTime(time));
                 }
                 
             }

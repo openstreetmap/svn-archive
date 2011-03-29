@@ -34,6 +34,10 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.*;
 
+import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
+
+import com.sun.jna.NativeLibrary;
+
 import static org.openstreetmap.josm.tools.I18n.*;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 
@@ -77,6 +81,8 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         loadSettings();
         applySettings();
         //further plugin informations are provided by build.xml properties
+        //NativeLibrary.addSearchPath("vlc", "C:\\Programme\\Video\\VLC"); // this should be the directory that contains libvlc.dll
+        NativeLibrary.addSearchPath("libvlc", WindowsRuntimeUtil.getVlcInstallDir());
     }
             
     //only use with GPS and own layers

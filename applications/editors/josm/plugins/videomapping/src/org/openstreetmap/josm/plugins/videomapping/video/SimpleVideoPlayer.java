@@ -117,7 +117,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 				        }
 				      });
 				}
-			}, 0L, 200L, TimeUnit.MILLISECONDS);
+			}, 0L, 500L, TimeUnit.MILLISECONDS);
             //setDefaultCloseOperation(EXIT_ON_CLOSE);
             addWindowListener(this);
         }
@@ -511,7 +511,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		}
 
 		public void buffering(MediaPlayer arg0) {
-			// TODO Auto-generated method stub
+			System.out.println("buffering!");
 			
 		}
 
@@ -522,6 +522,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 
 		public void opening(MediaPlayer arg0) {
 			// TODO Auto-generated method stub
+			System.out.println("opening!");
 			
 		}
 
@@ -531,7 +532,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		}
 
 		public void seekableChanged(MediaPlayer arg0, int arg1) {
-			// TODO Auto-generated method stub
+			System.out.println("seeking!");
 			
 		}
 

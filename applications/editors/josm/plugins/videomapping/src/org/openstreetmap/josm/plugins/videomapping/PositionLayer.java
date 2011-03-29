@@ -37,6 +37,7 @@ import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
 //Basic rendering and GPS layer interaction
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
     private List<WayPoint> ls;
+    private List<WayPoint> ipos;
     public GpsPlayer gps;
     private boolean dragIcon=false; //do we move the icon by hand?
     private WayPoint iconPosition;
@@ -47,14 +48,16 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
         
     public PositionLayer(File video, GpxLayer GpsLayer) {
         super(video.getName());
-        ls=copyGPSLayer(GpsLayer.data); //TODO This might be outsourced to a seperated track
-        gps= new GpsPlayer(ls);
+        ls=copyGPSLayer(GpsLayer.data); //TODO This might be outsourced to a seperated track        
+        gps= new GpsPlayer(ls);        
         icon = new ImageIcon("images/videomapping.png");
         gpsTimeCode= new SimpleDateFormat("HH:mm:ss");//TODO replace with DF small
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);                          
         gpsVP = new GPSVideoPlayer(video, gps);
-        iconPosition=gps.getCurr();
+        gps.goTo(0);
+        ipos=gps.interpolate();
+        iconPosition=gps.getCurr();        
     }
     
     //make a flat copy
@@ -157,8 +160,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
         //draw interpolated points
         g.setColor(Color.CYAN);
         g.setBackground(Color.CYAN);
-        LinkedList<WayPoint> ipo=(LinkedList<WayPoint>) gps.getInterpolatedLine(5);
-        for (WayPoint wp : ipo) {
+        //LinkedList<WayPoint> ipo=(LinkedList<WayPoint>) gps.getInterpolatedLine(5);
+        for (WayPoint wp : ipos) {
             p=Main.map.mapView.getPoint(wp.getEastNorth());
             g.fillArc(p.x, p.y, 4, 4, 0, 360);
             //g.drawOval(p.x - 2, p.y - 2, 4, 4);
@@ -178,7 +181,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
         else
         {
             if (gps.getCurr()!=null){
-            p=Main.map.mapView.getPoint(gps.getCurr().getEastNorth());
+            p=Main.map.mapView.getPoint(gps.getIPO().getEastNorth());
             icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);         
             g.drawString(gpsTimeCode.format(gps.getCurr().getTime()),p.x-15,p.y-15);
             }
@@ -288,7 +291,6 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
             mouse=e.getPoint();
             //restrict to GPS track
             iconPosition=gps.getInterpolatedWaypoint(mouse);
-
             Main.map.mapView.repaint();
         }
     }

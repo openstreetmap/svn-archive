@@ -14,7 +14,9 @@ public class GpsPlayer {
     private List<WayPoint> ls;
     private WayPoint prev,curr,next;
     private WayPoint start;
-    private boolean autoCenter;
+    private boolean autoCenter;    
+    private List<WayPoint> ipos; //TODO can become optiized hashtable
+    private WayPoint ipo;
     
 
     public WayPoint getPrev() {
@@ -44,6 +46,7 @@ public class GpsPlayer {
         prev=null;
         curr=ls.get(0);
         next=ls.get(1);
+        ipo=curr;
     }
     
     // one secure step forward
@@ -229,7 +232,7 @@ public class GpsPlayer {
         {
             timeSeg=-(getPrev().getTime().getTime()-getCurr().getTime().getTime());
         }
-        WayPoint w =new WayPoint(Main.map.mapView.getLatLon(m.x, m.y));
+        WayPoint w =new WayPoint(Main.map.mapView.getLatLon(m.x, m.y));        
         //calc total traversal length
         lengthSeg = getTraversalLength(p2, curr);
         length = getTraversalLength(p2, m);
@@ -328,36 +331,6 @@ public class GpsPlayer {
     {
         return p.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
     }
-    
-    
-
-    //toggles walking along the track
-    /* public void play(){
-    
-        if (t==null)
-        {
-            //start
-            t= new Timer();
-            ani=new TimerTask() {           
-                @Override
-                //some cheap animation stuff
-                public void run() {             
-                    next();
-                    if(autoCenter) Main.map.mapView.zoomTo(getCurr().getEastNorth());
-                    Main.map.mapView.repaint();
-                }
-            };
-            t.schedule(ani,1000,1000);          
-        }
-        else
-        {
-            //stop
-            ani.cancel();
-            ani=null;
-            t.cancel();
-            t=null;                 
-        }
-    }*/
 
     public long getLength() {
         return ls.size()*1000; //FIXME this is a poor hack
@@ -372,6 +345,32 @@ public class GpsPlayer {
     {
         return ls;
     }
+
+	public List<WayPoint> interpolate() {
+		ipos = new LinkedList<WayPoint>();
+		WayPoint old = getCurr();
+		for (int i=1;i<ls.size();i++)
+		{			
+			ipos.addAll(getInterpolatedLine(5));
+			next();
+		}
+		goTo(old);
+		return ipos;
+	}
+
+	public void jumpIPO(long relTime) {
+		int pos = Math.round(relTime/1000);//TODO assumes the time is constant
+        goTo(pos); 
+        pos=Math.round(relTime/200);
+        ipo= ipos.get(pos);
+        if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
+		
+	}
+	
+	public WayPoint getIPO()
+	{
+		return ipo;
+	}
 
 
     

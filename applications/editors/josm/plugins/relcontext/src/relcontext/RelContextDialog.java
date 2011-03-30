@@ -179,15 +179,39 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private void configureRelationsTable( final JTable relationsTable ) {
         relationsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         relationsTable.setTableHeader(null);
-        relationsTable.addMouseListener(new PopupMenuLauncher() {
+        relationsTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void launch(MouseEvent evt) {
-                Point p = evt.getPoint();
+            public void mouseClicked( MouseEvent e ) {
+                Point p = e.getPoint();
                 int row = relationsTable.rowAtPoint(p);
-                if (row > -1) {
+                if( SwingUtilities.isLeftMouseButton(e) && row >= 0 ) {
                     Relation relation = (Relation)relationsData.getValueAt(row, 0);
-                    JPopupMenu menu = new ChosenRelationPopupMenu(new StaticChosenRelation(relation));
-                    menu.show(relationsTable, p.x, p.y-5);
+                    if( e.getClickCount() > 1 ) {
+                        Main.map.mapView.getEditLayer().data.setSelected(relation);
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed( MouseEvent e ) {
+                checkPopup(e);
+            }
+
+            @Override
+            public void mouseReleased( MouseEvent e ) {
+                checkPopup(e);
+            }
+
+            public void checkPopup( MouseEvent e ) {
+                if( e.isPopupTrigger() ) {
+                    Point p = e.getPoint();
+                    int row = relationsTable.rowAtPoint(p);
+                    if (row > -1) {
+                        Relation relation = (Relation)relationsData.getValueAt(row, 0);
+                        JPopupMenu menu = chosenRelation.isSame(relation) ? popupMenu
+                                : new ChosenRelationPopupMenu(new StaticChosenRelation(relation));
+                        menu.show(relationsTable, p.x, p.y-5);
+                    }
                 }
             }
         });
@@ -202,7 +226,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             @Override
             public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column ) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if( !isSelected && value instanceof Relation && chosenRelation.get() != null && value.equals(chosenRelation.get()) )
+                if( !isSelected && value instanceof Relation && chosenRelation.isSame(value) )
                     c.setBackground(CHOSEN_RELATION_COLOR);
                 else
                     c.setBackground(table.getBackground());
@@ -214,7 +238,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             @Override
             public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column ) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if( !isSelected && chosenRelation.get() != null && table.getValueAt(row, 0).equals(chosenRelation.get()) )
+                if( !isSelected && chosenRelation.isSame(table.getValueAt(row, 0)) )
                     c.setBackground(CHOSEN_RELATION_COLOR);
                 else
                     c.setBackground(table.getBackground());
@@ -309,7 +333,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             relationsData.addRow(new Object[] {rel, role == null ? "" : role});
         }
         for( OsmPrimitive element : newSelection )
-            if( element instanceof Relation && (chosenRelation.get() == null || !chosenRelation.get().equals(element) ) )
+            if( element instanceof Relation && !chosenRelation.isSame(element) )
                 relationsData.addRow(new Object[] {element, ""});
     }
 
@@ -488,7 +512,6 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             addMenuItem("boundary", "Create administrative boundary relations");
             addMenuItem("boundaryways", "Add tags boundary and admin_level to boundary relation ways");
             addMenuItem("tags", "Move area tags from contour to relation");
-            addMenuItem("single", "Create a single multipolygon for multiple outer contours").setEnabled(false);
         }
 
         protected final JCheckBoxMenuItem addMenuItem( String property, String title ) {

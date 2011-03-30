@@ -2,11 +2,7 @@
 
 - Draw icons for multipoly settings menu
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
-- Doubleclick on a relation list member should either select a relation or
-  open relation editor for that relation (and choose it) (preferences?)
-- Add "Open editor" to relation context menu
 - "Reverse multipolygon": create a closed area out of outer members, move tags, delete relation and empty ways
-- Remove "single multipolygon" from relation settings, there will be single relation in all cases
 
 == NEW ALGORITHM ==
 

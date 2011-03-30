@@ -44,6 +44,15 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
     public void clear() {
         set(null);
     }
+
+    public boolean isSame( Object r ) {
+        if( r == null )
+            return chosenRelation == null;
+        else if( !(r instanceof Relation) )
+            return false;
+        else
+            return chosenRelation != null && r.equals(chosenRelation);
+    }
     
     private final static String[] MULTIPOLYGON_TYPES = new String[] {
         "multipolygon", "boundary"

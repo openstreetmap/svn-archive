@@ -62,9 +62,13 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
      * Check if the relation type assumes all ways inside it form a multipolygon.
      */
     public boolean isMultipolygon() {
-        if( chosenRelation == null )
+        return isMultipolygon(chosenRelation);
+    }
+
+    public static boolean isMultipolygon( Relation r ) {
+        if( r == null )
             return false;
-        String type = chosenRelation.get("type");
+        String type = r.get("type");
         if( type == null )
             return false;
         for( String t : MULTIPOLYGON_TYPES )

@@ -7,6 +7,7 @@ import javax.swing.Action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.ImageProvider;
 import relcontext.ChosenRelation;
@@ -26,8 +27,21 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     }
 
     public void actionPerformed( ActionEvent e ) {
-        if( rel.get() == null ) return;
-        Relation r = rel.get();
+        Command c = fixRelation(rel.get());
+        if( c != null )
+            Main.main.undoRedo.add(c);
+    }
+
+    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+        setEnabled(newRelation != null && needsFixing( newRelation));
+    }
+
+    public static boolean needsFixing( Relation rel ) {
+        return !isIncomplete(rel) && (areMultipolygonTagsEmpty(rel) || areBoundaryTagsNotRight(rel));
+    }
+
+    public static Command fixRelation( Relation rel ) {
+        Relation r = rel;
         boolean fixed = false;
         // todo: sort members
         // todo: set roles for multipolygon members
@@ -43,15 +57,10 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
             fixed = true;
         }
 
-        if( fixed )
-            Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));
+        return fixed ? new ChangeCommand(rel, r) : null;
     }
 
-    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setEnabled(newRelation != null && !isIncomplete(newRelation) && (areMultipolygonTagsEmpty() || areBoundaryTagsNotRight()));
-    }
-
-    protected boolean isIncomplete( Relation r ) {
+    protected static boolean isIncomplete( Relation r ) {
         if( r == null || r.isIncomplete() || r.isDeleted() )
             return true;
         for( RelationMember m : r.getMembers())
@@ -63,9 +72,8 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     /**
      * Check for ways that have roles different from "outer" and "inner".
      */
-    private boolean areMultipolygonTagsEmpty() {
-        Relation r = rel == null ? null : rel.get();
-        if( r == null || r.getMembersCount() == 0 || !rel.isMultipolygon() )
+    private static boolean areMultipolygonTagsEmpty( Relation r ) {
+        if( r == null || r.getMembersCount() == 0 || !ChosenRelation.isMultipolygon(r) )
             return false;
         for( RelationMember m : r.getMembers() ) {
             if( m.getType().equals(OsmPrimitiveType.WAY) && (m.getRole() == null || (!m.getRole().equals("outer") && !m.getRole().equals("inner"))) )
@@ -77,8 +85,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     /**
      * Check for nodes and relations without needed roles.
      */
-    private boolean areBoundaryTagsNotRight() {
-        Relation r = rel == null ? null : rel.get();
+    private static boolean areBoundaryTagsNotRight( Relation r ) {
         if( r == null || r.getMembersCount() == 0 || !r.hasKey("type") || !r.get("type").equals("boundary") )
             return false;
         for( RelationMember m : r.getMembers() ) {
@@ -93,7 +100,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     /**
      * Basically, created multipolygon from scratch, and if successful, replace roles with new ones.
      */
-    private Relation fixMultipolygonRoles( Relation source ) {
+    private static Relation fixMultipolygonRoles( Relation source ) {
         Collection<Way> ways = new ArrayList<Way>();
         for( OsmPrimitive p : source.getMemberPrimitives() )
             if( p instanceof Way )
@@ -130,7 +137,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         return fixed ? r : null;
     }
 
-    private Relation fixBoundaryRoles( Relation source ) {
+    private static Relation fixBoundaryRoles( Relation source ) {
         Relation r = new Relation(source);
         boolean fixed = false;
         for( int i = 0; i < r.getMembersCount(); i++ ) {

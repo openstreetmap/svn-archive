@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -48,6 +49,9 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         toAdd.remove(rel.get());
         toAdd.removeAll(r.getMemberPrimitives());
 
+        // 0. check if relation is broken (temporary)
+        boolean isBroken = !toAdd.isEmpty() && SortAndFixAction.needsFixing(r);
+
         // 1. remove all present members
         r.removeMembersFor(getCurrentDataSet().getSelected());
 
@@ -59,6 +63,11 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
             else
                 r.addMember(pos, new RelationMember("", p));
         }
+
+        // 3. check for roles again (temporary)
+        Command roleFix = !isBroken && SortAndFixAction.needsFixing(r) ? SortAndFixAction.fixRelation(r) : null;
+        if( roleFix != null )
+            roleFix.executeCommand();
 
         if( !r.getMemberPrimitives().equals(rel.get().getMemberPrimitives()) )
             Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));

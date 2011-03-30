@@ -1,18 +1,26 @@
 == BETA ==
 
 - Draw icons for multipoly settings menu
-- Analyze chosen relation and display corresponding symbol next to its name
-- Make chosen relation name pretty
-- "Add members" should search for connecting nodes among already present members
+- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
+- Doubleclick on a relation list member should either select a relation or
+  open relation editor for that relation (and choose it) (preferences?)
+- Add "Open editor" to relation context menu
+- "Reverse multipolygon": create a closed area out of outer members, move tags, delete relation and empty ways
+- Remove "single multipolygon" from relation settings, there will be single relation in all cases
+
+== NEW ALGORITHM ==
+
 - Implement algorithm to construct rings from selection
 - Classify those rings (inner/outer) based on node tracing
 - Break touching rings of multipolygons
-- Option to create separate multipolygon for every outer ring
-- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
+- Analyze chosen relation and display corresponding symbol next to its name
+- Make chosen relation name pretty (or analyze all relations in relation list)
 - Sort relation members button (now it's just role fixer)
+- "Add members" should search for connecting nodes among already present members
+- Automatic role setting for new multipolygon ways (construct rings, see where a way goes)
 
 == RELEASE ==
 
-- Construct rings using middle points of ways and break those ways (as an option)
+- Construct rings using middle points of ways and break those ways
 - Convert adjacing rings that need to be broken to multipolygons
 - Option to autodownload all ways that are being broken

@@ -24,7 +24,7 @@ OSM download utility
 
 Partitions an area into slices, downloads them, and patches them together
 again. Warning: The resulting file does not have the usual "nodes, then
-segments, then ways" order.
+ways, then relations" order.
 
 usage (example):
 perl $0 http://www.openstreetmap.org/api/0.4/map?bbox=1.0,40.0,2.0,39.0
@@ -78,7 +78,7 @@ sub merge()
         if ($copy)
         {
             last if (/^\s*<\/osm>/);
-            if (/^\s*<(node|segment|way) id="(\d+)".*(.)>/)
+            if (/^\s*<(node|relation|way) id="(\d+)".*(.)>/)
             {
                 my ($what, $id, $slash) = ($1, $2, $3);
                 my $key = substr($what, 0, 1) . $id;

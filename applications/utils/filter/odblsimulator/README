@@ -1,0 +1,28 @@
+Code in this directory is originally from Jakob Altenstein's Bachelor 
+Thesis in which he developed a tool to 
+
+* visualize the impact of the license change on a current map
+* simulate the license change, resulting in a (possibly) diminished map
+
+The tool is written in Java.
+
+The tool supports various modes of operation and some aspects are configurable,
+e.g. you can tell the tool to ignore all changes in a "created by" tag or
+to treat a position change of less than 1 metre as trivial or so, and see how
+your changes affect the outcome.
+
+The tools needs an excerpt from the OSM full history file to work, as well
+as the current list of people having agreed to ODbL.
+
+This currently committed version lacks a build script and JAR file so you
+have to build it with javac:
+
+cd src; javac de/altenstein/osm/OdblSimulator.java 
+
+and run it like so:
+
+java -cp src de.altenstein.osm.OdblSimulator
+
+Also, the file names are hard-coded in the main file. 
+
+FEEL FREE TO MODIFY THE CODE.

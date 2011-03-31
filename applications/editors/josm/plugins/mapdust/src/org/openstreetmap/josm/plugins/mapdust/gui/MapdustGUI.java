@@ -95,9 +95,6 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     /** Specifies if the MapDust data was or not downloaded */
     private boolean downloaded = false;
 
-    /** Specifies if the MapDust layer was or not before deleted */
-    boolean wasDeleted = false;
-
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
      *
@@ -125,10 +122,6 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             notifyObservers(null, true);
             downloaded = true;
         }
-        if (wasDeleted) {
-            notifyObservers(null, true);
-            wasDeleted = false;
-        }
         super.showDialog();
     }
 
@@ -146,14 +139,29 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             actionPanel = null;
             mainPanel = null;
             panel = null;
+            actionPanel = null;
         } else {
             /* from online to offline */
-            remove(mainPanel);
-            mainPanel = null;
-            panel = null;
+            if (mainPanel != null) {
+                remove(mainPanel);
+                mainPanel = null;
+                panel = null;
+                detailsPanel = null;
+            }
         }
-        wasDeleted = true;
+        downloaded = false;
+        button.setSelected(false);
         super.destroy();
+    }
+
+    @Override
+    protected void toggleButtonHook() {
+        if (isVisible()) {
+            setVisible(false);
+            button.setSelected(false);
+        } else {
+            setVisible(true);
+        }
     }
 
     /**
@@ -167,15 +175,13 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         List<MapdustAction> actionList = actionPanel.getActionList();
         actionList.add(action);
         List<MapdustBug> mapdustBugs = panel.getMapdustBugsList();
-        boolean showBug =
-                shouldDisplay(action.getMapdustBug(), mapdustPlugin.getFilter());
+        boolean showBug = shouldDisplay(action.getMapdustBug(),
+                mapdustPlugin.getFilter());
         mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug(), showBug);
-
         /* update panels */
         updateMapdustPanel(mapdustBugs);
         updateMapdustActionPanel(actionList);
-        if (showBug
-                && !action.getCommand().equals(MapdustServiceCommand.ADD_BUG)) {
+        if (showBug && !action.getCommand().equals(MapdustServiceCommand.ADD_BUG)) {
             panel.resetSelectedBug(0);
         } else {
             mapdustPlugin.getMapdustLayer().setBugSelected(null);
@@ -245,9 +251,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
                             : new ArrayList<MapdustAction>();
 
             /* update panels */
-            List<MapdustBug> bugs =
-                    filterMapdustBugList(mapdustBugs, actionList,
-                            mapdustPlugin.getFilter());
+            List<MapdustBug> bugs = filterMapdustBugList(mapdustBugs,
+                    actionList,mapdustPlugin.getFilter());
             updateMapdustPanel(bugs);
             updateMapdustActionPanel(actionList);
             if (mainPanel == null) {
@@ -255,7 +260,6 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             }
         }
     }
-
 
     /**
      * Updates the MapDust bugs panel with the new list of data.
@@ -271,9 +275,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             addObserver(detailsPanel);
         }
         if (panel == null) {
-            panel =
-                    new MapdustBugListPanel(mapdustBugs, "Bug reports",
-                            mapdustPlugin);
+            panel = new MapdustBugListPanel(mapdustBugs, "Bug reports",
+                    mapdustPlugin);
             panel.addObserver(detailsPanel);
         } else {
             panel.updateComponents(mapdustBugs);
@@ -288,9 +291,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
      */
     private void updateMapdustActionPanel(List<MapdustAction> actionList) {
         if (actionPanel == null) {
-            actionPanel =
-                    new MapdustActionPanel(actionList, "Offline Contribution",
-                            mapdustPlugin);
+            actionPanel = new MapdustActionPanel(actionList,
+                    "Offline Contribution", mapdustPlugin);
         } else {
             actionPanel.updateComponents(actionList);
         }
@@ -445,6 +447,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         return getActionPanel().getActionList();
     }
 
+
     /**
      * Adds a new MapDust bug details observer to the list of observers.
      *
@@ -515,7 +518,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         Iterator<MapdustUpdateObserver> elements =
                 this.initialUpdateObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).update(null, true);
+            (elements.next()).update(filter, first);
         }
     }
 
@@ -549,6 +552,15 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
      */
     public void setMapdustPlugin(MapdustPlugin mapdustPlugin) {
         this.mapdustPlugin = mapdustPlugin;
+    }
+
+    /**
+     * Returns the downloaded flag
+     *
+     * @return the downloaded
+     */
+    public boolean isDownloaded() {
+        return downloaded;
     }
 
 }

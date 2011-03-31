@@ -417,14 +417,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * editor
      */
     @Override
-    public void layerAdded(Layer layer) {
-        if (layer instanceof MapdustLayer) {
-            /* download the MapDust bugs and update the plugin */
-            if (mapdustBugList == null) {
-                updatePluginData();
-            }
-        }
-    }
+    public void layerAdded(Layer layer) {}
 
     /**
      * Removes the <code>MapdustLayer</code> from the JOSM editor. Also closes
@@ -507,9 +500,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      */
     private BoundingBox getBBox() {
         MapView mapView = Main.map.mapView;
-        Bounds bounds =
-                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
-                        mapView.getLatLon(mapView.getWidth(), 0));
+        Bounds bounds = new Bounds(mapView.getLatLon(0, mapView.getHeight()),
+                mapView.getLatLon(mapView.getWidth(), 0));
         return new BoundingBox(bounds.getMin().lon(), bounds.getMin().lat(),
                 bounds.getMax().lon(), bounds.getMax().lat());
     }
@@ -521,7 +513,6 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      */
     private void updatePluginData() {
         Main.worker.execute(new Runnable() {
-
             @Override
             public void run() {
                 updateMapdustData();
@@ -548,7 +539,6 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             }
             /* update the view */
             SwingUtilities.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
                     updateView();
@@ -561,33 +551,60 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         }
     }
 
+
     /**
      * Updates the current view ( map and MapDust bug list), with the given list
      * of <code>MapdustBug</code> objects.
      */
     protected void updateView() {
-        /* update the dialog with the new data */
-        mapdustGUI.update(mapdustBugList, this);
-        /* update the MapdustLayer */
-        if (mapdustLayer == null) {
-            /* create and add the layer */
-            mapdustLayer =
-                    new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
-            Main.main.addLayer(this.mapdustLayer);
-            Main.map.mapView.moveLayer(this.mapdustLayer, 0);
-            Main.map.mapView.addMouseListener(this);
-            NavigatableComponent.addZoomChangeListener(this);
-        } else {
-            /* re-set the properties */
-            mapdustLayer.destroy();
-            mapdustLayer.setMapdustGUI(mapdustGUI);
-            mapdustLayer.setMapdustBugList(mapdustBugList);
-            mapdustLayer.setBugSelected(null);
+        if (Main.map != null && Main.map.mapView != null) {
+            /* update the MapdustLayer */
+            boolean needRepaint = false;
+            if (!containsMapdustLayer()) {
+                /* first start or layer was deleted */
+                if (mapdustGUI.isDownloaded()) {
+                    mapdustGUI.update(mapdustBugList, this);
+                    /* create and add the layer */
+                    mapdustLayer = new MapdustLayer("MapDust", mapdustGUI,
+                            mapdustBugList);
+                    Main.main.addLayer(this.mapdustLayer);
+                    Main.map.mapView.moveLayer(this.mapdustLayer, 0);
+                    Main.map.mapView.addMouseListener(this);
+                    NavigatableComponent.addZoomChangeListener(this);
+                    needRepaint = true;
+                }
+            } else {
+                if (mapdustLayer != null) {
+                    /* MapDust data was changed */
+                    mapdustGUI.update(mapdustBugList, this);
+                    mapdustLayer.destroy();
+                    mapdustLayer.update(mapdustGUI, mapdustBugList);
+                    needRepaint = true;
+                }
+            }
+            if (needRepaint) {
+                /* force repaint */
+                mapdustGUI.revalidate();
+                Main.map.mapView.revalidate();
+                Main.map.repaint();
+            }
         }
-        /* repaint */
-        mapdustGUI.revalidate();
-        Main.map.mapView.revalidate();
-        Main.map.repaint();
+    }
+
+    /**
+     * Verifies if the <code>MapView</code> contains or not the
+     * <code>MapdustLayer</code> layer.
+     *
+     * @return true if the <code>MapView</code> contains the
+     * <code>MapdustLayer</code> false otherwise
+     */
+    private boolean containsMapdustLayer() {
+        boolean contains = false;
+        List<Layer> all = Main.map.mapView.getAllLayersAsList();
+        if (mapdustLayer != null && all.contains(mapdustLayer)) {
+            contains = true;
+        }
+        return contains;
     }
 
     /**

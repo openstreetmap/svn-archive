@@ -111,61 +111,54 @@ public class MapdustButtonPanel extends JPanel {
                 tooltipText = "Work online mode";
                 imagePath = "dialogs/online.png";
             }
-            AbstractAction action =
-                    new ExecuteWorkOffline(mapdustPlugin.getMapdustGUI());
+            AbstractAction action = new ExecuteWorkOffline(
+                    mapdustPlugin.getMapdustGUI());
             ((ExecuteWorkOffline) action).addObserver(mapdustPlugin);
-            btnWorkOffline =
-                    ComponentUtil.createJButton("Work offline", tooltipText,
-                            imagePath, action);
+            btnWorkOffline = ComponentUtil.createJButton("Work offline",
+                    tooltipText, imagePath, action);
             btnWorkOffline.setSelected(false);
             btnWorkOffline.setFocusTraversalKeysEnabled(false);
         }
         /* 'Filter' button */
         if (btnFilter == null) {
             AbstractAction action = new ShowFilterBugAction(mapdustPlugin);
-            btnFilter =
-                    ComponentUtil.createJButton("Filter bug reports",
-                            "Filter bug reports",
-                            "dialogs/mapdust_bug_filter.png", action);
+            btnFilter = ComponentUtil.createJButton("Filter bug reports",
+                    "Filter bug reports", "dialogs/mapdust_bug_filter.png",
+                    action);
             btnFilter.setEnabled(true);
             btnFilter.setFocusTraversalKeysEnabled(false);
         }
         /* 'Add Comment' button */
         if (btnAddComment == null) {
             AbstractAction action = new ShowCommentBugAction(mapdustPlugin);
-            btnAddComment =
-                    ComponentUtil
-                            .createJButton("Comment bug report",
-                                    "Comment bug report",
-                                    "dialogs/comment.png", action);
+            btnAddComment = ComponentUtil.createJButton("Comment bug report",
+                    "Comment bug report", "dialogs/comment.png", action);
             btnAddComment.setEnabled(false);
             btnAddComment.setFocusTraversalKeysEnabled(false);
         }
         /* 'Fix bug report' button */
         if (btnFixBugReport == null) {
             AbstractAction action = new ShowCloseBugAction(mapdustPlugin);
-            btnFixBugReport =
-                    ComponentUtil.createJButton("Close bug report",
-                            "Close bug report", "dialogs/fixed.png", action);
+            btnFixBugReport = ComponentUtil.createJButton("Close bug report",
+                    "Close bug report", "dialogs/fixed.png", action);
             btnFixBugReport.setEnabled(false);
             btnFixBugReport.setFocusTraversalKeysEnabled(false);
         }
         /* 'Invalidate bug report' button */
         if (btnInvalidateBugReport == null) {
             AbstractAction action = new ShowInvalidateBugAction(mapdustPlugin);
-            btnInvalidateBugReport =
-                    ComponentUtil.createJButton("Invalidate bug report",
-                            "Invalidate bug report", "dialogs/invalid.png",
-                            action);
+            btnInvalidateBugReport = ComponentUtil.createJButton(
+                    "Invalidate bug report", "Invalidate bug report",
+                    "dialogs/invalid.png", action);
             btnInvalidateBugReport.setEnabled(false);
             btnInvalidateBugReport.setFocusTraversalKeysEnabled(false);
         }
         /* 'Re-open bug report' button */
         if (btnReOpenBugReport == null) {
             AbstractAction action = new ShowReOpenBugAction(mapdustPlugin);
-            btnReOpenBugReport =
-                    ComponentUtil.createJButton("Re-open bug report",
-                            "Re-open bug report", "dialogs/reopen.png", action);
+            btnReOpenBugReport = ComponentUtil.createJButton(
+                    "Re-open bug report", "Re-open bug report",
+                    "dialogs/reopen.png", action);
             btnReOpenBugReport.setEnabled(false);
             btnReOpenBugReport.setFocusTraversalKeysEnabled(false);
         }
@@ -174,9 +167,8 @@ public class MapdustButtonPanel extends JPanel {
             String pluginState = Main.pref.get("mapdust.pluginState");
             AbstractAction action = new ExecuteRefresh();
             ((ExecuteRefresh) action).addObserver(mapdustPlugin);
-            btnRefresh =
-                    ComponentUtil.createJButton("Refresh", "Refresh",
-                            "dialogs/mapdust_refresh.png", action);
+            btnRefresh = ComponentUtil.createJButton("Refresh", "Refresh",
+                    "dialogs/mapdust_refresh.png", action);
             if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                 btnRefresh.setEnabled(false);
             }
@@ -240,7 +232,7 @@ public class MapdustButtonPanel extends JPanel {
      * filter bug report, and refresh.If the onlyBasic flag is true then the
      * other buttons will be disabled.
      *
-     * @param onlyBasic If true then the not basic buttons will be disabled
+     * @param onlyBasic If true then the not basic buttons will be enabled
      */
     public void enableBasicComponents(boolean onlyBasic) {
         btnWorkOffline.setEnabled(true);

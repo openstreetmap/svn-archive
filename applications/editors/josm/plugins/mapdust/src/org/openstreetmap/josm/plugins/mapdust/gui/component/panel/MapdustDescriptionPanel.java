@@ -79,16 +79,15 @@ public class MapdustDescriptionPanel extends JPanel {
      * @param description the description
      */
     private void addComponents(String description) {
-        if (description != null && !description.isEmpty()) {
-            JTextArea txtDescription = new JTextArea(description);
-            txtDescription.setLineWrap(true);
-            txtDescription.setFont(new Font("Times New Roman", Font.BOLD, 12));
-            txtDescription.setEditable(false);
-            JScrollPane cmpDescription = ComponentUtil.createJScrollPane(
-                    txtDescription, null, Color.white, true, true);
-            cmpDescription.setPreferredSize(new Dimension(100, 100));
-            add(cmpDescription, BorderLayout.CENTER);
-        }
+        description = (description != null ? description : "");
+        JTextArea txtDescription = new JTextArea(description);
+        txtDescription.setLineWrap(true);
+        txtDescription.setFont(new Font("Times New Roman", Font.BOLD, 12));
+        txtDescription.setEditable(false);
+        JScrollPane cmpDescription = ComponentUtil.createJScrollPane(
+                txtDescription, null, Color.white, true, true);
+        cmpDescription.setPreferredSize(new Dimension(100, 100));
+        add(cmpDescription, BorderLayout.CENTER);
     }
 
 }

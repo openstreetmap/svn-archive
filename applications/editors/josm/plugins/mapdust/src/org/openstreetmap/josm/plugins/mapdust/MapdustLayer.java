@@ -88,6 +88,19 @@ public class MapdustLayer extends Layer {
     }
 
     /**
+     * Updates the <code>MapdustLayer</code> with the new
+     * <code>MapdustGUI</code> and <code>MapdustBug</code> list.
+     *
+     * @param mapdustGUI The <code>MapdustGUI</code>
+     * @param mapdustBugList The <code>MapdustBug</code> list
+     */
+    public void update(MapdustGUI mapdustGUI, List<MapdustBug> mapdustBugList) {
+        this.mapdustGUI = mapdustGUI;
+        this.mapdustBugList = mapdustBugList;
+        this.bugSelected = null;
+    }
+
+    /**
      * Returns the icon of the MapDust layer.
      *
      * @return icon
@@ -168,7 +181,7 @@ public class MapdustLayer extends Layer {
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         JToolTip tooltip = new JToolTip();
-        if (mapdustBugList != null && mapdustBugList.size()>0) {
+        if (mapdustBugList != null && mapdustBugList.size() > 0) {
             /* draw the current visible bugs */
             for (MapdustBug bug : mapdustBugList) {
                 LatLon ll = bug.getLatLon();
@@ -202,7 +215,7 @@ public class MapdustLayer extends Layer {
             /* selected from the list */
             MapdustBug bugSelected = getMapdustGUI().getSelectedBug();
             if (bugSelected == null) {
-                    bugSelected = clickedBug;
+                bugSelected = clickedBug;
             }
             setBugSelected(bugSelected);
             if (bugSelected != null) {

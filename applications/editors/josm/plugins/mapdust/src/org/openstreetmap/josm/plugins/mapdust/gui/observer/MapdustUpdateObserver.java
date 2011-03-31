@@ -46,7 +46,9 @@ public interface MapdustUpdateObserver {
     /**
      * Updates the MapDust bugs based on the given filters. If the initialUpdate
      * flag is true then the filters will not be applied to the MapDust bug
-     * data.
+     * data. The initialUpdate flag can be true in one the following cases:
+     * 1) After JOSM startup , 2) If the MapDust layer was re-added after a
+     * previous deletion.
      *
      * @param filter The <code>MapdustBugFilter</code> object
      * @param initialUpdate Indicates if the update action is for the first time

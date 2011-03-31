@@ -16,9 +16,9 @@
 
 <script type="text/javascript">
 // Start position for the map
-var lat=65.4
-var lon=17.0
-var zoom=4
+var lat=65.4;
+var lon=17.0;
+var zoom=5;
 var epsg4326 = new OpenLayers.Projection("EPSG:4326");
 OpenLayers.Lang.setCode("nb");
 
@@ -59,8 +59,8 @@ function init() {
     ],
     projection: "EPSG:900913",
     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-    maxResolution: 156543.0399,
-    numZoomLevels: 20,
+    maxResolution: 156543.0339,
+    numZoomLevels: 18+1,
     units: 'm',
     displayProjection: epsg4326
   });
@@ -76,7 +76,6 @@ function init() {
      "http://c.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
      "http://d.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png"],
     {transitionEffect:"resize",
-     numZoomLevels: 19, maxZoomLevel: 18,
      attribution:
       'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
       'Kartografi: <a href="http://www.statkart.no/Skjermkartografi.d25-SwJjM0n.ips">Statens Kartverk</a>, ' +
@@ -90,7 +89,6 @@ function init() {
      "http://c.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
      "http://d.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png"],
     {transitionEffect:"resize",
-     numZoomLevels: 19, maxZoomLevel: 18,
      attribution:
       'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
       'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
@@ -104,7 +102,6 @@ function init() {
      "http://c.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
      "http://d.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png"],
     {transitionEffect:"resize",
-     numZoomLevels: 19, maxZoomLevel: 18,
      attribution:
       'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
       'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +

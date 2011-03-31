@@ -116,4 +116,5 @@
 "SECTION" "ROUTES" "ThicknessLine" "DashStyle" "Opacity" "Label" "StopNodeThickness" "FromScale" "ToScale"          
 "hiking" "red" 10 "none" 100 "ref!name" 16 0 999999          
 "foot" "red" 10 "none" 100 "ref!name" 16 0 999999          
+"bicycle" "red" 10 "none" 100 "ref!name" 16 0 999999          
 "SECTION" "END"                 

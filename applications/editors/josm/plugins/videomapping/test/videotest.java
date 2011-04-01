@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -13,30 +14,21 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.openstreetmap.josm.plugins.videomapping.video.SimpleVideoPlayer;
+import org.openstreetmap.josm.plugins.videomapping.video.VideoEngine;
+import org.openstreetmap.josm.plugins.videomapping.video.VideoPlayer;
 
 import uk.co.caprica.vlcj.player.*;
 
 
+//simple app to test videoplayer alone
 public class videotest {
-
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
-        final SimpleVideoPlayer sVP = new SimpleVideoPlayer();
-        sVP.setFile(new File("C:\\TEMP\\122_0159.MOV"));
-        //sVP.play(); //FIXME We have a bug so we get out of sync if we jump before the video is up (and this we CAN'T DETECT!!!)
-        /*
-        JButton b = new JButton("jump");
-        b.addActionListener(new ActionListener() {
-            
-            public void actionPerformed(ActionEvent e) {
-                sVP.jump(610000);               
-            }
-        });
-        sVP.add(b);
-        */
+    	VideoEngine.setupPlayer();
+    	VideoPlayer testplayer= new VideoPlayer(new SimpleDateFormat("hh:mm:ss"));
+    	testplayer.setJumpLength(1000);
+    	testplayer.setLoopLength(3000);
+    	testplayer.addVideo(new File("C:\\TEMP\\test.mpg"));
+        
     }
 
 }

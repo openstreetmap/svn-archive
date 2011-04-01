@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.17' ;
+$VERSION = '1.18' ;
 
 require Exporter ;
 
@@ -177,6 +177,12 @@ my @lines ;
 
 my $simplified = 0 ;
 my $simplifyTotal = 0 ;
+
+my $shieldPathId = 0 ;
+my %createdShields = () ; # key = name; value = id of path
+my %shieldXSize = () ;
+my %shieldYSize = () ;
+
 
 sub setdpi {
 	$dpi = shift ;
@@ -583,73 +589,122 @@ sub createWayLabels {
 			$numWayLabelsOmitted++ ;
 		}
 		else {
-			# print "$wLen - $name - $lLen\n" ;
-			my $numLabels = int ($wLen / (4 * $lLen)) ;
-			if ($numLabels < 1) { $numLabels = 1 ; }
-			if ($numLabels > 4) { $numLabels = 4 ; }
 
-			if ($numLabels == 1) {
-				my $spare = 0.95 * $wLen - $lLen ;
-				my $sparePercentHalf = $spare / ($wLen*0.95) *100 / 2 ;
-				my $startOffset = 50 - $sparePercentHalf ;
-				my $endOffset = 50 + $sparePercentHalf ;
-				# five possible positions per way
-				my $step = ($endOffset - $startOffset) / 5 ;
-				my @positions = () ;
-				my $actual = $startOffset ;
-				while ($actual <= $endOffset) {
-					my ($ref, $angle) = subWay (\@points, $lLen, "middle", $actual) ;
-					my @way = @$ref ;
-					my ($col) = lineCrossings (\@way) ;
-					# calc quality of position. distance from middle and bend angles
-					my $quality = $angle + abs (50 - $actual) ;
-					if ($col == 0) { push @positions, ["middle", $actual, $quality] ; }
-					$actual += $step ;
+			if (grep /shield/i, $name) {
+				# create shield if necessary
+				if ( ! defined $createdShields{ $name }) {
+					createShield ($name, $ruleData[$wayIndexLabelSize]) ;
 				}
-				if (scalar @positions > 0) {
-					$drawnLabels { $name } = 1 ;
-					# sort by quality and take best one
-					@positions = sort {$a->[2] <=> $b->[2]} @positions ;
-					my ($pos) = shift @positions ;
-					my ($ref, $angle) = subWay (\@points, $lLen, $pos->[0], $pos->[1]) ;
-					my @finalWay = @$ref ;
-					my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
-					push @svgOutputDef, svgElementPath ($pathName, @points) ;
-					push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
-						$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], $pos->[0], $pos->[1], $halo) ;
-					occupyLines (\@finalWay) ;
-				}
-				else {
-					$numWayLabelsOmitted++ ;
-				}
-			}
-			else { # more than one label
-				my $labelDrawn = 0 ;
-				my $interval = int (100 / ($numLabels + 1)) ;
-				my @positions = () ;
-				for (my $i=1; $i<=$numLabels; $i++) {
-					push @positions, $i * $interval ;
-				}
+
+				# @points = (x1, y1, x2, y2 ... ) 
+				# $wLen in pixels
+				# $lLen in pixels
+				# <use xlink:href="#a661" x="40" y="40" />
+
+				my $shieldMaxSize = $shieldXSize{ $name } ;
+				if ($shieldYSize{ $name } > $shieldMaxSize) { $shieldMaxSize = $shieldYSize{ $name } ; } 
+
+				my $numShields = int ($wLen / ($shieldMaxSize * 12) ) ;
+				# if ($numShields > 4) { $numShields = 4 ; } 
+
+				if ($numShields > 0) {
+					my $step = $wLen / ($numShields + 1) ;
+					my $position = $step ; 
+					while ($position < $wLen) {
+						my ($x, $y) = getPointOfWay (\@points, $position) ;
+						# print "XY: $x, $y\n" ;
+
+						# place shield if not occupied
 			
-				foreach my $position (@positions) {
-					my ($refFinal, $angle) = subWay (\@points, $lLen, "middle", $position) ;
-					my (@finalWay) = @$refFinal ;
-					my ($collision) = lineCrossings (\@finalWay) ;
-					if ($collision == 0) {
-						$labelDrawn = 1 ;
+						my $x2 = int ($x - $shieldXSize{ $name } / 2) ;
+						my $y2 = int ($y - $shieldYSize{ $name } / 2) ;
+
+						# print "AREA: $x2, $y2, $x2+$lLen, $y2+$lLen\n" ;
+
+						if ( ! areaOccupied ($x2, $x2+$shieldXSize{ $name }, $y2+$shieldYSize{ $name }, $y2) ) {
+
+							my $id = $createdShields{$name};
+							push @svgOutputIcons, "<use xlink:href=\"#$id\" x=\"$x2\" y=\"$y2\" />" ;
+
+							occupyArea ($x2, $x2+$shieldXSize{ $name }, $y2+$shieldYSize{ $name }, $y2) ;
+						}
+
+						$position += $step ;
+					}
+				}
+
+			}
+
+			else {
+
+				# print "$wLen - $name - $lLen\n" ;
+				my $numLabels = int ($wLen / (4 * $lLen)) ;
+				if ($numLabels < 1) { $numLabels = 1 ; }
+				if ($numLabels > 4) { $numLabels = 4 ; }
+
+				if ($numLabels == 1) {
+					my $spare = 0.95 * $wLen - $lLen ;
+					my $sparePercentHalf = $spare / ($wLen*0.95) *100 / 2 ;
+					my $startOffset = 50 - $sparePercentHalf ;
+					my $endOffset = 50 + $sparePercentHalf ;
+					# five possible positions per way
+					my $step = ($endOffset - $startOffset) / 5 ;
+					my @positions = () ;
+					my $actual = $startOffset ;
+					while ($actual <= $endOffset) {
+						my ($ref, $angle) = subWay (\@points, $lLen, "middle", $actual) ;
+						my @way = @$ref ;
+						my ($col) = lineCrossings (\@way) ;
+						# calc quality of position. distance from middle and bend angles
+						my $quality = $angle + abs (50 - $actual) ;
+						if ($col == 0) { push @positions, ["middle", $actual, $quality] ; }
+						$actual += $step ;
+					}
+					if (scalar @positions > 0) {
 						$drawnLabels { $name } = 1 ;
+						# sort by quality and take best one
+						@positions = sort {$a->[2] <=> $b->[2]} @positions ;
+						my ($pos) = shift @positions ;
+						my ($ref, $angle) = subWay (\@points, $lLen, $pos->[0], $pos->[1]) ;
+						my @finalWay = @$ref ;
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
-						push @svgOutputDef, svgElementPath ($pathName, @finalWay) ;
+						push @svgOutputDef, svgElementPath ($pathName, @points) ;
 						push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
-							$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", 50, $halo) ;
+							$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], $pos->[0], $pos->[1], $halo) ;
 						occupyLines (\@finalWay) ;
 					}
 					else {
-						# print "INFO: $name labeled less often than desired.\n" ;
+						$numWayLabelsOmitted++ ;
 					}
 				}
-				if ($labelDrawn == 0) {
-					$notDrawnLabels { $name } = 1 ;
+				else { # more than one label
+					my $labelDrawn = 0 ;
+					my $interval = int (100 / ($numLabels + 1)) ;
+					my @positions = () ;
+					for (my $i=1; $i<=$numLabels; $i++) {
+						push @positions, $i * $interval ;
+					}
+			
+					foreach my $position (@positions) {
+						my ($refFinal, $angle) = subWay (\@points, $lLen, "middle", $position) ;
+						my (@finalWay) = @$refFinal ;
+						my ($collision) = lineCrossings (\@finalWay) ;
+						if ($collision == 0) {
+							$labelDrawn = 1 ;
+							$drawnLabels { $name } = 1 ;
+							my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
+							push @svgOutputDef, svgElementPath ($pathName, @finalWay) ;
+							push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
+								$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", 50, $halo) ;
+							occupyLines (\@finalWay) ;
+						}
+						else {
+							# print "INFO: $name labeled less often than desired.\n" ;
+						}
+					}
+					if ($labelDrawn == 0) {
+						$notDrawnLabels { $name } = 1 ;
+					}
 				}
 			}
 		}
@@ -2140,27 +2195,97 @@ sub drawPageNumberTop {
 }
 
 
+sub createShield {
+	my ($name, $targetSize) = @_ ;
+	my @a = split /:/, $name ;
+	my $shieldFileName = $a[1] ;
+	my $shieldText = $a[2] ;
+
+	if (! defined $createdShields{$name}) {
+		open (my $file, "<", $shieldFileName) or die ("ERROR: shield definition $shieldFileName not found.\n") ;
+		my @defText = <$file> ;
+		close ($file) ;
+
+		# get size
+		# calc scaling
+		my $sizeX = 0 ;
+		my $sizeY = 0 ;
+		foreach my $line (@defText) {
+			if (grep /<svg/, $line) {
+				($sizeY) = ( $line =~ /height=\"(\d+)px\"/ ) ;
+				($sizeX) = ( $line =~ /width=\"(\d+)px\"/ ) ;
+				if ( (!defined $sizeX) or (!defined $sizeY) ) {
+					die "ERROR: size of shield in $shieldFileName could not be determined.\n" ;
+				}
+			}
+		}
+		if ( ($sizeX == 0) or ($sizeY == 0) ) {
+			die "ERROR: initial size of shield $shieldFileName could not be determined.\n" ;
+		}
+
+		my $scaleFactor = $targetSize / $sizeY ;
+		# print "factor: $scaleFactor\n" ;
+
+		$shieldXSize{ $name } = int ($sizeX * $scaleFactor) ;
+		$shieldYSize{ $name } = int ($sizeY * $scaleFactor) ;
+
+		$shieldPathId++ ;
+		my $shieldPathName = "ShieldPath" . $shieldPathId ;
+		my $shieldGroupName = "ShieldGroup" . $shieldPathId ;
+
+		foreach my $line (@defText) {
+			$line =~ s/REPLACEID/$shieldGroupName/ ;
+			$line =~ s/REPLACESCALE/$scaleFactor/g ;
+			$line =~ s/REPLACEPATH/$shieldPathName/ ;
+			$line =~ s/REPLACELABEL/$shieldText/ ;
+		}
+
+		foreach my $line (@defText) {
+			push @svgOutputDef, $line ;
+			# print "DEF: $line" ;
+		}
+		# print "\n" ; 
+
+		$createdShields{$name} = $shieldGroupName ;
+	}
+}
+
+
+
+sub getPointOfWay {
+	#
+	# returns point of way at distance/position
+	#
+
+	my ($ref, $position) = @_ ;
+	my @points = @$ref ;
+
+	my @double = () ;
+	while (scalar @points > 0) {
+		my $x = shift @points ;
+		my $y = shift @points ;
+		push @double, [$x, $y] ;
+	}
+
+	my $i = 0 ; my $actLen = 0 ;
+	while ($actLen < $position) {
+		$actLen += sqrt ( ($double[$i]->[0]-$double[$i+1]->[0])**2 + ($double[$i]->[1]-$double[$i+1]->[1])**2 ) ;
+		$i++ ;
+	}
+
+	my $x = int (($double[$i]->[0] +  $double[$i-1]->[0]) / 2) ;
+	my $y = int (($double[$i]->[1] +  $double[$i-1]->[1]) / 2) ;
+
+	# print "POW: $x, $y\n" ;
+
+	return ($x, $y) ;
+}
+
+
+
+
 
 
 1 ;
 
-#
-# copy this useful function to your main program and uncomment, if needed
-#
-# sub nodes2Coordinates {
-#
-# transform list of nodeIds to list of lons/lats
-#
-#	my @nodes = @_ ;
-#	my $i ;
-#	my @result = () ;
-#
-#	#print "in @nodes\n" ;
-#
-#	for ($i=0; $i<=$#nodes; $i++) {
-#		push @result, $lon{$nodes[$i]} ;
-#		push @result, $lat{$nodes[$i]} ;
-#	}
-#	return @result ;
-#}
 

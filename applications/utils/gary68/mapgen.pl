@@ -81,6 +81,7 @@
 # 1.14 -pagenumbers
 # 1.16 dpi removed from map; route label scaling corrected; osmosis complete ways and complete relations
 # 1.17 new dash definitions; position scale and ruler and grid letters; legend labels
+# 1.18 shields for way labels
 #
 # TODO
 # ------------------
@@ -99,11 +100,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.17 ;
-use OSM::mapgenRules 1.17 ;
+use OSM::mapgen 1.18 ;
+use OSM::mapgenRules 1.18 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.17" ;
+my $version = "1.18" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -906,10 +907,36 @@ foreach my $wayId (keys %memWayTags) {
 			if (($onewayOpt eq "1") and ($oneway != 0) ) {
 				addOnewayArrows (\@{$memWayNodes{$wayId}}, \%lon, \%lat, $oneway, $test->[$wayIndexThickness], $onewayColor, $layer) ;
 			}
+
+
+
 			if ($test->[$wayIndexLabel] ne "none") {
-				my $name = "" ; my $ref1 ;
-				($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel],0, 0) ;
-				my @names = @$ref1 ;
+
+				my $name = "" ; my $ref1 ; my @names ;
+
+				if (grep /shield/i, $test->[$wayIndexLabel]) {
+					($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, "ref",0, 0) ;
+					my $ref = $name ;
+
+					if (grep /;/, $ref) {
+						my @a = split /;/, $ref ;
+						$ref = $a[0] ; 
+					}
+
+					if ($ref ne "") {
+						@names = ($ref) ;
+						$name = $test->[$wayIndexLabel] . ":$ref" ;
+						# print "DRAW WAY: name set to $name\n" ;
+					}
+					else {
+						@names = () ;
+						$name = "" ;
+					}
+				}
+				else {
+					($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel],0, 0) ;
+					@names = @$ref1 ;
+				}
 
 				if ( ($nolabelOpt eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
 
@@ -1815,13 +1842,13 @@ sub processRoutes {
 	# init before relation processing
 	print "initializing route data...\n" ;
 	foreach my $routeType (@routes) {
-		print "  type: $routeType->[0]\n" ;
+		# print "  type: $routeType->[0]\n" ;
 		$actualColorIndex{$routeType->[0]} = 0 ;
 
 		# get route colors from	
 		@{$routeColors{$routeType->[0]}} = split ( /;/, $routeType->[$routeIndexColor] ) ;
 		$colorNumber{$routeType->[0]} = scalar @{$routeColors{$routeType->[0]}} ;
-		print "  colors: @{$routeColors{$routeType->[0]}}\n" ;
+		# print "  colors: @{$routeColors{$routeType->[0]}}\n" ;
 	}
 	print "end.\n" ;
 
@@ -1899,7 +1926,10 @@ sub processRoutes {
 					if ($verbose eq "1" ) { print "  label: $label\n" ; }
 
 					my $printIcon = "" ; if ($iconResult) { $printIcon=$iconName ; }
-					printf "ROUTE %10s %10s %10s %30s %40s\n", $relId, $routeType, $color, $label, $printIcon ; 
+					
+					if ($verbose eq "1" ) { 
+						printf "ROUTE %10s %10s %10s %30s %40s\n", $relId, $routeType, $color, $label, $printIcon ; 
+					}
 
 					# collect ways
 
@@ -2447,46 +2477,50 @@ sub preprocessWayLabels {
 			my @segments = @$nodesRef ;
 			# print "PPWL:    processing name $name, " . scalar (@segments) . " segments\n" ;
 
-			my @newSegments = () ;
-			foreach my $segment (@segments) {
-				my @actual = @$segment ;
-				# print "PPWL: Actual segment @actual\n" ;
-				my $found = 1 ;
-				while ($found) {
-					$found = 0 ; my $sp = 0 ;
-					# look for splitting point
-					LABSP: for (my $i=1; $i<$#actual; $i++) {
-						if ( (($lon{$actual[$i-1]} > $lon{$actual[$i]}) and ($lon{$actual[$i+1]} > $lon{$actual[$i]})) or 
-							(($lon{$actual[$i-1]} < $lon{$actual[$i]}) and ($lon{$actual[$i+1]} < $lon{$actual[$i]})) ) {
-							$found = 1 ;
-							$sp = $i ;
-							last LABSP ;
+			if ( ! grep /shield/i, $name) {
+
+				my @newSegments = () ;
+				foreach my $segment (@segments) {
+					my @actual = @$segment ;
+					# print "PPWL: Actual segment @actual\n" ;
+					my $found = 1 ;
+					while ($found) {
+						$found = 0 ; my $sp = 0 ;
+						# look for splitting point
+						LABSP: for (my $i=1; $i<$#actual; $i++) {
+							if ( (($lon{$actual[$i-1]} > $lon{$actual[$i]}) and ($lon{$actual[$i+1]} > $lon{$actual[$i]})) or 
+								(($lon{$actual[$i-1]} < $lon{$actual[$i]}) and ($lon{$actual[$i+1]} < $lon{$actual[$i]})) ) {
+								$found = 1 ;
+								$sp = $i ;
+								last LABSP ;
+							}
+						}
+						if ($found == 1) {
+							# print "\nname $name --- sp: $sp\n" ;
+							# print "ACTUAL BEFORE: @actual\n" ;
+							# create new seg
+							my @newSegment = @actual[0..$sp] ;
+							push @newSegments, [@newSegment] ;
+							# print "NEW: @newSegment\n" ;
+
+							# splice actual
+							splice @actual, 0, $sp ;
+							# print "ACTUAL AFTER: @actual\n\n" ;
 						}
 					}
-					if ($found == 1) {
-						# print "\nname $name --- sp: $sp\n" ;
-						# print "ACTUAL BEFORE: @actual\n" ;
-						# create new seg
-						my @newSegment = @actual[0..$sp] ;
-						push @newSegments, [@newSegment] ;
-						# print "NEW: @newSegment\n" ;
-
-						# splice actual
-						splice @actual, 0, $sp ;
-						# print "ACTUAL AFTER: @actual\n\n" ;
-					}
+					@$segment = @actual ;
 				}
-				@$segment = @actual ;
-			}
 
-			push @segments, @newSegments ;
+				push @segments, @newSegments ;
+
+			}
 
 			foreach my $segment (@segments) {
 				my (@wayNodes) = @$segment ;
 				my @points = () ;
 
 				if ($lon{$wayNodes[0]} > $lon{$wayNodes[-1]}) {
-					if ( ($ruleArray[1] ne "motorway") and ($ruleArray[1] ne "trunk") ) {
+					if ( ($ruleArray[ $wayIndexValue ] ne "motorway") and ($ruleArray[ $wayIndexValue ] ne "trunk") ) {
 						@wayNodes = reverse @wayNodes ;
 					}
 				}
@@ -2498,13 +2532,24 @@ sub preprocessWayLabels {
 				# print "PPWL:      segment @points\n" ;
 
 				my ($segmentLengthPixels) = 0 ; 
+
+
 				for (my $i=0; $i<$#wayNodes; $i++) {
 					my ($x1, $y1) = convert ($lon{$wayNodes[$i]}, $lat{$wayNodes[$i]}) ;
 					my ($x2, $y2) = convert ($lon{$wayNodes[$i+1]}, $lat{$wayNodes[$i+1]}) ;
 					$segmentLengthPixels += sqrt ( ($x2-$x1)**2 + ($y2-$y1)**2 ) ;
 				}
 				# print "$ruleNum, $wayIndexLabelSize\n" ;
-				my ($labelLengthPixels) = length ($name) * $ppc / 10 * $ruleArray[$wayIndexLabelSize] ;
+
+				my $labelLengthPixels = 0 ;
+
+				if (grep /shield/i, $ruleArray[ $wayIndexLabel ]) {
+					$labelLengthPixels = $ruleArray[ $wayIndexLabelSize ] ;
+					# print "PPWL: len = $labelLengthPixels\n" ;
+				}
+				else {
+					$labelLengthPixels = length ($name) * $ppc / 10 * $ruleArray[$wayIndexLabelSize] ;
+				}
 
 				# print "\nPPWL:        name $name - ppc $ppc - size $ruleArray[$wayIndexLabelSize]\n" ;
 				# print "PPWL:        wayLen $segmentLengthPixels\n" ;

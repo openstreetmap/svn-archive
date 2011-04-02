@@ -100,11 +100,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.18 ;
-use OSM::mapgenRules 1.18 ;
+use OSM::mapgen 1.19 ;
+use OSM::mapgenRules 1.19 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.18" ;
+my $version = "1.19" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -855,6 +855,27 @@ foreach my $nodeId (keys %memNodeTags) {
 # WAYS
 print "draw ways...\n" ;
 foreach my $wayId (keys %memWayTags) {
+
+
+	if (scalar @circles > 0) {
+		foreach my $rule (@circles) {
+			my ($value) = getValue ($rule->[0], $memWayTags{$wayId}) ;
+			if ( ($value eq $rule->[1]) or ($rule->[1] eq "*") ) {
+
+				my $x = 0 ; my $y = 0 ; my $num = 0 ;
+				foreach my $n ( @{$memWayNodes{$wayId}} ) {
+					$x += $lon{ $n } ;
+					$y += $lat{ $n } ;
+					$num++ ;
+				}
+				$x = $x / $num ;
+				$y = $y / $num ;
+
+				drawCircle ($x, $y, $rule->[2], $rule->[3], $rule->[4]) ;
+			}
+		}
+	}
+
 	my $text = "" ; 
 
 	# tunnels, bridges and layers

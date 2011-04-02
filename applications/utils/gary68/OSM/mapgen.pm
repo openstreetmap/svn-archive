@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.18' ;
+$VERSION = '1.19' ;
 
 require Exporter ;
 
@@ -455,7 +455,7 @@ sub drawCircle {
 	# radius in meters
 
 	my ($x, $y) = convert ($lon, $lat) ;
-	my $thickness2 = scalePoints (scaleBase ($thickness)) ;
+	my $thickness2 = scalePoints ($thickness) ;
 
 	my $radiusPixel = $radius / (1000 * distance ($left, $bottom, $right, $bottom) ) * $sizeX ;
 	push @svgOutputPixelGrid, svgElementCircle ($x, $y, $radiusPixel, $thickness2, $color) ;
@@ -1242,7 +1242,7 @@ sub svgElementCircle {
 # draws not filled circle / dot
 #
 	my ($x, $y, $radius, $size, $col) = @_ ;
-	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $radius . "\" fill=\"none\" stroke=\"" . $col  . "\" stroke-width=\"2\" />" ;
+	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $radius . "\" fill=\"none\" stroke=\"" . $col  . "\" stroke-width=\"$size\" />" ;
 	return $svg ;
 }
 

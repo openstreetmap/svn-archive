@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-20 22:11+0100\n"
+"POT-Creation-Date: 2011-04-03 18:52+0200\n"
 "PO-Revision-Date: 2011-03-07 12:46+0000\n"
 "Last-Translator: mmyfl <Unknown>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-03-20 17:29+0000\n"
-"X-Generator: Launchpad (build 12617)\n"
+"X-Launchpad-Export-Date: 2011-04-03 16:16+0000\n"
+"X-Generator: Launchpad (build 12710)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -161,7 +161,7 @@ msgstr "强制继续"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:227
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:675
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:266
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:470
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -309,13 +309,11 @@ msgid "About JOSM..."
 msgstr "关于 JOSM..."
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:44
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "WARNING: unexpected format of API base URL. Redirection to info or history "
 "page for OSM object will probably fail. API base URL is: ''{0}''"
 msgstr ""
-"警告：不是期望中的 API 基础 URL 格式。重定向至 OSM 主网站的信息或历史记录页面"
-"可能会失败。API 基础 URL为: ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:63
 #, java-format
@@ -353,7 +351,7 @@ msgstr "请点击继续来开启 {0} 个浏览器窗口"
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
 #: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
@@ -390,7 +388,7 @@ msgstr "请点击继续来开启 {0} 个浏览器窗口"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1285
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:284
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:649
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:415
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -812,6 +810,8 @@ msgstr "请正确的选择二或三个节点，或一条只有二或三个节点
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:103
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:84
 msgid "Create multipolygon"
 msgstr "建立多重多边形"
 
@@ -839,7 +839,7 @@ msgstr "您必须选择至少一条路径。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:322
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1055
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:757
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:508
@@ -860,8 +860,8 @@ msgstr "删除选择的对象。"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:214
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:223
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:210
@@ -921,6 +921,7 @@ msgid "Select if the data should be downloaded into a new layer"
 msgstr "如果资料要下载到新的图层里请选择此项"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:47
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr "下载关联对象"
 
@@ -974,9 +975,8 @@ msgid "Download parent ways/relations..."
 msgstr "下载上层路径/关系..."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:29
-#, fuzzy
 msgid "Download objects referring to one of the selected objects"
-msgstr "下载参照到已选取原型中之一的原型"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:22
@@ -1132,20 +1132,15 @@ msgstr ""
 "如果您想要将偏移保存为书签，请在下面输入书签名称"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:165
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Easting"
-msgstr "向东"
+#, fuzzy
+msgid "Offset: "
+msgstr "偏移："
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Northing"
-msgstr "向北"
-
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 msgid "Bookmark name: "
 msgstr "书签名称： "
 
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:228
 msgid "Offset bookmark already exists. Overwrite?"
 msgstr "偏移书签已存在。覆盖?"
 
@@ -1445,9 +1440,8 @@ msgid "Merge selection"
 msgstr "合并选择区域"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeSelectionAction.java:22
-#, fuzzy
 msgid "Merge the currently selected objects into another layer"
-msgstr "将目前选取的原型合并到另一个图层"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:35
@@ -1714,14 +1708,11 @@ msgid "Paste without incomplete members"
 msgstr "粘贴时不包含不完整的成员"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:156
-#, fuzzy
 msgid ""
 "The copied data contains incomplete objects.  When pasting the incomplete "
 "objects are removed.  Do you want to paste the data without the incomplete "
 "objects?"
 msgstr ""
-"复制的资料含有不完整的原型。当粘贴的时候不完整的原型会被移除。您确定要粘贴含"
-"有不完整原型的数据吗？"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:36
@@ -1740,10 +1731,11 @@ msgid_plural "Pasting {0} tags"
 msgstr[0] "正在粘贴 {0} 个标签"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:256
-#, fuzzy, java-format
+#, java-format
 msgid "to {0} object"
 msgid_plural "to {0} objects"
-msgstr[0] "删除 {0} 个对象"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:25
 msgid "Preferences..."
@@ -3382,13 +3374,11 @@ msgid "Change relation member role for {0} {1}"
 msgstr "改变关系成员 {0} {1} 的角色"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:30
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>This "
 "conflict cannot be added.</html>"
 msgstr ""
-"<html>图层 \"{0}\" 已有冲突发生于原型<br> \"{1}\"。 <br>这个冲突不能被加入。"
-"</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:36
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1191
@@ -3396,11 +3386,11 @@ msgid "Double conflict"
 msgstr "双重冲突"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:52
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict for "
 "object ''{1}''."
-msgstr "警告：图层 \"{0}\" 已不存在。不能删除原型 \"{1}\" 的冲突。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:67
 #, java-format
@@ -3597,10 +3587,11 @@ msgid_plural "Transform {0} nodes"
 msgstr[0] "变换 {0} 个节点"
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
-#, fuzzy, java-format
+#, java-format
 msgid "Undelete {0} object"
 msgid_plural "Undelete {0} objects"
-msgstr[0] "删除 {0} 个对象"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:38
 #, java-format
@@ -4613,6 +4604,7 @@ msgid "Relation is empty"
 msgstr "关系是空白的"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:565
 msgid "<empty>"
 msgstr "<空白>"
 
@@ -5900,6 +5892,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:392
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:21
 msgid "Role"
 msgstr "角色"
@@ -6095,16 +6089,14 @@ msgid "{0} more..."
 msgstr "还有 {0}..."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:325
-#, fuzzy
 msgid ""
 "The following objects could not be copied to the target object<br>because "
 "they are deleted in the target dataset:"
-msgstr "下列原型无法复制到目标原型，<br>因为它们已经在目标数据组合中被删除了："
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:335
-#, fuzzy
 msgid "Merging deleted objects failed"
-msgstr "合并删除的原型失败"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:628
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:652
@@ -6539,7 +6531,6 @@ msgstr "接受"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:166
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:308
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
 msgid "none"
 msgstr "无"
 
@@ -6845,7 +6836,6 @@ msgstr "开启所有命令的清单(恢复缓冲区)。"
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:126
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:188
 #, java-format
@@ -7270,7 +7260,7 @@ msgid "Save a copy of this Style to file and add it to the list"
 msgstr "保存这个样式的复本到文件中，并将它加入到列表中"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:474
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:207
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:223
 msgid "Reloading style sources"
 msgstr "重新载入样式来源"
 
@@ -7348,6 +7338,9 @@ msgid "Delete the selected relation"
 msgstr "删除选取的关系"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:359
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:344
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:109
 msgid "Create a new relation"
 msgstr "建立新的关系"
 
@@ -7365,6 +7358,7 @@ msgid "Select the members of all selected relations"
 msgstr "选择所有已选取关系的成员"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:463
+#: ../plugins/relcontext/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "选择成员"
 
@@ -7424,11 +7418,13 @@ msgstr "开启选取关系的关系编辑器"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:452
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1158
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "在关系清单中选择"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:453
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1159
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "在关系清单中选择。"
 
@@ -7488,9 +7484,8 @@ msgid_plural "{0} Authors"
 msgstr[0] "{0} 个作者"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:181
-#, fuzzy
 msgid "Select objects submitted by this user"
-msgstr "选择由这个用户提交的原型"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:213
 msgid "Launches a browser with information about the user"
@@ -7778,9 +7773,8 @@ msgid "Show history"
 msgstr "显示历史记录"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
-#, fuzzy
 msgid "Download and show the history of the selected objects"
-msgstr "下载并显示选取原型的历史记录"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -7813,9 +7807,8 @@ msgid "Zoom to in layer"
 msgstr "拉近到图层"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:379
-#, fuzzy
 msgid "Zoom to the corresponding objects in the current data layer"
-msgstr "缩放到目前数据图层对应的原型"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:393
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:429
@@ -8720,6 +8713,7 @@ msgstr "ID"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:333
 #: build/specialmessages.java:68 build/trans_presets.java:115
 #: build/trans_presets.java:153 build/trans_presets.java:195
 #: build/trans_presets.java:235 build/trans_presets.java:256
@@ -8946,11 +8940,10 @@ msgstr ""
 "<html>在目前编辑图层 \"{1}\" 修改集合 {0} 的内容<br>中没有对象可用。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:417
-#, fuzzy
 msgid ""
 "Zoom to the objects in the content of this changeset in the current data "
 "layer"
-msgstr "缩放到目前数据图层这个修改集合的内容的原型"
+msgstr ""
 
 #. parent for dialog is Main.parent
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetHeaderDownloadTask.java:112
@@ -9335,6 +9328,8 @@ msgstr "空白的数值代表删除该标签。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:639
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:151
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:112
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:327
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:629
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:215
 msgid "<different>"
 msgstr "<不同>"
@@ -9379,6 +9374,7 @@ msgstr "选取对象的属性。"
 
 #. setting up the membership table
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "成员"
 
@@ -9432,14 +9428,17 @@ msgid "Go to OSM wiki for tag help (F1)"
 msgstr "转到 OSM 的维基页面以查看标签的帮助内容 (F1)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1154
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "选择关系"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1155
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "选择主要选择区域的关系。"
 
@@ -9568,19 +9567,16 @@ msgid "Ignore them, leave relation as is"
 msgstr "忽略它们，保持关系原貌"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
 "object ''{0}''<br><br>Do you really want to add another relation member?</"
 "html>"
 msgstr ""
-"<html>这个关系已经有一或多个成员参照到<br>原型 \"{0}\"<br><br>您确定要加入另"
-"一个关系成员吗?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:681
-#, fuzzy
 msgid "Multiple members referring to same object."
-msgstr "多个成员参照到同一原型"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:699
 #, java-format
@@ -9593,33 +9589,28 @@ msgstr ""
 "做。<br>正跳过关系 \"{0}\"。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:740
-#, fuzzy
 msgid "Add all objects selected in the current dataset before the first member"
-msgstr "将目前数据组合中选取的所有原型加到第一个成员之前"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:766
-#, fuzzy
 msgid "Add all objects selected in the current dataset after the last member"
-msgstr "将目前数据组合中选取的所有原型加到最后一个成员之后"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset before the first selected "
 "member"
-msgstr "将目前数据组合中选取的所有原型加到第一个选取的成员之前"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset after the last selected "
 "member"
-msgstr "将目前数据组合中选取的所有原型加到最后一个选取的成员之后"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:859
-#, fuzzy
 msgid "Remove all members referring to one of the selected objects"
-msgstr "删除所有参照到选取原型其中之一的成员"
+msgstr ""
 
 #. putValue(NAME, tr("Remove Selected"));
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:862
@@ -9628,20 +9619,18 @@ msgstr "关系编辑器：删除已选取的"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:896
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:908
-#, fuzzy
 msgid "Select relation members which refer to objects in the current selection"
-msgstr "选取参照到目前选取范围的关系成员"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Select relation members which refer to {0} objects in the current selection"
-msgstr "选取参照到目前选取范围{0} 原型的关系成员"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
-#, fuzzy
 msgid "Select objects for selected relation members"
-msgstr "选择已选取关系成员的原型"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:950
 msgid "Sort the relation members"
@@ -9790,15 +9779,15 @@ msgid "Apply Role"
 msgstr "应用角色"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1383
-#, fuzzy, java-format
+#, java-format
 msgid "You are setting an empty role on {0} object."
 msgid_plural "You are setting an empty role on {0} objects."
-msgstr[0] "您正在设定{0} 个原型的空白角色。"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1386
-#, fuzzy
 msgid "This is equal to deleting the roles of these objects."
-msgstr "这样等同删除这些原型的角色。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1388
 msgid "Do you really want to apply the new role?"
@@ -10168,6 +10157,7 @@ msgstr "查询名称服务器..."
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:441
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:98
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:30
 #: build/specialmessages.java:82 build/trans_presets.java:457
 #: build/trans_presets.java:753 build/trans_presets.java:762
@@ -10449,9 +10439,8 @@ msgid "Relation {0}"
 msgstr "关系 {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:26
-#, fuzzy
 msgid "Object"
-msgstr "对象"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableCellRenderer.java:36
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableCellRenderer.java:60
@@ -10692,11 +10681,11 @@ msgid "Select to close the changeset after the next upload"
 msgstr "选择此项会在下次上传后关闭修改集合"
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:309
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:302
 msgid "Load the list of your open changesets from the server"
 msgstr "从服务器载入您的开放修改集合清单"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:327
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:320
 msgid "Close the currently selected open changeset"
 msgstr "关闭目前选取的开放修改集合"
 
@@ -11227,9 +11216,8 @@ msgstr ""
 "警告：对象 \"{0}\" 已经在服务器端被删除了。现在跳过这个对象并重新尝试上传。"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:108
-#, fuzzy
 msgid "Preparing objects to upload ..."
-msgstr "正在准备要上传的原型 ..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:44
 msgid "Objects are uploaded to a <strong>new changeset</strong>."
@@ -12442,12 +12430,12 @@ msgid "{0} was found to be GPS tagged."
 msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] "发现 {0} 已有 GPS 标签。"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:646
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "从磁碟删除图片档"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:649
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -12455,7 +12443,7 @@ msgid ""
 msgstr ""
 "<html><h3>是否从磁碟删除文件 {0}?<p>这个照片文件会永久消失!</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:674
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "无法删除图片文件。"
 
@@ -12641,7 +12629,7 @@ msgstr "(URL 是： "
 msgid "Error displaying URL"
 msgstr "在显示 URL 时发生错误"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:175
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:191
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/mapcss/MapCSSStyleSource.java:55
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/xml/XmlStyleSource.java:77
 #, java-format
@@ -12649,7 +12637,7 @@ msgid ""
 "Warning: failed to load Mappaint styles from ''{0}''. Exception was: {1}"
 msgstr "警告：从 \"{0}\" 载入 Mappaint 样式失败。例外为：{1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:236
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
 #, java-format
 msgid "loading style ''{0}''..."
 msgstr "载入样式 \"{0}\" 中..."
@@ -14056,6 +14044,7 @@ msgstr "选择的项目:"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:461
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:754
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1020
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:316
 msgid "New"
 msgstr "新增"
@@ -14114,6 +14103,14 @@ msgstr "EULA 授权的 URL 格式错误: {0}"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
 msgid "Projection"
 msgstr "投影方法"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Easting"
+msgstr "向东"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Northing"
+msgstr "向北"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -15865,11 +15862,10 @@ msgid "Fetching a package of relations from ''{0}''"
 msgstr "正在从 \"{0}\" 取回关系包"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:423
-#, fuzzy
 msgid ""
 "Server replied with response code 404, retrying with an individual request "
 "for each object."
-msgstr "服务器传回代码 404，以每个原型个别要求的方式重试。"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:449
 #, java-format
@@ -20773,7 +20769,7 @@ msgstr ""
 "<html>确定将这个议题标记为\"已解决\"?<br><br>您也许可以加入额外的注解：</"
 "html>"
 
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:94
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:95
 msgid "Close: "
 msgstr "关闭： "
 
@@ -21505,15 +21501,123 @@ msgstr "轨迹"
 msgid "Waypoints"
 msgstr "路标"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:36
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
 #, fuzzy
-msgid "Open Relation Editor"
-msgstr "关系编辑器：排序"
+msgid "Relation Toolbox"
+msgstr "关系"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:37
-msgid "Opens advanced relation/multipolygon editor panel"
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
+msgid "Open relation/multipolygon editor panel"
 msgstr ""
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:403
+#, fuzzy
+msgid "Specify role"
+msgstr "简化区域"
+
+#. Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:478
+#, fuzzy, java-format
+msgid "Change relation member roles to {0}"
+msgstr "改变关系成员 {0} {1} 的角色"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:499
+#, fuzzy
+msgid "Change multipolygon creation settings"
+msgstr "在多重多边形关系中没有样式"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:540
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#, fuzzy
+msgid "Enter role for selected members"
+msgstr "为选取的成员设定角色"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#, fuzzy, java-format
+msgid "Relation Toolbox: {0}"
+msgstr "关系：{0}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:566
+#, fuzzy
+msgid "another..."
+msgstr "粘贴 ..."
+
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:34
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#, fuzzy
+msgid "Add/remove members from the chosen relation"
+msgstr "从关系中删除这个关系成员"
+
+#: ../plugins/relcontext/src/relcontext/actions/ClearChosenRelationAction.java:19
+#, fuzzy
+msgid "Clear the chosen relation"
+msgstr "建立新的关系"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:31
+#, fuzzy
+msgid "Create a multipolygon from selected objects"
+msgstr "从三个选取的节点建立圆形。"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:322
+#, fuzzy
+msgid "Enter admin level and name for the border relation:"
+msgstr "输入一个角色并将它应用至选取的关系成员"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:326
+#, fuzzy
+msgid "Admin level"
+msgstr "行政区界等级"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
+#, fuzzy
+msgid "Create a relation from selected objects"
+msgstr "从三个选取的节点建立圆形。"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:91
+#, fuzzy
+msgid "Choose a type for the relation:"
+msgstr "建立新的关系"
+
+#: ../plugins/relcontext/src/relcontext/actions/DeleteChosenRelationAction.java:17
+#, fuzzy
+msgid "Delete relation"
+msgstr "删除关系"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadChosenRelationAction.java:31
+#, fuzzy
+msgid "Download incomplete members for the chosen relation"
+msgstr "下载已选取关系的不完整成员"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:33
+#, fuzzy
+msgid "Download referrers for the the chosen relation and its members"
+msgstr "下载已选取关系的所有成员"
+
+#: ../plugins/relcontext/src/relcontext/actions/EditChosenRelationAction.java:25
+#, fuzzy
+msgid "Open relation editor for the chosen relation"
+msgstr "开启选取的关系编辑器"
+
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:29
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:53
+#, fuzzy
+msgid "Find a relation"
+msgstr "修正关系"
+
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:24
+#, fuzzy
+msgid "Open relation wiki page"
+msgstr "没有类型的关系"
+
+#: ../plugins/relcontext/src/relcontext/actions/SortAndFixAction.java:23
+#, fuzzy
+msgid "Fix roles of the chosen relation members"
+msgstr "排序关系成员"
 
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
@@ -23594,170 +23698,25 @@ msgstr ""
 msgid "Unglued Relations"
 msgstr ""
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:83
-#, java-format
-msgid "{0} {1}% of GPS track"
-msgstr "{0} {1}% GPS 轨迹"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:105
-msgid "Shows current position in the video"
-msgstr "显示目前在影片中的位置"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Import Video"
-msgstr "导入视频"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Sync a video against this GPS track"
-msgstr "与 GPS 轨迹同步视频"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "Remove Video"
-msgstr "删除视频"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "removes current video from layer"
-msgstr "从图层中删除当前视频"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:135
-msgid "Play/Pause"
-msgstr "播放/暂停"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-msgid "starts/pauses video playback"
-msgstr "开始/暂停播放视频"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:142
-msgid "Backward"
-msgstr "后退"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-msgid "jumps n sec back"
-msgstr "跳至后 n 秒"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
-msgid "Forward"
-msgstr "前进"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-msgid "jumps n sec forward"
-msgstr "跳至前 n 秒"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:156
-msgid "Faster"
-msgstr "加速"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-msgid "faster playback"
-msgstr "加速播放"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:164
-msgid "Slower"
-msgstr "慢速"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-msgid "slower playback"
-msgstr "慢速播放"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "Jump To"
-msgstr "跳至"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "jumps to the entered gps time"
-msgstr "跳至输入的 gps 时刻"
-
-#. TODO here we should show the GPS time range to the user
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:191
-msgid "Jump to"
-msgstr "跳至"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "Loop"
-msgstr "循环"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "loops n sec around current position"
-msgstr "在目前的地点循环播放 n 秒"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:211
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:147
-msgid "loop"
-msgstr "循环"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "Keep centered"
-msgstr "保持居中"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "follows the video icon automaticly"
-msgstr "自动跟随影片图标"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Subtitles"
-msgstr "字幕"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Show subtitles in video"
-msgstr "在视频中显示字幕"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-msgid "Jump length"
-msgstr "跳转长度"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-msgid "Set the length of a jump"
-msgstr "设定跳转的长度"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Jump in video for x ms"
-msgstr "跳至 x 毫秒的影片"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Loop length"
-msgstr "循环长度"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-msgid "Set the length around a looppoint"
-msgstr "设定循环点的长度"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
-msgid "no deinterlacing"
-msgstr "没有非交错式"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:271
-msgid "deinterlacing using line doubling"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:279
-msgid "deinterlacing using linear interpolation"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:126
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:54
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:79
 msgid "Unable to find JNA Java library!"
 msgstr "找不到 JNA Java 程序库!"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:130
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:58
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:83
 msgid "Unable to find native libvlc library!"
 msgstr "找不到原生 libvlc 程序库!"
 
-#. TODO we need Icons instead
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:144
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:152
 msgid "play"
 msgstr "播放"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:148
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:155
+msgid "loop"
+msgstr "循环"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:156
 msgid "mute"
 msgstr "静音"
 
@@ -24559,23 +24518,28 @@ msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr "这个插件简化了大众运输路线的制图与编辑。"
 
-#. Plugin restart
+#. Plugin reltoolbox
 #: build/trans_plugins.java:95
+msgid "Relation and multipolygon creating and editing panel."
+msgstr ""
+
+#. Plugin restart
+#: build/trans_plugins.java:97
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr "添加 &quot;重新启动 JOSM&quot; 项目到文件菜单。"
 
 #. Plugin reverter
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Plugin for reverting changesets"
 msgstr "还原修改集合的插件"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "使用 rgis.spb.ru 图片做为覆盖"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -24585,7 +24549,7 @@ msgstr ""
 "小图标来开启。可用的国家预设组合: 德国。"
 
 #. Plugin routes
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -24594,17 +24558,17 @@ msgstr ""
 "routes.xml 文件"
 
 #. Plugin routing
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Provides routing capabilities."
 msgstr "提供路线规画的功能。"
 
 #. Plugin scripting
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Allows to run scripts in JOSM."
 msgstr "允许在 JOSM 中执行脚本。"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -24614,22 +24578,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:111 build/trans_plugins.java:113
+#: build/trans_plugins.java:113 build/trans_plugins.java:115
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "建立并编辑 OpenSeaMap 海图"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "允许在目前的 gps 位置加入标记/节点。"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "提供在表格线中编辑标签的对话框。"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -24639,42 +24603,42 @@ msgstr ""
 "速预览对话框)。您也可以单独以 jar-文件的方式启动。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Make terraced houses out of single blocks."
 msgstr "让连栋房屋能超出单一区块。"
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "建立并编辑 OpenSeaMap 海上航标"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr "提供辅助按钮以便使用于单键滑键(触控笔)。目前加入单键移动地图。"
 
 #. Plugin Tracer
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr "从捷克地籍图描出建筑物。需要有执行 TracerServer (.NET 或 Mono)。"
 
 #. Plugin trustosm
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid "Plugin to digital sign OSM-Data"
 msgstr "用来数字签名OSM-数据的插件"
 
 #. Plugin turnlanes
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -24682,17 +24646,17 @@ msgstr ""
 "turnrestrictions 插件允许将转弯限制的维护信息输入到 OpenStreetMap 数据库中。"
 
 #. Plugin undelete
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Allows undeleting object from OSM database"
 msgstr "允许从 OSM 数据库中取消删除对象"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid "Several utilities that make your life easier."
 msgstr "许多让您的生活更轻松的公用程序。"
 
 #. Plugin videomapping
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:141
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -24702,7 +24666,7 @@ msgstr ""
 "来辨识可见的对象。"
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:143
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -24711,22 +24675,22 @@ msgstr ""
 "段，因此可能有许多程序错误存在。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:145
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "方便的下载一整组互相联结的路径"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:147
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "为从 GPX 文件导入的路点开启搜索功能。"
 
 #. Plugin wayselector
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:149
 msgid "Select a sequence of non-branching connected ways"
 msgstr "选择一整列无分支的路径"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:151
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -40460,31 +40424,108 @@ msgstr ""
 msgid "Estonia Multi (Maaamet)"
 msgstr ""
 
-#. tms:http://fugro.openstreetmap.dk/fugro2005
+#. tms:http://tile.openstreetmap.dk/fugro2005
 #: build/trans_wms.java:35
 msgid "Fugro (Denmark)"
 msgstr ""
 
-#~ msgid "to {0} primitive"
-#~ msgid_plural "to {0} primtives"
-#~ msgstr[0] "到 {0} 个原型"
+#. tms:http://tile.openstreetmap.dk/stevns/2009
+#: build/trans_wms.java:36
+msgid "Stevns (Denmark)"
+msgstr ""
 
-#~ msgid "Undelete {0} primitive"
-#~ msgid_plural "Undelete {0} primitives"
-#~ msgstr[0] "取消删除 {0} 个原型"
+#~ msgid "{0} {1}% of GPS track"
+#~ msgstr "{0} {1}% GPS 轨迹"
 
-#~ msgid ""
-#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
-#~ "<br>Please resolve this conflict first, then try again.</html>"
-#~ msgstr ""
-#~ "<html>图层 \"{0}\" 已经有冲突于原型<br>\"{1}\"。<br>请先调解这个冲突，然后"
-#~ "再试一次。</html>\""
+#~ msgid "Shows current position in the video"
+#~ msgstr "显示目前在影片中的位置"
 
-#~ msgid ""
-#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
-#~ "this primitive and retrying to upload."
-#~ msgstr ""
-#~ "警告：原型 \"{0}\" 已在服务器上删除了。正跳过这个原型并尝试重新上传。"
+#~ msgid "Import Video"
+#~ msgstr "导入视频"
+
+#~ msgid "Sync a video against this GPS track"
+#~ msgstr "与 GPS 轨迹同步视频"
+
+#~ msgid "Remove Video"
+#~ msgstr "删除视频"
+
+#~ msgid "removes current video from layer"
+#~ msgstr "从图层中删除当前视频"
+
+#~ msgid "Play/Pause"
+#~ msgstr "播放/暂停"
+
+#~ msgid "starts/pauses video playback"
+#~ msgstr "开始/暂停播放视频"
+
+#~ msgid "Backward"
+#~ msgstr "后退"
+
+#~ msgid "jumps n sec back"
+#~ msgstr "跳至后 n 秒"
+
+#~ msgid "Forward"
+#~ msgstr "前进"
+
+#~ msgid "jumps n sec forward"
+#~ msgstr "跳至前 n 秒"
+
+#~ msgid "Faster"
+#~ msgstr "加速"
+
+#~ msgid "faster playback"
+#~ msgstr "加速播放"
+
+#~ msgid "Slower"
+#~ msgstr "慢速"
+
+#~ msgid "slower playback"
+#~ msgstr "慢速播放"
+
+#~ msgid "Jump To"
+#~ msgstr "跳至"
+
+#~ msgid "jumps to the entered gps time"
+#~ msgstr "跳至输入的 gps 时刻"
+
+#~ msgid "Jump to"
+#~ msgstr "跳至"
+
+#~ msgid "Loop"
+#~ msgstr "循环"
+
+#~ msgid "loops n sec around current position"
+#~ msgstr "在目前的地点循环播放 n 秒"
+
+#~ msgid "Keep centered"
+#~ msgstr "保持居中"
+
+#~ msgid "follows the video icon automaticly"
+#~ msgstr "自动跟随影片图标"
+
+#~ msgid "Subtitles"
+#~ msgstr "字幕"
+
+#~ msgid "Show subtitles in video"
+#~ msgstr "在视频中显示字幕"
+
+#~ msgid "Jump length"
+#~ msgstr "跳转长度"
+
+#~ msgid "Set the length of a jump"
+#~ msgstr "设定跳转的长度"
+
+#~ msgid "Jump in video for x ms"
+#~ msgstr "跳至 x 毫秒的影片"
+
+#~ msgid "Loop length"
+#~ msgstr "循环长度"
+
+#~ msgid "Set the length around a looppoint"
+#~ msgstr "设定循环点的长度"
+
+#~ msgid "no deinterlacing"
+#~ msgstr "没有非交错式"
 
 #~ msgid "Do not show again"
 #~ msgstr "以后不要再显示"
@@ -40608,11 +40649,11 @@ msgstr ""
 #~ msgid "Solve Conflicts"
 #~ msgstr "解决冲突"
 
+#~ msgid "Download primitives referring to one of the selected primitives"
+#~ msgstr "下载参照到已选取原型中之一的原型"
+
 #~ msgid "\"{0}\" is not closed and therefore cannot be joined."
 #~ msgstr "\"{0}\" 尚未封闭因此不能连结。"
-
-#~ msgid "Fix relations"
-#~ msgstr "修正关系"
 
 #~ msgid "Joined self-overlapping area"
 #~ msgstr "已连结自我重叠的区域"
@@ -40628,6 +40669,21 @@ msgstr ""
 
 #~ msgid "Please select at least two nodes to merge."
 #~ msgstr "请至少选取两个节点来合并"
+
+#~ msgid "Merge the currently selected primitives into another layer"
+#~ msgstr "将目前选取的原型合并到另一个图层"
+
+#~ msgid ""
+#~ "The copied data contains incomplete primitives.  When pasting the "
+#~ "incomplete primitives are removed.  Do you want to paste the data without "
+#~ "the incomplete primitives?"
+#~ msgstr ""
+#~ "复制的资料含有不完整的原型。当粘贴的时候不完整的原型会被移除。您确定要粘贴"
+#~ "含有不完整原型的数据吗？"
+
+#~ msgid "to {0} primitive"
+#~ msgid_plural "to {0} primtives"
+#~ msgstr[0] "到 {0} 个原型"
 
 #~ msgid "Click <strong>{0}</strong> to ignore."
 #~ msgstr "点击<strong>{0}</strong> 跳过。"
@@ -40673,11 +40729,27 @@ msgstr ""
 #~ "请编辑这个关系并删除掉这个循环相依性。"
 
 #~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>This conflict cannot be added.</html>"
+#~ msgstr ""
+#~ "<html>图层 \"{0}\" 已有冲突发生于原型<br> \"{1}\"。 <br>这个冲突不能被加"
+#~ "入。</html>"
+
+#~ msgid ""
+#~ "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict "
+#~ "for primitive ''{1}''."
+#~ msgstr "警告：图层 \"{0}\" 已不存在。不能删除原型 \"{1}\" 的冲突。"
+
+#~ msgid ""
 #~ "You are about to delete incomplete objects.<br>This will cause problems "
 #~ "because you don't see the real object.<br>Do you really want to delete?"
 #~ msgstr ""
 #~ "您即将删除不完整的对象。<br>这样会造成问题，因为您没有看到实际的对象。<br>"
 #~ "您确定要删除吗?"
+
+#~ msgid "Undelete {0} primitive"
+#~ msgid_plural "Undelete {0} primitives"
+#~ msgstr[0] "取消删除 {0} 个原型"
 
 #~ msgid "Error: Unexpected line ''{0}'' in bookmark list from server"
 #~ msgstr "错误：服务器的书签清单中有未预期的行 \"{0}\""
@@ -40769,6 +40841,15 @@ msgstr ""
 #~ msgid "The current value isn''ta valid tile index for the given zoom level"
 #~ msgstr "目前的数值在指定的缩放等级中是无法使用的拼贴索引"
 
+#~ msgid ""
+#~ "The following primitives could not be copied to the target "
+#~ "primitive<br>because they are deleted in the target dataset:"
+#~ msgstr ""
+#~ "下列原型无法复制到目标原型，<br>因为它们已经在目标数据组合中被删除了："
+
+#~ msgid "Merging deleted primitives failed"
+#~ msgstr "合并删除的原型失败"
+
 #~ msgid "List of elements in my dataset, ie the local dataset"
 #~ msgstr "我的数据组合里元件的清单，例如本地数据组合"
 
@@ -40852,6 +40933,9 @@ msgstr ""
 #~ "layer \"{0}\"."
 #~ msgstr[0] "<html>在目前编辑的图层 \"{0}\" 中没有选取的<br>对象可用。"
 
+#~ msgid "Zoom to the corresponding primitives in the current data layer"
+#~ msgstr "缩放到目前数据图层对应的原型"
+
 #~ msgid ""
 #~ "<html>The current value is not a valid user name.<br>Please enter an non-"
 #~ "empty user name.</html>"
@@ -40875,6 +40959,9 @@ msgstr ""
 #~ "<html>这个关系已经有一或多个成员参照到<br>原型 \"{0}\" <br><br>您确定要加"
 #~ "入另一个关系成员吗?</html>"
 
+#~ msgid "Multiple members referring to same primitive"
+#~ msgstr "多个成员参照到同一原型"
+
 #~ msgid ""
 #~ "<html>You are trying to add a relation to itself.<br><br>This creates "
 #~ "circular references and is therefore discouraged.<br>Skipping relation "
@@ -40884,11 +40971,51 @@ msgstr ""
 #~ "做。<br>正跳过关系 \"{0}\"。</html>"
 
 #~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first member"
+#~ msgstr "将目前数据组合中选取的所有原型加到第一个成员之前"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last member"
+#~ msgstr "将目前数据组合中选取的所有原型加到最后一个成员之后"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first "
+#~ "selected member"
+#~ msgstr "将目前数据组合中选取的所有原型加到第一个选取的成员之前"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last "
+#~ "selected member"
+#~ msgstr "将目前数据组合中选取的所有原型加到最后一个选取的成员之后"
+
+#~ msgid "Remove all members referring to one of the selected primitives"
+#~ msgstr "删除所有参照到选取原型其中之一的成员"
+
+#~ msgid ""
+#~ "Select relation members which refer to primitives in the current selection"
+#~ msgstr "选取参照到目前选取范围的关系成员"
+
+#~ msgid ""
+#~ "Select relation members which refer to {0} primitives in the current "
+#~ "selection"
+#~ msgstr "选取参照到目前选取范围{0} 原型的关系成员"
+
+#~ msgid "Select primitives for selected relation members"
+#~ msgstr "选择已选取关系成员的原型"
+
+#~ msgid ""
 #~ "<html>Layer \"{0}\" already has a conflict for primitive<br>\"{1}\"."
 #~ "<br>Please resolve this conflict first, then try again.</html>"
 #~ msgstr ""
 #~ "<html>图层 \"{0}\" 已经有冲突于原型<br> \"{1}\"。 <br>请先调解这个冲突，然"
 #~ "后再试一次。</html>"
+
+#~ msgid "You are setting an empty role on {0} primitive."
+#~ msgid_plural "You are setting an empty role on {0} primitives."
+#~ msgstr[0] "您正在设定{0} 个原型的空白角色。"
+
+#~ msgid "This is equal to deleting the roles of these primitives."
+#~ msgstr "这样等同删除这些原型的角色。"
 
 #~ msgid "Click do download the currently selected area"
 #~ msgstr "点击以下载目前选取的区域"
@@ -41001,6 +41128,9 @@ msgstr ""
 #~ "this primitive and retrying to upload."
 #~ msgstr ""
 #~ "警告：原型 \"{0}\" 已在服务器上删除了。正跳过这个原型并尝试重新上传。"
+
+#~ msgid "Preparing primitives to upload ..."
+#~ msgstr "正在准备要上传的原型 ..."
 
 #~ msgid ""
 #~ "Warning: object \"{0}\" is already deleted on the server. Skipping this "
@@ -41158,6 +41288,11 @@ msgstr ""
 #~ "Error: Connection to proxy \"{0}\" for URI \"{1}\" failed. Exception was: "
 #~ "{2}"
 #~ msgstr "错误：以代理服务器 \"{0}\" 连接到 URI \"{1}\" 失败。例外为：{2}"
+
+#~ msgid ""
+#~ "Server replied with response code 404, retrying with an individual "
+#~ "request for each primitive."
+#~ msgstr "服务器传回代码 404，以每个原型个别要求的方式重试。"
 
 #~ msgid "Malformed sentences: "
 #~ msgstr "格式不良的段落： "
@@ -41635,6 +41770,27 @@ msgstr ""
 #~ msgstr "<html>子关系<br>{0}<br>已在服务器中删除。它已无法载入"
 
 #~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>Please resolve this conflict first, then try again.</html>"
+#~ msgstr ""
+#~ "<html>图层 \"{0}\" 已经有冲突于原型<br>\"{1}\"。<br>请先调解这个冲突，然后"
+#~ "再试一次。</html>\""
+
+#~ msgid ""
+#~ "<html>This relation already has one or more members referring to<br>the "
+#~ "primitive ''{0}''<br><br>Do you really want to add another relation "
+#~ "member?</html>"
+#~ msgstr ""
+#~ "<html>这个关系已经有一或多个成员参照到<br>原型 \"{0}\"<br><br>您确定要加入"
+#~ "另一个关系成员吗?</html>"
+
+#~ msgid ""
+#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
+#~ "this primitive and retrying to upload."
+#~ msgstr ""
+#~ "警告：原型 \"{0}\" 已在服务器上删除了。正跳过这个原型并尝试重新上传。"
+
+#~ msgid ""
 #~ "Warning: failed to parse Mappaint styles from ''{0}''. Exception was: {1}"
 #~ msgstr "警告：从 \"{0}\" 解析 Mappaint 样式失败。例外为：{1}"
 
@@ -41661,6 +41817,9 @@ msgstr ""
 #~ msgstr ""
 #~ "拖曳可移动对象;按Shift 加入选择区域(Ctrl 可切换);Shift-Ctrl 可旋转选取;或"
 #~ "改变选择区域"
+
+#~ msgid "Select primitives submitted by this user"
+#~ msgstr "选择由这个用户提交的原型"
 
 #~ msgid ""
 #~ "<html><p class=\"warning-header\">Help content for help topic missing</"
@@ -41754,6 +41913,17 @@ msgstr ""
 #~ msgid "Only up to two areas can be joined at the moment."
 #~ msgstr "目前只能连接两个区域。"
 
+#~ msgid ""
+#~ "WARNING: unexpected format of API base URL. Redirection to info or "
+#~ "history page for OSM primitive will probably fail. API base URL is: "
+#~ "''{0}''"
+#~ msgstr ""
+#~ "警告：不是期望中的 API 基础 URL 格式。重定向至 OSM 主网站的信息或历史记录"
+#~ "页面可能会失败。API 基础 URL为: ''{0}''"
+
+#~ msgid "Download and show the history of the selected primitives"
+#~ msgstr "下载并显示选取原型的历史记录"
+
 #~ msgid "With kiosk"
 #~ msgstr "有售货亭"
 
@@ -41842,6 +42012,11 @@ msgstr ""
 
 #~ msgid "replaced by {0} plugin"
 #~ msgstr "被 {0} 插件替换"
+
+#~ msgid ""
+#~ "Zoom to the primitives in the content of this changeset in the current "
+#~ "data layer"
+#~ msgstr "缩放到目前数据图层这个修改集合的内容的原型"
 
 #~ msgid "Copy Selected Default(s)"
 #~ msgstr "复制选取的预设值"

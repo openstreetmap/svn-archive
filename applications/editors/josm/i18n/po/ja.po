@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-20 22:11+0100\n"
+"POT-Creation-Date: 2011-04-03 18:52+0200\n"
 "PO-Revision-Date: 2011-03-10 01:08+0000\n"
 "Last-Translator: ribbon <Unknown>\n"
 "Language-Team: Japanese <tr@openstreetmap.jp>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-03-20 17:21+0000\n"
-"X-Generator: Launchpad (build 12617)\n"
+"X-Launchpad-Export-Date: 2011-04-03 16:24+0000\n"
+"X-Generator: Launchpad (build 12710)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -166,7 +166,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:227
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:675
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:266
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:470
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -314,13 +314,11 @@ msgid "About JOSM..."
 msgstr "JOSMについて"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:44
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "WARNING: unexpected format of API base URL. Redirection to info or history "
 "page for OSM object will probably fail. API base URL is: ''{0}''"
 msgstr ""
-"警告: 予想外のAPI ベースURLのフォーマット。OSM プリミティブの情報や履歴のペー"
-"ジにリダイレクトすると、おそらく失敗します。API ベース URL は \"{0}\" です。"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:63
 #, java-format
@@ -358,7 +356,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
 #: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
@@ -395,7 +393,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1285
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:284
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:649
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:415
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -824,6 +822,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:103
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:84
 msgid "Create multipolygon"
 msgstr "マルチポリゴンを作成"
 
@@ -851,7 +851,7 @@ msgstr "少なくともウェイを一つ選択しなければなりません"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:322
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1055
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:757
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:508
@@ -872,8 +872,8 @@ msgstr "選択したオブジェクトを削除します"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:214
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:223
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:210
@@ -933,6 +933,7 @@ msgid "Select if the data should be downloaded into a new layer"
 msgstr "新しいレイヤーにデータをダウンロードするなら選択"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:47
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr "リファラーをダウンロード"
 
@@ -986,10 +987,8 @@ msgid "Download parent ways/relations..."
 msgstr "親のウェイ/リレーションをダウンロード..."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:29
-#, fuzzy
 msgid "Download objects referring to one of the selected objects"
 msgstr ""
-"選択したプリミティブの一つを参照しているプリミティブをダウンロードします。"
 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:22
@@ -1146,20 +1145,15 @@ msgstr ""
 "してください。"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:165
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Easting"
-msgstr "横座標値"
+#, fuzzy
+msgid "Offset: "
+msgstr "オフセット:"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Northing"
-msgstr "縦座標値"
-
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 msgid "Bookmark name: "
 msgstr "ブックマーク名: "
 
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:228
 msgid "Offset bookmark already exists. Overwrite?"
 msgstr "同名のブックマークが既に存在します。上書きしますか？"
 
@@ -1477,9 +1471,8 @@ msgid "Merge selection"
 msgstr "選択を結合"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeSelectionAction.java:22
-#, fuzzy
 msgid "Merge the currently selected objects into another layer"
-msgstr "選択したプリミティブを他のレイヤーに結合"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:35
@@ -1749,14 +1742,11 @@ msgid "Paste without incomplete members"
 msgstr "不完全な数字なしで貼り付け"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:156
-#, fuzzy
 msgid ""
 "The copied data contains incomplete objects.  When pasting the incomplete "
 "objects are removed.  Do you want to paste the data without the incomplete "
 "objects?"
 msgstr ""
-"コピーしたデータは不完全なプリミティブを含んでいます。貼り付けると不完全なプ"
-"リミティブが削除されます。データを不完全なプリミティブ抜きで貼り付けますか？"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:36
@@ -1776,10 +1766,11 @@ msgid_plural "Pasting {0} tags"
 msgstr[0] "{0} 個のタグを追加しています"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:256
-#, fuzzy, java-format
+#, java-format
 msgid "to {0} object"
 msgid_plural "to {0} objects"
-msgstr[0] "{0} 個のオブジェクトを削除"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:25
 msgid "Preferences..."
@@ -3463,13 +3454,11 @@ msgid "Change relation member role for {0} {1}"
 msgstr "リレーションのメンバー{0}のロールを {1} に変更"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:30
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>This "
 "conflict cannot be added.</html>"
 msgstr ""
-"<html>レイヤー ''{0}'' は、既にプリミティブ<br>''{1}''<br>で、競合していま"
-"す。この競合は加えることができません。</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:36
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1191
@@ -3477,13 +3466,11 @@ msgid "Double conflict"
 msgstr "二重の競合"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:52
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict for "
 "object ''{1}''."
 msgstr ""
-"警告: レイヤー ''{0}'' は既に存在しません。元の ''{1}'' への競合は取り除けま"
-"せん。"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:67
 #, java-format
@@ -3687,10 +3674,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
-#, fuzzy, java-format
+#, java-format
 msgid "Undelete {0} object"
 msgid_plural "Undelete {0} objects"
-msgstr[0] "{0} 個のオブジェクトを削除"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:38
 #, java-format
@@ -4731,6 +4719,7 @@ msgid "Relation is empty"
 msgstr "リレーションは空です"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:565
 msgid "<empty>"
 msgstr "<empty>"
 
@@ -6032,6 +6021,8 @@ msgstr "位置"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:392
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:21
 msgid "Role"
 msgstr "役割"
@@ -6233,18 +6224,14 @@ msgid "{0} more..."
 msgstr "{0} さらに..."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:325
-#, fuzzy
 msgid ""
 "The following objects could not be copied to the target object<br>because "
 "they are deleted in the target dataset:"
 msgstr ""
-"以下のプリミティブは、対象となるプリミティブにコピーできません。<br>これは先"
-"方のデータセットが削除されているためです:"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:335
-#, fuzzy
 msgid "Merging deleted objects failed"
-msgstr "削除されたプリミティブの併合に失敗"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:628
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:652
@@ -6692,7 +6679,6 @@ msgstr "適用"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:166
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:308
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
 msgid "none"
 msgstr "なし"
 
@@ -6999,7 +6985,6 @@ msgstr "全指示のリストを開く（取り消しバッファ）"
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:126
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:188
 #, java-format
@@ -7407,7 +7392,7 @@ msgid "Save a copy of this Style to file and add it to the list"
 msgstr "このスタイルのコピーをファイルに保存し、一覧に追加します"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:474
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:207
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:223
 msgid "Reloading style sources"
 msgstr ""
 
@@ -7485,6 +7470,9 @@ msgid "Delete the selected relation"
 msgstr "選択したリレーションを削除"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:359
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:344
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:109
 msgid "Create a new relation"
 msgstr "新規リレーション作成"
 
@@ -7502,6 +7490,7 @@ msgid "Select the members of all selected relations"
 msgstr "全ての選択済リレーションのメンバーを選択"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:463
+#: ../plugins/relcontext/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "メンバーを選択"
 
@@ -7561,11 +7550,13 @@ msgstr "選択されたリレーション用にリレーションエディタを
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:452
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1158
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "関連リストから選択"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:453
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1159
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "リレーション一覧のリレーションを選択。"
 
@@ -7627,9 +7618,8 @@ msgid_plural "{0} Authors"
 msgstr[0] "{0}人の作者"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:181
-#, fuzzy
 msgid "Select objects submitted by this user"
-msgstr "このユーザが登録したプリミティブを選択"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:213
 msgid "Launches a browser with information about the user"
@@ -7919,9 +7909,8 @@ msgid "Show history"
 msgstr "履歴を表示"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
-#, fuzzy
 msgid "Download and show the history of the selected objects"
-msgstr "選択したプリミティブの履歴をダウンロードして表示"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -7956,9 +7945,8 @@ msgid "Zoom to in layer"
 msgstr "レイヤにズーム"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:379
-#, fuzzy
 msgid "Zoom to the corresponding objects in the current data layer"
-msgstr "現在のデータレイヤ中の対応するプリミティブにズーム"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:393
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:429
@@ -8863,6 +8851,7 @@ msgstr "ID"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:333
 #: build/specialmessages.java:68 build/trans_presets.java:115
 #: build/trans_presets.java:153 build/trans_presets.java:195
 #: build/trans_presets.java:235 build/trans_presets.java:256
@@ -9090,12 +9079,10 @@ msgstr ""
 "\"<br>にありません。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:417
-#, fuzzy
 msgid ""
 "Zoom to the objects in the content of this changeset in the current data "
 "layer"
 msgstr ""
-"現在のデータレイヤー中のこの変更セットのコンテンツ内のプリミティブにズーム"
 
 #. parent for dialog is Main.parent
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetHeaderDownloadTask.java:112
@@ -9485,6 +9472,8 @@ msgstr "空の値でタグを削除します。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:639
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:151
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:112
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:327
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:629
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:215
 msgid "<different>"
 msgstr "<差異あり>"
@@ -9529,6 +9518,7 @@ msgstr "選択したオブジェクトのプロパティ"
 
 #. setting up the membership table
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "メンバー"
 
@@ -9582,14 +9572,17 @@ msgid "Go to OSM wiki for tag help (F1)"
 msgstr "タグのヘルプについて、OSM wiki を表示します(F1)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1154
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "リレーションを選択"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1155
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "メインの選択肢から条件を選んでください"
 
@@ -9720,20 +9713,16 @@ msgid "Ignore them, leave relation as is"
 msgstr "無視し、リレーションはそのまま"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
 "object ''{0}''<br><br>Do you really want to add another relation member?</"
 "html>"
 msgstr ""
-"<html>このリレーションには既にひとつ以上の<br>プリミティブ ''{0}'' <br>を参照"
-"しているメンバーがあります。<br>本当に他のリレーションメンバーを追加します"
-"か？</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:681
-#, fuzzy
 msgid "Multiple members referring to same object."
-msgstr "複数のメンバーが同じプリミティブを参照しています"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:699
 #, java-format
@@ -9746,39 +9735,28 @@ msgstr ""
 "起こすので薦められません。<br>リレーション ''{0}'' をスキップします。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:740
-#, fuzzy
 msgid "Add all objects selected in the current dataset before the first member"
 msgstr ""
-"現在のデータセット内で選択された全プリミティブを最初のメンバーの前に追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:766
-#, fuzzy
 msgid "Add all objects selected in the current dataset after the last member"
 msgstr ""
-"現在のデータセット内で選択された全プリミティブを最後のメンバーの後に追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset before the first selected "
 "member"
 msgstr ""
-"現在のデータセット内で選択された全プリミティブを最初に選択されたメンバーの前"
-"に追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset after the last selected "
 "member"
 msgstr ""
-"現在のデータセット内で選択された全プリミティブを最後に選択されたメンバーの後"
-"に追加"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:859
-#, fuzzy
 msgid "Remove all members referring to one of the selected objects"
-msgstr "選択されたプリミティブのひとつを参照している全てのメンバーを削除"
+msgstr ""
 
 #. putValue(NAME, tr("Remove Selected"));
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:862
@@ -9787,21 +9765,18 @@ msgstr "リレーション編集画面: 削除が選択されました"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:896
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:908
-#, fuzzy
 msgid "Select relation members which refer to objects in the current selection"
-msgstr "現在の選択の中でプリミティブを参照しているリレーションメンバーを選択"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Select relation members which refer to {0} objects in the current selection"
 msgstr ""
-"現在の選択の中で {0} プリミティブを参照しているリレーションメンバーを選択"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
-#, fuzzy
 msgid "Select objects for selected relation members"
-msgstr "選択されたリレーションメンバーのプリミティブを選択"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:950
 msgid "Sort the relation members"
@@ -9951,15 +9926,15 @@ msgid "Apply Role"
 msgstr "ロールを適用"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1383
-#, fuzzy, java-format
+#, java-format
 msgid "You are setting an empty role on {0} object."
 msgid_plural "You are setting an empty role on {0} objects."
-msgstr[0] "{0} プリミティブに空のロールを設定しています。"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1386
-#, fuzzy
 msgid "This is equal to deleting the roles of these objects."
-msgstr "これはこれらのプリミティブのロールを削除することと同じです"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1388
 msgid "Do you really want to apply the new role?"
@@ -10334,6 +10309,7 @@ msgstr "ネームサーバに問合せ中 ..."
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:441
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:98
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:30
 #: build/specialmessages.java:82 build/trans_presets.java:457
 #: build/trans_presets.java:753 build/trans_presets.java:762
@@ -10877,11 +10853,11 @@ msgid "Select to close the changeset after the next upload"
 msgstr "次回アップロード後に閉じる「変更セット」を選択"
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:309
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:302
 msgid "Load the list of your open changesets from the server"
 msgstr "自分の開いた変更セットのリストをサーバからロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:327
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:320
 msgid "Close the currently selected open changeset"
 msgstr "選択済みの開かれた変更セットを閉じる"
 
@@ -11424,9 +11400,8 @@ msgstr ""
 "トをスキップしてもう一度アップロードします。"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:108
-#, fuzzy
 msgid "Preparing objects to upload ..."
-msgstr "プリミティブアップロード準備中"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:44
 msgid "Objects are uploaded to a <strong>new changeset</strong>."
@@ -12667,12 +12642,12 @@ msgid "{0} was found to be GPS tagged."
 msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] "GPSタグが必要なものが {0}見つかりました。"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:646
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "ディスクから画像ファイルを削除"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:649
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -12681,7 +12656,7 @@ msgstr ""
 "<html><h3> ファイル {0} をディスクから削除しますか？<p>イメージファイルは永久"
 "に失われます。</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:674
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "画像ファイルが削除できません。"
 
@@ -12872,7 +12847,7 @@ msgstr "(URLは： "
 msgid "Error displaying URL"
 msgstr "URL を表示する際にエラー"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:175
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:191
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/mapcss/MapCSSStyleSource.java:55
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/xml/XmlStyleSource.java:77
 #, java-format
@@ -12880,7 +12855,7 @@ msgid ""
 "Warning: failed to load Mappaint styles from ''{0}''. Exception was: {1}"
 msgstr "警告： Mappaintスタイルを\"{0}\"から読み込めません。発生した例外は {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:236
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
 #, java-format
 msgid "loading style ''{0}''..."
 msgstr "スタイル \"{0}\" を読み込み中..."
@@ -14314,6 +14289,7 @@ msgstr "選択済みのエントリ:"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:461
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:754
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1020
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:316
 msgid "New"
 msgstr "新規"
@@ -14372,6 +14348,14 @@ msgstr "EULAライセンスに対する不正なURL: {0}"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
 msgid "Projection"
 msgstr "投影法"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Easting"
+msgstr "横座標値"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Northing"
+msgstr "縦座標値"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -16134,13 +16118,10 @@ msgid "Fetching a package of relations from ''{0}''"
 msgstr "''{0}'' からリレーションのパッケージを取得中"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:423
-#, fuzzy
 msgid ""
 "Server replied with response code 404, retrying with an individual request "
 "for each object."
 msgstr ""
-"サーバがレスポンスコード404を返しました、各プリミティブの個別リクエストで最試"
-"行中"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:449
 #, java-format
@@ -21085,7 +21066,7 @@ msgstr ""
 "<html>この件を本当に''完了''としてマークしますか？<br><br>コメントを追加でき"
 "ます:</html>"
 
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:94
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:95
 msgid "Close: "
 msgstr "クローズ: "
 
@@ -21816,15 +21797,123 @@ msgstr "トラック"
 msgid "Waypoints"
 msgstr "ウェイポイント"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:36
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
 #, fuzzy
-msgid "Open Relation Editor"
-msgstr "関連の編集者:{0}"
+msgid "Relation Toolbox"
+msgstr "関連"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:37
-msgid "Opens advanced relation/multipolygon editor panel"
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
+msgid "Open relation/multipolygon editor panel"
 msgstr ""
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:403
+#, fuzzy
+msgid "Specify role"
+msgstr "エリアを簡素化"
+
+#. Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:478
+#, fuzzy, java-format
+msgid "Change relation member roles to {0}"
+msgstr "リレーションのメンバー{0}のロールを {1} に変更"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:499
+#, fuzzy
+msgid "Change multipolygon creation settings"
+msgstr "マルチポリゴンのリレーションにスタイルがありません"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:540
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#, fuzzy
+msgid "Enter role for selected members"
+msgstr "選択されたメンバーにロールをセット"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#, fuzzy, java-format
+msgid "Relation Toolbox: {0}"
+msgstr "リレーション: {0}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:566
+#, fuzzy
+msgid "another..."
+msgstr "貼り付け ..."
+
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:34
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#, fuzzy
+msgid "Add/remove members from the chosen relation"
+msgstr "このリレーションメンバーをこのリレーションから除きます。"
+
+#: ../plugins/relcontext/src/relcontext/actions/ClearChosenRelationAction.java:19
+#, fuzzy
+msgid "Clear the chosen relation"
+msgstr "新規関連作成"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:31
+#, fuzzy
+msgid "Create a multipolygon from selected objects"
+msgstr "選ばれた3つのノードから円形を作成します。"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:322
+#, fuzzy
+msgid "Enter admin level and name for the border relation:"
+msgstr "場所の名称を入力してください。"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:326
+#, fuzzy
+msgid "Admin level"
+msgstr "ズームレベル"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
+#, fuzzy
+msgid "Create a relation from selected objects"
+msgstr "選ばれた3つのノードから円形を作成します。"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:91
+#, fuzzy
+msgid "Choose a type for the relation:"
+msgstr "キーの有効期限を選択:"
+
+#: ../plugins/relcontext/src/relcontext/actions/DeleteChosenRelationAction.java:17
+#, fuzzy
+msgid "Delete relation"
+msgstr "リレーションを削除"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadChosenRelationAction.java:31
+#, fuzzy
+msgid "Download incomplete members for the chosen relation"
+msgstr "選択されたリレーションの不完全なメンバーをダウンロード"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:33
+#, fuzzy
+msgid "Download referrers for the the chosen relation and its members"
+msgstr "選択済リレーションの全メンバーをダウンロード"
+
+#: ../plugins/relcontext/src/relcontext/actions/EditChosenRelationAction.java:25
+#, fuzzy
+msgid "Open relation editor for the chosen relation"
+msgstr "選択したリレーションの編集画面を開く"
+
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:29
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:53
+#, fuzzy
+msgid "Find a relation"
+msgstr "リレーションの修正"
+
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:24
+#, fuzzy
+msgid "Open relation wiki page"
+msgstr "typeのないリレーション"
+
+#: ../plugins/relcontext/src/relcontext/actions/SortAndFixAction.java:23
+#, fuzzy
+msgid "Fix roles of the chosen relation members"
+msgstr "リレーションメンバーをソート"
 
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
@@ -23877,170 +23966,25 @@ msgstr "リレーションを外す"
 msgid "Unglued Relations"
 msgstr "分離されたリレーション"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:83
-#, java-format
-msgid "{0} {1}% of GPS track"
-msgstr "GPSトラック中 {0} {1}%"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:105
-msgid "Shows current position in the video"
-msgstr "ビデオ中の現在位置を表示"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Import Video"
-msgstr "ビデオをインポート"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Sync a video against this GPS track"
-msgstr "このGPSトラックに対してビデオを同期"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "Remove Video"
-msgstr "ビデオを削除"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "removes current video from layer"
-msgstr "現在のビデオをレイヤから削除"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:135
-msgid "Play/Pause"
-msgstr "再生/一時停止"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-msgid "starts/pauses video playback"
-msgstr "ビデオ再生を開始/停止"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:142
-msgid "Backward"
-msgstr "戻る"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-msgid "jumps n sec back"
-msgstr "n 秒前にジャンプ"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
-msgid "Forward"
-msgstr "進む"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-msgid "jumps n sec forward"
-msgstr "n 秒先にジャンプ"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:156
-msgid "Faster"
-msgstr "もっと速く"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-msgid "faster playback"
-msgstr "早送り"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:164
-msgid "Slower"
-msgstr "遅く"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-msgid "slower playback"
-msgstr "スロー再生"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "Jump To"
-msgstr "行へジャンプ"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "jumps to the entered gps time"
-msgstr "入力されたGPS時刻にジャンプ"
-
-#. TODO here we should show the GPS time range to the user
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:191
-msgid "Jump to"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "Loop"
-msgstr "繰り返し"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "loops n sec around current position"
-msgstr "現在地周辺をn 秒ループ"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:211
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:147
-msgid "loop"
-msgstr "ループ"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "Keep centered"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "follows the video icon automaticly"
-msgstr "ビデオアイコンを自動追跡"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Subtitles"
-msgstr "字幕"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Show subtitles in video"
-msgstr "ビデオに字幕を表示"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-msgid "Jump length"
-msgstr "ジャンプ長"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-msgid "Set the length of a jump"
-msgstr "ジャンプの長さをセット"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Jump in video for x ms"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Loop length"
-msgstr "ループ長"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-msgid "Set the length around a looppoint"
-msgstr "ループポイント近辺の長さをセット"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
-msgid "no deinterlacing"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:271
-msgid "deinterlacing using line doubling"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:279
-msgid "deinterlacing using linear interpolation"
-msgstr ""
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:126
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:54
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:79
 msgid "Unable to find JNA Java library!"
 msgstr "JNA Java libraryが見つかりません！"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:130
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:58
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:83
 msgid "Unable to find native libvlc library!"
 msgstr "ネイティブlibvlc libraryが見つかりません！"
 
-#. TODO we need Icons instead
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:144
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:152
 msgid "play"
 msgstr "再生"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:148
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:155
+msgid "loop"
+msgstr "ループ"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:156
 msgid "mute"
 msgstr "ミュート"
 
@@ -24863,23 +24807,28 @@ msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr "このプラグインは公共輸送ルートのマッピングと編集を簡素化します。"
 
-#. Plugin restart
+#. Plugin reltoolbox
 #: build/trans_plugins.java:95
+msgid "Relation and multipolygon creating and editing panel."
+msgstr ""
+
+#. Plugin restart
+#: build/trans_plugins.java:97
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Plugin for reverting changesets"
 msgstr "変更セットを元に戻すプラグイン"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -24887,7 +24836,7 @@ msgid ""
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -24897,17 +24846,17 @@ msgstr ""
 "ん"
 
 #. Plugin routing
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Provides routing capabilities."
 msgstr "ルーティング能力の提供"
 
 #. Plugin scripting
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Allows to run scripts in JOSM."
 msgstr ""
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -24915,22 +24864,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:111 build/trans_plugins.java:113
+#: build/trans_plugins.java:113 build/trans_plugins.java:115
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "openSeaMap用の海図を作成・編集"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "現在のGPS位置上にマーカー/ノードの追加を許可"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "表形式でタグ編集のダイアログ・ボックスを提供"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -24941,59 +24890,59 @@ msgstr ""
 "ファイルも同様にスタンドアロンとして起動できます。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Make terraced houses out of single blocks."
 msgstr "1つのブロックからテラスハウスを作成する"
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr ""
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr ""
 
 #. Plugin trustosm
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid "Plugin to digital sign OSM-Data"
 msgstr ""
 
 #. Plugin turnlanes
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
 msgstr ""
 
 #. Plugin undelete
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Allows undeleting object from OSM database"
 msgstr "OSMデータベースからの削除取消を許可"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid "Several utilities that make your life easier."
 msgstr ""
 
 #. Plugin videomapping
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:141
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -25001,7 +24950,7 @@ msgid ""
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:143
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -25010,22 +24959,22 @@ msgstr ""
 "す。まだ開発初期段階ですので、バグを含んでいるかもしれません。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:145
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "長い相互接続されたウェイのセットに沿って簡単にダウンロード"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:147
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr ""
 
 #. Plugin wayselector
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:149
 msgid "Select a sequence of non-branching connected ways"
 msgstr ""
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:151
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -40763,32 +40712,96 @@ msgstr ""
 msgid "Estonia Multi (Maaamet)"
 msgstr ""
 
-#. tms:http://fugro.openstreetmap.dk/fugro2005
+#. tms:http://tile.openstreetmap.dk/fugro2005
 #: build/trans_wms.java:35
 msgid "Fugro (Denmark)"
 msgstr ""
 
-#~ msgid "to {0} primitive"
-#~ msgid_plural "to {0} primtives"
-#~ msgstr[0] "{0} 個のプリミティブまで"
+#. tms:http://tile.openstreetmap.dk/stevns/2009
+#: build/trans_wms.java:36
+msgid "Stevns (Denmark)"
+msgstr ""
 
-#~ msgid "Undelete {0} primitive"
-#~ msgid_plural "Undelete {0} primitives"
-#~ msgstr[0] "{0} 個のプリミティブの削除を取消す"
+#~ msgid "{0} {1}% of GPS track"
+#~ msgstr "GPSトラック中 {0} {1}%"
 
-#~ msgid ""
-#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
-#~ "<br>Please resolve this conflict first, then try again.</html>"
-#~ msgstr ""
-#~ "<html>レイヤー ''{0}''には既にプリミティブ ''{1}'' <br>に競合があります。"
-#~ "<br>最初にこの競合を解決してからやり直してください。</html>"
+#~ msgid "Shows current position in the video"
+#~ msgstr "ビデオ中の現在位置を表示"
 
-#~ msgid ""
-#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
-#~ "this primitive and retrying to upload."
-#~ msgstr ""
-#~ "警告: プリミティブの ''{0}''  は既にサーバから削除されています。このプリミ"
-#~ "ティブをスキップし、アップロードを再試行します。"
+#~ msgid "Import Video"
+#~ msgstr "ビデオをインポート"
+
+#~ msgid "Sync a video against this GPS track"
+#~ msgstr "このGPSトラックに対してビデオを同期"
+
+#~ msgid "Remove Video"
+#~ msgstr "ビデオを削除"
+
+#~ msgid "removes current video from layer"
+#~ msgstr "現在のビデオをレイヤから削除"
+
+#~ msgid "Play/Pause"
+#~ msgstr "再生/一時停止"
+
+#~ msgid "starts/pauses video playback"
+#~ msgstr "ビデオ再生を開始/停止"
+
+#~ msgid "Backward"
+#~ msgstr "戻る"
+
+#~ msgid "jumps n sec back"
+#~ msgstr "n 秒前にジャンプ"
+
+#~ msgid "Forward"
+#~ msgstr "進む"
+
+#~ msgid "jumps n sec forward"
+#~ msgstr "n 秒先にジャンプ"
+
+#~ msgid "Faster"
+#~ msgstr "もっと速く"
+
+#~ msgid "faster playback"
+#~ msgstr "早送り"
+
+#~ msgid "Slower"
+#~ msgstr "遅く"
+
+#~ msgid "slower playback"
+#~ msgstr "スロー再生"
+
+#~ msgid "Jump To"
+#~ msgstr "行へジャンプ"
+
+#~ msgid "jumps to the entered gps time"
+#~ msgstr "入力されたGPS時刻にジャンプ"
+
+#~ msgid "Loop"
+#~ msgstr "繰り返し"
+
+#~ msgid "loops n sec around current position"
+#~ msgstr "現在地周辺をn 秒ループ"
+
+#~ msgid "follows the video icon automaticly"
+#~ msgstr "ビデオアイコンを自動追跡"
+
+#~ msgid "Subtitles"
+#~ msgstr "字幕"
+
+#~ msgid "Show subtitles in video"
+#~ msgstr "ビデオに字幕を表示"
+
+#~ msgid "Jump length"
+#~ msgstr "ジャンプ長"
+
+#~ msgid "Set the length of a jump"
+#~ msgstr "ジャンプの長さをセット"
+
+#~ msgid "Loop length"
+#~ msgstr "ループ長"
+
+#~ msgid "Set the length around a looppoint"
+#~ msgstr "ループポイント近辺の長さをセット"
 
 #~ msgid "Move"
 #~ msgstr "移動"
@@ -40822,9 +40835,6 @@ msgstr ""
 
 #~ msgid "Select a bookmark first."
 #~ msgstr "最初にブックマークを選択してください、"
-
-#~ msgid "Please enter a name for the location."
-#~ msgstr "場所の名称を入力してください。"
 
 #~ msgid "Please enter the desired coordinates first."
 #~ msgstr "最初に目的の座標を入力してください。"
@@ -41026,9 +41036,6 @@ msgstr ""
 
 #~ msgid "zoom"
 #~ msgstr "ズーム"
-
-#~ msgid "zoom level"
-#~ msgstr "ズームレベル"
 
 #~ msgid "There are unsaved changes. Delete the layer anwyay?"
 #~ msgstr "保存していない変更があります。それでもレイヤーを削除しますか？"
@@ -41605,9 +41612,6 @@ msgstr ""
 #~ msgid "An empty value deletes the key."
 #~ msgstr "空の値でキーを削除。"
 
-#~ msgid "Create new relation"
-#~ msgstr "新規関連作成"
-
 #~ msgid "Edit new relation"
 #~ msgstr "新規関連編集"
 
@@ -42113,6 +42117,9 @@ msgstr ""
 #~ msgid "Move Down"
 #~ msgstr "下に移動"
 
+#~ msgid "Relation Editor: {0}"
+#~ msgstr "関連の編集者:{0}"
+
 #~ msgid "Solve Conflict"
 #~ msgstr "矛盾の解決"
 
@@ -42433,9 +42440,6 @@ msgstr ""
 #~ msgid "Only up to two areas can be joined at the moment."
 #~ msgstr "現在最大2つまでのエリアのみ結合できます。"
 
-#~ msgid "Fix relations"
-#~ msgstr "リレーションの修正"
-
 #~ msgid "Closed Way"
 #~ msgstr "閉じたウェイ"
 
@@ -42642,6 +42646,10 @@ msgstr ""
 
 #~ msgid "Download referrers..."
 #~ msgstr "参照をダウンロード..."
+
+#~ msgid "Download primitives referring to one of the selected primitives"
+#~ msgstr ""
+#~ "選択したプリミティブの一つを参照しているプリミティブをダウンロードします。"
 
 #~ msgid ""
 #~ "Warning: automatically truncating value of tag ''{0}'' on deleted "
@@ -42931,6 +42939,30 @@ msgstr ""
 #~ msgstr "ローカルデータセットから物理的に削除"
 
 #~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first "
+#~ "selected member"
+#~ msgstr ""
+#~ "現在のデータセット内で選択された全プリミティブを最初に選択されたメンバーの"
+#~ "前に追加"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last "
+#~ "selected member"
+#~ msgstr ""
+#~ "現在のデータセット内で選択された全プリミティブを最後に選択されたメンバーの"
+#~ "後に追加"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first member"
+#~ msgstr ""
+#~ "現在のデータセット内で選択された全プリミティブを最初のメンバーの前に追加"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last member"
+#~ msgstr ""
+#~ "現在のデータセット内で選択された全プリミティブを最後のメンバーの後に追加"
+
+#~ msgid ""
 #~ "Enable to upload all changes in one request, disable to use one request "
 #~ "per changed primitive"
 #~ msgstr ""
@@ -43151,6 +43183,9 @@ msgstr ""
 #~ msgid "index out of bounds Got {0}"
 #~ msgstr "範囲外のインデックス。{0} を受け取りました"
 
+#~ msgid "Select primitives submitted by this user"
+#~ msgstr "このユーザが登録したプリミティブを選択"
+
 #~ msgid ""
 #~ "<html>The child relation<br>{0}<br>is deleted on the server. It can't be "
 #~ "loaded"
@@ -43160,6 +43195,33 @@ msgstr ""
 
 #~ msgid "Conflicts in data"
 #~ msgstr "データ内の競合"
+
+#~ msgid "Multiple members referring to same primitive"
+#~ msgstr "複数のメンバーが同じプリミティブを参照しています"
+
+#~ msgid ""
+#~ "Select relation members which refer to primitives in the current selection"
+#~ msgstr ""
+#~ "現在の選択の中でプリミティブを参照しているリレーションメンバーを選択"
+
+#~ msgid ""
+#~ "Select relation members which refer to {0} primitives in the current "
+#~ "selection"
+#~ msgstr ""
+#~ "現在の選択の中で {0} プリミティブを参照しているリレーションメンバーを選択"
+
+#~ msgid "Select primitives for selected relation members"
+#~ msgstr "選択されたリレーションメンバーのプリミティブを選択"
+
+#~ msgid "Remove all members referring to one of the selected primitives"
+#~ msgstr "選択されたプリミティブのひとつを参照している全てのメンバーを削除"
+
+#~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>Please resolve this conflict first, then try again.</html>"
+#~ msgstr ""
+#~ "<html>レイヤー ''{0}''には既にプリミティブ ''{1}'' <br>に競合があります。"
+#~ "<br>最初にこの競合を解決してからやり直してください。</html>"
 
 #~ msgid "Delete the currently selected tags"
 #~ msgstr "現在選択されているタグを削除"
@@ -43205,6 +43267,9 @@ msgstr ""
 
 #~ msgid "Save and Delete"
 #~ msgstr "保存と削除"
+
+#~ msgid "Preparing primitives to upload ..."
+#~ msgstr "プリミティブアップロード準備中"
 
 #~ msgid "({0}/{1}) Loading parents of primitive {2}"
 #~ msgstr "({0}/{1}) プリミティブ {2} の親要素をロード中"
@@ -43384,6 +43449,15 @@ msgstr ""
 #~ msgstr ""
 #~ "<html>URL の作成に失敗しました。エンコーディング ''{0}''は<br>このシステム"
 #~ "にはありません。</html>"
+
+#~ msgid ""
+#~ "<html>This relation already has one or more members referring to<br>the "
+#~ "primitive ''{0}''<br><br>Do you really want to add another relation "
+#~ "member?</html>"
+#~ msgstr ""
+#~ "<html>このリレーションには既にひとつ以上の<br>プリミティブ ''{0}'' <br>を"
+#~ "参照しているメンバーがあります。<br>本当に他のリレーションメンバーを追加し"
+#~ "ますか？</html>"
 
 #~ msgid "history not initialized yet. Failed to set current primitive."
 #~ msgstr "履歴がまだ初期化されていません。現在のプリミティブのセットに失敗。"
@@ -44001,6 +44075,13 @@ msgstr ""
 #~ "id {0} のプリミティブはローカルデータセットにはありません。プリミティブタ"
 #~ "イプ不明"
 
+#~ msgid ""
+#~ "Server replied with response code 404, retrying with an individual "
+#~ "request for each primitive."
+#~ msgstr ""
+#~ "サーバがレスポンスコード404を返しました、各プリミティブの個別リクエストで"
+#~ "最試行中"
+
 #~ msgid "Preference ''{0}'' missing. Can't initialize OsmApi."
 #~ msgstr "設定 ''{0}'' がみつかりません。OsmApi を初期化できません"
 
@@ -44072,6 +44153,15 @@ msgstr ""
 
 #~ msgid "Unexpected column index. Got {0}."
 #~ msgstr "予期せぬカラムインデックス。入力値: {0}"
+
+#~ msgid ""
+#~ "WARNING: unexpected format of API base URL. Redirection to info or "
+#~ "history page for OSM primitive will probably fail. API base URL is: "
+#~ "''{0}''"
+#~ msgstr ""
+#~ "警告: 予想外のAPI ベースURLのフォーマット。OSM プリミティブの情報や履歴の"
+#~ "ページにリダイレクトすると、おそらく失敗します。API ベース URL は \"{0}\" "
+#~ "です。"
 
 #~ msgid ""
 #~ "Tag collection can't be applied to a primitive because there are keys "
@@ -44399,6 +44489,13 @@ msgstr ""
 #~ msgstr ""
 #~ "コマンド ''{0}'' をアンドゥできません。なぜならレイヤ ''{1}'' はもうないか"
 #~ "らです。"
+
+#~ msgid ""
+#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
+#~ "this primitive and retrying to upload."
+#~ msgstr ""
+#~ "警告: プリミティブの ''{0}''  は既にサーバから削除されています。このプリミ"
+#~ "ティブをスキップし、アップロードを再試行します。"
 
 #~ msgid "Purged {0} objects"
 #~ msgstr "{0} 個のオブジェクトを取り除いた。"
@@ -44846,6 +44943,9 @@ msgstr ""
 #~ msgid "Errors during Download"
 #~ msgstr "ダウンロード中にエラーが発生しました"
 
+#~ msgid "Download and show the history of the selected primitives"
+#~ msgstr "選択したプリミティブの履歴をダウンロードして表示"
+
 #~ msgid "<b>Baker Street</b> - 'Baker' and 'Street' in any key or name."
 #~ msgstr ""
 #~ "<b>ベイカー ストリート</b> - 任意のキーや名前に 'ベイカー' と 'ストリー"
@@ -44956,6 +45056,9 @@ msgstr ""
 #~ msgstr ""
 #~ "パラメータ ''{0}'' には整数値 > 0 が期待されています、入力値 ''{1}''"
 
+#~ msgid "Zoom to the corresponding primitives in the current data layer"
+#~ msgstr "現在のデータレイヤ中の対応するプリミティブにズーム"
+
 #~ msgid ""
 #~ "Warning: Failed to retrieve user infos for the current JOSM user. "
 #~ "Exceptions was: {0}"
@@ -44966,6 +45069,20 @@ msgstr ""
 
 #~ msgid "\"{0}\" is not closed and therefore cannot be joined."
 #~ msgstr "\"{0}\" は閉じられていないので連結できません。"
+
+#~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>This conflict cannot be added.</html>"
+#~ msgstr ""
+#~ "<html>レイヤー ''{0}'' は、既にプリミティブ<br>''{1}''<br>で、競合していま"
+#~ "す。この競合は加えることができません。</html>"
+
+#~ msgid ""
+#~ "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict "
+#~ "for primitive ''{1}''."
+#~ msgstr ""
+#~ "警告: レイヤー ''{0}'' は既に存在しません。元の ''{1}'' への競合は取り除け"
+#~ "ません。"
 
 #~ msgid "The \"from\" way does not start or end at a \"via\" node."
 #~ msgstr "\"from\"ウェイは、\"via\"ノードで開始または終了していません。"
@@ -44994,6 +45111,10 @@ msgstr ""
 #~ "Primitive {0} cannot be added to the relation because it was deleted."
 #~ msgstr "プリミティブ {0} は削除済のためリレーションに追加できません。"
 
+#~ msgid "You are setting an empty role on {0} primitive."
+#~ msgid_plural "You are setting an empty role on {0} primitives."
+#~ msgstr[0] "{0} プリミティブに空のロールを設定しています。"
+
 #~ msgid ""
 #~ "<html>You have sucessfully retrieved an OAuth Access Token from the OSM "
 #~ "website. Click on <strong>{0}</strong> to accept the token. JOSM will use "
@@ -45005,6 +45126,9 @@ msgstr ""
 
 #~ msgid "Node {0} cannot be added to the way because it was deleted"
 #~ msgstr "ノード {0} は削除済みなのでウェイに追加できません"
+
+#~ msgid "This is equal to deleting the roles of these primitives."
+#~ msgstr "これはこれらのプリミティブのロールを削除することと同じです"
 
 #~ msgid "GPS point"
 #~ msgstr "GPS ポイント"
@@ -45056,6 +45180,9 @@ msgstr ""
 #~ msgid "Use all their elements"
 #~ msgstr "全て相手の要素を使う"
 
+#~ msgid "Merging deleted primitives failed"
+#~ msgstr "削除されたプリミティブの併合に失敗"
+
 #~ msgid ""
 #~ "<html>Neither <strong>{0}</strong> nor <strong>{1}</strong> is enabled."
 #~ "<br>Please chose to either download OSM data, or GPX data, or both.</html>"
@@ -45087,6 +45214,12 @@ msgstr ""
 #~ "警告: \"\"{0}\"からのMappaintスタイルの解釈に失敗しました。発生した例外は"
 #~ "{1}:"
 
+#~ msgid ""
+#~ "Zoom to the primitives in the content of this changeset in the current "
+#~ "data layer"
+#~ msgstr ""
+#~ "現在のデータレイヤー中のこの変更セットのコンテンツ内のプリミティブにズーム"
+
 #~ msgid "Missing merge target for object with id {0}"
 #~ msgstr "ID {0} のオブジェクトの結合対象が見つかりません"
 
@@ -45101,6 +45234,13 @@ msgstr ""
 
 #~ msgid "UTM20 North Geodesic system"
 #~ msgstr "UTM２０北測地システム"
+
+#~ msgid ""
+#~ "The following primitives could not be copied to the target "
+#~ "primitive<br>because they are deleted in the target dataset:"
+#~ msgstr ""
+#~ "以下のプリミティブは、対象となるプリミティブにコピーできません。<br>これは"
+#~ "先方のデータセットが削除されているためです:"
 
 #~ msgid "Splits the way"
 #~ msgstr "ウェイを分割"
@@ -45131,8 +45271,28 @@ msgstr ""
 #~ "{0} 件の競合が未解決です。<br><br>競合リストダイアログをオープンして手動で"
 #~ "解決してください。"
 
+#~ msgid "to {0} primitive"
+#~ msgid_plural "to {0} primtives"
+#~ msgstr[0] "{0} 個のプリミティブまで"
+
+#~ msgid "Undelete {0} primitive"
+#~ msgid_plural "Undelete {0} primitives"
+#~ msgstr[0] "{0} 個のプリミティブの削除を取消す"
+
+#~ msgid "Merge the currently selected primitives into another layer"
+#~ msgstr "選択したプリミティブを他のレイヤーに結合"
+
 #~ msgid "Click do download the currently selected area"
 #~ msgstr "クリックして選択している範囲をダウンロード"
+
+#~ msgid ""
+#~ "The copied data contains incomplete primitives.  When pasting the "
+#~ "incomplete primitives are removed.  Do you want to paste the data without "
+#~ "the incomplete primitives?"
+#~ msgstr ""
+#~ "コピーしたデータは不完全なプリミティブを含んでいます。貼り付けると不完全な"
+#~ "プリミティブが削除されます。データを不完全なプリミティブ抜きで貼り付けます"
+#~ "か？"
 
 #~ msgid "Set width of building"
 #~ msgstr "ビルの幅をセット"

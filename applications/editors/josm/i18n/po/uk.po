@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-20 22:11+0100\n"
-"PO-Revision-Date: 2011-03-19 15:57+0000\n"
+"POT-Creation-Date: 2011-04-03 18:52+0200\n"
+"PO-Revision-Date: 2011-04-01 18:21+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-03-20 17:13+0000\n"
-"X-Generator: Launchpad (build 12617)\n"
+"X-Launchpad-Export-Date: 2011-04-03 16:33+0000\n"
+"X-Generator: Launchpad (build 12710)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -163,7 +163,7 @@ msgstr "Продовжити, спробувати у будь-якому вип
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:227
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:675
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:266
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:470
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -311,14 +311,14 @@ msgid "About JOSM..."
 msgstr "Про JOSM…"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:44
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "WARNING: unexpected format of API base URL. Redirection to info or history "
 "page for OSM object will probably fail. API base URL is: ''{0}''"
 msgstr ""
-"ПОПЕРЕДЖЕННЯ: неочікуваний формат базової адреси API. Перенаправлення на "
-"сторінку з інформацією або з історією OSM-елементів не можливо. Базова "
-"адреса API: \"{0}\""
+"ПОПЕРЕДЖЕННЯ: неочікуваний формат посилання до API. Перенаправлення на "
+"сторінку з інформацією або з історією об’єкта OSM можливо не вдалось. "
+"Основне посилання до API: ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:63
 #, java-format
@@ -357,7 +357,7 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
 #: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
@@ -394,7 +394,7 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1285
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:284
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:649
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:415
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -823,6 +823,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:103
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:84
 msgid "Create multipolygon"
 msgstr "Створити мультіполігон"
 
@@ -850,7 +852,7 @@ msgstr "Ви повинні виділити, принаймні, одну лі�
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:322
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1055
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:757
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:508
@@ -871,8 +873,8 @@ msgstr "Вилучити виділені об’єкти."
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:214
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:223
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:210
@@ -932,6 +934,7 @@ msgid "Select if the data should be downloaded into a new layer"
 msgstr "Позначте, якщо дані повинні бути завантажені у новий шар"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:47
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr "Завантажити дані, що посилаються на поточний об’єкт"
 
@@ -987,9 +990,8 @@ msgid "Download parent ways/relations..."
 msgstr "Завантажити батьківські лінії/зв’язки…"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:29
-#, fuzzy
 msgid "Download objects referring to one of the selected objects"
-msgstr "Завантажити елементи, які посилаються на один із виділених елементів"
+msgstr "Завантаження об’єктів, що посилаються на один зі виділених об’єктів"
 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:22
@@ -1146,20 +1148,15 @@ msgstr ""
 "Якщо ви бажаєте зберегти положення як закладку, введіть її ім’я нижче."
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:165
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Easting"
-msgstr "Східніще"
+#, fuzzy
+msgid "Offset: "
+msgstr "Зміщення:"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Northing"
-msgstr "Північніше"
-
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 msgid "Bookmark name: "
 msgstr "Ім'я закладки: "
 
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:228
 msgid "Offset bookmark already exists. Overwrite?"
 msgstr "Закладка для положення вже існує. Переписати?"
 
@@ -1480,9 +1477,8 @@ msgid "Merge selection"
 msgstr "Об’єднати виділене"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeSelectionAction.java:22
-#, fuzzy
 msgid "Merge the currently selected objects into another layer"
-msgstr "Об’єднати виділені об’єкти в інший шар"
+msgstr "Злити виділені об'єкти у новому шарі"
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:35
@@ -1769,14 +1765,13 @@ msgid "Paste without incomplete members"
 msgstr "Вставити без неповних членів"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:156
-#, fuzzy
 msgid ""
 "The copied data contains incomplete objects.  When pasting the incomplete "
 "objects are removed.  Do you want to paste the data without the incomplete "
 "objects?"
 msgstr ""
-"Скопійовані дані містять неповні елементи. Після вставки неповні елементи "
-"будуть вилучені. Чи бажаєте ви вставити дані без неповних елементів?"
+"Скопійовані дані містять неповні об’єкти. Під час вставки вони будуть "
+"знехтувані.Бажаєте продовжити вставку без неповних об’єктів?"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:36
@@ -1797,12 +1792,12 @@ msgstr[1] "Вставляється {0} теґи"
 msgstr[2] "Вставляється {0} теґів"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:256
-#, fuzzy, java-format
+#, java-format
 msgid "to {0} object"
 msgid_plural "to {0} objects"
-msgstr[0] "Вилучити {0} об’єкт"
-msgstr[1] "Вилучити {0} об’єкти"
-msgstr[2] "Вилучити {0} об’єктів"
+msgstr[0] "у {0} об’єкт"
+msgstr[1] "у {0} об’єкти"
+msgstr[2] "у {0} об’єктів"
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:25
 msgid "Preferences..."
@@ -3543,13 +3538,13 @@ msgid "Change relation member role for {0} {1}"
 msgstr "Змінити роль члена зв’язку для {0} {1}"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:30
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>This "
 "conflict cannot be added.</html>"
 msgstr ""
-"<html>В шарі ''{0}'' вже присутній конфлікт для елемента<br>''{1}''."
-"<br>Неможливо додати цей конфлікт.</html>"
+"<html>Шар ''{0}'' вже містить конфлікт для об’єкта<br>''{1}''.<br>Цей "
+"конфлікт не можливо додати.</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:36
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1191
@@ -3557,13 +3552,13 @@ msgid "Double conflict"
 msgstr "Подвійний конфлікт"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:52
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict for "
 "object ''{1}''."
 msgstr ""
-"Попередження: Шар''{0}''більше не існує. Неможливо вилучити конфлікт для "
-"елемента ''{1}''."
+"Попередження: Шару ''{0}'' більше не існує. Не можливо вилучити конфлікт для "
+"об’єкту ''{1}''."
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:67
 #, java-format
@@ -3781,12 +3776,12 @@ msgstr[1] "Трансформувати {0} точки"
 msgstr[2] "Трансформувати {0} точок"
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
-#, fuzzy, java-format
+#, java-format
 msgid "Undelete {0} object"
 msgid_plural "Undelete {0} objects"
-msgstr[0] "Вилучити {0} об’єкт"
-msgstr[1] "Вилучити {0} об’єкти"
-msgstr[2] "Вилучити {0} об’єктів"
+msgstr[0] "Відновити {0} об’єкт"
+msgstr[1] "Відновити {0} об’єкти"
+msgstr[2] "Відновити {0} об’єктів"
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:38
 #, java-format
@@ -4849,6 +4844,7 @@ msgid "Relation is empty"
 msgstr "Зв’язок порожній"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:565
 msgid "<empty>"
 msgstr "<порожньо>"
 
@@ -6172,6 +6168,8 @@ msgstr "Поз."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:392
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:21
 msgid "Role"
 msgstr "Роль"
@@ -6378,18 +6376,16 @@ msgid "{0} more..."
 msgstr "Ще {0} …"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:325
-#, fuzzy
 msgid ""
 "The following objects could not be copied to the target object<br>because "
 "they are deleted in the target dataset:"
 msgstr ""
-"Наступні елементи не можливо скопіювати у вказаний елемент,<br> тому що вони "
-"вилучені із набору даних вказаного елемента:"
+"Наступні об’єкти неможливо скопіювати до цільового об’єкту <br>тому що вони "
+"вилучені у цільовому наборі даних:"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:335
-#, fuzzy
 msgid "Merging deleted objects failed"
-msgstr "Збій під час об’єднання вилучених елеменів"
+msgstr "Збій злиття вилучених об’єктів"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:628
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:652
@@ -6855,7 +6851,6 @@ msgstr "Застосувати"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:166
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:308
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
 msgid "none"
 msgstr "нічого"
 
@@ -7173,7 +7168,6 @@ msgstr "Відкрити список всіх команд (буфер відм
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:126
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:188
 #, java-format
@@ -7386,7 +7380,7 @@ msgstr "<p><b>{0}</b> об’єктів приховано"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:385
 #, java-format
 msgid "<b>{0}</b> objects disabled"
-msgstr "<b>{0}</b> об’єктів пошкоджено"
+msgstr "<b>{0}</b> об’єктів відключено"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:388
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
@@ -7607,7 +7601,7 @@ msgid "Save a copy of this Style to file and add it to the list"
 msgstr "Зберегти копію цього Стилю у файл та додати його у список"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:474
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:207
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:223
 msgid "Reloading style sources"
 msgstr "Перезавантаження джерел стилів"
 
@@ -7685,6 +7679,9 @@ msgid "Delete the selected relation"
 msgstr "Вилучити вибраний зв’язок"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:359
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:344
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:109
 msgid "Create a new relation"
 msgstr "Створити новий зв’язок"
 
@@ -7702,6 +7699,7 @@ msgid "Select the members of all selected relations"
 msgstr "Виділити членів всіх вибраних зв’язків"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:463
+#: ../plugins/relcontext/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "Вибрати членів"
 
@@ -7761,11 +7759,13 @@ msgstr "Запустити редактор зв’язків для виділ�
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:452
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1158
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "Вибрати зі списку зв’язків"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:453
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1159
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "Вибрати зв’язок зі списку зв’язків"
 
@@ -7829,9 +7829,8 @@ msgstr[1] "{0} Автори"
 msgstr[2] "{0} Авторів"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:181
-#, fuzzy
 msgid "Select objects submitted by this user"
-msgstr "Вибрати елементи, створені цим користувачем"
+msgstr "Виділити об’єкти надіслані цим користувачем"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:213
 msgid "Launches a browser with information about the user"
@@ -8125,9 +8124,8 @@ msgid "Show history"
 msgstr "Показати історію"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
-#, fuzzy
 msgid "Download and show the history of the selected objects"
-msgstr "Завантажити та показати історію вибраних елементів"
+msgstr "Завантажити та показати історію виділених об’єктів"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -8168,9 +8166,8 @@ msgid "Zoom to in layer"
 msgstr "Збільшити в шарі"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:379
-#, fuzzy
 msgid "Zoom to the corresponding objects in the current data layer"
-msgstr "Наблизитися до відповідних елементів у поточному шарі даних"
+msgstr "Наблизитись до відповідних об’єктів у поточному шарі"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:393
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:429
@@ -9075,6 +9072,7 @@ msgstr "Ідентифікатор"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:333
 #: build/specialmessages.java:68 build/trans_presets.java:115
 #: build/trans_presets.java:153 build/trans_presets.java:195
 #: build/trans_presets.java:235 build/trans_presets.java:256
@@ -9304,12 +9302,12 @@ msgstr ""
 "редагується ''{1}''.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:417
-#, fuzzy
 msgid ""
 "Zoom to the objects in the content of this changeset in the current data "
 "layer"
 msgstr ""
-"Наблизитися до елементів вмісту цього набору змін у поточному шарі даних"
+"Наблизитись до відповідних об’єктів, що містяться в наборі змін у поточному "
+"шарі"
 
 #. parent for dialog is Main.parent
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetHeaderDownloadTask.java:112
@@ -9717,6 +9715,8 @@ msgstr "Пусте значення вилучає теґ"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:639
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:151
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:112
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:327
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:629
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:215
 msgid "<different>"
 msgstr "<інший>"
@@ -9765,6 +9765,7 @@ msgstr "Параметри обраних об’єктів."
 
 #. setting up the membership table
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "Член групи"
 
@@ -9818,14 +9819,17 @@ msgid "Go to OSM wiki for tag help (F1)"
 msgstr "Перейти до OSM-Вікі, щоб отримати довідку про теґ (F1)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
 msgstr "Запустити оглядач для огляду довідки по виділеному об’єкту"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1154
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "Вибрати зв’язок"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1155
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "Вибрати зв’язок із основного виділення"
 
@@ -9965,20 +9969,19 @@ msgid "Ignore them, leave relation as is"
 msgstr "Ігнорувати, залишити зв’язок як є"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
 "object ''{0}''<br><br>Do you really want to add another relation member?</"
 "html>"
 msgstr ""
-"<html>В цьому зв’язку вже є один чи декілька членів, що посилаються "
-"на<br>елемент ''{0}''<br><br>Ви дійсно хочете додати ще одного члена зв’язку?"
+"<html>Цей зв’язок вже містить один чи більше членів, які посилаються "
+"на<br>об’єкт ''{0}''<br><br>Ви дійсно хочете додати ще один член до зв’язку?"
 "</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:681
-#, fuzzy
 msgid "Multiple members referring to same object."
-msgstr "Кілька членів посилаються на один і той же елемент"
+msgstr "Кілька членів посилаються на один той самий об’єкт."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:699
 #, java-format
@@ -9992,40 +9995,34 @@ msgstr ""
 "html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:740
-#, fuzzy
 msgid "Add all objects selected in the current dataset before the first member"
 msgstr ""
-"Додати всі елементи, виділені в поточному наборі даних, перед першим членом"
+"Додати усі виділені у поточному наборі даних об’єкти перед першим членом"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:766
-#, fuzzy
 msgid "Add all objects selected in the current dataset after the last member"
 msgstr ""
-"Додати всі елементи, виділені в поточному наборі даних, після останнього "
-"члена"
+"Додати усі виділені у поточному наборі даних об’єкти після останнього члена"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset before the first selected "
 "member"
 msgstr ""
-"Додати всі елементи, виділені в поточному наборі даних, перед першим "
-"виділеним членом"
+"Додати усі виділені у поточному наборі даних об’єкти перед першим виділеним "
+"членом"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset after the last selected "
 "member"
 msgstr ""
-"Додати всі елементи, виділені в поточному наборі даних, після останнього "
+"Додати усі виділені у поточному наборі даних об’єкти після останнього "
 "виділеного члена"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:859
-#, fuzzy
 msgid "Remove all members referring to one of the selected objects"
-msgstr "Вилучити всіх членів, що відносяться до любого з виділених елементів"
+msgstr "Вилучити усіх членів, що посилаються на один із виділених об’єктів"
 
 #. putValue(NAME, tr("Remove Selected"));
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:862
@@ -10034,22 +10031,21 @@ msgstr "Редактор зв’язків: Вилучити виділене"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:896
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:908
-#, fuzzy
 msgid "Select relation members which refer to objects in the current selection"
-msgstr "Виділити членів зв’язку, які відносяться до вибраних елементів"
+msgstr ""
+"Виділити членів зв’язку, які посилаються на об’єкти у поточному виділенні"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Select relation members which refer to {0} objects in the current selection"
 msgstr ""
-"Виділити членів зв’язку, які відносяться до {0} елем. серед виділених "
-"елементів"
+"Виділити членів зв’язку, які посилаються на {0} об’єкт(и) у поточному "
+"виділенні"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
-#, fuzzy
 msgid "Select objects for selected relation members"
-msgstr "Виділити елементи для виділених членів зв’язку"
+msgstr "Виділити об’єкти для виділених членів зв’язку"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:950
 msgid "Sort the relation members"
@@ -10201,17 +10197,16 @@ msgid "Apply Role"
 msgstr "Застосувати роль"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1383
-#, fuzzy, java-format
+#, java-format
 msgid "You are setting an empty role on {0} object."
 msgid_plural "You are setting an empty role on {0} objects."
-msgstr[0] "Ви призначити пусту роль {0} елементу."
-msgstr[1] "Ви призначити пусту роль {0} елементам."
-msgstr[2] "Ви призначити пусту роль {0} елементам."
+msgstr[0] "Ви встановили порожню роль для {0} об’єкта."
+msgstr[1] "Ви встановили порожню роль для {0} об’єктів."
+msgstr[2] "Ви встановили порожню роль для {0} об’єктів."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1386
-#, fuzzy
 msgid "This is equal to deleting the roles of these objects."
-msgstr "Це дорівнює вилученю ролі цих елементів."
+msgstr "Це рівносильно вилученню ролей для цих об’єктів."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1388
 msgid "Do you really want to apply the new role?"
@@ -10595,6 +10590,7 @@ msgstr "Запит до сервера імен…"
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:441
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:98
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:30
 #: build/specialmessages.java:82 build/trans_presets.java:457
 #: build/trans_presets.java:753 build/trans_presets.java:762
@@ -11152,11 +11148,11 @@ msgstr ""
 "Вибрати, який набір змін треба закрити, після наступного надсилання даних"
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:309
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:302
 msgid "Load the list of your open changesets from the server"
 msgstr "Завантажте список ваших відкритих наборів змін з сервера"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:327
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:320
 msgid "Close the currently selected open changeset"
 msgstr "Закрити вибраний поточний відкритий набір змін"
 
@@ -11736,9 +11732,8 @@ msgstr ""
 "надіслані на сервер, але без цього об’єкта."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:108
-#, fuzzy
 msgid "Preparing objects to upload ..."
-msgstr "Підготовка елементів до надсилання на сервер…"
+msgstr "Підготування об’єктів до надсилання…"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:44
 msgid "Objects are uploaded to a <strong>new changeset</strong>."
@@ -13043,12 +13038,12 @@ msgstr[0] "{0} знайдений, з GPS позначками."
 msgstr[1] "{0} знайдені, з GPS позначками."
 msgstr[2] "{0} знайдено, з GPS позначками."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:646
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "Вилучити зображення з диску"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:649
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -13057,7 +13052,7 @@ msgstr ""
 "<html><h3>Вилучити файл {0} з диску?<p>Файл зображення буде остаточно "
 "втрачено!</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:674
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "Не можливо вилучити файл зображення"
 
@@ -13255,7 +13250,7 @@ msgstr "(посилання: "
 msgid "Error displaying URL"
 msgstr "Помилка показу URL"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:175
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:191
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/mapcss/MapCSSStyleSource.java:55
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/xml/XmlStyleSource.java:77
 #, java-format
@@ -13264,7 +13259,7 @@ msgid ""
 msgstr ""
 "Попередження: не вдалося завантажити стилі Mappaint з ''{0}''. Помилка: {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:236
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
 #, java-format
 msgid "loading style ''{0}''..."
 msgstr "завантаження стилю ''{0}''…"
@@ -14755,6 +14750,7 @@ msgstr "Обрані записи:"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:461
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:754
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1020
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:316
 msgid "New"
 msgstr "Створити"
@@ -14813,6 +14809,14 @@ msgstr "Спотворене посилання на ліцензію EULA: {0}"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
 msgid "Projection"
 msgstr "Проекція"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Easting"
+msgstr "Східніще"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Northing"
+msgstr "Північніше"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -16647,13 +16651,12 @@ msgid "Fetching a package of relations from ''{0}''"
 msgstr "Отримання пакету зв’язків з ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:423
-#, fuzzy
 msgid ""
 "Server replied with response code 404, retrying with an individual request "
 "for each object."
 msgstr ""
-"Сервер повідомив про помилку з кодом 404, повторити з індивідуальними "
-"запитами для кожного елемента."
+"Сервер відповів кодом 404, спробуйте надіслати об’єкти окремими "
+"індивідуальними запитами для кожного об’єкту."
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:449
 #, java-format
@@ -21795,7 +21798,7 @@ msgstr ""
 "<html>Дійсно відзначити цю проблему як \"вирішену\"?<br><br>Ви можете додати "
 "необов’язковий коментар:</html>"
 
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:94
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:95
 msgid "Close: "
 msgstr "Закрити: "
 
@@ -22535,15 +22538,124 @@ msgstr "Треки"
 msgid "Waypoints"
 msgstr "Маршрутні точки"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:36
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
 #, fuzzy
-msgid "Open Relation Editor"
-msgstr "Редактор зв’язків: Впорядкувати"
+msgid "Relation Toolbox"
+msgstr "Зв’язок"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:37
-msgid "Opens advanced relation/multipolygon editor panel"
-msgstr ""
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
+#, fuzzy
+msgid "Open relation/multipolygon editor panel"
+msgstr "Відкрити вдосконалену панель редагування зв’язків/мультиполігонів"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:403
+#, fuzzy
+msgid "Specify role"
+msgstr "Спростити ділянку"
+
+#. Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:478
+#, fuzzy, java-format
+msgid "Change relation member roles to {0}"
+msgstr "Змінити роль члена зв’язку для {0} {1}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:499
+#, fuzzy
+msgid "Change multipolygon creation settings"
+msgstr "Відсутній стиль у зв’язку мультиполігону"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:540
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#, fuzzy
+msgid "Enter role for selected members"
+msgstr "Встановити роль для виділених членів"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#, fuzzy, java-format
+msgid "Relation Toolbox: {0}"
+msgstr "Зв’язок: {0}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:566
+#, fuzzy
+msgid "another..."
+msgstr "Вставити…"
+
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:34
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#, fuzzy
+msgid "Add/remove members from the chosen relation"
+msgstr "Вилучити цього члена із зв’язку"
+
+#: ../plugins/relcontext/src/relcontext/actions/ClearChosenRelationAction.java:19
+#, fuzzy
+msgid "Clear the chosen relation"
+msgstr "Створити нове відношення (relation)"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:31
+#, fuzzy
+msgid "Create a multipolygon from selected objects"
+msgstr "Створити коло за трьома виділеним точкам"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:322
+#, fuzzy
+msgid "Enter admin level and name for the border relation:"
+msgstr "Будь-ласка, введіть назву місця"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:326
+#, fuzzy
+msgid "Admin level"
+msgstr "Адміністративний рівень"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
+#, fuzzy
+msgid "Create a relation from selected objects"
+msgstr "Створити коло за трьома виділеним точкам"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:91
+#, fuzzy
+msgid "Choose a type for the relation:"
+msgstr "Виберіть дату закінчення строку дії ключа:"
+
+#: ../plugins/relcontext/src/relcontext/actions/DeleteChosenRelationAction.java:17
+#, fuzzy
+msgid "Delete relation"
+msgstr "Вилучити зв’язки"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadChosenRelationAction.java:31
+#, fuzzy
+msgid "Download incomplete members for the chosen relation"
+msgstr "Завантажити з сервер неповних членів вибраних зв’язків"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:33
+#, fuzzy
+msgid "Download referrers for the the chosen relation and its members"
+msgstr "Завантажити з сервера всіх членів вибраних зв’язків"
+
+#: ../plugins/relcontext/src/relcontext/actions/EditChosenRelationAction.java:25
+#, fuzzy
+msgid "Open relation editor for the chosen relation"
+msgstr "Відкрити вибраний зв’язок в редакторі"
+
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:29
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:53
+#, fuzzy
+msgid "Find a relation"
+msgstr "Виправити зв’язки"
+
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:24
+#, fuzzy
+msgid "Open relation wiki page"
+msgstr "Відкрити редактор зв’язків"
+
+#: ../plugins/relcontext/src/relcontext/actions/SortAndFixAction.java:23
+#, fuzzy
+msgid "Fix roles of the chosen relation members"
+msgstr "Впорядкувати членів зв’язку"
 
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
@@ -23716,19 +23828,20 @@ msgstr "Створіть новий ключ для підписування"
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/TurnLanesDialog.java:31
 msgid "Edit turn relations and lane lengths for selected node."
 msgstr ""
-"Редагувати зв’язок на обмеження руху та довжину смуг для виділеної точки."
+"Редагувати зв’язок з напрямки руху по смугах та їх довжину для виділеної "
+"точки."
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/TurnLanesDialog.java:43
 msgid "Validate turn- and lane-length-relations for consistency."
-msgstr "Перевірка зв’язків на обмеження руху та довжину смуг на узгодженість."
+msgstr "Перевірка зв’язків з напрямками руху по смугах на узгодженість."
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/TurnLanesDialog.java:68
 msgid "Turn Lanes"
-msgstr "Смуги для повороту"
+msgstr "Напрямки руху по смугах"
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/TurnLanesDialog.java:68
 msgid "Edit turn lanes"
-msgstr "Редагувати смуги для повороту"
+msgstr "Редагувати напрямки руху по смугах"
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:30
 msgid "Quick-Fix"
@@ -24258,7 +24371,7 @@ msgid ""
 "restriction. If enabled, one can edit them in the Basic editor too. If "
 "disabled, editing of via-objects is possible in the Advanced Editor only."
 msgstr ""
-"Базовий редактор може додатково показати список елементи «через» у обмежені "
+"Базовий редактор може додатково показати список елементів «через» у обмежені "
 "на поворот. Якщо дозволено, їх також можливо редагувати у Базовому "
 "редакторі. Якщо ні, редагування елементів «через» можливо лише у Розширеному "
 "редакторі."
@@ -24718,170 +24831,25 @@ msgstr "Розділити Зв’язки"
 msgid "Unglued Relations"
 msgstr "Розділені Зв’язки"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:83
-#, java-format
-msgid "{0} {1}% of GPS track"
-msgstr "{0} {1}% трека GPS"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:105
-msgid "Shows current position in the video"
-msgstr "Показати поточне положення у відео-фрагменті"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Import Video"
-msgstr "Імпортувати відео"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Sync a video against this GPS track"
-msgstr "Синхронізувати відео з цим треком GPS"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "Remove Video"
-msgstr "Вилучити відео"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "removes current video from layer"
-msgstr "вилучити поточне відео із шару"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:135
-msgid "Play/Pause"
-msgstr "Пуск/Пауза"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-msgid "starts/pauses video playback"
-msgstr "починає/зупиняє відтворення відео"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:142
-msgid "Backward"
-msgstr "Назад"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-msgid "jumps n sec back"
-msgstr "перемотати на n сек назад"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
-msgid "Forward"
-msgstr "Вперед"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-msgid "jumps n sec forward"
-msgstr "перемотати на n сек вперед"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:156
-msgid "Faster"
-msgstr "Швидше"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-msgid "faster playback"
-msgstr "пришвидшене відтворення"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:164
-msgid "Slower"
-msgstr "Повільніше"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-msgid "slower playback"
-msgstr "повільне відтворення"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "Jump To"
-msgstr "Перейти до"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "jumps to the entered gps time"
-msgstr "перейти до введеного часу gps"
-
-#. TODO here we should show the GPS time range to the user
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:191
-msgid "Jump to"
-msgstr "Перейти до"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "Loop"
-msgstr "Повторювання"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "loops n sec around current position"
-msgstr "зациклювати n сек біля поточної позиції"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:211
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:147
-msgid "loop"
-msgstr "по кругу"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "Keep centered"
-msgstr "Утримувати в центрі"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "follows the video icon automaticly"
-msgstr "слідкувати за відео-позначкою автоматично"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Subtitles"
-msgstr "Субтитри"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Show subtitles in video"
-msgstr "Показувати субтитри у відео"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-msgid "Jump length"
-msgstr "довжина переходу"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-msgid "Set the length of a jump"
-msgstr "Встановити довжину переходу"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Jump in video for x ms"
-msgstr "переміщатись по відео на х мсек"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Loop length"
-msgstr "Довжина циклу"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-msgid "Set the length around a looppoint"
-msgstr "Встановити довжину циклу біля точки зациклювання"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
-msgid "no deinterlacing"
-msgstr "без деінтерленсінгу"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:271
-msgid "deinterlacing using line doubling"
-msgstr "деінтерленсінг з подвоєнням ліній"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:279
-msgid "deinterlacing using linear interpolation"
-msgstr "деінтерленсінгу з лінійною інтерполяцією"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:126
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:54
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:79
 msgid "Unable to find JNA Java library!"
 msgstr "Не можливо знайти JNA Java бібліотеку!"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:130
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:58
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:83
 msgid "Unable to find native libvlc library!"
 msgstr "Не можливо знайти бібліотеку libvlc"
 
-#. TODO we need Icons instead
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:144
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:152
 msgid "play"
 msgstr "відтворити"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:148
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:155
+msgid "loop"
+msgstr "по кругу"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:156
 msgid "mute"
 msgstr "вимкнути звук"
 
@@ -25728,23 +25696,28 @@ msgid ""
 msgstr ""
 "Цей втулок спрощує нанесення і редагування маршрутів громадського транспорту."
 
-#. Plugin restart
+#. Plugin reltoolbox
 #: build/trans_plugins.java:95
+msgid "Relation and multipolygon creating and editing panel."
+msgstr ""
+
+#. Plugin restart
+#: build/trans_plugins.java:97
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr "Додає в меню Файл рядок «Перезапустити JOSM»."
 
 #. Plugin reverter
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Plugin for reverting changesets"
 msgstr "Втулок для відміни наборів змін"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "Використовувати малюнок з rgis.spb.ru як прошарок"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -25755,7 +25728,7 @@ msgstr ""
 "Доступні заготовки: Німеччина."
 
 #. Plugin routes
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -25764,17 +25737,17 @@ msgstr ""
 "повинні бути визначені у файлі routes.xml у каталозі втулків"
 
 #. Plugin routing
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Provides routing capabilities."
 msgstr "Надає можливості маршрутизації."
 
 #. Plugin scripting
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Allows to run scripts in JOSM."
 msgstr "Дозволяє виконувати сценарії в JOSM."
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -25785,22 +25758,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:111 build/trans_plugins.java:113
+#: build/trans_plugins.java:113 build/trans_plugins.java:115
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "Створення та редагування морських мап для OpenSeaMap"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "Дозволяє додавати мітки/точки в поточній позиції GPS ."
 
 #. Plugin tageditor
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "Показує вікно для редагування теґів в табличному вигляді."
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -25811,17 +25784,17 @@ msgstr ""
 "також запустити JAR-файл як самостійний застосунок ."
 
 #. Plugin terracer
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Make terraced houses out of single blocks."
 msgstr "Зробити ряд будинків по вулиці з одного блоку."
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "Для створення та редагування навігаційних знаків для OpenSeaMap"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
@@ -25831,7 +25804,7 @@ msgstr ""
 "мапи."
 
 #. Plugin Tracer
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
@@ -25840,20 +25813,20 @@ msgstr ""
 "TracerServer (. NET або Mono)."
 
 #. Plugin trustosm
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid "Plugin to digital sign OSM-Data"
 msgstr "Втулок для накладення цифрового підпису на дані OSM"
 
 #. Plugin turnlanes
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 "Надає простий графічний інтерфейс для додавання, редагування та вилучення "
-"порядку проїзду по смугах."
+"правил руху по смугах."
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -25862,17 +25835,17 @@ msgstr ""
 "до бази даних OpenStreetMap."
 
 #. Plugin undelete
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Allows undeleting object from OSM database"
 msgstr "Дозволяє відновлювати об’єкти, вилучені з бази даних OSM"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid "Several utilities that make your life easier."
 msgstr "Кілька інструментів, що полегшать ваше життя."
 
 #. Plugin videomapping
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:141
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -25883,7 +25856,7 @@ msgstr ""
 "ідентифікації видимих об’єктів."
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:143
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -25892,22 +25865,22 @@ msgstr ""
 "Цей втулок поки ще вдосконалюється і може погано працювати."
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:145
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "Просте завантаження уздовж довгого набору взаємопов’язаних шляхів"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:147
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "Дозволяє пошук маршрутних точок імпортованих із файлу gpx."
 
 #. Plugin wayselector
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:149
 msgid "Select a sequence of non-branching connected ways"
 msgstr "Виділити послідовність з’єднаних ліній, що не розгалужуються"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:151
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -40954,7 +40927,7 @@ msgstr "чагарник"
 #. color heath
 #: build/trans_style.java:2880
 msgid "heath"
-msgstr "верес"
+msgstr "пустир"
 
 #. </rule>
 #.
@@ -41657,36 +41630,115 @@ msgstr "Орто мапа Естонії (Maaamet)"
 msgid "Estonia Multi (Maaamet)"
 msgstr "Мулти мапа Естонії (Maaamet)"
 
-#. tms:http://fugro.openstreetmap.dk/fugro2005
+#. tms:http://tile.openstreetmap.dk/fugro2005
 #: build/trans_wms.java:35
 msgid "Fugro (Denmark)"
 msgstr "Fugro (Данія)"
 
-#~ msgid "to {0} primitive"
-#~ msgid_plural "to {0} primtives"
-#~ msgstr[0] "для {0} елемента"
-#~ msgstr[1] "для {0} елементів"
-#~ msgstr[2] "для {0} елементів"
+#. tms:http://tile.openstreetmap.dk/stevns/2009
+#: build/trans_wms.java:36
+#, fuzzy
+msgid "Stevns (Denmark)"
+msgstr "Fugro (Данія)"
 
-#~ msgid "Undelete {0} primitive"
-#~ msgid_plural "Undelete {0} primitives"
-#~ msgstr[0] "Відновити {0} елемент"
-#~ msgstr[1] "Відновити {0} елементи"
-#~ msgstr[2] "Відновити {0} елементів"
+#~ msgid "{0} {1}% of GPS track"
+#~ msgstr "{0} {1}% трека GPS"
 
-#~ msgid ""
-#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
-#~ "<br>Please resolve this conflict first, then try again.</html>"
-#~ msgstr ""
-#~ "<html>Шар ''{0}'' має конфлікт для елементу<br>''{1}''.<br>Будь ласка "
-#~ "розв’яжіть конфлікти, а потім спробуйте ще раз.</html>"
+#~ msgid "Shows current position in the video"
+#~ msgstr "Показати поточне положення у відео-фрагменті"
 
-#~ msgid ""
-#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
-#~ "this primitive and retrying to upload."
-#~ msgstr ""
-#~ "Попередження: елемент ''{0}'' вже вилучено з сервера. Повторне надсилання "
-#~ "на сервер буде здійснено без цього елементу."
+#~ msgid "Import Video"
+#~ msgstr "Імпортувати відео"
+
+#~ msgid "Sync a video against this GPS track"
+#~ msgstr "Синхронізувати відео з цим треком GPS"
+
+#~ msgid "Remove Video"
+#~ msgstr "Вилучити відео"
+
+#~ msgid "removes current video from layer"
+#~ msgstr "вилучити поточне відео із шару"
+
+#~ msgid "Play/Pause"
+#~ msgstr "Пуск/Пауза"
+
+#~ msgid "starts/pauses video playback"
+#~ msgstr "починає/зупиняє відтворення відео"
+
+#~ msgid "Backward"
+#~ msgstr "Назад"
+
+#~ msgid "jumps n sec back"
+#~ msgstr "перемотати на n сек назад"
+
+#~ msgid "Forward"
+#~ msgstr "Вперед"
+
+#~ msgid "jumps n sec forward"
+#~ msgstr "перемотати на n сек вперед"
+
+#~ msgid "Faster"
+#~ msgstr "Швидше"
+
+#~ msgid "faster playback"
+#~ msgstr "пришвидшене відтворення"
+
+#~ msgid "Slower"
+#~ msgstr "Повільніше"
+
+#~ msgid "slower playback"
+#~ msgstr "повільне відтворення"
+
+#~ msgid "Jump To"
+#~ msgstr "Перейти до"
+
+#~ msgid "jumps to the entered gps time"
+#~ msgstr "перейти до введеного часу gps"
+
+#~ msgid "Jump to"
+#~ msgstr "Перейти до"
+
+#~ msgid "Loop"
+#~ msgstr "Повторювання"
+
+#~ msgid "loops n sec around current position"
+#~ msgstr "зациклювати n сек біля поточної позиції"
+
+#~ msgid "Keep centered"
+#~ msgstr "Утримувати в центрі"
+
+#~ msgid "follows the video icon automaticly"
+#~ msgstr "слідкувати за відео-позначкою автоматично"
+
+#~ msgid "Subtitles"
+#~ msgstr "Субтитри"
+
+#~ msgid "Show subtitles in video"
+#~ msgstr "Показувати субтитри у відео"
+
+#~ msgid "Jump length"
+#~ msgstr "довжина переходу"
+
+#~ msgid "Set the length of a jump"
+#~ msgstr "Встановити довжину переходу"
+
+#~ msgid "Jump in video for x ms"
+#~ msgstr "переміщатись по відео на х мсек"
+
+#~ msgid "Loop length"
+#~ msgstr "Довжина циклу"
+
+#~ msgid "Set the length around a looppoint"
+#~ msgstr "Встановити довжину циклу біля точки зациклювання"
+
+#~ msgid "no deinterlacing"
+#~ msgstr "без деінтерленсінгу"
+
+#~ msgid "deinterlacing using line doubling"
+#~ msgstr "деінтерленсінг з подвоєнням ліній"
+
+#~ msgid "deinterlacing using linear interpolation"
+#~ msgstr "деінтерленсінгу з лінійною інтерполяцією"
 
 #~ msgid "Do not show again"
 #~ msgstr "Не показувати знову"
@@ -41787,9 +41839,6 @@ msgstr "Fugro (Данія)"
 #~ msgid "zoom level"
 #~ msgstr "збільшення"
 
-#~ msgid "Please enter a name for the location."
-#~ msgstr "Будь-ласка, введіть назву місця"
-
 #~ msgid "Data Sources and Types"
 #~ msgstr "Джерела даних і Типи"
 
@@ -41839,9 +41888,6 @@ msgstr "Fugro (Данія)"
 
 #~ msgid "Occupied By"
 #~ msgstr "Зайнято"
-
-#~ msgid "Create new relation"
-#~ msgstr "Створити нове відношення (relation)"
 
 #~ msgid "Tags (empty value deletes tag)"
 #~ msgstr "Теги (порожнє значення знищує тег)"
@@ -42208,6 +42254,10 @@ msgstr "Fugro (Данія)"
 #~ msgid "Conflicts during download"
 #~ msgstr "Конфлікти під час завантаження"
 
+#~ msgid "Download primitives referring to one of the selected primitives"
+#~ msgstr ""
+#~ "Завантажити елементи, які посилаються на один із виділених елементів"
+
 #~ msgid "Expected instance of OsmDataLayer or GpxLayer. Got ''{0}''."
 #~ msgstr "Очікувався примірник  OsmDataLayer чи GpxLayer. Отримано \"{0}\"."
 
@@ -42236,11 +42286,14 @@ msgstr "Fugro (Данія)"
 #~ msgid "Create a new map."
 #~ msgstr "Створити нову мапу."
 
+#~ msgid "to {0} primitive"
+#~ msgid_plural "to {0} primtives"
+#~ msgstr[0] "для {0} елемента"
+#~ msgstr[1] "для {0} елементів"
+#~ msgstr[2] "для {0} елементів"
+
 #~ msgid "\"{0}\" is not closed and therefore cannot be joined."
 #~ msgstr "\"{0}\" не замкнена, і тому не може бути приєднана"
-
-#~ msgid "Fix relations"
-#~ msgstr "Виправити зв’язки"
 
 #~ msgid "Enter values for all conflicts."
 #~ msgstr "Введіть значення для всіх конфліктів."
@@ -42250,6 +42303,23 @@ msgstr "Fugro (Данія)"
 
 #~ msgid "Solve Conflicts"
 #~ msgstr "Розв’язати конфлікти"
+
+#~ msgid ""
+#~ "WARNING: unexpected format of API base URL. Redirection to info or "
+#~ "history page for OSM primitive will probably fail. API base URL is: "
+#~ "''{0}''"
+#~ msgstr ""
+#~ "ПОПЕРЕДЖЕННЯ: неочікуваний формат базової адреси API. Перенаправлення на "
+#~ "сторінку з інформацією або з історією OSM-елементів не можливо. Базова "
+#~ "адреса API: \"{0}\""
+
+#~ msgid ""
+#~ "The copied data contains incomplete primitives.  When pasting the "
+#~ "incomplete primitives are removed.  Do you want to paste the data without "
+#~ "the incomplete primitives?"
+#~ msgstr ""
+#~ "Скопійовані дані містять неповні елементи. Після вставки неповні елементи "
+#~ "будуть вилучені. Чи бажаєте ви вставити дані без неповних елементів?"
 
 #~ msgid "Style for inner way ''{0}'' equals multipolygon."
 #~ msgstr "Стиль внутрішньої лінії \"{0}\" такий же, як у мультиполігону."
@@ -42279,6 +42349,26 @@ msgstr "Fugro (Данія)"
 
 #~ msgid "Pattern Syntax Error: Pattern {0} in {1} is illegal!"
 #~ msgstr "Помилка синтаксису шаблону: Шаблон {0} в {1} неприпустимий!"
+
+#~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>This conflict cannot be added.</html>"
+#~ msgstr ""
+#~ "<html>В шарі ''{0}'' вже присутній конфлікт для елемента<br>''{1}''."
+#~ "<br>Неможливо додати цей конфлікт.</html>"
+
+#~ msgid ""
+#~ "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict "
+#~ "for primitive ''{1}''."
+#~ msgstr ""
+#~ "Попередження: Шар''{0}''більше не існує. Неможливо вилучити конфлікт для "
+#~ "елемента ''{1}''."
+
+#~ msgid "Undelete {0} primitive"
+#~ msgid_plural "Undelete {0} primitives"
+#~ msgstr[0] "Відновити {0} елемент"
+#~ msgstr[1] "Відновити {0} елементи"
+#~ msgstr[2] "Відновити {0} елементів"
 
 #~ msgid "Error: Unexpected line ''{0}'' in bookmark list from server"
 #~ msgstr "Помилка: Неочікуванний рядок ''{0}'' у переліку закладок з сервера"
@@ -42341,6 +42431,16 @@ msgstr "Fugro (Данія)"
 
 #~ msgid "UTM20 North Geodesic system"
 #~ msgstr "Північна геодезична система UTM20"
+
+#~ msgid "Merging deleted primitives failed"
+#~ msgstr "Збій під час об’єднання вилучених елеменів"
+
+#~ msgid ""
+#~ "The following primitives could not be copied to the target "
+#~ "primitive<br>because they are deleted in the target dataset:"
+#~ msgstr ""
+#~ "Наступні елементи не можливо скопіювати у вказаний елемент,<br> тому що "
+#~ "вони вилучені із набору даних вказаного елемента:"
 
 #~ msgid "Yes, undelete them too"
 #~ msgstr "Так, відновити їх теж"
@@ -42452,8 +42552,23 @@ msgstr "Fugro (Данія)"
 #~ msgid "Apply also for children"
 #~ msgstr "Застосувати також для нащадків"
 
+#~ msgid "Select primitives submitted by this user"
+#~ msgstr "Вибрати елементи, створені цим користувачем"
+
+#~ msgid "Download and show the history of the selected primitives"
+#~ msgstr "Завантажити та показати історію вибраних елементів"
+
+#~ msgid "Zoom to the corresponding primitives in the current data layer"
+#~ msgstr "Наблизитися до відповідних елементів у поточному шарі даних"
+
 #~ msgid "Filter Hidden: {0} Disabled: {0}"
 #~ msgstr "Фільтр Приховано: {0} Відключено: {0}"
+
+#~ msgid ""
+#~ "Zoom to the primitives in the content of this changeset in the current "
+#~ "data layer"
+#~ msgstr ""
+#~ "Наблизитися до елементів вмісту цього набору змін у поточному шарі даних"
 
 #~ msgid ""
 #~ "<html>The child relation<br>{0}<br>is deleted on the server. It cannot be "
@@ -42461,6 +42576,67 @@ msgstr "Fugro (Данія)"
 #~ msgstr ""
 #~ "<html>Нащадка зв’язку<br>{0}<br>вилучено з сервера. Його не можливо "
 #~ "завантажити"
+
+#~ msgid "Multiple members referring to same primitive"
+#~ msgstr "Кілька членів посилаються на один і той же елемент"
+
+#~ msgid ""
+#~ "<html>This relation already has one or more members referring to<br>the "
+#~ "primitive ''{0}''<br><br>Do you really want to add another relation "
+#~ "member?</html>"
+#~ msgstr ""
+#~ "<html>В цьому зв’язку вже є один чи декілька членів, що посилаються "
+#~ "на<br>елемент ''{0}''<br><br>Ви дійсно хочете додати ще одного члена "
+#~ "зв’язку?</html>"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first "
+#~ "selected member"
+#~ msgstr ""
+#~ "Додати всі елементи, виділені в поточному наборі даних, перед першим "
+#~ "виділеним членом"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first member"
+#~ msgstr ""
+#~ "Додати всі елементи, виділені в поточному наборі даних, перед першим "
+#~ "членом"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last member"
+#~ msgstr ""
+#~ "Додати всі елементи, виділені в поточному наборі даних, після останнього "
+#~ "члена"
+
+#~ msgid ""
+#~ "Select relation members which refer to primitives in the current selection"
+#~ msgstr "Виділити членів зв’язку, які відносяться до вибраних елементів"
+
+#~ msgid ""
+#~ "Select relation members which refer to {0} primitives in the current "
+#~ "selection"
+#~ msgstr ""
+#~ "Виділити членів зв’язку, які відносяться до {0} елем. серед виділених "
+#~ "елементів"
+
+#~ msgid "Select primitives for selected relation members"
+#~ msgstr "Виділити елементи для виділених членів зв’язку"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last "
+#~ "selected member"
+#~ msgstr ""
+#~ "Додати всі елементи, виділені в поточному наборі даних, після останнього "
+#~ "виділеного члена"
+
+#~ msgid "You are setting an empty role on {0} primitive."
+#~ msgid_plural "You are setting an empty role on {0} primitives."
+#~ msgstr[0] "Ви призначити пусту роль {0} елементу."
+#~ msgstr[1] "Ви призначити пусту роль {0} елементам."
+#~ msgstr[2] "Ви призначити пусту роль {0} елементам."
+
+#~ msgid "This is equal to deleting the roles of these primitives."
+#~ msgstr "Це дорівнює вилученю ролі цих елементів."
 
 #~ msgid "Click do download the currently selected area"
 #~ msgstr "Натисніть, щоб завантажити позначену ділянку"
@@ -42490,6 +42666,13 @@ msgstr "Fugro (Данія)"
 #~ "href=\"{2}\">вашою мовою ({1})</a> та — <a href=\"{3}\">розділ "
 #~ "англійською</a>.</p></html>"
 
+#~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>Please resolve this conflict first, then try again.</html>"
+#~ msgstr ""
+#~ "<html>Шар ''{0}'' має конфлікт для елементу<br>''{1}''.<br>Будь ласка "
+#~ "розв’яжіть конфлікти, а потім спробуйте ще раз.</html>"
+
 #~ msgid "Enter an upload comment (min. 3 characters)"
 #~ msgstr ""
 #~ "Введіть коментар для даних, що надсилаються на сервер (мін. 3 знаки)"
@@ -42508,8 +42691,22 @@ msgstr "Fugro (Данія)"
 #~ msgid "Illegal upload comment"
 #~ msgstr "Невірний коментар для надсилання на сервер"
 
+#~ msgid ""
+#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
+#~ "this primitive and retrying to upload."
+#~ msgstr ""
+#~ "Попередження: елемент ''{0}'' вже вилучено з сервера. Повторне надсилання "
+#~ "на сервер буде здійснено без цього елементу."
+
+#~ msgid "Preparing primitives to upload ..."
+#~ msgstr "Підготовка елементів до надсилання на сервер…"
+
 #~ msgid "Uploading {0} objects ..."
 #~ msgstr "Надсилання об’єктів. Кількість —  {0}…"
+
+#~ msgid "Remove all members referring to one of the selected primitives"
+#~ msgstr ""
+#~ "Вилучити всіх членів, що відносяться до любого з виділених елементів"
 
 #~ msgid ""
 #~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
@@ -42615,6 +42812,13 @@ msgstr "Fugro (Данія)"
 #~ msgstr ""
 #~ "Зіпсована заготовка теґів ''{0}''-{1}'' — кількість елементів "
 #~ "display_values повинна бути такою ж, як і у values"
+
+#~ msgid ""
+#~ "Server replied with response code 404, retrying with an individual "
+#~ "request for each primitive."
+#~ msgstr ""
+#~ "Сервер повідомив про помилку з кодом 404, повторити з індивідуальними "
+#~ "запитами для кожного елемента."
 
 #~ msgid "Zero coordinates: "
 #~ msgstr "Нульові координати: "
@@ -43024,6 +43228,9 @@ msgstr "Fugro (Данія)"
 
 #~ msgid "Please select at least two nodes to merge."
 #~ msgstr "Будь ласка, виберіть принаймні дві точки для з’єднання."
+
+#~ msgid "Merge the currently selected primitives into another layer"
+#~ msgstr "Об’єднати виділені об’єкти в інший шар"
 
 #~ msgid ""
 #~ "Move objects by dragging; Shift to add to selection (Ctrl to toggle); "

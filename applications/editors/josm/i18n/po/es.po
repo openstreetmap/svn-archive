@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-20 22:11+0100\n"
-"PO-Revision-Date: 2011-03-17 18:08+0000\n"
-"Last-Translator: Jonay <jonay.santana@gmail.com>\n"
+"POT-Creation-Date: 2011-04-03 18:52+0200\n"
+"PO-Revision-Date: 2011-03-31 04:43+0000\n"
+"Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-03-20 17:20+0000\n"
-"X-Generator: Launchpad (build 12617)\n"
+"X-Launchpad-Export-Date: 2011-04-03 16:28+0000\n"
+"X-Generator: Launchpad (build 12710)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -163,7 +163,7 @@ msgstr "Continuar, intentar de todas formas"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:203
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:227
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:675
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:266
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:470
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -311,14 +311,14 @@ msgid "About JOSM..."
 msgstr "Acerca de JOSM..."
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:44
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "WARNING: unexpected format of API base URL. Redirection to info or history "
 "page for OSM object will probably fail. API base URL is: ''{0}''"
 msgstr ""
-"Precaución: formato inesperado de la URL de la base API. La redirección "
-"hacia la página para información o historial para OSM primitivo "
-"probablemente falle. La URL de la base API es:\"{0}\""
+"ATENCIÓN: formato inesperado de la URL base de la API. El redireccionado a "
+"la página de información o de histórico del objeto OSM probablemente "
+"fallará. La URL base de la API es: \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:63
 #, java-format
@@ -357,7 +357,7 @@ msgstr "Haga clic para continuar y abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
 #: ../core/src/org/openstreetmap/josm/actions/Map_Rectifier_WMSmenuAction.java:158
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
@@ -394,7 +394,7 @@ msgstr "Haga clic para continuar y abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1285
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:284
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:649
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:415
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -823,6 +823,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:103
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:84
 msgid "Create multipolygon"
 msgstr "Crear multipolígono"
 
@@ -850,7 +852,7 @@ msgstr "Debe seleccionar al menos una vía"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:322
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1055
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:757
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:508
@@ -871,8 +873,8 @@ msgstr "Eliminar objetos seleccionados."
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:214
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:215
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:223
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:210
@@ -934,6 +936,7 @@ msgid "Select if the data should be downloaded into a new layer"
 msgstr "Seleccionar si los datos deben ser descargados en una nueva capa"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:47
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr "Descargar Referidos"
 
@@ -987,10 +990,9 @@ msgid "Download parent ways/relations..."
 msgstr "Descargar vias/relaciones padres..."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:29
-#, fuzzy
 msgid "Download objects referring to one of the selected objects"
 msgstr ""
-"Descargar primitivas referenciando a una de la primitivas seleccionadas"
+"Descargar objetos que hagan referencia a uno de los objetos seleccionados"
 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:22
@@ -1149,20 +1151,15 @@ msgstr ""
 "Si desea guardar el corrimiento como un marcador, ingrese el nombre abajo"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:165
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Easting"
-msgstr "Hacia el Este"
+#, fuzzy
+msgid "Offset: "
+msgstr "Ajuste:"
 
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:167
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
-msgid "Northing"
-msgstr "Hacia el Norte"
-
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:169
 msgid "Bookmark name: "
 msgstr "Nombre del marcador: "
 
-#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:228
 msgid "Offset bookmark already exists. Overwrite?"
 msgstr "El marcador del corrimiento ya existe. ¿Desea sobreescribirlo?"
 
@@ -1487,9 +1484,8 @@ msgid "Merge selection"
 msgstr "Unir la selección"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeSelectionAction.java:22
-#, fuzzy
 msgid "Merge the currently selected objects into another layer"
-msgstr "Fusionar primitivos seleccionados actualmente en otra capa"
+msgstr "Une los objetos actualmente seleccionados en otra capa"
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:35
@@ -1772,14 +1768,13 @@ msgid "Paste without incomplete members"
 msgstr "Pegar sin los miembros incompletos"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:156
-#, fuzzy
 msgid ""
 "The copied data contains incomplete objects.  When pasting the incomplete "
 "objects are removed.  Do you want to paste the data without the incomplete "
 "objects?"
 msgstr ""
-"Los datos copiados contienen primitivos incompletos. Al pegar se borrarán "
-"los primitivos incompletos. ¿Desea pegar los datos sin los primitivos "
+"Los datos copiados contienen objetos incompletos. Cuando se peguen, se "
+"eliminarán los objetos incompletos. ¿Quiere pegar los datos sin los objetos "
 "incompletos?"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:34
@@ -1802,11 +1797,11 @@ msgstr[0] "Pegando {0} etiqueta"
 msgstr[1] "Pegando {0} etiquetas"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:256
-#, fuzzy, java-format
+#, java-format
 msgid "to {0} object"
 msgid_plural "to {0} objects"
-msgstr[0] "Eliminar {0} objeto"
-msgstr[1] "Eliminar {0} objetos"
+msgstr[0] "a {0} objeto"
+msgstr[1] "a {0} objetos"
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:25
 msgid "Preferences..."
@@ -3531,13 +3526,11 @@ msgid "Change relation member role for {0} {1}"
 msgstr "Modificar la función del miembro de la relación para {0} {1}"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:30
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>This "
 "conflict cannot be added.</html>"
 msgstr ""
-"<html>La capa ''{0}'' ya tiene un conflicto con la primitiva <br>''{1}''."
-"<br>Este conflicto no puede ser añadido.</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:36
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1191
@@ -3545,13 +3538,11 @@ msgid "Double conflict"
 msgstr "Doble conflicto"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:52
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict for "
 "object ''{1}''."
 msgstr ""
-"Atención: La capa ''{0}'' ya no existe. No se puede eliminar el conflicto "
-"para la primitiva ''{1}''."
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:67
 #, java-format
@@ -3763,11 +3754,11 @@ msgstr[0] "Transformar {0} nodo"
 msgstr[1] "Transformar {0} nodos"
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
-#, fuzzy, java-format
+#, java-format
 msgid "Undelete {0} object"
 msgid_plural "Undelete {0} objects"
-msgstr[0] "Eliminar {0} objeto"
-msgstr[1] "Eliminar {0} objetos"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:38
 #, java-format
@@ -4838,6 +4829,7 @@ msgid "Relation is empty"
 msgstr "La relación es vacía"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:565
 msgid "<empty>"
 msgstr "<vacío>"
 
@@ -6167,6 +6159,8 @@ msgstr "Pos."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:392
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:21
 msgid "Role"
 msgstr "Función"
@@ -6375,18 +6369,16 @@ msgid "{0} more..."
 msgstr "{0} más..."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:325
-#, fuzzy
 msgid ""
 "The following objects could not be copied to the target object<br>because "
 "they are deleted in the target dataset:"
 msgstr ""
-"Las siguientes primitivas no pueden ser copiadas a la primitiva destino<br> "
-"porque han sido eliminadas en el conjunto de datos de destino:"
+"Los siguientes objetos no se pudieron copiar al objeto destino<br>debido a "
+"que han sido eliminados del conjunto de datos destino:"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:335
-#, fuzzy
 msgid "Merging deleted objects failed"
-msgstr "La unión de las primitivas borradas ha fallado"
+msgstr "Falló la unión de objetos eliminados"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:628
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:652
@@ -6868,7 +6860,6 @@ msgstr "Aplicar"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:166
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:308
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
 msgid "none"
 msgstr "ninguno"
 
@@ -7194,7 +7185,6 @@ msgstr "Abrir una lista de todos los comandos (revertir pila)"
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:126
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:188
 #, java-format
@@ -7622,7 +7612,7 @@ msgstr "Volver a cargar desde fichero"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:384
 msgid "reload selected styles from file"
-msgstr ""
+msgstr "volver a cargar los estilos seleccionados desde un fichero"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:432
 msgid "Save as..."
@@ -7633,7 +7623,7 @@ msgid "Save a copy of this Style to file and add it to the list"
 msgstr "Guarda una copia de este Estilo a un archivo y lo añade a la lista"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:474
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:207
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:223
 msgid "Reloading style sources"
 msgstr "Volviendo a cargar fuentes de estilos"
 
@@ -7644,11 +7634,11 @@ msgstr "Guardar estilo \"{0}\" como \"{1}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:543
 msgid "view meta information, error log and source definition"
-msgstr ""
+msgstr "ver meta información, log de errores y definición de fuente"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:554
 msgid "Map Style info"
-msgstr ""
+msgstr "Información de estilo de mapa"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:581
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:110
@@ -7711,6 +7701,9 @@ msgid "Delete the selected relation"
 msgstr "Borrar la relación seleccionada"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:359
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:344
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:109
 msgid "Create a new relation"
 msgstr "Crear una nueva relación"
 
@@ -7728,6 +7721,7 @@ msgid "Select the members of all selected relations"
 msgstr "Selecciona los miembros de todas las relaciones seleccionadas"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:463
+#: ../plugins/relcontext/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "Seleccionar miembros"
 
@@ -7787,11 +7781,13 @@ msgstr "Llame al editor de relaciones para la relación seleccionada"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:452
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1158
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "Seleccionar en la lista de relaciones"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:453
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1159
+#: ../plugins/relcontext/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "Seleccionar relación en la lista de relaciones."
 
@@ -7855,9 +7851,8 @@ msgstr[0] "{0} Autor"
 msgstr[1] "{0} Autores"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:181
-#, fuzzy
 msgid "Select objects submitted by this user"
-msgstr "Seleccionar primitivas presentadas por este usuario"
+msgstr "Elegir objetos enviados por este usuario"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:213
 msgid "Launches a browser with information about the user"
@@ -8156,9 +8151,8 @@ msgid "Show history"
 msgstr "Mostrar histórico"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
-#, fuzzy
 msgid "Download and show the history of the selected objects"
-msgstr "Descarga y muestra el histórico de las primitivas seleccionadas"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -8196,11 +8190,8 @@ msgid "Zoom to in layer"
 msgstr "Ajustar a la capa"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:379
-#, fuzzy
 msgid "Zoom to the corresponding objects in the current data layer"
-msgstr ""
-"Ajusta la visualización de las primitivas correspondientes en la capa de "
-"datos actual"
+msgstr "Hacer zoom a los objetos correspondientes en la capa de datos actual"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:393
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:429
@@ -9105,6 +9096,7 @@ msgstr "ID"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:333
 #: build/specialmessages.java:68 build/trans_presets.java:115
 #: build/trans_presets.java:153 build/trans_presets.java:195
 #: build/trans_presets.java:235 build/trans_presets.java:256
@@ -9334,13 +9326,10 @@ msgstr ""
 "disponible<br> en la capa de edición actual ''{1}''.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:417
-#, fuzzy
 msgid ""
 "Zoom to the objects in the content of this changeset in the current data "
 "layer"
 msgstr ""
-"Ajusta la visualización en la capa de datos actual a las primitivas "
-"contenidas en la modificación"
 
 #. parent for dialog is Main.parent
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetHeaderDownloadTask.java:112
@@ -9758,6 +9747,8 @@ msgstr "Un valor vacío borra el atributo."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:639
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:151
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:112
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:327
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:629
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:215
 msgid "<different>"
 msgstr "<diferente>"
@@ -9805,6 +9796,7 @@ msgstr "Propiedades de los objetos seleccionados."
 
 #. setting up the membership table
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:587
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "Miembro de"
 
@@ -9858,14 +9850,17 @@ msgid "Go to OSM wiki for tag help (F1)"
 msgstr "Ir a la wiki de OSM mostrar la ayuda de etiqueta (F1)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
-msgstr ""
+msgstr "Inicia el navegador con ayuda de la wiki para el objeto seleccionado"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1154
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "Seleccionar relación"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1155
+#: ../plugins/relcontext/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "Seleccionar la relación en la selección principal."
 
@@ -10001,19 +9996,16 @@ msgid "Ignore them, leave relation as is"
 msgstr "Ignorarlos, dejar la relación como está"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
 "object ''{0}''<br><br>Do you really want to add another relation member?</"
 "html>"
 msgstr ""
-"<html>Esta relación ya posee uno o más miembros referidos a<br>la primitiva "
-"''{0}''<br><br>¿Desea realmente añadir otro miembro relacionado?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:681
-#, fuzzy
 msgid "Multiple members referring to same object."
-msgstr "Miembros múltiples referenciando a la misma primitiva"
+msgstr "Miembros múltiples hacen referencia al mismo objeto."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:699
 #, java-format
@@ -10027,43 +10019,30 @@ msgstr ""
 "''{0}''.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:740
-#, fuzzy
 msgid "Add all objects selected in the current dataset before the first member"
 msgstr ""
-"Añadir todas las primitivas seleccionadas al conjunto de datos actual antes "
-"del primer miembro"
+"Añadir todos los objetos seleccionados al set de datos actual antes del "
+"primer miembro"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:766
-#, fuzzy
 msgid "Add all objects selected in the current dataset after the last member"
 msgstr ""
-"Añadir todas las primitivas seleccionadas al conjunto de datos actual antes "
-"del último miembro"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset before the first selected "
 "member"
 msgstr ""
-"Añadir todas las primitivas seleccionadas al conjunto de datos actual antes "
-"del primer miembro seleccionado"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#, fuzzy
 msgid ""
 "Add all objects selected in the current dataset after the last selected "
 "member"
 msgstr ""
-"Añadir todas las primitivas seleccionadas al conjunto de datos actual antes "
-"del último miembro seleccionado"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:859
-#, fuzzy
 msgid "Remove all members referring to one of the selected objects"
 msgstr ""
-"Elimina todos los miembros que se refieran a una de las primitivas "
-"seleccionadas"
 
 #. putValue(NAME, tr("Remove Selected"));
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:862
@@ -10072,24 +10051,18 @@ msgstr "Editor de relaciones: Cancelar selección"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:896
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:908
-#, fuzzy
 msgid "Select relation members which refer to objects in the current selection"
 msgstr ""
-"Seleccionar los miembros de la relación que se refieren a las primitivas de "
-"la selección actual"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Select relation members which refer to {0} objects in the current selection"
 msgstr ""
-"Seleccionar los miembros de la relación que se refieren a {0} primitivas de "
-"la selección actual"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
-#, fuzzy
 msgid "Select objects for selected relation members"
-msgstr "Seleccionar primitivas para la relación de miembros señalada"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:950
 msgid "Sort the relation members"
@@ -10243,16 +10216,15 @@ msgid "Apply Role"
 msgstr "Aplicar función"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1383
-#, fuzzy, java-format
+#, java-format
 msgid "You are setting an empty role on {0} object."
 msgid_plural "You are setting an empty role on {0} objects."
-msgstr[0] "Está configurando un rol vacío en la primitiva {0}"
-msgstr[1] "Está configurando reles vacíos en las primitivas {0}"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1386
-#, fuzzy
 msgid "This is equal to deleting the roles of these objects."
-msgstr "Esto equivale a borrar los roles de esas primitivas."
+msgstr "Esto equivale a borrar los roles de esos objetos."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1388
 msgid "Do you really want to apply the new role?"
@@ -10545,7 +10517,7 @@ msgstr "Haga clic para cerrar la caja de diálogo y abortar la descarga"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:395
 msgid "Click to download the currently selected area"
-msgstr ""
+msgstr "Haga click para descargar el área actualmente seleccionada"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:402
 msgid "Please select a download area first."
@@ -10637,6 +10609,7 @@ msgstr "Obteniendo nombre de servidor ..."
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:441
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:98
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:30
 #: build/specialmessages.java:82 build/trans_presets.java:457
 #: build/trans_presets.java:753 build/trans_presets.java:762
@@ -11196,11 +11169,11 @@ msgstr ""
 "Seleccionar para cerrar el conjunto de cambios después de la próxima subida"
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:309
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:302
 msgid "Load the list of your open changesets from the server"
 msgstr "Cargar del servidor la lista de su conjunto de cambios abiertos"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:327
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:320
 msgid "Close the currently selected open changeset"
 msgstr "Cerrar el conjunto de cambios seleccionado abierto"
 
@@ -11772,9 +11745,8 @@ msgstr ""
 "este objeto y reintentando subir."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:108
-#, fuzzy
 msgid "Preparing objects to upload ..."
-msgstr "Preparando primitivas para subir"
+msgstr "Preparando los objetos a subir..."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:44
 msgid "Objects are uploaded to a <strong>new changeset</strong>."
@@ -12629,7 +12601,7 @@ msgstr "Mostrar zoom: {0}"
 #: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:1238
 #, java-format
 msgid "Pixel scale: {0}"
-msgstr ""
+msgstr "Escala de píxel: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:1239
 #, java-format
@@ -13060,12 +13032,12 @@ msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] "Se encontró {0} elemento para posicionar con GPS"
 msgstr[1] "Se encontraron {0} elementos para posicionar con GPS"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:646
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "Borrar archivo de imagen del disco"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:649
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -13074,7 +13046,7 @@ msgstr ""
 "<html><h3>Borrar el archivo {0} del disco?<p>Se perderá irremediablemente el "
 "archivo!</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:674
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "El archivo de imagen no se pudo borrar."
 
@@ -13269,7 +13241,7 @@ msgstr "(La URL era: "
 msgid "Error displaying URL"
 msgstr "Error mostrando la URL"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:175
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:191
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/mapcss/MapCSSStyleSource.java:55
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/xml/XmlStyleSource.java:77
 #, java-format
@@ -13279,7 +13251,7 @@ msgstr ""
 "Advertencia: Fallo al cargar estilos Mappaint de \"{0}\". La excepción fue: "
 "{1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:236
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
 #, java-format
 msgid "loading style ''{0}''..."
 msgstr ""
@@ -14467,7 +14439,7 @@ msgstr "Solo en la cabecera de la vía."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
 msgid "Draw oneway arrows."
-msgstr ""
+msgstr "Dibuja flechas de sentido único."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:56
 msgid "Draw segment order numbers"
@@ -14637,6 +14609,8 @@ msgstr "Dibujar pistas de dirección para los segmentos de vía"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:247
 msgid "Draw arrows in the direction of oneways and other directed features."
 msgstr ""
+"Dibuja flechas en la dirección de las vías de sentido único y en otros "
+"elementos con dirección."
 
 #. segment order number
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:252
@@ -14789,11 +14763,12 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:443
 msgid "Selected entries:"
-msgstr ""
+msgstr "Entradas seleccionadas:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:461
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:754
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1020
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:316
 msgid "New"
 msgstr "Nuevo"
@@ -14808,7 +14783,7 @@ msgstr "Añadir URL de las imágenes"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:482
 msgid "remove entry"
-msgstr ""
+msgstr "eliminar entrada"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:508
 msgid "copy selected defaults"
@@ -14820,7 +14795,7 @@ msgstr "Por favor, seleccione al menos una fila para copiar"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:564
 msgid "reload defaults"
-msgstr ""
+msgstr "volver a cargar valores por defecto"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:579
 msgid "Imagery URL"
@@ -14852,6 +14827,14 @@ msgstr "URL malformada para la licencia EULA: {0}"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
 msgid "Projection"
 msgstr "Proyección"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Easting"
+msgstr "Hacia el Este"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:781
+msgid "Northing"
+msgstr "Hacia el Norte"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImagerySettingsMigration.java:47
 #, java-format
@@ -15153,7 +15136,7 @@ msgstr "URL de descripción del complemento de JOSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:48
 msgid "disabled"
-msgstr "descativado"
+msgstr "desactivado"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:49
 msgid "no modifier"
@@ -15539,7 +15522,7 @@ msgstr "activo"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:824
 msgid "Edit source entry:"
-msgstr ""
+msgstr "Editar entrada fuente:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:896
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:72
@@ -15549,7 +15532,7 @@ msgstr "Reiniciar"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:897
 msgid "Reset to default"
-msgstr ""
+msgstr "Restaurar a valores por defecto"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1021
 msgid "Add a new icon path"
@@ -15684,14 +15667,16 @@ msgstr ""
 #, java-format
 msgid "Warning: illegal format of entry in preset list ''{0}''. Got ''{1}''"
 msgstr ""
+"Atención: formato ilegal de entrada en la lista de predeterminados \"{0}\". "
+"Se obtuvo \"{1}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:331
 msgid "Internal Preset"
-msgstr ""
+msgstr "Ajuste predeterminado interno"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:332
 msgid "The default preset for JOSM"
-msgstr ""
+msgstr "El ajuste predeterminado de JOSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:270
 msgid "Actions"
@@ -16705,13 +16690,12 @@ msgid "Fetching a package of relations from ''{0}''"
 msgstr "Obteniendo un conjunto de relaciones de ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:423
-#, fuzzy
 msgid ""
 "Server replied with response code 404, retrying with an individual request "
 "for each object."
 msgstr ""
-"El servidor responde con el código de respuesta 404, reintentando con una "
-"petición individual para cada primitiva."
+"El servidor respondión con un código de respuesta 404, reintentando con una "
+"petición individual para cada objeto."
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:449
 #, java-format
@@ -17588,7 +17572,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/AddTagsDialog.java:45
 msgid "Add tags to selected objects"
-msgstr ""
+msgstr "Añadir etiquetas a los objetos seleccionados"
 
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/AddTagsDialog.java:45
 msgid "Add tags"
@@ -18018,7 +18002,7 @@ msgstr "Más información..."
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:248
 #, java-format
 msgid "<b>Plugin provided by an external source:</b> {0}"
-msgstr ""
+msgstr "<b>Plugin proporcionado por una fuente externa:</b> {0}"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginListParser.java:42
 #: ../core/src/org/openstreetmap/josm/plugins/PluginListParser.java:44
@@ -18626,15 +18610,15 @@ msgstr "Archivos de audio perdidos"
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLine.java:187
 msgid "Commands"
-msgstr ""
+msgstr "Comandos"
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLine.java:271
 msgid "Command"
-msgstr ""
+msgstr "Comando"
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLine.java:359
 msgid "Processing..."
-msgstr ""
+msgstr "Procesando..."
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLine.java:375
 msgid "Aborted"
@@ -18642,7 +18626,7 @@ msgstr "Abortado"
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLine.java:464
 msgid "Error executing the script: "
-msgstr ""
+msgstr "Error en la ejecución del script: "
 
 #: ../plugins/CommandLine/src/CommandLine/CommandLineAction.java:42
 #: ../plugins/CommandLine/src/CommandLine/CommandLineAction.java:43
@@ -18691,7 +18675,7 @@ msgstr "relaciones"
 
 #: ../plugins/CommandLine/src/CommandLine/Parameter.java:61
 msgid "OSM objects"
-msgstr ""
+msgstr "objetos OSM"
 
 #: ../plugins/CommandLine/src/CommandLine/PointAction.java:94
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementMode.java:47
@@ -18976,32 +18960,32 @@ msgstr "Valores supuestos para "
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:655
 msgid "Address has no street"
-msgstr ""
+msgstr "La dirección no tiene calle"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:664
 msgid "Address has no valid street"
-msgstr ""
+msgstr "La dirección no tiene una calle válida"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:676
 msgid "Address has no post code"
-msgstr ""
+msgstr "La dirección no tiene código postal"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:687
 msgid "Address has no city"
-msgstr ""
+msgstr "La dirección no tiene ciudad"
 
 #. TODO: Add guess for country
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:699
 msgid "Address has no country"
-msgstr ""
+msgstr "La dirección no tiene país"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:713
 msgid "Assign to"
-msgstr ""
+msgstr "Asignar a"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMAddress.java:729
 msgid "Remove all address tags"
-msgstr ""
+msgstr "Quitar todas las etiquetas de direcciones"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMEntityBase.java:41
 msgid "No name"
@@ -20656,13 +20640,13 @@ msgstr "Esquemas de color"
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:40
 msgid "Contour Merge"
-msgstr ""
+msgstr "Unión de contornos"
 
 #. name
 #. icon name
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:42
 msgid "Merge the contour of an area with the contour of another area"
-msgstr ""
+msgstr "Une el contorno de un área con el contorno de otra área"
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:153
 msgid "Drag/drop: drag the way segment an drop it on a target segment"
@@ -20674,7 +20658,7 @@ msgstr ""
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:163
 msgid "Can''t select an isolated node"
-msgstr ""
+msgstr "No se puede elegir un nodo aislado"
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:166
 msgid "Left-Click: select node"
@@ -21197,7 +21181,7 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
 msgid "filtering ways"
-msgstr ""
+msgstr "filtrando vías"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -21225,7 +21209,7 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
 msgid "junctions"
-msgstr ""
+msgstr "intersecciones"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
 msgid "Channel-Digraph creation"
@@ -21260,7 +21244,7 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "start the channel digraph creation"
@@ -21272,7 +21256,7 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "Check "
-msgstr ""
+msgstr "Comprobar "
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:94
 msgid "check a marked subset if it is a junction"
@@ -21284,7 +21268,7 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "Search "
-msgstr ""
+msgstr "Buscar "
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:98
 msgid "search for junctions into a subset of channels"
@@ -21887,7 +21871,7 @@ msgstr ""
 "<html>¿Desea realmente marcar marcar está cuestión como \"hecha\"?"
 "<br><br>Puedes añadir una comentario opcional:</html>"
 
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:94
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:95
 msgid "Close: "
 msgstr "Cerrar: "
 
@@ -22626,15 +22610,123 @@ msgstr "Vías"
 msgid "Waypoints"
 msgstr "Nodos de Vía"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:36
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:38
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
 #, fuzzy
-msgid "Open Relation Editor"
-msgstr "Editor de relación: {0}"
+msgid "Relation Toolbox"
+msgstr "Relación"
 
-#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:37
-msgid "Opens advanced relation/multipolygon editor panel"
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:70
+msgid "Open relation/multipolygon editor panel"
 msgstr ""
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:403
+#, fuzzy
+msgid "Specify role"
+msgstr "Simplificar aŕea"
+
+#. Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:478
+#, fuzzy, java-format
+msgid "Change relation member roles to {0}"
+msgstr "Modificar la función del miembro de la relación para {0} {1}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:499
+#, fuzzy
+msgid "Change multipolygon creation settings"
+msgstr "Relación multipolígono sin estilo"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:540
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#, fuzzy
+msgid "Enter role for selected members"
+msgstr "Fijar una función para los miembros seleccionados"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:541
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:32
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:40
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#, fuzzy, java-format
+msgid "Relation Toolbox: {0}"
+msgstr "Relación: {0}"
+
+#: ../plugins/relcontext/src/relcontext/RelContextDialog.java:566
+#, fuzzy
+msgid "another..."
+msgstr "Pegar ..."
+
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:34
+#: ../plugins/relcontext/src/relcontext/actions/AddRemoveMemberAction.java:35
+#, fuzzy
+msgid "Add/remove members from the chosen relation"
+msgstr "Suprimir este miembro de la relación"
+
+#: ../plugins/relcontext/src/relcontext/actions/ClearChosenRelationAction.java:19
+#, fuzzy
+msgid "Clear the chosen relation"
+msgstr "Crear nueva relación"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:31
+#, fuzzy
+msgid "Create a multipolygon from selected objects"
+msgstr "Crear un círculo a partir de tres nodos."
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:322
+#, fuzzy
+msgid "Enter admin level and name for the border relation:"
+msgstr "Por favor, introduzca un nombre para la localización."
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateMultipolygonAction.java:326
+#, fuzzy
+msgid "Admin level"
+msgstr "Nivel administrativo"
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:39
+#, fuzzy
+msgid "Create a relation from selected objects"
+msgstr "Crear un círculo a partir de tres nodos."
+
+#: ../plugins/relcontext/src/relcontext/actions/CreateRelationAction.java:91
+#, fuzzy
+msgid "Choose a type for the relation:"
+msgstr "Elija una fecha de expiración para la llave:"
+
+#: ../plugins/relcontext/src/relcontext/actions/DeleteChosenRelationAction.java:17
+#, fuzzy
+msgid "Delete relation"
+msgstr "Eliminar relaciones"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadChosenRelationAction.java:31
+#, fuzzy
+msgid "Download incomplete members for the chosen relation"
+msgstr "Descargar miembros incompletos de las relaciones seleccionadas"
+
+#: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:33
+#, fuzzy
+msgid "Download referrers for the the chosen relation and its members"
+msgstr "Descarga todos los miembros de las relaciones seleccionadas"
+
+#: ../plugins/relcontext/src/relcontext/actions/EditChosenRelationAction.java:25
+#, fuzzy
+msgid "Open relation editor for the chosen relation"
+msgstr "Abrir un editor para la relación seleccionada"
+
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:29
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:30
+#: ../plugins/relcontext/src/relcontext/actions/FindRelationAction.java:53
+#, fuzzy
+msgid "Find a relation"
+msgstr "Arreglar relaciones"
+
+#: ../plugins/relcontext/src/relcontext/actions/RelationHelpAction.java:24
+#, fuzzy
+msgid "Open relation wiki page"
+msgstr "relación sin tipo"
+
+#: ../plugins/relcontext/src/relcontext/actions/SortAndFixAction.java:23
+#, fuzzy
+msgid "Fix roles of the chosen relation members"
+msgstr "Ordenar los miembros de la relación"
 
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
 #: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
@@ -24796,170 +24888,25 @@ msgstr "Despegar relaciones"
 msgid "Unglued Relations"
 msgstr "Relaciones despegadas"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:83
-#, java-format
-msgid "{0} {1}% of GPS track"
-msgstr "{0} {1}% de la traza GPS"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:105
-msgid "Shows current position in the video"
-msgstr "Muestra la posición actual en el video"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Import Video"
-msgstr "Importar Video"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:103
-msgid "Sync a video against this GPS track"
-msgstr "Sincronizar un video frente a esta traza GPS"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "Remove Video"
-msgstr "Video Remoto"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:126
-msgid "removes current video from layer"
-msgstr "Elimina el video actual de la capa"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:135
-msgid "Play/Pause"
-msgstr "Reproducción/Pausa"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:134
-msgid "starts/pauses video playback"
-msgstr "Inicia/pausa la reproducción del video"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:142
-msgid "Backward"
-msgstr "Hacia atrás"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:141
-msgid "jumps n sec back"
-msgstr "ir n segundos atrás"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
-msgid "Forward"
-msgstr "Avanzar"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:147
-msgid "jumps n sec forward"
-msgstr "salta n segundos adelante"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:156
-msgid "Faster"
-msgstr "Más rápido"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
-msgid "faster playback"
-msgstr "reproducción más rápida"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:164
-msgid "Slower"
-msgstr "Más lento"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
-msgid "slower playback"
-msgstr "reproducción más lenta"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "Jump To"
-msgstr "Ir a"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
-msgid "jumps to the entered gps time"
-msgstr "salta al momento especificado por gps"
-
-#. TODO here we should show the GPS time range to the user
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:191
-msgid "Jump to"
-msgstr "Saltar a"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "Loop"
-msgstr "Ciclo"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:210
-msgid "loops n sec around current position"
-msgstr "ciclo de n segundos alrededor de la posición actual"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:211
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:147
-msgid "loop"
-msgstr "ciclo"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "Keep centered"
-msgstr "Mantener centrado"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:220
-msgid "follows the video icon automaticly"
-msgstr "Seguir el ícono de video automáticamente"
-
-#. now the options menu
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Subtitles"
-msgstr "Subtítulos"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:231
-msgid "Show subtitles in video"
-msgstr "Mostrar subtítulos en el video"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-msgid "Jump length"
-msgstr "Longitud del salto"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:239
-msgid "Set the length of a jump"
-msgstr "Establecer la longitud del salto"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Jump in video for x ms"
-msgstr "Saltar el video por x milisegundos"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:254
-msgid "Loop length"
-msgstr "Longitud del ciclo"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
-msgid "Set the length around a looppoint"
-msgstr "Establecer la longitud alrededor de un punto glorieta"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:263
-msgid "no deinterlacing"
-msgstr "No deinterlacing"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:271
-msgid "deinterlacing using line doubling"
-msgstr "deinterlacing usando line doubling"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:279
-msgid "deinterlacing using linear interpolation"
-msgstr "deinterlacing usando interpolación linear"
-
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:126
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:54
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:79
 msgid "Unable to find JNA Java library!"
 msgstr "¡No se encontró librería JNA de Java!"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:130
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:58
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoEngine.java:83
 msgid "Unable to find native libvlc library!"
 msgstr "¡No se encontró la librería nativa libvlc!"
 
-#. TODO we need Icons instead
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:144
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:152
 msgid "play"
 msgstr "reproducir"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:148
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:155
+msgid "loop"
+msgstr "ciclo"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/VideoPlayer.java:156
 msgid "mute"
 msgstr "silenciar"
 
@@ -25663,7 +25610,7 @@ msgid ""
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
 "the filename of an image."
 msgstr ""
-"Componente para hacer conincidir las fotografías con los puntos de interés "
+"Componente para hacer coincidir las fotografías con los puntos de interés "
 "recogidos en un archivo GPX. La correlación se produce cuando los atributos "
 "\"name\", \"cmt\" o \"desc\" de un punto coinciden con el nombre del archivo "
 "de una imagen."
@@ -25817,23 +25764,28 @@ msgstr ""
 "Este componente simplifica el cartografiado y edición de rutas de "
 "transportes públicos."
 
-#. Plugin restart
+#. Plugin reltoolbox
 #: build/trans_plugins.java:95
+msgid "Relation and multipolygon creating and editing panel."
+msgstr ""
+
+#. Plugin restart
+#: build/trans_plugins.java:97
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr "Añadir la opción &quot;Reiniciar JOSM&quot; al menú de Archivo."
 
 #. Plugin reverter
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "Plugin for reverting changesets"
 msgstr "Componente para revertir conjuntos de cambios"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "Usar imagen de rgis.spb.ru como capa"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -25845,7 +25797,7 @@ msgstr ""
 "disponible de los predefinidos: Alemania."
 
 #. Plugin routes
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -25855,17 +25807,17 @@ msgstr ""
 "complementos"
 
 #. Plugin routing
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Provides routing capabilities."
 msgstr "Proporciona capacidades de enrutamiento."
 
 #. Plugin scripting
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Allows to run scripts in JOSM."
 msgstr "Permite ejecutar scripts en JOSM"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -25876,24 +25828,24 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:111 build/trans_plugins.java:113
+#: build/trans_plugins.java:113 build/trans_plugins.java:115
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "Crea y edita un mapa naútico para OpenSeaMap"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "Permite añadir marcadores/nodos a las posiciones GPS actual."
 
 #. Plugin tageditor
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr ""
 "Proporciona un cuadro de diálogo para la edición de etiquetas en una rejilla "
 "tabular."
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -25905,17 +25857,17 @@ msgstr ""
 "de forma autónoma."
 
 #. Plugin terracer
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Make terraced houses out of single blocks."
 msgstr "Crea edificios entremedianeras a partir de bloques únicos"
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "Crea y editar balizas de navegación para OpenSeaMap"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
@@ -25924,7 +25876,7 @@ msgstr ""
 "botón (stylus). Actualmente añade únciamente un botón al mapa desplazable."
 
 #. Plugin Tracer
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
@@ -25933,18 +25885,18 @@ msgstr ""
 "NET o Mono) para funcionar."
 
 #. Plugin trustosm
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid "Plugin to digital sign OSM-Data"
 msgstr "Complemento para firmar digitalmente datos OSM"
 
 #. Plugin turnlanes
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -25953,17 +25905,17 @@ msgstr ""
 "sobre restricciones de giro a la base de datos OpenStreetMap."
 
 #. Plugin undelete
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid "Allows undeleting object from OSM database"
 msgstr "Permite recuperar un objeto eliminado desde la base de datos OSM"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid "Several utilities that make your life easier."
 msgstr "Varias utilidades que le harán la vida más sencilla."
 
 #. Plugin videomapping
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:141
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -25974,7 +25926,7 @@ msgstr ""
 "objetos visibles."
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:143
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -25983,23 +25935,23 @@ msgstr ""
 "Este componente aún está en un desarrollo temprano y puede ser inestable."
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:145
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr ""
 "Descargar fácilmente a lo largo de una larga serie de vías interconectadas"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:147
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "Habilitar búsqueda de punto de vía en ficheros gpx."
 
 #. Plugin wayselector
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:149
 msgid "Select a sequence of non-branching connected ways"
 msgstr "Selecciona una secuencia de vías conectadas no ramificadas"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:151
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -41764,34 +41716,114 @@ msgstr ""
 msgid "Estonia Multi (Maaamet)"
 msgstr ""
 
-#. tms:http://fugro.openstreetmap.dk/fugro2005
+#. tms:http://tile.openstreetmap.dk/fugro2005
 #: build/trans_wms.java:35
 msgid "Fugro (Denmark)"
 msgstr ""
 
-#~ msgid "to {0} primitive"
-#~ msgid_plural "to {0} primtives"
-#~ msgstr[0] "a {0} primitiva"
-#~ msgstr[1] "a {0} primitivas"
+#. tms:http://tile.openstreetmap.dk/stevns/2009
+#: build/trans_wms.java:36
+msgid "Stevns (Denmark)"
+msgstr ""
 
-#~ msgid "Undelete {0} primitive"
-#~ msgid_plural "Undelete {0} primitives"
-#~ msgstr[0] "Restaurar {0} primitiva"
-#~ msgstr[1] "Restaurar {0} primitivas"
+#~ msgid "{0} {1}% of GPS track"
+#~ msgstr "{0} {1}% de la traza GPS"
 
-#~ msgid ""
-#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
-#~ "<br>Please resolve this conflict first, then try again.</html>"
-#~ msgstr ""
-#~ "<html>La capa ''{0}'' tiene un conflicto con la primitiva <br>''{1}''."
-#~ "<br>Es necesario resolver el conflicto antes de continuar.</html>"
+#~ msgid "Shows current position in the video"
+#~ msgstr "Muestra la posición actual en el video"
 
-#~ msgid ""
-#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
-#~ "this primitive and retrying to upload."
-#~ msgstr ""
-#~ "Atención: la primitiva \"{0}\" ya ha sido borrada en el servidor. "
-#~ "Saltando esta primitiva e intentando  volver a enviar los cambios."
+#~ msgid "Import Video"
+#~ msgstr "Importar Video"
+
+#~ msgid "Sync a video against this GPS track"
+#~ msgstr "Sincronizar un video frente a esta traza GPS"
+
+#~ msgid "Remove Video"
+#~ msgstr "Video Remoto"
+
+#~ msgid "removes current video from layer"
+#~ msgstr "Elimina el video actual de la capa"
+
+#~ msgid "Play/Pause"
+#~ msgstr "Reproducción/Pausa"
+
+#~ msgid "starts/pauses video playback"
+#~ msgstr "Inicia/pausa la reproducción del video"
+
+#~ msgid "Backward"
+#~ msgstr "Hacia atrás"
+
+#~ msgid "jumps n sec back"
+#~ msgstr "ir n segundos atrás"
+
+#~ msgid "Forward"
+#~ msgstr "Avanzar"
+
+#~ msgid "jumps n sec forward"
+#~ msgstr "salta n segundos adelante"
+
+#~ msgid "Faster"
+#~ msgstr "Más rápido"
+
+#~ msgid "faster playback"
+#~ msgstr "reproducción más rápida"
+
+#~ msgid "Slower"
+#~ msgstr "Más lento"
+
+#~ msgid "slower playback"
+#~ msgstr "reproducción más lenta"
+
+#~ msgid "Jump To"
+#~ msgstr "Ir a"
+
+#~ msgid "jumps to the entered gps time"
+#~ msgstr "salta al momento especificado por gps"
+
+#~ msgid "Jump to"
+#~ msgstr "Saltar a"
+
+#~ msgid "Loop"
+#~ msgstr "Ciclo"
+
+#~ msgid "loops n sec around current position"
+#~ msgstr "ciclo de n segundos alrededor de la posición actual"
+
+#~ msgid "Keep centered"
+#~ msgstr "Mantener centrado"
+
+#~ msgid "follows the video icon automaticly"
+#~ msgstr "Seguir el ícono de video automáticamente"
+
+#~ msgid "Subtitles"
+#~ msgstr "Subtítulos"
+
+#~ msgid "Show subtitles in video"
+#~ msgstr "Mostrar subtítulos en el video"
+
+#~ msgid "Jump length"
+#~ msgstr "Longitud del salto"
+
+#~ msgid "Set the length of a jump"
+#~ msgstr "Establecer la longitud del salto"
+
+#~ msgid "Jump in video for x ms"
+#~ msgstr "Saltar el video por x milisegundos"
+
+#~ msgid "Loop length"
+#~ msgstr "Longitud del ciclo"
+
+#~ msgid "Set the length around a looppoint"
+#~ msgstr "Establecer la longitud alrededor de un punto glorieta"
+
+#~ msgid "no deinterlacing"
+#~ msgstr "No deinterlacing"
+
+#~ msgid "deinterlacing using line doubling"
+#~ msgstr "deinterlacing usando line doubling"
+
+#~ msgid "deinterlacing using linear interpolation"
+#~ msgstr "deinterlacing usando interpolación linear"
 
 #~ msgid "Move"
 #~ msgstr "Mover"
@@ -42086,9 +42118,6 @@ msgstr ""
 #~ msgid "Please enter the desired coordinates first."
 #~ msgstr "Por favor, introduzca las coordenadas deseadas primero."
 
-#~ msgid "Please enter a name for the location."
-#~ msgstr "Por favor, introduzca un nombre para la localización."
-
 #~ msgid "Select a bookmark first."
 #~ msgstr "Seleccione un marcador primero."
 
@@ -42308,9 +42337,6 @@ msgstr ""
 
 #~ msgid "Edit new relation"
 #~ msgstr "Editar nueva relación"
-
-#~ msgid "Create new relation"
-#~ msgstr "Crear nueva relación"
 
 #~ msgid "Edit relation #{0}"
 #~ msgstr "Editar relación #{0}"
@@ -43246,6 +43272,9 @@ msgstr ""
 #~ msgid "Move Down"
 #~ msgstr "Mueve hacia abajo"
 
+#~ msgid "Relation Editor: {0}"
+#~ msgstr "Editor de relación: {0}"
+
 #~ msgid "Move Up"
 #~ msgstr "Mover hacia arriba"
 
@@ -43642,9 +43671,6 @@ msgstr ""
 
 #~ msgid "Lambert Zone 4 cache file (.4)"
 #~ msgstr "Archivo caché de la zona Lambert 4 (.4)"
-
-#~ msgid "Fix relations"
-#~ msgstr "Arreglar relaciones"
 
 #~ msgid ""
 #~ "The main feature of the plugin is the possibility to delete points of the "
@@ -44840,6 +44866,11 @@ msgstr ""
 #~ msgid "Close current changeset"
 #~ msgstr "Cerrar el actual conjunto de cambios"
 
+#~ msgid "to {0} primitive"
+#~ msgid_plural "to {0} primtives"
+#~ msgstr[0] "a {0} primitiva"
+#~ msgstr[1] "a {0} primitivas"
+
 #~ msgid "Use the existing changeset {0} and close it after upload"
 #~ msgstr ""
 #~ "Usar el conjunto de cambios existente {0} y cerrarlo después de subir"
@@ -44918,6 +44949,9 @@ msgstr ""
 #~ msgstr ""
 #~ "<html>Existen conflictos sin resolver en la capa ''{0}''.<br>Has de "
 #~ "corregirlos primero.</html>"
+
+#~ msgid "Preparing primitives to upload ..."
+#~ msgstr "Preparando primitivas para subir"
 
 #~ msgid "can't add node {0} to incomplete way {1}"
 #~ msgstr "No se puede añadir nodo {0} a la vía incompleta {1}"
@@ -45233,6 +45267,13 @@ msgstr ""
 #~ "está presente."
 
 #~ msgid ""
+#~ "Warning: primitive ''{0}'' is already deleted on the server. Skipping "
+#~ "this primitive and retrying to upload."
+#~ msgstr ""
+#~ "Atención: la primitiva \"{0}\" ya ha sido borrada en el servidor. "
+#~ "Saltando esta primitiva e intentando  volver a enviar los cambios."
+
+#~ msgid ""
 #~ "You''re about to launch {0} browser windows.<br>This may both clutter "
 #~ "your screen with browser windows<br>and take some time to finish."
 #~ msgstr ""
@@ -45427,6 +45468,51 @@ msgstr ""
 #~ "simplificar un vía, unir áreas, moverse a un determinada posición, etc."
 
 #~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first "
+#~ "selected member"
+#~ msgstr ""
+#~ "Añadir todas las primitivas seleccionadas al conjunto de datos actual "
+#~ "antes del primer miembro seleccionado"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last "
+#~ "selected member"
+#~ msgstr ""
+#~ "Añadir todas las primitivas seleccionadas al conjunto de datos actual "
+#~ "antes del último miembro seleccionado"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset before the first member"
+#~ msgstr ""
+#~ "Añadir todas las primitivas seleccionadas al conjunto de datos actual "
+#~ "antes del primer miembro"
+
+#~ msgid ""
+#~ "Add all primitives selected in the current dataset after the last member"
+#~ msgstr ""
+#~ "Añadir todas las primitivas seleccionadas al conjunto de datos actual "
+#~ "antes del último miembro"
+
+#~ msgid "Select primitives submitted by this user"
+#~ msgstr "Seleccionar primitivas presentadas por este usuario"
+
+#~ msgid "Select primitives for selected relation members"
+#~ msgstr "Seleccionar primitivas para la relación de miembros señalada"
+
+#~ msgid ""
+#~ "Select relation members which refer to primitives in the current selection"
+#~ msgstr ""
+#~ "Seleccionar los miembros de la relación que se refieren a las primitivas "
+#~ "de la selección actual"
+
+#~ msgid ""
+#~ "Select relation members which refer to {0} primitives in the current "
+#~ "selection"
+#~ msgstr ""
+#~ "Seleccionar los miembros de la relación que se refieren a {0} primitivas "
+#~ "de la selección actual"
+
+#~ msgid ""
 #~ "<html>{0} relations build a cycle because they refer to each other."
 #~ "<br>JOSM can''t upload them. Please edit the relations and remove the "
 #~ "cyclic dependency.</html>"
@@ -45434,6 +45520,13 @@ msgstr ""
 #~ "<html>Las relaciones {0} son cíclicas (cada una se refiere a la otra)"
 #~ "<br>JOSM no puede subirlas al servidor. Por favor: edite las relaciones y "
 #~ "elimine la dependencia cíclica.</html>"
+
+#~ msgid ""
+#~ "Server replied with response code 404, retrying with an individual "
+#~ "request for each primitive."
+#~ msgstr ""
+#~ "El servidor responde con el código de respuesta 404, reintentando con una "
+#~ "petición individual para cada primitiva."
 
 #~ msgid "Motorboat"
 #~ msgstr "Embarcación a motor"
@@ -45460,6 +45553,10 @@ msgstr ""
 
 #~ msgid "Proxy Settings"
 #~ msgstr "Configuración del proxy"
+
+#~ msgid "Download primitives referring to one of the selected primitives"
+#~ msgstr ""
+#~ "Descargar primitivas referenciando a una de la primitivas seleccionadas"
 
 #~ msgid "<html>Cannot open directory.<br>Please select a file!"
 #~ msgstr "<html>No se pudo abrir la carpeta.<br>¡Seleccione un archivo!"
@@ -45593,8 +45690,23 @@ msgstr ""
 #~ "<html>Ninguno de los objetos seleccionados está disponible<br>en la capa "
 #~ "de edición actual ''{0}''.</html>"
 
+#~ msgid "Download and show the history of the selected primitives"
+#~ msgstr "Descarga y muestra el histórico de las primitivas seleccionadas"
+
+#~ msgid "Zoom to the corresponding primitives in the current data layer"
+#~ msgstr ""
+#~ "Ajusta la visualización de las primitivas correspondientes en la capa de "
+#~ "datos actual"
+
 #~ msgid "Enter a changset id"
 #~ msgstr "Introduzca un ID de modificación"
+
+#~ msgid ""
+#~ "Zoom to the primitives in the content of this changeset in the current "
+#~ "data layer"
+#~ msgstr ""
+#~ "Ajusta la visualización en la capa de datos actual a las primitivas "
+#~ "contenidas en la modificación"
 
 #~ msgid ""
 #~ "The current value isn't a valid changeset ID. Please enter an integer "
@@ -45680,6 +45792,13 @@ msgstr ""
 #~ "cargar.</html>"
 
 #~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>Please resolve this conflict first, then try again.</html>"
+#~ msgstr ""
+#~ "<html>La capa ''{0}'' tiene un conflicto con la primitiva <br>''{1}''."
+#~ "<br>Es necesario resolver el conflicto antes de continuar.</html>"
+
+#~ msgid ""
 #~ "<html>This relation has been changed outside of the editor.<br>You can't "
 #~ "apply your changes and continue editing.<br><br>Do you want to create a "
 #~ "conflict and close the editor?</html>"
@@ -45740,6 +45859,20 @@ msgstr ""
 #~ msgid "\"{0}\" is not closed and therefore cannot be joined."
 #~ msgstr "\"{0}\" no está cerrado y, por tanto, no se puede unir."
 
+#~ msgid ""
+#~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
+#~ "<br>This conflict cannot be added.</html>"
+#~ msgstr ""
+#~ "<html>La capa ''{0}'' ya tiene un conflicto con la primitiva <br>''{1}''."
+#~ "<br>Este conflicto no puede ser añadido.</html>"
+
+#~ msgid ""
+#~ "Warning: Layer ''{0}'' does not exist any more. Cannot remove conflict "
+#~ "for primitive ''{1}''."
+#~ msgstr ""
+#~ "Atención: La capa ''{0}'' ya no existe. No se puede eliminar el conflicto "
+#~ "para la primitiva ''{1}''."
+
 #~ msgid "The \"from\" way does not start or end at a \"via\" node."
 #~ msgstr "La vía \"desde\" no comienza o termina en un nodo \"vía\"."
 
@@ -45798,6 +45931,11 @@ msgstr ""
 #~ msgid "overground"
 #~ msgstr "en superficie"
 
+#~ msgid "Undelete {0} primitive"
+#~ msgid_plural "Undelete {0} primitives"
+#~ msgstr[0] "Restaurar {0} primitiva"
+#~ msgstr[1] "Restaurar {0} primitivas"
+
 #~ msgid "tagged"
 #~ msgstr "etiquetado"
 
@@ -45814,6 +45952,16 @@ msgstr ""
 #~ msgid "UTM20 North Geodesic system"
 #~ msgstr "Sistema geodésico UTM20 Norte"
 
+#~ msgid "Merging deleted primitives failed"
+#~ msgstr "La unión de las primitivas borradas ha fallado"
+
+#~ msgid ""
+#~ "The following primitives could not be copied to the target "
+#~ "primitive<br>because they are deleted in the target dataset:"
+#~ msgstr ""
+#~ "Las siguientes primitivas no pueden ser copiadas a la primitiva "
+#~ "destino<br> porque han sido eliminadas en el conjunto de datos de destino:"
+
 #~ msgid ""
 #~ "There is {0} additional node used by way {1}<br>which is deleted on the "
 #~ "server.<br><br>Do you want to undelete this node too?"
@@ -45827,11 +45975,22 @@ msgstr ""
 #~ "Hay {0} nodos adicionales usados por la vía {1}<br>que ha sido eliminada "
 #~ "en el servidor.<br><br> ¿Quiere que estos nodos vuelvan a existir?"
 
+#~ msgid "This is equal to deleting the roles of these primitives."
+#~ msgstr "Esto equivale a borrar los roles de esas primitivas."
+
 #~ msgid "Click do download the currently selected area"
 #~ msgstr "Haga click para descargar el área actualmente seleccionada"
 
 #~ msgid "Filter Hidden: {0} Disabled: {0}"
 #~ msgstr "Filtrar ocultos: {0} Desactivados: {0}"
+
+#~ msgid "Multiple members referring to same primitive"
+#~ msgstr "Miembros múltiples referenciando a la misma primitiva"
+
+#~ msgid "Remove all members referring to one of the selected primitives"
+#~ msgstr ""
+#~ "Elimina todos los miembros que se refieran a una de las primitivas "
+#~ "seleccionadas"
 
 #~ msgid "GPS point"
 #~ msgstr "Punto GPS"
@@ -45873,8 +46032,29 @@ msgstr ""
 #~ "de la primitiva {0} a 0.<br>En la próxima subida el servidor le "
 #~ "asignará<br>una ID nueva.<br>¿Está de acuerdo?</html>"
 
+#~ msgid ""
+#~ "WARNING: unexpected format of API base URL. Redirection to info or "
+#~ "history page for OSM primitive will probably fail. API base URL is: "
+#~ "''{0}''"
+#~ msgstr ""
+#~ "Precaución: formato inesperado de la URL de la base API. La redirección "
+#~ "hacia la página para información o historial para OSM primitivo "
+#~ "probablemente falle. La URL de la base API es:\"{0}\""
+
 #~ msgid "Only up to two areas can be joined at the moment."
 #~ msgstr "Hasta dos áreas pueden ser unidas por el momento."
+
+#~ msgid "Merge the currently selected primitives into another layer"
+#~ msgstr "Fusionar primitivos seleccionados actualmente en otra capa"
+
+#~ msgid ""
+#~ "The copied data contains incomplete primitives.  When pasting the "
+#~ "incomplete primitives are removed.  Do you want to paste the data without "
+#~ "the incomplete primitives?"
+#~ msgstr ""
+#~ "Los datos copiados contienen primitivos incompletos. Al pegar se borrarán "
+#~ "los primitivos incompletos. ¿Desea pegar los datos sin los primitivos "
+#~ "incompletos?"
 
 #~ msgid "An OSM way with role <tt>to</tt> is required in a turn restriction."
 #~ msgstr ""
@@ -45891,6 +46071,15 @@ msgstr ""
 
 #~ msgid "Add an OSM way with role ''to''"
 #~ msgstr "Añadir una vía OSM con el rol \"to\""
+
+#~ msgid ""
+#~ "<html>This relation already has one or more members referring to<br>the "
+#~ "primitive ''{0}''<br><br>Do you really want to add another relation "
+#~ "member?</html>"
+#~ msgstr ""
+#~ "<html>Esta relación ya posee uno o más miembros referidos a<br>la "
+#~ "primitiva ''{0}''<br><br>¿Desea realmente añadir otro miembro relacionado?"
+#~ "</html>"
 
 #~ msgid ""
 #~ "You are about to delete incomplete objects.<br>This will cause problems "
@@ -45945,6 +46134,11 @@ msgstr ""
 
 #~ msgid "Edit SeaMap Symbols"
 #~ msgstr "Editar símbolos SeaMap"
+
+#~ msgid "You are setting an empty role on {0} primitive."
+#~ msgid_plural "You are setting an empty role on {0} primitives."
+#~ msgstr[0] "Está configurando un rol vacío en la primitiva {0}"
+#~ msgstr[1] "Está configurando reles vacíos en las primitivas {0}"
 
 #~ msgid ""
 #~ "Aligning would result nodes outside the world.\n"

@@ -198,6 +198,14 @@ public class Route {
 		return length;
 	}
 	
+	public Node getStart() {
+		return getFirstSegment().getStart();
+	}
+	
+	public Node getEnd() {
+		return getLastSegment().getEnd();
+	}
+	
 	public Segment getFirstSegment() {
 		return getSegments().get(0);
 	}
@@ -208,5 +216,15 @@ public class Route {
 	
 	public Route subRoute(int fromIndex, int toIndex) {
 		return new Route(segments.subList(fromIndex, toIndex));
+	}
+	
+	public List<Way> getWays() {
+		final List<Way> ws = new ArrayList<Way>();
+		
+		for (Segment s : segments) {
+			ws.add(s.getWay());
+		}
+		
+		return Collections.unmodifiableList(ws);
 	}
 }

@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -18,10 +21,9 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
+import javax.swing.KeyStroke;
 
 class JunctionPane extends JComponent {
 	private final class MouseInputProcessor extends MouseAdapter {
@@ -30,6 +32,7 @@ class JunctionPane extends JComponent {
 		private int button;
 		
 		public void mousePressed(MouseEvent e) {
+			setFocusable(true);
 			button = e.getButton();
 			
 			if (button == MouseEvent.BUTTON1) {
@@ -75,7 +78,6 @@ class JunctionPane extends JComponent {
 				for (InteractiveElement ie : interactives()) {
 					if (ie.contains(mouse, state)) {
 						setState(ie.click(state));
-						repaint();
 						break;
 					}
 				}
@@ -102,8 +104,6 @@ class JunctionPane extends JComponent {
 				if (dragging != null) {
 					setState(dragging.drag(mouse.getX(), mouse.getY(), dropTarget(mouse), state));
 				}
-				
-				repaint();
 			} else if (button == MouseEvent.BUTTON3) {
 				translate(e.getX() - originX, e.getY() - originY);
 				
@@ -132,7 +132,7 @@ class JunctionPane extends JComponent {
 	
 	private final MouseInputProcessor mip = new MouseInputProcessor();
 	
-	private JunctionGui junction;
+	private GuiContainer container;
 	
 	private int width = 0;
 	private int height = 0;
@@ -147,33 +147,76 @@ class JunctionPane extends JComponent {
 	private State state;
 	private InteractiveElement dragging;
 	
-	public JunctionPane(JunctionGui junction) {
-		setJunction(junction);
+	public JunctionPane(GuiContainer container) {
+		setJunction(container);
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "refresh");
+		getActionMap().put("refresh", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setState(new State.Invalid(state));
+			}
+		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "zoomIn");
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "zoomIn");
+		getActionMap().put("zoomIn", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scale(Math.pow(0.8, -1));
+			}
+		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "zoomOut");
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "zoomOut");
+		getActionMap().put("zoomOut", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scale(Math.pow(0.8, 1));
+			}
+		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "center");
+		getActionMap().put("center", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				center();
+			}
+		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "toggleAllTurns");
+		getActionMap().put("toggleAllTurns", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				toggleAllTurns();
+			}
+		});
 	}
 	
-	public void setJunction(JunctionGui junction) {
+	public void setJunction(GuiContainer container) {
 		removeMouseListener(mip);
 		removeMouseMotionListener(mip);
 		removeMouseWheelListener(mip);
 		interactives.clear();
 		dragging = null;
-		this.junction = junction;
+		this.container = container;
 		
-		dirty = true;
-		repaint();
-		
-		if (junction == null) {
+		if (container == null) {
 			this.state = null;
 		} else {
-			this.state = new State.Default(junction);
+			setState(new State.Dirty(new State.Default()));
 			
-			final Rectangle2D bounds = junction.getBounds();
-			scale = Math.min(getHeight() / 2 / bounds.getHeight(), getWidth() / 2 / bounds.getWidth());
-			
-			translationX = -bounds.getCenterX();
-			translationY = -bounds.getCenterY();
-			
-			translate(getWidth() / 2d, getHeight() / 2d);
+			center();
 			
 			addMouseListener(mip);
 			addMouseMotionListener(mip);
@@ -181,22 +224,40 @@ class JunctionPane extends JComponent {
 		}
 	}
 	
+	private void center() {
+		final Rectangle2D bounds = container.getBounds();
+		scale = Math.min(getHeight() / 2 / bounds.getHeight(), getWidth() / 2 / bounds.getWidth());
+		
+		translationX = -bounds.getCenterX();
+		translationY = -bounds.getCenterY();
+		
+		translate(getWidth() / 2d, getHeight() / 2d);
+	}
+	
+	private void toggleAllTurns() {
+		if (state instanceof State.AllTurns) {
+			setState(((State.AllTurns) state).unwrap());
+		} else {
+			setState(new State.AllTurns(state));
+		}
+	}
+	
 	private void setState(State state) {
-		if (state instanceof State.Invalid) {
-			final Node n = junction.getModel().getNode();
-			final ModelContainer m = ModelContainer.create(n);
-			
-			final GuiContainer c = junction.getContainer().empty();
-			junction = c.getGui(m.getJunction(n));
-			
+		if (state instanceof State.AllTurns) {
 			dirty = true;
-			this.state = new State.Default(junction);
+			this.state = state;
+		} else if (state instanceof State.Invalid) {
+			container = container.recalculate();
+			dirty = true;
+			this.state = new State.Default();
 		} else if (state instanceof State.Dirty) {
 			dirty = true;
 			this.state = ((State.Dirty) state).unwrap();
 		} else {
 			this.state = state;
 		}
+		
+		repaint();
 	}
 	
 	void scale(int x, int y, double scale) {
@@ -210,6 +271,10 @@ class JunctionPane extends JComponent {
 		
 		dirty = true;
 		repaint();
+	}
+	
+	void scale(double scale) {
+		scale(getWidth() / 2, getHeight() / 2, scale);
 	}
 	
 	void translate(double x, double y) {
@@ -232,7 +297,7 @@ class JunctionPane extends JComponent {
 			interactive = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		}
 		
-		if (junction == null) {
+		if (container == null) {
 			super.paintComponent(g);
 			return;
 		}
@@ -294,13 +359,14 @@ class JunctionPane extends JComponent {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g2d.setColor(Color.GRAY);
-		for (RoadGui r : junction.getRoads()) {
+		for (RoadGui r : container.getRoads()) {
 			addAllInteractives(r.paint(g2d));
 		}
 		
-		addAllInteractives(junction.paint(g2d));
-		
-		dot(g2d, new Point2D.Double(junction.x, junction.y), junction.getContainer().getLaneWidth() / 5);
+		for (JunctionGui j : container.getJunctions()) {
+			addAllInteractives(j.paint(g2d));
+			dot(g2d, new Point2D.Double(j.x, j.y), container.getLaneWidth() / 5);
+		}
 	}
 	
 	private void addAllInteractives(List<InteractiveElement> ies) {

@@ -10,6 +10,7 @@ abstract class InteractiveElement {
 		Type TURN_CONNECTION = new Type() {};
 		Type LANE_ADDER = new Type() {};
 		Type EXTENDER = new Type() {};
+		Type VIA_CONNECTOR = new Type() {};
 	}
 	
 	public void paintBackground(Graphics2D g2d, State state) {}

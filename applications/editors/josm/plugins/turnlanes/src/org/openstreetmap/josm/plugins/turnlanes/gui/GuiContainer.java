@@ -1,29 +1,38 @@
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
+import static java.lang.Math.sqrt;
+import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.locs;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 import org.openstreetmap.josm.plugins.turnlanes.model.Lane;
+import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 import org.openstreetmap.josm.plugins.turnlanes.model.Road;
 
 class GuiContainer {
 	static final Color RED = new Color(234, 66, 108);
 	static final Color GREEN = new Color(66, 234, 108);
 	
+	private final ModelContainer mc;
+	
 	private final Point2D translation;
 	/**
 	 * Meters per pixel.
 	 */
 	private final double mpp;
-	/**
-	 * Meters per source unit.
-	 */
-	private final double mpsu;
 	private final double scale;
 	private final double laneWidth;
 	
@@ -32,14 +41,38 @@ class GuiContainer {
 	
 	private final Stroke connectionStroke;
 	
-	public GuiContainer(Point2D origin, double mpsu) {
+	public GuiContainer(ModelContainer mc) {
+		final Point2D origin = avgOrigin(locs(mc.getPrimaryJunctions()));
+		
+		final LatLon originCoor = Main.proj.eastNorth2latlon(new EastNorth(origin.getX(), origin.getY()));
+		final LatLon relCoor = Main.proj.eastNorth2latlon(new EastNorth(origin.getX() + 1, origin.getY() + 1));
+		
+		// meters per source unit
+		final double mpsu = relCoor.greatCircleDistance(originCoor) / sqrt(2);
+		
+		this.mc = mc;
 		this.translation = new Point2D.Double(-origin.getX(), -origin.getY());
 		this.mpp = 0.2;
-		this.mpsu = mpsu;
 		this.scale = mpsu / mpp;
 		this.laneWidth = 2 / mpp;
 		
 		this.connectionStroke = new BasicStroke((float) (laneWidth / 4), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+		
+		for (Junction j : mc.getPrimaryJunctions()) {
+			getGui(j);
+		}
+	}
+	
+	private static Point2D avgOrigin(List<Point2D> locs) {
+		double x = 0;
+		double y = 0;
+		
+		for (Point2D l : locs) {
+			x += l.getX();
+			y += l.getY();
+		}
+		
+		return new Point2D.Double(x / locs.size(), y / locs.size());
 	}
 	
 	public JunctionGui getGui(Junction j) {
@@ -104,7 +137,44 @@ class GuiContainer {
 		throw new IllegalArgumentException("No such lane.");
 	}
 	
-	public GuiContainer empty() {
-		return new GuiContainer(new Point2D.Double(-translation.getX(), -translation.getY()), mpsu);
+	public ModelContainer getModel() {
+		return mc;
+	}
+	
+	public Rectangle2D getBounds() {
+		final List<Junction> primaries = new ArrayList<Junction>(mc.getPrimaryJunctions());
+		final List<Double> top = new ArrayList<Double>();
+		final List<Double> left = new ArrayList<Double>();
+		final List<Double> right = new ArrayList<Double>();
+		final List<Double> bottom = new ArrayList<Double>();
+		
+		for (Junction j : primaries) {
+			final JunctionGui g = getGui(j);
+			final Rectangle2D b = g.getBounds();
+			
+			top.add(b.getMinY());
+			left.add(b.getMinX());
+			right.add(b.getMaxX());
+			bottom.add(b.getMaxY());
+		}
+		
+		final double t = Collections.min(top);
+		final double l = Collections.min(left);
+		final double r = Collections.max(right);
+		final double b = Collections.max(bottom);
+		
+		return new Rectangle2D.Double(l, t, r - l, b - t);
+	}
+	
+	public GuiContainer recalculate() {
+		return new GuiContainer(mc.recalculate());
+	}
+	
+	public Iterable<RoadGui> getRoads() {
+		return roads.values();
+	}
+	
+	public Iterable<JunctionGui> getJunctions() {
+		return junctions.values();
 	}
 }

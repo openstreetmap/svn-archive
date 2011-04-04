@@ -28,25 +28,101 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 import org.openstreetmap.josm.plugins.turnlanes.model.Lane;
 import org.openstreetmap.josm.plugins.turnlanes.model.Road;
 import org.openstreetmap.josm.plugins.turnlanes.model.Utils;
 
 class RoadGui {
+	final class ViaConnector extends InteractiveElement {
+		private final Road.End end;
+		
+		private final Line2D line;
+		private final float strokeWidth;
+		
+		public ViaConnector(Road.End end) {
+			this.end = end;
+			this.line = new Line2D.Double(getLeftCorner(end), getRightCorner(end));
+			this.strokeWidth = (float) (3 * getContainer().getLaneWidth() / 4);
+		}
+		
+		@Override
+		void paint(Graphics2D g2d, State state) {
+			if (isVisible(state)) {
+				g2d.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+				g2d.setColor(Color.ORANGE);
+				g2d.draw(line);
+			}
+		}
+		
+		@Override
+		boolean contains(Point2D p, State state) {
+			if (!isVisible(state)) {
+				return false;
+			}
+			
+			final Point2D closest = closest(line, p);
+			return p.distance(closest) <= strokeWidth / 2;
+		}
+		
+		private boolean isVisible(State state) {
+			if (!(state instanceof State.Connecting)) {
+				return false;
+			}
+			
+			final State.Connecting s = (State.Connecting) state;
+			
+			if (s.getJunction().equals(end.getJunction()) || equals(s.getBacktrackViaConnector())) {
+				return true;
+			} else if (!s.getViaConnectors().isEmpty()
+			    && s.getViaConnectors().get(s.getViaConnectors().size() - 1).getRoadModel().equals(getRoadModel())) {
+				return true;
+			}
+			
+			return false;
+		}
+		
+		private Road getRoadModel() {
+			return getModel();
+		}
+		
+		public RoadGui getRoad() {
+			return RoadGui.this;
+		}
+		
+		@Override
+		Type getType() {
+			return Type.VIA_CONNECTOR;
+		}
+		
+		@Override
+		int getZIndex() {
+			return 1;
+		}
+		
+		public Road.End getRoadEnd() {
+			return end;
+		}
+		
+		public Point2D getCenter() {
+			return relativePoint(line.getP1(), line.getP1().distance(line.getP2()) / 2, angle(line.getP1(), line.getP2()));
+		}
+	}
+	
 	private final class Extender extends InteractiveElement {
+		private final Road.End end;
 		private final Way way;
 		
 		private final Line2D line;
 		
-		public Extender(Way way, double angle) {
+		public Extender(Road.End end, Way way, double angle) {
+			this.end = end;
 			this.way = way;
 			this.line = new Line2D.Double(a.getPoint(), relativePoint(a.getPoint(), getContainer().getLaneWidth() * 4, angle));
 		}
@@ -69,7 +145,7 @@ class RoadGui {
 		
 		@Override
 		State click(State old) {
-			getModel().extend(way);
+			end.extend(way);
 			return new State.Invalid(old);
 		}
 		
@@ -82,19 +158,18 @@ class RoadGui {
 		int getZIndex() {
 			return 0;
 		}
-		
 	}
 	
 	private final class LaneAdder extends InteractiveElement {
 		private final Road.End end;
-		private final boolean left;
+		private final Lane.Kind kind;
 		
 		private final Point2D center;
 		private final Ellipse2D background;
 		
-		public LaneAdder(Road.End end, boolean left) {
+		public LaneAdder(Road.End end, Lane.Kind kind) {
 			this.end = end;
-			this.left = left;
+			this.kind = kind;
 			
 			final double a = getAngle(end) + PI;
 			final Point2D lc = getLeftCorner(end);
@@ -103,7 +178,7 @@ class RoadGui {
 			final double r = connectorRadius;
 			final double cx;
 			final double cy;
-			if (left) {
+			if (kind == Lane.Kind.EXTRA_LEFT) {
 				final JunctionGui j = getContainer().getGui(end.getJunction());
 				final Point2D i = intersection(line(j.getPoint(), a), new Line2D.Double(lc, rc));
 				
@@ -138,7 +213,7 @@ class RoadGui {
 		}
 		
 		private boolean isVisible(State state) {
-			return end.getJunction().equals(state.getJunction().getModel());
+			return end.getJunction().isPrimary();
 		}
 		
 		@Override
@@ -158,20 +233,26 @@ class RoadGui {
 		
 		@Override
 		public State click(State old) {
-			end.addExtraLane(left);
+			end.addLane(kind);
 			return new State.Invalid(old);
 		}
 	}
 	
 	final class IncomingConnector extends InteractiveElement {
-		private final boolean forward;
+		private final Road.End end;
+		private final List<LaneGui> lanes;
+		
 		private final Point2D center = new Point2D.Double();
 		private final Ellipse2D circle = new Ellipse2D.Double();
 		
-		private final List<LaneGui> lanes = new ArrayList<LaneGui>();
-		
-		private IncomingConnector(boolean forward) {
-			this.forward = forward;
+		private IncomingConnector(Road.End end) {
+			this.end = end;
+			
+			final List<LaneGui> lanes = new ArrayList<LaneGui>(end.getLanes().size());
+			for (Lane l : end.getOppositeEnd().getLanes()) {
+				lanes.add(new LaneGui(RoadGui.this, l));
+			}
+			this.lanes = Collections.unmodifiableList(lanes);
 		}
 		
 		@Override
@@ -216,19 +297,16 @@ class RoadGui {
 		}
 		
 		private boolean isVisible(State state) {
-			if (!getRoadEnd().getJunction().equals(state.getJunction().getModel())) {
+			if (getModel().isPrimary() || !getRoadEnd().getJunction().isPrimary()
+			    || getRoadEnd().getOppositeEnd().getLanes().isEmpty()) {
 				return false;
 			}
 			
-			// must be at least one lane in that direction
-			final boolean reverse = getRoadEnd().isToEnd();
-			for (Lane l : getModel().getLanes()) {
-				if (l.isReverse() == reverse) {
-					return true;
-				}
+			if (state instanceof State.Connecting) {
+				return ((State.Connecting) state).getJunction().equals(getRoadEnd().getJunction());
 			}
 			
-			return false;
+			return true;
 		}
 		
 		@Override
@@ -255,7 +333,7 @@ class RoadGui {
 		
 		@Override
 		public State activate(State old) {
-			return new State.IncomingActive(old.getJunction(), getRoadEnd());
+			return new State.IncomingActive(getRoadEnd());
 		}
 		
 		public Point2D getCenter() {
@@ -269,8 +347,12 @@ class RoadGui {
 			circle.setFrame(x - r, y - r, 2 * r, 2 * r);
 		}
 		
-		Road.End getRoadEnd() {
-			return forward ? getModel().getFromEnd() : getModel().getToEnd();
+		public Road.End getRoadEnd() {
+			return end;
+		}
+		
+		public List<LaneGui> getLanes() {
+			return lanes;
 		}
 		
 		@Override
@@ -399,46 +481,41 @@ class RoadGui {
 	private final JunctionGui b;
 	private final double length;
 	
-	private final IncomingConnector incomingA = new IncomingConnector(true);
-	private final IncomingConnector incomingB = new IncomingConnector(false);
+	private final IncomingConnector incomingA;
+	private final IncomingConnector incomingB;
 	
 	private final Road road;
-	private final List<LaneGui> lanes = new ArrayList<LaneGui>();
 	private final List<Segment> segments = new ArrayList<Segment>();
 	
 	final double connectorRadius;
 	
-	public RoadGui(GuiContainer container, Road r) {
+	public RoadGui(GuiContainer container, Road road) {
 		this.container = container;
 		
-		this.a = container.getGui(r.getFromEnd().getJunction());
-		this.b = container.getGui(r.getToEnd().getJunction());
+		this.road = road;
 		
-		this.road = r;
+		this.a = container.getGui(road.getFromEnd().getJunction());
+		this.b = container.getGui(road.getToEnd().getJunction());
+		
+		this.incomingA = new IncomingConnector(road.getFromEnd());
+		this.incomingB = new IncomingConnector(road.getToEnd());
 		
 		final List<Point2D> bends = new ArrayList<Point2D>();
-		final List<Node> nodes = r.getRoute().getNodes();
+		final List<Node> nodes = road.getRoute().getNodes();
 		for (int i = nodes.size() - 2; i > 0; --i) {
 			bends.add(container.translateAndScale(loc(nodes.get(i))));
 		}
 		
 		// they add themselves to this.segments
 		new Segment(b, bends, a);
-		
 		double l = 0;
 		for (Segment s : segments) {
 			l += s.length;
 		}
-		
 		this.length = l;
 		
-		for (Lane lane : r.getLanes()) {
-			final LaneGui gui = new LaneGui(this, lane);
-			lanes.add(gui);
-			(lane.isReverse() ? incomingB : incomingA).add(gui);
-		}
-		
-		this.innerMargin = getLaneCount(true) > 0 && getLaneCount(false) > 0 ? 1 * container.getLaneWidth() / 15 : 0;
+		this.innerMargin = !incomingA.getLanes().isEmpty() && !incomingB.getLanes().isEmpty() ? 1 * container
+		    .getLaneWidth() / 15 : 0;
 		this.outerMargin = container.getLaneWidth() / 6;
 		this.connectorRadius = 3 * container.getLaneWidth() / 8;
 		this.lineWidth = (float) (container.getLaneWidth() / 30);
@@ -454,14 +531,6 @@ class RoadGui {
 	
 	public JunctionGui getB() {
 		return b;
-	}
-	
-	private int laneMiddle() {
-		int i = 0;
-		while (lanes.size() > i && lanes.get(i).getModel().isReverse()) {
-			++i;
-		}
-		return i;
 	}
 	
 	public Line2D getLeftCurb(Road.End end) {
@@ -498,8 +567,8 @@ class RoadGui {
 			throw new IllegalArgumentException();
 		}
 		
-		final int lcForward = getLaneCount(false);
-		final int lcBackward = getLaneCount(true);
+		final int lcForward = incomingA.getLanes().size();
+		final int lcBackward = incomingB.getLanes().size();
 		
 		final double LW = getContainer().getLaneWidth();
 		final double M = innerMargin + outerMargin;
@@ -511,24 +580,19 @@ class RoadGui {
 		}
 	}
 	
-	private int getLaneCount(boolean reverse) {
-		int result = 0;
-		
-		for (LaneGui l : lanes) {
-			if (l.getModel().isReverse() == reverse) {
-				++result;
-			}
-		}
-		
-		return result;
-	}
-	
 	List<InteractiveElement> paint(Graphics2D g2d) {
 		final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
 		
 		result.addAll(paintLanes(g2d));
-		result.addAll(laneAdders());
-		result.addAll(extenders());
+		
+		if (getModel().isPrimary()) {
+			result.add(new ViaConnector(getModel().getFromEnd()));
+			result.add(new ViaConnector(getModel().getToEnd()));
+		} else {
+			result.addAll(laneAdders());
+			result.addAll(extenders(getModel().getFromEnd()));
+			result.addAll(extenders(getModel().getToEnd()));
+		}
 		
 		g2d.setColor(Color.RED);
 		for (Segment s : segments) {
@@ -541,48 +605,32 @@ class RoadGui {
 	private List<LaneAdder> laneAdders() {
 		final List<LaneAdder> result = new ArrayList<LaneAdder>(4);
 		
-		boolean to = false;
-		boolean from = false;
-		for (Lane l : getModel().getLanes()) {
-			to = to || (!l.isReverse() && !l.isExtra());
-			from = from || (l.isReverse() && !l.isExtra());
+		if (!incomingA.getLanes().isEmpty()) {
+			result.add(new LaneAdder(getModel().getToEnd(), Lane.Kind.EXTRA_LEFT));
+			result.add(new LaneAdder(getModel().getToEnd(), Lane.Kind.EXTRA_RIGHT));
 		}
 		
-		if (to) {
-			result.add(new LaneAdder(getModel().getToEnd(), true));
-			result.add(new LaneAdder(getModel().getToEnd(), false));
-		}
-		
-		if (from) {
-			result.add(new LaneAdder(getModel().getFromEnd(), true));
-			result.add(new LaneAdder(getModel().getFromEnd(), false));
+		if (!incomingB.getLanes().isEmpty()) {
+			result.add(new LaneAdder(getModel().getFromEnd(), Lane.Kind.EXTRA_LEFT));
+			result.add(new LaneAdder(getModel().getFromEnd(), Lane.Kind.EXTRA_RIGHT));
 		}
 		
 		return result;
 	}
 	
-	private List<Extender> extenders() {
-		if (!getModel().isExtendable()) {
+	private List<Extender> extenders(Road.End end) {
+		if (!end.isExtendable()) {
 			return Collections.emptyList();
 		}
 		
 		final List<Extender> result = new ArrayList<Extender>();
 		
-		final Node n = a.getModel().getNode();
-		for (OsmPrimitive p : n.getReferrers()) {
-			if (p.getType() != OsmPrimitiveType.WAY) {
-				continue;
-			}
-			
-			Way w = (Way) p;
-			if (w.isFirstLastNode(n) && w.getNodesCount() > 1 && Utils.isRoad(w)) {
-				if (getModel().getRoute().getFirstSegment().getWay().equals(w)) {
-					continue;
-				}
-				
+		final Node n = end.getJunction().getNode();
+		for (Way w : OsmPrimitive.getFilteredList(n.getReferrers(), Way.class)) {
+			if (w.getNodesCount() > 1 && !end.getWay().equals(w) && w.isFirstLastNode(n) && Utils.isRoad(w)) {
 				final Node nextNode = w.firstNode().equals(n) ? w.getNode(1) : w.getNode(w.getNodesCount() - 2);
 				final Point2D nextNodeLoc = getContainer().translateAndScale(loc(nextNode));
-				result.add(new Extender(w, angle(a.getPoint(), nextNodeLoc)));
+				result.add(new Extender(end, w, angle(a.getPoint(), nextNodeLoc)));
 			}
 		}
 		
@@ -602,8 +650,8 @@ class RoadGui {
 		
 		g2d.setStroke(regularStroke);
 		
-		final boolean forward = getLaneCount(false) > 0;
-		final boolean backward = getLaneCount(true) > 0;
+		final boolean forward = !incomingA.getLanes().isEmpty();
+		final boolean backward = !incomingB.getLanes().isEmpty();
 		
 		final Path2D middleArea;
 		if (forward && backward) {
@@ -629,26 +677,22 @@ class RoadGui {
 		g2d.setColor(Color.WHITE);
 		g2d.draw(middleLines);
 		
-		moveIncoming(getModel().getFromEnd());
-		moveIncoming(getModel().getToEnd());
-		
-		final int laneMiddle = laneMiddle();
-		for (int i = laneMiddle; i < lanes.size(); ++i) {
-			moveOutgoing(lanes.get(i), i - laneMiddle);
-		}
-		for (int i = laneMiddle - 1; i >= 0; --i) {
-			moveOutgoing(lanes.get(i), laneMiddle - i - 1);
-		}
-		
 		final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
 		
+		moveIncoming(getModel().getFromEnd());
+		moveIncoming(getModel().getToEnd());
 		result.add(incomingA);
 		result.add(incomingB);
-		for (LaneGui l : lanes) {
-			result.add(l.outgoing);
-			
-			if (l.getModel().isExtra()) {
-				result.add(l.lengthSlider);
+		
+		for (IncomingConnector c : Arrays.asList(incomingA, incomingB)) {
+			int offset = 0;
+			for (LaneGui l : c.getLanes()) {
+				moveOutgoing(l, offset++);
+				
+				result.add(l.outgoing);
+				if (l.getModel().isExtra()) {
+					result.add(l.lengthSlider);
+				}
 			}
 		}
 		
@@ -665,7 +709,7 @@ class RoadGui {
 		final List<Path> linePaths = new ArrayList<Path>();
 		linePaths.add(innerPath);
 		
-		for (LaneGui l : lanes(forward)) {
+		for (LaneGui l : forward ? incomingA.getLanes() : incomingB.getLanes()) {
 			l.setClip(clip);
 			innerPath = l.recalculate(innerPath, middleLines);
 			linePaths.add(innerPath);
@@ -718,10 +762,13 @@ class RoadGui {
 		
 		final double d = rc.getP1().distance(j.getPoint()) + lc.getP1().distance(j.getPoint());
 		
-		final Point2D r1 = relativePoint(rc.getP1(), 1, angle(lc.getP1(), rc.getP1()));
-		final Point2D r2 = relativePoint(r1, d, angle(rc) + PI);
-		final Point2D l1 = relativePoint(lc.getP1(), 1, angle(rc.getP1(), lc.getP1()));
-		final Point2D l2 = relativePoint(l1, d, angle(lc) + PI);
+		final double cm = 0.01 / getContainer().getMpp(); // 1 centimeter
+		final double rca = angle(rc) + PI;
+		final double lca = angle(lc) + PI;
+		final Point2D r1 = relativePoint(relativePoint(rc.getP1(), 1, angle(lc.getP1(), rc.getP1())), cm, rca);
+		final Point2D r2 = relativePoint(r1, d, rca);
+		final Point2D l1 = relativePoint(relativePoint(lc.getP1(), 1, angle(rc.getP1(), lc.getP1())), cm, lca);
+		final Point2D l2 = relativePoint(l1, d, lca);
 		
 		negativeClip.moveTo(r1.getX(), r1.getY());
 		negativeClip.lineTo(r2.getX(), r2.getY());
@@ -732,10 +779,12 @@ class RoadGui {
 		return negativeClip;
 	}
 	
-	private Iterable<LaneGui> lanes(boolean forward) {
-		final int laneMiddle = laneMiddle();
+	public Path getLaneMiddle(boolean forward) {
+		final Path mid = middlePath(!forward);
+		final double w = getWidth(forward ? getModel().getFromEnd() : getModel().getToEnd(), true);
+		final double o = (w - outerMargin) / 2;
 		
-		return forward ? lanes.subList(laneMiddle, lanes.size()) : CollectionUtils.reverse(lanes.subList(0, laneMiddle));
+		return o > 0 ? mid.offset(-o, -1, -1, -o) : mid;
 	}
 	
 	private Path middlePath(boolean forward) {
@@ -779,6 +828,14 @@ class RoadGui {
 		lane.outgoing.move(loc.getX(), loc.getY());
 	}
 	
+	public JunctionGui getJunction(Road.End end) {
+		if (!getModel().equals(end.getRoad())) {
+			throw new IllegalArgumentException();
+		}
+		
+		return end.isFromEnd() ? getA() : getB();
+	}
+	
 	public double getAngle(Road.End end) {
 		if (!getModel().equals(end.getRoad())) {
 			throw new IllegalArgumentException();
@@ -800,15 +857,24 @@ class RoadGui {
 		return length;
 	}
 	
-	public List<LaneGui> getLanes() {
-		return Collections.unmodifiableList(lanes);
-	}
-	
 	public double getOffset(double x, double y) {
 		return segments.get(0).getOffset(x, y);
 	}
 	
 	public GuiContainer getContainer() {
 		return container;
+	}
+	
+	public List<LaneGui> getLanes() {
+		final List<LaneGui> result = new ArrayList<LaneGui>();
+		
+		result.addAll(incomingB.getLanes());
+		result.addAll(incomingA.getLanes());
+		
+		return Collections.unmodifiableList(result);
+	}
+	
+	public List<LaneGui> getLanes(Road.End end) {
+		return getConnector(end.getOppositeEnd()).getLanes();
 	}
 }

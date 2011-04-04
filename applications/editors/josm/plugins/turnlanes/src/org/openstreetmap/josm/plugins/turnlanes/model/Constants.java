@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public interface Constants {
 	String SEPARATOR = ";";
-	String SPLIT_REGEX = "[,:;]";
+	String SPLIT_REGEX = "\\p{Zs}*[,:;]\\p{Zs}*";
 	Pattern SPLIT_PATTERN = Pattern.compile(SPLIT_REGEX);
 	
 	String TYPE_LENGTHS = "turnlanes:lengths";

@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
-import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.loc;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
@@ -8,22 +7,22 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.gui.SideButton;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 
 public class TurnLanesDialog extends ToggleDialog {
@@ -70,43 +69,32 @@ public class TurnLanesDialog extends ToggleDialog {
 		DataSet.addSelectionListener(new SelectionChangedListener() {
 			@Override
 			public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-				if (newSelection.size() != 1) {
+				final Collection<OsmPrimitive> s = Collections.unmodifiableCollection(newSelection);
+				final List<Node> nodes = OsmPrimitive.getFilteredList(s, Node.class);
+				final List<Way> ways = OsmPrimitive.getFilteredList(s, Way.class);
+				
+				if (nodes.isEmpty()) {
+					setJunction(null);
 					return;
 				}
 				
-				final OsmPrimitive p = newSelection.iterator().next();
-				
-				if (p.getType() == OsmPrimitiveType.NODE) {
-					final Node n = (Node) p;
-					
-					final ModelContainer mc;
-					final Junction j;
-					
-					try {
-						mc = ModelContainer.create(n);
-						j = mc.getJunction(n);
-					} catch (RuntimeException e) {
-						displayError(e);
-						
-						return;
-					}
-					
-					final EastNorth en = Main.proj.latlon2eastNorth(n.getCoor());
-					final EastNorth rel = new EastNorth(en.getX() + 1, en.getY());
-					
-					// meters per source unit
-					final double mpsu = Main.proj.eastNorth2latlon(rel).greatCircleDistance(n.getCoor());
-					final GuiContainer model = new GuiContainer(loc(n), mpsu);
-					
-					setJunction(model.getGui(j));
+				try {
+					setJunction(ModelContainer.create(nodes, ways));
+				} catch (RuntimeException e) {
+					displayError(e);
+					return;
 				}
 			}
-			
 		});
 		
 		final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
-		buttonPanel.add(new SideButton(editAction));
-		buttonPanel.add(new SideButton(validateAction));
+		final ButtonGroup group = new ButtonGroup();
+		final JToggleButton editButton = new JToggleButton(editAction);
+		final JToggleButton validateButton = new JToggleButton(validateAction);
+		group.add(editButton);
+		group.add(validateButton);
+		buttonPanel.add(editButton);
+		buttonPanel.add(validateButton);
 		
 		body.setLayout(new CardLayout(4, 4));
 		
@@ -116,12 +104,13 @@ public class TurnLanesDialog extends ToggleDialog {
 		body.add(junctionPane, CARD_EDIT);
 		body.add(new ValidationPanel(), CARD_VALIDATE);
 		body.add(error, CARD_ERROR);
-		editAction.actionPerformed(null);
+		
+		editButton.doClick();
 	}
 	
 	void displayError(RuntimeException e) {
 		if (editing) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			
 			error.setText("<html>An error occured while constructing the model."
 			    + " Please run the validator to make sure the data is consistent.<br><br>Error: " + e.getMessage()
@@ -132,9 +121,9 @@ public class TurnLanesDialog extends ToggleDialog {
 		}
 	}
 	
-	void setJunction(JunctionGui j) {
-		if (j != null && editing) {
-			junctionPane.setJunction(j);
+	void setJunction(ModelContainer mc) {
+		if (mc != null && editing) {
+			junctionPane.setJunction(new GuiContainer(mc));
 			final CardLayout cl = (CardLayout) body.getLayout();
 			cl.show(body, CARD_EDIT);
 		}

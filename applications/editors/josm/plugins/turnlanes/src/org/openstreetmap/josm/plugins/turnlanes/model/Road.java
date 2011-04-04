@@ -6,6 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -13,54 +14,87 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 import org.openstreetmap.josm.plugins.turnlanes.model.Route.Segment;
 import org.openstreetmap.josm.tools.Pair;
 
 public class Road {
 	public class End {
+		private final boolean from;
 		private final Junction junction;
 		
-		private End(Junction junction) {
+		private final Relation lengthsLeft;
+		private final Relation lengthsRight;
+		
+		private final double extraLengthLeft;
+		private final double extraLengthRight;
+		
+		private final List<Lane> lanes;
+		
+		private End(boolean from, Junction junction, Relation lengthsLeft, Relation lengthsRight) {
+			this.from = from;
 			this.junction = junction;
+			this.lengthsLeft = lengthsLeft;
+			this.lengthsRight = lengthsRight;
+			this.extraLengthLeft = lengthsLeft == null ? 0 : Route.load(lengthsLeft).getLengthFrom(getWay());
+			this.extraLengthRight = lengthsRight == null ? 0 : Route.load(lengthsRight).getLengthFrom(getWay());
+			this.lanes = Lane.load(this);
+			
+			junction.addRoad(getWay());
+		}
+		
+		private End(boolean from, Junction junction) {
+			this.from = from;
+			this.junction = junction;
+			this.lengthsLeft = null;
+			this.lengthsRight = null;
+			this.extraLengthLeft = 0;
+			this.extraLengthRight = 0;
+			this.lanes = Lane.load(this);
+			
+			junction.addRoad(getWay());
 		}
 		
 		public Road getRoad() {
 			return Road.this;
 		}
 		
+		public Way getWay() {
+			return isFromEnd() ? getRoute().getFirstSegment().getWay() : getRoute().getLastSegment().getWay();
+		}
+		
 		public Junction getJunction() {
 			return junction;
 		}
 		
-		private boolean isFrom() {
-			if (this == fromEnd) {
-				return true;
-			} else if (this == toEnd) {
-				return false;
-			}
-			
-			throw new IllegalStateException();
-		}
-		
 		public boolean isFromEnd() {
-			return isFrom();
+			return from;
 		}
 		
 		public boolean isToEnd() {
-			return !isFrom();
+			return !isFromEnd();
 		}
 		
-		public void addExtraLane(boolean left) {
-			if (!isToEnd()) {
-				throw new UnsupportedOperationException();
+		public End getOppositeEnd() {
+			return isFromEnd() ? toEnd : fromEnd;
+		}
+		
+		/**
+		 * @return the turns <em>onto</em> this road at this end
+		 */
+		public Set<Turn> getTurns() {
+			return Turn.load(getContainer(), Constants.TURN_ROLE_TO, getWay());
+		}
+		
+		public void addLane(Lane.Kind kind) {
+			if (kind == Lane.Kind.REGULAR) {
+				throw new IllegalArgumentException("Only extra lanes can be added.");
 			}
 			
 			double length = Double.POSITIVE_INFINITY;
-			for (Lane l : getLanes()) {
-				if (l.getKind() == (left ? Lane.Kind.EXTRA_LEFT : Lane.Kind.EXTRA_RIGHT)) {
-					{
-						length = Math.min(length, l.getLength());
-					}
+			for (Lane l : lanes) {
+				if (l.getKind() == kind) {
+					length = Math.max(0, Math.min(length, l.getLength() - 1));
 				}
 			}
 			
@@ -68,18 +102,123 @@ public class Road {
 				length = Math.min(20, 3 * getLength() / 4);
 			}
 			
-			addLength(left, length);
-		}
-	}
-	
-	public static List<Road> map(ModelContainer container, List<Way> ws, Junction j) {
-		final List<Road> result = new ArrayList<Road>();
-		
-		for (Way w : ws) {
-			result.add(container.getRoad(w, j));
+			addLane(kind, length);
 		}
 		
-		return result;
+		private void addLane(Lane.Kind kind, double length) {
+			assert kind == Lane.Kind.EXTRA_LEFT || kind == Lane.Kind.EXTRA_RIGHT;
+			
+			final boolean left = kind == Lane.Kind.EXTRA_LEFT;
+			final Relation rel = left ? lengthsLeft : lengthsRight;
+			final Relation other = left ? lengthsRight : lengthsLeft;
+			final Node n = getJunction().getNode();
+			
+			final String lengthStr = toLengthString(length);
+			final Relation target;
+			if (rel == null) {
+				if (other == null || !Utils.getMemberNode(other, "end").equals(n)) {
+					target = createLengthsRelation();
+				} else {
+					target = other;
+				}
+			} else {
+				target = rel;
+			}
+			
+			final String key = left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT;
+			final String old = target.get(key);
+			if (old == null) {
+				target.put(key, lengthStr);
+			} else {
+				target.put(key, old + Constants.SEPARATOR + lengthStr);
+			}
+		}
+		
+		private Relation createLengthsRelation() {
+			final Node n = getJunction().getNode();
+			
+			final Relation r = new Relation();
+			r.put("type", Constants.TYPE_LENGTHS);
+			
+			r.addMember(new RelationMember(Constants.LENGTHS_ROLE_END, n));
+			for (Route.Segment s : isFromEnd() ? route.getSegments() : CollectionUtils.reverse(route.getSegments())) {
+				r.addMember(new RelationMember(Constants.LENGTHS_ROLE_WAYS, s.getWay()));
+			}
+			
+			n.getDataSet().addPrimitive(r);
+			
+			return r;
+		}
+		
+		void updateLengths() {
+			for (final boolean left : Arrays.asList(true, false)) {
+				final Lane.Kind kind = left ? Lane.Kind.EXTRA_LEFT : Lane.Kind.EXTRA_RIGHT;
+				final Relation r = left ? lengthsLeft : lengthsRight;
+				final double extra = left ? extraLengthLeft : extraLengthRight;
+				
+				if (r == null) {
+					continue;
+				}
+				
+				final StringBuilder lengths = new StringBuilder(32);
+				for (Lane l : left ? CollectionUtils.reverse(lanes) : lanes) {
+					if (l.getKind() == kind) {
+						lengths.append(toLengthString(extra + l.getLength())).append(Constants.SEPARATOR);
+					}
+				}
+				
+				lengths.setLength(lengths.length() - Constants.SEPARATOR.length());
+				r.put(left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT, lengths.toString());
+			}
+		}
+		
+		public List<Lane> getLanes() {
+			return lanes;
+		}
+		
+		public Lane getLane(Lane.Kind kind, int index) {
+			for (Lane l : lanes) {
+				if (l.getKind() == kind && l.getIndex() == index) {
+					return l;
+				}
+			}
+			
+			throw new IllegalArgumentException("No such lane.");
+		}
+		
+		public Lane getExtraLane(int index) {
+			return index < 0 ? getLane(Lane.Kind.EXTRA_LEFT, index) : getLane(Lane.Kind.EXTRA_RIGHT, index);
+		}
+		
+		public boolean isExtendable() {
+			final End o = getOppositeEnd();
+			return (lengthsLeft == null && lengthsRight == null) && (o.lengthsLeft != null || o.lengthsRight != null);
+		}
+		
+		public void extend(Way way) {
+			if (!isExtendable()) {
+				throw new IllegalStateException();
+			}
+			
+			final End o = getOppositeEnd();
+			if (o.lengthsLeft != null) {
+				o.lengthsLeft.addMember(new RelationMember(Constants.LENGTHS_ROLE_WAYS, way));
+			}
+			if (o.lengthsRight != null) {
+				o.lengthsRight.addMember(new RelationMember(Constants.LENGTHS_ROLE_WAYS, way));
+			}
+		}
+		
+		public List<Double> getLengths(Lane.Kind kind) {
+			switch (kind) {
+				case EXTRA_LEFT:
+					return Lane.loadLengths(lengthsLeft, Constants.LENGTHS_KEY_LENGTHS_LEFT, extraLengthLeft);
+				case EXTRA_RIGHT:
+					return Lane.loadLengths(lengthsRight, Constants.LENGTHS_KEY_LENGTHS_RIGHT, extraLengthRight);
+				default:
+					throw new IllegalArgumentException(String.valueOf(kind));
+			}
+		}
 	}
 	
 	private static Pair<Relation, Relation> getLengthRelations(Way w, Node n) {
@@ -141,39 +280,29 @@ public class Road {
 	}
 	
 	private final ModelContainer container;
-	
-	private final Relation lengthsLeft;
-	private final Relation lengthsRight;
 	private final Route route;
-	private final List<Lane> lanes;
-	
 	private final End fromEnd;
 	private final End toEnd;
 	
 	Road(ModelContainer container, Way w, Junction j) {
-		this.container = container;
-		this.toEnd = new End(j);
-		
 		final Node n = j.getNode();
-		
 		if (!w.isFirstLastNode(n)) {
 			throw new IllegalArgumentException("Way must start or end in given node.");
 		}
+		final Pair<Relation, Relation> lengthsRelations = getLengthRelations(w, n);
 		
-		final Pair<Relation, Relation> lr = getLengthRelations(w, n);
-		
-		this.lengthsLeft = lr.a;
-		this.lengthsRight = lr.b;
-		this.route = lengthsLeft == null && lengthsRight == null ? Route.create(Arrays.asList(w), n) : Route.load(
-		    lengthsLeft, lengthsRight, w);
-		this.lanes = lengthsLeft == null && lengthsRight == null ? Lane.load(this) : Lane.load(this, lengthsLeft,
-		    lengthsRight, w);
-		
-		final List<Node> nodes = route.getNodes();
-		this.fromEnd = new End(container.getOrCreateJunction(nodes.get(0)));
-		
-		fromEnd.getJunction().addRoad(this);
-		toEnd.getJunction().addRoad(this);
+		this.container = container;
+		this.route = lengthsRelations.a == null && lengthsRelations.b == null ? Route.create(Arrays.asList(w), n) : Route
+		    .load(lengthsRelations.a, lengthsRelations.b, w);
+		this.fromEnd = new End(true, container.getOrCreateJunction(route.getFirstSegment().getStart()));
+		this.toEnd = new End(false, j, lengthsRelations.a, lengthsRelations.b);
+	}
+	
+	Road(ModelContainer container, Route route) {
+		this.container = container;
+		this.route = route;
+		this.fromEnd = new End(true, container.getJunction(route.getStart()));
+		this.toEnd = new End(false, container.getJunction(route.getEnd()));
 	}
 	
 	public End getFromEnd() {
@@ -188,36 +317,8 @@ public class Road {
 		return route;
 	}
 	
-	public List<Lane> getLanes() {
-		return lanes;
-	}
-	
 	public double getLength() {
 		return route.getLength();
-	}
-	
-	void updateLengths() {
-		if (lengthsLeft != null) { // TODO only forward lanes at this point
-			String lengths = "";
-			for (int i = lanes.size() - 1; i >= 0; --i) {
-				final Lane l = lanes.get(i);
-				if (l.getKind() == Lane.Kind.EXTRA_LEFT) {
-					lengths += toLengthString(l.getTotalLength()) + Constants.SEPARATOR;
-				}
-			}
-			lengthsLeft.put(Constants.LENGTHS_KEY_LENGTHS_LEFT,
-			    lengths.substring(0, lengths.length() - Constants.SEPARATOR.length()));
-		}
-		if (lengthsRight != null) {
-			String lengths = "";
-			for (Lane l : lanes) {
-				if (l.getKind() == Lane.Kind.EXTRA_RIGHT) {
-					lengths += toLengthString(l.getTotalLength()) + Constants.SEPARATOR;
-				}
-			}
-			lengthsRight.put(Constants.LENGTHS_KEY_LENGTHS_RIGHT,
-			    lengths.substring(0, lengths.length() - Constants.SEPARATOR.length()));
-		}
 	}
 	
 	private String toLengthString(double length) {
@@ -228,95 +329,11 @@ public class Road {
 		return nf.format(length);
 	}
 	
-	// TODO create a special Lanes class which deals with this, misplaced here
-	public Lane getLane(boolean reverse, int index) {
-		for (Lane l : lanes) {
-			if (!l.isExtra() && l.isReverse() == reverse && l.getIndex() == index) {
-				return l;
-			}
-		}
-		
-		throw new IllegalArgumentException("No such lane.");
-	}
-	
-	public Lane getExtraLane(boolean reverse, int index) {
-		for (Lane l : lanes) {
-			if (l.isExtra() && l.isReverse() == reverse && l.getIndex() == index) {
-				return l;
-			}
-		}
-		
-		throw new IllegalArgumentException("No such lane.");
-	}
-	
 	public ModelContainer getContainer() {
 		return container;
 	}
 	
-	private void addLength(boolean left, double length) {
-		final Relation l = lengthsLeft;
-		final Relation r = lengthsRight;
-		final Node n = toEnd.getJunction().getNode();
-		
-		final String lengthStr = toLengthString(length);
-		final Relation target;
-		if (left) {
-			if (l == null) {
-				if (r == null || !Utils.getMemberNode(r, "end").equals(n)) {
-					target = createLengthsRelation();
-				} else {
-					target = r;
-				}
-			} else {
-				target = l;
-			}
-		} else {
-			if (r == null) {
-				if (l == null || !Utils.getMemberNode(l, "end").equals(n)) {
-					target = createLengthsRelation();
-				} else {
-					target = l;
-				}
-			} else {
-				target = r;
-			}
-		}
-		
-		final String key = left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT;
-		final String old = target.get(key);
-		if (old == null) {
-			target.put(key, lengthStr);
-		} else {
-			target.put(key, old + Constants.SEPARATOR + lengthStr);
-		}
-	}
-	
-	private Relation createLengthsRelation() {
-		final Node n = toEnd.getJunction().getNode();
-		
-		final Relation r = new Relation();
-		r.put("type", Constants.TYPE_LENGTHS);
-		
-		r.addMember(new RelationMember(Constants.LENGTHS_ROLE_END, n));
-		for (Route.Segment s : route.getSegments()) {
-			r.addMember(1, new RelationMember(Constants.LENGTHS_ROLE_WAYS, s.getWay()));
-		}
-		
-		n.getDataSet().addPrimitive(r);
-		
-		return r;
-	}
-	
-	public boolean isExtendable() {
-		return lengthsLeft != null || lengthsRight != null;
-	}
-	
-	public void extend(Way way) {
-		if (lengthsLeft != null) {
-			lengthsLeft.addMember(new RelationMember(Constants.LENGTHS_ROLE_WAYS, way));
-		}
-		if (lengthsRight != null) {
-			lengthsRight.addMember(new RelationMember(Constants.LENGTHS_ROLE_WAYS, way));
-		}
+	public boolean isPrimary() {
+		return getContainer().isPrimary(this);
 	}
 }

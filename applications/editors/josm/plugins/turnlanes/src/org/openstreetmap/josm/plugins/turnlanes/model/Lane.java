@@ -1,11 +1,12 @@
 package org.openstreetmap.josm.plugins.turnlanes.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
@@ -14,50 +15,29 @@ public class Lane {
 		EXTRA_LEFT,
 		EXTRA_RIGHT,
 		REGULAR;
+		
+		public boolean isExtra() {
+			return this == EXTRA_LEFT || this == EXTRA_RIGHT;
+		}
 	}
 	
-	/**
-	 * 
-	 * @param road
-	 * @param r
-	 *          lengths relation
-	 * @param w
-	 * @return
-	 */
-	public static List<Lane> load(Road road, Relation left, Relation right, Way w) {
-		double extraLengthLeft = left == null ? 0 : Route.load(left).getLengthFrom(w);
-		double extraLengthRight = right == null ? 0 : Route.load(right).getLengthFrom(w);
+	static List<Lane> load(Road.End roadEnd) {
+		final List<Lane> result = new ArrayList<Lane>();
+		int i;
 		
-		final List<Double> leftLengths = loadLengths(left, Constants.LENGTHS_KEY_LENGTHS_LEFT, extraLengthLeft);
-		final List<Double> rightLengths = loadLengths(right, Constants.LENGTHS_KEY_LENGTHS_RIGHT, extraLengthRight);
-		
-		final List<Lane> result = new ArrayList<Lane>(load(road));
-		final int mid = getReverseCount(result);
-		result.addAll(mid, map(leftLengths, road, true, extraLengthLeft));
-		result.addAll(map(rightLengths, road, false, extraLengthRight));
-		
-		return result;
-	}
-	
-	private static List<Lane> map(List<Double> lengths, Road road, boolean left, double extraLength) {
-		final List<Lane> result = new ArrayList<Lane>(lengths.size());
-		
-		int index = left ? -lengths.size() : 1;
-		for (Double l : (left ? CollectionUtils.reverse(lengths) : lengths)) {
-			// TODO road may connect twice with junction => reverse might not always be false
-			result.add(new Lane(road, index++, false, left, extraLength, l - extraLength));
+		i = 0;
+		for (double l : CollectionUtils.reverse(roadEnd.getLengths(Kind.EXTRA_LEFT))) {
+			result.add(new Lane(roadEnd, --i, Kind.EXTRA_LEFT, l));
 		}
 		
-		return result;
-	}
-	
-	private static int getReverseCount(List<Lane> ls) {
-		int result = 0;
+		final int regulars = getRegularCount(roadEnd.getWay(), roadEnd.getJunction().getNode());
+		for (i = 1; i <= regulars; ++i) {
+			result.add(new Lane(roadEnd, i));
+		}
 		
-		for (Lane l : ls) {
-			if (l.isReverse()) {
-				++result;
-			}
+		i = 0;
+		for (double l : roadEnd.getLengths(Kind.EXTRA_RIGHT)) {
+			result.add(new Lane(roadEnd, ++i, Kind.EXTRA_RIGHT, l));
 		}
 		
 		return result;
@@ -111,69 +91,33 @@ public class Lane {
 		}
 	}
 	
-	public static List<Lane> load(Road r) {
-		final Route.Segment first = r.getRoute().getFirstSegment();
-		final Route.Segment last = r.getRoute().getLastSegment();
-		
-		final int back = getRegularCount(first.getWay(), first.getStart());
-		final int forth = getRegularCount(last.getWay(), last.getEnd());
-		
-		final List<Lane> result = new ArrayList<Lane>(back + forth);
-		
-		for (int i = back; i >= 1; --i) {
-			result.add(new Lane(r, i, true));
-		}
-		for (int i = 1; i <= forth; ++i) {
-			result.add(new Lane(r, i, false));
-		}
-		
-		return Collections.unmodifiableList(result);
-	}
-	
-	private final Road road;
+	private final Road.End roadEnd;
 	private final int index;
 	private final Kind kind;
-	private final boolean reverse;
-	
-	/**
-	 * If this extra lane extends past the given road, this value equals the length of the way(s)
-	 * which come after the end of the road.
-	 */
-	private final double extraLength;
 	
 	private double length = -1;
 	
-	public Lane(Road road, int index, boolean reverse) {
-		this.road = road;
+	public Lane(Road.End roadEnd, int index) {
+		this.roadEnd = roadEnd;
 		this.index = index;
 		this.kind = Kind.REGULAR;
-		this.reverse = reverse;
-		this.extraLength = -1;
 	}
 	
-	public Lane(Road road, int index, boolean reverse, boolean left, double extraLength, double length) {
-		this.road = road;
+	public Lane(Road.End roadEnd, int index, Kind kind, double length) {
+		assert kind == Kind.EXTRA_LEFT || kind == Kind.EXTRA_RIGHT;
+		
+		this.roadEnd = roadEnd;
 		this.index = index;
-		this.kind = left ? Kind.EXTRA_LEFT : Kind.EXTRA_RIGHT;
-		this.reverse = reverse;
-		this.extraLength = extraLength;
+		this.kind = kind;
 		this.length = length;
 		
 		if (length <= 0) {
 			throw new IllegalArgumentException("Length must be positive");
 		}
-		
-		if (extraLength < 0) {
-			throw new IllegalArgumentException("Extra length must not be negative");
-		}
 	}
 	
 	public Road getRoad() {
-		return road;
-	}
-	
-	public double getExtraLength() {
-		return extraLength;
+		return roadEnd.getRoad();
 	}
 	
 	public Kind getKind() {
@@ -181,15 +125,7 @@ public class Lane {
 	}
 	
 	public double getLength() {
-		return isExtra() ? length : road.getLength();
-	}
-	
-	double getTotalLength() {
-		if (!isExtra()) {
-			throw new UnsupportedOperationException();
-		}
-		
-		return length + extraLength;
+		return isExtra() ? length : getRoad().getLength();
 	}
 	
 	public void setLength(double length) {
@@ -200,7 +136,7 @@ public class Lane {
 		}
 		
 		// TODO if needed, increase length of other lanes
-		road.updateLengths();
+		getOutgoingRoadEnd().updateLengths();
 		
 		this.length = length;
 	}
@@ -213,23 +149,68 @@ public class Lane {
 		return index;
 	}
 	
-	public boolean isReverse() {
-		return reverse;
-	}
-	
 	public Junction getOutgoingJunction() {
-		return isReverse() ? getRoad().getFromEnd().getJunction() : getRoad().getToEnd().getJunction();
+		return getOutgoingRoadEnd().getJunction();
 	}
 	
 	public Junction getIncomingJunction() {
-		return isReverse() ? getRoad().getToEnd().getJunction() : getRoad().getFromEnd().getJunction();
+		return getIncomingRoadEnd().getJunction();
 	}
 	
 	public Road.End getOutgoingRoadEnd() {
-		return isReverse() ? getRoad().getFromEnd() : getRoad().getToEnd();
+		return roadEnd;
 	}
 	
 	public Road.End getIncomingRoadEnd() {
-		return isReverse() ? getRoad().getToEnd() : getRoad().getFromEnd();
+		return roadEnd.getOppositeEnd();
+	}
+	
+	public ModelContainer getContainer() {
+		return getRoad().getContainer();
+	}
+	
+	public void addTurn(List<Road> via, Road.End to) {
+		assert equals(to.getJunction());
+		
+		Relation existing = null;
+		for (Turn t : to.getTurns()) {
+			if (t.getFrom().getOutgoingRoadEnd().equals(getOutgoingRoadEnd()) && t.getVia().equals(via)) {
+				if (t.getFrom().equals(this)) {
+					// was already added
+					return;
+				}
+				
+				existing = t.getRelation();
+			}
+		}
+		
+		final Relation r;
+		if (existing == null) {
+			r = new Relation();
+			r.put("type", Constants.TYPE_TURNS);
+			
+			r.addMember(new RelationMember(Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay()));
+			if (via.isEmpty()) {
+				r.addMember(new RelationMember(Constants.TURN_ROLE_VIA, getOutgoingJunction().getNode()));
+			} else {
+				for (Way w : Utils.flattenVia(getOutgoingJunction().getNode(), via, to.getJunction().getNode())) {
+					r.addMember(new RelationMember(Constants.TURN_ROLE_VIA, w));
+				}
+			}
+			r.addMember(new RelationMember(Constants.TURN_ROLE_TO, to.getWay()));
+			
+			getOutgoingJunction().getNode().getDataSet().addPrimitive(r);
+		} else {
+			r = existing;
+		}
+		
+		final String key = isExtra() ? Constants.TURN_KEY_EXTRA_LANES : Constants.TURN_KEY_LANES;
+		final List<Integer> lanes = Turn.indices(r, key);
+		lanes.add(getIndex());
+		r.put(key, Turn.join(lanes));
+	}
+	
+	public Set<Turn> getTurns() {
+		return Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay());
 	}
 }

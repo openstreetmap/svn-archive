@@ -10,17 +10,18 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.plugins.turnlanes.gui.RoadGui.IncomingConnector;
-import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 import org.openstreetmap.josm.plugins.turnlanes.model.Lane;
+import org.openstreetmap.josm.plugins.turnlanes.model.Road;
 
 final class LaneGui {
 	final class LengthSlider extends InteractiveElement {
@@ -78,7 +79,7 @@ final class LaneGui {
 			final double r = getRoad().connectorRadius;
 			
 			final double offset = getRoad().getOffset(x, y);
-			final double newLength = getModel().isReverse() ? offset : getRoad().getLength() - offset;
+			final double newLength = getModel().getOutgoingRoadEnd().isFromEnd() ? offset : getRoad().getLength() - offset;
 			if (newLength > 0) {
 				getModel().setLength(newLength * getRoad().getContainer().getMpp());
 			}
@@ -124,9 +125,31 @@ final class LaneGui {
 			}
 			
 			if (dragLocation != null) {
+				final State.Connecting s = (State.Connecting) state;
+				final Path2D path = new Path2D.Double();
+				path.moveTo(center.getX(), center.getY());
+				
+				final List<RoadGui.ViaConnector> vias = s.getViaConnectors();
+				for (int i = 0; i < vias.size() - 1; i += 2) {
+					final RoadGui.ViaConnector v = vias.get(i);
+					final PathIterator it = v.getRoad().getLaneMiddle(v.getRoadEnd().isFromEnd()).getIterator();
+					path.append(it, true);
+				}
+				if ((vias.size() & 1) != 0) {
+					final RoadGui.ViaConnector last = vias.get(vias.size() - 1);
+					path.lineTo(last.getCenter().getX(), last.getCenter().getY());
+				}
+				
+				if (dropTarget == null) {
+					g2d.setColor(GuiContainer.RED);
+					path.lineTo(dragLocation.getX(), dragLocation.getY());
+				} else {
+					g2d.setColor(GuiContainer.GREEN);
+					path.lineTo(dropTarget.getCenter().getX(), dropTarget.getCenter().getY());
+				}
+				
 				g2d.setStroke(getContainer().getConnectionStroke());
-				g2d.setColor(dropTarget == null ? GuiContainer.RED : GuiContainer.GREEN);
-				g2d.draw(new Line2D.Double(getCenter(), dropTarget == null ? dragLocation : dropTarget.getCenter()));
+				g2d.draw(path);
 			}
 		}
 		
@@ -149,7 +172,11 @@ final class LaneGui {
 		}
 		
 		private boolean isVisible(State state) {
-			return getModel().getOutgoingJunction().equals(state.getJunction().getModel());
+			if (state instanceof State.Connecting) {
+				return ((State.Connecting) state).getLane().equals(getModel());
+			}
+			
+			return !getRoad().getModel().isPrimary() && getModel().getOutgoingJunction().isPrimary();
 		}
 		
 		@Override
@@ -164,7 +191,7 @@ final class LaneGui {
 		
 		@Override
 		public State activate(State old) {
-			return new State.OutgoingActive(old.getJunction(), LaneGui.this);
+			return new State.OutgoingActive(LaneGui.this);
 		}
 		
 		@Override
@@ -173,27 +200,46 @@ final class LaneGui {
 		}
 		
 		@Override
-		State drag(double x, double y, InteractiveElement target, State old) {
+		State.Connecting drag(double x, double y, InteractiveElement target, State old) {
 			dragLocation = new Point2D.Double(x, y);
-			dropTarget = target != null && target.getType() == Type.INCOMING_CONNECTOR ? (IncomingConnector) target : null;
-			return old;
+			dropTarget = null;
+			
+			if (!(old instanceof State.Connecting)) {
+				return new State.Connecting(getModel());
+			}
+			
+			final State.Connecting s = (State.Connecting) old;
+			if (target != null && target.getType() == Type.INCOMING_CONNECTOR) {
+				dropTarget = (IncomingConnector) target;
+				
+				return (s.getViaConnectors().size() & 1) == 0 ? s : s.pop();
+			} else if (target != null && target.getType() == Type.VIA_CONNECTOR) {
+				return s.next((RoadGui.ViaConnector) target);
+			}
+			
+			return s;
 		}
 		
 		@Override
 		State drop(double x, double y, InteractiveElement target, State old) {
-			drag(x, y, target, old);
+			final State.Connecting s = drag(x, y, target, old);
 			dragLocation = null;
-			
 			if (dropTarget == null) {
-				return old;
+				return activate(old);
 			}
 			
-			final Junction j = (getModel().isReverse() ? getRoad().getA() : getRoad().getB()).getModel();
+			final List<Road> via = new ArrayList<Road>();
+			assert (s.getViaConnectors().size() & 1) == 0;
+			for (int i = 0; i < s.getViaConnectors().size(); i += 2) {
+				final RoadGui.ViaConnector a = s.getViaConnectors().get(i);
+				final RoadGui.ViaConnector b = s.getViaConnectors().get(i + 1);
+				assert a.getRoadEnd().getOppositeEnd().equals(b);
+				via.add(a.getRoadEnd().getRoad());
+			}
 			
-			j.addTurn(getModel(), dropTarget.getRoadEnd());
-			
+			getModel().addTurn(via, dropTarget.getRoadEnd());
 			dropTarget = null;
-			return new State.Dirty(old);
+			return new State.Dirty(activate(old));
 		}
 		
 		public Point2D getCenter() {
@@ -255,12 +301,10 @@ final class LaneGui {
 		
 		final double WW = 3 / getContainer().getMpp();
 		
-		final List<LaneGui> lanes = getRoad().getLanes();
-		final int i = lanes.indexOf(this);
-		final LaneGui left = getModel().isReverse() ? (i < lanes.size() - 1 ? lanes.get(i + 1) : null) : (i > 0 ? lanes
-		    .get(i - 1) : null);
+		final LaneGui left = left();
 		final Lane leftModel = left == null ? null : left.getModel();
-		final double leftLength = leftModel == null || leftModel.isReverse() != getModel().isReverse() ? Double.NEGATIVE_INFINITY
+		final double leftLength = leftModel == null
+		    || !leftModel.getOutgoingRoadEnd().equals(getModel().getOutgoingRoadEnd()) ? Double.NEGATIVE_INFINITY
 		    : leftModel.getKind() == Lane.Kind.EXTRA_LEFT ? left.getLength() : L;
 		
 		final Path outer;
@@ -275,7 +319,7 @@ final class LaneGui {
 			
 			if (L > leftLength) {
 				innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
-				    || getModel().isReverse());
+				    || getModel().getOutgoingRoadEnd().isFromEnd());
 				final Point2D op = outer.getPoint(L + WW);
 				innerLine.lineTo(op.getX(), op.getY());
 			}
@@ -290,11 +334,17 @@ final class LaneGui {
 			
 			if (leftLength < L) {
 				innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
-				    || getModel().isReverse());
+				    || getModel().getOutgoingRoadEnd().isFromEnd());
 			}
 		}
 		
 		return outer;
+	}
+	
+	private LaneGui left() {
+		final List<LaneGui> lanes = getRoad().getLanes(getModel().getOutgoingRoadEnd());
+		final int i = lanes.indexOf(this);
+		return i > 0 ? lanes.get(i - 1) : null;
 	}
 	
 	public void fill(Graphics2D g2d) {

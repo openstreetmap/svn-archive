@@ -13,6 +13,7 @@ import java.util.List;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 
 class GuiUtil {
 	static double normalize(double a) {
@@ -130,11 +131,11 @@ class GuiUtil {
 		return new Point2D.Double(loc.getX(), -loc.getY());
 	}
 	
-	public static List<Point2D> locs(Iterable<Node> nodes) {
+	public static List<Point2D> locs(Iterable<Junction> junctions) {
 		final List<Point2D> locs = new ArrayList<Point2D>();
 		
-		for (Node n : nodes) {
-			locs.add(loc(n));
+		for (Junction j : junctions) {
+			locs.add(loc(j.getNode()));
 		}
 		
 		return locs;

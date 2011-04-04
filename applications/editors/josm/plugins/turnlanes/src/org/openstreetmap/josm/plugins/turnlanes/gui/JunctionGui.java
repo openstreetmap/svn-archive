@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.turnlanes.gui;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
+import static java.lang.Math.hypot;
 import static java.lang.Math.max;
 import static java.lang.Math.tan;
 import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.angle;
@@ -15,8 +16,10 @@ import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.relativePoint
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -36,11 +39,9 @@ class JunctionGui {
 	private final class TurnConnection extends InteractiveElement {
 		private final Turn turn;
 		
-		private final Line2D line = new Line2D.Double();
-		
 		private Point2D dragBegin;
-		
-		private Point2D dragOffset = new Point2D.Double();
+		private double dragOffsetX = 0;
+		private double dragOffsetY = 0;
 		
 		public TurnConnection(Turn turn) {
 			this.turn = turn;
@@ -49,22 +50,46 @@ class JunctionGui {
 		@Override
 		void paint(Graphics2D g2d, State state) {
 			if (isVisible(state)) {
-				final LaneGui laneGui = getContainer().getGui(turn.getFrom());
-				final RoadGui roadGui = getContainer().getGui(turn.getTo().getRoad());
-				
 				g2d.setStroke(getContainer().getConnectionStroke());
-				
 				g2d.setColor(isRemoveDragOffset() ? GuiContainer.RED : GuiContainer.GREEN);
-				
-				line.setLine(laneGui.outgoing.getCenter(), roadGui.getConnector(turn.getTo()).getCenter());
-				line.setLine(line.getX1() + dragOffset.getX(), line.getY1() + dragOffset.getY(),
-				    line.getX2() + dragOffset.getX(), line.getY2() + dragOffset.getY());
-				g2d.draw(line);
+				g2d.translate(dragOffsetX, dragOffsetY);
+				g2d.draw(getPath());
+				g2d.translate(-dragOffsetX, -dragOffsetY);
 			}
 		}
 		
+		private Path2D getPath() {
+			final Path2D path = new Path2D.Double();
+			
+			final LaneGui laneGui = getContainer().getGui(turn.getFrom());
+			final RoadGui roadGui = getContainer().getGui(turn.getTo().getRoad());
+			
+			path.moveTo(laneGui.outgoing.getCenter().getX(), laneGui.outgoing.getCenter().getY());
+			
+			Junction j = laneGui.getModel().getOutgoingJunction();
+			for (Road v : turn.getVia()) {
+				final PathIterator it;
+				if (v.getFromEnd().getJunction().equals(j)) {
+					it = getContainer().getGui(v).getLaneMiddle(true).getIterator();
+					j = v.getToEnd().getJunction();
+				} else {
+					it = getContainer().getGui(v).getLaneMiddle(false).getIterator();
+					j = v.getFromEnd().getJunction();
+				}
+				
+				path.append(it, true);
+			}
+			
+			path.lineTo(roadGui.getConnector(turn.getTo()).getCenter().getX(), roadGui.getConnector(turn.getTo()).getCenter()
+			    .getY());
+			
+			return path;
+		}
+		
 		private boolean isVisible(State state) {
-			if (state instanceof State.OutgoingActive) {
+			if (state instanceof State.AllTurns) {
+				return true;
+			} else if (state instanceof State.OutgoingActive) {
 				return turn.getFrom().equals(((State.OutgoingActive) state).getLane().getModel());
 			} else if (state instanceof State.IncomingActive) {
 				return turn.getTo().equals(((State.IncomingActive) state).getRoadEnd());
@@ -75,8 +100,30 @@ class JunctionGui {
 		
 		@Override
 		boolean contains(Point2D p, State state) {
-			final Point2D closest = closest(line, p);
-			return p.distance(closest) <= strokeWidth() / 2;
+			if (!isVisible(state)) {
+				return false;
+			}
+			
+			final PathIterator it = new FlatteningPathIterator(getPath().getPathIterator(null), 0.05 / getContainer()
+			    .getMpp());
+			final double[] coords = new double[6];
+			double lastX = 0;
+			double lastY = 0;
+			while (!it.isDone()) {
+				if (it.currentSegment(coords) == PathIterator.SEG_LINETO) {
+					final Point2D closest = closest(new Line2D.Double(lastX, lastY, coords[0], coords[1]), p);
+					
+					if (p.distance(closest) <= strokeWidth() / 2) {
+						return true;
+					}
+				}
+				
+				lastX = coords[0];
+				lastY = coords[1];
+				it.next();
+			}
+			
+			return false;
 		}
 		
 		private double strokeWidth() {
@@ -97,13 +144,15 @@ class JunctionGui {
 		@Override
 		boolean beginDrag(double x, double y) {
 			dragBegin = new Point2D.Double(x, y);
-			dragOffset = new Point2D.Double();
+			dragOffsetX = 0;
+			dragOffsetY = 0;
 			return true;
 		}
 		
 		@Override
 		State drag(double x, double y, InteractiveElement target, State old) {
-			dragOffset = new Point2D.Double(x - dragBegin.getX(), y - dragBegin.getY());
+			dragOffsetX = x - dragBegin.getX();
+			dragOffsetY = y - dragBegin.getY();
 			return old;
 		}
 		
@@ -112,17 +161,19 @@ class JunctionGui {
 			drag(x, y, target, old);
 			
 			if (isRemoveDragOffset()) {
-				getModel().removeTurn(turn);
+				turn.remove();
 			}
 			
-			dragOffset = new Point2D.Double();
+			dragBegin = null;
+			dragOffsetX = 0;
+			dragOffsetY = 0;
 			return new State.Dirty(old);
 		}
 		
 		private boolean isRemoveDragOffset() {
 			final double r = getContainer().getGui(turn.getFrom().getRoad()).connectorRadius;
 			final double max = r - strokeWidth() / 2;
-			return dragOffset.distance(0, 0) > max;
+			return hypot(dragOffsetX, dragOffsetY) > max;
 		}
 	}
 	
@@ -385,8 +436,12 @@ class JunctionGui {
 		
 		final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
 		
-		for (Turn t : getModel().getTurns()) {
-			result.add(new TurnConnection(t));
+		if (getModel().isPrimary()) {
+			for (Road.End r : new HashSet<Road.End>(getModel().getRoadEnds())) {
+				for (Turn t : r.getTurns()) {
+					result.add(new TurnConnection(t));
+				}
+			}
 		}
 		
 		return result;

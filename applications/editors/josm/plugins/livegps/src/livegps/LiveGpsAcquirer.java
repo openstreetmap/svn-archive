@@ -120,11 +120,20 @@ public class LiveGpsAcquirer implements Runnable {
         shutdownFlag = false;
         while (!shutdownFlag) {
 
-            try {
-                if (!connected)
+	    while (!connected) {
+		try {
                     connect();
+		} catch (IOException iox) {
+		    fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignore) {}
+		};
+	    }
 
-                if (connected) {
+	    assert (connected);
+
+	    try {
                     String line;
 
                     // <FIXXME date="23.06.2007" author="cdaller">
@@ -133,7 +142,7 @@ public class LiveGpsAcquirer implements Runnable {
                     line = gpsdReader.readLine();
                     // </FIXXME>
                     if (line == null)
-                        break;
+                        throw new IOException();
 
                     if (JSONProtocol == true)
                         gpsData = ParseJSON(line);
@@ -145,21 +154,12 @@ public class LiveGpsAcquirer implements Runnable {
 
                     fireGpsDataChangeEvent(oldGpsData, gpsData);
                     oldGpsData = gpsData;
-                } else {
-                    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignore) {}
-                }
             } catch (IOException iox) {
-                connected = false;
-                if (gpsData != null) {
-                    gpsData.setFix(false);
-                    fireGpsDataChangeEvent(oldGpsData, gpsData);
-                }
+                System.out.println("LiveGps: lost connection to gpsd");
                 fireGpsStatusChangeEvent(
                         LiveGpsStatus.GpsStatus.CONNECTION_FAILED,
                         tr("Connection Failed"));
+		disconnect();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignore) {} ;
@@ -167,17 +167,10 @@ public class LiveGpsAcquirer implements Runnable {
             }
         }
 
+	System.out.println("LiveGps: Disconnected from gpsd");
         fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED,
                 tr("Not connected"));
-        if (gpsdSocket != null) {
-            try {
-                gpsdSocket.close();
-                gpsdSocket = null;
-                System.out.println("LiveGps: Disconnected from gpsd");
-            } catch (Exception e) {
-                System.out.println("LiveGps: Unable to close socket; reconnection may not be possible");
-            }
-        }
+	disconnect();
     }
 
     public void shutdown() {
@@ -196,16 +189,14 @@ public class LiveGpsAcquirer implements Runnable {
             try {
                 gpsdSocket = new Socket(addrs[i], gpsdPort);
                 break;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println("LiveGps: Could not open connection to gpsd: " + e);
                 gpsdSocket = null;
             }
         }
 
-        if (gpsdSocket == null)
-            return;
-
-        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
+        if (gpsdSocket == null || gpsdSocket.isConnected() == false)
+            throw new IOException();
 
         /*
          * First emit the "w" symbol. The older version will activate, the newer one will ignore it.
@@ -247,6 +238,19 @@ public class LiveGpsAcquirer implements Runnable {
             connected = true;
             fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));
         }
+    }
+
+    private void disconnect() {
+	assert(gpsdSocket != null);
+
+	connected = false;
+
+        try {
+		gpsdSocket.close();
+		gpsdSocket = null;
+	} catch (Exception e) {
+		System.out.println("LiveGps: Unable to close socket; reconnection may not be possible");
+	}
     }
 
     private LiveGpsData ParseJSON(String line) {

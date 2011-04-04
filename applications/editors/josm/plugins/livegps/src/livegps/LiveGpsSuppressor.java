@@ -18,14 +18,12 @@ import org.openstreetmap.josm.Main;
 public class LiveGpsSuppressor implements Runnable, ILiveGpsSuppressor {
 
     /**
-     * Default sleep time is 5 seconds.
+     * Default sleep time is 0.5 seconds.
      */
-    private static final int DEFAULT_SLEEP_TIME = 5;
-
-    /**
-     * The currently used sleepTime.
-     */
-    private int sleepTime = DEFAULT_SLEEP_TIME;
+    private static final int DEFAULT_SLEEP_TIME = 500;
+    private static final String oldConfigKey = "livegps.refreshinterval";     /* in seconds */
+    private static final String ConfigKey = "livegps.refresh_interval_msec";  /* in msec */
+    private int sleepTime;
 
     /**
      * The flag allowUpdate is enabled once during the sleepTime.
@@ -61,19 +59,21 @@ public class LiveGpsSuppressor implements Runnable, ILiveGpsSuppressor {
     }
 
     /**
-     * Retrieve the sleepTime from the configuration.
-     * If no such configuration key exists, it will be initialized here.
+     * Retrieve the sleepTime from the configuration. Be compatible with old
+     * version that stored value in seconds. If no such configuration key exists,
+     * it will be initialized here.
      */
     private void initSleepTime() {
-        // fetch it from the user setting, or use the default value.
-        int sleepSeconds = 0;
-        sleepSeconds = Main.pref.getInteger("livegps.refreshinterval",
-                DEFAULT_SLEEP_TIME);
-        // creates the setting, if none present.
-        Main.pref.putInteger("livegps.refreshinterval", sleepSeconds);
+        if ((this.sleepTime = Main.pref.getInteger(ConfigKey, 0)) == 0) {
+		if ((this.sleepTime = Main.pref.getInteger(oldConfigKey, 0)) != 0) {
+			this.sleepTime *= 1000;
+			Main.pref.put(oldConfigKey, null);
+		} else
+			this.sleepTime = DEFAULT_SLEEP_TIME;
+	}
 
-        // convert seconds into milliseconds internally.
-        this.sleepTime = sleepSeconds * 1000;
+        // creates the setting, if none present.
+        Main.pref.putInteger(ConfigKey, this.sleepTime);
     }
 
     /**

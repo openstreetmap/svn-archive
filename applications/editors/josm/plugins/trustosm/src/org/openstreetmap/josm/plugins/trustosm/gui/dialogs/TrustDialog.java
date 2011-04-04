@@ -20,7 +20,6 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -588,6 +587,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 			if (TrustOSMplugin.signedItems.containsKey(id)) {
 				trust = TrustOSMplugin.signedItems.get(id);
 				sigsAvailable = true;
+				/*
 				Map<String,String> tags = osm.getKeys();
 				Map<String, TrustSignatures>  signedTags = trust.getTagSigs();
 				HashSet<String> removedKeys = new HashSet<String>(signedTags.keySet());
@@ -595,9 +595,10 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 				for (String removedKey: removedKeys) {
 					TrustSignatures sigs = signedTags.get(removedKey);
 					sigs.setStatus( TrustSignatures.ITEM_REMOVED );
-					//tags.putAll(TrustOSMplugin.gpg.getKeyValueFromSignature(sigs.getLatestSignature()));
+					String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(sigs.getOnePlainText());
+					tags.put(kv[0],kv[1]);
 				}
-
+				 */
 			} else {
 				trust = TrustOsmPrimitive.createTrustOsmPrimitive(osm);
 				sigsAvailable = false;

@@ -193,7 +193,6 @@ public class SigReader {
 	 *
 	 * @param source the source input stream. Must not be null.
 	 * @param progressMonitor  the progress monitor. If null, {@see NullProgressMonitor#INSTANCE} is assumed
-	 * @param missingData	every OsmPrimitive that is not present in the current Datalayer while parsing is stored in that set
 	 *
 	 * @return a map of the parsed OSM Signatures (TrustOSMItem) with their related OSM-ID as key
 	 * @throws IllegalDataException thrown if the an error was found while parsing the data from the source

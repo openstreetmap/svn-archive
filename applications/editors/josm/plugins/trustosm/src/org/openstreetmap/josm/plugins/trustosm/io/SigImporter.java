@@ -49,7 +49,7 @@ public class SigImporter extends FileImporter {
 		}
 		//		Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
 		Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
-
+		System.out.println(trustitems.size());
 		/*
 		int missingCount = missingData.size();
 		int itemCount = trustitems.size();

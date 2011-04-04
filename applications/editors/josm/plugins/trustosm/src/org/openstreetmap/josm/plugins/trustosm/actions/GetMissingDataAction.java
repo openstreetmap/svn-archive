@@ -22,7 +22,7 @@ public class GetMissingDataAction extends JosmAction {
 
 	public GetMissingDataAction() {
 		super(tr("Download OSM"),"getmissing",tr("Get all referenced but not actually present OSM objects from OSM server."),
-				Shortcut.registerShortcut("gpg:download", tr("Download referenced osm objects..."), KeyEvent.VK_D, Shortcut.GROUP_MENU),true);
+				Shortcut.registerShortcut("gpg:download", tr("Download referenced osm objects..."), KeyEvent.VK_T, Shortcut.GROUP_MENU),true);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class GetMissingDataAction extends JosmAction {
 	}
 
 	public void getMissing(Map<String,TrustOsmPrimitive> trustitems, Collection<OsmPrimitive> missingData) {
-		Collection<OsmPrimitive> presentData = getCurrentDataSet().allPrimitives();
+		Collection<OsmPrimitive> presentData = Main.main.getCurrentDataSet().allPrimitives();
 		for (TrustOsmPrimitive t : trustitems.values()) {
 			OsmPrimitive osm = t.getOsmPrimitive();
 			if (!presentData.contains(osm))

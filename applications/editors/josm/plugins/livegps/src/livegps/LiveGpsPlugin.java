@@ -27,13 +27,13 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
+    private boolean enabled = false;
     private LiveGpsAcquirer acquirer = null;
     private Thread acquirerThread = null;
-    private JMenu lgpsmenu;
+    private JMenu lgpsmenu = null;
     private JCheckBoxMenuItem lgpscapture;
     private JCheckBoxMenuItem lgpsautocenter;
     private LiveGpsDialog lgpsdialog;
-    List<PropertyChangeListener> listenerQueue;
 
     private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer = null;
@@ -41,7 +41,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     /**
      * The LiveGpsSuppressor is queried, if an event shall be suppressed.
      */
-    private LiveGpsSuppressor suppressor;
+    private LiveGpsSuppressor suppressor = null;
 
     /**
      * separate thread, where the LiveGpsSuppressor executes.
@@ -105,13 +105,12 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == lgpslayer) {
-            enableTracking(false);
-            lgpscapture.setSelected(false);
-            removePropertyChangeListener(lgpslayer);
-            MapView.removeLayerChangeListener(this);
-            lgpslayer = null;
-        }
+        assert (oldLayer == lgpslayer);
+
+        enableTracking(false);
+        lgpscapture.setSelected(false);
+        MapView.removeLayerChangeListener(this);
+        lgpslayer = null;
     }
 
     public LiveGpsPlugin(PluginInformation info) {
@@ -133,8 +132,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
         JosmAction autoCenterAction = new AutoCenterAction();
         lgpsautocenter = new JCheckBoxMenuItem(autoCenterAction);
         lgpsmenu.add(lgpsautocenter);
-        lgpsautocenter.setAccelerator(autoCenterAction.getShortcut()
-                .getKeyStroke());
+        lgpsautocenter.setAccelerator(autoCenterAction.getShortcut().getKeyStroke());
     }
 
     /**
@@ -164,82 +162,54 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
      * @param enable if <code>true</code> tracking is started.
      */
     public void enableTracking(boolean enable) {
-        if ((acquirer != null) && (!enable)) {
-            acquirer.shutdown();
-            acquirerThread = null;
+	
+        if (enable && !enabled) {
+            assert (suppressor == null);
+            assert (suppressorThread == null);
+            assert (acquirer == null);
+            assert (acquirerThread == null);
 
-            // also stop the suppressor
-            if (suppressor != null) {
-                suppressor.shutdown();
-                suppressorThread = null;
-                if (lgpslayer != null) {
-                    lgpslayer.setSuppressor(null);
-                }
-            }
-        } else if (enable) {
-            // also start the suppressor
-            if (suppressor == null) {
-                suppressor = new LiveGpsSuppressor();
-            }
-            if (suppressorThread == null) {
-                suppressorThread = new Thread(suppressor);
-                suppressorThread.start();
-            }
+            suppressor = new LiveGpsSuppressor();
+            suppressorThread = new Thread(suppressor);
 
-            if (acquirer == null) {
-                acquirer = new LiveGpsAcquirer();
-                if (lgpslayer == null) {
-                    lgpslayer = new LiveGpsLayer(data);
-                    Main.main.addLayer(lgpslayer);
-                    MapView.addLayerChangeListener(this);
-                    lgpslayer.setAutoCenter(isAutoCenter());
-                }
-                // connect layer with acquirer:
-                addPropertyChangeListener(lgpslayer);
+            acquirer = new LiveGpsAcquirer();
+            acquirerThread = new Thread(acquirer);
 
-                // connect layer with suppressor:
-                lgpslayer.setSuppressor(suppressor);
-                // add all listeners that were added before the acquirer
-                // existed:
-                if (listenerQueue != null) {
-                    for (PropertyChangeListener listener : listenerQueue) {
-                        addPropertyChangeListener(listener);
-                    }
-                    listenerQueue.clear();
-                }
-            }
-            if (acquirerThread == null) {
-                acquirerThread = new Thread(acquirer);
-                acquirerThread.start();
-            }
+	    if (lgpslayer == null) {
+		lgpslayer = new LiveGpsLayer(data);
+		Main.main.addLayer(lgpslayer);
+		MapView.addLayerChangeListener(this);
+		lgpslayer.setAutoCenter(isAutoCenter());
+	    }
 
-        }
-    }
+            lgpslayer.setSuppressor(suppressor);
+            acquirer.addPropertyChangeListener(lgpslayer);
+            acquirer.addPropertyChangeListener(lgpsdialog);
 
-    /**
-     * Add a listener for gps events.
-     * @param listener the listener.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        if (acquirer != null) {
-            acquirer.addPropertyChangeListener(listener);
-        } else {
-            if (listenerQueue == null) {
-                listenerQueue = new ArrayList<PropertyChangeListener>();
-            }
-            listenerQueue.add(listener);
-        }
-    }
+            suppressorThread.start();
+            acquirerThread.start();
 
-    /**
-     * Remove a listener for gps events.
-     * @param listener the listener.
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (acquirer != null)
-            acquirer.removePropertyChangeListener(listener);
-        else if (listenerQueue != null && listenerQueue.contains(listener))
-            listenerQueue.remove(listener);
+	    enabled = true;
+
+        } else if (!enable && enabled) {
+	    assert (lgpslayer != null);
+            assert (suppressor != null);
+            assert (suppressorThread != null);
+            assert (acquirer != null);
+            assert (acquirerThread != null);
+
+	    acquirer.shutdown();
+	    acquirer = null;
+	    acquirerThread = null;
+
+            suppressor.shutdown();
+            suppressor = null;
+            suppressorThread = null;
+
+            lgpslayer.setSuppressor(null);
+
+	    enabled = false;
+	}
     }
 
     /* (non-Javadoc)
@@ -247,12 +217,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (newFrame != null) {
-            // add dialog
+        if (newFrame != null)
             newFrame.addToggleDialog(lgpsdialog = new LiveGpsDialog(newFrame));
-            // connect listeners with acquirer:
-            addPropertyChangeListener(lgpsdialog);
-        }
     }
 
     /**
@@ -261,5 +227,4 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     public JMenu getLgpsMenu() {
         return this.lgpsmenu;
     }
-
 }

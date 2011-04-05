@@ -509,9 +509,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
         public MultipolygonSettingsPopup() {
             super();
-            addMenuItem("boundary", "Create administrative boundary relations");
-            addMenuItem("boundaryways", "Add tags boundary and admin_level to boundary relation ways");
-            addMenuItem("tags", "Move area tags from contour to relation");
+            addMenuItem("boundary", tr("Create administrative boundary relations"));
+            addMenuItem("boundaryways", tr("Add tags boundary and admin_level to boundary relation ways"));
+            addMenuItem("tags", tr("Move area tags from contour to relation"));
         }
 
         protected final JCheckBoxMenuItem addMenuItem( String property, String title ) {

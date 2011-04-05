@@ -1,5 +1,5 @@
 boundary: admin_centre, label, subarea
-route: forward, backward, stop, platform
+route: stop, platform, forward, backward, stop_exit_only, stop_entry_only, platform_exit_only, platform_entry_only
 restriction: from, to, via, location_hint
 enforcement: device, from, to, force
 destination_sign: to, from, intersection, sign

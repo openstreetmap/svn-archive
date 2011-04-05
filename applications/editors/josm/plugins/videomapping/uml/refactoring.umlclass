@@ -496,4 +496,16 @@
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_VjhRc1qlEeC9SaX6k5fY1Q" points="[-3, 1, 165, -25]$[-160, -26, 8, -52]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_VjqbYFqlEeC9SaX6k5fY1Q" id="(0.028037383177570093,0.6026490066225165)"/>
   </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_xwYYgF0FEeCEEfnO4j572A" type="4002" source="_4MKRAFRxEeCQNNgUSH7L8A" target="_aKUcwFRrEeCQNNgUSH7L8A">
+    <children xmi:type="notation:DecorationNode" xmi:id="_xwYYhF0FEeCEEfnO4j572A" type="6001">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_xwYYhV0FEeCEEfnO4j572A" y="40"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_xwYYhl0FEeCEEfnO4j572A" type="6010">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_xwYYh10FEeCEEfnO4j572A" y="20"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_xwYYgV0FEeCEEfnO4j572A"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_xwYYgl0FEeCEEfnO4j572A" fontName="Calibri"/>
+    <element xmi:type="uml:Dependency" href="refactoring.uml#_xv7skF0FEeCEEfnO4j572A"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_xwYYg10FEeCEEfnO4j572A" points="[-4, -99, -6, 145]$[-22, -128, -24, 116]"/>
+  </edges>
 </notation:Diagram>

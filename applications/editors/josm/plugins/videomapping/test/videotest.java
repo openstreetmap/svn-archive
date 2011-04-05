@@ -28,6 +28,7 @@ public class videotest {
     	testplayer.setJumpLength(1000);
     	testplayer.setLoopLength(3000);
     	testplayer.addVideo(new File("C:\\TEMP\\test.mpg"));
+    	testplayer.addVideo(new File("C:\\TEMP\\aoe-drachen_dvdscr.avi"));
         
     }
 

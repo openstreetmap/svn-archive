@@ -30,8 +30,8 @@
     <ownedOperation xmi:id="_CnPXgFRsEeCQNNgUSH7L8A" name="saveSettings">
       <ownedParameter xmi:id="_E7zbIFRsEeCQNNgUSH7L8A" direction="return"/>
     </ownedOperation>
-    <ownedOperation xmi:id="_FPB5IFRsEeCQNNgUSH7L8A" name="loadDefaults">
-      <ownedParameter xmi:id="_GcXO8FRsEeCQNNgUSH7L8A" direction="return"/>
+    <ownedOperation xmi:id="_FPB5IFRsEeCQNNgUSH7L8A" name="setDefaults">
+      <ownedParameter xmi:id="_pmckUF0CEeCEEfnO4j572A" direction="return"/>
     </ownedOperation>
     <ownedOperation xmi:id="_7wH7oFSgEeCQNNgUSH7L8A" name="enableControlMenus">
       <ownedParameter xmi:id="_9Gi8AFSgEeCQNNgUSH7L8A" direction="return"/>
@@ -82,7 +82,7 @@
       <ownedParameter xmi:id="_lK-J8FRvEeCQNNgUSH7L8A" direction="return"/>
     </ownedOperation>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_4MAgAFRxEeCQNNgUSH7L8A" name="VideoPositionLayer">
+  <packagedElement xmi:type="uml:Class" xmi:id="_4MAgAFRxEeCQNNgUSH7L8A" name="VideoPositionLayer" clientDependency="_xv7skF0FEeCEEfnO4j572A">
     <ownedAttribute xmi:id="_TfBWsFSdEeCQNNgUSH7L8A" name="iconPosition" aggregation="composite"/>
     <ownedAttribute xmi:id="_HIPx0FSeEeCQNNgUSH7L8A" name="isDragging" aggregation="composite"/>
     <ownedAttribute xmi:id="_K5o_0FSeEeCQNNgUSH7L8A" name="mousePosition" aggregation="composite"/>
@@ -168,4 +168,5 @@
   <packagedElement xmi:type="uml:Dependency" xmi:id="_OyCWkFqlEeC9SaX6k5fY1Q" supplier="_zSPkMFnhEeClo8qtmvnTtw" client="_Zzy2UFRvEeCQNNgUSH7L8A"/>
   <packagedElement xmi:type="uml:Dependency" xmi:id="_VjNvcFqlEeC9SaX6k5fY1Q" supplier="_n4H5YFolEeClo8qtmvnTtw" client="_Zzy2UFRvEeCQNNgUSH7L8A"/>
   <packagedElement xmi:type="uml:Interface" xmi:id="_6vSikFxoEeCd3KUH_BuVkA" name="VideoObserver"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_xv7skF0FEeCEEfnO4j572A" supplier="_aDA64FRrEeCQNNgUSH7L8A" client="_4MAgAFRxEeCQNNgUSH7L8A"/>
 </uml:Package>

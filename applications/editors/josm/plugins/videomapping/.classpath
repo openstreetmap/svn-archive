@@ -6,7 +6,11 @@
 	<classpathentry kind="lib" path="/core/dist/josm-custom.jar"/>
 	<classpathentry kind="lib" path="lib/jna.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/vlcj-1.1.5.1.jar" sourcepath="C:/Dokumente und Einstellungen/Matthias/Desktop/vlcj/vlcj-1.1.5.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/vlcj-1.1.5.1.jar" sourcepath="C:/Dokumente und Einstellungen/Matthias/Desktop/vlcj/vlcj-1.1.5.1-javadoc.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Projekte/Studium/BA Arbeit/working/plugins/videomapping/lib/vlcj-1.1.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/core"/>
 	<classpathentry kind="lib" path="lib/platform.jar"/>
 	<classpathentry kind="output" path="bin"/>

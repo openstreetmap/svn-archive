@@ -38,16 +38,6 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer = null;
 
-    /**
-     * The LiveGpsSuppressor is queried, if an event shall be suppressed.
-     */
-    private LiveGpsSuppressor suppressor = null;
-
-    /**
-     * separate thread, where the LiveGpsSuppressor executes.
-     */
-    private Thread suppressorThread;
-
     public class CaptureAction extends JosmAction {
         public CaptureAction() {
             super(
@@ -164,13 +154,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     public void enableTracking(boolean enable) {
 	
         if (enable && !enabled) {
-            assert (suppressor == null);
-            assert (suppressorThread == null);
             assert (acquirer == null);
             assert (acquirerThread == null);
-
-            suppressor = new LiveGpsSuppressor();
-            suppressorThread = new Thread(suppressor);
 
             acquirer = new LiveGpsAcquirer();
             acquirerThread = new Thread(acquirer);
@@ -182,31 +167,21 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 		lgpslayer.setAutoCenter(isAutoCenter());
 	    }
 
-            lgpslayer.setSuppressor(suppressor);
             acquirer.addPropertyChangeListener(lgpslayer);
             acquirer.addPropertyChangeListener(lgpsdialog);
 
-            suppressorThread.start();
             acquirerThread.start();
 
 	    enabled = true;
 
         } else if (!enable && enabled) {
 	    assert (lgpslayer != null);
-            assert (suppressor != null);
-            assert (suppressorThread != null);
             assert (acquirer != null);
             assert (acquirerThread != null);
 
 	    acquirer.shutdown();
 	    acquirer = null;
 	    acquirerThread = null;
-
-            suppressor.shutdown();
-            suppressor = null;
-            suppressorThread = null;
-
-            lgpslayer.setSuppressor(null);
 
 	    enabled = false;
 	}

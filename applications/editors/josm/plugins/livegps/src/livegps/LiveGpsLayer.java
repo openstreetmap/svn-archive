@@ -24,6 +24,12 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
     public static final String KEY_LIVEGPS_COLOR = "color.livegps.position";
+
+    private static final int DEFAULT_SLEEP_TIME = 500;	/* Default sleep time is 0.5 seconds. */
+    private static final String oldConfigKey = "livegps.refreshinterval";     /* in seconds */
+    private static final String ConfigKey = "livegps.refresh_interval_msec";  /* in msec */
+    private int sleepTime;
+
     LatLon lastPos;
     WayPoint lastPoint;
     private final AppendableGpxTrackSegment trackSegment;
@@ -31,13 +37,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     float course;
     // JLabel lbl;
     boolean autocenter;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(
-    "yyyy-MM-dd'T'HH:mm:ss.SSS");
-
-    /**
-     * The suppressor is queried, if the GUI shall be re-drawn.
-     */
-    private ILiveGpsSuppressor suppressor;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private long lastUpdate = 0;
 
     public LiveGpsLayer(GpxData data) {
         super(data, LAYER_NAME);
@@ -48,6 +49,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
         GpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);
         data.tracks.add(trackBeingWritten);
+
+	initSleepTime();
     }
 
     void setCurrentPosition(double lat, double lon) {
@@ -154,30 +157,37 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     }
 
     /**
-     * @param suppressor the suppressor to set
-     */
-    public void setSuppressor(ILiveGpsSuppressor suppressor) {
-        this.suppressor = suppressor;
-    }
-
-    /**
-     * @return the suppressor
-     */
-    public ILiveGpsSuppressor getSuppressor() {
-        return suppressor;
-    }
-
-    /**
      * Check, if a redraw is currently allowed.
      *
      * @return true, if a redraw is permitted, false, if a re-draw
      * should be suppressed.
      */
     private boolean allowRedraw() {
-        if (this.suppressor != null) {
-            return this.suppressor.isAllowUpdate();
-        } else {
-            return true;
+	Date date = new Date();
+	long current = date.getTime();
+
+	if (current - lastUpdate >= sleepTime) {
+		lastUpdate = current;
+		return true;
+	} else
+		return false;
+    }
+
+    /**
+     * Retrieve the sleepTime from the configuration. Be compatible with old
+     * version that stored value in seconds. If no such configuration key exists,
+     * it will be initialized here.
+     */
+    private void initSleepTime() {
+        if ((sleepTime = Main.pref.getInteger(ConfigKey, 0)) == 0) {
+                if ((sleepTime = Main.pref.getInteger(oldConfigKey, 0)) != 0) {
+                        sleepTime *= 1000;
+                        Main.pref.put(oldConfigKey, null);
+                } else
+                        sleepTime = DEFAULT_SLEEP_TIME;
         }
+
+        // creates the setting, if none present.
+        Main.pref.putInteger(ConfigKey, sleepTime);
     }
 }

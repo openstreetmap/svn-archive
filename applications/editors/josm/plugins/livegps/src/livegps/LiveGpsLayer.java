@@ -69,8 +69,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         if (autocenter && allowRedraw()) {
             center();
         }
-
-        // Main.map.repaint();
     }
 
     public void center() {
@@ -87,12 +85,10 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
     void setSpeed(float metresPerSecond) {
         speed = metresPerSecond;
-        // Main.map.repaint();
     }
 
     void setCourse(float degrees) {
         course = degrees;
-        // Main.map.repaint();
     }
 
     public void setAutoCenter(boolean ac) {
@@ -101,9 +97,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
-        // System.out.println("in paint");
-        // System.out.println("in synced paint");
         super.paint(g, mv, bounds);
+
         // int statusHeight = 50;
         // Rectangle mvs = mv.getBounds();
         // mvs.y = mvs.y + mvs.height - statusHeight;

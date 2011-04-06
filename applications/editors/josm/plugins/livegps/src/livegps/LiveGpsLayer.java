@@ -25,10 +25,15 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
     public static final String KEY_LIVEGPS_COLOR = "color.livegps.position";
 
-    private static final int DEFAULT_SLEEP_TIME = 500;	/* Default sleep time is 0.5 seconds. */
-    private static final String oldConfigKey = "livegps.refreshinterval";     /* in seconds */
-    private static final String ConfigKey = "livegps.refresh_interval_msec";  /* in msec */
-    private int sleepTime;
+    private static final int DEFAULT_REFRESH_INTERVAL = 250;
+    private static final int DEFAULT_CENTER_INTERVAL = 5000;
+    private static final String oldC_REFRESH_INTERVAL = "livegps.refreshinterval";     /* in seconds */
+    private static final String C_REFRESH_INTERVAL = "livegps.refresh_interval_msec";  /* in msec */
+    private static final String C_CENTER_INTERVAL = "livegps.center_interval_msec";  /* in msec */
+    private int refreshInterval;
+    private int centerInterval;
+    private long lastRedraw = 0;
+    private long lastCenter = 0;
 
     LatLon lastPos;
     WayPoint lastPoint;
@@ -38,7 +43,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     // JLabel lbl;
     boolean autocenter;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    private long lastUpdate = 0;
 
     public LiveGpsLayer(GpxData data) {
         super(data, LAYER_NAME);
@@ -50,25 +54,22 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         GpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);
         data.tracks.add(trackBeingWritten);
 
-	initSleepTime();
+	initIntervals();
     }
 
     void setCurrentPosition(double lat, double lon) {
-        // System.out.println("adding pos " + lat + "," + lon);
         LatLon thisPos = new LatLon(lat, lon);
-        if ((lastPos != null) && (thisPos.equalsEpsilon(lastPos))) {
+        if ((lastPos != null) && (thisPos.equalsEpsilon(lastPos)))
             // no change in position
             // maybe show a "paused" cursor or some such
             return;
-        }
 
         lastPos = thisPos;
         lastPoint = new WayPoint(thisPos);
         lastPoint.attr.put("time", dateFormat.format(new Date()));
         trackSegment.addWaypoint(lastPoint);
-        if (autocenter && allowRedraw()) {
+        if (autocenter && allowCenter())
             center();
-        }
     }
 
     public void center() {
@@ -144,9 +145,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
                 if (!Float.isNaN(data.getCourse())) {
                     setCourse(data.getCourse());
                 }
-                if (!autocenter && allowRedraw()) {
+                if (allowRedraw())
                     Main.map.repaint();
-                }
             }
         }
     }
@@ -161,28 +161,48 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 	Date date = new Date();
 	long current = date.getTime();
 
-	if (current - lastUpdate >= sleepTime) {
-		lastUpdate = current;
+	if (current - lastRedraw >= refreshInterval) {
+		lastRedraw = current;
 		return true;
 	} else
 		return false;
     }
 
     /**
-     * Retrieve the sleepTime from the configuration. Be compatible with old
-     * version that stored value in seconds. If no such configuration key exists,
-     * it will be initialized here.
+     * Check, if a autocentering is currently allowed.
+     *
+     * @return true, if a autocentering is permitted, false, if a autocentering
+     * should be suppressed.
      */
-    private void initSleepTime() {
-        if ((sleepTime = Main.pref.getInteger(ConfigKey, 0)) == 0) {
-                if ((sleepTime = Main.pref.getInteger(oldConfigKey, 0)) != 0) {
-                        sleepTime *= 1000;
-                        Main.pref.put(oldConfigKey, null);
+    private boolean allowCenter() {
+	Date date = new Date();
+	long current = date.getTime();
+
+	if (current - lastCenter >= centerInterval) {
+		lastCenter = current;
+		return true;
+	} else
+		return false;
+    }
+
+    /**
+     * Retrieve the refreshInterval and centerInterval from the configuration. Be compatible
+     * with old version that stored refreshInterval in seconds. If no such configuration key
+     * exists, it will be initialized here.
+     */
+    private void initIntervals() {
+        if ((refreshInterval = Main.pref.getInteger(C_REFRESH_INTERVAL, 0)) == 0) {
+                if ((refreshInterval = Main.pref.getInteger(oldC_REFRESH_INTERVAL, 0)) != 0) {
+                        refreshInterval *= 1000;
+                        Main.pref.put(oldC_REFRESH_INTERVAL, null);
                 } else
-                        sleepTime = DEFAULT_SLEEP_TIME;
+                        refreshInterval = DEFAULT_REFRESH_INTERVAL;
         }
 
-        // creates the setting, if none present.
-        Main.pref.putInteger(ConfigKey, sleepTime);
+	if ((centerInterval = Main.pref.getInteger(C_CENTER_INTERVAL, 0)) == 0)
+		centerInterval = DEFAULT_CENTER_INTERVAL;
+
+        Main.pref.putInteger(C_REFRESH_INTERVAL, refreshInterval);
+        Main.pref.putInteger(C_CENTER_INTERVAL, centerInterval);
     }
 }

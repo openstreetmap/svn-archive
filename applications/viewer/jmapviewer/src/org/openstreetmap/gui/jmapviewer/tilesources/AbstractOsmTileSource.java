@@ -35,7 +35,7 @@ public abstract class AbstractOsmTileSource implements TileSource {
     }
 
     public int getMaxZoom() {
-        return 18;
+        return 21;
     }
 
     public int getMinZoom() {

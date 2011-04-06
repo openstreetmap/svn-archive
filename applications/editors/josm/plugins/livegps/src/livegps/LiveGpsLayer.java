@@ -74,7 +74,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         lastPoint.attr.put("time", dateFormat.format(new Date()));
         trackSegment.addWaypoint(lastPoint);
 
-	conditionalCenter(thisPos);
+	if (autocenter)
+		conditionalCenter(thisPos);
     }
 
     public void center() {

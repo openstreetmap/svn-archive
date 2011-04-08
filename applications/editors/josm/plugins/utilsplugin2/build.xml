@@ -30,7 +30,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="fix" />
+    <property name="commit.message" value="extend selection" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3835" />
 
@@ -252,5 +252,10 @@
     </target>
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+    </target>
+    <target name="runjosm" depends="install">
+        <java jar="${josm}" >
+            <arg line="../../data_nodist/neubrandenburg.osm"/>
+        </java>
     </target>
 </project>

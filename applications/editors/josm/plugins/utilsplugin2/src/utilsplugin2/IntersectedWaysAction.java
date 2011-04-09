@@ -7,7 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
@@ -31,13 +31,13 @@ class IntersectedWaysAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        Set<Way> activeWays = new LinkedHashSet<Way>();
+        Set<Way> activeWays = new HashSet<Way>();
 
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
         // select ways attached to already selected ways
         if (!selectedWays.isEmpty()) {
-            Set<Way> newWays = new LinkedHashSet<Way>();
+            Set<Way> newWays = new HashSet<Way>();
             NodeWayUtils.addWaysIntersectingWays(
                     getCurrentDataSet().getWays(),
                     selectedWays, newWays);

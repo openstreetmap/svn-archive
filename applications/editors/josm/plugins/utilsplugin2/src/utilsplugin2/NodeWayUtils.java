@@ -2,7 +2,7 @@
 package utilsplugin2;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -24,7 +24,7 @@ public final class NodeWayUtils {
 
     static final int maxLevel = Main.pref.getInteger("selection.maxrecursion", 5);
     static final int maxWays = Main.pref.getInteger("selection.maxfoundways", 2000);
-    static final int maxWays1 = Main.pref.getInteger("selection.maxfoundwaysrec", 200);
+    static final int maxWays1 = Main.pref.getInteger("selection.maxfoundways.intersection", 500);
 
     /**
      * Find the neighbours of node n on the way w and put them in given collection
@@ -167,15 +167,15 @@ public final class NodeWayUtils {
     static void addWaysIntersectingWaysRecursively
             (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays)
     {
-            Set<Way> foundWays = new LinkedHashSet<Way>();
+            Set<Way> foundWays = new HashSet<Way>();
             foundWays.addAll(initWays);
             newWays.addAll(initWays);
-            Set<Way> newFoundWays = new LinkedHashSet<Way>();
+            Set<Way> newFoundWays = new HashSet<Way>();
 
             int level=0,c;
             do {
                  c=0;
-                 newFoundWays = new LinkedHashSet<Way>();
+                 newFoundWays = new HashSet<Way>();
                  for (Way w : foundWays){
                       c+=addWaysIntersectingWay(allWays, w, newFoundWays,newWays);
                  }
@@ -197,11 +197,12 @@ public final class NodeWayUtils {
  static void addWaysConnectedToWaysRecursively
             (Collection<Way> initWays, Set<Way> newWays)
     {
+            //long t = System.currentTimeMillis();
             int level=0,c;
             newWays.addAll(initWays);
             do {
                  c=0;
-                 Set<Way> foundWays = new LinkedHashSet<Way>();
+                 Set<Way> foundWays = new HashSet<Way>();
                  foundWays.addAll(newWays);
                  for (Way w : foundWays){
                       c+=addWaysConnectedToWay(w, newWays);
@@ -216,6 +217,7 @@ public final class NodeWayUtils {
                        return;
                  }
             } while ( c >0 && level < maxLevel );
+           // System.out.println("time = "+(System.currentTimeMillis()-t)+" ways = "+newWays.size());
             return;
     }
 

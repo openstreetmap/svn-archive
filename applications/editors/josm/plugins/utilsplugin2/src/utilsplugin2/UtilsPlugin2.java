@@ -30,7 +30,7 @@ public class UtilsPlugin2 extends Plugin {
         addIntersections = MainMenu.add(Main.main.menu.toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(Main.main.menu.toolsMenu, new SplitObjectAction());
         Main.main.menu.toolsMenu.addSeparator();
-        JMenu m1 = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_S, Main.main.menu.defaultMenuPos, "help");
+        JMenu m1 = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
 
         selectWayNodes = MainMenu.add(m1, new SelectWayNodesAction());
         adjNodes = MainMenu.add(m1, new AdjacentNodesAction());

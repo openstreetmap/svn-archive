@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
@@ -29,7 +29,7 @@ class AdjacentNodesAction extends JosmAction {
         putValue("help", ht("/Action/AdjacentNodes"));
     }
 
-    private  Set<Way> activeWays = new LinkedHashSet<Way>();
+    private  Set<Way> activeWays = new HashSet<Way>();
 
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();

@@ -7,7 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
@@ -31,7 +31,7 @@ class ConnectedWaysAction extends JosmAction {
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
-        Set<Way> newWays = new LinkedHashSet<Way>();
+        Set<Way> newWays = new HashSet<Way>();
 
         // selecting ways attached to selected nodes
         if(!selectedNodes.isEmpty()) {

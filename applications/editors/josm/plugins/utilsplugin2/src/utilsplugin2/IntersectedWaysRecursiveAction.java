@@ -7,7 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
@@ -24,7 +24,7 @@ class IntersectedWaysRecursiveAction extends JosmAction {
     public IntersectedWaysRecursiveAction() {
         super(tr("All intersecting ways"), "intwayall", tr("Select all intersecting ways"),
                 Shortcut.registerShortcut("tools:intwayall", tr("Tool: {0}","All intersecting ways"),
-                KeyEvent.VK_I, Shortcut.GROUP_MENU), true);
+                KeyEvent.VK_I, Shortcut.GROUP_MENU, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.CTRL_DOWN_MASK), true);
         putValue("help", ht("/Action/SelectAllIntersectingWays"));
 
     }
@@ -32,12 +32,12 @@ class IntersectedWaysRecursiveAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        Set<Way> activeWays = new LinkedHashSet<Way>();
+        Set<Way> activeWays = new HashSet<Way>();
 
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
         if (!selectedWays.isEmpty()) {
-            Set<Way> newWays = new LinkedHashSet<Way>();
+            Set<Way> newWays = new HashSet<Way>();
             NodeWayUtils.addWaysIntersectingWaysRecursively(
                     getCurrentDataSet().getWays(),
                     selectedWays, newWays);

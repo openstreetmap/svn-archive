@@ -322,7 +322,7 @@ public class CommandLine extends Plugin {
 					}
 				}
 				ImageryInfo info = ((ImageryLayer)layer).getInfo();
-				String url = info.getUrl();
+				String url = info.getURL();
 				String itype = info.getImageryType().getUrlString();
 				loadParameter((url.equals("") ? itype : url), true);
 				action = new DummyAction(currentMapFrame, this);
@@ -430,6 +430,7 @@ public class CommandLine extends Plugin {
 	public void runTool() {
 		setMode(Mode.PROCESSING);
 		String commandToRun = currentCommand.run;
+		final boolean tracks = currentCommand.tracks;
 
 		for (Parameter parameter : currentCommand.parameters) {
 			commandToRun = commandToRun.replace("{" + parameter.name + "}", parameter.getValue());
@@ -534,7 +535,7 @@ public class CommandLine extends Plugin {
 					osmWriter.footer();
 					osmWriter.flush();
 				}
-				if (currentCommand.tracks) {
+				if (tracks) {
 					final GpxWriter gpxWriter = new GpxWriter(printWriter);
 					GpxFilter gpxFilter = new GpxFilter();
 					gpxFilter.initBboxFilter(bbox);

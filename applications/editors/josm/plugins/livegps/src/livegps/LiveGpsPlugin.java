@@ -34,6 +34,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     private JCheckBoxMenuItem lgpscapture;
     private JCheckBoxMenuItem lgpsautocenter;
     private LiveGpsDialog lgpsdialog;
+    /* List of foreign (e.g. other plugins) subscribers */
+    List<PropertyChangeListener> listenerQueue = new ArrayList<PropertyChangeListener>();
 
     private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer = null;
@@ -169,6 +171,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
             acquirer.addPropertyChangeListener(lgpslayer);
             acquirer.addPropertyChangeListener(lgpsdialog);
+            for (PropertyChangeListener listener : listenerQueue)
+	        acquirer.addPropertyChangeListener(listener);
 
             acquirerThread.start();
 
@@ -185,6 +189,30 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
 	    enabled = false;
 	}
+    }
+
+    /** 
+     * Add a listener for gps events. 
+     * @param listener the listener. 
+     */ 
+    public void addPropertyChangeListener(PropertyChangeListener listener) { 
+        assert(!listenerQueue.contains(listener));
+
+        listenerQueue.add(listener); 
+        if (acquirer != null)
+            acquirer.addPropertyChangeListener(listener); 
+    } 
+
+    /** 
+     * Remove a listener for gps events. 
+     * @param listener the listener. 
+     */ 
+    public void removePropertyChangeListener(PropertyChangeListener listener) { 
+        assert(listenerQueue.contains(listener));
+
+        listenerQueue.remove(listener); 
+        if (acquirer != null) 
+            acquirer.removePropertyChangeListener(listener); 
     }
 
     /* (non-Javadoc)

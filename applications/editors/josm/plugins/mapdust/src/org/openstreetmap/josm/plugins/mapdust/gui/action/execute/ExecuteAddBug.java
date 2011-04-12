@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateIssueDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
@@ -87,7 +87,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
      * @param dialog The <code>CreateIssueDialog</code> object
      * @param mapdustGUI The <code>MapdustGUI</code> object
      */
-    public ExecuteAddBug(CreateIssueDialog dialog, MapdustGUI mapdustGUI) {
+    public ExecuteAddBug(CreateBugDialog dialog, MapdustGUI mapdustGUI) {
         setDialog(dialog);
         setMapdustGUI(mapdustGUI);
     }
@@ -102,7 +102,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
-            CreateIssueDialog createDialog = (CreateIssueDialog) getDialog();
+            CreateBugDialog createDialog = (CreateBugDialog) getDialog();
             Type type = (Type) (createDialog).getCbbType().getSelectedItem();
             String nickname = createDialog.getTxtNickname().getText();
             String commentText = createDialog.getTxtDescription().getText();

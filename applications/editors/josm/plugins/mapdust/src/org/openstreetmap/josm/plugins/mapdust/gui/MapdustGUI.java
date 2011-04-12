@@ -74,7 +74,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     private final ArrayList<MapdustUpdateObserver> initialUpdateObservers =
             new ArrayList<MapdustUpdateObserver>();
 
-    /** The <code>MapdustPlugin</code> plugin */
+    /** The <code>MapdustPlugin</code> plug-in */
     private MapdustPlugin mapdustPlugin;
 
     /** The <code>MapdustBugPropertiesPanel</code> */
@@ -92,7 +92,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     /** The <code>JPanel</code> */
     private JPanel mainPanel;
 
-    /** Specifies if the MapDust data was or not downloaded */
+    /** Specifies if the MapDust data was or not down-loaded */
     private boolean downloaded = false;
 
     /**
@@ -113,7 +113,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
 
     /**
      * Displays the <code>MapdustGUI</code> dialog window in the JOSM editor. If
-     * the MapDust data was not downloaded yet or the MapDust layer was added
+     * the MapDust data was not down-loaded yet or the MapDust layer was added
      * after a previous deletion, then the bug reports data will be deleted.
      */
     @Override
@@ -133,7 +133,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         setVisible(false);
         /* remove panels */
         if (tabbedPane != null) {
-            /* from offline to online */
+            /* from off-line to online */
             remove(mainPanel);
             tabbedPane = null;
             actionPanel = null;
@@ -141,7 +141,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             panel = null;
             actionPanel = null;
         } else {
-            /* from online to offline */
+            /* from online to off-line */
             if (mainPanel != null) {
                 remove(mainPanel);
                 mainPanel = null;
@@ -228,7 +228,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         String pluginState = Main.pref.get("mapdust.pluginState");
         if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
             if (tabbedPane != null) {
-                /* from offline to online */
+                /* from off-line to online */
                 remove(mainPanel);
                 tabbedPane = null;
                 actionPanel = null;
@@ -241,18 +241,17 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             }
         } else {
             if (tabbedPane == null) {
-                /* from online to offline */
+                /* from online to off-line */
                 remove(mainPanel);
                 mainPanel = null;
                 panel = null;
             }
-            List<MapdustAction> actionList =
-                    actionPanel != null ? actionPanel.getActionList()
-                            : new ArrayList<MapdustAction>();
+            List<MapdustAction> actionList = actionPanel != null ?
+                    actionPanel.getActionList() : new ArrayList<MapdustAction>();
 
             /* update panels */
             List<MapdustBug> bugs = filterMapdustBugList(mapdustBugs,
-                    actionList,mapdustPlugin.getFilter());
+                    actionList, mapdustPlugin.getFilter());
             updateMapdustPanel(bugs);
             updateMapdustActionPanel(actionList);
             if (mainPanel == null) {
@@ -267,9 +266,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
      * @param mapdustBugs The list of <code>MapdustBug</code> objects
      */
     private void updateMapdustPanel(List<MapdustBug> mapdustBugs) {
-        MapdustBug selectedBug =
-                (mapdustBugs != null && mapdustBugs.size() > 0) ? mapdustBugs
-                        .get(0) : null;
+        MapdustBug selectedBug = (mapdustBugs != null && mapdustBugs.size()
+                > 0) ? mapdustBugs.get(0) : null;
         if (detailsPanel == null) {
             detailsPanel = new MapdustBugPropertiesPanel(selectedBug);
             addObserver(detailsPanel);
@@ -299,7 +297,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     }
 
     /**
-     * Creates the main panel of the plugin and adds to the content pane.
+     * Creates the main panel of the plug-in and adds to the content pane.
      */
     private void createMainPanel() {
         mainPanel = new JPanel();
@@ -426,7 +424,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
 
     /**
      * Enables the basic components from the <code>MapdustButtonPanel</code>.
-     * Basic components are considered the following buttons: work offline,
+     * Basic components are considered the following buttons: work off-line,
      * filter bug report, and refresh.If the onlyBasic flag is true then the
      * other buttons will be disabled.
      *
@@ -446,7 +444,6 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     public List<MapdustAction> getMapdustActionList() {
         return getActionPanel().getActionList();
     }
-
 
     /**
      * Adds a new MapDust bug details observer to the list of observers.
@@ -511,7 +508,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
 
     /**
      * Notifies the <code>MapdustInitialUpdateObserver</code> objects waiting
-     * for the initial download, and update of plugin.
+     * for the initial down-load, and update of plug-in.
      */
     @Override
     public void notifyObservers(MapdustBugFilter filter, boolean first) {
@@ -541,6 +538,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     }
 
     /**
+     * Returns the <code>MapdustPlugin</code> object
+     *
      * @return the mapdustPlugin
      */
     public MapdustPlugin getMapdustPlugin() {
@@ -548,6 +547,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     }
 
     /**
+     * Sets the <code>MapdustPlugin</code> object
+     *
      * @param mapdustPlugin the mapdustPlugin to set
      */
     public void setMapdustPlugin(MapdustPlugin mapdustPlugin) {
@@ -555,9 +556,9 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     }
 
     /**
-     * Returns the downloaded flag
+     * Returns the down-loaded flag
      *
-     * @return the downloaded
+     * @return the down-loaded
      */
     public boolean isDownloaded() {
         return downloaded;

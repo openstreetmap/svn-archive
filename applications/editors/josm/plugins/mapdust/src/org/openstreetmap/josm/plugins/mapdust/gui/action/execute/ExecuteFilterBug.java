@@ -42,6 +42,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.FilterBugDial
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 
 
 /**
@@ -95,9 +96,11 @@ public class ExecuteFilterBug extends MapdustExecuteAction implements
                 List<Integer> statuses = dialog.getCheckedStatuses();
                 /* get the selected description filter */
                 boolean descr = dialog.isDescrFilterChecked();
+                MapdustRelevance minValue = dialog.getSelectedMinRelevance();
+                MapdustRelevance maxValue= dialog.getSelectedMaxRelevance();
                 /* notifies the observers about the filters */
-                notifyObservers(new MapdustBugFilter(statuses, types, descr),
-                        false);
+                notifyObservers(new MapdustBugFilter(statuses, types, descr,
+                        minValue, maxValue), false);
                 enableFiredButton(dialog.getFiredButton());
                 mapdustGUI.enableBtnPanel(false);
                 /* destroy dialog */

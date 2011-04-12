@@ -52,6 +52,9 @@ public class MapdustBugProperties {
     /** The type of the bug */
     private String type;
 
+    /** The relevance value */
+    private Integer relevance;
+
     /** The description of the bug */
     private String description;
 
@@ -94,6 +97,7 @@ public class MapdustBugProperties {
      * @param dateUpdated The update date
      * @param status The status of the bug
      * @param type The type of the bug
+     * @param relevance The relevance of the bug
      * @param description The description of the bug
      * @param isDefaultDescription Flag indicating if the description is default
      * or not
@@ -107,7 +111,7 @@ public class MapdustBugProperties {
      * @param comments The array of comments
      */
     public MapdustBugProperties(Date dateCreated, Date dateUpdated,
-            Integer status, String type, String description,
+            Integer status, String type, Integer relevance, String description,
             boolean isDefaultDescription, String nickname, String skoUid,
             String extUid, String source, String kmlUrl, Address address,
             Integer numberOfComments, MapdustCommentProperties[] comments) {
@@ -115,6 +119,7 @@ public class MapdustBugProperties {
         this.dateUpdated = dateUpdated;
         this.status = status;
         this.type = type;
+        this.relevance = relevance;
         this.description = description;
         this.isDefaultDescription = isDefaultDescription;
         this.nickname = nickname;
@@ -197,6 +202,31 @@ public class MapdustBugProperties {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * Returns the relevance
+     *
+     * @return the relevance
+     */
+    public Integer getRelevance() {
+        return relevance;
+    }
+
+    /**
+     * Sets the relevance
+     *
+     * @param relevance the relevance to set
+     */
+    public void setRelevance(Integer relevance) {
+        this.relevance = relevance;
+    }
+
+    /**
+     * @param isDefaultDescription the isDefaultDescription to set
+     */
+    public void setDefaultDescription(boolean isDefaultDescription) {
+        this.isDefaultDescription = isDefaultDescription;
     }
 
     /**

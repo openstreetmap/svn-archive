@@ -39,7 +39,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
@@ -59,13 +58,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  *
  */
-public class CreateIssueDialog extends AbstractDialog {
+public class CreateBugDialog extends AbstractDialog {
 
     /** The serial version UID */
     private static final long serialVersionUID = 1912577313684808253L;
-
-    /** The create issue text */
-    private String createIssueText;
 
     /** Text message */
     private JScrollPane cmpMessage;
@@ -73,7 +69,7 @@ public class CreateIssueDialog extends AbstractDialog {
     /** The label of the bug type */
     private JLabel lblType;
 
-    /** The combo box for the bug types */
+    /** The combo-box for the bug types */
     private JComboBox cbbType;
 
     /** The nickname label */
@@ -107,10 +103,7 @@ public class CreateIssueDialog extends AbstractDialog {
      * @param point The position where the bug was created
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
-    public CreateIssueDialog(Point point, MapdustPlugin mapdustPlugin) {
-        this.createIssueText = "In order to create a new bug report you";
-        this.createIssueText += " need to provide your nickname and a brief";
-        this.createIssueText += " description for the bug.";
+    public CreateBugDialog(Point point, MapdustPlugin mapdustPlugin) {
         this.point = point;
         /* set JDialog settings */
         initializeDialog();
@@ -158,32 +151,25 @@ public class CreateIssueDialog extends AbstractDialog {
     public void addComponents(MapdustPlugin mapdustPlugin) {
         Color backgroundColor = getContentPane().getBackground();
         Font font = new Font("Times New Roman", Font.BOLD, 14);
-        /* text message */
-        if (cmpMessage == null) {
-            JTextPane txtPane = ComponentUtil.createJTextPane(createIssueText,
-                    backgroundColor);
-            Rectangle bounds = new Rectangle(10, 10, 330, 50);
-            cmpMessage = ComponentUtil.createJScrollPane(txtPane, bounds,
-                    backgroundColor, true, true);
-        }
         /* type */
         if (lblType == null) {
-            Rectangle bounds = new Rectangle(10, 70, 91, 25);
-            lblType = ComponentUtil.createJLabel("Type", font, bounds);
+            Rectangle bounds = new Rectangle(10, 10, 91, 25);
+            lblType = ComponentUtil.createJLabel("Type", font, bounds, null);
         }
         if (cbbType == null) {
             ComboBoxRenderer renderer = new ComboBoxRenderer();
-            Rectangle bounds = new Rectangle(110, 70, 230, 25);
+            Rectangle bounds = new Rectangle(110, 10, 250, 25);
             cbbType = ComponentUtil.createJComboBox(bounds, renderer,
                     backgroundColor);
         }
         /* nickname */
         if (lblNickname == null) {
-            Rectangle bounds = new Rectangle(10, 110, 79, 25);
-            lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds);
+            Rectangle bounds = new Rectangle(10, 50, 79, 25);
+            lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds,
+                    null);
         }
         if (txtNickname == null) {
-            Rectangle bounds = new Rectangle(110, 110, 230,25);
+            Rectangle bounds = new Rectangle(110, 50, 250, 25);
             txtNickname = ComponentUtil.createJTextField(bounds);
             /* get the nickname */
             String nickname = Main.pref.get("mapdust.nickname");
@@ -197,12 +183,12 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         /* description */
         if (lblDescription == null) {
-            Rectangle bounds = new Rectangle(10, 150, 95, 25);
+            Rectangle bounds = new Rectangle(10, 90, 95, 25);
             lblDescription = ComponentUtil.createJLabel("Description", font,
-                    bounds);
+                    bounds, null);
         }
         if (cmpDescription == null) {
-            Rectangle bounds = new Rectangle(110, 150, 230, 50);
+            Rectangle bounds = new Rectangle(110, 90, 250, 80);
             txtDescription = new JTextArea();
             txtDescription.setFont(new Font("Times New Roman", Font.PLAIN, 12));
             txtDescription.setLineWrap(true);
@@ -211,7 +197,7 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         /* cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(250, 210, 90, 25);
+            Rectangle bounds = new Rectangle(270, 180, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
             btnCancel = ComponentUtil.createJButton("Cancel", bounds,
@@ -219,15 +205,14 @@ public class CreateIssueDialog extends AbstractDialog {
         }
         /* ok button */
         if (btnOk == null) {
-            Rectangle bounds = new Rectangle(180, 210, 60, 25);
-            ExecuteAddBug okAction =
-                    new ExecuteAddBug(this, mapdustPlugin.getMapdustGUI());
+            Rectangle bounds = new Rectangle(200, 180, 60, 25);
+            ExecuteAddBug okAction = new ExecuteAddBug(this,
+                    mapdustPlugin.getMapdustGUI());
             okAction.addObserver(mapdustPlugin);
             okAction.addObserver(mapdustPlugin.getMapdustGUI());
             btnOk = ComponentUtil.createJButton("OK", bounds, okAction);
         }
         /* add components to the frame */
-        add(cmpMessage);
         add(lblType);
         add(cbbType);
         add(lblNickname);
@@ -236,7 +221,7 @@ public class CreateIssueDialog extends AbstractDialog {
         add(cmpDescription);
         add(btnCancel);
         add(btnOk);
-        setSize(350, 250);
+        setSize(370, 210);
     }
 
     /**

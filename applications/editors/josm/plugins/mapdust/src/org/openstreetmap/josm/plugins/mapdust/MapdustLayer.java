@@ -172,7 +172,7 @@ public class MapdustLayer extends Layer {
 
     /**
      * Draw the objects to the given map view. Also draws the MapDust bugs to
-     * the map, and the tooltip for the selected MapDust bug.
+     * the map, and the tool-tip for the selected MapDust bug.
      *
      * @param g The <code>Graphics2D</code> object
      * @param mv The <code>MapView</code> object
@@ -199,7 +199,6 @@ public class MapdustLayer extends Layer {
                 for (int i = 0; i < 2; i++) {
                     g.drawImage(icon.getImage(), p.x - (width / 2), p.y
                             - (height / 2), new ImageObserver() {
-
                         @Override
                         public boolean imageUpdate(Image img, int infoflags,
                                 int x, int y, int width, int height) {
@@ -229,7 +228,6 @@ public class MapdustLayer extends Layer {
                 /* draw the icon */
                 g.drawImage(icon.getImage(), p.x - (width / 2), p.y
                         - (height / 2), new ImageObserver() {
-
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x,
                             int y, int width, int height) {
@@ -239,7 +237,7 @@ public class MapdustLayer extends Layer {
                 /* draw description */
                 String text = buildTooltipText(bugSelected);
                 tooltip.setTipText(text);
-                tooltip.setFont(new Font("Times New Roman", Font.BOLD, 12));
+                tooltip.setFont(new Font("Times New Roman", Font.PLAIN, 13));
                 tooltip.setBackground(Color.WHITE);
                 tooltip.setForeground(Color.BLUE);
                 tooltip.setLocation(p);
@@ -271,24 +269,26 @@ public class MapdustLayer extends Layer {
     public void mergeFrom(Layer layer) {}
 
     /**
-     * Builds the text of the tooltip containing a short description of the
+     * Builds the text of the tool-tip containing a short description of the
      * given <code>MapdustBug</code> object.
      *
      * @param bug The <code>MapdustBug</code> object
      * @return A string containing the description text
      */
     private String buildTooltipText(MapdustBug bug) {
-        DateFormat df =
-                DateFormat.getDateInstance(DateFormat.DEFAULT,
-                        Locale.getDefault());
-        String text = "<html>Type: " + bug.getType().getValue() + "<br/>";
-        text += "Status: " + bug.getStatus().getValue() + "<br/>";
-        text += "Address: " + bug.getAddress() + " <br/>";
-        text += "Created by: " + bug.getNickname() + "<br/>";
-        text += "Created on: " + df.format(bug.getDateCreated()) + "<br/>";
-        text += "Last modified on: ";
-        text += df.format(bug.getDateUpdated()) + "<br/>";
-        text += "Comments: " + bug.getNumberOfComments();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                Locale.getDefault());
+        String text = "<html><b>Type:</b> " + bug.getType().getValue() ;
+        text += "<br/>";
+        text += "<b>Status:</b> " + bug.getStatus().getValue() + "<br/>";
+        text += "<b>Relevance:</b> " + bug.getRelevance().getName() + "<br/>";
+        text += "<b>Address:</b> " + bug.getAddress() + " <br/>";
+        text += "<b>Created by:</b> " + bug.getNickname() + "<br/>";
+        text += "<b>Created on:</b> " + df.format(bug.getDateCreated());
+        text += "<br/>";
+        text += "<b>Last modified on:</b> "+ df.format(bug.getDateUpdated()) ;
+        text += "<br/>";
+        text += "<b>Comments:</b> " + bug.getNumberOfComments();
         text += "</html>";
         return text;
     }

@@ -36,7 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeBugStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
@@ -86,7 +86,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
      * @param dialog The <code>ChangeIssueStatusDialog</code> object
      * @param mapdustGUI The <code>MapdustGUI</code> object
      */
-    public ExecuteCloseBug(ChangeIssueStatusDialog dialog, MapdustGUI mapdustGUI) {
+    public ExecuteCloseBug(ChangeBugStatusDialog dialog, MapdustGUI mapdustGUI) {
         setDialog(dialog);
         setMapdustGUI(mapdustGUI);
     }
@@ -103,8 +103,8 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
             JButton btn = (JButton) event.getSource();
             if (btn.getText().equals("OK")) {
                 /* the OK button was pressed */
-                ChangeIssueStatusDialog issueDialog =
-                        (ChangeIssueStatusDialog) getDialog();
+                ChangeBugStatusDialog issueDialog =
+                        (ChangeBugStatusDialog) getDialog();
                 String nickname = issueDialog.getTxtNickname().getText();
                 String commentText = issueDialog.getTxtDescription().getText();
                 /* validate nickname & comment text */
@@ -130,7 +130,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                             selectedBug, comment, 2);
                     /* destroy dialog */
                     enableFiredButton(issueDialog.getFiredButton());
-                    mapdustGUI.enableBtnPanel(false);
+                    mapdustGUI.enableBtnPanel(true);
                     issueDialog.dispose();
                     if (getMapdustGUI().getActionPanel()!= null) {
                         notifyObservers(mapdustAction);

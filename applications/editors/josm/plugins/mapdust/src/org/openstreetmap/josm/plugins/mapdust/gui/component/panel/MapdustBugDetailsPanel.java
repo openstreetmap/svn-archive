@@ -45,6 +45,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.util.Configuration;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
@@ -69,7 +70,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
      */
     public MapdustBugDetailsPanel(MapdustBug bug) {
         this.bug = bug;
-        setLayout(new GridLayout(7, 2));
+        setLayout(new GridLayout(8, 2));
         addComponents();
         setBackground(Color.white);
     }
@@ -98,7 +99,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
                 Locale.getDefault());
 
         /* the id */
-        add(ComponentUtil.createJLabel("Id: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Id: ", fontLabel, null, null));
         String idStr = bug != null ? bug.getId().toString() : "";
         String txt = "<html>";
         txt += "<font style='font-size:10px' face='Times New Roman'>";
@@ -113,36 +114,44 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
         add(txtId);
 
         /* the type */
-        add(ComponentUtil.createJLabel("Type: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Type: ", fontLabel, null, null));
         String typeStr = bug != null ? bug.getType().getValue() : "";
-        add(ComponentUtil.createJLabel(typeStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(typeStr, fontLabelVal, null, null));
 
         /* the status */
-        add(ComponentUtil.createJLabel("Status: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Status: ", fontLabel, null, null));
         String statusStr = bug != null ? bug.getStatus().getValue() : "";
-        add(ComponentUtil.createJLabel(statusStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(statusStr, fontLabelVal, null, null));
+
+        /* the relevance */
+        add(ComponentUtil.createJLabel("Relevance: ", fontLabel, null, null));
+        Color color = getRelevanceValueColor(bug);
+        String relevanceStr = bug != null ? bug.getRelevance().getName() : "";
+        add(ComponentUtil.createJLabel(relevanceStr, fontLabel, null, color));
 
         /* the source */
-        add(ComponentUtil.createJLabel("Source: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Source: ", fontLabel, null, null));
         String sourceStr = bug != null ? bug.getSource() : "";
-        add(ComponentUtil.createJLabel(sourceStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(sourceStr, fontLabelVal, null, null));
 
         /* the nickname */
-        add(ComponentUtil.createJLabel("Created by: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Created by: ", fontLabel, null, null));
         String nicknameStr = bug != null ? bug.getNickname() : "";
-        add(ComponentUtil.createJLabel(nicknameStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(nicknameStr, fontLabelVal, null, null));
 
         /* the date created */
-        add(ComponentUtil.createJLabel("Date created: ", fontLabel, null));
-        String dateCreatedStr =
-                bug != null ? df.format(bug.getDateCreated()) : "";
-        add(ComponentUtil.createJLabel(dateCreatedStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel("Date created: ", fontLabel, null, null));
+        String dateCreatedStr = bug != null ? df.format(bug.getDateCreated())
+                : "";
+        add(ComponentUtil.createJLabel(dateCreatedStr, fontLabelVal, null,
+                null));
 
         /* the date updated */
-        add(ComponentUtil.createJLabel("Date updated: ", fontLabel, null));
-        String dateUpdatedStr =
-                bug != null ? df.format(bug.getDateUpdated()) : "";
-        add(ComponentUtil.createJLabel(dateUpdatedStr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel("Date updated: ", fontLabel, null, null));
+        String dateUpdatedStr = bug != null ? df.format(bug.getDateUpdated())
+                : "";
+        add(ComponentUtil.createJLabel(dateUpdatedStr, fontLabelVal, null,
+                null));
     }
 
     @Override
@@ -150,8 +159,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             String bugDetailsUrl = null;
             if (bug != null) {
-                String mapdustSite =
-                    Configuration.getInstance().getMapdustBugDetailsUrl();
+                String mapdustSite = Configuration.getInstance().getMapdustBugDetailsUrl();
                 bugDetailsUrl = mapdustSite + bug.getId().toString();
             }
             if (bugDetailsUrl != null) {
@@ -160,12 +168,43 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
                 } catch (Exception e) {
                     String errorMessage = "Error opening the MapDust bug ";
                     errorMessage += "details page";
-                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
-                            tr("Error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent,
+                            tr(errorMessage), tr("Error"),
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
 
         }
+    }
+
+    /**
+     * Returns a <code>Color</code> object based on the <code>MapdustBug</code>
+     * relevance level. If the <code>MapdustBug</code> is null, then the
+     * returned color will be black.
+     *
+     * @param bug The <code>MapdustBug</code> object
+     * @return The corresponding <code>Color</code>
+     */
+    private Color getRelevanceValueColor(MapdustBug bug) {
+        Color color = Color.BLACK;
+        if (bug != null) {
+            if (bug.getRelevance().equals(MapdustRelevance.LOW)) {
+                color = Color.RED.brighter();
+            }
+            if (bug.getRelevance().equals(MapdustRelevance.MID_LOW)) {
+                color = Color.RED.darker();
+            }
+            if (bug.getRelevance().equals(MapdustRelevance.MEDIUM)) {
+                color = Color.ORANGE;
+            }
+            if (bug.getRelevance().equals(MapdustRelevance.MID_HIGH)) {
+                color = Color.GREEN;
+            }
+            if (bug.getRelevance().equals(MapdustRelevance.HIGH)) {
+                color = (Color.GREEN.darker()).darker();
+            }
+        }
+        return color;
     }
 
 }

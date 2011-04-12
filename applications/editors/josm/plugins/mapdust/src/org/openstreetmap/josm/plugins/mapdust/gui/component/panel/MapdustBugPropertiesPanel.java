@@ -47,9 +47,9 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 
 
 /**
- * Defines the JPanel for the <code>MapdustBug</code> object properties.
- * The MapDust bug properties panel displays detailed information about a
- * given <code>MapdustBug</code> and it is composed by the following panels:
+ * Defines the JPanel for the <code>MapdustBug</code> object properties. The
+ * MapDust bug properties panel displays detailed information about a given
+ * <code>MapdustBug</code> and it is composed by the following panels:
  * <code>MapdustBugDetailsPanel</code>, <code>MapdustAddressPanel</code>,
  * <code>MapdustDescriptionPanel</code>, <code>MapdustCommentsPanel</code> and
  * <code>MapdustHelpPanel</code>.
@@ -118,7 +118,6 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         if (mainPanel != null) {
             index = mainPanel.getSelectedIndex();
         }
-
         /* create the panels */
         createPanels(selectedBug);
         if (index != -1) {
@@ -158,7 +157,6 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         } else {
             detailsPanel.updateComponents(mapdustBug);
         }
-
         /* address panel */
         Address address = mapdustBug != null ? mapdustBug.getAddress() : null;
         LatLon coordinates = mapdustBug != null ? mapdustBug.getLatLon() : null;
@@ -171,30 +169,27 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         } else {
             addressPanel.updateComponents(address, coordinates);
         }
-
         /* description panel */
-        String description = mapdustBug != null ? mapdustBug.getDescription() : "";
+        String description = mapdustBug != null ? mapdustBug.getDescription()
+                : "";
         if (descriptionPanel == null) {
             descriptionPanel = new MapdustDescriptionPanel(description);
         } else {
             descriptionPanel.updateComponents(description);
         }
-
         /* comments panel */
-        MapdustComment[] comments = mapdustBug != null ? mapdustBug.getComments()
-                : new MapdustComment[0];
+        MapdustComment[] comments = mapdustBug != null ?
+                mapdustBug.getComments() : new MapdustComment[0];
         if (commentsPanel == null) {
             commentsPanel = new MapdustCommentsPanel(comments);
         } else {
-           commentsPanel.updateComponents(comments);
-           mainPanel.setTitleAt(3, commentsPanel.getName());
+            commentsPanel.updateComponents(comments);
+            mainPanel.setTitleAt(3, commentsPanel.getName());
         }
-
         /* the help panel */
         if (helpPanel == null) {
             helpPanel = new MapdustHelpPanel();
         }
-
         /* creates the main panel */
         if (mainPanel == null) {
             mainPanel = new JTabbedPane();

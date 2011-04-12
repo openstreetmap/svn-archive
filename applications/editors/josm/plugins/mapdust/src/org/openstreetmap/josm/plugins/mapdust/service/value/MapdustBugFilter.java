@@ -52,6 +52,12 @@ public class MapdustBugFilter {
     /** The description filter value */
     private Boolean descr;
 
+    /** The minimum relevance */
+    private MapdustRelevance minRelevance;
+
+    /** The maximum relevance */
+    private MapdustRelevance maxRelevance;
+
     /**
      * Build a <code>MapdustBugFilter</code> object
      */
@@ -64,12 +70,17 @@ public class MapdustBugFilter {
      * @param statuses The list of status filter values
      * @param types The list of type filter values
      * @param descr The description filter value
+     * @param minRelevance The minimum relevance
+     * @param maxRelevance The maximum relevance
      */
     public MapdustBugFilter(List<Integer> statuses, List<String> types,
-            Boolean descr) {
+            Boolean descr, MapdustRelevance minRelevance,
+            MapdustRelevance maxRelevance) {
         this.statuses = statuses;
         this.types = types;
         this.descr = descr;
+        this.minRelevance = minRelevance;
+        this.maxRelevance = maxRelevance;
     }
 
     /**
@@ -124,6 +135,42 @@ public class MapdustBugFilter {
      */
     public void setDescr(Boolean descr) {
         this.descr = descr;
+    }
+
+    /**
+     * Returns the minimum relevance
+     *
+     * @return the minRelevance
+     */
+    public MapdustRelevance getMinRelevance() {
+        return minRelevance;
+    }
+
+    /**
+     * Sets the minimum relevance
+     *
+     * @param minRelevance the minRelevance to set
+     */
+    public void setMinRelevance(MapdustRelevance minRelevance) {
+        this.minRelevance = minRelevance;
+    }
+
+    /**
+     * Returns the maximum relevance
+     *
+     * @return the maxRelevance
+     */
+    public MapdustRelevance getMaxRelevance() {
+        return maxRelevance;
+    }
+
+    /**
+     * Sets the maximum relevance
+     *
+     * @param maxRelevance the maxRelevance to set
+     */
+    public void setMaxRelevance(MapdustRelevance maxRelevance) {
+        this.maxRelevance = maxRelevance;
     }
 
 }

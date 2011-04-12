@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeBugStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 
 
@@ -62,11 +62,8 @@ public class ShowReOpenBugAction extends MapdustShowAction {
      */
     public ShowReOpenBugAction(MapdustPlugin mapdustPlugin) {
         setMapdustPlugin(mapdustPlugin);
-        setTitle("Re-open bug report");
+        setTitle("Reopen bug report");
         setIconName("dialogs/reopen.png");
-        String text = "In order to re-open the bug report, please provide ";
-        text += "your nickname and your reason of re-opening the bug report.";
-        setMessageText(text);
     }
 
     /**
@@ -86,8 +83,8 @@ public class ShowReOpenBugAction extends MapdustShowAction {
                 getButtonPanel().getBtnReOpenBugReport().setSelected(true);
             }
             disableButtons(getButtonPanel());
-            ChangeIssueStatusDialog dialog = new ChangeIssueStatusDialog(
-                    getTitle(), getIconName(), getMessageText(), "reopen", btn,
+            ChangeBugStatusDialog dialog = new ChangeBugStatusDialog(
+                    getTitle(), getIconName(), "reopen", btn,
                     getMapdustPlugin());
             dialog.setLocationRelativeTo(null);
             dialog.getContentPane().setPreferredSize(dialog.getSize());

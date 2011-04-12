@@ -61,6 +61,9 @@ public class MapdustBug {
     /** The type of the object */
     private Type type;
 
+    /** The relevance of the object */
+    private MapdustRelevance relevance;
+
     /** The description of the bug */
     private String description;
 
@@ -91,9 +94,7 @@ public class MapdustBug {
     /**
      * Builds a <code>MapdustBug</code> object.
      */
-    public MapdustBug() {
-
-    }
+    public MapdustBug() {}
 
     /**
      * Builds a <code>MapdustBug</code> object based on the given arguments.
@@ -121,6 +122,7 @@ public class MapdustBug {
      * @param dateUpdated The update date
      * @param status The status of the bug
      * @param type The type of the bug
+     * @param relevance The relevance of the bug
      * @param description The description of the bug
      * @param isDefaultDescription Flag indicating if the description is default
      * or not
@@ -134,8 +136,9 @@ public class MapdustBug {
      */
     public MapdustBug(Long id, LatLon latLon, Address address,
             Date dateCreated, Date dateUpdated, Status status, Type type,
-            String description, boolean isDefaultDescription, String nickname,
-            String skoUid, String extUid, String source, String kmlUrl,
+            MapdustRelevance relevance, String description,
+            boolean isDefaultDescription, String nickname, String skoUid,
+            String extUid, String source, String kmlUrl,
             Integer numberOfComments, MapdustComment[] comments) {
         this.id = id;
         this.latLon = latLon;
@@ -144,6 +147,7 @@ public class MapdustBug {
         this.dateUpdated = dateUpdated;
         this.status = status;
         this.type = type;
+        this.relevance = relevance;
         this.description = description;
         this.isDefaultDescription = isDefaultDescription;
         this.nickname = nickname;
@@ -261,6 +265,24 @@ public class MapdustBug {
      */
     public void setType(Type type) {
         this.type = type;
+    }
+
+    /**
+     * Returns the relevance
+     *
+     * @return the relevance
+     */
+    public MapdustRelevance getRelevance() {
+        return relevance;
+    }
+
+    /**
+     * Sets the relevance
+     *
+     * @param relevance the relevance to set
+     */
+    public void setRelevance(MapdustRelevance relevance) {
+        this.relevance = relevance;
     }
 
     /**
@@ -442,7 +464,9 @@ public class MapdustBug {
         this.comments = comments;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -453,7 +477,9 @@ public class MapdustBug {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -472,6 +498,5 @@ public class MapdustBug {
             return false;
         return true;
     }
-
 
 }

@@ -65,7 +65,7 @@ public abstract class MapdustExecuteAction extends AbstractAction {
     protected String validate(String nickname, String commentText) {
         String errorMessage = null;
         String invalidNickname = " Your nickname length has to be between 3";
-        invalidNickname += " and 16 characters.Please use letters,numbers, ";
+        invalidNickname += " and 16 characters. Please use letters,numbers, ";
         invalidNickname += " '-', '.' or '_' '.'";
         if (emptyValue(nickname) && emptyValue(commentText)) {
             errorMessage = " Missing nickname and comment.";

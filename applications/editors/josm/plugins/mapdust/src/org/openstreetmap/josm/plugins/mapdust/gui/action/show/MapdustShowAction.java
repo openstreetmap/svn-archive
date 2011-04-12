@@ -51,9 +51,6 @@ public abstract class MapdustShowAction extends AbstractAction {
     /** The icon name of the dialog window */
     protected String iconName;
 
-    /** The message to display on the dialog */
-    protected String messageText;
-
     /** The <code>MapdustPlugin</code> */
     protected MapdustPlugin mapdustPlugin;
 
@@ -120,24 +117,6 @@ public abstract class MapdustShowAction extends AbstractAction {
      */
     public void setIconName(String iconName) {
         this.iconName = iconName;
-    }
-
-    /**
-     * Returns the message text
-     *
-     * @return the messageText
-     */
-    public String getMessageText() {
-        return this.messageText;
-    }
-
-    /**
-     * Returns the message text
-     *
-     * @param messageText the messageText to set
-     */
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
     }
 
     /**

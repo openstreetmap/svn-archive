@@ -86,7 +86,7 @@ public class Type implements Serializable {
 
     /** The blocked street <code>Type</code> */
     public static final Type BLOCKED_STREET = new Type("blocked_street",
-            "Blocked streeet");
+            "Blocked street");
 
     /** The missing street <code>Type</code> */
     public static final Type MISSING_STREET = new Type("missing_street",

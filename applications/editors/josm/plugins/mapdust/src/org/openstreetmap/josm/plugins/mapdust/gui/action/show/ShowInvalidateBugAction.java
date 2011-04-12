@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeBugStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 
 
@@ -63,11 +63,8 @@ public class ShowInvalidateBugAction extends MapdustShowAction {
      */
     public ShowInvalidateBugAction(MapdustPlugin mapdustPlugin) {
         setMapdustPlugin(mapdustPlugin);
-        setTitle("Invalidate bug report");
+        setTitle("Mark bug report as non-reproducible/software bug");
         setIconName("dialogs/invalid.png");
-        String text = "In order to invalidate the bug report, please provide ";
-        text += "your nickname and your reason of invalidating the bug report.";
-        setMessageText(text);
     }
 
     /**
@@ -89,8 +86,8 @@ public class ShowInvalidateBugAction extends MapdustShowAction {
                 }
             }
             disableButtons(getButtonPanel());
-            ChangeIssueStatusDialog dialog = new ChangeIssueStatusDialog(
-                    getTitle(), getIconName(), getMessageText(), "invalidate",
+            ChangeBugStatusDialog dialog = new ChangeBugStatusDialog(
+                    getTitle(), getIconName(), "invalidate",
                     btn, getMapdustPlugin());
             dialog.setLocationRelativeTo(null);
             dialog.getContentPane().setPreferredSize(dialog.getSize());

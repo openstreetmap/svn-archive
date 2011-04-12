@@ -47,9 +47,12 @@ import org.openstreetmap.josm.plugins.mapdust.gui.action.adapter.WindowClose;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteCancel;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteFilterBug;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.slider.RelevanceSlider;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.FilterCheckBox;
+import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustRelevanceValue;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -83,6 +86,12 @@ public class FilterBugDialog extends AbstractDialog {
 
     /** The <code>FilterCheckBox</code> containing the description filter */
     private FilterCheckBox filterDescr;
+
+    /** The <code>JLabel</code> for the relevance filter */
+    private JLabel lblRelevance;
+
+    /** The <code>RelevanceSlider</code> representing the relevance values */
+    private RelevanceSlider sliderRelevance;
 
     /** The apply button */
     private JButton btnApply;
@@ -130,7 +139,8 @@ public class FilterBugDialog extends AbstractDialog {
         /* status filter */
         if (lblStatus == null) {
             Rectangle bounds = new Rectangle(10, 10, 95, 25);
-            lblStatus = ComponentUtil.createJLabel("Status", font, bounds);
+            lblStatus = ComponentUtil.createJLabel("Status", font, bounds,
+                    null);
         }
         if (filterStatuses == null) {
             createStatusFilters(prevFilter);
@@ -142,45 +152,78 @@ public class FilterBugDialog extends AbstractDialog {
         }
         if (lblType == null) {
             Rectangle bounds = new Rectangle(10, 90, 95, 25);
-            lblType = ComponentUtil.createJLabel("Type", font, bounds);
+            lblType = ComponentUtil.createJLabel("Type", font, bounds, null);
         }
 
         /* description filter */
         if (lblDescription == null) {
             Rectangle bounds = new Rectangle(10, 230, 95, 25);
             lblDescription = ComponentUtil.createJLabel("Description", font,
-                    bounds);
+                    bounds, null);
         }
         if (filterDescr == null) {
             Rectangle chbBounds = new Rectangle(110, 230, 20, 25);
             Rectangle lblBounds = new Rectangle(130, 230, 300, 25);
             String text = "Hide bugs with default description";
             String iconName = "dialogs/default_description.png";
-            filterDescr = new FilterCheckBox("descr", chbBounds, iconName, text,
-                    lblBounds);
+            filterDescr = new FilterCheckBox("descr", chbBounds, iconName,
+                    text, lblBounds);
             if (prevFilter != null && prevFilter.getDescr() != null
                     && prevFilter.getDescr()) {
                 filterDescr.getChbFilter().setSelected(true);
             }
         }
+        /* relevance filter */
+        if (lblRelevance == null) {
+            Rectangle bounds = new Rectangle(10, 265, 95, 25);
+            lblRelevance = ComponentUtil.createJLabel("Relevance", font,
+                    bounds, null);
+        }
+        if (sliderRelevance == null) {
+            Rectangle bounds = new Rectangle(110, 265, 300, 50);
+            sliderRelevance = new RelevanceSlider();
+            sliderRelevance.setBounds(bounds);
+            if (prevFilter != null) {
+                MapdustRelevance min = prevFilter.getMinRelevance();
+                MapdustRelevance max = prevFilter.getMaxRelevance();
+                if (min != null) {
+                    Integer value = MapdustRelevanceValue.getSliderValue(min);
+                    if (value == null) {
+                        value = MapdustRelevanceValue.LOW.getSliderValue();
+                    }
+                    sliderRelevance.setLowerValue(value);
+                }
+                if (max != null) {
+                    Integer value = MapdustRelevanceValue.getSliderValue(max);
+                    if (value == null) {
+                        value = MapdustRelevanceValue.HIGH.getSliderValue();
+                    }
+                    sliderRelevance.setUpperValue(value);
+                }
+                if (max != null && max.equals(min)
+                        && max.equals(MapdustRelevance.LOW)) {
+                    sliderRelevance.getUI().setIsUpperSelected(true);
+                }
+            }
+        }
 
         /* creates the cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(360, 265, 90, 25);
+            Rectangle bounds = new Rectangle(360, 330, 90, 25);
             ExecuteCancel cancelAction = new ExecuteCancel(this,
                     mapdustPlugin.getMapdustGUI());
             btnCancel = ComponentUtil.createJButton("Cancel", bounds,
                     cancelAction);
         }
-        /* creates the ok button */
+        /* creates the OK button */
         if (btnApply == null) {
-            Rectangle bounds = new Rectangle(260, 265, 90, 25);
+            Rectangle bounds = new Rectangle(260, 330, 90, 25);
             ExecuteFilterBug applyAction = new ExecuteFilterBug(this,
                     mapdustPlugin.getMapdustGUI());
             applyAction.addObserver(mapdustPlugin);
-            btnApply = ComponentUtil.createJButton("Apply", bounds, applyAction);
+            btnApply = ComponentUtil.createJButton("Apply", bounds,
+                    applyAction);
         }
-
         /* add components */
         add(lblStatus);
         add(filterStatuses);
@@ -188,9 +231,11 @@ public class FilterBugDialog extends AbstractDialog {
         add(filterTypes);
         add(lblDescription);
         add(filterDescr);
+        add(lblRelevance);
+        add(sliderRelevance);
         add(btnCancel);
         add(btnApply);
-        setSize(460, 300);
+        setSize(460, 360);
     }
 
     /**
@@ -237,23 +282,23 @@ public class FilterBugDialog extends AbstractDialog {
 
         /* wrong_turn type */
         filterTypes[0] = new FilterCheckBox(Type.WRONG_TURN.getKey(),
-                new Rectangle(110,90, 20, 25), "dialogs/wrong_turn.png",
-                Type.WRONG_TURN.getValue(), new Rectangle(130, 90, 120,25));
+                new Rectangle(110, 90, 20, 25), "dialogs/wrong_turn.png",
+                Type.WRONG_TURN.getValue(), new Rectangle(130, 90, 120, 25));
         /* bad_routing type */
         filterTypes[1] = new FilterCheckBox(Type.WRONG_ROUNDABOUT.getKey(),
                 new Rectangle(270, 90, 20, 25), "dialogs/wrong_roundabout.png",
-                Type.WRONG_ROUNDABOUT.getValue(),
-                new Rectangle(290, 90, 180, 25));
+                Type.WRONG_ROUNDABOUT.getValue(), new Rectangle(290, 90, 180,
+                        25));
         /* oneway_road type */
-        filterTypes[2] = new FilterCheckBox(Type.MISSING_STREET.getKey(),
+        filterTypes[2] =  new FilterCheckBox(Type.MISSING_STREET.getKey(),
                 new Rectangle(110, 125, 20, 25), "dialogs/missing_street.png",
-                Type.MISSING_STREET.getValue(),
-                new Rectangle(130, 125, 150, 25));
+                Type.MISSING_STREET.getValue(), new Rectangle(130, 125, 150,
+                        25));
         /* blocked_street type */
         filterTypes[3] = new FilterCheckBox(Type.BLOCKED_STREET.getKey(),
                 new Rectangle(270, 125, 20, 25), "dialogs/blocked_street.png",
-                Type.BLOCKED_STREET.getValue(),
-                new Rectangle(290, 125, 180, 25));
+                Type.BLOCKED_STREET.getValue(), new Rectangle(290, 125, 180,
+                        25));
         /* missing_street type */
         filterTypes[4] = new FilterCheckBox(Type.BAD_ROUTING.getKey(),
                 new Rectangle(110, 160, 20, 25), "dialogs/bad_routing.png",
@@ -261,8 +306,8 @@ public class FilterBugDialog extends AbstractDialog {
         /* wrong_roundabout type */
         filterTypes[5] = new FilterCheckBox(Type.MISSING_SPEEDLIMIT.getKey(),
                 new Rectangle(270, 160, 20, 25), "dialogs/missing_speedlimit.png",
-                Type.MISSING_SPEEDLIMIT.getValue(),
-                new Rectangle(290, 160, 180, 25));
+                Type.MISSING_SPEEDLIMIT.getValue(), new Rectangle(290, 160,
+                        180, 25));
         /* missing_speedlimit type */
         filterTypes[6] = new FilterCheckBox(Type.OTHER.getKey(),
                 new Rectangle(110, 195, 20, 25), "dialogs/other.png",
@@ -324,6 +369,30 @@ public class FilterBugDialog extends AbstractDialog {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the selected minimum relevance value from the relevance slider.
+     *
+     * @return A <code>MapdustRelevance</code> object
+     */
+    public MapdustRelevance getSelectedMinRelevance() {
+        int value = sliderRelevance.getLowerValue();
+        MapdustRelevance minRelevance =
+                MapdustRelevance.getMapdustRelevance(value);
+        return minRelevance;
+    }
+
+    /**
+     * Returns the selected maximum relevance value from the relevance slider.
+     *
+     * @return A <code>MapdustRelevance</code> object
+     */
+    public MapdustRelevance getSelectedMaxRelevance() {
+        int value = sliderRelevance.getUpperValue();
+        MapdustRelevance maxRelevance =
+                MapdustRelevance.getMapdustRelevance(value);
+        return maxRelevance;
     }
 
     /**

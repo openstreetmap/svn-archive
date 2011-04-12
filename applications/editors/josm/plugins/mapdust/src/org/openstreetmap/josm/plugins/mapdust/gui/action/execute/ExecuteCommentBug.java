@@ -36,7 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentIssueDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObservable;
@@ -85,7 +85,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
      * @param dialog The <code>CommentIssueDialog</code> object
      * @param mapdustGUI The <code>MapdustGUI</code> object
      */
-    public ExecuteCommentBug(CommentIssueDialog dialog, MapdustGUI mapdustGUI) {
+    public ExecuteCommentBug(CommentBugDialog dialog, MapdustGUI mapdustGUI) {
         setDialog(dialog);
         setMapdustGUI(mapdustGUI);
     }
@@ -102,8 +102,8 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
             JButton btn = (JButton) event.getSource();
             if (btn.getText().equals("OK")) {
                 /* ok button was pressed */
-                CommentIssueDialog issueDialog =
-                        (CommentIssueDialog) getDialog();
+                CommentBugDialog issueDialog =
+                        (CommentBugDialog) getDialog();
                 String nickname = issueDialog.getTxtNickname().getText();
                 String commentText = issueDialog.getTxtComment().getText();
                 /* validate */
@@ -126,6 +126,11 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                     MapdustAction mapdustAction = new MapdustAction(
                             MapdustServiceCommand.COMMENT_BUG, iconPath,
                             selectedBug, comment);
+                    /* destroy dialog */
+                    enableFiredButton(issueDialog.getFiredButton());
+                    mapdustGUI.enableBtnPanel(true);
+                    mapdustGUI.getPanel().resetSelectedBug(0);
+                    issueDialog.dispose();
                     if (getMapdustGUI().getActionPanel() != null) {
                         issueDialog.dispose();
                         notifyObservers(mapdustAction);
@@ -154,17 +159,18 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
                         }
+                        /* enable buttons */
+                        enableFiredButton(issueDialog.getFiredButton());
+                        mapdustGUI.enableBtnPanel(false);
+                        mapdustGUI.getPanel().resetSelectedBug(0);
+                        /* destroy dialog */
+                        issueDialog.dispose();
                         if (newMapdustBug != null) {
                             notifyObservers(newMapdustBug);
                         }
                     }
                 }
-                /* enable buttons */
-                enableFiredButton(issueDialog.getFiredButton());
-                mapdustGUI.enableBtnPanel(false);
-                mapdustGUI.getPanel().resetSelectedBug(0);
-                /* destroy dialog */
-                issueDialog.dispose();
+
             }
         }
     }

@@ -64,8 +64,8 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
  * @author Bea
  * @version $Revision$
  */
-public class MapdustBugListPanel extends JPanel implements ListSelectionListener,
-        MapdustBugDetailsObservable {
+public class MapdustBugListPanel extends JPanel implements
+        ListSelectionListener, MapdustBugDetailsObservable {
 
     /** The serial version UID */
     private static final long serialVersionUID = -675120506597637085L;
@@ -139,22 +139,22 @@ public class MapdustBugListPanel extends JPanel implements ListSelectionListener
             menu = new JPopupMenu();
             /* add comment item */
             MapdustShowAction action = new ShowCommentBugAction(mapdustPlugin);
-            menuAddComment = ComponentUtil.createJMenuItem(action, "Add comment",
-                    "dialogs/comment.png");
+            menuAddComment = ComponentUtil.createJMenuItem(action,
+                    "Add comment/additional info", "dialogs/comment.png");
             menu.add(menuAddComment);
             /* fix bug item */
             action = new ShowCloseBugAction(mapdustPlugin);
-            menuFixed = ComponentUtil.createJMenuItem(action, "Close bug",
+            menuFixed = ComponentUtil.createJMenuItem(action, "Mark as fixed",
                     "dialogs/fixed.png");
             menu.add(menuFixed);
             /* invalidate bug item */
             action = new ShowInvalidateBugAction(mapdustPlugin);
             menuInvalidate = ComponentUtil.createJMenuItem(action,
-                    "Invalidate bug", "dialogs/invalid.png");
+                    "Non-reproducible/Software bug", "dialogs/invalid.png");
             menu.add(menuInvalidate);
             /* re-open bug item */
             action = new ShowReOpenBugAction(mapdustPlugin);
-            menuReopen = ComponentUtil.createJMenuItem(action, "Re-open bug",
+            menuReopen = ComponentUtil.createJMenuItem(action, "Reopen bug",
                     "dialogs/reopen.png");
             menu.add(menuReopen);
         }
@@ -196,26 +196,34 @@ public class MapdustBugListPanel extends JPanel implements ListSelectionListener
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs.getViewport().setView(textJList);
         } else {
-            if (mapdustBugsJList == null) {
-                mapdustBugsJList = ComponentUtil.createJList(mapdustBugsList,
-                        menu);
-                mapdustBugsJList.addListSelectionListener(this);
-                DisplayMenu adapter = new DisplayMenu(mapdustBugsJList, menu);
-                mapdustBugsJList.addMouseListener(adapter);
-            } else {
-                mapdustBugsJList.setModel(new BugsListModel(mapdustBugsList));
+            synchronized (mapdustBugsJList) {
+                if (mapdustBugsJList == null) {
+                    mapdustBugsJList = ComponentUtil.createJList(
+                            mapdustBugsList, menu);
+                    mapdustBugsJList.addListSelectionListener(this);
+                    DisplayMenu adapter = new DisplayMenu(mapdustBugsJList,
+                            menu);
+                    mapdustBugsJList.addMouseListener(adapter);
+                } else {
+                    mapdustBugsJList.setModel(new BugsListModel(mapdustBugsList));
+                }
+                cmpMapdustBugs.getViewport().setView(mapdustBugsJList);
             }
-            cmpMapdustBugs.getViewport().setView(mapdustBugsJList);
         }
     }
 
     /**
+     * Listens to the <code>ListSelectionEvent</code>s and modifies the buttons
+     * and menu items depending on the status of the <code>MapdustBug</code>
+     * object.
      *
+     * @param event The <code>ListSelectionEvent</code> object
      */
     @Override
-    public void valueChanged(ListSelectionEvent event) {
+    public synchronized void valueChanged(ListSelectionEvent event) {
         if (!event.getValueIsAdjusting()) {
-            MapdustBug selectedBug = (MapdustBug) mapdustBugsJList.getSelectedValue();
+            MapdustBug selectedBug =
+                    (MapdustBug) mapdustBugsJList.getSelectedValue();
             if (selectedBug != null) {
                 Main.pref.put("selectedBug.status", selectedBug.getStatus()
                         .getValue());
@@ -249,7 +257,6 @@ public class MapdustBugListPanel extends JPanel implements ListSelectionListener
                     getMenuInvalidate().setEnabled(false);
                     getMenuFixed().setEnabled(false);
                 }
-
                 btnPanel.getBtnAddComment().setSelected(false);
                 btnPanel.getBtnReOpenBugReport().setSelected(false);
                 btnPanel.getBtnFixBugReport().setSelected(false);
@@ -270,6 +277,8 @@ public class MapdustBugListPanel extends JPanel implements ListSelectionListener
             /* re-paint */
             Main.map.mapView.repaint();
             mapdustGUI.repaint();
+        } else {
+            return;
         }
     }
 

@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentIssueDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 
 
@@ -62,11 +62,8 @@ public class ShowCommentBugAction extends MapdustShowAction {
      */
     public ShowCommentBugAction(MapdustPlugin mapdustPlugin) {
         setMapdustPlugin(mapdustPlugin);
-        setTitle("Create bug report comment");
+        setTitle("Add comment/additional info");
         setIconName("dialogs/comment.png");
-        String text = "In order to comment a bug report, you need to ";
-        text += "provide your nickname and a brief comment for the bug.";
-        setMessageText(text);
     }
 
     /**
@@ -87,8 +84,8 @@ public class ShowCommentBugAction extends MapdustShowAction {
                 }
             }
             disableButtons(getButtonPanel());
-            CommentIssueDialog dialog = new CommentIssueDialog(getTitle(),
-                    getIconName(), getMessageText(), btn, getMapdustPlugin());
+            CommentBugDialog dialog = new CommentBugDialog(getTitle(),
+                    getIconName(), btn, getMapdustPlugin());
             dialog.setLocationRelativeTo(null);
             dialog.getContentPane().setPreferredSize(dialog.getSize());
             dialog.pack();

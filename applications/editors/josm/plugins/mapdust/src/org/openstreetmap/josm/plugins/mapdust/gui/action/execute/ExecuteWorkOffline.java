@@ -94,6 +94,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                     Main.pref.put("mapdust.pluginState",
                             MapdustPluginState.OFFLINE.getValue());
                     btn.setSelected(false);
+                    btn.setFocusable(false);
                 } else {
                     // was offline, becomes online
                     String title = "MapDust";
@@ -116,6 +117,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                     Main.pref.put("mapdust.pluginState",
                             MapdustPluginState.ONLINE.getValue());
                     btn.setSelected(false);
+                    btn.setFocusable(false);
                 }
                 notifyObservers(null, false);
             }

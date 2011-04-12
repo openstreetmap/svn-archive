@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeIssueStatusDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeBugStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 
 
@@ -63,11 +63,8 @@ public class ShowCloseBugAction extends MapdustShowAction {
      */
     public ShowCloseBugAction(MapdustPlugin mapdustPlugin) {
         setMapdustPlugin(mapdustPlugin);
-        setTitle("Close bug report");
+        setTitle("Mark bug report as fixed");
         setIconName("dialogs/fixed.png");
-        String text = "In order to close a bug report, please provide your";
-        text += " nickname and your reason of closing the bug report.";
-        setMessageText(text);
     }
 
     /**
@@ -88,8 +85,8 @@ public class ShowCloseBugAction extends MapdustShowAction {
                 }
             }
             disableButtons(getButtonPanel());
-            ChangeIssueStatusDialog dialog = new ChangeIssueStatusDialog(
-                    getTitle(), getIconName(), getMessageText(), "close", btn,
+            ChangeBugStatusDialog dialog = new ChangeBugStatusDialog(
+                    getTitle(), getIconName(), "close", btn,
                     getMapdustPlugin());
             dialog.setLocationRelativeTo(null);
             dialog.getContentPane().setPreferredSize(dialog.getSize());

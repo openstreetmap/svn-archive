@@ -38,7 +38,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.WindowConstants;
 import org.openstreetmap.josm.Main;
@@ -60,16 +59,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  * @author Bea
  */
-public class ChangeIssueStatusDialog extends AbstractDialog {
+public class ChangeBugStatusDialog extends AbstractDialog {
 
     /** The serial version UID */
     private static final long serialVersionUID = -4106150600118847229L;
-
-    /** The message test */
-    private final String messageText;
-
-    /** Custom text */
-    private JScrollPane cmpMessage;
 
     /** Nickname label */
     private JLabel lblNickname;
@@ -101,16 +94,13 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
      *
      * @param title The title of the dialog
      * @param iconName The name of the icon
-     * @param messageText The text of the message component.
      * @param type The type of the dialog ( close ,invalidate , re-open)
      * @param firedButton The button which fired this action
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
-    public ChangeIssueStatusDialog(String title, String iconName,
-            String messageText, String type, JToggleButton firedButton,
-            MapdustPlugin mapdustPlugin) {
+    public ChangeBugStatusDialog(String title, String iconName, String type,
+            JToggleButton firedButton, MapdustPlugin mapdustPlugin) {
         this.type = type;
-        this.messageText = messageText;
         if (firedButton != null) {
             setFiredButton(firedButton);
         }
@@ -140,21 +130,14 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
         /* initialize components of the JDialog */
         Color backgroundColor = getContentPane().getBackground();
         Font font = new Font("Times New Roman", Font.BOLD, 14);
-        /* create the message cmp */
-        if (cmpMessage == null) {
-            JTextPane txtPane = ComponentUtil.createJTextPane(messageText,
-                    backgroundColor);
-            Rectangle bounds = new Rectangle(10, 10, 330, 50);
-            cmpMessage = ComponentUtil.createJScrollPane(txtPane, bounds,
-                    backgroundColor, true, true);
-        }
         /* create the nickname label and text field */
         if (lblNickname == null) {
-            Rectangle bounds = new Rectangle(10, 70, 85, 25);
-            lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds);
+            Rectangle bounds = new Rectangle(10, 10, 85, 25);
+            lblNickname = ComponentUtil.createJLabel("Nickname", font, bounds,
+                    null);
         }
         if (txtNickname == null) {
-            Rectangle bounds = new Rectangle(100, 70, 230, 25);
+            Rectangle bounds = new Rectangle(100, 10, 250, 25);
             txtNickname = ComponentUtil.createJTextField(bounds);
             /* get the nickname */
             String nickname = Main.pref.get("mapdust.nickname");
@@ -168,11 +151,12 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
         }
         /* creates the comment label and text area */
         if (lblComment == null) {
-            Rectangle bounds = new Rectangle(10, 110, 89, 25);
-            lblComment = ComponentUtil.createJLabel("Comment", font, bounds);
+            Rectangle bounds = new Rectangle(10, 50, 89, 25);
+            lblComment = ComponentUtil.createJLabel("Comment", font, bounds,
+                    null);
         }
         if (cmpDescription == null) {
-            Rectangle bounds = new Rectangle(100, 110, 230, 50);
+            Rectangle bounds = new Rectangle(100, 50, 250, 80);
             txtDescription = new JTextArea();
             txtDescription.setLineWrap(true);
             txtDescription.setFont(new Font("Times New Roman", Font.PLAIN, 12));
@@ -187,7 +171,8 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
             /* create the execute close bug action */
             okAction = new ExecuteCloseBug(this, mapdustPlugin.getMapdustGUI());
             ((ExecuteCloseBug) okAction).addObserver(mapdustPlugin);
-            ((ExecuteCloseBug) okAction).addObserver(mapdustPlugin.getMapdustGUI());
+            ((ExecuteCloseBug) okAction).addObserver(mapdustPlugin
+                    .getMapdustGUI());
         } else {
             if (type.equals("invalidate")) {
                 /* create the invalidate bug action */
@@ -198,7 +183,8 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
                         .getMapdustGUI());
             } else {
                 /* executes the re-open bug action */
-                okAction = new ExecuteReOpenBug(this,mapdustPlugin.getMapdustGUI());
+                okAction = new ExecuteReOpenBug(this,
+                        mapdustPlugin.getMapdustGUI());
                 ((ExecuteReOpenBug) okAction).addObserver(mapdustPlugin);
                 ((ExecuteReOpenBug) okAction).addObserver(mapdustPlugin
                         .getMapdustGUI());
@@ -206,33 +192,23 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
         }
         /* creates the cancel button */
         if (btnCancel == null) {
-            Rectangle bounds = new Rectangle(240, 170, 90, 25);
+            Rectangle bounds = new Rectangle(260, 140, 90, 25);
             btnCancel = ComponentUtil.createJButton("Cancel", bounds,
                     cancelAction);
         }
         /* creates the ok button */
         if (btnOk == null) {
-            Rectangle bounds = new Rectangle(170, 170, 60, 25);
+            Rectangle bounds = new Rectangle(190, 140, 60, 25);
             btnOk = ComponentUtil.createJButton("OK", bounds, okAction);
         }
         /* add components to the frame */
-        add(cmpMessage);
         add(lblNickname);
         add(txtNickname);
         add(lblComment);
         add(cmpDescription);
         add(btnCancel);
         add(btnOk);
-        setSize(340, 210);
-    }
-
-    /**
-     * Returns the <code>JScrollPane</code> of the info message.
-     *
-     * @return the cmpMessage
-     */
-    public JScrollPane getCmpMessage() {
-        return this.cmpMessage;
+        setSize(360, 170);
     }
 
     /**
@@ -296,15 +272,6 @@ public class ChangeIssueStatusDialog extends AbstractDialog {
      */
     public JButton getBtnOk() {
         return this.btnOk;
-    }
-
-    /**
-     * Retruns the message text
-     *
-     * @return the messageText
-     */
-    public String getMessageText() {
-        return this.messageText;
     }
 
     /**

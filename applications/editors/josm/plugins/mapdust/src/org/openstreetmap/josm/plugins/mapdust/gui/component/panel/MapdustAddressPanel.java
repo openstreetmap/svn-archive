@@ -62,15 +62,15 @@ public class MapdustAddressPanel extends JPanel {
     }
 
     /**
-     * Updates the components of the <code>MapdustAddressPanel</code> based
-     * on the given parameters.
+     * Updates the components of the <code>MapdustAddressPanel</code> based on
+     * the given parameters.
      *
      * @param address The <code>Address</code> of a MapDust bug
      * @param coordinates The <code>LatLon</code> of a MapDust bug
      */
-    public void updateComponents(Address address,LatLon coordinates){
-    	removeAll();
-    	addComponents(address, coordinates);
+    public void updateComponents(Address address, LatLon coordinates) {
+        removeAll();
+        addComponents(address, coordinates);
     }
 
     /**
@@ -85,44 +85,44 @@ public class MapdustAddressPanel extends JPanel {
         Font fontLabelVal = new Font("Times New Roman", Font.PLAIN, 12);
 
         /* country */
-        add(ComponentUtil.createJLabel("Country: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Country: ", fontLabel, null, null));
         String country = address != null ? address.getCountryCode() : "";
-        add(ComponentUtil.createJLabel(country, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(country, fontLabelVal, null, null));
 
         /* label */
-        add(ComponentUtil.createJLabel("City: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("City: ", fontLabel, null, null));
         String city = address != null ? address.getCity() : "";
-        add(ComponentUtil.createJLabel(city, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(city, fontLabelVal, null, null));
 
         /* statecode */
-        add(ComponentUtil.createJLabel("State code: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("State code: ", fontLabel, null, null));
         String state = address != null ? address.getStateCode() : "";
-        add(ComponentUtil.createJLabel(state, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(state, fontLabelVal, null, null));
 
         /* label */
-        add(ComponentUtil.createJLabel("Zip code: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Zip code: ", fontLabel, null, null));
         String zip = address != null ? address.getZipCode() : "";
-        add(ComponentUtil.createJLabel(zip, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(zip, fontLabelVal, null, null));
 
         /* street name */
-        add(ComponentUtil.createJLabel("Street: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("Street: ", fontLabel, null, null));
         String street = address != null ? address.getStreetName() : "";
-        add(ComponentUtil.createJLabel(street, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(street, fontLabelVal, null, null));
 
         /* house number */
-        add(ComponentUtil.createJLabel("House number: ", fontLabel, null));
+        add(ComponentUtil.createJLabel("House number: ", fontLabel, null, null));
         String houseNr = address != null ? address.getHouseNumber() : "";
-        add(ComponentUtil.createJLabel(houseNr, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(houseNr, fontLabelVal, null, null));
 
-        /* lat */
-        add(ComponentUtil.createJLabel("Latitude: ", fontLabel, null));
+        /* latitude */
+        add(ComponentUtil.createJLabel("Latitude: ", fontLabel, null, null));
         String lat = coordinates != null ? ("" + coordinates.lat()) : "";
-        add(ComponentUtil.createJLabel(lat, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(lat, fontLabelVal, null, null));
 
-        /*  lon */
-        add(ComponentUtil.createJLabel("Longitude: ", fontLabel, null));
+        /* longitude */
+        add(ComponentUtil.createJLabel("Longitude: ", fontLabel, null, null));
         String lon = coordinates != null ? ("" + coordinates.lon()) : "";
-        add(ComponentUtil.createJLabel(lon, fontLabelVal, null));
+        add(ComponentUtil.createJLabel(lon, fontLabelVal, null, null));
     }
 
 }

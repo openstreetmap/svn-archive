@@ -121,8 +121,7 @@ public class MapdustConnector {
             /* verify status codes */
             handleStatusCode(httpResponse);
             result = (MapdustGetBugsResponse) getParser().parseResponse(
-                            httpResponse.getContent(),
-                            MapdustGetBugsResponse.class);
+                    httpResponse.getContent(),MapdustGetBugsResponse.class);
         } catch (MapdustConnectorException e) {
             throw new MapdustConnectorException(e.getMessage(), e);
         } catch (MapdustParserException e) {
@@ -332,6 +331,14 @@ public class MapdustConnector {
                 if (filter.getDescr() != null && filter.getDescr()) {
                     urlString += "&idd=" + "0";
                 }
+                if (filter.getMinRelevance() != null) {
+                    int min=filter.getMinRelevance().getRange().getLowerValue();
+                    urlString += "&minr=" + min;
+                }
+                if (filter.getMaxRelevance() != null) {
+                    int max= filter.getMaxRelevance().getRange().getUpperValue();
+                    urlString += "&maxr=" + max;
+                }
             }
         }
         URL url = null;
@@ -520,7 +527,7 @@ public class MapdustConnector {
      */
     private void handleStatusCode(HttpResponse httpResponse)
             throws MapdustConnectorException {
-        String errorMessage = "";
+        String error = "";
         Integer statusCode = httpResponse.getStatusCode();
         String statusMessage = httpResponse.getStatusMessage();
         if (statusCode.equals(MapdustResponseStatusCode.Status200
@@ -534,37 +541,37 @@ public class MapdustConnector {
         }
         switch (statusCode) {
             case 400:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status400.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status400.getDescription();
+                throw new MapdustConnectorException(error);
             case 401:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status401.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status401.getDescription();
+                throw new MapdustConnectorException(error);
             case 403:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status403.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status403.getDescription();
+                throw new MapdustConnectorException(error);
             case 404:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status404.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status404.getDescription();
+                throw new MapdustConnectorException(error);
             case 405:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status405.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status405.getDescription();
+                throw new MapdustConnectorException(error);
             case 500:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status500.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status500.getDescription();
+                throw new MapdustConnectorException(error);
             case 601:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status601.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status601.getDescription();
+                throw new MapdustConnectorException(error);
             case 602:
-                errorMessage = statusMessage + " ";
-                errorMessage += MapdustResponseStatusCode.Status602.getDescription();
-                throw new MapdustConnectorException(errorMessage);
+                error = statusMessage + " ";
+                error += MapdustResponseStatusCode.Status602.getDescription();
+                throw new MapdustConnectorException(error);
             default:
                 throw new MapdustConnectorException(
                         MapdustResponseStatusCode.Status.getDescription());

@@ -75,17 +75,24 @@ public class ComponentUtil {
      * @param text The text of the label
      * @param font The font of the label
      * @param bounds The bounds of the element
+     * @param color The color of the element
      * @return A <code>JLabel</code> object
      */
-    public static JLabel createJLabel(String text, Font font, Rectangle bounds) {
+    public static JLabel createJLabel(String text, Font font, Rectangle bounds,
+            Color color) {
         JLabel jLabel = new JLabel();
         if (bounds != null) {
             jLabel.setBounds(bounds);
         }
         jLabel.setText(text);
         jLabel.setFont(font);
+        if (color != null) {
+            jLabel.setForeground(color);
+        }
+        jLabel.setVerticalTextPosition(SwingConstants.TOP);
         return jLabel;
     }
+
 
     /**
      * Creates a <code>JLabel</code> object with the given properties.

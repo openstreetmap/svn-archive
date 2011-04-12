@@ -51,7 +51,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateIssueDialog;
+import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
@@ -60,6 +60,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandlerExcep
 import org.openstreetmap.josm.plugins.mapdust.service.value.BoundingBox;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.tools.Shortcut;
 
 
@@ -80,15 +81,15 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     private MapdustLayer mapdustLayer;
 
     /** The <code>CreateIssueDialog</code> object */
-    private CreateIssueDialog dialog;
+    private CreateBugDialog dialog;
 
-    /** The JOSM user identity manager, it is used for obtaining the username */
+    /** The JOSM user identity manager, it is used for obtaining the user name */
     private final JosmUserIdentityManager userIdentityManager;
 
     /** The list of <code>MapdustBug</code> objects */
     private List<MapdustBug> mapdustBugList;
 
-    /** The bounding box from where the MapDust bugs are downloaded */
+    /** The bounding box from where the MapDust bugs are down-loaded */
     private BoundingBox bBox;
 
     /**
@@ -97,8 +98,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      */
     private MapdustBugFilter filter;
 
-    /** Specifies if there was or not an error downloading the data */
-    private boolean wasError = false;
+    /** Specifies if there was or not an error down-loading the data */
+    protected boolean wasError = false;
 
     /**
      * Builds a new <code>MapDustPlugin</code> object based on the given
@@ -131,13 +132,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         mapdustGUI = new MapdustGUI(tr(name), "mapdust_icon.png", tr(tooltip),
                 shortcut, 150, this);
         /* add default values for static variables */
-        Main.pref.put("mapdust.pluginState",
-                MapdustPluginState.ONLINE.getValue());
+        Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
         Main.pref.put("mapdust.nickname", "");
         Main.pref.put("mapdust.showError", true);
         Main.pref.put("mapdust.version", getPluginInformation().version);
-        Main.pref.put("mapdust.localVersion",
-                getPluginInformation().localversion);
+        Main.pref.put("mapdust.localVersion",getPluginInformation().localversion);
     }
 
     /**
@@ -175,13 +174,13 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * Listens for the events of type <code>PreferenceChangeEvent</code> . If
-     * the event key is 'osm-server.username' then if the username was changed
+     * the event key is 'osm-server.username' then if the user name was changed
      * in Preferences and it was used as 'nickname'( the user did not changed
-     * this completed nickname to someting else ) for submitting changes to
+     * this completed nickname to something else ) for submitting changes to
      * MapDust , re-set the 'mapdust.josmUserName' and 'mapdust.nickname'
      * properties.
      *
-     * @param event The <code>PreferenceChangeEvent</code> obejct
+     * @param event The <code>PreferenceChangeEvent</code> object
      */
     @Override
     public void preferenceChanged(PreferenceChangeEvent event) {
@@ -197,11 +196,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     Main.pref.put("mapdust.nickname", newUserName);
                 } else {
                     if (nickname.equals(oldUserName)) {
-                        /* username was used for nickname, and was not changed */
+                        /* user name was used for nickname, and was not changed */
                         Main.pref.put("mapdust.josmUserName", newUserName);
                         Main.pref.put("mapdust.nickname", newUserName);
                     } else {
-                        /* username was used for nickname, and was changed */
+                        /* user name was used for nickname, and was changed */
                         Main.pref.put("mapdust.josmUserName", newUserName);
                     }
                 }
@@ -267,7 +266,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * Verifies if the given <code>MapdustBug</code> object should be displayed
      * on the map and on the bugs list. A <code>MapdustBug</code> will be
      * displayed on the map only if it is permitted by the selected filter
-     * settings.
+     * settings (statuses, types, description and relevance filter).
      *
      * @param mapdustBug The <code>MapdustBug</code> object
      * @return true if the given bug should be displayed false otherwise
@@ -303,6 +302,32 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             } else {
                 result = containsStatus && containsType;
             }
+            /* check relevance filter settings */
+            boolean containsMinRelevance = false;
+            if (filter.getMinRelevance() != null) {
+                MapdustRelevance minRel = filter.getMinRelevance();
+                MapdustRelevance bugRel = mapdustBug.getRelevance();
+                if (minRel.equals(bugRel)) {
+                    containsMinRelevance = true;
+                } else {
+                    if (bugRel.compareTo(minRel) == 1) {
+                        containsMinRelevance = true;
+                    }
+                }
+            }
+            boolean containsMaxRelevance = false;
+            if (filter.getMaxRelevance() != null) {
+                MapdustRelevance maxRel = filter.getMaxRelevance();
+                MapdustRelevance bugRel = mapdustBug.getRelevance();
+                if (maxRel.equals(bugRel)) {
+                    containsMaxRelevance = true;
+                } else {
+                    if (bugRel.compareTo(maxRel) == -1) {
+                        containsMaxRelevance = true;
+                    }
+                }
+                result = result && (containsMinRelevance && containsMaxRelevance);
+            }
         }
         return result;
     }
@@ -333,9 +358,9 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * At mouse click the following two actions can be done: adding a new bug,
-     * and selecting a bug from the map. A bug can be added if the plugin is the
-     * only active plugin and you double click on the map. You can select a bug
-     * from the map by clicking on it.
+     * and selecting a bug from the map. A bug can be added if the plug-in is
+     * the only active plug-in and you double click on the map. You can select
+     * a bug from the map by clicking on it.
      *
      * @param event The <code>MouseEvent</code> object
      */
@@ -356,7 +381,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                         /* disable MapdustButtonPanel */
                         mapdustGUI.getPanel().disableBtnPanel();
                         /* create and show dialog */
-                        dialog = new CreateIssueDialog(event.getPoint(), this);
+                        dialog = new CreateBugDialog(event.getPoint(), this);
                         dialog.showDialog();
                         event.consume();
                         return;
@@ -410,8 +435,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * Adds the <code>MapdustLayer</code> to the JOSM editor. If the list of
-     * <code>MapdustBug</code>s is null then downloads the data from the MapDust
-     * Service and updates the editor with this new data.
+     * <code>MapdustBug</code>s is null then down-loads the data from the
+     * MapDust Service and updates the editor with this new data.
      *
      * @param layer The <code>Layer</code> which will be added to the JOSM
      * editor
@@ -421,7 +446,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * Removes the <code>MapdustLayer</code> from the JOSM editor. Also closes
-     * the MapDust plugin window.
+     * the MapDust plug-in window.
      *
      * @param layer The <code>Layer</code> which will be removed from the JOSM
      * editor
@@ -446,8 +471,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * Listens for the zoom change event. If the zoom was changed, then it will
-     * download the MapDust bugs data from the current view. The new data will
-     * be downloaded only if the current bounding box is different from the
+     * down-load the MapDust bugs data from the current view. The new data will
+     * be down-loaded only if the current bounding box is different from the
      * previous one.
      */
     @Override
@@ -468,9 +493,9 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
 
     /**
-     * Updates the plugin with a new MapDust bugs data. If the filters are set
+     * Updates the plug-in with a new MapDust bugs data. If the filters are set
      * then the MapDust data will be filtered. If initialUpdate flag is true
-     * then the plugin is updated for the first time with the MapDust data. By
+     * then the plug-in is updated for the first time with the MapDust data. By
      * default the first time there is no filter applied to the MapDust data.
      *
      * @param filter The <code>MapdustBugFilter</code> containing the filter
@@ -507,7 +532,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
 
     /**
-     * Updates the <code>MapdustPlugin</code> data. Downloads the
+     * Updates the <code>MapdustPlugin</code> data. Down-loads the
      * <code>MapdustBug</code> objects from the current view, and updates the
      * <code>MapdustGUI</code> and the map with the new data.
      */
@@ -522,13 +547,13 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
 
     /**
-     * Updates the MapDust plugin data. Downloads the list of
+     * Updates the MapDust plug-in data. Down-loads the list of
      * <code>MapdustBug</code> objects for the given area, and updates the map
      * and the MapDust layer with the new data.
      */
     protected synchronized void updateMapdustData() {
         if (Main.map != null && Main.map.mapView != null) {
-            /* download the MapDust data */
+            /* Down-loads the MapDust data */
             try {
                 MapdustServiceHandler handler = new MapdustServiceHandler();
                 mapdustBugList = handler.getBugs(bBox, filter);
@@ -541,9 +566,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    updateView();
-                    if (wasError) {
-                        handleError();
+                    synchronized (this) {
+                        updateView();
+                        if (wasError) {
+                            handleError();
+                        }
                     }
                 }
             });
@@ -609,9 +636,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
 
     /**
      * Handles the <code>MapdustServiceHandlerException</code> error.
-     *
      */
-    private void handleError() {
+    protected void handleError() {
         String showMessage = Main.pref.get("mapdust.showError");
         Boolean showErrorMessage = Boolean.parseBoolean(showMessage);
         if (showErrorMessage) {

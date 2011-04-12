@@ -39,6 +39,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.connector.response.Mapdust
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugsResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
 
@@ -85,6 +86,11 @@ public class MapdustConverter {
                 /* sets the type */
                 Type type = Type.getType(bugProperties.getType());
                 bug.setType(type);
+                /* sets the relevance */
+                MapdustRelevance relevance =
+                        MapdustRelevance.getMapdustRelevance(bugProperties
+                                .getRelevance());
+                bug.setRelevance(relevance);
                 /* sets the creation date */
                 bug.setDateCreated(bugProperties.getDateCreated());
                 /* sets the update date */
@@ -172,6 +178,11 @@ public class MapdustConverter {
                 /* sets the type */
                 Type type = Type.getType(bugProperties.getType());
                 bug.setType(type);
+                /* sets the relevance */
+                MapdustRelevance relevance =
+                        MapdustRelevance.getMapdustRelevance(bugProperties
+                                .getRelevance());
+                bug.setRelevance(relevance);
                 /* sets the creation date */
                 bug.setDateCreated(bugProperties.getDateCreated());
                 /* sets the update date */

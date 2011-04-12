@@ -322,7 +322,7 @@ public class CommandLine extends Plugin {
 					}
 				}
 				ImageryInfo info = ((ImageryLayer)layer).getInfo();
-				String url = info.getURL();
+				String url = info.getUrl();
 				String itype = info.getImageryType().getUrlString();
 				loadParameter((url.equals("") ? itype : url), true);
 				action = new DummyAction(currentMapFrame, this);

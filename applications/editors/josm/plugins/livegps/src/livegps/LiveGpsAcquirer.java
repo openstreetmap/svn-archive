@@ -21,6 +21,10 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class LiveGpsAcquirer implements Runnable {
+    private static final String DEFAULT_HOST = "localhost";
+    private static final int DEFAULT_PORT = 2947;
+    private static final String C_HOST = "livegps.gpsd.host";
+    private static final String C_PORT = "livegps.gpsd.port";
     private String gpsdHost;
     private int gpsdPort;
 
@@ -40,11 +44,11 @@ public class LiveGpsAcquirer implements Runnable {
     public LiveGpsAcquirer() {
         super();
 
-        gpsdHost = Main.pref.get("livegps.gpsd.host", "localhost");
-        gpsdPort = Main.pref.getInteger("livegps.gpsd.port", 2947);
+        gpsdHost = Main.pref.get(C_HOST, DEFAULT_HOST);
+        gpsdPort = Main.pref.getInteger(C_PORT, DEFAULT_PORT);
         // put the settings back in to the preferences, makes keys appear.
-        Main.pref.put("livegps.gpsd.host", gpsdHost);
-        Main.pref.putInteger("livegps.gpsd.port", gpsdPort);
+        Main.pref.put(C_HOST, gpsdHost);
+        Main.pref.putInteger(C_PORT, gpsdPort);
     }
 
     /**

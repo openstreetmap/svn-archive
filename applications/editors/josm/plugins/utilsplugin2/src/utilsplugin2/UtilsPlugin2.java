@@ -18,6 +18,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem splitObject;
     JMenuItem selectWayNodes;
     JMenuItem adjNodes;
+    JMenuItem unsNodes;
     JMenuItem adjWays;
     JMenuItem adjWaysAll;
     JMenuItem intWays;
@@ -34,6 +35,7 @@ public class UtilsPlugin2 extends Plugin {
 
         selectWayNodes = MainMenu.add(m1, new SelectWayNodesAction());
         adjNodes = MainMenu.add(m1, new AdjacentNodesAction());
+        unsNodes = MainMenu.add(m1, new UnselectNodesAction());
         adjWays = MainMenu.add(m1, new AdjacentWaysAction());
         adjWaysAll = MainMenu.add(m1, new ConnectedWaysAction());
         intWays = MainMenu.add(m1, new IntersectedWaysAction());
@@ -49,6 +51,7 @@ public class UtilsPlugin2 extends Plugin {
         splitObject.setEnabled(enabled);
         selectWayNodes.setEnabled(enabled);
         adjNodes.setEnabled(enabled);
+        unsNodes.setEnabled(enabled);
         adjWays.setEnabled(enabled);
         adjWaysAll.setEnabled(enabled);
         intWays.setEnabled(enabled);

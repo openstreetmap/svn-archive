@@ -431,6 +431,7 @@ public class CommandLine extends Plugin {
 		setMode(Mode.PROCESSING);
 		String commandToRun = currentCommand.run;
 		final boolean tracks = currentCommand.tracks;
+		final ArrayList<Parameter> parameters = currentCommand.parameters;
 
 		for (Parameter parameter : currentCommand.parameters) {
 			commandToRun = commandToRun.replace("{" + parameter.name + "}", parameter.getValue());
@@ -515,7 +516,7 @@ public class CommandLine extends Plugin {
 				}
 				osmWriter.footer();
 				osmWriter.flush();
-				for (Parameter parameter : currentCommand.parameters) {
+				for (Parameter parameter : parameters) {
 					if (!parameter.isOsm())
 						continue;
 					osmWriter.header();

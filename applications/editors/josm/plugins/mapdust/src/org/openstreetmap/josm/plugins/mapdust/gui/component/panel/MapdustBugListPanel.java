@@ -186,7 +186,7 @@ public class MapdustBugListPanel extends JPanel implements
      *
      * @param mapdustBugsList The list of <code>MapdustBug</code>s
      */
-    public void updateComponents(List<MapdustBug> mapdustBugsList) {
+    public synchronized void updateComponents(List<MapdustBug> mapdustBugsList) {
         this.mapdustBugsList = mapdustBugsList;
         if (mapdustBugsList == null || mapdustBugsList.isEmpty()) {
             String text = " No bugs in the current view for the selected";
@@ -196,19 +196,16 @@ public class MapdustBugListPanel extends JPanel implements
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs.getViewport().setView(textJList);
         } else {
-            synchronized (mapdustBugsJList) {
-                if (mapdustBugsJList == null) {
-                    mapdustBugsJList = ComponentUtil.createJList(
-                            mapdustBugsList, menu);
-                    mapdustBugsJList.addListSelectionListener(this);
-                    DisplayMenu adapter = new DisplayMenu(mapdustBugsJList,
-                            menu);
-                    mapdustBugsJList.addMouseListener(adapter);
-                } else {
-                    mapdustBugsJList.setModel(new BugsListModel(mapdustBugsList));
-                }
-                cmpMapdustBugs.getViewport().setView(mapdustBugsJList);
+            if (mapdustBugsJList == null) {
+                mapdustBugsJList = ComponentUtil.createJList(mapdustBugsList,
+                        menu);
+                mapdustBugsJList.addListSelectionListener(this);
+                DisplayMenu adapter = new DisplayMenu(mapdustBugsJList, menu);
+                mapdustBugsJList.addMouseListener(adapter);
+            } else {
+                mapdustBugsJList.setModel(new BugsListModel(mapdustBugsList));
             }
+            cmpMapdustBugs.getViewport().setView(mapdustBugsJList);
         }
     }
 

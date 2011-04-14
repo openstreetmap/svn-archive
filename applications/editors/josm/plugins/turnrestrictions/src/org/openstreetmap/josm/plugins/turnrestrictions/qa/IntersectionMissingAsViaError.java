@@ -21,13 +21,13 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControle
 public class IntersectionMissingAsViaError extends Issue{
     private Way from;
     private Way to;
-    private Node interesect;
+    private Node intersect;
     
     public IntersectionMissingAsViaError(IssuesModel parent, Way from, Way to, Node intersect) {
         super(parent, Severity.ERROR);
         this.from = from;
         this.to = to;
-        this.interesect = intersect;
+        this.intersect = intersect;
         actions.add(new SetVia());
         actions.add(new FixInEditorAction());
     }
@@ -35,11 +35,11 @@ public class IntersectionMissingAsViaError extends Issue{
     @Override
     public String getText() {       
         String msg = tr("The <strong>from</strong>-way <span class=\"object-name\">{0}</span> and the <strong>to</strong>-way <span class=\"object-name\">{1}</span> "
-               + "interesect at node <span class=\"object-name\">{2}</span> but <span class=\"object-name\">{2}</span> isn''t a <strong>via</strong>-object.<br> "
+               + "intersect at node <span class=\"object-name\">{2}</span> but <span class=\"object-name\">{2}</span> isn''t a <strong>via</strong>-object.<br> "
                + "It is recommended to set <span class=\"object-name\">{2}</span> as unique <strong>via</strong>-object.",
                this.from.getDisplayName(DefaultNameFormatter.getInstance()),
                this.to.getDisplayName(DefaultNameFormatter.getInstance()),
-               this.interesect.getDisplayName(DefaultNameFormatter.getInstance())
+               this.intersect.getDisplayName(DefaultNameFormatter.getInstance())
         );
         return msg;
     }
@@ -50,7 +50,7 @@ public class IntersectionMissingAsViaError extends Issue{
             putValue(SHORT_DESCRIPTION, tr("Replaces the currently configured via-objects with the node at the intersection"));
         }
         public void actionPerformed(ActionEvent e) {
-            getIssuesModel().getEditorModel().setVias(Collections.<OsmPrimitive>singletonList(interesect));         
+            getIssuesModel().getEditorModel().setVias(Collections.<OsmPrimitive>singletonList(intersect));
         }       
     }
     

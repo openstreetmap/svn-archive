@@ -35,7 +35,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
     private Node intersect;
     
     /**
-     * <p>Creates the issue for a pair of ways {@code from} and {@code to} which interesect
+     * <p>Creates the issue for a pair of ways {@code from} and {@code to} which intersect
      * at node {@code intersect}.</p>
      * 
      * @param parent the parent model 

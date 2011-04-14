@@ -138,7 +138,7 @@ public class TurnRestrictionBuilder {
      * node at which they are connected
      * 
      */
-    static public double interesectionAngle(Way from, Way to) throws IllegalArgumentException {
+    static public double intersectionAngle(Way from, Way to) throws IllegalArgumentException {
 	    Node via = getUniqueCommonNode(from, to);
 	    if (via == null) 
 	    	throw new IllegalArgumentException("the two ways must share exactly one common node"); // no I18n required
@@ -195,7 +195,7 @@ public class TurnRestrictionBuilder {
     	if (isClosedAt(from, via)) return null;
     	if (isClosedAt(to, via)) return null;
     	
-    	double phi = interesectionAngle(from, to);    	
+    	double phi = intersectionAngle(from, to);    	
     	if (phi >=0 && phi <= Math.PI) {
     		return RelativeWayJoinOrientation.RIGHT;
     	} else {
@@ -249,7 +249,7 @@ public class TurnRestrictionBuilder {
     	
     	if (! isStartNode(from, cn1) && ! isEndNode(from, cn1)) {
     		/*
-    		 * the now split to-way still *interesects* the from-way. We
+    		 * the now split to-way still *intersects* the from-way. We
     		 * can't adjust the split decisions. 
     		 */
     		return null;

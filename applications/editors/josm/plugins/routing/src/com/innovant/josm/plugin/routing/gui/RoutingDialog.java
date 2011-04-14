@@ -29,14 +29,15 @@ package com.innovant.josm.plugin.routing.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
@@ -67,15 +68,8 @@ public class RoutingDialog extends ToggleDialog {
     public RoutingDialog() {
         super(tr("Routing"), "routing", tr("Open a list of routing nodes"),
                 Shortcut.registerShortcut("subwindow:relations", tr("Toggle: {0}", tr("Routing")), KeyEvent.VK_R, Shortcut.GROUP_LAYER), 150);
-        model= new DefaultListModel();
-        this.setSize(456, 292);
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-        this.setName("PrincipalDialog");
-        this.setFont(new Font("Dialog", Font.PLAIN, 12));
-        this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        this.add(getJScrollPane(), null);
-
+        model = new DefaultListModel();
+        add(getJScrollPane(), BorderLayout.CENTER);
     }
 
     /**
@@ -86,12 +80,8 @@ public class RoutingDialog extends ToggleDialog {
     private JScrollPane getJScrollPane() {
         if (jScrollPane == null) {
             jScrollPane = new JScrollPane();
-            jScrollPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-            jScrollPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
             jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            jScrollPane.setName("nList");
-            jScrollPane.setViewportBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             jScrollPane.setViewportView(getJList());
         }
         return jScrollPane;

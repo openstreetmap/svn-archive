@@ -119,7 +119,7 @@ public class RoutingMenu extends JMenu {
         criteriaM.add(rfaster);
 
         criteriaM.addSeparator();
-        JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem("Ignore oneways");
+        JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem(tr("Ignore oneways"));
         cbmi.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {

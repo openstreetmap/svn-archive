@@ -15,5 +15,10 @@ public class Video {
 		this.canvas=canvas;
 	}
 	
+	public long getTime()
+	{
+		return player.getTime();
+	}
+	
 
 }

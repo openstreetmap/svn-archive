@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_jq4bMWd-EeC5DqwlMjG_Kw" name="oldConcept">
+  <elementImport xmi:id="_jyopAGd-EeC5DqwlMjG_Kw">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <elementImport xmi:id="_jzOe4Gd-EeC5DqwlMjG_Kw">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_jzOe4Wd-EeC5DqwlMjG_Kw">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+  </elementImport>
+  <elementImport xmi:id="_jzOe4md-EeC5DqwlMjG_Kw">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_sr2scGd-EeC5DqwlMjG_Kw" name="VideoMappingPlugin">
+    <ownedAttribute xmi:id="_w1PjsGd-EeC5DqwlMjG_Kw" name="player" visibility="private" aggregation="composite"/>
+    <ownedAttribute xmi:id="_zNiQwGd-EeC5DqwlMjG_Kw" name="layer" visibility="private" aggregation="composite"/>
+    <ownedOperation xmi:id="_5m3xYGd-EeC5DqwlMjG_Kw" name="VideoMappingPlugin">
+      <ownedParameter xmi:id="_71BrAGd-EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_8DVMwGd-EeC5DqwlMjG_Kw" name="activeLyerChange">
+      <ownedParameter xmi:id="_9_TxQGd-EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_-KV8kGd-EeC5DqwlMjG_Kw" name="layerAdded">
+      <ownedParameter xmi:id="__fH-MGd-EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="__w3OcGd-EeC5DqwlMjG_Kw" name="layerRemoved">
+      <ownedParameter xmi:id="_At9I0Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_CYpJAGd_EeC5DqwlMjG_Kw" name="addMenuItems">
+      <ownedParameter xmi:id="_Eemv8Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_EmW9wGd_EeC5DqwlMjG_Kw" name="loadSettings" visibility="private">
+      <ownedParameter xmi:id="_FRkd8Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_FZK6wGd_EeC5DqwlMjG_Kw" name="applySettings" visibility="private">
+      <ownedParameter xmi:id="_GaIogGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_GvvsIGd_EeC5DqwlMjG_Kw" name="saveSettings" visibility="private">
+      <ownedParameter xmi:id="_HZLDoGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_H4nYsGd_EeC5DqwlMjG_Kw" name="copyGPSLayer" visibility="private">
+      <ownedParameter xmi:id="_IlwykGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_J4wrgGd_EeC5DqwlMjG_Kw" name="PositionLayer" clientDependency="_i0I5EGeBEeC5DqwlMjG_Kw _oSnT8GeBEeC5DqwlMjG_Kw">
+    <ownedAttribute xmi:id="_MSF6YGd_EeC5DqwlMjG_Kw" name="observers" aggregation="composite"/>
+    <ownedAttribute xmi:id="_OKC6gGd_EeC5DqwlMjG_Kw" name="player" aggregation="composite"/>
+    <ownedOperation xmi:id="_L6QCIGd_EeC5DqwlMjG_Kw" name="PositinLayer">
+      <ownedParameter xmi:id="_QmERAGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_Qx_NIGd_EeC5DqwlMjG_Kw" name="operation"/>
+    <ownedOperation xmi:id="_RhXboGd_EeC5DqwlMjG_Kw" name="getInfoComponent">
+      <ownedParameter xmi:id="_Si7mUGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_SqFXMGd_EeC5DqwlMjG_Kw" name="getMenuEntries">
+      <ownedParameter xmi:id="_T4ww0Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_UBjgcGd_EeC5DqwlMjG_Kw" name="getToolTipText">
+      <ownedParameter xmi:id="_VSBp0Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_VgeVgGd_EeC5DqwlMjG_Kw" name="isMergeable">
+      <ownedParameter xmi:id="_W9dQ4Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_XEnBwGd_EeC5DqwlMjG_Kw" name="mergeFrom">
+      <ownedParameter xmi:id="_YI3UEGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_YpMZ8Gd_EeC5DqwlMjG_Kw" name="paint">
+      <ownedParameter xmi:id="_Y_GYgGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_ZW8QwGd_EeC5DqwlMjG_Kw" name="mousePressed">
+      <ownedParameter xmi:id="_aM4aQGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_aY9HYGd_EeC5DqwlMjG_Kw" name="mouseReleased">
+      <ownedParameter xmi:id="_bKIFoGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_blsnUGd_EeC5DqwlMjG_Kw" name="mouseMoved">
+      <ownedParameter xmi:id="_dKR_gGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_dsQEIGd_EeC5DqwlMjG_Kw" name="NotifyObservers" visibility="private">
+      <ownedParameter xmi:id="_uAOo8Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_eexGMGd_EeC5DqwlMjG_Kw" name="getNearestWayPoint" visibility="private">
+      <ownedParameter xmi:id="_fpkscGd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_xn8WgGd_EeC5DqwlMjG_Kw" name="GPSPlayer" clientDependency="_c6_UYGeBEeC5DqwlMjG_Kw _gneNMGeBEeC5DqwlMjG_Kw">
+    <ownedAttribute xmi:id="_zgo9gGd_EeC5DqwlMjG_Kw" name="prev" visibility="private" aggregation="composite"/>
+    <ownedAttribute xmi:id="_0YqxsGd_EeC5DqwlMjG_Kw" name="curr" visibility="private" aggregation="composite"/>
+    <ownedAttribute xmi:id="_1HBFcGd_EeC5DqwlMjG_Kw" name="next" visibility="private" aggregation="composite"/>
+    <interfaceRealization xmi:id="_c6_UYGeBEeC5DqwlMjG_Kw" supplier="_DID-UGeAEeC5DqwlMjG_Kw" client="_xn8WgGd_EeC5DqwlMjG_Kw" contract="_DID-UGeAEeC5DqwlMjG_Kw"/>
+    <ownedOperation xmi:id="_3khCoGd_EeC5DqwlMjG_Kw" name="GPSPlayer">
+      <ownedParameter xmi:id="_5up-8Gd_EeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_58NSwGd_EeC5DqwlMjG_Kw" name="jump">
+      <ownedParameter xmi:id="_7WgtkGd_EeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_7WgtkWd_EeC5DqwlMjG_Kw" name="WayPoint"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_7hZH4Gd_EeC5DqwlMjG_Kw" name="jump">
+      <ownedParameter xmi:id="_9M0u8Gd_EeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_9M0u8Wd_EeC5DqwlMjG_Kw" name="Date"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_9T-f0Gd_EeC5DqwlMjG_Kw" name="jumpRel">
+      <ownedParameter xmi:id="_-x2zEGd_EeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_-yAkEGd_EeC5DqwlMjG_Kw" name="int"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="__W9rQGd_EeC5DqwlMjG_Kw" name="getInterpolated">
+      <ownedParameter xmi:id="_AdJQMGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_DID-UGeAEeC5DqwlMjG_Kw" name="PlayerObserver" clientDependency="_yaOdIGeBEeC5DqwlMjG_Kw">
+    <ownedOperation xmi:id="_Eqjr0GeAEeC5DqwlMjG_Kw" name="playing">
+      <ownedParameter xmi:id="_FSf1kGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_FcVHAGeAEeC5DqwlMjG_Kw" name="jumping">
+      <ownedParameter xmi:id="_GlDCkGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_GrKRoGeAEeC5DqwlMjG_Kw" name="metadata">
+      <ownedParameter xmi:id="_HaigIGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_SGqEkGeAEeC5DqwlMjG_Kw" name="GPSVideoPlayer" clientDependency="_pp8TQGeBEeC5DqwlMjG_Kw _stI-gGeBEeC5DqwlMjG_Kw">
+    <ownedAttribute xmi:id="_TteRYGeAEeC5DqwlMjG_Kw" name="gps" visibility="private" aggregation="composite"/>
+    <ownedAttribute xmi:id="_UfingGeAEeC5DqwlMjG_Kw" name="video" visibility="private" aggregation="composite"/>
+    <ownedAttribute xmi:id="_VSWkgGeAEeC5DqwlMjG_Kw" name="synced" visibility="private" aggregation="composite"/>
+    <ownedOperation xmi:id="_XLpocGeAEeC5DqwlMjG_Kw" name="play">
+      <ownedParameter xmi:id="_XrY4cGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_XzSQMGeAEeC5DqwlMjG_Kw" name="pause">
+      <ownedParameter xmi:id="_YOtA4GeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_YdwJgGeAEeC5DqwlMjG_Kw" name="jumpToGPSTime">
+      <ownedParameter xmi:id="_Z2alkGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_Z2alkWeAEeC5DqwlMjG_Kw" name="long"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_aDO5kGeAEeC5DqwlMjG_Kw" name="loop">
+      <ownedParameter xmi:id="_ag4e4GeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_b8rHcGeAEeC5DqwlMjG_Kw" name="forward">
+      <ownedParameter xmi:id="_czgo0GeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_c56y0GeAEeC5DqwlMjG_Kw" name="backward">
+      <ownedParameter xmi:id="_ddFxUGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_dn0aoGeAEeC5DqwlMjG_Kw" name="setDeinterlacer">
+      <ownedParameter xmi:id="_eT7SsGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_f7fGYGeAEeC5DqwlMjG_Kw" name="GPSVideoFile" clientDependency="_ZCmGgGeBEeC5DqwlMjG_Kw">
+    <ownedAttribute xmi:id="_htU3cGeAEeC5DqwlMjG_Kw" name="offset" aggregation="composite"/>
+    <ownedAttribute xmi:id="_jT2JUGeAEeC5DqwlMjG_Kw" name="file" aggregation="composite"/>
+    <ownedOperation xmi:id="_k57WUGeAEeC5DqwlMjG_Kw" name="GPSVideoFile">
+      <ownedParameter xmi:id="_l0x1AGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_oS42MGeAEeC5DqwlMjG_Kw" name="SimpleVideoPlayer" clientDependency="_ur80kGeBEeC5DqwlMjG_Kw">
+    <ownedOperation xmi:id="_rVC_oGeAEeC5DqwlMjG_Kw" name="finished">
+      <ownedParameter xmi:id="_yLSesGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_yLSesWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_sZ5H0GeAEeC5DqwlMjG_Kw" name="metaDataAvailable">
+      <ownedParameter xmi:id="_zsvqYGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_zsvqYWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_uO3FYGeAEeC5DqwlMjG_Kw" name="paused">
+      <ownedParameter xmi:id="_1QR5sGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_1QR5sWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_vaRIkGeAEeC5DqwlMjG_Kw" name="playing">
+      <ownedParameter xmi:id="_14z5UGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_14z5UWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_6mkB4GeAEeC5DqwlMjG_Kw" name="updateTime" visibility="private">
+      <ownedParameter xmi:id="_7l5X8GeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_74qi8GeAEeC5DqwlMjG_Kw" name="setDeinterlacer" visibility="private">
+      <ownedParameter xmi:id="_81KncGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_8-_44GeAEeC5DqwlMjG_Kw" name="loop" visibility="protected">
+      <ownedParameter xmi:id="_-ZAYwGeAEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_BFtPkGeBEeC5DqwlMjG_Kw" name="forward" visibility="protected">
+      <ownedParameter xmi:id="_DOzDAGeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_CdBn0GeBEeC5DqwlMjG_Kw" name="backward" visibility="protected">
+      <ownedParameter xmi:id="_Ev9TwGeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_E45NUGeBEeC5DqwlMjG_Kw" name="faster" visibility="protected">
+      <ownedParameter xmi:id="_FmMYMGeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_F9I4kGeBEeC5DqwlMjG_Kw" name="slower" visibility="protected">
+      <ownedParameter xmi:id="_Gl-aMGeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_HB_AwGeBEeC5DqwlMjG_Kw" name="toggleSubs" visibility="protected">
+      <ownedParameter xmi:id="_Hz6M8GeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_TLhlcGeBEeC5DqwlMjG_Kw" name="Syncer">
+    <ownedAttribute xmi:id="_XPtMkGeBEeC5DqwlMjG_Kw" name="player" aggregation="composite"/>
+    <ownedOperation xmi:id="_UhqR8GeBEeC5DqwlMjG_Kw" name="run">
+      <ownedParameter xmi:id="_WmIEEGeBEeC5DqwlMjG_Kw" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_ZCmGgGeBEeC5DqwlMjG_Kw" supplier="_TLhlcGeBEeC5DqwlMjG_Kw" client="_f7fGYGeAEeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_gneNMGeBEeC5DqwlMjG_Kw" supplier="_sr2scGd-EeC5DqwlMjG_Kw" client="_xn8WgGd_EeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_i0I5EGeBEeC5DqwlMjG_Kw" supplier="_sr2scGd-EeC5DqwlMjG_Kw" client="_J4wrgGd_EeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_oSnT8GeBEeC5DqwlMjG_Kw" supplier="_SGqEkGeAEeC5DqwlMjG_Kw" client="_J4wrgGd_EeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_pp8TQGeBEeC5DqwlMjG_Kw" supplier="_f7fGYGeAEeC5DqwlMjG_Kw" client="_SGqEkGeAEeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_stI-gGeBEeC5DqwlMjG_Kw" supplier="_oS42MGeAEeC5DqwlMjG_Kw" client="_SGqEkGeAEeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_ur80kGeBEeC5DqwlMjG_Kw" supplier="_TLhlcGeBEeC5DqwlMjG_Kw" client="_oS42MGeAEeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_yaOdIGeBEeC5DqwlMjG_Kw" supplier="_TLhlcGeBEeC5DqwlMjG_Kw" client="_DID-UGeAEeC5DqwlMjG_Kw"/>
+</uml:Package>

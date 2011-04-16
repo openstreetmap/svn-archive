@@ -137,7 +137,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		return interpolate(before,perc);
 	}
 	
-	private WayPoint getWayPointBefore(Date GPSTime)
+	public WayPoint getWayPointBefore(Date GPSTime)
 	{
 		assert GPSTime.after(getFirstWayPoint().getTime())==true;
 		assert GPSTime.before(getLastWayPoint().getTime())==true;
@@ -194,6 +194,11 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
     private WayPoint getRightPoint(WayPoint p1, WayPoint p2)
     {
         if(p1.getCoor().lon()>p2.getCoor().lon()) return p1; else return p2;
+    }
+    
+    public Date getGPSDate()
+    {
+    	return iconPosition.getTime();
     }
 
 	public void mouseReleased(MouseEvent e) {

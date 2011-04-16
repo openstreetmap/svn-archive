@@ -206,9 +206,11 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         fc.setSelectedFile(new File(mostRecentFolder));
         if(fc.showOpenDialog(Main.main.parent)!=JFileChooser.CANCEL_OPTION)
         {
-//        	mostRecentFolder=fc.getSelectedFile().getAbsolutePath();
-//        	saveProperties();
+        	mostRecentFolder=fc.getSelectedFile().getAbsolutePath();
+        	saveProperties();
         	VideoPositionLayer videoPositionLayer= new VideoPositionLayer(gpsLayer);
+        	GPSVideoPlayer gpsVideoPlayer = new GPSVideoPlayer(new SimpleDateFormat("hh:mm:ss") ,videoPositionLayer);
+        	gpsVideoPlayer.addVideo(fc.getSelectedFile());
         }
 		
 	}

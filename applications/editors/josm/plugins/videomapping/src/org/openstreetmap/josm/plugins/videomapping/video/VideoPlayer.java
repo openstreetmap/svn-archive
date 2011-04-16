@@ -60,7 +60,7 @@ import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 //basic class of a videoplayer for one video
 public class VideoPlayer extends JFrame implements WindowListener, VideosObserver, VideoPlayerObserver{
 	private static final int notificationIntervall = 1000;
-	private JPanel screenPanel,controlsPanel,canvasPanel;
+	protected JPanel screenPanel,controlsPanel,canvasPanel;
     private JSlider timeline;
     private JButton play,back,forward;
     private JToggleButton loop,mute;
@@ -93,7 +93,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	    this.addWindowListener(this);
 	}
 	
-	public void addVideo(File Videofile)
+	public Video addVideo(File Videofile)
 	{
 		Video video = new Video(Videofile,new Canvas());
 		canvasPanel.add(video.canvas);
@@ -101,6 +101,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		videoengine.add(video);
         pack();
         startNotificationTimer();
+        return video;
 	}
 
 	protected void play() {

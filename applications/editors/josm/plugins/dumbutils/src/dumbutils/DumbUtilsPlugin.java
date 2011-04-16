@@ -16,13 +16,13 @@ public class DumbUtilsPlugin extends Plugin {
         super(info);
         Main.main.menu.toolsMenu.addSeparator();
         replaceGeometry = MainMenu.add(Main.main.menu.toolsMenu, new ReplaceGeometryAction());
-//        tagBuffer = MainMenu.add(Main.main.menu.toolsMenu, new TagBufferAction());
+        tagBuffer = MainMenu.add(Main.main.menu.toolsMenu, new TagBufferAction());
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         boolean enabled = newFrame != null;
         replaceGeometry.setEnabled(enabled);
-//        tagBuffer.setEnabled(enabled);
+        tagBuffer.setEnabled(enabled);
     }
 }

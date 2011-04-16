@@ -1,5 +1,7 @@
 package dumbutils;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.*;
 import java.util.*;
 import java.awt.event.KeyEvent;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -16,6 +18,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 class TagBufferAction extends JosmAction {
     private static final String TITLE = "Paste remembered tags";
     private Map<String, String> tags = new HashMap<String, String>();
+    private Map<String, String> currentTags = new HashMap<String, String>();
+    private Set<OsmPrimitive> selectionBuf = new HashSet<OsmPrimitive>();
 
     public TagBufferAction() {
         super(tr(TITLE), "tagbuffer", tr("Pastes tags of previously selected object(s)"),
@@ -23,11 +27,84 @@ class TagBufferAction extends JosmAction {
     }
 
     public void actionPerformed( ActionEvent e ) {
-        for( OsmPrimitive p : getCurrentDataSet().getSelected() ) {
-            for( String key : tags.keySet() )
-                p.put(key, tags.get(key));
-            // todo: undoRedo
+        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        if( selection.isEmpty() )
+            return;
+
+        List<Command> commands = new ArrayList<Command>();
+        for( String key : tags.keySet() ) {
+            String value = tags.get(key);
+            boolean foundNew = false;
+            for( OsmPrimitive p : selection ) {
+                if( !p.hasKey(key) || !p.get(key).equals(value) ) {
+                    foundNew = true;
+                    break;
+                }
+            }
+            if( foundNew )
+                commands.add(new ChangePropertyCommand(selection, key, value));
+        }
+        
+        if( !commands.isEmpty() )
+            Main.main.undoRedo.add(new SequenceCommand(tr(TITLE), commands));
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        if( getCurrentDataSet() == null ) {
+            setEnabled(false);
+            if( selectionBuf != null )
+                selectionBuf.clear();
+        }  else
+            updateEnabledState(getCurrentDataSet().getSelected());
+    }
+
+    @Override
+    protected void updateEnabledState( Collection<? extends OsmPrimitive> selection ) {
+        // selection changed => check if selection is completely different from before
+        boolean foundOld = false;
+        if( selection != null ) {
+            for( OsmPrimitive p : selectionBuf ) {
+                if( selection.contains(p) ) {
+                    foundOld = true;
+                    break;
+                }
+            }
+            selectionBuf.clear();
+            selectionBuf.addAll(selection);
+        } else {
+            foundOld = selectionBuf.isEmpty();
+            selectionBuf.clear();
+        }
+        if( !foundOld ) {
+            // selection has completely changed, remember tags
+            tags.clear();
+            tags.putAll(currentTags);
+        }
+        rememberSelectionTags();
+
+        setEnabled(selection != null && !selection.isEmpty() && !tags.isEmpty());
+    }
+
+    private void rememberSelectionTags() {
+        if( getCurrentDataSet() != null && !getCurrentDataSet().getSelected().isEmpty() ) {
+            currentTags.clear();
+            Set<String> bad = new HashSet<String>();
+            for( OsmPrimitive p : getCurrentDataSet().getSelected() ) {
+                if( currentTags.isEmpty() ) {
+                    for( String key : p.keySet() )
+                        currentTags.put(key, p.get(key));
+                } else {
+                    for( String key : p.keySet() )
+                        if( !currentTags.containsKey(key) || !currentTags.get(key).equals(p.get(key)) )
+                            bad.add(key);
+                    for( String key : currentTags.keySet() )
+                        if( !p.hasKey(key) )
+                            bad.add(key);
+                }
+            }
+            for( String key : bad )
+                currentTags.remove(key);
         }
     }
 }
-

@@ -52,7 +52,9 @@ class ReplaceGeometryAction extends JosmAction {
         // Two items in undo stack: change original way and delete geometry way
         Command changeCommand = new ChangeCommand(way, result);
         Command deleteCommand = new DeleteCommand(geometry);
-        Main.main.undoRedo.add(new SequenceCommand(tr("Replace geometry of way {0}", way.getDisplayName(DefaultNameFormatter.getInstance()))));
+        Main.main.undoRedo.add(new SequenceCommand(
+                tr("Replace geometry of way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
+                changeCommand, deleteCommand));
     }
 }
 

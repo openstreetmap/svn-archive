@@ -1,7 +1,9 @@
 package dumbutils;
 
+import java.awt.geom.Area;
+import org.openstreetmap.josm.data.osm.Node;
+import java.util.*;
 import org.openstreetmap.josm.command.*;
-import java.util.List;
 import org.openstreetmap.josm.Main;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.data.osm.Way;
@@ -46,15 +48,29 @@ class ReplaceGeometryAction extends JosmAction {
         }
 
         // Now do the replacement
+        List<Command> commands = new ArrayList<Command>();
         Way result = new Way(way);
         result.setNodes(geometry.getNodes());
+        // Copy tags from temporary way (source etc.)
+        for( String key : geometry.keySet() )
+            result.put(key, geometry.get(key));
+        commands.add(new ChangeCommand(way, result));
+        commands.add(new DeleteCommand(geometry));
+
+        // Check if there are unconnected nodes, delete them
+        Set<Node> nodesToDelete = new HashSet<Node>();
+        Area a = getCurrentDataSet().getDataSourceArea();
+        for( Node node : way.getNodes() ) {
+            if( !node.isDeleted() && node.isReferredByWays(1) && (node.isNewOrUndeleted() || a.contains(node.getCoor())) )
+                nodesToDelete.add(node);
+        }
+        if( !nodesToDelete.isEmpty() )
+            commands.add(new DeleteCommand(nodesToDelete));
 
         // Two items in undo stack: change original way and delete geometry way
-        Command changeCommand = new ChangeCommand(way, result);
-        Command deleteCommand = new DeleteCommand(geometry);
         Main.main.undoRedo.add(new SequenceCommand(
                 tr("Replace geometry of way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
-                changeCommand, deleteCommand));
+                commands));
     }
 }
 

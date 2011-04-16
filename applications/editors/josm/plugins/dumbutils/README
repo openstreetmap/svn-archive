@@ -1,0 +1,5 @@
+Some utilies which would never see the light of the core.
+Please use with care.
+
+* Copy tags from previous selected object
+* Replace geometry for existing way

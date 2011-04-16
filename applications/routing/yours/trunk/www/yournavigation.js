@@ -286,7 +286,7 @@ function init() {
 					if (value !== 0) {
 						wlonlat.lon = value;
 						waypointAdd();
-						MyFirstRoute.updateWaypoint("selected", flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
+						MyFirstRoute.updateWaypoint("selected", wlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
 					}
 					break;
 				case 'tlat':

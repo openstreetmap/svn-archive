@@ -923,7 +923,7 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 			if (this.Waypoints[i].lonlat === undefined || this.Waypoints[i + 1].lonlat === undefined) {
 				if (this.renderQuiet) {
 					// Finish silently
-					this.rendering--;
+					this._segmentFinished(this.Segments[i]);
 				} else {
 					// Finish with error
 					this._segmentError(this.Segments[i], 'No begin or end point specified!');
@@ -1147,7 +1147,7 @@ Yours.Segment = function(ParentRoute) {
 						var kml = new OpenLayers.Format.KML(options);
 						var distance = parseFloat(distance);
 						var feature = kml.read(xml);
-						this.create(distance, feature);
+						this.create(distance, this.cloneFeature(feature));
 						this.route._segmentFinished(this);
 						// Add to cache
 						routeCache[this.search] = {distance: distance, feature: feature};
@@ -1194,10 +1194,23 @@ Yours.Segment = function(ParentRoute) {
 		} else {
 			// In cache, retreive from there
 			var s = routeCache[this.search];
-			this.create(s.distance, s.feature);
+			this.create(s.distance, this.cloneFeature(s.feature));
 			this.route._segmentFinished(this);
 		}
 	};
+	
+	/*
+	 * Function cloneFeature
+	 *
+	 * Create a clone of a feature
+	 */
+	this.cloneFeature = function(feature) {
+		var featureClone = [];
+		for (var i = 0; i < feature.length; i++) {
+			featureClone[i] = feature[i].clone();
+		}
+		return featureClone;
+	}
 
 	/*
 		Function: profile

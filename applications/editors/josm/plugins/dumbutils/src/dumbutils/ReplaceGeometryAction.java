@@ -61,7 +61,9 @@ class ReplaceGeometryAction extends JosmAction {
         Set<Node> nodesToDelete = new HashSet<Node>();
         Area a = getCurrentDataSet().getDataSourceArea();
         for( Node node : way.getNodes() ) {
-            if( !node.isDeleted() && node.isReferredByWays(1) && (node.isNewOrUndeleted() || a.contains(node.getCoor())) )
+            List<OsmPrimitive> referrers = node.getReferrers();
+            if( !node.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
+                    && (node.isNewOrUndeleted() || a.contains(node.getCoor())) )
                 nodesToDelete.add(node);
         }
         if( !nodesToDelete.isEmpty() )

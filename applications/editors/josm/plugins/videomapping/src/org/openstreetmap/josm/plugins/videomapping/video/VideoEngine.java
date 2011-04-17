@@ -84,6 +84,18 @@ public class VideoEngine implements MediaPlayerEventListener{
         }
 	}
 	
+	private Video getVideo(MediaPlayer mp)
+	{
+		for (Video video : videos) {
+			if (video.player==mp) return video;
+		}
+		return null;
+	}
+
+	public List<Video> getVideos() {		
+		return videos;
+	}
+
 	public void play()
 	{
 		for (Video video : videos) {
@@ -118,7 +130,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 	}
 			
 	//TODO muss auf Rückgabe für alle Videos erweitert werden
-	public long getCurrentVideoTime()
+	public long getVideoTime()
 	{
 		return videos.get(0).player.getTime();
 	}
@@ -211,6 +223,18 @@ public class VideoEngine implements MediaPlayerEventListener{
 		mediaPlayerFactory.release();        
 	}
 
+	public void addObserver(VideosObserver observer) {
+		observers.add(observer);
+		
+	}
+
+	private void notifyObservers(VideoObserversEvents event)
+	{
+		for (VideosObserver observer : observers) {
+			observer.update(event);
+		}
+	}
+
 	public void backward(MediaPlayer arg0) {
 		
 	}
@@ -282,26 +306,6 @@ public class VideoEngine implements MediaPlayerEventListener{
 	}
 
 	public void titleChanged(MediaPlayer arg0, int arg1) {
-		
-	}
-	
-	private Video getVideo(MediaPlayer mp)
-	{
-		for (Video video : videos) {
-			if (video.player==mp) return video;
-		}
-		return null;
-	}
-	
-	private void notifyObservers(VideoObserversEvents event)
-	{
-		for (VideosObserver observer : observers) {
-			observer.update(event);
-		}
-	}
-
-	public void addObserver(VideosObserver observer) {
-		observers.add(observer);
 		
 	}
 

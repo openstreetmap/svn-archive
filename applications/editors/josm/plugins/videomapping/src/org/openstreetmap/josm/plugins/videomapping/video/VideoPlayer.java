@@ -95,21 +95,31 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	
 	public Video addVideo(File Videofile)
 	{
-		Video video = new Video(Videofile,new Canvas());
-		canvasPanel.add(video.canvas);
+		Video video = new Video(Videofile);		
+		canvasPanel.add(video.panel);
 		video.canvas.setSize(new Dimension(300, 300)); // will be updated by the video engine itself
 		videoengine.add(video);
         pack();
         startNotificationTimer();
         return video;
 	}
-
-	protected void play() {
-		videoengine.play();
-		
+	
+	public List <Video> getVideos()
+	{
+		return videoengine.getVideos();
 	}
+
 	
 	protected void pause(){
+		if (notificationTimer!=null)
+		{
+			notificationTimer.cancel();
+			notificationTimer=null;
+		}
+		else
+		{
+			startNotificationTimer();
+		}
 		videoengine.pause();
 	}
 
@@ -125,7 +135,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		if(loopingTimer==null)
 		{
 			//do reset after loop time experienced
-			final long videoResetTime=(long) videoengine.getCurrentVideoTime()-loopLength/2;
+			final long videoResetTime=(long) videoengine.getVideoTime()-loopLength/2;
 			TimerTask reset=new TimerTask() {                
                 @Override
                 public void run() {
@@ -236,6 +246,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
             	{
 	            	isManualJump=true;
 	            	videoengine.jumpToPosition((timeline.getValue()));
+	            	System.out.println("manual jump");
             	}
             }
                 
@@ -342,8 +353,9 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	//keep internal controls up to date during playback
 	public void update_plays() {
 		timeline.setValue(videoengine.getPosition());
-		System.out.println(videoengine.getPosition());
+		setTitle(Long.toString(videoengine.getVideoTime()));
 		isManualJump=false;
+		System.out.println("update");
 		
 	}
     

@@ -28,6 +28,7 @@ import javax.swing.text.MaskFormatter;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.*;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
+import org.openstreetmap.josm.plugins.videomapping.video.VideoEngine;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
@@ -67,6 +68,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 
 	public VideoPlugin(PluginInformation info) {
 		super(info);
+		VideoEngine.setupPlayer();
 		MapView.addLayerChangeListener(this);				
 		createMenusAndShortCuts();
 		enableVideoControlMenus(false);

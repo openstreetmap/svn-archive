@@ -34,7 +34,9 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.videomapping.video.GPSVideo;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
+import org.openstreetmap.josm.plugins.videomapping.video.Video;
 
 //Basic rendering and GPS layer interaction
 public class VideoPositionLayer extends Layer implements MouseListener,MouseMotionListener {
@@ -43,6 +45,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	private DateFormat gpsTimeFormat;
 	private WayPoint iconPosition;
 	private final int GPS_INTERVALL=1000;
+	private GPSVideoPlayer gpsVideoPlayer;
 
 	public VideoPositionLayer(GpxLayer gpsLayer) {
 		super("videolayer");
@@ -72,8 +75,9 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	@Override
 	public void paint(Graphics2D g, MapView map, Bounds bound) {
 		paintGpsTrack(g);
+		paintSyncedTrack(g);
 		paintPositionIcon(g);
-		paintInterpolatedSegment(g);
+		//paintInterpolatedSegment(g); //just a test for my own
 	}
 
 	private void paintGpsTrack(Graphics2D g) {
@@ -84,6 +88,18 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
         }
 	}
 	
+	private void paintSyncedTrack(Graphics2D g) {
+		g.setColor(Color.GREEN);
+		for (WayPoint n : gpsTrack) {
+			if (n.attr.containsKey("synced"))
+			{
+				Point p = Main.map.mapView.getPoint(n.getEastNorth());
+	            g.drawOval(p.x - 2, p.y - 2, 4, 4);
+			}				
+		} 
+		
+	}
+
 	private void paintPositionIcon(Graphics2D g) {
 		Point p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
         layerIcon.paintIcon(null, g, p.x-layerIcon.getIconWidth()/2, p.y-layerIcon.getIconHeight()/2);
@@ -118,11 +134,9 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		Date test=getFirstWayPoint().getTime();
 		test.setHours(14);
 		test.setMinutes(50);
-		test.setSeconds(33);
-		
+		test.setSeconds(33);		
 		ls.add(getWayPointBefore(new Date(test.getTime()+500)));
 		ls.add(interpolate(new Date(test.getTime()+500)));
-		System.out.print(test);
 		return ls;
 	}
 	
@@ -200,6 +214,18 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
     {
     	return iconPosition.getTime();
     }
+    
+    public WayPoint getCurrentWayPoint()
+    {
+    	return iconPosition;
+    }
+
+
+
+	public List<WayPoint> getTrack() {
+		return gpsTrack;
+		
+	}
 
 	public void mouseReleased(MouseEvent e) {
 		//only leftclicks on our layer
@@ -207,9 +233,14 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
         	WayPoint wp = getNearestWayPoint(e.getPoint());            	
             if(wp!=null)
             {
+            	if (gpsVideoPlayer.areAllVideosSynced())
+            	{
+            		//we set the video to right position
+            		gpsVideoPlayer.jumpTo(wp.getTime());
+            	}
             	iconPosition=wp;
-            }
-            Main.map.mapView.repaint();
+            	Main.map.mapView.repaint();
+            }            
         }
 		
 	}
@@ -292,9 +323,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		
 	}
 
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent e) {
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
@@ -305,6 +334,11 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void setGPSVideoPlayer(GPSVideoPlayer player)
+	{
+		gpsVideoPlayer=player;
 	}
     
 }

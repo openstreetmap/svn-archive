@@ -1,5 +1,6 @@
 package dumbutils;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Area;
 import org.openstreetmap.josm.data.osm.Node;
 import java.util.*;
@@ -22,6 +23,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 class ReplaceGeometryAction extends JosmAction {
     private static final String TITLE = "Replace geometry";
+    private static final double MAX_NODE_REPLACEMENT_DISTANCE = 3e-4;
 
     public ReplaceGeometryAction() {
         super(tr(TITLE), "replacegeometry", tr("Replace geometry of selected way with a new one"),
@@ -47,32 +49,90 @@ class ReplaceGeometryAction extends JosmAction {
             return;
         }
 
-        // Now do the replacement
-        List<Command> commands = new ArrayList<Command>();
-        Way result = new Way(way);
-        result.setNodes(geometry.getNodes());
-        // Copy tags from temporary way (source etc.)
-        for( String key : geometry.keySet() )
-            result.put(key, geometry.get(key));
-        commands.add(new ChangeCommand(way, result));
-        commands.add(new DeleteCommand(geometry));
-
-        // Check if there are unconnected nodes, delete them
-        Set<Node> nodesToDelete = new HashSet<Node>();
+        // Prepare a list of nodes that are not used anywhere except in the way
+        Set<Node> nodePool = new HashSet<Node>();
         Area a = getCurrentDataSet().getDataSourceArea();
         for( Node node : way.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( !node.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
                     && (node.isNewOrUndeleted() || a.contains(node.getCoor())) )
-                nodesToDelete.add(node);
+                nodePool.add(node);
         }
-        if( !nodesToDelete.isEmpty() )
-            commands.add(new DeleteCommand(nodesToDelete));
+
+        // And the same for geometry, list nodes that can be freely deleted
+        Set<Node> geometryPool = new HashSet<Node>();
+        for( Node node : geometry.getNodes() ) {
+            List<OsmPrimitive> referrers = node.getReferrers();
+            if( node.isNew() && !node.isDeleted() && referrers.size() == 1
+                    && referrers.get(0).equals(geometry) && !way.containsNode(node) )
+                geometryPool.add(node);
+        }
+
+        // Find new nodes that are closest to the old ones, remove matching old ones from the pool
+        Map<Node, Node> nodeAssoc = new HashMap<Node, Node>();
+        for( Node n : geometryPool ) {
+            Node nearest = findNearestNode(n, nodePool);
+            if( nearest != null ) {
+                nodeAssoc.put(n, nearest);
+                nodePool.remove(nearest);
+            }
+        }
+
+        // Now that we have replacement list, move all unused new nodes to nodePool (and delete them afterwards)
+        for( Node n : geometryPool )
+            if( nodeAssoc.containsKey(n) )
+                nodePool.add(n);
+
+        // And prepare a list of nodes with all the replacements
+        List<Node> geometryNodes = geometry.getNodes();
+        for( int i = 0; i < geometryNodes.size(); i++ )
+            if( nodeAssoc.containsKey(geometryNodes.get(i)) )
+                geometryNodes.set(i, nodeAssoc.get(geometryNodes.get(i)));
+
+        // Now do the replacement
+        List<Command> commands = new ArrayList<Command>();
+        commands.add(new ChangeNodesCommand(way, geometryNodes));
+
+        // Move old nodes to new positions
+        for( Node node : nodeAssoc.keySet() )
+            commands.add(new MoveCommand(nodeAssoc.get(node), node.getCoor()));
+
+        // Copy tags from temporary way (source etc.)
+        for( String key : geometry.keySet() )
+            commands.add(new ChangePropertyCommand(way, key, geometry.get(key)));
+
+        // And delete odl geometry way
+        commands.add(new DeleteCommand(geometry));
+
+        // Delete nodes that are not used anymore
+        if( !nodePool.isEmpty() )
+            commands.add(new DeleteCommand(nodePool));
 
         // Two items in undo stack: change original way and delete geometry way
         Main.main.undoRedo.add(new SequenceCommand(
-                tr("Replace geometry of way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
+                tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
+    }
+
+    /**
+     * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.
+     * @return null if there is no such node.
+     */
+    private Node findNearestNode( Node node, Collection<Node> nodes ) {
+        if( nodes.contains(node) )
+            return node;
+        
+        Node nearest = null;
+        double distance = MAX_NODE_REPLACEMENT_DISTANCE;
+        Point2D coor = node.getCoor();
+        for( Node n : nodes ) {
+            double d = n.getCoor().distance(coor);
+            if( d < distance ) {
+                distance = d;
+                nearest = n;
+            }
+        }
+        return nearest;
     }
 }
 

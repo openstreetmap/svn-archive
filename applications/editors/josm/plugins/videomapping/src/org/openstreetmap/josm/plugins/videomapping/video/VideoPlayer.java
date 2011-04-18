@@ -59,7 +59,7 @@ import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 
 //basic class of a videoplayer for one video
 public class VideoPlayer extends JFrame implements WindowListener, VideosObserver, VideoPlayerObserver{
-	private static final int notificationIntervall = 1000;
+	private static final int notificationIntervall = 500;
 	protected JPanel screenPanel,controlsPanel,canvasPanel;
     private JSlider timeline;
     private JButton play,back,forward;
@@ -110,7 +110,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	}
 
 	
-	protected void pause(){
+	public void pause(){
 		if (notificationTimer!=null)
 		{
 			notificationTimer.cancel();
@@ -123,15 +123,40 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		videoengine.pause();
 	}
 
-	protected void backward() {
+	public void backward() {
 		videoengine.jump(-jumpLength);	
 	}
 
-	protected void forward() {
+	public void forward() {
 		videoengine.jump(jumpLength);	
 	}
 
-	protected void toggleLooping() {
+	public void setSpeed(Integer percent)
+	{
+		speed.setValue(percent);		
+	}
+	
+	public Integer getSpeed()
+	{
+		return speed.getValue();
+	}
+	
+	public void setDeinterlacer(String deinterlacer)
+	{
+		videoengine.setDeinterlacer(deinterlacer);
+	}
+	
+	public void setSubtitles(boolean enabled)
+	{
+		videoengine.setSubtitles(enabled);
+	}
+
+	public void mute()
+	{
+		videoengine.mute();
+	}
+
+	public void toggleLooping() {
 		if(loopingTimer==null)
 		{
 			//do reset after loop time experienced
@@ -235,7 +260,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         mute.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent arg0) {
-                videoengine.mute();
+                mute();
             }
         });
         
@@ -253,7 +278,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         });
         
         speed.addChangeListener(new ChangeListener() {            
-            public void stateChanged(ChangeEvent arg0) {
+            public void stateChanged(ChangeEvent arg0) {            	            
             	if(!speed.getValueIsAdjusting())
             	{
             		videoengine.setSpeed(speed.getValue());

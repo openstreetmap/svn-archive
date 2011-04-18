@@ -46,6 +46,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	private WayPoint iconPosition;
 	private final int GPS_INTERVALL=1000;
 	private GPSVideoPlayer gpsVideoPlayer;
+	private boolean autoCenter;
 
 	public VideoPositionLayer(GpxLayer gpsLayer) {
 		super("videolayer");
@@ -141,7 +142,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	}
 	
 	//creates a waypoint for the corresponding time
-	private WayPoint interpolate(Date GPSTime)
+	public WayPoint interpolate(Date GPSTime)
 	{
 		WayPoint before =getWayPointBefore(GPSTime);
 		long diff=GPSTime.getTime()-before.getTime().getTime();
@@ -226,6 +227,20 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		return gpsTrack;
 		
 	}
+	
+	public void jump(Date GPSTime)
+	{
+		setIconPosition(getWayPointBefore(GPSTime));
+		
+	}
+
+	public void setIconPosition(WayPoint wp) {
+		iconPosition=wp;
+		Main.map.mapView.repaint();
+		if (autoCenter)
+			Main.map.mapView.zoomTo(iconPosition.getCoor());
+		
+	}
 
 	public void mouseReleased(MouseEvent e) {
 		//only leftclicks on our layer
@@ -238,13 +253,12 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
             		//we set the video to right position
             		gpsVideoPlayer.jumpTo(wp.getTime());
             	}
-            	iconPosition=wp;
-            	Main.map.mapView.repaint();
+            	setIconPosition(wp);
             }            
         }
 		
 	}
-	
+
 	//finds the first waypoint that is nearby the given point
     private WayPoint getNearestWayPoint(Point mouse)
     {
@@ -339,6 +353,16 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 	public void setGPSVideoPlayer(GPSVideoPlayer player)
 	{
 		gpsVideoPlayer=player;
+	}
+
+	public void setAutoCenter(boolean enabled) {
+		autoCenter=enabled;
+		
+	}
+
+	public void unload() {
+		Main.main.removeLayer(this);
+		
 	}
     
 }

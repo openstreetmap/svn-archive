@@ -95,6 +95,17 @@ public class GPSVideo extends Video{
 			player.setTime(diff);
 			System.out.println(diff);
 		}
-	}  
+	}
+	
+	public WayPoint getCurrentWayPoint()
+	{
+		if (isSynced())
+		{
+			long videotime=player.getTime();
+			Date gpstime=new Date(start.getTime()+videotime);
+			return videoPositionLayer.interpolate(gpstime);
+		}
+		return null;
+	}
 
 }

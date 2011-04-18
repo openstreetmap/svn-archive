@@ -83,6 +83,21 @@ public class GPSVideoPlayer extends VideoPlayer
 		}
 		return true;		
 	}
+
+
+	@Override
+	public void update_plays() {		
+		super.update_plays();
+		if (areAllVideosSynced())
+			videoPositionLayer.setIconPosition( videos.get(0).getCurrentWayPoint());
+	}
+	
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		videoPositionLayer.unload();
+		super.windowClosing(arg0);
+	}
+	
 	
 	
 	

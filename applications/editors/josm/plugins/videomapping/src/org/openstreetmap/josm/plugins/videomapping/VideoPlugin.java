@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -65,6 +69,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
     private Integer jumpLength,loopLength;
     private String mostRecentFolder;
 	private GpxLayer gpsLayer;
+	private VideoPositionLayer videoPositionLayer;
+	private GPSVideoPlayer gpsVideoPlayer;
 
 	public VideoPlugin(PluginInformation info) {
 		super(info);
@@ -93,20 +99,20 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         };       
         VStart = new JosmAction(tr("Play/Pause"), "audio-playpause", tr("starts/pauses video playback"),
                 Shortcut.registerShortcut("videomapping:startstop","Video: "+tr("Play/Pause"),KeyEvent.VK_NUMPAD5, Shortcut.GROUP_DIRECT), false) {            
-            public void actionPerformed(ActionEvent e) {                                
-                
+            public void actionPerformed(ActionEvent e) {
+            	gpsVideoPlayer.pause();                
             }
         };
         Vbackward = new JosmAction(tr("Backward"), "audio-prev", tr("jumps n sec back"),
                 Shortcut.registerShortcut("videomapping:backward","Video: "+tr("Backward"),KeyEvent.VK_NUMPAD4, Shortcut.GROUP_DIRECT), false) {
             public void actionPerformed(ActionEvent e) {
-               
+            	gpsVideoPlayer.backward();
             }
         };
         Vforward= new JosmAction(tr("Forward"), "audio-next", tr("jumps n sec forward"),
                 Shortcut.registerShortcut("videomapping:forward","Video: "+tr("Forward"),KeyEvent.VK_NUMPAD6, Shortcut.GROUP_DIRECT), false) {            
             public void actionPerformed(ActionEvent e) {
-                
+            	gpsVideoPlayer.forward();
                             
             }
         };
@@ -114,7 +120,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
                 Shortcut.registerShortcut("videomapping:faster","Video: "+tr("Faster"),KeyEvent.VK_NUMPAD8, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
-                
+            	gpsVideoPlayer.setSpeed(gpsVideoPlayer.getSpeed()+20);
                             
             }
         };
@@ -122,14 +128,13 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
                 Shortcut.registerShortcut("videomapping:slower","Video: "+tr("Slower"),KeyEvent.VK_NUMPAD2, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
-                
+            	gpsVideoPlayer.setSpeed(gpsVideoPlayer.getSpeed()-20);
                             
             }
         };
         VJump= new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
             public void actionPerformed(ActionEvent e) {
-            	
-
+            	showJumpTo();
             }
                             
             
@@ -137,50 +142,54 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         Vloop= new JosmAction(tr("Loop"), "loop", tr("loops n sec around current position"),
                 Shortcut.registerShortcut("videomapping:loop","Video: "+tr("loop"),KeyEvent.VK_NUMPAD7, Shortcut.GROUP_DIRECT), false) {            
             public void actionPerformed(ActionEvent e) {
-
-                            
+            	gpsVideoPlayer.toggleLooping();
             }
         };
         
         //now the options menu
         VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), null, tr("follows the video icon automaticly"),null, false) {            
             public void actionPerformed(ActionEvent e) {
-
-                            
+            	videoPositionLayer.setAutoCenter(VCenterIcon.isSelected());
             }
         });
-        //now the options menu
+        
         VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), null, tr("Show subtitles in video"),null, false) {           
             public void actionPerformed(ActionEvent e) {
-  
-                            
+            	gpsVideoPlayer.setSubtitles(VSubTitles.isSelected());                            
             }
         });
         
         VJumpLength = new JMenuItem(new JosmAction(tr("Jump length"), null, tr("Set the length of a jump"),null, false) {            
-            public void actionPerformed(ActionEvent e) {                        
+            public void actionPerformed(ActionEvent e) {
+            	Object[] possibilities = {"200", "500", "1000", "2000", "10000"};
+                String s = (String)JOptionPane.showInputDialog(Main.parent,tr("Jump in video for x ms"),tr("Jump length"),JOptionPane.QUESTION_MESSAGE,null,possibilities,jumpLength);
+                jumpLength=Integer.getInteger(s);
+                saveProperties();
             }
         });
         
         VLoopLength = new JMenuItem(new JosmAction(tr("Loop length"), null, tr("Set the length around a looppoint"),null, false) {            
             public void actionPerformed(ActionEvent e) {
-               
-                            
+            	Object[] possibilities = {"500", "1000", "3000", "5000", "10000"};
+                String s = (String)JOptionPane.showInputDialog(Main.parent,tr("Jump in video for x ms"),tr("Loop length"),JOptionPane.QUESTION_MESSAGE,null,possibilities,loopLength);
+                loopLength=Integer.getInteger(s);
+                saveProperties();
             }
         });        
         VDeinterlacer= new JMenu("Deinterlacer");
         VIntNone= new JRadioButtonMenuItem(new JosmAction(tr("none"), null, tr("no deinterlacing"),null, false) {            
-            public void actionPerformed(ActionEvent e) {                
+            public void actionPerformed(ActionEvent e) {
+            	gpsVideoPlayer.setDeinterlacer("none");
             }
         });
         VIntBob= new JRadioButtonMenuItem(new JosmAction("bob", null, tr("deinterlacing using line doubling"),null, false) {            
             public void actionPerformed(ActionEvent e) {
-
+            	gpsVideoPlayer.setDeinterlacer("bob");
             }
         });
         VIntLinear= new JRadioButtonMenuItem(new JosmAction("linear", null, tr("deinterlacing using linear interpolation"),null, false) {            
             public void actionPerformed(ActionEvent e) {
-
+            	gpsVideoPlayer.setDeinterlacer("linear");
             }
         });
         VDeinterlacer.add(VIntNone);
@@ -210,9 +219,12 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         {
         	mostRecentFolder=fc.getSelectedFile().getAbsolutePath();
         	saveProperties();
-        	VideoPositionLayer videoPositionLayer= new VideoPositionLayer(gpsLayer);
-        	GPSVideoPlayer gpsVideoPlayer = new GPSVideoPlayer(new SimpleDateFormat("hh:mm:ss") ,videoPositionLayer);
+        	videoPositionLayer= new VideoPositionLayer(gpsLayer);
+        	gpsVideoPlayer = new GPSVideoPlayer(new SimpleDateFormat("hh:mm:ss") ,videoPositionLayer);
+        	gpsVideoPlayer.setJumpLength(jumpLength);
+        	gpsVideoPlayer.setLoopLength(loopLength);
         	gpsVideoPlayer.addVideo(fc.getSelectedFile());
+        	enableVideoControlMenus(true);
         }
 		
 	}
@@ -270,6 +282,49 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         	VIntBob.setSelected(true);
         if(deinterlacer=="linear")
         	VIntLinear.setSelected(true);
+	}
+	
+	private void showJumpTo()
+	{
+		String s;
+    	try {
+	    	JOptionPane d=new JOptionPane(tr("Jump to"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);	    	
+	    	SimpleDateFormat gpsTimeFormat= new SimpleDateFormat("HH:mm:ss");
+	    	String timerange=gpsTimeFormat.format(videoPositionLayer.getFirstWayPoint().getTime())+" - ";
+	    	timerange=timerange+gpsTimeFormat.format(videoPositionLayer.getLastWayPoint().getTime());
+	    	d.add(new JLabel(timerange)); //TODO for some reason this doesn't work -> use dialog
+	    	final JFormattedTextField inp = new JFormattedTextField(new MaskFormatter("##:##:##"));
+	    	inp.setText(gpsTimeFormat.format( videoPositionLayer.getGPSDate()));
+	    	inp.setInputVerifier(new InputVerifier() {					
+				@Override
+				public boolean verify(JComponent input) {
+					return false;
+				}
+			});
+	    	//hack to set the focus
+	    	SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            	inp.requestFocus();
+	            	inp.setCaretPosition(0);
+	            }
+	        });
+	    	if(d.showConfirmDialog(Main.main.panel,inp, tr("Jump to GPS time"),JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION)
+	    	{
+	    		//add the day to the time
+	    		Date t = gpsTimeFormat.parse(inp.getText());	    		
+	    		Calendar time = Calendar.getInstance();
+	    		Calendar date = Calendar.getInstance();
+	    		time.setTime(t);
+	    		date.setTime(videoPositionLayer.getFirstWayPoint().getTime());
+	    		time.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
+	            if (t!=null)
+	            {
+	            	videoPositionLayer.jump(time.getTime());
+	            }                       
+	    	}
+    	} catch (ParseException e1) {
+                e1.printStackTrace();
+        }
 	}
 	
 

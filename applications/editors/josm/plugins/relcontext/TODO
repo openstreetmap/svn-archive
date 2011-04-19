@@ -4,7 +4,12 @@
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 - "Reverse multipolygon": create a closed area out of outer members, move tags, delete relation and empty ways
 - Fix tags for public_transport relations
-- Copy relations to another object (buffer? dumbutils?)
+
+== DumbUtils todo ==
+
+- Paste relations to another object (Main.pasteBuffer.getDirectlyAdded() -> relations)
+- Align way nodes: 1 node - between neighboring, 2 nodes - all between them, 3 or more - all selected
+- Paste remembered source (store it indefinetly, even in preferences)
 
 == NEW ALGORITHM ==
 

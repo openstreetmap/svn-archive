@@ -101,7 +101,10 @@ class ReplaceGeometryAction extends JosmAction {
         for( String key : geometry.keySet() )
             commands.add(new ChangePropertyCommand(way, key, geometry.get(key)));
 
-        // And delete odl geometry way
+        // Remove geometry way from selection
+        getCurrentDataSet().clearSelection(geometry);
+
+        // And delete old geometry way
         commands.add(new DeleteCommand(geometry));
 
         // Delete nodes that are not used anymore

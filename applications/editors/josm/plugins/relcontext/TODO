@@ -9,7 +9,8 @@
 
 - Paste relations to another object (Main.pasteBuffer.getDirectlyAdded() -> relations)
 - Align way nodes: 1 node - between neighboring, 2 nodes - all between them, 3 or more - all selected
-- Paste remembered source (store it indefinetly, even in preferences)
+- Paste remembered source tag value (store it indefinetly, even in preferences)
+- Replace geometry: choose nearest node for replacing, not just any
 
 == NEW ALGORITHM ==
 

@@ -4,6 +4,7 @@
 - Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
 - "Reverse multipolygon": create a closed area out of outer members, move tags, delete relation and empty ways
 - Fix tags for public_transport relations
+- Copy relations to another object (buffer? dumbutils?)
 
 == NEW ALGORITHM ==
 

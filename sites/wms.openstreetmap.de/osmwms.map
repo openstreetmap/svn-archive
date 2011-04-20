@@ -34,7 +34,7 @@ MAP
   END
 
   WEB
-    IMAGEPATH "/tmp/ms_tmp/"
+    IMAGEPATH "/osm/wms_tmp/"
   END
 
   LAYER
@@ -44,7 +44,7 @@ MAP
       "wms_extent" "8.901518 47.715411 9.065091 47.816186"
       "wms_srs"    "EPSG:4326"
       "copyright"  "© Stadt Radolfzell: OSM use only"
-      "wiki" "http://wiki.openstreetmap.org/wiki/Luftbilder_Radolfzell"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/Luftbilder_Radolfzell"
       "zoomlevels" "22"
     END
     TYPE RASTER
@@ -55,7 +55,6 @@ MAP
     END
   END
 
-
   LAYER
     NAME "Witten"
     METADATA
@@ -63,13 +62,64 @@ MAP
       "wms_extent" "7.220357 51.364269 7.438294 51.498894"
       "wms_srs"    "EPSG:4326"
       "copyright"  "© Stadtwerke Witten: OSM use only"
-      "wiki" "http://wiki.openstreetmap.org/wiki/DE:Luftbilder_Witten"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/DE:Luftbilder_Witten"
     END
     TYPE RASTER
     STATUS ON
     DATA "witten/witten-4326.img"
     PROJECTION
       "init=epsg:4326"
+    END
+  END
+
+  LAYER
+    NAME "Goerlitz"
+    STATUS ON
+    TYPE RASTER
+    METADATA
+     "wms_title"  "Luftbilder Goerlitz"
+     "wms_extent" "14.978819 51.142103 15.006943 51.170933"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "© Holger Neubert: osm-use only"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    DATA "martin_dornfelder/goerlitz.tif"
+    PROJECTION
+       "init=epsg:4326"
+    END
+  END
+
+  LAYER
+    NAME "Gross-Jamno"
+    METADATA
+     "wms_title"  "Luftbilder Gross-Jamno"
+     "wms_extent" "14.567003 51.716530 14.597042 51.729961"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "© Holger Neubert: osm-use only"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    STATUS ON
+    TYPE RASTER
+    DATA "martin_dornfelder/gross-jamno.tif"
+    PROJECTION
+       "init=epsg:4326"
+    END
+  END
+
+  LAYER
+    NAME "Luebben"
+    METADATA
+     "wms_title"  "Luftbilder Luebben"
+     "wms_extent" "13.860654 51.916350 13.913610 51.961214"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "© Holger Neubert: osm-use only"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    STATUS ON
+    TYPE RASTER
+    DATA "martin_dornfelder/luebben.tif"
+    PROJECTION
+       "init=epsg:4326"
     END
   END
 
@@ -273,6 +323,24 @@ MAP
     END
   END
 
+LAYER
+  NAME "Karlsruhe"
+  TYPE RASTER
+  STATUS ON
+  CONNECTION "http://geodaten.karlsruhe.de/wmsconnector/com.esri.wms.Esrimap/ortho2008wms?"
+  CONNECTIONTYPE WMS
+  METADATA
+    "wms_title" "Luftbilder Liegenschaftsamt Karlsruhe"      
+    "wms_extent" "8.2756 48.9367 8.5471 49.0963"
+    "wms_srs" "EPSG:31467"
+    "wms_server_version" "1.1.1"
+    "wms_name" "0"
+    "wms_format" "image/png"
+    "wms_connectiontimeout" "180"
+    "copyright"  "© Liegenschaftsamt KA: OSM use only"
+    "zoomlevels" "22"
+  END
+END
 
   LAYER
     METADATA

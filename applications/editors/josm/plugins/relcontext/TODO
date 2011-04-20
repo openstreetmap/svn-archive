@@ -15,6 +15,7 @@
 - Sort relation members button (now it's just role fixer)
 - "Add members" should search for connecting nodes among already present members
 - Automatic role setting for new multipolygon ways (construct rings, see where a way goes)
+- Split multipolygon: arrange holes accordingly.
 
 == RELEASE ==
 

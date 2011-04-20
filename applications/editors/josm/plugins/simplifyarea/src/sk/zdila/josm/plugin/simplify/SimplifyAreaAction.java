@@ -202,7 +202,7 @@ public class SimplifyAreaAction extends JosmAction {
 
     // average nearby nodes
     private Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
-        final double mergeThreshold = Main.pref.getDouble("simplify-area.merge.threshold", 0.2);
+        final double mergeThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
 
         final Map<Node, LatLon> coordMap = new HashMap<Node, LatLon>();
         for (final Way way : ways) {
@@ -315,12 +315,12 @@ public class SimplifyAreaAction extends JosmAction {
 
 
     private void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
-        final double angleThreshold = Main.pref.getDouble("simplify-area.angle.threshold", 10);
-        final double angleFactor = Main.pref.getDouble("simplify-area.angle.factor", 1.0);
-        final double areaThreshold = Main.pref.getDouble("simplify-area.area.threshold", 5.0);
-        final double areaFactor = Main.pref.getDouble("simplify-area.area.factor", 1.0);
-        final double distanceThreshold = Main.pref.getDouble("simplify-area.dist.threshold", 3);
-        final double distanceFactor = Main.pref.getDouble("simplify-area.dist.factor", 3);
+        final double angleThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_THRESHOLD, 10);
+        final double angleFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_FACTOR, 1.0);
+        final double areaThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.AREA_THRESHOLD, 5.0);
+        final double areaFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.AREA_FACTOR, 1.0);
+        final double distanceThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.DIST_THRESHOLD, 3);
+        final double distanceFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.DIST_FACTOR, 3);
 
         final List<Node> nodes = w.getNodes();
         final int size = nodes.size();

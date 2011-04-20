@@ -14,6 +14,14 @@ import org.openstreetmap.josm.tools.GBC;
 
 public class SimplifyAreaPreferenceSetting implements PreferenceSetting {
 
+    static final String DIST_FACTOR = "simplify-area.dist.factor";
+    static final String DIST_THRESHOLD = "simplify-area.dist.threshold";
+    static final String AREA_FACTOR = "simplify-area.area.factor";
+    static final String AREA_THRESHOLD = "simplify-area.area.threshold";
+    static final String ANGLE_FACTOR = "simplify-area.angle.factor";
+    static final String ANGLE_THRESHOLD = "simplify-area.angle.threshold";
+    static final String MERGE_THRESHOLD = "simplify-area.merge.threshold";
+
     private final JTextField mergeThreshold = new JTextField(8);
     private final JTextField angleThreshold = new JTextField(8);
     private final JTextField angleFactor = new JTextField(8);
@@ -35,31 +43,31 @@ public class SimplifyAreaPreferenceSetting implements PreferenceSetting {
         		"Removal continues until there is no node to remove." +
         		"Merge Nearby Nodes is another step of the simplification that merges adjanced nodes that are closer than <u>Threshold</u> meters.");
 
-        angleThreshold.setText(Main.pref.get("simplify-area.angle.threshold", "10"));
+        angleThreshold.setText(Main.pref.get(ANGLE_THRESHOLD, "10"));
         tab.add(new JLabel(tr("Angle Threshold")), GBC.std());
         tab.add(angleThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        angleFactor.setText(Main.pref.get("simplify-area.angle.factor", "1.0"));
+        angleFactor.setText(Main.pref.get(ANGLE_FACTOR, "1.0"));
         tab.add(new JLabel(tr("Angle Factor")), GBC.std());
         tab.add(angleFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        areaThreshold.setText(Main.pref.get("simplify-area.area.threshold", "5.0"));
+        areaThreshold.setText(Main.pref.get(AREA_THRESHOLD, "5.0"));
         tab.add(new JLabel(tr("Area Threshold")), GBC.std());
         tab.add(areaThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        areaFactor.setText(Main.pref.get("simplify-area.area.factor", "1.0"));
+        areaFactor.setText(Main.pref.get(AREA_FACTOR, "1.0"));
         tab.add(new JLabel(tr("Area Factor")), GBC.std());
         tab.add(areaFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        distanceThreshold.setText(Main.pref.get("simplify-area.dist.threshold", "3"));
+        distanceThreshold.setText(Main.pref.get(DIST_THRESHOLD, "3"));
         tab.add(new JLabel(tr("Distance Threshold")), GBC.std());
         tab.add(distanceThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        distanceFactor.setText(Main.pref.get("simplify-area.dist.factor", "3"));
+        distanceFactor.setText(Main.pref.get(DIST_FACTOR, "3"));
         tab.add(new JLabel(tr("Distance Factor")), GBC.std());
         tab.add(distanceFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        mergeThreshold.setText(Main.pref.get("simplify-area.merge.threshold", "0.2"));
+        mergeThreshold.setText(Main.pref.get(MERGE_THRESHOLD, "0.2"));
         // mergeThreshold.setToolTipText(tr("bla bla"));
         tab.add(new JLabel(tr("Merge Nearby Nodes Threshold")), GBC.std());
         tab.add(mergeThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
@@ -69,13 +77,13 @@ public class SimplifyAreaPreferenceSetting implements PreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.put("simplify-area.merge.threshold", mergeThreshold.getText());
-        Main.pref.put("simplify-area.angle.threshold", angleThreshold.getText());
-        Main.pref.put("simplify-area.angle.factor", angleFactor.getText());
-        Main.pref.put("simplify-area.area.threshold", areaThreshold.getText());
-        Main.pref.put("simplify-area.area.factor", areaFactor.getText());
-        Main.pref.put("simplify-area.dist.threshold", distanceThreshold.getText());
-        Main.pref.put("simplify-area.dist.factor", distanceFactor.getText());
+        Main.pref.put(MERGE_THRESHOLD, mergeThreshold.getText());
+        Main.pref.put(ANGLE_THRESHOLD, angleThreshold.getText());
+        Main.pref.put(ANGLE_FACTOR, angleFactor.getText());
+        Main.pref.put(AREA_THRESHOLD, areaThreshold.getText());
+        Main.pref.put(AREA_FACTOR, areaFactor.getText());
+        Main.pref.put(DIST_THRESHOLD, distanceThreshold.getText());
+        Main.pref.put(DIST_FACTOR, distanceFactor.getText());
         return false;
     }
 

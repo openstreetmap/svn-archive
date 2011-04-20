@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import java.util.Collection;
 import java.util.HashSet;

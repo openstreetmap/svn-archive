@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin and Martin Ždila
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  *    Unselects all nodes
  */
-class UnselectNodesAction extends JosmAction {
+public class UnselectNodesAction extends JosmAction {
 
     
     public UnselectNodesAction() {

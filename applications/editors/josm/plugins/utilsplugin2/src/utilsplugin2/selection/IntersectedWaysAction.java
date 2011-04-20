@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -9,46 +9,46 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JOptionPane;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
 
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- *    Extends current selection
+ *    Extends current selection by selecting nodes on all touched ways
  */
-class AdjacentWaysAction extends JosmAction {
+public class IntersectedWaysAction extends JosmAction {
 
-    public static final boolean treeMode = false;
-
-    public AdjacentWaysAction() {
-        super(tr("Adjacent ways"), "adjways",
-                tr("Adjacent ways will be selected. Nodes wiil be deselected."),
-                Shortcut.registerShortcut("tools:adjways", tr("Tool: {0}","Adjacent ways"),
-                KeyEvent.VK_E, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
-        putValue("help", ht("/Action/AdjacentWays"));
+    public IntersectedWaysAction() {
+        super(tr("Intersecting ways"), "intway", tr("Select intersecting ways"),
+                Shortcut.registerShortcut("tools:intway", tr("Tool: {0}","Intersecting ways"),
+                KeyEvent.VK_I, Shortcut.GROUP_EDIT), true);
+        putValue("help", ht("/Action/SelectIntersectingWays"));
     }
 
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
+        Set<Way> activeWays = new HashSet<Way>();
 
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
         // select ways attached to already selected ways
-        Set<Way> newWays = new HashSet<Way>();
-        newWays.addAll(selectedWays);
-        for (Way w : selectedWays){
-            NodeWayUtils.addWaysConnectedToWay(w, newWays);
+        if (!selectedWays.isEmpty()) {
+            Set<Way> newWays = new HashSet<Way>();
+            NodeWayUtils.addWaysIntersectingWays(
+                    getCurrentDataSet().getWays(),
+                    selectedWays, newWays);
+            getCurrentDataSet().addSelected(newWays);
+            return;
+        } else {
+             JOptionPane.showMessageDialog(Main.parent,
+               tr("Please select some ways to find connected and intersecting ways!"),
+               tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
 
-        // selecting ways attached to selected nodes
-        if(!selectedNodes.isEmpty()) {
-            NodeWayUtils.addWaysConnectedToNodes(selectedNodes, newWays);
-        }
-
-//        System.out.printf("%d ways added to selection\n",newWays.size()-selectedWays.size());
-        getCurrentDataSet().setSelected(newWays);
     }
 
     @Override
@@ -68,7 +68,6 @@ class AdjacentWaysAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
 
 
 }

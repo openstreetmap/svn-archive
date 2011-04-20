@@ -4,6 +4,8 @@ package utilsplugin2;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import utilsplugin2.selection.*;
+import utilsplugin2.dumbutils.*;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -24,22 +26,35 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem intWays;
     JMenuItem intWaysR;
 
+    JMenuItem replaceGeometry;
+    JMenuItem tagBuffer;
+    JMenuItem sourceTag;
+    JMenuItem pasteRelations;
+    JMenuItem alignWayNodes;
+
     public UtilsPlugin2(PluginInformation info) {
         super(info);
-        Main.main.menu.toolsMenu.addSeparator();
-        unglueRelation = MainMenu.add(Main.main.menu.toolsMenu, new UnGlueRelationAction());
-        addIntersections = MainMenu.add(Main.main.menu.toolsMenu, new AddIntersectionsAction());
-        splitObject = MainMenu.add(Main.main.menu.toolsMenu, new SplitObjectAction());
-        Main.main.menu.toolsMenu.addSeparator();
-        JMenu m1 = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
 
-        selectWayNodes = MainMenu.add(m1, new SelectWayNodesAction());
-        adjNodes = MainMenu.add(m1, new AdjacentNodesAction());
-        unsNodes = MainMenu.add(m1, new UnselectNodesAction());
-        adjWays = MainMenu.add(m1, new AdjacentWaysAction());
-        adjWaysAll = MainMenu.add(m1, new ConnectedWaysAction());
-        intWays = MainMenu.add(m1, new IntersectedWaysAction());
-        intWaysR = MainMenu.add(m1, new IntersectedWaysRecursiveAction());
+        JMenu toolsMenu = Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_M, 4, "help");
+        unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
+        addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
+        splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
+
+        toolsMenu.addSeparator();
+        replaceGeometry = MainMenu.add(toolsMenu, new ReplaceGeometryAction());
+        tagBuffer = MainMenu.add(toolsMenu, new TagBufferAction());
+        sourceTag = MainMenu.add(toolsMenu, new TagSourceAction());
+        pasteRelations = MainMenu.add(toolsMenu, new PasteRelationsAction());
+        alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
+
+        JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
+        selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
+        adjNodes = MainMenu.add(selectionMenu, new AdjacentNodesAction());
+        unsNodes = MainMenu.add(selectionMenu, new UnselectNodesAction());
+        adjWays = MainMenu.add(selectionMenu, new AdjacentWaysAction());
+        adjWaysAll = MainMenu.add(selectionMenu, new ConnectedWaysAction());
+        intWays = MainMenu.add(selectionMenu, new IntersectedWaysAction());
+        intWaysR = MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
     }
 
     @Override
@@ -49,6 +64,13 @@ public class UtilsPlugin2 extends Plugin {
         unglueRelation.setEnabled(enabled);
         addIntersections.setEnabled(enabled);
         splitObject.setEnabled(enabled);
+
+        replaceGeometry.setEnabled(enabled);
+        tagBuffer.setEnabled(enabled);
+        sourceTag.setEnabled(enabled);
+        pasteRelations.setEnabled(enabled);
+        alignWayNodes.setEnabled(enabled);
+
         selectWayNodes.setEnabled(enabled);
         adjNodes.setEnabled(enabled);
         unsNodes.setEnabled(enabled);

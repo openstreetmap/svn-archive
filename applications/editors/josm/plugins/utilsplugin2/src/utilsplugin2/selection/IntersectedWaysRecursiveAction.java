@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin ond others
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,7 +19,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  *    Extends current selection by selecting nodes on all touched ways
  */
-class IntersectedWaysRecursiveAction extends JosmAction {
+public class IntersectedWaysRecursiveAction extends JosmAction {
     
     public IntersectedWaysRecursiveAction() {
         super(tr("All intersecting ways"), "intwayall", tr("Select all intersecting ways"),

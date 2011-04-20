@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -17,7 +17,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  *    Extends current selection by selecting nodes on all touched ways
  */
-class ConnectedWaysAction extends JosmAction {
+public class ConnectedWaysAction extends JosmAction {
 
     public ConnectedWaysAction() {
         super(tr("All connected ways"), "adjwaysall", tr("Select all connected ways"),

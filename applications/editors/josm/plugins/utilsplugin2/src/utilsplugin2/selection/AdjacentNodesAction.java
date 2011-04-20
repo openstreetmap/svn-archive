@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin and others
-package utilsplugin2;
+package utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -7,7 +7,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -18,7 +17,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  *    Extends current selection
  */
-class AdjacentNodesAction extends JosmAction {
+public class AdjacentNodesAction extends JosmAction {
 
     public static final boolean treeMode = false;
 

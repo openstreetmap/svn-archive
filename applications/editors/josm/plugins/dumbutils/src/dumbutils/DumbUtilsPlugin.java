@@ -22,7 +22,7 @@ public class DumbUtilsPlugin extends Plugin {
         tagBuffer = MainMenu.add(Main.main.menu.toolsMenu, new TagBufferAction());
         sourceTag = MainMenu.add(Main.main.menu.toolsMenu, new TagSourceAction());
         pasteRelations = MainMenu.add(Main.main.menu.toolsMenu, new PasteRelationsAction());
-//        alignWayNodes = MainMenu.add(Main.main.menu.toolsMenu, new AlignWayNodesAction());
+        alignWayNodes = MainMenu.add(Main.main.menu.toolsMenu, new AlignWayNodesAction());
     }
 
     @Override
@@ -32,6 +32,6 @@ public class DumbUtilsPlugin extends Plugin {
         tagBuffer.setEnabled(enabled);
         sourceTag.setEnabled(enabled);
         pasteRelations.setEnabled(enabled);
-//        alignWayNodes.setEnabled(enabled);
+        alignWayNodes.setEnabled(enabled);
     }
 }

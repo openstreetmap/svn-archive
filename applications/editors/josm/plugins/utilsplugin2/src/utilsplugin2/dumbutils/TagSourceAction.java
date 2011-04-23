@@ -16,14 +16,14 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  */
 public class TagSourceAction extends JosmAction {
-    private static final String TITLE = "Add Source Tag";
+    private static final String TITLE = tr("Add Source Tag");
     private String source;
     private Set<OsmPrimitive> selectionBuf = new HashSet<OsmPrimitive>();
     private boolean clickedTwice = false;
 
     public TagSourceAction() {
-        super(tr(TITLE), "dumbutils/sourcetag", tr("Add remembered source tag"),
-                Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", tr(TITLE)), KeyEvent.VK_S,
+        super(TITLE, "dumbutils/sourcetag", tr("Add remembered source tag"),
+                Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", TITLE), KeyEvent.VK_S,
                 Shortcut.GROUP_MENU, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
         source = Main.pref.get("sourcetag.value");
     }

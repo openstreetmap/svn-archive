@@ -16,11 +16,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  */
 public class PasteRelationsAction extends JosmAction {
-    private static final String TITLE = "Paste Relations";
+    private static final String TITLE = tr("Paste Relations");
 
     public PasteRelationsAction() {
-        super(tr(TITLE), "dumbutils/pasterelations", tr("Paste relation membership from objects in the buffer onto selected object(s)"),
-                Shortcut.registerShortcut("tools:pasterelations", tr("Tool: {0}", tr(TITLE)), KeyEvent.VK_V,
+        super(TITLE, "dumbutils/pasterelations", tr("Paste relation membership from objects in the buffer onto selected object(s)"),
+                Shortcut.registerShortcut("tools:pasterelations", tr("Tool: {0}", TITLE), KeyEvent.VK_V,
                 Shortcut.GROUP_MENU, KeyEvent.ALT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK), true);
     }
 
@@ -64,7 +64,7 @@ public class PasteRelationsAction extends JosmAction {
         }
 
         if( !commands.isEmpty() )
-            Main.main.undoRedo.add(new SequenceCommand(tr(TITLE), commands));
+            Main.main.undoRedo.add(new SequenceCommand(TITLE, commands));
     }
 
     @Override

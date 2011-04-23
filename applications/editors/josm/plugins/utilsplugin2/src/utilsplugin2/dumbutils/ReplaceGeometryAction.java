@@ -22,12 +22,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  */
 public class ReplaceGeometryAction extends JosmAction {
-    private static final String TITLE = "Replace Geometry";
+    private static final String TITLE = tr("Replace Geometry");
     private static final double MAX_NODE_REPLACEMENT_DISTANCE = 3e-4;
 
     public ReplaceGeometryAction() {
-        super(tr(TITLE), "dumbutils/replacegeometry", tr("Replace geometry of selected way with a new one"),
-                Shortcut.registerShortcut("tools:replacegeometry", tr("Tool: {0}", tr(TITLE)), KeyEvent.VK_G,
+        super(TITLE, "dumbutils/replacegeometry", tr("Replace geometry of selected way with a new one"),
+                Shortcut.registerShortcut("tools:replacegeometry", tr("Tool: {0}", TITLE), KeyEvent.VK_G,
                 Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT), true);
     }
 
@@ -38,7 +38,7 @@ public class ReplaceGeometryAction extends JosmAction {
         if( selection.size() != 2 ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("This tool replaces geometry of one way with another, and requires two ways to be selected."),
-                    tr(TITLE), JOptionPane.INFORMATION_MESSAGE);
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int idxNew = selection.get(0).isNew() ? 0 : 1;
@@ -47,7 +47,7 @@ public class ReplaceGeometryAction extends JosmAction {
         if( way.isNew() || !geometry.isNew() ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select one way that exists in the database and one new way with correct geometry."),
-                    tr(TITLE), JOptionPane.WARNING_MESSAGE);
+                    TITLE, JOptionPane.WARNING_MESSAGE);
             return;
         }
 

@@ -17,12 +17,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  */
 public class AlignWayNodesAction extends JosmAction {
-    private static final String TITLE = "Align Way Nodes";
+    private static final String TITLE = tr("Align Way Nodes");
     private static final double MOVE_THRESHOLD = 1e-9;
 
     public AlignWayNodesAction() {
-        super(tr(TITLE), "dumbutils/alignwaynodes", tr("Align nodes in a way"),
-                Shortcut.registerShortcut("tools:alignwaynodes", tr("Tool: {0}", tr(TITLE)), KeyEvent.VK_L, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+        super(TITLE, "dumbutils/alignwaynodes", tr("Align nodes in a way"),
+                Shortcut.registerShortcut("tools:alignwaynodes", tr("Tool: {0}", TITLE), KeyEvent.VK_L, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 
     public void actionPerformed( ActionEvent e ) {
@@ -34,7 +34,7 @@ public class AlignWayNodesAction extends JosmAction {
             return;
         Way way = ways.iterator().next();
         if( way.getNodesCount() < (way.isClosed() ? 4 : 3) ) {
-            JOptionPane.showMessageDialog(Main.parent, tr("The way with selected nodes can not be straightened."), tr(TITLE), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("The way with selected nodes can not be straightened."), TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -64,8 +64,8 @@ public class AlignWayNodesAction extends JosmAction {
         }
 
         if( nodes.size() < 3 ) {
-            JOptionPane.showMessageDialog(Main.parent, "Internal error: number of nodes is " + nodes.size(),
-                    tr(TITLE), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Internal error: number of nodes is {0}.", nodes.size()),
+                    TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -107,7 +107,7 @@ public class AlignWayNodesAction extends JosmAction {
         }
 
         if( !commands.isEmpty() )
-            Main.main.undoRedo.add(new SequenceCommand(tr(TITLE), commands));
+            Main.main.undoRedo.add(new SequenceCommand(TITLE, commands));
     }
 
     @Override

@@ -16,14 +16,14 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  */
 public class TagBufferAction extends JosmAction {
-    private static final String TITLE = "Copy tags from previous selection";
+    private static final String TITLE = tr("Copy tags from previous selection");
     private Map<String, String> tags = new HashMap<String, String>();
     private Map<String, String> currentTags = new HashMap<String, String>();
     private Set<OsmPrimitive> selectionBuf = new HashSet<OsmPrimitive>();
 
     public TagBufferAction() {
-        super(tr(TITLE), "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
-                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr(TITLE)), KeyEvent.VK_R,
+        super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
+                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", TITLE), KeyEvent.VK_R,
                 Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 
@@ -47,7 +47,7 @@ public class TagBufferAction extends JosmAction {
         }
         
         if( !commands.isEmpty() )
-            Main.main.undoRedo.add(new SequenceCommand(tr(TITLE), commands));
+            Main.main.undoRedo.add(new SequenceCommand(TITLE, commands));
     }
 
     @Override

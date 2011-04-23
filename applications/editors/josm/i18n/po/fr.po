@@ -5,15 +5,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2011-04-21 15:57+0000\n"
 "Last-Translator: Casiope <Unknown>\n"
 "Language-Team: Fr <>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:06+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:51+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 "X-Poedit-Language: French\n"
 
@@ -3161,8 +3162,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 "<b>timestamp:</b>... - recherche l’objet possédant l’horodatage indiqué "
 "(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> ou <b>T14:51</b> ...)"
@@ -5393,19 +5394,19 @@ msgstr "Chemins non connectés"
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr "Vérifier si un chemin a son dernier nœud près d’un autre chemin."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Fin d’un chemin près d’une autre route"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Fin d’un chemin près d’un autre chemin"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Nœud d’un chemin proche d’un autre chemin"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "nœud final d’un chemin à côté d’un autre chemin"
 
@@ -14510,8 +14511,8 @@ msgid ""
 "Maximum length (in meters) to draw lines for local files. Set to ''-1'' to "
 "draw all lines."
 msgstr ""
-"Longueur maximale en mètres pour dessiner les lignes des fichiers locaux (''-"
-"1'' pour dessiner toutes les lignes)."
+"Longueur maximale en mètres pour dessiner les lignes des fichiers locaux "
+"(''-1'' pour dessiner toutes les lignes)."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:117
 msgid "Maximum length for local files (meters)"
@@ -21446,8 +21447,8 @@ msgid ""
 "Maximum gray value to accept as water (based on Landsat IR-1 data). Can be "
 "in the range 0-255. Default 90."
 msgstr ""
-"Valeur de gris maximum définissant l’eau (basée sur les données Landsat IR-"
-"1). Cette valeur peut se situer entre 0 et 255 (90 par défaut)."
+"Valeur de gris maximum définissant l’eau (basée sur les données Landsat "
+"IR-1). Cette valeur peut se situer entre 0 et 255 (90 par défaut)."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid ""
@@ -23196,9 +23197,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Fonction de jonction des aires"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -45467,8 +45467,8 @@ msgstr ""
 #~ msgid ""
 #~ "Can''t undo command ''{0}'' because layer ''{1}'' is not present any more"
 #~ msgstr ""
-#~ "Impossible d’annuler la commande « {0} » parce que la couche « {1} » n’est "
-#~ "plus présente"
+#~ "Impossible d’annuler la commande « {0} » parce que la couche « {1} » "
+#~ "n’est plus présente"
 
 #~ msgid "A primitive with ID = 0 can't be invisible."
 #~ msgstr "Une primitive avec un ID égal à 0 ne peut pas être invisible."
@@ -46055,9 +46055,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Contenu d’aide pour sujet manquant</"
 #~ "p><p class=\"warning-body\">Un contenu d’aide pour le sujet <strong>{0}</"

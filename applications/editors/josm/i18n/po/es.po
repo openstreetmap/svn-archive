@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2011-04-22 13:00+0000\n"
 "Last-Translator: Emilio Gomez Fernandez <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:07+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:52+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -2420,8 +2421,8 @@ msgid ""
 "<html>The data to be uploaded participates in unresolved conflicts of layer "
 "''{0}''.<br>You have to resolve them first.</html>"
 msgstr ""
-"<html>Los datos a subir aparecen en conflictos no resueltos de la capa \"{0}"
-"\". <br>Debe resolverlos primero.</html>"
+"<html>Los datos a subir aparecen en conflictos no resueltos de la capa "
+"\"{0}\". <br>Debe resolverlos primero.</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:156
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:99
@@ -3165,8 +3166,8 @@ msgstr "<b>rol:</b>... - objecto con un rol dado en una relación"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 "<b>marca de tiempo («timestamp»):</b>... - objetos con esta marca de tiempo "
 "(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
@@ -5400,19 +5401,19 @@ msgstr ""
 "Este test comprueba si una vía tiene un nodo final demasiado cerca de otra "
 "vía."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Nodo de extremo de vía próxima a otra carretera"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Nodo de extremo de vía próximo a otro vial"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Nodo de vía próximo a otro vial"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Conectado nodo de extremo de vía próximo a otro vial"
 
@@ -9710,8 +9711,8 @@ msgid ""
 "Warning: unexpected value for preference ''{0}'', got ''{1}''. Resetting to "
 "default query."
 msgstr ""
-"Advertencia: hay un valor inesperado para la preferencia \"{0}\", era \"{1}"
-"\". De vuelta a la cadena de búsqueda predeterminada."
+"Advertencia: hay un valor inesperado para la preferencia \"{0}\", era "
+"\"{1}\". De vuelta a la cadena de búsqueda predeterminada."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:51
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:172
@@ -10058,8 +10059,8 @@ msgid ""
 "<br>How do you want to proceed with circular dependencies?</html>"
 msgstr ""
 "<html>Hay al menos un miembro en esta relación que se refiere <br>a si "
-"misma</br>Esto creará dependencias circulares, cosa que se desaconseja. "
-"<br>¿Desea continuar con dependencias circulares?</html>"
+"misma</br>Esto creará dependencias circulares, cosa que se desaconseja. <br>"
+"¿Desea continuar con dependencias circulares?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:608
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:609
@@ -12327,8 +12328,8 @@ msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
 "wish<br>to continue?</html>"
 msgstr ""
-"<html>Esta acción requiere {0} peticiones<br>individuales de descarga."
-"<br¿Desea continuar?</html>"
+"<html>Esta acción requiere {0} peticiones<br>individuales de descarga.<br"
+"¿Desea continuar?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:952
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:968
@@ -13932,8 +13933,8 @@ msgstr "Probando Llave de Acceso OAuth"
 #, java-format
 msgid "Retrieving user details with Access Token Key ''{0}'' was rejected."
 msgstr ""
-"Fue rechazada la descarga de detalles de usuario con la Llave de Acceso \"{0}"
-"\""
+"Fue rechazada la descarga de detalles de usuario con la Llave de Acceso "
+"\"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:120
 #, java-format
@@ -16412,8 +16413,8 @@ msgid ""
 "Warning: unexpected value for preference ''{0}'' found. Got ''{1}''. Will "
 "use no proxy."
 msgstr ""
-"Advertencia: valor inesperado para la preferencia \"{0}\". Se obtuvo \"{1}"
-"\". No se usará proxy"
+"Advertencia: valor inesperado para la preferencia \"{0}\". Se obtuvo "
+"\"{1}\". No se usará proxy"
 
 #: ../core/src/org/openstreetmap/josm/io/DefaultProxySelector.java:121
 #, java-format
@@ -17120,8 +17121,8 @@ msgid ""
 "minlat=''{1}'',maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''."
 msgstr ""
 "Hace falta atributos obligatorios en el elemento \"bounds\". Se obtuvo "
-"minlon=\"{0}\", minlat=\"{1}\", maxlon=\"{3}\", maxlat=\"{4}\", origin=\"{5}"
-"\""
+"minlon=\"{0}\", minlat=\"{1}\", maxlon=\"{3}\", maxlat=\"{4}\", origin="
+"\"{5}\""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:190
 #: ../plugins/reverter/src/reverter/corehacks/MultiOsmReader.java:201
@@ -17309,8 +17310,8 @@ msgstr ""
 msgid ""
 "Way with external ID ''{0}'' includes missing node with external ID ''{1}''."
 msgstr ""
-"La vía con ID externo \"{0}\" incluye un nodo faltante con ID externo \"{1}"
-"\"."
+"La vía con ID externo \"{0}\" incluye un nodo faltante con ID externo "
+"\"{1}\"."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:447
 #: ../plugins/reverter/src/reverter/corehacks/MultiOsmReader.java:452
@@ -17934,8 +17935,8 @@ msgstr "Elija para deshabilitar el plugin \"{0}\""
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
-"Sucedió una excepción imprevista. Pudo ser originada por el componente \"{0}"
-"\"."
+"Sucedió una excepción imprevista. Pudo ser originada por el componente "
+"\"{0}\"."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:913
 #, java-format
@@ -18228,9 +18229,9 @@ msgid ""
 "<br>Please launch the preferences dialog and retrieve another OAuth token.</"
 "html>"
 msgstr ""
-"<html>Falló la autenticación frente al servidor OSM con la llave OAuth \"{0}"
-"\".<br>Por favor lance el diálogo de preferencias y descargue otra llave "
-"OAuth.</html>"
+"<html>Falló la autenticación frente al servidor OSM con la llave OAuth "
+"\"{0}\".<br>Por favor lance el diálogo de preferencias y descargue otra "
+"llave OAuth.</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:136
 msgid ""
@@ -18257,10 +18258,10 @@ msgid ""
 "<br>Please launch the preferences dialog and retrieve another OAuth token.</"
 "html>"
 msgstr ""
-"<html>Falló la autorización frente al servidor OSM con la llave OAuth \"{0}"
-"\".<br>La llave no está autorizada para acceder al recurso protegido<br>\"{1}"
-"\".<br>Por favor lance el diálogo de preferencias y obtenga otra llave OAuth."
-"</html>"
+"<html>Falló la autorización frente al servidor OSM con la llave OAuth "
+"\"{0}\".<br>La llave no está autorizada para acceder al recurso protegido<br>"
+"\"{1}\".<br>Por favor lance el diálogo de preferencias y obtenga otra llave "
+"OAuth.</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:183
 #, java-format
@@ -18502,8 +18503,8 @@ msgid ""
 "because the shortcut is already taken by the action ''{3}'' ({4}).\n"
 "\n"
 msgstr ""
-"No se pudo establecer el atajo de teclado \"{0}\" para la acción \"{1}"
-"\" ({2})\n"
+"No se pudo establecer el atajo de teclado \"{0}\" para la acción "
+"\"{1}\" ({2})\n"
 "porque ese atajo está actualmente establecido para \"{3}\" ({4}).\n"
 "\n"
 
@@ -18570,9 +18571,9 @@ msgid ""
 "Failed to parse field ''{1}'' in preference with key ''{0}''. Exception was: "
 "{2}. Cannot restore window geometry from preferences."
 msgstr ""
-"Fallo al interpretar el campo \"{1}\" en la preferencia con la llave \"{0}"
-"\". La excepción fue: {2}. No se puede restaurar la geometría de la ventana "
-"a partir de las preferencias."
+"Fallo al interpretar el campo \"{1}\" en la preferencia con la llave "
+"\"{0}\". La excepción fue: {2}. No se puede restaurar la geometría de la "
+"ventana a partir de las preferencias."
 
 #: ../core/src/org/openstreetmap/josm/tools/WindowGeometry.java:122
 #, java-format
@@ -21505,8 +21506,8 @@ msgid ""
 "Maximum gray value to accept as water (based on Landsat IR-1 data). Can be "
 "in the range 0-255. Default 90."
 msgstr ""
-"Máximo valor de gris para ser aceptado como agua (basado en datos Landsat IR-"
-"1). Puede estar entre el rango 0-255. Por defecto 90."
+"Máximo valor de gris para ser aceptado como agua (basado en datos Landsat "
+"IR-1). Puede estar entre el rango 0-255. Por defecto 90."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid ""
@@ -23234,9 +23235,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Función para la fusión de áreas"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -45264,8 +45264,8 @@ msgstr ""
 #~ msgstr ""
 #~ "<html>La URL base<br>''{0}''<br>para esta capa WML no finaliza con un "
 #~ "''&'' ni con un ''?''.<br>Esto puede dar lugar a una solicitud WMS no "
-#~ "válida. Debes comprobar la<br>configuración de tus preferencias."
-#~ "<br>¿Quieres descargar las teselas WMS de todos modos?"
+#~ "válida. Debes comprobar la<br>configuración de tus preferencias.<br>"
+#~ "¿Quieres descargar las teselas WMS de todos modos?"
 
 #~ msgid ""
 #~ "There are unsaved changes in {0} layer. Discard the changes and continue?"
@@ -45472,8 +45472,8 @@ msgstr ""
 #~ "<html>Selection \"{0}\" is used by relation \"{1}\".<br>Delete from "
 #~ "relation?</html>"
 #~ msgstr ""
-#~ "<html>La selección \"{0}\" se utiliza en la relación \"{1}\"."
-#~ "<br>¿Eliminar de la relación?</html>"
+#~ "<html>La selección \"{0}\" se utiliza en la relación \"{1}\".<br>"
+#~ "¿Eliminar de la relación?</html>"
 
 #~ msgid ""
 #~ "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
@@ -45916,8 +45916,8 @@ msgstr ""
 #~ msgstr ""
 #~ "<html>La URL base<br>''{0}''<br>para esta capa WMS no finaliza con un "
 #~ "''&'' ni con un ''?''.<br>Esto puede dar lugar a una solicitud WMS no "
-#~ "válida. Debe comprobar la<br>configuración de sus preferencias."
-#~ "<br>¿Quiere descargar las teselas WMS de todos modos?"
+#~ "válida. Debe comprobar la<br>configuración de sus preferencias.<br>"
+#~ "¿Quiere descargar las teselas WMS de todos modos?"
 
 #~ msgid "Motorboat"
 #~ msgstr "Embarcación a motor"
@@ -46507,9 +46507,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">No existe contenido de ayuda para el "
 #~ "tema</p><p class=\"warning-body\">No está disponible todavía el contenido "

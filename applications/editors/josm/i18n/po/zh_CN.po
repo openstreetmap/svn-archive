@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2011-03-07 12:46+0000\n"
 "Last-Translator: mmyfl <Unknown>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:01+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:47+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3032,8 +3033,8 @@ msgstr "<b>role:</b>... - 在关系中指定角色的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 "<b>timestamp:</b>... - 有此时间戳记的对象 (<b>2009-11-12T14:51:09Z</b>, "
 "<b>2009-11-12</b > 或 <b>T14:51</b> ...)"
@@ -5162,19 +5163,19 @@ msgstr "未连接的路径。"
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr "这个测试会检查路径的结束点是否非常靠近其他的路径。"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "路径结束点靠近其他的公路"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "路径结束点靠近其他的路径"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "路径节点靠近其他的路径"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "已连接的路径结束点靠近其他的路径"
 
@@ -22128,9 +22129,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "连结区域功能"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -41037,8 +41037,8 @@ msgstr ""
 #~ msgstr "请输入查找字串。"
 
 #~ msgid ""
-#~ "<b>timestamp:</b>... - objects with this timestamp (<b>2009-11-"
-#~ "12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+#~ "<b>timestamp:</b>... - objects with this timestamp "
+#~ "(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 #~ msgstr ""
 #~ "<b>时间戳记：</b>... - 有此时间戳记的对象(<b>2009-11-12T14:51:09Z</b>，"
 #~ "<b>2009-11-12</b > 或 <b>T14:51</b> ...)"
@@ -41377,9 +41377,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">缺少帮助主题的内容</p><p class="
 #~ "\"warning-body\">帮助主题的内容<strong>{0}</strong>尚不能取得。不管是您当"
@@ -41661,8 +41661,8 @@ msgstr ""
 #~ msgstr "类型 double 的必要属性 \"{0}\" 有不合格的数值。得到 \"{1}\"。"
 
 #~ msgid ""
-#~ "Illegal value for mandatory attribute \"{0}\" of type boolean. Got \"{1}"
-#~ "\"."
+#~ "Illegal value for mandatory attribute \"{0}\" of type boolean. Got "
+#~ "\"{1}\"."
 #~ msgstr "类型 boolean 的必要属性 \"{0}\" 有不合格的数值。得到 \"{1}\"。"
 
 #~ msgid ""
@@ -41679,8 +41679,8 @@ msgstr ""
 #~ "\"{3}\",maxlat=\"{4}\", origin=\"{5}\"。"
 
 #~ msgid ""
-#~ "Way with external ID \"{0}\" includes missing node with external ID \"{1}"
-#~ "\"."
+#~ "Way with external ID \"{0}\" includes missing node with external ID "
+#~ "\"{1}\"."
 #~ msgstr "外部 ID \"{0}\" 的路径包含了缺少的外部 ID \"{1}\" 的节点。"
 
 #~ msgid ""
@@ -42197,9 +42197,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">缺少帮助主题的内容</p><p class="
 #~ "\"warning-body\">帮助主题的内容 <strong>{0}</strong> 尚不能取得。不管是您"
@@ -42597,9 +42597,9 @@ msgstr ""
 
 #~ msgid ""
 #~ "<html>Authorisation at the OSM server with the OAuth token \"{0}\" failed."
-#~ "<br>The token is not authorised to access the protected resource<br>\"{1}"
-#~ "\".<br>Please launch the preferences dialog and retrieve another OAuth "
-#~ "token.</html>"
+#~ "<br>The token is not authorised to access the protected resource<br>"
+#~ "\"{1}\".<br>Please launch the preferences dialog and retrieve another "
+#~ "OAuth token.</html>"
 #~ msgstr ""
 #~ "<html>以 OAuth 存取记号 \"{0}\" 验证 OSM 服务器失败。<br>这个记号未获授权"
 #~ "存取受保护的资源<br> \"{1}\"。<br>请执行首选项对话框并取回另一个 OAuth 存"
@@ -42658,8 +42658,8 @@ msgstr ""
 #~ "\"。"
 
 #~ msgid ""
-#~ "Warning: the preference with key \"{0}\" has an unsupported value \"{1}"
-#~ "\". Assuming the default value ''set-a''."
+#~ "Warning: the preference with key \"{0}\" has an unsupported value "
+#~ "\"{1}\". Assuming the default value ''set-a''."
 #~ msgstr ""
 #~ "警告：首选项键 \"{0}\" 有不支持的数值 \"{1}\"。推测预设数值应为 \"set-a"
 #~ "\"。"

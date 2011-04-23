@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-04-02 16:42+0000\n"
-"Last-Translator: Rafał <rrudzik@gmail.com>\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 17:48+0000\n"
+"Last-Translator: Paweł Marynowski <yarl@o2.pl>\n"
 "Language-Team: Polish <josm-lang-pl@googlegroups.com>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:52+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:29+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-Language: Polish\n"
@@ -2407,7 +2408,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ValidateAction.java:47
 #: ../core/src/org/openstreetmap/josm/actions/ValidateAction.java:48
 msgid "Validation"
-msgstr "Sprawdzanie poprawności"
+msgstr "Sprawdź"
 
 #: ../core/src/org/openstreetmap/josm/actions/ValidateAction.java:47
 msgid "Performs the data validation"
@@ -2901,6 +2902,9 @@ msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
 "Ctrl to rotate selected; Alt-Ctrl to scale selected; or change selection"
 msgstr ""
+"Przesuwaj obiekty przeciągając je; Shift, aby dodać do zaznaczenia (Ctrl, "
+"aby przełączać); Shift-Ctrl aby obracać zaznaczenie; Alt-Ctrl aby skalować "
+"zaznaczenie"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:45
@@ -2972,7 +2976,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:138
 msgid "Search string:"
-msgstr ""
+msgstr "Wyszukanie:"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:143
 msgid "Enter the search expression"
@@ -3099,8 +3103,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
@@ -5251,19 +5255,19 @@ msgstr "Niepołączone drogi."
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Węzeł końca drogi leżący blisko innej drogi (ulicy)"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Węzeł końca drogi leżący blisko innej drogi"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Węzeł drogi blisko innej drogi"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr ""
 
@@ -7389,7 +7393,7 @@ msgstr "Style rysowania map"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:87
 msgid "configure the map painting style"
-msgstr ""
+msgstr "Konfiguruje styl rysowania mapy"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:88
 msgid "MapPaint"
@@ -7706,7 +7710,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:91
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:92
 msgid "Validation results"
-msgstr ""
+msgstr "Sprawdzanie poprawności"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:91
 msgid "Open the validation window."
@@ -12798,7 +12802,7 @@ msgstr "Nie można utworzyć nowego znacznika dźwiękowego."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/WebMarker.java:43
 msgid "There was an error while trying to display the URL for this marker"
-msgstr ""
+msgstr "Wystąpił błąd podczas próby wyświetlenia adresu URL dla tego znacznika"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/WebMarker.java:44
 msgid "(URL was: "
@@ -12815,11 +12819,13 @@ msgstr "Błąd podczas wyświetlania adresu"
 msgid ""
 "Warning: failed to load Mappaint styles from ''{0}''. Exception was: {1}"
 msgstr ""
+"Ostrzeżenie: załadowanie stylu Mappaint z ''{0}'' nie powiodło się. Wyjątek: "
+"{1}"
 
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
 #, java-format
 msgid "loading style ''{0}''..."
-msgstr ""
+msgstr "wczytywanie stylu ''{0}''..."
 
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/StyleSource.java:98
 #, java-format
@@ -12858,17 +12864,17 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:68
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:234
 msgid "Access Token Key:"
-msgstr ""
+msgstr "Klucz dostępu:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AccessTokenInfoPanel.java:49
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:82
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:246
 msgid "Access Token Secret:"
-msgstr ""
+msgstr "Sekretny klucz dostępu:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AccessTokenInfoPanel.java:60
 msgid "Save Access Token in preferences"
-msgstr ""
+msgstr "Zapisz klucz dostępu w ustawieniach"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AccessTokenInfoPanel.java:62
 msgid ""
@@ -12878,58 +12884,60 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:49
 msgid "Use default settings"
-msgstr ""
+msgstr "Użyj domyślnych ustawień"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:56
 msgid "Consumer Key:"
-msgstr ""
+msgstr "Klucz odbiorcy:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:67
 msgid "Consumer Secret:"
-msgstr ""
+msgstr "Sekretny klucz odbiorcy:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:78
 msgid "Request Token URL:"
-msgstr ""
+msgstr "URL prośby klucza:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:89
 msgid "Access Token URL:"
-msgstr ""
+msgstr "URL dostępu klucza:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:101
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:236
 msgid "Authorize URL:"
-msgstr ""
+msgstr "URL autoryzacji:"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:125
 msgid "Click to reset the OAuth settings to default values"
-msgstr ""
+msgstr "Kliknij, aby zresetować ustawienia OAuth"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:131
 msgid "Click to abort resetting to the OAuth default values"
-msgstr ""
+msgstr "Kliknij, aby anulować resetowanie ustawień OAuth"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:138
 msgid ""
 "<html>JOSM is about to reset the OAuth settings to default values.<br>The "
 "current custom settings are not saved.</html>"
 msgstr ""
+"<html>JOSM zresetuje ustawienia OAuth.<br>Obecne ustawienia nie są zapisane."
+"</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:141
 msgid "Overwrite custom OAuth settings?"
-msgstr ""
+msgstr "Nadpisać ustawienia OAuth?"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AuthorizationProcedureComboBox.java:58
 msgid "Fully automatic"
-msgstr ""
+msgstr "Automatyczna"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AuthorizationProcedureComboBox.java:61
 msgid "Semi-automatic"
-msgstr ""
+msgstr "Półautomatyczna"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AuthorizationProcedureComboBox.java:64
 msgid "Manual"
-msgstr ""
+msgstr "Ręczna"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AuthorizationProcedureComboBox.java:73
 msgid ""
@@ -12961,11 +12969,15 @@ msgid ""
 "submitted to the OSM server <strong>only once</strong>. Subsequent data "
 "upload requests don't use your password any more."
 msgstr ""
+"Podaj swoją nazwę użytkownika oraz hasło. Hasło <strong>nie będzie</strong> "
+"zapisane jako zwykły tekst w ustawieniach JOSM i zostanie wysłane na serwer "
+"OSM <strong>tylko raz</strong>. Przy następnych przesyłaniach danych twoje "
+"hasło nie będzie już używane."
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:111
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticPropertiesPanel.java:40
 msgid "Username: "
-msgstr ""
+msgstr "Nazwa użytkownika: "
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:126
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticPropertiesPanel.java:54
@@ -12982,16 +12994,16 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:173
 msgid "Granted rights"
-msgstr ""
+msgstr "Przyznane uprawnienia"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:174
 msgid "Advanced OAuth properties"
-msgstr ""
+msgstr "Zaawansowane"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:234
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:361
 msgid "Accept Access Token"
-msgstr ""
+msgstr "Akceptuj"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:235
 #, java-format
@@ -13004,7 +13016,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:329
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:306
 msgid "Authorize now"
-msgstr ""
+msgstr "Autoryzuj"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:331
 msgid "Click to redirect you to the authorization form on the JOSM web site"
@@ -13885,7 +13897,7 @@ msgstr "Tylko na początku drogi."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
 msgid "Draw oneway arrows."
-msgstr ""
+msgstr "Rysuj strzałki dla ulic jednokierunkowych"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:56
 msgid "Draw segment order numbers"
@@ -13917,23 +13929,23 @@ msgstr "Rysuj tylko kontury obszarów"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
 msgid "Auto"
-msgstr ""
+msgstr "Automatycznie"
 
 #. gpx data field name
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
 msgctxt "gpx_field"
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #. gpx data field name
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 msgctxt "gpx_field"
 msgid "Desc(ription)"
-msgstr ""
+msgstr "Opis"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 msgid "Both"
-msgstr ""
+msgstr "Obie"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:73
 msgid ""
@@ -14276,7 +14288,7 @@ msgstr "Wyświetlaj ID obiektu na listach wyboru"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:40
 msgid "Show localized name in selection lists"
-msgstr ""
+msgstr "Wyświetlaj zlokalizowane nazwy na listach"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:41
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:93
@@ -14290,7 +14302,7 @@ msgstr ""
 #. Show localized names
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:89
 msgid "Show localized name in selection lists, if available"
-msgstr ""
+msgstr "Wyświetla zlokalizowane nazwy na listach, jeśli są dostępne"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:97
 msgid "Do not require to switch modes (potlatch style workflow)"
@@ -14365,7 +14377,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:244
 msgid "JOSM Internal Style"
-msgstr ""
+msgstr "Wewnętrzny styl JOSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:245
 msgid "Internal style to be used as base for runtime switchable overlay styles"
@@ -17092,8 +17104,8 @@ msgstr "Kliknij aby zablokować wtyczkę ''{0}''"
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
-"Wystąpił niespodziewany błąd, który mógł być spowodowany przez wtyczkę \"{0}"
-"\"."
+"Wystąpił niespodziewany błąd, który mógł być spowodowany przez wtyczkę "
+"\"{0}\"."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:913
 #, java-format
@@ -17468,6 +17480,9 @@ msgid ""
 "<html>The OSM server<br>''{0}''<br>reported an internal server error."
 "<br>This is most likely a temporary problem. Please try again later.</html>"
 msgstr ""
+"<html>Serwer OSM<br>''{0}''<br>zaraportował błąd wewnętrzny."
+"<br>Najprawdopodobniej jest to problem tymczasowy. Spróbuj ponownie później."
+"</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:397
 #, java-format
@@ -22064,9 +22079,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Funkcja łączenia obszarów"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -23188,7 +23202,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferenceEditor.java:96
 msgid "Configure the preferences for the turnrestrictions plugin"
-msgstr ""
+msgstr "Konfiguruje ustawienia wtyczki turnrestrictions"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferenceEditor.java:97
 msgid "Sponsor"
@@ -23233,6 +23247,8 @@ msgid ""
 "Please configure the <strong>keyboard shortcut</strong> which triggers "
 "creating/editing a turn restriction from the current JOSM selection."
 msgstr ""
+"Skonfiguruj <strong>skrót klawiaturowy</strong>, który uruchamia tworzenie/"
+"edycję ograniczeń skrętu."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:65
 msgctxt "keyboard-key"
@@ -42078,8 +42094,8 @@ msgstr ""
 #~ "for OSM primitive will probably fail. API base URL is: ''{0}''"
 #~ msgstr ""
 #~ "UWAGA: nieoczekiwany format bazowego URL API. Przekierowanie do "
-#~ "historycznej strony OSM prawdopodobnie zawiedzie. Bazowy URL API to: \"{0}"
-#~ "\""
+#~ "historycznej strony OSM prawdopodobnie zawiedzie. Bazowy URL API to: "
+#~ "\"{0}\""
 
 #~ msgid ""
 #~ "Current number of changes exceeds the max. number of changes, current is "

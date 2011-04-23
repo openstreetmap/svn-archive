@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2011-03-31 19:34+0000\n"
 "Last-Translator: Martin Öberg <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:43+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:32+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3133,11 +3134,11 @@ msgstr "<b>roll:</b>... - objekt med given roll i en relation"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>timestamp:</b>... - objekt med angiven tidsstämpel (<b>2006-11-"
-"12T14:51:09Z</b>, <b>2006-11-12</b> eller <b>T14:51</b> ...)"
+"<b>timestamp:</b>... - objekt med angiven tidsstämpel "
+"(<b>2006-11-12T14:51:09Z</b>, <b>2006-11-12</b> eller <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -5315,19 +5316,19 @@ msgstr ""
 "Detta kontrollerar om en sträcka har en slutnod som ligger mycket nära en "
 "annan sträcka."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Slutnod nära annan väg"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Slutnod nära annan sträcka"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Nod på sträcka nära annan sträcka"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Slutnod på sträcka nära annan sträcka"
 
@@ -22086,9 +22087,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Ytsammanslagningsfunktion"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"

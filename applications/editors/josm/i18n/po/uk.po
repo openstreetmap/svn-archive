@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-04-22 14:55+0000\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 16:53+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:07+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:32+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3183,11 +3184,11 @@ msgstr "<b>роль:</b>… — об’єкт із зазначеною ролл
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>timestamp:</b>… — об’єкт з цією часовою позначкою (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> або <b>T14:51</b> …)"
+"<b>timestamp:</b>… — об’єкт з цією часовою позначкою "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> або <b>T14:51</b> …)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -4839,9 +4840,9 @@ msgid ""
 "some 'name:*' attribute and not a composition of 'name:*' attributes, e.g., "
 "Italia - Italien - Italy."
 msgstr ""
-"Ця перевірка виявила багатомовні об’єкти теґ «name» у яких не дорівнює деяким "
-"атрибутам «name:*» чи не є частиною набору атрибутів «name:*», наприклад: "
-"Italia - Italien - Italy."
+"Ця перевірка виявила багатомовні об’єкти теґ «name» у яких не дорівнює "
+"деяким атрибутам «name:*» чи не є частиною набору атрибутів «name:*», "
+"наприклад: Italia - Italien - Italy."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:47
 msgid "A name:* translation is missing."
@@ -5410,19 +5411,19 @@ msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 "Цей тест перевіряє, чи має лінія кінцеву точку дуже близько до іншої лінії."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Кінцева точка лінії знаходиться біля іншої дороги"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Кінцева точка лінії знаходиться біля іншої лінії"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Точка лінії розташована біля іншої лінії"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Кінцева точка приєднаної лінії розташована близько до іншої лінії"
 
@@ -7541,8 +7542,8 @@ msgstr ""
 "51, 19 24 18</li><li>49 29, 19 24</li><li>E 49 29, N 19 24</li><li>49&deg; "
 "29; 19&deg; 24</li><li>N 49&deg; 29, W 19&deg; 24</li><li>49&deg; 29.5 S, "
 "19&deg; 24.6 E</li><li>N 49 29.918 E 19 15.88</li><li>49 29.4 19 24.5</"
-"li><li>-49 29.4 N -19 24.5 W</li><li>48&deg 42' 52.13\" N, 21&deg 11' 47.60"
-"\" E</li></ul>"
+"li><li>-49 29.4 N -19 24.5 W</li><li>48&deg 42' 52.13\" N, 21&deg 11' "
+"47.60\" E</li></ul>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:237
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:241
@@ -21448,8 +21449,8 @@ msgid ""
 "Maximum gray value to accept as water (based on Landsat IR-1 data). Can be "
 "in the range 0-255. Default 90."
 msgstr ""
-"Максимальне значення сірого, яке вважати водою (на основі даних Landsat IR-"
-"1). Може бути в діапазоні 0-255, початкове значення — 90."
+"Максимальне значення сірого, яке вважати водою (на основі даних Landsat "
+"IR-1). Може бути в діапазоні 0-255, початкове значення — 90."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid ""
@@ -23186,9 +23187,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Функція об’єднання ділянок"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -24852,16 +24852,16 @@ msgstr "Ще інструменти"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:24
 msgid "Align nodes in a way"
-msgstr ""
+msgstr "Розташувати точки у лінію"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:37
 msgid "The way with selected nodes can not be straightened."
-msgstr ""
+msgstr "Лінію із виділеними точками не можливо випрямити."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:22
 msgid ""
 "Paste relation membership from objects in the buffer onto selected object(s)"
-msgstr ""
+msgstr "Вставити членство об’єкта з буферу обміну у виділений(і) об’єкт(и)"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:29
 msgid "Replace geometry of selected way with a new one"
@@ -24894,7 +24894,7 @@ msgstr "Вставити теґи попередньо виділеного об
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:25
 msgid "Add remembered source tag"
-msgstr ""
+msgstr "Додати теґ source з попереднього об’єкта"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/AdjacentNodesAction.java:25
 msgid "Adjacent nodes"
@@ -27444,12 +27444,12 @@ msgstr "Глухий кут"
 #. item "Highways/Streets/Road Restrictions" label "Transport mode restrictions"
 #: build/trans_presets.java:434
 msgid "Transport mode restrictions"
-msgstr ""
+msgstr "Обмеження за типами транспорту"
 
 #. item "Highways/Streets/Road Restrictions" combo "General Access"
 #: build/trans_presets.java:435
 msgid "General Access"
-msgstr ""
+msgstr "Загальний доступ"
 
 #. item "Highways/Streets/Road Restrictions" combo "General Access" display value
 #. item "Highways/Streets/Road Restrictions" combo "Foot" display value
@@ -28140,18 +28140,18 @@ msgstr "Конем"
 #. item "Highways/Streets/Road Restrictions" label "Vehicles per type"
 #: build/trans_presets.java:438
 msgid "Vehicles per type"
-msgstr ""
+msgstr "Траспортні засоби"
 
 #. item "Highways/Streets/Road Restrictions" combo "All vehicles"
 #: build/trans_presets.java:439
 msgid "All vehicles"
-msgstr ""
+msgstr "Всі траспортні засоби"
 
 #. item "Highways/Streets/Road Restrictions" combo "Motor vehicles"
 #. item "Ways/Track" combo "Motor vehicles"
 #: build/trans_presets.java:441 build/trans_presets.java:532
 msgid "Motor vehicles"
-msgstr ""
+msgstr "Автомобілі"
 
 #. item "Highways/Streets/Road Restrictions" combo "Motorcycle"
 #. item "Ways/Track" combo "Motorcycle"
@@ -28200,7 +28200,7 @@ msgstr "Автомобіль"
 #. item "Highways/Streets/Road Restrictions" combo "Light Commercial Vehicles (goods)"
 #: build/trans_presets.java:444
 msgid "Light Commercial Vehicles (goods)"
-msgstr ""
+msgstr "Вантажівки до 3,5т"
 
 #. item "Highways/Streets/Road Restrictions" combo "Heavy Goods Vehicles (hgv)"
 #: build/trans_presets.java:445
@@ -28210,7 +28210,7 @@ msgstr "Вантажівка (більше 3.5т)"
 #. item "Highways/Streets/Road Restrictions" label "Vehicles per use"
 #: build/trans_presets.java:446
 msgid "Vehicles per use"
-msgstr ""
+msgstr "Транспортні засоби за призначенням"
 
 #. item "Highways/Streets/Road Restrictions" combo "Agricultural"
 #: build/trans_presets.java:447
@@ -28220,12 +28220,12 @@ msgstr "Сільхоз рух"
 #. item "Highways/Streets/Road Restrictions" combo "Emergency vehicles"
 #: build/trans_presets.java:448
 msgid "Emergency vehicles"
-msgstr ""
+msgstr "Спецавтомобілі"
 
 #. item "Highways/Streets/Road Restrictions" combo "High-occupancy vehicles (hov)"
 #: build/trans_presets.java:449
 msgid "High-occupancy vehicles (hov)"
-msgstr ""
+msgstr "Автомобілі з пасажирами"
 
 #. item "Highways/Streets/Road Restrictions" combo "Public Service Vehicles (psv)"
 #: build/trans_presets.java:450
@@ -28251,17 +28251,17 @@ msgstr "Макс. навантаження на вісь (тонн)"
 #. item "Highways/Streets/Road Restrictions" text "Max. height (meters)"
 #: build/trans_presets.java:455
 msgid "Max. height (meters)"
-msgstr ""
+msgstr "Макс. висота (м.)"
 
 #. item "Highways/Streets/Road Restrictions" text "Max. width (meters)"
 #: build/trans_presets.java:456
 msgid "Max. width (meters)"
-msgstr ""
+msgstr "Макс. ширина (м.)"
 
 #. item "Highways/Streets/Road Restrictions" text "Max. length (meters)"
 #: build/trans_presets.java:457
 msgid "Max. length (meters)"
-msgstr ""
+msgstr "Макс. довжина (м.)"
 
 #. <separator/>
 #. item "Highways/Streets/Roundabout"
@@ -28556,7 +28556,7 @@ msgstr "Шкала для МотоБайків"
 #. item "Ways/Track" combo "General access"
 #: build/trans_presets.java:531
 msgid "General access"
-msgstr ""
+msgstr "Загальний доступ"
 
 #. </optional>
 #. item "Ways/Path"
@@ -43016,9 +43016,9 @@ msgstr "Stevns (Данія)"
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Відсутній вміст розділу довідки</p><p "
 #~ "class=\"warning-body\">Вміст довідки для розділу довідки <strong>{0}</"

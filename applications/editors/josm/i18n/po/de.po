@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-04-22 19:47+0000\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 20:16+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: <de@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:42+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:31+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -1536,7 +1537,7 @@ msgstr "{0} verschieben"
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:58
 #, java-format
 msgid "Moves Objects {0}"
-msgstr "Verschiebt Objekte {0}"
+msgstr "Objekte {0} verschieben"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:113
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:235
@@ -1892,24 +1893,24 @@ msgstr "Die Datei ''{0}'' konnte nicht umbenannt werden"
 
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:54
 msgid "Reverse way"
-msgstr "Wegrichtung umkehren"
+msgstr "Linienrichtung umkehren"
 
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:67
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:68
 msgid "Reverse Ways"
-msgstr "Wegrichtung umkehren"
+msgstr "Linienrichtung umkehren"
 
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:67
 msgid "Reverse the direction of all selected ways."
-msgstr "Die Richtung aller gewählter Wege umkehren."
+msgstr "Die Richtung aller gewählter Linien umkehren."
 
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:82
 msgid "Please select at least one way."
-msgstr "Bitte mindestens einen Weg auswählen."
+msgstr "Bitte mindestens eine Linie auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:101
 msgid "Reverse ways"
-msgstr "Wegrichtung umkehren"
+msgstr "Linienrichtung umkehren"
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:28
@@ -2041,7 +2042,7 @@ msgstr "Schließen"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:39
 msgid "Simplify Way"
-msgstr "Weg vereinfachen"
+msgstr "Linie vereinfachen"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:39
 msgid "Delete unnecessary nodes from a way."
@@ -2083,7 +2084,7 @@ msgstr "Punkte außerhalb von Ladebereichen löschen?"
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:102
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:90
 msgid "Please select at least one way to simplify."
-msgstr "Bitte mindestens einen Weg zum Vereinfachen auswählen."
+msgstr "Bitte mindestens eine Linie zum Vereinfachen auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:619
@@ -2097,39 +2098,39 @@ msgstr "Ja"
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:114
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:95
 msgid "Simplify all selected ways"
-msgstr "Alle ausgewählten Wege vereinfachen"
+msgstr "Alle ausgewählten Linien vereinfachen"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:127
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:97
 #, java-format
 msgid ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
-msgstr "Die Auswahl enthält {0} Wege. Wollen Sie sie alle vereinfachen?"
+msgstr "Die Auswahl enthält {0} Linien. Wollen Sie sie alle vereinfachen?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:130
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:97
 msgid "Simplify ways?"
-msgstr "Wege vereinfachen?"
+msgstr "Linien vereinfachen?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:185
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:196
 #, java-format
 msgid "Simplify {0} way"
 msgid_plural "Simplify {0} ways"
-msgstr[0] "{0} Weg vereinfachen"
-msgstr[1] "{0} Wege vereinfachen"
+msgstr[0] "{0} Linie vereinfachen"
+msgstr[1] "{0} Linien vereinfachen"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:260
 #, java-format
 msgid "Simplify Way (remove {0} node)"
 msgid_plural "Simplify Way (remove {0} nodes)"
-msgstr[0] "Linie vereinfachen ({0} Knoten entfernen)"
-msgstr[1] "Linie vereinfachen ({0} Knoten entfernen)"
+msgstr[0] "Linie vereinfachen ({0} Punkt entfernen)"
+msgstr[1] "Linie vereinfachen ({0} Punkte entfernen)"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:80
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:81
 msgid "Split Way"
-msgstr "Weg aufspalten"
+msgstr "Linie aufspalten"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:80
 msgid "Split a way at the selected node."
@@ -2189,21 +2190,22 @@ msgid ""
 "<html>A role based relation membership was copied to all new ways.<br>You "
 "should verify this and correct it when necessary.</html>"
 msgstr ""
-"<html>Eine rollenbasierte Relations-Mitgliedschaft wurde in alle neuen Wege "
-"kopiert.<br>Sie sollten dies überprüfen und falls nötig korrigieren.</html>"
+"<html>Eine rollenbasierte Relations-Mitgliedschaft wurde in alle neuen "
+"Linien kopiert.<br>Sie sollten dies überprüfen und falls nötig korrigieren.</"
+"html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:449
 msgid ""
 "<html>A relation membership was copied to all new ways.<br>You should verify "
 "this and correct it when necessary.</html>"
 msgstr ""
-"<html>Alle neuen Wege wurden als Elemente in einer Relation eingefügt."
+"<html>Alle neuen Linien wurden als Elemente in einer Relation eingefügt."
 "<br>Sie sollten dies überprüfen und falls nötig korrigieren.</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:456
 #, java-format
 msgid "Split way {0} into {1} parts"
-msgstr "Weg {0} in {1} Teile teilen"
+msgstr "Linie {0} in {1} Teile teilen"
 
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:17
@@ -2222,7 +2224,7 @@ msgstr "Globale Einstellung \"{0}\" umschalten."
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:54
 msgid "UnGlue Ways"
-msgstr "Wege trennen"
+msgstr "Linien trennen"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:53
 msgid "Duplicate nodes that are used by multiple ways."
@@ -2727,7 +2729,7 @@ msgstr "({0}/{1}) Eltern des Punktes {2} laden"
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:223
 #, java-format
 msgid "({0}/{1}) Loading parents of way {2}"
-msgstr "({0}/{1}) Eltern des Wegs {2} laden"
+msgstr "({0}/{1}) Eltern der Linie {2} laden"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:224
 #, java-format
@@ -2846,7 +2848,7 @@ msgstr "Flächen erstellen"
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:116
 msgid "Move a segment along its normal, then release the mouse button."
 msgstr ""
-"Erst einen Wegabschnitt senkrecht zu seiner Richtung bewegen, dann den "
+"Erst einen Linienabschnitt senkrecht zu seiner Richtung bewegen, dann den "
 "Mausknopf loslassen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:118
@@ -2859,12 +2861,12 @@ msgid ""
 "Drag a way segment to make a rectangle. Ctrl-drag to move a segment along "
 "its normal."
 msgstr ""
-"Bewege einen Wegabschnitt, um ein Rechteck zu erstellen. <Strg>+Bewegen zum "
-"Verschieben des Wegabschnittes entlang seiner Senkrechten."
+"Bewege einen Linienabschnitt, um ein Rechteck zu erstellen. <Strg>+Bewegen "
+"zum Verschieben des Linienabschnittes entlang seiner Senkrechten."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:343
 msgid "Extrude Way"
-msgstr "Weg ausziehen"
+msgstr "Linie ausziehen"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/PlayHeadDragMode.java:29
 msgid "Drag play head"
@@ -3165,11 +3167,11 @@ msgstr "<b>role:</b>... - Objekt mit gegebener Rolle in einer Relation"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>timestamp:</b>... -  Objekte mit diesem Zeitstempel (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> oder <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  Objekte mit diesem Zeitstempel "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> oder <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -3505,7 +3507,7 @@ msgstr "Punkt {0} hinzufügen"
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:66
 #, java-format
 msgid "Add way {0}"
-msgstr "Weg {0} hinzufügen"
+msgstr "Linie {0} hinzufügen"
 
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:67
 #, java-format
@@ -3527,7 +3529,7 @@ msgstr "Punkt {0} verändern"
 #: ../core/src/org/openstreetmap/josm/command/ChangeCommand.java:56
 #, java-format
 msgid "Change way {0}"
-msgstr "Weg {0} verändern"
+msgstr "Linie {0} verändern"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeCommand.java:57
 #, java-format
@@ -3547,7 +3549,7 @@ msgstr "\"{0}\" vom Punkt \"{1}\" entfernen"
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:109
 #, java-format
 msgid "Remove \"{0}\" for way ''{1}''"
-msgstr "\"{0}\" vom Weg \"{1}\" entfernen"
+msgstr "\"{0}\" von Linie \"{1}\" entfernen"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:110
 #, java-format
@@ -3562,7 +3564,7 @@ msgstr "{0}={1} für Punkt \"{2}\" setzen"
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:116
 #, java-format
 msgid "Set {0}={1} for way ''{2}''"
-msgstr "{0}={1} für Weg \"{2}\" setzen"
+msgstr "{0}={1} für Linie \"{2}\" setzen"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:117
 #, java-format
@@ -3648,7 +3650,7 @@ msgstr "Punkt {0} löschen"
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:156
 #, java-format
 msgid "Delete way {0}"
-msgstr "Weg {0} löschen"
+msgstr "Linie {0} löschen"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:157
 #, java-format
@@ -3673,8 +3675,8 @@ msgstr[1] "{0} Punkte löschen"
 #, java-format
 msgid "Delete {0} way"
 msgid_plural "Delete {0} ways"
-msgstr[0] "{0} Weg löschen"
-msgstr[1] "{0} Wege löschen"
+msgstr[0] "{0} Linie löschen"
+msgstr[1] "{0} Linien löschen"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:177
 #, java-format
@@ -3730,7 +3732,7 @@ msgstr "Die ''Modifiziert''-Eigenschaft für den Punkt {0} setzen"
 #: ../core/src/org/openstreetmap/josm/command/ModifiedConflictResolveCommand.java:39
 #, java-format
 msgid "Set the ''modified'' flag for way {0}"
-msgstr "Die ''Modifiziert''-Eigenschaft für den Weg {0} setzen"
+msgstr "Die ''Modifiziert''-Eigenschaft für die Linie {0} setzen"
 
 #: ../core/src/org/openstreetmap/josm/command/ModifiedConflictResolveCommand.java:40
 #, java-format
@@ -3803,7 +3805,7 @@ msgstr "{0} Merkmalskonflikte im Punkt {1} auflösen"
 #: ../core/src/org/openstreetmap/josm/command/TagConflictResolveCommand.java:65
 #, java-format
 msgid "Resolve {0} tag conflicts in way {1}"
-msgstr "{0} Merkmalskonflikte im Weg {1} auflösen"
+msgstr "{0} Merkmalskonflikte in Linie {1} auflösen"
 
 #: ../core/src/org/openstreetmap/josm/command/TagConflictResolveCommand.java:66
 #, java-format
@@ -3832,7 +3834,7 @@ msgstr "Versionskonflikt für Punkt {0} auflösen"
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:39
 #, java-format
 msgid "Resolve version conflict for way {0}"
-msgstr "Versionskonflikt für Weg {0} auflösen"
+msgstr "Versionskonflikt für Linie {0} auflösen"
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:40
 #, java-format
@@ -3858,7 +3860,7 @@ msgid ""
 "When reversing this way, the following changes to properties of the way and "
 "its nodes are suggested in order to maintain data consistency."
 msgstr ""
-"Für das Umdrehen der Linie werden zum Erhalt der Datenintegrität folgende "
+"Für das Umkehren der Linie werden zum Erhalt der Datenintegrität folgende "
 "Eigenschaftsänderungen an der Linie und ihren Punkten vorgeschlagen."
 
 #: ../core/src/org/openstreetmap/josm/corrector/RoleCorrectionTableModel.java:26
@@ -4181,7 +4183,8 @@ msgstr ""
 #, java-format
 msgid "Missing merge target for way with id {0}"
 msgstr ""
-"Beim Zusammenführen wurde der Ziel-Weg für den Weg mit ID {0} nicht gefunden"
+"Beim Zusammenführen wurde die Ziel-Linie für die Linie mit ID {0} nicht "
+"gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:182
 #, java-format
@@ -4240,7 +4243,7 @@ msgstr "Jeder Punkt muss genau 2 Linien verbinden"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/MultipolygonCreate.java:195
 msgid "There is an intersection between ways."
-msgstr "Die Wege überschneiden sich."
+msgstr "Die Linien überschneiden sich."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:455
 #, java-format
@@ -4293,8 +4296,8 @@ msgstr[1] "Punkte"
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:64
 msgid "way"
 msgid_plural "ways"
-msgstr[0] "Weg"
-msgstr[1] "Wege"
+msgstr[0] "Linie"
+msgstr[1] "Linien"
 
 #. dark blue
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
@@ -4310,7 +4313,7 @@ msgstr[1] "Relationen"
 #. only for display, no real type
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:15
 msgid "closedway"
-msgstr "geschlossener Weg"
+msgstr "geschlossene Linie"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:16
 msgid "multipolygon"
@@ -4376,12 +4379,12 @@ msgstr "Punkt: Mit Merkmalen"
 #. teal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
 msgid "untagged way"
-msgstr "Weg ohne Merkmale"
+msgstr "Linie ohne Merkmale"
 
 #. dark green
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:26
 msgid "incomplete way"
-msgstr "Unvollständiger Weg"
+msgstr "Unvollständige Linie"
 
 #. darker blue
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:27
@@ -4627,7 +4630,7 @@ msgstr "Die Richtung einer Küstenlinie ist falsch"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:44
 msgid "Crossing ways."
-msgstr "Überschneidende Wege."
+msgstr "Überschneidende Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:45
 msgid ""
@@ -4643,7 +4646,7 @@ msgstr "Überschneidende Gebäude"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/CrossingWays.java:120
 msgid "Crossing ways"
-msgstr "Überschneidende Wege"
+msgstr "Überschneidende Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:108
 msgid "Duplicated nodes."
@@ -4738,27 +4741,27 @@ msgstr "Doppelte Relationen löschen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:88
 msgid "Duplicated ways."
-msgstr "Überlappende Wege."
+msgstr "Überlappende Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:89
 msgid ""
 "This test checks that there are no ways with same node coordinates and "
 "optionally also same tags."
 msgstr ""
-"Dieser Test prüft, dass keine Wege auf den selben Koordinaten liegen  "
+"Dieser Test prüft, dass keine Linien auf den selben Koordinaten liegen  "
 "optional auch  mit den gleichen Merkmalen."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:105
 msgid "Duplicated ways"
-msgstr "Überlappende Wege"
+msgstr "Überlappende Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:130
 msgid "Ways with same position"
-msgstr "Wege mit gleicher Position."
+msgstr "Linien mit gleicher Position."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateWay.java:225
 msgid "Delete duplicate ways"
-msgstr "Überlappende Wege löschen"
+msgstr "Überlappende Linien löschen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicatedWayNodes.java:23
 msgid "Duplicated way nodes."
@@ -4784,11 +4787,11 @@ msgstr "Dieser Test prüft, ob Multipolygone gültig sind"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:120
 msgid "Area style way is not closed"
-msgstr "Weg mit Flächenzeichenstil nicht geschlossen"
+msgstr "Linie mit Flächenzeichenstil nicht geschlossen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:137
 msgid "No outer way for multipolygon"
-msgstr "Kein äußerer Weg für Multipolygon"
+msgstr "Keine äußere Linie für Multipolygon"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:173
 msgid "No style for multipolygon"
@@ -4800,11 +4803,11 @@ msgstr "Kein Zeichenstil in Multipolygonrelation"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:193
 msgid "Style for inner way equals multipolygon"
-msgstr "Zeichenstil für inneren Weg mit Multipolygon identisch"
+msgstr "Zeichenstil für innere Linie mit Multipolygon identisch"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:210
 msgid "Style for outer way mismatches"
-msgstr "Zeichenstil für äußeren Weg unterschiedlich"
+msgstr "Zeichenstil für äußere Linie unterschiedlich"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:219
 msgid "Multipolygon is not closed"
@@ -4812,11 +4815,11 @@ msgstr "Multipolygon nicht geschlossen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:241
 msgid "Multipolygon inner way is outside"
-msgstr "Innenweg im Multipolygon ist außen"
+msgstr "Innenlinie im Multipolygon ist außen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:244
 msgid "Intersection between multipolygon ways"
-msgstr "Multipolygon-Wege schneiden sich"
+msgstr "Multipolygonlinien schneiden sich"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:255
 msgid "No useful role for multipolygon member"
@@ -4824,7 +4827,7 @@ msgstr "Keine sinnvolle Rolle für Multipolygon-Element"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:258
 msgid "Non-Way in multipolygon"
-msgstr "Nicht-Weg im Multipolygon"
+msgstr "Nicht-Linie im Multipolygon"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/NameMismatch.java:36
 msgid "Missing name:* translation."
@@ -4861,7 +4864,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:45
 msgid "Overlapping ways."
-msgstr "Überlappende Wege."
+msgstr "Überlappende Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:46
 msgid ""
@@ -4885,7 +4888,7 @@ msgstr "Überlappende Schienen (mit Fläche)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:112
 msgid "Overlapping ways (with area)"
-msgstr "Überlappende Wege (mit Fläche)"
+msgstr "Überlappende Linien (mit Fläche)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:117
 msgid "Overlapping highways"
@@ -4897,7 +4900,7 @@ msgstr "Überlappende Schienen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/OverlappingWays.java:123
 msgid "Overlapping ways"
-msgstr "Überlappende Wege"
+msgstr "Überlappende Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:40
 msgid "Relation checker :"
@@ -4961,7 +4964,7 @@ msgstr "Leere Rolle gefunden"
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SelfIntersectingWay.java:23
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SelfIntersectingWay.java:35
 msgid "Self-intersecting ways"
-msgstr "Wege, die sich selbst überschneiden"
+msgstr "Linien, die sich selbst überschneiden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SelfIntersectingWay.java:24
 msgid ""
@@ -4971,18 +4974,18 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SimilarNamedWays.java:41
 msgid "Similarly named ways."
-msgstr "Ähnlich benannte Wege."
+msgstr "Ähnlich benannte Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SimilarNamedWays.java:42
 msgid ""
 "This test checks for ways with similar names that may have been misspelled."
 msgstr ""
-"Dieser Test prüft auf ähnlich benannte Wege, was auf Schreibfehler hinweisen "
-"könnte."
+"Dieser Test prüft auf ähnlich benannte Linien, was auf Schreibfehler "
+"hinweisen könnte."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/SimilarNamedWays.java:85
 msgid "Similarly named ways"
-msgstr "Ähnlich benannte Wege"
+msgstr "Ähnlich benannte Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:152
 msgid "Properties checker :"
@@ -5259,51 +5262,51 @@ msgstr "Unbekannter Elementtyp"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:105
 msgid "More than one \"from\" way found"
-msgstr "Mehr als einen ''from''-Weg gefunden"
+msgstr "Mehr als eine Startlinie gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:108
 msgid "More than one \"to\" way found"
-msgstr "Mehr als einen ''to''-Weg gefunden"
+msgstr "Mehr als eine Ziellinie gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:111
 msgid "More than one \"via\" way found"
-msgstr "Mehr als einen ''via''-Weg gefunden"
+msgstr "Mehr als eine Zwischenlinie gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:115
 msgid "No \"from\" way found"
-msgstr "Kein ''from''-Weg gefunden"
+msgstr "Keine Startlinie gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:119
 msgid "No \"to\" way found"
-msgstr "Kein ''to''-Weg gefunden"
+msgstr "Keine Ziellinie gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:123
 msgid "No \"via\" node or way found"
-msgstr "Keine ''via''-Linie oder -Punkt gefunden"
+msgstr "Keine Zwischenlinie oder -punkt gefunden"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:132
 msgid "The \"from\" way does not start or end at a \"via\" node"
-msgstr "Die ''from'-Linie startet oder endet nicht am ''via''-Punkt"
+msgstr "Die Startlinie startet oder endet nicht am Zwischenpunkt"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:137
 msgid "The \"to\" way does not start or end at a \"via\" node"
-msgstr "Die ''to''-Linie startet oder endet nicht am ''via''-Punkt"
+msgstr "Die Ziellinie startet oder endet nicht am Zwischenpunkt"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:167
 msgid "The \"from\" way does not start or end at a \"via\" way."
-msgstr "Der ''from''-Weg startet oder endet nicht am ''via''-Weg"
+msgstr "Die Startlinie startet oder endet nicht an der Zwischenlinie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:172
 msgid "The \"to\" way does not start or end at a \"via\" way."
-msgstr "Der ''to''-Weg startet oder endet nicht am ''via''-Weg"
+msgstr "Die Ziellinie startet oder endet nicht an der Zwischenlinie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:32
 msgid "Unclosed Ways."
-msgstr "Nicht geschlossene Wege."
+msgstr "Nicht geschlossene Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:32
 msgid "This tests if ways which should be circular are closed."
-msgstr "Testen, ob kreisförmige Wege korrekt geschlossen sind."
+msgstr "Testen, ob kreisförmige Linien korrekt geschlossen sind."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:72
 #, java-format
@@ -5405,33 +5408,33 @@ msgstr "Fläche"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:128
 msgid "Unclosed way"
-msgstr "Nicht geschlossener Weg"
+msgstr "Nicht geschlossene Linie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:61
 msgid "Unconnected ways."
-msgstr "Unverbundene Wege."
+msgstr "Unverbundene Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:62
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
-"Dieser Test prüft, ob ein Weg einen Endpunkt in der Nähe eines anderen Weges "
-"hat."
+"Dieser Test prüft, ob eine Linie einen Endpunkt in der Nähe einer anderen "
+"Linie hat."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
-msgstr "Wegende nahe anderer Straße"
+msgstr "Linienende nahe anderer Straße"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
-msgstr "Wegende nahe anderem Weg"
+msgstr "Linienende nahe anderer Linie"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Linienpunkt nahe anderer Linie"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
-msgstr "Verbundenes Wegende nahe anderem Weg"
+msgstr "Verbundenes Linienende nahe anderer Linie"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedNode.java:39
 msgid "Untagged and unconnected nodes."
@@ -5492,7 +5495,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:88
 msgid "Unnamed ways"
-msgstr "Unbenannte Wege"
+msgstr "Unbenannte Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:90
 msgid "Unnamed junction"
@@ -5500,15 +5503,15 @@ msgstr "Unbenannte Kreuzung"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:98
 msgid "Untagged ways (commented)"
-msgstr "Weg ohne Merkmale (mit Kommentar)"
+msgstr "Linien ohne Merkmale (mit Kommentar)"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:100
 msgid "Untagged ways"
-msgstr "Wege ohne Merkmale"
+msgstr "Linien ohne Merkmale"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:105
 msgid "Empty ways"
-msgstr "Leere Wege"
+msgstr "Leere Linien"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UntaggedWay.java:107
 msgid "One node ways"
@@ -5516,7 +5519,7 @@ msgstr "Linien, die nur aus einem Punkt bestehen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/WronglyOrderedWays.java:31
 msgid "Wrongly Ordered Ways."
-msgstr "Falsch geordnete Wege."
+msgstr "Falsch geordnete Linien."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/WronglyOrderedWays.java:32
 msgid "This test checks the direction of water, land and coastline ways."
@@ -6116,15 +6119,15 @@ msgstr "Die geographische Breite an der Mausposition."
 
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:101
 msgid "The angle between the previous and the current way segment."
-msgstr "Der Winkel zwischen vorherigem und aktuellem Wegabschnitt."
+msgstr "Der Winkel zwischen vorherigem und aktuellem Linienabschnitt."
 
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:102
 msgid "The (compass) heading of the line segment being drawn."
-msgstr "Die (Kompass-)Richtung des zu zeichnenden Wegabschnittes."
+msgstr "Die (Kompass-)Richtung des zu zeichnenden Linienabschnittes."
 
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:103
 msgid "The length of the new way segment being drawn."
-msgstr "Die Länge des neu zu zeichnenden Wegabschnittes."
+msgstr "Die Länge des neu zu zeichnenden Linienabschnittes."
 
 #: ../core/src/org/openstreetmap/josm/gui/MapStatus.java:219
 msgid ""
@@ -6892,7 +6895,7 @@ msgstr "Konflikte beim Verbinden der Objekte"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:136
 #, java-format
 msgid "Conflicts when combining ways - combined way is ''{0}''"
-msgstr "Konflikte beim Verbinden der Wege. Verbundener Weg ist \"{0}\""
+msgstr "Konflikte beim Verbinden der Linien. Verbundene Linie ist \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:141
 #, java-format
@@ -6980,7 +6983,7 @@ msgstr "Merkmale von Punkten"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:50
 msgid "Tags from ways"
-msgstr "Merkmale von Wegen"
+msgstr "Merkmale von Linien"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:51
 msgid "Tags from relations"
@@ -7021,8 +7024,8 @@ msgstr[1] "{0} Merkmale"
 #, java-format
 msgid "{0} way"
 msgid_plural "{0} ways"
-msgstr[0] "{0} Weg"
-msgstr[1] "{0} Wege"
+msgstr[0] "{0} Linie"
+msgstr[1] "{0} Linien"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:462
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:815
@@ -7112,13 +7115,14 @@ msgid ""
 "ways that are members of the same relation: the combined way will take the "
 "place of the original way in the relation.</html>"
 msgstr ""
-"<html>Die Wege, die zusammengefasst werden sollen, sind Elemente einer oder "
-"mehrerer Relationen. Bitte entscheiden Sie, ob Sie diese Mitgliedschaften "
-"für den zusammengefassten Weg <strong>beibehalten</strong> oder "
-"<strong>auflösen</strong> möchten.<br>Standardmäßig wird die Mitgliedschaft "
-"des ersten Weges <strong>beibehalten</strong>, und die Mitgliedschaft der "
-"weiteren Wege wird <strong>aufgelöst</strong>. Der zusammengefasste Weg "
-"tritt in der Relation an die Stelle des ursprünglichen ersten Weges.</html>"
+"<html>Die Linien, die zusammengefasst werden sollen, sind Elemente einer "
+"oder mehrerer Relationen. Bitte entscheiden Sie, ob Sie diese "
+"Mitgliedschaften für die zusammengefasste Linie <strong>beibehalten</strong> "
+"oder <strong>auflösen</strong> möchten.<br>Standardmäßig wird die "
+"Mitgliedschaft der ersten Linie <strong>beibehalten</strong>, und die "
+"Mitgliedschaft der weiteren Linien wird <strong>aufgelöst</strong>. Die "
+"zusammengefasste Linie tritt in der Relation an die Stelle der "
+"ursprünglichen ersten Linie.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:133
 msgid ""
@@ -7144,7 +7148,7 @@ msgstr "Rolle zu allen Elementen hinzufügen."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolverColumnModel.java:51
 msgid "Orig. Way"
-msgstr "Orig. Weg"
+msgstr "Orig. Linie"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolverColumnModel.java:59
 msgid "Decision"
@@ -7781,7 +7785,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:434
 msgid "Set the current selection to the list of selected relations"
-msgstr "Ersetze die aktuelle Auswahl durch die ausgewählten Relationen"
+msgstr "Die aktuelle Auswahl durch die ausgewählten Relationen ersetzen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:461
 msgid "Select the members of all selected relations"
@@ -10430,21 +10434,21 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/WayConnectionType.java:79
 msgid "way is connected"
-msgstr "Weg ist verbunden"
+msgstr "Linie ist verbunden"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/WayConnectionType.java:81
 msgid "way is connected to previous relation member"
-msgstr "Der Weg ist zum vorangehenden"
+msgstr "Die Linie ist mit dem vorhergehendem Element verbunden"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/WayConnectionType.java:83
 msgid "way is connected to next relation member"
-msgstr "Der Weg ist mit dem nächsten Element der Relation verbunden."
+msgstr "Die Linie ist mit dem nächsten Element verbunden"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/WayConnectionType.java:85
 msgid "way is not connected to previous or next relation member"
 msgstr ""
-"Der Weg ist weder mit dem vorangehenden, noch mit dem nachfolgenden Element "
-"der Relation verbunden"
+"Die Linie ist weder mit dem vorhergehenden, noch mit dem nächsten Element "
+"verbunden"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:110
 msgid "Bookmarks"
@@ -10880,7 +10884,7 @@ msgstr "Versionsprotokoll für Punkt {0}"
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:49
 #, java-format
 msgid "History for way {0}"
-msgstr "Versionsprotokoll für Weg {0}"
+msgstr "Versionsprotokoll für Linie {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:50
 #, java-format
@@ -10940,7 +10944,7 @@ msgstr "Versionsprotokoll für Punkt {0} laden"
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryLoadTask.java:187
 #, java-format
 msgid "Loading history for way {0}"
-msgstr "Versionsprotokoll für Weg {0} laden"
+msgstr "Versionsprotokoll für Linie {0} laden"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryLoadTask.java:188
 #, java-format
@@ -10968,7 +10972,7 @@ msgstr "Browser mit dem Versionsprotokoll dieses Punktes öffnen"
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberListTableCellRenderer.java:78
 #, java-format
 msgid "Way {0}"
-msgstr "Weg {0}"
+msgstr "Linie {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberListTableCellRenderer.java:79
 #, java-format
@@ -11069,7 +11073,7 @@ msgstr "Nur Punkte {0} synchronisieren"
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:95
 #, java-format
 msgid "Synchronize way {0} only"
-msgstr "Nur Weg {0} synchronisieren"
+msgstr "Nur Linie {0} synchronisieren"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:96
 #, java-format
@@ -11696,7 +11700,7 @@ msgstr "Initialisiere Punkte zum Aktualisieren ..."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UpdatePrimitivesTask.java:123
 msgid "Initializing ways to update ..."
-msgstr "Initialisiere Wege zum Aktualisieren ..."
+msgstr "Linien zum Aktualisieren initialisieren..."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UpdatePrimitivesTask.java:132
 msgid "Initializing relations to update ..."
@@ -12327,17 +12331,17 @@ msgstr "Herunterladen nahe bei:"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:717
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "track only"
-msgstr "nur Weg"
+msgstr "Nur GPS-Spur"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:717
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "waypoints only"
-msgstr "nur Wegpunkte"
+msgstr "Nur Wegpunkte"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:717
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "track and waypoints"
-msgstr "Weg und Wegpunkte"
+msgstr "GPS-Spur und Wegpunkte"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:843
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:214
@@ -13971,9 +13975,9 @@ msgid ""
 "at ''{1}''.<br>You are accessing the OSM server as user ''{2}'' with id "
 "''{3}''.</html>"
 msgstr ""
-"<html>Zugriffskennung \"{0}\" erfolgreich für den Zugang zum OSM-Server \"{1}"
-"\" eingesetzt.<br>Sie greifen als Benutzer \"{2}\" mit der ID \",{3}\" auf "
-"den OSM-Server zu.</html>"
+"<html>Zugriffskennung \"{0}\" erfolgreich für den Zugang zum OSM-Server "
+"\"{1}\" eingesetzt.<br>Sie greifen als Benutzer \"{2}\" mit der ID \",{3}\" "
+"auf den OSM-Server zu.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:154
 msgid "Success"
@@ -14037,8 +14041,8 @@ msgid ""
 "<html>Failed to sign the request for the OSM server ''{0}'' with the token "
 "''{1}''.<br>The token ist probably invalid.</html>"
 msgstr ""
-"<html>Signieren der Anfrage an den OSM-Server \"{0}\" mit der Kennung \"{1}"
-"\" fehlgeschlagen.<br>Die Kennung ist wahrscheinlich ungültig.<html>"
+"<html>Signieren der Anfrage an den OSM-Server \"{0}\" mit der Kennung "
+"\"{1}\" fehlgeschlagen.<br>Die Kennung ist wahrscheinlich ungültig.<html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:235
 msgid ""
@@ -14514,7 +14518,7 @@ msgstr "Schnelles Zeichnen (schlechtere Qualität)"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:54
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:241
 msgid "Only on the head of a way."
-msgstr "Nur am Ende des Weges"
+msgstr "Nur am Ende der Linie"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
 msgid "Draw oneway arrows."
@@ -14682,7 +14686,7 @@ msgstr "GPS-Punkte"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:236
 msgid "Draw direction hints for way segments."
-msgstr "Richtungspfeile für Wegabschnitte zeichnen."
+msgstr "Richtungspfeile für Linienabschnitte zeichnen."
 
 #. draw oneway arrows
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:247
@@ -14694,7 +14698,7 @@ msgstr ""
 #. segment order number
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:252
 msgid "Draw the order numbers of all segments within their way."
-msgstr "Ordnungsnummer für alle Abschnitte innerhalb des Weges anzeigen."
+msgstr "Ordnungsnummer für alle Abschnitte innerhalb der Linie anzeigen."
 
 #. antialiasing
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:257
@@ -16145,8 +16149,8 @@ msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in ''display_values'' "
 "must be the same as in ''values''"
 msgstr ""
-"Kaputte Voreinstellung der Kennzeichnung \"{0}-{1}\" - Anzahl der Datenworte "
-"in ''display_values'' und in ''values'' müssen gleich sein"
+"Defekte Objektvorlage \"{0}-{1}\" - Anzahl der Datenworte in "
+"''display_values'' und in ''values'' müssen gleich sein"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:458
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:734
@@ -16155,8 +16159,8 @@ msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in "
 "''short_descriptions'' must be the same as in ''values''"
 msgstr ""
-"Kaputte Voreinstellung der Kennzeichnung \"{0}-{1}\" - Anzahl der Datenworte "
-"in ''short_descriptions'' und in ''values'' müssen gleich sein"
+"Defekte Objektvorlage \"{0}-{1}\" - Anzahl der Datenworte in "
+"''short_descriptions'' und in ''values'' müssen gleich sein"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:937
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:314
@@ -16685,7 +16689,7 @@ msgstr "Punkt mit der ID {0} von \"{1}\" abrufen"
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:361
 #, java-format
 msgid "Fetching way with id {0} from ''{1}''"
-msgstr "Weg mit der ID {0} von \"{1}\" abrufen"
+msgstr "Linie mit der ID {0} von \"{1}\" abrufen"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:362
 #, java-format
@@ -16705,7 +16709,7 @@ msgstr "Mehrere Punkte von \"{0}\" abrufen"
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:411
 #, java-format
 msgid "Fetching a package of ways from ''{0}''"
-msgstr "Mehrere Wege von \"{0}\" abrufen"
+msgstr "Mehrere Linien von \"{0}\" abrufen"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:412
 #, java-format
@@ -17163,7 +17167,7 @@ msgstr "Das XML-Element <nd> ist kein unmittelbares Kindelement von <way>."
 #: ../plugins/reverter/src/reverter/corehacks/MultiOsmReader.java:206
 #, java-format
 msgid "Missing mandatory attribute ''{0}'' on <nd> of way {1}."
-msgstr "Fehlendes obligatorisches Attribut \"{0}\" auf <nd> des Wegs {1}"
+msgstr "Fehlendes obligatorisches Attribut \"{0}\" auf <nd> der Linie {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:201
 #: ../plugins/CommandLine/src/CommandLine/OsmToCmd.java:153
@@ -17397,7 +17401,7 @@ msgstr "Vom OSM-Server laden..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerBackreferenceReader.java:142
 msgid "Downloading referring ways ..."
-msgstr "Lade referenzierende Wege herunter..."
+msgstr "Lade referenzierende Linien herunter..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerBackreferenceReader.java:180
 msgid "Downloading referring relations ..."
@@ -17506,7 +17510,7 @@ msgstr "{0}% ({1}/{2}), {3} verbleiben. Punkt ''{4}'' (id: {5}) hochladen"
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:89
 #, java-format
 msgid "{0}% ({1}/{2}), {3} left. Uploading way ''{4}'' (id: {5})"
-msgstr "{0}% ({1}/{2}), {3} verbleiben. Weg ''{4}'' (id: {5}) hochladen"
+msgstr "{0}% ({1}/{2}), {3} verbleiben. Linie ''{4}'' (id: {5}) hochladen"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:90
 #, java-format
@@ -18719,7 +18723,7 @@ msgstr "Punkte"
 
 #: ../plugins/CommandLine/src/CommandLine/Parameter.java:55
 msgid "ways"
-msgstr "Wege"
+msgstr "Linien"
 
 #: ../plugins/CommandLine/src/CommandLine/Parameter.java:58
 msgid "relations"
@@ -18736,7 +18740,7 @@ msgstr "Kann nicht außerhalb der Welt zeichnen."
 
 #: ../plugins/Create_grid_of_ways/src/CreateGridOfWaysPlugin/CreateGridOfWaysAction.java:34
 msgid "Create grid of ways"
-msgstr "Wegegitter erstellen"
+msgstr "Liniengitter erstellen"
 
 #: ../plugins/Create_grid_of_ways/src/CreateGridOfWaysPlugin/CreateGridOfWaysAction.java:34
 msgid ""
@@ -18756,7 +18760,7 @@ msgstr "Zwei Linien mit maximal einem gemeinsamen Punkt wählen"
 
 #: ../plugins/Create_grid_of_ways/src/CreateGridOfWaysPlugin/CreateGridOfWaysAction.java:104
 msgid "Create a grid of ways"
-msgstr "Ein Wegegitter erstellen."
+msgstr "Ein Liniengitter erstellen."
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:48
 msgid "Download Track ..."
@@ -19369,7 +19373,7 @@ msgstr "Genauigkeit:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:238
 msgid "Convert way to individual house numbers."
-msgstr "Weg in einzelne Hausnummern umwandeln."
+msgstr "Linie in einzelne Hausnummern umwandeln."
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:308
 #, java-format
@@ -19403,13 +19407,13 @@ msgstr "Optionale Adressinformationen:"
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:684
 msgid "Please select a street to associate with address interpolation way"
 msgstr ""
-"Wählen Sie bitte eine Straße, die mit dem Weg zur Adressinterpolation "
+"Wählen Sie bitte eine Straße, die mit der Linie zur Adressinterpolation "
 "verknüpft werden soll"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:697
 msgid "Please select address interpolation way for this street"
 msgstr ""
-"Wählen Sie bitte einen Weg zur Adressinterpolation, der mit dieser Straße "
+"Wählen Sie bitte eine Linie zur Adressinterpolation, der mit dieser Straße "
 "verknüpft werden soll"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1085
@@ -19458,20 +19462,20 @@ msgstr "Die Startnummer muss kleiner als die Endnummer sein."
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:32
 msgid "Align Way Segments"
-msgstr "Wegsegmente ausrichten"
+msgstr "Linienabschnitte ausrichten"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:33
 msgid ""
 "Makes a pair of selected way segments parallel by rotating one of them "
 "around a chosen pivot."
 msgstr ""
-"Macht ein Paar ausgewählter Wege durch Drehen eines Weges um einen gewählten "
-"Angelpunkt parallel."
+"Macht ein Paar ausgewählter Linien durch Drehen einer Linie um einen "
+"gewählten Angelpunkt parallel."
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:36
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysMode.java:42
 msgid "Align Ways"
-msgstr "Wege ausrichten"
+msgstr "Linien ausrichten"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:76
 msgid ""
@@ -19484,7 +19488,7 @@ msgstr ""
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:78
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:89
 msgid "AlignWayS: Alignment not possible"
-msgstr "Wege ausrichten: Ausrichten nicht möglich"
+msgstr "Linien ausrichten: Ausrichten nicht möglich"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysAction.java:88
 msgid "Aligning would result nodes outside the world.\n"
@@ -19500,15 +19504,15 @@ msgstr "Bereit!"
 #. Take Main.map as frame as it's better to inherit its icon than the default Java cup
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysMode.java:173
 msgid "AlignWays Tips"
-msgstr "Tipps zum Wegausrichten"
+msgstr "Tipps zum Linienausrichten"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysPlugin.java:32
 msgid "Align Ways mode"
-msgstr "Wegausrichten-Modus"
+msgstr "Linenausrichten-Modus"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysRotateCommand.java:173
 msgid "Align way segment"
-msgstr "Wegsegment ausrichten"
+msgstr "Linienabschnitt ausrichten"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysSegment.java:38
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysSegment.java:41
@@ -19527,7 +19531,7 @@ msgstr ""
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysSegmentMgr.java:73
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysSegmentMgr.java:111
 msgid "AlignWayS message"
-msgstr "Wege ausrichten: Nachricht"
+msgstr "Linien ausrichten: Nachricht"
 
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysSegmentMgr.java:109
 msgid ""
@@ -19557,11 +19561,11 @@ msgstr ""
 "italic;\">\n"
 "<span style=\"font-size: large;\">Willkommen beim</span><br>\n"
 "<span style=\"font-size: xx-large;\">AlignWay<span style=\"color: rgb(204, "
-"85, 0);\">S</span>-Plugin (Wegausrichten-Plugin)<br>\n"
+"85, 0);\">S</span>-Plugin (Linienausrichten-Plugin)<br>\n"
 "</span><span style=\"font-size: medium;\"><br>\n"
 "...oder bessergesagt sollte es <br>\n"
 "<span style=\"font-size: large;\">AlignWayS(egments)</span>-Plugin "
-"(Wegsegmenteausrichten-Plugin) genannt werden...</span>\n"
+"(Linienabschnittausrichten-Plugin) genannt werden...</span>\n"
 "</div>\n"
 "</html>"
 
@@ -19580,8 +19584,9 @@ msgid ""
 msgstr ""
 "<html>\n"
 "<p style=\"font-family: sans-serif; font-weight: bold;\">AlignWays hilft\n"
-"beim Ausrichten zweier Wegsegmente. Dies ist z.B. beim Zeichnen von\n"
-"Gebäuden, welche parallel zu Straßen oder Wegen sein sollen, hilfreich.<br>\n"
+"beim Ausrichten zweier Linienabschnitte. Dies ist z.B. beim Zeichnen von\n"
+"Gebäuden, welche parallel zu Straßen oder Linien sein sollen, hilfreich."
+"<br>\n"
 "<br>\n"
 "Einige Tipps können zu Anfang hilfreich sein:\n"
 "</p>\n"
@@ -19666,9 +19671,10 @@ msgstr ""
 "<div style=\"font-family:sans-serif\">\n"
 "<ul>\n"
 "  <li>Optional kann der <b>Rotationspunkt geändert werden</b>. Zum "
-"Ausrichten des Segmentes parallel zum Referenzsegment, wird um diesen Punkt "
-"gedreht. Die Wegendpunkte oder das Segmentzentrum können durch <b><i><span "
-"style=\"color:green\">Klicken</span></i></b> in Punktnähe gewählt werden. \n"
+"Ausrichten des Abschnittes parallel zum Referenzabschnitt, wird um diesen "
+"Punkt gedreht. Die Linienendpunkte oder das Abschnittszentrum können durch "
+"<b><i><span style=\"color:green\">Klicken</span></i></b> in Punktnähe "
+"gewählt werden. \n"
 "  </li>\n"
 "</ul>\n"
 "</div>\n"
@@ -20690,7 +20696,7 @@ msgstr ""
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:153
 msgid "Drag/drop: drag the way segment an drop it on a target segment"
 msgstr ""
-"Ziehen/Ablegen: Ziehen Sie das Wegsegment, um es auf dem Zielsegment "
+"Ziehen/Ablegen: Ziehen Sie den Linienabschnitt, um ihn auf dem Zielabschnitt "
 "abzulegen"
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:159
@@ -20709,7 +20715,7 @@ msgstr "Lick-Klick: Node auswählen"
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:213
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:221
 msgid "Drag the way segment and drop it on a target segment"
-msgstr "Ziehen Sie das Wegsegment, um es auf dem Zielsegment abzulegen"
+msgstr "Ziehen Sie den Linienabschnitt, um ihn auf dem Zielabschnitt abzulegen"
 
 #: ../plugins/contourmerge/src/org/openstreetmap/josm/plugins/contourmerge/ContourMergeMode.java:229
 msgid "Drop to align to the the target segment"
@@ -20731,7 +20737,7 @@ msgstr "Fläche aufspalten"
 
 #: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:42
 msgid "Splits an area by an untagged way."
-msgstr "Gebiet mittels eines Wegs ohne Merkmale aufteilen"
+msgstr "Gebiet mittels einer Linie ohne Merkmale aufteilen"
 
 #: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:78
 msgid ""
@@ -20773,7 +20779,7 @@ msgstr "Herunterladen entlang..."
 
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:56
 msgid "Download OSM data along the selected ways."
-msgstr "OSM-Daten entlang der ausgewählten Wege herunterladen."
+msgstr "OSM-Daten entlang der ausgewählten Linien herunterladen."
 
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:58
 msgid "Download Along"
@@ -20782,7 +20788,8 @@ msgstr "Herunterladen entlang"
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:74
 msgid "Please select 1 or more ways to download along"
 msgstr ""
-"Bitte 1 oder mehr Wege auswählen entlang welchen der Download erfolgen soll"
+"Bitte 1 oder mehr Linien auswählen entlang welchen das Herunterladen "
+"erfolgen soll"
 
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:167
 #, java-format
@@ -20821,12 +20828,12 @@ msgstr "GPS-Spuren ändern"
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:242
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:287
 msgid "Import path from GPX layer"
-msgstr "Weg aus GPX-Ebene importieren"
+msgstr "Linie aus GPX-Ebene importieren"
 
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/GPXLayerImportAction.java:86
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:277
 msgid "Drop existing path"
-msgstr "Existierenden Weg verwerfen"
+msgstr "Existierende Linie verwerfen"
 
 #. no gps layer
 #. TODO: register a listener and show menu entry only if gps layers are available
@@ -21204,7 +21211,7 @@ msgid ""
 "Resulting layer is to be saved as .osm and sent to Komzpa (me@komzpa.net) "
 "with [irs rectify] in subject."
 msgstr ""
-"Diese Option erzeugt eine IRS-Ausrichtungsebene und einen kleinen Weg "
+"Diese Option erzeugt eine IRS-Ausrichtungsebene und eine kleine Linie "
 "innerhalb. Zuerst muss die WMS-Ebene ausgerichtet werden. Die Ergebnisebene "
 "muss als .osm gespeichert und an Kompza (me@komzpa.net) mit [irs rectify] im "
 "Betreff gesendet werden."
@@ -21232,7 +21239,7 @@ msgstr "Wandle OSM-Daten in einen Channel-Digraphen um"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:110
 msgid "filtering ways"
-msgstr "Wege filtern"
+msgstr "Linien filtern"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/DigraphCreationTask.java:119
 msgid "creating Channel-Digraph"
@@ -21341,7 +21348,7 @@ msgstr ""
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckTask.java:59
 #, java-format
 msgid "The marked channels are a {0}-ways junction"
-msgstr "Die markierten Channels sind eine {0}-Wege-Kreuzung"
+msgstr "Die markierten Kanäle sind eine {0}-Linien-Kreuzung"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckTask.java:69
 msgid "The marked channels are not a junction:"
@@ -21353,7 +21360,7 @@ msgstr "Erzeuge Channel-Digraph und suche nach Kreuzungen"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionSearchTask.java:55
 msgid "Number of {0]-ways junctions found: "
-msgstr "Anzahl der gefundenen {0}-Wege-Kreuzungen: "
+msgstr "Anzahl der gefundenen {0}-Linien-Kreuzungen: "
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/junctionchecking/JMinimality.java:83
 msgid "generate all combinations from entrie/exit candidates"
@@ -21465,7 +21472,7 @@ msgstr "Land"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:42
 msgid "Maximum number of segments per way"
-msgstr "Maximale Anzahl von Abschnitten je Weg"
+msgstr "Maximale Anzahl von Abschnitten je Linie"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:44
 msgid "Maximum number of nodes in initial trace"
@@ -21501,7 +21508,7 @@ msgstr "Richtung, in der nach Land gesucht werden soll"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:60
 msgid "Tag ways as"
-msgstr "Wege bezeichnen als"
+msgstr "Linien bezeichnen als"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:62
 msgid "WMS Layer"
@@ -21522,7 +21529,7 @@ msgstr "Datenquelle"
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:71
 msgid "Maximum number of segments allowed in each generated way. Default 250."
 msgstr ""
-"Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
+"Maximale Anzahl von Abschnitten in jeder generierten Linie. Standard ist 250."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:72
 msgid ""
@@ -21575,7 +21582,7 @@ msgstr "Richtung in der nach Land gesucht werden soll. Standardmäßig Ost."
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:80
 msgid "Tag ways as water, coastline, land or nothing. Default is water."
 msgstr ""
-"Wege als Wasser, Küstenlinie, Land oder nichts bezeichnen. Standard ist "
+"Linien als Wasser, Küstenlinie, Land oder nichts bezeichnen. Standard ist "
 "Wasser."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:81
@@ -21648,7 +21655,7 @@ msgstr "Status"
 
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:52
 msgid "Way Info"
-msgstr "Weginfo"
+msgstr "Linieninfo"
 
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:58
 msgid "Speed"
@@ -21718,11 +21725,11 @@ msgstr "Fenster mit den Messungen öffnen."
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:73
 msgid "Reset current measurement results and delete measurement path."
-msgstr "Aktuelle Messungen zurücksetzen und Messweg löschen."
+msgstr "Aktuelle Messungen zurücksetzen und Messlinie löschen."
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:79
 msgid "Path Length"
-msgstr "Weglänge"
+msgstr "Linienlänge"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:84
 msgid "Selection Length"
@@ -21760,22 +21767,22 @@ msgstr "Michigan Left"
 
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:50
 msgid "Adds no left turn for sets of 4 or 5 ways."
-msgstr "Fügt Abbiegeverbote nach links für 4 oder 5 ausgewählte Wege hinzu."
+msgstr "Fügt Abbiegeverbote nach links für 4 oder 5 ausgewählte Linien hinzu."
 
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:72
 msgid "Please select 4 or 5 ways to assign no left turns."
 msgstr ""
-"Bitte wählen Sie 4 oder 5 Wege aus, damit Links-Abbiege-Verbote bestimmt "
+"Bitte wählen Sie 4 oder 5 Linien aus, damit Links-Abbiege-Verbote bestimmt "
 "werden können."
 
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:89
 msgid "Please select 4 ways that form a closed relation."
-msgstr "Bitte wählen Sie 4 Wege aus, die eine geschlossene Relation bilden."
+msgstr "Bitte wählen Sie 4 Linien aus, die eine geschlossene Relation bilden."
 
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:113
 msgid "Unable to order the ways. Please verify their directions"
 msgstr ""
-"Die Wege können nicht geordnet werden. Bitte überprüfen Sie die Richtungen."
+"Die Linien können nicht geordnet werden. Bitte überprüfen Sie die Richtungen."
 
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:127
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:201
@@ -21799,7 +21806,7 @@ msgstr "In Multipolygon konvertieren."
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:81
 msgid "One of the selected ways is already part of another multipolygon."
 msgstr ""
-"Einer der ausgewählten Wege ist bereits in einem anderen Multipolygon "
+"Eine der ausgewählten Linien ist bereits in einem anderen Multipolygon "
 "enthalten."
 
 #: ../plugins/namemanager/src/org/openstreetmap/josm/plugins/namemanager/dialog/NameManagerDialog.java:109
@@ -22876,7 +22883,7 @@ msgstr "Verkehrszeichen Plugin"
 
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:53
 msgid "Roadsign tagging"
-msgstr "Verkehrszeichen-Tagging"
+msgstr "Verkehrszeichen-Erfassung"
 
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:53
 msgid "Add tags by clicking on road signs"
@@ -22889,12 +22896,12 @@ msgstr "Verkehrszeichen Plugin: Dialog öffnen"
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:89
 #, java-format
 msgid "Could not read tagging preset source: ''{0}''"
-msgstr "Konnte Quelle für Tagging-Vorlage nicht lesen: ''{0}''"
+msgstr "Konnte Quelle für Objektvorlage nicht lesen: ''{0}''"
 
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:97
 #, java-format
 msgid "Error parsing tagging preset from ''{0}'':\n"
-msgstr "Fehler beim Parsen der Tagging-Vorlage aus ''{0}'':\n"
+msgstr "Fehler beim Analysieren der Objektvorlage aus ''{0}'':\n"
 
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/Sign.java:108
 #, java-format
@@ -22927,7 +22934,7 @@ msgstr "Punkt \"{0}\" an Position {1} aus der Relation \"{2}\" entfernen"
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RemoveRelationMemberCommand.java:69
 #, java-format
 msgid "Remove way ''{0}'' at position {1} from relation ''{2}''"
-msgstr "Weg \"{0}\" an Position {1} aus der Relation \"{2}\" entfernen"
+msgstr "Linie \"{0}\" an Position {1} aus der Relation \"{2}\" entfernen"
 
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RemoveRelationMemberCommand.java:70
 #, java-format
@@ -23280,33 +23287,32 @@ msgstr "Unnötige Punkte aus Flächen entfernen"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:47
 msgid "Angle Threshold"
-msgstr ""
+msgstr "Winkelschwellwert"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:51
 msgid "Angle Factor"
-msgstr ""
+msgstr "Winkelfaktor"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:55
 msgid "Area Threshold"
-msgstr ""
+msgstr "Flächenschwellwert"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Funktion zum Flächen verbinden"
+msgstr "Flächenfaktor"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
-msgstr ""
+msgstr "Distanzschwellwert"
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:67
 msgid "Distance Factor"
-msgstr ""
+msgstr "Distanzfaktor"
 
 #. mergeThreshold.setToolTipText(tr("bla bla"));
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:72
 msgid "Merge Nearby Nodes Threshold"
-msgstr ""
+msgstr "Schwellwert zum Vereinen naheliegender Punkte"
 
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:58
 msgid "Online Help"
@@ -23342,7 +23348,7 @@ msgstr "Fehler beim Exportieren von {0}: {1}"
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:51
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:179
 msgid "Way: "
-msgstr "Weg: "
+msgstr "Linie: "
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:107
 msgid "Duplicate hotkey for button '{0}' - button will be ignored!"
@@ -23499,7 +23505,7 @@ msgstr "Eine Straßenzugehörigkeitsrelation erzeugen"
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:183
 msgid "delete outline way"
-msgstr "Ursprungsweg löschen"
+msgstr "Umringslinie löschen"
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:205
 msgid "Street name: "
@@ -23786,7 +23792,7 @@ msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:147
 msgid "Selected WaySegment was:"
-msgstr "Ausgewähltes Wegsegment:"
+msgstr "Ausgewählter Linienabschnitt:"
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigExporter.java:26
 msgid "Signature Files"
@@ -24001,12 +24007,12 @@ msgstr "Die Reihenfolge der Straßen ordnen."
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:372
 #, java-format
 msgid "Relation references non-existent (regular) lane {0}"
-msgstr "Relation verweist auf den nicht vorhandenen (normalen) Weg {0}"
+msgstr "Relation verweist auf die nicht vorhandene (normale) Spur {0}"
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:378
 #, java-format
 msgid "Relation references non-existent extra lane {0}"
-msgstr "Relation verweist auf den nicht vorhandenen Extraweg {0}"
+msgstr "Relation verweist auf die nicht vorhandene Extraspur {0}"
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:399
 #, java-format
@@ -24260,7 +24266,7 @@ msgstr "Keine Fehler/Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:161
 msgid "please select a way"
-msgstr "Bitte Weg auswählen"
+msgstr "Bitte Linie auswählen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:172
 #, java-format
@@ -24273,7 +24279,7 @@ msgstr "Aus Abbiegeeinschränkung entfernen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:282
 msgid "Accept the currently selected way"
-msgstr "Gewählten Weg verwenden."
+msgstr "Gewählte Linie verwenden."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:283
 msgid "Accept"
@@ -24369,23 +24375,23 @@ msgstr "Verwende Nicht-Standardwerte für Ausnahmen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:157
 msgid "Remove the currently selected vias"
-msgstr "Aktuell gewählte Vias entfernen"
+msgstr "Aktuell gewählte Zwischenobjekte entfernen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:178
 msgid "Move the selected vias down by one position"
-msgstr "Ausgewählte Vias um eine Position nach unten verschieben"
+msgstr "Ausgewählte Zwischenobjekte um eine Position nach unten verschieben"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:204
 msgid "Move the selected vias up by one position"
-msgstr "Ausgewählte Vias um eine Position nach oben verschieben"
+msgstr "Ausgewählte Zwischenobjekte um eine Position nach oben verschieben"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:232
 msgid "Copy the selected vias to the clipboard"
-msgstr "Ausgewählte Vias in die Zwischenablage kopieren"
+msgstr "Ausgewählte Zwischenobjekte in die Zwischenablage kopieren"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:265
 msgid "Insert 'via' objects from the clipboard"
-msgstr "Einfügen von 'via'-Objekten aus der Zwischenablage"
+msgstr "Einfügen von Zwischenobjekten aus der Zwischenablage"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaListModel.java:177
 #, java-format
@@ -24394,7 +24400,7 @@ msgid ""
 "''via''."
 msgstr ""
 "Abrufen des OSM-Objekts mit ID {0} vom Datensatz {1} fehlgeschlagen. Als "
-"\"via\" hinzufügen nicht möglich."
+"Zwischenobjekt hinzufügen nicht möglich."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:125
 msgctxt "turnrestrictions"
@@ -24409,12 +24415,12 @@ msgstr "Nach:"
 #. FIXME: render as warning/error (red background?)
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:173
 msgid "no participating way with role ''from''"
-msgstr "Kein beteiligter Weg mit der Rolle \"Von\""
+msgstr "Keine Startlinie enthalten"
 
 #. FIXME: render as warning/error (red background?)
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:183
 msgid "no participating way with role ''to''"
-msgstr "Kein beteiligter Weg mit der Rolle \"Nach\""
+msgstr "Keine Ziellinie enthalten"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:104
 msgid "Only participating in selection"
@@ -24489,14 +24495,14 @@ msgid ""
 "restriction. If enabled, one can edit them in the Basic editor too. If "
 "disabled, editing of via-objects is possible in the Advanced Editor only."
 msgstr ""
-"Der Standard-Editor kann optional die Liste der via-Objekte einer "
-"Abbiegebeschränkung anzeigen. Falls aktiviert kann man diese im Standard-"
-"Editor auch editieren. Falls deaktiviert, ist das nur im Fortgeschrittenen-"
-"Editor möglich."
+"Der Standardeditor kann optional die Liste der Zwischenobjekte einer "
+"Abbiegebeschränkung anzeigen. Falls aktiviert kann man diese im "
+"Standardeditor auch editieren. Falls deaktiviert, ist das nur im "
+"Fortgeschrittenen-Editor möglich."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:60
 msgid "Display and edit list of via-objects in the Basic Editor"
-msgstr "Zeige und editiere die Liste der via-Objekte im Standard-Editor"
+msgstr "Zeige und editiere die Liste der Zwischenobjekte im Standardeditor"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:78
 msgid "Road signs - Set A"
@@ -24568,27 +24574,26 @@ msgid ""
 "turn restriction, the way with role <tt>from</tt> should be different from "
 "the way with role <tt>to</tt>, though."
 msgstr ""
-"Diese Abbiegebeschränkung benutzt den Weg <span class=\"object-name\">{0}</"
-"span> mit der Rolle <tt>Herkunft</tt> <strong>und</strong> mit der Rolle "
-"<tt>Ziel</tt>. In einer Abbiegebeschränkung sollte sich der Weg mit der "
-"Rolle <tt>Herkunft</tt> von dem Weg mit der Rolle <tt>Ziel</tt> "
-"unterscheiden."
+"Diese Abbiegebeschränkung benutzt die Linie <span class=\"object-name\">{0}</"
+"span> mit der Rolle <tt>from</tt>(Start) <strong>und</strong> mit der Rolle "
+"<tt>to</tt> (Ziel). In einer Abbiegebeschränkung sollten sich Start- und "
+"Zielline unterscheiden."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
 msgid "Delete ''from''"
-msgstr "Lösche den Weg in der Rolle ''from''"
+msgstr "Lösche die Startlinie"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
 msgid "Removes the member with role ''from''"
-msgstr "Löscht den Weg in der Rolle ''from''"
+msgstr "Die Startlinie (Rolle ''from'') löschen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
 msgid "Delete ''to''"
-msgstr "Lösche ''to''"
+msgstr "Lösche die Ziellinie"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
 msgid "Removes the member with role ''to''"
-msgstr "Löscht den Weg in der Rolle ''to''"
+msgstr "Die Startlinie (Rolle ''to'') löschen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:57
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:35
@@ -24605,7 +24610,7 @@ msgstr "Korrigiere im Editor"
 msgid ""
 "Go to Basic Editor and manually choose members with roles ''from'' and ''to''"
 msgstr ""
-"Gehe zum Standard-Editor und wähle Relationselemente mit Rolle ''from'' und "
+"Gehe zum Standardeditor und wähle Relationselemente mit Rolle ''from'' und "
 "''to''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:27
@@ -24634,26 +24639,28 @@ msgid ""
 "set <span class=\"object-name\">{2}</span> as unique <strong>via</strong>-"
 "object."
 msgstr ""
-"Die <strong>from</strong>-Linie <span class=\\\"object-name\\\">{0}</span> "
-"und die <strong>to</strong>-Linie <span class=\\\"object-name\\\">{1}</span> "
-"schneiden sich am Punkt <span class=\\\"object-name\\\">{2}</span>, aber der "
-"Punkt <span class=\\\"object-name\\\">{2}</span> ist nicht als <strong>via</"
-"strong>-Objekt eingetragen.<br>Sie sollten <span class=\\\"object-name\\\">"
-"{2}</span> als einziges <strong>via</strong>-Objekt setzen."
+"Die <strong>Start</strong>linie <span class=\\\"object-name\\\">{0}</span> "
+"und die <strong>Ziel</strong>linie <span class=\\\"object-name\\\">{1}</"
+"span> schneiden sich am Punkt <span class=\\\"object-name\\\">{2}</span>, "
+"aber der Punkt <span class=\\\"object-name\\\">{2}</span> ist nicht als "
+"<strong>Zwischen</strong>objekt eingetragen.<br>Sie sollten <span class=\\"
+"\"object-name\\\">{2}</span> als einziges <strong>Zwischen</strong>objekt "
+"setzen."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
 msgid "Set via-Object"
-msgstr "Setze das via-Objekt"
+msgstr "Setze Zwischenobjekt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
 "Replaces the currently configured via-objects with the node at the "
 "intersection"
-msgstr "Ersetze die zurzeit vorhandenen via-Objekte durch den Schnittpunkt"
+msgstr ""
+"Die zurzeit vorhandenen Zwischenobjekte durch den Schnittpunkt ersetzen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:60
 msgid "Go to Basic Editor and manually fix the list of via-objects"
-msgstr "Gehe zum Standard-Editor und korrigiere die Liste der via-Objekte"
+msgstr "Gehe zum Standardeditor und korrigiere die Liste der Zwischenobjekte"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingRestrictionTypeError.java:25
 msgid ""
@@ -24666,16 +24673,17 @@ msgstr ""
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:36
 msgid "A way with role <tt>from</tt> is required in a turn restriction."
 msgstr ""
-"In einer Abbiegebeschränkung wird ein Weg mit der Rolle <tt>Herkunft</tt> "
-"benötigt."
+"Eine Abbiegebeschränkung erfordert eine Startlinie mit der Rolle <tt>from</"
+"tt>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:39
 msgid "A way with role <tt>to</tt> is required in a turn restriction."
-msgstr "Eine Abbiegeeinschränkung erfordert einen Weg mit Rolle <tt>to</tt>."
+msgstr ""
+"Eine Abbiegeeinschränkung erfordert eine Ziellinie mit der Rolle <tt>to</tt>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:42
 msgid "Please go to the Basic editor and manually choose a way."
-msgstr "Rufen Sie bitte den einfachen Editor auf und wählen Sie einen Weg."
+msgstr "Rufen Sie bitte den Standardeditor auf und wählen Sie eine Linie."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
 msgid "Add in editor"
@@ -24683,18 +24691,18 @@ msgstr "Im Editor hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add a way with role ''from''"
-msgstr "Einen Weg mit der Rolle \"from\" hinzufügen"
+msgstr "Eine Startlinie (Rolle \"from\") hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:54
 msgid "Add a way with role ''to''"
-msgstr "Einen Weg mit der Rolle \"to\" hinzufügen"
+msgstr "Eine Ziellinie (Rolle \"to\") hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:24
 msgid ""
 "The two ways participating in the turn restriction <strong>aren''t connected."
 "</strong>"
 msgstr ""
-"Die zwei Wege in der Abbiegebeschränkung sind <strong>nicht verbunden</"
+"Die zwei Linien in der Abbiegebeschränkung sind <strong>nicht verbunden</"
 "strong>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:26
@@ -24702,12 +24710,12 @@ msgid ""
 "Make sure you add one or more via objects (nodes or ways) to the turn "
 "restriction."
 msgstr ""
-"Stellen Sie sicher ein oder mehr Via-Objekte (Punkte oder Linien) in die "
+"Stellen Sie sicher ein oder mehr Zwischenobjekte (Punkte oder Linien) in die "
 "Abbiegebeschränkung einzufügen."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:33
 msgid "Go to the Advanced Editor and add via objects"
-msgstr "Offnen Sie den Erweiterten Editor und fügen Sie Zwischen-Objekte hinzu"
+msgstr "Offnen Sie den erweiterten Editor und fügen Sie Zwischenobjekte hinzu"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:37
 #, java-format
@@ -24715,9 +24723,9 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>from</tt>. This "
 "turn restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
-"Eine Abbiegebeschränkung benötigt genau einen Weg in der Rolle <tt>from</"
-"tt>. Diese Abbiegebeschränkung hat {0} Wege mit dieser Rolle. Bitte "
-"entfernen Sie {1} davon."
+"Eine Abbiegebeschränkung benötigt genau eine Startlinie mit der Rolle "
+"<tt>from</tt>. Diese Abbiegebeschränkung hat {0} Linien mit dieser Rolle. "
+"Bitte entfernen Sie {1} davon."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:44
 #, java-format
@@ -24725,9 +24733,9 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>to</tt>. This turn "
 "restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
-"Eine Abbiegebeschränkung benötigt genau einen Weg in der Rolle <tt>to</tt>. "
-"Diese Abbiegebeschränkung hat {0} Wege mit dieser Rolle. Bitte entfernen Sie "
-"{1} davon."
+"Eine Abbiegebeschränkung benötigt genau eine Ziellinie mit der Rolle <tt>to</"
+"tt>. Diese Abbiegebeschränkung hat {0} Linien mit dieser Rolle. Bitte "
+"entfernen Sie {1} davon."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:57
 msgid "Go to the Advanced Editor and remove the members"
@@ -24773,10 +24781,10 @@ msgid ""
 "intersect at node <span class=\"object-name\">{2}</span>. <p> Both ways "
 "should be split at the intersecting node."
 msgstr ""
-"Die Linie <span class=\"object-name\">{0}</span> mit Rolle <tt>from</tt> und "
-"die Linie <span class=\"object-name\">{1}</span> mit Rolle <tt>to</tt> "
-"scheiden sich bei Punkt <span class=\"object-name\">{2}</span>. <p> Beide "
-"Linien sollten am Schnittpunkt aufgeteilt werden."
+"Die Startlinie <span class=\"object-name\">{0}</span> mit Rolle <tt>from</"
+"tt> und die Ziellinie <span class=\"object-name\">{1}</span> mit Rolle "
+"<tt>to</tt> schneiden sich bei Punkt <span class=\"object-name\">{2}</span>. "
+"<p> Beide Linien sollten am Schnittpunkt aufgeteilt werden."
 
 #.
 #. * "to" joins "from" at a common node. Only from has to be split
@@ -24802,7 +24810,7 @@ msgstr "Jetzt auftrennen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:128
 msgid "Split the ways"
-msgstr "Auftrennen der Wege"
+msgstr "Linien auftrennen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -24824,7 +24832,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:57
 msgid "A way is required instead."
-msgstr "Weg erforderlich."
+msgstr "Linie erforderlich."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
 msgid "Delete the member from the turn restriction"
@@ -24832,7 +24840,7 @@ msgstr "Lösche das Relationselement aus der Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select a way"
-msgstr "Bitte wechseln sie zum Editor und wählen einen Weg aus"
+msgstr "Bitte zum Standardeditor wechseln und eine Linie auswählen"
 
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:69
 msgid "Undelete object..."
@@ -24894,7 +24902,7 @@ msgstr "Fehlende Punkte an den Schnittpunkten der gewählten Linien einfügen"
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:39
 msgid "Please select one or more ways with intersections of segments."
 msgstr ""
-"Bitte wählen Sie mindestens einen Weg mit sich überschneidenden Segmenten."
+"Bitte wählen Sie mindestens eine Linie mit sich überschneidenden Abschnitten."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:43
 msgid "Split Object"
@@ -24910,7 +24918,7 @@ msgstr "Die aktuelle Auswahl kann nicht zum Aufspalten verwendet werden."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:140
 msgid "The selected way is not closed."
-msgstr "Der gewählte Weg ist nicht geschlossen."
+msgstr "Die gewählte Linie ist nicht geschlossen."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:149
 msgid "The selected way does not contain the selected node."
@@ -25005,7 +25013,7 @@ msgstr "Angrenzende Punkte auswählen"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/AdjacentWaysAction.java:25
 msgid "Adjacent ways"
-msgstr "Angrenzende Wege"
+msgstr "Angrenzende Linien"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/AdjacentWaysAction.java:26
 msgid "Adjacent ways will be selected. Nodes wiil be deselected."
@@ -25014,44 +25022,45 @@ msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/ConnectedWaysAction.java:23
 msgid "All connected ways"
-msgstr "Alle zusammenhängenden Wege"
+msgstr "Alle zusammenhängenden Linien"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/ConnectedWaysAction.java:23
 msgid "Select all connected ways"
-msgstr "Alle zusammenhängenden Wege auswählen"
+msgstr "Alle zusammenhängenden Linien auswählen"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:25
 msgid "Intersecting ways"
-msgstr "Kreuzende Wege"
+msgstr "Kreuzende Linien"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:25
 msgid "Select intersecting ways"
-msgstr "Kreuzende Wege auswählen"
+msgstr "Kreuzende Linien auswählen"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:48
 msgid "Please select some ways to find connected and intersecting ways!"
 msgstr ""
-"Bitte zum Finden von verbundenen und kreuzenden Wegen einige Wege auswählen."
+"Bitte zum Finden von verbundenen und kreuzenden Linien einige Linien "
+"auswählen."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:25
 msgid "All intersecting ways"
-msgstr "Alle kreuzenden Wege"
+msgstr "Alle kreuzenden Linien"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:25
 msgid "Select all intersecting ways"
-msgstr "Alle kreuzenden Wege auswählen"
+msgstr "Alle kreuzenden Linien auswählen"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:48
 msgid "Please select some ways to find all connected and intersecting ways!"
 msgstr ""
-"Bitte zum Finden aller verbundenen und kreuzenden Wegen einige Wege "
+"Bitte zum Finden aller verbundenen und kreuzenden Linien einige Linien "
 "auswählen."
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:188
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:214
 #, java-format
 msgid "Too many ways are added: {0}!"
-msgstr "Zu viele Wege wurden hinzugefügt: {0}!"
+msgstr "Zu viele Linien wurden hinzugefügt: {0}!"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:32
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:33
@@ -25280,11 +25289,11 @@ msgstr "WalkingPapers"
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:56
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:59
 msgid "Way Download"
-msgstr "Wege-Herunterladen"
+msgstr "Linien-Herunterladen"
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:58
 msgid "Download map data on the end of selected way"
-msgstr "Kartendaten mit Anschluss zu einem der Wegenden herunterladen"
+msgstr "Kartendaten mit Anschluss zu einem der Linienenden herunterladen"
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:100
 msgid ""
@@ -25314,8 +25323,8 @@ msgid ""
 "Way downloader data inconsistency. Prior connected way ''{0}'' wasn''t "
 "discovered after download"
 msgstr ""
-"Problem mit der Datenkonsistenz. Der vorher verbundene Weg ''{0}'' ist nach "
-"dem Herunterladen verschwunden"
+"Problem mit der Datenkonsistenz. Die vorher verbundene Linie ''{0}'' ist "
+"nach dem Herunterladen verschwunden"
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:183
 #, java-format
@@ -25338,7 +25347,7 @@ msgstr "Doppelten Punkt zusammenführen?"
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:213
 msgid "<html>No more connected ways to download.</html>"
-msgstr "<html>Keine weiteren verbundenen Wege zum Herunterladen.</html>"
+msgstr "<html>Keine weiteren verbundenen Linien zum Herunterladen.</html>"
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:222
 #, java-format
@@ -25368,11 +25377,11 @@ msgstr ""
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:44
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:47
 msgid "Way Select"
-msgstr "Wegauswahl"
+msgstr "Linienauswahl"
 
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:46
 msgid "Select non-branching sequences of ways"
-msgstr "Nichverzweigenden Sequenz von Wegen auswählen"
+msgstr "Nichverzweigenden Folge von Linien auswählen"
 
 #. *
 #. This file can be used to add some special messages to the translation,
@@ -25852,7 +25861,7 @@ msgstr "Konturen von zwei Flächen verschmelzen"
 #. Plugin Create_grid_of_ways
 #: build/trans_plugins.java:18
 msgid "Create a grid of ways."
-msgstr "Erzeugt ein Wegegitter."
+msgstr "Erzeugt ein Liniengitter."
 
 #. Plugin czechaddress
 #: build/trans_plugins.java:20
@@ -25884,7 +25893,7 @@ msgstr ""
 #. Plugin download_along
 #: build/trans_plugins.java:28
 msgid "Downloads OSM data along a way"
-msgstr "Lädt OSM-Daten entlang eines Weges herunter"
+msgstr "OSM-Daten entlang einer Linie herunterladen"
 
 #. Plugin editgpx
 #: build/trans_plugins.java:30
@@ -25943,7 +25952,7 @@ msgid ""
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
 "the filename of an image."
 msgstr ""
-"Ein weiteres Plugin, um Bilder Wegpunkten in einer GPX-Datei zuzuordnen. "
+"Ein weiteres Plugin, um Wegpunkten in einer GPX-Datei Bilder zuzuordnen. "
 "Eine Übereinstimmung wird gefunden, wenn eines der Attribute 'name', 'cmt' "
 "oder 'desc' eines Wegpunktes mit dem Dateinamen des Bildes übereinstimmt."
 
@@ -25994,13 +26003,13 @@ msgid ""
 "paths (which also can be imported from a gps layer)."
 msgstr ""
 "Bietet eine Maßanzeige und Ebene um Länge und Winkel von Segmenten, Flächen "
-"von (einfach) geschlossenen Wegen zu messen. Außerdem können Messpfade (die "
+"von (einfach) geschlossenen Linien zu messen. Außerdem können Messpfade (die "
 "auch von einer GPS-Ebene importiert werden können) angelegt werden."
 
 #. Plugin michigan_left
 #: build/trans_plugins.java:67
 msgid "Adds no left turn for sets of 4 or 5 ways"
-msgstr "Fügt Abbiegeverbote nach links für 4 oder 5 ausgewählte Wege hinzu"
+msgstr "Fügt Abbiegeverbote nach links für 4 oder 5 ausgewählte Linien hinzu"
 
 #. Plugin multipoly-convert
 #: build/trans_plugins.java:69
@@ -26053,7 +26062,7 @@ msgstr ""
 #. Plugin pdfimport
 #: build/trans_plugins.java:83
 msgid "Import PDF file and convert to ways."
-msgstr "PDF-Datei importieren und in Wege konvertieren."
+msgstr "PDF-Datei importieren und in Linien konvertieren."
 
 #. Plugin photo_geotagging
 #: build/trans_plugins.java:85
@@ -26263,7 +26272,7 @@ msgstr ""
 #. Plugin waydownloader
 #: build/trans_plugins.java:145
 msgid "Easy downloading along a long set of interconnected ways"
-msgstr "Leichtes Herunterladen entlang einer langen Reihe verbundener Wege"
+msgstr "Leichtes Herunterladen entlang einer langen Reihe verbundener Linien"
 
 #. Plugin waypoint_search
 #: build/trans_plugins.java:147
@@ -26274,7 +26283,7 @@ msgstr ""
 #. Plugin wayselector
 #: build/trans_plugins.java:149
 msgid "Select a sequence of non-branching connected ways"
-msgstr "Eine Reihe von nichtverzweigenden verbundenen Wegen auswählen"
+msgstr "Eine Reihe von nichtverzweigenden verbundenen Linien auswählen"
 
 #. Plugin wms-turbo-challenge2
 #: build/trans_plugins.java:151
@@ -38422,17 +38431,17 @@ msgstr "Nur geradeaus"
 #. item "Relations/Turn restriction" role "from way"
 #: build/trans_presets.java:4128
 msgid "from way"
-msgstr "Von Weg"
+msgstr "Startlinie"
 
 #. item "Relations/Turn restriction" role "via node or way"
 #: build/trans_presets.java:4129
 msgid "via node or way"
-msgstr "Über Punkt oder Linie"
+msgstr "Zwischenpunkt oder -linie"
 
 #. item "Relations/Turn restriction" role "to way"
 #: build/trans_presets.java:4130
 msgid "to way"
-msgstr "Zu Weg"
+msgstr "Ziellinie"
 
 #. </roles>
 #. item "Relations/Route"
@@ -44125,8 +44134,8 @@ msgstr "Stevns (Dänemark)"
 #~ "Helppage missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF="
 #~ "\"{1}\">your language</A>."
 #~ msgstr ""
-#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF=\"{1}"
-#~ "\">deutscher</A> Sprache erstellen."
+#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF="
+#~ "\"{1}\">deutscher</A> Sprache erstellen."
 
 #~ msgid "Optional"
 #~ msgstr "Optional"
@@ -44693,8 +44702,8 @@ msgstr "Stevns (Dänemark)"
 #~ "Help page missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF="
 #~ "\"{1}\">your language</A>."
 #~ msgstr ""
-#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF=\"{1}"
-#~ "\">deutscher</A> Sprache erstellen."
+#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF="
+#~ "\"{1}\">deutscher</A> Sprache erstellen."
 
 #~ msgid "The following errors occurred during mass download:"
 #~ msgstr "Die folgenden Fehler sind während des Herunterladens aufgetreten:"
@@ -44961,8 +44970,8 @@ msgstr "Stevns (Dänemark)"
 
 #~ msgid "can't compare primitive with id ''{0}'' to primitive with id ''{1}''"
 #~ msgstr ""
-#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID \"{1}"
-#~ "\" verglichen werden"
+#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID "
+#~ "\"{1}\" verglichen werden"
 
 #~ msgid "Didn't find an historized primitive with id {0} in this dataset"
 #~ msgstr ""
@@ -45159,8 +45168,8 @@ msgstr "Stevns (Dänemark)"
 #~ msgid ""
 #~ "Can't undo command ''{0}'' because layer ''{1}'' is not present anymore"
 #~ msgstr ""
-#~ "Kommando \"{0}\" kann nicht rückgängig gemacht werden, da die Ebene \"{1}"
-#~ "\" nicht mehr existiert."
+#~ "Kommando \"{0}\" kann nicht rückgängig gemacht werden, da die Ebene "
+#~ "\"{1}\" nicht mehr existiert."
 
 #~ msgid "UTM Zone {0}"
 #~ msgstr "UTM Zone {0}"
@@ -46230,14 +46239,14 @@ msgstr "Stevns (Dänemark)"
 #~ "Help page missing. Create it in <A HREF=\"{0}\">English</A> or <A HREF="
 #~ "\"{1}\">your language</A>."
 #~ msgstr ""
-#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF=\"{1}"
-#~ "\">deutscher</A> Sprache erstellen."
+#~ "Hilfeseite fehlt. In <A HREF=\"{0}\">englischer</A> oder <A HREF="
+#~ "\"{1}\">deutscher</A> Sprache erstellen."
 
 #~ msgid ""
 #~ "Can't undo command ''{0}'' because layer ''{1}'' is not present any more"
 #~ msgstr ""
-#~ "Kommando \"{0}\" kann nicht rückgängig gemacht werden, da die Ebene \"{1}"
-#~ "\" nicht mehr existiert."
+#~ "Kommando \"{0}\" kann nicht rückgängig gemacht werden, da die Ebene "
+#~ "\"{1}\" nicht mehr existiert."
 
 #~ msgid "Didn't find an primitive with id {0} in this dataset"
 #~ msgstr "Konnte kein Objekt mit ID {0} im Datensatz finden"
@@ -46459,24 +46468,24 @@ msgstr "Stevns (Dänemark)"
 #~ "WARNING: normalizing value of attribute ''version'' of element {0} to 0, "
 #~ "API version is ''0.5''. Got {1}"
 #~ msgstr ""
-#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert \"0"
-#~ "\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
+#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert "
+#~ "\"0\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
 #~ "Version \"0.5\")"
 
 #~ msgid ""
 #~ "WARNING: normalizing value of attribute ''version'' of element {0} to 0, "
 #~ "API version is ''0.6''. Got {1}"
 #~ msgstr ""
-#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert \"0"
-#~ "\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
+#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert "
+#~ "\"0\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
 #~ "Version \"0.6\")"
 
 #~ msgid ""
 #~ "WARNING: normalizing value of attribute ''version'' of element {0} to 1, "
 #~ "API version is ''0.5''. Got {1}"
 #~ msgstr ""
-#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert \"1"
-#~ "\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
+#~ "Achtung: Die Version des Elementes \"{0}\" wurde auf den Ausgangswert "
+#~ "\"1\" gesetzt, da ein fehlerhafter Wert von \"{1}\" gelesen wurde. (API-"
 #~ "Version \"0.5\")"
 
 #~ msgid "Error: failed to add authentication credentials to the connection."
@@ -46513,8 +46522,8 @@ msgstr "Stevns (Dänemark)"
 #~ msgid ""
 #~ "Can't compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
 #~ msgstr ""
-#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID \"{1}"
-#~ "\" verglichen werden"
+#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID "
+#~ "\"{1}\" verglichen werden"
 
 #~ msgid "Parameter current out of range. Got {0}."
 #~ msgstr "Parameter \"current\" außerhalb des Bereichs: Wert ist {0}"
@@ -46837,9 +46846,9 @@ msgstr "Stevns (Dänemark)"
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information.You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information.You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Hilfe-Seite für ein Hilfe-Thema fehlt</"
 #~ "p><p class=\"warning-body\">Für das Hilfe-Thema <strong>{0}</strong> ist "
@@ -47003,8 +47012,8 @@ msgstr "Stevns (Dänemark)"
 #~ msgid ""
 #~ "Can''t compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
 #~ msgstr ""
-#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID \"{1}"
-#~ "\" verglichen werden."
+#~ "Das Objekt mit der ID \"{0}\" kann nicht mit dem Objekt mit der ID "
+#~ "\"{1}\" verglichen werden."
 
 #~ msgid "Parameter ''{0}'' > 0 expected. Got {1}."
 #~ msgstr "Parameter ''{0}'' größer als 0 erwartet. Erhaltener Wert ''{1}''."
@@ -47867,8 +47876,8 @@ msgstr "Stevns (Dänemark)"
 #~ "with id ''{3}''.</html>"
 #~ msgstr ""
 #~ "<html>Zugriffskennung \"{0}\" erfolgreich für den Zugang zum OSM-Server "
-#~ "\"{1}\" eingesetzt.<br>Sie greifen als Benutzer \"{2}\" mit der ID \",{3}"
-#~ "\" auf den OSM-Server zu.</html>"
+#~ "\"{1}\" eingesetzt.<br>Sie greifen als Benutzer \"{2}\" mit der ID \","
+#~ "{3}\" auf den OSM-Server zu.</html>"
 
 #~ msgid ""
 #~ "<html><body>JOSM successfully retrieved a Request Token. JOSM is now "
@@ -47922,8 +47931,8 @@ msgstr "Stevns (Dänemark)"
 #~ "will not<br>be able to access any protected resource on this server using "
 #~ "this token.</html>"
 #~ msgstr ""
-#~ "<html>Zugriff auf dem OSM-Server \"{0}\"<br>mit der Zugriffskennung \"{0}"
-#~ "\" fehlgeschlagen.<br>Der Server hat die Kennung als unberechtigt "
+#~ "<html>Zugriff auf dem OSM-Server \"{0}\"<br>mit der Zugriffskennung "
+#~ "\"{0}\" fehlgeschlagen.<br>Der Server hat die Kennung als unberechtigt "
 #~ "zurückgewiesen. Diese Kennung kann nicht zum Zugriff auf geschützte "
 #~ "Ressourcen auf diesem Server verwendet werden.</html>"
 
@@ -48262,9 +48271,9 @@ msgstr "Stevns (Dänemark)"
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Hilfe-Seite für ein Hilfe-Thema fehlt</"
 #~ "p><p class=\"warning-body\">Für das Hilfe-Thema <strong>{0}</strong> ist "

@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-03-10 01:08+0000\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 09:08+0000\n"
 "Last-Translator: ribbon <Unknown>\n"
 "Language-Team: Japanese <tr@openstreetmap.jp>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:51+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:30+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
@@ -1053,7 +1054,7 @@ msgstr "アプリケーションを終了します。"
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:35
 msgid "Fullscreen view"
-msgstr ""
+msgstr "全画面表示"
 
 #. no icon
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:37
@@ -3100,11 +3101,11 @@ msgstr "<b>role:</b>... - リレーション内で指定した役割を持つオ
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>timestamp:</b>... - 指定したタイムスタンプのオブジェクト (<b>2009-11-"
-"12T14:51:09Z</b>、<b>2009-11-12</b>　や <b>T14:51</b> 等)"
+"<b>timestamp:</b>... - 指定したタイムスタンプのオブジェクト "
+"(<b>2009-11-12T14:51:09Z</b>、<b>2009-11-12</b>　や <b>T14:51</b> 等)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -3388,7 +3389,7 @@ msgstr "エラー"
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:122
 msgid "Usually this should be fixed."
-msgstr ""
+msgstr "通常これは修正すべきです。"
 
 #. * Warning messages
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:123
@@ -3398,7 +3399,7 @@ msgstr "警告"
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:125
 msgid "Fix these when possible."
-msgstr ""
+msgstr "可能であれば修正してください。"
 
 #. * Other messages
 #. item "Motorcycle/Motorcycle Dealer" text "Other"
@@ -3420,7 +3421,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:136
 msgid "Continue upload"
-msgstr ""
+msgstr "アップロードを継続"
 
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:65
 #, java-format
@@ -5277,19 +5278,19 @@ msgstr ""
 "このテストはウェイが別のウェイのすぐ近くにエンドポイントを持っているかチェッ"
 "クしています。"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "ウェイは他の高速道路の近くでノードで終わっています。"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "ウェイは他のウェイの近くでノードで終わっています。"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "ほかのウェイに近いウェイのノード"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "他のウェイの近くに結合されたウェイ"
 
@@ -7759,7 +7760,7 @@ msgstr "修正"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:119
 msgid "Fix the selected issue."
-msgstr ""
+msgstr "選択された問題を修正。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:124
 msgid "Ignore the selected issue next time."
@@ -9142,8 +9143,8 @@ msgid ""
 "<html>None of the objects in the content of changeset {0} is available in "
 "the current<br>edit layer ''{1}''.</html>"
 msgstr ""
-"<html>変更セット{0}に含まれるオブジェクトは、現在の編集中のレイヤー\"{1}"
-"\"<br>にありません。"
+"<html>変更セット{0}に含まれるオブジェクトは、現在の編集中のレイヤー"
+"\"{1}\"<br>にありません。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:417
 msgid ""
@@ -17047,8 +17048,8 @@ msgid ""
 "Warning: Cannot download plugin ''{0}''. Its download link ''{1}'' is not a "
 "valid URL. Skipping download."
 msgstr ""
-"警告: プラグイン\"{0}\"をダウンロードできません。ダウンロードリンク\"{1}"
-"\"は、不正なURLです。ダウンロードスキップします。"
+"警告: プラグイン\"{0}\"をダウンロードできません。ダウンロードリンク"
+"\"{1}\"は、不正なURLです。ダウンロードスキップします。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:167
 #, java-format
@@ -22418,9 +22419,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "エリア結合機能"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -23088,7 +23088,7 @@ msgstr ""
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:43
 msgid "Automatically fixes the issue."
-msgstr ""
+msgstr "問題を自動的に修正。"
 
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:58
 msgid "Selects the offending relation."
@@ -45612,9 +45612,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">ヘルプ項目の解説文がありません。</p><p "
 #~ "class=\"warning-body\">ヘルプ項目 <strong>{0}</strong>の解説文はまだ存在し"

@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2010-12-30 18:03+0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:07+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:52+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
-"Language: gl\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -2381,8 +2381,8 @@ msgid ""
 "<html>The data to be uploaded participates in unresolved conflicts of layer "
 "''{0}''.<br>You have to resolve them first.</html>"
 msgstr ""
-"<html> Os datos a subir participan en conflictos non resoltos na capa \"{0}"
-"\". <br>Debe resolvelos primeiro.</html>"
+"<html> Os datos a subir participan en conflictos non resoltos na capa "
+"\"{0}\". <br>Debe resolvelos primeiro.</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:156
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:99
@@ -3109,11 +3109,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>marca de tempo:</b>...-obxectos con esta marca de tempo (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>marca de tempo:</b>...-obxectos con esta marca de tempo "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -4331,8 +4331,8 @@ msgid ""
 "Warning: failed to open input stream for resource ''/data/{0}''. Cannot load "
 "NTF<->RGF93 grid"
 msgstr ""
-"Atención: Fallou ao abrir a secuencia de entrada para o recurso \"/data/{0}"
-"\". Non se pode cargar NTF <-> malla RGF93"
+"Atención: Fallou ao abrir a secuencia de entrada para o recurso \"/data/"
+"{0}\". Non se pode cargar NTF <-> malla RGF93"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:139
 msgid "Lambert 4 Zones (France)"
@@ -5303,19 +5303,19 @@ msgstr ""
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "O nodo final da vía esta próximo a outra carretera"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr ""
 
@@ -16997,8 +16997,8 @@ msgid ""
 "Warning: Cannot download plugin ''{0}''. Its download link ''{1}'' is not a "
 "valid URL. Skipping download."
 msgstr ""
-"Atención: Non se pode descargar o plugin \"{0}\". O enlace de descarga \"{1}"
-"\" non é unha URL válida. Saltando a descarga."
+"Atención: Non se pode descargar o plugin \"{0}\". O enlace de descarga "
+"\"{1}\" non é unha URL válida. Saltando a descarga."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:167
 #, java-format
@@ -22257,9 +22257,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Función de unor áreas"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -43210,17 +43209,17 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">O contido de axuda para tema non "
 #~ "existe</p><p class=\"warning-body\">O contído de axuda para o tema de "
 #~ "axuda<strong>{0}</strong> aínd anon está dispoñible. Falta tanto na túa "
 #~ "lingua ({1}) e en inglés.<br><br>Axuda a millorar o sistema de axuda "
 #~ "enchendo a información faltante. Pode tanto ediitar o tema de axuda <a "
-#~ "href=\"{2}\">no seu idioma local ({1})</a> e o tema de axuda <a href=\"{3}"
-#~ "\">en inglés</a>.</p></html>"
+#~ "href=\"{2}\">no seu idioma local ({1})</a> e o tema de axuda <a href="
+#~ "\"{3}\">en inglés</a>.</p></html>"
 
 #~ msgid "Seamarks"
 #~ msgstr "Marcas do mar"

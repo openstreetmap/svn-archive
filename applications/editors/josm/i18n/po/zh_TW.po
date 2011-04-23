@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-04-22 06:11+0000\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 05:46+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:01+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:32+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
-"Language: zh_TW\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -3034,8 +3034,8 @@ msgstr "<b>角色：</b>... - 在關係中指定角色的物件"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 "<b>時刻戳記：</b>... -  有此時刻戳記的物件 (<b>2009-11-12T14:51:09Z</b>，"
 "<b>2009-11-12</b> 或 <b>T14:51</b> ...)"
@@ -5165,19 +5165,19 @@ msgstr "未連接的路徑。"
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr "這個測試會檢查路徑的結束點是否非常靠近其他的路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "路徑結束點靠近其他的公路"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "路徑結束點靠近其他的路徑"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "路徑節點靠近其他的路徑"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "已連接的路徑結束點靠近其他的路徑"
 
@@ -20144,15 +20144,15 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
 msgid "JunctionChecking"
-msgstr ""
+msgstr "匯集點檢查"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:47
 msgid "Open the junctionchecking window."
-msgstr ""
+msgstr "開啟匯集點檢查視窗。"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
 msgid "junctions"
-msgstr ""
+msgstr "匯集點檢查"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:53
 msgid "Channel-Digraph creation"
@@ -20169,21 +20169,21 @@ msgstr ""
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:64
 msgid "Junctionchecking/junctions searching"
-msgstr ""
+msgstr "匯集點檢查/匯集點搜尋"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:70
 msgid "order of junction (n):"
-msgstr ""
+msgstr "匯集點順序："
 
 #. Elemente zur OSM-Relationen-Erzeugung
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:76
 msgid "produce OSM-Relations: junction"
-msgstr ""
+msgstr "產生 OSM 關係：匯集點"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:77
 msgid ""
 "if enabled the plugin produces osm-relations from the junction subgraphs"
-msgstr ""
+msgstr "如果啟用則外掛程式會從匯集點副圖表產生 osm 關係"
 
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:91
 msgid "Create"
@@ -22131,9 +22131,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "連結區域功能"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -24557,6 +24556,7 @@ msgid ""
 "Implements a command line and enables to create your commands. See link for "
 "standard commands (arc, circle etc.)"
 msgstr ""
+"實作一個命令列讓您建立自己的指令。請查閱連結以了解標準指令 (arc, circle 等.)"
 
 #. Plugin contourmerge
 #: build/trans_plugins.java:16
@@ -24709,7 +24709,7 @@ msgstr "只把區域轉換為多重多邊形。"
 #. Plugin namemanager
 #: build/trans_plugins.java:71
 msgid "Allows to attribute tags to all objects in any selected area at once"
-msgstr ""
+msgstr "允許在任何選取的區域中一次將所有物件加入屬性標籤"
 
 #. Plugin nearclick
 #: build/trans_plugins.java:73
@@ -26155,7 +26155,7 @@ msgstr "編輯施工中的公路"
 #. item "Highways/Streets/Construction" combo "Junction"
 #: build/trans_presets.java:421
 msgid "Junction"
-msgstr "交叉點"
+msgstr "匯集點"
 
 #. item "Highways/Streets/Construction" combo "Junction" display value
 #. </rule>
@@ -29483,7 +29483,7 @@ msgstr "編輯加油站"
 #: build/trans_presets.java:1537 build/trans_presets.java:1546
 #: build/trans_presets.java:1565
 msgid "Brand"
-msgstr ""
+msgstr "品牌"
 
 #. item "Car/Fuel" combo "Brand" display value
 #: build/trans_presets.java:1462
@@ -29588,12 +29588,12 @@ msgstr ""
 #. item "Car/Fuel" combo "Brand" display value
 #: build/trans_presets.java:1462
 msgid "Total"
-msgstr "總計"
+msgstr "Total"
 
 #. item "Car/Fuel" combo "Brand" display value
 #: build/trans_presets.java:1462
 msgid "Independent"
-msgstr "獨立"
+msgstr "Independent"
 
 #. item "Car/Fuel" combo "Opening Hours"
 #. item "Car/Wash" combo "Opening Hours"
@@ -43801,9 +43801,9 @@ msgstr ""
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">缺少求助主題的內容</p><p class="
 #~ "\"warning-body\">求助主題的內容<strong>{0}</strong>尚不能取得。不管是您當"

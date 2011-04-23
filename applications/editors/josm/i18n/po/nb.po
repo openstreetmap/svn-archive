@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2010-12-03 21:21+0000\n"
 "Last-Translator: Stian Ellingsen <stiell@gmail.com>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:48+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:36+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3033,8 +3034,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
@@ -5165,19 +5166,19 @@ msgstr "Ikke knyttede linjer."
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr "Sjekker om en linje har endepunkt nesten inntil annen  linje."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Sluttnode nær annen ferdselsvei"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Sluttnode nær annen linje"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Linjenode nær annen linje"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Knyttet endenode nær annen linje"
 
@@ -15996,7 +15997,8 @@ msgstr ""
 msgid ""
 "Illegal value for mandatory attribute ''{0}'' of type boolean. Got ''{1}''."
 msgstr ""
-"ugyldig verdi for obligatorisk attributt «{0}» av type «boolean» – leste «{1}»"
+"ugyldig verdi for obligatorisk attributt «{0}» av type «boolean» – leste "
+"«{1}»"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:150
 #: ../core/src/org/openstreetmap/josm/io/OsmHistoryReader.java:146
@@ -21898,9 +21900,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Funksjon Slå sammen Areal"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -42945,7 +42946,8 @@ msgstr ""
 #~ "HREF=\"{1}\">norsk (bokmål)</A>."
 
 #~ msgid "Warning: error header \"{0}\" did not match expected pattern \"{1}\""
-#~ msgstr "Advarsel: Feillinje «{0}» samsvarer ikke med forventet mønster «{1}»"
+#~ msgstr ""
+#~ "Advarsel: Feillinje «{0}» samsvarer ikke med forventet mønster «{1}»"
 
 #~ msgid "Error header \"{0}\" does not match expected pattern \"{1}\""
 #~ msgstr "Feillinje «{0}» samsvarer ikke med forventet mønster «{1}»"
@@ -42995,7 +42997,8 @@ msgstr ""
 #~ msgstr "parameter {0} er ikke i intervall 0–{1} – leste {2}"
 
 #~ msgid "can't compare primitive with id ''{0}'' to primitive with id ''{1}''"
-#~ msgstr "klarte ikke sammenlikne element med ID «{0}» og element med ID «{1}»"
+#~ msgstr ""
+#~ "klarte ikke sammenlikne element med ID «{0}» og element med ID «{1}»"
 
 #~ msgid "parameter ''{0}'' must not be null"
 #~ msgstr "parameter «{0}» må ha en verdi"
@@ -43274,15 +43277,15 @@ msgstr ""
 #~ "illegal value for mandatory attribute ''{0}'' of type OsmPrimitiveType, "
 #~ "got ''{1}''"
 #~ msgstr ""
-#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «OsmPrimitiveType» – "
-#~ "leste «{1}»"
+#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «OsmPrimitiveType» "
+#~ "– leste «{1}»"
 
 #~ msgid ""
 #~ "illegal value for mandatory attribute ''{0}'' of type int (>=0), got "
 #~ "''{1}''"
 #~ msgstr ""
-#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «int» (>= 0) – leste "
-#~ "«{1}»"
+#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «int» (>= 0) – "
+#~ "leste «{1}»"
 
 #~ msgid ""
 #~ "illegal value for mandatory attribute ''{0}'' of type long (>=0), got "
@@ -43294,7 +43297,8 @@ msgstr ""
 #~ msgid ""
 #~ "illegal value for mandatory attribute ''{0}'' of type long, got ''{1}''"
 #~ msgstr ""
-#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «long» – leste «{1}»"
+#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «long» – leste "
+#~ "«{1}»"
 
 #~ msgid ""
 #~ "illegal value for mandatory attribute ''{0}'' of type boolean, got ''{1}''"
@@ -43561,7 +43565,8 @@ msgstr ""
 
 #~ msgid ""
 #~ "Can't compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
-#~ msgstr "klarte ikke sammenlikne element med ID «{0}» og element med ID «{1}»"
+#~ msgstr ""
+#~ "klarte ikke sammenlikne element med ID «{0}» og element med ID «{1}»"
 
 #~ msgid "Parameter current out of range. Got {0}."
 #~ msgstr "parameter «current» utenfor rekkevidde: leste {0}"
@@ -43609,8 +43614,8 @@ msgstr ""
 #~ "Illegal value for mandatory attribute ''{0}'' of type int (>=0). Got "
 #~ "''{1}''."
 #~ msgstr ""
-#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «int» (>= 0) – leste "
-#~ "«{1}»"
+#~ "ugyldig verdi for obligatorisk attributt «{0}» av type «int» (>= 0) – "
+#~ "leste «{1}»"
 
 #~ msgid "Parameter ''{0}'' >= 0 expected. Got ''{1}''."
 #~ msgstr "parameter «{0}» >= 0 forventet – leste «{1}»"

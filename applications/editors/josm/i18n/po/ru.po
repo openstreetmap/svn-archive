@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
-"PO-Revision-Date: 2011-04-20 14:41+0000\n"
-"Last-Translator: bastik <Unknown>\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
+"PO-Revision-Date: 2011-04-23 15:53+0000\n"
+"Last-Translator: Radmir Agliullin <Unknown>\n"
 "Language-Team: Koptev Oleg <koptev.oleg@gmail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-04-22 21:46+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:31+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-Language: Russian\n"
@@ -1060,7 +1061,7 @@ msgstr "Выйти из программы"
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:35
 msgid "Fullscreen view"
-msgstr ""
+msgstr "Во весь экран"
 
 #. no icon
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:37
@@ -3182,11 +3183,11 @@ msgstr "<b>role:</b>… — объект с указанной ролью в о�
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>timestamp:</b>... - объект с этой меткой времени (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> или <b>T14:51</b> ...)"
+"<b>timestamp:</b>... - объект с этой меткой времени "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> или <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -5413,19 +5414,19 @@ msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 "Этот тест ищет линии, конец которых расположен очень близко к другой линии."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Последняя точка линии расположена около другой дороги"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Конец линии расположен около другой линии"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Точка линии расположена около другой линии"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Конечная точка присоединённой линии расположена около другой линии"
 
@@ -9529,7 +9530,7 @@ msgstr "Дата: "
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:700
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:731
 msgid "Time:"
-msgstr ""
+msgstr "Время:"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:684
 msgid "Closed after - "
@@ -15702,7 +15703,7 @@ msgstr "Заготовка по умолчанию для JOSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:316
 msgid "Tooltip"
-msgstr ""
+msgstr "Подсказка"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:316
 msgid "Icon"
@@ -16809,8 +16810,8 @@ msgstr "сервер вернул неожиданный формат id, тек
 msgid ""
 "Unexpected format of new version of modified primitive ''{0}''. Got ''{1}''."
 msgstr ""
-"Неожиданный формат новой версии изменённого элемента \"{0}\". Получено \"{1}"
-"\""
+"Неожиданный формат новой версии изменённого элемента \"{0}\". Получено "
+"\"{1}\""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:347
 msgid "Creating changeset..."
@@ -23251,9 +23252,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Функция объединения полигонов"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -42232,8 +42232,8 @@ msgstr "Stevns (Дания)"
 #~ "Selection \"{0}\" is used by relation \"{1}\" with role {2}.\n"
 #~ "Delete from relation?"
 #~ msgstr ""
-#~ "Выделенный объект \"{0}\" используется отношением \"{1}\" в роли \"{2}"
-#~ "\".\n"
+#~ "Выделенный объект \"{0}\" используется отношением \"{1}\" в роли "
+#~ "\"{2}\".\n"
 #~ "Удалить из отношения?"
 
 #~ msgid ""
@@ -46235,9 +46235,9 @@ msgstr "Stevns (Дания)"
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information.You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information.You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Отсутствует содержимое справки в "
 #~ "справочном разделе</p><p class=\"warning-body\">Содержимое справки в "
@@ -47478,9 +47478,9 @@ msgstr "Stevns (Дания)"
 #~ "p><p class=\"warning-body\">Help content for the help topic <strong>{0}</"
 #~ "strong> is not available yet. It is missing both in your local language "
 #~ "({1}) and in english.<br><br>Please help to improve the JOSM help system "
-#~ "and fill in the missing information. You can both edit the <a href=\"{2}"
-#~ "\">help topic in your local language ({1})</a> and the <a href=\"{3}"
-#~ "\">help topic in english</a>.</p></html>"
+#~ "and fill in the missing information. You can both edit the <a href="
+#~ "\"{2}\">help topic in your local language ({1})</a> and the <a href="
+#~ "\"{3}\">help topic in english</a>.</p></html>"
 #~ msgstr ""
 #~ "<html><p class=\"warning-header\">Отсутствует содержимое раздела справки</"
 #~ "p><p class=\"warning-body\">Содержимое справки для раздела справки "

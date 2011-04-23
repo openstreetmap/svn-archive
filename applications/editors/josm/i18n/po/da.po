@@ -8,15 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 06:53+0200\n"
+"POT-Creation-Date: 2011-04-23 22:56+0200\n"
 "PO-Revision-Date: 2011-03-24 04:23+0000\n"
 "Last-Translator: Peter Brodersen <Unknown>\n"
 "Language-Team: Dansk <kde-i18n-doc@kde.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-04-22 22:05+0000\n"
+"X-Launchpad-Export-Date: 2011-04-23 20:50+0000\n"
 "X-Generator: Launchpad (build 12883)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3117,11 +3118,11 @@ msgstr "<b>rolle:</b>... - objekt med en given rolle i en relation"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid ""
-"<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
+"<b>timestamp:</b>... -  objects with this timestamp "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>tidsstempel:</b>... -  objekter med dette tidsstempel (<b>2009-11-"
-"12T14:51:09Z</b>, <b>2009-11-12</b> eller <b>T14:51</b> ...)"
+"<b>tidsstempel:</b>... -  objekter med dette tidsstempel "
+"(<b>2009-11-12T14:51:09Z</b>, <b>2009-11-12</b> eller <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>modified</b> - all changed objects"
@@ -5317,19 +5318,19 @@ msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 "Denne test undersøger om en vej har et slutpunkt meget tæt på en anden vej."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:120
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:110
 msgid "Way end node near other highway"
 msgstr "Vejens slutpunkt tæt på anden landevej."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:138
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:128
 msgid "Way end node near other way"
 msgstr "Vejens slutpunkt nær anden vej."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:157
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:149
 msgid "Way node near other way"
 msgstr "Vejpunkt tæt på anden vej"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:174
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/UnconnectedWays.java:168
 msgid "Connected way end node near other way"
 msgstr "Forbundet vejs slutpunkt tæt på anden vej"
 
@@ -16448,8 +16449,8 @@ msgid ""
 "Illegal value for mandatory attribute ''{0}'' of type long (>=0). Got "
 "''{1}''."
 msgstr ""
-"Ulovlig værdi af obligatorisk attribut \"{0}\" af type long (>=0). Fik \"{1}"
-"\"."
+"Ulovlig værdi af obligatorisk attribut \"{0}\" af type long (>=0). Fik "
+"\"{1}\"."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:112
 #: ../core/src/org/openstreetmap/josm/io/OsmHistoryReader.java:108
@@ -22401,9 +22402,8 @@ msgid "Area Threshold"
 msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:59
-#, fuzzy
 msgid "Area Factor"
-msgstr "Funktion til sammenlægning af områder"
+msgstr ""
 
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaPreferenceSetting.java:63
 msgid "Distance Threshold"
@@ -44079,8 +44079,8 @@ msgstr ""
 #~ "Warning: Failed to initialize preferences. Preference directory ''{0}'' "
 #~ "isn't a directory."
 #~ msgstr ""
-#~ "Advarsel: Kunne ikke initialisere indstillinger. Indstillingsmappe \"{0}"
-#~ "\" er ikke en mappe."
+#~ "Advarsel: Kunne ikke initialisere indstillinger. Indstillingsmappe "
+#~ "\"{0}\" er ikke en mappe."
 
 #~ msgid ""
 #~ "<html>Failed to initialize preferences.<br>Preference directory ''{0}'' "

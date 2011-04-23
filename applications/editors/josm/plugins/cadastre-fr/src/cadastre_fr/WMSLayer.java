@@ -179,8 +179,8 @@ public class WMSLayer extends Layer implements ImageObserver {
             EastNorth mid = lambertMax.getCenter(lambertMin);
             mid = mid.add(-1, 1); // in case the boxes side is a pair, select the one one top,left to follow the rotation
             mid = mid.add(- mid.east()%c, - mid.north()%c);
-            int x = (int)(lambertMax.east() - lambertMin.east())/100;
-            int y = (int)(lambertMax.north() - lambertMin.north())/100;
+            int x = (int)(lambertMax.east() - lambertMin.east())/c;
+            int y = (int)(lambertMax.north() - lambertMin.north())/c;
             int dx[] = {+1, 0,-1, 0};
             int dy[] = {0,-1, 0,+1};
             int currDir = -1, lDir = 1, i = 1, j = 0, k = -1;

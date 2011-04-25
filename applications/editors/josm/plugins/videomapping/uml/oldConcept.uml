@@ -154,22 +154,6 @@
     </ownedOperation>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_oS42MGeAEeC5DqwlMjG_Kw" name="SimpleVideoPlayer" clientDependency="_ur80kGeBEeC5DqwlMjG_Kw">
-    <ownedOperation xmi:id="_rVC_oGeAEeC5DqwlMjG_Kw" name="finished">
-      <ownedParameter xmi:id="_yLSesGeAEeC5DqwlMjG_Kw" direction="return"/>
-      <ownedParameter xmi:id="_yLSesWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
-    </ownedOperation>
-    <ownedOperation xmi:id="_sZ5H0GeAEeC5DqwlMjG_Kw" name="metaDataAvailable">
-      <ownedParameter xmi:id="_zsvqYGeAEeC5DqwlMjG_Kw" direction="return"/>
-      <ownedParameter xmi:id="_zsvqYWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
-    </ownedOperation>
-    <ownedOperation xmi:id="_uO3FYGeAEeC5DqwlMjG_Kw" name="paused">
-      <ownedParameter xmi:id="_1QR5sGeAEeC5DqwlMjG_Kw" direction="return"/>
-      <ownedParameter xmi:id="_1QR5sWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
-    </ownedOperation>
-    <ownedOperation xmi:id="_vaRIkGeAEeC5DqwlMjG_Kw" name="playing">
-      <ownedParameter xmi:id="_14z5UGeAEeC5DqwlMjG_Kw" direction="return"/>
-      <ownedParameter xmi:id="_14z5UWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
-    </ownedOperation>
     <ownedOperation xmi:id="_6mkB4GeAEeC5DqwlMjG_Kw" name="updateTime" visibility="private">
       <ownedParameter xmi:id="_7l5X8GeAEeC5DqwlMjG_Kw" direction="return"/>
     </ownedOperation>
@@ -209,4 +193,24 @@
   <packagedElement xmi:type="uml:Dependency" xmi:id="_stI-gGeBEeC5DqwlMjG_Kw" supplier="_oS42MGeAEeC5DqwlMjG_Kw" client="_SGqEkGeAEeC5DqwlMjG_Kw"/>
   <packagedElement xmi:type="uml:Dependency" xmi:id="_ur80kGeBEeC5DqwlMjG_Kw" supplier="_TLhlcGeBEeC5DqwlMjG_Kw" client="_oS42MGeAEeC5DqwlMjG_Kw"/>
   <packagedElement xmi:type="uml:Dependency" xmi:id="_yaOdIGeBEeC5DqwlMjG_Kw" supplier="_TLhlcGeBEeC5DqwlMjG_Kw" client="_DID-UGeAEeC5DqwlMjG_Kw"/>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_i61f8GwAEeCIG-Xw7oAxcQ" name="vlcj.player.MediaPlayerEventListener" clientDependency="_vJvs0GwAEeCIG-Xw7oAxcQ">
+    <ownedOperation xmi:id="_qi2aMGwAEeCIG-Xw7oAxcQ" name="operation"/>
+    <ownedOperation xmi:id="_rVC_oGeAEeC5DqwlMjG_Kw" name="finished">
+      <ownedParameter xmi:id="_yLSesGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_yLSesWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_sZ5H0GeAEeC5DqwlMjG_Kw" name="metaDataAvailable">
+      <ownedParameter xmi:id="_zsvqYGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_zsvqYWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_uO3FYGeAEeC5DqwlMjG_Kw" name="paused">
+      <ownedParameter xmi:id="_1QR5sGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_1QR5sWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_vaRIkGeAEeC5DqwlMjG_Kw" name="playing">
+      <ownedParameter xmi:id="_14z5UGeAEeC5DqwlMjG_Kw" direction="return"/>
+      <ownedParameter xmi:id="_14z5UWeAEeC5DqwlMjG_Kw" name="MediaPlayer"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Realization" xmi:id="_vJvs0GwAEeCIG-Xw7oAxcQ" supplier="_oS42MGeAEeC5DqwlMjG_Kw" client="_i61f8GwAEeCIG-Xw7oAxcQ"/>
 </uml:Package>

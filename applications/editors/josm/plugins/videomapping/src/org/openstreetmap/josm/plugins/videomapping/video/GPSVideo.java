@@ -13,6 +13,7 @@ import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
 
 // a specific synced video
 public class GPSVideo extends Video{
+	private static final String SYNC_KEY = "synced";
 	public JComponent SyncComponent;
 	private WayPoint syncWayPoint;
 	private long syncVideoTime;
@@ -22,18 +23,21 @@ public class GPSVideo extends Video{
 	public WayPoint lastWayPoint;
 	private VideoPositionLayer videoPositionLayer;
 	
-	public GPSVideo(File filename) {
-		super(filename);
+	public GPSVideo(File filename, String id) {
+		super(filename,id);
 	}
 	
 	public GPSVideo(Video video)
 	{
-		super(video.filename);
+		super(video.filename,video.id);
 		this.player=video.player;
 	}
 	
+	//calculates attributes basing upon the current position
 	public void doSync(VideoPositionLayer layer) {
 		this.videoPositionLayer=layer;
+		if (isSynced())
+			removeSyncedWayPoints();
 		syncWayPoint=layer.getCurrentWayPoint();
 		syncVideoTime=getCurrentTime();
 		//calc now, to avoid calculations on every click
@@ -43,9 +47,6 @@ public class GPSVideo extends Video{
 		lastWayPoint=getLastGPS();
 		markSyncedWayPoints();
 		Main.map.mapView.repaint();
-		System.out.println(firstWayPoint.getTime());
-		System.out.println(lastWayPoint.getTime());
-
 	}
 
 	//make sure we don't leave the GPS track
@@ -71,6 +72,16 @@ public class GPSVideo extends Video{
 			return videoPositionLayer.getWayPointBefore(end);
 		}
 	}
+	
+	private void removeSyncedWayPoints() {
+		List <WayPoint> track =videoPositionLayer.getTrack();
+		int start=track.indexOf(firstWayPoint);
+		int end=track.indexOf(lastWayPoint);
+		List <WayPoint> ls =videoPositionLayer.getTrack().subList(start, end);
+		for (WayPoint n : ls) {
+			n.attr.keySet().remove(SYNC_KEY);
+		}				
+	}
 
 	private void markSyncedWayPoints() {
 		List <WayPoint> track =videoPositionLayer.getTrack();
@@ -78,10 +89,8 @@ public class GPSVideo extends Video{
 		int end=track.indexOf(lastWayPoint);
 		List <WayPoint> ls =videoPositionLayer.getTrack().subList(start, end);
 		for (WayPoint n : ls) {
-			n.attr.put("synced", Boolean.TRUE);
-		}
-		
-		
+			n.attr.put(SYNC_KEY, id);
+		}				
 	}
 
 	public boolean isSynced() {

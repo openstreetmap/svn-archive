@@ -93,9 +93,9 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	    this.addWindowListener(this);
 	}
 	
-	public Video addVideo(File Videofile)
+	public Video addVideo(File Videofile,String id)
 	{
-		Video video = new Video(Videofile);		
+		Video video = new Video(Videofile,id);		
 		canvasPanel.add(video.panel);
 		video.canvas.setSize(new Dimension(300, 300)); // will be updated by the video engine itself
 		videoengine.add(video);
@@ -111,24 +111,25 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 
 	
 	public void pause(){
-		if (notificationTimer!=null)
-		{
-			notificationTimer.cancel();
-			notificationTimer=null;
-		}
-		else
-		{
-			startNotificationTimer();
-		}
 		videoengine.pause();
+		if (videoengine.isNoVideoPlaying())
+			stopNotificationTimer();
+		else
+			startNotificationTimer();
+	}
+	
+	public void pauseAll()
+	{
+		stopNotificationTimer();
+		videoengine.pauseAll();
 	}
 
 	public void backward() {
-		videoengine.jump(-jumpLength);	
+		videoengine.jumpFor(-jumpLength);	
 	}
 
 	public void forward() {
-		videoengine.jump(jumpLength);	
+		videoengine.jumpFor(jumpLength);	
 	}
 
 	public void setSpeed(Integer percent)
@@ -156,6 +157,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		videoengine.mute();
 	}
 
+	//TODO auf mehrere Videos umstellen
 	public void toggleLooping() {
 		if(loopingTimer==null)
 		{
@@ -298,24 +300,37 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     	loopLength=ms;
     }
     
+    public void enableSingleVideoMode(boolean enabled)
+    {
+    	pauseAll();
+    	videoengine.enableSingleVideoMode(enabled);
+    }
+    
     public void addObserver(VideoPlayerObserver observer)
     {
     	observers.add(observer);
     }
 	
 	
-	private void startNotificationTimer() {
-		if(notificationTimer==null)
+	private void stopNotificationTimer() {
+		/*
+		if(notificationTimer!=null)
 		{
-			notificationTimer= new Timer();
-		    notificationTimer.schedule(new TimerTask() {				
-				@Override
-				public void run() {
-					notifyObservers();
-					
-				}
-			},notificationIntervall,notificationIntervall);
+			notificationTimer.cancel();
+			notificationTimer=null;
 		}
+		*/
+	}
+
+	private void startNotificationTimer() {
+		notificationTimer= new Timer();
+		notificationTimer.schedule(new TimerTask() {				
+			@Override
+			public void run() {
+				notifyObservers();
+				
+			}
+		},notificationIntervall,notificationIntervall);
 	}
 	
 	private void  notifyObservers() {
@@ -368,9 +383,11 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 			case speeding:
 			{
 				speed.setValue(videoengine.getSpeed());
+				break;
 			}
 			case jumping:
-			{				
+			{			
+				break;
 			}
 		}		
 	}

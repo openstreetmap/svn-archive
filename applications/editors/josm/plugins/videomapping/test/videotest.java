@@ -27,8 +27,9 @@ public class videotest {
     	VideoPlayer testplayer= new VideoPlayer(new SimpleDateFormat("hh:mm:ss"));
     	testplayer.setJumpLength(1000);
     	testplayer.setLoopLength(3000);
-    	testplayer.addVideo(new File("C:\\TEMP\\test.mpg"));
-    	testplayer.addVideo(new File("C:\\TEMP\\aoe-drachen_dvdscr.avi"));
+    	testplayer.addVideo(new File("C:\\TEMP\\test.mpg"),"1");
+    	testplayer.addVideo(new File("C:\\TEMP\\aoe-drachen_dvdscr.avi"),"2");
+    	testplayer.enableSingleVideoMode(true);
         
     }
 

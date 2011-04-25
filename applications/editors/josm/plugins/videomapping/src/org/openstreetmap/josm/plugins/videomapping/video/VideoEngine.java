@@ -30,8 +30,10 @@ public class VideoEngine implements MediaPlayerEventListener{
 	private List<VideosObserver> observers;
 	private final String[] libvlcArgs = {""};
     private final String[] standardMediaOptions = {""};
-    private final String[] deinterlacers = {"bob","linear"};
+    private final static String[] deinterlacers = {"bob","linear"};
     private final float initialCanvasFactor = 0.5f;
+	private boolean singleVideoMode; //commands will only affect the last added video
+	private Video lastAddedVideo;
 	
 	//called at plugin start to setup library
 	public static void setupPlayer()
@@ -68,6 +70,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 			video.player=mp;
 			mp.setStandardMediaOptions(standardMediaOptions);
 			videos.add(video);
+			lastAddedVideo=video;
 			mp.setVideoSurface(video.canvas);
 	        mp.addMediaPlayerEventListener(this);
 	        String mediaPath = video.filename.getAbsoluteFile().toString();
@@ -96,40 +99,79 @@ public class VideoEngine implements MediaPlayerEventListener{
 		return videos;
 	}
 
-	public void play()
+	public void play()	
 	{
-		for (Video video : videos) {
-			video.player.play();
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.play();
+		}
+		else
+		{
+			for (Video video : videos) {
+				video.player.play();
+			}
 		}
 		System.out.println("abspielen");
 	}
 	
+	//toggles pause and play 
 	public void pause()
 	{
-		for (Video video : videos) {
-			video.player.pause();
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.pause();
+		}
+		else
+		{
+			for (Video video : videos) {
+				video.player.pause();
+			}
 		}
 	}
 	
-	//jumps relative for ms in all videos
-	public void jump(long ms) {
+	//ensures that all stop
+	public void pauseAll() {
 		for (Video video : videos) {
-			long start=video.player.getTime();
-			video.player.setTime(start+ms);
+			if (video.player.isPlaying())
+				video.player.pause();
+		}	
+	}
+
+	//jumps relative for ms in all videos
+	public void jumpFor(long ms) {
+		if (singleVideoMode)
+		{
+			long start=lastAddedVideo.player.getTime();
+			lastAddedVideo.player.setTime(start+ms);
 		}
+		else
+		{
+			for (Video video : videos) {
+				long start=video.player.getTime();
+				video.player.setTime(start+ms);
+			}
+		}
+		notifyObservers(VideoObserversEvents.jumping);
 		
 	}
 
 	//jumps in all videos to this absolute video time
 	public void jumpTo(long msVideo)
 	{
-		for (Video video : videos) {
-			video.player.setTime(msVideo);
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.setTime(msVideo);
+		}
+		else
+		{
+			for (Video video : videos) {
+				video.player.setTime(msVideo);
+			}
 		}
 		notifyObservers(VideoObserversEvents.jumping);
 	}
 			
-	//TODO muss auf Rückgabe für alle Videos erweitert werden
+	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public long getVideoTime()
 	{
 		return videos.get(0).player.getTime();
@@ -138,13 +180,21 @@ public class VideoEngine implements MediaPlayerEventListener{
 	//jumps in all videos to this absolute video time percentage
 	public void jumpToPosition(int percent)
 	{
-		for (Video video : videos) {
-			float position = ((float)percent/100f);
-			video.player.setPosition(position);
+		float position = ((float)percent/100f);
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.setPosition(position);
+		}
+		else
+		{
+			for (Video video : videos) {
+				video.player.setPosition(position);
+			}
 		}
 		notifyObservers(VideoObserversEvents.jumping);
 	}
 	
+	//TODO has to be for every video
 	public int getPosition()
 	{
 		return (int) (videos.get(0).player.getPosition()*100);
@@ -154,6 +204,10 @@ public class VideoEngine implements MediaPlayerEventListener{
 	
 	public void setSpeed(int percent)
 	{
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.setRate((float)(percent/100f));
+		}
 		for (Video video : videos) {
 			video.player.setRate((float)(percent/100f));
 		}
@@ -195,18 +249,29 @@ public class VideoEngine implements MediaPlayerEventListener{
 	
 	public void setDeinterlacer (String deinterlacer)
 	{
-		for (Video video : videos) {
-			video.player.setDeinterlace(deinterlacer);
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.setDeinterlace(deinterlacer);
+		}
+		else
+		{
+			for (Video video : videos) {
+				video.player.setDeinterlace(deinterlacer);
+			}
 		}
 	}
 	
-	public String[] getDeinterlacers()
+	public static String[] getDeinterlacers()
 	{
 		return deinterlacers;
 	}
 	
 	public void mute()
 	{
+		if (singleVideoMode)
+		{
+			lastAddedVideo.player.mute();
+		}
 		for (Video video : videos) {
 			video.player.mute();
 		}
@@ -306,6 +371,19 @@ public class VideoEngine implements MediaPlayerEventListener{
 	}
 
 	public void titleChanged(MediaPlayer arg0, int arg1) {
+		
+	}
+
+	public boolean isNoVideoPlaying() {
+		for (Video video : videos) {
+			if (video.player.isPlaying())
+				return false;
+		}
+		return true;
+	}
+
+	public void enableSingleVideoMode(boolean enabled) {
+		singleVideoMode = true;
 		
 	}
 

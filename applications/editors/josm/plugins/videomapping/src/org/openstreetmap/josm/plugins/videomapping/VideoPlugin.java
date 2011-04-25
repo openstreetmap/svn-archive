@@ -175,7 +175,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
                 loopLength=Integer.getInteger(s);
                 saveProperties();
             }
-        });        
+        });
+        //TODO read deinterlacers list out of videoengine
         VDeinterlacer= new JMenu("Deinterlacer");
         VIntNone= new JRadioButtonMenuItem(new JosmAction(tr("none"), null, tr("no deinterlacing"),null, false) {            
             public void actionPerformed(ActionEvent e) {
@@ -216,15 +217,18 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 		JFileChooser fc = new JFileChooser(mostRecentFolder);
         fc.setSelectedFile(new File(mostRecentFolder));
         if(fc.showOpenDialog(Main.main.parent)!=JFileChooser.CANCEL_OPTION)
-        {
+        {        	
         	mostRecentFolder=fc.getSelectedFile().getAbsolutePath();
         	saveProperties();
-        	videoPositionLayer= new VideoPositionLayer(gpsLayer);
-        	gpsVideoPlayer = new GPSVideoPlayer(new SimpleDateFormat("hh:mm:ss") ,videoPositionLayer);
-        	gpsVideoPlayer.setJumpLength(jumpLength);
-        	gpsVideoPlayer.setLoopLength(loopLength);
-        	gpsVideoPlayer.addVideo(fc.getSelectedFile());
-        	enableVideoControlMenus(true);
+        	if(videoPositionLayer==null)
+        	{
+        		videoPositionLayer= new VideoPositionLayer(gpsLayer);
+            	gpsVideoPlayer = new GPSVideoPlayer(new SimpleDateFormat("hh:mm:ss") ,videoPositionLayer);
+            	gpsVideoPlayer.setJumpLength(jumpLength);
+            	gpsVideoPlayer.setLoopLength(loopLength);
+            	enableVideoControlMenus(true);
+        	}        	
+        	gpsVideoPlayer.addVideo(fc.getSelectedFile());        	
         }
 		
 	}
@@ -271,19 +275,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
     	Main.pref.put(PROP_MRU, mostRecentFolder);
     }
 	
-	private void applySettings()
-	{
-		//GUI
-        VCenterIcon.setSelected(autoCenter);
-        VIntNone.setSelected(true);
-        if(deinterlacer=="")
-        	VIntNone.setSelected(true);
-        if(deinterlacer=="bob")
-        	VIntBob.setSelected(true);
-        if(deinterlacer=="linear")
-        	VIntLinear.setSelected(true);
-	}
-	
+
 	private void showJumpTo()
 	{
 		String s;
@@ -344,6 +336,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 	}
 
 	public void layerRemoved(Layer arg0) {
+		if(arg0 instanceof VideoPositionLayer)
+			enableVideoControlMenus(false);
 		activeLayerChange(null,arg0);
 		
 	}

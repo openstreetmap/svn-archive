@@ -42,25 +42,37 @@ public class GPSVideoPlayer extends VideoPlayer
 	}
 
 
-	@Override
 	public GPSVideo addVideo(File Videofile) {		
-		GPSVideo video = new GPSVideo(super.addVideo(Videofile));
+		GPSVideo video = new GPSVideo(super.addVideo(Videofile,Integer.toString(videos.size())));
+		enableSingleVideoMode(true);
 		videos.add(video);
+		addSyncButton(video);
+		return video;
+	}
+
+
+	private void addSyncButton(GPSVideo video) {
 		JButton syncButton= new JButton(tr("Sync"));
 		syncButton.setBackground(Color.RED);		
 		syncButton.addActionListener(new ActionListener() {
-            //do a sync
             public void actionPerformed(ActionEvent e) {
-            	GPSVideo v=findVideo((JButton)e.getSource());
-            	v.doSync(videoPositionLayer);
-            }
+            	resync(e);
+            }			
 		});
 		video.SyncComponent=syncButton;
 		//video.panel.add(syncButton,BorderLayout.SOUTH);
 		controlsPanel.add(syncButton);
-		return video;
 	}	
 
+	//do a (re)sync
+	private void resync(ActionEvent e) {
+		JButton btn =(JButton)e.getSource();
+    	GPSVideo v=findVideo(btn);
+    	v.doSync(videoPositionLayer);
+    	btn.setBackground(Color.GREEN);
+    	enableSingleVideoMode(false);
+	}
+	
 	protected GPSVideo findVideo(JButton source) {
 		for (GPSVideo v : videos) {
 			if (v.SyncComponent==source) return v;

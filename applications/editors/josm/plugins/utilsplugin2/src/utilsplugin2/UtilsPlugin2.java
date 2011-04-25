@@ -31,6 +31,8 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem sourceTag;
     JMenuItem pasteRelations;
     JMenuItem alignWayNodes;
+    JMenuItem selModifiedNodes;
+    JMenuItem selModifiedWays;
 
     public UtilsPlugin2(PluginInformation info) {
         super(info);
@@ -55,6 +57,8 @@ public class UtilsPlugin2 extends Plugin {
         adjWaysAll = MainMenu.add(selectionMenu, new ConnectedWaysAction());
         intWays = MainMenu.add(selectionMenu, new IntersectedWaysAction());
         intWaysR = MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
+        selModifiedNodes = MainMenu.add(selectionMenu, new SelectModNodesAction());
+        selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
     }
 
     @Override
@@ -78,5 +82,7 @@ public class UtilsPlugin2 extends Plugin {
         adjWaysAll.setEnabled(enabled);
         intWays.setEnabled(enabled);
         intWaysR.setEnabled(enabled);
+        selModifiedNodes.setEnabled(enabled);
+        selModifiedWays.setEnabled(enabled);
     }
 }

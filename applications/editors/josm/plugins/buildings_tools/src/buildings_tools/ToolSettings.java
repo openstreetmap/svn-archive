@@ -10,8 +10,10 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 public class ToolSettings {
+    public static BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", true);
     private static double width = 0;
     private static double lenstep = 0;
     private static boolean useAddr;

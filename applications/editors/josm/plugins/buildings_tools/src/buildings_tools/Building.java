@@ -16,13 +16,18 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.*;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 
@@ -213,6 +218,38 @@ class Building {
         return bestnode;
     }
 
+    /**
+     * Returns a node with "building=yes" tag under the building
+     *
+     * @return
+     */
+    private Node getAddressNode() {
+        BBox bbox = new BBox(eastNorth2latlon(en[0]), eastNorth2latlon(en[1]));
+        bbox.add(eastNorth2latlon(en[2]));
+        bbox.add(eastNorth2latlon(en[3]));
+        List<Node> nodes = new LinkedList<Node>();
+        nodesloop:
+        for (Node n : Main.main.getCurrentDataSet().searchNodes(bbox)) {
+            if (!n.isUsable() || n.getKeys().get("building") == null)
+                continue;
+            double x = projection1(latlon2eastNorth(n.getCoor()));
+            double y = projection2(latlon2eastNorth(n.getCoor()));
+            if (Math.signum(x) != Math.signum(len) || Math.signum(y) != Math.signum(width))
+                continue;
+            if (Math.abs(x) > Math.abs(len) || Math.abs(y) > Math.abs(width))
+                continue;
+            for (OsmPrimitive p : n.getReferrers()) {
+                // Don't use nodes if they're referenced by ways
+                if (p.getType() == OsmPrimitiveType.WAY)
+                    continue nodesloop;
+            }
+            nodes.add(n);
+        }
+        if (nodes.size() != 1)
+            return null;
+        return nodes.get(0);
+    }
+
     public Way create() {
         if (len == 0)
             return null;
@@ -246,13 +283,31 @@ class Building {
             w.addNode(nodes[1]);
         }
         w.addNode(nodes[0]);
-        w.setKeys(ToolSettings.getTags());
         Collection<Command> cmds = new LinkedList<Command>();
         for (int i = 0; i < 4; i++) {
             if (created[i])
                 cmds.add(new AddCommand(nodes[i]));
         }
         cmds.add(new AddCommand(w));
+        Node addrNode;
+        if (ToolSettings.PROP_USE_ADDR_NODE.get() && (addrNode = getAddressNode()) != null) {
+            w.setKeys(addrNode.getKeys());
+            for (OsmPrimitive p : addrNode.getReferrers()) {
+                Relation r = (Relation) p;
+                Relation rnew = new Relation(r);
+                for (int i = 0; i < r.getMembersCount(); i++) {
+                    RelationMember member = r.getMember(i);
+                    if (member.getMember() == addrNode) {
+                        rnew.removeMember(i);
+                        rnew.addMember(i, new RelationMember(member.getRole(), w));
+                    }
+                }
+                cmds.add(new ChangeCommand(r, rnew));
+            }
+            cmds.add(new DeleteCommand(addrNode));
+        } else {
+            w.setKeys(ToolSettings.getTags());
+        }
         Command c = new SequenceCommand(tr("Create building"), cmds);
         Main.main.undoRedo.add(c);
         return w;

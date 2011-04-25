@@ -349,39 +349,39 @@ window.onunload = setCookie;
 </script>
 
 <style type="text/css">
-  body { margin:0px; }
-  div#map { width:100%; height:100%; }
-  .olControlAttribution {
-    font-size:8pt;
-    left:5px; bottom:5px;
-  }
-  #menu {
-    position:absolute; top:0px; left:50%; 
-    width:42em; margin-left:-21em;
-    z-index:1000;
-    vertical-align:middle;
-    font-family:Arial,Helvetica,sans-serif;
-    font-size:13px;
-    color:white;
-    background-image: url('darkblue-75.png');
-    /* background-color: rgba(0,0,139,0.75); */
-    padding:4px 20px;
-    border-bottom-left-radius: 7px;
-    border-bottom-right-radius: 7px;
-    -moz-border-radius-bottomleft: 7px;
-    -moz-border-radius-bottomright: 7px;
-    -webkit-border-bottom-left-radius: 7px;
-    -webkit-border-bottom-right-radius: 7px;
-  }
-  #more, #search { display:none; }
-  input#q { width: 25em; }
-  #videotutorial { display:none; text-align:center; }
-  #menu a {
-    text-decoration:none;
-    color:white;
-  }
-  #tabs a { margin-right:.9em; }
-  #more ul li { line-height:1.4em; }
+body { margin:0px; }
+div#map { width:100%; height:100%; }
+.olControlAttribution {
+  font-size:8pt;
+  left:5px; bottom:5px;
+}
+#menu {
+  position:absolute; top:0px; left:50%; 
+  width:42em; margin-left:-21em;
+  z-index:1000;
+  vertical-align:middle;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:13px;
+  color:white;
+  background-image:url('darkblue-75.png');
+  /* background-color:rgba(0,0,139,0.75); */
+  padding:4px 20px;
+  border-bottom-left-radius:7px;
+  border-bottom-right-radius:7px;
+  -moz-border-radius-bottomleft:7px;
+  -moz-border-radius-bottomright:7px;
+  -webkit-border-bottom-left-radius:7px;
+  -webkit-border-bottom-right-radius:7px;
+}
+#more, #search { display:none; }
+input#q { width:25em; }
+#videotutorial { display:none; text-align:center; }
+#menu a { color:inherit; }
+#tabs a { text-decoration:none; }
+.hide a { text-decoration:none; }
+#tabs a { margin-right:.9em; }
+#more ul li { line-height:1.4em; }
+.hide { font-size:14pt;position:absolute;right:1em;top:2px; }
 </style>
 
 </head>
@@ -409,10 +409,10 @@ window.onunload = setCookie;
        title="Spør om hjelp her">Hjelp</a>
     <a href="#"
        onclick="javascript:toggleVisibility('search');"
-       title="Naviger ved hjelp av stedsnavn">Søk &gt;&gt;</a>
+       title="Naviger ved hjelp av stedsnavn">Søk</a>
     <a href="#"
        onclick="javascript:toggleVisibility('more');"
-       title="Kort om OSM og hint til å komme i gang">Informasjon &gt;&gt;</a>
+       title="Kort om OSM og hint til å komme i gang">Informasjon</a>
     </div>
     <div id="search">
       <p>
@@ -427,6 +427,12 @@ window.onunload = setCookie;
              title="Se alle søkeresultatene med Nominatim"></a>
         </form>
       </p>
+      <p class="hide">
+        <a href="#"
+           onclick="javascript:toggleVisibility('search');"
+           title="Skjul søkefeltet"
+          >&#x2716;</a>
+      </p>
     </div>
     <div id="more">
       <p>
@@ -434,10 +440,10 @@ window.onunload = setCookie;
         et verdensomspennende prosjekt for å dele frie kartdata.
         Hver måned bidrar
         <a href="http://wiki.openstreetmap.org/wiki/Statistics"
-           title="OSM database statistikk"
-          >13000 mennesker</a> (på verdensbasis,
-        <a href="https://spreadsheets.google.com/pub?key=0AhGotL8XToWSdFY5ZmdnZmhSTHZGa2QwUm5VdkpjMFE"
-           title="OSM database statistikk"
+           title="OSM database statistikk (globalt)"
+          >13000 mennesker</a>
+        (<a href="https://spreadsheets.google.com/pub?key=0AhGotL8XToWSdFY5ZmdnZmhSTHZGa2QwUm5VdkpjMFE"
+           title="OSM database statistikk (Norge)"
            >150 i Norge</a>)
         med å samle inn data og lage løsninger som du kan bruke helt fritt.
       </p>
@@ -451,7 +457,7 @@ window.onunload = setCookie;
               >Hvordan bidra til dugnadskartet</a> —
             <a href="#"
                onclick="javascript:toggleVisibility('videotutorial');"
-              >se en instruksjonsfilm &gt;&gt;</a></li>
+              >se en instruksjonsfilm</a></li>
         <li><a href="http://wiki.openstreetmap.org/wiki/No:Map_Features"
               >Oversikt over kartegenskaper (tagger) tilpasset Norge</a></li>
         <li><a href="http://www.frikart.no/garmin/"
@@ -466,6 +472,12 @@ window.onunload = setCookie;
       </ul>
       <p id="videotutorial">
 <object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0"/><param name="allowFullScreen" value="true"/><param name="allowscriptaccess" value="always"/><embed src="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"/></object>
+      </p>
+      <p class="hide">
+        <a href="#"
+           onclick="javascript:toggleVisibility('more');"
+           title="Skjul informasjonsarket"
+          >&#x2716;</a>
       </p>
     </div>
   </div>

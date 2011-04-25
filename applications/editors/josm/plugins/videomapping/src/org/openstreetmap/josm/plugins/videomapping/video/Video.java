@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
+//basic informations about one single video playback instance
 public class Video {
 	public File filename;
 	public String id; //unique id to make it easy to identify

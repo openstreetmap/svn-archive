@@ -117,6 +117,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		
 	}
 
+	//just a Demo to show up IPO on a whole segment
 	private List<WayPoint> getInterpolatedSegment(WayPoint center, int before, int after) {
 		LinkedList<WayPoint> ls = new LinkedList<WayPoint>();
 		if(gpsTrack.indexOf(iconPosition)!=0)
@@ -250,7 +251,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
             {
             	if (gpsVideoPlayer.areAllVideosSynced())
             	{
-            		//we set the video to right position
+            		//we set the video to corresponding position
             		gpsVideoPlayer.jumpTo(wp.getTime());
             	}
             	setIconPosition(wp);

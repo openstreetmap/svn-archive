@@ -57,7 +57,7 @@ import uk.co.caprica.vlcj.player.embedded.*;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 
-//basic class of a videoplayer for one video
+//basic UI of a videoplayer for multiple videos incl. notifications
 public class VideoPlayer extends JFrame implements WindowListener, VideosObserver, VideoPlayerObserver{
 	private static final int notificationIntervall = 500;
 	protected JPanel screenPanel,controlsPanel,canvasPanel;

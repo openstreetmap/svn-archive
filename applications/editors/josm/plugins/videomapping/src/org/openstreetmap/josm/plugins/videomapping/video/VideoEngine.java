@@ -22,7 +22,7 @@ import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 
 import static org.openstreetmap.josm.tools.I18n.*;
 
-//concrete Player library that is able to play back multiple videos
+//concrete Player library that is able to playback multiple videos
 public class VideoEngine implements MediaPlayerEventListener{
 	private FullScreenStrategy fullScreenStrategy;
 	private MediaPlayerFactory mediaPlayerFactory;
@@ -151,8 +151,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 				video.player.setTime(start+ms);
 			}
 		}
-		notifyObservers(VideoObserversEvents.jumping);
-		
+		notifyObservers(VideoObserversEvents.jumping);		
 	}
 
 	//jumps in all videos to this absolute video time
@@ -194,13 +193,11 @@ public class VideoEngine implements MediaPlayerEventListener{
 		notifyObservers(VideoObserversEvents.jumping);
 	}
 	
-	//TODO has to be for every video
+	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public int getPosition()
 	{
 		return (int) (videos.get(0).player.getPosition()*100);
-	}
-	
-	
+	}	
 	
 	public void setSpeed(int percent)
 	{
@@ -214,6 +211,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		notifyObservers(VideoObserversEvents.speeding);
 	}
 	
+	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public int getSpeed()
 	{
 		return (int) (videos.get(0).player.getRate()*100);

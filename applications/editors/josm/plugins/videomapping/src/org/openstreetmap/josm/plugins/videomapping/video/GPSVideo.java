@@ -97,6 +97,7 @@ public class GPSVideo extends Video{
 		return firstWayPoint!=null;
 	}
 
+	//if synced jump in video to this GPS timecode 
 	public void jumpTo(Date GPSTime) {
 		if((GPSTime.after(firstWayPoint.getTime())&(GPSTime.before(lastWayPoint.getTime()))))
 		{

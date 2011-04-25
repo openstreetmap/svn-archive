@@ -41,7 +41,6 @@ public class GPSVideoPlayer extends VideoPlayer
 		videoPositionLayer.setGPSVideoPlayer(this);
 	}
 
-
 	public GPSVideo addVideo(File Videofile) {		
 		GPSVideo video = new GPSVideo(super.addVideo(Videofile,Integer.toString(videos.size())));
 		enableSingleVideoMode(true);
@@ -49,7 +48,6 @@ public class GPSVideoPlayer extends VideoPlayer
 		addSyncButton(video);
 		return video;
 	}
-
 
 	private void addSyncButton(GPSVideo video) {
 		JButton syncButton= new JButton(tr("Sync"));
@@ -80,6 +78,7 @@ public class GPSVideoPlayer extends VideoPlayer
 		return null;
 	}
 	
+	//jump in all videos this date, if possible
 	public void jumpTo(Date date)
 	{
 		for (GPSVideo video : videos) {
@@ -89,7 +88,6 @@ public class GPSVideoPlayer extends VideoPlayer
 	
 	public boolean areAllVideosSynced()
 	{
-
 		for (GPSVideo video : videos) {
 			if (!video.isSynced()) return false;
 		}

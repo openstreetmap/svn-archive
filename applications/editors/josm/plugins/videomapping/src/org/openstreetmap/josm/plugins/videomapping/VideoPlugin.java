@@ -50,7 +50,7 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
   /**
  * @author Matthias Meiﬂer (digi_c at arcor dot de)
  * @ released under GPL
- * This Plugin allows you to link a video against a GPS track and playback both synchronously 
+ * This Plugin allows you to link multiple videos against a GPS track and playback both synchronously 
  */
 
 //Here we manage properties and start the other classes
@@ -229,8 +229,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
             	enableVideoControlMenus(true);
         	}        	
         	gpsVideoPlayer.addVideo(fc.getSelectedFile());        	
-        }
-		
+        }		
 	}
 
 	private void enableVideoControlMenus(boolean b) {

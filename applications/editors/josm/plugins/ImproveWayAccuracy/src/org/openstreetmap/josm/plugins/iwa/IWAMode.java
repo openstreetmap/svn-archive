@@ -345,69 +345,65 @@ public class IWAMode extends MapMode implements MapViewPaintable,
                 return;
             }
 
-            if (ctrl) {
+            if (ctrl && candidateSegment != null) {
                 // Adding a new node to the highlighted segment
                 // Important: If there are other ways containing the same
                 // segment, a node must added to all of that ways.
-                if (candidateSegment != null) {
-                    Collection<Command> virtualCmds = new LinkedList<Command>();
+                Collection<Command> virtualCmds = new LinkedList<Command>();
 
-                    // Creating a new node
-                    Node virtualNode = new Node(mv.getEastNorth(mousePos.x,
-                            mousePos.y));
-                    virtualCmds.add(new AddCommand(virtualNode));
+                // Creating a new node
+                Node virtualNode = new Node(mv.getEastNorth(mousePos.x,
+                        mousePos.y));
+                virtualCmds.add(new AddCommand(virtualNode));
 
-                    // Looking for candidateSegment copies in ways that are
-                    // referenced
-                    // by candidateSegment nodes
-                    List<Way> firstNodeWays = OsmPrimitive.getFilteredList(
-                            candidateSegment.getFirstNode().getReferrers(),
-                            Way.class);
-                    List<Way> secondNodeWays = OsmPrimitive.getFilteredList(
-                            candidateSegment.getFirstNode().getReferrers(),
-                            Way.class);
+                // Looking for candidateSegment copies in ways that are
+                // referenced
+                // by candidateSegment nodes
+                List<Way> firstNodeWays = OsmPrimitive.getFilteredList(
+                        candidateSegment.getFirstNode().getReferrers(),
+                        Way.class);
+                List<Way> secondNodeWays = OsmPrimitive.getFilteredList(
+                        candidateSegment.getFirstNode().getReferrers(),
+                        Way.class);
 
-                    Collection<WaySegment> virtualSegments = new LinkedList<WaySegment>();
-                    for (Way w : firstNodeWays) {
-                        List<Pair<Node, Node>> wpps = w.getNodePairs(true);
-                        for (Way w2 : secondNodeWays) {
-                            if (!w.equals(w2))
-                                continue;
-                            // A way is referenced in both nodes.
-                            // Checking if there is such segment
-                            int i = -1;
-                            for (Pair<Node, Node> wpp : wpps) {
-                                ++i;
-                                if ((wpp.a.equals(candidateSegment
-                                        .getFirstNode())
-                                        && wpp.b.equals(candidateSegment
-                                                .getSecondNode()) || (wpp.b
-                                        .equals(candidateSegment.getFirstNode()) && wpp.a
-                                        .equals(candidateSegment
-                                                .getSecondNode())))) {
-                                    virtualSegments.add(new WaySegment(w, i));
-                                }
+                Collection<WaySegment> virtualSegments = new LinkedList<WaySegment>();
+                for (Way w : firstNodeWays) {
+                    List<Pair<Node, Node>> wpps = w.getNodePairs(true);
+                    for (Way w2 : secondNodeWays) {
+                        if (!w.equals(w2))
+                            continue;
+                        // A way is referenced in both nodes.
+                        // Checking if there is such segment
+                        int i = -1;
+                        for (Pair<Node, Node> wpp : wpps) {
+                            ++i;
+                            if ((wpp.a.equals(candidateSegment.getFirstNode())
+                                    && wpp.b.equals(candidateSegment
+                                            .getSecondNode()) || (wpp.b
+                                    .equals(candidateSegment.getFirstNode()) && wpp.a
+                                    .equals(candidateSegment.getSecondNode())))) {
+                                virtualSegments.add(new WaySegment(w, i));
                             }
                         }
                     }
-
-                    // Adding the node to all segments found
-                    for (WaySegment virtualSegment : virtualSegments) {
-                        Way w = virtualSegment.way;
-                        Way wnew = new Way(w);
-                        wnew.addNode(virtualSegment.lowerIndex + 1, virtualNode);
-                        virtualCmds.add(new ChangeCommand(w, wnew));
-                    }
-
-                    // Finishing the sequence command
-                    String text = trn("Add and a new node to way",
-                            "Add and a new node to {0} ways",
-                            virtualSegments.size(), virtualSegments.size());
-
-                    Main.main.undoRedo.add(new SequenceCommand(text,
-                            virtualCmds));
                 }
-            } else {
+
+                // Adding the node to all segments found
+                for (WaySegment virtualSegment : virtualSegments) {
+                    Way w = virtualSegment.way;
+                    Way wnew = new Way(w);
+                    wnew.addNode(virtualSegment.lowerIndex + 1, virtualNode);
+                    virtualCmds.add(new ChangeCommand(w, wnew));
+                }
+
+                // Finishing the sequence command
+                String text = trn("Add and a new node to way",
+                        "Add and a new node to {0} ways",
+                        virtualSegments.size(), virtualSegments.size());
+
+                Main.main.undoRedo.add(new SequenceCommand(text, virtualCmds));
+
+            } else if (candidateNode != null) {
                 // Moving the highlighted node
                 EastNorth nodeEN = candidateNode.getEastNorth();
                 EastNorth cursorEN = mv.getEastNorth(mousePos.x, mousePos.y);

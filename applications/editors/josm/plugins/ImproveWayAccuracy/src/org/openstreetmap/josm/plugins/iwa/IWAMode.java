@@ -336,7 +336,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
                 getCurrentDataSet().setSelected(targetWay.getPrimitiveId());
                 updateStateByCurrentSelection();
             }
-        } else if (state == State.improving) {
+        } else if (state == State.improving && mousePos != null) {
             // Checking if the new coordinate is outside of the world
             if (mv.getLatLon(mousePos.x, mousePos.y).isOutSideWorld()) {
                 JOptionPane.showMessageDialog(Main.parent,

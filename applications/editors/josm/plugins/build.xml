@@ -33,6 +33,7 @@
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
+        <ant antfile="build.xml" target="dist" dir="ImproveWayAccuracy"/>
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
@@ -105,6 +106,7 @@
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>
+        <ant antfile="build.xml" target="clean" dir="ImproveWayAccuracy"/>
         <ant antfile="build.xml" target="clean" dir="irsrectify"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
         <ant antfile="build.xml" target="clean" dir="livegps"/>

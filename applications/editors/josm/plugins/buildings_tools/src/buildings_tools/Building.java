@@ -11,6 +11,7 @@ import java.awt.geom.GeneralPath;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -219,7 +220,7 @@ class Building {
     }
 
     /**
-     * Returns a node with "building=yes" tag under the building
+     * Returns a node with address tags under the building
      *
      * @return
      */
@@ -230,8 +231,15 @@ class Building {
         List<Node> nodes = new LinkedList<Node>();
         nodesloop:
         for (Node n : Main.main.getCurrentDataSet().searchNodes(bbox)) {
-            if (!n.isUsable() || n.getKeys().get("building") == null)
+            if (!n.isUsable())
                 continue;
+            tagcheck: do {
+                for (String key : n.getKeys().keySet()) {
+                    if (key.equals("building") || key.startsWith("addr:"))
+                        break tagcheck;
+                }
+                continue nodesloop;
+            } while (false);
             double x = projection1(latlon2eastNorth(n.getCoor()));
             double y = projection2(latlon2eastNorth(n.getCoor()));
             if (Math.signum(x) != Math.signum(len) || Math.signum(y) != Math.signum(width))
@@ -288,10 +296,13 @@ class Building {
             if (created[i])
                 cmds.add(new AddCommand(nodes[i]));
         }
+        w.setKeys(ToolSettings.getTags());
         cmds.add(new AddCommand(w));
         Node addrNode;
         if (ToolSettings.PROP_USE_ADDR_NODE.get() && (addrNode = getAddressNode()) != null) {
-            w.setKeys(addrNode.getKeys());
+            for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {
+                w.put(entry.getKey(), entry.getValue());
+            }
             for (OsmPrimitive p : addrNode.getReferrers()) {
                 Relation r = (Relation) p;
                 Relation rnew = new Relation(r);
@@ -305,8 +316,6 @@ class Building {
                 cmds.add(new ChangeCommand(r, rnew));
             }
             cmds.add(new DeleteCommand(addrNode));
-        } else {
-            w.setKeys(ToolSettings.getTags());
         }
         Command c = new SequenceCommand(tr("Create building"), cmds);
         Main.main.undoRedo.add(c);

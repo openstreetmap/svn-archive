@@ -16,7 +16,6 @@ import java.util.Set;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -108,13 +107,8 @@ public class Validator {
 		final List<Relation> lenghts = new ArrayList<Relation>();
 		final List<Relation> turns = new ArrayList<Relation>();
 		
-		for (OsmPrimitive p : dataSet.allPrimitives()) {
-			if (p.getType() != OsmPrimitiveType.RELATION) {
-				continue;
-			}
-			
-			final Relation r = (Relation) p;
-			final String type = p.get("type");
+		for (Relation r : OsmPrimitive.getFilteredList(dataSet.allPrimitives(), Relation.class)) {
+			final String type = r.get("type");
 			
 			if (Constants.TYPE_LENGTHS.equals(type)) {
 				lenghts.add(r);
@@ -152,41 +146,42 @@ public class Validator {
 	private List<Issue> validateLengths(Relation r, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
 		final List<Issue> issues = new ArrayList<Issue>();
 		
-		final Node end = validateLengthsEnd(r, issues);
-		
-		if (end == null) {
+		try {
+			final Node end = Utils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
+			final Route route = validateLengthsWays(r, end, issues);
+			
+			if (route == null) {
+				return issues;
+			}
+			
+			final List<Double> left = Lane.loadLengths(r, Constants.LENGTHS_KEY_LENGTHS_LEFT, 0);
+			final List<Double> right = Lane.loadLengths(r, Constants.LENGTHS_KEY_LENGTHS_RIGHT, 0);
+			
+			int tooLong = 0;
+			for (Double l : left) {
+				if (l > route.getLength()) {
+					++tooLong;
+				}
+			}
+			for (Double l : right) {
+				if (l > route.getLength()) {
+					++tooLong;
+				}
+			}
+			
+			if (tooLong > 0) {
+				issues.add(Issue.newError(r, end, "The lengths-relation specifies " + tooLong
+				    + " extra-lanes which are longer than its ways."));
+			}
+			
+			putIncomingLanes(route, left, right, incomingLanes);
+			
+			return issues;
+			
+		} catch (UnexpectedDataException e) {
+			issues.add(Issue.newError(r, e.getMessage()));
 			return issues;
 		}
-		
-		final Route route = validateLengthsWays(r, end, issues);
-		
-		if (route == null) {
-			return issues;
-		}
-		
-		final List<Double> left = Lane.loadLengths(r, Constants.LENGTHS_KEY_LENGTHS_LEFT, 0);
-		final List<Double> right = Lane.loadLengths(r, Constants.LENGTHS_KEY_LENGTHS_RIGHT, 0);
-		
-		int tooLong = 0;
-		for (Double l : left) {
-			if (l > route.getLength()) {
-				++tooLong;
-			}
-		}
-		for (Double l : right) {
-			if (l > route.getLength()) {
-				++tooLong;
-			}
-		}
-		
-		if (tooLong > 0) {
-			issues.add(Issue.newError(r, end, "The lengths-relation specifies " + tooLong
-			    + " extra-lanes which are longer than its ways."));
-		}
-		
-		putIncomingLanes(route, left, right, incomingLanes);
-		
-		return issues;
 	}
 	
 	private void putIncomingLanes(Route route, List<Double> left, List<Double> right,
@@ -205,14 +200,16 @@ public class Validator {
 			        .max(lanes.extraRight, old.extraRight)));
 		}
 		
-		final double length = route.getLastSegment().getLength();
-		final List<Double> newLeft = reduceLengths(left, length);
-		final List<Double> newRight = new ArrayList<Double>(right.size());
-		
-		if (route.getSegments().size() > 1) {
-			final Route subroute = route.subRoute(0, route.getSegments().size() - 1);
-			putIncomingLanes(subroute, newLeft, newRight, incomingLanes);
-		}
+		// TODO this tends to produce a bunch of useless errors
+		// turn lanes really should not span from one junction past another, remove??
+		//		final double length = route.getLastSegment().getLength();
+		//		final List<Double> newLeft = reduceLengths(left, length);
+		//		final List<Double> newRight = new ArrayList<Double>(right.size());
+		//		
+		//		if (route.getSegments().size() > 1) {
+		//			final Route subroute = route.subRoute(0, route.getSegments().size() - 1);
+		//			putIncomingLanes(subroute, newLeft, newRight, incomingLanes);
+		//		}
 	}
 	
 	private List<Double> reduceLengths(List<Double> lengths, double length) {
@@ -239,7 +236,7 @@ public class Validator {
 		Node current = end;
 		for (Way w : ways) {
 			if (!w.isFirstLastNode(current)) {
-				return orderWays(r, ways, current, issues);
+				return orderWays(r, ways, current, issues, "ways", "lengths");
 			}
 			
 			current = Utils.getOppositeEnd(w, current);
@@ -248,7 +245,7 @@ public class Validator {
 		return Route.create(ways, end);
 	}
 	
-	private Route orderWays(final Relation r, List<Way> ways, Node end, List<Issue> issues) {
+	private Route orderWays(final Relation r, List<Way> ways, Node end, List<Issue> issues, String role, String type) {
 		final List<Way> unordered = new ArrayList<Way>(ways);
 		final List<Way> ordered = new ArrayList<Way>(ways.size());
 		final Set<Node> ends = new HashSet<Node>(); // to find cycles
@@ -256,7 +253,8 @@ public class Validator {
 		Node current = end;
 		findNext: while (!unordered.isEmpty()) {
 			if (!ends.add(current)) {
-				issues.add(Issue.newError(r, ways, "The ways of the lengths-relation are unordered (and contain cycles)."));
+				issues.add(Issue.newError(r, ways, "The " + role + " of the " + type
+				    + "-relation are unordered (and contain cycles)."));
 				return null;
 			}
 			
@@ -272,7 +270,7 @@ public class Validator {
 				}
 			}
 			
-			issues.add(Issue.newError(r, ways, "The ways of the lengths-relation are disconnected."));
+			issues.add(Issue.newError(r, ways, "The " + role + " of the " + type + "-relation are disconnected."));
 			return null;
 		}
 		
@@ -300,18 +298,6 @@ public class Validator {
 		return Route.create(ordered, end);
 	}
 	
-	private Node validateLengthsEnd(Relation r, List<Issue> issues) {
-		final List<Node> endNodes = Utils.getMemberNodes(r, Constants.LENGTHS_ROLE_END);
-		
-		if (endNodes.size() != 1) {
-			issues.add(Issue.newError(r, endNodes, "A lengths-relation requires exactly one member-node with role \""
-			    + Constants.LENGTHS_ROLE_END + "\"."));
-			return null;
-		}
-		
-		return endNodes.get(0);
-	}
-	
 	private List<Issue> validateTurns(List<Relation> turns, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
 		final List<Issue> issues = new ArrayList<Issue>();
 		
@@ -325,61 +311,72 @@ public class Validator {
 	private List<Issue> validateTurns(Relation r, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
 		final List<Issue> issues = new ArrayList<Issue>();
 		
-		final List<Way> fromWays = Utils.getMemberWays(r, Constants.TURN_ROLE_FROM);
-		final List<Node> viaNodes = Utils.getMemberNodes(r, Constants.TURN_ROLE_VIA);
-		final List<Way> toWays = Utils.getMemberWays(r, Constants.TURN_ROLE_TO);
-		
-		if (fromWays.size() != 1) {
-			issues.add(Issue.newError(r, fromWays, "A turns-relation requires exactly one member-way with role \""
-			    + Constants.TURN_ROLE_FROM + "\"."));
-		}
-		if (viaNodes.size() != 1) {
-			issues.add(Issue.newError(r, viaNodes, "A turns-relation requires exactly one member-node with role \""
-			    + Constants.TURN_ROLE_VIA + "\"."));
-		}
-		if (toWays.size() != 1) {
-			issues.add(Issue.newError(r, toWays, "A turns-relation requires exactly one member-way with role \""
-			    + Constants.TURN_ROLE_TO + "\"."));
-		}
-		
-		if (!issues.isEmpty()) {
+		try {
+			final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
+			final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
+			
+			if (from.firstNode().equals(from.lastNode())) {
+				issues.add(Issue.newError(r, from, "The from-way both starts as well as ends at the via-node."));
+			}
+			if (to.firstNode().equals(to.lastNode())) {
+				issues.add(Issue.newError(r, to, "The to-way both starts as well as ends at the via-node."));
+			}
+			if (!issues.isEmpty()) {
+				return issues;
+			}
+			
+			final Node fromJunctionNode;
+			final List<RelationMember> viaMembers = Utils.getMembers(r, Constants.TURN_ROLE_VIA);
+			if (viaMembers.isEmpty()) {
+				throw UnexpectedDataException.Kind.NO_MEMBER.chuck(Constants.TURN_ROLE_VIA);
+			} else if (viaMembers.get(0).isWay()) {
+				final List<Way> vias = Utils.getMemberWays(r, Constants.TURN_ROLE_VIA);
+				
+				fromJunctionNode = Utils.lineUp(from, vias.get(0));
+				Node current = fromJunctionNode;
+				for (Way via : vias) {
+					if (!via.isFirstLastNode(current)) {
+						orderWays(r, vias, current, issues, "via-ways", "turns");
+						break;
+					}
+					
+					current = Utils.getOppositeEnd(via, current);
+				}
+			} else {
+				final Node via = Utils.getMemberNode(r, Constants.TURN_ROLE_VIA);
+				
+				if (!from.isFirstLastNode(via)) {
+					issues.add(Issue.newError(r, from, "The from-way does not start or end at the via-node."));
+				}
+				if (!to.isFirstLastNode(via)) {
+					issues.add(Issue.newError(r, to, "The to-way does not start or end at the via-node."));
+				}
+				
+				fromJunctionNode = via;
+			}
+			
+			if (!issues.isEmpty()) {
+				return issues;
+			}
+			final IncomingLanes lanes = get(incomingLanes, fromJunctionNode, from);
+			
+			for (int l : splitInts(r, Constants.TURN_KEY_LANES, issues)) {
+				if (!lanes.existsRegular(l)) {
+					issues.add(Issue.newError(r, tr("Relation references non-existent (regular) lane {0}", l)));
+				}
+			}
+			
+			for (int l : splitInts(r, Constants.TURN_KEY_EXTRA_LANES, issues)) {
+				if (!lanes.existsExtra(l)) {
+					issues.add(Issue.newError(r, tr("Relation references non-existent extra lane {0}", l)));
+				}
+			}
+			
+			return issues;
+		} catch (UnexpectedDataException e) {
+			issues.add(Issue.newError(r, e.getMessage()));
 			return issues;
 		}
-		
-		final Way from = fromWays.get(0);
-		final Node via = viaNodes.get(0);
-		final Way to = toWays.get(0);
-		
-		if (!from.isFirstLastNode(via)) {
-			issues.add(Issue.newError(r, from, "The from-way does not start or end at the via-node."));
-		} else if (from.firstNode().equals(from.lastNode())) {
-			issues.add(Issue.newError(r, from, "The from-way both starts as well as ends at the via-node."));
-		}
-		if (!to.isFirstLastNode(via)) {
-			issues.add(Issue.newError(r, to, "The to-way does not start or end at the via-node."));
-		} else if (to.firstNode().equals(to.lastNode())) {
-			issues.add(Issue.newError(r, to, "The to-way both starts as well as ends at the via-node."));
-		}
-		
-		if (!issues.isEmpty()) {
-			return issues;
-		}
-		
-		final IncomingLanes lanes = get(incomingLanes, via, from);
-		
-		for (int l : splitInts(r, Constants.TURN_KEY_LANES, issues)) {
-			if (!lanes.existsRegular(l)) {
-				issues.add(Issue.newError(r, tr("Relation references non-existent (regular) lane {0}", l)));
-			}
-		}
-		
-		for (int l : splitInts(r, Constants.TURN_KEY_EXTRA_LANES, issues)) {
-			if (!lanes.existsExtra(l)) {
-				issues.add(Issue.newError(r, tr("Relation references non-existent extra lane {0}", l)));
-			}
-		}
-		
-		return issues;
 	}
 	
 	private List<Integer> splitInts(Relation r, String key, List<Issue> issues) {

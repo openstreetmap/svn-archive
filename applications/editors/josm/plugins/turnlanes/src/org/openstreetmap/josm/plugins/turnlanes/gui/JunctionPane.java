@@ -122,7 +122,13 @@ class JunctionPane extends JComponent {
 		}
 		
 		private Point2D translateCoords(int x, int y) {
-			return new Point2D.Double(-translationX + x / scale, -translationY + y / scale);
+			final double c = Math.cos(-rotation);
+			final double s = Math.sin(-rotation);
+			
+			final double x2 = -translationX + x / scale;
+			final double y2 = -translationY + y / scale;
+			
+			return new Point2D.Double(x2 * c - y2 * s, x2 * s + y2 * c);
 		}
 	}
 	
@@ -136,6 +142,7 @@ class JunctionPane extends JComponent {
 	
 	private int width = 0;
 	private int height = 0;
+	private double rotation = 0;
 	private double scale = 10;
 	private double translationX = 0;
 	private double translationY = 0;
@@ -201,6 +208,28 @@ class JunctionPane extends JComponent {
 				toggleAllTurns();
 			}
 		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK), "rotateLeft");
+		getActionMap().put("rotateLeft", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rotation -= Math.PI / 180;
+				setState(new State.Dirty(state));
+			}
+		});
+		
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), "rotateRight");
+		getActionMap().put("rotateRight", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rotation += Math.PI / 180;
+				setState(new State.Dirty(state));
+			}
+		});
 	}
 	
 	public void setJunction(GuiContainer container) {
@@ -226,6 +255,9 @@ class JunctionPane extends JComponent {
 	
 	private void center() {
 		final Rectangle2D bounds = container.getBounds();
+		
+		rotation = 0;
+		
 		scale = Math.min(getHeight() / 2 / bounds.getHeight(), getWidth() / 2 / bounds.getWidth());
 		
 		translationX = -bounds.getCenterX();
@@ -322,8 +354,8 @@ class JunctionPane extends JComponent {
 		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 		
 		g2d.scale(scale, scale);
-		
 		g2d.translate(translationX, translationY);
+		g2d.rotate(rotation);
 		
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, 0.7f));
 		
@@ -355,6 +387,7 @@ class JunctionPane extends JComponent {
 		
 		g2d.scale(scale, scale);
 		g2d.translate(translationX, translationY);
+		g2d.rotate(rotation);
 		
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		

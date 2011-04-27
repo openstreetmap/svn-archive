@@ -65,11 +65,14 @@ public class Lane {
 		final String countStr = w.get("lanes");
 		
 		if (countStr != null) {
-			return Integer.parseInt(countStr);
+			try {
+				return Integer.parseInt(countStr);
+			} catch (NumberFormatException e) {
+				throw UnexpectedDataException.Kind.INVALID_TAG_FORMAT.chuck("lanes", countStr);
+			}
 		}
 		
-		// TODO default lane counts based on "highway" tag
-		return 2;
+		throw UnexpectedDataException.Kind.MISSING_TAG.chuck("lanes");
 	}
 	
 	static int getRegularCount(Way w, Node end) {

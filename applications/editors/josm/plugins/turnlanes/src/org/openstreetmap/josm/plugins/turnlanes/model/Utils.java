@@ -51,9 +51,9 @@ public class Utils {
 	public static RelationMember getMember(Relation r, String role, OsmPrimitiveType type) {
 		final List<RelationMember> candidates = getMembers(r, role, type);
 		if (candidates.isEmpty()) {
-			throw new IllegalStateException("No member with given role and type.");
+			throw UnexpectedDataException.Kind.NO_MEMBER.chuck(role);
 		} else if (candidates.size() > 1) {
-			throw new IllegalStateException(candidates.size() + " members with given role and type.");
+			throw UnexpectedDataException.Kind.MULTIPLE_MEMBERS.chuck(role);
 		}
 		return candidates.get(0);
 	}
@@ -62,7 +62,7 @@ public class Utils {
 		final List<RelationMember> result = getMembers(r, role);
 		for (RelationMember m : getMembers(r, role)) {
 			if (m.getType() != type) {
-				throw new IllegalArgumentException("Member has the specified role, but wrong type.");
+				throw UnexpectedDataException.Kind.WRONG_MEMBER_TYPE.chuck(role, m.getType(), type);
 			}
 		}
 		return result;

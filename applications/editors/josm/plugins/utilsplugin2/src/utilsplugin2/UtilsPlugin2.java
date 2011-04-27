@@ -25,6 +25,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem adjWaysAll;
     JMenuItem intWays;
     JMenuItem intWaysR;
+    JMenuItem undoSelection;
 
     JMenuItem replaceGeometry;
     JMenuItem tagBuffer;
@@ -59,6 +60,7 @@ public class UtilsPlugin2 extends Plugin {
         intWaysR = MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
         selModifiedNodes = MainMenu.add(selectionMenu, new SelectModNodesAction());
         selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
+        undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
     }
 
     @Override
@@ -84,5 +86,6 @@ public class UtilsPlugin2 extends Plugin {
         intWaysR.setEnabled(enabled);
         selModifiedNodes.setEnabled(enabled);
         selModifiedWays.setEnabled(enabled);
+        undoSelection.setEnabled(enabled);
     }
 }

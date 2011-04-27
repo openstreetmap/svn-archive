@@ -102,9 +102,10 @@
 				<attribute name="Author" value="Alexander Kachkaev" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.iwa.IWAPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="Can be useful when you are improving accuracy of existing ways. The idea of the plugin is to substitute dragging and dropping nodes with clicking to quicken the editing process." />
 				<attribute name="Plugin-Icon" value="images/favicon.png" />
+				<attribute name="Plugin-Description" value="Can be useful when you are improving accuracy of existing ways. The idea of the plugin is to substitute dragging and dropping nodes with clicking to quicken the editing process." />
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImproveWayAccuracy" />
+                <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/ImproveWayAccuracy" />
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 			</manifest>

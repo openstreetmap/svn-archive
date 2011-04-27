@@ -88,6 +88,9 @@ public class IWAMode extends MapMode implements MapViewPaintable,
     private boolean oldCtrl = false;
 
     private final Color guideColor;
+    private final BasicStroke selectTargetWayStroke;
+    private final BasicStroke moveNodeStroke;
+    private final BasicStroke addNodeStroke;
 
     private boolean selectionChangedBlocked = false;
 
@@ -110,6 +113,13 @@ public class IWAMode extends MapMode implements MapViewPaintable,
         cursorImproveLock = ImageProvider.getCursor("crosshair", "lock");
 
         guideColor = PaintColors.HIGHLIGHT.get();
+        selectTargetWayStroke = new BasicStroke(2, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND);
+        float dash1[] = { 4.0f };
+        moveNodeStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
+        addNodeStroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
     }
 
     // -------------------------------------------------------------------------
@@ -215,8 +225,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             // Highlighting the targetWay in Selecting state
             // Non-native highlighting is used, because sometimes highlighted
             // segments are covered with others, which is bad.
-            g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_ROUND));
+            g.setStroke(selectTargetWayStroke);
 
             List<Node> nodes = targetWay.getNodes();
 
@@ -238,15 +247,15 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             // Drawing preview lines and highlighting the node
             // that is going to be moved.
             // Non-native highlighting is used here as well.
-            g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_ROUND));
 
             // Finding endpoints
             Point p1 = null, p2 = null;
             if (candidateSegment != null) {
+                g.setStroke(addNodeStroke);
                 p1 = mv.getPoint(candidateSegment.getFirstNode());
                 p2 = mv.getPoint(candidateSegment.getSecondNode());
             } else if (candidateNode != null) {
+                g.setStroke(moveNodeStroke);
                 List<Pair<Node, Node>> wpps = targetWay.getNodePairs(false);
                 for (Pair<Node, Node> wpp : wpps) {
                     if (wpp.a == candidateNode)
@@ -261,13 +270,13 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             // Drawing preview lines
             GeneralPath b = new GeneralPath();
             if (p1 != null) {
-                b.moveTo(p1.x, p1.y);
-                b.lineTo(mousePos.x, mousePos.y);
-            } else {
                 b.moveTo(mousePos.x, mousePos.y);
+                b.lineTo(p1.x, p1.y);
             }
-            if (p2 != null)
+            if (p2 != null) {
+                b.moveTo(mousePos.x, mousePos.y);
                 b.lineTo(p2.x, p2.y);
+            }
             g.draw(b);
 
             // Highlighting candidateNode
@@ -414,6 +423,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             }
         }
 
+        mousePos = null;
         updateCursor();
         updateStatusLine();
         Main.map.mapView.repaint();

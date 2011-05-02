@@ -42,14 +42,14 @@ class fake_map_view extends MapView {
 
         ProjectionBounds parent_bounds = parent.getProjectionBounds();
         max_east_west =
-            parent_bounds.max.east() - parent_bounds.min.east();
+            parent_bounds.maxEast - parent_bounds.minEast;
     }
 
     public void setProjectionBounds(ProjectionBounds bounds) {
         view_bounds = bounds;
 
-        if (bounds.max.east() - bounds.min.east() > max_east_west) {
-            max_east_west = bounds.max.east() - bounds.min.east();
+        if (bounds.maxEast - bounds.minEast > max_east_west) {
+            max_east_west = bounds.maxEast - bounds.minEast;
 
             /* We need to set the parent MapView's bounds (i.e.
              * zoom level) to the same as ours max possible
@@ -74,11 +74,11 @@ class fake_map_view extends MapView {
             ProjectionBounds new_bounds =
                 parent.getProjectionBounds();
             max_east_west =
-                new_bounds.max.east() - new_bounds.min.east();
+                new_bounds.maxEast - new_bounds.minEast;
         }
 
-        Point vmin = getPoint(bounds.min);
-        Point vmax = getPoint(bounds.max);
+        Point vmin = getPoint(bounds.getMin());
+        Point vmax = getPoint(bounds.getMax());
         int w = vmax.x + 1;
         int h = vmin.y + 1;
 
@@ -104,8 +104,8 @@ class fake_map_view extends MapView {
     }
 
     public Point getPoint(EastNorth p) {
-        double x = p.east() - view_bounds.min.east();
-        double y = view_bounds.max.north() - p.north();
+        double x = p.east() - view_bounds.minEast;
+        double y = view_bounds.maxNorth - p.north();
         x /= this.scale;
         y /= this.scale;
 
@@ -114,8 +114,8 @@ class fake_map_view extends MapView {
 
     public EastNorth getEastNorth(int x, int y) {
         return new EastNorth(
-            view_bounds.min.east() + x * this.scale,
-            view_bounds.min.north() - y * this.scale);
+            view_bounds.minEast + x * this.scale,
+            view_bounds.minNorth - y * this.scale);
     }
 
     public boolean isVisible(int x, int y) {

@@ -183,8 +183,8 @@ public class ImageLayer extends Layer {
             ProjectionBounds projbounds = Main.map.mapView
                     .getProjectionBounds();
 
-            double width = projbounds.max.getX() - projbounds.min.getX();
-            double height = projbounds.max.getY() - projbounds.min.getY();
+            double width = projbounds.maxEast - projbounds.minEast;
+            double height = projbounds.maxNorth - projbounds.minNorth;
 
             double ratio_x = (this.bbox.getMaxY() - this.bbox.getMinY())
                     / width;

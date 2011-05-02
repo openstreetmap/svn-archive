@@ -113,7 +113,7 @@ public class ExtTool {
     static double getPPD() {
         ProjectionBounds bounds = Main.map.mapView.getProjectionBounds();
         return Main.map.mapView.getWidth() /
-                (bounds.max.east() - bounds.min.east());
+                (bounds.maxEast - bounds.minEast);
     }
 
     private double latToTileY(double lat, int zoom) {

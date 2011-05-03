@@ -1,0 +1,14 @@
+<h1>Offset#index</h1>
+<p>Centre point: <%= params[:lat] %>&deg;, <%= params[:lon] %>&deg; at zoom level <%= params[:zoom] %></p>
+
+<% @offset.each do |offset| %>
+<p><%= offset.name %>:
+Imagery here from <%= params[:provider] %> is displayed <%= offset.offset_north %>m too far north and <%= offset.offset_east %>m too far east within a radius of <%= offset.radius %>&deg;.</p>
+
+<p>Matches: <%= offset.match %></p>
+<p>Bounding box offset: <%= offset.bbox_offset.to_s %></p>
+<p>Bounding box north: <%= offset.bbox_north %></p>
+<p>Bounding box south: <%= offset.bbox_south %></p>
+<p>Bounding box east: <%= offset.bbox_east %></p>
+<p>Bounding box west: <%= offset.bbox_west %></p>
+<% end %>

@@ -64,11 +64,11 @@ tags = dict()
 
 def print_message(message, id, user, name, header='INFO'):
   print header
+  if name:
+    print '  Area name:  {0}'.format(name)
   print '  Reason:     {0}'.format(message)
   print '  Way:        http://api.openstreetmap.org/api/0.6/way/{0}'.format(id)
   print '  User:       http://www.openstreetmap.org/user/{0}'.format(user)
-  if name:
-    print '  Area name:  {0}'.format(name)
   print
 
 def process_start(name, attributes):

@@ -123,10 +123,10 @@ def process_end(name):
       offset_north = float(offset_north)
       offset_east = float(offset_east)
 
-      if offset_north > 1.0:
+      if abs(offset_north) > 1.0:
         raise Exception('Value of tag "offset_north" exceeds one degree')
 
-      if offset_east > 1.0:
+      if abs(offset_east) > 1.0:
         raise Exception('Value of tag "offset_east" exceeds one degree')
 
       try:

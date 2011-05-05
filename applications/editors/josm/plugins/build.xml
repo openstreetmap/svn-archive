@@ -14,7 +14,6 @@
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="CommandLine"/>
-        <ant antfile="build.xml" target="dist" dir="contourmerge"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="dataimport"/>
@@ -89,7 +88,6 @@
         <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="CommandLine"/>
-        <ant antfile="build.xml" target="clean" dir="contourmerge"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
         <ant antfile="build.xml" target="clean" dir="dataimport"/>

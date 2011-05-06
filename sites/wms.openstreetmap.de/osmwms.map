@@ -38,6 +38,86 @@ MAP
   END
 
   LAYER
+    NAME "Calau"
+    METADATA
+      "wms_title"  "Luftbilder Calau"
+      "wms_extent" "13.946011 51.740416 13.957644 51.751561"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/calau-geo.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "Cottbus-Merzdorf"
+    METADATA
+      "wms_title"  "Luftbilder Cottbus-Merzdorf"
+      "wms_extent" "14.365237 51.753010 14.413440 51.784761"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/cottbus-merzdorf-geo.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+ LAYER
+    NAME "Cottbus-Sandow"
+    METADATA
+      "wms_title"  "Luftbilder Cottbus-Sandow"
+      "wms_extent" "14.323081 51.737204 14.397514 51.781354"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/cottbus-sandow-geo.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "Gross-Schacksdorf-Brandenburg"
+    METADATA
+      "wms_title"  "Luftbilder Gross-Schacksdorf"
+      "wms_extent" "14.616566 51.683360 14.637754 51.698390"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/Gross_Schacksdorf-geo.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "Rodewitz"
+    METADATA
+      "wms_title"  "Luftbilder Rodewitz Sachsen"
+      "wms_extent" "14.430536 51.096425 14.451835 51.110455"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/Rodewitz_modifiziert.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
     NAME "Radolfzell"
     METADATA
       "wms_title"  "Luftbilder Radolfzell (5.06.2010, 7 cm)"
@@ -54,7 +134,22 @@ MAP
       "init=epsg:4326"
     END
   END
-
+  LAYER
+    NAME "Schwarze Pumpe"
+    METADATA
+      "wms_title"  "Luftbilder Schwarze Pumpe"
+      "wms_extent" "14.334045 51.525423 14.368677 51.548234"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/Schwarze_Pumpe-geo.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
   LAYER
     NAME "Witten"
     METADATA
@@ -117,7 +212,7 @@ MAP
     END
     STATUS ON
     TYPE RASTER
-    DATA "martin_dornfelder/luebben.tif"
+    DATA "martin_dornfelder/luebben-geo.tif"
     PROJECTION
        "init=epsg:4326"
     END

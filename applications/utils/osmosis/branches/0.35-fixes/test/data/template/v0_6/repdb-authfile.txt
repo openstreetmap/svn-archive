@@ -1,5 +1,0 @@
-host=localhost
-database=replicosis
-user=osm
-password=password
-db=postgresql

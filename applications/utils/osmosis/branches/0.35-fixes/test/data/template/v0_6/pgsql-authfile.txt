@@ -1,4 +1,0 @@
-host=localhost
-database=pgosmsnap06_test
-user=osm
-password=password

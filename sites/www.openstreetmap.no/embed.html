@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no" lang="no">
+<head>
+<title>OpenStreetMap Norge</title>
+<meta charset="utf-8"/> 
+<meta content="OpenStreetMap er et prosjekt for å samle inn frie kartdata for hele verden." name="description" />
+
+<!-- bring in the OpenLayers javascript library -->
+<link rel="stylesheet" type="text/css"
+      href="openlayers/theme/default/style.css"/>
+<script src="openlayers/OpenLayers.js"></script>
+
+<!-- bring in the OpenStreetMap OpenLayers layers.
+     Using this hosted file will make sure we are kept up
+     to date with any necessary changes -->
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+
+<script type="text/javascript">
+// Start position for the map
+var lat=65.4
+var lon=17.0
+var zoom=4
+var epsg4326 = new OpenLayers.Projection("EPSG:4326");
+OpenLayers.Lang.setCode("nb");
+
+var map;
+//Initialise the 'map' object
+function init() {
+
+  map = new OpenLayers.Map ("map", {
+    controls: [
+      new OpenLayers.Control.ArgParser(),
+      new OpenLayers.Control.Navigation(),
+      new OpenLayers.Control.Attribution()
+    ],
+    projection: "EPSG:900913",
+    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+    maxResolution: 156543.0399,
+    numZoomLevels: 20,
+    units: 'm',
+    displayProjection: epsg4326
+  });
+
+  keyboardnav = new OpenLayers.Control.KeyboardDefaults();
+  map.addControl(keyboardnav);
+
+  // Tiles kan kun benyttes etter avtale
+  var layerScreenspec = new OpenLayers.Layer.XYZ(
+    "Skjermkartografi (beta)",
+    ["http://a.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Kartografi: <a href="http://www.statkart.no/Skjermkartografi.d25-SwJjM0n.ips">Statens Kartverk</a>'});
+
+  // Tiles kan kun benyttes etter avtale
+  var layerHiking = new OpenLayers.Layer.XYZ(
+    "Turstier (beta)",
+    ["http://a.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>'});
+
+  // Tiles kan kun benyttes etter avtale
+  var layerSkiing = new OpenLayers.Layer.XYZ(
+    "Skiløyper (beta)",
+    ["http://a.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>'});
+
+  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
+  var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
+  var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
+
+  var layerTransit = new OpenLayers.Layer.XYZ(
+    "Kollektivtransport (beta)",
+    ["http://a.tile.tusvik.no/tiles/fantasytown/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/fantasytown/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/fantasytown/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/fantasytown/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Kartografi: <a href="http://www.stadtkreation.de/">Stadtkreation</a>, ' +
+      'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
+
+  map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
+  map.addLayers([layerScreenspec, layerHiking, layerSkiing, layerTransit]);
+
+  var lonLat = new OpenLayers.LonLat(lon, lat).transform(
+    epsg4326, map.getProjectionObject());
+  if( ! map.getCenter() ){
+    map.setCenter(lonLat, zoom);
+  }
+}
+
+window.onload = init;
+</script>
+
+<style type="text/css">
+  body { margin:0px; }
+  div#map { width:100%; height:100%; }
+  .olControlAttribution {
+    font-size:8pt;
+    left:5px; bottom:5px;
+  }
+</style>
+
+</head>
+<body>
+
+  <!-- Define a DIV into which the map will appear. -->
+  <div id="map"></div>
+
+</body>
+</html>

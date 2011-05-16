@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.plugins.ohe.OhePlugin;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
@@ -38,10 +40,37 @@ public class OheDialogPanel extends JPanel {
 
     private final String oldkey;
 
-    public OheDialogPanel(OhePlugin plugin, String key, String value) {
+    /**
+     * The Panel for editing the time-values.
+     * 
+     * @param plugin
+     * @param key
+     * @param valuesToEdit
+     *            can be a String or a Map<String, Integer> which contains
+     *            multiple values and their number of occurences
+     */
+    public OheDialogPanel(OhePlugin plugin, String key, Object valuesToEdit) {
         oldkey = key;
         keyField = new JTextField(key);
 
+        String value = "";
+        if (valuesToEdit instanceof String)
+            value = (String) valuesToEdit;
+        else if (valuesToEdit instanceof Map<?, ?>) {
+            Map<String, Integer> valuesMap = (Map<String, Integer>) valuesToEdit;
+            if (valuesMap.size() == 1)
+                value = valuesMap.keySet().iterator().next();
+            else if (valuesMap.size() > 1) {
+                // TODO let the user choose which value he wants to edit (e.g.
+                // with a combobox)
+                int mostOccurences = 0;
+                for (String v : valuesMap.keySet())
+                    if (valuesMap.get(v) > mostOccurences) {
+                        value = v;
+                        mostOccurences = valuesMap.get(v);
+                    }
+            }
+        }
         valueField = new JTextField(value);
         valueField.addActionListener(new ActionListener() {
             @Override
@@ -60,7 +89,7 @@ public class OheDialogPanel extends JPanel {
             }
         });
 
-        actualPostionLabel = new JLabel("Mo 00:00");
+        actualPostionLabel = new JLabel("-");
         JPanel toolsPanel = new JPanel(new GridBagLayout());
         toolsPanel.add(twentyfourSevenButton, GBC.std());
         toolsPanel.add(Box.createGlue(), GBC.std().fill(GBC.HORIZONTAL));
@@ -79,7 +108,6 @@ public class OheDialogPanel extends JPanel {
         add(toolsPanel, GBC.eol().fill(GBC.HORIZONTAL));
         add(editorPanel, GBC.eol().fill());
 
-        valueField.requestFocus();
         setPreferredSize(new Dimension(480, 520));
     }
 
@@ -101,18 +129,14 @@ public class OheDialogPanel extends JPanel {
 
                 if (t instanceof ParseException) {
                     ParseException parserExc = (ParseException) t;
-                    tColumns = new int[] {
-                            parserExc.currentToken.beginColumn - 1,
-                            parserExc.currentToken.endColumn + 1 };
+                    tColumns = new int[] { parserExc.currentToken.beginColumn - 1, parserExc.currentToken.endColumn + 1 };
                 } else if (t instanceof SyntaxException) {
                     SyntaxException syntaxError = (SyntaxException) t;
-                    tColumns = new int[] { syntaxError.getStartColumn(),
-                            syntaxError.getEndColumn() };
+                    tColumns = new int[] { syntaxError.getStartColumn(), syntaxError.getEndColumn() };
                     info = syntaxError.getInfo();
                 } else if (t instanceof TokenMgrError) {
                     TokenMgrError tokenMgrError = (TokenMgrError) t;
-                    tColumns = new int[] { tokenMgrError.errorColumn - 1,
-                            tokenMgrError.errorColumn + 1 };
+                    tColumns = new int[] { tokenMgrError.errorColumn - 1, tokenMgrError.errorColumn + 1 };
                 } else {
                     t.printStackTrace();
                 }
@@ -124,18 +148,15 @@ public class OheDialogPanel extends JPanel {
                     String begin = value.substring(0, first);
                     String middle = value.substring(first, last);
                     String end = value.substring(last);
-                    String message = "<html>"
-                            + tr("There is something wrong in the value near:")
-                            + "<br>" + begin
-                            + "<span style='background-color:red;'>" + middle
-                            + "</span>" + end;
+                    valueField.setCaretPosition(first);
+                    // TODO focus on the valueField
+                    String message = "<html>" + tr("There is something wrong in the value near:") + "<br>" + begin
+                            + "<span style='background-color:red;'>" + middle + "</span>" + end;
                     if (info != null)
                         message += "<br>" + tr("Info: {0}", tr(info));
-                    message += "<br>"
-                            + tr("Correct the value manually and than press Enter.");
+                    message += "<br>" + tr("Correct the value manually and than press Enter.");
                     message += "</html>";
-                    JOptionPane.showMessageDialog(this, message,
-                            tr("Error in timeformat"),
+                    JOptionPane.showMessageDialog(this, message, tr("Error in timeformat"),
                             JOptionPane.INFORMATION_MESSAGE);
                 }
 

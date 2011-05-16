@@ -284,13 +284,13 @@ public class TimeRect extends JPanel implements MouseListener,
                 }
             }
         }
-        editor.mousePositionChanged(evt.getX() + getX(), evt.getY() + getY());
+        editor.mousePositionChanged(evt.getX() + getX(), evt.getY() + getY(), true);
     }
 
     @Override
     public void mouseMoved(MouseEvent evt) {
         if (transformType < 0)
             setCursor(new Cursor(transformCursorTypes[getTransformType(evt)]));
-        editor.mousePositionChanged(evt.getX() + getX(), evt.getY() + getY());
+        editor.mousePositionChanged(evt.getX() + getX(), evt.getY() + getY(), true);
     }
 }

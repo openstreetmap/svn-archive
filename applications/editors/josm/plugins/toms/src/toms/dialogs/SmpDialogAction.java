@@ -219,12 +219,17 @@ public class SmpDialogAction extends JosmAction {
 								Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
 
 		dia = this;
-		String str = Main.pref.get("mappaint.style.sources"); //$NON-NLS-1$
-		if (!str.contains("dev.openseamap.org")) { //$NON-NLS-1$
-			if (!str.isEmpty()) //$NON-NLS-1$
-				str += new String(new char[] { 0x1e });
-			Main.pref.put("mappaint.style.sources", str //$NON-NLS-1$
-					+ "http://dev.openseamap.org/josm/seamark_styles.xml"); //$NON-NLS-1$
+		for (int l = 0; ; l++) {
+			String entry = new String("mappaint.style.sources-list." + l);
+			String str = Main.pref.get(entry);
+			if (str == null || str.isEmpty()) {
+				String sep = new String(new char[] { 0x1e });
+				Main.pref.put(entry, "http://dev.openseamap.org/josm/seamark_styles.xml" + sep + sep + "OpenSeaMap" + sep + "true");
+				break;
+			}
+			if (str.contains("http://dev.openseamap.org/josm/seamark_styles.xml")) {
+				break;
+			}
 		}
 	}
 

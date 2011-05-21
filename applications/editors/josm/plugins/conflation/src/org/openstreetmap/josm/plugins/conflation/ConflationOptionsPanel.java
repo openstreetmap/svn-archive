@@ -9,14 +9,36 @@
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import java.util.List;
+import java.util.Set;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import org.openstreetmap.josm.actions.search.SearchAction;
-import org.openstreetmap.josm.actions.search.SearchAction.SearchSetting;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.conflict.Conflict;
+import org.openstreetmap.josm.data.conflict.ConflictCollection;
+import org.openstreetmap.josm.data.conflict.IConflictListener;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.TagCollection;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.conflict.pair.ConflictResolver;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
@@ -24,22 +46,57 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  *
  * @author Josh
  */
-public class ConflationOptionsPanel extends javax.swing.JPanel {
+public class ConflationOptionsPanel extends javax.swing.JPanel implements IConflictListener {
     ConflationOptionsDialog dlg = null;
+    ConflationLayer conflationLayer = null;
+    DataSet myDataSet = null;
+    DataSet theirDataSet = null;
+    ArrayList<OsmPrimitive> mySelection = null;
+    ArrayList<OsmPrimitive> theirSelection = null;
+    OsmDataLayer myLayer = null;
+    OsmDataLayer theirLayer = null;
+    ConflictCollection conflicts = null;
+    ConflictResolver conflictResolver;
+    OsmPrimitive[][] pairs;
+    int[][] assignment;
+    MatchTableModel tableModel;
 
     /** Creates new form ConflationPanel */
     public ConflationOptionsPanel(ConflationOptionsDialog dlg, List<OsmDataLayer> layers) {
         initComponents();
 
+        // add selection handler, to change ConflictResolver contents and center/zoom view
+        resultsTable.getSelectionModel().addListSelectionListener(
+                new MatchListSelectionHandler());
+        resultsTable.getColumnModel().getSelectionModel().addListSelectionListener(
+                new MatchListSelectionHandler());
+
+        // FIXME: doesn't work right now
+        ColorTableCellRenderer cr = new ColorTableCellRenderer("Tags");
+        resultsTable.getColumnModel().getColumn(4).setCellRenderer(cr);
+
+        // replace dummy panel with conflictResolver
+        conflictResolver = new ConflictResolver();
+        for (int i = 0; i < resultsPanel.getComponentCount(); i++) {
+            if (resultsPanel.getComponent(i) == tagMergerPlaceholderPanel) {
+                resultsPanel.add(conflictResolver, i);
+                resultsPanel.remove(tagMergerPlaceholderPanel);
+                break;
+            }
+        }
+        resultsPanel.validate();
+
         this.dlg = dlg;
 
+        conflicts = new ConflictCollection();
+
         // set layer names to comboboxes
-        if (layers != null && layers.size() > 0) {
-            refLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(layers.toArray()));
-            refLayerComboBox.setRenderer(new LayerListCellRenderer());
-            nonRefLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(layers.toArray()));
-            nonRefLayerComboBox.setRenderer(new LayerListCellRenderer());
-        }
+//        if (layers != null && layers.size() > 0) {
+//            refLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(layers.toArray()));
+//            refLayerComboBox.setRenderer(new LayerListCellRenderer());
+//            nonRefLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(layers.toArray()));
+//            nonRefLayerComboBox.setRenderer(new LayerListCellRenderer());
+//        }
 
     }
 
@@ -52,278 +109,213 @@ public class ConflationOptionsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        refSearchModeButtonGroup = new javax.swing.ButtonGroup();
-        nonRefSearchModeButtonGroup = new javax.swing.ButtonGroup();
         resultsTabPanel = new javax.swing.JTabbedPane();
         objectTabPanel = new javax.swing.JPanel();
         refSetPanel = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        freezeMySetButton = new javax.swing.JButton();
+        restoreMySetButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        refLayerComboBox = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
-        refFilterTextField = new javax.swing.JTextField();
-        jPanel5 = new javax.swing.JPanel();
-        refReplaceRadio = new javax.swing.JRadioButton();
-        refAddRadio = new javax.swing.JRadioButton();
-        refRemoveRadio = new javax.swing.JRadioButton();
-        refInSelectionRadio = new javax.swing.JRadioButton();
-        refCaseSensitiveCheckBox = new javax.swing.JCheckBox();
-        refAllObjectsCheckBox = new javax.swing.JCheckBox();
-        refRegExCheckBox = new javax.swing.JCheckBox();
-        nonRefSetPanel = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        nonRefLayerComboBox = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
-        nonRefFilterTextField = new javax.swing.JTextField();
-        jPanel8 = new javax.swing.JPanel();
-        nonRefReplaceRadio = new javax.swing.JRadioButton();
-        nonRefAddRadio = new javax.swing.JRadioButton();
-        nonRefRemoveRadio = new javax.swing.JRadioButton();
-        nonRefInSelectionRadio = new javax.swing.JRadioButton();
-        nonRefCaseSensitiveCheckBox = new javax.swing.JCheckBox();
-        nonRefAllObjectsCheckBox = new javax.swing.JCheckBox();
-        nonRefRegExCheckBox = new javax.swing.JCheckBox();
+        myRelationCountLabel = new javax.swing.JLabel();
+        myWayCountLabel = new javax.swing.JLabel();
+        myNodeCountLabel = new javax.swing.JLabel();
+        myLayerLabel = new javax.swing.JLabel();
+        nonRefSetPanel = new javax.swing.JPanel();
+        freezeTheirSelectionButton = new javax.swing.JButton();
+        restoreTheirSetButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        theirNodeCountLabel = new javax.swing.JLabel();
+        theirLayerLabel = new javax.swing.JLabel();
+        theirWayCountLabel = new javax.swing.JLabel();
+        theirRelationCountLabel = new javax.swing.JLabel();
         objectTabCancelButton = new javax.swing.JButton();
         objectTabNextButton = new javax.swing.JButton();
         criteriaTabPanel = new javax.swing.JPanel();
         criteriaTabConflateButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        resultsPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultsTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
+        useMyTagsButton = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        useTheirTagsButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        tagMergerPlaceholderPanel = new javax.swing.JPanel();
+        resolveButton = new javax.swing.JButton();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        refSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Reference Set"));
+        refSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("My Set"));
 
-        jLabel1.setText("Layer");
-
-        refLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel2.setText("Filter");
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        refSearchModeButtonGroup.add(refReplaceRadio);
-        refReplaceRadio.setSelected(true);
-        refReplaceRadio.setText("Replace selection");
-
-        refSearchModeButtonGroup.add(refAddRadio);
-        refAddRadio.setText("Add to selection");
-        refAddRadio.addActionListener(new java.awt.event.ActionListener() {
+        freezeMySetButton.setText("Freeze Selection");
+        freezeMySetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refAddRadioActionPerformed(evt);
+                freezeMySetButtonActionPerformed(evt);
             }
         });
 
-        refSearchModeButtonGroup.add(refRemoveRadio);
-        refRemoveRadio.setText("Remove from selection");
+        restoreMySetButton.setText("Restore Selection");
+        restoreMySetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreMySetButtonActionPerformed(evt);
+            }
+        });
 
-        refSearchModeButtonGroup.add(refInSelectionRadio);
-        refInSelectionRadio.setText("Find in selection");
+        jLabel1.setText("Nodes");
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(refReplaceRadio)
-                    .addComponent(refAddRadio)
-                    .addComponent(refRemoveRadio)
-                    .addComponent(refInSelectionRadio))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(refReplaceRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refAddRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refRemoveRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refInSelectionRadio))
-        );
+        jLabel2.setText("Layer");
 
-        refCaseSensitiveCheckBox.setText("Case sensitive");
+        jLabel3.setText("Ways");
 
-        refAllObjectsCheckBox.setText("All objects");
+        jLabel4.setText("Relations");
 
-        refRegExCheckBox.setText("Regular expression");
+        myRelationCountLabel.setText("0");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(refLayerComboBox, 0, 246, Short.MAX_VALUE)
-                            .addComponent(refFilterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(refCaseSensitiveCheckBox)
-                            .addComponent(refAllObjectsCheckBox)
-                            .addComponent(refRegExCheckBox))))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(refLayerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(refFilterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(refCaseSensitiveCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refAllObjectsCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refRegExCheckBox))))
-        );
+        myWayCountLabel.setText("0");
+
+        myNodeCountLabel.setText("0");
+
+        myLayerLabel.setText("(invalid)");
 
         javax.swing.GroupLayout refSetPanelLayout = new javax.swing.GroupLayout(refSetPanel);
         refSetPanel.setLayout(refSetPanelLayout);
         refSetPanelLayout.setHorizontalGroup(
             refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(refSetPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(refSetPanelLayout.createSequentialGroup()
+                        .addComponent(freezeMySetButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
+                        .addComponent(restoreMySetButton))
+                    .addGroup(refSetPanelLayout.createSequentialGroup()
+                        .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(myLayerLabel)
+                            .addComponent(myNodeCountLabel)
+                            .addComponent(myWayCountLabel)
+                            .addComponent(myRelationCountLabel))))
+                .addContainerGap())
         );
         refSetPanelLayout.setVerticalGroup(
             refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(refSetPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(freezeMySetButton)
+                    .addComponent(restoreMySetButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(myLayerLabel))
+                .addGap(11, 11, 11)
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(myNodeCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(myWayCountLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(myRelationCountLabel))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        nonRefSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Non-Reference Set"));
+        nonRefSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Their Set"));
 
-        jLabel3.setText("Layer");
-
-        nonRefLayerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel4.setText("Filter");
-
-        jPanel8.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        nonRefSearchModeButtonGroup.add(nonRefReplaceRadio);
-        nonRefReplaceRadio.setSelected(true);
-        nonRefReplaceRadio.setText("Replace selection");
-
-        nonRefSearchModeButtonGroup.add(nonRefAddRadio);
-        nonRefAddRadio.setText("Add to selection");
-        nonRefAddRadio.addActionListener(new java.awt.event.ActionListener() {
+        freezeTheirSelectionButton.setText("Freeze Selection");
+        freezeTheirSelectionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nonRefAddRadioActionPerformed(evt);
+                freezeTheirSelectionButtonActionPerformed(evt);
             }
         });
 
-        nonRefSearchModeButtonGroup.add(nonRefRemoveRadio);
-        nonRefRemoveRadio.setText("Remove from selection");
+        restoreTheirSetButton.setText("Restore Selection");
+        restoreTheirSetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreTheirSetButtonActionPerformed(evt);
+            }
+        });
 
-        nonRefSearchModeButtonGroup.add(nonRefInSelectionRadio);
-        nonRefInSelectionRadio.setText("Find in selection");
+        jLabel5.setText("Relations");
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nonRefReplaceRadio)
-                    .addComponent(nonRefAddRadio)
-                    .addComponent(nonRefRemoveRadio)
-                    .addComponent(nonRefInSelectionRadio))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(nonRefReplaceRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nonRefAddRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nonRefRemoveRadio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nonRefInSelectionRadio))
-        );
+        jLabel6.setText("Layer");
 
-        nonRefCaseSensitiveCheckBox.setText("Case sensitive");
+        jLabel7.setText("Nodes");
 
-        nonRefAllObjectsCheckBox.setText("All objects");
+        jLabel9.setText("Ways");
 
-        nonRefRegExCheckBox.setText("Regular expression");
+        theirNodeCountLabel.setText("0");
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nonRefLayerComboBox, 0, 246, Short.MAX_VALUE)
-                            .addComponent(nonRefFilterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nonRefCaseSensitiveCheckBox)
-                            .addComponent(nonRefAllObjectsCheckBox)
-                            .addComponent(nonRefRegExCheckBox))))
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(nonRefLayerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(nonRefFilterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(nonRefCaseSensitiveCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nonRefAllObjectsCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nonRefRegExCheckBox))))
-        );
+        theirLayerLabel.setText("(invalid)");
+
+        theirWayCountLabel.setText("0");
+
+        theirRelationCountLabel.setText("0");
 
         javax.swing.GroupLayout nonRefSetPanelLayout = new javax.swing.GroupLayout(nonRefSetPanel);
         nonRefSetPanel.setLayout(nonRefSetPanelLayout);
         nonRefSetPanelLayout.setHorizontalGroup(
             nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(nonRefSetPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nonRefSetPanelLayout.createSequentialGroup()
+                        .addComponent(freezeTheirSelectionButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
+                        .addComponent(restoreTheirSetButton))
+                    .addGroup(nonRefSetPanelLayout.createSequentialGroup()
+                        .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(theirLayerLabel)
+                            .addComponent(theirNodeCountLabel)
+                            .addComponent(theirWayCountLabel)
+                            .addComponent(theirRelationCountLabel))))
+                .addContainerGap())
         );
         nonRefSetPanelLayout.setVerticalGroup(
             nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(nonRefSetPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(freezeTheirSelectionButton)
+                    .addComponent(restoreTheirSetButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(theirLayerLabel))
+                .addGap(11, 11, 11)
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(theirNodeCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(theirWayCountLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(theirRelationCountLabel))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         objectTabCancelButton.setText("Cancel");
@@ -379,48 +371,148 @@ public class ConflationOptionsPanel extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jCheckBox1.setSelected(true);
+        jCheckBox1.setText("Distance");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBox1)
+                .addContainerGap(282, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBox1)
+                .addContainerGap(192, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout criteriaTabPanelLayout = new javax.swing.GroupLayout(criteriaTabPanel);
         criteriaTabPanel.setLayout(criteriaTabPanelLayout);
         criteriaTabPanelLayout.setHorizontalGroup(
             criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
-                .addContainerGap(254, Short.MAX_VALUE)
+                .addContainerGap(578, Short.MAX_VALUE)
                 .addComponent(criteriaTabConflateButton)
                 .addContainerGap())
+            .addGroup(criteriaTabPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(292, Short.MAX_VALUE))
         );
         criteriaTabPanelLayout.setVerticalGroup(
             criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
-                .addContainerGap(404, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
                 .addComponent(criteriaTabConflateButton)
                 .addContainerGap())
         );
 
         resultsTabPanel.addTab("Matching criteria", criteriaTabPanel);
 
+        resultsPanel.setLayout(new javax.swing.BoxLayout(resultsPanel, javax.swing.BoxLayout.PAGE_AXIS));
+
+        resultsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Mine", "Theirs", "Distance (m)", "Cost", "Tags"
+            }
+        ));
+        resultsTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jScrollPane1.setViewportView(resultsTable);
+
+        resultsPanel.add(jScrollPane1);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        useMyTagsButton.setText("My Tags");
+        useMyTagsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useMyTagsButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Resolve using:");
+
+        useTheirTagsButton.setText("Their Tags");
+
+        jButton1.setText("Not a match");
+        jButton1.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 337, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(useMyTagsButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(useTheirTagsButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addContainerGap(300, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 438, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(useMyTagsButton)
+                    .addComponent(useTheirTagsButton)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        resultsTabPanel.addTab("Results", jPanel1);
+        resultsPanel.add(jPanel1);
+
+        tagMergerPlaceholderPanel.setPreferredSize(new java.awt.Dimension(661, 250));
+
+        javax.swing.GroupLayout tagMergerPlaceholderPanelLayout = new javax.swing.GroupLayout(tagMergerPlaceholderPanel);
+        tagMergerPlaceholderPanel.setLayout(tagMergerPlaceholderPanelLayout);
+        tagMergerPlaceholderPanelLayout.setHorizontalGroup(
+            tagMergerPlaceholderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 661, Short.MAX_VALUE)
+        );
+        tagMergerPlaceholderPanelLayout.setVerticalGroup(
+            tagMergerPlaceholderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+
+        resultsPanel.add(tagMergerPlaceholderPanel);
+
+        resolveButton.setText("Resolve");
+        resolveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resolveButtonActionPerformed(evt);
+            }
+        });
+        resultsPanel.add(resolveButton);
+
+        resultsTabPanel.addTab("Results", resultsPanel);
 
         add(resultsTabPanel);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void refAddRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refAddRadioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_refAddRadioActionPerformed
-
-    private void nonRefAddRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonRefAddRadioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nonRefAddRadioActionPerformed
 
     private void objectTabCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectTabCancelButtonActionPerformed
         dlg.setCanceled(true);
@@ -428,13 +520,160 @@ public class ConflationOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_objectTabCancelButtonActionPerformed
 
     private void criteriaTabConflateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criteriaTabConflateButtonActionPerformed
-        dlg.setVisible(false);
+
+        // some initialization
+        int n = mySelection.size();
+        int m = theirSelection.size();
+        int maxLen = Math.max(n, m);
+        double cost[][] = new double[maxLen][maxLen];
+
+        // calculate cost matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                cost[i][j] = calcCost(mySelection.get(i), theirSelection.get(j));
+            }
+        }
+
+        // perform assignment using Hungarian algorithm
+        assignment = new int[maxLen][2];
+        assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
+
+        // create array of primitives based on indices from assignment
+        pairs = new OsmPrimitive[maxLen][2];
+        for (int i = 0; i < maxLen; i++) {
+            if (assignment[i][0] < n)
+                pairs[i][0] = mySelection.get(assignment[i][0]);
+            else
+                pairs[i][0] = null;
+            if (assignment[i][1] < m)
+                pairs[i][1] = theirSelection.get(assignment[i][1]);
+            else
+                pairs[i][1] = null;
+
+            if (pairs[i][0] != null && pairs[i][1] != null) {
+                // TODO: do something!
+                conflicts.add(pairs[i][0], pairs[i][1]);
+            }
+        }
+
+        // add conflation layer
+        try {
+            conflationLayer = new ConflationLayer(myLayer.data, conflicts);
+            Main.main.addLayer(conflationLayer);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(Main.parent, ex.toString(),
+                    "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
+        }
+        tableModel = new MatchTableModel();
+        resultsTable.setModel(tableModel);
+
+        conflictResolver.populate(conflicts.get(0));
+        // print list of matched pairsalong with distance
+        // upon selection of one pair, highlight them and draw arrow
     }//GEN-LAST:event_criteriaTabConflateButtonActionPerformed
 
     private void objectTabNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectTabNextButtonActionPerformed
         if (criteriaTabPanel != null)
             resultsTabPanel.setSelectedComponent(criteriaTabPanel);
     }//GEN-LAST:event_objectTabNextButtonActionPerformed
+
+    private void restoreMySetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreMySetButtonActionPerformed
+        if (myLayer != null && myDataSet != null && mySelection != null && !mySelection.isEmpty()) {
+            Main.map.mapView.setActiveLayer(myLayer);
+            myLayer.setVisible(true);
+            myDataSet.setSelected(mySelection);
+        }
+    }//GEN-LAST:event_restoreMySetButtonActionPerformed
+
+    private void restoreTheirSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreTheirSetButtonActionPerformed
+        if (theirLayer != null && theirDataSet != null && theirSelection != null && !theirSelection.isEmpty()) {
+            Main.map.mapView.setActiveLayer(theirLayer);
+            theirLayer.setVisible(true);
+            theirDataSet.setSelected(theirSelection);
+        }
+    }//GEN-LAST:event_restoreTheirSetButtonActionPerformed
+
+    private void freezeMySetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeMySetButtonActionPerformed
+        myDataSet = Main.main.getCurrentDataSet();
+        myLayer = Main.main.getEditLayer();
+        if (myDataSet == null || myLayer == null) {
+            JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
+                    tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        mySelection = new ArrayList<OsmPrimitive>(myDataSet.getSelected());
+        if (mySelection.isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
+                    tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int numNodes = 0;
+        int numWays = 0;
+        int numRelations = 0;
+        for (OsmPrimitive p: mySelection) {
+            switch(p.getType()) {
+            case NODE: numNodes++; break;
+            case WAY: numWays++; break;
+            case RELATION: numRelations++; break;
+            }
+        }
+
+        myLayerLabel.setText(myLayer.getName());
+        myNodeCountLabel.setText(Integer.toString(numNodes));
+        myWayCountLabel.setText(Integer.toString(numWays));
+        myRelationCountLabel.setText(Integer.toString(numRelations));
+    }//GEN-LAST:event_freezeMySetButtonActionPerformed
+
+    private void freezeTheirSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeTheirSelectionButtonActionPerformed
+        theirDataSet = Main.main.getCurrentDataSet();
+        theirLayer = Main.main.getEditLayer();
+        if (theirDataSet == null || theirLayer == null) {
+            JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
+                    tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        theirSelection = new ArrayList<OsmPrimitive>(theirDataSet.getSelected());
+        if (theirSelection.isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
+                    tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int numNodes = 0;
+        int numWays = 0;
+        int numRelations = 0;
+        for (OsmPrimitive p: mySelection) {
+            switch(p.getType()) {
+            case NODE: numNodes++; break;
+            case WAY: numWays++; break;
+            case RELATION: numRelations++; break;
+            }
+        }
+
+        theirLayerLabel.setText(theirLayer.getName());
+        theirNodeCountLabel.setText(Integer.toString(numNodes));
+        theirWayCountLabel.setText(Integer.toString(numWays));
+        theirRelationCountLabel.setText(Integer.toString(numRelations));
+    }//GEN-LAST:event_freezeTheirSelectionButtonActionPerformed
+
+    private void useMyTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useMyTagsButtonActionPerformed
+        int[] rows = resultsTable.getSelectedRows();
+    }//GEN-LAST:event_useMyTagsButtonActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void resolveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resolveButtonActionPerformed
+        if (!conflictResolver.isResolvedCompletely()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Unresolved differences remain, please fix remaining differences."),
+                    tr("Conflict not resolved completely"), JOptionPane.ERROR_MESSAGE);
+                    return;
+        }
+        Command cmd = conflictResolver.buildResolveCommand();
+        Main.main.undoRedo.add(cmd);
+    }//GEN-LAST:event_resolveButtonActionPerformed
 
     static public class LayerListCellRenderer extends DefaultListCellRenderer {
         @Override
@@ -450,76 +689,194 @@ public class ConflationOptionsPanel extends javax.swing.JPanel {
         }
     }
 
-    public OsmDataLayer getRefLayer() {
-        return (OsmDataLayer) refLayerComboBox.getModel().getSelectedItem();
+
+    public static EastNorth getCenter(OsmPrimitive prim) {
+            LatLon center = prim.getBBox().getTopLeft().getCenter(prim.getBBox().getBottomRight());
+            return Main.map.mapView.getProjection().latlon2eastNorth(center);
     }
 
-    public OsmDataLayer getNonRefLayer() {
-        return (OsmDataLayer) nonRefLayerComboBox.getModel().getSelectedItem();
+    /**
+     * Calculate the cost of a pair of <code>OsmPrimitive</code>'s. A
+     * simple cost consisting of the Euclidean distance is used
+     * now, later we can also use dissimilarity between tags.
+     *
+     * @param   refPrim      the reference <code>OsmPrimitive</code>.
+     * @param   nonRefPrim   the non-reference <code>OsmPrimitive</code>.
+     */
+    public double calcCost(OsmPrimitive refPrim, OsmPrimitive nonRefPrim) {
+        double dist;
+        try {
+            dist = getCenter(refPrim).distance(getCenter(nonRefPrim));
+        } catch (Exception e) {
+            dist = 1000; // FIXME: what number to use?
+        }
+
+        // TODO: use other "distance" measures, i.e. matching tags
+        return dist;
     }
 
-    public SearchSetting getRefSearchSetting() {
-        SearchSetting s = new SearchSetting();
-        s.text = refFilterTextField.getText();
-        s.allElements = refAllObjectsCheckBox.isSelected();
-        s.caseSensitive = refCaseSensitiveCheckBox.isSelected();
-        s.regexSearch = refRegExCheckBox.isSelected();
-        s.mode = refReplaceRadio.isSelected() ? SearchAction.SearchMode.replace
-                : (refAddRadio.isSelected() ? SearchAction.SearchMode.add
-                : (refRemoveRadio.isSelected() ? SearchAction.SearchMode.remove : SearchAction.SearchMode.in_selection));
-        return s;
+    class MatchTableModel extends AbstractTableModel {
+
+        private String[] columnNames = {"Mine", "Theirs", "Distance (m)", "Cost", "Tags"};
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return conflicts.size();
+        }
+
+        @Override
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            if (col == 0)
+                return conflicts.get(row).getMy();
+            if (col == 1)
+                return conflicts.get(row).getTheir();
+            if (col == 4) {
+                HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+                set.add(conflicts.get(row).getMy());
+                set.add(conflicts.get(row).getTheir());
+                TagCollection tags = TagCollection.unionOfAllPrimitives(set);
+                Set<String> keys = tags.getKeysWithMultipleValues();
+                if (keys.isEmpty())
+                    return "No conflicts!";
+                else
+                    return "Conflicts!";
+
+            }
+            else
+                return 0;
+        }
+
+        @Override
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
     }
 
-    public SearchSetting getNonRefSearchSetting() {
-        SearchSetting s = new SearchSetting();
-        s.text = nonRefFilterTextField.getText();
-        s.allElements = nonRefAllObjectsCheckBox.isSelected();
-        s.caseSensitive = nonRefCaseSensitiveCheckBox.isSelected();
-        s.regexSearch = nonRefRegExCheckBox.isSelected();
-        s.mode = nonRefReplaceRadio.isSelected() ? SearchAction.SearchMode.replace
-                : (nonRefAddRadio.isSelected() ? SearchAction.SearchMode.add
-                : (nonRefRemoveRadio.isSelected() ? SearchAction.SearchMode.remove : SearchAction.SearchMode.in_selection));
-        return s;
+    class ColorTableCellRenderer extends JLabel implements TableCellRenderer {
+        private String columnName;
+
+        public ColorTableCellRenderer(String column) {
+            this.columnName = column;
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Object columnValue = table.getValueAt(row, table.getColumnModel().getColumnIndex(columnName));
+
+            if (value != null) {
+                setText(value.toString());
+            }
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+                if (columnValue.equals("Conflicts!")) {
+                    setBackground(java.awt.Color.red);
+                }
+                else {
+                    setBackground(java.awt.Color.green);
+                }
+            }
+            return this;
+        }
+    }
+
+    class MatchListSelectionHandler implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent e) {
+            ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+
+            int firstIndex = lsm.getMinSelectionIndex();
+            int lastIndex = lsm.getMaxSelectionIndex();
+            boolean isAdjusting = e.getValueIsAdjusting();
+            if (isAdjusting)
+                return;
+
+            // only one item selected, show tags and zoom/center map
+            if (!lsm.isSelectionEmpty() && firstIndex == lastIndex) {
+                Conflict<?> c = conflicts.get(firstIndex);
+                conflictResolver.populate(c);
+                
+                ArrayList<OsmPrimitive> sel = new ArrayList<OsmPrimitive>();
+                sel.add(c.getMy());
+                sel.add(c.getTheir());
+
+                BoundingXYVisitor box = new BoundingXYVisitor();
+                box.computeBoundingBox(sel);
+                if (box.getBounds() == null) {
+                    return;
+                }
+                box.enlargeBoundingBox();
+                Main.map.mapView.recalculateCenterScale(box);
+            }
+
+        }
+    }
+
+    public final void refreshView() {
+        // TODO: should tell what rows changed
+        tableModel.fireTableDataChanged();
+    }
+
+    public void onConflictsAdded(ConflictCollection conflicts) {
+        refreshView();
+    }
+
+    public void onConflictsRemoved(ConflictCollection conflicts) {
+        System.err.println("1 conflict has been resolved.");
+        refreshView();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton criteriaTabConflateButton;
     private javax.swing.JPanel criteriaTabPanel;
+    private javax.swing.JButton freezeMySetButton;
+    private javax.swing.JButton freezeTheirSelectionButton;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JRadioButton nonRefAddRadio;
-    private javax.swing.JCheckBox nonRefAllObjectsCheckBox;
-    private javax.swing.JCheckBox nonRefCaseSensitiveCheckBox;
-    private javax.swing.JTextField nonRefFilterTextField;
-    private javax.swing.JRadioButton nonRefInSelectionRadio;
-    private javax.swing.JComboBox nonRefLayerComboBox;
-    private javax.swing.JCheckBox nonRefRegExCheckBox;
-    private javax.swing.JRadioButton nonRefRemoveRadio;
-    private javax.swing.JRadioButton nonRefReplaceRadio;
-    private javax.swing.ButtonGroup nonRefSearchModeButtonGroup;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel myLayerLabel;
+    private javax.swing.JLabel myNodeCountLabel;
+    private javax.swing.JLabel myRelationCountLabel;
+    private javax.swing.JLabel myWayCountLabel;
     private javax.swing.JPanel nonRefSetPanel;
     private javax.swing.JButton objectTabCancelButton;
     private javax.swing.JButton objectTabNextButton;
     private javax.swing.JPanel objectTabPanel;
-    private javax.swing.JRadioButton refAddRadio;
-    private javax.swing.JCheckBox refAllObjectsCheckBox;
-    private javax.swing.JCheckBox refCaseSensitiveCheckBox;
-    private javax.swing.JTextField refFilterTextField;
-    private javax.swing.JRadioButton refInSelectionRadio;
-    private javax.swing.JComboBox refLayerComboBox;
-    private javax.swing.JCheckBox refRegExCheckBox;
-    private javax.swing.JRadioButton refRemoveRadio;
-    private javax.swing.JRadioButton refReplaceRadio;
-    private javax.swing.ButtonGroup refSearchModeButtonGroup;
     private javax.swing.JPanel refSetPanel;
+    private javax.swing.JButton resolveButton;
+    private javax.swing.JButton restoreMySetButton;
+    private javax.swing.JButton restoreTheirSetButton;
+    private javax.swing.JPanel resultsPanel;
     private javax.swing.JTabbedPane resultsTabPanel;
+    private javax.swing.JTable resultsTable;
+    private javax.swing.JPanel tagMergerPlaceholderPanel;
+    private javax.swing.JLabel theirLayerLabel;
+    private javax.swing.JLabel theirNodeCountLabel;
+    private javax.swing.JLabel theirRelationCountLabel;
+    private javax.swing.JLabel theirWayCountLabel;
+    private javax.swing.JButton useMyTagsButton;
+    private javax.swing.JButton useTheirTagsButton;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -25,7 +25,7 @@ public class ConflationOptionsDialog extends JDialog {
     private ConflationOptionsPanel panel;
 
     public ConflationOptionsDialog(Component parent, List<OsmDataLayer> layers) {
-        super(JOptionPane.getFrameForComponent(parent),tr("Conflation Options"), ModalityType.DOCUMENT_MODAL);
+        super(JOptionPane.getFrameForComponent(parent),tr("Conflation Options"), ModalityType.MODELESS);
         getContentPane().setLayout(new BorderLayout());
         panel = new ConflationOptionsPanel(this, layers);
         getContentPane().add(panel, BorderLayout.CENTER);

@@ -66,9 +66,9 @@ public class ConflationLayer extends OsmDataLayer implements LayerChangeListener
             OsmPrimitive p = c.getMy();
             OsmPrimitive q = c.getTheir();
             if (p != null && q != null) {
-                // we have a pair, so draw line between them
-                Point p1 = mv.getPoint(ConflationAction.getCenter(p));
-                Point p2 = mv.getPoint(ConflationAction.getCenter(q));
+                // we have a pair, so draw line between them, FIXME: not good to use getCenter() from here, move to utils?
+                Point p1 = mv.getPoint(ConflationOptionsPanel.getCenter(p));
+                Point p2 = mv.getPoint(ConflationOptionsPanel.getCenter(q));
                 path.moveTo(p1.x, p1.y);
                 path.lineTo(p2.x, p2.y);
                 //logger.info(String.format("Line %d,%d to %d,%d", p1.x, p1.y, p2.x, p2.y));

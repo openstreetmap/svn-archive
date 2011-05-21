@@ -21,15 +21,14 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
@@ -43,12 +42,12 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
  * @author casualwalker
  */
 public class HouseNumberInputHandler extends JosmAction implements ActionListener, FocusListener, ItemListener {
-    private TerracerAction terracerAction;
-    private Way outline, street;
-    private String streetName;
-    private Node init;
-    private Relation associatedStreet;
-    private ArrayList<Node> housenumbers;
+    private final TerracerAction terracerAction;
+    private final Way outline, street;
+    private final String streetName;
+    private final Node init;
+    private final Relation associatedStreet;
+    private final ArrayList<Node> housenumbers;
     public HouseNumberInputDialog dialog;
 
     /**
@@ -126,7 +125,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
 
         // Allow non numeric characters for the low number as long as there is
         // no high number of the segmentcount is 1
-        if (dialog.hi.getText().length() > 0 | segments() > 1) {
+        if (dialog.hi.getText().length() > 0 && (segments()!= null || segments() < 1)) {
             isOk = isOk
                     && checkNumberStringField(dialog.lo, tr("Lowest number"),
                             message);
@@ -280,19 +279,21 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
      * Called when the user selects from a pulldown selection
      */
+    @Override
     public void itemStateChanged(ItemEvent e) {
         validateInput();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(final ActionEvent e) {
         // OK or Cancel button-actions
         if (e.getSource() instanceof JButton) {
@@ -390,7 +391,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
             return null;
         } else {
             String name;
-            if (selected instanceof AutoCompletionListItem) 
+            if (selected instanceof AutoCompletionListItem)
             {
                name = ((AutoCompletionListItem)selected).getValue();
             }
@@ -435,6 +436,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      *
      * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
      */
+    @Override
     public void focusGained(FocusEvent e) {
         // Empty, but placeholder is required
     }
@@ -444,6 +446,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      *
      * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
      */
+    @Override
     public void focusLost(FocusEvent e) {
         if (e.getOppositeComponent() == null)
             return;

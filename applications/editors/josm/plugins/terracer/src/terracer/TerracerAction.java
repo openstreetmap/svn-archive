@@ -19,9 +19,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,12 +29,11 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -79,6 +77,7 @@ public final class TerracerAction extends JosmAction {
      * Checks that the selection is OK. If not, displays error message. If so
      * calls to terraceBuilding(), which does all the real work.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         Way outline = null;
@@ -228,7 +227,7 @@ public final class TerracerAction extends JosmAction {
 
     /**
      * Sorts the house number nodes according their numbers only
-     * 
+     *
      * @param house
      *            number nodes
      */
@@ -237,7 +236,7 @@ public final class TerracerAction extends JosmAction {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         @Override
@@ -342,7 +341,11 @@ public final class TerracerAction extends JosmAction {
         final double backLength = wayLength(interp.b);
 
         // new nodes array to hold all intermediate nodes
+        // This set will contain at least 4 existing nodes from the original outline (those, which coordinates match coordinates of outline nodes)
         Node[][] new_nodes = new Node[2][nb + 1];
+        // This list will contain nodes of the outline that are used in new lines.
+        // These nodes will not be deleted with the outline (if deleting was prompted).
+        ArrayList<Node> reused_nodes = new ArrayList<Node>();
 
         this.commands = new LinkedList<Command>();
         Collection<Way> ways = new LinkedList<Way>();
@@ -352,8 +355,14 @@ public final class TerracerAction extends JosmAction {
                 int i_dir = swap ? nb - i : i;
                 new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i_dir / nb);
                 new_nodes[1][i] = interpolateAlong(interp.b, backLength * i_dir / nb);
-                this.commands.add(new AddCommand(new_nodes[0][i]));
-                this.commands.add(new AddCommand(new_nodes[1][i]));
+                if (!outline.containsNode(new_nodes[0][i]))
+                    this.commands.add(new AddCommand(new_nodes[0][i]));
+                else
+                    reused_nodes.add(new_nodes[0][i]);
+                if (!outline.containsNode(new_nodes[1][i]))
+                    this.commands.add(new AddCommand(new_nodes[1][i]));
+                else
+                    reused_nodes.add(new_nodes[1][i]);
             }
 
             // assemble new quadrilateral, closed ways
@@ -388,7 +397,17 @@ public final class TerracerAction extends JosmAction {
             }
 
             if (deleteOutline) {
-                this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
+                // Delete outline nodes having no tags and referrers but the outline itself
+                List<Node> nodes = outline.getNodes();
+                ArrayList<Node> nodesToDelete = new ArrayList<Node>();
+                for (Node n : nodes)
+                    if (!n.hasKeys() && n.getReferrers().size() == 1 && !reused_nodes.contains(n))
+                        nodesToDelete.add(n);
+                if (nodesToDelete.size() > 0)
+                    this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), nodesToDelete));
+                // Delete the way itself without nodes
+                this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), false, true));
+
             }
         } else {
             // Single building, just add the address details
@@ -531,8 +550,7 @@ public final class TerracerAction extends JosmAction {
         int side2 = indexes[1];
         // if side2 is contiguous with side1 then look further down the
         // list. we know there are at least 4 sides, as anything smaller
-        // than a quadrilateral would have been rejected at an earlier
-        // stage.
+        // than a quadrilateral would have been rejected at an earlier stage.
         if (indexDistance(side1, side2, indexes.length) < 2) {
             side2 = indexes[2];
         }
@@ -546,8 +564,8 @@ public final class TerracerAction extends JosmAction {
         // created using the orthogonalise tool the sideness will be about the
         // same for all sides.
         if (sideLength(w, side1) > sideLength(w, side1 + 1)
-                && Math.abs(sideness[side1] - sideness[side1 + 1]) < 0.001) {
-            side1 = side1 + 1;
+                && Math.abs(sideness[side1] - sideness[(side1 + 1) % (w.getNodesCount() - 1)]) < 0.001) {
+            side1 = (side1 + 1) % (w.getNodesCount() - 1);
             side2 = (side2 + 1) % (w.getNodesCount() - 1);
         }
 
@@ -627,6 +645,7 @@ public final class TerracerAction extends JosmAction {
                 i = b;
             }
 
+            @Override
             public int compareTo(SortWithIndex o) {
                 return Double.compare(x, o.x);
             };
@@ -685,13 +704,19 @@ public final class TerracerAction extends JosmAction {
      * Creates a new node at the interpolated position between the argument
      * nodes. Interpolates linearly in projected coordinates.
      *
+     * If new node coordinate matches a or b coordinates, a or b is returned.
+     *
      * @param a First node, at which f=0.
      * @param b Last node, at which f=1.
      * @param f Fractional position between first and last nodes.
-     * @return A new node at the interpolated position.
+     * @return A new node at the interpolated position (or a or b in case if f ≈ 0 or f ≈ 1).
      */
     private Node interpolateNode(Node a, Node b, double f) {
         Node n = new Node(a.getEastNorth().interpolate(b.getEastNorth(), f));
+        if (n.getCoor().equalsEpsilon(a.getCoor()))
+            return a;
+        if (n.getCoor().equalsEpsilon(b.getCoor()))
+            return b;
         return n;
     }
 

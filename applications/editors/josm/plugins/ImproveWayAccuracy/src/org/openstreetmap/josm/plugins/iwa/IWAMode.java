@@ -104,8 +104,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
                         KeyEvent.VK_K, Shortcut.GROUP_EDIT), mapFrame, Cursor
                         .getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-        cursorSelect = ImageProvider.getCursor("normal", null);
-        cursorSelectHover = ImageProvider.getCursor("hand", null);
+        cursorSelect = ImageProvider.getCursor("normal", "mode");
+        cursorSelectHover = ImageProvider.getCursor("hand", "mode");
         cursorImprove = ImageProvider.getCursor("crosshair", null);
         cursorImproveAdd = ImageProvider.getCursor("crosshair", "add_node");
         cursorImproveAddLock = ImageProvider.getCursor("crosshair",

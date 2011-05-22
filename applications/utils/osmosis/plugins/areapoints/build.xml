@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     18 Apr 2011                                                   
+
+     AreaPoints Plugin
+
+     ====================================================================== -->
+<project name="areaPointsPlugin" default="package">
+    <description>
+            Builds the Osmosis areapoints plugin.
+    </description>
+
+	<path id="libs">
+		<fileset dir="../../trunk/core/lib" includes="**/*.jar"/>
+	</path>
+
+    <!-- ================================= 
+          target: build   
+         ================================= -->
+    <target name="build">
+		<!-- Create the build directories -->
+		<mkdir dir="build"/>
+		<mkdir dir="build/classes"/>
+    	
+		<!-- Compile stuff -->
+		<javac srcdir="src" destdir="build/classes" debuglevel="lines,vars,source" classpathref="libs" classpath="../../trunk/core/build/binary/osmosis-core.jar" />
+    	
+		<!-- Copy all resource files (even if there aren't any... I'll get caught out later otherwise) -->
+		<copy todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+    </target>
+
+	<target name="package" depends="build">
+		<mkdir dir="build/dist"/>
+		<jar
+			destfile="build/dist/areapointsPlugin.jar"
+			basedir="build/classes" />
+	</target>
+</project>

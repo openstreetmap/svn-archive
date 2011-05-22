@@ -69,9 +69,6 @@ public class ElevationProfilePlugin extends Plugin {
 		
 		if(Main.map != null){
 			Main.map.toolGroup.add(eleModeButton);
-
-			Main.map.mapView.addPropertyChangeListener(eleProfileDlg);
-			MapView.addLayerChangeListener(eleProfileDlg);
 			eleProfileDlg.setProfileLayer(getCurrentLayer());
 		}
 	}

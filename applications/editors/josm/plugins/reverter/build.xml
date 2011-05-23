@@ -30,9 +30,9 @@
 <project name="reverter" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="avoid shortcut conflict (see josm bug 6029)" />
+	<property name="commit.message" value="recompile after change in MultiFetchServerObjectReader in JOSM 4081" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3835" />
+	<property name="plugin.main.version" value="4081" />
 
 
 	<!--

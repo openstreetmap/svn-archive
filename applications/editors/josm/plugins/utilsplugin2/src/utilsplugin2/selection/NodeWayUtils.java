@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
 package utilsplugin2.selection;
 
+import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -221,6 +222,48 @@ public final class NodeWayUtils {
             return;
     }
 
+    static void addMiddle(Set<Node> selectedNodes, Set<Node> newNodes) {
+        Iterator<Node> it=selectedNodes.iterator();
+        Node n1 = it.next();
+        Node n2 = it.next();
+        Set<Way> ways=new HashSet<Way>();
+        ways.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
+        for (Way w: ways) {
+            System.out.println(w);
+            System.out.println("Node1"+n1);
+            System.out.println("Node2"+n2);
+
+            if (w.isUsable() && w.containsNode(n2) && w.containsNode(n1)) {
+                // Way w goes from n1 to n2
+                List <Node> nodes= w.getNodes();
+                int i1 = nodes.indexOf(n1);
+                int i2 = nodes.indexOf(n2);
+                int n = nodes.size();
+                if (i1>i2) { int p=i2; i2=i1; i1=p; } // now i1<i2
+                if (w.isClosed()) {
+                        if ((i2-i1)*2 <= n ) { // i1 ... i2
+                            for (int i=i1+1;i!=i2; i++) {
+                                newNodes.add(nodes.get(i));
+                            }
+                        } else { // i2 ... n-1 0 1 ... i1
+                            for (int i=i2+1;i!=i1; i=(i+1)%n) {
+                                newNodes.add(nodes.get(i));
+                            }
+                        }
+                    } else {
+                        for (int i=i1+1;i<i2;i++) {
+                            newNodes.add(nodes.get(i));
+                        }
+                    }
+            }
+            if (newNodes.size()==0) {
+                JOptionPane.showMessageDialog(Main.parent,
+                    tr("Please select two nodes connected by way!"),
+                    tr("Warning"),
+                    JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
 
 
 }

@@ -229,9 +229,6 @@ public final class NodeWayUtils {
         Set<Way> ways=new HashSet<Way>();
         ways.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
         for (Way w: ways) {
-            System.out.println(w);
-            System.out.println("Node1"+n1);
-            System.out.println("Node2"+n2);
 
             if (w.isUsable() && w.containsNode(n2) && w.containsNode(n1)) {
                 // Way w goes from n1 to n2
@@ -256,13 +253,13 @@ public final class NodeWayUtils {
                         }
                     }
             }
-            if (newNodes.size()==0) {
+        }
+        if (newNodes.size()==0) {
                 JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select two nodes connected by way!"),
                     tr("Warning"),
                     JOptionPane.WARNING_MESSAGE);
             }
-        }
     }
 
 

@@ -59,7 +59,8 @@ function GPX($data) {
 	    	if (count($lonlat) > 0) {    	
     			$xml .= '      <trkpt lon="'.$lonlat[0].'" lat="'.$lonlat[1].'"></trkpt>'."\n";
    		}
-	}
+	}
+
 	$xml .= '    </trkseg>'."\n";
 	$xml .= '  </trk>'."\n";
 	$xml .= '</gpx>'."\n"; 

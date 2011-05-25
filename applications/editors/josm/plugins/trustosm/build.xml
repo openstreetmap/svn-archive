@@ -108,9 +108,6 @@
     -->
 	<target name="dist" depends="compile,revision">
 		<echo message="creating ${ant.project.name}.jar ... "/>
-		<copy todir="${plugin.build.dir}/jce">
-			<fileset dir="jce"/>
-		</copy>
 		<copy todir="${plugin.build.dir}/lib">
 			<fileset dir="${plugin.lib.dir}"/>
 		</copy>

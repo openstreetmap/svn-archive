@@ -30,6 +30,7 @@ if (isset($type)) {
 function GPX($data) {
 	header('Content-Type: text/text');
 	header('Content-Disposition: attachment; filename="route.gpx"');
+	header('Access-Control-Allow-Origin: *');
 	
 	$ref = parse_url($_SERVER['HTTP_REFERER']);
 	$url = $ref['scheme'].'://'.$ref['host'].$ref['path']; //.'?'.urlencode($ref['query']);

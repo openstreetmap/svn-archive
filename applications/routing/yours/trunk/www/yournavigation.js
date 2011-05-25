@@ -235,12 +235,6 @@ function init() {
 		displayOutsideMaxExtent: true,
 		wrapDateLine: true
 	});
-	/*
-	layerCycleNetworks = new OpenLayers.Layer.OSM.CycleMap("Cycle Networks", {
-		displayOutsideMaxExtent: true,
-		wrapDateLine: true
-	});
-	*/
 
 	myFirstMap.addLayers([layerMapnik, layerCycle, layerWandelRoutes]);
 	
@@ -383,6 +377,13 @@ function init() {
 	var permalink = new OpenLayers.Control.Permalink('test', 'http://www.openstreetmap.org/edit');
 	myFirstMap.addControl(permalink);
 	permalink.element.textContent = 'Edit map';
+	
+	// Setup file drag-n-drop listeners.
+	if (window.FileReader) {
+		var dropZone = document.getElementById('content');
+		dropZone.addEventListener('dragover', handleDragOver, false);
+		dropZone.addEventListener('drop', handleFileSelect, false);
+	}
 } //End of init()
 
 // Called when the baselayer is changed
@@ -647,4 +648,40 @@ function notice(message, div, type) {
 			message = message;
 	}
 	$(div).html(message);
+}
+
+/*
+ * Handle dropping a file on the drop zone
+ */
+function handleFileSelect(evt) {
+	evt.stopPropagation();
+	evt.preventDefault();
+
+	var files = evt.dataTransfer.files; // FileList object.
+
+	// files is a FileList of File objects. List some properties.
+	var output = [];
+	for (var i = 0, f; f = files[i]; i++) {
+		var url = window.URL.createObjectURL(f);
+		addGpxOvelay(f.name, url);
+	}
+}
+
+/*
+ * Handle dragging a file over the drop zone
+ */
+function handleDragOver(evt) {
+	evt.stopPropagation();
+	evt.preventDefault();
+}
+
+/*
+ * Add a GPX overlay to the map
+ */
+function addGpxOvelay(name, url) {
+	myFirstMap.addLayer(new OpenLayers.Layer.GML(name, url, {
+		format: OpenLayers.Format.GPX,
+		style: {strokeColor: "red", strokeWidth: 3, strokeOpacity: 0.5},
+		projection: new OpenLayers.Projection("EPSG:4326")
+	}));
 }

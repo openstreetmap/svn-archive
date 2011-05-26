@@ -3,10 +3,12 @@ package org.openstreetmap.liveEditMapViewer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.osmosis.core.xml.common.DateParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -17,20 +19,34 @@ public class ChangesetParser extends DefaultHandler {
 	int mode;
 	int noNodes;
 	int noWoodpeck_Fixbot_nodes;
+	int noNodes_outside;
+	
+	String name = null;
+	String highway = null;
+	boolean restriction = false;
+	String restrictionType = null;
 
 	ArrayList<Double> drawLat = new ArrayList<Double>();
 	ArrayList<Double> drawLon = new ArrayList<Double>();
 	ArrayList<Long> drawTime = new ArrayList<Long>();
 	ArrayList<Long> drawID = new ArrayList<Long>();
 	ArrayList<Integer> drawMode = new ArrayList<Integer>();
+	HashMap<String, Integer> modifiedHighway = new HashMap<String, Integer>();
 
 	DateParser dp = new DateParser();
+	
+	private Coordinate bboxll, bboxur;
 
-	public ChangesetParser(InputStream i) {
+	public ChangesetParser(InputStream i, Coordinate bboxll, Coordinate bboxur) {
 		System.out.println("OSM XML parser started...");
+		System.out.println("");
 		mode = 0;
 		noNodes = 0;
 		noWoodpeck_Fixbot_nodes = 0;
+		noNodes_outside = 0;
+		modifiedHighway.clear();
+		this.bboxll = bboxll; this.bboxur = bboxur;
+		
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			// Parse the input
@@ -65,10 +81,21 @@ public class ChangesetParser extends DefaultHandler {
 	}
 
 	public void endDocument() {
+		System.out.println("Highways created and modified: ");
+		
+		for (String n : modifiedHighway.keySet()) {
+			Integer m = modifiedHighway.get(n);
+			if (m == 0) System.out.println("\tCreated:  " + n);
+			if (m == 1) System.out.println("\tModified: " + n);
+			if (m == 2) System.out.println("\tDeleted:  " + n);
+		}
+		System.out.println("");
 		System.out.println("Changeset contained "
-				+ (noNodes + noWoodpeck_Fixbot_nodes) + " nodes, of which "
+				+ (noNodes + noWoodpeck_Fixbot_nodes) + " nodes in your bbox, of which "
 				+ noWoodpeck_Fixbot_nodes
-				+ " were from Woodpeck_Fixbot and therefore ignored");
+				+ " were from Woodpeck_Fixbot and therefore ignored. "
+				+ noNodes_outside + " nodes edited outside your bounding box");
+		
 	}
 
 	public void startElement(String namespaceURI, String localName,
@@ -84,19 +111,76 @@ public class ChangesetParser extends DefaultHandler {
 			if (Integer.parseInt(atts.getValue("uid")) == 147510) {
 				noWoodpeck_Fixbot_nodes++;
 			} else {
+				
 				double lat = Double.parseDouble(atts.getValue("lat"));
 				double lon = Double.parseDouble(atts.getValue("lon"));
-				long time = dp.parse(atts.getValue("timestamp")).getTime();
-				long id = Long.parseLong(atts.getValue("id"));
-				drawLat.add(new Double(lat));
-				drawLon.add(new Double(lon));
-				drawMode.add(new Integer(mode));
-				drawTime.add(new Long(time));
-				drawID.add(id);
-				noNodes++;
+				if (lat > bboxll.getLat() && lat < bboxur.getLat() && lon > bboxll.getLon() && lon < bboxur.getLon()) {
+					long time = dp.parse(atts.getValue("timestamp")).getTime();
+					long id = Long.parseLong(atts.getValue("id"));
+					drawLat.add(new Double(lat));
+					drawLon.add(new Double(lon));
+					drawMode.add(new Integer(mode));
+					drawTime.add(new Long(time));
+					drawID.add(id);
+					noNodes++;
+				} else {
+					noNodes_outside++;
+				}
 			}
-
+	
+		} else if (qName.equals("tag")) {
+			if (atts.getValue("k").equalsIgnoreCase("name")) name = atts.getValue("v");
+			if (atts.getValue("k").equalsIgnoreCase("highway")) highway = atts.getValue("v");
+			if (atts.getValue("k").equalsIgnoreCase("restriction")) restrictionType = atts.getValue("v");
+			if (atts.getValue("k").equalsIgnoreCase("type") && atts.getValue("v").equalsIgnoreCase("restriction")) restriction = true;
+		} 
+		
+	}
+	
+	public void endElement(String namespaceURI, String localName,
+			String qName) {
+		
+		if (qName.equals("relation")) {
+			if (restriction) {
+				if (mode == 0) System.out.println("A new restriction relation of type " + restrictionType + " was created");
+				if (mode == 1) System.out.println("A restriction relation of type " + restrictionType + " was modified");
+				if (mode == 2) System.out.println("A restriction relation of type " + restrictionType + " was deleted");
+			}
+			name = null;
+			highway = null;
+			restriction = false;
+			restrictionType = null;
+		} else if (qName.equals("way")) {
+			if (highway != null && name != null) {
+				if (mode == 0) {
+					Integer m = modifiedHighway.get("highway = " + highway + ": " + name);
+					if (m == null || m == 0) {
+						modifiedHighway.put("highway = " + highway + ": " + name, 0);
+					} else if (m == 2) {
+						modifiedHighway.put("highway = " + highway + ": " + name, 1);
+					}
+				}
+				if (mode == 1) modifiedHighway.put("highway = " + highway + ": " + name, 1);
+				if (mode == 2) {
+					Integer m = modifiedHighway.get("highway = " + highway + ": " + name);
+					if (m == null || m == 2) {
+						modifiedHighway.put("highway = " + highway + ": " + name, 2);
+					} else if (m == 0) {
+						modifiedHighway.put("highway = " + highway + ": " + name, 1);
+					}
+				}
+			}
+			name = null;
+			highway = null;
+			restriction = false;
+			restrictionType = null;
+		} else if (qName.equals("node")) {
+			name = null;
+			highway = null;
+			restriction = false;
+			restrictionType = null;
 		}
+		
 	}
 
 	public double[] getLats() {

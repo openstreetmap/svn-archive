@@ -474,7 +474,7 @@ function myRouteCallback(code, result) {
 			}
 			
 			// Zoom in to the area around the route
-			if (!result.quiet) {
+			if (!result.quiet && myFirstRoute.Layer.getDataExtent() != null) {
 				myFirstMap.zoomToExtent(myFirstRoute.Layer.getDataExtent());
 			}
 			break;

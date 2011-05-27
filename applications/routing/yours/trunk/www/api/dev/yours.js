@@ -909,7 +909,9 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	 */
 	this.draw = function() {
 		// Clear a previous route result
-		this.Layer.destroyFeatures();
+		for (var i = 0; i < this.Segments.length; i++) {
+			this.Segments[i].destroy();
+		}
 		this.Segments = [];
 		
 		// Determine the numer of segments.
@@ -1186,11 +1188,13 @@ Yours.Segment = function(ParentRoute) {
 		this.permalink = location.protocol + '//' + location.host + location.pathname + "?" + this.search;
 		if (routeCache[this.search] === undefined) {
 			// Not in cache, request from server
-			var url = apiUrl + 'gosmore.php?' + this.search;
-			var self = this;
-			$.get(url, {}, function(xml) {
+			var url = apiUrl + 'route.php?' + this.search;
+			this.request = $.get(url, {}, function(xml) {
+				self.request = undefined;
 				self.parseKML(xml);
-			}, "xml");
+			}, "xml").error(function(jqXHR, textStatus, errorThrown) {
+				self.route._segmentError(self, textStatus + ": " + errorThrown);
+			});
 		} else {
 			// In cache, retreive from there
 			var s = routeCache[this.search];
@@ -1294,6 +1298,20 @@ Yours.Segment = function(ParentRoute) {
 		} else {
 			len = this.feature.geometry.getLength();
 			return len;
+		}
+	};
+
+	/*
+	 * Function: destroy
+	 * Remove Segment from the Vector Layer and destroy it's location information
+	 */
+	this.destroy = function() {
+		if (this.request !== undefined) {
+			this.request.abort();
+		}
+		if (this.feature !== undefined) {
+			this.route.Layer.removeFeatures(this.feature);
+			this.feature = undefined;
 		}
 	};
 };

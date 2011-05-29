@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-22 23:30+0200\n"
+"POT-Creation-Date: 2011-05-29 21:08+0200\n"
 "PO-Revision-Date: 2011-02-20 14:14+0000\n"
 "Last-Translator: pl71 <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-05-22 19:22+0000\n"
-"X-Generator: Launchpad (build 13085)\n"
+"X-Launchpad-Export-Date: 2011-05-29 18:13+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -106,8 +106,10 @@ msgstr "Игнориране неправилен адрес на файл: \"{0
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:181
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:49
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:189
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:215
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:45
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:190
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:216
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:260
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:68
 msgid "Warning"
 msgstr "Внимание"
@@ -354,7 +356,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:67
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:62
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:116
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
@@ -587,6 +589,7 @@ msgstr "Преместване на избраните точки така, че
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/ConnectedWaysAction.java:24
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:26
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:26
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:28
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:29
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:29
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:33
@@ -609,7 +612,7 @@ msgstr "Моля изберете поне четири точки."
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:80
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:266
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:66
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:139
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:51
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:83
@@ -723,7 +726,7 @@ msgstr "Затваря отворени пакети с промени"
 
 #: ../core/src/org/openstreetmap/josm/actions/CloseChangesetAction.java:39
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:55
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:30
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:51
@@ -924,130 +927,126 @@ msgstr "Сваляне от OSM..."
 msgid "Download map data from the OSM server."
 msgstr "Сваляне на картографски данни от OSM сървър."
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:55
 msgid "Download object..."
 msgstr "Сваляне на обект..."
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:53
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
 msgid "Download OSM object by ID."
 msgstr "Сваляне на обект по ID."
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:66
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:67
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:83
 msgid "Object type:"
 msgstr "Тип на обекта:"
 
-#. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:68
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
-msgid "mixed"
-msgstr "смесен"
-
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:69
-msgid "Choose the OSM object type"
+msgctxt "osm object types"
+msgid "mixed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:70
+msgid "Choose the OSM object type"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:71
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:91
 msgid "Object ID:"
 msgstr "ID на обекта:"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:72
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:73
 msgid "Enter the ID of the object that should be downloaded"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:75
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:76
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:70
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:74
 msgid "Separate Layer"
 msgstr "На отделен слой"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:76
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:77
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:71
 msgid "Select if the data should be downloaded into a new layer"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:78
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:80
 msgid "Select if the referrers of the object should be downloaded as well"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:81
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:82
 msgid ""
 "Object IDs can be separated by comma or space.<br/> Examples: <b><ul><li>1 2 "
 "5</li><li>1,2,5</li></ul><br/></b> In mixed mode, specify objects like this: "
 "<b>w123, n110, w12, r15</b><br/>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:114
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:116
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadPrimitiveTask.java:44
 msgid "Download object"
 msgstr "Сваляне на обект"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:120
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:121
 msgid "Start downloading"
 msgstr "Започни сваляне"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:121
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:122
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:96
 msgid "Close dialog and cancel downloading"
 msgstr "Затвори и прекрати свалянето"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:136
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:137
 msgid ""
 "Invalid ID list specified\n"
 " Cannot download object."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:170
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:171
 msgid "Object could not be downloaded"
 msgid_plural "Some objects could not be downloaded"
-msgstr[0] "Файлът не може да бъде намерен."
-msgstr[1] "Файлът не може да бъде намерен."
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:171
-#, fuzzy, java-format
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:172
+#, java-format
 msgid "One object could not be downloaded.<br>"
 msgid_plural "{0} objects could not be downloaded.<br>"
-msgstr[0] "Въведенето време не може да бъде използвано."
-msgstr[1] "Въведенето време не може да бъде използвано."
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:175
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:176
 msgid ""
 "The server replied with response code 404.<br>This usually means, the server "
 "does not know an object with the requested id."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:177
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:178
 msgid "missing objects:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:202
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:203
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:462
-#, fuzzy
 msgid "Object deleted"
 msgid_plural "Objects deleted"
-msgstr[0] "Обектът е изтрит"
-msgstr[1] "Обектът е изтрит"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:204
-#, fuzzy, java-format
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:205
+#, java-format
 msgid "One downloaded object is deleted."
 msgid_plural "{0} downloaded objects are deleted."
-msgstr[0] "Само една точка е избрана"
-msgstr[1] "Само една точка е избрана"
+msgstr[0] ""
+msgstr[1] ""
 
 #. content.add(scroller);
 #. JOptionPane.showMessageDialog(Main.parent,scroller, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:245
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:246
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:666
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:116
 msgid "Ok"
@@ -1124,9 +1123,8 @@ msgid "Continues drawing a line that shares nodes with another line."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/FollowLineAction.java:40
-#, fuzzy
 msgid "Follow"
-msgstr "нисък"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:35
 msgid "Fullscreen view"
@@ -2704,7 +2702,7 @@ msgstr ""
 msgid "Errors during download"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:176
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:328
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:474
 #, java-format
@@ -2713,23 +2711,23 @@ msgid_plural "There were {0} conflicts during import."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:181
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:184
 msgid "Conflict during download"
 msgid_plural "Conflicts during download"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:222
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:233
 #, java-format
 msgid "({0}/{1}) Loading parents of node {2}"
 msgstr "({0}/{1}) Зареждане на родителите на възел {2}"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:223
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:234
 #, java-format
 msgid "({0}/{1}) Loading parents of way {2}"
 msgstr "({0}/{1}) Зареждане на родителите на път {2}"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:224
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:235
 #, java-format
 msgid "({0}/{1}) Loading parents of relation {2}"
 msgstr "({0}/{1}) Зареждане на родителите на релация {2}"
@@ -2755,6 +2753,7 @@ msgstr "Изтриване на точки или линии."
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysMode.java:42
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:68
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:97
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:144
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RelationEditMode.java:29
 #, java-format
 msgid "Mode: {0}"
@@ -3412,7 +3411,7 @@ msgstr "Циклични зависимости"
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:114
 msgid ""
 "The following are results of automatic validation. Try fixing these, but be "
-"careful (don't destroy valid data). When in doubt ignore them.<br>When you "
+"careful (don''t destroy valid data). When in doubt ignore them.<br>When you "
 "cancel this dialog, you can find the entries in the validator side panel to "
 "inspect them."
 msgstr ""
@@ -4088,6 +4087,29 @@ msgstr ""
 msgid "Projection ''{0}'' is not found, bookmark ''{1}'' is not usable"
 msgstr ""
 
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:186
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:340
+#, java-format
+msgid "ID > 0 expected. Got {0}."
+msgstr "Очаква се ID > 0. Имаме {0}."
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:188
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:342
+#, java-format
+msgid "Version > 0 expected. Got {0}."
+msgstr "Очакваше се Version > 0. Имаме: {0}."
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:254
+#, java-format
+msgid ""
+"Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
+"{0}"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:386
+msgid "A primitive with ID = 0 cannot be invisible."
+msgstr "Примитив с ID = 0 не може да бъде невидим."
+
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:317
 #, java-format
 msgid ""
@@ -4161,34 +4183,13 @@ msgstr ""
 msgid "There is an intersection between ways."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:455
-#, java-format
-msgid "ID > 0 expected. Got {0}."
-msgstr "Очаква се ID > 0. Имаме {0}."
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:457
-#, java-format
-msgid "Version > 0 expected. Got {0}."
-msgstr "Очакваше се Version > 0. Имаме: {0}."
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:543
-#, java-format
-msgid ""
-"Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
-"{0}"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:755
-msgid "A primitive with ID = 0 cannot be invisible."
-msgstr "Примитив с ID = 0 не може да бъде невидим."
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1416
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:946
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1418
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:948
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -4196,7 +4197,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:10
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:51
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:133
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:137
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "възел"
@@ -4215,8 +4216,8 @@ msgstr[1] "пътища"
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:24
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:75
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:345
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:532
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:351
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:538
 msgid "relation"
 msgid_plural "relations"
 msgstr[0] "релация"
@@ -4240,8 +4241,8 @@ msgid ""
 "multiple values."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:343
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:371
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:355
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:383
 #, java-format
 msgid "Cannot add node {0} to incomplete way {1}."
 msgstr ""
@@ -4289,9 +4290,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapRendererFactory.java:166
-#, fuzzy
 msgid "Wireframe Map Renderer"
-msgstr "Каркас"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapRendererFactory.java:167
 msgid "Renders the map as simple wire frame."
@@ -5335,7 +5335,7 @@ msgstr "тип на водоема: {0}"
 #. <icon annotate="true" src="misc/landmark/building.png" priority="-10000"/>
 #. color building
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:104
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:335
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:341
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:72
 #: build/trans_style.java:3568
 msgid "building"
@@ -5484,9 +5484,9 @@ msgid "{0}, ..."
 msgstr "{0}, ..."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:84
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:88
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:90
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:448
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:92
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:94
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:454
 #, java-format
 msgid " [id: {0}]"
 msgstr " [id: {0}]"
@@ -5522,62 +5522,62 @@ msgstr ""
 msgid "Do not show again (remembers choice)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:104
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:162
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:238
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:253
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:108
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:166
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:242
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:258
 msgid "incomplete"
 msgstr "непълен"
 
 #. I18n: name of house as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:116
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:184
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:120
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:188
 #, java-format
 msgid "House {0}"
 msgstr ""
 
 #. I18n: house number, street as parameter, number should remain
 #. before street for better visibility
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:123
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:191
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:127
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:195
 #, java-format
 msgid "House number {0} at {1}"
 msgstr ""
 
 #. I18n: house number as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:127
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:195
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:131
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:199
 #, java-format
 msgid "House number {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:174
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:502
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:178
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:508
 msgid "highway"
 msgstr "път"
 
 #. item "Relations/Route" combo "Route type" display value
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:175
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:503
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:179
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:509
 #: build/trans_presets.java:4138
 msgid "railway"
 msgstr "железопътна линия"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:176
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:504
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:180
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:510
 msgid "waterway"
 msgstr "водоеми"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:177
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:505
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:181
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:511
 msgid "landuse"
 msgstr "земеползване"
 
 #. note: length == 0 should no longer happen, but leave the bracket code
 #. nevertheless, who knows what future brings
 #. I18n: count of nodes as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:210
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:510
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:214
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:516
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:460
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:811
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:266
@@ -5588,19 +5588,19 @@ msgid_plural "{0} nodes"
 msgstr[0] "{0} точка"
 msgstr[1] "{0} точки"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:250
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:560
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:254
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:566
 #, java-format
 msgid "{0} member"
 msgid_plural "{0} members"
 msgstr[0] "{0} член"
 msgstr[1] "{0} члена"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:330
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:336
 msgid "public transport"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:396
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:402
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:62
 #, java-format
 msgid "Changeset {0}"
@@ -7685,7 +7685,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:374
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/SelectionTableColumnModel.java:17
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:64
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:53
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:54
 msgid "Selection"
 msgstr "Избор"
 
@@ -11027,9 +11027,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadPrimitivesTask.java:57
-#, fuzzy
 msgid "Download objects"
-msgstr "Сваляне на обект"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadPrimitivesTask.java:106
 msgid "Initializing nodes to download ..."
@@ -11424,7 +11423,7 @@ msgstr "Етикети на списък с промени {0}"
 #. we tried to delete an already deleted primitive.
 #.
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:94
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:194
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:195
 #, java-format
 msgid ""
 "Warning: object ''{0}'' is already deleted on the server. Skipping this "
@@ -11515,37 +11514,37 @@ msgstr ""
 "Качване на <strong>{0} обекта</strong> към <strong>няколко списъка с "
 "промени</strong>, като се ползват <strong>{1} заявки</strong>."
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:67
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:68
 #, java-format
 msgid "Uploading data for layer ''{0}''"
 msgstr "Качване на данни за слой ''{0}''"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:81
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:82
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:275
 msgid "Continue uploading"
 msgstr "Продължаване на качването"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:83
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:84
 msgid "Click to continue uploading to additional new changesets"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:87
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:88
 msgid "Go back to Upload Dialog"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:89
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:90
 msgid "Click to return to the Upload Dialog"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:93
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:94
 msgid "Abort"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:95
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:96
 msgid "Click to abort uploading"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:100
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:101
 #, java-format
 msgid ""
 "The server reported that the current changeset was closed.<br>This is most "
@@ -11553,14 +11552,14 @@ msgid ""
 "on the server ''{1}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:107
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:108
 #, java-format
 msgid "There is {0} object left to upload."
 msgid_plural "There are {0} objects left to upload."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:113
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:114
 #, java-format
 msgid ""
 "Click ''<strong>{0}</strong>'' to continue uploading to additional new "
@@ -11569,16 +11568,16 @@ msgid ""
 "editing.<br>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:124
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:125
 msgid "Changeset is full"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:195
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:196
 #, java-format
 msgid "Object ''{0}'' is already deleted. Skipping object in upload."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:232
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:233
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:462
 #, java-format
 msgid "Uploading {0} object..."
@@ -11586,7 +11585,7 @@ msgid_plural "Uploading {0} objects..."
 msgstr[0] "Качване на {0} обект..."
 msgstr[1] "Качване на {0} обекта..."
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:289
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:290
 #, java-format
 msgid "Ignoring caught exception because upload is canceled. Exception is: {0}"
 msgstr ""
@@ -12349,9 +12348,8 @@ msgid "Automatic downloading"
 msgstr "Автоматично сваляне"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:823
-#, fuzzy
 msgid "Zoom to native resolution"
-msgstr "Мащабиране по селекцията"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:95
 msgid "Correlate to GPX"
@@ -16734,7 +16732,7 @@ msgstr[1] ""
 msgid "Uploading data ..."
 msgstr "Качване на данни..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmWriter.java:218
+#: ../core/src/org/openstreetmap/josm/io/OsmWriter.java:223
 msgid "Unexpected id 0 for osm primitive found"
 msgstr ""
 
@@ -18303,17 +18301,16 @@ msgid "Click to add a new node. Release Ctrl to move existing nodes."
 msgstr ""
 
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:352
-#, fuzzy
 msgid "Cannot place a node outside of the world."
-msgstr "Не може да се добави точка извън пределите на света."
+msgstr ""
 
 #. Finishing the sequence command
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:409
-#, fuzzy, java-format
+#, java-format
 msgid "Add and a new node to way"
 msgid_plural "Add and a new node to {0} ways"
-msgstr[0] "Добавяне и преместване на виртуален нов възел към път"
-msgstr[1] "Добавяне и преместване на виртуален нов възел към {0} пътя"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:80
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:82
@@ -18325,14 +18322,12 @@ msgid "Edit time-tag of selected element in a graphical interface"
 msgstr ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:188
-#, fuzzy
 msgid "edit existing tag"
-msgstr "Редактирай кисинг гейт"
+msgstr ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:195
-#, fuzzy
 msgid "edit new tag"
-msgstr "Добавяне на нов етикет"
+msgstr ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:251
 msgid "Choose key"
@@ -19626,14 +19621,12 @@ msgstr "Цветни схеми"
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:21
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:22
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationPlugin.java:41
-#, fuzzy
 msgid "Conflation"
-msgstr "Потвърждение"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:21
-#, fuzzy
 msgid "Conflation tool for merging data"
-msgstr "Конфликт в данните"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:37
 msgid ""
@@ -19646,43 +19639,36 @@ msgid "Cannot perform conflation"
 msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationLayer.java:43
-#, fuzzy
 msgid "Conflation symbols"
-msgstr "Потвърждение"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsDialog.java:28
-#, fuzzy
 msgid "Conflation Options"
-msgstr "Конфликтиращи релации"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsDialog.java:55
-#, fuzzy
 msgid "Close the dialog, do not perform conflation"
-msgstr "Затвори и прекрати свалянето"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:600
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:632
-#, fuzzy
 msgid "No valid OSM data layer present."
-msgstr "Не е открит слой с GPX данни."
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:601
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:633
-#, fuzzy
 msgid "Error freezing selection"
-msgstr "изтрий от селекцията"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:606
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:638
-#, fuzzy
 msgid "Nothing is selected, please try again."
-msgstr "Няма нищо избрано за показване."
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:607
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:639
-#, fuzzy
 msgid "Empty selection"
-msgstr "избор"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:670
 msgid "Unresolved differences remain, please fix remaining differences."
@@ -20615,14 +20601,12 @@ msgid "Checks if all contributors have agreed to the new CT/License."
 msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:51
-#, fuzzy
 msgid "Creator has rejected CT"
-msgstr "Не е избрана релация"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:51
-#, fuzzy
 msgid "Creator unknown"
-msgstr "неизвестно"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:56
 msgid "Creator has not (yet) accepted CT"
@@ -20634,51 +20618,43 @@ msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:39
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:40
-#, fuzzy
 msgid "License Check"
-msgstr "Лиценз"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:39
-#, fuzzy
 msgid "Performs the license check"
-msgstr "Проверка на параметрите:"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:101
 msgid "Loading from Quick History Service"
 msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:145
-#, fuzzy
 msgid "Analyzing"
-msgstr "Инициализиране"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:78
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:103
-#, fuzzy
 msgid "Relicensing problems"
-msgstr "Проблем с изобразяването"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
-#, fuzzy
 msgid "Open the relicensing window."
-msgstr "Отваряне на прозореца с проверките."
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:40
-#, fuzzy
 msgid "Relicensing Problems"
-msgstr "Проблем с изобразяването"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:101
-#, fuzzy
 msgid "No relicensing problems"
-msgstr "Проблем с изобразяването"
+msgstr ""
 
 #. * Error messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:15
-#, fuzzy
 msgid "Data loss"
-msgstr "Източници на данни"
+msgstr ""
 
 #. * Warning messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:19
@@ -20687,9 +20663,8 @@ msgstr ""
 
 #. * Other messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:23
-#, fuzzy
 msgid "Data reduction"
-msgstr "Посока"
+msgstr ""
 
 #: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:131
 #: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:165
@@ -21078,6 +21053,37 @@ msgstr ""
 #: ../plugins/osmarender/src/org/openstreetmap/josm/plugins/osmarender/OsmarenderPlugin.java:149
 msgid "Firefox executable"
 msgstr "изпълним файл на Firefox"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:143
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:144
+#, fuzzy
+msgid "Parallel"
+msgstr "алея"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:143
+#, fuzzy
+msgid "Makes a paralell copy of the selected way(s)"
+msgstr "Установява роля за избраните членове"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:200
+msgid ""
+"Select ways as in Select mode. Drag selected ways or a single way to create "
+"a parallel copy (Alt toggles tag preservation)"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:202
+msgid "Hold Ctrl to toggle snapping"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:411
+msgid ""
+"ParallelWayAction\n"
+"The ways selected must form a simple branchless path"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:413
+msgid "Make parallel way error"
+msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:142
 msgid "Transform error: Min X must be smaller than max"
@@ -22520,6 +22526,43 @@ msgstr ""
 msgid "Show all available signatures for selected attribute."
 msgstr ""
 
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:25
+msgid "Show deleted tags and notes if they were signed before"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:26
+#, java-format
+msgid ""
+"Use default (and maybe existing) GnuPG directory ({0}) to store new keys and "
+"configs."
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:27
+#, java-format
+msgid "Use separate GnuPG directory ({0}) to store new keys and configs."
+msgstr ""
+
+#. TODO Auto-generated method stub
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:32
+msgid "Trust OSM Settings"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:32
+msgid "Change GPG and privacy settings of the trustosm plugin."
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:41
+msgid "Use separate GnuPG configuration directory?"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:58
+msgid "GnuPG"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:62
+msgid "Dialog"
+msgstr ""
+
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:46
 #, java-format
 msgid "Signed key value pair was: {0}={1}"
@@ -22598,6 +22641,14 @@ msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:209
 msgid "Parsing Signature data..."
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustAnalyzer.java:26
+msgid "The Signature is broken!"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustAnalyzer.java:26
+msgid "Manipulation Warning"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:182
@@ -23631,14 +23682,13 @@ msgstr ""
 msgid "Unglued Relations"
 msgstr ""
 
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:41
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:42
 msgid "More tools"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:20
-#, fuzzy
 msgid "Align Way Nodes"
-msgstr "Подреди точките в линия"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:24
 msgid "Align nodes in a way"
@@ -23654,9 +23704,8 @@ msgid "Internal error: number of nodes is {0}."
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:19
-#, fuzzy
 msgid "Paste Relations"
-msgstr "Родителски релации"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:22
 msgid ""
@@ -23664,9 +23713,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:25
-#, fuzzy
 msgid "Replace Geometry"
-msgstr "Замяна"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:29
 msgid "Replace geometry of selected way with a new one"
@@ -23690,18 +23738,16 @@ msgid "Replace geometry for way {0}"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:19
-#, fuzzy
 msgid "Copy tags from previous selection"
-msgstr "Мащабиране по селекцията"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:25
 msgid "Pastes tags of previously selected object(s)"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:19
-#, fuzzy
 msgid "Add Source Tag"
-msgstr "Източник"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:25
 msgid "Add remembered source tag"
@@ -23755,23 +23801,34 @@ msgstr ""
 msgid "Please select some ways to find all connected and intersecting ways!"
 msgstr ""
 
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:188
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:214
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:27
+msgid "Middle nodes"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:27
+msgid "Select middle nodes"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:44
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:259
+msgid "Please select two nodes connected by way!"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:189
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:215
 #, java-format
 msgid "Too many ways are added: {0}!"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:27
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:28
-#, fuzzy
 msgid "Select last modified nodes"
-msgstr "Моля изберете поне четири точки."
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:27
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:28
-#, fuzzy
 msgid "Select last modified ways"
-msgstr "Изриване на дублиращите се пътища"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:32
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:33
@@ -23783,9 +23840,8 @@ msgid "Select all nodes of a selected way."
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/UndoSelectionAction.java:26
-#, fuzzy
 msgid "Undo selection"
-msgstr "Качване на избраното"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/UndoSelectionAction.java:27
 msgid "Reselect last added object or selection form history"
@@ -24651,7 +24707,7 @@ msgstr ""
 #: build/trans_plugins.java:56
 msgid ""
 "Can be useful when you are improving accuracy of existing ways. The idea of "
-"the plugin is to substitute dragging and dropping nodes with clicking to "
+"the plugin is to substitute dragging and dropping nodes with clicking to "
 "quicken the editing process."
 msgstr ""
 
@@ -24750,20 +24806,26 @@ msgstr ""
 "Стартира firefox за показване на текущо видимия екран като красиво SVG "
 "изображение."
 
-#. Plugin pdfimport
+#. Plugin ParallelWay
 #: build/trans_plugins.java:87
+#, fuzzy
+msgid "..."
+msgstr "На..."
+
+#. Plugin pdfimport
+#: build/trans_plugins.java:89
 msgid "Import PDF file and convert to ways."
 msgstr ""
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:89
+#: build/trans_plugins.java:91
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
 msgstr ""
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:91
+#: build/trans_plugins.java:93
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
@@ -24772,43 +24834,43 @@ msgstr ""
 "редактора и да я калибрирате към картата."
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:93
+#: build/trans_plugins.java:95
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr "Великият JGoodies Plastic Look and Feel."
 
 #. Plugin proj4j
-#: build/trans_plugins.java:95
+#: build/trans_plugins.java:97
 msgid "adds projections from Proj4J"
 msgstr ""
 
 #. Plugin public_transport
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr ""
 
 #. Plugin reltoolbox
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Relation and multipolygon creating and editing panel."
 msgstr ""
 
 #. Plugin restart
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid "Plugin for reverting changesets"
 msgstr ""
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -24816,19 +24878,19 @@ msgid ""
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
 msgstr ""
 
 #. Plugin routing
-#: build/trans_plugins.java:111
+#: build/trans_plugins.java:113
 msgid "Provides routing capabilities."
 msgstr "Предоставя маршрутизиращи възможности."
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:113
+#: build/trans_plugins.java:115
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -24836,22 +24898,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:115 build/trans_plugins.java:117
+#: build/trans_plugins.java:117 build/trans_plugins.java:119
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "Позволява добавянето на маркери/възли на текущата gps позиция."
 
 #. Plugin tageditor
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "Предоставя диалог за редактиране на маркери в табличен вид."
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -24863,59 +24925,65 @@ msgstr ""
 "така."
 
 #. Plugin terracer
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid "Make terraced houses out of single blocks."
 msgstr "Създава терасовидни къщи от един блок."
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr ""
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr ""
 
 #. Plugin trustosm
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid "Plugin to digital sign OSM-Data"
 msgstr ""
 
+#. Plugin FastDraw
+#: build/trans_plugins.java:137
+#, fuzzy
+msgid "Fast drawing ways by mouse"
+msgstr "Бързо изрисуване (изглежда по-зле)"
+
 #. Plugin turnlanes
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:139
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:141
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
 msgstr ""
 
 #. Plugin undelete
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:143
 msgid "Allows undeleting object from OSM database"
 msgstr ""
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:145
 msgid "Several utilities that make your life easier."
 msgstr ""
 
 #. Plugin videomapping
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:147
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -24923,29 +24991,29 @@ msgid ""
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:149
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
 msgstr ""
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:151
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr ""
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:153
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr ""
 
 #. Plugin wayselector
-#: build/trans_plugins.java:151
+#: build/trans_plugins.java:155
 msgid "Select a sequence of non-branching connected ways"
 msgstr ""
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:153
+#: build/trans_plugins.java:157
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -36450,16 +36518,22 @@ msgid "Edit Wood"
 msgstr "редактиране на \"гора\""
 
 #. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
+#: build/trans_presets.java:3835
+msgctxt "wood"
 msgid "coniferous"
-msgstr "иглолистен"
+msgstr ""
 
 #. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
+#: build/trans_presets.java:3835
+msgctxt "wood"
 msgid "deciduous"
-msgstr "широколистен"
+msgstr ""
+
+#. item "Nature/Wood" combo "Type" display value
+#: build/trans_presets.java:3835
+msgctxt "wood"
+msgid "mixed"
+msgstr ""
 
 #. item "Nature/Forest"
 #: build/trans_presets.java:3837
@@ -36472,6 +36546,21 @@ msgstr "Гора"
 #: build/trans_presets.java:3840
 msgid "Edit Forest Landuse"
 msgstr "редактиране на \"залесена площ\""
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "coniferous"
+msgstr "иглолистен"
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "deciduous"
+msgstr "широколистен"
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "mixed"
+msgstr "смесен"
 
 #. item "Nature/Nature Reserve"
 #: build/trans_presets.java:3846
@@ -40838,9 +40927,6 @@ msgstr ""
 msgid "Stevns (Denmark)"
 msgstr ""
 
-#~ msgid "File not found"
-#~ msgstr "Файлът не е намерен"
-
 #~ msgid ""
 #~ "There were problems with the following plugins:\n"
 #~ "\n"
@@ -41213,6 +41299,9 @@ msgstr ""
 #~ msgid "my version:"
 #~ msgstr "моя версия:"
 
+#~ msgid "File not found"
+#~ msgstr "Файлът не е намерен"
+
 #~ msgid "All installed plugins are up to date."
 #~ msgstr "Всички инсталирани разширения са последна версия."
 
@@ -41236,6 +41325,9 @@ msgstr ""
 
 #~ msgid "Delete {1} {0}"
 #~ msgstr "Изтриване {1} {0}"
+
+#~ msgid "Conflicting relation"
+#~ msgstr "Конфликтиращи релации"
 
 #~ msgid "Degrees Minutes Seconds"
 #~ msgstr "Градуси, минути, секунди"
@@ -41656,6 +41748,9 @@ msgstr ""
 
 #~ msgid "Synchronize Time with GPS Unit"
 #~ msgstr "Синхронизиране времето с GPS приемника"
+
+#~ msgid "Time entered could not be parsed."
+#~ msgstr "Въведенето време не може да бъде използвано."
 
 #~ msgid "The base URL for the OSM server (REST API)"
 #~ msgstr "Основен URL адрес на OSM сървъра (REST API)"
@@ -42216,6 +42311,9 @@ msgstr ""
 #~ "проекция за да не се появява повече това предупреждение.<br>Желаете ли да "
 #~ "продължите?"
 
+#~ msgid "Only one node selected"
+#~ msgstr "Само една точка е избрана"
+
 #~ msgid "No data imported."
 #~ msgstr "Никакви данни не са импортирани"
 
@@ -42505,6 +42603,9 @@ msgstr ""
 
 #~ msgid "Illegal tag/value combinations"
 #~ msgstr "Неправилна комбинация маркер/стойност"
+
+#~ msgid "Painting problem"
+#~ msgstr "Проблем с изобразяването"
 
 #~ msgid "Check if map painting found data errors."
 #~ msgstr "Проверява дали картата при русиване е открила грешки в данните."
@@ -43076,6 +43177,9 @@ msgstr ""
 #~ msgid "paramenter ''{0}'' must not be null"
 #~ msgstr "Параметърът {0} не трябва да е празен"
 
+#~ msgid "Conflicts in data"
+#~ msgstr "Конфликт в данните"
+
 #~ msgid ""
 #~ "Warning: automatically truncating value of tag ''{0}'' on deleted "
 #~ "primitive {1}"
@@ -43110,6 +43214,9 @@ msgstr ""
 
 #~ msgid "Updating primitive"
 #~ msgstr "Обновяване на примитива."
+
+#~ msgid "File could not be found."
+#~ msgstr "Файлът не може да бъде намерен."
 
 #~ msgid ""
 #~ "WARNING: launching browser windows for the first {0} of {1} selected "
@@ -43433,6 +43540,9 @@ msgstr ""
 
 #~ msgid "Parameter 'col' must be 0 or 1. Got {0}"
 #~ msgstr "Параметърът 'col' трябва да е 0 или 1. Имаме: {0}"
+
+#~ msgid "Confirmation"
+#~ msgstr "Потвърждение"
 
 #~ msgid "History item"
 #~ msgstr "Точка от историята"
@@ -43887,6 +43997,9 @@ msgstr ""
 
 #~ msgid "Parameter ''{0}'' must not be empty."
 #~ msgstr "Параметърът ''{0}'' не трябва да е празен."
+
+#~ msgid "Replace"
+#~ msgstr "Замяна"
 
 #~ msgid "Upload all changes in the current data layer to the OSM server"
 #~ msgstr "качване на всички промени в текущия слой данни към сървър на OSM."

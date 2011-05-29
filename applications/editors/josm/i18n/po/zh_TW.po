@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-22 23:30+0200\n"
-"PO-Revision-Date: 2011-04-23 05:46+0000\n"
+"POT-Creation-Date: 2011-05-29 21:08+0200\n"
+"PO-Revision-Date: 2011-05-23 03:41+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2011-05-22 19:22+0000\n"
-"X-Generator: Launchpad (build 13085)\n"
+"X-Launchpad-Export-Date: 2011-05-29 18:29+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
 "Language: zh_TW\n"
 
 #. FIXME why is help not a JosmAction?
@@ -107,8 +107,10 @@ msgstr "忽略格式不良的檔案 URL： \"{0}\""
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:181
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:49
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:189
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:215
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:45
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:190
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:216
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:260
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:68
 msgid "Warning"
 msgstr "警告"
@@ -356,7 +358,7 @@ msgstr "請點選繼續來開啟 {0} 個瀏覽器"
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:67
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:62
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:57
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:116
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:157
 #: ../core/src/org/openstreetmap/josm/actions/ImageryAdjustAction.java:224
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:97
@@ -587,6 +589,7 @@ msgstr "將選取的節點移動到圓圈裡。"
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/ConnectedWaysAction.java:24
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:26
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:26
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:28
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:29
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:29
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:33
@@ -609,7 +612,7 @@ msgstr "請選取至少四個節點"
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:80
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:266
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:66
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:139
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:51
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:83
@@ -723,7 +726,7 @@ msgstr "關閉開放的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/actions/CloseChangesetAction.java:39
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:55
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:30
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:51
@@ -919,128 +922,126 @@ msgstr "從 OSM 下載"
 msgid "Download map data from the OSM server."
 msgstr "從 OSM 主機下載圖資"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:55
 msgid "Download object..."
 msgstr "下載物件..."
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:53
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:54
 msgid "Download OSM object by ID."
 msgstr "依 ID 下載 OSM 物件。"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:66
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:67
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:83
 msgid "Object type:"
 msgstr "物件類型："
 
-#. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:68
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
-msgid "mixed"
-msgstr "混合"
-
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:69
+msgctxt "osm object types"
+msgid "mixed"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:70
 msgid "Choose the OSM object type"
 msgstr "選擇 OSM 物件類型"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:70
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:71
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:91
 msgid "Object ID:"
 msgstr "物件 ID："
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:72
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:73
 msgid "Enter the ID of the object that should be downloaded"
 msgstr "輸入要下載的物件 ID"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:75
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:76
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:70
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:74
 msgid "Separate Layer"
 msgstr "另外的圖層"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:76
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:77
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:71
 msgid "Select if the data should be downloaded into a new layer"
 msgstr "如果資料要下載到新的圖層裡請選擇此項"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:78
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
 #: ../plugins/relcontext/src/relcontext/actions/DownloadParentsAction.java:31
 msgid "Download referrers"
 msgstr "下載參照"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:79
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:80
 msgid "Select if the referrers of the object should be downloaded as well"
 msgstr "如果也要下載物件的參照就選擇此選項"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:81
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:82
 msgid ""
 "Object IDs can be separated by comma or space.<br/> Examples: <b><ul><li>1 2 "
 "5</li><li>1,2,5</li></ul><br/></b> In mixed mode, specify objects like this: "
 "<b>w123, n110, w12, r15</b><br/>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:114
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:116
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadPrimitiveTask.java:44
 msgid "Download object"
 msgstr "下載物件"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:120
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:121
 msgid "Start downloading"
 msgstr "開始下載"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:121
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:122
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:96
 msgid "Close dialog and cancel downloading"
 msgstr "關閉對話盒並取消下載"
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:136
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:137
 msgid ""
 "Invalid ID list specified\n"
 " Cannot download object."
-msgstr "指定了無效的 ID。不能下載物件。"
-
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:170
-#, fuzzy
-msgid "Object could not be downloaded"
-msgid_plural "Some objects could not be downloaded"
-msgstr[0] "無法刪除檔案！"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:171
-#, fuzzy, java-format
+msgid "Object could not be downloaded"
+msgid_plural "Some objects could not be downloaded"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:172
+#, java-format
 msgid "One object could not be downloaded.<br>"
 msgid_plural "{0} objects could not be downloaded.<br>"
-msgstr[0] "無法刪除圖片檔案。"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:175
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:176
 msgid ""
 "The server replied with response code 404.<br>This usually means, the server "
 "does not know an object with the requested id."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:177
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:178
 msgid "missing objects:"
-msgstr "正在移除小型物件"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:202
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:203
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:462
-#, fuzzy
 msgid "Object deleted"
 msgid_plural "Objects deleted"
-msgstr[0] "物件已刪除"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:204
-#, fuzzy, java-format
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:205
+#, java-format
 msgid "One downloaded object is deleted."
 msgid_plural "{0} downloaded objects are deleted."
-msgstr[0] "只選取一個節點"
+msgstr[0] ""
+msgstr[1] ""
 
 #. content.add(scroller);
 #. JOptionPane.showMessageDialog(Main.parent,scroller, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
-#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:245
+#: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:246
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:666
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:116
 msgid "Ok"
@@ -1116,9 +1117,8 @@ msgid "Continues drawing a line that shares nodes with another line."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/FollowLineAction.java:40
-#, fuzzy
 msgid "Follow"
-msgstr "低"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:35
 msgid "Fullscreen view"
@@ -2675,7 +2675,7 @@ msgstr "在大量下載時發生下列錯誤：{0}"
 msgid "Errors during download"
 msgstr "下載時發生錯誤"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:176
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:328
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:474
 #, java-format
@@ -2683,22 +2683,22 @@ msgid "There was {0} conflict during import."
 msgid_plural "There were {0} conflicts during import."
 msgstr[0] "在匯入過程中發生 {0} 個衝突。"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:181
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:184
 msgid "Conflict during download"
 msgid_plural "Conflicts during download"
 msgstr[0] "下載時發生衝突"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:222
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:233
 #, java-format
 msgid "({0}/{1}) Loading parents of node {2}"
 msgstr "({0}/{1}) 正在載入節點 {2} 的上層項目"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:223
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:234
 #, java-format
 msgid "({0}/{1}) Loading parents of way {2}"
 msgstr "({0}/{1}) 正在載入路徑 {2} 的上層項目"
 
-#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:224
+#: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadReferrersTask.java:235
 #, java-format
 msgid "({0}/{1}) Loading parents of relation {2}"
 msgstr "({0}/{1}) 正在載入關係 {2} 的上層項目"
@@ -2724,6 +2724,7 @@ msgstr "刪除節點或路徑。"
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysMode.java:42
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:68
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:97
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:144
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RelationEditMode.java:29
 #, java-format
 msgid "Mode: {0}"
@@ -3388,7 +3389,7 @@ msgstr "循環相依性"
 #: ../core/src/org/openstreetmap/josm/actions/upload/ValidateUploadHook.java:114
 msgid ""
 "The following are results of automatic validation. Try fixing these, but be "
-"careful (don't destroy valid data). When in doubt ignore them.<br>When you "
+"careful (don''t destroy valid data). When in doubt ignore them.<br>When you "
 "cancel this dialog, you can find the entries in the validator side panel to "
 "inspect them."
 msgstr ""
@@ -4044,6 +4045,29 @@ msgstr "不在快取中"
 msgid "Projection ''{0}'' is not found, bookmark ''{1}'' is not usable"
 msgstr "找不到投影法「{0}」，書籤「{1}」無法使用"
 
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:186
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:340
+#, java-format
+msgid "ID > 0 expected. Got {0}."
+msgstr "預期 ID > 0。收到 {0}。"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:188
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:342
+#, java-format
+msgid "Version > 0 expected. Got {0}."
+msgstr "預期版本 > 0。收到 {0}。"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:254
+#, java-format
+msgid ""
+"Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
+"{0}"
+msgstr "不能將 changesetId > 0 指派給新的原型。changesetId 的數值為 {0}"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/AbstractPrimitive.java:386
+msgid "A primitive with ID = 0 cannot be invisible."
+msgstr "ID = 0 的原型不能為不可視。"
+
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:317
 #, java-format
 msgid ""
@@ -4119,34 +4143,13 @@ msgstr "每個節點必須只連接 2 條路徑"
 msgid "There is an intersection between ways."
 msgstr "有路徑交叉。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:455
-#, java-format
-msgid "ID > 0 expected. Got {0}."
-msgstr "預期 ID > 0。收到 {0}。"
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:457
-#, java-format
-msgid "Version > 0 expected. Got {0}."
-msgstr "預期版本 > 0。收到 {0}。"
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:543
-#, java-format
-msgid ""
-"Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
-"{0}"
-msgstr "不能將 changesetId > 0 指派給新的原型。changesetId 的數值為 {0}"
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:755
-msgid "A primitive with ID = 0 cannot be invisible."
-msgstr "ID = 0 的原型不能為不可視。"
-
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1416
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:946
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr "不能合併，因為參與的原型是新的但其他的卻不是"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1418
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:948
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -4154,7 +4157,7 @@ msgstr "不能合併不同 id 的原型。這個 id 是 {0}，另一個是 {1}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:10
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:51
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:133
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:137
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "節點"
@@ -4171,8 +4174,8 @@ msgstr[0] "路徑"
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:24
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:75
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:345
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:532
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:351
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:538
 msgid "relation"
 msgid_plural "relations"
 msgstr[0] "關係"
@@ -4195,8 +4198,8 @@ msgid ""
 "multiple values."
 msgstr "標籤集無法套用到原型上，因為有鍵值含有多個數值。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:343
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:371
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:355
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:383
 #, java-format
 msgid "Cannot add node {0} to incomplete way {1}."
 msgstr "不能將節點 {0} 加入到不完整的路徑 {1}。"
@@ -4244,9 +4247,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapRendererFactory.java:166
-#, fuzzy
 msgid "Wireframe Map Renderer"
-msgstr "線框檢視"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapRendererFactory.java:167
 msgid "Renders the map as simple wire frame."
@@ -5280,7 +5282,7 @@ msgstr "水路類型 {0}"
 #. <icon annotate="true" src="misc/landmark/building.png" priority="-10000"/>
 #. color building
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/UnclosedWays.java:104
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:335
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:341
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:72
 #: build/trans_style.java:3568
 msgid "building"
@@ -5427,9 +5429,9 @@ msgid "{0}, ..."
 msgstr "{0}, ..."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/util/NameVisitor.java:84
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:88
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:90
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:448
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:92
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:94
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:454
 #, java-format
 msgid " [id: {0}]"
 msgstr " [id: {0}]"
@@ -5463,62 +5465,62 @@ msgstr "<html>無法讀取書籤<br>''{0}''<br>錯誤為：{1}</html>"
 msgid "Do not show again (remembers choice)"
 msgstr "不要再顯示（記住選擇）"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:104
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:162
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:238
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:253
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:108
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:166
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:242
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:258
 msgid "incomplete"
 msgstr "不完整"
 
 #. I18n: name of house as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:116
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:184
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:120
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:188
 #, java-format
 msgid "House {0}"
 msgstr "房屋 {0}"
 
 #. I18n: house number, street as parameter, number should remain
 #. before street for better visibility
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:123
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:191
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:127
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:195
 #, java-format
 msgid "House number {0} at {1}"
 msgstr "房屋門牌號碼 {0} 於 {1}"
 
 #. I18n: house number as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:127
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:195
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:131
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:199
 #, java-format
 msgid "House number {0}"
 msgstr "房屋門牌號碼 {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:174
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:502
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:178
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:508
 msgid "highway"
 msgstr "公路"
 
 #. item "Relations/Route" combo "Route type" display value
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:175
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:503
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:179
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:509
 #: build/trans_presets.java:4138
 msgid "railway"
 msgstr "鐵路"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:176
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:504
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:180
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:510
 msgid "waterway"
 msgstr "航道"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:177
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:505
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:181
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:511
 msgid "landuse"
 msgstr "土地利用"
 
 #. note: length == 0 should no longer happen, but leave the bracket code
 #. nevertheless, who knows what future brings
 #. I18n: count of nodes as parameter
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:210
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:510
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:214
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:516
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:460
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:811
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:266
@@ -5528,18 +5530,18 @@ msgid "{0} node"
 msgid_plural "{0} nodes"
 msgstr[0] "{0} 節點"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:250
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:560
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:254
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:566
 #, java-format
 msgid "{0} member"
 msgid_plural "{0} members"
 msgstr[0] "{0} 成員"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:330
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:336
 msgid "public transport"
 msgstr "大眾運輸"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:396
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:402
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:62
 #, java-format
 msgid "Changeset {0}"
@@ -5866,10 +5868,9 @@ msgid_plural "JOSM found {0} unsaved osm data layers. "
 msgstr[0] "JOSM 發現 {0} 個未儲存的 osm 資料圖層。 "
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:269
-#, fuzzy
 msgid ""
 "It looks like JOSM crashed last time. Would you like to restore the data?"
-msgstr "看來 JOSM 上次似乎是當機了。您想要還原資料嗎？"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:306
 #, java-format
@@ -7651,7 +7652,7 @@ msgstr "在關係清單中選擇。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:374
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/SelectionTableColumnModel.java:17
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:64
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:53
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:54
 msgid "Selection"
 msgstr "選擇區域"
 
@@ -11028,14 +11029,12 @@ msgid ""
 msgstr "警告：無法取得目前的 JOSM 使用者資訊。例外為：{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadPrimitivesTask.java:57
-#, fuzzy
 msgid "Download objects"
-msgstr "下載物件"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadPrimitivesTask.java:106
-#, fuzzy
 msgid "Initializing nodes to download ..."
-msgstr "正在初始化要更新的節點 ..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/FilenameCellEditor.java:140
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:699
@@ -11433,7 +11432,7 @@ msgstr "變更組合 {0} 的標籤"
 #. we tried to delete an already deleted primitive.
 #.
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:94
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:194
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:195
 #, java-format
 msgid ""
 "Warning: object ''{0}'' is already deleted on the server. Skipping this "
@@ -11521,37 +11520,37 @@ msgstr ""
 "正在使用 <strong>{1} 次要求</strong>上傳 <strong>{0} 個物件</strong>到"
 "<strong>多個變更組合</strong>"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:67
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:68
 #, java-format
 msgid "Uploading data for layer ''{0}''"
 msgstr "上傳圖層「{0}」的資料"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:81
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:82
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:275
 msgid "Continue uploading"
 msgstr "正在繼續上傳"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:83
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:84
 msgid "Click to continue uploading to additional new changesets"
 msgstr "點選繼續以上傳到另外的新變更組合"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:87
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:88
 msgid "Go back to Upload Dialog"
 msgstr "回到上傳對話盒"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:89
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:90
 msgid "Click to return to the Upload Dialog"
 msgstr "點選以回到上傳對話盒"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:93
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:94
 msgid "Abort"
 msgstr "中止"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:95
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:96
 msgid "Click to abort uploading"
 msgstr "點選以放棄上傳"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:100
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:101
 #, java-format
 msgid ""
 "The server reported that the current changeset was closed.<br>This is most "
@@ -11561,13 +11560,13 @@ msgstr ""
 "伺服器回報目前的變更組合已關閉。<br>這很可能是由於變更組合的大小超過<br>伺服"
 "器「{1}」最大 {0} 個物件的大小。"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:107
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:108
 #, java-format
 msgid "There is {0} object left to upload."
 msgid_plural "There are {0} objects left to upload."
 msgstr[0] "還剩下 {0} 個物件要上傳。"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:113
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:114
 #, java-format
 msgid ""
 "Click ''<strong>{0}</strong>'' to continue uploading to additional new "
@@ -11579,23 +11578,23 @@ msgstr ""
 "</strong>」回到上傳對話盒。<br>點選「<strong>{2}</strong>」放棄上傳並回到地圖"
 "編輯。<br>"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:124
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:125
 msgid "Changeset is full"
 msgstr "變更組合已滿"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:195
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:196
 #, java-format
 msgid "Object ''{0}'' is already deleted. Skipping object in upload."
 msgstr "物件「{0}」已經被刪除。在上傳中略過此物件。"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:232
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:233
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:462
 #, java-format
 msgid "Uploading {0} object..."
 msgid_plural "Uploading {0} objects..."
 msgstr[0] "正在上傳 {0} 個物件..."
 
-#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:289
+#: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:290
 #, java-format
 msgid "Ignoring caught exception because upload is canceled. Exception is: {0}"
 msgstr "忽略捕捉到的例外，因為上傳已被取消。例外為：{0}"
@@ -12349,9 +12348,8 @@ msgid "Automatic downloading"
 msgstr "自動下載"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:823
-#, fuzzy
 msgid "Zoom to native resolution"
-msgstr "縮放至選擇區域"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:95
 msgid "Correlate to GPX"
@@ -14184,7 +14182,7 @@ msgstr "強烈"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:133
 msgid "Sharpen (requires layer re-add): "
-msgstr ""
+msgstr "銳化 (需要重新加入圖層)： "
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:137
 msgid "Use offset server: "
@@ -16782,7 +16780,7 @@ msgstr[0] "({0}/{1}) 正在上傳 {2} 個物件..."
 msgid "Uploading data ..."
 msgstr "正在上傳資料 ..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmWriter.java:218
+#: ../core/src/org/openstreetmap/josm/io/OsmWriter.java:223
 msgid "Unexpected id 0 for osm primitive found"
 msgstr "發現未預期的 id 0 osm 原型"
 
@@ -18370,9 +18368,8 @@ msgid "Error while creating image layer: "
 msgstr "在建立圖片圖層時發生錯誤： "
 
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:100
-#, fuzzy
 msgid "ImproveWayAccuracy"
-msgstr "準確度"
+msgstr ""
 
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:101
 msgid "Improve Way Accuracy mode"
@@ -18399,16 +18396,16 @@ msgid "Click to add a new node. Release Ctrl to move existing nodes."
 msgstr ""
 
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:352
-#, fuzzy
 msgid "Cannot place a node outside of the world."
-msgstr "不能在這個世界以外的地方加入節點。"
+msgstr ""
 
 #. Finishing the sequence command
 #: ../plugins/ImproveWayAccuracy/src/org/openstreetmap/josm/plugins/iwa/IWAMode.java:409
-#, fuzzy, java-format
+#, java-format
 msgid "Add and a new node to way"
 msgid_plural "Add and a new node to {0} ways"
-msgstr[0] "加入並移動虛擬新節點至{0}路徑"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:80
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:82
@@ -18420,14 +18417,12 @@ msgid "Edit time-tag of selected element in a graphical interface"
 msgstr "以圖形化介面編輯選取元素的 time-tag"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:188
-#, fuzzy
 msgid "edit existing tag"
-msgstr "加入缺少的標籤"
+msgstr ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:195
-#, fuzzy
 msgid "edit new tag"
-msgstr "加入新標籤"
+msgstr ""
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:251
 msgid "Choose key"
@@ -19783,14 +19778,12 @@ msgstr "顏色配置"
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:21
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:22
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationPlugin.java:41
-#, fuzzy
 msgid "Conflation"
-msgstr "繼續"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:21
-#, fuzzy
 msgid "Conflation tool for merging data"
-msgstr "點選以放棄合併節點"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:37
 msgid ""
@@ -19799,47 +19792,40 @@ msgid ""
 msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:39
-#, fuzzy
 msgid "Cannot perform conflation"
-msgstr "開啓關係編輯器"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationLayer.java:43
 msgid "Conflation symbols"
 msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsDialog.java:28
-#, fuzzy
 msgid "Conflation Options"
-msgstr "衝突的關係"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsDialog.java:55
-#, fuzzy
 msgid "Close the dialog, do not perform conflation"
-msgstr "關閉此對話盒，不要建立新的節點"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:600
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:632
-#, fuzzy
 msgid "No valid OSM data layer present."
-msgstr "找不到 GPX 資料圖層。"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:601
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:633
-#, fuzzy
 msgid "Error freezing selection"
-msgstr "從選擇區域移除"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:606
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:638
-#, fuzzy
 msgid "Nothing is selected, please try again."
-msgstr "沒有選擇要縮放的物件。"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:607
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:639
-#, fuzzy
 msgid "Empty selection"
-msgstr "更新選擇區域"
+msgstr ""
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationOptionsPanel.java:670
 msgid "Unresolved differences remain, please fix remaining differences."
@@ -20768,14 +20754,12 @@ msgid "Checks if all contributors have agreed to the new CT/License."
 msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:51
-#, fuzzy
 msgid "Creator has rejected CT"
-msgstr "尚未選取關係"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:51
-#, fuzzy
 msgid "Creator unknown"
-msgstr "不明"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/BasicLicenseCheck.java:56
 msgid "Creator has not (yet) accepted CT"
@@ -20787,51 +20771,43 @@ msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:39
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:40
-#, fuzzy
 msgid "License Check"
-msgstr "駕照類別"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:39
-#, fuzzy
 msgid "Performs the license check"
-msgstr "屬性檢查器："
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:101
 msgid "Loading from Quick History Service"
 msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/CheckAction.java:145
-#, fuzzy
 msgid "Analyzing"
-msgstr "初始化"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:78
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:103
-#, fuzzy
 msgid "Relicensing problems"
-msgstr "繪圖問題"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
-#, fuzzy
 msgid "Open the relicensing window."
-msgstr "開啟驗證視窗。"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:40
-#, fuzzy
 msgid "Relicensing Problems"
-msgstr "繪圖問題"
+msgstr ""
 
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/ProblemLayer.java:101
-#, fuzzy
 msgid "No relicensing problems"
-msgstr "繪圖問題"
+msgstr ""
 
 #. * Error messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:15
-#, fuzzy
 msgid "Data loss"
-msgstr "資料來源"
+msgstr ""
 
 #. * Warning messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:19
@@ -20840,9 +20816,8 @@ msgstr ""
 
 #. * Other messages
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/Severity.java:23
-#, fuzzy
 msgid "Data reduction"
-msgstr "方向"
+msgstr ""
 
 #: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:131
 #: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:165
@@ -21225,6 +21200,37 @@ msgstr "找不到 Firefox。請在偏好設定的地圖設定頁面設定 firefo
 #: ../plugins/osmarender/src/org/openstreetmap/josm/plugins/osmarender/OsmarenderPlugin.java:149
 msgid "Firefox executable"
 msgstr "Firefox 可執行檔"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:143
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:144
+#, fuzzy
+msgid "Parallel"
+msgstr "巷/弄"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:143
+#, fuzzy
+msgid "Makes a paralell copy of the selected way(s)"
+msgstr "為選取的成員設定角色"
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:200
+msgid ""
+"Select ways as in Select mode. Drag selected ways or a single way to create "
+"a parallel copy (Alt toggles tag preservation)"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:202
+msgid "Hold Ctrl to toggle snapping"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:411
+msgid ""
+"ParallelWayAction\n"
+"The ways selected must form a simple branchless path"
+msgstr ""
+
+#: ../plugins/parallel-way/src/org/openstreetmap/josm/plugins/parallelway/ParallelWayMode.java:413
+msgid "Make parallel way error"
+msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:142
 msgid "Transform error: Min X must be smaller than max"
@@ -22673,6 +22679,43 @@ msgstr "數位簽章選擇的標籤，如果您相信它們是正確的。"
 msgid "Show all available signatures for selected attribute."
 msgstr "顯示所有選取屬性可用的簽章。"
 
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:25
+msgid "Show deleted tags and notes if they were signed before"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:26
+#, java-format
+msgid ""
+"Use default (and maybe existing) GnuPG directory ({0}) to store new keys and "
+"configs."
+msgstr "使用預設（可能是現有的） GnuPG 目錄 ({0}) 來儲存新的金鑰與設定。"
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:27
+#, java-format
+msgid "Use separate GnuPG directory ({0}) to store new keys and configs."
+msgstr "使用個別的 GnuPG 目錄 ({0}) 來儲存新的金鑰與設定。"
+
+#. TODO Auto-generated method stub
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:32
+msgid "Trust OSM Settings"
+msgstr "Trust OSM 設定值"
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:32
+msgid "Change GPG and privacy settings of the trustosm plugin."
+msgstr "改變 trustosm 外掛程式的 GPG 和隱私權設定值"
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:41
+msgid "Use separate GnuPG configuration directory?"
+msgstr "是否使用分開的 GnuPG 組態目錄？"
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:58
+msgid "GnuPG"
+msgstr "GnuPG"
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustPreferenceEditor.java:62
+msgid "Dialog"
+msgstr ""
+
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:46
 #, java-format
 msgid "Signed key value pair was: {0}={1}"
@@ -22756,6 +22799,14 @@ msgstr ""
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:209
 msgid "Parsing Signature data..."
 msgstr "正在解析簽章資料..."
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustAnalyzer.java:26
+msgid "The Signature is broken!"
+msgstr ""
+
+#: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustAnalyzer.java:26
+msgid "Manipulation Warning"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:182
 msgid "Select a signing key from your keyring-file:"
@@ -23810,14 +23861,13 @@ msgstr ""
 msgid "Unglued Relations"
 msgstr ""
 
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:41
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:42
 msgid "More tools"
 msgstr "更多工具"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:20
-#, fuzzy
 msgid "Align Way Nodes"
-msgstr "對齊路徑模式"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:24
 msgid "Align nodes in a way"
@@ -23833,9 +23883,8 @@ msgid "Internal error: number of nodes is {0}."
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:19
-#, fuzzy
 msgid "Paste Relations"
-msgstr "上層關係"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:22
 msgid ""
@@ -23843,9 +23892,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:25
-#, fuzzy
 msgid "Replace Geometry"
-msgstr "取代選擇區域"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:29
 msgid "Replace geometry of selected way with a new one"
@@ -23869,18 +23917,16 @@ msgid "Replace geometry for way {0}"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:19
-#, fuzzy
 msgid "Copy tags from previous selection"
-msgstr "關係的標籤"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:25
 msgid "Pastes tags of previously selected object(s)"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:19
-#, fuzzy
 msgid "Add Source Tag"
-msgstr "來源"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:25
 msgid "Add remembered source tag"
@@ -23934,23 +23980,34 @@ msgstr ""
 msgid "Please select some ways to find all connected and intersecting ways!"
 msgstr ""
 
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:188
-#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:214
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:27
+msgid "Middle nodes"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:27
+msgid "Select middle nodes"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:44
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:259
+msgid "Please select two nodes connected by way!"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:189
+#: ../plugins/utilsplugin2/src/utilsplugin2/selection/NodeWayUtils.java:215
 #, java-format
 msgid "Too many ways are added: {0}!"
 msgstr "加入太多路徑：{0}！"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:27
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModNodesAction.java:28
-#, fuzzy
 msgid "Select last modified nodes"
-msgstr "選擇路徑節點"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:27
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectModWaysAction.java:28
-#, fuzzy
 msgid "Select last modified ways"
-msgstr "選擇所有連接的路徑"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:32
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/SelectWayNodesAction.java:33
@@ -23962,9 +24019,8 @@ msgid "Select all nodes of a selected way."
 msgstr "選擇選取路徑的所有節點。"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/UndoSelectionAction.java:26
-#, fuzzy
 msgid "Undo selection"
-msgstr "加入至選擇區域"
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/UndoSelectionAction.java:27
 msgid "Reselect last added object or selection form history"
@@ -24833,7 +24889,7 @@ msgstr "匯入向量圖形 (SVG)"
 #: build/trans_plugins.java:56
 msgid ""
 "Can be useful when you are improving accuracy of existing ways. The idea of "
-"the plugin is to substitute dragging and dropping nodes with clicking to "
+"the plugin is to substitute dragging and dropping nodes with clicking to "
 "quicken the editing process."
 msgstr ""
 
@@ -24925,13 +24981,18 @@ msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr "執行 FireFox 將目前可見的畫面顯示為很好的 SVG 圖片。"
 
-#. Plugin pdfimport
+#. Plugin ParallelWay
 #: build/trans_plugins.java:87
+msgid "..."
+msgstr "..."
+
+#. Plugin pdfimport
+#: build/trans_plugins.java:89
 msgid "Import PDF file and convert to ways."
 msgstr "匯入 PDF 檔案並轉換為路徑。"
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:89
+#: build/trans_plugins.java:91
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
@@ -24939,50 +25000,50 @@ msgstr ""
 "將 gps 地點資訊寫入圖片檔的檔頭。在圖片圖層按右鍵選單就可以執行這項功能。"
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:91
+#: build/trans_plugins.java:93
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
 msgstr "這個外掛程式允許顯示任何圖片做為編輯器的背景並將它對齊地圖。"
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:93
+#: build/trans_plugins.java:95
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr "超棒的 JGoodies 塑膠外觀與感覺。"
 
 #. Plugin proj4j
-#: build/trans_plugins.java:95
+#: build/trans_plugins.java:97
 msgid "adds projections from Proj4J"
 msgstr ""
 
 #. Plugin public_transport
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr "這個外掛程式簡化了大眾運輸路線的製圖與編輯。"
 
 #. Plugin reltoolbox
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "Relation and multipolygon creating and editing panel."
 msgstr ""
 
 #. Plugin restart
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr "加入 &quot;重新啟動 JOSM&quot; 項目到檔案選單。"
 
 #. Plugin reverter
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid "Plugin for reverting changesets"
 msgstr "還原變更組合的外掛程式"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "使用 rgis.spb.ru 圖片做為覆蓋"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -24992,7 +25053,7 @@ msgstr ""
 "點選小圖示來開啟。可用的國家預設組合：德國。"
 
 #. Plugin routes
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -25001,12 +25062,12 @@ msgstr ""
 "routes.xml 檔案"
 
 #. Plugin routing
-#: build/trans_plugins.java:111
+#: build/trans_plugins.java:113
 msgid "Provides routing capabilities."
 msgstr "提供路線規畫的功能。"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:113
+#: build/trans_plugins.java:115
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -25016,22 +25077,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:115 build/trans_plugins.java:117
+#: build/trans_plugins.java:117 build/trans_plugins.java:119
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "建立並編輯 OpenSeaMap 海圖"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:119
+#: build/trans_plugins.java:121
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "允許在目前的 gps 位置加入標記/節點。"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:121
+#: build/trans_plugins.java:123
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "提供在表格線中編輯標籤的對話盒。"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -25041,42 +25102,48 @@ msgstr ""
 "快速預覽對話盒）。您也可以單獨以 jar-檔案的方式啟動。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid "Make terraced houses out of single blocks."
 msgstr "讓連棟房屋能超出單一區塊。"
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "建立並編輯 OpenSeaMap 海上航標"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr "提供輔助按鈕以便使用於單鍵滑鍵（觸控筆）。目前加入單鍵移動地圖。"
 
 #. Plugin Tracer
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr "從捷克地籍圖描出建築物。需要有執行 TracerServer (.NET 或 Mono)。"
 
 #. Plugin trustosm
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid "Plugin to digital sign OSM-Data"
 msgstr "用來數位簽署 OSM-Data 的外掛程式"
 
+#. Plugin FastDraw
+#: build/trans_plugins.java:137
+#, fuzzy
+msgid "Fast drawing ways by mouse"
+msgstr "快速繪製（看起來較醜）"
+
 #. Plugin turnlanes
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:139
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:141
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -25085,17 +25152,17 @@ msgstr ""
 "中。"
 
 #. Plugin undelete
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:143
 msgid "Allows undeleting object from OSM database"
 msgstr "允許從 OSM 資料庫中取消物件的刪除"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:145
 msgid "Several utilities that make your life easier."
 msgstr "許多讓您的生活更便利的公用程式。"
 
 #. Plugin videomapping
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:147
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -25105,7 +25172,7 @@ msgstr ""
 "它可以用來辨識可見的物件。"
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:149
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -25114,22 +25181,22 @@ msgstr ""
 "期階段，因此可能有許多程式錯誤存在。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:151
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "方便的下載一整組互相聯結的路徑"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:153
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "啟用搜尋從 gpx 檔案匯入的航點。"
 
 #. Plugin wayselector
-#: build/trans_plugins.java:151
+#: build/trans_plugins.java:155
 msgid "Select a sequence of non-branching connected ways"
 msgstr "選擇非分支連接的路徑次序"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:153
+#: build/trans_plugins.java:157
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -31987,14 +32054,14 @@ msgstr "編輯動物園"
 #. item "Leisure/Dog Park"
 #: build/trans_presets.java:2188
 msgid "Dog Park"
-msgstr ""
+msgstr "狗狗公園"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:leisure=dog_park"
 #. it.href="http://wiki.openstreetmap.org/wiki/IT:Tag:leisure=dog_park" />
 #. item "Leisure/Dog Park" label "Edit Dog Park"
 #: build/trans_presets.java:2191
 msgid "Edit Dog Park"
-msgstr ""
+msgstr "編輯狗狗公園"
 
 #. item "Leisure/Dog Park" combo "Barrier"
 #: build/trans_presets.java:2195
@@ -32460,13 +32527,13 @@ msgstr "遜尼派"
 #. item "Culture/Recording Studio"
 #: build/trans_presets.java:2297
 msgid "Recording Studio"
-msgstr ""
+msgstr "錄音室"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dstudio" />
 #. item "Culture/Recording Studio" label "Edit Studio"
 #: build/trans_presets.java:2299
 msgid "Edit Studio"
-msgstr ""
+msgstr "編輯錄音室"
 
 #. item "Culture/Recording Studio" combo "Type" display value
 #: build/trans_presets.java:2304
@@ -35170,13 +35237,13 @@ msgstr "編輯貯水塔"
 #. item "Man Made/Man Made/Water Works"
 #: build/trans_presets.java:3006
 msgid "Water Works"
-msgstr ""
+msgstr "水工廠"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dwater_works" />
 #. item "Man Made/Man Made/Water Works" label "Edit Water Works"
 #: build/trans_presets.java:3008
 msgid "Edit Water Works"
-msgstr ""
+msgstr "編輯水工廠"
 
 #. item "Man Made/Man Made/Wastewater Plant"
 #: build/trans_presets.java:3014
@@ -36634,16 +36701,22 @@ msgid "Edit Wood"
 msgstr "編輯樹林"
 
 #. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
+#: build/trans_presets.java:3835
+msgctxt "wood"
 msgid "coniferous"
-msgstr "松類"
+msgstr ""
 
 #. item "Nature/Wood" combo "Type" display value
-#. item "Nature/Forest" combo "Type" display value
-#: build/trans_presets.java:3835 build/trans_presets.java:3844
+#: build/trans_presets.java:3835
+msgctxt "wood"
 msgid "deciduous"
-msgstr "落葉類"
+msgstr ""
+
+#. item "Nature/Wood" combo "Type" display value
+#: build/trans_presets.java:3835
+msgctxt "wood"
+msgid "mixed"
+msgstr ""
 
 #. item "Nature/Forest"
 #: build/trans_presets.java:3837
@@ -36656,6 +36729,21 @@ msgstr "森林"
 #: build/trans_presets.java:3840
 msgid "Edit Forest Landuse"
 msgstr "編輯森林土地利用"
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "coniferous"
+msgstr "松類"
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "deciduous"
+msgstr "落葉類"
+
+#. item "Nature/Forest" combo "Type" display value
+#: build/trans_presets.java:3844
+msgid "mixed"
+msgstr "混合"
 
 #. item "Nature/Nature Reserve"
 #: build/trans_presets.java:3846
@@ -41022,186 +41110,6 @@ msgstr ""
 msgid "Stevns (Denmark)"
 msgstr ""
 
-#~ msgid "Change properties of 1 object"
-#~ msgstr "改變 1 個物件的屬性"
-
-#~ msgid "You have {0} Elements selected. But you can edit only one element!"
-#~ msgstr "您已選取 {0} 個元素。但是您只能編輯一個元素！"
-
-#~ msgid "Run..."
-#~ msgstr "執行..."
-
-#~ msgid "Run a script"
-#~ msgstr "執行一份命令稿"
-
-#~ msgid "Select a script file and click on <strong>Run</strong>."
-#~ msgstr "選擇一個命令稿檔案並點選<strong>執行</strong>。"
-
-#~ msgid "File:"
-#~ msgstr "檔案："
-
-#~ msgid "Enter the name of a script file"
-#~ msgstr "輸入命令稿檔案的名字"
-
-#~ msgid "Run"
-#~ msgstr "執行"
-
-#~ msgid "Run the script"
-#~ msgstr "執行命令稿"
-
-#~ msgid "The script file ''{0}'' doesn''t exist."
-#~ msgstr "命令稿檔案「{0}」不存在。"
-
-#~ msgid "File not found"
-#~ msgstr "找不到檔案"
-
-#~ msgid "Please enter a file name first."
-#~ msgstr "請先輸入檔案名稱。"
-
-#~ msgid "Empty file name"
-#~ msgstr "空白檔案名稱"
-
-#~ msgid "The script file ''{0}'' isn''t readable."
-#~ msgstr "命令稿檔案「{0}」不可讀取"
-
-#~ msgid "File not readable"
-#~ msgstr "檔案不可讀取"
-
-#~ msgid "Failed to read the script from the file ''{0}''."
-#~ msgstr "從檔案「{0}」讀取命令稿失敗。"
-
-#~ msgid "IO error"
-#~ msgstr "IO 錯誤"
-
-#~ msgid "Failed to read a macro from the file ''{0}''."
-#~ msgstr "無法從檔案「{0}」讀取巨集。"
-
-#~ msgid "Script execution has failed."
-#~ msgstr "命令稿執行失敗。"
-
-#~ msgid "Script Error"
-#~ msgstr "命令稿錯誤"
-
-#~ msgid "Macro execution has failed."
-#~ msgstr "巨集執行失敗。"
-
-#~ msgid ""
-#~ "<p>The script can''t be executed, because there are currently no "
-#~ "scripting engines installed.</p><p>Refer to the online help for "
-#~ "information about how to install a scripting engine with JOSM.</p>"
-#~ msgstr ""
-#~ "<p>命令稿不能執行，因為目前沒有安裝命令稿引擎。</p><p>請參考線上求助以了解"
-#~ "如何在 JOSM 安裝命令稿引擎的資訊。</p>"
-
-#~ msgid "No script engine"
-#~ msgstr "沒有命令稿引擎"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "Launch file selection dialog"
-#~ msgstr "執行檔案選擇對話盒"
-
-#~ msgid "Select a script"
-#~ msgstr "選擇一個命令稿"
-
-#~ msgid "Warning: failed to load mime types from file ''0''."
-#~ msgstr "警告：無法載入檔案「0」的 mime 類型。"
-
-#~ msgid "Warning: failed to load default mime types from  resource ''0''."
-#~ msgstr "警告：無法載入來源「0」的預設 mime 類型。"
-
-#~ msgid "Please select a scripting engine to execute the selected script."
-#~ msgstr "請選擇用來執行選取的命令稿的命令稿引擎。"
-
-#~ msgid "Accept the selected scripting engine"
-#~ msgstr "套用選取的命令稿引擎"
-
-#~ msgid "cancel"
-#~ msgstr "取消"
-
-#~ msgid "Scripting"
-#~ msgstr "命令稿"
-
-#~ msgid "Configure..."
-#~ msgstr "設定..."
-
-#~ msgid "Configure scripting preferences"
-#~ msgstr "設定命令稿偏好設定"
-
-#~ msgid "Script engines"
-#~ msgstr "命令稿引擎"
-
-#~ msgid "Configure script engines and scripts"
-#~ msgstr "設定命令稿引擎和命令稿"
-
-#~ msgid "''{0}'' doesn''t exist."
-#~ msgstr "「{0}」不存在。"
-
-#~ msgid "''{0}'' is a directory. Expecting a jar file instead."
-#~ msgstr "「{0}」是一個目錄。預期應該是一個 jar 檔案。"
-
-#~ msgid "''{0}'' isn't readable. Can''t load a script engine from this file."
-#~ msgstr "「{0}」不可讀取。不能從這個檔案載入命令稿引擎。"
-
-#~ msgid ""
-#~ "Failed to open file ''{0}'' as jar file. Can''t load a script engine from "
-#~ "this file"
-#~ msgstr "無法將檔案「{0}」開啟為 jar 檔案。不能從這個檔案載入命令稿引擎"
-
-#~ msgid ""
-#~ "The jar file ''{0}'' doesn''t provide a script engine. The entry ''{1}'' "
-#~ "is missing."
-#~ msgstr "jar 檔案「{0}」不能提供命令稿引擎。缺少項目「{1}」。"
-
-#~ msgid "JAR files"
-#~ msgstr "JAR 檔案"
-
-#~ msgid "Enter additional JAR files which provide script engines."
-#~ msgstr "輸入提供命令稿引擎的額外 JAR 檔案。"
-
-#~ msgid "Available script engines"
-#~ msgstr "可用的命令稿引擎"
-
-#~ msgid "JOSM currently supports the following script engines:"
-#~ msgstr "JOSM 目前支援下列命令稿引擎："
-
-#~ msgid "JAR file"
-#~ msgstr "JAR 檔案"
-
-#~ msgid "Remove the selected jar files"
-#~ msgstr "移除選取的 jar 檔案"
-
-#~ msgid "Add a jar file providing a script engine"
-#~ msgstr "加入提供命令稿引擎的 jar 檔案"
-
-#~ msgid "Launch file chooser"
-#~ msgstr "執行檔案選取器"
-
-#~ msgid "Select a jar file"
-#~ msgstr "選擇一個 jar 檔案"
-
-#~ msgid "{1} (with engine {0})"
-#~ msgstr "{1} (使用引擎 {0})"
-
-#~ msgid "Version:"
-#~ msgstr "版本："
-
-#~ msgid "Language:"
-#~ msgstr "語言："
-
-#~ msgid "Language version:"
-#~ msgstr "語言版本："
-
-#~ msgid "MIME-Types:"
-#~ msgstr "MIME-類型："
-
-#~ msgid "Merges the contours of two areas"
-#~ msgstr "合併兩個區域的輪廓"
-
-#~ msgid "Allows to run scripts in JOSM."
-#~ msgstr "允許在 JOSM 中執行命令稿。"
-
 #~ msgid "The projection could not be read from preferences. Using EPSG:4326"
 #~ msgstr "不能從偏好設定取得投影系統。使用 EPSG:4326。"
 
@@ -41353,6 +41261,9 @@ msgstr ""
 
 #~ msgid "Please select one or more closed ways of at least four nodes."
 #~ msgstr "請選擇一或多個至少有四個節點的封閉路徑。"
+
+#~ msgid "Only one node selected"
+#~ msgstr "只選取一個節點"
 
 #~ msgid "Please select ways with almost right angles to orthogonalize."
 #~ msgstr "請選擇有近乎正確角度的路徑來做直角化。"
@@ -41602,6 +41513,9 @@ msgstr ""
 #~ msgid "Delete {1} {0}"
 #~ msgstr "刪除 {1} {0}"
 
+#~ msgid "Conflicting relation"
+#~ msgstr "衝突的關係"
+
 #~ msgid "Delete {0} {1}"
 #~ msgstr "刪除 {0} {1}"
 
@@ -41808,6 +41722,9 @@ msgstr ""
 
 #~ msgid "Full Screen"
 #~ msgstr "全螢幕"
+
+#~ msgid "File not found"
+#~ msgstr "找不到檔案"
 
 #~ msgid "{0} pending tag conflicts to be resolved"
 #~ msgstr "{0} 個標籤衝突待解決"
@@ -43013,6 +42930,9 @@ msgstr ""
 #~ msgid "Illegal tag/value combinations"
 #~ msgstr "不合法的標籤/數值組合"
 
+#~ msgid "Painting problem"
+#~ msgstr "繪圖問題"
+
 #~ msgid "Check if map painting found data errors."
 #~ msgstr "檢查地圖繪製是否發現資料錯誤。"
 
@@ -44197,6 +44117,9 @@ msgstr ""
 #~ msgid "Add a filename or an URL of an active style"
 #~ msgstr "為使用的樣式加入檔案名稱或 URL"
 
+#~ msgid "Invalid ID specified. Cannot download object."
+#~ msgstr "指定了無效的 ID。不能下載物件。"
+
 #~ msgid ""
 #~ "Target object with id {0} and version {1} is visible although source "
 #~ "object with lower version {2} is not visible. Cannot deal with this "
@@ -44519,6 +44442,10 @@ msgstr ""
 #~ msgid "slower"
 #~ msgstr "減速"
 
+#~ msgid ""
+#~ "It looks like JOSM crashed last time. Do you like to restore the data?"
+#~ msgstr "看來 JOSM 上次似乎是當機了。您想要還原資料嗎？"
+
 #~ msgid "Internal style"
 #~ msgstr "內部樣式"
 
@@ -44527,6 +44454,12 @@ msgstr ""
 
 #~ msgid "Launch browser with wiki help to selected object"
 #~ msgstr "執行瀏覽器取得選取物件的 wiki 說明"
+
+#~ msgid "Change properties of 1 object"
+#~ msgstr "改變 1 個物件的屬性"
+
+#~ msgid "You have {0} Elements selected. But you can edit only one element!"
+#~ msgstr "您已選取 {0} 個元素。但是您只能編輯一個元素！"
 
 #~ msgid "Zoom level was not enough to record an offset precisely"
 #~ msgstr "縮放等級不足以精確的記錄位移"
@@ -44654,9 +44587,6 @@ msgstr ""
 #~ msgid "Black"
 #~ msgstr "黑"
 
-#~ msgid "GnuPG"
-#~ msgstr "GnuPG"
-
 #~ msgid "Privacy"
 #~ msgstr "隱私"
 
@@ -44729,28 +44659,179 @@ msgstr ""
 #~ msgid "Key Signatures"
 #~ msgstr "設定鍵簽章"
 
-#~ msgid ""
-#~ "Use default (and maybe existing) GnuPG directory ({0}) to store new keys "
-#~ "and configs."
-#~ msgstr "使用預設（可能是現有的） GnuPG 目錄 ({0}) 來儲存新的金鑰與設定。"
-
-#~ msgid "Use separate GnuPG directory ({0}) to store new keys and configs."
-#~ msgstr "使用個別的 GnuPG 目錄 ({0}) 來儲存新的金鑰與設定。"
-
-#~ msgid "Trust OSM Settings"
-#~ msgstr "Trust OSM 設定值"
-
-#~ msgid "Change GPG and privacy settings of the trustosm plugin."
-#~ msgstr "改變 trustosm 外掛程式的 GPG 和隱私權設定值"
-
 #~ msgid "GnuPG command to execute:"
 #~ msgstr "要執行的 GnuPG 指令："
-
-#~ msgid "Use separate GnuPG configuration directory?"
-#~ msgstr "是否使用分開的 GnuPG 組態目錄？"
 
 #~ msgid "Built-in Style, internal path:</b>"
 #~ msgstr "內建樣式，內部路徑：</b>"
 
 #~ msgid "Internal Style"
 #~ msgstr "內部樣式"
+
+#~ msgid "Run..."
+#~ msgstr "執行..."
+
+#~ msgid "Run a script"
+#~ msgstr "執行一份命令稿"
+
+#~ msgid "Select a script file and click on <strong>Run</strong>."
+#~ msgstr "選擇一個命令稿檔案並點選<strong>執行</strong>。"
+
+#~ msgid "The script file ''{0}'' isn''t readable."
+#~ msgstr "命令稿檔案「{0}」不可讀取"
+
+#~ msgid "Please enter a file name first."
+#~ msgstr "請先輸入檔案名稱。"
+
+#~ msgid "The script file ''{0}'' doesn''t exist."
+#~ msgstr "命令稿檔案「{0}」不存在。"
+
+#~ msgid "Run the script"
+#~ msgstr "執行命令稿"
+
+#~ msgid "Run"
+#~ msgstr "執行"
+
+#~ msgid "Failed to read the script from the file ''{0}''."
+#~ msgstr "從檔案「{0}」讀取命令稿失敗。"
+
+#~ msgid "File not readable"
+#~ msgstr "檔案不可讀取"
+
+#~ msgid "Empty file name"
+#~ msgstr "空白檔案名稱"
+
+#~ msgid "File:"
+#~ msgstr "檔案："
+
+#~ msgid "Enter the name of a script file"
+#~ msgstr "輸入命令稿檔案的名字"
+
+#~ msgid ""
+#~ "<p>The script can''t be executed, because there are currently no "
+#~ "scripting engines installed.</p><p>Refer to the online help for "
+#~ "information about how to install a scripting engine with JOSM.</p>"
+#~ msgstr ""
+#~ "<p>命令稿不能執行，因為目前沒有安裝命令稿引擎。</p><p>請參考線上求助以了解"
+#~ "如何在 JOSM 安裝命令稿引擎的資訊。</p>"
+
+#~ msgid "No script engine"
+#~ msgstr "沒有命令稿引擎"
+
+#~ msgid "Failed to read a macro from the file ''{0}''."
+#~ msgstr "無法從檔案「{0}」讀取巨集。"
+
+#~ msgid "IO error"
+#~ msgstr "IO 錯誤"
+
+#~ msgid "Launch file selection dialog"
+#~ msgstr "執行檔案選擇對話盒"
+
+#~ msgid "Select a script"
+#~ msgstr "選擇一個命令稿"
+
+#~ msgid "Script Error"
+#~ msgstr "命令稿錯誤"
+
+#~ msgid "Script execution has failed."
+#~ msgstr "命令稿執行失敗。"
+
+#~ msgid "Macro execution has failed."
+#~ msgstr "巨集執行失敗。"
+
+#~ msgid "Configure..."
+#~ msgstr "設定..."
+
+#~ msgid "cancel"
+#~ msgstr "取消"
+
+#~ msgid ""
+#~ "The jar file ''{0}'' doesn''t provide a script engine. The entry ''{1}'' "
+#~ "is missing."
+#~ msgstr "jar 檔案「{0}」不能提供命令稿引擎。缺少項目「{1}」。"
+
+#~ msgid "Scripting"
+#~ msgstr "命令稿"
+
+#~ msgid "Configure scripting preferences"
+#~ msgstr "設定命令稿偏好設定"
+
+#~ msgid "Script engines"
+#~ msgstr "命令稿引擎"
+
+#~ msgid "''{0}'' doesn''t exist."
+#~ msgstr "「{0}」不存在。"
+
+#~ msgid "Accept the selected scripting engine"
+#~ msgstr "套用選取的命令稿引擎"
+
+#~ msgid "Configure script engines and scripts"
+#~ msgstr "設定命令稿引擎和命令稿"
+
+#~ msgid "''{0}'' isn't readable. Can''t load a script engine from this file."
+#~ msgstr "「{0}」不可讀取。不能從這個檔案載入命令稿引擎。"
+
+#~ msgid "''{0}'' is a directory. Expecting a jar file instead."
+#~ msgstr "「{0}」是一個目錄。預期應該是一個 jar 檔案。"
+
+#~ msgid ""
+#~ "Failed to open file ''{0}'' as jar file. Can''t load a script engine from "
+#~ "this file"
+#~ msgstr "無法將檔案「{0}」開啟為 jar 檔案。不能從這個檔案載入命令稿引擎"
+
+#~ msgid "Add a jar file providing a script engine"
+#~ msgstr "加入提供命令稿引擎的 jar 檔案"
+
+#~ msgid "Launch file chooser"
+#~ msgstr "執行檔案選取器"
+
+#~ msgid "JAR file"
+#~ msgstr "JAR 檔案"
+
+#~ msgid "Remove the selected jar files"
+#~ msgstr "移除選取的 jar 檔案"
+
+#~ msgid "Select a jar file"
+#~ msgstr "選擇一個 jar 檔案"
+
+#~ msgid "JOSM currently supports the following script engines:"
+#~ msgstr "JOSM 目前支援下列命令稿引擎："
+
+#~ msgid "Available script engines"
+#~ msgstr "可用的命令稿引擎"
+
+#~ msgid "Enter additional JAR files which provide script engines."
+#~ msgstr "輸入提供命令稿引擎的額外 JAR 檔案。"
+
+#~ msgid "JAR files"
+#~ msgstr "JAR 檔案"
+
+#~ msgid "{1} (with engine {0})"
+#~ msgstr "{1} (使用引擎 {0})"
+
+#~ msgid "MIME-Types:"
+#~ msgstr "MIME-類型："
+
+#~ msgid "Language:"
+#~ msgstr "語言："
+
+#~ msgid "Language version:"
+#~ msgstr "語言版本："
+
+#~ msgid "Version:"
+#~ msgstr "版本："
+
+#~ msgid "Allows to run scripts in JOSM."
+#~ msgstr "允許在 JOSM 中執行命令稿。"
+
+#~ msgid "Merges the contours of two areas"
+#~ msgstr "合併兩個區域的輪廓"
+
+#~ msgid "Warning: failed to load mime types from file ''0''."
+#~ msgstr "警告：無法載入檔案「0」的 mime 類型。"
+
+#~ msgid "Warning: failed to load default mime types from  resource ''0''."
+#~ msgstr "警告：無法載入來源「0」的預設 mime 類型。"
+
+#~ msgid "Please select a scripting engine to execute the selected script."
+#~ msgstr "請選擇用來執行選取的命令稿的命令稿引擎。"

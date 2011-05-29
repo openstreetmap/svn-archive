@@ -118,7 +118,7 @@ public class Undelete extends Plugin {
         if (dialog.getValue() != 1) return;
         Main.pref.putInteger("undelete.lasttype", cbType.getSelectedIndex());
         Main.pref.put("undelete.newlayer", layer.isSelected());
-        Main.pref.putInteger("undelete.osmid", tfId.getOsmId());
+        Main.pref.put("undelete.osmid", Long.toString(tfId.getOsmId()));
         List<Long> ids=new ArrayList<Long>();
         ids.add((long)tfId.getOsmId());
         undelete(layer.isSelected(), cbType.getType(), ids, 0);

@@ -44,6 +44,21 @@ if (document.cookie.length>0) {
   }
 }
 
+// Read marker position
+var args = getArgs(document.location.search);
+var mlon = args["mlon"];
+var mlat = args["mlat"];
+
+// If lon and lat parameters aren't explicitly specified, default to
+// the marker position
+if (mlon !== undefined && mlat !== undefined)
+{
+  lon = args["mlon"];
+  lat = args["mlat"];
+  if (args["zoom"] !== undefined)
+    zoom = args["zoom"];
+}
+
 var map;
 //Initialise the 'map' object
 function init() {
@@ -125,6 +140,16 @@ function init() {
 
   map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
   map.addLayers([layerScreenspec, layerHiking, layerSkiing, layerTransit]);
+
+  if (mlon !== undefined && mlat !== undefined) {
+    var markers = new OpenLayers.Layer.Markers("Markør",
+      {displayInLayerSwitcher: false});
+    map.addLayer(markers);
+    var marker = new OpenLayers.Marker(new OpenLayers.LonLat(mlon, mlat).
+      transform(new OpenLayers.Projection("EPSG:4326"),
+                new OpenLayers.Projection("EPSG:900913")));
+    markers.addMarker(marker);
+  }
 
   var lonLat = new OpenLayers.LonLat(lon, lat).transform(
     epsg4326, map.getProjectionObject());

@@ -1072,12 +1072,13 @@ public class SeaMark {
 
 		Main.pref.put("tomsplugin.IALA", getRegion() == Reg.A ? "A" : "B");
 
-		for (String str : node.getKeys().keySet()) {
-			if (str.contains("seamark"))
-				if (!str.equals("seamark")) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
-				}
-		}
+//		for (String str : node.getKeys().keySet()) {
+//			if (str.contains("seamark"))
+//				if (!str.equals("seamark")) {
+//					Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
+//				}
+//		}
+		
 		if (!name.isEmpty())
 			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", name));
 

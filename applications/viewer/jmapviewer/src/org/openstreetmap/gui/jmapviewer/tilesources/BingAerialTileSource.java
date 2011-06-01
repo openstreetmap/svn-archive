@@ -7,31 +7,60 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class BingAerialTileSource extends AbstractOsmTileSource {
     private static String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
     private static Future<List<Attribution>> attributions;
+    private String imageUrlTemplate;
+    private Integer imageryZoomMax;
+    private String[] subdomains;
+
+    private static final Pattern subdomainPattern = Pattern.compile("\\{subdomain\\}");
+    private static final Pattern quadkeyPattern = Pattern.compile("\\{quadkey\\}");
+    private static final Pattern culturePattern = Pattern.compile("\\{culture\\}");
 
     public BingAerialTileSource() {
-        super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
+        super("Bing Aerial Maps", "http://example.com/");
 
         if (attributions == null) {
             attributions = Executors.newSingleThreadExecutor().submit(new Callable<List<Attribution>>() {
                 public List<Attribution> call() throws Exception {
-                    return loadAttributionText();
+                    List<Attribution> attrs = null;
+                    int waitTime = 1;
+                    do {
+
+                        try {
+                            attrs = loadAttributionText();
+                            System.out.println("Successfully loaded Bing attribution data.");
+                            return attrs;
+                        } catch(IOException e) {
+                            System.err.println("Could not connect to Bing API. Will retry in " + waitTime + " seconds.");
+                            Thread.sleep(waitTime * 1000L);
+                            waitTime *= 2;
+                        }
+
+                    } while(true);
                 }
             });
         }
@@ -45,81 +74,85 @@ public class BingAerialTileSource extends AbstractOsmTileSource {
         Coordinate max;
     }
 
-    class AttrHandler extends DefaultHandler {
+    @Override
+    public String getTileUrl(int zoom, int tilex, int tiley) throws IOException {
+        int t = (zoom + tilex + tiley) % subdomains.length;
+        String subdomain = subdomains[t];
 
-        private String string;
-        private Attribution curr;
-        private List<Attribution> attributions = new ArrayList<Attribution>();
-        private double southLat;
-        private double northLat;
-        private double eastLon;
-        private double westLon;
-        private boolean inCoverage = false;
+        String url = new String(imageUrlTemplate);
+        url = subdomainPattern.matcher(url).replaceAll(subdomain);
+        url = quadkeyPattern.matcher(url).replaceAll(computeQuadTree(zoom, tilex, tiley));
 
-        @Override
-        public void startElement(String uri, String stripped, String tagName, Attributes attrs) throws SAXException {
-            if ("ImageryProvider".equals(tagName)) {
-                curr = new Attribution();
-            } else if ("CoverageArea".equals(tagName)) {
-                inCoverage = true;
-            }
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            string = new String(ch, start, length);
-        }
-
-        @Override
-        public void endElement(String uri, String stripped, String tagName) throws SAXException {
-            if ("ImageryProvider".equals(tagName)) {
-                attributions.add(curr);
-            } else if ("Attribution".equals(tagName)) {
-                curr.attribution = string;
-            } else if (inCoverage && "ZoomMin".equals(tagName)) {
-                curr.minZoom = Integer.parseInt(string);
-            } else if (inCoverage && "ZoomMax".equals(tagName)) {
-                curr.maxZoom = Integer.parseInt(string);
-            } else if (inCoverage && "SouthLatitude".equals(tagName)) {
-                southLat = Double.parseDouble(string);
-            } else if (inCoverage && "NorthLatitude".equals(tagName)) {
-                northLat = Double.parseDouble(string);
-            } else if (inCoverage && "EastLongitude".equals(tagName)) {
-                eastLon = Double.parseDouble(string);
-            } else if (inCoverage && "WestLongitude".equals(tagName)) {
-                westLon = Double.parseDouble(string);
-            } else if ("BoundingBox".equals(tagName)) {
-                curr.min = new Coordinate(southLat, westLon);
-                curr.max = new Coordinate(northLat, eastLon);
-            } else if ("CoverageArea".equals(tagName)) {
-                inCoverage = false;
-            }
-            string = "";
-        }
+        return url;
     }
 
-    private List<Attribution> loadAttributionText() {
+    private List<Attribution> loadAttributionText() throws IOException {
         try {
-            URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/0,0?zl=1&mapVersion=v1&key="
-                    + API_KEY + "&include=ImageryProviders&output=xml");
+            URL u = new URL("http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?include=ImageryProviders&output=xml&key="
+                    + API_KEY);
             URLConnection conn = u.openConnection();
-
-            // This is not JOSM! Do not use anything other than standard JRE classes within this package!
-            // See package.html for details
-            //conn.setConnectTimeout(Main.pref.getInteger("imagery.bing.load-attribution-text.timeout", 4000));
 
             InputStream stream = conn.getInputStream();
 
-            XMLReader parser = XMLReaderFactory.createXMLReader();
-            AttrHandler handler = new AttrHandler();
-            parser.setContentHandler(handler);
-            parser.parse(new InputSource(stream));
-            //System.err.println("Added " + handler.attributions.size() + " attributions.");
-            return handler.attributions;
-        } catch (IOException e) {
-            System.err.println("Could not open Bing aerials attribution metadata.");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(stream);
+
+            XPathFactory xPathFactory = XPathFactory.newInstance();
+            XPath xpath = xPathFactory.newXPath();
+            imageUrlTemplate = xpath.compile("//ImageryMetadata/ImageUrl/text()").evaluate(document);
+            imageUrlTemplate = culturePattern.matcher(imageUrlTemplate).replaceAll(Locale.getDefault().toString());
+            imageryZoomMax = Integer.parseInt(xpath.compile("//ImageryMetadata/ZoomMax/text()").evaluate(document));
+
+            NodeList subdomainTxt = (NodeList) xpath.compile("//ImageryMetadata/ImageUrlSubdomains/string/text()").evaluate(document, XPathConstants.NODESET);
+            subdomains = new String[subdomainTxt.getLength()];
+            for(int i = 0; i < subdomainTxt.getLength(); i++) {
+                subdomains[i] = subdomainTxt.item(i).getNodeValue();
+            }
+
+            XPathExpression attributionXpath = xpath.compile("Attribution/text()");
+            XPathExpression coverageAreaXpath = xpath.compile("CoverageArea");
+            XPathExpression zoomMinXpath = xpath.compile("ZoomMin/text()");
+            XPathExpression zoomMaxXpath = xpath.compile("ZoomMax/text()");
+            XPathExpression southLatXpath = xpath.compile("BoundingBox/SouthLatitude/text()");
+            XPathExpression westLonXpath = xpath.compile("BoundingBox/WestLongitude/text()");
+            XPathExpression northLatXpath = xpath.compile("BoundingBox/NorthLatitude/text()");
+            XPathExpression eastLonXpath = xpath.compile("BoundingBox/EastLongitude/text()");
+
+            NodeList imageryProviderNodes = (NodeList) xpath.compile("//ImageryMetadata/ImageryProvider").evaluate(document, XPathConstants.NODESET);
+            List<Attribution> attributions = new ArrayList<Attribution>(imageryProviderNodes.getLength());
+            for (int i = 0; i < imageryProviderNodes.getLength(); i++) {
+                Node providerNode = imageryProviderNodes.item(i);
+
+                String attribution = attributionXpath.evaluate(providerNode);
+
+                NodeList coverageAreaNodes = (NodeList) coverageAreaXpath.evaluate(providerNode, XPathConstants.NODESET);
+                for(int j = 0; j < coverageAreaNodes.getLength(); j++) {
+                    Node areaNode = coverageAreaNodes.item(j);
+                    Attribution attr = new Attribution();
+                    attr.attribution = attribution;
+
+                    attr.maxZoom = Integer.parseInt(zoomMaxXpath.evaluate(areaNode));
+                    attr.minZoom = Integer.parseInt(zoomMinXpath.evaluate(areaNode));
+
+                    Double southLat = Double.parseDouble(southLatXpath.evaluate(areaNode));
+                    Double northLat = Double.parseDouble(northLatXpath.evaluate(areaNode));
+                    Double westLon = Double.parseDouble(westLonXpath.evaluate(areaNode));
+                    Double eastLon = Double.parseDouble(eastLonXpath.evaluate(areaNode));
+                    attr.min = new Coordinate(southLat, westLon);
+                    attr.max = new Coordinate(northLat, eastLon);
+
+                    attributions.add(attr);
+                }
+            }
+
+            return attributions;
         } catch (SAXException e) {
             System.err.println("Could not parse Bing aerials attribution metadata.");
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
         return null;
@@ -127,24 +160,10 @@ public class BingAerialTileSource extends AbstractOsmTileSource {
 
     @Override
     public int getMaxZoom() {
-        return 22;
-    }
-
-    @Override
-    public String getExtension() {
-        return ("jpeg");
-    }
-
-    @Override
-    public String getTilePath(int zoom, int tilex, int tiley) throws IOException {
-        try {
-            if (attributions.get() == null)
-                throw new IOException("Cannot load Bing attribution");
-            String quadtree = computeQuadTree(zoom, tilex, tiley);
-            return "/tiles/a" + quadtree + "." + getExtension() + "?g=587";
-        } catch (Exception e) {
-            throw new IOException("Cannot load Bing attribution", e);
-        }
+        if(imageryZoomMax != null)
+            return imageryZoomMax;
+        else
+            return 22;
     }
 
     public TileUpdate getTileUpdate() {

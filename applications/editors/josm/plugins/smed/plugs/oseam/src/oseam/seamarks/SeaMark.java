@@ -451,6 +451,29 @@ public class SeaMark {
 		sectorIndex = sector;
 	}
 
+	public enum Chr {
+		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK,
+		ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
+	}
+
+	public static final EnumMap<Chr, String> characters = new EnumMap<Chr, String>(Chr.class);
+	static {
+		characters.put(Chr.UNKNOWN, "");
+		characters.put(Chr.FIXED, "F");
+		characters.put(Chr.FLASH, "Fl");
+		characters.put(Chr.LONGFLASH, "LFl");
+		characters.put(Chr.QUICK, "Q");
+		characters.put(Chr.VERYQUICK, "VQ");
+		characters.put(Chr.ULTRAQUICK, "UQ");
+		characters.put(Chr.ISOPHASED, "Iso");
+		characters.put(Chr.OCCULTING, "Oc");
+		characters.put(Chr.MORSE, "Mo");
+		characters.put(Chr.ALTERNATING, "Al");
+		characters.put(Chr.INTERRUPTEDQUICK, "IQ");
+		characters.put(Chr.INTERRUPTEDVERYQUICK, "IVQ");
+		characters.put(Chr.INTERRUPTEDULTRAQUICK, "IUQ");
+	}
+
 	private String[] LightChar = new String[10];
 
 	public String getLightChar() {

@@ -32,9 +32,9 @@ import org.xml.sax.SAXException;
 public class BingAerialTileSource extends AbstractOsmTileSource {
     private static String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
     private static Future<List<Attribution>> attributions;
-    private String imageUrlTemplate;
-    private Integer imageryZoomMax;
-    private String[] subdomains;
+    private static String imageUrlTemplate;
+    private static Integer imageryZoomMax;
+    private static String[] subdomains;
 
     private static final Pattern subdomainPattern = Pattern.compile("\\{subdomain\\}");
     private static final Pattern quadkeyPattern = Pattern.compile("\\{quadkey\\}");

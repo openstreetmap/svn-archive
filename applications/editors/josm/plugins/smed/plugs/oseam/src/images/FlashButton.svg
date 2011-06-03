@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="30"
+   width="40"
    height="16"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="FixedButton.svg"
+   sodipodi:docname="FlashButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OrangeButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -2902,11 +2902,11 @@
      showgrid="true"
      inkscape:showpageshadow="false"
      inkscape:snap-grids="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="786"
+     inkscape:window-width="1920"
+     inkscape:window-height="1088"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2816"
@@ -2934,31 +2934,40 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect9640"
-       width="29.249414"
+       width="39.249416"
        height="15.249415"
        x="0.37529233"
        y="1036.7375"
        rx="5"
        ry="5"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OffButton.png"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FlashButton.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 1,1047.3622 4,0 -1.9780219,-6 z"
+       d="m 1.2135796,1047.3622 5.3675488,0 -2.6542823,-6 z"
        id="path3404"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FlashButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4174"
-       d="m 13,1047.3622 4,0 -1.978022,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 17.316226,1047.3622 5.367549,0 -2.654282,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FlashButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 25,1047.3622 4,0 -1.978022,-6 z"
+       d="m 33.418873,1047.3622 5.367549,0 -2.654283,-6 z"
        id="path4176"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FlashButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

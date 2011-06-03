@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="30"
+   width="40"
    height="16"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="NoCharButton.svg"
+   sodipodi:docname="FixedButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OrangeButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -2896,7 +2896,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="22.627416"
      inkscape:cx="16.32572"
-     inkscape:cy="8.0491388"
+     inkscape:cy="7.3505427"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -2934,23 +2934,26 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect9640"
-       width="29.249414"
+       width="39.249416"
        height="15.249415"
        x="0.37529233"
        y="1036.7375"
        rx="5"
        ry="5"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OffButton.png"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FixedButton.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <rect
        style="fill:#ffffff;fill-opacity:1"
        id="rect4184"
-       width="28"
+       width="37.572842"
        height="6"
-       x="1"
-       y="1041.3622" />
+       x="1.2135795"
+       y="1041.3622"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FixedButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

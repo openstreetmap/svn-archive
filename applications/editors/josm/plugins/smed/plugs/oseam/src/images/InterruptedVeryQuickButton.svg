@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="30"
+   width="40"
    height="16"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="VeryQuickButton.svg"
+   sodipodi:docname="InterruptedVeryQuickButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/QuickButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -2902,11 +2902,11 @@
      showgrid="true"
      inkscape:showpageshadow="false"
      inkscape:snap-grids="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="786"
+     inkscape:window-width="1920"
+     inkscape:window-height="1088"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2816"
@@ -2934,46 +2934,64 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect9640"
-       width="29.249414"
+       width="39.249416"
        height="15.249415"
        x="0.37529233"
        y="1036.7375"
        rx="5"
        ry="5"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OffButton.png"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 1,1047.3622 3,0 -1.4835164,-6 z"
+       d="m 1.2135796,1047.3622 4.0256616,0 -1.9907117,-6 z"
        id="path3404"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4174"
-       d="m 9.333,1047.3622 3,0 -1.483516,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 12.395526,1047.3622 4.025661,0 -1.990711,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 17.667,1047.4064 3,0 -1.483517,-6 z"
+       d="m 23.578814,1047.4064 4.025661,0 -1.990712,-6 z"
        id="path4176"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4721"
-       d="m 5.167,1047.3622 3,0 -1.4835164,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 6.8052236,1047.3622 4.0256614,0 -1.9907114,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4744"
-       d="m 21.835,1047.3622 3,0 -1.483517,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 29.1718,1047.3622 4.025661,0 -1.990712,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 26,1047.3622 3,0 -1.483517,-6 z"
+       d="m 34.76076,1047.3622 4.025662,0 -1.990713,-6 z"
        id="path4746"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/InterruptedVeryQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

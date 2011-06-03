@@ -10,13 +10,13 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="30"
+   width="40"
    height="16"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="VeryQuickButton.svg"
-   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/VeryQuickButton.png"
+   sodipodi:docname="UltraQuickButton.svg"
+   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    style="display:inline">
@@ -2902,8 +2902,8 @@
      showgrid="true"
      inkscape:showpageshadow="false"
      inkscape:snap-grids="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="786"
+     inkscape:window-width="1920"
+     inkscape:window-height="1088"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0">
@@ -2934,61 +2934,88 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.75058466;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect9640"
-       width="29.249414"
+       width="39.249416"
        height="15.249415"
        x="0.37529233"
        y="1036.7375"
        rx="5"
        ry="5"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OffButton.png"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 1,1047.3622 2,0 -0.9890109,-6 z"
+       d="m 1.2135796,1047.3622 2.6837744,0 -1.3271411,-6 z"
        id="path3404"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4174"
-       d="m 7.5,1047.3622 2,0 -0.989011,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 9.9358465,1047.3622 2.6837745,0 -1.327141,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 14,1047.3622 2,0 -0.989011,-6 z"
+       d="m 18.658113,1047.3622 2.683775,0 -1.327141,-6 z"
        id="path4176"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4721"
-       d="m 4.25,1047.3622 2,0 -0.9890109,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 5.574713,1047.3622 2.6837745,0 -1.3271411,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 10.75,1047.3622 2,0 -0.989011,-6 z"
+       d="m 14.29698,1047.3622 2.683774,0 -1.327141,-6 z"
        id="path4723"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4744"
-       d="m 17.25,1047.3622 2,0 -0.989011,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 23.019247,1047.3622 2.683774,0 -1.327141,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 20.5,1047.3622 2,0 -0.989011,-6 z"
+       d="m 27.38038,1047.3622 2.683775,0 -1.327141,-6 z"
        id="path4746"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        inkscape:connector-curvature="0"
        id="path4767"
-       d="m 23.75,1047.3622 2,0 -0.989011,-6 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:none" />
+       d="m 31.741514,1047.3622 2.683774,0 -1.327141,-6 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 27,1047.3622 2,0 -0.989011,-6 z"
+       d="m 36.102647,1047.3622 2.683775,0 -1.327142,-6 z"
        id="path4769"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/UltraQuickButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

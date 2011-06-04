@@ -16,9 +16,8 @@ import javax.swing.SwingConstants;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
+import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Chr;
 import oseam.seamarks.SeaMark;
@@ -58,13 +57,9 @@ public class PanelChr	 extends JPanel {
 					button.setBorderPainted(false);
 				}
 			}
-			charBox.setText("");
-			for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
-				if (map.equals(combo)) {
-					charBox.setText(SeaMark.ChrMAP.get(map));
-				}
-			}
-			if (charBox.getText().isEmpty()) {
+			if (SeaMark.ChrMAP.containsKey(combo)) {
+				charBox.setText(SeaMark.ChrMAP.get(combo));
+			} else {
 				for (Chr chr : buttons.keySet()) {
 					JToggleButton button = buttons.get(chr);
 					if (button == source) {
@@ -105,23 +100,23 @@ public class PanelChr	 extends JPanel {
 	public PanelChr(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getChrButton(noneButton, 0, 0, 44, 16, "No character", Chr.UNKNOWN), null);
-		this.add(getChrButton(fixedButton, 0, 16, 44, 16, "F: Fixed", Chr.FIXED), null);
-		this.add(getChrButton(flashButton, 0, 32, 44, 16, "Fl: Flashing", Chr.FLASH), null);
-		this.add(getChrButton(longFlashButton, 0, 48, 44, 16, "LFl: Long flash", Chr.LONGFLASH), null);
-		this.add(getChrButton(quickButton, 0, 64, 44, 16, "Q: Quick flashing", Chr.QUICK), null);
-		this.add(getChrButton(veryQuickButton, 0, 80, 44, 16, "VQ: Very quick flashing", Chr.VERYQUICK), null);
-		this.add(getChrButton(ultraQuickButton, 0, 96, 44, 16, "UQ: Ultra quick flashing", Chr.ULTRAQUICK), null);
-		this.add(getChrButton(alternatingButton, 44, 0, 44, 16, "Al: Alternating", Chr.ALTERNATING), null);
-		this.add(getChrButton(isophasedButton, 44, 16, 44, 16, "Iso: Isophased flashing", Chr.ISOPHASED), null);
-		this.add(getChrButton(occultingButton, 44, 32, 44, 16, "Oc: Occulting flash", Chr.OCCULTING), null);
-		this.add(getChrButton(morseButton, 44, 48, 44, 16, "Mo: Morse", Chr.MORSE), null);
-		this.add(getChrButton(interruptedQuickButton, 44, 64, 44, 16, "IQ: Interrupted quick flashing", Chr.INTERRUPTEDQUICK), null);
-		this.add(getChrButton(interruptedVeryQuickButton, 44, 80, 44, 16, "IVQ: Interrupted very quick flashing", Chr.INTERRUPTEDVERYQUICK), null);
-		this.add(getChrButton(interruptedUltraQuickButton, 44, 96, 44, 16, "IUQ: Interrupted ultra quick flashing", Chr.INTERRUPTEDULTRAQUICK), null);
+		this.add(getChrButton(noneButton, 0, 0, 44, 16, Messages.getString("NoChar"), Chr.UNKNOWN), null);
+		this.add(getChrButton(fixedButton, 0, 16, 44, 16, Messages.getString("FChar"), Chr.FIXED), null);
+		this.add(getChrButton(flashButton, 0, 32, 44, 16, Messages.getString("FlChar"), Chr.FLASH), null);
+		this.add(getChrButton(longFlashButton, 0, 48, 44, 16, Messages.getString("LFlChar"), Chr.LONGFLASH), null);
+		this.add(getChrButton(quickButton, 0, 64, 44, 16, Messages.getString("QChar"), Chr.QUICK), null);
+		this.add(getChrButton(veryQuickButton, 0, 80, 44, 16, Messages.getString("VQChar"), Chr.VERYQUICK), null);
+		this.add(getChrButton(ultraQuickButton, 0, 96, 44, 16, Messages.getString("UQChar"), Chr.ULTRAQUICK), null);
+		this.add(getChrButton(alternatingButton, 44, 0, 44, 16, Messages.getString("AlChar"), Chr.ALTERNATING), null);
+		this.add(getChrButton(isophasedButton, 44, 16, 44, 16, Messages.getString("IsoChar"), Chr.ISOPHASED), null);
+		this.add(getChrButton(occultingButton, 44, 32, 44, 16, Messages.getString("OcChar"), Chr.OCCULTING), null);
+		this.add(getChrButton(morseButton, 44, 48, 44, 16, Messages.getString("MoChar"), Chr.MORSE), null);
+		this.add(getChrButton(interruptedQuickButton, 44, 64, 44, 16, Messages.getString("IQChar"), Chr.INTERRUPTEDQUICK), null);
+		this.add(getChrButton(interruptedVeryQuickButton, 44, 80, 44, 16, Messages.getString("IVQChar"), Chr.INTERRUPTEDVERYQUICK), null);
+		this.add(getChrButton(interruptedUltraQuickButton, 44, 96, 44, 16, Messages.getString("IUQChar"), Chr.INTERRUPTEDULTRAQUICK), null);
 		charLabel.setBounds(new Rectangle(0, 113, 88, 20));
 		charLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		charLabel.setText("Character");
+		charLabel.setText(Messages.getString("Character"));
 		this.add(charLabel, null);
 		charBox.setBounds(new Rectangle(20, 135, 50, 20));
 		charBox.setHorizontalAlignment(SwingConstants.CENTER);

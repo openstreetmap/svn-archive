@@ -71,23 +71,23 @@ public class PanelTop extends JPanel {
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);
-		this.add(getTopButton(noTopButton, 40, 5, 27, 27, "NoTopTip", Top.NONE), null);
-		this.add(getTopButton(canTopButton, 70, 5, 27, 27, "CanTopTip", Top.CAN), null);
-		this.add(getTopButton(coneTopButton, 100, 5, 27, 27, "ConeTopTip", Top.CONE), null);
-		this.add(getTopButton(sphereTopButton, 130, 5, 27, 27, "SphereTopTip", Top.SPHERE), null);
-		this.add(getTopButton(XTopButton, 160, 5, 27, 27, "XTopTip", Top.X_SHAPE), null);
-		this.add(getTopButton(northTopButton, 40, 35, 27, 27, "NorthTopTip", Top.NORTH), null);
-		this.add(getTopButton(southTopButton, 70, 35, 27, 27, "SouthTopTip", Top.SOUTH), null);
-		this.add(getTopButton(eastTopButton, 100, 35, 27, 27, "EastTopTip", Top.EAST), null);
-		this.add(getTopButton(westTopButton, 130, 35, 27, 27, "WestTopTip", Top.WEST), null);
-		this.add(getTopButton(spheres2TopButton, 160, 35, 27, 27, "Spheres2TopTip", Top.SPHERES2), null);
-		this.add(getDayButton(boardDayButton, 40, 65, 27, 27, "BoardDayTip", Day.BOARD), null);
-		this.add(getDayButton(diamondDayButton, 70, 65, 27, 27, "DiamondDayTip", Day.DIAMOND), null);
-		this.add(getDayButton(triangleDayButton, 100, 65, 27, 27, "TriangleDayTip", Day.TRIANGLE), null);
-		this.add(getDayButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDayTip", Day.TRIANGLE_INV), null);
-		this.add(getDayButton(squareDayButton, 160, 65, 27, 27, "SquareDayTip", Day.SQUARE), null);
-		this.add(getDayButton(circleDayButton, 160, 95, 27, 27, "CircleDayTip", Day.CIRCLE), null);
-		this.add(getMoorButton(mooringTopButton, 40, 95, 27, 27, "MooringTopTip"), null);
+		this.add(getTopButton(noTopButton, 40, 5, 27, 27, "NoTop", Top.NONE), null);
+		this.add(getTopButton(canTopButton, 70, 5, 27, 27, "CanTop", Top.CAN), null);
+		this.add(getTopButton(coneTopButton, 100, 5, 27, 27, "ConeTop", Top.CONE), null);
+		this.add(getTopButton(sphereTopButton, 130, 5, 27, 27, "SphereTop", Top.SPHERE), null);
+		this.add(getTopButton(XTopButton, 160, 5, 27, 27, "XTop", Top.X_SHAPE), null);
+		this.add(getTopButton(northTopButton, 40, 35, 27, 27, "NorthTop", Top.NORTH), null);
+		this.add(getTopButton(southTopButton, 70, 35, 27, 27, "SouthTop", Top.SOUTH), null);
+		this.add(getTopButton(eastTopButton, 100, 35, 27, 27, "EastTop", Top.EAST), null);
+		this.add(getTopButton(westTopButton, 130, 35, 27, 27, "WestTop", Top.WEST), null);
+		this.add(getTopButton(spheres2TopButton, 160, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
+		this.add(getDayButton(boardDayButton, 40, 65, 27, 27, "BoardDay", Day.BOARD), null);
+		this.add(getDayButton(diamondDayButton, 70, 65, 27, 27, "DiamondDay", Day.DIAMOND), null);
+		this.add(getDayButton(triangleDayButton, 100, 65, 27, 27, "TriangleDay", Day.TRIANGLE), null);
+		this.add(getDayButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDay", Day.TRIANGLE_INV), null);
+		this.add(getDayButton(squareDayButton, 160, 65, 27, 27, "SquareDay", Day.SQUARE), null);
+		this.add(getDayButton(circleDayButton, 160, 95, 27, 27, "CircleDay", Day.CIRCLE), null);
+		this.add(getMoorButton(mooringTopButton, 40, 95, 27, 27, "MooringTop"), null);
 	}
 
 	public void clearSelections() {

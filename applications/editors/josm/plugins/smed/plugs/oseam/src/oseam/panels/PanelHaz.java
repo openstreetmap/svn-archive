@@ -121,17 +121,17 @@ public class PanelHaz extends JPanel {
 	public PanelHaz(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getCatButton(northButton, 0, 0, 52, 32, "NorthTip"), null);
-		this.add(getCatButton(southButton, 0, 32, 52, 32, "SouthTip"), null);
-		this.add(getCatButton(eastButton, 0, 64, 52, 32, "EastTip"), null);
-		this.add(getCatButton(westButton, 0, 96, 52, 32, "WestTip"), null);
-		this.add(getCatButton(isolButton, 0, 128, 52, 32, "IsolTip"), null);
+		this.add(getCatButton(northButton, 0, 0, 52, 32, "North"), null);
+		this.add(getCatButton(southButton, 0, 32, 52, 32, "South"), null);
+		this.add(getCatButton(eastButton, 0, 64, 52, 32, "East"), null);
+		this.add(getCatButton(westButton, 0, 96, 52, 32, "West"), null);
+		this.add(getCatButton(isolButton, 0, 128, 52, 32, "Isol"), null);
 
-		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "PillarTip", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "SparTip", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "FloatTip", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "BeaconTip", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
-		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "TowerTip", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 	}
 
 	public void clearSelections() {

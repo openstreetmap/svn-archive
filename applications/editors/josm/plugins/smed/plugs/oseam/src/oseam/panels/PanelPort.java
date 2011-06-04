@@ -59,15 +59,15 @@ public class PanelPort extends JPanel {
 	public PanelPort(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getRegionButton(regionAButton, 0, 2, 34, 30, "RegionATip"), null);
-		this.add(getRegionButton(regionBButton, 0, 32, 34, 30, "RegionBTip"), null);
-		this.add(getShapeButton(pillarButton, 0, 64, 34, 32, "PillarTip", Shp.PILLAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(sparButton, 0, 96, 34, 32, "SparTip", Shp.SPAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(canButton, 0, 128, 34, 32, "CanTip", Shp.CAN, Obj.BOYLAT), null);
-		this.add(getShapeButton(floatButton, 35, 0, 34, 32, "FloatTip", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 35, 32, 34, 32, "BeaconTip", Shp.BEACON, Obj.BCNLAT), null);
-		this.add(getShapeButton(towerButton, 35, 64, 34, 32, "TowerTip", Shp.TOWER, Obj.BCNLAT), null);
-		this.add(getShapeButton(perchButton, 35, 96, 34, 32, "PerchTip", Shp.PERCH, Obj.BCNLAT), null);
+		this.add(getRegionButton(regionAButton, 0, 2, 34, 30, "RegionA"), null);
+		this.add(getRegionButton(regionBButton, 0, 32, 34, 30, "RegionB"), null);
+		this.add(getShapeButton(pillarButton, 0, 64, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT), null);
+		this.add(getShapeButton(sparButton, 0, 96, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT), null);
+		this.add(getShapeButton(canButton, 0, 128, 34, 32, "Can", Shp.CAN, Obj.BOYLAT), null);
+		this.add(getShapeButton(floatButton, 35, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 35, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNLAT), null);
+		this.add(getShapeButton(towerButton, 35, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNLAT), null);
+		this.add(getShapeButton(perchButton, 35, 96, 34, 32, "Perch", Shp.PERCH, Obj.BCNLAT), null);
 	}
 
 	public void clearSelections() {

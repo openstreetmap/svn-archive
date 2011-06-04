@@ -14,6 +14,7 @@ import javax.swing.JRadioButton;
 
 import java.util.EnumMap;
 
+import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Ent;
@@ -51,16 +52,16 @@ public class PanelCol extends JPanel {
 		dlg = dia;
 		ent = entity;
 		this.setLayout(null);
-		this.add(getColButton(offButton, 0, 0, 34, 16, "No colour", Col.UNKNOWN), null);
-		this.add(getColButton(whiteButton, 0, 16, 34, 16, "White", Col.WHITE), null);
-		this.add(getColButton(redButton, 0, 32, 34, 16, "Red", Col.RED), null);
-		this.add(getColButton(orangeButton, 0, 48, 34, 16, "Orange", Col.ORANGE), null);
-		this.add(getColButton(amberButton, 0, 64, 34, 16, "Amber", Col.AMBER), null);
-		this.add(getColButton(yellowButton, 0, 80, 34, 16, "Yellow", Col.YELLOW), null);
-		this.add(getColButton(greenButton, 0, 96, 34, 16, "Green", Col.GREEN), null);
-		this.add(getColButton(blueButton, 0, 112, 34, 16, "Blue", Col.BLUE), null);
-		this.add(getColButton(violetButton, 0, 128, 34, 16, "Violet", Col.VIOLET), null);
-		this.add(getColButton(blackButton, 0, 144, 34, 16, "Black", Col.BLACK), null);
+		this.add(getColButton(offButton, 0, 0, 34, 16, Messages.getString("NoColour"), Col.UNKNOWN), null);
+		this.add(getColButton(whiteButton, 0, 16, 34, 16, Messages.getString("White"), Col.WHITE), null);
+		this.add(getColButton(redButton, 0, 32, 34, 16, Messages.getString("Red"), Col.RED), null);
+		this.add(getColButton(orangeButton, 0, 48, 34, 16, Messages.getString("Orange"), Col.ORANGE), null);
+		this.add(getColButton(amberButton, 0, 64, 34, 16, Messages.getString("Amber"), Col.AMBER), null);
+		this.add(getColButton(yellowButton, 0, 80, 34, 16, Messages.getString("Yellow"), Col.YELLOW), null);
+		this.add(getColButton(greenButton, 0, 96, 34, 16, Messages.getString("Green"), Col.GREEN), null);
+		this.add(getColButton(blueButton, 0, 112, 34, 16, Messages.getString("Blue"), Col.BLUE), null);
+		this.add(getColButton(violetButton, 0, 128, 34, 16, Messages.getString("Violet"), Col.VIOLET), null);
+		this.add(getColButton(blackButton, 0, 144, 34, 16, Messages.getString("Black"), Col.BLACK), null);
 	}
 
 	public void clearSelections() {

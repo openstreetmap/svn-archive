@@ -47,11 +47,11 @@ public class PanelSaw extends JPanel {
 	public PanelSaw(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "PillarTip", Shp.PILLAR, Obj.BOYSAW), null);
-		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "SparTip", Shp.SPAR, Obj.BOYSAW), null);
-		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "SphereTip", Shp.SPHERE, Obj.BOYSAW), null);
-		this.add(getShapeButton(barrelButton, 0, 96, 34, 32, "BarrelTip", Shp.BARREL, Obj.BOYSAW), null);
-		this.add(getShapeButton(floatButton, 0, 128, 34, 32, "FloatTip", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSAW), null);
+		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSAW), null);
+		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW), null);
+		this.add(getShapeButton(barrelButton, 0, 96, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSAW), null);
+		this.add(getShapeButton(floatButton, 0, 128, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
 	}
 
 	public void clearSelections() {

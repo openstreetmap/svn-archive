@@ -47,11 +47,11 @@ public class PanelLights extends JPanel {
 	public PanelLights(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getCatButton(houseButton, 0, 0, 34, 32, "LighthouseTip", Cat.LIGHT_HOUSE, Obj.LNDMRK), null);
-		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLightTip", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
-		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLightTip", Cat.LIGHT_MINOR, Obj.LITMIN), null);
-		this.add(getCatButton(vesselButton, 0, 96, 34, 32, "LightVesselTip", Cat.LIGHT_VESSEL, Obj.LITVES), null);
-		this.add(getCatButton(stationButton, 0, 128, 34, 32, "SignalStationTip", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
+		this.add(getCatButton(houseButton, 0, 0, 34, 32, "Lighthouse", Cat.LIGHT_HOUSE, Obj.LNDMRK), null);
+		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLight", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
+		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLight", Cat.LIGHT_MINOR, Obj.LITMIN), null);
+		this.add(getCatButton(vesselButton, 0, 96, 34, 32, "LightVessel", Cat.LIGHT_VESSEL, Obj.LITVES), null);
+		this.add(getCatButton(stationButton, 0, 128, 34, 32, "SignalStation", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
 	}
 
 	public void clearSelections() {

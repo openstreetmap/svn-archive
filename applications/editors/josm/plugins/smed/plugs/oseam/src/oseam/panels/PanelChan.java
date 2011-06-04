@@ -204,11 +204,11 @@ public class PanelChan extends JPanel {
 		this.add(panelPort, null);
 		this.add(panelStbd, null);
 		this.add(panelSaw, null);
-		this.add(getCatButton(portButton, 0, 0, 52, 32, "PortTip"), null);
-		this.add(getCatButton(stbdButton, 0, 32, 52, 32, "StbdTip"), null);
-		this.add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPortTip"), null);
-		this.add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbdTip"), null);
-		this.add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWaterTip"), null);
+		this.add(getCatButton(portButton, 0, 0, 52, 32, "Port"), null);
+		this.add(getCatButton(stbdButton, 0, 32, 52, 32, "Stbd"), null);
+		this.add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPort"), null);
+		this.add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbd"), null);
+		this.add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWater"), null);
 	}
 
 	public void clearSelections() {

@@ -58,16 +58,16 @@ public class PanelSpec extends JPanel {
 
 		this.setLayout(null);
 		this.add(panelCol, null);
-		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "PillarTip", Shp.PILLAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "SparTip", Shp.SPAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(canButton, 55, 64, 34, 32, "CanTip", Shp.CAN, Obj.BOYSPP), null);
-		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "ConeTip", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "SphereTip", Shp.SPHERE, Obj.BOYSPP), null);
-		this.add(getShapeButton(barrelButton, 90, 0, 34, 32, "BarrelTip", Shp.BARREL, Obj.BOYSPP), null);
-		this.add(getShapeButton(superButton, 90, 32, 34, 32, "SuperTip", Shp.SUPER, Obj.BOYSPP), null);
-		this.add(getShapeButton(floatButton, 90, 64, 34, 32, "FloatTip", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 90, 96, 34, 32, "BeaconTip", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 90, 128, 34, 32, "TowerTip", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
+		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
+		this.add(getShapeButton(barrelButton, 90, 0, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
+		this.add(getShapeButton(superButton, 90, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
+		this.add(getShapeButton(floatButton, 90, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 90, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
+		this.add(getShapeButton(towerButton, 90, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
 	}
 
 	public void clearSelections() {

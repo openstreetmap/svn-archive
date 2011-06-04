@@ -95,10 +95,10 @@ public class PanelMain extends JPanel {
 		fogIcon.setBounds(new Rectangle(265, 0, 125, 185));
 		this.add(fogIcon, null);
 
-		this.add(getButton(chanButton, 0, 0, 62, 40, "ChanTip"), null);
-		this.add(getButton(hazButton, 0, 40, 62, 40, "HazTip"), null);
-		this.add(getButton(specButton, 0, 80, 62, 40, "SpecTip"), null);
-		this.add(getButton(lightsButton, 0, 120, 62, 40, "LightsTip"), null);
+		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
+		this.add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
+		this.add(getButton(specButton, 0, 80, 62, 40, "Spec"), null);
+		this.add(getButton(lightsButton, 0, 120, 62, 40, "Lights"), null);
 		this.add(panelChan, null);
 		this.add(panelHaz, null);
 		this.add(panelSpec, null);
@@ -169,10 +169,10 @@ public class PanelMain extends JPanel {
 		specButton.addActionListener(alType);
 		lightsButton.addActionListener(alType);
 
-		this.add(getButton(topButton, 0, 165, 34, 32, "TopmarksTip"), null);
-		this.add(getButton(fogButton, 0, 205, 34, 32, "FogSignalsTip"), null);
-		this.add(getButton(radButton, 0, 245, 34, 32, "RadarTip"), null);
-		this.add(getButton(litButton, 0, 285, 34, 32, "LitTip"), null);
+		this.add(getButton(topButton, 0, 165, 34, 32, "Topmarks"), null);
+		this.add(getButton(fogButton, 0, 205, 34, 32, "FogSignals"), null);
+		this.add(getButton(radButton, 0, 245, 34, 32, "Radar"), null);
+		this.add(getButton(litButton, 0, 285, 34, 32, "Lit"), null);
 		miscButtons = new ButtonGroup();
 		miscButtons.add(topButton);
 		miscButtons.add(fogButton);

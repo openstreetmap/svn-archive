@@ -463,12 +463,9 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.UNKNOWN), "");
 		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
 		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
 		ChrMAP.put(EnumSet.of(Chr.LONGFLASH), "LFl");
 		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
-		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
 		ChrMAP.put(EnumSet.of(Chr.VERYQUICK), "VQ");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
 		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK), "UQ");
 		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDQUICK), "IQ");
 		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDVERYQUICK), "IVQ");
@@ -479,8 +476,17 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LONGFLASH), "Al.LFl");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LONGFLASH), "FLFl");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
+		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LONGFLASH), "FlLFl");
+		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
+		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
+		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
 	}
 	
 	private String[] LightChar = new String[10];

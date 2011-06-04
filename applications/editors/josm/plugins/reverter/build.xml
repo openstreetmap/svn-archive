@@ -30,9 +30,9 @@
 <project name="reverter" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="recompile after change in MultiFetchServerObjectReader in JOSM 4081" />
+	<property name="commit.message" value="recompile after change in OsmPrimitive in JOSM 4099" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="4081" />
+	<property name="plugin.main.version" value="4099" />
 
 
 	<!--

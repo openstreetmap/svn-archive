@@ -14,7 +14,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import org.openstreetmap.josm.data.coor.LatLon;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -26,20 +25,16 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.JOptionPane;
-import javax.swing.plaf.basic.BasicArrowButton;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.SimplifyWayAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -48,7 +43,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -59,6 +53,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private static final String DRAWINGMODE_MESSAGE=
     "Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to start new line";
     
+    private static final Color COLOR_FIXED = Color.green;
+    private static final Color COLOR_NORMAL = Color.white;
+    private static final Color COLOR_DELETE = Color.red;
+    private static final Color COLOR_SELECTEDFRAGMENT = Color.red;
+    private static final Color COLOR_EDITEDFRAGMENT = Color.orange;
+    
     private double maxDist;
     private double epsilonMult;
     //private double deltaLatLon;
@@ -67,18 +67,15 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     /// Initial tolerance for Douglas-Pecker algorithm
     private double startingEps;
     
+    private DrawnPolyLine line;
     private MapView mv;
-    private ArrayList<LatLon> points = new ArrayList<LatLon>(100);
-    private ArrayList<LatLon> simplePoints = new ArrayList<LatLon>(100);
     private String statusText;
     private boolean drawing;
     private boolean ctrl;
     private boolean shift;
     private boolean oldCtrl;
     private boolean oldShift;
-    Set<LatLon> used;
-    Set<LatLon> fixed = new HashSet<LatLon>();
-    private double eps=startingEps;
+    private double eps;
     private final Stroke strokeForSimplified;
     private final Stroke strokeForOriginal;
     private boolean ready;
@@ -88,6 +85,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private final Cursor cursorReady;
     private final Cursor cursorNode;
     private boolean nearpoint;
+    private LatLon highlighted;
+    private int nearestIdx;
+    private Stroke strokeForDelete;
     
 
     FastDrawingMode(MapFrame mapFrame) {
@@ -95,7 +95,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 "mapmode:FastDraw",
                 tr("Mode: {0}", tr("Fast drawing mode")),
                 KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        line=new DrawnPolyLine();
         strokeForOriginal = new BasicStroke();
+        strokeForDelete = new BasicStroke(3);
         strokeForSimplified = new BasicStroke(1,BasicStroke.CAP_ROUND,BasicStroke.JOIN_BEVEL,5f,
                 new float[]{5.f,5f},0f);
         cursorDraw = ImageProvider.getCursor("crosshair", null);
@@ -106,13 +108,16 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         //loadPrefs();
     }
 
+// <editor-fold defaultstate="collapsed" desc="Event listeners">
+
     @Override
     public void enterMode() {
         if (!isEnabled()) return;
         super.enterMode();
         loadPrefs();
         mv = Main.map.mapView;
-
+        line.setMv(mv);
+        
         if (getCurrentDataSet() == null) return;
         
         Main.map.mapView.addMouseListener(this);
@@ -143,7 +148,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         }
         savePrefs();
         Main.map.mapView.setCursor(cursorDraw);
-        Main.map.mapView.repaint();
+        repaint();
     }
 
     @Override
@@ -160,34 +165,57 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
-        if (points.size() == 0) return;
-        List<LatLon> pts=points;
-        if (simplePoints!=null && simplePoints.size()>0) {
+        LinkedList<LatLon> pts=line.getPoints();
+        if (pts.isEmpty()) return;
+        
+        if (line.wasSimplified()) {
             // we are drawing simplified version, that exists
-            pts=simplePoints;
             g.setStroke(strokeForSimplified);
         } else {
             g.setStroke(strokeForOriginal);
         }
         
         Point p1, p2;
-        LatLon pp2;
-        p1 = getPoint(pts.get(0));
-        g.setColor(Color.green);
+        LatLon pp1, pp2;
+        p1 = line.getPoint(pts.get(0));
+        g.setColor(COLOR_FIXED);
         g.fillOval(p1.x - 3, p1.y - 3, 7, 7);
+        Color lineColor=COLOR_NORMAL;
         if (pts.size() > 1) {
+        Iterator<LatLon> it1,it2;
+        it1=pts.listIterator(0);
+        it2=pts.listIterator(1);
             for (int i = 0; i < pts.size() - 1; i++) {
-                g.setColor(Color.red);
-                p1 = getPoint(pts.get(i));
-                pp2 = pts.get(i + 1);
-                p2 = getPoint(pts.get(i + 1));
-
+                pp1 = it1.next();
+                p1 = line.getPoint(pp1);
+                pp2 = it2.next();
+                p2 = line.getPoint(pp2);
+                if (highlighted==pp1) {lineColor=COLOR_SELECTEDFRAGMENT;}
+                if (line.isLastPoint(i)) { lineColor=COLOR_EDITEDFRAGMENT; }
+                g.setColor(lineColor);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
-                if (fixed.contains(pp2)) {
-                    g.setColor(Color.green);
+  //                  g.fillOval(p2.x - 5, p2.y - 5, 11, 11);
+                if (line.isFixed(pp2)) {
+                    lineColor=COLOR_NORMAL;
+                    g.setColor(COLOR_FIXED);
                     g.fillOval(p2.x - 3, p2.y - 3, 7, 7);
                 } else {
                     g.fillRect(p2.x - 1, p2.y - 1, 3, 3);
+                }
+                if (shift && !line.wasSimplified() && nearestIdx==i+1 ) {
+                    // highlight node to delete
+                    g.setStroke(strokeForDelete);
+                    g.setColor(COLOR_DELETE);
+                    g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
+                    g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
+                    g.setStroke(strokeForOriginal);
+                }
+                if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
+                    // highlight node to delete
+                    g.setStroke(strokeForDelete);
+                    g.setColor( line.isFixed(pp2) ? COLOR_NORMAL: COLOR_FIXED);
+                    g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
+                    g.setStroke(strokeForOriginal);
                 }
             }
         }
@@ -205,7 +233,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         }
         updateCursor();
 //        updateStatusLine();
-        Main.map.mapView.repaint();
+        repaint();
     }
 
     @Override
@@ -213,44 +241,52 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
         
-        int idx = findClosestPoint(e.getX(),e.getY(),maxDist);
+        
+        int idx=line.findClosestPoint(e.getPoint(),maxDist);
         if (idx==0) {
+            line.closeLine();
             // the way should become closed
-            points.add(points.get(idx));
             drawing=false;
             ready=true;
             updateCursor();
             return;
         } 
         
-        if (shift) newDrawing();
-        if (ready) {
-            setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
+        if (ctrl && shift) newDrawing();
+        if (!ctrl && shift) {
+            if (idx>=0) {line.deleteNode(idx); nearestIdx=-1;}
+            else line.tryToDeleteSegment(e.getPoint()); 
+            return;
+        }
+        if (idx>=0) {
+            if (ctrl) {
+                // toggle fixed point
+                line.toggleFixed(idx);                
+            }
             return;
         }
         
+        if (ready) { setStatusLine(tr(SIMPLIFYMODE_MESSAGE)); return;  }
+        drawing = true;
+        
         LatLon p = getLatLon(e);
         Node nd1 = getNearestNode(e.getPoint(), maxDist);
-
         if (nd1!=null) {
             // found node, make it fixed point of the line
             //System.out.println("node "+nd1);
             p=nd1.getCoor();
-            fixed.add(p);
+            line.fixPoint(p);
         }         
         
-        drawing = true;
-        points.add(p);
-        if (ctrl) fixed.add(p);
-        simplePoints=null;
+        line.addLast(p);
+        if (ctrl) line.fixPoint(p);
+        line.clearSimplifiedVersion();
                
         setStatusLine(tr("Please move the mouse to draw new way"));
-        Main.map.mapView.repaint();
+        repaint();
 
     }
-    
-    
-
+ 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (!isEnabled()) return;
@@ -258,7 +294,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         drawing = false;
         if (!ready) setStatusLine(tr(DRAWINGMODE_MESSAGE)
                         + tr(SIMPLIFYMODE_MESSAGE));
-        Main.map.mapView.repaint();
+        repaint();
     }
 
     @Override
@@ -273,85 +309,55 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         boolean nearpoint2=nd1!=null; 
         if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();}
         
-        if (!drawing) return;
-        if (ready) {
-            setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
-        }
+        nearestIdx=line.findClosestPoint(e.getPoint(),maxDist);
         
-        Point lastP = getPoint(points.get(points.size() - 1));
-
+        if (!drawing) {
+            if (shift) {
+                // find line fragment to highlight
+                LatLon h2=line.findBigSegment(e.getPoint());
+                if (highlighted!=h2) {
+                    highlighted=h2;
+                    repaint();
+                } 
+            }
+            return;
+        }
+        if (ready) setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
+        
+        // do not draw points close to existing points - we do not want self-intersections
+        if (nearestIdx>=0) { return; }
+        
+        Point lastP = line.getLastPoint(); // last point of line fragment being edited
+                
         if (nearpoint){
             if ( Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > 1e-2) {
-                points.add(nd1.getCoor());
-                fixed.add(nd1.getCoor());
-                Main.map.mapView.repaint();
+                line.addFixed(nd1.getCoor()); // snap to node coords
+                repaint();
             } 
         } else {
             if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > minPixelsBetweenPoints) {
-                points.add(getLatLon(e));
-                Main.map.mapView.repaint();
+                line.addLast(getLatLon(e)); // free mouse-drawing
+                repaint();
             }
         }
         
         //statusText = getLatLon(e).toString();        updateStatusLine();
     }
 
-    @Override
-    protected void updateStatusLine() {
-        Main.map.statusLine.setHelpText(statusText);
-        Main.map.statusLine.repaint();
-
-    }
-
-    LatLon getLatLon(MouseEvent e) {
-        return mv.getLatLon(e.getX(), e.getY());
-    }
-
-    Point getPoint(LatLon p) {
-        return mv.getPoint(p);
-    }
-
-    public void newDrawing() {
-        points.clear();
-        used=null;
-        fixed.clear();
-        eps=startingEps;
-        ready=false;
-        simplePoints=null;
-    }
-
-    public void back() {
-        if (points.size() == 0) {
-            return;
-        }
-        points.remove(points.size() - 1);
-        Main.map.mapView.repaint();
-    }
-
-    /**
-     * Updates shift and ctrl key states
-     */
-    private void updateKeyModifiers(InputEvent e) {
-        oldCtrl = ctrl;
-        oldShift = shift;
-        ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
-        shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-    }
-
     private void doKeyEvent(KeyEvent e) {
         ///  System.out.println(e);
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            if (simplePoints!=null) {
-                simplePoints=null;
-                Main.map.mapView.repaint();
+            if (line.wasSimplified()) {
+                line.clearSimplifiedVersion();
+                repaint();
                 eps=startingEps;
             }
             back();
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             // first Enter = simplify, second = save the way
-            if (simplePoints==null) {
-                simplify(eps);
+            if (!line.wasSimplified()) {
+                line.simplify(eps);
                 setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
             } else saveAsWay();
         }
@@ -365,105 +371,40 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             e.consume();
             changeEpsilon(1/epsilonMult);
         }
-    }
-
-    
-    void changeEpsilon(double k) {
-        //System.out.println(tr("Eps={0}", eps));
-        eps*=k;
-        setStatusLine(tr("Eps={0}", eps));
-        simplify(eps);
-        Main.map.mapView.repaint();
-    }
-    
-    /**
-     * Simplified drawn line, not touching the nodes includes in "fixed" set.
-     */
-    private void simplify(double epsilon) {
-        //System.out.println("Simplify polyline...");
-        int n = points.size();
-        if (n < 3) return;
-        used = new HashSet<LatLon>(n);
-        int start = 0;
-        for (int i = 0; i < n; i++) {
-            LatLon p = points.get(i);
-            if (fixed.contains(p) || i == n - 1) {
-                if (start < 0) {
-                    start = i;
-                } else {
-                    douglasPeucker(start, i, epsilon, 0);
-                }
-            }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            // less details
+            e.consume();
+            line.moveToTheEnd();
         }
-        simplePoints = new ArrayList<LatLon>(n);
-        simplePoints.addAll(points);
-        simplePoints.retainAll(used);
-        Main.map.mapView.repaint();
-        used = null;
+              
+
     }
 
     /**
-     * Simplification of the line specified by "points" field.
-     * Remainin points are included to "used" set.
-     * @param start - starting index
-     * @param end - ending index
-     * @param epsilon - min point-to line distance in pixels (tolerance)
-     * @param depth - recursion level
+     * Updates shift and ctrl key states
      */
-    private void douglasPeucker(int start, int end, double epsilon, int depth) {
-        if (depth > 500) return;
-        if (end - start < 1) return; // incorrect invocation
-        LatLon first = points.get(start);
-        LatLon last = points.get(end);
-        Point firstp = getPoint(first);
-        Point lastp = getPoint(last);
-        used.add(first);
-        used.add(last);
-
-        if (end - start < 2) return;
-        
-        int farthest_node = -1;
-        double farthest_dist = 0;
-
-        ArrayList<double[]> new_nodes = new ArrayList<double[]>();
-
-        double d = 0;
-
-        for (int i = start + 1; i < end; i++) {
-            d = pointLineDistance(getPoint(points.get(i)), firstp, lastp);
-            if (d > farthest_dist) {
-                farthest_dist = d;
-                farthest_node = i;
-            }
-        }
-
-        if (farthest_dist > epsilon) {
-            douglasPeucker(start, farthest_node, epsilon, depth + 1);
-            douglasPeucker(farthest_node, end, epsilon, depth + 1);
-        }
+    private void updateKeyModifiers(InputEvent e) {
+        oldCtrl = ctrl;
+        oldShift = shift;
+        ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+        shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
     }
 
-    /** Modfified funclion from LakeWalker
-     * Gets distance from point p1 to line p2-p3
-     */
-    public double pointLineDistance(Point p1, Point p2, Point p3) {
-        double x0 = p1.x;        double y0 = p1.y;
-        double x1 = p2.x;        double y1 = p2.y;
-        double x2 = p3.x;        double y2 = p3.y;
-        if (x2 == x1 && y2 == y1) {
-            return Math.hypot(x1 - x0, y1 - y0);
-        } else {
-            return Math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1))/Math.hypot(x2 - x1,y2 - y1);
-        }
+    @Override
+    protected void updateStatusLine() {
+        Main.map.statusLine.setHelpText(statusText);
+        Main.map.statusLine.repaint();
     }
+// </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Different action helper methods">
+    public void newDrawing() {
+        eps=startingEps;
+        ready=false;
+        line.clear();
+    }
     private void saveAsWay() {
-        List<LatLon> pts=points;
-        if (simplePoints!=null && simplePoints.size()>0) {
-            // we are drawig simplified version, that exists
-            pts=simplePoints;
-        }
-            
+        List<LatLon> pts=line.getPoints();
         int n = pts.size();
         if (n == 0) return;
         
@@ -475,9 +416,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         
         for (LatLon p : pts) {
             Node nd=null;
-            if (fixed.contains(p)) {
+            if (line.isFixed(p)) {
                 // there may be a node with same ccoords!
-                nd = Main.map.mapView.getNearestNode(getPoint(p), OsmPrimitive.isUsablePredicate);
+                nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive.isUsablePredicate);
             }
             if (nd==null) {
                 if (i>0 && p.equals(first)) nd=firstNode; else {
@@ -504,20 +445,23 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         Main.map.selectSelectTool(false);
     }
 
-    private int findClosestPoint(double x, double y, double d) {
-        int n=points.size();
-        int idx=-1;
-        double dist,minD=1e10;
-        for (int i=0;i<n;i++) {
-            dist = Math.sqrt(getPoint(points.get(i)).distanceSq(x,y));
-            if (dist<d && dist<minD) {
-                idx=i;
-                minD=dist;
-            };
-        }
-        return idx;
+    private void repaint() {
+        Main.map.mapView.repaint();
     }
 
+    public void back() {
+        line.undo();
+        repaint();
+    }
+
+    void changeEpsilon(double k) {
+        //System.out.println(tr("Eps={0}", eps));
+        eps*=k;
+        setStatusLine(tr("Eps={0}", eps));
+        line.simplify(eps);
+        repaint();
+    }
+    
     private void setStatusLine(String tr) {
         statusText=tr;
         updateStatusLine();
@@ -547,6 +491,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
         minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
+        eps=startingEps;
     }
     
     void savePrefs() {
@@ -569,11 +514,19 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         
         
     }
+// </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Helper functions">
+    
     private Node getNearestNode(Point point, double maxDist) {
        Node nd = Main.map.mapView.getNearestNode(point, OsmPrimitive.isUsablePredicate);
-       if (nd!=null && getPoint(nd.getCoor()).distance(point)<=maxDist) return nd; 
+       if (nd!=null && line.getPoint(nd.getCoor()).distance(point)<=maxDist) return nd; 
        else return null;
     }
 
+    LatLon getLatLon(MouseEvent e) {
+        return mv.getLatLon(e.getX(), e.getY());
+    }
+// </editor-fold>
+    
 }

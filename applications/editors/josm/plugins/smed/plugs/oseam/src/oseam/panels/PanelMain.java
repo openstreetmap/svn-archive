@@ -80,19 +80,19 @@ public class PanelMain extends JPanel {
 		panelLit.setVisible(false);
 
 		shapeIcon = new JLabel();
-		shapeIcon.setBounds(new Rectangle(265, 0, 130, 185));
+		shapeIcon.setBounds(new Rectangle(220, 0, 130, 185));
 		this.add(shapeIcon, null);
 		lightIcon = new JLabel();
-		lightIcon.setBounds(new Rectangle(265, 0, 125, 185));
+		lightIcon.setBounds(new Rectangle(220, 0, 130, 185));
 		this.add(lightIcon, null);
 		topIcon = new JLabel();
-		topIcon.setBounds(new Rectangle(265, 0, 125, 185));
+		topIcon.setBounds(new Rectangle(220, 0, 130, 185));
 		this.add(topIcon, null);
 		radarIcon = new JLabel();
-		radarIcon.setBounds(new Rectangle(265, 0, 130, 185));
+		radarIcon.setBounds(new Rectangle(220, 0, 130, 185));
 		this.add(radarIcon, null);
 		fogIcon = new JLabel();
-		fogIcon.setBounds(new Rectangle(265, 0, 125, 185));
+		fogIcon.setBounds(new Rectangle(220, 0, 130, 185));
 		this.add(fogIcon, null);
 
 		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);

@@ -59,7 +59,7 @@ public class SelectModWaysAction extends JosmAction {
             for ( OsmPrimitive p : pp) {  // find all affected ways
                 if (p instanceof Way && !p.isDeleted()) ways.add((Way)p);
             }
-            if (!ways.isEmpty()) {
+            if (!ways.isEmpty() && !getCurrentDataSet().getSelected().containsAll(ways)) {
                 getCurrentDataSet().setSelected(ways);
                 lastCmd = cmd; // remember last used command and last selection
                 lastHash = getCurrentDataSet().getSelected().hashCode();

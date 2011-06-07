@@ -272,13 +272,4 @@ public class DrawnPolyLine {
         else fixed.add(p);
     }
 
-    
-
-   
-        
-        
-    
-
-    
-        
 }

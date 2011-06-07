@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Tag;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
@@ -26,10 +27,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.util.*;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.PasteTagsAction.TagPaster;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
@@ -49,15 +52,15 @@ import org.openstreetmap.josm.tools.Shortcut;
 class FastDrawingMode extends MapMode implements MapViewPaintable,
         AWTEventListener {
     private static final String SIMPLIFYMODE_MESSAGE=
-            "Press Enter to simplify or save, Up/Down to tune simplification";
+            "Press Enter to simplify or save, Ctrl-Enter to save with tags, Up/Down to tune simplification";
     private static final String DRAWINGMODE_MESSAGE=
-    "Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to start new line";
+    "Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to delete, Enter to simplify or save, Ctrl-Shift-Click to start new line";
     
-    private static final Color COLOR_FIXED = Color.green;
-    private static final Color COLOR_NORMAL = Color.white;
-    private static final Color COLOR_DELETE = Color.red;
-    private static final Color COLOR_SELECTEDFRAGMENT = Color.red;
-    private static final Color COLOR_EDITEDFRAGMENT = Color.orange;
+    private Color COLOR_FIXED;
+    private Color COLOR_NORMAL;
+    private Color COLOR_DELETE;
+    private Color COLOR_SELECTEDFRAGMENT;
+    private Color COLOR_EDITEDFRAGMENT;
     
     private double maxDist;
     private double epsilonMult;
@@ -190,7 +193,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 p1 = line.getPoint(pp1);
                 pp2 = it2.next();
                 p2 = line.getPoint(pp2);
-                if (highlighted==pp1) {lineColor=COLOR_SELECTEDFRAGMENT;}
+                if (shift && highlighted==pp1 && nearestIdx<0) {lineColor=COLOR_SELECTEDFRAGMENT;}
                 if (line.isLastPoint(i)) { lineColor=COLOR_EDITEDFRAGMENT; }
                 g.setColor(lineColor);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
@@ -211,7 +214,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     g.setStroke(strokeForOriginal);
                 }
                 if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
-                    // highlight node to delete
+                    // highlight node to toggle fixation
                     g.setStroke(strokeForDelete);
                     g.setColor( line.isFixed(pp2) ? COLOR_NORMAL: COLOR_FIXED);
                     g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
@@ -292,8 +295,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
         drawing = false;
-        if (!ready) setStatusLine(tr(DRAWINGMODE_MESSAGE)
-                        + tr(SIMPLIFYMODE_MESSAGE));
+        highlighted=null;
+        if (!ready) setStatusLine(tr(DRAWINGMODE_MESSAGE));
         repaint();
     }
 
@@ -435,6 +438,17 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             w.addNode(nd);
             i++;
         }
+        if (ctrl) {
+            // paste tags - from ctrl-shift-v
+            Set <OsmPrimitive> ts = new HashSet<OsmPrimitive>();
+            ts.add(w);
+            TagPaster tp = new TagPaster(Main.pasteBuffer.getDirectlyAdded(), ts);
+            List<Tag> execute = tp.execute();
+            Map<String,String> tgs=new HashMap<String,String>();
+            for (Tag t : execute) {
+                w.put(t.getKey(), t.getValue());
+            }
+        }
         cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
         Main.main.undoRedo.add(c);
@@ -486,6 +500,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     
     void loadPrefs() {
+        COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
+        COLOR_EDITEDFRAGMENT = Main.pref.getColor("fastdraw.color.edit", Color.orange);
+        COLOR_FIXED = Main.pref.getColor("fastdraw.color.fixed", Color.green);
+        COLOR_NORMAL = Main.pref.getColor("fastdraw.color.normal", Color.red);
+        COLOR_SELECTEDFRAGMENT = Main.pref.getColor("fastdraw.color.select", Color.blue);
         maxDist = Main.pref.getDouble("fastdraw.maxdist", 5);
         epsilonMult = Main.pref.getDouble("fastdraw.epsilonmult", 1.1);
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
@@ -495,6 +514,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }
     
     void savePrefs() {
+         Main.pref.putColor("fastdraw.color.delete", COLOR_DELETE );
+         Main.pref.putColor("fastdraw.color.edit", COLOR_EDITEDFRAGMENT);
+         Main.pref.putColor("fastdraw.color.fixed", COLOR_FIXED);
+         Main.pref.putColor("fastdraw.color.normal", COLOR_NORMAL);
+         Main.pref.putColor("fastdraw.color.select", COLOR_SELECTEDFRAGMENT);
          Main.pref.putDouble("fastdraw.maxdist", maxDist);
          Main.pref.putDouble("fastdraw.epsilonmult", epsilonMult);
          //Main.pref.putDouble("fastdraw.deltasearch", deltaLatLon);

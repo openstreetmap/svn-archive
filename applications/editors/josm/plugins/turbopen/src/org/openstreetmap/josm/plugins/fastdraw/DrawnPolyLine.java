@@ -19,7 +19,11 @@ public class DrawnPolyLine {
     private Set<LatLon> fixed = new HashSet<LatLon>();
     
     private int lastIdx;
+    private boolean closedFlag;
 
+    public DrawnPolyLine() {
+        clear();
+    }
     public void setMv(MapView mv) {
         this.mv = mv;
     }
@@ -55,6 +59,7 @@ public class DrawnPolyLine {
         points.clear();
         used=null;
         lastIdx=0;
+        closedFlag=false;
         fixed.clear();
         simplePoints=null;
     }
@@ -65,7 +70,6 @@ public class DrawnPolyLine {
         points.remove(lastIdx);
         lastIdx--;
         }
-        
     }
     
     void fixPoint(LatLon p) {
@@ -77,6 +81,7 @@ public class DrawnPolyLine {
         fixed.add(coor);
     }
     void addLast(LatLon coor) {
+        if (closedFlag && lastIdx>points.size()-1) return;
         if (lastIdx>=points.size()-1) {
             //System.out.println("add last "+points.size());
             points.addLast(coor);if (points.size()>1) lastIdx++;
@@ -176,6 +181,10 @@ public class DrawnPolyLine {
 
     void closeLine() {
         points.add(points.getFirst());
+        closedFlag=true;
+    }
+    boolean isClosed() {
+        return closedFlag;
     }
     
     void deleteNode(int idx) {
@@ -200,6 +209,7 @@ public class DrawnPolyLine {
                 return;
             }if (f &&(!it.hasNext())) {
                 // if end of whole line reached
+                closedFlag=false;
                 it.remove();
                 lastIdx=points.size()-1;
                 return;
@@ -270,6 +280,22 @@ public class DrawnPolyLine {
         LatLon p = points.get(idx);
         if (fixed.contains(p)) fixed.remove(p);
         else fixed.add(p);
+    }
+
+    void moveNode(int dragNode, LatLon coor) {
+        LatLon dragged = points.get(dragNode);
+        // points.getLast().equals(points.getFirst()
+        if (closedFlag && points.getFirst().equals(dragged)) {
+            // move both ends
+            points.set(0, coor);
+            points.set(points.size()-1, coor);
+        } else {
+            points.set(dragNode, coor);
+        }
+        if (fixed.contains(dragged)) {
+                fixed.remove(dragged);
+                fixed.add(coor);
+         }
     }
 
 }

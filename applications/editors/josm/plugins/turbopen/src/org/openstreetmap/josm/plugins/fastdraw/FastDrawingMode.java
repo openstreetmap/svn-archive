@@ -81,7 +81,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private double eps;
     private final Stroke strokeForSimplified;
     private final Stroke strokeForOriginal;
-    private boolean ready;
     private final Cursor cursorDraw;
     private final Cursor cursorCtrl;
     private final Cursor cursorShift;
@@ -91,6 +90,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private LatLon highlighted;
     private int nearestIdx;
     private Stroke strokeForDelete;
+    private int dragNode=-1;
     
 
     FastDrawingMode(MapFrame mapFrame) {
@@ -194,7 +194,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 pp2 = it2.next();
                 p2 = line.getPoint(pp2);
                 if (shift && highlighted==pp1 && nearestIdx<0) {lineColor=COLOR_SELECTEDFRAGMENT;}
-                if (line.isLastPoint(i)) { lineColor=COLOR_EDITEDFRAGMENT; }
+                if (!shift && line.isLastPoint(i)) { lineColor=COLOR_EDITEDFRAGMENT; }
                 g.setColor(lineColor);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
   //                  g.fillOval(p2.x - 5, p2.y - 5, 11, 11);
@@ -205,20 +205,22 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 } else {
                     g.fillRect(p2.x - 1, p2.y - 1, 3, 3);
                 }
-                if (shift && !line.wasSimplified() && nearestIdx==i+1 ) {
-                    // highlight node to delete
-                    g.setStroke(strokeForDelete);
-                    g.setColor(COLOR_DELETE);
-                    g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
-                    g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
-                    g.setStroke(strokeForOriginal);
-                }
-                if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
-                    // highlight node to toggle fixation
-                    g.setStroke(strokeForDelete);
-                    g.setColor( line.isFixed(pp2) ? COLOR_NORMAL: COLOR_FIXED);
-                    g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
-                    g.setStroke(strokeForOriginal);
+                if (!drawing) {
+                    if (shift && !line.wasSimplified() && nearestIdx==i+1 ) {
+                        // highlight node to delete
+                        g.setStroke(strokeForDelete);
+                        g.setColor(COLOR_DELETE);
+                        g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
+                        g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
+                        g.setStroke(strokeForOriginal);
+                    }
+                    if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
+                        // highlight node to toggle fixation
+                        g.setStroke(strokeForDelete);
+                        g.setColor( line.isFixed(pp2) ? COLOR_NORMAL: COLOR_FIXED);
+                        g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
+                        g.setStroke(strokeForOriginal);
+                    }
                 }
             }
         }
@@ -246,11 +248,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         
         
         int idx=line.findClosestPoint(e.getPoint(),maxDist);
-        if (idx==0) {
+        if (idx==0 && !line.isClosed()) {
             line.closeLine();
             // the way should become closed
             drawing=false;
-            ready=true;
+            dragNode=0;
             updateCursor();
             return;
         } 
@@ -266,10 +268,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 // toggle fixed point
                 line.toggleFixed(idx);                
             }
+            // node dragging
+            dragNode=idx;
             return;
         }
-        
-        if (ready) { setStatusLine(tr(SIMPLIFYMODE_MESSAGE)); return;  }
+
+        //if (line.isClosed()) { setStatusLine(tr(SIMPLIFYMODE_MESSAGE));return;  }
         drawing = true;
         
         LatLon p = getLatLon(e);
@@ -294,9 +298,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void mouseReleased(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
+        dragNode = -1;
         drawing = false;
         highlighted=null;
-        if (!ready) setStatusLine(tr(DRAWINGMODE_MESSAGE));
+        if (!line.isClosed()) setStatusLine(tr(DRAWINGMODE_MESSAGE));
         repaint();
     }
 
@@ -315,6 +320,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         nearestIdx=line.findClosestPoint(e.getPoint(),maxDist);
         
         if (!drawing) {
+            if (dragNode>=0) {
+                line.moveNode(dragNode,getLatLon(e));
+                repaint();
+                return;
+            }
+
             if (shift) {
                 // find line fragment to highlight
                 LatLon h2=line.findBigSegment(e.getPoint());
@@ -325,7 +336,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             }
             return;
         }
-        if (ready) setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
+        if (line.isClosed()) setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
         
         // do not draw points close to existing points - we do not want self-intersections
         if (nearestIdx>=0) { return; }
@@ -403,7 +414,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 // <editor-fold defaultstate="collapsed" desc="Different action helper methods">
     public void newDrawing() {
         eps=startingEps;
-        ready=false;
         line.clear();
     }
     private void saveAsWay() {
@@ -531,7 +541,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     private void updateCursor() {
         if (shift) Main.map.mapView.setCursor(cursorShift); else
-        if (ready) Main.map.mapView.setCursor(cursorReady); else
+        if (line.isClosed()) Main.map.mapView.setCursor(cursorReady); else
         if (ctrl) Main.map.mapView.setCursor(cursorCtrl); else
         if (nearpoint) Main.map.mapView.setCursor(cursorCtrl); else
         Main.map.mapView.setCursor(cursorDraw);

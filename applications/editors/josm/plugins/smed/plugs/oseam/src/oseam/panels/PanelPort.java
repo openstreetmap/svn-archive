@@ -21,8 +21,10 @@ public class PanelPort extends JPanel {
 
 	private OSeaMAction dlg;
 	private ButtonGroup regionButtons = new ButtonGroup();
-	public JRadioButton regionAButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionAButton.png")));
-	public JRadioButton regionBButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionBButton.png")));
+	public JRadioButton regionAButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/RegionAButton.png")));
+	public JRadioButton regionBButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/RegionBButton.png")));
 	private ActionListener alRegion = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			regionAButton.setBorderPainted(regionAButton.isSelected());
@@ -31,14 +33,22 @@ public class PanelPort extends JPanel {
 		}
 	};
 	private ButtonGroup shapeButtons = new ButtonGroup();
-	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
-	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
-	public JRadioButton canButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanButton.png")));
-	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
-	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
-	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
-	public JRadioButton perchButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PerchPButton.png")));
-	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
+	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/PillarButton.png")));
+	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/SparButton.png")));
+	public JRadioButton canButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/CanButton.png")));
+	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/FloatButton.png")));
+	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/BeaconButton.png")));
+	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/TowerButton.png")));
+	public JRadioButton perchButton = new JRadioButton(new ImageIcon(getClass()
+			.getResource("/images/PerchPButton.png")));
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(
+			Shp.class);
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -61,13 +71,27 @@ public class PanelPort extends JPanel {
 		this.setLayout(null);
 		this.add(getRegionButton(regionAButton, 0, 2, 34, 30, "RegionA"), null);
 		this.add(getRegionButton(regionBButton, 0, 32, 34, 30, "RegionB"), null);
-		this.add(getShapeButton(pillarButton, 0, 64, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(sparButton, 0, 96, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(canButton, 0, 128, 34, 32, "Can", Shp.CAN, Obj.BOYLAT), null);
-		this.add(getShapeButton(floatButton, 35, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 35, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNLAT), null);
-		this.add(getShapeButton(towerButton, 35, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNLAT), null);
-		this.add(getShapeButton(perchButton, 35, 96, 34, 32, "Perch", Shp.PERCH, Obj.BCNLAT), null);
+		this.add(
+				getShapeButton(pillarButton, 0, 64, 34, 32, "Pillar", Shp.PILLAR,
+						Obj.BOYLAT), null);
+		this.add(
+				getShapeButton(sparButton, 0, 96, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT),
+				null);
+		this.add(
+				getShapeButton(canButton, 0, 128, 34, 32, "Can", Shp.CAN, Obj.BOYLAT),
+				null);
+		this.add(
+				getShapeButton(floatButton, 35, 0, 34, 32, "Float", Shp.FLOAT,
+						Obj.LITFLT), null);
+		this.add(
+				getShapeButton(beaconButton, 35, 32, 34, 32, "Beacon", Shp.BEACON,
+						Obj.BCNLAT), null);
+		this.add(
+				getShapeButton(towerButton, 35, 64, 34, 32, "Tower", Shp.TOWER,
+						Obj.BCNLAT), null);
+		this.add(
+				getShapeButton(perchButton, 35, 96, 34, 32, "Perch", Shp.PERCH,
+						Obj.BCNLAT), null);
 	}
 
 	public void clearSelections() {
@@ -75,7 +99,8 @@ public class PanelPort extends JPanel {
 		alShape.actionPerformed(null);
 	}
 
-	private JRadioButton getRegionButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+	private JRadioButton getRegionButton(JRadioButton button, int x, int y,
+			int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));
@@ -84,7 +109,8 @@ public class PanelPort extends JPanel {
 		return button;
 	}
 
-	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {
+	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w,
+			int h, String tip, Shp shp, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

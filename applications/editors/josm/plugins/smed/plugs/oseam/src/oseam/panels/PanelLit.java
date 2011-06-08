@@ -8,7 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.JFrame;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -21,6 +23,7 @@ import oseam.seamarks.SeaMark.Ent;
 public class PanelLit extends JPanel {
 
 	private OSeaMAction dlg;
+	public PanelSectors panelSector;
 	public PanelCol panelCol;
 	public PanelChr panelChr;
 	public JLabel groupLabel;
@@ -57,6 +60,9 @@ public class PanelLit extends JPanel {
 
 	public PanelLit(OSeaMAction dia) {
 		dlg = dia;
+		panelSector = new PanelSectors();
+		panelSector.setAlwaysOnTop(true);
+		panelSector.setLocation(450, 0);
 		panelChr = new PanelChr(dlg);
 		panelChr.setBounds(new Rectangle(0, 0, 88, 160));
 		panelCol = new PanelCol(dlg, Ent.LIGHT);
@@ -65,20 +71,27 @@ public class PanelLit extends JPanel {
 		this.setLayout(null);
 		this.add(panelChr, null);
 		this.add(panelCol, null);
-		
+
 		alType = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				singleButton.setBorderPainted(singleButton.isSelected());
 				sectorButton.setBorderPainted(sectorButton.isSelected());
+				if (sectorButton.isSelected()) {
+					panelSector.setVisible(true);
+				} else {
+					panelSector.setVisible(false);
+				}
 				dlg.mark.paintSign();
 			}
 		};
 		typeButtons = new ButtonGroup();
-		singleButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SingleButton.png")));
+		singleButton = new JRadioButton(new ImageIcon(getClass().getResource(
+				"/images/SingleButton.png")));
 		this.add(getTypeButton(singleButton, 280, 125, 34, 30, "Single"), null);
-		sectorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SectorButton.png")));
+		sectorButton = new JRadioButton(new ImageIcon(getClass().getResource(
+				"/images/SectorButton.png")));
 		this.add(getTypeButton(sectorButton, 315, 125, 34, 30, "Sector"), null);
-		
+
 		alGroupBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = groupBox.getText();
@@ -91,13 +104,14 @@ public class PanelLit extends JPanel {
 		groupBox.setBounds(new Rectangle(135, 20, 40, 20));
 		this.add(groupBox, null);
 		groupBox.addActionListener(alGroupBox);
-		
+
 		alPeriodBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = periodBox.getText();
 			}
 		};
-		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
+		periodLabel = new JLabel(Messages.getString("Period"),
+				SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(123, 40, 65, 20));
 		this.add(periodLabel, null);
 		periodBox = new JTextField();
@@ -105,13 +119,14 @@ public class PanelLit extends JPanel {
 		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(periodBox, null);
 		periodBox.addActionListener(alPeriodBox);
-		
+
 		alHeightBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = heightBox.getText();
 			}
 		};
-		heightLabel = new JLabel(Messages.getString("Height"), SwingConstants.CENTER);
+		heightLabel = new JLabel(Messages.getString("Height"),
+				SwingConstants.CENTER);
 		heightLabel.setBounds(new Rectangle(123, 80, 65, 20));
 		this.add(heightLabel, null);
 		heightBox = new JTextField();
@@ -119,7 +134,7 @@ public class PanelLit extends JPanel {
 		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(heightBox, null);
 		heightBox.addActionListener(alHeightBox);
-		
+
 		alRangeBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = rangeBox.getText();
@@ -133,13 +148,14 @@ public class PanelLit extends JPanel {
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(rangeBox, null);
 		rangeBox.addActionListener(alRangeBox);
-		
+
 		alSequenceBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = sequenceBox.getText();
 			}
 		};
-		sequenceLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
+		sequenceLabel = new JLabel(Messages.getString("Sequence"),
+				SwingConstants.CENTER);
 		sequenceLabel.setBounds(new Rectangle(188, 120, 80, 20));
 		this.add(sequenceLabel, null);
 		sequenceBox = new JTextField();
@@ -147,12 +163,13 @@ public class PanelLit extends JPanel {
 		sequenceBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(sequenceBox, null);
 		sequenceBox.addActionListener(alSequenceBox);
-		
+
 		alCategoryBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
+		categoryLabel = new JLabel(Messages.getString("Category"),
+				SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(185, 0, 165, 20));
 		this.add(categoryLabel, null);
 		categoryBox = new JComboBox();
@@ -161,12 +178,13 @@ public class PanelLit extends JPanel {
 		categoryBox.addActionListener(alCategoryBox);
 		categoryBox.addItem(Messages.getString("NoneSpecified"));
 		categoryBox.addItem(Messages.getString("Vert2"));
-		
+
 		alVisibilityBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		visibilityLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
+		visibilityLabel = new JLabel(Messages.getString("Visibility"),
+				SwingConstants.CENTER);
 		visibilityLabel.setBounds(new Rectangle(185, 40, 165, 20));
 		this.add(visibilityLabel, null);
 		visibilityBox = new JComboBox();
@@ -177,12 +195,13 @@ public class PanelLit extends JPanel {
 		visibilityBox.addItem(Messages.getString("Intensified"));
 		visibilityBox.addItem(Messages.getString("Unintensified"));
 		visibilityBox.addItem(Messages.getString("PartiallyObscured"));
-		
+
 		alExhibitionBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		exhibitionLabel = new JLabel(Messages.getString("Exhibition"), SwingConstants.CENTER);
+		exhibitionLabel = new JLabel(Messages.getString("Exhibition"),
+				SwingConstants.CENTER);
 		exhibitionLabel.setBounds(new Rectangle(280, 80, 70, 20));
 		this.add(exhibitionLabel, null);
 		exhibitionBox = new JComboBox();
@@ -193,13 +212,14 @@ public class PanelLit extends JPanel {
 		exhibitionBox.addItem(Messages.getString("Day"));
 		exhibitionBox.addItem(Messages.getString("Night"));
 		exhibitionBox.addItem(Messages.getString("Fog"));
-		
+
 		alOrientationBox = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				String str = orientationBox.getText();
 			}
 		};
-		orientationLabel = new JLabel(Messages.getString("Orientation"), SwingConstants.CENTER);
+		orientationLabel = new JLabel(Messages.getString("Orientation"),
+				SwingConstants.CENTER);
 		orientationLabel.setBounds(new Rectangle(188, 80, 80, 20));
 		this.add(orientationLabel, null);
 		orientationBox = new JTextField();
@@ -209,7 +229,8 @@ public class PanelLit extends JPanel {
 		orientationBox.addActionListener(alOrientationBox);
 	}
 
-	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w, int h, String tip) {
+	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w,
+			int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

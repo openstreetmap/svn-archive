@@ -62,6 +62,10 @@ public class PopupFactory {
             close.setAction(new CloseIssueAction(dialog));
             close.setIcon(OsbPlugin.loadIcon("icon_valid16.png"));
             issuePopup.add(close);
+            JMenuItem openInBrowser = new JMenuItem();
+            openInBrowser.setAction(new OpenInBrowserAction(dialog));
+            openInBrowser.setIcon(OsbPlugin.loadIcon("internet-web-browser.png"));
+            issuePopup.add(openInBrowser);
         }
         return issuePopup;
     }
@@ -74,13 +78,17 @@ public class PopupFactory {
             aca.setEnabled(false);
             add.setAction(aca);
             add.setIcon(OsbPlugin.loadIcon("add_comment16.png"));
+            fixedPopup.add(add);
             JMenuItem close = new JMenuItem();
             CloseIssueAction cia = new CloseIssueAction(dialog);
             cia.setEnabled(false);
             close.setAction(cia);
             close.setIcon(OsbPlugin.loadIcon("icon_valid16.png"));
-            fixedPopup.add(add);
             fixedPopup.add(close);
+            JMenuItem openInBrowser = new JMenuItem();
+            openInBrowser.setAction(new OpenInBrowserAction(dialog));
+            openInBrowser.setIcon(OsbPlugin.loadIcon("internet-web-browser.png"));
+            fixedPopup.add(openInBrowser);
         }
         return fixedPopup;
     }

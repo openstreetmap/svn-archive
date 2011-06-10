@@ -60,6 +60,8 @@ import org.openstreetmap.josm.tools.UrlLabel;
 
 public class RoutePatternAction extends JosmAction {
 
+  public static int STOPLIST_ROLE_COLUMN = 2;
+
   private class RoutesLSL implements ListSelectionListener {
     RoutePatternAction root = null;
 
@@ -260,11 +262,12 @@ public class RoutePatternAction extends JosmAction {
   };
 
   private class StoplistTableModel extends DefaultTableModel {
+
     public Vector<Node> nodes = new Vector<Node>();
 
     public boolean isCellEditable(int row, int column) {
-      if (column != 1)
-    return false;
+      if (column != STOPLIST_ROLE_COLUMN)
+        return false;
       return true;
     }
 
@@ -281,26 +284,31 @@ public class RoutePatternAction extends JosmAction {
     }
 
     public void insertRow(int insPos, Node node, String role) {
-      String[] buf = { "", "" };
+      String[] buf = { "", "", "" };
       String curName = node.get("name");
       if (curName != null)
       {
-    buf[0] = curName;
+        buf[0] = curName;
       }
       else
       {
-    buf[0] = "[ID] " + (new Long(node.getId())).toString();
+        buf[0] = "[ID] " + (new Long(node.getId())).toString();
       }
-      buf[1] = role;
+      String curRef = node.get("ref");
+      if (curRef != null)
+      {
+        buf[1] = curRef;
+      }
+      buf[STOPLIST_ROLE_COLUMN] = role;
       if (insPos == -1)
       {
-    nodes.addElement(node);
-    super.addRow(buf);
+        nodes.addElement(node);
+        super.addRow(buf);
       }
       else
       {
-    nodes.insertElementAt(node, insPos);
-    super.insertRow(insPos, buf);
+        nodes.insertElementAt(node, insPos);
+        super.insertRow(insPos, buf);
       }
     }
 
@@ -838,6 +846,7 @@ public class RoutePatternAction extends JosmAction {
       stoplistTable = new JTable();
       stoplistData = new StoplistTableModel();
       stoplistData.addColumn("Name/Id");
+      stoplistData.addColumn("Ref");
       stoplistData.addColumn("Role");
       stoplistTable.setModel(stoplistData);
       /*JScrollPane*/ tableSP = new JScrollPane(stoplistTable);
@@ -845,8 +854,8 @@ public class RoutePatternAction extends JosmAction {
       comboBox.addItem("");
       comboBox.addItem("forward_stop");
       comboBox.addItem("backward_stop");
-      stoplistTable.getColumnModel().getColumn(1)
-      .setCellEditor(new DefaultCellEditor(comboBox));
+      stoplistTable.getColumnModel().getColumn(STOPLIST_ROLE_COLUMN)
+                   .setCellEditor(new DefaultCellEditor(comboBox));
       stoplistData.addTableModelListener(new StoplistTableModelListener());
 
       layoutCons.gridx = 0;

@@ -60,9 +60,6 @@ public class PanelLit extends JPanel {
 
 	public PanelLit(OSeaMAction dia) {
 		dlg = dia;
-		panelSector = new PanelSectors();
-		panelSector.setAlwaysOnTop(true);
-		panelSector.setLocation(450, 0);
 		panelChr = new PanelChr(dlg);
 		panelChr.setBounds(new Rectangle(0, 0, 88, 160));
 		panelCol = new PanelCol(dlg, Ent.LIGHT);
@@ -77,8 +74,18 @@ public class PanelLit extends JPanel {
 				singleButton.setBorderPainted(singleButton.isSelected());
 				sectorButton.setBorderPainted(sectorButton.isSelected());
 				if (sectorButton.isSelected()) {
+					if (panelSector == null) {
+						panelSector = new PanelSectors(dlg.mark.light);
+						panelSector.setAlwaysOnTop(true);
+						panelSector.setLocation(450, 0);
+					}
+					if (dlg.mark.light.getRowCount() == 1) {
+						dlg.mark.light.addSector(1);
+						dlg.mark.setSectored(true);
+					}
 					panelSector.setVisible(true);
 				} else {
+					dlg.mark.setSectored(false);
 					panelSector.setVisible(false);
 				}
 				dlg.mark.paintSign();

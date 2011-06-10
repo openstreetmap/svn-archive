@@ -1,5 +1,7 @@
 package oseam.panels;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,6 +10,9 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
+import oseam.seamarks.Light;
+import oseam.seamarks.SeaMark;
+
 public class PanelSectors extends JFrame {
 	
 	public JPanel panel;
@@ -15,39 +20,7 @@ public class PanelSectors extends JFrame {
 	public JButton plusButton;
 	public JTable table;
 	
-	class TableModel extends AbstractTableModel {
-
-		private String[] columns = { "Sector", "Start", "End", "Colour",
-				"Character", "Group", "Period", "Height", "Range", "Visibility" };
-		private Object[][] data = { { new Integer(1), "", "", "", "", "", "", "", "", "" } };
-
-		public String getColumnName(int col) {
-			return columns[col].toString();
-		}
-
-		public int getColumnCount() {
-			return columns.length;
-		}
-
-		public int getRowCount() {
-			return data.length;
-		}
-
-		public Object getValueAt(int row, int col) {
-			return data[row][col];
-		}
-
-		public boolean isCellEditable(int row, int col) {
-			return (col > 0);
-		}
-
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = value;
-			fireTableCellUpdated(row, col);
-		}
-}
-	
-	public PanelSectors() {
+	public PanelSectors(Light light) {
 		super("Sector Table");
 		panel = new JPanel();
 		this.setSize(700, 100);
@@ -57,7 +30,7 @@ public class PanelSectors extends JFrame {
 		minusButton.setBounds(0, 0, 32, 34);
 		plusButton = new JButton(new ImageIcon(getClass().getResource("/images/PlusButton.png")));
 		plusButton.setBounds(0, 34, 32, 34);
-		table = new JTable(new TableModel());
+		table = new JTable(light);
 		JScrollPane tablePane = new JScrollPane(table);
 		tablePane.setBounds(40, 0, 660, 34);
 		panel.setLayout(null);

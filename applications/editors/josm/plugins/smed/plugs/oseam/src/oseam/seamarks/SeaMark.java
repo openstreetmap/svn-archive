@@ -439,7 +439,7 @@ public class SeaMark {
 			setRange("");
 			setBearing1("");
 			setBearing2("");
-			setRadius("");
+			setVisibility(Vis.UNKNOWN);
 		}
 	}
 
@@ -452,7 +452,7 @@ public class SeaMark {
 	public void setsectorIndex(int sector) {
 		sectorIndex = sector;
 	}
-
+	
 	public enum Chr {
 		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK,
 		ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
@@ -488,6 +488,8 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
 		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
 	}
+	
+	public Light light = new Light();
 	
 	private String[] LightChar = new String[10];
 
@@ -595,18 +597,32 @@ public class SeaMark {
 		Bearing2[sectorIndex] = bearing;
 	}
 
-	private String[] Radius = new String[10];
+	public enum Vis { UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS }
+	public static final Map<EnumSet<Vis>, String> VisMAP = new HashMap<EnumSet<Vis>, String>();
+	static {
+		VisMAP.put(EnumSet.of(Vis.UNKNOWN), "");
+		VisMAP.put(EnumSet.of(Vis.HIGH), "high");
+		VisMAP.put(EnumSet.of(Vis.LOW), "low");
+		VisMAP.put(EnumSet.of(Vis.FAINT), "faint");
+		VisMAP.put(EnumSet.of(Vis.INTEN), "intensified");
+		VisMAP.put(EnumSet.of(Vis.UNINTEN), "unintensified");
+		VisMAP.put(EnumSet.of(Vis.REST), "restricted");
+		VisMAP.put(EnumSet.of(Vis.OBS), "obscured");
+		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
+	}
+	
+	private Vis[] Visibility = new Vis[10];
 
-	public String getRadius() {
-		if (Radius[sectorIndex] == null)
-			return (Radius[0]);
-		return Radius[sectorIndex];
+	public Vis getVisibility() {
+		if (Visibility[sectorIndex] == null)
+			return (Visibility[0]);
+		return Visibility[sectorIndex];
 	}
 
-	public void setRadius(String radius) {
+	public void setVisibility(Vis visibility) {
 		if (sectorIndex == 0)
-			Radius = new String[10];
-		Radius[sectorIndex] = radius;
+			Visibility = new Vis[10];
+		Visibility[sectorIndex] = visibility;
 	}
 
 	private String[] LightPeriod = new String[10];
@@ -925,8 +941,6 @@ public class SeaMark {
 						Bearing1[index] = values[1];
 					if (values.length > 2)
 						Bearing2[index] = values[2];
-					if (values.length > 3)
-						Radius[index] = values[3];
 				} else {
 					index = 0;
 				}
@@ -1190,22 +1204,22 @@ public class SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:range", Range[0]));
 			for (int i = 1; i < 10; i++) {
 				if ((colour = lightColour[i]) != Col.UNKNOWN)
-					if (colour.equals("R")) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "red"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "red:" + Bearing1[i] + ":"
-							    + Bearing2[i] + ":" + Radius[i]));
-					} else if (colour.equals("G")) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "green"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "green:" + Bearing1[i] + ":"
-							    + Bearing2[i] + ":" + Radius[i]));
-					} else if (colour.equals("W")) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "white"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "white:" + Bearing1[i] + ":"
-							    + Bearing2[i] + ":" + Radius[i]));
-					}
+//					if (colour.equals("R")) {
+//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "red"));
+//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
+//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "red:" + Bearing1[i] + ":"
+//							    + Bearing2[i] + ":" + Radius[i]));
+//					} else if (colour.equals("G")) {
+//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "green"));
+//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
+//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "green:" + Bearing1[i] + ":"
+//							    + Bearing2[i] + ":" + Radius[i]));
+//					} else if (colour.equals("W")) {
+//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "white"));
+//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
+//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "white:" + Bearing1[i] + ":"
+//							    + Bearing2[i] + ":" + Radius[i]));
+//					}
 				if (LightPeriod[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":period", LightPeriod[i]));
 				if (LightChar[i] != null)

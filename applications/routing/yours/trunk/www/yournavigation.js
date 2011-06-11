@@ -230,8 +230,8 @@ function init() {
 	
 	//map.events.register("changebaselayer", map, onChangeBaseLayer(this));
 			
-	layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-	layerCycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map", {
+	var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+	var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map", {
 		displayOutsideMaxExtent: true,
 		wrapDateLine: true
 	});
@@ -251,16 +251,16 @@ function init() {
 		var wlonlat = new OpenLayers.LonLat();
 		var zlonlat = new OpenLayers.LonLat();
 		var zlevel = -1;
-		params = location.search.substr(1).split('&');
+		var params = location.search.substr(1).split('&');
 		for (var i = 0; i < params.length; i++) {
-			fields = params[i].split('=');
+			var fields = params[i].split('=');
 			
 			switch (fields[0]) {
 				case 'flat':
 					flonlat.lat = parseFloat(fields[1]);
 					break;
 				case 'flon':
-					value = parseFloat(fields[1]);
+					var value = parseFloat(fields[1]);
 					if (value !== 0) {
 						flonlat.lon = value;
 						myFirstRoute.selectWaypoint(myFirstRoute.Start.position);
@@ -271,7 +271,7 @@ function init() {
 					wlonlat.lat = parseFloat(fields[1]);
 					break;
 				case 'wlon':
-					value = parseFloat(fields[1]);
+					var value = parseFloat(fields[1]);
 					if (value !== 0) {
 						wlonlat.lon = value;
 						waypointAdd();
@@ -282,7 +282,7 @@ function init() {
 					tlonlat.lat = parseFloat(fields[1]);
 					break;
 				case 'tlon':
-					value = parseFloat(fields[1]);
+					var value = parseFloat(fields[1]);
 					if (value !== 0) {
 						tlonlat.lon = value;
 						myFirstRoute.selectWaypoint(myFirstRoute.End.position);
@@ -317,7 +317,7 @@ function init() {
 					zlonlat.lat = parseFloat(fields[1]);
 					break;
 				case 'zlon':
-					value = parseFloat(fields[1]);
+					var value = parseFloat(fields[1]);
 					if (value !== 0) {
 						zlonlat.lon = value;
 						zlonlat.transform(myFirstMap.displayProjection, myFirstMap.projection);
@@ -378,6 +378,7 @@ function init() {
 	myFirstMap.addControl(permalink);
 	permalink.element.textContent = 'Edit map';
 	
+	
 	// Setup file drag-n-drop listeners.
 	if (window.FileReader) {
 		var dropZone = document.getElementById('content');
@@ -416,7 +417,7 @@ function onChangeBaseLayer(e) {
 */
 
 function myRouteCallback(code, result) {
-	message_div = $('#status');
+	var message_div = $('#status');
 	switch (code) {
 		case Yours.status.routeFinished:
 			$('#directions').html("Not implemented yet");
@@ -496,14 +497,10 @@ function myRouteCallback(code, result) {
 /*
  * Called when a namefinder result is returned
  */
-function myCallback(result) {
+function namefinderCallback(message_div, wait_image, result) {
 	if (result == "OK") {
-		if (undefined !== wait_image) {
-			wait_image.css("visibility", "hidden");
-		}
-		if (undefined !== message_div) {
-			message_div.html('');
-		}
+		wait_image.css("visibility", "hidden");
+		message_div.html('');
 	} else {
 		wait_image.css("visibility", "hidden");
 		message_div.html('<font color="red">' + result + '</font>');
@@ -536,12 +533,14 @@ function typeChange(element) {
 function elementChange(element) {
 	if (element.value.length > 0) {
 		// Try to find element in waypoint list
-		viaNr = element.parentNode.attributes['waypointnr'].value;
-		wait_image = $(".via_image", element.parentNode);
-		message_div = $(".via_message", element.parentNode);
+		var viaNr = element.parentNode.attributes['waypointnr'].value;
+		var wait_image = $(".via_image", element.parentNode);
+		var message_div = $(".via_message", element.parentNode);
 		myFirstRoute.selectWaypoint(viaNr);
 
 		wait_image.css("visibility", "visible");
+
+		var myCallback = function(result) { namefinderCallback(message_div, wait_image, result); }
 		// Choose between Namefinder or Nominatim
 		//Yours.NamefinderLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstWayPoint, myFirstMap, myCallback);
 		Yours.NominatimLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), myFirstRoute.Selected, myFirstMap, myCallback);
@@ -588,16 +587,16 @@ function elementClick(element) {
 
 function prepareDrawRoute() {
 	$('#feature_info').empty();
-				
+	
 	for (var i = 0; i < document.forms['parameters'].elements.length; i++) {
-		element = document.forms['parameters'].elements[i];
+		var element = document.forms['parameters'].elements[i];
 		if (element.checked === true) {
 			myFirstRoute.parameters.type = element.value;
 			break;
 		}
 	}
 	for (var j = 0; j < document.forms['options'].elements.length; j++) {
-		element = document.forms['options'].elements[j];
+		var element = document.forms['options'].elements[j];
 		if (element.value == 'fast' &&
 			element.checked === true) {
 			myFirstRoute.parameters.fast = '1';
@@ -666,7 +665,7 @@ function handleFileSelect(evt) {
 		addGpxOvelay(f.name, url);
 	}
 }
-
+ 
 /*
  * Handle dragging a file over the drop zone
  */

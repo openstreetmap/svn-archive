@@ -34,6 +34,14 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent.DatasetEventType;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
@@ -59,7 +67,7 @@ import com.innovant.josm.plugin.routing.gui.RoutingPreferenceDialog;
  *
  * @version 0.3
  */
-public class RoutingPlugin extends Plugin implements LayerChangeListener {
+public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSetListenerAdapter.Listener {
     /**
      * Logger
      */
@@ -122,12 +130,16 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
      * Reference for the plugin class (as if it were a singleton)
      */
     private static RoutingPlugin plugin;
+    
+    private DataSetListenerAdapter datasetAdapter;
 
     /**
      * Default Constructor
      */
     public RoutingPlugin(PluginInformation info) {
         super(info);
+        
+        datasetAdapter = new DataSetListenerAdapter(this);
         plugin = this; // Assign reference to the plugin class
         DOMConfigurator.configure("log4j.xml");
         logger.debug("Loading routing plugin...");
@@ -140,6 +152,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
         menu = new RoutingMenu();
         // Register this class as LayerChangeListener
         MapView.addLayerChangeListener(this);
+        DatasetEventManager.getInstance().addDatasetListener(datasetAdapter, FireMode.IN_EDT_CONSOLIDATED);
         logger.debug("Finished loading plugin");
     }
 
@@ -202,7 +215,21 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
      * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
      */
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        routingDialog.refresh();
+    	   	
+    	   	if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
+    	   		addRouteNodeButton.setVisible(true);
+    		    removeRouteNodeButton.setVisible(true);
+    		    moveRouteNodeButton.setVisible(true);
+    		    menu.enableRestOfItems();    		
+    		    routingDialog.showDialog();
+    		    routingDialog.refresh();
+    	   	}else{											/*   hide Routing toolbar and dialog window  */
+    	   		addRouteNodeButton.setVisible(false);
+    		    removeRouteNodeButton.setVisible(false);
+    		    moveRouteNodeButton.setVisible(false);
+    		    menu.disableRestOfItems();
+    		    routingDialog.hideDialog();
+    	   	}
     }
 
     /*
@@ -253,7 +280,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
         // Reload RoutingDialog table model
         routingDialog.refresh();
     }
-
+    
+    public void processDatasetEvent(AbstractDatasetChangedEvent event){
+    	
+    	
+    }
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
      */

@@ -32,10 +32,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -105,6 +107,10 @@ public class RoutingLayer extends Layer {
         this.dataLayer = dataLayer;
         this.routingModel = new RoutingModel(dataLayer.data);
         logger.debug("Routing Layer created.");
+        
+
+        this.routingModel.routingGraph.createGraph();	/* construct the graph right after we we create the layer */
+        Main.map.repaint();							/* update MapView */
     }
 
     /**
@@ -138,7 +144,7 @@ public class RoutingLayer extends Layer {
                 if (n.isDeleted() || n.isIncomplete()) continue;
 
                 Point P = Main.map.mapView.getPoint(n);
-                double dist = p.distanceSq(P);
+                double dist = p.distance(P);
                 if (dist < snapDistance) {
                     if ((nearest == null) || (dist < minDist)) {
                         nearest = n;
@@ -230,10 +236,6 @@ public class RoutingLayer extends Layer {
         boolean isActiveLayer = (mv.getActiveLayer().equals(this));
         // Get routing nodes (start, middle, end)
         List<Node> nodes = routingModel.getSelectedNodes();
-        if(nodes == null || nodes.size() == 0) {
-            logger.debug("no nodes selected");
-            return;
-        }
 
         // Get path stroke color from preferences
         // Color is different for active and inactive layers
@@ -258,11 +260,31 @@ public class RoutingLayer extends Layer {
         // Get path stroke width from preferences
         String widthString = Main.pref.get(PreferencesKeys.KEY_ROUTE_WIDTH.key);
         if (widthString.length() == 0) {
-            widthString = "8";
+            widthString = "2";						/* I think 2 is better  */
             // FIXME add after good width is found: Main.pref.put(KEY_ROUTE_WIDTH, widthString);
         }
         int width = Integer.parseInt(widthString);
-
+        
+        
+        // draw our graph
+        if (isActiveLayer) {
+        	if(routingModel != null) {
+        		if(routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
+        	    	Color color2 = ColorHelper.html2color("#00ff00");		/* just green for now  */
+        	        Set<OsmEdge> graphEdges =  routingModel.routingGraph.getGraph().edgeSet();
+        	        OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
+        	        Point from = mv.getPoint(firstedge.fromEastNorth());
+        	        g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
+        	        for(OsmEdge edge : graphEdges) {
+        	        	drawGraph(g, mv, edge, color2, width);
+        	        }
+        	     }
+        	 }
+        }
+        	        
+        
+        if(nodes == null || nodes.size() == 0) return;
+        
         // Paint routing path
         List<OsmEdge> routeEdges = routingModel.getRouteEdges();
         if(routeEdges != null) {
@@ -326,9 +348,10 @@ public class RoutingLayer extends Layer {
         to = mv.getPoint(edge.toEastNorth());
 
             Graphics2D g2d = (Graphics2D)g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Anti-alias!
             Stroke oldStroke = g2d.getStroke();
             g2d.setStroke(new BasicStroke(width)); // thickness
-            g.drawLine(from.x, from.y, to.x, to.y);
+            g2d.drawLine(from.x, from.y, to.x, to.y);
             if (showDirection) {
                 double t = Math.atan2(to.y-from.y, to.x-from.x) + Math.PI;
                 g.drawLine(to.x,to.y, (int)(to.x + 10*Math.cos(t-ARROW_PHI)), (int)(to.y + 10*Math.sin(t-ARROW_PHI)));
@@ -336,5 +359,21 @@ public class RoutingLayer extends Layer {
             }
             g2d.setStroke(oldStroke);
     }
+    private void drawGraph(Graphics g, MapView mv, OsmEdge edge, Color col, int width) {
+        g.setColor(col);
+        Point from;
+        Point to;
+        from = mv.getPoint(edge.fromEastNorth());
+        to = mv.getPoint(edge.toEastNorth());
+        
+            Graphics2D g2d = (Graphics2D)g;
+            Stroke oldStroke = g2d.getStroke();
+            g2d.setStroke(new BasicStroke(width)); // thickness
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);  // Anti-alias!
+            g2d.drawLine(from.x, from.y, to.x, to.y);
+            g2d.drawRect(to.x- 4, to.y+4, 4, 4);
 
+            g2d.setStroke(oldStroke);
+	 }
+		
 }

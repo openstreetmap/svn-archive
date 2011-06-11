@@ -34,11 +34,13 @@
 	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-	<property name="jgrapht"                value="lib/jgrapht-jdk1.5.jar"/>
-	<property name="log4j"                  value="lib/log4j-1.2.15.jar"/>
+	<property name="libdir"                 location="lib"/>
+	<property name="jgrapht"                value="${libdir}/jgrapht-jdk1.5.jar"/>
+	<property name="log4j"                  value="${libdir}/log4j-1.2.15.jar"/>
 	<property name="ant.build.javac.target" value="1.5"/>
 	<!-- Some initializations for several other targets -->
 	<target name="init">
+		<mkdir dir="${plugin.dist.dir}"/>
 		<mkdir dir="${plugin.build.dir}"/>
 	</target>
 	<!-- Compile sources -->
@@ -68,7 +70,7 @@
 		</copy>
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
 			<manifest>
-				<attribute name="Author" value="Jose Vidal &lt;vidalfree@gmail.com&gt;, Juangui Jordán &lt;juangui@gmail.com&gt;"/>
+				<attribute name="Author" value="Jose Vidal &lt;vidalfree@gmail.com&gt;, Juangui Jordán &lt;juangui@gmail.com&gt;, Hassan S &lt;hassan.sabirin@gmail.com&gt;"/>
 				<attribute name="Plugin-Class" value="com.innovant.josm.plugin.routing.RoutingPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Provides routing capabilities."/>

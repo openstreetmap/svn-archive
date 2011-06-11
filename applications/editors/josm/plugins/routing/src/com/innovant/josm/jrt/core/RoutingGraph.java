@@ -48,6 +48,7 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  *
  * @author Juangui
  * @author Jose Vidal
+ * @author Hassan S
  */
 public class RoutingGraph {
 
@@ -98,6 +99,29 @@ public class RoutingGraph {
     private Graph<Node, OsmEdge> graph;
     private RoutingGraphDelegator rgDelegator=null;
 
+    
+    /**
+     * Graph getter
+     */
+    public Graph<Node, OsmEdge> getGraph(){
+    	return graph;
+    
+    }
+    
+    
+	private void addEdgeBidirectional( Way way, Node from, Node to){
+	    addEdge(way,from,to);
+	    addEdge(way,to,from);
+	}
+	
+	private void addEdgeReverseOneway( Way way, Node from, Node to){
+	    addEdge(way,to,from);
+	}
+	
+	private void addEdgeNormalOneway( Way way, Node from, Node to){
+	    addEdge(way,from,to);
+	}
+    
     /**
      * Speeds
      */
@@ -130,23 +154,69 @@ public class RoutingGraph {
         rgDelegator.setRouteType(this.routeType);
         // iterate all ways and segments for all nodes:
         for (Way way : data.getWays()) {
-            if (way != null && !way.isDeleted() && this.isvalidWay(way)) {
-                Node from = null;
-                for (Node to : way.getNodes()) {
-                    // Ignore the node if deleted
-                    if (!to.isDeleted()) {
-                        graph.addVertex(to);
-                        if (from != null) {
-                            addEdge(way, from, to);
-                            if (!isOneWay(way)){
-                                addEdge(way, to, from);}
-                        }
-                        from = to;
-                    }
-                }
-            }
-        }
-//      graph.vertexSet().size();
+		
+        // skip way if not suitable for routing.
+  			if (way != null && !way.isDeleted() && this.isvalidWay(way)
+  					&& way.getNodes().size() > 1) continue;
+  
+          // INIT
+  				Node from = null;
+  				Node to = null;
+  				List<Node> nodes = way.getNodes();
+  				int nodes_count = nodes.size();
+  				
+  				/*
+           * Assume node is A B C D E. The procedure should be
+           * 
+           *  case 1 - bidirectional ways:
+           *  1) Add vertex A B C D E
+           *  2) Link A<->B, B<->C, C<->D, D<->E as Edges
+           *  
+           *  case 2 - oneway reverse:
+           *  1) Add vertex A B C D E
+           *  2) Link B->A,C->B,D->C,E->D as Edges. result: A<-B<-C<-D<-E
+           *                  
+           *  case 3 - oneway normal:
+           *  1) Add vertex A B C D E
+           *  2) Link A->B, B->C, C->D, D->E as Edges. result: A->B->C->D->E
+           *  
+           *                  
+           */
+            
+  				String oneway_val = way.get("oneway");   /*   get (oneway=?) tag for this way.   */
+            
+  				from = nodes.get(0);                   /*   1st node A  */
+  				graph.addVertex(from);                 /*   add vertex A */
+  
+  				for (int i = 1; i < nodes_count; i++) { /*   loop from B until E */
+  
+  					to = nodes.get(i);                   /*   2nd node B   */
+  					
+  					if (to != null && !to.isDeleted()) {
+  						graph.addVertex(to);               /*   add vertex B */
+  						
+  				    
+  				    //this is where we link the vertices
+  						if (oneway_val == null || oneway_val == "false" || oneway_val == "no" || oneway_val == "0") {
+  						//Case 1 (bi-way): oneway=false OR oneway=unset OR oneway=0 OR oneway=no
+  						  addEdgeBidirectional(way, from, to);
+  						  
+  						} else if (oneway_val == "-1") {
+  						//Case 2 (oneway reverse): oneway=-1
+  						  addEdgeReverseOneway(way, from, to);
+  						
+  						} else if (oneway_val == "1" || oneway_val == "yes" || oneway_val == "true") {
+              //Case 3 (oneway normal): oneway=yes OR 1 OR true
+  						  addEdgeNormalOneway(way, from, to);				
+                		
+  						}
+  
+  						from = to;                         /*   we did A<->B, next loop we will do B<->C, so from=B,to=C for next loop. */
+  					}
+					
+  				} // end of looping thru nodes
+  		  } // end of looping thru ways
+		  
         logger.debug("End Create Graph");
         logger.debug("Vertex: "+graph.vertexSet().size());
         logger.debug("Edges: "+graph.edgeSet().size());
@@ -224,20 +294,6 @@ public class RoutingGraph {
     }
 
     /**
-     * Check is One Way.
-     *
-     * @param way
-     *            the way.
-     * @return <code>true</code> is a one way. <code>false</code> is not a one
-     *         way.
-     */
-    private boolean isOneWay(Way way) {
-        // FIXME: oneway=-1 is ignored for the moment!
-        return way.get("oneway") != null
-                || "motorway".equals(way.get("highway"));
-    }
-
-    /**
      * Check if a Way is correct.
      *
      * @param way
@@ -245,16 +301,12 @@ public class RoutingGraph {
      * @return <code>true</code> is valid. <code>false</code> is not valid.
      */
     public boolean isvalidWay(Way way) {
-        if (!way.isTagged())
-            return false;
+        //if (!way.isTagged())            <---not needed me thinks
+        //    return false;
 
         return way.get("highway") != null || way.get("junction") != null
                 || way.get("service") != null;
 
-    }
-
-    public boolean isvalidNode(Node node) {
-        return true;
     }
 
     /**
@@ -294,7 +346,7 @@ public class RoutingGraph {
             logger.debug("Using Dijkstra algorithm");
             DijkstraShortestPath<Node, OsmEdge> routingk = null;
             for (int index = 1; index < nodes.size(); ++index) {
-                routingk = new DijkstraShortestPath<Node, OsmEdge>(rgDelegator, nodes
+                routingk = new DijkstraShortestPath<Node, OsmEdge>(g, nodes
                         .get(index - 1), nodes.get(index));
                 if (routingk.getPathEdgeList() == null) {
                     logger.debug("no path found!");

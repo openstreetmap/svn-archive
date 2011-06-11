@@ -19,8 +19,9 @@ import java.util.EnumSet;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Chr;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.Light;
+import oseam.seamarks.Light.Chr;
 
 public class PanelChr extends JPanel {
 	// System.out.println(map);
@@ -75,13 +76,13 @@ public class PanelChr extends JPanel {
 					button.setBorderPainted(false);
 				}
 			}
-			if (SeaMark.ChrMAP.containsKey(combo)) {
-				charBox.setText(SeaMark.ChrMAP.get(combo));
+			if (Light.ChrMAP.containsKey(combo)) {
+				charBox.setText(Light.ChrMAP.get(combo));
 			} else {
 				for (Chr chr : buttons.keySet()) {
 					JToggleButton button = buttons.get(chr);
 					if (button == source) {
-						charBox.setText(SeaMark.ChrMAP.get(EnumSet.of(chr)));
+						charBox.setText(Light.ChrMAP.get(EnumSet.of(chr)));
 						button.setSelected(true);
 						button.setBorderPainted(true);
 					} else {
@@ -96,8 +97,8 @@ public class PanelChr extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			String str = charBox.getText();
 			EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
-			for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
-				if (str.equals(SeaMark.ChrMAP.get(map))) {
+			for (EnumSet<Chr> map : Light.ChrMAP.keySet()) {
+				if (str.equals(Light.ChrMAP.get(map))) {
 					set = map;
 					break;
 				}

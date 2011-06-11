@@ -15,6 +15,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.Light;
 
 public class SeaMark {
 
@@ -233,8 +234,8 @@ public class SeaMark {
 			return topColour;
 		case DAYMARK:
 			return dayColour;
-		case LIGHT:
-			return lightColour[sectorIndex];
+//		case LIGHT:
+//			return light.getLightColour();
 		}
 		return Col.UNKNOWN;
 	}
@@ -253,9 +254,9 @@ public class SeaMark {
 		case DAYMARK:
 			dayColour = col;
 			break;
-		case LIGHT:
-			lightColour[sectorIndex] = col;
-			break;
+//		case LIGHT:
+//			light.setLightColour(col);
+//			break;
 		}
 	}
 
@@ -410,250 +411,8 @@ public class SeaMark {
 		FogPeriod = period;
 	}
 
-	private boolean Fired = false;
-
-	public boolean isFired() {
-		return Fired;
-	}
-
-	public void setFired(boolean fired) {
-		Fired = fired;
-	}
-
-	private boolean Sectored = false;
-
-	public boolean isSectored() {
-		return Sectored;
-	}
-
-	public void setSectored(boolean sectored) {
-		Sectored = sectored;
-		if (sectored) {
-			lightColour[0] = Col.UNKNOWN;
-		} else {
-			setsectorIndex(0);
-			setLightChar("");
-			setLightColour(Col.UNKNOWN);
-			setLightGroup("");
-			setHeight("");
-			setRange("");
-			setBearing1("");
-			setBearing2("");
-			setVisibility(Vis.UNKNOWN);
-		}
-	}
-
-	private int sectorIndex = 0;
-
-	public int getsectorIndex() {
-		return sectorIndex;
-	}
-
-	public void setsectorIndex(int sector) {
-		sectorIndex = sector;
-	}
+	public Light light = new Light(dlg);
 	
-	public enum Chr {
-		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK,
-		ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
-	}
-
-	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
-	static {
-		ChrMAP.put(EnumSet.of(Chr.UNKNOWN), "");
-		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
-		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
-		ChrMAP.put(EnumSet.of(Chr.LONGFLASH), "LFl");
-		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK), "VQ");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK), "UQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDQUICK), "IQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDVERYQUICK), "IVQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDULTRAQUICK), "IUQ");
-		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
-		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LONGFLASH), "Al.LFl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LONGFLASH), "FLFl");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
-		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LONGFLASH), "FlLFl");
-		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
-	}
-	
-	public Light light = new Light();
-	
-	private String[] LightChar = new String[10];
-
-	public String getLightChar() {
-		if (LightChar[sectorIndex] == null)
-			return (LightChar[0]);
-		return LightChar[sectorIndex];
-	}
-
-	public void setLightChar(String lightChar) {
-		if (sectorIndex == 0) {
-			LightChar = new String[10];
-			LightChar[0] = lightChar;
-		} else if (LightChar[0].isEmpty())
-			LightChar[sectorIndex] = lightChar;
-	}
-
-	private Col[] lightColour = new Col[10];
-
-	public Col getLightColour() {
-		if (lightColour[sectorIndex] == null)
-			return (lightColour[0]);
-		return lightColour[sectorIndex];
-	}
-
-	public void setLightColour(Col col) {
-		lightColour[sectorIndex] = col;
-	}
-
-	private String[] LightGroup = new String[10];
-
-	public String getLightGroup() {
-		if (LightGroup[sectorIndex] == null)
-			return (LightGroup[0]);
-		return LightGroup[sectorIndex];
-	}
-
-	public void setLightGroup(String lightGroup) {
-		if (sectorIndex == 0)
-			LightGroup = new String[10];
-		LightGroup[sectorIndex] = lightGroup;
-	}
-
-	protected void setLightGroup(Map<String, String> keys) {
-		String s = "";
-		if (keys.containsKey("seamark:light:group")) {
-			s = keys.get("seamark:light:group");
-			setLightGroup(s);
-		}
-	}
-
-	private String[] Height = new String[10];
-
-	public String getHeight() {
-		if (Height[sectorIndex] == null)
-			return (Height[0]);
-		return Height[sectorIndex];
-	}
-
-	public void setHeight(String height) {
-		if (sectorIndex == 0)
-			Height = new String[10];
-		Height[sectorIndex] = height;
-	}
-
-	private String[] Range = new String[10];
-
-	public String getRange() {
-		if (Range[sectorIndex] == null)
-			return (Range[0]);
-		return Range[sectorIndex];
-	}
-
-	public void setRange(String range) {
-		if (sectorIndex == 0)
-			Range = new String[10];
-		Range[sectorIndex] = range;
-	}
-
-	private String[] Bearing1 = new String[10];
-
-	public String getBearing1() {
-		if (Bearing1[sectorIndex] == null)
-			return (Bearing1[0]);
-		return Bearing1[sectorIndex];
-	}
-
-	public void setBearing1(String bearing) {
-		if (sectorIndex == 0)
-			Bearing1 = new String[10];
-		Bearing1[sectorIndex] = bearing;
-	}
-
-	private String[] Bearing2 = new String[10];
-
-	public String getBearing2() {
-		if (Bearing2[sectorIndex] == null)
-			return (Bearing2[0]);
-		return Bearing2[sectorIndex];
-	}
-
-	public void setBearing2(String bearing) {
-		if (sectorIndex == 0)
-			Bearing2 = new String[10];
-		Bearing2[sectorIndex] = bearing;
-	}
-
-	public enum Vis { UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS }
-	public static final Map<EnumSet<Vis>, String> VisMAP = new HashMap<EnumSet<Vis>, String>();
-	static {
-		VisMAP.put(EnumSet.of(Vis.UNKNOWN), "");
-		VisMAP.put(EnumSet.of(Vis.HIGH), "high");
-		VisMAP.put(EnumSet.of(Vis.LOW), "low");
-		VisMAP.put(EnumSet.of(Vis.FAINT), "faint");
-		VisMAP.put(EnumSet.of(Vis.INTEN), "intensified");
-		VisMAP.put(EnumSet.of(Vis.UNINTEN), "unintensified");
-		VisMAP.put(EnumSet.of(Vis.REST), "restricted");
-		VisMAP.put(EnumSet.of(Vis.OBS), "obscured");
-		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
-	}
-	
-	private Vis[] Visibility = new Vis[10];
-
-	public Vis getVisibility() {
-		if (Visibility[sectorIndex] == null)
-			return (Visibility[0]);
-		return Visibility[sectorIndex];
-	}
-
-	public void setVisibility(Vis visibility) {
-		if (sectorIndex == 0)
-			Visibility = new Vis[10];
-		Visibility[sectorIndex] = visibility;
-	}
-
-	private String[] LightPeriod = new String[10];
-
-	public String getLightPeriod() {
-		if (LightPeriod[sectorIndex] == null)
-			return (LightPeriod[0]);
-		return LightPeriod[sectorIndex];
-	}
-
-	public void setLightPeriod(String lightPeriod) {
-		String regex = "^[\\d\\s.]+$";
-
-		if (!lightPeriod.isEmpty()) {
-
-			Pattern pat = Pattern.compile(regex);
-			Matcher matcher = pat.matcher(lightPeriod);
-
-			if (matcher.find()) {
-				// setErrMsg(null);
-			} else {
-				// setErrMsg("Must be a number");
-				lightPeriod = "";
-				// dlg.tfM01RepeatTime.requestFocus();
-			}
-		}
-		if (sectorIndex == 0)
-			LightPeriod = new String[10];
-		LightPeriod[sectorIndex] = lightPeriod;
-	}
-
 	private boolean paintlock = false;
 
 	public void parseMark(Node node) {
@@ -917,12 +676,12 @@ public class SeaMark {
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 		}
-
+/*
 		for (Map.Entry<String, String> entry : keys.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue().trim();
 			if (key.contains("seamark:light:")) {
-				setFired(true);
+				light.setFired(true);
 				int index = 0;
 				key = key.substring(14);
 				if (key.matches("^\\d:.*")) {
@@ -966,7 +725,7 @@ public class SeaMark {
 				}
 			}
 		}
-
+*/
 		if (keys.containsKey("seamark:fog_signal") || keys.containsKey("seamark:fog_signal:category")
 		    || keys.containsKey("seamark:fog_signal:group") || keys.containsKey("seamark:fog_signal:period")) {
 			setFog(true);
@@ -1181,7 +940,7 @@ public class SeaMark {
 			if (str != null)
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:daymark:colour", str));
 		}
-
+/*
 		Col colour;
 		if (isFired()) {
 			if ((colour = lightColour[0]) != Col.UNKNOWN)
@@ -1235,7 +994,7 @@ public class SeaMark {
 				if (Bearing2[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":sector_end", Bearing2[i]));
 			}
-		}
+		}*/
 		if (hasRadar()) {
 			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_reflector", "yes"));
 		}

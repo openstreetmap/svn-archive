@@ -1,17 +1,13 @@
 package oseam.panels;
 
-import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
-import javax.swing.table.AbstractTableModel;
 
 import oseam.seamarks.Light;
-import oseam.seamarks.SeaMark;
 
 public class PanelSectors extends JFrame {
 	

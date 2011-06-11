@@ -8,9 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.JFrame;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -81,11 +79,11 @@ public class PanelLit extends JPanel {
 					}
 					if (dlg.mark.light.getRowCount() == 1) {
 						dlg.mark.light.addSector(1);
-						dlg.mark.setSectored(true);
+						dlg.mark.light.setSectored(true);
 					}
 					panelSector.setVisible(true);
 				} else {
-					dlg.mark.setSectored(false);
+					dlg.mark.light.setSectored(false);
 					panelSector.setVisible(false);
 				}
 				dlg.mark.paintSign();

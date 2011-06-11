@@ -156,8 +156,8 @@ public class RoutingGraph {
         for (Way way : data.getWays()) {
 		
         // skip way if not suitable for routing.
-  			if (way != null && !way.isDeleted() && this.isvalidWay(way)
-  					&& way.getNodes().size() > 1) continue;
+  			if (way == null || way.isDeleted() || !this.isvalidWay(way)
+  					|| way.getNodes().size() < 1) continue;
   
           // INIT
   				Node from = null;

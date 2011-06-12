@@ -305,7 +305,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         final NameFormatter formatter = DefaultNameFormatter.getInstance();
         Set<Relation> relations = new TreeSet<Relation>(new Comparator<Relation>() {
             public int compare( Relation r1, Relation r2 ) {
-                return r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
+                int diff = r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
+                return diff != 0 ? diff : r1.compareTo(r2);
             }
         });
         for( OsmPrimitive element : newSelection ) {

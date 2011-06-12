@@ -77,9 +77,9 @@ public class PanelLit extends JPanel {
 						panelSector.setAlwaysOnTop(true);
 						panelSector.setLocation(450, 0);
 					}
-					if (dlg.mark.light.getRowCount() == 1) {
-						dlg.mark.light.addSector(1);
-						dlg.mark.light.setSectored(true);
+					if (panelSector.getSectorCount() == 0) {
+						panelSector.addSector(1);
+						panelSector.light.setSectored(true);
 					}
 					panelSector.setVisible(true);
 				} else {

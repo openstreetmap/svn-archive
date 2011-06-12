@@ -21,10 +21,9 @@ public class Light extends AbstractTableModel {
 	private ArrayList<Object[]> lights;
 	
 	public Light(OSeaMAction dia) {
-		super();
 		dlg = dia;
 		lights = new ArrayList<Object[]>();
-		lights.add(new Object[12]);
+		lights.add(new Object[]{null, null, null, null, null, null, null, null, null, null, null, null});
 	}
 
 	public String getColumnName(int col) {
@@ -80,18 +79,6 @@ public class Light extends AbstractTableModel {
 
 	public void setSectored(boolean sectored) {
 		Sectored = sectored;
-		if (sectored) {
-			setLightColour(0, Col.UNKNOWN);
-		} else {
-			setLightChar(0, Chr.UNKNOWN);
-			setLightColour(0, Col.UNKNOWN);
-			setLightGroup(0, "");
-			setHeight(0, "");
-			setRange(0, "");
-			setBearing1(0, "");
-			setBearing2(0, "");
-			setVisibility(0, Vis.UNKNOWN);
-		}
 	}
 
 	public String getBearing1(int idx) {

@@ -11,7 +11,7 @@
 import sys
 import psycopg2
 import csv
-from numpy import *
+from numpy import math,angle
 
 def shift_by_meters(lat, lon, brng, d):
     R = 6371000.0 # earth's radius in m

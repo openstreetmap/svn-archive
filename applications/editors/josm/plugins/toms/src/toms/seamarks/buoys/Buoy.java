@@ -504,7 +504,7 @@ abstract public class Buoy extends SeaMark {
 					setSectored(true);
 				if (key.equals("ref"))
 					setLitRef(value);
-				if (key.equals("inform"))
+				if (key.equals("information"))
 					setLitInf(value);
 				if (key.equals("category"))
 					setLitCat(value);
@@ -929,7 +929,7 @@ abstract public class Buoy extends SeaMark {
 
 			if (!LitInf.isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:inform", LitInf));
+						"seamark:light:information", LitInf));
 
 			if (!LitCat.isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,

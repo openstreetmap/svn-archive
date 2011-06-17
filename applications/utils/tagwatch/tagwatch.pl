@@ -215,7 +215,7 @@ sub getOSMFiles
 				my $Date = $2;
 				my $FileName = $1;
 				my $usename = $FileName;
-				next if (!($FileName =~ /\.osm/)) || ($FileName =~ /\.md5/);
+				next if (!($FileName =~ /\.osm/)) || ($FileName =~ /\.md5/) || ($FileName =~ /\.pbf/);
 				# strip date
 				$usename =~ s/-\d+(\.osm.*)$/$1/;
 				next if %usefiles && !$usefiles{$usename};

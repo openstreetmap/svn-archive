@@ -49,10 +49,11 @@ foreach my $arg (@ARGV)
   my $a = `date`; chomp $a; print "$a Copy files $arg\n";
   foreach my $name (glob("*"))
   {
-    if(-d $name)
+    if(-d $name && -e "$WEBDIR/$name")
     {
-      system "rm -r $WEBDIR/$name";
-      system "mv $name $WEBDIR";
+      system "mv $WEBDIR/$name ${name}_old_$$";
+      system "mv -f $name $WEBDIR";
+      system "rm -r ${name}_old_$$";
     }
     else
     {

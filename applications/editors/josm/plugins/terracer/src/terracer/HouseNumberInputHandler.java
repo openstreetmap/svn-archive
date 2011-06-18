@@ -318,7 +318,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
 
                     this.dialog.dispose();
                 }
-            } else if ("Cancel".equals(button.getActionCommand())) {
+            } else if (tr("Cancel").equals(button.getActionCommand())) {
                 this.dialog.dispose();
             }
         } else {

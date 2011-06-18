@@ -72,8 +72,9 @@ public class StopImporterAction extends JosmAction
   public StopImporterAction()
   {
     super(tr("Create Stops from GPX ..."), null,
-      tr("Create Stops from a GPX file"), null, true);
+      tr("Create Stops from a GPX file"), null, false);
     putValue("toolbar", "publictransport/stopimporter");
+    Main.toolbar.register(this);
   }
 
   public WaypointTableModel getWaypointTableModel()
@@ -112,7 +113,7 @@ public class StopImporterAction extends JosmAction
       String curDir = Main.pref.get("lastDirectory");
       if (curDir.equals(""))
       {
-    curDir = ".";
+        curDir = ".";
       }
       JFileChooser fc = new JFileChooser(new File(curDir));
       fc.setDialogTitle("Select GPX file");
@@ -120,10 +121,10 @@ public class StopImporterAction extends JosmAction
 
       int answer = fc.showOpenDialog(Main.parent);
       if (answer != JFileChooser.APPROVE_OPTION)
-    return;
+        return;
 
       if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-    Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+        Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
 
       importData(fc.getSelectedFile());
 
@@ -132,22 +133,22 @@ public class StopImporterAction extends JosmAction
     else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
-    Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+      Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
     }
     else if ("stopImporter.settingsStopwatchStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.stopwatchStartValid()) && (currentTrack != null))
-    Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+      Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
     }
     else if ("stopImporter.settingsTimeWindow".equals(event.getActionCommand()))
     {
       if (currentTrack != null)
-    currentTrack.timeWindow = dialog.getTimeWindow();
+      currentTrack.timeWindow = dialog.getTimeWindow();
     }
     else if ("stopImporter.settingsThreshold".equals(event.getActionCommand()))
     {
       if (currentTrack != null)
-    currentTrack.threshold = dialog.getThreshold();
+        currentTrack.threshold = dialog.getThreshold();
     }
     else if ("stopImporter.settingsSuggestStops".equals(event.getActionCommand()))
       Main.main.undoRedo.add(new TrackSuggestStopsCommand(this));
@@ -193,18 +194,18 @@ public class StopImporterAction extends JosmAction
     {
       InputStream is;
       if (file.getName().endsWith(".gpx.gz"))
-    is = new GZIPInputStream(new FileInputStream(file));
+        is = new GZIPInputStream(new FileInputStream(file));
       else
-    is = new FileInputStream(file);
+        is = new FileInputStream(file);
       // Workaround for SAX BOM bug
       // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6206835
       if (!((is.read() == 0xef) && (is.read() == 0xbb) && (is.read() == 0xbf)))
       {
-    is.close();
-    if (file.getName().endsWith(".gpx.gz"))
-      is = new GZIPInputStream(new FileInputStream(file));
-    else
-      is = new FileInputStream(file);
+        is.close();
+        if (file.getName().endsWith(".gpx.gz"))
+          is = new GZIPInputStream(new FileInputStream(file));
+        else
+          is = new FileInputStream(file);
       }
       final GpxReader r = new GpxReader(is);
       final boolean parsedProperly = r.parse(true);
@@ -212,7 +213,7 @@ public class StopImporterAction extends JosmAction
 
       if (!parsedProperly)
       {
-    JOptionPane.showMessageDialog(null, tr("Error occured while parsing gpx file {0}. Only part of the file will be available", file.getName()));
+        JOptionPane.showMessageDialog(null, tr("Error occured while parsing gpx file {0}. Only part of the file will be available", file.getName()));
       }
     }
     catch (FileNotFoundException e)
@@ -241,22 +242,22 @@ public class StopImporterAction extends JosmAction
       Iterator< GpxTrack > trackIter = data.tracks.iterator();
       while (trackIter.hasNext())
       {
-    GpxTrack track = trackIter.next();
-    trackRefs.add(new TrackReference(track, this));
+        GpxTrack track = trackIter.next();
+        trackRefs.add(new TrackReference(track, this));
       }
 
       Collections.sort(trackRefs);
 
       Iterator< TrackReference > iter = trackRefs.iterator();
       while (iter.hasNext())
-    tracksListModel.addElement(iter.next());
+        tracksListModel.addElement(iter.next());
 
       waypointTM = new WaypointTableModel(this);
       Iterator< WayPoint > waypointIter = data.waypoints.iterator();
       while (waypointIter.hasNext())
       {
-    WayPoint waypoint = waypointIter.next();
-    waypointTM.addRow(waypoint);
+        WayPoint waypoint = waypointIter.next();
+        waypointTM.addRow(waypoint);
       }
       dialog.setWaypointsTableModel(waypointTM);
     }
@@ -434,13 +435,13 @@ public class StopImporterAction extends JosmAction
     {
       public void actionPerformed(ActionEvent e)
       {
-    JTable table = dialog.getWaypointsTable();
-    int row = table.getEditingRow();
-    if (row < 0)
-      return;
-    table.clearSelection();
-    table.addRowSelectionInterval(row, row);
-    Main.main.undoRedo.add
+        JTable table = dialog.getWaypointsTable();
+        int row = table.getEditingRow();
+        if (row < 0)
+          return;
+        table.clearSelection();
+        table.addRowSelectionInterval(row, row);
+        Main.main.undoRedo.add
         (new WaypointsDisableCommand(StopImporterAction.this));
       }
     };
@@ -483,12 +484,12 @@ public class StopImporterAction extends JosmAction
       markNodesFromTable(table, waypointTM.nodes);
       int row = table.getEditingRow();
       if (row < 0)
-    row = 0;
+        row = 0;
       waypointTM.inEvent = true;
       if (table.getCellEditor() != null)
       {
-    if (!table.getCellEditor().stopCellEditing())
-      table.getCellEditor().cancelCellEditing();
+        if (!table.getCellEditor().stopCellEditing())
+          table.getCellEditor().cancelCellEditing();
       }
       table.editCellAt(row, 1);
       table.getCellEditor().getTableCellEditorComponent
@@ -513,12 +514,12 @@ public class StopImporterAction extends JosmAction
       markNodesFromTable(table, waypointTM.nodes);
       int row = table.getEditingRow();
       if (row < 0)
-    row = 0;
+        row = 0;
       waypointTM.inEvent = true;
       if (table.getCellEditor() != null)
       {
-    if (!table.getCellEditor().stopCellEditing())
-      table.getCellEditor().cancelCellEditing();
+        if (!table.getCellEditor().stopCellEditing())
+          table.getCellEditor().cancelCellEditing();
       }
       table.editCellAt(row, 2);
       waypointTM.inEvent = false;
@@ -536,12 +537,12 @@ public class StopImporterAction extends JosmAction
       markNodesFromTable(table, currentTrack.stoplistTM.getNodes());
       int row = table.getEditingRow();
       if (row < 0)
-    row = 0;
+        row = 0;
       currentTrack.inEvent = true;
       if (table.getCellEditor() != null)
       {
-    if (!table.getCellEditor().stopCellEditing())
-      table.getCellEditor().cancelCellEditing();
+        if (!table.getCellEditor().stopCellEditing())
+          table.getCellEditor().cancelCellEditing();
       }
       table.editCellAt(row, 1);
       table.getCellEditor().getTableCellEditorComponent
@@ -566,12 +567,12 @@ public class StopImporterAction extends JosmAction
       markNodesFromTable(table, currentTrack.stoplistTM.getNodes());
       int row = table.getEditingRow();
       if (row < 0)
-    row = 0;
+        row = 0;
       currentTrack.inEvent = true;
       if (table.getCellEditor() != null)
       {
-    if (!table.getCellEditor().stopCellEditing())
-      table.getCellEditor().cancelCellEditing();
+        if (!table.getCellEditor().stopCellEditing())
+          table.getCellEditor().cancelCellEditing();
       }
       table.editCellAt(row, 2);
       currentTrack.inEvent = false;

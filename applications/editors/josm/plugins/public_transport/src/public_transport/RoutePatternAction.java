@@ -416,6 +416,7 @@ public class RoutePatternAction extends JosmAction {
   public RoutePatternAction() {
     super(tr("Route patterns ..."), null,
       tr("Edit Route patterns for public transport"), null, true);
+    putValue("toolbar", "publictransport/routepattern");
   }
 
   public void actionPerformed(ActionEvent event) {

@@ -74,6 +74,7 @@ public class GTFSImporterAction extends JosmAction
   {
     super(tr("Create Stops from GTFS ..."), null,
       tr("Create Stops from a GTFS file"), null, true);
+      putValue("toolbar", "publictransport/gtfsimporter");
   }
 
   public GTFSStopTableModel getGTFSStopTableModel()

@@ -73,6 +73,7 @@ public class StopImporterAction extends JosmAction
   {
     super(tr("Create Stops from GPX ..."), null,
       tr("Create Stops from a GPX file"), null, true);
+    putValue("toolbar", "publictransport/stopimporter");
   }
 
   public WaypointTableModel getWaypointTableModel()

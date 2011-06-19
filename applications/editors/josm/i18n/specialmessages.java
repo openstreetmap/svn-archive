@@ -13,8 +13,10 @@
 /* Java message loading audio data */ tr("Audio Device Unavailable");
 /* OSM server message */ tr("You must make your edits public to upload new data");
 /* Nominatim search place type */ tr("town");
-/* Landuse type used in multipolygons */ tr("forest");
-/* Landuse type used in multipolygons */ tr("farmland");
+/* Landuse type used in multipolygons */ trc("landuse", "forest");
+/* Landuse type used in multipolygons */ trc("landuse", "farmland");
+/* Landuse type used in multipolygons */ trc("landuse", "residential");
+/* Landuse type used in multipolygons */ trc("natural", "scrub");
 /* relation type */ trc("Relation type", "associatedStreet");
 /* relation type */ trc("Relation type", "boundary");
 /* relation type */ trc("Relation type", "enforcement");

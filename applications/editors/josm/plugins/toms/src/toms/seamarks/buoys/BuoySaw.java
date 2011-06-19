@@ -68,7 +68,7 @@ public class BuoySaw extends Buoy {
 				setStyleIndex(SAFE_PILLAR);
 			else if (str.equals("spar")) //$NON-NLS-1$
 				setStyleIndex(SAFE_SPAR);
-			else if (str.equals("sphere")) //$NON-NLS-1$
+			else if (str.equals("spherical")) //$NON-NLS-1$
 				setStyleIndex(SAFE_SPHERE);
 		} else if ((keys.containsKey("seamark:type")) //$NON-NLS-1$
 				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -224,7 +224,7 @@ public class BuoySaw extends Buoy {
 		case SAFE_SPHERE:
 			super.saveSign("buoy_safe_water"); //$NON-NLS-1$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safe_water:shape", "sphere")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_safe_water:shape", "spherical")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case SAFE_BEACON:
 			super.saveSign("beacon_safe_water"); //$NON-NLS-1$

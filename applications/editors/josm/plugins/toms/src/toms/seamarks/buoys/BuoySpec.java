@@ -85,7 +85,7 @@ public class BuoySpec extends Buoy {
 				setStyleIndex(SPEC_CONE);
 			else if (str.equals("spar")) //$NON-NLS-1$
 				setStyleIndex(SPEC_SPAR);
-			else if (str.equals("sphere")) //$NON-NLS-1$
+			else if (str.equals("spherical")) //$NON-NLS-1$
 				setStyleIndex(SPEC_SPHERE);
 			else if (str.equals("barrel")) //$NON-NLS-1$
 				setStyleIndex(SPEC_BARREL);
@@ -373,7 +373,7 @@ public class BuoySpec extends Buoy {
 		case SPEC_SPHERE:
 			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "sphere")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "spherical")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;

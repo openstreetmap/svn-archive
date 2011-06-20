@@ -23,7 +23,7 @@ use warnings ;
 
 use mwConfig ;
 # use mwFile ;
-use mwLabel ;
+# use mwLabel ;
 
 use OSM::osm ;
 
@@ -49,6 +49,7 @@ require Exporter ;
 			createPath
 			pathText
 			placeIcon
+			convert
 		 ) ;
 
 
@@ -95,7 +96,7 @@ sub initGraph {
 	$sizeX = int ($x) ;
 	$sizeY = int ($x * $factor) ;
 
-	initQuadTrees ($sizeX, $sizeY) ;
+	mwLabel::initQuadTrees ($sizeX, $sizeY) ;
 
 	$top = $t ;
 	$left = $l ;
@@ -313,10 +314,10 @@ sub createPath {
 #
 # creates path element for later use with textPath
 #
-	my ($pathName, @points, $layer) = @_ ;
+	my ($pathName, $refp, $layer) = @_ ;
 
-	my $refp = simplifyPoints (\@points) ;
-	@points = @$refp ;
+	my $refp2 = simplifyPoints ($refp) ;
+	my @points = @$refp2 ;
 
 	my $svg = "<path id=\"" . $pathName . "\" d=\"M " ;
 	my $i ;

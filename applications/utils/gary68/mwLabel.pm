@@ -72,7 +72,9 @@ sub placeLabelAndIcon {
 #
 	my ($lon, $lat, $offset, $thickness, $text, $svgText, $icon, $iconSizeX, $iconSizeY, $layer) = @_ ;
 
-	my ($x, $y) = convert ($lon, $lat) ; # center !
+	if (cv('debug') eq "1") { print "PLAI: $lon, $lat, $offset, $thickness, $text, $svgText, $icon, $iconSizeX, $iconSizeY, $layer\n" ; }
+
+	my ($x, $y) = mwMap::convert ($lon, $lat) ; # center !
 	$y = $y + $offset ;
 
 	my ($ref) = splitLabel ($text) ;
@@ -236,6 +238,9 @@ sub checkAndDrawText {
 # checks if area available and if so draws text
 #
 	my ($x1, $x2, $y1, $y2, $orientation, $refLines, $svgText, $layer) = @_ ;
+
+	if (cv('debug') eq "1") { print "CADT: $x1, $x2, $y1, $y2, $orientation, $refLines, $svgText, $layer\n" ; }
+
 	my @lines = @$refLines ;
 	my $numLines = scalar @lines ;
 	my $lineDist = cv ('linedist') ;
@@ -250,7 +255,7 @@ sub checkAndDrawText {
 			my @points = ($x1, $y2+($i+1)*($size+$lineDist), $x2, $y2+($i+1)*($size+$lineDist)) ;
 			my $pathName = "LabelPath" . $labelPathId ; 
 			$labelPathId++ ;
-			createPath ($pathName, @points, "definitions") ;
+			createPath ($pathName, \@points, "definitions") ;
 
 			if ($orientation eq "centered") {
 				pathText ($svgText, $lines[$i], $pathName, 0, "middle", $layer)

@@ -28,8 +28,8 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw ( getValue
-
+@EXPORT = qw (	getValue
+		createLabel
 		 ) ;
 
 
@@ -42,6 +42,57 @@ sub getValue {
 	}
 	return $value ;
 }
+
+sub createLabel {
+#
+# takes @tags and labelKey(s) from style file and creates labelTextTotal and array of labels for directory
+# takes more keys in one string - using a separator. 
+#
+# § all listed keys will be searched for and values be concatenated
+# # first of found keys will be used to select value
+# "name§ref" will return all values if given
+# "name#ref" will return name, if given. if no name is given, ref will be used. none given, no text
+#
+	my ($ref1, $styleLabelText, $lon, $lat) = @_ ;
+	my @tags = @$ref1 ;
+	my @keys ;
+	my @labels = () ;
+	my $labelTextTotal = "" ; 
+
+	if (grep /!/, $styleLabelText) { # AND
+		@keys = split ( /!/, $styleLabelText) ;
+		# print "par found: $styleLabelText; @keys\n" ;
+		for (my $i=0; $i<=$#keys; $i++) {
+			if ($keys[$i] eq "_lat") { push @labels, $lat ; } 
+			if ($keys[$i] eq "_lon") { push @labels, $lon ; } 
+			foreach my $tag (@tags) {
+				if ($tag->[0] eq $keys[$i]) {
+					push @labels, $tag->[1] ;
+				}
+			}
+		}
+		$labelTextTotal = "" ;
+		foreach my $label (@labels) { $labelTextTotal .= $label . " " ; }
+	}
+	else { # PRIO
+		@keys = split ( /#/, $styleLabelText) ;
+		my $i = 0 ; my $found = 0 ;
+		while ( ($i<=$#keys) and ($found == 0) ) {
+			if ($keys[$i] eq "_lat") { push @labels, $lat ; $found = 1 ; $labelTextTotal = $lat ; } 
+			if ($keys[$i] eq "_lon") { push @labels, $lon ; $found = 1 ; $labelTextTotal = $lon ; } 
+			foreach my $tag (@tags) {
+				if ($tag->[0] eq $keys[$i]) {
+					push @labels, $tag->[1] ;
+					$labelTextTotal = $tag->[1] ;
+					$found = 1 ;
+				}
+			}
+			$i++ ;
+		}		
+	}
+	return ( $labelTextTotal, \@labels) ;
+}
+
 
 1 ;
 

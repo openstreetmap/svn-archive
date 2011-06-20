@@ -38,92 +38,94 @@ require Exporter ;
 			getProgramOptions
 		 ) ;
 
-my @initial = (	["verbose",0,"print some mor information"],
-			["debug",0,"print debug information"],
-			["projection","merc","Used projection"],
-			["ellipsoid","WGS84","Used ellipsoid"],
+my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
+			["debug",0,    "print debug information (CLO)",     "misc"],
+			["projection", "merc","Used projection",            "map"],
+			["ellipsoid",  "WGS84","Used ellipsoid",            "map"],
 
-			["ruledefaultnodeSize","20","default size of dot for nodes"],
-			["ruledefaultnodeColor","black","default color of dot for nodes"],
-			["ruledefaultnodeShape","circle","default shape of node"],
-			["ruledefaultnodeFromScale",0,"default fromScale of node"],
-			["ruledefaultnodeToScale",50000,"default toScale of node"],
+			["ruleDefaultNodeSize",      "20",      "default size of dot for nodes",  "nodes"],
+			["ruleDefaultNodeColor",     "black",   "default color of dot for nodes", "nodes"],
+			["ruleDefaultNodeShape",     "circle",  "default shape of node",          "nodes"],
+			["ruleDefaultNodeLabel",     "name",  "default key for label",          "nodes"],
+			["ruleDefaultNodelabelSize",     30,  "default size of label text",          "nodes"],
+			["ruleDefaultNodeIconSize",  40,        "default size of icon",           "nodes"],
+			["ruleDefaultNodeFromScale",  0,        "default fromScale of node",      "nodes"],
+			["ruleDefaultNodeToScale",   1000000,   "default toScale of node",        "nodes"],
 
-			["ruledefaultWayColor","gray","default color of way"],
-			["ruledefaultWaySize",20,"default size of way"],
-			["ruledefaultWayBorderColor","black","default color of border of way"],
-			["ruledefaultWayBorderSize",2,"default size of border of way"],
+			["ruleDefaultWayColor","gray","default color of way", "ways"],
+			["ruleDefaultWaySize",20,"default size of way", "ways"],
+			["ruleDefaultWayBorderColor","black","default color of border of way", "ways"],
+			["ruleDefaultWayBorderSize",2,"default size of border of way", "ways"],
+			["ruledefaultWayFromScale",0,"default fromScale of way", "ways"],
+			["ruledefaultWayToScale",1000000,"default toScale of way", "ways"],
 
-			["ruledefaultWayFromScale",0,"default fromScale of way"],
-			["ruledefaultWayToScale",50000,"default toScale of way"],
-
-			["in","map.osm","osm in file"],
-			["ini","mwconfig.ini","file with configuration values"],
-			["out","mapweaver.svg","svg output name"],
-			["style","mwStandardRules.txt","file with render rules"],
-			["svgname","mapweaver.svg","output file name for svg graphics"],
-			["size",2200,"size in pixels x axis, 300dpi"],
-			["legend",0,"appearance and position of legend"],
-			["bgcolor","white","background color of map"],
-			["grid",0,"number of grid cells, 0 = no grid"],
-			["gridcolor","black","color of grid lines"],
-			["coords",0,"draw coordinate system"],
-			["coordsexp",-2,"size of grid cells, exp 10"],
-			["coordscolor","black","color of coordinates grid lines"],
-			["clip",0,""],
-			["clipbbox","",""],
-			["pad",0,""],
-			["ppc",6,"points per character"],
-			["pdf",0,"convert output to pdf"],
-			["png",0,"convert output to png"],
-			["dir",0,"add directory"],
-			["poi",0,"add POI directory"],
-			["dirpdf",0,"create directory pdf"],
-			["dircolnum",2,"number of text columns for directory pdf"],
-			["dirtitle","Directory","title for directory"],
-			["tagstat",0,"print tag statistics"],
-			["declutter",1,""],
-			["allowIconMove",0,""],
-			["lineDist",10,"distance between text lines in pixels"],
-			["maxCharPerLine",20,"maximum characters per line in node label"],
-			["help",0,""],
-			["oneway",0,"add oneway arrows"],
-			["onewaycolor","white","color of oneway arrows"],
-			["nobridge",0,"omit bridges and tunnels"],
-			["noLabel",0,""],
-			["place","","search for place name in osm file and create map"],
-			["placefile","","name of file containing only place information"],
-			["lonrad",2,"radius lon in km for place map"],
-			["latrad",2,"radius lat in km for place map"],
-			["ruler",0,"draw ruler; positions 1..4"],
-			["rulercolor","black","color of ruler"],
-			["rulerbackground","none","background of ruler, none=transparent"],
-			["scale",0,"draw scale; positions 1..4"],
-			["scalecolor","black","color of scale"],
-			["scalebackground","none","color of scale background; none=transparent"],
-			["scaleset",0,"set scale of map (i.e. 10000)"],
-			["rulescaleset",0,"set assumed scale for rules"],
-			["routelabelcolor","black",""],
-			["routelabelsize",30,""],
-			["routelabelfont","sans-serif",""],
-			["routelabeloffset",-5,""],
-			["routeicondist",70,""],
-			["routeiconscale",1,""],
-			["icondir","./routeicons",""],
-			["poifile","","name of external POI file"],
-			["relid",0,"relation ID for hikingbook"],
-			["rectangles","","draw rectangles for hikingbook"],
-			["pagenumbers","","add page numbers to map"],
-			["ra",0,"relation analyzer mode"],
-			["multionly",0,"draw only multipolygons"],
-			["foot","mapweaver by gary68 - data by www.openstreetmap.org","text for footer"],
-			["footcolor","black","color for footer"],
-			["footbackground","none","background color for footer"],
-			["footsize",40,"font size for footer"],
-			["head","","text for header"],
-			["headcolor","black","color for header"],
-			["headbackground","none","background color for header"],
-			["headsize",40,"font size for header"]
+			["in","map.osm","osm in file (CLO)", "job"],
+			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],
+			["out","mapweaver.svg","svg output name (CLO)", "job"],
+			["style","mwStandardRules.txt","file with render rules (CLO)", "job"],
+			["svgname","mapweaver.svg","output file name for svg graphics (CLO)", "job"],
+			["size",2200,"size in pixels x axis, 300dpi (CLO)", "map"],
+			["legend",0,"appearance and position of legend (CLO)", "map"],
+			["bgcolor","white","background color of map (CLO)", "map"],
+			["grid",0,"number of grid cells, 0 = no grid (CLO)", "map"],
+			["gridcolor","black","color of grid lines (CLO)", "map"],
+			["coords",0,"draw coordinate system (CLO)", "map"],
+			["coordsexp",-2,"size of grid cells, exp 10 (CLO)", "map"],
+			["coordscolor","black","color of coordinates grid lines (CLO)", "map"],
+			["clip",0," (CLO)", "job"],
+			["clipbbox",""," (CLO)", "job"],
+			["pad",0," (CLO)", "job"],
+			["ppc",6,"points per character (CLO)", "misc", "map"],
+			["pdf",0,"convert output to pdf (CLO)", "job"],
+			["png",0,"convert output to png (CLO)", "job"],
+			["dir",0,"add directory (CLO)", "additional information"],
+			["poi",0,"add POI directory (CLO)", "additional information"],
+			["dirpdf",0,"create directory pdf (CLO)", "additional information"],
+			["dircolnum",2,"number of text columns for directory pdf (CLO)", "additional information"],
+			["dirtitle","Directory","title for directory (CLO)", "additional information"],
+			["tagstat",0,"print tag statistics (CLO)", "misc"],
+			["declutter",1," (CLO)", "map"],
+			["allowIconMove",0," (CLO)", "map"],
+			["lineDist",10,"distance between text lines in pixels", "map"],
+			["maxCharPerLine",20,"maximum characters per line in node label", "map"],
+			["help",0,"prints help texts (CLO)", "misc"],
+			["oneway",0,"add oneway arrows (CLO)", "map"],
+			["onewaycolor","white","color of oneway arrows (CLO)", "map"],
+			["nobridge",0,"omit bridges and tunnels (CLO)", "map"],
+			["noLabel",0,"", "map"],
+			["place","","search for place name in osm file and create map (CLO)", "job"],
+			["placefile","","name of file containing only place information (CLO)", "job"],
+			["lonrad",2,"radius lon in km for place map (CLO)", "job"],
+			["latrad",2,"radius lat in km for place map (CLO)", "job"],
+			["ruler",0,"draw ruler; positions 1..4 (CLO)", "map"],
+			["rulercolor","black","color of ruler (CLO)", "map"],
+			["rulerbackground","none","background of ruler, none=transparent (CLO)", "map"],
+			["scale",0,"draw scale; positions 1..4 (CLO)", "map"],
+			["scalecolor","black","color of scale (CLO)", "map"],
+			["scalebackground","none","color of scale background; none=transparent (CLO)", "map"],
+			["scaleset",0,"set scale of map (i.e. 10000) (CLO)", "map"],
+			["rulescaleset",0,"set assumed scale for rules (CLO)", "map"],
+			["routelabelcolor","black","", "routes"],
+			["routelabelsize",30,"", "routes"],
+			["routelabelfont","sans-serif","", "routes"],
+			["routelabeloffset",-5,"", "routes"],
+			["routeicondist",70,"", "routes"],
+			["routeiconscale",1,"", "routes"],
+			["icondir","./routeicons","", "routes"],
+			["poifile","","name of external POI file (CLO)", "job"],
+			["relid",0,"relation ID for hikingbook (CLO)", "misc"],
+			["rectangles","","draw rectangles for hikingbook (CLO)", "misc"],
+			["pagenumbers","","add page numbers to map (CLO)", "misc"],
+			["ra",0,"relation analyzer mode (CLO)", "misc"],
+			["multionly",0,"draw only multipolygons (CLO)", "misc"],
+			["foot","mapweaver by gary68 - data by www.openstreetmap.org","text for footer (CLO)", "map"],
+			["footcolor","black","color for footer (CLO)", "map"],
+			["footbackground","none","background color for footer (CLO)", "map"],
+			["footsize",40,"font size for footer (CLO)", "map"],
+			["head","","text for header (CLO)", "map"],
+			["headcolor","black","color for header (CLO)", "map"],
+			["headbackground","none","background color for header (CLO)", "map"],
+			["headsize",40,"font size for header (CLO)", "map"]
 
 		  ) ;
 
@@ -169,16 +171,27 @@ sub printConfig {
 
 	# print actual config to stdout
 
-	print "\nCONFIG VALUES:\n\n" ;
-	foreach my $k (sort keys %cv) {
-		# print $k, "\n" ;
-		if (defined $explanation{$k}) {
-			printf "%-30s %-30s %-75s\n", $k, $cv{$k}, $explanation{$k} ;
+	print "\nActual configuration\n" ;
+
+	my %cats = () ;
+	foreach my $e (@initial) {
+		$cats{ $e->[3] } = 1 ;
+	}
+
+	foreach my $cat (sort keys %cats) {
+		my @entries = () ;
+		foreach my $e (@initial) {
+			if ($e->[3] eq $cat) {
+				push @entries, $e->[0] ;
+			}
 		}
-		else {
-			printf "%-30s %-30s\n", $k, $cv{$k} ;
+		print "\nCATEGORY $cat\n" ;
+		print "--------\n" ;
+		foreach my $e ( sort { $a cmp $b } @entries ) {
+			printf "%-30s %-30s\n", $e, cv($e) ;
 		}
 	}
+
 	print "\n" ;
 }
 
@@ -265,8 +278,6 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"footcolor:s"		=> \$cv{'footcolor'},
 				"footbackground:s"		=> \$cv{'footbackground'},
 				"footsize:i"		=> \$cv{'footsize'},
-				"linedist:i"		=> \$cv{'linedist'},
-				"maxcharperline:i"		=> \$cv{'maxcharperline'},
 				"head:s"		=> \$cv{'head'},
 				"headcolor:s"		=> \$cv{'headcolor'},
 				"headbackground:s"		=> \$cv{'headbackground'},

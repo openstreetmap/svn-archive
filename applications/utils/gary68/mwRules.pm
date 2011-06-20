@@ -122,10 +122,10 @@ sub readRules {
 			$nodeRules{ $nodeNr }{ 'color' } = cv( 'ruleDefaultNodeColor' ) ;
 			$nodeRules{ $nodeNr }{ 'shape' } = cv( 'ruleDefaultNodeShape' ) ;
 
-			# TODO defaults from config for label etc.
-
-			$nodeRules{ $nodeNr }{ 'label' } = "none" ;
+			$nodeRules{ $nodeNr }{ 'label' } = cv( 'ruleDefaultNodeLabel' ) ;
+			$nodeRules{ $nodeNr }{ 'labelsize' } = cv( 'ruleDefaultNodeLabelSize' ) ;
 			$nodeRules{ $nodeNr }{ 'icon' } = "none" ;
+			$nodeRules{ $nodeNr }{ 'iconsize' } = cv( 'ruleDefaultNodeIconSize' ) ;
 			$nodeRules{ $nodeNr }{ 'legend' } = "no" ;
 			$nodeRules{ $nodeNr }{ 'shieldname' } = "none" ;
 			$nodeRules{ $nodeNr }{ 'svgstring' } = "" ;

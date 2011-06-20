@@ -25,6 +25,8 @@ use mwConfig ;
 use mwFile ;
 use mwRules ;
 use mwMap ;
+use mwMisc ;
+use mwLabel ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -81,7 +83,7 @@ sub processNodes {
 				drawCircle ($$lonRef{$nodeId}, $$latRef{$nodeId}, 1, $$ruleRef{'circleradius'}, 1, $svgString, 'nodes') ;
 			}
 
-			if ($$ruleRef{'size'} > 0)  {
+			if ( ($$ruleRef{'size'} > 0) and ($$ruleRef{'icon'} eq "none") )  {
 				my $svgString = "" ;
 				if ( $$ruleRef{'svgstring'} ne "" ) {
 					$svgString = $$ruleRef{'svgstring'} ;
@@ -104,7 +106,16 @@ sub processNodes {
 				}
 			}
 
-		}
+			if ( ($$ruleRef{'label'} ne "none") or ($$ruleRef{'icon'} ne "none") ) {
+				my ($labelText, $ref) = createLabel (\@tags, $$ruleRef{'label'}, $$lonRef{$nodeId}, $$latRef{$nodeId}) ;
+				my $labelSize = $$ruleRef{'labelsize'} ;
+				my $icon = $$ruleRef{'icon'} ;
+				my $iconSize = $$ruleRef{'iconsize'} ;
+				my $svgText = "font-size=\"$labelSize\"" ;
+
+				placeLabelAndIcon($$lonRef{$nodeId}, $$latRef{$nodeId}, 0, $$ruleRef{'size'}, $labelText, $svgText, $icon, $iconSize, $iconSize, "nodes") ;
+			}
+		} # defined ruleref
 	}
 
 }

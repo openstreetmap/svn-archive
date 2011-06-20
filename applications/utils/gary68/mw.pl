@@ -7,9 +7,10 @@
 # 0.04 ruler positions; ruler background; disc opacity correction; -debug; -verbose
 # 0.04 scale, colors and positions; header/footer
 # 0.04 triangle and diamond for nodes; labels and icons for nodes
+# 0.05 categories for config values
 # 
 
-my $version = "0.04" ;
+my $version = "0.05" ;
 
 use strict ;
 use warnings ;

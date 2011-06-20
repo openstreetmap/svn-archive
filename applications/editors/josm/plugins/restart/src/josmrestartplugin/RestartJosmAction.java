@@ -18,7 +18,9 @@ public class RestartJosmAction extends JosmAction {
                 Shortcut.registerShortcut("file:restart",
                 tr("File: {0}", tr("Restart JOSM")),
                 KeyEvent.VK_R, Shortcut.GROUP_MENU),
-                true);
+                false);
+        putValue("toolbar", "action/restart");
+        Main.toolbar.register(this);
     }
 
     public void actionPerformed(ActionEvent arg0) {
@@ -37,7 +39,7 @@ public class RestartJosmAction extends JosmAction {
             for (String s : cmds)
                 System.out.print(s + " ");
             System.out.println();
-            
+
             Runtime.getRuntime().exec(cmds);
         } catch (Exception e) {
             e.printStackTrace();

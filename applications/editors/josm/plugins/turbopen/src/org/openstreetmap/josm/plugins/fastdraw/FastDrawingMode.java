@@ -4,7 +4,7 @@
  *
  * Licence: GPL v2 or later
  * Author:  Alexei Kasatkin, 2011
- * Thanks to authors of BuildingTools, ImproveWayAccuracy and LakeWalker 
+ * Thanks to authors of BuildingTools, ImproveWayAccuracy and LakeWalker
  * for good sample code
  */
 package org.openstreetmap.josm.plugins.fastdraw;
@@ -52,16 +52,16 @@ import org.openstreetmap.josm.tools.Shortcut;
 class FastDrawingMode extends MapMode implements MapViewPaintable,
         AWTEventListener {
     private static final String SIMPLIFYMODE_MESSAGE=
-            "Press Enter to simplify or save, Ctrl-Enter to save with tags, Up/Down to tune simplification";
+            tr("Press Enter to simplify or save, Ctrl-Enter to save with tags, Up/Down to tune simplification");
     private static final String DRAWINGMODE_MESSAGE=
-    "Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to delete, Enter to simplify or save, Ctrl-Shift-Click to start new line";
-    
+    tr("Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to delete, Enter to simplify or save, Ctrl-Shift-Click to start new line");
+
     private Color COLOR_FIXED;
     private Color COLOR_NORMAL;
     private Color COLOR_DELETE;
     private Color COLOR_SELECTEDFRAGMENT;
     private Color COLOR_EDITEDFRAGMENT;
-    
+
     private double maxDist;
     private double epsilonMult;
     //private double deltaLatLon;
@@ -69,7 +69,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private double minPixelsBetweenPoints;
     /// Initial tolerance for Douglas-Pecker algorithm
     private double startingEps;
-    
+
     private DrawnPolyLine line;
     private MapView mv;
     private String statusText;
@@ -91,7 +91,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private int nearestIdx;
     private Stroke strokeForDelete;
     private int dragNode=-1;
-    
+
 
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), Shortcut.registerShortcut(
@@ -120,13 +120,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         loadPrefs();
         mv = Main.map.mapView;
         line.setMv(mv);
-        
+
         if (getCurrentDataSet() == null) return;
-        
+
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
         Main.map.mapView.addTemporaryLayer(this);
-        
+
         Main.map.mapView.setCursor(cursorDraw);
 
         try {
@@ -165,19 +165,19 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }
 
     //////////    Event listener methods
-    
+
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
         LinkedList<LatLon> pts=line.getPoints();
         if (pts.isEmpty()) return;
-        
+
         if (line.wasSimplified()) {
             // we are drawing simplified version, that exists
             g.setStroke(strokeForSimplified);
         } else {
             g.setStroke(strokeForOriginal);
         }
-        
+
         Point p1, p2;
         LatLon pp1, pp2;
         p1 = line.getPoint(pts.get(0));
@@ -245,8 +245,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void mousePressed(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        
-        
+
+
         int idx=line.findClosestPoint(e.getPoint(),maxDist);
         if (idx==0 && !line.isClosed()) {
             line.closeLine();
@@ -255,18 +255,18 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             dragNode=0;
             updateCursor();
             return;
-        } 
-        
+        }
+
         if (ctrl && shift) newDrawing();
         if (!ctrl && shift) {
             if (idx>=0) {line.deleteNode(idx); nearestIdx=-1;}
-            else line.tryToDeleteSegment(e.getPoint()); 
+            else line.tryToDeleteSegment(e.getPoint());
             return;
         }
         if (idx>=0) {
             if (ctrl) {
                 // toggle fixed point
-                line.toggleFixed(idx);                
+                line.toggleFixed(idx);
             }
             // node dragging
             dragNode=idx;
@@ -275,7 +275,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         //if (line.isClosed()) { setStatusLine(tr(SIMPLIFYMODE_MESSAGE));return;  }
         drawing = true;
-        
+
         LatLon p = getLatLon(e);
         Node nd1 = getNearestNode(e.getPoint(), maxDist);
         if (nd1!=null) {
@@ -283,17 +283,17 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             //System.out.println("node "+nd1);
             p=nd1.getCoor();
             line.fixPoint(p);
-        }         
-        
+        }
+
         line.addLast(p);
         if (ctrl) line.fixPoint(p);
         line.clearSimplifiedVersion();
-               
+
         setStatusLine(tr("Please move the mouse to draw new way"));
         repaint();
 
     }
- 
+
     @Override
     public void mouseReleased(MouseEvent e) {
         if (!isEnabled()) return;
@@ -301,7 +301,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         dragNode = -1;
         drawing = false;
         highlighted=null;
-        if (!line.isClosed()) setStatusLine(tr(DRAWINGMODE_MESSAGE));
+        if (!line.isClosed()) setStatusLine(DRAWINGMODE_MESSAGE);
         repaint();
     }
 
@@ -314,11 +314,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void mouseMoved(MouseEvent e) {
         if (!isEnabled()) return;
         Node nd1 = getNearestNode(e.getPoint(), maxDist);
-        boolean nearpoint2=nd1!=null; 
+        boolean nearpoint2=nd1!=null;
         if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();}
-        
+
         nearestIdx=line.findClosestPoint(e.getPoint(),maxDist);
-        
+
         if (!drawing) {
             if (dragNode>=0) {
                 line.moveNode(dragNode,getLatLon(e));
@@ -332,29 +332,29 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 if (highlighted!=h2) {
                     highlighted=h2;
                     repaint();
-                } 
+                }
             }
             return;
         }
-        if (line.isClosed()) setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
-        
+        if (line.isClosed()) setStatusLine(SIMPLIFYMODE_MESSAGE);
+
         // do not draw points close to existing points - we do not want self-intersections
         if (nearestIdx>=0) { return; }
-        
+
         Point lastP = line.getLastPoint(); // last point of line fragment being edited
-                
+
         if (nearpoint){
             if ( Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > 1e-2) {
                 line.addFixed(nd1.getCoor()); // snap to node coords
                 repaint();
-            } 
+            }
         } else {
             if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > minPixelsBetweenPoints) {
                 line.addLast(getLatLon(e)); // free mouse-drawing
                 repaint();
             }
         }
-        
+
         //statusText = getLatLon(e).toString();        updateStatusLine();
     }
 
@@ -372,7 +372,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             // first Enter = simplify, second = save the way
             if (!line.wasSimplified()) {
                 line.simplify(eps);
-                setStatusLine(tr(SIMPLIFYMODE_MESSAGE));
+                setStatusLine(SIMPLIFYMODE_MESSAGE);
             } else saveAsWay();
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -390,7 +390,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             e.consume();
             line.moveToTheEnd();
         }
-              
+
 
     }
 
@@ -420,13 +420,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         List<LatLon> pts=line.getPoints();
         int n = pts.size();
         if (n == 0) return;
-        
+
         Collection<Command> cmds = new LinkedList<Command>();
         int i = 0;
         Way w = new Way();
         LatLon first=pts.get(0);
         Node firstNode=null;
-        
+
         for (LatLon p : pts) {
             Node nd=null;
             if (line.isFixed(p)) {
@@ -481,11 +481,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     void changeEpsilon(double k) {
         //System.out.println(tr("Eps={0}", eps));
         eps*=k;
-        setStatusLine(tr("Eps={0}", eps));
+        /* I18N: Eps = Epsilon, the tolerance parameter */ setStatusLine(tr("Eps={0}", eps));
         line.simplify(eps);
         repaint();
     }
-    
+
     private void setStatusLine(String tr) {
         statusText=tr;
         updateStatusLine();
@@ -508,7 +508,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         return nn;
     }*/
 
-    
+
     void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
         COLOR_EDITEDFRAGMENT = Main.pref.getColor("fastdraw.color.edit", Color.orange);
@@ -522,7 +522,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
         eps=startingEps;
     }
-    
+
     void savePrefs() {
          Main.pref.putColor("fastdraw.color.delete", COLOR_DELETE );
          Main.pref.putColor("fastdraw.color.edit", COLOR_EDITEDFRAGMENT);
@@ -545,16 +545,16 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (ctrl) Main.map.mapView.setCursor(cursorCtrl); else
         if (nearpoint) Main.map.mapView.setCursor(cursorCtrl); else
         Main.map.mapView.setCursor(cursorDraw);
-        
-        
+
+
     }
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Helper functions">
-    
+
     private Node getNearestNode(Point point, double maxDist) {
        Node nd = Main.map.mapView.getNearestNode(point, OsmPrimitive.isUsablePredicate);
-       if (nd!=null && line.getPoint(nd.getCoor()).distance(point)<=maxDist) return nd; 
+       if (nd!=null && line.getPoint(nd.getCoor()).distance(point)<=maxDist) return nd;
        else return null;
     }
 
@@ -562,5 +562,5 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         return mv.getLatLon(e.getX(), e.getY());
     }
 // </editor-fold>
-    
+
 }

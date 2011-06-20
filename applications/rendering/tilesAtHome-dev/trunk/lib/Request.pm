@@ -20,6 +20,7 @@ package Request;
 
 use warnings;
 use strict;
+use Net::INET6Glue::INET_is_INET6;
 use LWP::UserAgent;
 use Error qw(:try);
 use tahlib;

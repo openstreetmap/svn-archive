@@ -8,9 +8,10 @@
 # 0.04 scale, colors and positions; header/footer
 # 0.04 triangle and diamond for nodes; labels and icons for nodes
 # 0.05 categories for config values
+# 0.06 drawArea; area rules; extended help, added valid object properties
 # 
 
-my $version = "0.05" ;
+my $version = "0.06" ;
 
 use strict ;
 use warnings ;
@@ -34,6 +35,7 @@ readConfigFile( cv('ini') ) ;
 
 if ( cv('help') eq "1" ) {
 	printConfigDescriptions() ;
+	printValidObjectProperties() ;
 	die ("quit after help output\n") ;
 }
 

@@ -1,0 +1,93 @@
+RULE NODE
+keyvalue=amenity=post_box
+icon=./icons/postbox.svg
+iconsize=40
+RULE NODE
+keyvalue=place=city
+size=40
+labelsize=60
+shape=square
+RULE NODE
+keyvalue=place=town
+label=name
+labelsize=45
+size=30
+RULE NODE
+keyvalue=place=village
+size=20
+labelsize=30
+svgString=fill="black"
+RULE NODE
+keyvalue=place=suburb
+size=20
+labelsize=30
+RULE WAY
+keyvalue=highway=motorway
+color=blue
+size=26
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=motorway_link
+color=blue
+size=14
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=trunk
+color=blue
+size=24
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=trunk_link
+color=blue
+size=14
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=primary
+color=red
+size=22
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=primary_link
+color=red
+size=14
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=secondary
+color=orange
+size=20
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=secondary_link
+color=orange
+size=14
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=tertiary
+color=green
+size=18
+bordercolor=black
+bordersize=2
+RULE WAY
+keyvalue=highway=residential
+color=grey
+size=16
+bordersize=0
+RULE AREA
+keyvalue=landuse=residential
+color=lightgray
+base=yes
+RULE AREA
+keyvalue=building=yes
+color=darkgray
+RULE AREA
+keyvalue=natural=water
+color=lightblue
+base=yes

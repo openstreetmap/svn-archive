@@ -34,6 +34,9 @@ require Exporter ;
 			printNodeRules
 			getWayRule
 			printWayRules
+			getAreaRule
+			printAreaRules
+			printValidObjectProperties
 		 ) ;
 
 my @validNodeProperties = qw (	keyValue
@@ -86,6 +89,16 @@ my @validWayProperties = qw (	keyValue
 					toScale
 					) ;
 
+my @validAreaProperties = qw (	keyValue
+						color
+						icon
+						base
+						svgString
+						fromScale
+						toScale
+					) ;
+
+
 
 my %nodeRules = () ;
 my %areaRules = () ;
@@ -94,10 +107,35 @@ my $nodeNr = 0 ;
 my $areaNr = 0 ;
 my $wayNr = 0 ;
 
+# ---------------------------------------------------------------------------------------
+
+sub printValidObjectProperties {
+
+	print "\nValid Object Properties\n" ;
+
+	print "\nNodes\n-----\n" ;
+	foreach my $p (sort @validNodeProperties) {
+		print "$p\n" ;
+	}
+	print "\nWays\n----\n" ;
+	foreach my $p (sort @validWayProperties) {
+		print "$p\n" ;
+	}
+	print "\nAreas\n-----\n" ;
+	foreach my $p (sort @validAreaProperties) {
+		print "$p\n" ;
+	}
+	print "\n" ;
+}
+
+
+# ---------------------------------------------------------------------------------------
+
+
 sub readRules {
 
 	my $fileName = cv('style') ;
-	my $nrr = 0 ; my $wrr = 0 ; my $rrr = 0 ; my $crr = 0 ;
+	my $nrr = 0 ; my $wrr = 0 ; my $arr = 0 ; my $rrr = 0 ; my $crr = 0 ;
 
 	print "reading rule file $fileName\n" ;
 
@@ -106,6 +144,9 @@ sub readRules {
 
 	my %vwp = () ;
 	foreach my $p ( @validWayProperties ) { $vwp{ lc ( $p ) } = 1 ; }
+
+	my %vap = () ;
+	foreach my $p ( @validAreaProperties ) { $vap{ lc ( $p ) } = 1 ; }
 
 	open (my $file, "<", $fileName) or die ("ERROR: could not open rule file $fileName\n") ;
 	my $line = "" ;
@@ -188,7 +229,7 @@ sub readRules {
 				else {
 					$k = lc ( $k ) ;
 					$wayRules{ $wayNr }{ $k } = $v ;
-					if ( ! defined $vwp{$k} ) { print "WARNING: $k is not a valid node property!\n" ; }
+					if ( ! defined $vwp{$k} ) { print "WARNING: $k is not a valid way property!\n" ; }
 				}
 				$line = <$file> ;
 			}
@@ -197,6 +238,33 @@ sub readRules {
 		} # way
 
 		elsif ( grep /^rule area/i, $line ) {
+			$areaNr++ ;
+			$arr++ ;
+			$line = <$file> ;
+
+			# set defaults first
+			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
+			$areaRules{ $areaNr }{ 'icon' } = "none" ;
+			$areaRules{ $areaNr }{ 'base' } = "no"  ;
+			$areaRules{ $areaNr }{ 'svgstring' } = ""  ;
+			$areaRules{ $areaNr }{ 'minsize' } = cv ('ruledefaultareaminsize')  ;
+			$areaRules{ $areaNr }{ 'fromscale' } = cv ('ruledefaultareafromscale') ;
+			$areaRules{ $areaNr }{ 'toscale' } =  cv ('ruledefaultareatoscale') ;
+
+			while ( ( defined $line) and ( ! grep /^rule/i, $line) ) {
+				my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;
+				if ( ( ! defined $k ) or ( ! defined $v ) ) {
+					print "WARNING: could not parse rule line: $line" ;
+				}
+				else {
+					$k = lc ( $k ) ;
+					$areaRules{ $areaNr }{ $k } = $v ;
+					if ( ! defined $vap{$k} ) { print "WARNING: $k is not a valid area property!\n" ; }
+				}
+				$line = <$file> ;
+			}
+			if ( ! defined $areaRules{ $areaNr }{ 'keyvalue' } ) { die "ERROR: rule without keyValue detected!\n" ; }
+
 		} # area
 
 		elsif ( grep /^rule config/i, $line ) {
@@ -211,7 +279,7 @@ sub readRules {
 
 	close ($file) ;
 
-	print "rules read: $nrr nodes, $wrr ways, $rrr routes and $crr configs\n\n" ;
+	print "rules read: $nrr nodes, $wrr ways, $arr areas, $rrr routes and $crr configs\n\n" ;
 
 }
 
@@ -341,6 +409,73 @@ sub printWayRules {
 		print "\n" ;
 	}
 }
+
+
+# ---------------------------------------------------------------------------------------
+
+
+
+sub getAreaRule {
+
+	# takes tagref and returns hashref to rule properties
+
+	my $tagRef = shift ;
+
+	my $scale = cv ('scale') ;
+	if ( cv('rulescaleset') != 0 ) { $scale = cv('rulescaleset') ; }
+
+	my $ruleFound ; undef $ruleFound ;
+
+	RUL8: foreach my $rule (keys %areaRules) {
+		# print "rule $rule\n" ;
+		if ( ( $areaRules{$rule}{'fromscale'} <= $scale) and ( $areaRules{$rule}{'toscale'} >= $scale) ) {
+
+			my @kvs = split /;/, $areaRules{$rule}{'keyvalue'} ;
+			my $allValid = 1 ;
+			RUL7: foreach my $kv1 ( @kvs ) { # for each needed
+				my ($k, $v) = ( $kv1 =~ /(.+)=(.+)/ ) ;
+				# print "  looking for $k=$v\n" ;
+				my $found = 0 ;
+				RUL9: foreach my $tag ( @$tagRef) {
+					# print "    actual kvs: $tag->[0]=$tag->[1]\n" ;
+					if ( ( $tag->[0] eq $k) and ( ( $tag->[1] eq $v) or ( $v eq "*") ) ) {
+						$found = 1 ;
+						# print "    FOUND\n" ;
+						last RUL9 ;
+					}
+				} # tags
+				if ( ! $found ) { 
+					$allValid = 0 ;
+					last RUL7 ; 
+				}
+			} # kv1
+
+			if ( $allValid ) {
+				# print "ALL VALID\n" ;
+				# return the first rule found
+				$ruleFound = \%{ $areaRules{ $rule } } ;
+				last RUL8 ;
+			}
+
+		} # scale
+
+	} # all rules
+
+	return ($ruleFound) ;
+
+}
+
+
+sub printAreaRules {
+	foreach my $n (sort keys %areaRules) {
+		print "area rule $n\n" ;
+		foreach my $v (sort keys %{$areaRules{$n}}) {
+			print "  $v=$areaRules{$n}{$v}\n" ;
+		} 
+		print "\n" ;
+	}
+}
+
 
 
 

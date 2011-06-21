@@ -44,6 +44,7 @@ require Exporter ;
 			drawRect
 			writeMap
 			drawWay
+			drawArea
 			fitsPaper
 			getScale
 			createPath
@@ -68,6 +69,8 @@ my ($bottom, $left, $right, $top) ;
 my ($sizeX, $sizeY) ;
 my ($projLeft, $projBottom, $projRight, $projTop) ;
 my ($projSizeX, $projSizeY) ;
+
+my %areaDef ; # TODO replace by function call
 
 sub initGraph {
 
@@ -370,6 +373,49 @@ sub placeIcon {
 	push @{ $svgLayer{ $layer } }, $out ;
 }
 
+
+sub drawArea {
+#
+# draws mp in svg ARRAY of ARRAY of nodes/coordinates
+#
+	my ($svgText, $icon, $ref, $convert, $layer) = @_ ;
+	my @ways = @$ref ;
+	my $i ;
+	my $svg ;
+
+	if ($convert) {
+		my ($lonRef, $latRef, $tagRef) = mwFile::getNodePointers () ;
+		foreach my $aRef (@ways) {
+			my @way = @$aRef ;
+			my @newCoords = () ;
+			foreach my $n (@way) {
+				my ($x, $y) = convert ($$lonRef{$n}, $$latRef{$n}) ;
+				push @newCoords, $x, $y ;
+			}
+			@$aRef = @newCoords ;
+		}
+	}
+
+	if (defined $areaDef{$icon}) {
+		$svg = "<path $svgText fill-rule=\"evenodd\" style=\"fill:url(" . $areaDef{$icon} . ")\" d=\"" ;
+	}
+	else {
+		$svg = "<path $svgText fill-rule=\"evenodd\" d=\"" ;
+	}
+	
+	foreach my $way (@ways) {
+		my @actual = @$way ;
+		for ($i=0; $i<scalar(@actual); $i+=2) {
+			if ($i == 0) { $svg .= " M " ; } else { $svg .= " L " ; }
+			$svg = $svg . $actual[$i] . " " . $actual[$i+1] ;
+		}
+		$svg .= " z" ;
+	}
+
+	$svg = $svg . "\" />" ;
+
+	push @{ $svgLayer{ $layer } }, $svg ;
+}
 
 
 

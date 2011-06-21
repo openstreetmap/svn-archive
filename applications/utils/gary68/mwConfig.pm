@@ -59,6 +59,11 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruledefaultWayFromScale",0,"default fromScale of way", "ways"],
 			["ruledefaultWayToScale",1000000,"default toScale of way", "ways"],
 
+			["ruleDefaultAreaColor","lightgray","default area color", "areas"],
+			["ruleDefaultAreaMinSize",0,"minimum size of area to be drawn", "areas"],
+			["ruledefaultAreaFromScale",0,"default fromScale of way", "areas"],
+			["ruledefaultAreaToScale",1000000,"default toScale of way", "areas"],
+
 			["in","map.osm","osm in file (CLO)", "job"],
 			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],
 			["out","mapweaver.svg","svg output name (CLO)", "job"],

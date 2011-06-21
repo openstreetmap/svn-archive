@@ -49,24 +49,16 @@ sub processWays {
 		my @tags = @{ $$tagRef{$wayId} } ;
 		my $tagsString = "" ;
 
+		# WAYS
+
 		my $ruleRef = getWayRule (\@tags) ;
 		if (defined $ruleRef) {
-			# foreach my $t (@tags) { $tagsString .= $t->[0] . "=" . $t->[1] . " " ; }
-			# print "$nodeId $tagsString\n" ;
-			# print "rule found\n" ;
-			# foreach my $prop (keys %$ruleRef) {
-			#	print "$prop=$$ruleRef{$prop}\n" ;
-			# }
-			# print "\n" ;
-
 			my @nodes = @{ $$nodesRef{ $wayId } } ;
 
 			my $layer = getValue ("layer", $$tagRef{$wayId}) ;
 			if ( ! defined $layer ) { $layer = 0 ; }
+
 			# TODO check for numeric!!!
-
-
-			# DRAW WAY
 
 			if ( ( $$ruleRef{'svgstringtop'} ne "" ) or ( $$ruleRef{'svgstringbottom'} ne "" ) ) {
 				# TODO individual (NEEDS sizes anyway!!! for layers... or automatic?)
@@ -89,6 +81,30 @@ sub processWays {
 			# LABEL WAY
 
 		}
+
+		# AREAS
+
+		$ruleRef = getAreaRule (\@tags) ;
+		if (defined $ruleRef) {
+			my $color = $$ruleRef{'color'} ;
+			my $icon = $$ruleRef{'icon'} ;
+			my $base = $$ruleRef{'base'} ;
+			my $svgString = $$ruleRef{'svgstring'} ;
+			my @nodes = @{ $$nodesRef{ $wayId } } ;
+			my @ways = [@nodes] ;
+
+			if ($svgString eq "") {
+				$svgString = "fill=\"$color\" " ;
+			}
+
+			if ($base eq "yes") {
+				drawArea ($svgString, $icon, \@ways, 1, "base") ;
+			}
+			else {
+				drawArea ($svgString, $icon, \@ways, 1, "area") ;
+			}
+
+		} # Area
 	}
 }
 

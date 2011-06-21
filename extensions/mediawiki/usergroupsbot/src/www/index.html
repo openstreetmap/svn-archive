@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OSM User Groups around the world</title>
+  <link rel="shortcut icon" href="favicon.png" />
+  <script type="text/javascript" src="OpenLayers-2.10/OpenLayers.js"></script>
+  <script type="text/javascript" src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+  <script src="date.js"></script>
+  <style>.pop_heading{font-family: Arial, Helvetica, sans-serif; font-weight: bold;font-size:16px}</style>
+  <style>.pop_text{font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	padding-right:5px;
+	padding-top:5px;}</style>
+<style>.pop_link{font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	padding-right:5px;}</style>
+  <script>
+	var proj4326
+	var projmerc
+	var markers
+	var map
+	var groups, popup
+	var baseLayers=new Array();
+	var feature
+	//Init
+	function init(){
+	//add Map
+	var lonlat = new OpenLayers.LonLat();	        
+	var zoom = 13;
+	proj4326 = new OpenLayers.Projection("EPSG:4326");
+	projmerc = new OpenLayers.Projection("EPSG:900913");       
+	map = new OpenLayers.Map("map", {
+				controls: [
+					new OpenLayers.Control.KeyboardDefaults(),
+					new OpenLayers.Control.Navigation(),
+					new OpenLayers.Control.ArgParser(),
+					new OpenLayers.Control.Permalink(),
+					new OpenLayers.Control.LayerSwitcher(),
+					new OpenLayers.Control.PanZoomBar(),
+	            			new OpenLayers.Control.MousePosition(),
+					new OpenLayers.Control.Attribution(),
+					new OpenLayers.Control.OverviewMap(),
+					new OpenLayers.Control.ScaleLine()],maxExtent:
+	                		new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34, 20037508.34),
+						numZoomLevels: 18,
+	            				maxResolution: 156543,
+	            				units: 'm',
+	            				projection: projmerc,
+	            				displayProjection: proj4326
+				} );
+	//add base layers	
+	baseLayers.push(new OpenLayers.Layer.OSM("OpenStreetMap"));
+	baseLayers.push(new OpenLayers.Layer.XYZ('MapQuest', 'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png', { lid: 'mapquest' }));
+	map.addLayers(baseLayers);
+	addGroupsLayer();
+	//init Interaction
+	var select = new OpenLayers.Control.SelectFeature(groups, {clickout: true,multiple: false,onSelect: groupSelect,onUnselect:groupUnselect});
+	map.addControl(select);
+	select.activate();
+	//center map
+	pos=new OpenLayers.LonLat(0,50);//map.getMaxExtent().centerLonLat
+	if (!map.getCenter())
+	{
+		map.zoomToMaxExtent();
+	}
+	}
+
+	//make a popup with infos when POI is selected
+	function groupSelect(feature) {
+		if (feature.cluster==null)
+		{
+			content=getPOIContent(feature.data);
+			feature.popup = new OpenLayers.Popup.FramedCloud(null,
+		                        feature.geometry.getBounds().getCenterLonLat(),
+		                        new OpenLayers.Size(200,200),
+		                        "<div class='popupcontent'>"+content+"<\/div>",
+		                        feature.marker,
+		                        true);
+			map.addPopup(feature.popup);
+			//feature.popup.updateSize();
+		}
+        }
+
+	//close popup
+	function groupUnselect(feature) {
+	    	if (feature.popup) {
+			map.removePopup(feature.popup);
+			feature.popup.destroy();
+			feature.popup = null;
+	    	} 
+	}
+
+
+	//create popup content for a POI
+	function getPOIContent(data)
+	{
+		text="<p class='pop_heading'>"+data.name+"<\/p>";
+		if(data.photo)
+		{
+			text+= '<img src="'+data.photo+'" width=300px style="margin-right:20px; margin-bottom:10px"><br>';
+		}
+		else
+		{
+			text+= '<img src="nophoto.png" style="margin-right:20px; margin-bottom:10px" title="No photo available"><br>';
+		}
+		if(data.when) text+="<p class='pop_text'>"+data.when
+			else text+="<p class='pop_text'> When: ?";
+		if(data.where) text+="<br>Location: "+data.where+"<\/p>";
+			else text+="<br>Location: ?<\/p>";
+		text+='<a href="'+data.wiki+'"'+" class='pop_link'>Wiki<\/a> ";
+		if (data.url) {text+='<a href="'+data.url+'"'+" class='pop_link'>WWW<\/a>";}
+		if (data.mail) {text+='<a href="'+data.mail+'"'+" class='pop_link'>Mail<\/a>";}
+		return text;
+		//return data.toSource();
+	}        
+
+	//Groups layer has cluster behaviour and more complex styling
+	function addGroupsLayer()
+	{
+		var strategy = new OpenLayers.Strategy.Cluster({distance: 25, threshold: 3});
+		var dynStyle = new OpenLayers.Style({label: "${name}",pointerEvents: "visiblePainted", graphicTitle: "${name}",externalGraphic: "${icon}",graphicWidth: "22",graphicHeight: "22",graphicYOffset:"${offsetY}",graphicXOffset:"${offsetX}",
+						fontColor: "black",fontSize: "10px",fontWeight:"bold",fontFamily: "Courier New, monospace",labelAlign: "lt"},
+					{context:{
+						//gets only called for clusters!
+						name:function(feature){
+							 if(feature.cluster) {
+								return feature.cluster.length.toString(); //display number
+							}
+							else return null;
+						},
+						icon:function(feature){
+							return "localgroup.png";
+						},
+						offsetX:function(feature){
+							if(feature.cluster) {
+								if(feature.cluster.length>=10) return -7; else return -10; //keep text centered
+							}
+						},
+						offsetY:function(feature){
+							if(feature.cluster) {
+								return -20;
+							}
+						}
+					}
+				});
+		groups = new OpenLayers.Layer.GML("OSM user groups","osm_user_groups.kml", { projection: proj4326, displayInLayerSwitcher: true, format: OpenLayers.Format.KML,formatOptions: { extractStyles: true, extractAttributes: true },strategies:[strategy],styleMap: new OpenLayers.StyleMap({"default": dynStyle})});
+	map.addLayers([groups]);
+	}
+
+        
+</script>
+</head>
+<body onload="init();" style="background-color: #B5D0D0">
+		<div id="map" style="position:absolute;left:0;top:0;width:98%; height:95%"></div>
+		<div id="footer" style="padding-left:1%;font-size:11px;color: #000000;font-family: Arial,sans-serif;background-color: #CBEEA7;width:98%;height:5%;position: absolute; bottom: 0;">
+			<p>Data harvested by <a href='http://wiki.openstreetmap.org/wiki/User:UserGroupsBot'>UserGroupsBot</a> at <script> document.write(export_date+" ("+export_number+" groups)");</script></p>
+		</div>
+
+
+</body>
+</html>

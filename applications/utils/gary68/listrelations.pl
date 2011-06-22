@@ -23,6 +23,9 @@
 # Version 1.2
 # - reduced view to 6 columns again
 #
+# Version 1.3
+# - added operator and network
+# 
 
 
 use strict ;
@@ -35,7 +38,7 @@ use OSM::osm 5.3 ;
 
 my $program = "listrelations.pl" ;
 my $usage = $program . " file.osm out.htm out.csv" ;
-my $version = "1.2" ;
+my $version = "1.3" ;
 
 
 my $wayId ;
@@ -112,10 +115,10 @@ print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 
 print $html "<H2>Data</H2>\n" ;
 printHTMLTableHead ($html) ;
-printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Name / Note", "Ref", "#members") ;
+printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Name / Note", "Ref", "Operator", "Network", "#members") ;
 
 print $csv $program . " " . stringFileInfo ($osmName), "\n" ;
-print $csv "line;relationId;type;route;name;ref;note;members\n" ;
+print $csv "line;relationId;type;route;name;ref;operator;network;note;members\n" ;
 
 ($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
 if ($relationId != -1) {
@@ -132,6 +135,8 @@ while ($relationId != -1) {
 	my $type = "-" ;
 	my $note = "-" ;
 	my $route = "" ;
+	my $network = "-" ;
+	my $operator = "-" ;
 
 	my $i ;
 	if (scalar (@relationTags) > 0) {
@@ -142,6 +147,8 @@ while ($relationId != -1) {
 			if ( ${$relationTags[$i]}[0] eq "type")  { $type  = ${$relationTags[$i]}[1] . " " . $route; }
 			if ( ${$relationTags[$i]}[0] eq "note")  { $note  = ${$relationTags[$i]}[1] ; }
 			if ( ${$relationTags[$i]}[0] eq "route") { $route = ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "network") { $network = ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "operator") { $operator = ${$relationTags[$i]}[1] ; }
 		}
 	}
 
@@ -166,6 +173,8 @@ while ($relationId != -1) {
 		printHTMLCellLeftTwoValues ($html, $name, $note) ;
 	}
 	printHTMLCellLeft ($html, $ref) ;
+	printHTMLCellLeft ($html, $operator) ;
+	printHTMLCellLeft ($html, $network) ;
 	printHTMLCellLeft ($html, $members) ;
 	printHTMLRowEnd ($html) ;
 	
@@ -175,6 +184,8 @@ while ($relationId != -1) {
 	print $csv $route, ";" ; 
 	print $csv "\"", $name,  "\"", ";" ; 
 	print $csv "\"", $ref,  "\"",  ";" ; 
+	print $csv "\"", $operator,  "\"",  ";" ; 
+	print $csv "\"", $network,  "\"",  ";" ; 
 	print $csv "\"", $note,  "\"",  ";" ; 
 	print $csv $members, "\n" ; 
 

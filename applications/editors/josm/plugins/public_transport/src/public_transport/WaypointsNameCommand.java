@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -16,10 +18,10 @@ public class WaypointsNameCommand extends Command
   private String oldName = null;
   private String name = null;
   private String oldShelter = null;
-  private String shelter = null;
+  private TransText shelter;
 
   public WaypointsNameCommand
-      (WaypointTableModel waypointTM, int workingLine, String name, String shelter)
+      (WaypointTableModel waypointTM, int workingLine, String name, TransText shelter)
   {
     this.waypointTM = waypointTM;
     this.workingLine = workingLine;
@@ -30,8 +32,6 @@ public class WaypointsNameCommand extends Command
     }
     this.name = name;
     this.shelter = shelter;
-    if ("".equals(shelter))
-      this.shelter = null;
   }
 
   public boolean executeCommand()
@@ -39,17 +39,14 @@ public class WaypointsNameCommand extends Command
     if (waypointTM.nodes.elementAt(workingLine) != null)
     {
       waypointTM.nodes.elementAt(workingLine).put("name", name);
-      waypointTM.nodes.elementAt(workingLine).put("shelter", shelter);
+      waypointTM.nodes.elementAt(workingLine).put("shelter", shelter.text);
     }
     waypointTM.inEvent = true;
     if (name == null)
       waypointTM.setValueAt("", workingLine, 1);
     else
       waypointTM.setValueAt(name, workingLine, 1);
-    if (shelter == null)
-      waypointTM.setValueAt("", workingLine, 2);
-    else
-      waypointTM.setValueAt(shelter, workingLine, 2);
+    waypointTM.setValueAt(shelter, workingLine, 2);
     waypointTM.inEvent = false;
     return true;
   }
@@ -66,10 +63,7 @@ public class WaypointsNameCommand extends Command
       waypointTM.setValueAt("", workingLine, 1);
     else
       waypointTM.setValueAt(oldName, workingLine, 1);
-    if (oldShelter == null)
-      waypointTM.setValueAt("", workingLine, 2);
-    else
-      waypointTM.setValueAt(oldShelter, workingLine, 2);
+    waypointTM.setValueAt(new TransText(oldShelter), workingLine, 2);
     waypointTM.inEvent = false;
   }
 
@@ -81,6 +75,6 @@ public class WaypointsNameCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.Waypoints.EditName");
+    return new JLabel(tr("Public Transport: Edit waypoint name"));
   }
 };

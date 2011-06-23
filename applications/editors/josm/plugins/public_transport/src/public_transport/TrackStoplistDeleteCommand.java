@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -13,7 +15,7 @@ public class TrackStoplistDeleteCommand extends Command
 {
   private class NodeTimeName
   {
-    NodeTimeName(Node node, String time, String name, String shelter)
+    NodeTimeName(Node node, String time, String name, TransText shelter)
     {
       this.node = node;
       this.time = time;
@@ -24,7 +26,7 @@ public class TrackStoplistDeleteCommand extends Command
     public Node node;
     public String time;
     public String name;
-    public String shelter;
+    public TransText shelter;
   };
 
   private Vector< Integer > workingLines = null;
@@ -43,13 +45,13 @@ public class TrackStoplistDeleteCommand extends Command
     {
       for (int i = 0; i < selectedLines.length; ++i)
       {
-    workingLines.add(selectedLines[i]);
+        workingLines.add(selectedLines[i]);
       }
     }
     else
     {
       for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-    workingLines.add(new Integer(i));
+        workingLines.add(new Integer(i));
     }
   }
 
@@ -63,10 +65,10 @@ public class TrackStoplistDeleteCommand extends Command
       nodesForUndo.add(new NodeTimeName
       (node, (String)stoplistTM.getValueAt(j, 0),
        (String)stoplistTM.getValueAt(j, 1),
-       (String)stoplistTM.getValueAt(j, 2)));
+       (TransText)stoplistTM.getValueAt(j, 2)));
       stoplistTM.removeRow(j);
       if (node == null)
-    continue;
+        continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
@@ -81,7 +83,7 @@ public class TrackStoplistDeleteCommand extends Command
       NodeTimeName ntn = nodesForUndo.elementAt(workingLines.size() - i - 1);
       stoplistTM.insertRow(j, ntn.node, ntn.time, ntn.name, ntn.shelter);
       if (ntn.node == null)
-    continue;
+        continue;
       ntn.node.setDeleted(false);
       Main.main.getCurrentDataSet().addPrimitive(ntn.node);
     }
@@ -95,6 +97,6 @@ public class TrackStoplistDeleteCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.TrackStoplist.Delete");
+    return new JLabel(tr("Public Transport: Delete track stop"));
   }
 };

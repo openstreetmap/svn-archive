@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -19,7 +21,7 @@ public class TrackStoplistNameCommand extends Command
   private String oldTime = null;
   private String time = null;
   private String oldShelter = null;
-  private String shelter = null;
+  private TransText shelter = null;
   private LatLon oldLatLon = null;
 
   @SuppressWarnings("unchecked")
@@ -37,8 +39,8 @@ public class TrackStoplistNameCommand extends Command
     }
     this.time = (String)trackref.stoplistTM.getValueAt(workingLine, 0);
     this.name = (String)trackref.stoplistTM.getValueAt(workingLine, 1);
-    this.shelter = (String)trackref.stoplistTM.getValueAt(workingLine, 2);
-    if ("".equals(this.shelter))
+    this.shelter = (TransText)trackref.stoplistTM.getValueAt(workingLine, 2);
+    if ("".equals(this.shelter.text))
       this.shelter = null;
   }
 
@@ -48,7 +50,7 @@ public class TrackStoplistNameCommand extends Command
     if (node != null)
     {
       node.put("name", name);
-      node.put("shelter", shelter);
+      node.put("shelter", shelter.text);
       double dTime = StopImporterDialog.parseTime(time);
       node.setCoor(trackref.computeCoor(dTime));
     }
@@ -61,10 +63,7 @@ public class TrackStoplistNameCommand extends Command
       trackref.stoplistTM.setValueAt("", workingLine, 1);
     else
       trackref.stoplistTM.setValueAt(name, workingLine, 1);
-    if (shelter == null)
-      trackref.stoplistTM.setValueAt("", workingLine, 2);
-    else
-      trackref.stoplistTM.setValueAt(shelter, workingLine, 2);
+    trackref.stoplistTM.setValueAt(shelter, workingLine, 2);
     trackref.inEvent = false;
     return true;
   }
@@ -87,10 +86,7 @@ public class TrackStoplistNameCommand extends Command
       trackref.stoplistTM.setValueAt("", workingLine, 1);
     else
       trackref.stoplistTM.setValueAt(oldName, workingLine, 1);
-    if (oldShelter == null)
-      trackref.stoplistTM.setValueAt("", workingLine, 2);
-    else
-      trackref.stoplistTM.setValueAt(oldShelter, workingLine, 2);
+    trackref.stoplistTM.setValueAt(new TransText(oldShelter), workingLine, 2);
     trackref.inEvent = false;
   }
 
@@ -102,6 +98,6 @@ public class TrackStoplistNameCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.TrackStoplist.Edit");
+    return new JLabel(tr("Public Transport: Edit track stop list"));
   }
 };

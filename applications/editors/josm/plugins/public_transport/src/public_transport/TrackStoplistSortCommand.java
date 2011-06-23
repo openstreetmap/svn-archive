@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -34,12 +36,12 @@ public class TrackStoplistSortCommand extends Command
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
-    workingLines.add(selectedLines[i]);
+        workingLines.add(selectedLines[i]);
     }
     else
     {
       for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-    workingLines.add(new Integer(i));
+        workingLines.add(new Integer(i));
     }
   }
 
@@ -58,7 +60,7 @@ public class TrackStoplistSortCommand extends Command
       nodesToSort.add(new NodeSortEntry
       (stoplistTM.nodeAt(j), (String)stoplistTM.getValueAt(j, 0),
         (String)stoplistTM.getValueAt(j, 1),
-        (String)stoplistTM.getValueAt(j, 2),
+        (TransText)stoplistTM.getValueAt(j, 2),
          StopImporterDialog.parseTime(stopwatchStart)));
       stoplistTM.removeRow(j);
     }
@@ -72,7 +74,7 @@ public class TrackStoplistSortCommand extends Command
       NodeSortEntry nse = iter.next();
       stoplistTM.insertRow(insPos, nse.node, nse.time, nse.name, nse.shelter);
       if (insPos >= 0)
-    ++insPos;
+        ++insPos;
     }
     return true;
   }
@@ -92,7 +94,7 @@ public class TrackStoplistSortCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.TrackStoplist.Sort");
+    return new JLabel(tr("Public Transport: sort track stop list"));
   }
 
   private class NodeSortEntry implements Comparable< NodeSortEntry >
@@ -100,11 +102,11 @@ public class TrackStoplistSortCommand extends Command
     public Node node = null;
     public String time = null;
     public String name = null;
-    public String shelter = null;
+    public TransText shelter = null;
     public double startTime = 0;
 
     public NodeSortEntry
-        (Node node, String time, String name, String shelter, double startTime)
+        (Node node, String time, String name, TransText shelter, double startTime)
     {
       this.node = node;
       this.time = time;
@@ -116,18 +118,18 @@ public class TrackStoplistSortCommand extends Command
     {
       double time = StopImporterDialog.parseTime(this.time);
       if (time - startTime > 12*60*60)
-    time -= 24*60*60;
+        time -= 24*60*60;
 
       double nseTime = StopImporterDialog.parseTime(nse.time);
       if (nseTime - startTime > 12*60*60)
-    nseTime -= 24*60*60;
+        nseTime -= 24*60*60;
 
       if (time < nseTime)
-    return -1;
+        return -1;
       else if (time > nseTime)
-    return 1;
+        return 1;
       else
-    return 0;
+        return 0;
     }
   };
 };

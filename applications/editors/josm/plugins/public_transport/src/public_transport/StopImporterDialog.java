@@ -74,19 +74,21 @@ public class StopImporterDialog
   private JTable stoplistTable = null;
   private JTable waypointTable = null;
 
+  private final String[] stoptypes = new String[]{marktr("bus"), marktr("tram"), marktr("light_rail"), marktr("subway"), marktr("rail")};
+
   public StopImporterDialog(StopImporterAction controller)
   {
     Frame frame = JOptionPane.getFrameForComponent(Main.parent);
-    jDialog = new JDialog(frame, "Create Stops from GPX", false);
+    jDialog = new JDialog(frame, tr("Create Stops from GPX"), false);
     tabbedPane = new JTabbedPane();
     JPanel tabTracks = new JPanel();
-    tabbedPane.addTab(marktr("Tracks"), tabTracks);
+    tabbedPane.addTab(tr("Tracks"), tabTracks);
     JPanel tabSettings = new JPanel();
-    tabbedPane.addTab(marktr("Settings"), tabSettings);
+    tabbedPane.addTab(tr("Settings"), tabSettings);
     JPanel tabStops = new JPanel();
-    tabbedPane.addTab(marktr("Stops"), tabStops);
+    tabbedPane.addTab(tr("Stops"), tabStops);
     JPanel tabWaypoints = new JPanel();
-    tabbedPane.addTab(marktr("Waypoints"), tabWaypoints);
+    tabbedPane.addTab(tr("Waypoints"), tabWaypoints);
     tabbedPane.setEnabledAt(0, true);
     tabbedPane.setEnabledAt(1, true);
     tabbedPane.setEnabledAt(2, false);
@@ -99,7 +101,7 @@ public class StopImporterDialog
     GridBagConstraints layoutCons = new GridBagConstraints();
     contentPane.setLayout(gridbag);
 
-    JLabel label = new JLabel("Tracks in this GPX file:");
+    JLabel label = new JLabel(tr("Tracks in this GPX file:"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 0;
@@ -133,7 +135,7 @@ public class StopImporterDialog
     layoutCons = new GridBagConstraints();
     contentPane.setLayout(gridbag);
 
-    label = new JLabel("Type of stops to add");
+    label = new JLabel(tr("Type of stops to add"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 0;
@@ -146,11 +148,8 @@ public class StopImporterDialog
 
     cbStoptype = new JComboBox();
     cbStoptype.setEditable(false);
-    cbStoptype.addItem("bus");
-    cbStoptype.addItem("tram");
-    cbStoptype.addItem("light_rail");
-    cbStoptype.addItem("subway");
-    cbStoptype.addItem("rail");
+    for(String type : stoptypes)
+        cbStoptype.addItem(new TransText(type));
     cbStoptype.setActionCommand("stopImporter.settingsStoptype");
     cbStoptype.addActionListener(controller);
 
@@ -163,7 +162,7 @@ public class StopImporterDialog
     gridbag.setConstraints(cbStoptype, layoutCons);
     contentPane.add(cbStoptype);
 
-    label = new JLabel("Time on your GPS device");
+    label = new JLabel(tr("Time on your GPS device"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 2;
@@ -187,7 +186,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tfGPSTimeStart, layoutCons);
     contentPane.add(tfGPSTimeStart);
 
-    label = new JLabel("HH:MM:SS.sss");
+    label = new JLabel(tr("HH:MM:SS.sss"));
 
     layoutCons.gridx = 1;
     layoutCons.gridy = 3;
@@ -198,7 +197,7 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    label = new JLabel("Time on your stopwatch");
+    label = new JLabel(tr("Time on your stopwatch"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 4;
@@ -222,7 +221,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tfStopwatchStart, layoutCons);
     contentPane.add(tfStopwatchStart);
 
-    label = new JLabel("HH:MM:SS.sss");
+    label = new JLabel(tr("HH:MM:SS.sss"));
 
     layoutCons.gridx = 1;
     layoutCons.gridy = 5;
@@ -233,7 +232,7 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    label = new JLabel("Time window");
+    label = new JLabel(tr("Time window"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 6;
@@ -257,7 +256,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tfTimeWindow, layoutCons);
     contentPane.add(tfTimeWindow);
 
-    label = new JLabel("seconds");
+    label = new JLabel(tr("seconds"));
 
     layoutCons.gridx = 1;
     layoutCons.gridy = 7;
@@ -268,7 +267,7 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    label = new JLabel("Move Threshold");
+    label = new JLabel(tr("Move Threshold"));
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 8;
@@ -292,7 +291,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tfThreshold, layoutCons);
     contentPane.add(tfThreshold);
 
-    label = new JLabel("meters");
+    label = new JLabel(tr("meters"));
 
     layoutCons.gridx = 1;
     layoutCons.gridy = 9;
@@ -303,7 +302,7 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    JButton bSuggestStops = new JButton("Suggest Stops");
+    JButton bSuggestStops = new JButton(tr("Suggest Stops"));
     bSuggestStops.setActionCommand("stopImporter.settingsSuggestStops");
     bSuggestStops.addActionListener(controller);
 
@@ -358,7 +357,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tableSP, layoutCons);
     contentPane.add(tableSP);
 
-    JButton bFind = new JButton("Find");
+    JButton bFind = new JButton(tr("Find"));
     bFind.setActionCommand("stopImporter.stoplistFind");
     bFind.addActionListener(controller);
 
@@ -371,7 +370,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bFind, layoutCons);
     contentPane.add(bFind);
 
-    JButton bShow = new JButton("Show");
+    JButton bShow = new JButton(tr("Show"));
     bShow.setActionCommand("stopImporter.stoplistShow");
     bShow.addActionListener(controller);
 
@@ -384,7 +383,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bShow, layoutCons);
     contentPane.add(bShow);
 
-    JButton bMark = new JButton("Mark");
+    JButton bMark = new JButton(tr("Mark"));
     bMark.setActionCommand("stopImporter.stoplistMark");
     bMark.addActionListener(controller);
 
@@ -398,7 +397,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bMark, layoutCons);
     contentPane.add(bMark);
 
-    JButton bDetach = new JButton("Detach");
+    JButton bDetach = new JButton(tr("Detach"));
     bDetach.setActionCommand("stopImporter.stoplistDetach");
     bDetach.addActionListener(controller);
 
@@ -412,7 +411,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bDetach, layoutCons);
     contentPane.add(bDetach);
 
-    JButton bAdd = new JButton("Add");
+    JButton bAdd = new JButton(tr("Add"));
     bAdd.setActionCommand("stopImporter.stoplistAdd");
     bAdd.addActionListener(controller);
 
@@ -426,7 +425,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bAdd, layoutCons);
     contentPane.add(bAdd);
 
-    JButton bDelete = new JButton("Delete");
+    JButton bDelete = new JButton(tr("Delete"));
     bDelete.setActionCommand("stopImporter.stoplistDelete");
     bDelete.addActionListener(controller);
 
@@ -439,7 +438,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bDelete, layoutCons);
     contentPane.add(bDelete);
 
-    JButton bSort = new JButton("Sort");
+    JButton bSort = new JButton(tr("Sort"));
     bSort.setActionCommand("stopImporter.stoplistSort");
     bSort.addActionListener(controller);
 
@@ -495,7 +494,7 @@ public class StopImporterDialog
     gridbag.setConstraints(tableSP, layoutCons);
     contentPane.add(tableSP);
 
-    bFind = new JButton("Find");
+    bFind = new JButton(tr("Find"));
     bFind.setActionCommand("stopImporter.waypointsFind");
     bFind.addActionListener(controller);
 
@@ -508,7 +507,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bFind, layoutCons);
     contentPane.add(bFind);
 
-    bShow = new JButton("Show");
+    bShow = new JButton(tr("Show"));
     bShow.setActionCommand("stopImporter.waypointsShow");
     bShow.addActionListener(controller);
 
@@ -521,7 +520,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bShow, layoutCons);
     contentPane.add(bShow);
 
-    bMark = new JButton("Mark");
+    bMark = new JButton(tr("Mark"));
     bMark.setActionCommand("stopImporter.waypointsMark");
     bMark.addActionListener(controller);
 
@@ -535,7 +534,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bMark, layoutCons);
     contentPane.add(bMark);
 
-    bDetach = new JButton("Detach");
+    bDetach = new JButton(tr("Detach"));
     bDetach.setActionCommand("stopImporter.waypointsDetach");
     bDetach.addActionListener(controller);
 
@@ -549,7 +548,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bDetach, layoutCons);
     contentPane.add(bDetach);
 
-    bAdd = new JButton("Enable");
+    bAdd = new JButton(tr("Enable"));
     bAdd.setActionCommand("stopImporter.waypointsAdd");
     bAdd.addActionListener(controller);
 
@@ -563,7 +562,7 @@ public class StopImporterDialog
     gridbag.setConstraints(bAdd, layoutCons);
     contentPane.add(bAdd);
 
-    bDelete = new JButton("Disable");
+    bDelete = new JButton(tr("Disable"));
     bDelete.setActionCommand("stopImporter.waypointsDelete");
     bDelete.addActionListener(controller);
 
@@ -602,7 +601,7 @@ public class StopImporterDialog
 
   public String getStoptype()
   {
-    return (String)cbStoptype.getSelectedItem();
+    return ((TransText)cbStoptype.getSelectedItem()).text;
   }
 
   public boolean gpsTimeStartValid()
@@ -614,7 +613,7 @@ public class StopImporterDialog
     else
     {
       JOptionPane.showMessageDialog
-      (null, "Can't parse a time from this string.", "Invalid value",
+      (null, tr("Can't parse a time from this string."), tr("Invalid value"),
        JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -639,7 +638,7 @@ public class StopImporterDialog
     else
     {
       JOptionPane.showMessageDialog
-      (null, "Can't parse a time from this string.", "Invalid value",
+      (null, tr("Can't parse a time from this string."), tr("Invalid value"),
        JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -674,10 +673,10 @@ public class StopImporterDialog
   {
     stoplistTable.setModel(model);
     JComboBox comboBox = new JComboBox();
-    comboBox.addItem("");
-    comboBox.addItem("yes");
-    comboBox.addItem("no");
-    comboBox.addItem("implicit");
+    comboBox.addItem(new TransText(null));
+    comboBox.addItem(new TransText(marktr("yes")));
+    comboBox.addItem(new TransText(marktr("no")));
+    comboBox.addItem(new TransText(marktr("implicit")));
     stoplistTable.getColumnModel().getColumn(2)
     .setCellEditor(new DefaultCellEditor(comboBox));
     int width = stoplistTable.getPreferredSize().width;
@@ -695,10 +694,10 @@ public class StopImporterDialog
   {
     waypointTable.setModel(model);
     JComboBox comboBox = new JComboBox();
-    comboBox.addItem("");
-    comboBox.addItem("yes");
-    comboBox.addItem("no");
-    comboBox.addItem("implicit");
+    comboBox.addItem(new TransText(null));
+    comboBox.addItem(new TransText(marktr("yes")));
+    comboBox.addItem(new TransText(marktr("no")));
+    comboBox.addItem(new TransText(marktr("implicit")));
     waypointTable.getColumnModel().getColumn(2)
     .setCellEditor(new DefaultCellEditor(comboBox));
     int width = waypointTable.getPreferredSize().width;
@@ -735,9 +734,9 @@ public class StopImporterDialog
     {
       int selectedPos = tracksList.getAnchorSelectionIndex();
       if (tracksList.isSelectedIndex(selectedPos))
-    root.tracksSelectionChanged(selectedPos);
+        root.tracksSelectionChanged(selectedPos);
       else
-    root.tracksSelectionChanged(-1);
+        root.tracksSelectionChanged(-1);
     }
   };
 }

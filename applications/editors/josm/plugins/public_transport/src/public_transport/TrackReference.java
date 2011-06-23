@@ -1,6 +1,5 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Iterator;
@@ -56,8 +55,8 @@ public class TrackReference
       if (this.gpsSyncTime == null)
       {
     JOptionPane.showMessageDialog
-        (null, "The GPX file doesn't contain valid trackpoints. "
-        + "Please use a GPX file that has trackpoints.", "GPX File Trouble",
+        (null, tr("The GPX file doesn't contain valid trackpoints. "
+        + "Please use a GPX file that has trackpoints."), tr("GPX File Trouble"),
      JOptionPane.ERROR_MESSAGE);
 
     this.gpsStartTime = "1970-01-01T00:00:00Z";
@@ -92,7 +91,7 @@ public class TrackReference
   {
     String buf = (String)track.getAttributes().get("name");
     if (buf == null)
-      return "unnamed";
+      return tr("unnamed");
     return buf;
   }
 
@@ -110,7 +109,7 @@ public class TrackReference
     stoplistTM.setValueAt
         (stoplistTM.timeAt(e.getFirstRow()), e.getFirstRow(), 0);
     JOptionPane.showMessageDialog
-        (null, "Can't parse a time from this string.", "Invalid value",
+        (null, tr("Can't parse a time from this string."), tr("Invalid value"),
          JOptionPane.ERROR_MESSAGE);
     return;
       }

@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -46,9 +48,9 @@ public class SettingsStoptypeCommand extends Command
     {
       if ((Node)waypointTM.nodes.elementAt(i) != null)
       {
-    Node node = (Node)waypointTM.nodes.elementAt(i);
-    oldStrings.add(new HighwayRailway(node));
-    StopImporterAction.setTagsWrtType(node, type);
+        Node node = (Node)waypointTM.nodes.elementAt(i);
+        oldStrings.add(new HighwayRailway(node));
+        StopImporterAction.setTagsWrtType(node, type);
       }
     }
     for (int j = 0; j < tracksListModel.size(); ++j)
@@ -56,12 +58,12 @@ public class SettingsStoptypeCommand extends Command
       TrackReference track = (TrackReference)tracksListModel.elementAt(j);
       for (int i = 0; i < track.stoplistTM.getRowCount(); ++i)
       {
-    if (track.stoplistTM.nodeAt(i) != null)
-    {
-      Node node = track.stoplistTM.nodeAt(i);
-      oldStrings.add(new HighwayRailway(node));
-      StopImporterAction.setTagsWrtType(node, type);
-    }
+        if (track.stoplistTM.nodeAt(i) != null)
+        {
+          Node node = track.stoplistTM.nodeAt(i);
+          oldStrings.add(new HighwayRailway(node));
+          StopImporterAction.setTagsWrtType(node, type);
+        }
       }
     }
     return true;
@@ -85,7 +87,7 @@ public class SettingsStoptypeCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.Settings.ChangeStoptype");
+    return new JLabel(tr("Public Transport: Change stop type"));
   }
 
 };

@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -65,7 +67,7 @@ public class GTFSJoinCommand extends Command
       dest.put("name", (String)gtfsStopTM.getValueAt(j, 1));
     gtfsStopTM.nodes.set(j, dest);
     type = (String)gtfsStopTM.getValueAt(j, 2);
-    gtfsStopTM.setValueAt("moved", j, 2);
+    gtfsStopTM.setValueAt(tr("moved"), j, 2);
 
     return true;
   }
@@ -105,6 +107,6 @@ public class GTFSJoinCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.GTFSStops.Join");
+    return new JLabel(tr("Public Transport: Join GTFS stops"));
   }
 };

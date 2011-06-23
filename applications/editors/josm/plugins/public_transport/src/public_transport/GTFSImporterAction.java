@@ -1,6 +1,5 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Container;
@@ -114,18 +113,18 @@ public class GTFSImporterAction extends JosmAction
       String curDir = Main.pref.get("lastDirectory");
       if (curDir.equals(""))
       {
-    curDir = ".";
+        curDir = ".";
       }
       JFileChooser fc = new JFileChooser(new File(curDir));
-      fc.setDialogTitle("Select GTFS file (stops.txt)");
+      fc.setDialogTitle(tr("Select GTFS file (stops.txt)"));
       fc.setMultiSelectionEnabled(false);
 
       int answer = fc.showOpenDialog(Main.parent);
       if (answer != JFileChooser.APPROVE_OPTION)
-    return;
+        return;
 
       if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-    Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+        Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
 
       importData(fc.getSelectedFile());
 
@@ -215,54 +214,48 @@ public class GTFSImporterAction extends JosmAction
 
       if (Main.main.getCurrentDataSet() == null)
       {
-        JOptionPane.showMessageDialog(null, "There exists no dataset."
-        + " Try to download data from the server or open an OSM file.",
-     "No data found", JOptionPane.ERROR_MESSAGE);
-
-        System.out.println("Public Transport: StopInserter: No data found");
+        JOptionPane.showMessageDialog(null, tr("There exists no dataset."
+        + " Try to download data from the server or open an OSM file."),
+        tr("No data found"), JOptionPane.ERROR_MESSAGE);
 
         return;
       }
       else
       {
-    Iterator< Node > iter =
+        Iterator< Node > iter =
         Main.main.getCurrentDataSet().getNodes().iterator();
-    while (iter.hasNext())
-    {
-      Node node = iter.next();
-      if ("bus_stop".equals(node.get("highway")))
-        existingStops.add(node);
-    }
+        while (iter.hasNext())
+        {
+          Node node = iter.next();
+          if ("bus_stop".equals(node.get("highway")))
+            existingStops.add(node);
+        }
       }
 
       Iterator< String > iter = data.iterator();
       if (iter.hasNext())
-    gtfsStopTM = new GTFSStopTableModel(this, iter.next());
+        gtfsStopTM = new GTFSStopTableModel(this, iter.next());
       else
       {
-    JOptionPane.showMessageDialog
-    (null, "The GTFS file was empty.", "No data found",
-     JOptionPane.ERROR_MESSAGE);
-
-        System.out.println("Public Transport: GTFSImporter: No data found");
+        JOptionPane.showMessageDialog
+        (null, tr("The GTFS file was empty."), tr("No data found"),
+        JOptionPane.ERROR_MESSAGE);
 
         return;
       }
 
       while (iter.hasNext())
       {
-    String s = iter.next();
-    gtfsStopTM.addRow(s, existingStops);
+        String s = iter.next();
+        gtfsStopTM.addRow(s, existingStops);
       }
       dialog.setGTFSStopTableModel(gtfsStopTM);
     }
     else
     {
       JOptionPane.showMessageDialog
-      (null, "The GTFS file was empty.", "No data found",
+      (null, tr("The GTFS file was empty."), tr("No data found"),
        JOptionPane.ERROR_MESSAGE);
-
-      System.out.println("Public Transport: GTFSImporter: No data found");
     }
   }
 
@@ -297,11 +290,9 @@ public class GTFSImporterAction extends JosmAction
     node.put("name", name);
     if (Main.main.getCurrentDataSet() == null)
     {
-      JOptionPane.showMessageDialog(null, "There exists no dataset."
-      + " Try to download data from the server or open an OSM file.",
-   "No data found", JOptionPane.ERROR_MESSAGE);
-
-      System.out.println("Public Transport: StopInserter: No data found");
+      JOptionPane.showMessageDialog(null, tr("There exists no dataset."
+      + " Try to download data from the server or open an OSM file."),
+      tr("No data found"), JOptionPane.ERROR_MESSAGE);
 
       return null;
     }
@@ -318,12 +309,12 @@ public class GTFSImporterAction extends JosmAction
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
-    consideredLines.add(selectedLines[i]);
+        consideredLines.add(selectedLines[i]);
     }
     else
     {
       for (int i = 0; i < table.getRowCount(); ++i)
-    consideredLines.add(new Integer(i));
+        consideredLines.add(new Integer(i));
     }
     return consideredLines;
   }
@@ -339,8 +330,8 @@ public class GTFSImporterAction extends JosmAction
     for (int i = 0; i < table.getRowCount(); ++i)
     {
       if ((nodes.elementAt(i) != null) &&
-       (Main.main.getCurrentDataSet().isSelected(nodes.elementAt(i))))
-    table.addRowSelectionInterval(i, i);
+      (Main.main.getCurrentDataSet().isSelected(nodes.elementAt(i))))
+        table.addRowSelectionInterval(i, i);
     }
   }
 
@@ -354,7 +345,7 @@ public class GTFSImporterAction extends JosmAction
     {
       int j = consideredLines.elementAt(i);
       if (nodes.elementAt(j) != null)
-    nodes.elementAt(j).visit(box);
+        nodes.elementAt(j).visit(box);
     }
     if (box.getBounds() == null)
       return;
@@ -373,7 +364,7 @@ public class GTFSImporterAction extends JosmAction
     {
       int j = consideredLines.elementAt(i);
       if (nodes.elementAt(j) != null)
-    Main.main.getCurrentDataSet().addSelected(nodes.elementAt(j));
+        Main.main.getCurrentDataSet().addSelected(nodes.elementAt(j));
     }
   }
 

@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -57,7 +59,7 @@ public class TrackSuggestStopsCommand extends Command
     {
       Node node = stoplistTM.nodeAt(i);
       if (node == null)
-    continue;
+        continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
@@ -69,7 +71,7 @@ public class TrackSuggestStopsCommand extends Command
     {
       Iterator< WayPoint > witer = siter.next().getWayPoints().iterator();
       while (witer.hasNext())
-    wayPoints.add(witer.next());
+        wayPoints.add(witer.next());
     }
     Vector< Double > wayPointsDist = new Vector< Double >(wayPoints.size());
 
@@ -79,10 +81,10 @@ public class TrackSuggestStopsCommand extends Command
     while ((i < wayPoints.size()) && (time < dGpsStartTime + timeWindow/2))
     {
       if (wayPoints.elementAt(i).getString("time") != null)
-    time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-        .getString("time").substring(11,19));
+        time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+            .getString("time").substring(11,19));
       if (time < dGpsStartTime)
-    time += 24*60*60;
+        time += 24*60*60;
       wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
       ++i;
     }
@@ -92,45 +94,45 @@ public class TrackSuggestStopsCommand extends Command
       double time2 = time;
       while ((j > 0) && (time - timeWindow/2 < time2))
       {
-    --j;
-    if (wayPoints.elementAt(j).getString("time") != null)
-      time2 = StopImporterDialog.parseTime(wayPoints.elementAt(j)
-          .getString("time").substring(11,19));
-    if (time2 < dGpsStartTime)
-      time2 += 24*60*60;
+        --j;
+        if (wayPoints.elementAt(j).getString("time") != null)
+          time2 = StopImporterDialog.parseTime(wayPoints.elementAt(j)
+              .getString("time").substring(11,19));
+        if (time2 < dGpsStartTime)
+          time2 += 24*60*60;
       }
       int k = i + 1;
       time2 = time;
       while ((k < wayPoints.size()) && (time + timeWindow/2 > time2))
       {
-    if (wayPoints.elementAt(k).getString("time") != null)
-      time2 = StopImporterDialog.parseTime(wayPoints.elementAt(k)
-          .getString("time").substring(11,19));
-    if (time2 < dGpsStartTime)
-      time2 += 24*60*60;
-    ++k;
+        if (wayPoints.elementAt(k).getString("time") != null)
+          time2 = StopImporterDialog.parseTime(wayPoints.elementAt(k)
+              .getString("time").substring(11,19));
+        if (time2 < dGpsStartTime)
+          time2 += 24*60*60;
+        ++k;
       }
 
       if (j < k)
       {
-    double dist = 0;
-    LatLon latLonI = wayPoints.elementAt(i).getCoor();
-    for (int l = j; l < k; ++l)
-    {
-      double distL = latLonI.greatCircleDistance(wayPoints.elementAt(l).getCoor());
-      if (distL > dist)
-        dist = distL;
-    }
-    wayPointsDist.add(Double.valueOf(dist));
+        double dist = 0;
+        LatLon latLonI = wayPoints.elementAt(i).getCoor();
+        for (int l = j; l < k; ++l)
+        {
+          double distL = latLonI.greatCircleDistance(wayPoints.elementAt(l).getCoor());
+          if (distL > dist)
+            dist = distL;
+        }
+        wayPointsDist.add(Double.valueOf(dist));
       }
       else
-    wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
+        wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
 
       if (wayPoints.elementAt(i).getString("time") != null)
-    time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-        .getString("time").substring(11,19));
+        time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+            .getString("time").substring(11,19));
       if (time < dGpsStartTime)
-    time += 24*60*60;
+        time += 24*60*60;
       ++i;
     }
 
@@ -138,26 +140,26 @@ public class TrackSuggestStopsCommand extends Command
     for (i = 1; i < wayPoints.size()-1; ++i)
     {
       if (wayPointsDist.elementAt(i).doubleValue() >= threshold)
-    continue;
+        continue;
       if ((wayPointsDist.elementAt(i).compareTo(wayPointsDist.elementAt(i-1)) != -1)
        || (wayPointsDist.elementAt(i).compareTo(wayPointsDist.elementAt(i+1)) != -1))
-    continue;
+        continue;
 
       LatLon latLon = wayPoints.elementAt(i).getCoor();
       if ((lastStopCoor != null) &&  (lastStopCoor.greatCircleDistance(latLon) < threshold))
-    continue;
+        continue;
 
       if (wayPoints.elementAt(i).getString("time") != null)
       {
-    time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-        .getString("time").substring(11,19));
-    double gpsSyncTime = StopImporterDialog.parseTime(this.gpsSyncTime);
-    if (gpsSyncTime < dGpsStartTime - 12*60*60)
-      gpsSyncTime += 24*60*60;
-    double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
-    time -= timeDelta;
-    Node node = StopImporterAction.createNode(latLon, type, "");
-    stoplistTM.insertRow(-1, node, StopImporterAction.timeOf(time), "", "");
+        time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+            .getString("time").substring(11,19));
+        double gpsSyncTime = StopImporterDialog.parseTime(this.gpsSyncTime);
+        if (gpsSyncTime < dGpsStartTime - 12*60*60)
+          gpsSyncTime += 24*60*60;
+        double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
+        time -= timeDelta;
+        Node node = StopImporterAction.createNode(latLon, type, "");
+        stoplistTM.insertRow(-1, node, StopImporterAction.timeOf(time), "", new TransText(null));
       }
 
       lastStopCoor = latLon;
@@ -174,7 +176,7 @@ public class TrackSuggestStopsCommand extends Command
     {
       Node node = stoplistTM.nodeAt(i);
       if (node == null)
-    continue;
+        continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
@@ -187,7 +189,7 @@ public class TrackSuggestStopsCommand extends Command
     {
       Node node = stoplistTM.nodeAt(i);
       if (node == null)
-    continue;
+        continue;
       node.setDeleted(false);
       Main.main.getCurrentDataSet().addPrimitive(node);
     }
@@ -201,7 +203,7 @@ public class TrackSuggestStopsCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.TrackStoplist.SuggestStops");
+    return new JLabel(tr("Public Transport: Suggest stops"));
   }
 
   private class NodeSortEntry implements Comparable< NodeSortEntry >
@@ -222,18 +224,18 @@ public class TrackSuggestStopsCommand extends Command
     {
       double time = StopImporterDialog.parseTime(this.time);
       if (time - startTime > 12*60*60)
-    time -= 24*60*60;
+        time -= 24*60*60;
 
       double nseTime = StopImporterDialog.parseTime(nse.time);
       if (nseTime - startTime > 12*60*60)
-    nseTime -= 24*60*60;
+        nseTime -= 24*60*60;
 
       if (time < nseTime)
-    return -1;
+        return -1;
       else if (time > nseTime)
-    return 1;
+        return 1;
       else
-    return 0;
+        return 0;
     }
   };
 };

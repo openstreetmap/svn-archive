@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -82,6 +84,6 @@ public class WaypointsDisableCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.Waypoints.Disable");
+    return new JLabel(tr("Public Transport: Disable waypoints"));
   }
 };

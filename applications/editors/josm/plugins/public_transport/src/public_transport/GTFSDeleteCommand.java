@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -58,7 +60,7 @@ public class GTFSDeleteCommand extends Command
       if (node == null)
     continue;
       gtfsStopTM.nodes.set(j, null);
-      gtfsStopTM.setValueAt("skipped", j, 2);
+      gtfsStopTM.setValueAt(tr("skipped"), j, 2);
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
@@ -88,6 +90,6 @@ public class GTFSDeleteCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.GTFS.Disable");
+    return new JLabel(tr("Public Transport: Disable GTFS"));
   }
 };

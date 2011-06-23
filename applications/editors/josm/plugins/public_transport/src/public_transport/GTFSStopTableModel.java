@@ -1,6 +1,5 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Iterator;
@@ -69,9 +68,9 @@ public class GTFSStopTableModel extends DefaultTableModel
       lonCol = i;
 
     this.controller = controller;
-    addColumn("Id");
-    addColumn("Name");
-    addColumn("State");
+    addColumn(tr("Id"));
+    addColumn(tr("Name"));
+    addColumn(tr("State"));
     addTableModelListener(this);
   }
 
@@ -137,7 +136,7 @@ public class GTFSStopTableModel extends DefaultTableModel
 
   public void insertRow(int insPos, String s, Vector< Node > existingStops)
   {
-    String[] buf = { "", "", "pending" };
+    String[] buf = { "", "", tr("pending") };
     int pos = tokenize(s, 0);
     int oldPos = 0;
     int i = 0;
@@ -175,14 +174,14 @@ public class GTFSStopTableModel extends DefaultTableModel
           Main.main.getCurrentDataSet().dataSources.iterator();
       while (iter.hasNext())
       {
-    if (iter.next().bounds.contains(coor))
-    {
-      inside = true;
-      break;
-    }
+        if (iter.next().bounds.contains(coor))
+        {
+          inside = true;
+          break;
+        }
       }
       if (!inside)
-    buf[2] = "outside";
+        buf[2] = tr("outside");
     }
 
     boolean nearBusStop = false;
@@ -192,33 +191,33 @@ public class GTFSStopTableModel extends DefaultTableModel
       Node node = iter.next();
       if (coor.greatCircleDistance(node.getCoor()) < 1000)
       {
-    nearBusStop = true;
-    break;
+        nearBusStop = true;
+        break;
       }
     }
 
     if (insPos == -1)
     {
-      if ((nearBusStop) || !("pending".equals(buf[2])))
-    nodes.addElement(null);
+      if ((nearBusStop) || !(tr("pending").equals(buf[2])))
+        nodes.addElement(null);
       else
       {
-    Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
-    nodes.addElement(node);
-    buf[2] = "added";
+        Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
+        nodes.addElement(node);
+        buf[2] = tr("added");
       }
       coors.addElement(coor);
       super.addRow(buf);
     }
     else
     {
-      if ((nearBusStop) || !("pending".equals(buf[2])))
-    nodes.insertElementAt(null, insPos);
+      if ((nearBusStop) || !(tr("pending").equals(buf[2])))
+        nodes.insertElementAt(null, insPos);
       else
       {
-    Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
-    nodes.insertElementAt(node, insPos);
-    buf[2] = "added";
+        Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
+        nodes.insertElementAt(node, insPos);
+        buf[2] = tr("added");
       }
       coors.insertElementAt(coor, insPos);
       super.insertRow(insPos, buf);

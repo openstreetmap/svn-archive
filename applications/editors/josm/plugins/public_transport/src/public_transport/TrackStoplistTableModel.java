@@ -1,6 +1,5 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Vector;
@@ -19,9 +18,9 @@ public class TrackStoplistTableModel extends DefaultTableModel
     if (columns == null)
     {
       columns = new Vector< String >();
-      columns.add("Time");
-      columns.add("Name");
-      columns.add("Shelter");
+      columns.add(tr("Time"));
+      columns.add(tr("Name"));
+      columns.add(tr("Shelter"));
     }
     nodes = new Vector< Node >();
     times = new Vector< String >();
@@ -48,7 +47,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
 
   public void insertRow(int insPos, String time)
   {
-    insertRow(insPos, null, time, "", "");
+    insertRow(insPos, null, time, "", new TransText(null));
   }
 
   public void removeRow(int pos)
@@ -99,11 +98,9 @@ public class TrackStoplistTableModel extends DefaultTableModel
   }
 
   public void insertRow
-      (int insPos, Node node, String time, String name, String shelter)
+      (int insPos, Node node, String time, String name, TransText shelter)
   {
-    String[] buf = { "", "", "" };
-    buf[0] = time;
-    buf[1] = name;
+    Object[] buf = { time, name, shelter };
     if (insPos == -1)
     {
       nodes.addElement(node);

@@ -1,5 +1,7 @@
 package public_transport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -27,19 +29,19 @@ public class WaypointsEnableCommand extends Command
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
-    consideredLines.add(selectedLines[i]);
+        consideredLines.add(selectedLines[i]);
     }
     else
     {
       for (int i = 0; i < waypointTM.getRowCount(); ++i)
-    consideredLines.add(new Integer(i));
+        consideredLines.add(new Integer(i));
     }
 
     // keep only lines where a node can be added
     for (int i = 0; i < consideredLines.size(); ++i)
     {
       if (waypointTM.nodes.elementAt(consideredLines.elementAt(i)) == null)
-    workingLines.add(consideredLines.elementAt(i));
+        workingLines.add(consideredLines.elementAt(i));
     }
   }
 
@@ -50,10 +52,8 @@ public class WaypointsEnableCommand extends Command
       int j = workingLines.elementAt(i).intValue();
       Node node = StopImporterAction.createNode
         (waypointTM.coors.elementAt(j), type, (String)waypointTM.getValueAt(j, 1));
-      if ("".equals((String)waypointTM.getValueAt(j, 2)))
-    node.put("shelter", null);
-      else
-    node.put("shelter", (String)waypointTM.getValueAt(j, 2));
+      TransText shelter = (TransText)waypointTM.getValueAt(j, 2);
+      node.put("shelter", shelter.text);
       waypointTM.nodes.set(j, node);
     }
     return true;
@@ -67,7 +67,7 @@ public class WaypointsEnableCommand extends Command
       Node node = waypointTM.nodes.elementAt(j);
       waypointTM.nodes.set(j, null);
       if (node == null)
-    continue;
+        continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
@@ -81,6 +81,6 @@ public class WaypointsEnableCommand extends Command
 
   @Override public JLabel getDescription()
   {
-    return new JLabel("public_transport.Waypoints.Enable");
+    return new JLabel(tr("Public Transport: Enable waypoints"));
   }
 };

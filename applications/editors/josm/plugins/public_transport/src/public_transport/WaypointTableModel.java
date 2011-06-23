@@ -1,6 +1,5 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Vector;
@@ -24,9 +23,9 @@ public class WaypointTableModel extends DefaultTableModel
   public WaypointTableModel(StopImporterAction controller)
   {
     this.controller = controller;
-    addColumn("Time");
-    addColumn("Stopname");
-    addColumn("Shelter");
+    addColumn(tr("Time"));
+    addColumn(tr("Stopname"));
+    addColumn(tr("Shelter"));
     addTableModelListener(this);
   }
 
@@ -54,16 +53,16 @@ public class WaypointTableModel extends DefaultTableModel
 
   public void insertRow(int insPos, WayPoint wp)
   {
-    String[] buf = { "", "", "" };
-    buf[0] = wp.getString("time");
-    if (buf[0] == null)
-      buf[0] = "";
-    buf[1] = wp.getString("name");
-    if (buf[1] == null)
-      buf[1] = "";
+    String time = wp.getString("time");
+    if (time == null)
+      time = "";
+    String name = wp.getString("name");
+    if (name == null)
+      name = "";
 
-    Node node = controller.createNode(wp.getCoor(), buf[1]);
+    Node node = controller.createNode(wp.getCoor(), name);
 
+    Object[] buf = { time, name, new TransText(null) };
     if (insPos == -1)
     {
       nodes.addElement(node);
@@ -89,10 +88,10 @@ public class WaypointTableModel extends DefaultTableModel
     if (e.getType() == TableModelEvent.UPDATE)
     {
       if (inEvent)
-    return;
+        return;
       Main.main.undoRedo.add(new WaypointsNameCommand
       (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1),
-       (String)getValueAt(e.getFirstRow(), 2)));
+       (TransText)getValueAt(e.getFirstRow(), 2)));
     }
   }
 };

@@ -53,6 +53,9 @@
 # Version 3.2
 # - handle rels without node properly
 # 
+# Version 3.3
+# - ignoreMissingWaysAndNodes
+#
 
 use strict ;
 use warnings ;
@@ -67,7 +70,7 @@ use OSM::osmgraph ;
 
 
 my $program = "boundaries.pl" ;
-my $version = "3.2" ;
+my $version = "3.3" ;
 my $usage = $program . <<"END1" ;
 -help print this text
 -in= osm file name (input file, mandatory) 
@@ -84,6 +87,7 @@ my $usage = $program . <<"END1" ;
 -hierarchy build hierarchy. output as html and csv. html and csv names must be given and will be adapted. -poly and -polybase= must be given. 
 -resize -factor=float build a resized (factor > 1 means bigger polygon, maybe 1.2) polygon. -poly and -polybase must be given. -simplify can be given. 
 -adminlevel=integer selects one admin_level as selection criteria. So only country borders can be selected i.e. 
+-ignoremissing ignores missing nodes or invalid ways.
 -verbose program talks even more... 
 END1
 
@@ -164,6 +168,7 @@ my $htmlName = "" ; my $htmlFile ;
 my $csvName = "" ; my $csvFile ;
 my $polyBaseName = "" ;
 my $polyName = "" ; my $polyFile ;
+my $ignoreMissingNodesAndWays = 0;
 
 # defaults for simplify
 my $simplifySlope = 0.001 ; # IN DEGREES, ~100m
@@ -191,7 +196,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"bigpicsize:i"	=> \$bigPicSize,	# specifies big pic size longitude in pixels
 				"adminlevel:s"	=> \$adminLevelOpt,	# specifies which boundaries to look at
 				"help" 	=> \$help,	 		# print help
-				"verbose" 	=> \$verbose) ;		# turns twitter on
+				"verbose" 	=> \$verbose,		# turns twitter on
+				"ignoremissing"	=> \$ignoreMissingNodesAndWays ) ; #ignore missing nodes
 
 
 
@@ -536,7 +542,7 @@ if ($waysMissing == 1 ) {
 else {
 	print "all needed ways found.\n" ;
 }
-if ( ($nodesMissing == 1) or ($waysMissing == 1) )  {
+if ( ( ($nodesMissing == 1) or ($waysMissing == 1) ) and not $ignoreMissingNodesAndWays)  {
 	die ("ERROR: at least one needed node or way missing.\n")
 }
 print "done (node and way check).\n" ;

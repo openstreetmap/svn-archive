@@ -20,12 +20,19 @@ my $comment = 0;
 # so that the input and output line numbers will match.
 print "class trans_preset { void tr(String s){} void f() {";
 
+sub fix($)
+{
+  my ($val) = @_;
+  $val =~ s/'/''/g;
+  return $val;
+}
+
 while(my $line = <>)
 {
   chomp($line);
   if($line =~ /<item\s+name=(".*?")/)
   {
-    my $val = $1;
+    my $val = fix($1);
     $item = $group ? "$group$val" : $val;
     $item =~ s/""/\//;
     if($line =~ /name_context=(".*?")/)
@@ -39,7 +46,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<group.*\s+name=(".*?")/)
   {
-    my $gr = $1;
+    my $gr = fix($1);
     $group = $group ? "$group$gr" : $gr;
     $group =~ s/\"\"/\//;
     if($line =~ /name_context=(".*?")/)
@@ -57,7 +64,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<label.*\s+text=(".*?")/)
   {
-    my $text = $1;
+    my $text = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
       print "/* item $item label $text */ trc($1,$text);\n";
@@ -69,7 +76,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<text.*\s+text=(".*?")/)
   {
-    my $n = $1;
+    my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
       print "/* item $item text $n */ trc($1,$n);\n";
@@ -81,7 +88,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<check.*\s+text=(".*?")/)
   {
-    my $n = $1;
+    my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
       print "/* item $item check $n */ trc($1,$n);\n";
@@ -93,7 +100,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<role.*\s+text=(".*?")/)
   {
-    my $n = $1;
+    my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
       print "/* item $item role $n */ trc($1,$n);\n";
@@ -106,7 +113,7 @@ while(my $line = <>)
   # first handle display values
   elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+display_values="(.*?)"/)
   {
-    my ($type,$n,$vals) = ($1,$2,$3);
+    my ($type,$n,$vals) = ($1,fix($2),$3);
     my $sp = ($type eq "combo" ? ",":";");
     $combo_n = $n;
     $combo_idx = 0;
@@ -121,16 +128,19 @@ while(my $line = <>)
     }
     $vals =~ s/\\$sp/\x91/g;
     @combo_values = split $sp,$vals;
-    for (my $i=0; $i<@combo_values; ++$i) {
-      $combo_values[$i] =~ s/\x91/$sp/g;
-      next if $combo_values[$i] =~ /^[0-9-]+$/; # search for non-numbers
-      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");");
+    for (my $i=0; $i<@combo_values; ++$i)
+    {
+      my $val = $combo_values[$i];
+      $val =~ s/\x91/$sp/g;
+      next if $val =~ /^[0-9-]+$/; # search for non-numbers
+      $val = fix($val);
+      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
     }
     print "\n";
   }
   elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+values="(.*?)"/)
   {
-    my ($type,$n,$vals) = ($1,$2,$3);
+    my ($type,$n,$vals) = ($1,fix($2),$3);
     my $sp = ($type eq "combo" ? ",":";");
     $combo_n = $n;
     $combo_idx = 0;
@@ -147,13 +157,14 @@ while(my $line = <>)
     foreach my $val (@combo_values)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
+      $val = fix($val);
       print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
     }
     print "\n";
   }
   elsif(!$comment && $line =~ /<short_description>(.*?)<\/short_description>/)
   {
-    my $n = $1;
+    my $n = fix($1);
     print "/* item $item combo $combo_n item \"$combo_values[$combo_idx]\" short description */ tr(\"$n\");\n";
     $combo_idx++;
   }

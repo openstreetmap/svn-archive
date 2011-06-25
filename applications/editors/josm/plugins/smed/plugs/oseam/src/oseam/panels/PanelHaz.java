@@ -24,16 +24,11 @@ public class PanelHaz extends JPanel {
 
 	private OSeaMAction dlg;
 	private ButtonGroup catButtons = new ButtonGroup();
-	public JRadioButton northButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/CardNButton.png")));
-	public JRadioButton southButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/CardSButton.png")));
-	public JRadioButton eastButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/CardEButton.png")));
-	public JRadioButton westButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/CardWButton.png")));
-	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/IsolButton.png")));
+	public JRadioButton northButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardNButton.png")));
+	public JRadioButton southButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardSButton.png")));
+	public JRadioButton eastButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardEButton.png")));
+	public JRadioButton westButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardWButton.png")));
+	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/IsolButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (catButtons.getSelection() != null) {
@@ -96,18 +91,12 @@ public class PanelHaz extends JPanel {
 	};
 
 	private ButtonGroup shapeButtons = new ButtonGroup();
-	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/PillarButton.png")));
-	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/SparButton.png")));
-	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/FloatButton.png")));
-	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/BeaconButton.png")));
-	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/TowerButton.png")));
-	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(
-			Shp.class);
+	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
+	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
+	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
+	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
+	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
 	public EnumMap<Shp, Obj> carObjects = new EnumMap<Shp, Obj>(Shp.class);
 	public EnumMap<Shp, Obj> isdObjects = new EnumMap<Shp, Obj>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
@@ -138,21 +127,11 @@ public class PanelHaz extends JPanel {
 		this.add(getCatButton(westButton, 0, 96, 52, 32, "West"), null);
 		this.add(getCatButton(isolButton, 0, 128, 52, 32, "Isol"), null);
 
-		this.add(
-				getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR,
-						Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(
-				getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR,
-						Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(
-				getShapeButton(floatButton, 55, 64, 34, 32, "Float", Shp.FLOAT,
-						Obj.LITFLT, Obj.LITFLT), null);
-		this.add(
-				getShapeButton(beaconButton, 55, 96, 34, 32, "Beacon", Shp.BEACON,
-						Obj.BCNCAR, Obj.BCNISD), null);
-		this.add(
-				getShapeButton(towerButton, 55, 128, 34, 32, "Tower", Shp.TOWER,
-						Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 	}
 
 	public void clearSelections() {
@@ -162,8 +141,7 @@ public class PanelHaz extends JPanel {
 		alShape.actionPerformed(null);
 	}
 
-	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w,
-			int h, String tip) {
+	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));
@@ -172,8 +150,7 @@ public class PanelHaz extends JPanel {
 		return button;
 	}
 
-	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w,
-			int h, String tip, Shp shp, Obj car, Obj isd) {
+	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj car, Obj isd) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

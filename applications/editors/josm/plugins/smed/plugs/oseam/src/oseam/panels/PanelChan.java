@@ -30,16 +30,11 @@ public class PanelChan extends JPanel {
 	public PanelStbd panelStbd = null;
 	public PanelSaw panelSaw = null;
 	private ButtonGroup catButtons = new ButtonGroup();
-	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/PortButton.png")));
-	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/StbdButton.png")));
-	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(
-			getClass().getResource("/images/PrefPortButton.png")));
-	public JRadioButton prefStbdButton = new JRadioButton(new ImageIcon(
-			getClass().getResource("/images/PrefStbdButton.png")));
-	public JRadioButton safeWaterButton = new JRadioButton(new ImageIcon(
-			getClass().getResource("/images/SafeWaterButton.png")));
+	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
+	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
+	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
+	public JRadioButton prefStbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefStbdButton.png")));
+	public JRadioButton safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			Shp shp = null;
@@ -197,13 +192,13 @@ public class PanelChan extends JPanel {
 	public PanelChan(OSeaMAction dia) {
 		dlg = dia;
 		panelPort = new PanelPort(dlg);
-		panelPort.setBounds(new Rectangle(55, 0, 225, 160));
+		panelPort.setBounds(new Rectangle(55, 0, 180, 160));
 		panelPort.setVisible(false);
 		panelStbd = new PanelStbd(dlg);
-		panelStbd.setBounds(new Rectangle(55, 0, 225, 160));
+		panelStbd.setBounds(new Rectangle(55, 0, 180, 160));
 		panelStbd.setVisible(false);
 		panelSaw = new PanelSaw(dlg);
-		panelSaw.setBounds(new Rectangle(55, 0, 225, 160));
+		panelSaw.setBounds(new Rectangle(55, 0, 180, 160));
 		panelSaw.setVisible(false);
 		this.setLayout(null);
 		this.add(panelPort, null);
@@ -224,8 +219,7 @@ public class PanelChan extends JPanel {
 		panelSaw.clearSelections();
 	}
 
-	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w,
-			int h, String tip) {
+	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

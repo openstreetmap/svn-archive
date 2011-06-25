@@ -30,24 +30,16 @@ public class PanelMain extends JPanel {
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	public ButtonGroup typeButtons = null;
-	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/ChanButton.png")));
-	public JRadioButton hazButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/HazButton.png")));
-	public JRadioButton specButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/SpecButton.png")));
-	public JRadioButton lightsButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/LightsButton.png")));
+	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
+	public JRadioButton hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
+	public JRadioButton specButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SpecButton.png")));
+	public JRadioButton lightsButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightsButton.png")));
 	private ActionListener alType = null;
 	private ButtonGroup miscButtons = null;
-	public JRadioButton topButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/TopButton.png")));
-	public JRadioButton fogButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/FogButton.png")));
-	public JRadioButton radButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/RadarButton.png")));
-	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass()
-			.getResource("/images/LitButton.png")));
+	public JRadioButton topButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TopButton.png")));
+	public JRadioButton fogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogButton.png")));
+	public JRadioButton radButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarButton.png")));
+	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 	private ActionListener alMisc = null;
 	private ActionListener alName = null;
 	public PanelChan panelChan = null;
@@ -63,16 +55,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 205, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 185, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 205, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 185, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 205, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 185, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 205, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 185, 160));
 		panelLights.setVisible(false);
 		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
@@ -88,19 +80,20 @@ public class PanelMain extends JPanel {
 		panelLit.setVisible(false);
 
 		shapeIcon = new JLabel();
-		shapeIcon.setBounds(new Rectangle(220, 0, 130, 185));
+		shapeIcon.setBounds(new Rectangle(250, 0, 150, 185));
 		this.add(shapeIcon, null);
 		lightIcon = new JLabel();
-		lightIcon.setBounds(new Rectangle(220, 0, 130, 185));
+		lightIcon.setBounds(new Rectangle(250, 0, 150, 185));
 		this.add(lightIcon, null);
 		topIcon = new JLabel();
-		topIcon.setBounds(new Rectangle(220, 0, 130, 185));
+		topIcon.setBounds(new Rectangle(250, 0, 150, 185));
 		this.add(topIcon, null);
 		radarIcon = new JLabel();
-		radarIcon.setBounds(new Rectangle(220, 0, 130, 185));
+		radarIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 		this.add(radarIcon, null);
 		fogIcon = new JLabel();
-		fogIcon.setBounds(new Rectangle(220, 0, 130, 185));
+		fogIcon.setBounds(new Rectangle(250, 0, 150, 185));
 		this.add(fogIcon, null);
 
 		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
@@ -274,12 +267,12 @@ public class PanelMain extends JPanel {
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);
-		radarIcon.setIcon(null);
+		// radarIcon.setIcon(null);
+		radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 		fogIcon.setIcon(null);
 	}
 
-	private JRadioButton getButton(JRadioButton button, int x, int y, int w,
-			int h, String tip) {
+	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

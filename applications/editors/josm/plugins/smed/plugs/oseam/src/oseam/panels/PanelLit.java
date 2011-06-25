@@ -90,11 +90,9 @@ public class PanelLit extends JPanel {
 			}
 		};
 		typeButtons = new ButtonGroup();
-		singleButton = new JRadioButton(new ImageIcon(getClass().getResource(
-				"/images/SingleButton.png")));
+		singleButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SingleButton.png")));
 		this.add(getTypeButton(singleButton, 280, 125, 34, 30, "Single"), null);
-		sectorButton = new JRadioButton(new ImageIcon(getClass().getResource(
-				"/images/SectorButton.png")));
+		sectorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SectorButton.png")));
 		this.add(getTypeButton(sectorButton, 315, 125, 34, 30, "Sector"), null);
 
 		alGroupBox = new ActionListener() {
@@ -115,8 +113,7 @@ public class PanelLit extends JPanel {
 				String str = periodBox.getText();
 			}
 		};
-		periodLabel = new JLabel(Messages.getString("Period"),
-				SwingConstants.CENTER);
+		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(123, 40, 65, 20));
 		this.add(periodLabel, null);
 		periodBox = new JTextField();
@@ -130,8 +127,7 @@ public class PanelLit extends JPanel {
 				String str = heightBox.getText();
 			}
 		};
-		heightLabel = new JLabel(Messages.getString("Height"),
-				SwingConstants.CENTER);
+		heightLabel = new JLabel(Messages.getString("Height"), SwingConstants.CENTER);
 		heightLabel.setBounds(new Rectangle(123, 80, 65, 20));
 		this.add(heightLabel, null);
 		heightBox = new JTextField();
@@ -159,8 +155,7 @@ public class PanelLit extends JPanel {
 				String str = sequenceBox.getText();
 			}
 		};
-		sequenceLabel = new JLabel(Messages.getString("Sequence"),
-				SwingConstants.CENTER);
+		sequenceLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
 		sequenceLabel.setBounds(new Rectangle(188, 120, 80, 20));
 		this.add(sequenceLabel, null);
 		sequenceBox = new JTextField();
@@ -173,8 +168,7 @@ public class PanelLit extends JPanel {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		categoryLabel = new JLabel(Messages.getString("Category"),
-				SwingConstants.CENTER);
+		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(185, 0, 165, 20));
 		this.add(categoryLabel, null);
 		categoryBox = new JComboBox();
@@ -188,8 +182,7 @@ public class PanelLit extends JPanel {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		visibilityLabel = new JLabel(Messages.getString("Visibility"),
-				SwingConstants.CENTER);
+		visibilityLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
 		visibilityLabel.setBounds(new Rectangle(185, 40, 165, 20));
 		this.add(visibilityLabel, null);
 		visibilityBox = new JComboBox();
@@ -205,8 +198,7 @@ public class PanelLit extends JPanel {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			}
 		};
-		exhibitionLabel = new JLabel(Messages.getString("Exhibition"),
-				SwingConstants.CENTER);
+		exhibitionLabel = new JLabel(Messages.getString("Exhibition"), SwingConstants.CENTER);
 		exhibitionLabel.setBounds(new Rectangle(280, 80, 70, 20));
 		this.add(exhibitionLabel, null);
 		exhibitionBox = new JComboBox();
@@ -223,8 +215,7 @@ public class PanelLit extends JPanel {
 				String str = orientationBox.getText();
 			}
 		};
-		orientationLabel = new JLabel(Messages.getString("Orientation"),
-				SwingConstants.CENTER);
+		orientationLabel = new JLabel(Messages.getString("Orientation"), SwingConstants.CENTER);
 		orientationLabel.setBounds(new Rectangle(188, 80, 80, 20));
 		this.add(orientationLabel, null);
 		orientationBox = new JTextField();
@@ -234,8 +225,7 @@ public class PanelLit extends JPanel {
 		orientationBox.addActionListener(alOrientationBox);
 	}
 
-	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w,
-			int h, String tip) {
+	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

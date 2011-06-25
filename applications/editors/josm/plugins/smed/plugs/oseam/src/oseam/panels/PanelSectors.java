@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import oseam.seamarks.Light;
 
 public class PanelSectors extends JFrame {
-	
+
 	public JPanel panel;
 	public JButton minusButton;
 	public JButton plusButton;
@@ -22,7 +22,7 @@ public class PanelSectors extends JFrame {
 	private JScrollPane tablePane;
 	private ActionListener alMinusButton;
 	private ActionListener alPlusButton;
-	
+
 	public PanelSectors(Light lit) {
 		super("Sector Table");
 		light = lit;
@@ -35,7 +35,7 @@ public class PanelSectors extends JFrame {
 		tablePane.setBounds(40, 0, 660, 34);
 		panel.setLayout(null);
 		panel.add(tablePane);
-		
+
 		alMinusButton = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				deleteSector(2);
@@ -45,7 +45,7 @@ public class PanelSectors extends JFrame {
 		minusButton.setBounds(0, 0, 32, 34);
 		minusButton.addActionListener(alMinusButton);
 		panel.add(minusButton);
-		
+
 		alPlusButton = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				addSector(2);
@@ -56,11 +56,11 @@ public class PanelSectors extends JFrame {
 		plusButton.addActionListener(alPlusButton);
 		panel.add(plusButton);
 	}
-	
+
 	public int getSectorCount() {
 		return light.getRowCount();
 	}
-	
+
 	public void addSector(int idx) {
 		light.addSector(idx);
 		tablePane.setSize(660, ((light.getRowCount() * 16) + 18));
@@ -71,7 +71,7 @@ public class PanelSectors extends JFrame {
 		}
 		light.fireTableRowsInserted(idx, idx);
 	}
-	
+
 	public void deleteSector(int idx) {
 		light.deleteSector(idx);
 		tablePane.setSize(660, ((light.getRowCount() * 16) + 18));
@@ -82,5 +82,5 @@ public class PanelSectors extends JFrame {
 		}
 		light.fireTableRowsDeleted(idx, idx);
 	}
-	
+
 }

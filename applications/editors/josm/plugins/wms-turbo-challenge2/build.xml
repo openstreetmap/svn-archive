@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 ** To build it run
 **
@@ -8,14 +9,13 @@
 **    > ant  install
 -->
 <project name="wms-turbo-challenge2" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.src.dir"         value="src"/>
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="ant.build.javac.target" value="1.5"/>
-    <property name="plugin.dist.dir"        value="../../dist"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <!--
     **********************************************************
     ** init - initializes the build
@@ -24,7 +24,6 @@
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
-
     <!--
     **********************************************************
     ** compile - compiles the source tree
@@ -37,7 +36,6 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-
     <!--
     **********************************************************
     ** dist - creates the plugin jar
@@ -51,10 +49,13 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
-                <include name="README" />
-                <include name="LICENSE" />
+                <include name="README"/>
+                <include name="LICENSE"/>
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
@@ -70,7 +71,6 @@
             </manifest>
         </jar>
     </target>
-
     <!--
     **********************************************************
     ** revision - extracts the current revision number for the
@@ -79,7 +79,6 @@
     **********************************************************
     -->
     <target name="revision">
-
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -89,7 +88,6 @@
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-
     <!--
     **********************************************************
     ** clean - clean up the build environment
@@ -99,7 +97,6 @@
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
-
     <!--
     **********************************************************
     ** install - install the plugin in your local JOSM installation

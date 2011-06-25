@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,7 +93,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!", "No ruleset", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"), tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
                     transitionStructure.setAccessParametersAndRuleset(preferences.getCurrentParameterBookmark(), accessRuleset);
                     transitionStructure.forceUpdate();
@@ -102,8 +104,8 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
-                            "No ruleset", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"),
+                            tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
 
                     transitionStructure = new JOSMTransitionStructure(
@@ -125,13 +127,13 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             }
 
         } catch (AccessRulesetSyntaxException e) {
-            JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n{0}", e));
             e.printStackTrace();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
             e.printStackTrace();
         }
 
@@ -147,8 +149,8 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
-                            "No ruleset", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"),
+                            tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
                     transitionStructure.setAccessParametersAndRuleset(
                             preferences.getCurrentParameterBookmark(), accessRuleset);
@@ -158,13 +160,13 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             }
 
         } catch (AccessRulesetSyntaxException e) {
-            JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n", e));
             e.printStackTrace();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
+            JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
             e.printStackTrace();
         }
 
@@ -205,7 +207,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             if (rulesetURL != null) {
                 rulesetInputStream = rulesetURL.openStream();
             } else {
-                throw new FileNotFoundException("couldn't find built-in ruleset " + ruleset);
+                throw new FileNotFoundException(tr("Couldn't find built-in ruleset {0}", ruleset));
             }
 
         } else {

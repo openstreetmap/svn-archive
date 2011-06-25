@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.AXLELOAD;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.HEIGHT;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.LENGTH;
@@ -215,8 +217,6 @@ public class GraphViewPreferences extends Observable {
         currentRulesetFile = null;
         currentInternalRuleset = null;
 
-        nodeColor = Color.WHITE;
-        segmentColor = Color.WHITE;
         currentColorScheme = new PreferencesColorScheme(this);
 
         separateDirections = false;
@@ -243,8 +243,8 @@ public class GraphViewPreferences extends Observable {
             Main.pref.put("graphview.rulesetResource", currentInternalRuleset.toString());
         }
 
-        Main.pref.put("graphview.defaultNodeColor", createColorString(nodeColor));
-        Main.pref.put("graphview.defaultSegmentColor", createColorString(segmentColor));
+        Main.pref.putColor(marktr("GraphView default node"), nodeColor);
+        Main.pref.putColor(marktr("Graphview default segment"), segmentColor);
 
         Main.pref.put("graphview.separateDirections", separateDirections);
 
@@ -288,19 +288,8 @@ public class GraphViewPreferences extends Observable {
             }
         }
 
-        if (Main.pref.hasKey("graphview.defaultNodeColor")) {
-            Color color = parseColorString(Main.pref.get("graphview.defaultNodeColor"));
-            if (color != null) {
-                nodeColor = color;
-            }
-        }
-        if (Main.pref.hasKey("graphview.defaultSegmentColor")) {
-            Color color = parseColorString(Main.pref.get("graphview.defaultSegmentColor"));
-            if (color != null) {
-                segmentColor = color;
-            }
-        }
-
+        nodeColor = Main.pref.getColor(marktr("GraphView default node"), Color.white);
+        segmentColor = Main.pref.getColor(marktr("Graphview default segment"), Color.white);
         separateDirections = Main.pref.getBoolean("graphview.separateDirections", false);
 
     }
@@ -470,23 +459,4 @@ public class GraphViewPreferences extends Observable {
 
         }
     }
-
-    private static final Pattern COLOR_PATTERN =
-        Pattern.compile("^(\\d{1,3}),\\s*(\\d{1,3}),\\s*(\\d{1,3})$");
-    private String createColorString(Color color) {
-        return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
-    }
-
-    private Color parseColorString(String string) {
-        Matcher matcher = COLOR_PATTERN.matcher(string);
-        if (!matcher.matches()) {
-            return null;
-        } else {
-            int r = Integer.parseInt(matcher.group(1));
-            int g = Integer.parseInt(matcher.group(2));
-            int b = Integer.parseInt(matcher.group(3));
-            return new Color(r, g, b);
-        }
-    }
-
 }

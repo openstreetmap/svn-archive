@@ -66,7 +66,7 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
             switch(upperLimit) {
                 case MINIMUM: return vehicleValue >= (Float) propertyValue;
                 case MAXIMUM: return vehicleValue <= (Float) propertyValue;
-                default:      throw new Error("unhandled LimitType");
+                default:      throw new Error("Unhandled LimitType");
             }
         } else {
             return true;

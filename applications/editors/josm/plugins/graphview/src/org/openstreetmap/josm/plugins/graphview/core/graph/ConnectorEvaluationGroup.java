@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +61,7 @@ public class ConnectorEvaluationGroup extends EvaluationGroup {
         assert startNode != null && borderNodes.contains(startNode);
         assert targetNode != null && borderNodes.contains(targetNode);
 
-        if (!evaluated) { throw new IllegalStateException("group not yet evaluated"); }
+        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
 
         int inboundIndex = borderNodes.indexOf(startNode);
         int outboundIndex = borderNodes.indexOf(targetNode);

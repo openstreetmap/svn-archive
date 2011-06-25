@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -66,7 +68,7 @@ public class ImplicationXMLReader {
 
                 if ("tag".equals(name)) {
                     if (tagOpen) {
-                        throw new SAXException("tag element inside other tag element");
+                        throw new SAXException(tr("Tag element inside other tag element"));
                     }
                     currentImpliedTags.add(readTag(attributes));
                     tagOpen = true;
@@ -77,7 +79,7 @@ public class ImplicationXMLReader {
         }
 
         //all vaild paths end with return; reaching this indicates an invalid tag
-        throw new SAXException("invalid opening xml tag <" + name + "> in state " + state);
+        throw new SAXException(tr("Invalid opening xml tag <{0}> in state {1}", name, state));
 
     }
 
@@ -90,7 +92,7 @@ public class ImplicationXMLReader {
 
                 if (name.equals("condition")) {
                     if (!currentConditionReader.isFinished()) {
-                        throw new SAXException("condition isn't finished at </condition> tag");
+                        throw new SAXException(tr("Condition isn't finished at </condition> tag"));
                     } else {
                         currentCondition = currentConditionReader.getCondition();
                         currentConditionReader = null;
@@ -109,7 +111,7 @@ public class ImplicationXMLReader {
                     return;
                 } else if (name.equals("tag")) {
                     if (!tagOpen) {
-                        throw new SAXException("closing tag element that was not open");
+                        throw new SAXException(tr("Closing tag element that was not open"));
                     }
                     tagOpen = false;
                     return;
@@ -130,14 +132,14 @@ public class ImplicationXMLReader {
         }
 
         //all vaild paths end with return; reaching this indicates an invalid tag
-        throw new SAXException("invalid closing xml tag </" + name + "> in state " + state);
+        throw new SAXException(tr("Invalid closing xml tag </{0}> in state {1}", name, state));
 
     }
 
     public List<Implication> getImplications() throws SAXException {
 
         if (state != State.BEFORE_IMPLICATION) {
-            throw new SAXException("some tags not been closed; now in state " + state);
+            throw new SAXException(tr("Some tags not been closed; now in state {0}", state));
         } else {
             return new ArrayList<Implication>(implications);
         }
@@ -149,9 +151,9 @@ public class ImplicationXMLReader {
         String value = attributes.getValue("v");
 
         if (key == null) {
-            throw new SAXException("tag without key");
+            throw new SAXException(tr("Tag without key"));
         } else if (value == null) {
-            throw new SAXException("tag without value (key is " + key + ")");
+            throw new SAXException(tr("Tag without value (key is {0})", key));
         }
 
         return new Tag(key, value);
@@ -162,7 +164,7 @@ public class ImplicationXMLReader {
         String key = attributes.getValue("k");
 
         if (key == null) {
-            throw new SAXException("key element without attribute k");
+            throw new SAXException(tr("Key element without attribute k"));
         }
 
         return key;
@@ -184,7 +186,7 @@ public class ImplicationXMLReader {
         throws SAXException {
 
             if (finished) {
-                throw new SAXException("condition is already finished at <" + name + ">");
+                throw new SAXException(tr("Condition is already finished at <{0}>", name));
             }
 
             if (currentChildReader != null) {
@@ -202,14 +204,14 @@ public class ImplicationXMLReader {
                 } else if ("key".equals(name)) {
                     condition = TagConditionLogic.key(readKey(attributes));
                 } else if (!("or".equals(name)) && !("and".equals(name)) && !("not".equals(name))) {
-                    throw new SAXException("unknown tag for condition: " + name);
+                    throw new SAXException(tr("Unknown tag for condition: {0}", name));
                 }
 
                 //all tags after the first are start tags of child conditions
             } else {
 
                 if ("tag".equals(openingName) || "key".equals(openingName)) {
-                    throw new SAXException("element must not have childs: " + openingName);
+                    throw new SAXException(tr("Element must not have childs: {0}", openingName));
                 }
 
                 currentChildReader = new ConditionReader();
@@ -223,7 +225,7 @@ public class ImplicationXMLReader {
         throws SAXException {
 
             if (finished) {
-                throw new SAXException("condition is already finished at </" + name + ">");
+                throw new SAXException(tr("Condition is already finished at </{0}>", name));
             }
 
             /* if active child reader exists, pass parameter to it. */
@@ -249,27 +251,26 @@ public class ImplicationXMLReader {
                         if (childConditions.size() > 0) {
                             condition = TagConditionLogic.and(childConditions);
                         } else {
-                            throw new SAXException("<and> needs at least one child");
+                            throw new SAXException(tr("<and> needs at least one child"));
                         }
                     } else if ("or".equals(openingName)) {
                         if (childConditions.size() > 0) {
                             condition = TagConditionLogic.or(childConditions);
                         } else {
-                            throw new SAXException("<or> needs at least one child");
+                            throw new SAXException(tr("<or> needs at least one child"));
                         }
                     } else if ("not".equals(openingName)) {
                         if (childConditions.size() == 1) {
                             condition = TagConditionLogic.not(childConditions.get(0));
                         } else {
-                            throw new SAXException("<not> needs at least one child");
+                            throw new SAXException(tr("<not> needs at least one child"));
                         }
                     }
 
                     finished = true;
 
                 } else {
-                    throw new SAXException("wrong closing tag " + name +
-                            " (</" + openingName + "> expected");
+                    throw new SAXException(tr("Wrong closing tag {0} (</{1}> expected)", name, openingName));
                 }
 
             }
@@ -282,7 +283,7 @@ public class ImplicationXMLReader {
 
         public TagCondition getCondition() {
             if (!finished) {
-                throw new IllegalStateException("condition " + openingName + " not yet finished");
+                throw new IllegalStateException(tr("Condition {0} not yet finished", openingName));
             } else {
                 assert condition != null;
                 return condition;

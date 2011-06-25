@@ -1,139 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
 <project name="JOSM i18n" default="build" basedir=".">
-
-  <!-- compilation properties -->
-  <property name="josm.build.dir"    value="../core"/>
-  <property name="josm.presets"      value="${josm.build.dir}/data/defaultpresets.xml"/>
-  <property name="josm.style"        value="${josm.build.dir}/styles/standard/elemstyles.xml"/>
-  <property name="plugin.dir"        value="../plugins"/>
-  <property name="validator.tagfile" value="${josm.build.dir}/data/tagchecker.cfg"/>
-  <property name="wms.srcfile"       value="http://josm.openstreetmap.de/maps"/>
-  <property name="surveyor.srcfile"  value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
-  <property name="i18n.build.dir"    value="build"/>
-  <property name="i18n.install.dir"  value="${josm.build.dir}/data"/>
-  <property name="i18n.oldinstall.dir" value="${josm.build.dir}/lib"/>
-  <property name="i18n.name"         value="josm-translation"/>
-  <property name="i18n.jar"          value="${i18n.oldinstall.dir}/${i18n.name}.jar"/>
-
-  <property name="ant.build.javac.target" value="1.5"/>
-
-  <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
-
-  <target name="init.gettext" description="Loads the Ant gettext tasks">
-    <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
-    <taskdef name="gettext-merge" classname="org.xnap.commons.ant.gettext.GettextMergeKeysTask" classpath="${gettexttasks.jar}"/>
-    <taskdef name="gettext-dist" classname="org.xnap.commons.ant.gettext.GettextDistTask" classpath="${gettexttasks.jar}"/>
-  </target>
-
-  <target name="trans_.java">
-    <mkdir dir="${i18n.build.dir}"/>
-    <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
-      <arg line="convpreset.pl ${josm.presets}"/>
-    </exec>
-    <exec executable="perl" output="${i18n.build.dir}/trans_style.java">
-      <arg line="convstyle.pl ${josm.style}"/>
-    </exec>
-    <exec executable="perl" output="${i18n.build.dir}/trans_validator.java">
-      <arg line="convvalidator.pl ${validator.tagfile}"/>
-    </exec>
-    <exec executable="perl" output="${i18n.build.dir}/trans_wms.java">
-      <arg line="convwms.pl ${wms.srcfile}"/>
-    </exec>
-    <exec executable="perl" output="${i18n.build.dir}/trans_surveyor.java">
-      <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
-    </exec>
-    <exec executable="perl" output="${i18n.build.dir}/trans_plugins.java">
-      <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
-    </exec>
-    <copy file="specialmessages.java" todir="${i18n.build.dir}" />
-  </target>
-
-  <target name="po/josm.pot"
-          description="Extracts message keys from the source code"
-          depends="trans_.java,init.gettext">
-    <gettext-extract keysFile="josm.pot" poDirectory="po"
-                     keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-      <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
-      <fileset dir="${plugin.dir}" includes="**/*.java"/>
-      <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-      <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
-    </gettext-extract>
-  </target>
-
-  <target name="prebuild" depends="po/josm.pot,init.gettext">
-    <gettext-merge keysFile="josm.pot" poDirectory="po"/>
-  </target>
-
-  <target name="build" depends="prebuild">
-    <exec executable="perl">
-      <arg line="i18n.pl ${i18n.install.dir}/ po/*.po"/>
-    </exec>
-  </target>
-
-  <target name="buildold" depends="prebuild">
-    <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
-
-    <!--<gettext-dist targetBundle="org.openstreetmap.josm.i18n.Translation"
-                  poDirectory="po" outputDirectory="build"/>-->
-    <ant target="build-lang"><property name="language" value="ar"/></ant>
-    <ant target="build-lang"><property name="language" value="bg"/></ant>
-    <ant target="build-lang"><property name="language" value="cs"/></ant>
-    <ant target="build-lang"><property name="language" value="da"/></ant>
-    <ant target="build-lang"><property name="language" value="de"/></ant>
-    <ant target="build-lang"><property name="language" value="el"/></ant>
-    <ant target="build-lang"><property name="language" value="en_AU"/></ant>
-    <ant target="build-lang"><property name="language" value="en_GB"/></ant>
-    <ant target="build-lang"><property name="language" value="es"/></ant>
-    <ant target="build-lang"><property name="language" value="et"/></ant>
-    <ant target="build-lang"><property name="language" value="fi"/></ant>
-    <ant target="build-lang"><property name="language" value="fr"/></ant>
-    <ant target="build-lang"><property name="language" value="gl"/></ant>
-    <ant target="build-lang"><property name="language" value="he"/><property name="jlanguage" value="iw_IL"/></ant>
-    <ant target="build-lang"><property name="language" value="ja"/></ant>
-    <ant target="build-lang"><property name="language" value="is"/></ant>
-    <ant target="build-lang"><property name="language" value="it"/></ant>
-    <ant target="build-lang"><property name="language" value="nb"/></ant>
-    <ant target="build-lang"><property name="language" value="nl"/></ant>
-    <ant target="build-lang"><property name="language" value="pl"/></ant>
-    <ant target="build-lang"><property name="language" value="pt_BR"/></ant>
-    <ant target="build-lang"><property name="language" value="ro"/></ant>
-    <ant target="build-lang"><property name="language" value="ru"/></ant>
-    <ant target="build-lang"><property name="language" value="sk"/></ant>
-    <ant target="build-lang"><property name="language" value="sl"/></ant>
-    <ant target="build-lang"><property name="language" value="sv"/></ant>
-    <ant target="build-lang"><property name="language" value="tr"/></ant>
-    <ant target="build-lang"><property name="language" value="zh_TW"/></ant>
-
-    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-      <env key="LANG" value="C"/>
-      <arg value="info"/>
-      <arg value="--xml"/>
-      <arg value="po"/>
-    </exec>
-    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-    <delete file="REVISION"/>
-
-    <jar destfile="${i18n.jar}" basedir="build" excludes="**/*.java">
-      <manifest>
-        <attribute name="Extension-Name" value="JOSM Translation into various languages" />
-        <attribute name="Translation-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Translation-Date" value="${version.entry.commit.date}"/>
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="build-lang">
-    <property name="jlanguage" value="${language}"/>
-    <exec executable="msgfmt">
-      <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${jlanguage} po/${language}.po"/>
-    </exec>
-  </target>
-
-  <target name="clean">
-    <delete dir="${i18n.build.dir}" />
-    <delete file="po/josm.pot"/>
-    <delete>
-      <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
-    </delete>
-  </target>
-
+    <!-- compilation properties -->
+    <property name="josm.build.dir" value="../core"/>
+    <property name="josm.presets" value="${josm.build.dir}/data/defaultpresets.xml"/>
+    <property name="josm.style" value="${josm.build.dir}/styles/standard/elemstyles.xml"/>
+    <property name="plugin.dir" value="../plugins"/>
+    <property name="validator.tagfile" value="${josm.build.dir}/data/tagchecker.cfg"/>
+    <property name="wms.srcfile" value="http://josm.openstreetmap.de/maps"/>
+    <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
+    <property name="i18n.build.dir" value="build"/>
+    <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
+    <property name="po.build.dir" value="${i18n.build.dir}"/>
+    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
+    <property name="antcontrib.jar" value="lib/ant-contrib-1.0b3.jar"/>
+    <target name="init" description="Loads the Ant gettext and contrib tasks">
+        <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
+        <taskdef name="gettext-merge" classname="org.xnap.commons.ant.gettext.GettextMergeKeysTask" classpath="${gettexttasks.jar}"/>
+        <taskdef name="gettext-dist" classname="org.xnap.commons.ant.gettext.GettextDistTask" classpath="${gettexttasks.jar}"/>
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${antcontrib.jar}"/>
+    </target>
+    <target name="trans_.java">
+        <mkdir dir="${i18n.build.dir}"/>
+        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
+            <arg line="convpreset.pl ${josm.presets}"/>
+        </exec>
+        <exec executable="perl" output="${i18n.build.dir}/trans_style.java">
+            <arg line="convstyle.pl ${josm.style}"/>
+        </exec>
+        <exec executable="perl" output="${i18n.build.dir}/trans_validator.java">
+            <arg line="convvalidator.pl ${validator.tagfile}"/>
+        </exec>
+        <exec executable="perl" output="${i18n.build.dir}/trans_wms.java">
+            <arg line="convwms.pl ${wms.srcfile}"/>
+        </exec>
+        <exec executable="perl" output="${i18n.build.dir}/trans_surveyor.java">
+            <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
+        </exec>
+        <exec executable="perl" output="${i18n.build.dir}/trans_plugins.java">
+            <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
+        </exec>
+        <copy file="specialmessages.java" todir="${i18n.build.dir}"/>
+    </target>
+    <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
+        <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
+            <fileset dir="${plugin.dir}" includes="**/*.java"/>
+        </gettext-extract>
+        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
+    </target>
+    <target name="build" depends="po/josm.pot,init">
+        <antcall target="coretrans"/>
+        <foreach param="path" target="plugintrans">
+            <path>
+                <dirset dir="${plugin.dir}" includes="*"/>
+            </path>
+        </foreach>
+    </target>
+    <target name="coretrans">
+        <mkdir dir="${po.build.dir}/core"/>
+        <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/core" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
+        </gettext-extract>
+        <copy todir="${po.build.dir}/core">
+            <fileset dir="po"/>
+        </copy>
+        <gettext-merge keysFile="josm.pot" poDirectory="${po.build.dir}/core"/>
+        <exec executable="perl">
+            <arg line="i18n.pl ${i18n.install.dir}/ ${po.build.dir}/core/*.po"/>
+        </exec>
+    </target>
+    <target name="plugintrans">
+        <basename file="${path}" property="dir"/>
+        <mkdir dir="${po.build.dir}/plugin_${dir}"/>
+        <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
+        </gettext-extract>
+        <if>
+            <available file="${po.build.dir}/plugin_${dir}/josm.pot"/>
+            <then>
+                <copy todir="${po.build.dir}/plugin_${dir}">
+                    <fileset dir="po"/>
+                </copy>
+                <gettext-merge keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}"/>
+                <exec executable="perl">
+                    <arg line="i18n.pl ${plugin.dir}/${dir}/data/ ${po.build.dir}/plugin_${dir}/*.po"/>
+                </exec>
+            </then>
+        </if>
+    </target>
+    <target name="clean">
+        <delete dir="${i18n.build.dir}"/>
+        <delete file="po/josm.pot"/>
+        <delete>
+            <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
+        </delete>
+    </target>
 </project>

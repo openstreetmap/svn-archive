@@ -203,6 +203,12 @@ sub makestring($)
 sub createlang($@)
 {
   my ($data, @files) = @_;
+  my $maxlen = 0;
+  foreach my $file (@files)
+  {
+    my $len = length($file);
+    $maxlen = $len if $len > $maxlen;
+  }
   foreach my $file (@files)
   {
     my $la;
@@ -279,11 +285,11 @@ sub createlang($@)
     if(!$cnt)
     {
       unlink $file;
-      print "Skipped file $file: Contained 0 strings out of $maxcount.\n";
+      printf "Skipped file %-${maxlen}s: Contained 0 strings out of %5d.\n",$file,$maxcount;
     }
     else
     {
-      print "Created file $file: Added $cnt strings out of $maxcount.\n";
+      printf "Created file %-${maxlen}s: Added %5d strings out of %5d (%5.1f%%).\n",$file,$cnt,$maxcount,,$cnt*100.0/$maxcount;
     }
   }
 }

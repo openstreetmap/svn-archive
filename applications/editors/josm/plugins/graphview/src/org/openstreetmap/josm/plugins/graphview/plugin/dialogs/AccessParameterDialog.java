@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_INCLINE_DOWN;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_INCLINE_UP;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_TRACKTYPE;
@@ -49,12 +51,12 @@ public class AccessParameterDialog extends JDialog {
 
     static {
         FLOAT_PROPERTIES = new LinkedHashMap<VehiclePropertyType<Float>, String>();
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.HEIGHT, "height (m)");
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.WIDTH, "width (m)");
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.LENGTH, "length (m)");
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.SPEED, "speed (km/h)");
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.WEIGHT, "weight (t)");
-        FLOAT_PROPERTIES.put(VehiclePropertyTypes.AXLELOAD, "axleload (t)");
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.HEIGHT, tr("height (m)"));
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.WIDTH, tr("width (m)"));
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.LENGTH, tr("length (m)"));
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.SPEED, tr("speed (km/h)"));
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.WEIGHT, tr("weight (t)"));
+        FLOAT_PROPERTIES.put(VehiclePropertyTypes.AXLELOAD, tr("axleload (t)"));
     }
 
     private static final Collection<Character> FORBIDDEN_CHARS =
@@ -66,7 +68,7 @@ public class AccessParameterDialog extends JDialog {
 
         public BookmarkNamePanel(String initialName) {
             super();
-            this.setBorder(BorderFactory.createTitledBorder("bookmark name"));
+            this.setBorder(BorderFactory.createTitledBorder(tr("Bookmark name")));
 
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
@@ -80,14 +82,13 @@ public class AccessParameterDialog extends JDialog {
             String name = bookmarkNameTextField.getText();
 
             if (existingBookmarkNames.contains(name)) {
-                JOptionPane.showMessageDialog(this, "Bookmark name already exists!");
+                JOptionPane.showMessageDialog(this, tr("Bookmark name already exists!"));
                 return null;
             }
 
             for (char nameChar : name.toCharArray()) {
                 if (FORBIDDEN_CHARS.contains(nameChar)) {
-                    JOptionPane.showMessageDialog(this, "Bookmark name must not contain '" +
-                            nameChar + "'!");
+                    JOptionPane.showMessageDialog(this, tr("Bookmark name must not contain ''{0}''!", nameChar));
                     return null;
                 }
             }
@@ -102,7 +103,7 @@ public class AccessParameterDialog extends JDialog {
 
         public AccessClassPanel(PreferenceAccessParameters initialParameters) {
             super();
-            this.setBorder(BorderFactory.createTitledBorder("access class"));
+            this.setBorder(BorderFactory.createTitledBorder(tr("Access class")));
 
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
@@ -117,8 +118,7 @@ public class AccessParameterDialog extends JDialog {
 
             for (char nameChar : name.toCharArray()) {
                 if (FORBIDDEN_CHARS.contains(nameChar)) {
-                    JOptionPane.showMessageDialog(this, "Access class must not contain '" +
-                            nameChar + "'!");
+                    JOptionPane.showMessageDialog(this, tr("Access class must not contain ''{0}''!", nameChar));
                     return null;
                 }
             }
@@ -136,7 +136,7 @@ public class AccessParameterDialog extends JDialog {
 
         public AccessTypesPanel(PreferenceAccessParameters initialParameters) {
             super();
-            this.setBorder(BorderFactory.createTitledBorder("access types"));
+            this.setBorder(BorderFactory.createTitledBorder(tr("Access types")));
 
             this.setLayout(
                     new GridLayout(((COLS-1 + AccessType.values().length) / COLS), COLS));
@@ -173,7 +173,7 @@ public class AccessParameterDialog extends JDialog {
 
         public VehiclePropertiesPanel(PreferenceAccessParameters initialParameters) {
             super();
-            this.setBorder(BorderFactory.createTitledBorder("vehicle properties"));
+            this.setBorder(BorderFactory.createTitledBorder(tr("Vehicle properties")));
 
             this.setLayout(new GridLayout(((COLS-1 + FLOAT_PROPERTIES.size()) / COLS),
                     2*COLS));
@@ -222,15 +222,15 @@ public class AccessParameterDialog extends JDialog {
 
         public RoadQualityPanel(PreferenceAccessParameters initialParameters) {
             super();
-            this.setBorder(BorderFactory.createTitledBorder("road requirements"));
+            this.setBorder(BorderFactory.createTitledBorder(tr("Road requirements")));
 
 
             this.setLayout(new GridLayout(4, 2));
 
             /* incline up */
             {
-                JLabel inclineUpLabel = new JLabel("max. incline up (%, pos.)");
-                inclineUpLabel.setToolTipText("maximum incline the vehicle can go up");
+                JLabel inclineUpLabel = new JLabel(tr("Max. incline up (%, pos.)"));
+                inclineUpLabel.setToolTipText(tr("Maximum incline the vehicle can go up"));
                 this.add(inclineUpLabel);
 
                 inclineUpTextField = new JTextField();
@@ -240,15 +240,15 @@ public class AccessParameterDialog extends JDialog {
                 if (vehiclePropertyString != null) {
                     inclineUpTextField.setText(vehiclePropertyString);
                 }
-                inclineUpTextField.setToolTipText("maximum incline the vehicle can go up");
+                inclineUpTextField.setToolTipText(tr("Maximum incline the vehicle can go up"));
 
                 this.add(inclineUpTextField);
             }
 
             /* incline down */
             {
-                JLabel inclineDownLabel = new JLabel("max. incline down (%, pos.)");
-                inclineDownLabel.setToolTipText("maximum incline the vehicle can go down");
+                JLabel inclineDownLabel = new JLabel(tr("Max. incline down (%, pos.)"));
+                inclineDownLabel.setToolTipText(tr("Maximum incline the vehicle can go down"));
                 this.add(inclineDownLabel);
 
                 inclineDownTextField = new JTextField();
@@ -258,16 +258,16 @@ public class AccessParameterDialog extends JDialog {
                 if (vehiclePropertyString != null) {
                     inclineDownTextField.setText(vehiclePropertyString);
                 }
-                inclineDownTextField.setToolTipText("maximum incline the vehicle can go down");
+                inclineDownTextField.setToolTipText(tr("Maximum incline the vehicle can go down"));
 
                 this.add(inclineDownTextField);
             }
 
             /* surface */
             {
-                JLabel surfaceLabel = new JLabel("surface blacklist");
-                surfaceLabel.setToolTipText("list of surfaces the vehicle cannot use, "
-                        + "values are separated by semicolons (;)");
+                JLabel surfaceLabel = new JLabel(tr("Surface blacklist"));
+                surfaceLabel.setToolTipText(tr("List of surfaces the vehicle cannot use, "
+                        + "values are separated by semicolons (;)"));
                 this.add(surfaceLabel);
 
                 surfaceTextField = new JTextField();
@@ -279,17 +279,17 @@ public class AccessParameterDialog extends JDialog {
                     surfaceTextField.setText(vehiclePropertyString);
                 }
 
-                surfaceTextField.setToolTipText("list of surfaces the vehicle cannot use, "
-                        + "values are separated by semicolons (;)");
+                surfaceTextField.setToolTipText(tr("List of surfaces the vehicle cannot use, "
+                        + "values are separated by semicolons (;)"));
 
                 this.add(surfaceTextField);
             }
 
             /* tracktype */
             {
-                JLabel tracktypeLabel = new JLabel("max. tracktype grade");
-                tracktypeLabel.setToolTipText("worst tracktype (1-5) the vehicle can still use,"
-                        + " 0 for none");
+                JLabel tracktypeLabel = new JLabel(tr("max. tracktype grade"));
+                tracktypeLabel.setToolTipText(tr("Worst tracktype (1-5) the vehicle can still use,"
+                        + " 0 for none"));
                 this.add(tracktypeLabel);
 
                 tracktypeTextField = new JTextField();
@@ -299,8 +299,8 @@ public class AccessParameterDialog extends JDialog {
                 if (vehiclePropertyString != null) {
                     tracktypeTextField.setText(vehiclePropertyString);
                 }
-                tracktypeTextField.setToolTipText("worst tracktype (1-5) the vehicle can still use,"
-                        + " 0 for none");
+                tracktypeTextField.setToolTipText(tr("Worst tracktype (1-5) the vehicle can still use,"
+                        + " 0 for none"));
 
                 this.add(tracktypeTextField);
             }
@@ -342,7 +342,7 @@ public class AccessParameterDialog extends JDialog {
 
             new BoxLayout(this, BoxLayout.X_AXIS);
 
-            JButton okButton = new JButton(existingBookmark?"Change bookmark":"Create bookmark");
+            JButton okButton = new JButton(existingBookmark?tr("Change bookmark"):tr("Create bookmark"));
             okButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String bookmarkName = bookmarkNamePanel.getBookmarkName();
@@ -357,7 +357,7 @@ public class AccessParameterDialog extends JDialog {
             });
             this.add(okButton);
 
-            JButton cancelButton = new JButton("Cancel");
+            JButton cancelButton = new JButton(tr("Cancel"));
             cancelButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     AccessParameterDialog.this.dispose();
@@ -383,7 +383,7 @@ public class AccessParameterDialog extends JDialog {
     public AccessParameterDialog(final Frame owner, boolean existingBookmark, String initialName,
             Collection<String> existingBookmarkNames,
             PreferenceAccessParameters initialAccessParameters, BookmarkAction okAction) {
-        super(owner, "edit access parameters", true);
+        super(owner, tr("Edit access parameters"), true);
 
         this.existingBookmark = existingBookmark;
         this.existingBookmarkNames = existingBookmarkNames;

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,19 +32,19 @@ public final class VehiclePropertyStringParser {
     }
 
     public static final String ERROR_WEIGHT =
-        "Weights must be given as positive decimal numbers with unit \"t\" or without unit.";
+        tr("Weights must be given as positive decimal numbers with unit \"t\" or without unit.");
     public static final String ERROR_LENGTH =
-        "Lengths must be given as positive decimal numbers with unit \"m\", \"km\", \"mi\"" +
-        " or without unit.\nAlternatively, the format FEET' INCHES\" can be used.";
+        tr("Lengths must be given as positive decimal numbers with unit \"m\", \"km\", \"mi\"" +
+        " or without unit.\nAlternatively, the format FEET' INCHES\" can be used.");
     public static final String ERROR_SPEED =
-        "Speeds should be given as numbers without unit or "
-        + "as numbers followed by \"mph\".";
+        tr("Speeds should be given as numbers without unit or "
+        + "as numbers followed by \"mph\".");
     public static final String ERROR_INCLINE =
-        "Inclines must be given as positive decimal numbers with followed by \"%\".";
+        tr("Inclines must be given as positive decimal numbers with followed by \"%\".");
     public static final String ERROR_TRACKTYPE =
-        "Tracktype grades must be given as integers between 0 and 5.";
+        tr("Tracktype grades must be given as integers between 0 and 5.");
     public static final String ERROR_SURFACE =
-        "Surface values must not contain any of the following characters: ',' '{' '}' '=' '|";
+        tr("Surface values must not contain any of the following characters: ',' '{' '}' '=' '|");
 
     private static final List<Character> FORBIDDEN_SURFACE_CHARS =
         Arrays.asList(',', '{', '}', '=', '|');
@@ -144,7 +146,7 @@ public final class VehiclePropertyStringParser {
             return result;
 
         } else {
-            throw new InvalidParameterException("unknown property type: " + propertyType);
+            throw new InvalidParameterException("Unknown property type: " + propertyType);
         }
 
     }

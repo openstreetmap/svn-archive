@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.Collection;
 
 import org.openstreetmap.josm.plugins.graphview.core.data.Tag;
@@ -87,7 +89,7 @@ public final class TagConditionLogic {
      */
     public static TagCondition and(final Collection<TagCondition> conditions) {
         if (conditions.size() == 0) {
-            throw new IllegalArgumentException("collection must contain at least one condition");
+            throw new IllegalArgumentException(tr("Collection must contain at least one condition"));
         }
         return new TagCondition() {
             public boolean matches(TagGroup tags) {
@@ -154,7 +156,7 @@ public final class TagConditionLogic {
      */
     public static TagCondition or(final Collection<TagCondition> conditions) {
         if (conditions.size() == 0) {
-            throw new IllegalArgumentException("collection must contain at least one condition");
+            throw new IllegalArgumentException(tr("Collection must contain at least one condition"));
         }
         return new TagCondition() {
             public boolean matches(TagGroup tags) {

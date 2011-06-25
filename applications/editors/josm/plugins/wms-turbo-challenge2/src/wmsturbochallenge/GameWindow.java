@@ -5,6 +5,8 @@
  */
 package wmsturbochallenge;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -38,7 +40,7 @@ import org.openstreetmap.josm.gui.layer.WMSLayer;
 
 public class GameWindow extends JFrame implements ActionListener {
     public GameWindow(Layer ground) {
-        setTitle("The Ultimate WMS Super-speed Turbo Challenge II");
+        setTitle(tr("The Ultimate WMS Super-speed Turbo Challenge II"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setUndecorated(true);
         setSize(s.getScreenSize().width, s.getScreenSize().height);

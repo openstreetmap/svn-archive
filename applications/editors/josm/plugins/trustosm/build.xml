@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 ** This is a template build file for a JOSM  plugin.
 **
@@ -28,27 +28,23 @@
 **
 -->
 <project name="trustosm" default="dist" basedir=".">
-
-	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="New plugin for digital signing osm data" />
-	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3329" />
-
-
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="New plugin for digital signing osm data"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="3329"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-	<property name="plugin.build.dir"       value="build"/>
-	<property name="plugin.src.dir"         value="src"/>
-	<property name="plugin.lib.dir"         value="lib"/>
-	<!-- this is the directory where the plugin jar is copied to -->
-	<property name="plugin.dist.dir"        value="../../dist"/>
-	<property name="ant.build.javac.target" value="1.6"/>
-	<property name="plugin.dist.dir"        value="../../dist"/>
-	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.src.dir" value="src"/>
+    <property name="plugin.lib.dir" value="lib"/>
+    <!-- this is the directory where the plugin jar is copied to -->
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="ant.build.javac.target" value="1.6"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <!--
     **********************************************************
     ** init - initializes the build
@@ -57,74 +53,68 @@
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
-
     <!--
     **********************************************************
     ** compile - complies the source tree
     **********************************************************
     -->
-	<target name="compile" depends="init">
-		<echo message="compiling sources for  ${plugin.jar} ... "/>
-		<javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
-			<compilerarg value="-Xlint:deprecation"/>
-			<compilerarg value="-Xlint:unchecked"/>
-			<classpath>
-				<pathelement location="${josm}"/>
-				<fileset dir="${plugin.lib.dir}">
-					<include name="**/*.jar"/>
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
-	
-	<!-- create a property containing all .jar files, prefix lib/, and seperated with a space -->
-	  <pathconvert property="libs.project" pathsep=" ">
-	    <mapper>
-	      <chainedmapper>
-
-	        <!-- remove absolute path -->
-	        <flattenmapper />
-
-	        <!-- add lib/ prefix -->
-	        <globmapper from="*" to="${ant.project.name}/lib/*" />
-	      </chainedmapper>
-	    </mapper>
-
-	    <path>
-
-	      <!-- plugin.lib.dir contains all jar files -->
-	      <fileset dir="${plugin.lib.dir}">
-	        <include name="**/*.jar" />
-	      </fileset>
-	    </path>
-	  </pathconvert>
-
-	
-	<!--
+    <target name="compile" depends="init">
+        <echo message="compiling sources for  ${plugin.jar} ... "/>
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="${plugin.lib.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    <!-- create a property containing all .jar files, prefix lib/, and seperated with a space -->
+    <pathconvert property="libs.project" pathsep=" ">
+        <mapper>
+            <chainedmapper>
+                <!-- remove absolute path -->
+                <flattenmapper/>
+                <!-- add lib/ prefix -->
+                <globmapper from="*" to="${ant.project.name}/lib/*"/>
+            </chainedmapper>
+        </mapper>
+        <path>
+            <!-- plugin.lib.dir contains all jar files -->
+            <fileset dir="${plugin.lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+    </pathconvert>
+    <!--
     **********************************************************
     ** dist - creates the plugin jar
     **********************************************************
     -->
-	<target name="dist" depends="compile,revision">
-		<echo message="creating ${ant.project.name}.jar ... "/>
-		<copy todir="${plugin.build.dir}/lib">
-			<fileset dir="${plugin.lib.dir}"/>
-		</copy>
-		<copy todir="${plugin.build.dir}/resources">
-			<fileset dir="resources"/>
-		</copy>
-		<copy todir="${plugin.build.dir}/images">
-			<fileset dir="images"/>
-		</copy>
-		<copy todir="${plugin.build.dir}">
-			<fileset dir=".">
-				<include name="README" />
-				<include name="LICENSE" />
-			</fileset>
-		</copy>
-		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-			<!--
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${plugin.build.dir}/lib">
+            <fileset dir="${plugin.lib.dir}"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/resources">
+            <fileset dir="resources"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="LICENSE"/>
+            </fileset>
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <!--
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins
         ** manifest file. Property values will also show up in the list available
@@ -132,20 +122,19 @@
         **
         ************************************************
     -->
-			<manifest>
-				<attribute name="Author" value="Christoph Wagner"/>
-				<attribute name="Class-Path" value="${libs.project}" />
-				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin"/>
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Plugin-Description" value="Plugin to digital sign OSM-Data"/>
-				<attribute name="Plugin-Icon" value="trustosm"/>
-				<attribute name="Plugin-Link" value="..."/>
-				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-			</manifest>
-		</jar>
-	</target>
-
+            <manifest>
+                <attribute name="Author" value="Christoph Wagner"/>
+                <attribute name="Class-Path" value="${libs.project}"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Plugin to digital sign OSM-Data"/>
+                <attribute name="Plugin-Icon" value="trustosm"/>
+                <attribute name="Plugin-Link" value="..."/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
     <!--
     **********************************************************
     ** revision - extracts the current revision number for the
@@ -154,7 +143,6 @@
     **********************************************************
     -->
     <target name="revision">
-
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -164,7 +152,6 @@
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-
     <!--
     **********************************************************
     ** clean - clean up the build environment
@@ -174,7 +161,6 @@
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
-
     <!--
     **********************************************************
     ** install - install the plugin in your local JOSM installation
@@ -189,8 +175,6 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
-
-
     <!--
     ************************** Publishing the plugin *********************************** 
     -->
@@ -209,9 +193,8 @@
         <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
         <echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
         <echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
-        <delete file="core.info.xml" />
+        <delete file="core.info.xml"/>
     </target>
-
     <!--
         ** commits the source tree for this plugin
         -->
@@ -224,7 +207,6 @@
             <arg value="."/>
         </exec>
     </target>
-
     <!--
         ** updates (svn up) the source tree for this plugin
         -->
@@ -242,7 +224,6 @@
             <arg value="../dist/${plugin.jar}"/>
         </exec>
     </target>
-
     <!--
         ** commits the plugin.jar 
         -->
@@ -264,29 +245,27 @@
             <arg value="${plugin.jar}"/>
         </exec>
     </target>
-
     <!-- ** make sure svn is present as a command line tool ** -->
     <target name="ensure-svn-present">
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
-            <env key="LANG" value="C" />
-            <arg value="--version" />
+            <env key="LANG" value="C"/>
+            <arg value="--version"/>
         </exec>
         <fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
             <!-- return code not set at all? Most likely svn isn't installed -->
             <condition>
                 <not>
-                    <isset property="svn.exit.code" />
+                    <isset property="svn.exit.code"/>
                 </not>
             </condition>
         </fail>
         <fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
             <!-- error code from SVN? Most likely svn is not what we are looking on this system -->
             <condition>
-                <isfailure code="${svn.exit.code}" />
+                <isfailure code="${svn.exit.code}"/>
             </condition>
         </fail>
     </target>
-
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
 </project>

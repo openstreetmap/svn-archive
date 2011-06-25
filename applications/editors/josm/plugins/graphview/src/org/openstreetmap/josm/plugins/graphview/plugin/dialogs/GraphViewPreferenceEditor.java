@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -58,8 +60,8 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
         readPreferences();
 
-        preferencePanel = gui.createPreferenceTab("graphview", "Graphview",
-        "Settings for the Graphview plugin that visualizes routing graphs.");
+        preferencePanel = gui.createPreferenceTab("graphview", tr("Graphview"),
+        tr("Settings for the Graphview plugin that visualizes routing graphs."));
 
         JPanel mainPanel = createMainPanel();
 
@@ -122,15 +124,15 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     private JPanel createRulesetPanel() {
 
         JPanel rulesetPanel = new JPanel();
-        rulesetPanel.setBorder(BorderFactory.createTitledBorder("ruleset"));
+        rulesetPanel.setBorder(BorderFactory.createTitledBorder(tr("Ruleset")));
         rulesetPanel.setLayout(new BoxLayout(rulesetPanel, BoxLayout.Y_AXIS));
 
-        internalRulesetCheckBox = new JCheckBox("use built-in rulesets");
+        internalRulesetCheckBox = new JCheckBox(tr("Use built-in rulesets"));
         internalRulesetCheckBox.setSelected(GraphViewPreferences.getInstance().getUseInternalRulesets());
         internalRulesetCheckBox.addActionListener(internalRulesetActionListener);
         rulesetPanel.add(internalRulesetCheckBox);
 
-        rulesetFolderLabel = new JLabel("external ruleset directory:");
+        rulesetFolderLabel = new JLabel(tr("Wxternal ruleset directory:"));
         rulesetPanel.add(rulesetFolderLabel);
 
         rulesetFolderTextField = new JTextField();
@@ -138,7 +140,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
         rulesetFolderTextField.setEditable(false);
         rulesetPanel.add(rulesetFolderTextField);
 
-        selectRulesetFolderButton = new JButton("select directory");
+        selectRulesetFolderButton = new JButton(tr("Select directory"));
         selectRulesetFolderButton.addActionListener(selectRulesetFolderActionListener);
         rulesetPanel.add(selectRulesetFolderButton);
 
@@ -150,7 +152,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     private JPanel createVehiclePanel() {
 
         JPanel vehiclePanel = new JPanel();
-        vehiclePanel.setBorder(BorderFactory.createTitledBorder("vehicle"));
+        vehiclePanel.setBorder(BorderFactory.createTitledBorder(tr("Vehicle")));
         vehiclePanel.setLayout(new BoxLayout(vehiclePanel, BoxLayout.Y_AXIS));
 
         bookmarkComboBox = new JComboBox();
@@ -159,19 +161,19 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
-        JButton createButton = new JButton("create");
+        JButton createButton = new JButton(tr("Create"));
         createButton.addActionListener(createVehicleActionListener);
         buttonPanel.add(createButton);
 
-        editBookmarkButton = new JButton("edit");
+        editBookmarkButton = new JButton(tr("Edit"));
         editBookmarkButton.addActionListener(editVehicleActionListener);
         buttonPanel.add(editBookmarkButton);
 
-        deleteBookmarkButton = new JButton("delete");
+        deleteBookmarkButton = new JButton(tr("Delete"));
         deleteBookmarkButton.addActionListener(deleteVehicleActionListener);
         buttonPanel.add(deleteBookmarkButton);
 
-        JButton restoreDefaultsButton = new JButton("restore defaults");
+        JButton restoreDefaultsButton = new JButton(tr("Restore defaults"));
         restoreDefaultsButton.addActionListener(restoreVehicleDefaultsActionListener);
         buttonPanel.add(restoreDefaultsButton);
 
@@ -183,10 +185,10 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     private JPanel createVisualizationPanel() {
     	
     	JPanel visualizationPanel = new JPanel();
-    	visualizationPanel.setBorder(BorderFactory.createTitledBorder("visualization"));
+    	visualizationPanel.setBorder(BorderFactory.createTitledBorder(tr("Visualization")));
     	visualizationPanel.setLayout(new BoxLayout(visualizationPanel, BoxLayout.Y_AXIS));
     	
-    	separateDirectionsCheckBox = new JCheckBox("draw directions separately");
+    	separateDirectionsCheckBox = new JCheckBox(tr("Draw directions separately"));
     	separateDirectionsCheckBox.setSelected(GraphViewPreferences.getInstance().getSeparateDirections());
     	visualizationPanel.add(separateDirectionsCheckBox);
     	
@@ -197,7 +199,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     		
     		Color nodeColor = GraphViewPreferences.getInstance().getNodeColor();
     		
-    		nodeColorButton = new JButton("node color");
+    		nodeColorButton = new JButton(tr("Node color"));
     		nodeColorButton.addActionListener(chooseNodeColorActionListener);
     		colorPanel.add(nodeColorButton);
     		nodeColorField = new JPanel();
@@ -206,7 +208,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     		
     		Color segmentColor = GraphViewPreferences.getInstance().getSegmentColor();
     		
-    		segmentColorButton = new JButton("arrow color");
+    		segmentColorButton = new JButton(tr("Arrow color"));
     		segmentColorButton.addActionListener(chooseSegmentColorActionListener);
     		colorPanel.add(segmentColorButton);
     		segmentColorField = new JPanel();
@@ -279,7 +281,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
             AccessParameterDialog apd = new AccessParameterDialog(
                     null,
                     false,
-                    "new bookmark",
+                    tr("New bookmark"),
                     parameterBookmarks.keySet(),
                     defaultBookmarkParameters,
                     new BookmarkAction() {
@@ -336,8 +338,8 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
                 int userChoice = JOptionPane.showConfirmDialog(
                         preferencePanel,
-                        "Really delete \"" + selectedBookmarkName + "\"?",
-                        "Bookmark deletion",
+                        tr("Really delete \"{0}\"?", selectedBookmarkName),
+                        tr("Bookmark deletion"),
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (userChoice == JOptionPane.YES_OPTION) {
@@ -354,9 +356,9 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
             int userChoice = JOptionPane.showConfirmDialog(
                     preferencePanel,
-                    "Really restore default bookmarks?\n"
-                    + "All manually added or edited bookmarks will be lost!",
-                    "Bookmark reset",
+                    tr("Really restore default bookmarks?\n"
+                    + "All manually added or edited bookmarks will be lost!"),
+                    tr("Bookmark reset"),
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (userChoice == JOptionPane.YES_OPTION) {
@@ -373,7 +375,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
         public void actionPerformed(ActionEvent e) {
         	
         	Color selectedColor = JColorChooser.showDialog(
-        			preferencePanel, "Choose node color", nodeColorField.getBackground());
+        			preferencePanel, tr("Choose node color"), nodeColorField.getBackground());
         	
         	if (selectedColor != null) {
         		nodeColorField.setBackground(selectedColor);
@@ -386,7 +388,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
         public void actionPerformed(ActionEvent e) {
         	
         	Color selectedColor = JColorChooser.showDialog(
-        			preferencePanel, "Choose arrow color", segmentColorField.getBackground());
+        			preferencePanel, tr("Choose arrow color"), segmentColorField.getBackground());
         	
         	if (selectedColor != null) {
         		segmentColorField.setBackground(selectedColor);

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +37,7 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
      * @return  segment collection; != null
      */
     public Collection<Segment> getInboundSegments() {
-        if (!evaluated) { throw new IllegalStateException("group not yet evaluated"); }
+        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
         return inboundSegments;
     }
 
@@ -46,7 +48,7 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
      * @return  segment collection; != null
      */
     public Collection<Segment> getOutboundSegments() {
-        if (!evaluated) { throw new IllegalStateException("group not yet evaluated"); }
+        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
         return outboundSegments;
     }
 
@@ -65,7 +67,7 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
         assert inboundSegment != null && inboundSegments.contains(inboundSegment);
         assert outboundSegment != null && outboundSegments.contains(outboundSegment);
 
-        if (!evaluated) { throw new IllegalStateException("group not yet evaluated"); }
+        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
 
         int inboundIndex = inboundSegments.indexOf(inboundSegment);
         int outboundIndex = outboundSegments.indexOf(outboundSegment);

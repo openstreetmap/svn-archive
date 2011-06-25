@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -119,7 +121,7 @@ public class AccessRulesetReader {
             if ("classes".equals(name)) {
 
                 if (currentSection != Section.NONE) {
-                    throw new SAXException("classes element below root child level");
+                    throw new SAXException(tr("Classes element below root child level"));
                 }
 
                 currentSection = Section.CLASSES;
@@ -129,9 +131,9 @@ public class AccessRulesetReader {
                 String className = attributes.getValue("name");
 
                 if (currentSection != Section.CLASSES) {
-                    throw new SAXException("class element (" + className + ") outside classes element");
+                    throw new SAXException(tr("Class element ({0}) outside classes element", className));
                 } else if (className == null) {
-                    throw new SAXException("class element without name");
+                    throw new SAXException(tr("Class element without name"));
                 }
 
                 AccessClass newAccessClass = new AccessClass(className, currentAccessClass);
@@ -143,7 +145,7 @@ public class AccessRulesetReader {
             } else if ("basetags".equals(name)) {
 
                 if (currentSection != Section.NONE) {
-                    throw new SAXException("classes element below root child level");
+                    throw new SAXException(tr("Classes element below root child level"));
                 }
 
                 currentSection = Section.BASETAGS;
@@ -153,13 +155,13 @@ public class AccessRulesetReader {
                 if (currentSection == Section.BASETAGS) {
                     baseTags.add(readTag(attributes));
                 } else {
-                    throw new SAXException("tag element outside basetag and implication elements");
+                    throw new SAXException(tr("Tag element outside basetag and implication elements"));
                 }
 
             } else if ("implications".equals(name)) {
 
                 if (currentSection != Section.NONE) {
-                    throw new SAXException("implications element below root child level");
+                    throw new SAXException(tr("Implications element below root child level"));
                 }
 
                 implicationReader = new ImplicationXMLReader();
@@ -175,9 +177,9 @@ public class AccessRulesetReader {
             String value = attributes.getValue("v");
 
             if (key == null) {
-                throw new SAXException("tag without key");
+                throw new SAXException(tr("Tag without key"));
             } else if (value == null) {
-                throw new SAXException("tag without value (key is " + key + ")");
+                throw new SAXException(tr("Tag without value (key is {0})", key));
             }
 
             return new Tag(key, value);
@@ -194,9 +196,9 @@ public class AccessRulesetReader {
             if ("classes".equals(name)) {
 
                 if (currentSection != Section.CLASSES) {
-                    throw new SAXException("closed classes while it wasn't open");
+                    throw new SAXException(tr("Closed classes while it was not open"));
                 } else if (currentAccessClass != null) {
-                    throw new SAXException("closed classes element before all class elements were closed");
+                    throw new SAXException(tr("Closed classes element before all class elements were closed"));
                 }
 
                 currentSection = Section.NONE;
@@ -204,7 +206,7 @@ public class AccessRulesetReader {
             } else if ("class".equals(name)) {
 
                 if (currentAccessClass == null) {
-                    throw new SAXException("closed class element while none was open");
+                    throw new SAXException(tr("Closed class element while none was open"));
                 }
 
                 currentAccessClass = currentAccessClass.parent;
@@ -212,7 +214,7 @@ public class AccessRulesetReader {
             } else if ("basetags".equals(name)) {
 
                 if (currentSection != Section.BASETAGS) {
-                    throw new SAXException("closed basetags while it wasn't open");
+                    throw new SAXException(tr("Closed basetags while it was not open"));
                 }
 
                 currentSection = Section.NONE;
@@ -220,7 +222,7 @@ public class AccessRulesetReader {
             } else if ("implications".equals(name)) {
 
                 if (currentSection != Section.IMPLICATIONS) {
-                    throw new SAXException("closed implications while it wasn't open");
+                    throw new SAXException(tr("Closed implications while it was not open"));
                 }
 
                 implications.addAll(implicationReader.getImplications());

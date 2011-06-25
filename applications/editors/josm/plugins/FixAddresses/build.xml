@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 ** This is a template build file for a JOSM  plugin.
 **
@@ -25,24 +25,22 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-    <property name="josm"          location="../../core/dist/josm-custom.jar"/>
-	<property name="josm_3529"     location="../../core/dist/3529/josm-tested.jar"/>
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.src.dir"         value="src"/>
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="josm_3529" location="../../core/dist/3529/josm-tested.jar"/>
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
     <property name="ant.build.javac.target" value="1.5"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-
+    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <!--
     **********************************************************
     ** init - initializes the build
     **********************************************************
     -->
     <target name="init">
-        <mkdir dir="${plugin.build.dir}"/>    	
+        <mkdir dir="${plugin.build.dir}"/>
     </target>
-
     <!--
     **********************************************************
     ** compile - complies the source tree
@@ -55,14 +53,13 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-
     <!--
     **********************************************************
     ** dist - creates the plugin jar
     **********************************************************
     -->
     <target name="dist" depends="compile,revision">
-    	<mkdir dir="${plugin.dist.dir}"/>
+        <mkdir dir="${plugin.dist.dir}"/>
         <echo message="creating ${plugin.jar} ... "/>
         <copy todir="${plugin.build.dir}/resources">
             <fileset dir="resources"/>
@@ -70,15 +67,18 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
-                <include name="README" />
-                <include name="GPL-v2.0.txt" />
-            	<include name="GPL-v3.0.txt" />
+                <include name="README"/>
+                <include name="GPL-v2.0.txt"/>
+                <include name="GPL-v3.0.txt"/>
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-    <!--
+            <!--
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins
         ** manifest file. Property values will also show up in the list available
@@ -91,15 +91,14 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.fixAddresses.FixAddressesPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Finds and fixes invalid street addresses in a comfortable way."/>
-            	<attribute name="de_Plugin-Description" value="Findet ungültige Addressen und bietet Unterstützung zur deren Korrektur."/>
+                <attribute name="de_Plugin-Description" value="Findet ungültige Addressen und bietet Unterstützung zur deren Korrektur."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
                 <attribute name="Plugin-Mainversion" value="3835"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            	<attribute name="Plugin-Icon" value="images/fixaddresses.png"/>
+                <attribute name="Plugin-Icon" value="images/fixaddresses.png"/>
             </manifest>
-        </jar>        
+        </jar>
     </target>
-
     <!--
     **********************************************************
     ** revision - extracts the current revision number for the
@@ -108,17 +107,16 @@
     **********************************************************
     -->
     <target name="revision">
-		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-    	            <env key="LANG" value="C"/>
-    	            <arg value="info"/>
-    	            <arg value="--xml"/>
-    	            <arg value="."/>
-    	        </exec>
-    	<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-    	<echo message="Revision: ${version.entry.commit.revision}"/>
-    	<delete file="REVISION"/>
-   	</target>
-
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <echo message="Revision: ${version.entry.commit.revision}"/>
+        <delete file="REVISION"/>
+    </target>
     <!--
     **********************************************************
     ** clean - clean up the build environment
@@ -128,7 +126,6 @@
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
-
     <!--
     **********************************************************
     ** install - install the plugin in your local JOSM installation

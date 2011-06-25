@@ -5,6 +5,8 @@
  */
 package wmsturbochallenge;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -37,8 +39,8 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
         protected Layer groundLayer = null;
 
         public DriveAction() {
-            super("Go driving", "wmsracer",
-                    "Drive a race car on this layer",
+            super(tr("Go driving"), "wmsracer",
+                    tr("Drive a race car on this layer"),
                     null, true);
             setEnabled(false);
         }

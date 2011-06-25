@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -64,25 +66,25 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
     public GraphViewDialog(final GraphViewPlugin plugin) {
 
-        super("Graph View Dialog", "graphview",
-                "Open the dialog for graph view configuration.", (Shortcut)null, HEIGHT);
+        super(tr("Graph View Dialog"), "graphview",
+                tr("Open the dialog for graph view configuration."), (Shortcut)null, HEIGHT);
 
         this.preferences = GraphViewPreferences.getInstance();
         this.plugin = plugin;
 
         availableColorSchemes = new LinkedHashMap<String, ColorScheme>();
 
-        availableColorSchemes.put("default",
+        availableColorSchemes.put(tr("default"),
                 new PreferencesColorScheme(preferences));
-        availableColorSchemes.put("end nodes",
+        availableColorSchemes.put(tr("end nodes"),
                 new EndNodeColorScheme(Color.GRAY, Color.RED, Color.GRAY));
-        availableColorSchemes.put("maxspeed",
+        availableColorSchemes.put(tr("maxspeed"),
                 new MaxspeedColorScheme());
-        availableColorSchemes.put("maxweight",
+        availableColorSchemes.put(tr("maxweight"),
                 new MaxweightColorScheme());
-        availableColorSchemes.put("maxheight",
+        availableColorSchemes.put(tr("maxheight"),
                 new MaxheightColorScheme());
-        availableColorSchemes.put("incline",
+        availableColorSchemes.put(tr("incline"),
                 new InclineColorScheme());
 
         JPanel selectionPanel = new JPanel();
@@ -102,7 +104,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
         /* create ruleset label and combo box */
         {
-            JLabel rulesetLabel = new JLabel("ruleset:");
+            JLabel rulesetLabel = new JLabel(tr("Ruleset:"));
             gbcLabel.gridy = 0;
             selectionLayout.setConstraints(rulesetLabel, gbcLabel);
             selectionPanel.add(rulesetLabel);
@@ -116,7 +118,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
         /* create bookmark label and combo box */
         {
-            JLabel bookmarkLabel = new JLabel("parameters:");
+            JLabel bookmarkLabel = new JLabel(tr("Parameters:"));
             gbcLabel.gridy = 1;
             selectionLayout.setConstraints(bookmarkLabel, gbcLabel);
             selectionPanel.add(bookmarkLabel);
@@ -130,7 +132,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
         /* create color scheme label and combo box */
         {
-            JLabel colorSchemeLabel = new JLabel("coloring:");
+            JLabel colorSchemeLabel = new JLabel(tr("Coloring:"));
             gbcLabel.gridy = 2;
             selectionLayout.setConstraints(colorSchemeLabel, gbcLabel);
             selectionPanel.add(colorSchemeLabel);
@@ -153,7 +155,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
 
         JPanel buttonPanel = new JPanel();
-        JButton showLayerButton = new JButton("create/update graph");
+        JButton showLayerButton = new JButton(tr("Create/update graph"));
         showLayerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 plugin.createGraphViewLayer();

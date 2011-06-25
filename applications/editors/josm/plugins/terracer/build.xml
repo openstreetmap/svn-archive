@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 ** This is a template build file for the terracer plugin
 **
@@ -24,17 +25,13 @@
 **
 -->
 <project name="terracer" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.dist.dir"        value="../../dist"/>
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
-
-
-    <property name="commit.message" value="applied #j5760 (patch by robome) - Order of housenumbers not correct" />
-    <property name="plugin.main.version" value="3835" />
-
-
+    <property name="commit.message" value="applied #j5760 (patch by robome) - Order of housenumbers not correct"/>
+    <property name="plugin.main.version" value="3835"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
@@ -48,6 +45,9 @@
     <target name="dist" depends="compile,revision">
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
@@ -85,64 +85,60 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
-
     <!--
          ************************** Publishing the plugin ***********************************
         -->
-            <!--
+    <!--
               ** extracts the JOSM release for the JOSM version in ../core and saves it in the
               ** property ${coreversion.info.entry.revision}
               **
             -->
-            <target name="core-info">
-                <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
-                            <env key="LANG" value="C"/>
-                            <arg value="info"/>
-                            <arg value="--xml"/>
-                            <arg value="../../core"/>
-                </exec>
-                <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
-                <echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
-                <echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
-                <delete file="core.info.xml" />
-            </target>
-
-            <!--
+    <target name="core-info">
+        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="../../core"/>
+        </exec>
+        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+        <echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
+        <echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
+        <delete file="core.info.xml"/>
+    </target>
+    <!--
              ** commits the source tree for this plugin
             -->
-            <target name="commit-current">
-                <echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-                <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-                                <env key="LANG" value="C"/>
-                                <arg value="commit"/>
-                                <arg value="-m '${commit.message}'"/>
-                                <arg value="."/>
-                </exec>
-            </target>
-
-            <!--
+    <target name="commit-current">
+        <echo>Commiting the plugin source with message '${commit.message}' ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="commit"/>
+            <arg value="-m '${commit.message}'"/>
+            <arg value="."/>
+        </exec>
+    </target>
+    <!--
             ** updates (svn up) the source tree for this plugin
             -->
-            <target name="update-current">
-                <echo>Updating plugin source ...</echo>
-                <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-                                <env key="LANG" value="C"/>
-                                <arg value="up"/>
-                                <arg value="."/>
-                </exec>
-                <echo>Updating ${plugin.jar} ...</echo>
-                <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-                                <env key="LANG" value="C"/>
-                                <arg value="up"/>
-                                <arg value="../dist/${plugin.jar}"/>
-                </exec>
-            </target>
-
-            <!--
+    <target name="update-current">
+        <echo>Updating plugin source ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="up"/>
+            <arg value="."/>
+        </exec>
+        <echo>Updating ${plugin.jar} ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="up"/>
+            <arg value="../dist/${plugin.jar}"/>
+        </exec>
+    </target>
+    <!--
              ** commits the plugin.jar
              -->
-            <target name="commit-dist">
-                    <echo>
+    <target name="commit-dist">
+        <echo>
     ***** Properties of published ${plugin.jar} *****
     Commit message    : '${commit.message}'
     Plugin-Mainversion: ${plugin.main.version}
@@ -152,14 +148,13 @@
 
     Now commiting ${plugin.jar} ...
     </echo>
-                    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-                                    <env key="LANG" value="C"/>
-                                    <arg value="-m '${commit.message}'"/>
-                                    <arg value="commit"/>
-                                    <arg value="${plugin.jar}"/>
-                    </exec>
-               </target>
-
-            <target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="-m '${commit.message}'"/>
+            <arg value="commit"/>
+            <arg value="${plugin.jar}"/>
+        </exec>
+    </target>
+    <target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
             </target>
 </project>

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.layer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -250,7 +252,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
     }
     private Point getNodePoint(LatLonCoords coords, MapView mv) {
         LatLon latLon = new LatLon(coords.getLat(), coords.getLon());
-        EastNorth eastNorth = Main.proj.latlon2eastNorth(latLon);
+        EastNorth eastNorth = Main.getProjection().latlon2eastNorth(latLon);
         return mv.getPoint(eastNorth);
     }
 
@@ -299,12 +301,12 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
     @Override
     public String getToolTipText() {
-        return "routing graph calculated by the GraphView plugin";
+        return tr("Routing graph calculated by the GraphView plugin");
     }
 
     @Override
     public void mergeFrom(Layer from) {
-        throw new AssertionError("GraphView layer is not mergable");
+        throw new AssertionError(tr("GraphView layer is not mergable"));
     }
 
     @Override

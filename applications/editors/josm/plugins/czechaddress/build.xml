@@ -1,43 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
 <project name="czechaddress" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.dist.dir"        value="../../dist"/>
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="plugin.manifest"        value="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.manifest" value="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
     <property name="ant.build.javac.target" value="1.5"/>
-
-
-
     <target name="clean" description="Removes all build files and the plugins's jar">
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
-
-
-
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
         <mkdir dir="${plugin.dist.dir}"/>
     </target>
-
-
-
-    <target name="compile" depends="init,revision"
-            description="Compile the plugin and make it ready for running">
-
-        <javac srcdir="src"
-               classpath="${josm}"
-               debug="true"
-               encoding="utf8"
-               destdir="${plugin.build.dir}">
+    <target name="compile" depends="init,revision" description="Compile the plugin and make it ready for running">
+        <javac srcdir="src" classpath="${josm}" debug="true" encoding="utf8" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
         <manifest file="${plugin.manifest}">
             <attribute name="Author" value="Radomír Černoch"/>
             <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin"/>
@@ -47,19 +34,10 @@
             <attribute name="Plugin-Mainversion" value="3835"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
-
     </target>
-
-
-
     <target name="dist" depends="compile">
-        <jar destfile="${plugin.jar}"
-             basedir ="${plugin.build.dir}"
-             manifest="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
     </target>
-
-
-
     <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
@@ -67,25 +45,18 @@
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <xmlproperty file="REVISION" prefix="version"
-                     keepRoot="false" collapseAttributes="true"/>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-
-
-
     <target name="install" depends="dist">
         <property environment="env"/>
-        <condition property="josm.plugins.dir"
-                   value="${env.APPDATA}/JOSM/plugins"
-                   else="${user.home}/.josm/plugins">
-            <and><os family="windows"/></and>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
-
-
-
     <target name="run" depends="compile">
         <java classname="JOSM" fork="true">
             <jvmarg value="-Xmx1024m"/>
@@ -102,11 +73,7 @@
             </classpath>
         </java>
     </target>
-
-
-
-    <target name="profile" depends="compile"
-            description="Profile CzechAddress with Netbeans">
+    <target name="profile" depends="compile" description="Profile CzechAddress with Netbeans">
         <fail unless="netbeans.home">
             This target can only run inside the NetBeans IDE.
         </fail>
@@ -128,12 +95,8 @@
             </classpath>
         </java>
     </target>
-
-    <target name="debug" depends="compile"
-            description="Debug CzechAddress with Netbeans">
-        <nbjpdastart addressproperty="jpda.address"
-                     name="czechaddress"
-                     transport="dt_socket"/>
+    <target name="debug" depends="compile" description="Debug CzechAddress with Netbeans">
+        <nbjpdastart addressproperty="jpda.address" name="czechaddress" transport="dt_socket"/>
         <java classname="JOSM" fork="true">
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
             <jvmarg value="-Xmx1024m"/>
@@ -149,5 +112,4 @@
             </classpath>
         </java>
     </target>
-
 </project>

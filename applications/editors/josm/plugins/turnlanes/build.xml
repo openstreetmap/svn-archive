@@ -98,7 +98,7 @@
             <manifest>
                 <attribute name="Author" value="Benjamin Schulz"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.turnlanes.TurnLanesPlugin"/>
-                <attribute name="Plugin-Date" value="2011-03-17"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides a straightforward GUI for adding, editing and deleting turn lanes."/>
                 <!--<attribute name="Plugin-Icon" value="..." />-->
                 <!--<attribute name="Plugin-Link" value="..." />-->

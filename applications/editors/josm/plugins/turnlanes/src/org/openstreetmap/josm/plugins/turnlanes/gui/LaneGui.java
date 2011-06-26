@@ -38,7 +38,7 @@ final class LaneGui {
                 g2d.setColor(Color.BLUE);
                 g2d.fill(circle);
                 
-                final String len = METER_FORMAT.format(getModel().getLength());
+                final String len = METER_FORMAT.format(getLength() * getRoad().getContainer().getMpp());
                 final Rectangle2D bounds = circle.getBounds2D();
                 g2d.setFont(g2d.getFont().deriveFont(Font.BOLD, (float) bounds.getHeight()));
                 g2d.drawString(len, (float) bounds.getMaxX(), (float) bounds.getMaxY());
@@ -71,16 +71,25 @@ final class LaneGui {
         
         @Override
         State drag(double x, double y, InteractiveElement target, State old) {
-            move(x + dragDelta.getX(), y + dragDelta.getY());
+            move(x + dragDelta.getX(), y + dragDelta.getY(), false);
             return new State.Dirty(old);
         }
         
-        void move(double x, double y) {
+        @Override
+        State drop(double x, double y, InteractiveElement target, State old) {
+            move(x + dragDelta.getX(), y + dragDelta.getY(), true);
+            return old;
+        }
+        
+        void move(double x, double y, boolean updateModel) {
             final double r = getRoad().connectorRadius;
             
             final double offset = getRoad().getOffset(x, y);
-            final double newLength = getModel().getOutgoingRoadEnd().isFromEnd() ? offset : getRoad().getLength() - offset;
-            if (newLength > 0) {
+            final double newLength = getModel().getOutgoingRoadEnd().isFromEnd() ? offset : getRoad().getLength()
+                    - offset;
+            
+            length = newLength;
+            if (updateModel && newLength > 0) {
                 getModel().setLength(newLength * getRoad().getContainer().getMpp());
             }
             
@@ -168,7 +177,8 @@ final class LaneGui {
         }
         
         private boolean isActive(State state) {
-            return state instanceof State.OutgoingActive && LaneGui.this.equals(((State.OutgoingActive) state).getLane());
+            return state instanceof State.OutgoingActive
+                    && LaneGui.this.equals(((State.OutgoingActive) state).getLane());
         }
         
         private boolean isVisible(State state) {
@@ -233,7 +243,7 @@ final class LaneGui {
             for (int i = 0; i < s.getViaConnectors().size(); i += 2) {
                 final RoadGui.ViaConnector a = s.getViaConnectors().get(i);
                 final RoadGui.ViaConnector b = s.getViaConnectors().get(i + 1);
-                assert a.getRoadEnd().getOppositeEnd().equals(b);
+                assert a.getRoadEnd().getOppositeEnd().equals(b.getRoadEnd());
                 via.add(a.getRoadEnd().getRoad());
             }
             
@@ -270,15 +280,17 @@ final class LaneGui {
     final LengthSlider lengthSlider;
     
     private Shape clip;
+    private double length;
     
     public LaneGui(RoadGui road, Lane lane) {
         this.road = road;
         this.lane = lane;
         this.lengthSlider = lane.isExtra() ? new LengthSlider() : null;
+        this.length = lane.isExtra() ? lane.getLength() / road.getContainer().getMpp() : Double.NaN;
     }
     
     public double getLength() {
-        return getModel().isExtra() ? lane.getLength() / getRoad().getContainer().getMpp() : getRoad().getLength();
+        return lane.isExtra() ? length : road.getLength();
     }
     
     public Lane getModel() {
@@ -304,8 +316,8 @@ final class LaneGui {
         final LaneGui left = left();
         final Lane leftModel = left == null ? null : left.getModel();
         final double leftLength = leftModel == null
-            || !leftModel.getOutgoingRoadEnd().equals(getModel().getOutgoingRoadEnd()) ? Double.NEGATIVE_INFINITY
-            : leftModel.getKind() == Lane.Kind.EXTRA_LEFT ? left.getLength() : L;
+                || !leftModel.getOutgoingRoadEnd().equals(getModel().getOutgoingRoadEnd()) ? Double.NEGATIVE_INFINITY
+                : leftModel.getKind() == Lane.Kind.EXTRA_LEFT ? left.getLength() : L;
         
         final Path outer;
         if (getModel().getKind() == Lane.Kind.EXTRA_LEFT) {
@@ -319,7 +331,7 @@ final class LaneGui {
             
             if (L > leftLength) {
                 innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
-                    || getModel().getOutgoingRoadEnd().isFromEnd());
+                        || getModel().getOutgoingRoadEnd().isFromEnd());
                 final Point2D op = outer.getPoint(L + WW);
                 innerLine.lineTo(op.getX(), op.getY());
             }
@@ -334,7 +346,7 @@ final class LaneGui {
             
             if (leftLength < L) {
                 innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
-                    || getModel().getOutgoingRoadEnd().isFromEnd());
+                        || getModel().getOutgoingRoadEnd().isFromEnd());
             }
         }
         

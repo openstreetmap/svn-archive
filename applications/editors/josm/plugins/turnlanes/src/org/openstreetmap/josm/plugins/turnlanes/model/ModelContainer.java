@@ -32,7 +32,7 @@ public class ModelContainer {
         while (!closed) {
             closed = true;
             
-            for (Node n : closedNodes) {
+            for (Node n : new ArrayList<Node>(closedNodes)) {
                 for (Way w : Utils.filterRoads(n.getReferrers())) {
                     if (w.isFirstLastNode(n)) {
                         closed &= close(closedNodes, closedWays, w, Constants.TURN_ROLE_FROM);
@@ -40,7 +40,7 @@ public class ModelContainer {
                     }
                 }
                 
-                for (Way w : closedWays) {
+                for (Way w : new ArrayList<Way>(closedWays) ) {
                     closed &= close(closedNodes, closedWays, w, Constants.TURN_ROLE_VIA);
                 }
             }

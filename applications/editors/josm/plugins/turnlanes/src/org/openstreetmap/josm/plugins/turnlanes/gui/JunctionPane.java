@@ -32,7 +32,8 @@ class JunctionPane extends JComponent {
         private int button;
         
         public void mousePressed(MouseEvent e) {
-            setFocusable(true);
+            JunctionPane.this.requestFocus();
+            
             button = e.getButton();
             
             if (button == MouseEvent.BUTTON1) {
@@ -157,6 +158,8 @@ class JunctionPane extends JComponent {
     public JunctionPane(GuiContainer container) {
         setJunction(container);
         
+        setFocusable(true);
+        
         getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "refresh");
         getActionMap().put("refresh", new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -230,6 +233,16 @@ class JunctionPane extends JComponent {
                 setState(new State.Dirty(state));
             }
         });
+        
+        getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "delete");
+        getActionMap().put("delete", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setState(state.delete());
+            }
+        });
     }
     
     public void setJunction(GuiContainer container) {
@@ -275,18 +288,19 @@ class JunctionPane extends JComponent {
     }
     
     private void setState(State state) {
+        
         if (state instanceof State.AllTurns) {
             dirty = true;
             this.state = state;
         } else if (state instanceof State.Invalid) {
             container = container.recalculate();
             dirty = true;
-            this.state = new State.Default();
+            setState(((State.Invalid) state).unwrap());
         } else if (state instanceof State.Dirty) {
             dirty = true;
-            this.state = ((State.Dirty) state).unwrap();
+            setState(((State.Dirty) state).unwrap());
         } else {
-            this.state = state;
+            this.state = state.carryOver(container);
         }
         
         repaint();
@@ -429,5 +443,11 @@ class JunctionPane extends JComponent {
     
     static void dot(Graphics2D g2d, Point2D p, double r) {
         dot(g2d, p, r, Color.RED);
+    }
+    
+    void refresh() {
+        if (state != null) {
+            setState(new State.Invalid(state));
+        }
     }
 }

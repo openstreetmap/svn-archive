@@ -10,8 +10,8 @@ import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 import org.openstreetmap.josm.plugins.turnlanes.model.Lane;
 import org.openstreetmap.josm.plugins.turnlanes.model.Road;
 
-interface State {
-    public class AllTurns implements State {
+abstract class State {
+    static class AllTurns extends State {
         private final State wrapped;
         
         public AllTurns(State wrapped) {
@@ -21,9 +21,14 @@ interface State {
         public State unwrap() {
             return wrapped;
         }
+        
+        @Override
+        State carryOver(GuiContainer newContainer) {
+            return new AllTurns(wrapped.carryOver(newContainer));
+        }
     }
     
-    public class Connecting implements State {
+    static class Connecting extends State {
         private final Lane lane;
         private final List<RoadGui.ViaConnector> vias;
         
@@ -90,7 +95,7 @@ interface State {
         }
     }
     
-    public class Invalid implements State {
+    static class Invalid extends State {
         private final State wrapped;
         
         public Invalid(State wrapped) {
@@ -102,7 +107,7 @@ interface State {
         }
     }
     
-    public class Dirty implements State {
+    static class Dirty extends State {
         private final State wrapped;
         
         public Dirty(State wrapped) {
@@ -112,13 +117,18 @@ interface State {
         public State unwrap() {
             return wrapped;
         }
+        
+        @Override
+        State carryOver(GuiContainer newContainer) {
+            return new Dirty(wrapped.carryOver(newContainer));
+        }
     }
     
-    class Default implements State {
+    static class Default extends State {
         public Default() {}
     }
     
-    class IncomingActive implements State {
+    static class IncomingActive extends State {
         private final Road.End roadEnd;
         
         public IncomingActive(Road.End roadEnd) {
@@ -128,9 +138,26 @@ interface State {
         public Road.End getRoadEnd() {
             return roadEnd;
         }
+        
+        @Override
+        State carryOver(GuiContainer newContainer) {
+            if (newContainer.getModel().equals(roadEnd.getRoad().getContainer())) {
+                return this;
+            }
+            
+            final Junction newJunction = newContainer.getModel().getJunction(roadEnd.getJunction().getNode());
+            
+            for (Road.End e : newJunction.getRoadEnds()) {
+                if (e.isToEnd() && e.getWay().equals(roadEnd.getWay())) {
+                    return new IncomingActive(e);
+                }
+            }
+            
+            return new Default();
+        }
     }
     
-    class OutgoingActive implements State {
+    static class OutgoingActive extends State {
         private final LaneGui lane;
         
         public OutgoingActive(LaneGui lane) {
@@ -140,5 +167,48 @@ interface State {
         public LaneGui getLane() {
             return lane;
         }
+        
+        @Override
+        State delete() {
+            if (!lane.getModel().isExtra()) {
+                return this;
+            }
+            
+            lane.getModel().remove();
+            
+            return new Invalid(this);
+        }
+        
+        @Override
+        State carryOver(GuiContainer newContainer) {
+            if (newContainer.equals(lane.getContainer())) {
+                return this;
+            }
+            
+            final Lane model = lane.getModel();
+            final Junction newJunction = newContainer.getModel().getJunction(model.getOutgoingJunction().getNode());
+            
+            for (Road.End e : newJunction.getRoadEnds()) {
+                if (e.isToEnd() && e.getWay().equals(model.getOutgoingRoadEnd().getWay())) {
+                    for (Lane l : e.getLanes()) { // e.getLane(...) can fail on lane removal
+                        if (l.getKind() == model.getKind() && l.getIndex() == model.getIndex()) {
+                            return new OutgoingActive(newContainer.getGui(l));
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+            
+            return new Default();
+        }
+    }
+    
+    State delete() {
+        return this;
+    }
+    
+    State carryOver(GuiContainer newContainer) {
+        return this;
     }
 }

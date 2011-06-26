@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.AbstractPrimitive;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -108,6 +110,8 @@ public class Road {
         private void addLane(Lane.Kind kind, double length) {
             assert kind == Lane.Kind.EXTRA_LEFT || kind == Lane.Kind.EXTRA_RIGHT;
             
+            final GenericCommand cmd = new GenericCommand(getJunction().getNode().getDataSet(), "Add lane");
+            
             final boolean left = kind == Lane.Kind.EXTRA_LEFT;
             final Relation rel = left ? lengthsLeft : lengthsRight;
             final Relation other = left ? lengthsRight : lengthsLeft;
@@ -128,10 +132,12 @@ public class Road {
             final String key = left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT;
             final String old = target.get(key);
             if (old == null) {
-                target.put(key, lengthStr);
+                cmd.backup(target).put(key, lengthStr);
             } else {
-                target.put(key, old + Constants.SEPARATOR + lengthStr);
+                cmd.backup(target).put(key, old + Constants.SEPARATOR + lengthStr);
             }
+            
+            Main.main.undoRedo.add(cmd);
         }
         
         private Relation createLengthsRelation() {
@@ -151,6 +157,8 @@ public class Road {
         }
         
         void updateLengths() {
+            final GenericCommand cmd = new GenericCommand(getJunction().getNode().getDataSet(), "Change lane length");
+            
             for (final boolean left : Arrays.asList(true, false)) {
                 final Lane.Kind kind = left ? Lane.Kind.EXTRA_LEFT : Lane.Kind.EXTRA_RIGHT;
                 final Relation r = left ? lengthsLeft : lengthsRight;
@@ -168,8 +176,11 @@ public class Road {
                 }
                 
                 lengths.setLength(lengths.length() - Constants.SEPARATOR.length());
-                r.put(left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT, lengths.toString());
+                cmd.backup(r).put(left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT,
+                        lengths.toString());
             }
+            
+            Main.main.undoRedo.add(cmd);
         }
         
         public List<Lane> getLanes() {
@@ -219,6 +230,37 @@ public class Road {
                     throw new IllegalArgumentException(String.valueOf(kind));
             }
         }
+        
+        void removeLane(GenericCommand cmd, Lane lane) {
+            assert lane.getKind() == Lane.Kind.EXTRA_LEFT || lane.getKind() == Lane.Kind.EXTRA_RIGHT;
+            
+            final boolean left = lane.getKind() == Lane.Kind.EXTRA_LEFT;
+            final Relation rel = left ? lengthsLeft : lengthsRight;
+            
+            for (Turn t : Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getWay())) {
+                t.fixReferences(cmd, left, lane.getIndex());
+            }
+            
+            final double extraLength = left ? extraLengthLeft : extraLengthRight;
+            final List<Double> newLengths = new ArrayList<Double>();
+            int i = Math.abs(lane.getIndex());
+            final String key = left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT;
+            for (double l : Lane.loadLengths(rel, key, 0)) {
+                if (l < extraLength) {
+                    newLengths.add(l);
+                } else if (--i != 0) {
+                    newLengths.add(l);
+                }
+            }
+            
+            final AbstractPrimitive bRel = cmd.backup(rel);
+            bRel.put(key, join(newLengths));
+            
+            if (bRel.get(Constants.LENGTHS_KEY_LENGTHS_LEFT) == null
+                    && bRel.get(Constants.LENGTHS_KEY_LENGTHS_RIGHT) == null) {
+                bRel.setDeleted(true);
+            }
+        }
     }
     
     private static Pair<Relation, Relation> getLengthRelations(Way w, Node n) {
@@ -246,27 +288,27 @@ public class Road {
         
         if (left.size() > 1) {
             throw new IllegalArgumentException("Way is in " + left.size()
-                + " lengths relations for given direction, both specifying left lane lengths.");
+                    + " lengths relations for given direction, both specifying left lane lengths.");
         }
         
         if (right.size() > 1) {
             throw new IllegalArgumentException("Way is in " + right.size()
-                + " lengths relations for given direction, both specifying right lane lengths.");
+                    + " lengths relations for given direction, both specifying right lane lengths.");
         }
         
         return new Pair<Relation, Relation>( //
-            left.isEmpty() ? null : left.get(0), //
-            right.isEmpty() ? null : right.get(0) //
+                left.isEmpty() ? null : left.get(0), //
+                right.isEmpty() ? null : right.get(0) //
         );
     }
     
     /**
      * @param r
-     *          lengths relation
+     *            lengths relation
      * @param w
-     *          the way to check for
+     *            the way to check for
      * @param n
-     *          first or last node of w, determines the direction
+     *            first or last node of w, determines the direction
      * @return whether the turn lane goes into the direction of n
      */
     private static boolean isRightDirection(Relation r, Way w, Node n) {
@@ -292,8 +334,8 @@ public class Road {
         final Pair<Relation, Relation> lengthsRelations = getLengthRelations(w, n);
         
         this.container = container;
-        this.route = lengthsRelations.a == null && lengthsRelations.b == null ? Route.create(Arrays.asList(w), n) : Route
-            .load(lengthsRelations.a, lengthsRelations.b, w);
+        this.route = lengthsRelations.a == null && lengthsRelations.b == null ? Route.create(Arrays.asList(w), n)
+                : Route.load(lengthsRelations.a, lengthsRelations.b, w);
         this.fromEnd = new End(true, container.getOrCreateJunction(route.getFirstSegment().getStart()));
         this.toEnd = new End(false, j, lengthsRelations.a, lengthsRelations.b);
     }
@@ -321,7 +363,22 @@ public class Road {
         return route.getLength();
     }
     
-    private String toLengthString(double length) {
+    private static String join(List<Double> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        
+        final StringBuilder builder = new StringBuilder(list.size() * (4 + Constants.SEPARATOR.length()));
+        
+        for (double e : list) {
+            builder.append(toLengthString(e)).append(Constants.SEPARATOR);
+        }
+        
+        builder.setLength(builder.length() - Constants.SEPARATOR.length());
+        return builder.toString();
+    }
+    
+    private static String toLengthString(double length) {
         final DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
         dfs.setDecimalSeparator('.');
         final DecimalFormat nf = new DecimalFormat("0.0", dfs);

@@ -1,14 +1,18 @@
 package org.openstreetmap.josm.plugins.turnlanes.model;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
 public class Lane {
     public enum Kind {
@@ -26,9 +30,10 @@ public class Lane {
         int i;
         
         i = 0;
-        for (double l : CollectionUtils.reverse(roadEnd.getLengths(Kind.EXTRA_LEFT))) {
+        for (double l : roadEnd.getLengths(Kind.EXTRA_LEFT)) {
             result.add(new Lane(roadEnd, --i, Kind.EXTRA_LEFT, l));
         }
+        Collections.reverse(result);
         
         final int regulars = getRegularCount(roadEnd.getWay(), roadEnd.getJunction().getNode());
         for (i = 1; i <= regulars; ++i) {
@@ -52,7 +57,7 @@ public class Lane {
                 // a unit (m))
                 final Double length = Double.parseDouble(s.trim());
                 
-                if (length > lengthBound) {
+                if (length >= lengthBound) {
                     result.add(length);
                 }
             }
@@ -138,10 +143,10 @@ public class Lane {
             throw new IllegalArgumentException("Length must positive.");
         }
         
+        this.length = length;
+        
         // TODO if needed, increase length of other lanes
         getOutgoingRoadEnd().updateLengths();
-        
-        this.length = length;
     }
     
     public boolean isExtra() {
@@ -173,7 +178,7 @@ public class Lane {
     }
     
     public void addTurn(List<Road> via, Road.End to) {
-        assert equals(to.getJunction());
+        final GenericCommand cmd = new GenericCommand(getOutgoingJunction().getNode().getDataSet(), tr("Add turn"));
         
         Relation existing = null;
         for (Turn t : to.getTurns()) {
@@ -202,7 +207,7 @@ public class Lane {
             }
             r.addMember(new RelationMember(Constants.TURN_ROLE_TO, to.getWay()));
             
-            getOutgoingJunction().getNode().getDataSet().addPrimitive(r);
+            cmd.add(r);
         } else {
             r = existing;
         }
@@ -210,10 +215,39 @@ public class Lane {
         final String key = isExtra() ? Constants.TURN_KEY_EXTRA_LANES : Constants.TURN_KEY_LANES;
         final List<Integer> lanes = Turn.indices(r, key);
         lanes.add(getIndex());
-        r.put(key, Turn.join(lanes));
+        cmd.backup(r).put(key, Turn.join(lanes));
+        
+        Main.main.undoRedo.add(cmd);
     }
     
     public Set<Turn> getTurns() {
-        return Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay());
+        final Set<Turn> turns = Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay());
+        
+        final Iterator<Turn> it = turns.iterator();
+        while (it.hasNext()) {
+            final Turn t = it.next();
+            
+            if (!t.getFrom().equals(this)) {
+                it.remove();
+            }
+        }
+        
+        return turns;
+    }
+    
+    public void remove() {
+        if (!isExtra()) {
+            throw new UnsupportedOperationException();
+        }
+        
+        final GenericCommand cmd = new GenericCommand(getOutgoingJunction().getNode().getDataSet(), tr("Delete lane."));
+        
+        for (Turn t : getTurns()) {
+            t.remove(cmd);
+        }
+        
+        getOutgoingRoadEnd().removeLane(cmd, this);
+        
+        Main.main.undoRedo.add(cmd);
     }
 }

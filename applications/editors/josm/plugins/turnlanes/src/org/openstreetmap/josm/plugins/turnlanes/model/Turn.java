@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.turnlanes.model;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -20,7 +23,7 @@ public final class Turn {
         final Set<Turn> result = new HashSet<Turn>();
         
         for (Relation r : OsmPrimitive.getFilteredList(primitive.getReferrers(), Relation.class)) {
-            if (!r.get("type").equals(Constants.TYPE_TURNS)) {
+            if (!r.isUsable() || !r.get("type").equals(Constants.TYPE_TURNS)) {
                 continue;
             }
             
@@ -70,7 +73,7 @@ public final class Turn {
             }
             
             final Iterator<Route.Segment> it2 = (v.getRoute().getFirstSegment().getWay().equals(w) ? v.getRoute()
-                .getSegments() : CollectionUtils.reverse(v.getRoute().getSegments())).iterator();
+                    .getSegments() : CollectionUtils.reverse(v.getRoute().getSegments())).iterator();
             it2.next(); // first is done
             
             while (it2.hasNext()) {
@@ -122,7 +125,9 @@ public final class Turn {
         
         final Set<Turn> result = new HashSet<Turn>();
         for (int i : indices(r, Constants.TURN_KEY_LANES)) {
-            result.add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), Collections.<Road> emptyList(), toRoadEnd));
+            result
+                    .add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), Collections.<Road> emptyList(),
+                            toRoadEnd));
         }
         for (int i : indices(r, Constants.TURN_KEY_EXTRA_LANES)) {
             result.add(new Turn(r, fromRoadEnd.getExtraLane(i), Collections.<Road> emptyList(), toRoadEnd));
@@ -175,18 +180,41 @@ public final class Turn {
     }
     
     public void remove() {
+        final GenericCommand cmd = new GenericCommand(relation.getDataSet(), tr("Delete turn."));
+        
+        remove(cmd);
+        
+        Main.main.undoRedo.add(cmd);
+    }
+    
+    void remove(GenericCommand cmd) {
         final List<Integer> lanes = indices(relation, Constants.TURN_KEY_LANES);
         final List<Integer> extraLanes = indices(relation, Constants.TURN_KEY_EXTRA_LANES);
         
+        // TODO understand & document
         if (lanes.size() + extraLanes.size() == 1 && (from.isExtra() ^ !lanes.isEmpty())) {
-            relation.getDataSet().removePrimitive(relation.getPrimitiveId());
+            cmd.backup(relation).setDeleted(true);
+            // relation.getDataSet().removePrimitive(relation.getPrimitiveId());
         } else if (from.isExtra()) {
             extraLanes.remove(Integer.valueOf(from.getIndex()));
         } else {
             lanes.remove(Integer.valueOf(from.getIndex()));
         }
         
-        relation.put(Constants.TURN_KEY_LANES, lanes.isEmpty() ? null : join(lanes));
-        relation.put(Constants.TURN_KEY_EXTRA_LANES, extraLanes.isEmpty() ? null : join(extraLanes));
+        cmd.backup(relation).put(Constants.TURN_KEY_LANES, lanes.isEmpty() ? null : join(lanes));
+        cmd.backup(relation).put(Constants.TURN_KEY_EXTRA_LANES, extraLanes.isEmpty() ? null : join(extraLanes));
+    }
+    
+    void fixReferences(GenericCommand cmd, boolean left, int index) {
+        final List<Integer> fixed = new ArrayList<Integer>();
+        for (int i : indices(relation, Constants.TURN_KEY_EXTRA_LANES)) {
+            if (left ? i < index : i > index) {
+                fixed.add(left ? i + 1 : i - 1);
+            } else {
+                fixed.add(i);
+            }
+        }
+        
+        cmd.backup(relation).put(Constants.TURN_KEY_EXTRA_LANES, join(fixed));
     }
 }

@@ -68,7 +68,7 @@
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <!--<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>-->
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
     <target name="clean">

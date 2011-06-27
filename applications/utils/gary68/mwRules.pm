@@ -22,6 +22,7 @@ use strict ;
 use warnings ;
 
 use mwConfig ;
+use mwMap ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -77,6 +78,7 @@ my @validWayProperties = qw (	keyValue
 					borderColor
 					borderSize
 					label
+					labelColor
 					labelSize
 					labelFont
 					labelOffset
@@ -210,6 +212,11 @@ sub readRules {
 			$line = <$file> ;
 
 			# set defaults first
+			$wayRules{ $wayNr }{ 'label' } = cv( 'ruleDefaultWayLabel' ) ;
+			$wayRules{ $wayNr }{ 'labelsize' } = cv( 'ruleDefaultWayLabelSize' ) ;
+			$wayRules{ $wayNr }{ 'labelcolor' } = cv( 'ruleDefaultWayLabelColor' ) ;
+			$wayRules{ $wayNr }{ 'labelfont' } = cv( 'ruleDefaultWayLabelFont' ) ;
+			$wayRules{ $wayNr }{ 'labeloffset' } = cv( 'ruleDefaultWayLabelOffset' ) ;
 			$wayRules{ $wayNr }{ 'color' } = cv( 'ruleDefaultWayColor' ) ;
 			$wayRules{ $wayNr }{ 'size' } = cv( 'ruleDefaultWaySize' ) ;
 			$wayRules{ $wayNr }{ 'bordercolor' } = cv( 'ruleDefaultWayBorderColor' ) ;
@@ -289,8 +296,9 @@ sub getNodeRule {
 
 	my $tagRef = shift ;
 
-	my $scale = cv ('scale') ;
+	my $scale = getScale() ;
 	if ( cv('rulescaleset') != 0 ) { $scale = cv('rulescaleset') ; }
+	# print "GNR: scale: $scale\n" ;
 
 	my $ruleFound ; undef $ruleFound ;
 
@@ -355,7 +363,7 @@ sub getWayRule {
 
 	my $tagRef = shift ;
 
-	my $scale = cv ('scale') ;
+	my $scale = getScale() ;
 	if ( cv('rulescaleset') != 0 ) { $scale = cv('rulescaleset') ; }
 
 	my $ruleFound ; undef $ruleFound ;
@@ -421,7 +429,7 @@ sub getAreaRule {
 
 	my $tagRef = shift ;
 
-	my $scale = cv ('scale') ;
+	my $scale = getScale() ;
 	if ( cv('rulescaleset') != 0 ) { $scale = cv('rulescaleset') ; }
 
 	my $ruleFound ; undef $ruleFound ;

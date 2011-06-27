@@ -23,6 +23,7 @@ use warnings ;
 
 use mwConfig ;
 use mwMap ;
+use mwMisc ;
 
 use OSM::QuadTree ;
 
@@ -30,7 +31,8 @@ my $labelPathId = 0 ;
 
 my $qtWayLabels ;
 my $qtPoiLabels ;
-my @occupiedAreas ;
+my @occupiedAreas = () ;
+my @lines = () ;
 
 my $numIconsMoved = 0 ;
 my $numLabels = 0 ;
@@ -48,6 +50,8 @@ require Exporter ;
 @EXPORT = qw ( 
 			placeLabelAndIcon
 			initQuadTrees
+			occupyLines
+			lineCrossings
 		 ) ;
 
 
@@ -258,13 +262,13 @@ sub checkAndDrawText {
 			createPath ($pathName, \@points, "definitions") ;
 
 			if ($orientation eq "centered") {
-				pathText ($svgText, $lines[$i], $pathName, 0, "middle", $layer)
+				pathText ($svgText, $lines[$i], $pathName, 0, "middle", 50, $layer)
 			}
 			if ($orientation eq "left") {
-				pathText ($svgText, $lines[$i], $pathName, 0, "start", $layer)
+				pathText ($svgText, $lines[$i], $pathName, 0, "start", 0, $layer)
 			}
 			if ($orientation eq "right") {
-				pathText ($svgText, $lines[$i], $pathName, 0, "end", $layer)
+				pathText ($svgText, $lines[$i], $pathName, 0, "end", 100, $layer)
 			}
 		}
 
@@ -338,6 +342,76 @@ sub areaOccupied {
 	}
 	return ($occupied) ;
 }
+
+sub lineCrossings {
+#
+# checks for line collisions
+# accepts multiple lines in form of multiple coordinates
+#
+	my ($ref) = shift ;
+	my @coordinates = @$ref ;
+	my @testLines = () ;
+
+	for (my $i=0; $i<$#coordinates-2; $i+=2) {
+		push @testLines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
+	}
+
+	# find area of way
+	my ($found) = 0 ;
+	my $xMin = 999999 ; my $xMax = 0 ;
+	my $yMin = 999999 ; my $yMax = 0 ;
+	foreach my $l1 (@testLines) {
+		if ($l1->[0] > $xMax) { $xMax = $l1->[0] ; }
+		if ($l1->[0] < $xMin) { $xMin = $l1->[0] ; }
+		if ($l1->[1] > $yMax) { $yMax = $l1->[1] ; }
+		if ($l1->[1] < $yMin) { $yMin = $l1->[1] ; }
+	}
+	
+	# get indexes from quad tree
+	my $ref2 = $qtWayLabels->getEnclosedObjects ($xMin, $yMin, $xMax, $yMax) ;
+	# create array linesInArea
+	my @linesInAreaIndex = @$ref2 ;
+	my @linesInArea = () ;
+	foreach my $lineNr (@linesInAreaIndex) {
+		push @linesInArea, $lines[$lineNr] ;
+	} 
+
+	LABCR: foreach my $l1 (@testLines) {
+		foreach my $l2 (@linesInArea) {
+			my ($x, $y) = intersection (@$l1, @$l2) ;
+			if (($x !=0) and ($y != 0)) {
+				$found = 1 ;
+				last LABCR ;
+			}
+		}
+	}
+	if ($found == 0) {
+		return 0 ;
+	}
+	else {
+		return 1 ;
+	}	
+}
+
+
+sub occupyLines {
+#
+# store drawn lines and make quad tree entries
+# accepts multiple coordinates that form a way
+#
+	my ($ref) = shift ;
+	my @coordinates = @$ref ;
+
+	for (my $i=0; $i<$#coordinates-2; $i+=2) {
+		push @lines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
+		# print "PUSHED $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]\n" ;
+		# drawWayPix ("black", 1, 0, @coordinates)
+
+		$qtWayLabels->add ($#lines, $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]) ;
+
+	}
+}
+
 
 
 

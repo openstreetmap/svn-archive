@@ -51,6 +51,7 @@ require Exporter ;
 			pathText
 			placeIcon
 			convert
+			gridSquare
 		 ) ;
 
 
@@ -126,6 +127,7 @@ sub initGraph {
 	if ( length cv('head') > 0 ) {
 		drawHead() ;
 	}
+
 }
 
 sub addToLayer {
@@ -344,11 +346,7 @@ sub pathText {
 #
 # draws text to path element; alignment: start, middle, end
 #
-	my ($svgText, $text, $pathName, $tSpan, $alignment, $layer) = @_ ;
-	my $offset = 0 ;
-	if ($alignment eq "start") { $offset = 0 ; }
-	if ($alignment eq "middle") { $offset = 50 ; }
-	if ($alignment eq "end") { $offset = 100 ; }
+	my ($svgText, $text, $pathName, $tSpan, $alignment, $offset, $layer) = @_ ;
 
 	my $svg = "<text $svgText >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"" . $alignment . "\" startOffset=\"" . $offset . "%\" >\n" ;
@@ -874,6 +872,26 @@ sub getScale {
 
 	return ($scale) ;
 }
+
+sub gridSquare {
+#
+# returns grid square of given coordinates for directories
+#
+	my ($lon, $lat) = @_ ;
+
+	my $parts = cv('grid') ;
+
+	my ($x, $y) = convert ($lon, $lat) ;
+	my $xi = int ($x / ($sizeX / $parts)) + 1 ;
+	my $yi = int ($y / ($sizeX / $parts)) + 1 ;
+	if ( ($x >= 0) and ($x <= $sizeX) and ($y >= 0) and ($y <= $sizeY) ) {
+		return (chr($xi+64) . $yi) ;
+	}
+	else {
+		return undef ;
+	}
+}
+
 
 
 1 ;

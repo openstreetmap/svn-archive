@@ -2,6 +2,7 @@ RULE NODE
 keyvalue=amenity=post_box
 icon=./icons/postbox.svg
 iconsize=40
+toscale=10000
 RULE NODE
 keyvalue=place=city
 size=40
@@ -25,6 +26,7 @@ RULE WAY
 keyvalue=highway=motorway
 color=blue
 size=26
+label=ref
 bordercolor=black
 bordersize=2
 RULE WAY
@@ -37,6 +39,7 @@ RULE WAY
 keyvalue=highway=trunk
 color=blue
 size=24
+label=ref
 bordercolor=black
 bordersize=2
 RULE WAY
@@ -51,6 +54,8 @@ color=red
 size=22
 bordercolor=black
 bordersize=2
+labelsize=20
+labeloffset=10
 RULE WAY
 keyvalue=highway=primary_link
 color=red
@@ -80,6 +85,23 @@ keyvalue=highway=residential
 color=grey
 size=16
 bordersize=0
+toscale=10000
+RULE WAY
+keyvalue=highway=residential
+label=none
+color=grey
+size=8
+bordersize=0
+fromscale=10001
+toscale=50000
+RULE WAY
+keyvalue=highway=track
+label=none
+color=black
+size=3
+labeloffset=-3
+bordersize=0
+toscale=50000
 RULE AREA
 keyvalue=landuse=residential
 color=lightgray

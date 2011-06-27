@@ -9,9 +9,10 @@
 # 0.04 triangle and diamond for nodes; labels and icons for nodes
 # 0.05 categories for config values
 # 0.06 drawArea; area rules; extended help, added valid object properties
+# 0.07 way labels; minsizearea implemented;
 # 
 
-my $version = "0.06" ;
+my $version = "0.07" ;
 
 use strict ;
 use warnings ;
@@ -46,6 +47,11 @@ if ( cv('verbose') eq "1" ) {
 readRules() ;
 
 readFile() ;
+
+#if ( cv('rulescaleset') == 0 ) { 
+#	my $scale = getScale() ;
+#	setConfigValue ('rulescaleset', $scale ) ; 
+#}
 
 processNodes() ;
 processWays() ;

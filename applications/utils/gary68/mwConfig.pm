@@ -52,6 +52,12 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruleDefaultNodeFromScale",  0,        "default fromScale of node",      "nodes"],
 			["ruleDefaultNodeToScale",   1000000,   "default toScale of node",        "nodes"],
 
+			["ruleDefaultWayLabel","name","default label of way", "ways"],
+			["ruleDefaultWayLabelColor","black","default label color of way", "ways"],
+			["ruleDefaultWayLabelSize",30,"default label size of way", "ways"],
+			["ruleDefaultWayLabelFont","sans-serif","default label font of way", "ways"],
+			["ruleDefaultWayLabelOffset",15,"default label Tspan offset of way", "ways"],
+
 			["ruleDefaultWayColor","gray","default color of way", "ways"],
 			["ruleDefaultWaySize",20,"default size of way", "ways"],
 			["ruleDefaultWayBorderColor","black","default color of border of way", "ways"],
@@ -130,7 +136,9 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["head","","text for header (CLO)", "map"],
 			["headcolor","black","color for header (CLO)", "map"],
 			["headbackground","none","background color for header (CLO)", "map"],
-			["headsize",40,"font size for header (CLO)", "map"]
+			["headsize",40,"font size for header (CLO)", "map"],
+
+			["minAreaSize",400,"min size of area to be drawn on map", "map"]
 
 		  ) ;
 
@@ -205,10 +213,14 @@ sub readConfigFile {
 	# read ini file; initial k/v pairs might be changed
 
 	my $fileName = shift ;
+	my $lc = 0 ;
+	
+	print "reading config file $fileName\n" ;
 
 	open (my $file, "<", $fileName) or die ("ERROR: could not open ini file $fileName\n") ;
 	my $line = "" ;
 	while ($line = <$file>) {
+		$lc ++ ;
 		if ( ! grep /^#/, $line) {
 			my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;
 			if ( ( ! defined $k ) or ( ! defined $v ) ) {
@@ -221,6 +233,7 @@ sub readConfigFile {
 		}
 	}
 	close ($file) ;
+	print "$lc lines read.\n\n" ;
 }
 
 

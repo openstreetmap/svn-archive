@@ -26,6 +26,7 @@ use mwFile ;
 use mwRules ;
 use mwMap ;
 use mwMisc ;
+use mwWayLabel ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -37,6 +38,8 @@ require Exporter ;
 
 		 ) ;
 
+my $areasOmitted = 0 ;
+my $areasDrawn = 0 ;
 
 sub processWays {
 
@@ -44,6 +47,7 @@ sub processWays {
 
 	my $nodesRef; my $tagRef ;
 	($nodesRef, $tagRef) = getWayPointers () ;
+	my ($lonRef, $latRef, $nodeTagRef) = getNodePointers() ;
 
 	foreach my $wayId (keys %$nodesRef) {
 		my @tags = @{ $$tagRef{$wayId} } ;
@@ -80,6 +84,58 @@ sub processWays {
 
 			# LABEL WAY
 
+			if ($$ruleRef{'label'} ne "none") {
+
+				my $name = "" ; my $ref1 ; my @names ;
+
+				if (grep /shield/i, $$ruleRef{'label'} ) {
+					($name, $ref1) = createLabel (\@tags, "ref",0, 0) ;
+					my $ref = $name ;
+
+					if (grep /;/, $ref) {
+						my @a = split /;/, $ref ;
+						$ref = $a[0] ; 
+					}
+
+					if ($ref ne "") {
+						@names = ($ref) ;
+						$name = $$ruleRef{'label'} . ":$ref" ;
+						# print "DRAW WAY: name set to $name\n" ;
+					}
+					else {
+						@names = () ;
+						$name = "" ;
+					}
+				}
+				else {
+					($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'}, 0, 0) ;
+					@names = @$ref1 ;
+				}
+
+				if ( ( cv('nolabel') eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
+
+				if ($name ne "") { 
+					addWayLabel ($wayId, $name, $ruleRef) ; 
+				}
+				if ( cv('dir') eq "1") {
+					if ( cv('grid') > 0) {
+						foreach my $node ( @nodes ) {
+							foreach my $name (@names) {
+								my $sq = gridSquare($$lonRef{$node}, $$latRef{$node}, cv('grid') ) ;
+								if (defined $sq) {
+									addToDirectory($name, $sq) ;
+								}
+							}
+						}
+					}
+					else {
+						foreach my $name (@names) {
+							addToDirectory ($name, undef) ;
+						}
+					}
+				}
+			}  # label
+
 		}
 
 		# AREAS
@@ -91,21 +147,34 @@ sub processWays {
 			my $base = $$ruleRef{'base'} ;
 			my $svgString = $$ruleRef{'svgstring'} ;
 			my @nodes = @{ $$nodesRef{ $wayId } } ;
+			my $size = areaSize (\@nodes) ;
 			my @ways = [@nodes] ;
 
 			if ($svgString eq "") {
 				$svgString = "fill=\"$color\" " ;
 			}
 
-			if ($base eq "yes") {
-				drawArea ($svgString, $icon, \@ways, 1, "base") ;
+			if ($size > cv('minareasize') ) {
+				if ($base eq "yes") {
+					drawArea ($svgString, $icon, \@ways, 1, "base") ;
+				}
+				else {
+					drawArea ($svgString, $icon, \@ways, 1, "area") ;
+				}
+				$areasDrawn++ ;
 			}
 			else {
-				drawArea ($svgString, $icon, \@ways, 1, "area") ;
+				$areasOmitted++ ;
 			}
 
 		} # Area
 	}
+
+	print "$areasDrawn areas drawn, $areasOmitted omitted because they are too small\n" ;
+
+	preprocessWayLabels() ;
+	createWayLabels() ;
+
 }
 
 1 ;

@@ -14,7 +14,6 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -39,7 +38,6 @@ import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
-import org.openstreetmap.josm.plugins.turnlanes.model.UnexpectedDataException;
 
 public class TurnLanesDialog extends ToggleDialog {
     private class EditAction extends JosmAction {
@@ -58,6 +56,7 @@ public class TurnLanesDialog extends ToggleDialog {
             cl.show(body, CARD_EDIT);
             editing = true;
             editButton.setSelected(true);
+            refresh();
         }
     }
     
@@ -136,11 +135,9 @@ public class TurnLanesDialog extends ToggleDialog {
     
     private static final String CARD_EDIT = "EDIT";
     private static final String CARD_VALIDATE = "VALIDATE";
-    private static final String CARD_ERROR = "ERROR";
     
     private final JPanel body = new JPanel();
-    private final JunctionPane junctionPane = new JunctionPane(null);
-    private final JLabel error = new JLabel();
+    private final JunctionPane junctionPane = new JunctionPane(GuiContainer.empty());
     
     private final JToggleButton editButton = new JToggleButton(editAction);
     private final JToggleButton validateButton = new JToggleButton(validateAction);
@@ -148,6 +145,7 @@ public class TurnLanesDialog extends ToggleDialog {
     private final Set<OsmPrimitive> selected = new HashSet<OsmPrimitive>();
     
     private boolean editing = true;
+    private boolean wasShowing = false;
     
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
@@ -174,24 +172,7 @@ public class TurnLanesDialog extends ToggleDialog {
                 selected.clear();
                 selected.addAll(newSelection);
                 
-                final Collection<OsmPrimitive> s = Collections.unmodifiableCollection(newSelection);
-                final List<Node> nodes = OsmPrimitive.getFilteredList(s, Node.class);
-                final List<Way> ways = OsmPrimitive.getFilteredList(s, Way.class);
-                
-                if (nodes.isEmpty()) {
-                    setJunction(null);
-                    return;
-                }
-                
-                try {
-                    setJunction(ModelContainer.create(nodes, ways));
-                } catch (UnexpectedDataException e) {
-                    displayError(e);
-                    return;
-                } catch (RuntimeException e) {
-                    displayError(e);
-                    return;
-                }
+                refresh();
             }
         });
         
@@ -209,45 +190,28 @@ public class TurnLanesDialog extends ToggleDialog {
         
         body.add(junctionPane, CARD_EDIT);
         body.add(new ValidationPanel(), CARD_VALIDATE);
-        body.add(error, CARD_ERROR);
         
         editButton.doClick();
     }
     
-    void displayError(UnexpectedDataException e) {
-        if (editing) {
-            if (e.getKind() == UnexpectedDataException.Kind.MISSING_TAG
-                    && UnexpectedDataException.Kind.MISSING_TAG.format("lanes").equals(e.getMessage())) {
-                
-                error.setText("<html>The number of lanes is not specified for one or more roads;"
-                        + " please add missing lanes tags.</html>");
-            } else {
-                displayError((RuntimeException) e);
-            }
-            
-            final CardLayout cl = (CardLayout) body.getLayout();
-            cl.show(body, CARD_ERROR);
+    @Override
+    protected void stateChanged() {
+        if (isShowing && !wasShowing) {
+            refresh();
         }
+        wasShowing = isShowing;
     }
     
-    void displayError(RuntimeException e) {
-        if (editing) {
-            e.printStackTrace();
+    void refresh() {
+        if (isShowing && editing) {
+            final Collection<OsmPrimitive> s = Collections.unmodifiableCollection(selected);
+            final List<Node> nodes = OsmPrimitive.getFilteredList(s, Node.class);
+            final List<Way> ways = OsmPrimitive.getFilteredList(s, Way.class);
             
-            error.setText("<html>An error occured while constructing the model."
-                    + " Please run the validator to make sure the data is consistent.<br><br>Error: " + e.getMessage()
-                    + "</html>");
+            final ModelContainer mc = nodes.isEmpty() ? ModelContainer.empty() : ModelContainer
+                    .createEmpty(nodes, ways);
             
-            final CardLayout cl = (CardLayout) body.getLayout();
-            cl.show(body, CARD_ERROR);
-        }
-    }
-    
-    void setJunction(ModelContainer mc) {
-        if (mc != null && editing) {
             junctionPane.setJunction(new GuiContainer(mc));
-            final CardLayout cl = (CardLayout) body.getLayout();
-            cl.show(body, CARD_EDIT);
         }
     }
 }

@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ public class Road {
         private final double extraLengthRight;
         
         private final List<Lane> lanes;
+        private Set<Turn> turns;
         
         private End(boolean from, Junction junction, Relation lengthsLeft, Relation lengthsRight) {
             this.from = from;
@@ -85,7 +87,7 @@ public class Road {
          * @return the turns <em>onto</em> this road at this end
          */
         public Set<Turn> getTurns() {
-            return Turn.load(getContainer(), Constants.TURN_ROLE_TO, getWay());
+            return turns;
         }
         
         public void addLane(Lane.Kind kind) {
@@ -261,6 +263,14 @@ public class Road {
                 bRel.setDeleted(true);
             }
         }
+        
+        void initialize() {
+            this.turns = Collections.unmodifiableSet(Turn.load(getContainer(), Constants.TURN_ROLE_TO, getWay()));
+            
+            for (Lane l : lanes) {
+                l.initialize();
+            }
+        }
     }
     
     private static Pair<Relation, Relation> getLengthRelations(Way w, Node n) {
@@ -392,5 +402,10 @@ public class Road {
     
     public boolean isPrimary() {
         return getContainer().isPrimary(this);
+    }
+    
+    void initialize() {
+        fromEnd.initialize();
+        toEnd.initialize();
     }
 }

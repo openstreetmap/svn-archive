@@ -17,13 +17,6 @@ public class Junction {
     Junction(ModelContainer container, Node n) {
         this.container = container;
         this.node = n;
-        
-        container.register(this);
-        
-        if (isPrimary()) {
-            // if turn data is invalid, this will force an exception now, not later during painting
-            // getTurns(); TODO force this again
-        }
     }
     
     public boolean isPrimary() {
@@ -79,7 +72,7 @@ public class Junction {
         }
         
         throw new IllegalArgumentException("While there exists a road for the given way, the way neither "
-            + "starts nor ends at the junction node.");
+                + "starts nor ends at the junction node.");
     }
     
     public ModelContainer getContainer() {

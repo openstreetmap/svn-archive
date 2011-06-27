@@ -4,6 +4,9 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -23,7 +26,10 @@ import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.KeyStroke;
+
+import org.openstreetmap.josm.plugins.turnlanes.model.UnexpectedDataException;
 
 class JunctionPane extends JComponent {
     private final class MouseInputProcessor extends MouseAdapter {
@@ -141,6 +147,8 @@ class JunctionPane extends JComponent {
     
     private GuiContainer container;
     
+    private final JLabel error = new JLabel("");
+    
     private int width = 0;
     private int height = 0;
     private double rotation = 0;
@@ -157,6 +165,11 @@ class JunctionPane extends JComponent {
     
     public JunctionPane(GuiContainer container) {
         setJunction(container);
+        
+        setLayout(new GridBagLayout());
+        error.setOpaque(false);
+        add(error, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(8, 8, 8, 8), 0, 0));
         
         setFocusable(true);
         
@@ -249,21 +262,16 @@ class JunctionPane extends JComponent {
         removeMouseListener(mip);
         removeMouseMotionListener(mip);
         removeMouseWheelListener(mip);
-        interactives.clear();
-        dragging = null;
-        this.container = container;
+        this.interactives.clear();
+        this.dragging = null;
         
-        if (container == null) {
-            this.state = null;
-        } else {
-            setState(new State.Dirty(new State.Default()));
-            
-            center();
-            
-            addMouseListener(mip);
-            addMouseMotionListener(mip);
-            addMouseWheelListener(mip);
-        }
+        this.container = container;
+        center();
+        setState(new State.Invalid(new State.Default()));
+        
+        addMouseListener(mip);
+        addMouseMotionListener(mip);
+        addMouseWheelListener(mip);
     }
     
     private void center() {
@@ -288,14 +296,28 @@ class JunctionPane extends JComponent {
     }
     
     private void setState(State state) {
+        error.setText("");
         
         if (state instanceof State.AllTurns) {
             dirty = true;
             this.state = state;
         } else if (state instanceof State.Invalid) {
-            container = container.recalculate();
             dirty = true;
             setState(((State.Invalid) state).unwrap());
+            
+            try {
+                final GuiContainer old = container;
+                
+                container = container.recalculate();
+                
+                if (old.isEmpty() != container.isEmpty()) {
+                    center();
+                }
+            } catch (UnexpectedDataException e) {
+                displayError(e);
+            } catch (RuntimeException e) {
+                displayError(e);
+            }
         } else if (state instanceof State.Dirty) {
             dirty = true;
             setState(((State.Dirty) state).unwrap());
@@ -304,6 +326,23 @@ class JunctionPane extends JComponent {
         }
         
         repaint();
+    }
+    
+    private void displayError(UnexpectedDataException e) {
+        if (e.getKind() == UnexpectedDataException.Kind.MISSING_TAG
+                && UnexpectedDataException.Kind.MISSING_TAG.format("lanes").equals(e.getMessage())) {
+            
+            error.setText("<html>The number of lanes is not specified for one or more roads;"
+                    + " please add missing lanes tags.</html>");
+        } else {
+            displayError((RuntimeException) e);
+        }
+    }
+    
+    private void displayError(RuntimeException e) {
+        error.setText("<html>An error occured while constructing the model."
+                + " Please run the validator to make sure the data is consistent.<br><br>Error: " + e.getMessage()
+                + "</html>");
     }
     
     void scale(int x, int y, double scale) {
@@ -343,11 +382,6 @@ class JunctionPane extends JComponent {
             interactive = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         }
         
-        if (container == null) {
-            super.paintComponent(g);
-            return;
-        }
-        
         if (dirty) {
             paintPassive((Graphics2D) passive.getGraphics());
             dirty = false;
@@ -358,6 +392,8 @@ class JunctionPane extends JComponent {
         
         g2d.drawImage(passive, 0, 0, getWidth(), getHeight(), null);
         g2d.drawImage(interactive, 0, 0, getWidth(), getHeight(), null);
+        
+        paintChildren(g);
     }
     
     private void paintInteractive(Graphics2D g2d) {
@@ -446,8 +482,6 @@ class JunctionPane extends JComponent {
     }
     
     void refresh() {
-        if (state != null) {
-            setState(new State.Invalid(state));
-        }
+        setState(new State.Invalid(state));
     }
 }

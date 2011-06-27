@@ -103,6 +103,7 @@ public class Lane {
     private final int index;
     private final Kind kind;
     
+    private Set<Turn> turns;
     private double length = -1;
     
     public Lane(Road.End roadEnd, int index) {
@@ -221,17 +222,6 @@ public class Lane {
     }
     
     public Set<Turn> getTurns() {
-        final Set<Turn> turns = Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay());
-        
-        final Iterator<Turn> it = turns.iterator();
-        while (it.hasNext()) {
-            final Turn t = it.next();
-            
-            if (!t.getFrom().equals(this)) {
-                it.remove();
-            }
-        }
-        
         return turns;
     }
     
@@ -249,5 +239,20 @@ public class Lane {
         getOutgoingRoadEnd().removeLane(cmd, this);
         
         Main.main.undoRedo.add(cmd);
+    }
+    
+    void initialize() {
+        final Set<Turn> turns = Turn.load(getContainer(), Constants.TURN_ROLE_FROM, getOutgoingRoadEnd().getWay());
+        
+        final Iterator<Turn> it = turns.iterator();
+        while (it.hasNext()) {
+            final Turn t = it.next();
+            
+            if (!t.getFrom().equals(this)) {
+                it.remove();
+            }
+        }
+        
+        this.turns = Collections.unmodifiableSet(turns);
     }
 }

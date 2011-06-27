@@ -26,6 +26,12 @@ class GuiContainer {
     static final Color RED = new Color(234, 66, 108);
     static final Color GREEN = new Color(66, 234, 108);
     
+    private static final GuiContainer EMPTY = new GuiContainer(ModelContainer.empty());
+    
+    public static GuiContainer empty() {
+        return EMPTY;
+    }
+    
     private final ModelContainer mc;
     
     private final Point2D translation;
@@ -45,7 +51,8 @@ class GuiContainer {
         final Point2D origin = avgOrigin(locs(mc.getPrimaryJunctions()));
         
         final LatLon originCoor = Main.getProjection().eastNorth2latlon(new EastNorth(origin.getX(), origin.getY()));
-        final LatLon relCoor = Main.getProjection().eastNorth2latlon(new EastNorth(origin.getX() + 1, origin.getY() + 1));
+        final LatLon relCoor = Main.getProjection().eastNorth2latlon(
+                new EastNorth(origin.getX() + 1, origin.getY() + 1));
         
         // meters per source unit
         final double mpsu = relCoor.greatCircleDistance(originCoor) / sqrt(2);
@@ -64,6 +71,10 @@ class GuiContainer {
     }
     
     private static Point2D avgOrigin(List<Point2D> locs) {
+        if (locs.isEmpty()) {
+            return new Point2D.Double(0, 0);
+        }
+        
         double x = 0;
         double y = 0;
         
@@ -142,6 +153,10 @@ class GuiContainer {
     }
     
     public Rectangle2D getBounds() {
+        if (isEmpty()) {
+            return new Rectangle2D.Double(-1, -1, 2, 2);
+        }
+        
         final List<Junction> primaries = new ArrayList<Junction>(mc.getPrimaryJunctions());
         final List<Double> top = new ArrayList<Double>();
         final List<Double> left = new ArrayList<Double>();
@@ -176,5 +191,9 @@ class GuiContainer {
     
     public Iterable<JunctionGui> getJunctions() {
         return junctions.values();
+    }
+    
+    public boolean isEmpty() {
+        return mc.isEmpty();
     }
 }

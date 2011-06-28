@@ -115,10 +115,19 @@ sub readFile {
 			my $top = $placeLat + cv('latrad')/111.11 ; 
 			my $bottom = $placeLat - cv('latrad')/111.11 ;
 
-			print "OSMOSIS STRING: --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right\n" ;
 			print "call osmosis...\n" ;
-			`osmosis --read-xml $osmName  --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right --write-xml ./temp.osm` ;
+
+			if ( cv('cie') eq "0" ) {
+				print "OSMOSIS STRING: --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right\n" ;
+				`osmosis --read-xml $osmName  --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right --write-xml ./temp.osm` ;
+			}
+			else {
+				print "OSMOSIS STRING: --bounding-box clipIncompleteEntities=yes bottom=$bottom top=$top left=$left right=$right\n" ;
+				`osmosis --read-xml $osmName  --bounding-box clipIncompleteEntities=yes  bottom=$bottom top=$top left=$left right=$right --write-xml ./temp.osm` ;
+			}
+
 			print "osmosis done.\n" ;
+
 			$osmName = "./temp.osm" ;
 			$clipbbox = "$left,$bottom,$right,$top" ;
 		}
@@ -223,10 +232,10 @@ sub readFile {
 	if ($clipbbox ne "") {
 		my ($bbLeft, $bbBottom, $bbRight, $bbTop) = ($clipbbox =~ /([\d\-\.]+),([\d\-\.]+),([\d\-\.]+),([\d\-\.]+)/ ) ;
 		# print "$bbLeft, $bbBottom, $bbRight, $bbTop\n" ;
-		if (($bbLeft > $lonMax) or ($bbLeft < $lonMin)) { die ("ERROR -clipbox left parameter outside data.") ; }
-		if (($bbRight > $lonMax) or ($bbRight < $lonMin)) { die ("ERROR -clipbox right parameter outside data.") ; }
-		if (($bbBottom > $latMax) or ($bbBottom < $latMin)) { die ("ERROR -clipbox bottom parameter outside data.") ; }
-		if (($bbTop > $latMax) or ($bbTop < $latMin)) { die ("ERROR -clipbox top parameter outside data.") ; }
+		if (($bbLeft > $lonMax) or ($bbLeft < $lonMin)) { print "WARNING -clipbox left parameter outside data.\n" ; }
+		if (($bbRight > $lonMax) or ($bbRight < $lonMin)) { print "WARNING -clipbox right parameter outside data.\n" ; }
+		if (($bbBottom > $latMax) or ($bbBottom < $latMin)) { print "WARNING -clipbox bottom parameter outside data.\n" ; }
+		if (($bbTop > $latMax) or ($bbTop < $latMin)) { print "WARNING -clipbox top parameter outside data.\n" ; }
 		$lonMin = $bbLeft ;
 		$lonMax = $bbRight ;
 		$latMin = $bbBottom ;

@@ -10,9 +10,10 @@
 # 0.05 categories for config values
 # 0.06 drawArea; area rules; extended help, added valid object properties
 # 0.07 way labels; minsizearea implemented;
+# 0.08 added coastlines; problems with completeObjects! use option -cie
 # 
 
-my $version = "0.07" ;
+my $version = "0.08" ;
 
 use strict ;
 use warnings ;

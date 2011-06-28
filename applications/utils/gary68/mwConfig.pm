@@ -138,7 +138,9 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["headbackground","none","background color for header (CLO)", "map"],
 			["headsize",40,"font size for header (CLO)", "map"],
 
-			["minAreaSize",400,"min size of area to be drawn on map", "map"]
+			["minAreaSize",400,"min size of area to be drawn on map", "map"],
+			["oceanColor","lightblue","color of ocean", "map"],
+			["cIE",0,"osmosis clipIncompleteEntities instead of completeObjects (CLP)", "map"]
 
 		  ) ;
 
@@ -307,6 +309,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"multionly"	=> \$cv{'multionly'},		# draw only areas from multipolygons
 				"ra:s"		=> \$cv{'ra'},		# 
 				"debug" 	=> \$cv{'debug'},			# turns debug messages on 
+				"cie" 	=> \$cv{'cie'},			# turns debug messages on 
 				"verbose" 	=> \$cv{'verbose'} ) ;		# turns twitter on
 
 
@@ -321,7 +324,9 @@ sub printConfigDescriptions {
 	print "\nconfig value descriptions\n\n" ;
 	printf "%-25s %-50s %-20s\n" , "key" , "description", "default" ;
 	foreach my $t (@texts) {
-		printf "%-25s %-50s %-20s\n" , $t->[0] , $t->[2], $t->[1] ;
+		my $def = $t->[1] ;
+		if ($def eq "") { $def = "<EMPTY>" ; }
+		printf "%-25s %-50s %-20s\n" , $t->[0] , $t->[2], $def ;
 	}
 	print "\n" ;
 }

@@ -41,6 +41,7 @@ require Exporter ;
 		triangleNode
 		intersection
 		areaSize
+		isIn
 		 ) ;
 
 
@@ -379,6 +380,49 @@ sub areaSize {
 
 	return $size ;
 }
+
+sub isIn {
+# checks two polygons
+# return 0 = neither
+# 1 = p1 is in p2
+# 2 = p2 is in p1
+	my ($p1, $p2) = @_ ;
+
+	my ($p1In2) = 1 ;
+	my ($p2In1) = 1 ;
+
+	# p1 in p2 ?
+	foreach my $pt1 ($p1->points) {
+		if ($p2->contains ($pt1) ) {
+			# good
+		}
+		else {
+			$p1In2 = 0 ;
+		}
+	}
+
+	# p2 in p1 ?
+	foreach my $pt2 ($p2->points) {
+		if ($p1->contains ($pt2) ) {
+			# good
+		}
+		else {
+			$p2In1 = 0 ;
+		}
+	}
+
+	if ($p1In2 == 1) {
+		return 1 ;
+	}
+	elsif ($p2In1 == 1) {
+		return 2 ;
+	}
+	else {
+		return 0 ;
+	}
+}
+
+
 
 1 ;
 

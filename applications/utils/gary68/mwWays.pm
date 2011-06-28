@@ -27,6 +27,7 @@ use mwRules ;
 use mwMap ;
 use mwMisc ;
 use mwWayLabel ;
+use mwCoastLines ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -35,11 +36,13 @@ require Exporter ;
 @ISA = qw ( Exporter AutoLoader ) ;
 
 @EXPORT = qw ( 	processWays 
-
+		getCoastWays
 		 ) ;
 
 my $areasOmitted = 0 ;
 my $areasDrawn = 0 ;
+
+my @coastWays = () ;
 
 sub processWays {
 
@@ -52,6 +55,12 @@ sub processWays {
 	foreach my $wayId (keys %$nodesRef) {
 		my @tags = @{ $$tagRef{$wayId} } ;
 		my $tagsString = "" ;
+
+		# coast
+		my $v = getValue ("natural", \@tags) ;
+		if ( (defined $v) and ($v eq "coastline") ) {
+			push @coastWays, $wayId ;
+		} 
 
 		# WAYS
 
@@ -172,9 +181,15 @@ sub processWays {
 
 	print "$areasDrawn areas drawn, $areasOmitted omitted because they are too small\n" ;
 
+	my $cw = scalar @coastWays ;
+	if ( cv('verbose')) { print "$cw coast line ways found.\n" ; }
+ 
 	preprocessWayLabels() ;
 	createWayLabels() ;
 
+	if ($cw > 0) {
+		processCoastLines (\@coastWays) ;
+	}
 }
 
 1 ;

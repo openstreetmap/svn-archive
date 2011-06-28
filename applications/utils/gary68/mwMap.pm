@@ -52,6 +52,7 @@ require Exporter ;
 			placeIcon
 			convert
 			gridSquare
+			getDimensions
 		 ) ;
 
 
@@ -893,6 +894,9 @@ sub gridSquare {
 }
 
 
+sub getDimensions {
+	return ($sizeX, $sizeY) ;
+}
 
 1 ;
 

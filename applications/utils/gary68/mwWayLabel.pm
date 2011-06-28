@@ -253,6 +253,9 @@ sub createWayLabels {
 #
 # finally take all way label candidates and try to label them
 #
+
+	print "placing way labels...\n" ;
+
 	my %notDrawnLabels = () ;
 	my %drawnLabels = () ;
 

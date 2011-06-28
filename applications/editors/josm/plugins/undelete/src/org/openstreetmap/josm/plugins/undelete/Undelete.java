@@ -3,6 +3,8 @@
 
 package org.openstreetmap.josm.plugins.undelete;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -16,11 +18,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadPrimitiveTask;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;

@@ -57,20 +57,16 @@ class GPXLayerImportAction extends AbstractAction {
 
         final JList layerList = new JList(dModel);
         Collection<Layer> data = Main.map.mapView.getAllLayers();
-        Layer lastLayer = null;
         int layerCnt = 0;
 
         for (Layer l : data){
             if(l instanceof GpxLayer){
                 dModel.addElement(l);
-                lastLayer = l;
                 layerCnt++;
             }
         }
-        if(layerCnt == 1){
-            layerList.setSelectedValue(lastLayer, true);
-        }
         if(layerCnt > 0){
+            layerList.setSelectionInterval(0, layerCnt-1);
             layerList.setCellRenderer(new DefaultListCellRenderer(){
                 @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     Layer layer = (Layer)value;
@@ -102,10 +98,11 @@ class GPXLayerImportAction extends AbstractAction {
                 return;
             }
 
-            GpxLayer gpx = (GpxLayer)layerList.getSelectedValue();
-
-            synchronized(importing) {
-                this.data.load(gpx.data, dropFirst.isSelected());
+            for (Object o : layerList.getSelectedValues()) {
+		GpxLayer gpx = (GpxLayer )o;
+                synchronized(importing) {
+                    this.data.load(gpx.data, dropFirst.isSelected());
+                }
             }
             Main.map.mapView.repaint();
 

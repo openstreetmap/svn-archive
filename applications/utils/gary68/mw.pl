@@ -11,9 +11,10 @@
 # 0.06 drawArea; area rules; extended help, added valid object properties
 # 0.07 way labels; minsizearea implemented;
 # 0.08 added coastlines; problems with completeObjects! use option -cie
-# 
+# 0.09 oneways
+#
 
-my $version = "0.08" ;
+my $version = "0.09" ;
 
 use strict ;
 use warnings ;
@@ -49,15 +50,13 @@ readRules() ;
 
 readFile() ;
 
-#if ( cv('rulescaleset') == 0 ) { 
-#	my $scale = getScale() ;
-#	setConfigValue ('rulescaleset', $scale ) ; 
-#}
-
 processNodes() ;
+
+initOneways() ;
 processWays() ;
 
 writeMap() ;
 
 my ($paper, $x, $y) = fitsPaper () ; $x = int ($x*10) / 10 ; $y = int ($y*10) / 10 ;
-print "map ($x cm x $y cm) fits paper $paper\n" ;
+print "map ($x cm x $y cm) fits paper $paper\n\n" ;
+

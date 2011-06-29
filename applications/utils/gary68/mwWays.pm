@@ -73,14 +73,22 @@ sub processWays {
 
 			# TODO check for numeric!!!
 
+			my $direction = 0 ;
+			my $ow = getValue("oneway", $$tagRef{$wayId}) ;
+			if (defined $ow) {
+				if (($ow eq "yes") or ($ow eq "true") or ($ow eq "1")) { $direction = 1 ; }
+				if ($ow eq "-1") { $direction = -1 ; }
+			}
+
+			my $size = $$ruleRef{'size'} ;
+			my $color = $$ruleRef{'color'} ;
+
 			if ( ( $$ruleRef{'svgstringtop'} ne "" ) or ( $$ruleRef{'svgstringbottom'} ne "" ) ) {
 				# TODO individual (NEEDS sizes anyway!!! for layers... or automatic?)
 			}
 			else {
 
 				# top (actual way)
-				my $size = $$ruleRef{'size'} ;
-				my $color = $$ruleRef{'color'} ;
 				my $svgString = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"round\" fill=\"none\" stroke-linejoin=\"round\"" ;
 				drawWay ( \@nodes, 1, $svgString, undef, $layer + $size/100 ) ;
 
@@ -89,6 +97,10 @@ sub processWays {
 				$color = $$ruleRef{'bordercolor'} ;
 				$svgString = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"round\" fill=\"none\" stroke-linejoin=\"round\"" ;
 				drawWay ( \@nodes, 1, $svgString, undef, $layer -0.3 + $size/100 ) ;
+			}
+
+			if ( ( cv('oneways') eq "1" ) and ($direction != 0) ) {
+				addOnewayArrows (\@nodes, $direction, $size, $layer) ;
 			}
 
 			# LABEL WAY

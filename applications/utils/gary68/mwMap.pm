@@ -53,6 +53,8 @@ require Exporter ;
 			convert
 			gridSquare
 			getDimensions
+			initOneways
+			addOnewayArrows
 		 ) ;
 
 
@@ -133,7 +135,15 @@ sub initGraph {
 
 sub addToLayer {
 	my ($layer, $text) = @_ ;
-	push @{$svgLayer{$layer}}, $text ;
+
+	if ( $layer =~ /^[\d\-\.]+$/) {
+		push @{$wayLayer{$layer}}, $text ;
+		# print "adding NUMERIC: $text\n" ;
+	}
+	else {
+		push @{$svgLayer{$layer}}, $text ;
+		# print "adding TEXTUAL: $text\n" ;
+	}
 }
 
 sub drawWay {
@@ -897,6 +907,57 @@ sub gridSquare {
 sub getDimensions {
 	return ($sizeX, $sizeY) ;
 }
+
+# ----------------------------------------------------------------------
+
+sub initOneways {
+#
+# write marker defs to svg 
+#
+	my $color = cv('onewaycolor') ;
+	my $markerSize = cv('onewaysize') ;
+
+	my @svgOutputDef = () ;
+	push @svgOutputDef, "<marker id=\"Arrow1\"" ;
+	push @svgOutputDef, "viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"" ;
+	push @svgOutputDef, "markerUnits=\"strokeWidth\"" ;
+	push @svgOutputDef, "markerWidth=\"" . $markerSize . "\" markerHeight=\"" . $markerSize . "\"" ;
+	push @svgOutputDef, "orient=\"auto\">" ;
+	push @svgOutputDef, "<path d=\"M 0 4 L 6 4 L 6 2 L 10 5 L 6 8 L 6 6 L 0 6 Z\" fill=\"" . $color .  "\" />" ;
+	push @svgOutputDef, "</marker>" ;
+
+	foreach my $line (@svgOutputDef) {
+		addToLayer ("definitions", $line) ;
+	}
+}
+
+sub addOnewayArrows {
+#
+# adds oneway arrows to new pathes
+#
+	my ($wayNodesRef, $direction, $thickness, $layer) = @_ ;
+	my @wayNodes = @$wayNodesRef ;
+	my $minDist = cv('onewaysize') * 1.5 ;
+	my ($lonRef, $latRef) = mwFile::getNodePointers() ;
+
+	if ($direction == -1) { @wayNodes = reverse @wayNodes ; }
+
+	# create new pathes with new nodes
+	for (my $i=0; $i<scalar(@wayNodes)-1;$i++) {
+		my ($x1, $y1) = convert ($$lonRef{$wayNodes[$i]}, $$latRef{$wayNodes[$i]}) ;
+		my ($x2, $y2) = convert ($$lonRef{$wayNodes[$i+1]}, $$latRef{$wayNodes[$i+1]}) ;
+		my $xn = ($x2+$x1) / 2 ;
+		my $yn = ($y2+$y1) / 2 ;
+		if (sqrt (($x2-$x1)**2+($y2-$y1)**2) > $minDist) {
+			# create path
+			# use path
+			my $svg = "<path d=\"M $x1 $y1 L $xn $yn L $x2 $y2\" fill=\"none\" marker-mid=\"url(#Arrow1)\" />" ;
+			
+			addToLayer ($layer+$thickness/100, $svg) ;
+		}
+	}
+}
+
 
 1 ;
 

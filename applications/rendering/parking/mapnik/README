@@ -1,0 +1,15 @@
+By Kay Drangmeister. Licence CC-BY-SA.
+
+Installation:
+
+(0) CD to your workspace, e.g. /home/me/workspace
+(1) Checkout mapnik:
+    svn co http://svn.openstreetmap.org/applications/rendering/mapnik
+(2) Checkout Parking:
+    svn co http://svn.openstreetmap.org/applications/rendering/parking
+    The two projects ./mapnik and ./Parking should now be neighbours.
+(3) modify mapnik-to-bw-toolserver.sh and mapnik-patch/*.inc.toolserver
+    according to your needs, mainly temp path and deploy path.
+(4) call mapnik-to-bw-toolserver.sh
+    This creates the bw-mapnik and bw-mapnik-noicons styles.
+

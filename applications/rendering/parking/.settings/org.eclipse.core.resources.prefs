@@ -1,6 +1,7 @@
-#Tue Jun 14 00:44:04 CEST 2011
+#Wed Jun 29 23:40:24 CEST 2011
 eclipse.preferences.version=1
-encoding//mapnik/mapnik-to-bw.py=utf-8
+encoding//mapnik/generate_parking_layer_xml.py=utf-8
+encoding//mapnik/mapnik_to_bw.py=utf-8
 encoding//osray/osray.py=utf-8
 encoding//osray/osray_buildings.py=utf-8
 encoding//osray/osray_db.py=utf-8

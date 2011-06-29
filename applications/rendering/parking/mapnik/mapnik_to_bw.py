@@ -5,7 +5,7 @@ import sys,os,subprocess
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
-import colorsys
+#import colorsys
 
 simple_colors = {
     'aliceblue': 'f0f8ff',

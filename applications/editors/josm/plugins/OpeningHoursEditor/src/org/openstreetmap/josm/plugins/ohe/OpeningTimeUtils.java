@@ -210,16 +210,26 @@ public class OpeningTimeUtils {
         return timeString(minutes, hourMode, false);
     }
 
+    /**
+     * @param minutes integer in range from 0 and 24*60 inclusive
+     * @param hourMode 12 or 24 hour clock
+     * @param showPeriod if 12 hour clock is chosen, the "AM"/"PM" will be shown
+     * @return a formatted string of the time (for example "01:45 PM" or "13:45")
+     */
     public static String timeString(int minutes, ClockSystem hourMode, boolean showPeriod) {
         int h = minutes / 60;
         String period = "";
         if (hourMode == ClockSystem.TWELVE_HOURS) {
-            if (showPeriod) {
-                period = h <= 12 ? " AM" : " PM";
-            }
-            h %= 12;
-            if (h == 0) {
-                h = 12;
+            if (h == 24)
+                return "midnight";
+            else {
+                if (showPeriod) {
+                    period = h < 12 ? " AM" : " PM";
+                }
+                h %= 12;
+                if (h == 0) {
+                    h = 12;
+                }
             }
         }
         int m = minutes % 60;

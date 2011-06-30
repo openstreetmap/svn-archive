@@ -7,9 +7,20 @@ from optparse import OptionParser
 import pxdom
 #import colorsys
 
-simple_colors = {
-    'aliceblue': 'f0f8ff',
-    'yellowgreen': '9acd32'
+condition_colors = {
+    'free': '7fff00',
+    'disc': '50a100',
+    'cust': 'b68529',
+    'resi': '785534',
+    'priv': '3f2920',
+    'fee':  '67a1eb',
+    'unkn': 'bc73e2'
+    }
+
+forbidden_colors = {
+    'nopa': 'f8b81f',
+    'nost': 'f85b1f',
+    'fire': 'f81f1f'
     }
 
 
@@ -107,14 +118,63 @@ def strip_doctype(f):
     p.wait()
 
 def create_parking_icons(source_symbols_dir,dest_symbols_dir):
+    create_parking_lane_icons(source_symbols_dir,dest_symbols_dir)
+    create_parking_area_icons(source_symbols_dir,dest_symbols_dir)
+    
+def create_parking_lane_icons(source_symbols_dir,dest_symbols_dir):
+    # first create mirror images (from left to right)
     image_files = os.listdir(source_symbols_dir)
-    image_files = [f for f in image_files if f.endswith('png')]
+    image_files = [f for f in image_files if f.startswith('park-l') and f.endswith('png')]
+    for f in image_files:
+        sf = os.path.join(source_symbols_dir,f)
+        df = os.path.join(source_symbols_dir,f) # this is changed so that we write in the source dir
+        hflip_icon(sf,df.replace('-l','-r'))
+
+    # then, create the colors
+    image_files = os.listdir(source_symbols_dir)
+    image_files = [f for f in image_files if f.endswith('source.png')]
     for f in image_files:
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(dest_symbols_dir,f)
-        p = subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+        if 'n-' in f:      # then it's a non-parking thing
+            for c in forbidden_colors.iterkeys():
+                colorize_icon(sf,df.replace('source',c),forbidden_colors.get(c))
+        else:
+            for c in condition_colors.iterkeys():
+                colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
+
+def create_parking_area_icons(source_symbols_dir,dest_symbols_dir):
+    df = os.path.join(dest_symbols_dir,"parking_area_source.png")
+    stampf = os.path.join(source_symbols_dir,"parking_area_stamp.png")
+    for c in condition_colors.iterkeys():
+        p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',df.replace('source',c)])
         p.wait()
+
+def create_parking_area_icons_delete(source_symbols_dir,dest_symbols_dir):
+    image_files = os.listdir(source_symbols_dir)
+    image_files = [f for f in image_files if f.startswith('parking_area') and f.endswith('source.png')]
+    print "all image files:", image_files
+    for f in image_files:
+        sf = os.path.join(source_symbols_dir,f)
+        df = os.path.join(dest_symbols_dir,f)
+        stampf = sf.replace('source','stamp')
+        print "stampf", stampf
+        for c in condition_colors.iterkeys():
+            colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
+            stamp_icon(df.replace('source',c),df.replace('source',c),stampf)
+
+def colorize_icon(sf,df,color):
+    p = subprocess.Popen(['convert',sf,'-fill','#'+color,'-colorize','100',df])
+    p.wait()
+
+def hflip_icon(sf,df):
+    p = subprocess.Popen(['convert',sf,'-flip',df])
+    p.wait()
+
+def stamp_icon(sf,df,stampf):
+    p = subprocess.Popen(['convert',sf,stampf,'-compose','Darken','-composite',df])
+    p.wait()
 
 def add_license_files(dirname):
     f = open(os.path.join(dirname,"CONTACT"), 'w')
@@ -127,7 +187,8 @@ def add_license_files(dirname):
 def main(options):
     source_dir = options['sourcedir']
     source_file = options['sourcefile']
-    source_symbols_dir = os.path.join(source_dir,"symbols")
+    source_symbols_dir_mapnik = os.path.join(source_dir,"symbols")
+    source_symbols_dir_parking = os.path.join(source_dir,"parking-symbols-src")
     dest_dir = options['destdir']
 
     dest_dir_parktrans = os.path.join(dest_dir,"parktrans")
@@ -137,7 +198,7 @@ def main(options):
     if not os.path.exists(dest_dir_parktrans_symbols):
         os.makedirs(dest_dir_parktrans_symbols)
 
-    create_parking_icons(source_symbols_dir,dest_dir_parktrans_symbols)
+    create_parking_icons(source_symbols_dir_parking,dest_dir_parktrans_symbols)
     transmogrify_file(os.path.join(source_dir,source_file),parktrans_file,"")
     strip_doctype(parktrans_file)
 #    strip_doctype(parktrans_noicons_file)

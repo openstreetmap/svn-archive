@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,11 +52,16 @@ public class OhePlugin extends Plugin {
      * edited, the order is referencing the preference of the keys, String[] ->
      * {key, value, key-to-edit} key and value can contain regular expressions
      */
-    private final String[][] TAG_EDIT_STRINGS = new String[][] { { "opening_hours", ".*", "opening_hours" },
+    private final String[][] TAG_EDIT_STRINGS = new String[][] {
+            { "opening_hours", ".*", "opening_hours" },
             { "collection_times", ".*", "collection_times" },
-            { "collection_times:local", ".*", "collection_times:local" }, { "shop", ".*", "opening_hours" },
-            { "amenity", "post_box", "collection_times" }, { "amenity", ".*", "opening_hours" },
-            { "lit", ".*", "lit" }, { "highway", ".*", "lit" } };
+            { "collection_times:local", ".*", "collection_times:local" },
+            { "shop", ".*", "opening_hours" },
+            { "amenity", "post_box", "collection_times" },
+            { "amenity", "recycling", "collection_times" },
+            { "amenity", ".*", "opening_hours" },
+            { "lit", ".*", "lit" },
+            { "highway", ".*", "lit" } };
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin
@@ -215,19 +222,21 @@ public class OhePlugin extends Plugin {
                         if (value instanceof String && valuePattern.matcher((String) value).matches()) {
                             preSelectedKey = pattern[2];
                             break searchLoop;
-                        } else if (value instanceof Map<?, ?>)
+                        } else if (value instanceof Map<?, ?>) {
                             for (String v : ((Map<String, Integer>) value).keySet())
                                 if (valuePattern.matcher(v).matches()) {
                                     preSelectedKey = pattern[2];
                                     break searchLoop;
                                 }
+                        }
                     }
                 }
             }
             int preSelectedRow = -1;
             for (int i = 0; i < propertyData.getRowCount(); ++i)
-                if (preSelectedKey.equals(propertyData.getValueAt(i, 0)))
+                if (preSelectedKey.equals(propertyData.getValueAt(i, 0))) {
                     preSelectedRow = i;
+                }
             if (preSelectedRow != -1) {
                 propertyTable.setEnabled(true);
                 newTagField.setEnabled(false);
@@ -240,11 +249,15 @@ public class OhePlugin extends Plugin {
                 newButton.setSelected(true);
             }
 
+            JCheckBox useTwelveHourClock = new JCheckBox(tr("Display clock in 12h mode."),
+                    ClockSystem.getClockSystem(Locale.getDefault()) == ClockSystem.TWELVE_HOURS);
+
             JPanel dlgPanel = new JPanel(new GridBagLayout());
-            dlgPanel.add(editButton, GBC.std().anchor(GBC.CENTER));
+            dlgPanel.add(editButton, GBC.std().anchor(GBC.WEST));
             dlgPanel.add(sp, GBC.eol().fill(GBC.BOTH));
-            dlgPanel.add(newButton, GBC.std().anchor(GBC.CENTER));
+            dlgPanel.add(newButton, GBC.std().anchor(GBC.WEST));
             dlgPanel.add(newTagField, GBC.eol().fill(GBC.HORIZONTAL));
+            dlgPanel.add(useTwelveHourClock, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 5, 0, 5));
 
             JOptionPane optionPane = new JOptionPane(dlgPanel, JOptionPane.QUESTION_MESSAGE,
                     JOptionPane.OK_CANCEL_OPTION);
@@ -261,12 +274,14 @@ public class OhePlugin extends Plugin {
                 if (editButton.isSelected() && propertyTable.getSelectedRow() != -1) {
                     keyToEdit = (String) propertyData.getValueAt(propertyTable.getSelectedRow(), 0);
                     valuesToEdit = propertyData.getValueAt(propertyTable.getSelectedRow(), 1);
-                } else if (newButton.isSelected())
+                } else if (newButton.isSelected()) {
                     keyToEdit = newTagField.getText();
+                }
             if (keyToEdit == null)
                 return;
 
-            OheDialogPanel panel = new OheDialogPanel(OhePlugin.this, keyToEdit, valuesToEdit);
+            OheDialogPanel panel = new OheDialogPanel(OhePlugin.this, keyToEdit, valuesToEdit,
+                    useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS : ClockSystem.TWENTYFOUR_HOURS);
 
             optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
             dlg = optionPane.createDialog(Main.parent, tr("Edit"));
@@ -275,8 +290,9 @@ public class OhePlugin extends Plugin {
 
             String[] changedKeyValuePair = null;
             answer = optionPane.getValue();
-            if (!(answer == null || answer == JOptionPane.UNINITIALIZED_VALUE || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION)))
+            if (!(answer == null || answer == JOptionPane.UNINITIALIZED_VALUE || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))) {
                 changedKeyValuePair = panel.getChangedKeyValuePair();
+            }
             if (changedKeyValuePair == null)
                 return;
             String key = changedKeyValuePair[0].trim();

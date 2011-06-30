@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
+import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OhePlugin;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
@@ -40,6 +40,8 @@ public class OheDialogPanel extends JPanel {
 
     private final String oldkey;
 
+    private ClockSystem clockSystem;
+
     /**
      * The Panel for editing the time-values.
      * 
@@ -49,7 +51,9 @@ public class OheDialogPanel extends JPanel {
      *            can be a String or a Map<String, Integer> which contains
      *            multiple values and their number of occurences
      */
-    public OheDialogPanel(OhePlugin plugin, String key, Object valuesToEdit) {
+    public OheDialogPanel(OhePlugin plugin, String key, Object valuesToEdit, ClockSystem clockSystem) {
+        this.clockSystem = clockSystem;
+
         oldkey = key;
         keyField = new JTextField(key);
 
@@ -175,5 +179,12 @@ public class OheDialogPanel extends JPanel {
 
     public void setMousePositionText(String positionText) {
         actualPostionLabel.setText(positionText);
+    }
+
+    /**
+     * @return the hourMode
+     */
+    public ClockSystem getHourMode() {
+        return clockSystem;
     }
 }

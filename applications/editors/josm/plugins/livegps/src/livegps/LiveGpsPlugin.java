@@ -97,7 +97,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void layerRemoved(Layer oldLayer) {
-        assert (oldLayer == lgpslayer);
+        if (oldLayer != lgpslayer)
+		return;
 
         enableTracking(false);
         lgpscapture.setSelected(false);

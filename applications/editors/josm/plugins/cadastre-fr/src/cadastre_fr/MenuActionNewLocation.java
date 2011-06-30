@@ -115,12 +115,12 @@ public class MenuActionNewLocation extends JosmAction {
             }
             // add the layer if it doesn't exist
             int zone = -1;
-            if (Main.proj instanceof LambertCC9Zones)
-                zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
-            else if (Main.proj instanceof Lambert)
-                zone = ((Lambert)Main.proj).getLayoutZone();
-            else if (Main.proj instanceof UTM_France_DOM)
-                zone = ((UTM_France_DOM)Main.proj).getCurrentGeodesic();
+            if (Main.getProjection() instanceof LambertCC9Zones)
+                zone = ((LambertCC9Zones)Main.getProjection()).getLayoutZone();
+            else if (Main.getProjection() instanceof Lambert)
+                zone = ((Lambert)Main.getProjection()).getLayoutZone();
+            else if (Main.getProjection() instanceof UTM_France_DOM)
+                zone = ((UTM_France_DOM)Main.getProjection()).getCurrentGeodesic();
             wmsLayer = new WMSLayer(location, codeCommune, zone);
             wmsLayer.setDepartement(codeDepartement);
             CadastrePlugin.addWMSLayer(wmsLayer);

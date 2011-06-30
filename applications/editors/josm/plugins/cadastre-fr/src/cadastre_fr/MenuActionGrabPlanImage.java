@@ -140,7 +140,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
         if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
-        EastNorth ea = Main.proj.latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
+        EastNorth ea = Main.getProjection().latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);
         if (clickOnTheMap) {
             clickOnTheMap = false;

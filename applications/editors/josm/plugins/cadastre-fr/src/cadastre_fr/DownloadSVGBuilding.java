@@ -113,7 +113,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         for (ArrayList<EastNorth> path : eastNorths) {
             Way wayToAdd = new Way();
             for (EastNorth eastNorth : path) {
-                Node nodeToAdd = new Node(Main.proj.eastNorth2latlon(eastNorth));
+                Node nodeToAdd = new Node(Main.getProjection().eastNorth2latlon(eastNorth));
                 // check if new node is not already created by another new path
                 Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.getNodes());
                 if (nearestNewNode == nodeToAdd)

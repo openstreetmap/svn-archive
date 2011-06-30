@@ -121,6 +121,8 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - the divided BBox mode starts from the central square and loads the next in a spiral
  *                 - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
  *                   of multiple municipalities in parallel.
+ * 2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
+ *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance 
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.1";
@@ -349,9 +351,9 @@ public class CadastrePlugin extends Plugin {
     }
 
     public static boolean isCadastreProjection() {
-        return Main.proj.toString().equals(new Lambert().toString())
-            || Main.proj.toString().equals(new UTM_France_DOM().toString())
-            || Main.proj.toString().equals(new LambertCC9Zones().toString());
+        return Main.getProjection().toString().equals(new Lambert().toString())
+            || Main.getProjection().toString().equals(new UTM_France_DOM().toString())
+            || Main.getProjection().toString().equals(new LambertCC9Zones().toString());
     }
 
     public static void safeSleep(long milliseconds) {

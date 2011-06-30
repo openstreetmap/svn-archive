@@ -32,7 +32,7 @@ public class EastNorthBound implements Serializable {
     }
 
     public Bounds toBounds() {
-        return new Bounds(Main.proj.eastNorth2latlon(min), Main.proj.eastNorth2latlon(max));
+        return new Bounds(Main.getProjection().eastNorth2latlon(min), Main.getProjection().eastNorth2latlon(max));
     }
 
     @Override public String toString() {

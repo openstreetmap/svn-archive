@@ -209,9 +209,9 @@ public class CacheControl implements Runnable {
 
     private String WMSFileExtension() {
         String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
-        if (Main.proj instanceof LambertCC9Zones)
+        if (Main.getProjection() instanceof LambertCC9Zones)
             ext = cLambertCC9Z + ext;
-        else if (Main.proj instanceof UTM_France_DOM)
+        else if (Main.getProjection() instanceof UTM_France_DOM)
             ext = cUTM20N + ext;
         return ext;
     }

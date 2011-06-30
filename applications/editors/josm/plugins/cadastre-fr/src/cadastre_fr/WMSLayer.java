@@ -137,7 +137,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             divideBbox(b, 1);
         } else {
             if (isRaster) {
-                b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
+                b = new Bounds(Main.getProjection().eastNorth2latlon(rasterMin), Main.getProjection().eastNorth2latlon(rasterMax));
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
                         CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
             } else
@@ -157,8 +157,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      *                   allowing grabbing of next contiguous zone
      */
     private void divideBbox(Bounds b, int factor) {
-        EastNorth lambertMin = Main.proj.latlon2eastNorth(b.getMin());
-        EastNorth lambertMax = Main.proj.latlon2eastNorth(b.getMax());
+        EastNorth lambertMin = Main.getProjection().latlon2eastNorth(b.getMin());
+        EastNorth lambertMax = Main.getProjection().latlon2eastNorth(b.getMax());
         double minEast = lambertMin.east();
         double minNorth = lambertMin.north();
         double dEast = (lambertMax.east() - minEast) / factor;
@@ -321,8 +321,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     public boolean isOverlapping(Bounds bounds) {
         GeorefImage georefImage =
             new GeorefImage(null,
-            Main.proj.latlon2eastNorth(bounds.getMin()),
-            Main.proj.latlon2eastNorth(bounds.getMax()));
+            Main.getProjection().latlon2eastNorth(bounds.getMin()),
+            Main.getProjection().latlon2eastNorth(bounds.getMax()));
         for (GeorefImage img : images) {
             if (img.overlap(georefImage))
                 return true;
@@ -398,9 +398,9 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @param bounds the current main map view boundaries
      */
     public void setRasterBounds(Bounds bounds) {
-        EastNorth rasterCenter = Main.proj.latlon2eastNorth(bounds.getCenter());
-        EastNorth eaMin = Main.proj.latlon2eastNorth(bounds.getMin());
-        EastNorth eaMax = Main.proj.latlon2eastNorth(bounds.getMax());
+        EastNorth rasterCenter = Main.getProjection().latlon2eastNorth(bounds.getCenter());
+        EastNorth eaMin = Main.getProjection().latlon2eastNorth(bounds.getMin());
+        EastNorth eaMax = Main.getProjection().latlon2eastNorth(bounds.getMax());
         double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX();
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;

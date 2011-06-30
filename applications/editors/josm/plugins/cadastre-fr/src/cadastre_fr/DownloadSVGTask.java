@@ -115,7 +115,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         int bestPath = fitViewBox.indexOf(min);
         List<Node> nodeList = new ArrayList<Node>();
         for (EastNorth eastNorth : eastNorths.get(bestPath)) {
-            nodeList.add(new Node(Main.proj.eastNorth2latlon(eastNorth)));
+            nodeList.add(new Node(Main.getProjection().eastNorth2latlon(eastNorth)));
         }
         Way wayToAdd = new Way();
         Collection<Command> cmds = new LinkedList<Command>();

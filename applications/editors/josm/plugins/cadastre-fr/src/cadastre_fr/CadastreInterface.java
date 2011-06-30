@@ -57,8 +57,8 @@ public class CadastreInterface {
     final String cInterfaceVector = "afficherCarteCommune.do";
     final String cInterfaceRasterTA = "afficherCarteTa.do";
     final String cInterfaceRasterFeuille = "afficherCarteFeuille.do";
-    final String cImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteFeuille.do?f=";
-    final String cTAImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteTa.do?f=";
+    final String cImageLinkStart = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteFeuille.do?f=";
+    final String cTAImageLinkStart = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteTa.do?f=";
     final String cImageNameStart = ">Feuille ";
     final String cTAImageNameStart = "Tableau d'assemblage <strong>";
 

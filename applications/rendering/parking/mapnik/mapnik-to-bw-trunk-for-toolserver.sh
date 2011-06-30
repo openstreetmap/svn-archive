@@ -21,16 +21,21 @@ cp ./mapnik-patch/settings.xml.inc.toolserver $MAPNIKPATCHED/inc/settings.xml.in
 
 # copy parking to temp
 mkdir -p $PARKINGPATCHED
-cp -r $PARKINGSRC/* $PARKINGPATCHED
+cp -r $PARKINGSRC/colorents* $PARKINGPATCHED
+#TODO ^^^^ remove it ###
+cp -r $PARKINGSRC/osm-park* $PARKINGPATCHED
+cp -r $PARKINGSRC/parking-inc $PARKINGPATCHED
 mv $PARKINGPATCHED/parking-inc $PARKINGPATCHED/inc
-mv $PARKINGPATCHED/parking-symbols $PARKINGPATCHED/symbols
+cp -r $PARKINGSRC/parking-symbols-src $PARKINGPATCHED
+#mv $PARKINGPATCHED/parking-symbols-src $PARKINGPATCHED/parking-symbols
+cp -r $MAPNIKSRC/symbols $PARKINGPATCHED
 
 # patch parking to have local settings
 cp ./mapnik-patch/datasource-settings.xml.inc.toolserver $PARKINGPATCHED/inc/datasource-settings.xml.inc
 cp ./mapnik-patch/fontset-settings.xml.inc.toolserver $PARKINGPATCHED/inc/fontset-settings.xml.inc
 cp ./mapnik-patch/settings.xml.inc.toolserver $PARKINGPATCHED/inc/settings.xml.inc
 
-#TODO are these ^^^^ settings the same as with mapnik???
+#TODO are these ^^^^ settings the same as with mapnik??? ###
 
 # call converter
 python generate_parking_layer_xml.py -s $PARKINGPATCHED -f osm-parktrans-src.xml -d $DESTDIR

@@ -9,6 +9,7 @@ import java.awt.Point;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -163,7 +164,8 @@ public class LiveGpsData {
     public Way getWay() {
         if(way == null && Main.map != null && Main.map.mapView != null) {
             Point xy = Main.map.mapView.getPoint(getLatLon());
-            way = Main.map.mapView.getNearestWay(xy);
+            way = Main.map.mapView.getNearestWay(xy,
+                OsmPrimitive.isUsablePredicate);
         }
         return way;
     }

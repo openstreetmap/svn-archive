@@ -1,0 +1,8 @@
+Some png files originate from SVG logos.
+
+While they are provided here, the source svg files are also
+available (at least in some cases).
+
+corrently png files are created calling inkscape like this:
+
+inkscape -e wood_coniferous.png wood_coniferous.svg

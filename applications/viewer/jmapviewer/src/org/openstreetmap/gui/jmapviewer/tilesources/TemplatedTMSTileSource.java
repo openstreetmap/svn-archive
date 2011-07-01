@@ -1,12 +1,13 @@
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
 
-public class TemplatedTMSTileSource extends AbstractOsmTileSource {
-    private int maxZoom;
-
+public class TemplatedTMSTileSource extends TMSTileSource {
     public TemplatedTMSTileSource(String name, String url, int maxZoom) {
-        super(name, url);
-        this.maxZoom = maxZoom;
+        super(name, url, maxZoom);
+    }
+
+    public TemplatedTMSTileSource(String name, String url, int minZoom, int maxZoom) {
+        super(name, url, minZoom, maxZoom);
     }
 
     @Override
@@ -17,14 +18,5 @@ public class TemplatedTMSTileSource extends AbstractOsmTileSource {
         .replaceAll("\\{y\\}", Integer.toString(tiley))
         .replaceAll("\\{!y\\}", Integer.toString((int)Math.pow(2, zoom)-1-tiley));
 
-    }
-
-    @Override
-    public int getMaxZoom() {
-        return (maxZoom == 0) ? super.getMaxZoom() : maxZoom;
-    }
-
-    public TileUpdate getTileUpdate() {
-        return TileUpdate.IfNoneMatch;
     }
 }

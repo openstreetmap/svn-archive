@@ -10,6 +10,11 @@ public class OsmTileSource {
             super("Mapnik", MAP_MAPNIK);
         }
 
+        @Override
+        public int getMaxZoom() {
+            return 18;
+        }
+
         public TileUpdate getTileUpdate() {
             return TileUpdate.IfNoneMatch;
         }

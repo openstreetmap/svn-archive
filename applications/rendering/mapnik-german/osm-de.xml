@@ -489,17 +489,17 @@
     <Rule>
       <Filter>([landuse] = 'forest' or [landuse] = 'wood' or [natural]='wood') and [wood] = 'deciduous'</Filter>
       &maxscale_zoom14;
-      <PolygonPatternSymbolizer file="&symbols;/deciduous.png" type="png" width="36" height="36"/>
+      <PolygonPatternSymbolizer file="&symbols;/wood_deciduous.png" type="png" width="36" height="36"/>
     </Rule>
     <Rule>
       <Filter>([landuse] = 'forest' or [landuse] = 'wood' or [natural]='wood') and [wood] = 'mixed'</Filter>
       &maxscale_zoom14;
-      <PolygonPatternSymbolizer file="&symbols;/mixed.png" type="png" width="36" height="36"/>
+      <PolygonPatternSymbolizer file="&symbols;/wood_mixed.png" type="png" width="36" height="36"/>
     </Rule>
     <Rule>
       <Filter>([landuse] = 'forest' or [landuse] = 'wood' or [natural]='wood') and [wood] = 'coniferous'</Filter>
       &maxscale_zoom14;
-      <PolygonPatternSymbolizer file="&symbols;/coniferous.png" type="png" width="36" height="36"/>
+      <PolygonPatternSymbolizer file="&symbols;/wood_coniferous.png" type="png" width="36" height="36"/>
     </Rule>
     <Rule>
           <Filter>([landuse] = 'forest' or [landuse] = 'wood' or [natural]='wood') and not ([wood] = 'deciduous' or [wood] = 'mixed' or [wood] = 'coniferous')</Filter>

@@ -10,15 +10,9 @@ public class OsmTileSource {
             super("Mapnik", MAP_MAPNIK);
         }
 
-        @Override
-        public int getMaxZoom() {
-            return 18;
-        }
-
         public TileUpdate getTileUpdate() {
             return TileUpdate.IfNoneMatch;
         }
-
     }
 
     public static class CycleMap extends AbstractOsmTileSource {
@@ -48,7 +42,6 @@ public class OsmTileSource {
         public TileUpdate getTileUpdate() {
             return TileUpdate.LastModified;
         }
-
     }
 
     public static abstract class OsmaSource extends AbstractOsmTileSource {

@@ -132,6 +132,7 @@ while(my $line = <>)
     {
       my $val = $combo_values[$i];
       $val =~ s/\x91/$sp/g;
+      $combo_values[$i] = $val;
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
       $val = fix($val);
       print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");

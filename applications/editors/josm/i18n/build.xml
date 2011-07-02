@@ -49,9 +49,9 @@
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
         </gettext-extract>
-        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
     </target>
     <target name="build" depends="po/josm.pot,init">
+        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
         <antcall target="coretrans"/>
         <foreach param="path" target="plugintrans">
             <path>

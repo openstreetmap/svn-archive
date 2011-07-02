@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -85,6 +86,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     private String attrTermsUrl;
     public static final Font ATTR_FONT = new Font("Arial", Font.PLAIN, 10);
     public static final Font ATTR_LINK_FONT;
+
+    protected Rectangle attrTextBounds = null;
+    protected Rectangle attrToUBounds = null;
+    protected Rectangle attrImageBounds = null;
 
     static {
         HashMap<TextAttribute, Integer> aUnderline = new HashMap<TextAttribute, Integer>();
@@ -752,11 +757,14 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         g.setFont(ATTR_LINK_FONT);
 
         Rectangle2D termsStringBounds = g.getFontMetrics().getStringBounds("Background Terms of Use", g);
-        int textHeight = (int) termsStringBounds.getHeight() - 5;
+        int textRealHeight = (int) termsStringBounds.getHeight();
+        int textHeight = textRealHeight - 5;
+        int textWidth = (int) termsStringBounds.getWidth();
         int termsTextY = getHeight() - textHeight;
         if (attrTermsUrl != null) {
             int x = 2;
             int y = getHeight() - textHeight;
+            attrToUBounds = new Rectangle(x, y-textHeight, textWidth, textRealHeight);
             g.setColor(Color.black);
             g.drawString("Background Terms of Use", x + 1, y + 1);
             g.setColor(Color.white);
@@ -766,8 +774,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         // Draw attribution logo
         if (attrImage != null) {
             int x = 2;
+            int imgWidth = attrImage.getWidth(this);
             int height = attrImage.getHeight(null);
             int y = termsTextY - height - textHeight - 5;
+            attrImageBounds = new Rectangle(x, y, imgWidth, height);
             g.drawImage(attrImage, x, y, null);
         }
 
@@ -783,6 +793,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             g.drawString(attributionText, x + 1, y + 1);
             g.setColor(Color.white);
             g.drawString(attributionText, x, y);
+            attrTextBounds = new Rectangle(x, y-textHeight, textWidth, textRealHeight);
         }
 
         g.setFont(font);

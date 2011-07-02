@@ -25,7 +25,7 @@ public abstract class AbstractOsmTileSource extends AbstractTSMTileSource {
 
     @Override
     public boolean requiresAttribution() {
-        return false;
+        return true;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class TemplatedTMSTileSource extends TMSTileSource {
         .replaceAll("\\{x\\}", Integer.toString(tilex))
         .replaceAll("\\{y\\}", Integer.toString(tiley))
         .replaceAll("\\{!y\\}", Integer.toString((int)Math.pow(2, zoom)-1-tiley));
-        if(r != null) {
+        if(rand != null) {
             r = r.replaceAll("\\{switch:[^}]+\\}",
             randomParts[rand.nextInt(randomParts.length)]);
         }

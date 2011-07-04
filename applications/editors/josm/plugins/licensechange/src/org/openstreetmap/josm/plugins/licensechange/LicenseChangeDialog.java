@@ -181,8 +181,8 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener,
                 DefaultMutableTreeNode childNode = children.nextElement();
                 Object nodeInfo = childNode.getUserObject();
                 if (nodeInfo instanceof LicenseProblem) {
-                    LicenseProblem error = (LicenseProblem) nodeInfo;
-                    sel.addAll(error.getPrimitives());
+                    LicenseProblem problem = (LicenseProblem) nodeInfo;
+                    sel.addAll(problem.getPrimitives());
                 }
             }
         }

@@ -41,7 +41,7 @@ public class BasicLicenseCheck extends Check
     private void doCheck(OsmPrimitive n, List<User> users)
     {
         Severity sev = null;
-        if (users != null)
+        if ((users != null) && (n.getUser() != null))
         {
             int u0 = users.get(0).getRelicensingStatus();
             String msg = null;

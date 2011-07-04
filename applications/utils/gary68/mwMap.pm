@@ -42,6 +42,7 @@ require Exporter ;
 			drawTriangle
 			drawDiamond
 			drawRect
+			drawText
 			writeMap
 			drawWay
 			drawArea
@@ -62,7 +63,7 @@ my @belowWays = ("background", "base", "area", "multi") ;
 
 my @aboveWays = ( "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional") ;
 
-my @elements = ("scale", "ruler", "legend", "header", "footer", "title") ;
+my @elements = ("scale", "ruler", "legend", "header", "footer", "rectangles", "title") ;
 
 my %svgLayer = () ;
 my %wayLayer = () ;

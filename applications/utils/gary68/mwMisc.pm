@@ -27,6 +27,7 @@ use List::Util qw[min max] ;
 
 use mwConfig ;
 use mwFile ;
+use mwMap ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -42,6 +43,8 @@ require Exporter ;
 		intersection
 		areaSize
 		isIn
+		processPageNumbers
+		processRectangles
 		 ) ;
 
 
@@ -422,6 +425,127 @@ sub isIn {
 	}
 }
 
+# -------------------------------------------------------------------------------
+
+sub processPageNumbers {
+	if ( cv('pageNumbers') ne "") {
+		my $pnSize ; my $pnColor ;
+		my @a = split /,/, cv('pageNumbers') ;
+		if (scalar @a >= 3) {
+			$pnSize = $a[0] ;
+			$pnColor = $a[1] ;
+			my $pnNumber = $a[2] ;
+
+			if ($pnNumber != 0) {
+				drawPageNumber ($pnSize, $pnColor, $pnNumber) ;
+			}
+		}
+		if (scalar @a == 7) {
+			# draw 4 other positions if ne 0!!!
+			if ($a[3] != 0) { # left
+				drawPageNumberLeft ($pnSize, $pnColor, $a[3]) ;
+			}
+			if ($a[4] != 0) { # bottom
+				drawPageNumberBottom ($pnSize, $pnColor, $a[4]) ;
+			}
+			if ($a[5] != 0) { # right
+				drawPageNumberRight ($pnSize, $pnColor, $a[5]) ;
+			}
+			if ($a[6] != 0) { # top
+				drawPageNumberTop ($pnSize, $pnColor, $a[6]) ;
+			}
+		}
+	}
+}
+
+sub drawPageNumber {
+	my ($size, $col, $num) = @_ ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my $x = $sizeX - 2 * $size ;
+	my $y = $sizeY - 2 * $size ;
+	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
+	drawText ($x, $y, 0, $num, $svgString, "text")
+}
+
+sub drawPageNumberLeft {
+	my ($size, $col, $num) = @_ ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my $x = 2 * $size ;
+	my $y = $sizeY / 2 ;
+	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
+	drawText ($x, $y, 0, $num, $svgString, "text")
+}
+
+sub drawPageNumberBottom {
+	my ($size, $col, $num) = @_ ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my $x = $sizeX / 2 ;
+	my $y = $sizeY - 2 * $size ;
+	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
+	drawText ($x, $y, 0, $num, $svgString, "text")
+}
+
+sub drawPageNumberRight {
+	my ($size, $col, $num) = @_ ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my $x = $sizeX - 2 * $size ;
+	my $y = $sizeY / 2 ;
+	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
+	drawText ($x, $y, 0, $num, $svgString, "text")
+}
+
+sub drawPageNumberTop {
+	my ($size, $col, $num) = @_ ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my $x = $sizeX / 2 ;
+	my $y = 2 * $size ;
+	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
+	drawText ($x, $y, 0, $num, $svgString, "text")
+}
+
+# ---------------------------------------------------------------------
+
+sub processRectangles {
+	my $no = 0 ;
+
+	if ( cv('rectangles') ne "") {
+		my @rects ;
+		@rects = split /#/, cv('rectangles') ;
+		foreach my $r (@rects) {
+			$no++ ;
+			my @coords ;
+			@coords = split /,/, $r ;
+
+			my $left = $coords[0] ;
+			my $bottom = $coords[1] ;
+			my $right = $coords[2] ;
+			my $top = $coords[3] ;
+
+			my @nodes ;
+			push @nodes, convert ($left, $bottom) ;
+			push @nodes, convert ($right, $bottom) ;
+			push @nodes, convert ($right, $top) ;
+			push @nodes, convert ($left, $top) ;
+			push @nodes, convert ($left, $bottom) ;
+	
+			# drawWay (10, "black", 5, "none", @nodes) ;
+			my $svgString = "fill=\"none\" stroke=\"black\" stroke-width=\"7\" " ;
+			drawWay (\@nodes, 0, $svgString, "rectangles", undef) ;
+			# drawRect ($left, $bottom, $right, $top, 1, $svgString, "rectangles") ;
+
+			if ( cv('pagenumbers') ne "") {
+				my $x = ($right + $left) / 2 ;
+				my $y = ($bottom + $top) / 2 ;
+				my $xp ; my $yp ;
+				($xp, $yp) = convert ($x, $y) ;
+				# drawTextPixGrid ($xp, $yp, $no, $pnColor, scalePoints ( scaleBase ($pnSize) ) ) ;
+				my $svgString = "fill=\"black\" font-size=\"60\" " ;
+				drawText ($xp, $yp, 0, $no, $svgString, "rectangles") ;
+			}
+
+		}
+	}
+}
 
 
 1 ;

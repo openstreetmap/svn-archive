@@ -75,6 +75,7 @@ my @validWayProperties = qw (	keyValue
 					color
 					size
 					dash
+					dashCap
 					borderColor
 					borderSize
 					label
@@ -108,6 +109,9 @@ my %wayRules = () ;
 my $nodeNr = 0 ;
 my $areaNr = 0 ;
 my $wayNr = 0 ;
+
+my $line ;
+my $ruleFile ;
 
 # ---------------------------------------------------------------------------------------
 
@@ -150,15 +154,12 @@ sub readRules {
 	my %vap = () ;
 	foreach my $p ( @validAreaProperties ) { $vap{ lc ( $p ) } = 1 ; }
 
-	open (my $file, "<", $fileName) or die ("ERROR: could not open rule file $fileName\n") ;
-	my $line = "" ;
-	$line = <$file>	;
+	openRuleFile($fileName) ;
 	while (defined $line) {
-		$line =~ s/\r//g ; # remove dos/win char at line end
 		if ( grep /^rule node/i, $line ) {
 			$nodeNr++ ;
 			$nrr++ ;
-			$line = <$file> ;
+			getRuleLine() ;
 
 			# set defaults first
 			$nodeRules{ $nodeNr }{ 'size' } = cv( 'ruleDefaultNodeSize' ) ;
@@ -199,7 +200,7 @@ sub readRules {
 					$nodeRules{ $nodeNr }{ $k } = $v ;
 					if ( ! defined $vnp{$k} ) { print "WARNING: $k is not a valid node property!\n" ; }
 				}
-				$line = <$file> ;
+				getRuleLine() ;
 			}
 			if ( ! defined $nodeRules{ $nodeNr }{ 'keyvalue' } ) { die "ERROR: rule without keyValue detected!\n" ; }
 
@@ -209,7 +210,7 @@ sub readRules {
 
 			$wayNr++ ;
 			$wrr++ ;
-			$line = <$file> ;
+			getRuleLine() ;
 
 			# set defaults first
 			$wayRules{ $wayNr }{ 'label' } = cv( 'ruleDefaultWayLabel' ) ;
@@ -221,6 +222,8 @@ sub readRules {
 			$wayRules{ $wayNr }{ 'size' } = cv( 'ruleDefaultWaySize' ) ;
 			$wayRules{ $wayNr }{ 'bordercolor' } = cv( 'ruleDefaultWayBorderColor' ) ;
 			$wayRules{ $wayNr }{ 'bordersize' } = cv( 'ruleDefaultWayBorderSize' ) ;
+			$wayRules{ $wayNr }{ 'dash' } = cv( 'ruleDefaultWayDash' ) ;
+			$wayRules{ $wayNr }{ 'dashcap' } = cv( 'ruleDefaultWayDashCap' ) ;
 
 			$wayRules{ $wayNr }{ 'svgstringtop' } = "" ;
 			$wayRules{ $wayNr }{ 'svgstringbottom' } = "" ;
@@ -238,7 +241,7 @@ sub readRules {
 					$wayRules{ $wayNr }{ $k } = $v ;
 					if ( ! defined $vwp{$k} ) { print "WARNING: $k is not a valid way property!\n" ; }
 				}
-				$line = <$file> ;
+				getRuleLine() ;
 			}
 			if ( ! defined $wayRules{ $wayNr }{ 'keyvalue' } ) { die "ERROR: rule without keyValue detected!\n" ; }
 
@@ -247,7 +250,7 @@ sub readRules {
 		elsif ( grep /^rule area/i, $line ) {
 			$areaNr++ ;
 			$arr++ ;
-			$line = <$file> ;
+			getRuleLine() ;
 
 			# set defaults first
 			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
@@ -268,23 +271,32 @@ sub readRules {
 					$areaRules{ $areaNr }{ $k } = $v ;
 					if ( ! defined $vap{$k} ) { print "WARNING: $k is not a valid area property!\n" ; }
 				}
-				$line = <$file> ;
+				getRuleLine() ;
 			}
 			if ( ! defined $areaRules{ $areaNr }{ 'keyvalue' } ) { die "ERROR: rule without keyValue detected!\n" ; }
 
 		} # area
 
 		elsif ( grep /^rule config/i, $line ) {
-		} # area
+			$crr++ ;
+			my ($key, $value) = ( $line =~ /^rule config\s+(.+)=(.+)/i ) ;
+			if ( (defined $key) and (defined $value) ) {
+				setConfigValue ($key, $value) ;
+				if ( cv('debug') eq "1" ) {
+					print "RULES: config changed $key=$value\n" ;
+				}
+			}
+			getRuleLine() ;
+		} # config
 
 		else {
-			$line = <$file> ;
+			getRuleLine() ;
 		}
 
 	}
 
 
-	close ($file) ;
+	close ($ruleFile) ;
 
 	print "rules read: $nrr nodes, $wrr ways, $arr areas, $rrr routes and $crr configs\n\n" ;
 
@@ -485,7 +497,22 @@ sub printAreaRules {
 }
 
 
+sub openRuleFile {
+	my $fileName = shift ;
+	open ($ruleFile, "<", $fileName) or die ("ERROR: could not open rule file $fileName\n") ;
+	getRuleLine() ;
+}
 
+sub getRuleLine {
+	$line = <$ruleFile> ;
+	if (defined $line) {	
+		$line =~ s/\r//g ; # remove dos/win char at line end
+	}
+	while ( (defined $line) and ( (length $line < 2) or ( grep /^comment/i, $line) or ( grep /^\#/i, $line) ) ) {
+		$line = <$ruleFile> ;
+	}
+	return $line ;
+}
 
 1 ;
 

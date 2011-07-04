@@ -1,115 +1,181 @@
+#
+# standard ruleset for mapweaver
+#
+
 RULE NODE
 keyvalue=amenity=post_box
 icon=./icons/postbox.svg
 iconsize=40
 toscale=10000
+
+RULE CONFIG foot=hat wohl geklappt
+
 RULE NODE
 keyvalue=place=city
 size=40
 labelsize=60
 shape=square
+
 RULE NODE
 keyvalue=place=town
 label=name
 labelsize=45
 size=30
+
 RULE NODE
 keyvalue=place=village
 size=20
 labelsize=30
 svgString=fill="black"
+toscale=50000
+
 RULE NODE
 keyvalue=place=suburb
 size=20
 labelsize=30
+toscale=50000
+
 RULE WAY
 keyvalue=highway=motorway
 color=blue
-size=26
+size=28
 label=ref
+labelsize=26
+labeloffset=11
 bordercolor=black
 bordersize=2
+
 RULE WAY
 keyvalue=highway=motorway_link
 color=blue
-size=14
+size=20
 bordercolor=black
 bordersize=2
+
 RULE WAY
 keyvalue=highway=trunk
 color=blue
-size=24
+size=28
 label=ref
 bordercolor=black
-bordersize=2
+bordersize=4
+
 RULE WAY
 keyvalue=highway=trunk_link
 color=blue
-size=14
+size=20
 bordercolor=black
 bordersize=2
+
 RULE WAY
 keyvalue=highway=primary
-color=red
-size=22
-bordercolor=black
-bordersize=2
-labelsize=20
+label=name
+labelsize=24
 labeloffset=10
+color=red
+size=26
+bordercolor=black
+bordersize=4
+
 RULE WAY
 keyvalue=highway=primary_link
 color=red
-size=14
+size=20
 bordercolor=black
 bordersize=2
+
 RULE WAY
 keyvalue=highway=secondary
+label=name
+labelsize=22
+labeloffset=9
+color=orange
+size=24
+bordercolor=black
+bordersize=4
+
+RULE WAY
+keyvalue=highway=secondary_link
 color=orange
 size=20
 bordercolor=black
 bordersize=2
-RULE WAY
-keyvalue=highway=secondary_link
-color=orange
-size=14
-bordercolor=black
-bordersize=2
+
 RULE WAY
 keyvalue=highway=tertiary
 color=green
-size=18
+labelsize=22
+labeloffset=9
+size=24
 bordercolor=black
-bordersize=2
+bordersize=4
+
 RULE WAY
 keyvalue=highway=residential
+label=name
+labelsize=20
+labeloffset=8
 color=grey
-size=16
-bordersize=0
+size=22
+bordersize=4
 toscale=10000
+
 RULE WAY
 keyvalue=highway=residential
 label=none
 color=grey
-size=8
+size=10
 bordersize=0
 fromscale=10001
+toscale=25000
+
+RULE WAY
+keyvalue=highway=residential
+label=none
+color=grey
+size=5
+bordersize=0
+fromscale=25001
 toscale=50000
+
+RULE WAY
+keyvalue=highway=sevice
+label=none
+color=grey
+size=20
+bordersize=0
+toscale=10000
+
+RULE WAY
+keyvalue=highway=track
+label=name
+labelsize=20
+color=darkgrey
+size=3
+labeloffset=-2
+bordersize=0
+toscale=10000
+
 RULE WAY
 keyvalue=highway=track
 label=none
-color=black
-size=3
-labeloffset=-3
+color=darkgrey
+size=1
 bordersize=0
+fromscale=10001
 toscale=50000
+
 RULE AREA
 keyvalue=landuse=residential
 color=lightgray
 base=yes
+
 RULE AREA
 keyvalue=building=yes
 color=darkgray
+
 RULE AREA
 keyvalue=natural=water
 color=lightblue
 base=yes
+

@@ -80,28 +80,30 @@ sub processWays {
 				if ($ow eq "-1") { $direction = -1 ; }
 			}
 
+			my $bridge = getValue("bridge", $$tagRef{$wayId}) ;
+			if (defined $bridge) {
+				if (($bridge eq "yes") or ($bridge eq "true")) { $bridge = 1 ; } else { $bridge = 0 ; }
+			}
+			else { $bridge = 0 ; }
+
+			my $tunnel = getValue("tunnel", $$tagRef{$wayId}) ;
+			if (defined $tunnel) {
+				if (($tunnel eq "yes") or ($tunnel eq "true")) { $tunnel = 1 ; } else { $tunnel = 0 ; }
+			}
+			else { $tunnel = 0 ; }
+
+			my ($svg1, $layer1, $svg2, $layer2) = createWayParameters ($ruleRef, $layer, $bridge, $tunnel) ;
+
+			drawWay ( \@nodes, 1, $svg1, undef, $layer1 ) ;
+			if ($svg2 ne "") {
+				drawWay ( \@nodes, 1, $svg2, undef, $layer2 ) ;
+			}
+
 			my $size = $$ruleRef{'size'} ;
-			my $color = $$ruleRef{'color'} ;
-
-			if ( ( $$ruleRef{'svgstringtop'} ne "" ) or ( $$ruleRef{'svgstringbottom'} ne "" ) ) {
-				# TODO individual (NEEDS sizes anyway!!! for layers... or automatic?)
-			}
-			else {
-
-				# top (actual way)
-				my $svgString = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"round\" fill=\"none\" stroke-linejoin=\"round\"" ;
-				drawWay ( \@nodes, 1, $svgString, undef, $layer + $size/100 ) ;
-
-				# bottom (border)
-				$size = 2 * $$ruleRef{'bordersize'} + $$ruleRef{'size'} ;
-				$color = $$ruleRef{'bordercolor'} ;
-				$svgString = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"round\" fill=\"none\" stroke-linejoin=\"round\"" ;
-				drawWay ( \@nodes, 1, $svgString, undef, $layer -0.3 + $size/100 ) ;
-			}
-
 			if ( ( cv('oneways') eq "1" ) and ($direction != 0) ) {
 				addOnewayArrows (\@nodes, $direction, $size, $layer) ;
 			}
+
 
 			# LABEL WAY
 
@@ -203,6 +205,115 @@ sub processWays {
 		processCoastLines (\@coastWays) ;
 	}
 }
+
+# ----------------------------------------------------------------------------
+
+sub createWayParameters {
+	my ($ruleRef, $layer, $bridge, $tunnel) = @_ ;
+
+	my $svg1 = "" ; my $layer1 = 0 ;
+	my $svg2 = "" ; my $layer2 = 0 ;
+
+	my %dashDefinition = () ;
+	@{$dashDefinition {1} } = ("round", "20,20") ;
+	@{$dashDefinition {2} } = ("round", "44,20") ;
+	@{$dashDefinition {3} } = ("round", "28,20") ;
+	@{$dashDefinition {4} } = ("round", "12,20") ;
+
+	@{$dashDefinition {10} } = ("round", "8,8") ;
+	@{$dashDefinition {11} } = ("round", "16,16") ;
+	@{$dashDefinition {12} } = ("round", "24,24") ;
+	@{$dashDefinition {13} } = ("round", "32,32") ;
+	@{$dashDefinition {14} } = ("round", "40,40") ;
+
+	@{$dashDefinition {20} } = ("round", "0,8,0,16") ;
+	@{$dashDefinition {21} } = ("round", "0,16,0,32") ;
+	@{$dashDefinition {22} } = ("round", "0,24,0,48") ;
+	@{$dashDefinition {23} } = ("round", "0,32,0,48") ;
+
+	@{$dashDefinition {30} } = ("butt", "4,4") ;
+	@{$dashDefinition {31} } = ("butt", "8,8") ;
+	@{$dashDefinition {32} } = ("butt", "12,12") ;
+	@{$dashDefinition {33} } = ("butt", "4,12") ;
+	@{$dashDefinition {34} } = ("butt", "4,20") ;
+	@{$dashDefinition {35} } = ("butt", "8,20") ;
+
+	if ( cv ('autobridge') eq "0" ) {
+		$layer = 0 ;
+	}
+
+	if ( ( $$ruleRef{'svgstringtop'} ne "" ) or ( $$ruleRef{'svgstringbottom'} ne "" ) ) {
+
+		$svg1 = $$ruleRef{'svgstringtop'} ;
+		$svg2 = $$ruleRef{'svgstringbottom'} ;
+
+		# TODO layer
+		$layer1 = $layer ;
+		$layer2 = $layer ;
+
+	}
+	else {
+
+		my $size = $$ruleRef{'size'} ;
+		my $color = $$ruleRef{'color'} ;
+
+		my $lc = "round" ;
+		my $lj = "round" ;
+
+		my $dash = "" ;
+		if ( $$ruleRef{'dash'} ne "" ) {
+			if ( ! grep /,/, $$ruleRef{'dash'}) {
+				my @ds = @{$dashDefinition{ $$ruleRef{'dash'} } } ;
+				$lc = $ds[0] ;
+				my $style = $ds[1] ;
+				$dash = "stroke-dasharray=\"$style\" " ;
+			}
+			else {
+				$lc = $$ruleRef{'dashcap'} ;
+				my $style = $$ruleRef{'dash'} ;
+				$dash = "stroke-dasharray=\"$style\"" ;
+			}
+		}
+
+		# top (actual way)
+		$svg1 = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"$lc\" fill=\"none\" stroke-linejoin=\"$lj\" " . $dash ;
+		$layer1 = $layer + $size / 100 ;
+
+		my $bs = $$ruleRef{'bordersize'} ;
+		$lc = "round" ;
+		$dash = "" ;
+
+		if ( cv ('autobridge') eq "1" ) {
+			# TODO bridge/tunnel
+			if ( $bridge == 1) {
+				$lc = "butt" ;
+				$bs += 3 ; # TODO config value
+			}
+			elsif ( $tunnel == 1) {
+				$lc = "butt" ;
+				$dash = "stroke-dasharray=\"10,10\" " ;
+				$bs += 3 ; 
+			}
+		}
+
+		# bottom (border)
+		if ( $bs > 0 ) {
+			$size = 2 * $bs + $$ruleRef{'size'} ;
+			$color = $$ruleRef{'bordercolor'} ;
+			$svg2 = "stroke=\"$color\" stroke-width=\"$size\" stroke-linecap=\"$lc\" fill=\"none\" stroke-linejoin=\"$lj\" " . $dash ;
+			$layer2 = $layer - 0.3 + $size / 100 ;
+		}
+		else {
+			$svg2 = "" ;
+			$layer2 = 0 ;
+		}
+
+	}
+
+	return ($svg1, $layer1, $svg2, $layer2) ;
+}
+
+
 
 1 ;
 

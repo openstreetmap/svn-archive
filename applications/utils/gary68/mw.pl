@@ -12,9 +12,11 @@
 # 0.07 way labels; minsizearea implemented;
 # 0.08 added coastlines; problems with completeObjects! use option -cie
 # 0.09 oneways
-#
+# 0.10 pagenumbers; rectangles; comments and empty lines in rule file; config in rule file
+# 0.10 coast lines fixed; auto bridge implemented
+# 
 
-my $version = "0.09" ;
+my $version = "0.10" ;
 
 use strict ;
 use warnings ;
@@ -54,6 +56,9 @@ processNodes() ;
 
 initOneways() ;
 processWays() ;
+
+if ( cv('pagenumbers') ne "" ) { processPageNumbers() ; }
+if ( cv('rectangles') ne "" ) { processRectangles() ; }
 
 writeMap() ;
 

@@ -142,16 +142,77 @@ sub processCoastLines {
 #
 #
 	print "check and process coastlines...\n" ;
-	# collect all coastline ways
 
-	my $ref = shift ;
+	my $ref = shift ; # ref to all coast ways
 	my @allWays = @$ref ;
 
+	if (cv('debug') eq "1") { 
+		print "COAST: " . scalar (@allWays) . " coast ways initially found.\n" ;
+		print "COAST: ways: @allWays\n\n" ;
+	}
+
+
 	my ($lonRef, $latRef) = getNodePointers() ;
+	my ($nodesRef, $tagRef) = getWayPointers() ;
+
+	# check coast ways. eliminate invisible ways. eliminate points outside map.
+	my @newWays = () ;
+	foreach my $w ( @allWays ) {
+		my @nodes = @{ $$nodesRef{ $w } } ;
+
+		my $allIn = 1 ;
+		my $allOut = 1 ; 
+		foreach my $n ( @nodes ) {
+			if ( pointInMap ($n) ) {
+				$allOut = 0 ;
+			}
+			else {
+				$allIn = 0 ;
+			}
+		}
+
+		if ( $allIn ) {
+			# use way as it is	
+			push @newWays, $w ;
+			if ( cv ('debug') eq "1" ) { print "COAST: way $w will be used unmodified.\n" ; }
+		}
+		elsif ( $allOut) {
+			# do nothing
+			if ( cv ('debug') eq "1" ) { print "COAST: way $w will NOT be used. outside map.\n" ; }
+		}
+		else {
+			# eliminate all outside nodes at start and end of way, then use new way
+			
+			# eliminate outsides at start
+			while ( (scalar @nodes >= 1) and ( ! pointInMap ($nodes[0]) ) ) {
+				shift @nodes ;
+			}
+
+			# eliminate outsides at end
+			while ( (scalar @nodes >= 1) and ( ! pointInMap ($nodes[-1]) ) ) {
+				pop @nodes ;
+			}
+
+			if ( scalar @nodes >= 2 ) {
+				@{ $$nodesRef{$w}} = @nodes ;
+				push @newWays, $w ;
+				if ( cv ('debug') eq "1" ) { print "COAST: modified way $w will be used.\n" ; }
+			}
+			else {
+				if ( cv ('debug') eq "1" ) { print "COAST: way $w too short now.\n" ; }
+			}
+
+		}		
+
+	}
+
+	@allWays = @newWays ;
+
+
 
 	if (cv('debug') eq "1") { 
-		print "COAST: " . scalar (@allWays) . " coast ways found.\n" ;
-		print "COAST: ways: @allWays\n" ;
+		print "\nCOAST: " . scalar (@allWays) . " coast ways will be used.\n" ;
+		print "COAST: ways: @allWays\n\n" ;
 	}
 
 	if (scalar @allWays > 0) {
@@ -333,7 +394,23 @@ sub processCoastLines {
 	}
 }
 
+sub pointInMap {
+	my ($n) = shift ;
+	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($lonRef, $latRef) = getNodePointers() ;
 
+	my ($x, $y) = convert ($$lonRef{$n}, $$latRef{$n}) ;
+
+	my $ok = 0 ;
+	if (
+		( $x >= 0 ) and
+		( $x <= $sizeX ) and
+		( $y >= 0 ) and
+		( $y <= $sizeY ) ) {
+		$ok = 1 ;
+	}
+	return $ok ;		
+}
 
 1 ;
 

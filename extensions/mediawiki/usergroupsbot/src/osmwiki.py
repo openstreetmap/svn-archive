@@ -9,13 +9,14 @@ from wikitools import wiki
 from wikitools import api
 from wikitools import pagelist
 import urllib
+import logging
 
 def loadAllUserGroups(user,password):
-    print("login site")
+    logging.log(logging.DEBUG, "login site") 
     __loginSite(user, password)
-    print("get templates")
+    logging.log(logging.DEBUG, "getting template list")
     templates =__getTemplatesList()
-    print("parse templates")
+    logging.log(logging.DEBUG, "parsing templates")
     return __getUsergroups(templates)
     
 
@@ -38,7 +39,7 @@ def __getUsergroups(query):
         if page.getWikiText(False).find("{{user group")>-1 : #some embedded the template within other templates so we receive fakes
             usergroup=__getTemplateAttributes(page)
             usergroups.append(usergroup)
-            print usergroup["name"]
+        logging.log(logging.DEBUG, "got "+usergroup["name"])
     return usergroups
 
 def __getTemplateAttributes(page):

@@ -9,23 +9,53 @@ import pickle
 import mykml
 import os.path
 import sys
+import logging
 
 def saveCache(groups):
-    fcache=file("wiki_nodes.cache","w")
+    fcache=file("usergroups.cache","w")
     pickle.dump(groups,fcache)
     fcache.close()
 
 def loadCache():
     groups={}
-    fcache=file("wiki_nodes.cache","r")
-    groups=pickle.load(fcache)
-    fcache.close()
-    return groups
+    try:
+        fcache=file("usergroups.cache","r")
+        groups=pickle.load(fcache)
+        fcache.close()        
+    except IOError:
+        logging.log(logging.WARNING, "no cache file present!")
+    return groups    
 
 def getNewestUserGroups(currGroups):
-    oldGroups=loadCache
-    diff = set(currGroups)-set(oldGroups)
-    return diff  
+    oldGroups=[]
+    newGroups=[]
+    #flatten lists
+    for group in loadCache():
+        oldGroups.append(group["name"])
+    for group in currGroups:
+        newGroups.append(group["name"])
+    diff = list(set(newGroups)-set(oldGroups))
+    diff=__appendNewestUserGroups(diff)
+    return diff
+
+def __appendNewestUserGroups(newgroups):
+    try:
+        fcache=file("lastgroups.cache","r")
+        lastgroups=pickle.load(fcache)
+        fcache.close()        
+    except IOError:
+        logging.log(logging.WARNING, "no lastgroups file present!")
+        lastgroups=[]
+    lastgroups=newgroups+lastgroups
+    if len(lastgroups)>=5:
+        lastgroups=lastgroups[0:4]
+    fcache=file("lastgroups.cache","w")
+    pickle.dump(lastgroups,fcache)
+    fcache.close()
+    return lastgroups
+    
+    
+      
 
 def exportUserGroups(groups,filename):
     #create a KML

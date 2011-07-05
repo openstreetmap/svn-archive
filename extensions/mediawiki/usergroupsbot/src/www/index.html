@@ -5,7 +5,7 @@
   <link rel="shortcut icon" href="favicon.png" />
   <script type="text/javascript" src="OpenLayers-2.10/OpenLayers.js"></script>
   <script type="text/javascript" src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-  <script src="date.js"></script>
+  <script src="stat.js"></script>
   <style>.pop_heading{font-family: Arial, Helvetica, sans-serif; font-weight: bold;font-size:16px}</style>
   <style>.pop_text{font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -153,9 +153,10 @@
 </script>
 </head>
 <body onload="init();" style="background-color: #B5D0D0">
-		<div id="map" style="position:absolute;left:0;top:0;width:98%; height:95%"></div>
-		<div id="footer" style="padding-left:1%;font-size:11px;color: #000000;font-family: Arial,sans-serif;background-color: #CBEEA7;width:98%;height:5%;position: absolute; bottom: 0;">
+		<div id="map" style="position:absolute;left:0;top:0;width:98%; height:94%"></div>
+		<div id="footer" style="padding-left:1%;font-size:11px;color: #000000;font-family: Arial,sans-serif;background-color: #CBEEA7;width:98%;height:6%;position: absolute; bottom: 0;">
 			<p>Data harvested by <a href='http://wiki.openstreetmap.org/wiki/User:UserGroupsBot'>UserGroupsBot</a> at <script> document.write(export_date+" ("+export_number+" groups)");</script></p>
+			<p>Last: <script> document.write(export_recent);</script></p>
 		</div>
 
 

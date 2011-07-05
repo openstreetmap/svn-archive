@@ -15,7 +15,7 @@ Lizenz:
 GPL
 
 Source:
-demnächst im offiziellen repo
+http://svn.openstreetmap.org/extensions/mediawiki/usergroupsbot/
 
 Cronjobs:
 alle 2h Laufzeit <1min

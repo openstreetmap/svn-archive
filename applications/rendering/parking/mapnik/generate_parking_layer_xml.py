@@ -191,6 +191,8 @@ def main(options):
     source_symbols_dir_parking = os.path.join(source_dir,"parking-symbols-src")
     dest_dir = options['destdir']
 
+    # parktrans - transparent layer to be put on top of mapnik or bw-noicons base layer
+    
     dest_dir_parktrans = os.path.join(dest_dir,"parktrans")
     dest_dir_parktrans_symbols = os.path.join(dest_dir_parktrans,"symbols")
     dest_file_parktrans = 'osm-parktrans.xml'
@@ -201,9 +203,27 @@ def main(options):
     create_parking_icons(source_symbols_dir_parking,dest_dir_parktrans_symbols)
     transmogrify_file(os.path.join(source_dir,source_file),parktrans_file,"")
     strip_doctype(parktrans_file)
-#    strip_doctype(parktrans_noicons_file)
     add_license_files(dest_dir_parktrans)
-#    add_license_files(dest_dir_parktrans_noicons)
+
+    # parking - bw-noicons background ans parking information on top - single layer containing all
+
+    dest_dir_parking = os.path.join(dest_dir,"parking")
+    dest_dir_parking_symbols = os.path.join(dest_dir_parking,"symbols")
+    dest_file_parking = 'osm-parking.xml'
+    parking_file = os.path.join(dest_dir_parking,dest_file_parking)
+    if not os.path.exists(dest_dir_parking_symbols):
+        os.makedirs(dest_dir_parking_symbols)
+
+    create_parking_icons(source_symbols_dir_parking,dest_dir_parking_symbols)
+    transmogrify_file(os.path.join(source_dir,source_file),parking_file,"")
+    strip_doctype(parking_file)
+    add_license_files(dest_dir_parking)
+
+"""
+./generate_xml.py osm-parking-src.xml    osm-parking.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''
+./generate_xml.py osm-parking-bw-src.xml osm-parking-bw.xml --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''
+./generate_xml.py osm-parkerr-src.xml    osm-parkerr.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''
+"""
 
 if __name__ == '__main__':
     parser = OptionParser()

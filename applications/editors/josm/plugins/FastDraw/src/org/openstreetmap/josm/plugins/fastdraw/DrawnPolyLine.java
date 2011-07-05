@@ -100,6 +100,10 @@ public class DrawnPolyLine {
         return mv.getPoint(p);
     }
     
+    int getSimplePointsCount() {
+        if (simplePoints!=null)return simplePoints.size(); else return -1;
+    }
+    
     /**
      * Simplified drawn line, not touching the nodes includes in "fixed" set.
      */

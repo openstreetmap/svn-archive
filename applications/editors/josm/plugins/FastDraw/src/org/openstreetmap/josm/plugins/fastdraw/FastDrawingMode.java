@@ -56,19 +56,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private static final String DRAWINGMODE_MESSAGE=
     tr("Click or Click&drag to continue, Ctrl-Click to add fixed node, Shift-Click to delete, Enter to simplify or save, Ctrl-Shift-Click to start new line");
 
-    private Color COLOR_FIXED;
-    private Color COLOR_NORMAL;
-    private Color COLOR_DELETE;
-    private Color COLOR_SELECTEDFRAGMENT;
-    private Color COLOR_EDITEDFRAGMENT;
-
-    private double maxDist;
-    private double epsilonMult;
-    //private double deltaLatLon;
-    /// When drawing line, distance between points will be this
-    private double minPixelsBetweenPoints;
-    /// Initial tolerance for Douglas-Pecker algorithm
-    private double startingEps;
+    private FDSettings settings;
 
     private DrawnPolyLine line;
     private MapView mv;
@@ -95,7 +83,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), Shortcut.registerShortcut(
-                "mapmode:FastDraw",
+                "mapmode/building",
                 tr("Mode: {0}", tr("Fast drawing mode")),
                 KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         line=new DrawnPolyLine();
@@ -117,7 +105,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void enterMode() {
         if (!isEnabled()) return;
         super.enterMode();
-        loadPrefs();
+        settings=new FDSettings();
+        settings.loadPrefs();
+        settings.savePrefs();
+        
+        eps=settings.startingEps;
         mv = Main.map.mapView;
         line.setMv(mv);
 
@@ -149,7 +141,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
         }
-        savePrefs();
+        settings.savePrefs();
         Main.map.mapView.setCursor(cursorDraw);
         repaint();
     }
@@ -181,9 +173,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         Point p1, p2;
         LatLon pp1, pp2;
         p1 = line.getPoint(pts.get(0));
-        g.setColor(COLOR_FIXED);
+        g.setColor(settings.COLOR_FIXED);
         g.fillOval(p1.x - 3, p1.y - 3, 7, 7);
-        Color lineColor=COLOR_NORMAL;
+        Color lineColor=settings.COLOR_NORMAL;
         if (pts.size() > 1) {
         Iterator<LatLon> it1,it2;
         it1=pts.listIterator(0);
@@ -193,14 +185,14 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 p1 = line.getPoint(pp1);
                 pp2 = it2.next();
                 p2 = line.getPoint(pp2);
-                if (shift && highlighted==pp1 && nearestIdx<0) {lineColor=COLOR_SELECTEDFRAGMENT;}
-                if (!shift && line.isLastPoint(i)) { lineColor=COLOR_EDITEDFRAGMENT; }
+                if (shift && highlighted==pp1 && nearestIdx<0) {lineColor=settings.COLOR_SELECTEDFRAGMENT;}
+                if (!shift && line.isLastPoint(i)) { lineColor=settings.COLOR_EDITEDFRAGMENT; }
                 g.setColor(lineColor);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
   //                  g.fillOval(p2.x - 5, p2.y - 5, 11, 11);
                 if (line.isFixed(pp2)) {
-                    lineColor=COLOR_NORMAL;
-                    g.setColor(COLOR_FIXED);
+                    lineColor=settings.COLOR_NORMAL;
+                    g.setColor(settings.COLOR_FIXED);
                     g.fillOval(p2.x - 3, p2.y - 3, 7, 7);
                 } else {
                     g.fillRect(p2.x - 1, p2.y - 1, 3, 3);
@@ -209,7 +201,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     if (shift && !line.wasSimplified() && nearestIdx==i+1 ) {
                         // highlight node to delete
                         g.setStroke(strokeForDelete);
-                        g.setColor(COLOR_DELETE);
+                        g.setColor(settings.COLOR_DELETE);
                         g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
                         g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
                         g.setStroke(strokeForOriginal);
@@ -217,7 +209,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
                         // highlight node to toggle fixation
                         g.setStroke(strokeForDelete);
-                        g.setColor( line.isFixed(pp2) ? COLOR_NORMAL: COLOR_FIXED);
+                        g.setColor( line.isFixed(pp2) ? settings.COLOR_NORMAL: settings.COLOR_FIXED);
                         g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
                         g.setStroke(strokeForOriginal);
                     }
@@ -247,7 +239,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (e.getButton() != MouseEvent.BUTTON1) return;
 
 
-        int idx=line.findClosestPoint(e.getPoint(),maxDist);
+        int idx=line.findClosestPoint(e.getPoint(),settings.maxDist);
         if (idx==0 && !line.isClosed()) {
             line.closeLine();
             // the way should become closed
@@ -257,7 +249,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             return;
         }
 
-        if (ctrl && shift) newDrawing();
+        if (ctrl && shift) {newDrawing();repaint();return;}
         if (!ctrl && shift) {
             if (idx>=0) {line.deleteNode(idx); nearestIdx=-1;}
             else line.tryToDeleteSegment(e.getPoint());
@@ -277,7 +269,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         drawing = true;
 
         LatLon p = getLatLon(e);
-        Node nd1 = getNearestNode(e.getPoint(), maxDist);
+        Node nd1 = getNearestNode(e.getPoint(), settings.maxDist);
         if (nd1!=null) {
             // found node, make it fixed point of the line
             //System.out.println("node "+nd1);
@@ -313,11 +305,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!isEnabled()) return;
-        Node nd1 = getNearestNode(e.getPoint(), maxDist);
+        Node nd1 = getNearestNode(e.getPoint(), settings.maxDist);
         boolean nearpoint2=nd1!=null;
         if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();}
 
-        nearestIdx=line.findClosestPoint(e.getPoint(),maxDist);
+        nearestIdx=line.findClosestPoint(e.getPoint(),settings.maxDist);
 
         if (!drawing) {
             if (dragNode>=0) {
@@ -349,7 +341,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 repaint();
             }
         } else {
-            if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > minPixelsBetweenPoints) {
+            if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > settings.minPixelsBetweenPoints) {
                 line.addLast(getLatLon(e)); // free mouse-drawing
                 repaint();
             }
@@ -364,7 +356,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             if (line.wasSimplified()) {
                 line.clearSimplifiedVersion();
                 repaint();
-                eps=startingEps;
+                eps=settings.startingEps;
             }
             back();
         }
@@ -372,26 +364,35 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             // first Enter = simplify, second = save the way
             if (!line.wasSimplified()) {
                 line.simplify(eps);
-                setStatusLine(SIMPLIFYMODE_MESSAGE);
+                setStatusLine(tr("Eps={0}, {1} points", eps, line.getSimplePointsCount())+" "+SIMPLIFYMODE_MESSAGE);
             } else saveAsWay();
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             // more details
             e.consume();
-            changeEpsilon(epsilonMult);
+            changeEpsilon(settings.epsilonMult);
         }
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             // less details
             e.consume();
-            changeEpsilon(1/epsilonMult);
+            changeEpsilon(1/settings.epsilonMult);
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             // less details
             e.consume();
             line.moveToTheEnd();
         }
-
-
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+            // less details
+            e.consume();
+            try {
+                Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+                new FastDrawConfigDialog(settings);
+                Toolkit.getDefaultToolkit().addAWTEventListener(this,
+                    AWTEvent.KEY_EVENT_MASK);
+            } catch (SecurityException ex) {  }
+            eps=settings.startingEps;
+        }
     }
 
     /**
@@ -413,7 +414,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
 // <editor-fold defaultstate="collapsed" desc="Different action helper methods">
     public void newDrawing() {
-        eps=startingEps;
+        eps=settings.startingEps;
         line.clear();
     }
     private void saveAsWay() {
@@ -481,8 +482,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     void changeEpsilon(double k) {
         //System.out.println(tr("Eps={0}", eps));
         eps*=k;
-        /* I18N: Eps = Epsilon, the tolerance parameter */ setStatusLine(tr("Eps={0}", eps));
         line.simplify(eps);
+        /* I18N: Eps = Epsilon, the tolerance parameter */ 
+        setStatusLine(tr("Eps={0}, {1} points", eps, line.getSimplePointsCount()));
         repaint();
     }
 
@@ -509,35 +511,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }*/
 
 
-    void loadPrefs() {
-        COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
-        COLOR_EDITEDFRAGMENT = Main.pref.getColor("fastdraw.color.edit", Color.orange);
-        COLOR_FIXED = Main.pref.getColor("fastdraw.color.fixed", Color.green);
-        COLOR_NORMAL = Main.pref.getColor("fastdraw.color.normal", Color.red);
-        COLOR_SELECTEDFRAGMENT = Main.pref.getColor("fastdraw.color.select", Color.blue);
-        maxDist = Main.pref.getDouble("fastdraw.maxdist", 5);
-        epsilonMult = Main.pref.getDouble("fastdraw.epsilonmult", 1.1);
-        //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
-        minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
-        startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
-        eps=startingEps;
-    }
 
-    void savePrefs() {
-         Main.pref.putColor("fastdraw.color.delete", COLOR_DELETE );
-         Main.pref.putColor("fastdraw.color.edit", COLOR_EDITEDFRAGMENT);
-         Main.pref.putColor("fastdraw.color.fixed", COLOR_FIXED);
-         Main.pref.putColor("fastdraw.color.normal", COLOR_NORMAL);
-         Main.pref.putColor("fastdraw.color.select", COLOR_SELECTEDFRAGMENT);
-         Main.pref.putDouble("fastdraw.maxdist", maxDist);
-         Main.pref.putDouble("fastdraw.epsilonmult", epsilonMult);
-         //Main.pref.putDouble("fastdraw.deltasearch", deltaLatLon);
-         Main.pref.putDouble("fastdraw.mindelta",minPixelsBetweenPoints);
-         Main.pref.putDouble("fastdraw.startingEps",startingEps);
-         try {Main.pref.save();} catch (IOException e) {
-             System.err.println(tr("Can not save preferences"));
-         }
-    }
 
     private void updateCursor() {
         if (shift) Main.map.mapView.setCursor(cursorShift); else

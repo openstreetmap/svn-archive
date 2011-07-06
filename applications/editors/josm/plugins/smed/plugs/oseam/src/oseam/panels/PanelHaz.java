@@ -94,6 +94,9 @@ public class PanelHaz extends JPanel {
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
+	public JRadioButton canButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanButton.png")));
+	public JRadioButton coneButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ConeButton.png")));
+	public JRadioButton sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
 	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
@@ -129,9 +132,12 @@ public class PanelHaz extends JPanel {
 
 		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
 		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(floatButton, 55, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 55, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
-		this.add(getShapeButton(towerButton, 55, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD), null);
+		this.add(getShapeButton(floatButton, 90, 0,34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 	}
 
 	public void clearSelections() {

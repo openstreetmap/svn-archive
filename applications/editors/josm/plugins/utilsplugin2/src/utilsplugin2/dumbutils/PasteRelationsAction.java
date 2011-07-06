@@ -31,7 +31,7 @@ public class PasteRelationsAction extends JosmAction {
 
         Map<Relation, String> relations = new HashMap<Relation, String>();
         for( PrimitiveData pdata : Main.pasteBuffer.getDirectlyAdded() ) {
-            OsmPrimitive p = getCurrentDataSet().getPrimitiveById(pdata.getId(), pdata.getType());
+            OsmPrimitive p = getCurrentDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
             for( Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
                 String role = relations.get(r);
                 for( RelationMember m : r.getMembers() ) {

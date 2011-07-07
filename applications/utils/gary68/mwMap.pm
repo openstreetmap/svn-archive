@@ -22,6 +22,7 @@ use strict ;
 use warnings ;
 
 use mwConfig ;
+# use mwMisc ;
 # use mwFile ;
 # use mwLabel ;
 
@@ -29,6 +30,9 @@ use OSM::osm ;
 
 use Geo::Proj4 ;
 
+
+my $areaNum = 0 ;
+my %areaDef = () ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -56,6 +60,7 @@ require Exporter ;
 			getDimensions
 			initOneways
 			addOnewayArrows
+			addAreaIcon
 		 ) ;
 
 
@@ -74,8 +79,6 @@ my ($bottom, $left, $right, $top) ;
 my ($sizeX, $sizeY) ;
 my ($projLeft, $projBottom, $projRight, $projTop) ;
 my ($projSizeX, $projSizeY) ;
-
-my %areaDef ; # TODO replace by function call
 
 sub initGraph {
 
@@ -958,6 +961,60 @@ sub addOnewayArrows {
 		}
 	}
 }
+
+# ----------------------------------------------------------------------------
+
+sub addAreaIcon {
+#
+# initial collection of area icons 
+#
+	my $fileNameOriginal = shift ;
+	# print "AREA: $fileNameOriginal\n" ;
+	my $result = open (my $file, "<", $fileNameOriginal) ;
+	close ($file) ;
+	if ($result) {
+		my ($x, $y) ;
+		if (grep /.svg/, $fileNameOriginal) {
+			($x, $y) = mwMisc::sizeSVG ($fileNameOriginal) ;
+			if ( ($x == 0) or ($y == 0) ) { 
+				$x = 32 ; $y = 32 ; 
+				print "WARNING: size of file $fileNameOriginal could not be determined. Set to 32px x 32px\n" ;
+			} 
+		}
+
+		if (grep /.png/, $fileNameOriginal) {
+			($x, $y) = mwMisc::sizePNG ($fileNameOriginal) ;
+		}
+
+		if (!defined $areaDef{$fileNameOriginal}) {
+
+			my $x1 = $x ; # scale area icons 
+			my $y1 = $y ;
+			my $fx = $x1 / $x ;
+			my $fy = $y1 / $y ;
+			
+			# add defs to svg output
+			my $defName = "A" . $areaNum ;
+			# print "INFO area icon $fileNameOriginal, $defName, $x, $y --- $x1, $y1 --- $fx, $fy --- processed.\n" ;
+			$areaNum++ ;
+
+			my $svgElement = "<pattern id=\"" . $defName . "\" width=\"" . $x . "\" height=\"" . $y . "\" " ;
+			$svgElement .= "patternTransform=\"translate(0,0) scale(" . $fx . "," . $fy . ")\" \n" ;
+			$svgElement .= "patternUnits=\"userSpaceOnUse\">\n" ;
+			$svgElement .= "  <image xlink:href=\"" . $fileNameOriginal . "\"/>\n" ;
+			$svgElement .= "</pattern>\n" ;
+
+			addToLayer ("definitions", $svgElement) ;
+
+			$defName = "#" . $defName ;
+			$areaDef{$fileNameOriginal} = $defName ;
+		}
+	}
+	else {
+		print "WARNING: area icon $fileNameOriginal not found!\n" ;
+	}
+}
+
 
 
 1 ;

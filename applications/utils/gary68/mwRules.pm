@@ -270,6 +270,8 @@ sub readRules {
 					$k = lc ( $k ) ;
 					$areaRules{ $areaNr }{ $k } = $v ;
 					if ( ! defined $vap{$k} ) { print "WARNING: $k is not a valid area property!\n" ; }
+
+					if ($k eq "icon") { mwMap::addAreaIcon ($v) ; }
 				}
 				getRuleLine() ;
 			}

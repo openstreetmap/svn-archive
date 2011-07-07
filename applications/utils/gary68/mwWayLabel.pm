@@ -34,6 +34,7 @@ require Exporter ;
 @ISA = qw ( Exporter AutoLoader ) ;
 
 @EXPORT = qw (	addToDirectory
+		getDirectory
 		addWayLabel
 		preprocessWayLabels
 		createWayLabels
@@ -55,6 +56,10 @@ sub addToDirectory {
 	else {
 		$directory { $name } { $square } = 1 ;
 	}
+}
+
+sub getDirectory {
+	return \%directory ;
 }
 
 sub addWayLabel {

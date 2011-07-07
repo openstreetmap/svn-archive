@@ -41,6 +41,8 @@ my $numLabelsOmitted = 0 ;
 my $numLabelsMoved = 0 ;
 my $numIconsOmitted = 0 ;
 
+my %poiHash = () ;
+
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
 require Exporter ;
@@ -52,6 +54,8 @@ require Exporter ;
 			initQuadTrees
 			occupyLines
 			lineCrossings
+			addToPoiHash
+			getPoiHash
 		 ) ;
 
 
@@ -412,7 +416,22 @@ sub occupyLines {
 	}
 }
 
+# ------------------------------------------------------------
 
+sub addToPoiHash {
+	my ($name, $sq) = @_ ;
+	if (defined $sq) {
+		$poiHash{$name}{$sq} = 1 ;
+	}
+	else {
+		$poiHash{$name} = 1 ;
+	}
+}
+
+
+sub getPoiHash {
+	return \%poiHash ;
+}
 
 
 1 ;

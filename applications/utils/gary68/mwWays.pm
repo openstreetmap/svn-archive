@@ -37,6 +37,7 @@ require Exporter ;
 
 @EXPORT = qw ( 	processWays 
 		getCoastWays
+		createDirectory
 		 ) ;
 
 my $areasOmitted = 0 ;
@@ -173,7 +174,7 @@ sub processWays {
 			my $size = areaSize (\@nodes) ;
 			my @ways = [@nodes] ;
 
-			if ($svgString eq "") {
+			if ( ($svgString eq "") and ($icon eq "none") ) {
 				$svgString = "fill=\"$color\" " ;
 			}
 
@@ -313,7 +314,36 @@ sub createWayParameters {
 	return ($svg1, $layer1, $svg2, $layer2) ;
 }
 
+# ---------------------------------------------------------------------------------
 
+sub createDirectory {
+	my $directoryName ;
+	my $dirFile ;
+	$directoryName = cv ('out') ;
+	$directoryName =~ s/\.svg/\_streets.txt/ ;
+	setConfigValue("directoryname", $directoryName) ;
+	print "creating dir file $directoryName ...\n" ;
+	open ($dirFile, ">", $directoryName) or die ("can't open dir file $directoryName\n") ;
+
+	my $ref = getDirectory() ;
+	my %directory = %$ref ;
+
+	if ( cv('grid') eq "0") {
+		foreach my $street (sort keys %directory) {
+			print $dirFile "$street\n" ;
+		}
+	}
+	else {
+		foreach my $street (sort keys %directory) {
+			print $dirFile "$street\t" ;
+			foreach my $square (sort keys %{$directory{$street}}) {
+				print $dirFile "$square " ;
+			}
+			print $dirFile "\n" ;
+		}
+	}
+	close ($dirFile) ;
+}
 
 1 ;
 

@@ -27,7 +27,7 @@ use List::Util qw[min max] ;
 
 use mwConfig ;
 use mwFile ;
-use mwMap ;
+# use mwMap ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -45,6 +45,9 @@ require Exporter ;
 		isIn
 		processPageNumbers
 		processRectangles
+		sizePNG
+		sizeSVG
+		createDirPdf
 		 ) ;
 
 
@@ -547,6 +550,91 @@ sub processRectangles {
 	}
 }
 
+# --------------------------------------------------------------------
+
+sub sizePNG {
+#
+# evaluates size of png graphics
+#
+	my $fileName = shift ;
+
+	my ($x, $y) ;
+	my $file ;
+	my $result = open ($file, "<", $fileName) ;
+	if ($result) {
+		my $pic = newFromPng GD::Image($file) ;
+		($x, $y) = $pic->getBounds ;
+		close ($file) ;
+	}
+	else {
+		($x, $y) = (0, 0) ;
+	}
+	return ($x, $y) ;
+}
+
+sub sizeSVG {
+#
+# evaluates size of svg graphics
+#
+	my $fileName = shift ;
+	my $file ;
+	my ($x, $y) ; undef $x ; undef $y ;
+
+	my $result = open ($file, "<", $fileName) ;
+	if ($result) {
+		my $line ;
+		while ($line = <$file>) {
+			my ($x1) = ( $line =~ /^.*width=\"([\d]+)px\"/ ) ; 
+			my ($y1) = ( $line =~ /^.*height=\"([\d]+)px\"/ ) ;
+			if (!defined $x1) {
+				($x1) = ( $line =~ /^\s*width=\"([\d]+)\"/ ) ; 
+
+			} 
+			if (!defined $y1) {
+				($y1) = ( $line =~ /^\s*height=\"([\d]+)\"/ ) ; 
+			} 
+			if (defined $x1) { $x = $x1 ; }
+			if (defined $y1) { $y = $y1 ; }
+		}
+		close ($file) ;
+	}
+
+	if ( (!defined $x) or (!defined $y) ) { 
+		$x = 0 ; $y = 0 ; 
+		print "WARNING: size of file $fileName could not be determined.\n" ;
+	} 
+	return ($x, $y) ;
+}
+
+# ------------------------------------------------------------------------
+
+
+sub createDirPdf {
+	if ((cv('dir') eq "1") or (cv('poi') eq "1")) {
+		if (cv('grid') >0) {
+			my $dirPdfName = cv('out') ;
+			$dirPdfName =~ s/.svg/_dir.pdf/ ;
+			my $sName = "none" ;
+			my $pName = "none" ;
+
+			
+
+			if (cv('dir') eq "1") { $sName = cv('directoryname') ; }
+			if (cv('poi') eq "1") { $pName = cv('poiname') ; }
+			my $dirColNum = cv ('dircolnum') ;
+			my $dirTitle = cv ('dirtitle') ;
+			print "\ncalling perl dir.pl $sName $pName $dirTitle $dirPdfName $dirColNum\n\n" ;
+			`perl dir.pl $sName $pName \"$dirTitle\" $dirPdfName $dirColNum > out.txt` ;
+		}
+		else {
+			print "WARNING: directory PDF will not be created because -grid was not specified\n" ;
+		}
+		
+	}
+	else {
+		print "WARNING: directory PDF will not be created because neither -dir nor -poi was specified\n" ;
+	}
+}
 
 1 ;
 

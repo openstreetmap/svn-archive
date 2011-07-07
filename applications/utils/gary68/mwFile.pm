@@ -274,7 +274,7 @@ sub readFile {
 		$size = int ($width * 300) ;
 	}
 
-	initGraph ($size, $lonMin, $latMin, $lonMax, $latMax) ;
+	mwMap::initGraph ($size, $lonMin, $latMin, $lonMax, $latMax) ;
 
 }
 

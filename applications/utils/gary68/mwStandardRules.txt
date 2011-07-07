@@ -179,3 +179,17 @@ keyvalue=natural=water
 color=lightblue
 base=yes
 
+RULE AREA
+keyvalue=amenity=parking
+icon=icons/areaParking.svg
+
+RULE AREA
+keyvalue=leisure=golf_course
+icon=icons/areaGolf.svg
+
+RULE AREA
+keyvalue=landuse=cemetery
+icon=icons/areaCemetery.svg
+
+
+

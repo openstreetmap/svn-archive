@@ -14,14 +14,16 @@
 # 0.09 oneways
 # 0.10 pagenumbers; rectangles; comments and empty lines in rule file; config in rule file
 # 0.10 coast lines fixed; auto bridge implemented
+# 0.11 area icons / patterns added; time; street directory; poi directory; pdf directoriy
 # 
 
-my $version = "0.10" ;
+my $version = "0.11" ;
+my $programName = "mapweaver" ;
 
 use strict ;
 use warnings ;
 
-# use OSM::osm.pm ;
+use OSM::osm ;
 use mwConfig ;
 use mwMap ;
 use mwRules ;
@@ -30,7 +32,10 @@ use mwNodes ;
 use mwWays ;
 use mwMisc ;
 
-print "\nmapweaver version $version by gary68\n\n" ;
+my $time0 = time() ; 
+
+
+print "\n$programName $version by gary68\n\n" ;
 
 initConfig() ;
 
@@ -54,8 +59,22 @@ readFile() ;
 
 processNodes() ;
 
+if ( cv('poi') eq "1") {
+	createPoiDirectory() ;
+}
+
 initOneways() ;
 processWays() ;
+
+if ( cv('dir') eq "1") {
+	createDirectory() ;
+}
+
+if ( cv('dirpdf') eq "1") {
+	createDirPdf() ;
+}
+
+
 
 if ( cv('pagenumbers') ne "" ) { processPageNumbers() ; }
 if ( cv('rectangles') ne "" ) { processRectangles() ; }
@@ -65,3 +84,5 @@ writeMap() ;
 my ($paper, $x, $y) = fitsPaper () ; $x = int ($x*10) / 10 ; $y = int ($y*10) / 10 ;
 print "map ($x cm x $y cm) fits paper $paper\n\n" ;
 
+my $time1 = time() ;
+print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;

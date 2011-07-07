@@ -35,7 +35,7 @@ require Exporter ;
 @ISA = qw ( Exporter AutoLoader ) ;
 
 @EXPORT = qw ( 	processNodes 
-
+			createPoiDirectory
 		 ) ;
 
 
@@ -115,9 +115,62 @@ sub processNodes {
 
 				placeLabelAndIcon($$lonRef{$nodeId}, $$latRef{$nodeId}, 0, $$ruleRef{'size'}, $labelText, $svgText, $icon, $iconSize, $iconSize, "nodes") ;
 			}
+
+			# fill poi directory
+
+			my $thing0 = $$ruleRef{'keyvalue'} ;
+			my ($thing) = ( $thing0 =~ /.+=(.+)/ ) ;
+
+			my $dirName = getValue ("name", $$tagRef{$nodeId} ) ;
+			if ( ( cv('poi') eq "1" ) and ( defined $dirName ) ) {
+				$dirName .=  " ($thing)" ;
+				if ( cv('grid') > 0) {
+					my $sq = gridSquare($$lonRef{$nodeId}, $$latRef{$nodeId}, cv('grid')) ;
+					if (defined $sq) {
+						addToPoiHash ($dirName, $sq) ;
+					}
+				}
+				else {
+					# $poiHash{$dirName} = 1 ;
+					addToPoiHash ($dirName, undef) ;
+				}
+			}
+			
+
 		} # defined ruleref
 	}
 
+}
+
+# ------------------------------------------------------------------------------------
+
+sub createPoiDirectory {
+	my $poiName ;
+	my $poiFile ;
+	$poiName = cv ('out')  ;
+	$poiName =~ s/\.svg/\_pois.txt/ ;
+	setConfigValue("poiname", $poiName) ;
+	print "creating poi file $poiName ...\n" ;
+	open ($poiFile, ">", $poiName) or die ("can't open poi file $poiName\n") ;
+
+	my $ref = getPoiHash() ;
+	my %poiHash = %$ref ;
+
+	if ( cv('grid') eq "0") {
+		foreach my $poi (sort keys %poiHash) {
+			print $poiFile "$poi\n" ;
+		}
+	}
+	else {
+		foreach my $poi (sort keys %poiHash) {
+			print $poiFile "$poi\t" ;
+			foreach my $square (sort keys %{$poiHash{$poi}}) {
+				print $poiFile "$square " ;
+			}
+			print $poiFile "\n" ;
+		}
+	}
+	close ($poiFile) ;
 }
 
 1 ;

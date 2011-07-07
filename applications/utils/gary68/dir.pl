@@ -2,7 +2,7 @@
 use strict ;
 use warnings ;
 
-my $version = "1.04" ;
+my $version = "1.05" ;
 
 my $streetFileName ;
 my $poiFileName ;
@@ -122,6 +122,7 @@ sub convert {
 
 	$line =~ s/\&apos;/\'/g ;
 	$line =~ s/\&quot;/\'/g ;
+	$line =~ s/\_/ /g ;
 
 	return $line ;
 }

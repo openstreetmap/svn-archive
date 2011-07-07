@@ -162,7 +162,7 @@ sub preprocessWayLabels {
 				my $labelLengthPixels = 0 ;
 
 				if (grep /shield/i, $$ruleRef{'label'} ) {
-					$labelLengthPixels = $$rule{'labelsize'} ;
+					$labelLengthPixels = $$ruleRef{'labelsize'} ;
 					# print "PPWL: len = $labelLengthPixels\n" ;
 				}
 				else {
@@ -299,9 +299,45 @@ sub createWayLabels {
 		else {
 
 			if (grep /shield/i, $name) {
-			}
 
-			else { # shield
+				createShield ($name, $$ruleRef{'labelsize'} ) ;
+
+				my $shieldMaxSize = getMaxShieldSize ($name) ;
+
+				my $numShields = int ($wLen / ($shieldMaxSize * 12) ) ;
+				# if ($numShields > 4) { $numShields = 4 ; } 
+
+				if ($numShields > 0) {
+					my $step = $wLen / ($numShields + 1) ;
+					my $position = $step ; 
+					while ($position < $wLen) {
+						my ($x, $y) = getPointOfWay (\@points, $position) ;
+						# print "XY: $x, $y\n" ;
+
+						# place shield if not occupied
+			
+						my ($ssx, $ssy) = getShieldSizes($name) ;
+
+						my $x2 = int ($x - $ssx / 2) ;
+						my $y2 = int ($y - $ssy / 2) ;
+
+						# print "AREA: $x2, $y2, $x2+$lLen, $y2+$lLen\n" ;
+
+						if ( ! mwLabel::areaOccupied ($x2, $x2+$ssx, $y2+$ssy, $y2) ) {
+
+							my $id = getShieldId ($name) ;
+							addToLayer ("shields", "<use xlink:href=\"#$id\" x=\"$x2\" y=\"$y2\" />") ;
+
+							mwLabel::occupyArea ($x2, $x2+$ssx, $y2+$ssy, $y2) ;
+						}
+
+						$position += $step ;
+					}
+				}
+
+			} # shield
+
+			else { 
 
 				# print "$wLen - $name - $lLen\n" ;
 				my $numLabels = int ($wLen / (4 * $lLen)) ;

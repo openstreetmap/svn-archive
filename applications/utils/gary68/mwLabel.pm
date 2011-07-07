@@ -56,6 +56,8 @@ require Exporter ;
 			lineCrossings
 			addToPoiHash
 			getPoiHash
+			occupyArea
+			areaOccupied
 		 ) ;
 
 

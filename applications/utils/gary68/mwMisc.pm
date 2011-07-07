@@ -48,6 +48,7 @@ require Exporter ;
 		sizePNG
 		sizeSVG
 		createDirPdf
+		getPointOfWay
 		 ) ;
 
 
@@ -635,6 +636,40 @@ sub createDirPdf {
 		print "WARNING: directory PDF will not be created because neither -dir nor -poi was specified\n" ;
 	}
 }
+
+# -----------------------------------------------------------------------------
+
+sub getPointOfWay {
+	#
+	# returns point of way at distance/position
+	# coordinates and units are pixels
+
+	my ($ref, $position) = @_ ;
+	my @points = @$ref ;
+
+	my @double = () ;
+	while (scalar @points > 0) {
+		my $x = shift @points ;
+		my $y = shift @points ;
+		push @double, [$x, $y] ;
+	}
+
+	my $i = 0 ; my $actLen = 0 ;
+	while ($actLen < $position) {
+		$actLen += sqrt ( ($double[$i]->[0]-$double[$i+1]->[0])**2 + ($double[$i]->[1]-$double[$i+1]->[1])**2 ) ;
+		$i++ ;
+	}
+
+	my $x = int (($double[$i]->[0] +  $double[$i-1]->[0]) / 2) ;
+	my $y = int (($double[$i]->[1] +  $double[$i-1]->[1]) / 2) ;
+
+	# print "POW: $x, $y\n" ;
+
+	return ($x, $y) ;
+}
+
+
+
 
 1 ;
 

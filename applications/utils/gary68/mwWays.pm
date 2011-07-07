@@ -130,6 +130,8 @@ sub processWays {
 						@names = () ;
 						$name = "" ;
 					}
+
+					# print "WAY: name for shield >$name<\n" ;
 				}
 				else {
 					($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'}, 0, 0) ;

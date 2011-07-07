@@ -61,6 +61,11 @@ require Exporter ;
 			initOneways
 			addOnewayArrows
 			addAreaIcon
+			createShield
+			getMaxShieldSize
+			getShieldSizes
+			getShieldId
+			addToLayer
 		 ) ;
 
 
@@ -72,6 +77,11 @@ my @elements = ("scale", "ruler", "legend", "header", "footer", "rectangles", "t
 
 my %svgLayer = () ;
 my %wayLayer = () ;
+
+my $shieldPathId = 0 ;
+my %createdShields = () ;
+my %shieldXSize = () ;
+my %shieldYSize = () ;
 
 my $proj ;
 
@@ -1015,7 +1025,78 @@ sub addAreaIcon {
 	}
 }
 
+# ----------------------------------------------------------------------------
 
+sub createShield {
+	my ($name, $targetSize) = @_ ;
+	my @a = split /:/, $name ;
+	my $shieldFileName = $a[1] ;
+	my $shieldText = $a[2] ;
+
+	if (! defined $createdShields{$name}) {
+		open (my $file, "<", $shieldFileName) or die ("ERROR: shield definition $shieldFileName not found.\n") ;
+		my @defText = <$file> ;
+		close ($file) ;
+
+		# get size
+		# calc scaling
+		my $sizeX = 0 ;
+		my $sizeY = 0 ;
+		foreach my $line (@defText) {
+			if (grep /<svg/, $line) {
+				($sizeY) = ( $line =~ /height=\"(\d+)px\"/ ) ;
+				($sizeX) = ( $line =~ /width=\"(\d+)px\"/ ) ;
+				if ( (!defined $sizeX) or (!defined $sizeY) ) {
+					die "ERROR: size of shield in $shieldFileName could not be determined.\n" ;
+				}
+			}
+		}
+		if ( ($sizeX == 0) or ($sizeY == 0) ) {
+			die "ERROR: initial size of shield $shieldFileName could not be determined.\n" ;
+		}
+
+		my $scaleFactor = $targetSize / $sizeY ;
+
+		$shieldXSize{ $name } = int ($sizeX * $scaleFactor) ;
+		$shieldYSize{ $name } = int ($sizeY * $scaleFactor) ;
+
+		$shieldPathId++ ;
+		my $shieldPathName = "ShieldPath" . $shieldPathId ;
+		my $shieldGroupName = "ShieldGroup" . $shieldPathId ;
+
+		foreach my $line (@defText) {
+			$line =~ s/REPLACEID/$shieldGroupName/ ;
+			$line =~ s/REPLACESCALE/$scaleFactor/g ;
+			$line =~ s/REPLACEPATH/$shieldPathName/ ;
+			$line =~ s/REPLACELABEL/$shieldText/ ;
+		}
+
+		foreach my $line (@defText) {
+			addToLayer ("definitions", $line) ;
+		}
+
+		$createdShields{$name} = $shieldGroupName ;
+	}
+}
+
+sub getMaxShieldSize {
+	my $name = shift ;
+	my $max = $shieldXSize{$name} ;
+	if ( $shieldYSize{$name} > $max) { $max = $shieldYSize{$name} ; }
+	return $max ;
+}
+
+sub getShieldSizes {
+	my $name = shift ;
+	my $x = $shieldXSize{$name} ;
+	my $y = $shieldYSize{$name} ;
+	return $x, $y ;
+}
+
+sub getShieldId {
+	my $name = shift ;
+	return $createdShields{$name} ;
+}
 
 1 ;
 

@@ -15,9 +15,10 @@
 # 0.10 pagenumbers; rectangles; comments and empty lines in rule file; config in rule file
 # 0.10 coast lines fixed; auto bridge implemented
 # 0.11 area icons / patterns added; time; street directory; poi directory; pdf directoriy
+# 0.12 way shields
 # 
 
-my $version = "0.11" ;
+my $version = "0.12" ;
 my $programName = "mapweaver" ;
 
 use strict ;

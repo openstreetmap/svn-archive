@@ -39,8 +39,8 @@ RULE WAY
 keyvalue=highway=motorway
 color=blue
 size=28
-label=ref
-labelsize=26
+label=shield:icons/shield_ger_bab.def
+labelsize=60
 labeloffset=11
 bordercolor=black
 bordersize=2
@@ -55,8 +55,8 @@ bordersize=2
 RULE WAY
 keyvalue=highway=trunk
 color=blue
-size=28
-label=ref
+size=60
+label=shield:icons/shield_ger_bs.def
 bordercolor=black
 bordersize=4
 
@@ -69,8 +69,8 @@ bordersize=2
 
 RULE WAY
 keyvalue=highway=primary
-label=name
-labelsize=24
+label=shield:icons/shield_ger_bs.def
+labelsize=50
 labeloffset=10
 color=red
 size=26
@@ -86,8 +86,8 @@ bordersize=2
 
 RULE WAY
 keyvalue=highway=secondary
-label=name
-labelsize=22
+label=shield:icons/shield_ger_ls.def
+labelsize=50
 labeloffset=9
 color=orange
 size=24

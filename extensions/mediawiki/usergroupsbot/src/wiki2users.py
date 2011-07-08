@@ -71,7 +71,11 @@ if __name__ == '__main__':
             logger.setLevel(logging.DEBUG)
     #processing
     groups=osmwiki.loadAllUserGroups(user, password)
+    legacyGroups=osmwiki.loadAllUserGroupsLegacy(user, password)
+    groups.extend(legacyGroups)
     path,x=os.path.split(sys.argv[0])
+    filename=os.path.join(path,"www","osm_user_groups_dach.kml")
+    usergroups.exportUserGroups(legacyGroups,filename)
     filename=os.path.join(path,"www","osm_user_groups.kml")
     usergroups.exportUserGroups(groups,filename)
     filename=os.path.join(path,"www")

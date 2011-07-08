@@ -39,7 +39,7 @@ def __getUsergroups(query):
         if page.getWikiText(False).find("{{user group")>-1 : #some embedded the template within other templates so we receive fakes
             usergroup=__getTemplateAttributes(page)
             usergroups.append(usergroup)
-        logging.log(logging.DEBUG, "got "+usergroup["name"])
+            logging.log(logging.DEBUG, "got "+usergroup["name"])
     return usergroups
 
 def __getTemplateAttributes(page):
@@ -121,3 +121,62 @@ def __getImageInfos(name):
         result = request.query()
         url=result["query"]["pages"].values()[0]["imageinfo"][0]["url"]
         return  url
+
+"""
+LEGACY STUFF FOR OLD GERMAN LOKALE_GRUPPE Template
+"""
+
+def loadAllUserGroupsLegacy(user,password):
+    logging.log(logging.DEBUG, "login site") 
+    __loginSite(user, password)
+    logging.log(logging.DEBUG, "getting template list")
+    templates =__getTemplatesListLegacy()
+    logging.log(logging.DEBUG, "parsing templates")
+    return __getUsergroupsLegacy(templates)
+
+def __getTemplatesListLegacy():
+    getAllUserGroups = {'action':'query', 'list':'embeddedin',"eititle":"Template:Lokale_Gruppe","eilimit":"500"}
+    request = api.APIRequest(site, getAllUserGroups)
+    return request.query()
+
+def __getUsergroupsLegacy(query):
+    usergroups=[]
+    list=pagelist.listFromQuery(site,query["query"]["embeddedin"])
+    for page in list:
+        if page.getWikiText(False).find("{{Lokale Gruppe")>-1 : #some embedded the template within other templates so we receive fakes
+            usergroup=__getTemplateAttributesLegacy(page)
+            usergroups.append(usergroup)
+            logging.log(logging.DEBUG, "got "+usergroup["name"])
+    return usergroups
+
+def __getTemplateAttributesLegacy(page):
+    attrs={} #the parsed dictionary of the template attributes 
+    source=page.getWikiText(False).decode("utf-8") #API uses UTF-8
+    source=urllib.unquote(source).replace('\n',"")
+    #extract template and cut it's attributes
+    start=source.find("{{Lokale Gruppe")+len("{{user group")+1
+    end=source.find("}}",start)
+    source=source[start:end]
+    for attr in source.split("|"):
+        items=attr.split("=",1)                
+        if len(items)==2 : # some formatings have otherwise strange effects
+            attrs[__nospaces(str(items[0]))]=__nospaces(items[1]) #remove leading linebreaks
+    #assign values
+    name=where=when=url=mail=wikipage=photo=country=""
+    name=attrs.get("name","")
+    point=(attrs["lon"]),__nospaces(attrs["lat"])
+    country="DE"
+    state=""
+    when=attrs.get("meets_when","")
+    where=__expandLinks(attrs.get("meets_where",""))
+    if where==None: where=""
+    url=attrs.get("url","")
+    mail=attrs.get("mailing_list_url","")
+    wikipage="http://wiki.openstreetmap.org/wiki/"+page.title
+    photo=""
+    if not photo.isspace() and len(photo)>1 :
+        #some might use additional photo formating
+        if photo.find("|")>-1:
+            photo=photo[:photo.find("|")]
+        photo=__getImageInfos(photo) #the fotos need additional API magic
+    return {"name":name,"lonlat":point,"where":where,"when":when,"url":url,"wiki":wikipage,"mail":mail,"photo":photo,"country":country}

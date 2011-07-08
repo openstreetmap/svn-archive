@@ -39,7 +39,7 @@ public class UtilsPlugin2 extends Plugin {
     public UtilsPlugin2(PluginInformation info) {
         super(info);
 
-        JMenu toolsMenu = Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_X, 4, "help");
+        JMenu toolsMenu = Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_R, 4, "help");
         unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());

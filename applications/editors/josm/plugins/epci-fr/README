@@ -1,0 +1,12 @@
+README 
+======
+
+Readme for epci-fr JOSM plugin
+
+    * Author: Don-vip
+    * License: GPL v2 or later
+    
+This plugin helps dealing in editing French EPCIs (boundary=local_authority) 
+by recognizing them at such in the Relations window.
+
+See http://wiki.openstreetmap.org/wiki/WikiProject_France/Tracer_les_limites_administratives/Mise_au_point_du_modele_des_EPCI

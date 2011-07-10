@@ -55,10 +55,10 @@ public class PanelTop extends JPanel {
 						switch (dlg.mark.getRegion()) {
 						case A:
 						case C:
-							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cylinder_red.png")));
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_can_red.png")));
 							break;
 						case B:
-							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cylinder_green.png")));
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_can_green.png")));
 							break;
 						}
 						break;
@@ -66,10 +66,10 @@ public class PanelTop extends JPanel {
 						switch (dlg.mark.getRegion()) {
 						case A:
 						case C:
-							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone, point up_green.png")));
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone_green.png")));
 							break;
 						case B:
-							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone, point up_red.png")));
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone_red.png")));
 							break;
 						}
 						break;

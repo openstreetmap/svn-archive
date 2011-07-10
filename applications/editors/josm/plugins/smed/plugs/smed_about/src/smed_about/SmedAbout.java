@@ -89,17 +89,17 @@ public class SmedAbout implements SmedPluggable {
             
             aboutCopyright = new JLabel();
             aboutCopyright.setBounds(new Rectangle(125, 0, 245, 55));
-            aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009 / 2010<BR><center>by" +
-            				"<BR>Werner KÃ¶nig & Malcolm Herring</BODY></HTML>");
+            aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009/10/11<BR><center>by" +
+            				"<BR>Werner Kšnig & Malcolm Herring</BODY></HTML>");
 
             aboutAuthors = new JLabel();
             aboutAuthors.setBounds(new Rectangle(30, 50
             		, 340, 30));
-            aboutAuthors.setText("Authors: Werner KÃ¶nig and Malcolm Herring");
+            aboutAuthors.setText("Authors: Werner Kšnig and Malcolm Herring");
 
             aboutVersion = new JLabel();
             aboutVersion.setBounds(new Rectangle(30, 65, 340, 30));
-            aboutVersion.setText("Version: 23479                     Date: 05.10.2010");
+            aboutVersion.setText("Version: 26218                     Date: 2011.7.8");
 
             aboutDescription = new JLabel();
             aboutDescription.setBounds(new Rectangle(30, 80, 340, 30));
@@ -107,11 +107,11 @@ public class SmedAbout implements SmedPluggable {
 
             aboutSmed = new JLabel();
             aboutSmed.setBounds(new Rectangle(100, 95, 265, 30));
-            aboutSmed.setText("SeaMap Editor to map marks & lights");
+            aboutSmed.setText("Plugin to map seamarks & lights");
 
             aboutAvailable = new JLabel();
             aboutAvailable.setBounds(new Rectangle(30, 115, 141, 27));
-            aboutAvailable.setText("available plugins:");
+            aboutAvailable.setText("Available plugins:");
 
         	aboutPlugins = new JLabel();
             aboutPlugins.setBounds(new Rectangle(58, 135, 303, 60));

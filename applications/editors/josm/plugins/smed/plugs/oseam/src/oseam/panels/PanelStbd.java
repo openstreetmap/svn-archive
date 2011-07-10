@@ -84,7 +84,7 @@ public class PanelStbd extends JPanel {
 							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_red.png")));
 							break;
 						case C:
-							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_green;white;green;white.png")));
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_green_white_green_white.png")));
 							break;
 						}
 						break;
@@ -97,7 +97,7 @@ public class PanelStbd extends JPanel {
 							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_red.png")));
 							break;
 						case C:
-							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_green;white;green;white.png")));
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_green_white_green_white.png")));
 							break;
 						}
 						break;

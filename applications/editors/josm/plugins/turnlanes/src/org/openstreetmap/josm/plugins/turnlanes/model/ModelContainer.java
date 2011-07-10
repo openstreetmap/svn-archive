@@ -19,8 +19,8 @@ import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public class ModelContainer {
-    private static final ModelContainer EMPTY = new ModelContainer(Collections.<Node> emptySet(), Collections
-            .<Way> emptySet(), false);
+    private static final ModelContainer EMPTY = new ModelContainer(Collections.<Node> emptySet(),
+            Collections.<Way> emptySet(), false);
     
     public static ModelContainer create(Iterable<Node> primaryNodes, Iterable<Way> primaryWays) {
         return new ModelContainer(new HashSet<Node>(CollectionUtils.toList(primaryNodes)), new HashSet<Way>(
@@ -45,19 +45,18 @@ public class ModelContainer {
             for (Node n : new ArrayList<Node>(closedNodes)) {
                 for (Way w : Utils.filterRoads(n.getReferrers())) {
                     if (w.isFirstLastNode(n)) {
-                        closed &= close(closedNodes, closedWays, w, Constants.TURN_ROLE_FROM);
-                        closed &= close(closedNodes, closedWays, w, Constants.TURN_ROLE_TO);
+                        closed &= close(closedNodes, closedWays, w);
                     }
                 }
                 
                 for (Way w : new ArrayList<Way>(closedWays)) {
-                    closed &= close(closedNodes, closedWays, w, Constants.TURN_ROLE_VIA);
+                    closed &= close(closedNodes, closedWays, w);
                 }
             }
         }
     }
     
-    private static boolean close(Set<Node> closedNodes, Set<Way> closedWays, Way w, String role) {
+    private static boolean close(Set<Node> closedNodes, Set<Way> closedWays, Way w) {
         boolean closed = true;
         
         for (Relation r : OsmPrimitive.getFilteredList(w.getReferrers(), Relation.class)) {
@@ -66,7 +65,7 @@ public class ModelContainer {
             }
             
             for (RelationMember m : r.getMembers()) {
-                if (m.getRole().equals(role) && m.getMember().equals(w)) {
+                if (m.getRole().equals(Constants.TURN_ROLE_VIA) && m.getMember().equals(w)) {
                     closed &= close(closedNodes, closedWays, r);
                 }
             }
@@ -295,5 +294,13 @@ public class ModelContainer {
     
     public boolean isEmpty() {
         return empty;
+    }
+    
+    public boolean hasRoad(Way w) {
+        return roads.containsKey(w);
+    }
+    
+    public boolean hasJunction(Node n) {
+        return junctions.containsKey(n);
     }
 }

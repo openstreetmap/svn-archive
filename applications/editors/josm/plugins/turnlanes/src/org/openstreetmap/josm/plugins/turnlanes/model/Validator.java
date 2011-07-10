@@ -108,8 +108,11 @@ public class Validator {
         final List<Relation> turns = new ArrayList<Relation>();
         
         for (Relation r : OsmPrimitive.getFilteredList(dataSet.allPrimitives(), Relation.class)) {
-            final String type = r.get("type");
+            if (!r.isUsable()) {
+                continue;
+            }
             
+            final String type = r.get("type");
             if (Constants.TYPE_LENGTHS.equals(type)) {
                 lenghts.add(r);
             } else if (Constants.TYPE_TURNS.equals(type)) {
@@ -126,7 +129,7 @@ public class Validator {
         for (IncomingLanes lanes : incomingLanes.values()) {
             if (lanes.unreferenced() > 0) {
                 issues.add(Issue.newWarning(Arrays.asList(lanes.key.junction, lanes.key.from),
-                    tr("{0} lanes are not referenced in any turn-relation.", lanes.unreferenced())));
+                        tr("{0} lanes are not referenced in any turn-relation.", lanes.unreferenced())));
             }
         }
         
@@ -171,7 +174,7 @@ public class Validator {
             
             if (tooLong > 0) {
                 issues.add(Issue.newError(r, end, "The lengths-relation specifies " + tooLong
-                    + " extra-lanes which are longer than its ways."));
+                        + " extra-lanes which are longer than its ways."));
             }
             
             putIncomingLanes(route, left, right, incomingLanes);
@@ -185,7 +188,7 @@ public class Validator {
     }
     
     private void putIncomingLanes(Route route, List<Double> left, List<Double> right,
-        Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
+            Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
         final Node end = route.getLastSegment().getEnd();
         final Way way = route.getLastSegment().getWay();
         
@@ -195,33 +198,10 @@ public class Validator {
         
         if (old != null) {
             incomingLanes.put(
-                key,
-                new IncomingLanes(key, Math.max(lanes.extraLeft, old.extraLeft), Math.max(lanes.regular, old.regular), Math
-                    .max(lanes.extraRight, old.extraRight)));
+                    key,
+                    new IncomingLanes(key, Math.max(lanes.extraLeft, old.extraLeft), Math.max(lanes.regular,
+                            old.regular), Math.max(lanes.extraRight, old.extraRight)));
         }
-        
-        // TODO this tends to produce a bunch of useless errors
-        // turn lanes really should not span from one junction past another, remove??
-        //      final double length = route.getLastSegment().getLength();
-        //      final List<Double> newLeft = reduceLengths(left, length);
-        //      final List<Double> newRight = new ArrayList<Double>(right.size());
-        //      
-        //      if (route.getSegments().size() > 1) {
-        //          final Route subroute = route.subRoute(0, route.getSegments().size() - 1);
-        //          putIncomingLanes(subroute, newLeft, newRight, incomingLanes);
-        //      }
-    }
-    
-    private List<Double> reduceLengths(List<Double> lengths, double length) {
-        final List<Double> newLengths = new ArrayList<Double>(lengths.size());
-        
-        for (double l : lengths) {
-            if (l > length) {
-                newLengths.add(l - length);
-            }
-        }
-        
-        return newLengths;
     }
     
     private Route validateLengthsWays(Relation r, Node end, List<Issue> issues) {
@@ -229,7 +209,7 @@ public class Validator {
         
         if (ways.isEmpty()) {
             issues.add(Issue.newError(r, "A lengths-relation requires at least one member-way with role \""
-                + Constants.LENGTHS_ROLE_WAYS + "\"."));
+                    + Constants.LENGTHS_ROLE_WAYS + "\"."));
             return null;
         }
         
@@ -254,7 +234,7 @@ public class Validator {
         findNext: while (!unordered.isEmpty()) {
             if (!ends.add(current)) {
                 issues.add(Issue.newError(r, ways, "The " + role + " of the " + type
-                    + "-relation are unordered (and contain cycles)."));
+                        + "-relation are unordered (and contain cycles)."));
                 return null;
             }
             

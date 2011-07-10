@@ -55,6 +55,10 @@ public final class Turn {
         final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
         final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
         
+        if (!c.hasRoad(from) || !c.hasRoad(to)) {
+            return Collections.emptySet();
+        }
+        
         final List<Way> tmp = Utils.getMemberWays(r, Constants.TURN_ROLE_VIA);
         final LinkedList<Road> via = new LinkedList<Road>();
         
@@ -64,6 +68,10 @@ public final class Turn {
         final Iterator<Way> it = tmp.iterator();
         while (it.hasNext()) {
             final Way w = it.next();
+            if (!c.hasRoad(w)) {
+                return Collections.emptySet();
+            }
+            
             final Road v = c.getRoad(w);
             via.add(v);
             n = Utils.getOppositeEnd(w, n);
@@ -118,6 +126,10 @@ public final class Turn {
         final Node via = Utils.getMemberNode(r, Constants.TURN_ROLE_VIA);
         final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
         
+        if (!c.hasRoad(from) || !c.hasJunction(via) || !c.hasRoad(to)) {
+            return Collections.emptySet();
+        }
+        
         final Junction j = c.getJunction(via);
         
         final Road.End fromRoadEnd = j.getRoadEnd(from);
@@ -125,9 +137,7 @@ public final class Turn {
         
         final Set<Turn> result = new HashSet<Turn>();
         for (int i : indices(r, Constants.TURN_KEY_LANES)) {
-            result
-                    .add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), Collections.<Road> emptyList(),
-                            toRoadEnd));
+            result.add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), Collections.<Road> emptyList(), toRoadEnd));
         }
         for (int i : indices(r, Constants.TURN_KEY_EXTRA_LANES)) {
             result.add(new Turn(r, fromRoadEnd.getExtraLane(i), Collections.<Road> emptyList(), toRoadEnd));

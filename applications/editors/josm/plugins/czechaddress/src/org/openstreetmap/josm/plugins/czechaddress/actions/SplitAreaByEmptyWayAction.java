@@ -54,7 +54,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
 
         Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-        Collection<Way> newSelection = new LinkedList(Main.main.getCurrentDataSet().getSelectedWays());
+        Collection<Way> newSelection = new LinkedList<Way>(Main.main.getCurrentDataSet().getSelectedWays());
 
         for (Way area : selectedWays) {
             if (! area.isClosed()) continue;

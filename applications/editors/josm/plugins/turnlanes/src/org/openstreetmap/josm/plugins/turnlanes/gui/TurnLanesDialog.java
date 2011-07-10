@@ -97,12 +97,12 @@ public class TurnLanesDialog extends ToggleDialog {
         }
         
         @Override
-        public void primtivesRemoved(PrimitivesRemovedEvent event) {
+        public void primitivesRemoved(PrimitivesRemovedEvent event) {
             refresh();
         }
         
         @Override
-        public void primtivesAdded(PrimitivesAddedEvent event) {
+        public void primitivesAdded(PrimitivesAddedEvent event) {
             refresh();
         }
         

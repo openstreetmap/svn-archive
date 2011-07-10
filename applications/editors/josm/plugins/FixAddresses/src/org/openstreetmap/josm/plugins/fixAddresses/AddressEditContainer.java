@@ -643,18 +643,18 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primtivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
 	 */
 	@Override
-	public void primtivesAdded(PrimitivesAddedEvent event) {
+	public void primitivesAdded(PrimitivesAddedEvent event) {
 		invalidate();
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primtivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
 	 */
 	@Override
-	public void primtivesRemoved(PrimitivesRemovedEvent event) {
+	public void primitivesRemoved(PrimitivesRemovedEvent event) {
 		invalidate();
 	}
 

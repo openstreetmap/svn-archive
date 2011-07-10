@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-08 20:18+0200\n"
-"PO-Revision-Date: 2011-07-03 19:43+0000\n"
+"POT-Creation-Date: 2011-07-10 22:18+0200\n"
+"PO-Revision-Date: 2011-07-09 12:36+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-07-08 16:48+0000\n"
+"X-Launchpad-Export-Date: 2011-07-10 16:13+0000\n"
 "X-Generator: Launchpad (build 13376)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -72,9 +72,9 @@ msgstr "Ігнорування невірної адреси файлу: \"{0}\"
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:234
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:426
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:603
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:706
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:619
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:722
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1116
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:188
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:421
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:703
@@ -108,6 +108,7 @@ msgstr "Ігнорування невірної адреси файлу: \"{0}\"
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:141
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:152
 #: ../plugins/utilsplugin2/src/utilsplugin2/SplitObjectAction.java:181
+#: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/SplitOnIntersectionsAction.java:69
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/IntersectedWaysRecursiveAction.java:49
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/MiddleNodesAction.java:45
@@ -182,8 +183,8 @@ msgstr "Продовжити, спробувати у будь-якому вип
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1130
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:66
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:117
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1268
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1278
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1270
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1280
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:64
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:80
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:176
@@ -392,7 +393,7 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:317
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1009
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1267
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1290
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:372
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:109
@@ -416,9 +417,9 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:91
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:666
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:67
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1412
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1413
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1414
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:202
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:116
 #: ../core/src/org/openstreetmap/josm/io/remotecontrol/AddTagsDialog.java:45
 #: build/specialmessages.java:46
@@ -531,7 +532,7 @@ msgstr "Додати точку, зазначивши її широту та д�
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:33
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1575
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1598
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeAction.java:17
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:63
 #, java-format
@@ -601,6 +602,7 @@ msgstr "Змістити вибрані точки так, щоб вони ут�
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/AlignWayNodesAction.java:25
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/PasteRelationsAction.java:23
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/ReplaceGeometryAction.java:30
+#: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/SplitOnIntersectionsAction.java:28
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:26
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagSourceAction.java:26
 #: ../plugins/utilsplugin2/src/utilsplugin2/selection/AdjacentNodesAction.java:26
@@ -641,7 +643,7 @@ msgstr "Будь ласка, виберіть щонайменше чотири 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:193
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:463
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:250
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:512
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:513
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1000
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:1030
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:43
@@ -858,7 +860,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/CreateMultipolygonAction.java:103
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
 #: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:32
-#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:84
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:89
 msgid "Create multipolygon"
 msgstr "Створити мультіполігон"
 
@@ -886,10 +888,10 @@ msgstr "Ви повинні виділити, принаймні, одну лі�
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:320
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1032
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1053
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1069
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:741
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:742
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:504
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
 #: ../plugins/graphview/src/org/openstreetmap/josm/plugins/graphview/plugin/dialogs/GraphViewPreferenceEditor.java:172
@@ -1103,7 +1105,7 @@ msgstr "Завантаження об’єктів, що посилаються 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateLayerAction.java:21
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:693
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1437
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1460
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:524
 msgid "Duplicate"
 msgstr "Дублювати"
@@ -1221,7 +1223,7 @@ msgstr "Налаштування положення фону"
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:82
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:350
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:266
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1232
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1255
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1350
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:356
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:284
@@ -1323,7 +1325,7 @@ msgid "Are you really sure to continue?"
 msgstr "Ви справді бажаєте продовжити?"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:345
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:694
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:695
 msgid "Please abort if you are not sure"
 msgstr "Будь ласка, зупиніться, якщо ви не впевнені"
 
@@ -1896,7 +1898,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:36
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1575
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1598
 msgid "Paste Tags"
 msgstr "Вставити теґи"
 
@@ -2040,7 +2042,7 @@ msgstr "Змінити напрямок ліній"
 #: build/specialmessages.java:78
 #: ../plugins/namemanager/src/org/openstreetmap/josm/plugins/namemanager/dialog/NameManagerDialog.java:462
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:248
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:241
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:240
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1408
 msgid "Save"
@@ -3059,7 +3061,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:326
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:181
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:114
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:202
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/SelectAddressesInMapAction.java:55
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:100
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/gui/ValidationPanel.java:57
@@ -3777,7 +3779,7 @@ msgstr ""
 "конфлікт не можливо додати.</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:36
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1189
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1212
 msgid "Double conflict"
 msgstr "Подвійний конфлікт"
 
@@ -5043,7 +5045,7 @@ msgstr "Перетин між лініями мультиполігону"
 msgid "No useful role for multipolygon member"
 msgstr "Непридатна роль члена мультиполігону"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:258
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/MultipolygonTest.java:259
 msgid "Non-Way in multipolygon"
 msgstr "Не-лінія в мультиполігоні"
 
@@ -5133,7 +5135,7 @@ msgid "Relation is empty"
 msgstr "Зв’язок порожній"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/RelationChecker.java:138
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:566
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:568
 msgid "<empty>"
 msgstr "<порожньо>"
 
@@ -5315,7 +5317,7 @@ msgstr "Перевіряти значення і теґги за допомог�
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1065
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:128
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:731
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:732
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:466
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:83
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:790
@@ -5360,7 +5362,7 @@ msgstr "Будь ласка, оберіть рядок для правки."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:648
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:225
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:747
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:748
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:138
 msgid "Please select the row to delete."
 msgstr "Будь ласка, оберіть рядок для вилучення."
@@ -6059,12 +6061,12 @@ msgstr ""
 "якщо встановлено, перевстановити на типові налаштування замість їх "
 "зчитування."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:107
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:111
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:169
 msgid "Username"
 msgstr "Логін"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:110
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:114
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:177
 msgid "Password"
 msgstr "Пароль"
@@ -6249,7 +6251,7 @@ msgid "Tools"
 msgstr "Інструменти"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:184
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:202
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:191
 msgid "Presets"
 msgstr "Заготовки"
@@ -6648,7 +6650,7 @@ msgstr "Властивості"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:107
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:170
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:180
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:254
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:257
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:132
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:434
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:192
@@ -6664,7 +6666,7 @@ msgstr "Точки"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:117
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:246
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:307
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:142
 msgid "Members"
 msgstr "Члени"
@@ -6907,7 +6909,7 @@ msgstr "Опустити виділені елементи на одну поз�
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:759
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecisionType.java:28
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:181
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:465
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:466
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:783
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1035
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:26
@@ -7221,7 +7223,7 @@ msgstr "Застосувати розв’язки конфліктів"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:361
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:284
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:145
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1199
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1222
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:46
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:131
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:644
@@ -7539,7 +7541,7 @@ msgstr "Відкрити список всіх команд (буфер відм
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:173
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:88
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:89
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:165
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:72
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:92
@@ -8104,7 +8106,7 @@ msgid "Adjust opacity of the layer."
 msgstr "Налаштування рівня непрозрості шару."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:570
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:491
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:492
 msgid "Activate"
 msgstr "Активувати"
 
@@ -8253,50 +8255,51 @@ msgid "No"
 msgstr "Ні"
 
 #. group "Relations"
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:89
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:777
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:778
 #: build/trans_presets.java:4095
 msgid "Relations"
 msgstr "Зв’язки"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:87
 msgid "Open a list of all relations."
 msgstr "Відкрити список усіх зв’язків."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:277
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:276
 msgid "Open an editor for the selected relation"
 msgstr "Відкрити вибраний зв’язок в редакторі"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:318
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:317
 msgid "Delete the selected relation"
 msgstr "Вилучити вибраний зв’язок"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:356
-#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:344
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:355
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:349
 #: ../plugins/reltoolbox/src/relcontext/actions/CreateRelationAction.java:40
 #: ../plugins/reltoolbox/src/relcontext/actions/CreateRelationAction.java:109
 msgid "Create a new relation"
 msgstr "Створити новий зв’язок"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:393
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1434
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:392
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1457
+#: ../plugins/reltoolbox/src/relcontext/actions/DuplicateChosenRelationAction.java:19
 msgid "Create a copy of this relation and open it in another editor window"
 msgstr "Створити копію цього зв’язку і відкрити його в іншому вікні редактора"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:432
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:431
 msgid "Add the selected relations to the current selection"
 msgstr "Додати виділені зв’язки до поточного виділення"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:433
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:432
 msgid "Set the current selection to the list of selected relations"
 msgstr "Встановити поточний вибір на списку виділених зв’язків"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:435
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:434
 msgid "Select relation (add)"
 msgstr "Виділити (додати) зв’язок"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:435
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:434
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1209
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
@@ -8320,27 +8323,27 @@ msgstr "Виділити (додати) членів"
 msgid "Select members"
 msgstr "Вибрати членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:507
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:508
 msgid "Download all members of the selected relations"
 msgstr "Завантажити з сервера всіх членів вибраних зв’язків"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:508
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:509
 msgid "Download members"
 msgstr "Завантажити членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:539
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:540
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:864
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1259
 msgid "Download incomplete members of selected relations"
 msgstr "Завантажити з сервер неповних членів вибраних зв’язків"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:541
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:542
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:866
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1261
 msgid "Download incomplete members"
 msgstr "Завантажити неповних членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:775
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:776
 #, java-format
 msgid "Relations: {0}"
 msgstr "Зв’язки: {0}"
@@ -8389,10 +8392,10 @@ msgid "Select relation in relation list."
 msgstr "Вибрати зв’язок зі списку зв’язків"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:500
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:371
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:387
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/SelectionTableColumnModel.java:17
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:64
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:54
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:56
 msgid "Selection"
 msgstr "Виділення"
 
@@ -9684,7 +9687,7 @@ msgstr "Вилучено"
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:72
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:765
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 #: build/specialmessages.java:70 build/trans_presets.java:116
 #: build/trans_presets.java:154 build/trans_presets.java:196
 #: build/trans_presets.java:236 build/trans_presets.java:257
@@ -9865,7 +9868,7 @@ msgstr "Вилучено"
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
 #: ../plugins/public_transport/src/public_transport/GTFSStopTableModel.java:72
 #: ../plugins/public_transport/src/public_transport/TrackStoplistTableModel.java:22
-#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:333
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:338
 msgid "Name"
 msgstr "Назва"
 
@@ -10342,7 +10345,7 @@ msgstr "Пусте значення вилучає теґ"
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:309
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:316
 #: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:328
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:630
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:632
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:214
 msgid "<different>"
 msgstr "<інший>"
@@ -10507,7 +10510,7 @@ msgstr "Завантажити членів зв’язку"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:329
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:475
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1170
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1193
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:615
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
@@ -10579,28 +10582,28 @@ msgstr "Завантажити зв’язки"
 msgid "({0}/{1}): Downloading relation ''{2}''..."
 msgstr "({0}/{1}): Завантаження зв’язку ''{2}''…"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:169
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:172
 msgid "Tags and Members"
 msgstr "Теґи та члени"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:171
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:179
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:174
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:182
 msgid "Parent Relations"
 msgstr "Батьківські зв’язки"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:172
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:175
 msgid "Child Relations"
 msgstr "Підпорядковані зв’язки"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:312
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:329
 msgid "Apply Role:"
 msgstr "Застосувати роль:"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:331
 msgid "Enter a role and apply it to the selected relation members"
 msgstr "Ввести роль та застосувати її до виділених членів зв’язку"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:599
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:615
 msgid ""
 "<html>There is at least one member in this relation referring<br>to the "
 "relation itself.<br>This creates circular dependencies and is discouraged."
@@ -10610,16 +10613,16 @@ msgstr ""
 "<br>Це створює циклічну залежність і не рекомендується.<br>Що робити із "
 "циклічними залежностями?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:606
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:607
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:622
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:623
 msgid "Remove them, clean up relation"
 msgstr "Вилучити їх із зв’язку"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:606
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:622
 msgid "Ignore them, leave relation as is"
 msgstr "Ігнорувати, залишити зв’язок як є"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:669
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:685
 #, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
@@ -10630,11 +10633,11 @@ msgstr ""
 "на<br>об’єкт ''{0}''<br><br>Ви дійсно хочете додати ще один член до зв’язку?"
 "</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:679
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:695
 msgid "Multiple members referring to same object."
 msgstr "Кілька членів посилаються на один той самий об’єкт."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:697
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:713
 #, java-format
 msgid ""
 "<html>You are trying to add a relation to itself.<br><br>This creates "
@@ -10645,17 +10648,17 @@ msgstr ""
 "циклічне посилання і тому не рекомендується.<br>Пропустити зв’язок ''{0}''.</"
 "html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:738
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:754
 msgid "Add all objects selected in the current dataset before the first member"
 msgstr ""
 "Додати усі виділені у поточному наборі даних об’єкти перед першим членом"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:764
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:780
 msgid "Add all objects selected in the current dataset after the last member"
 msgstr ""
 "Додати усі виділені у поточному наборі даних об’єкти після останнього члена"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:791
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:807
 msgid ""
 "Add all objects selected in the current dataset before the first selected "
 "member"
@@ -10663,7 +10666,7 @@ msgstr ""
 "Додати усі виділені у поточному наборі даних об’єкти перед першим виділеним "
 "членом"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:825
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:841
 msgid ""
 "Add all objects selected in the current dataset after the last selected "
 "member"
@@ -10671,22 +10674,22 @@ msgstr ""
 "Додати усі виділені у поточному наборі даних об’єкти після останнього "
 "виділеного члена"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:857
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:873
 msgid "Remove all members referring to one of the selected objects"
 msgstr "Вилучити усіх членів, що посилаються на один із виділених об’єктів"
 
 #. putValue(NAME, tr("Remove Selected"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:860
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:876
 msgid "Relation Editor: Remove Selected"
 msgstr "Редактор зв’язків: Вилучити виділене"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:894
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:910
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:922
 msgid "Select relation members which refer to objects in the current selection"
 msgstr ""
 "Виділити членів зв’язку, які посилаються на об’єкти у поточному виділенні"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:904
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:920
 #, java-format
 msgid ""
 "Select relation members which refer to {0} objects in the current selection"
@@ -10694,70 +10697,70 @@ msgstr ""
 "Виділити членів зв’язку, які посилаються на {0} об’єкт(и) у поточному "
 "виділенні"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:928
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:944
 msgid "Select objects for selected relation members"
 msgstr "Виділити об’єкти для виділених членів зв’язку"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:948
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:964
 msgid "Sort the relation members"
 msgstr "Впорядкувати членів зв’язку"
 
 #. JButton
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:950
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:966
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:817
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:940
 #: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:441
 msgid "Sort"
 msgstr "Впорядкувати"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:951
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:967
 msgid "Relation Editor: Sort"
 msgstr "Редактор зв’язків: Впорядкувати"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:971
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:987
 msgid "Reverse the order of the relation members"
 msgstr "Змінити порядок членів зв’язку на протилежний"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:973
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:989
 msgid "Reverse"
 msgstr "У зворотному порядку"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:974
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:990
 msgid "Relation Editor: Reverse"
 msgstr "Редактор зв’язків: Навпаки"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:994
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1010
 msgid "Move the currently selected members up"
 msgstr "Перемістити обраних членів вгору"
 
 #. putValue(NAME, tr("Move Up"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:997
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1013
 msgid "Relation Editor: Move Up"
 msgstr "Редактор зв’язків: Підняти"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1013
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1029
 msgid "Move the currently selected members down"
 msgstr "Перемістити обраних членів вниз"
 
 #. putValue(NAME, tr("Move Down"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1016
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1032
 msgid "Relation Editor: Move Down"
 msgstr "Редактор зв’язків: Опустити"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1048
 msgid "Remove the currently selected members from this relation"
 msgstr "Вилучити виділених членів зі зв’язку"
 
 #. putValue(NAME, tr("Remove"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1035
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1051
 msgid "Relation Editor: Remove"
 msgstr "Редактор зв’язків: Вилучити"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1051
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1067
 msgid "Delete the currently edited relation"
 msgstr "Вилучити зв’язок, що редагується"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1098
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1114
 msgid ""
 "One or more members of this new relation have been deleted while the "
 "relation editor\n"
@@ -10767,26 +10770,26 @@ msgstr ""
 "зв’язків\n"
 "був відкритий. Вони були вилучені зі списку членів зв’язку."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1151
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1174
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:596
 msgid "Yes, create a conflict and close"
 msgstr "Так, створити конфлікт і закрити"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1153
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1176
 msgid "Click to create a conflict and close this relation editor"
 msgstr "Натисніть, щоб створити конфлікт і закрити редактор зв’язків"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1157
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1180
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:602
 msgid "No, continue editing"
 msgstr "Ні, продовжити редагування"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1159
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1182
 msgid "Click to return to the relation editor and to resume relation editing"
 msgstr ""
 "Клацніть аби повернутися до редактора зв’язків та продовжити редагування"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1166
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1189
 msgid ""
 "<html>This relation has been changed outside of the editor.<br>You cannot "
 "apply your changes and continue editing.<br><br>Do you want to create a "
@@ -10796,7 +10799,7 @@ msgstr ""
 "зберегти свої зміни та продовжити редагування.<br><br>Бажаєте позначити як "
 "конфлікт та закрити редактор?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1183
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1206
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:628
 #, java-format
 msgid ""
@@ -10806,52 +10809,52 @@ msgstr ""
 "<html>В шарі ''{0}'' вже є конфлікт для об’єкта <br>''{1}''.<br>Будь ласка, "
 "спочатку розв’яжіть цей конфлікт, а потім спробуйте знову..</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1197
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1220
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:642
 msgid "Apply the current updates"
 msgstr "Застосувати поточні оновлення"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1230
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1253
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:685
 msgid "Apply the updates and close the dialog"
 msgstr "Застосувати оновлення і закрити діалог"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1265
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1288
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:739
 msgid "Cancel the updates and close the dialog"
 msgstr "Скасувати оновлення та закрити діалог"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1282
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1305
 msgid "Add an empty tag"
 msgstr "Додати порожній теґ"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1295
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1318
 msgid "Download all incomplete members"
 msgstr "Завантажити усіх неповних членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1297
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1327
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1320
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1350
 msgid "Download Members"
 msgstr "Завантажити членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1298
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1328
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1321
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1351
 msgid "Relation Editor: Download Members"
 msgstr "Редактор зв’язків: Завантажити членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1325
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1348
 msgid "Download selected incomplete members"
 msgstr "Завантажити виділених неповних членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1359
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1382
 msgid "Sets a role for the selected members"
 msgstr "Встановити роль для виділених членів"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1361
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1384
 msgid "Apply Role"
 msgstr "Застосувати роль"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1375
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1398
 #, java-format
 msgid "You are setting an empty role on {0} object."
 msgid_plural "You are setting an empty role on {0} objects."
@@ -10859,31 +10862,31 @@ msgstr[0] "Ви встановили порожню роль для {0} об’�
 msgstr[1] "Ви встановили порожню роль для {0} об’єктів."
 msgstr[2] "Ви встановили порожню роль для {0} об’єктів."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1378
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1401
 msgid "This is equal to deleting the roles of these objects."
 msgstr "Це рівносильно вилученню ролей для цих об’єктів."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1380
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1403
 msgid "Do you really want to apply the new role?"
 msgstr "Ви дійсно бажаєте, застосувати нову роль?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1382
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1405
 msgid "Yes, apply it"
 msgstr "Так, застосовувати"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1383
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1406
 msgid "No, do not apply"
 msgstr "Ні, не застосовувати"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1389
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1412
 msgid "Confirm empty role"
 msgstr "Підтвердити порожню роль"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1457
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1480
 msgid "Edit the relation the currently selected relation member refers to"
 msgstr "Виділений, при редагуванні зв’язку, член відноситься до"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1534
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1557
 msgid ""
 "Members from paste buffer cannot be added because they are not included in "
 "current layer"
@@ -12205,7 +12208,7 @@ msgstr "Неповне збереження/надсилання на серве
 #. item "Water/Water/River" combo "Layer"
 #. item "Transport/Railway/Bus Guideway" combo "Layer"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:20
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:765
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 #: build/trans_presets.java:117 build/trans_presets.java:135
 #: build/trans_presets.java:155 build/trans_presets.java:175
 #: build/trans_presets.java:197 build/trans_presets.java:215
@@ -14637,7 +14640,7 @@ msgid "Retrieving user info..."
 msgstr "Отримання інформації про користувача…"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AddWMSLayerPanel.java:86
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:563
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:564
 msgid "Menu Name"
 msgstr "Назва меню"
 
@@ -14687,7 +14690,7 @@ msgid "TMS URL"
 msgstr "TMS посилання"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AddWMSLayerPanel.java:204
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:563
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:564
 msgctxt "layer"
 msgid "Zoom"
 msgstr "Масштаб"
@@ -14697,7 +14700,7 @@ msgid "TMS"
 msgstr "TMS"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AddWMSLayerPanel.java:215
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:563
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:564
 msgid "Imagery URL"
 msgstr "Посилання фону"
 
@@ -14999,6 +15002,7 @@ msgstr "Швидкість (червоний = повільно, зелений 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:47
 msgid "Direction (red = west, yellow = north, green = east, blue = south)"
 msgstr ""
+"Напрямок (червоний = захід, жовтий = північ, зелений = схід, синій = південь)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:48
 msgid "Dilution of Position (red = high, green = low, if available)"
@@ -15233,9 +15237,8 @@ msgid "Colors points and track segments by velocity."
 msgstr "Позначати колір відрізків та точок треку в залежності від швидкості."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:199
-#, fuzzy
 msgid "Colors points and track segments by direction."
-msgstr "Позначати колір відрізків та точок треку в залежності від швидкості."
+msgstr "Розфарбовувати точки та треки за напрямом."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:200
 msgid ""
@@ -15414,15 +15417,15 @@ msgstr "Постачальники фонів"
 msgid "Offset bookmarks"
 msgstr "Закладки положень"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:401
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:402
 msgid "Available default entries:"
 msgstr "Доступні типові записи:"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:427
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:428
 msgid "Selected entries:"
 msgstr "Обрані записи:"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:445
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:446
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:756
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:1022
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:496
@@ -15431,57 +15434,57 @@ msgstr "Обрані записи:"
 msgid "New"
 msgstr "Створити"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:446
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:447
 msgid "Add a new WMS/TMS entry by entering the URL"
 msgstr "Додайте новий елемент WMS/TMS ввівши URL"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:454
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:455
 msgid "Add Imagery URL"
 msgstr "Додати посилання для фону"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:466
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:467
 msgid "Remove entry"
 msgstr "Вилучити елемент"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:492
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:493
 msgid "copy selected defaults"
 msgstr "копіювати виділені типові записи"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:511
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:512
 msgid "Please select at least one row to copy."
 msgstr "Будь ласка, виберіть принаймні один рядок для копіювання."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:548
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:549
 msgid "reload defaults"
 msgstr "перезавантажити типові записи"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:642
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:643
 msgid "Menu Name (Default)"
 msgstr "Назва пункта меню (типова)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:642
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:643
 msgid "Imagery URL (Default)"
 msgstr "Посилання фону (Типове)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:685
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:686
 #, java-format
 msgid "EULA license URL not available: {0}"
 msgstr "Посилання на ліцензію EULA не доступне: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:699
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:700
 #, java-format
 msgid "Malformed URL for the EULA licence: {0}"
 msgstr "Спотворене посилання на ліцензію EULA: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:765
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 msgid "Projection"
 msgstr "Проекція"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:765
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 msgid "Easting"
 msgstr "Східніще"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:765
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 msgid "Northing"
 msgstr "Північніше"
 
@@ -16718,8 +16721,8 @@ msgstr "Вилучити виділене з таблиці теґів"
 msgid "Add a new tag"
 msgstr "Додати новий теґ"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:453
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:729
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:452
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:728
 #, java-format
 msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in ''display_values'' "
@@ -16728,8 +16731,8 @@ msgstr ""
 "Зламаний шаблон теґів \"{0}-{1}\" — кількість елементів у ''display_values'' "
 "повинна дорівнювати кількості ''values''"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:458
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:734
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:457
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:733
 #, java-format
 msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in "
@@ -16738,61 +16741,61 @@ msgstr ""
 "Зламаний шаблон теґів \"{0}-{1}\" — кількість елементів у "
 "''short_descriptions'' повинна дорівнювати кількості ''values''"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:937
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:939
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:314
 msgid "More information about this feature"
 msgstr "Більш детальна інформація про цей елемент"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:974
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:976
 #, java-format
 msgid "Unknown requisite: {0}"
 msgstr "Невідомий запит: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1031
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1033
 msgid "Available roles"
 msgstr "Доступні ролі"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1034
 msgid "role"
 msgstr "роль"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1033
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1035
 msgid "count"
 msgstr "кількість"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1034
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1036
 msgid "elements"
 msgstr "елементи"
 
 #. space
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1049
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1051
 msgid "Optional Attributes:"
 msgstr "Необов’язкові атрибути:"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1098
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1100
 #, java-format
 msgid "Use preset ''{0}'' of group ''{1}''"
 msgstr "Використовувати заготовку \"{0}\" в групі ''{1}''"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1099
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1101
 #, java-format
 msgid "Use preset ''{0}''"
 msgstr "Використовувати заготовку \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1150
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1152
 #, java-format
 msgid "Unknown type: {0}"
 msgstr "Невідомий тип: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1219
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1221
 msgid "Preset role element without parent"
 msgstr "Роль елемента заготовки без батьків"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1227
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1229
 msgid "Preset sub element without parent"
 msgstr "Вкладені елементи заготовок без батьків"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1267
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1269
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:63
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:66
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:71
@@ -16800,17 +16803,17 @@ msgstr "Вкладені елементи заготовок без батькі
 msgid "Could not read tagging preset source: {0}"
 msgstr "Неможливо прочитати з джерела заготовок теґів: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1277
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1279
 #, java-format
 msgid "Error parsing {0}: "
 msgstr "Помилка синтаксичного аналізу: {0} "
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1318
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1320
 #, java-format
 msgid "Elements of type {0} are supported."
 msgstr "Елементи типу {0} підтримуються."
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1398
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1399
 #: ../plugins/terracer/src/terracer/TerracerAction.java:212
 #, java-format
 msgid "Change {0} object"
@@ -16819,24 +16822,24 @@ msgstr[0] "Правка {0} об’єкта"
 msgstr[1] "Правка {0} об’єктів"
 msgstr[2] "Правка {0} об’єктів"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1401
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1402
 msgid "Nothing selected!"
 msgstr "Нічого не вибрано!"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1403
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1404
 msgid "Selection unsuitable!"
 msgstr "Невдалий вибір!"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1412
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1413
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1414
 msgid "Apply Preset"
 msgstr "Застосувати заготовку"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1412
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1413
 msgid "New relation"
 msgstr "Новий зв’язок"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1506
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:1507
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:122
 msgid "Change Properties"
 msgstr "Змінити параметри"
@@ -16863,11 +16866,11 @@ msgstr "Показати вікно із заготовками пошуку"
 msgid "Search presets"
 msgstr "Заготовки пошуку"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:281
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:285
 msgid "Show only applicable to selection"
 msgstr "Показати тільки ті, що застосовуються для виділеного"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:298
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:302
 msgid "Search in tags"
 msgstr "Шукати в теґах"
 
@@ -17289,7 +17292,7 @@ msgstr "Отримання пакету ліній з ''{0}''"
 msgid "Fetching a package of relations from ''{0}''"
 msgstr "Отримання пакету зв’язків з ''{0}''"
 
-#: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:415
+#: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:416
 msgid ""
 "Server replied with response code 404, retrying with an individual request "
 "for each object."
@@ -17297,7 +17300,7 @@ msgstr ""
 "Сервер відповів кодом 404, спробуйте надіслати об’єкти окремими "
 "індивідуальними запитами для кожного об’єкту."
 
-#: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:441
+#: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:442
 #, java-format
 msgid "Downloading {0} object from ''{1}''"
 msgid_plural "Downloading {0} objects from ''{1}''"
@@ -19031,7 +19034,7 @@ msgstr ""
 "<strong>Завантаження не вдалося</strong>, якщо ви намагались завантажити цей "
 "об’єкт.<br><br>Повідомлення про помилку:<br>{0}</html>"
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:611
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:602
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Не вдається знайти переклад мовою «{0}». Повертаємось до {1}."
@@ -19730,8 +19733,13 @@ msgstr ""
 msgid "Shows the elevation profile and some statistical data of a GPX track."
 msgstr "Показує профілі висот і деякі статистичні дані треку GPX."
 
-#. Plugin epsg31287
+#. Plugin epci-fr
 #: build/trans_plugins.java:35
+msgid "Handling of French EPCIs (boundary=local_authority)"
+msgstr ""
+
+#. Plugin epsg31287
+#: build/trans_plugins.java:37
 msgid ""
 "sets current projection to EPSG:31287 - Bessel 1841 in Lambert Conformal "
 "Conic. For use with WMS plugin to load geoimage.at WMS, see link for details"
@@ -19741,45 +19749,45 @@ msgstr ""
 "завантаження з geoimage.at, перейдіть за посиланням"
 
 #. Plugin ext_tools
-#: build/trans_plugins.java:37
+#: build/trans_plugins.java:39
 #: ../plugins/ext_tools/src/ext_tools/preferences/ExtToolsPreference.java:27
 msgid "Use external scripts in JOSM"
 msgstr "Використовувати зовнішні сценарії в JOSM"
 
 #. Plugin FastDraw
-#: build/trans_plugins.java:39
+#: build/trans_plugins.java:41
 msgid "Fast drawing ways by mouse"
 msgstr "Швидке креслення ліній за допомогою миші"
 
 #. Plugin FixAddresses
-#: build/trans_plugins.java:41
+#: build/trans_plugins.java:43
 msgid "Finds and fixes invalid street addresses in a comfortable way."
 msgstr "Знаходить та виправляє помилки в адресах у зручний спосіб."
 
 #. Plugin globalsat
-#: build/trans_plugins.java:43
+#: build/trans_plugins.java:45
 msgid "Download GPS points from Globalsat dg100 data logger directly in JOSM."
 msgstr ""
 "Дозволяє завантажити точки GPS з Globalsat dg100 data logger безпосередньо в "
 "JOSM."
 
 #. Plugin gpxfilter
-#: build/trans_plugins.java:45
+#: build/trans_plugins.java:47
 msgid "Allows to filter out unnececary GPS tracks"
 msgstr "Дозволяє відфільтровувати не потрібні GPX-треки"
 
 #. Plugin graphview
-#: build/trans_plugins.java:47
+#: build/trans_plugins.java:49
 msgid "Visualizes routing information as a routing graph."
 msgstr "Показує інформацію про маршрут у вигляді маршрутної діаграми."
 
 #. Plugin imageryadjust
-#: build/trans_plugins.java:49
+#: build/trans_plugins.java:51
 msgid "WMSPlugin-style imagery adjustment mapmode"
 msgstr "Режим налаштування положення фону як у WMSPlugin"
 
 #. Plugin ImageWayPoint
-#: build/trans_plugins.java:51
+#: build/trans_plugins.java:53
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -19790,17 +19798,17 @@ msgstr ""
 "точки, буде паруватись з ім’ям файлу зображення."
 
 #. Plugin ImportImagePlugin
-#: build/trans_plugins.java:53 build/trans_plugins.java:55
+#: build/trans_plugins.java:55 build/trans_plugins.java:57
 msgid "Plugin for importing spatial referenced images"
 msgstr "Втулок для імпорту просторово прив’язаних зображень"
 
 #. Plugin importvec
-#: build/trans_plugins.java:57
+#: build/trans_plugins.java:59
 msgid "Import vector graphics (SVG)"
 msgstr "Імпорт векторної графіки (SVG)"
 
 #. Plugin ImproveWayAccuracy
-#: build/trans_plugins.java:59
+#: build/trans_plugins.java:61
 msgid ""
 "Can be useful when you are improving accuracy of existing ways. The idea of "
 "the plugin is to substitute dragging and dropping nodes with clicking to "
@@ -19811,12 +19819,12 @@ msgstr ""
 "клацання, що значно прискорює роботу."
 
 #. Plugin irsrectify
-#: build/trans_plugins.java:61
+#: build/trans_plugins.java:63
 msgid "A helper for IRS satellite adjustment."
 msgstr "Допомагає у вірівнюванні тла зі супутниковими знімками від IRS."
 
 #. Plugin junctionchecking
-#: build/trans_plugins.java:63
+#: build/trans_plugins.java:65
 msgid ""
 "creates a channel digraph and checks a subset of channels if it is a "
 "junction or searches in a subset of channels for junctions"
@@ -19825,12 +19833,12 @@ msgstr ""
 "або шукає у підмножинах каналів розв’язки"
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:65
+#: build/trans_plugins.java:67
 msgid "Helps vectorizing WMS images."
 msgstr "Допомагає оцифровувати (векторизувати) зображення WMS."
 
 #. Plugin licensechange
-#: build/trans_plugins.java:67
+#: build/trans_plugins.java:69
 msgid ""
 "Checks if all users contributing to an object have agreed to the license "
 "change."
@@ -19839,7 +19847,7 @@ msgstr ""
 "ліцензії."
 
 #. Plugin livegps
-#: build/trans_plugins.java:69
+#: build/trans_plugins.java:71
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr ""
@@ -19847,7 +19855,7 @@ msgstr ""
 "до сервісу gpsd."
 
 #. Plugin mapdust
-#: build/trans_plugins.java:71
+#: build/trans_plugins.java:73
 msgid ""
 "The MapDust Plug-In shows the MapDust bug reports on       the map. You can "
 "create, close,invalidate, re-open and comment       bug reports by using "
@@ -19858,7 +19866,7 @@ msgstr ""
 "про помилки за допомогою цього втулка."
 
 #. Plugin measurement
-#: build/trans_plugins.java:73
+#: build/trans_plugins.java:75
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -19869,24 +19877,24 @@ msgstr ""
 "бути також імпортований із шару gps)."
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:75
+#: build/trans_plugins.java:77
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr "Додає заборону повороту ліворуч для наборів з 4 або 5 ліній"
 
 #. Plugin multipoly-convert
-#: build/trans_plugins.java:77
+#: build/trans_plugins.java:79
 msgid "Simply convert an area to a multipolygon."
 msgstr "Легко перетворює ділянку у мультиполігон."
 
 #. Plugin namemanager
-#: build/trans_plugins.java:79
+#: build/trans_plugins.java:81
 msgid "Allows to attribute tags to all objects in any selected area at once"
 msgstr ""
 "Дозволяє призначити теґи до всіх об'єктів в будь-якій виділеній області за "
 "один раз"
 
 #. Plugin nearclick
-#: build/trans_plugins.java:81
+#: build/trans_plugins.java:83
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -19897,17 +19905,17 @@ msgstr ""
 "планшета, без переміщення миші (основна Java-планшет проблема)."
 
 #. Plugin OpeningHoursEditor
-#: build/trans_plugins.java:83
+#: build/trans_plugins.java:85
 msgid "extended options for editing opening_hours"
 msgstr "Розширені параметри для редагування opening_hours"
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:85
+#: build/trans_plugins.java:87
 msgid "Imports issues from OpenStreetBugs"
 msgstr "Імпорт запитів з OpenStreetBugs"
 
 #. Plugin openvisible
-#: build/trans_plugins.java:87
+#: build/trans_plugins.java:89
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr ""
@@ -19915,18 +19923,18 @@ msgstr ""
 "екрану"
 
 #. Plugin osmarender
-#: build/trans_plugins.java:89
+#: build/trans_plugins.java:91
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr "Запускає FireFox для показу поточного виду, у вигляді SVG зображення."
 
 #. Plugin pdfimport
-#: build/trans_plugins.java:91
+#: build/trans_plugins.java:93
 msgid "Import PDF file and convert to ways."
 msgstr "Імпортує дані з PDF файлу та перетворює їх на лінії."
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:93
+#: build/trans_plugins.java:95
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
@@ -19935,7 +19943,7 @@ msgstr ""
 "натиснувши праву клавішу миші на шарі зображення."
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:95
+#: build/trans_plugins.java:97
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
@@ -19944,44 +19952,44 @@ msgstr ""
 "і привести його у відповідність з мапою."
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:97
+#: build/trans_plugins.java:99
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr "Чудовий JGoodies Пластиковий Скін."
 
 #. Plugin proj4j
-#: build/trans_plugins.java:99
+#: build/trans_plugins.java:101
 msgid "adds projections from Proj4J"
 msgstr "додати проекції з Proj4J"
 
 #. Plugin public_transport
-#: build/trans_plugins.java:101
+#: build/trans_plugins.java:103
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr ""
 "Цей втулок спрощує нанесення і редагування маршрутів громадського транспорту."
 
 #. Plugin reltoolbox
-#: build/trans_plugins.java:103
+#: build/trans_plugins.java:105
 msgid "Relation and multipolygon creating and editing panel."
 msgstr "Панель створення та редагування зв’язків та мультиполігонів."
 
 #. Plugin restart
-#: build/trans_plugins.java:105
+#: build/trans_plugins.java:107
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr "Додає в меню Файл рядок «Перезапустити JOSM»."
 
 #. Plugin reverter
-#: build/trans_plugins.java:107
+#: build/trans_plugins.java:109
 msgid "Plugin for reverting changesets"
 msgstr "Втулок для відміни наборів змін"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:109
+#: build/trans_plugins.java:111
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "Використовувати малюнок з rgis.spb.ru як прошарок"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:111
+#: build/trans_plugins.java:113
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -19992,7 +20000,7 @@ msgstr ""
 "Доступні заготовки: Німеччина."
 
 #. Plugin routes
-#: build/trans_plugins.java:113
+#: build/trans_plugins.java:115
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -20001,12 +20009,12 @@ msgstr ""
 "повинні бути визначені у файлі routes.xml у каталозі втулків"
 
 #. Plugin routing
-#: build/trans_plugins.java:115
+#: build/trans_plugins.java:117
 msgid "Provides routing capabilities."
 msgstr "Надає можливості маршрутизації."
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:117
+#: build/trans_plugins.java:119
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -20017,22 +20025,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:119 build/trans_plugins.java:121
+#: build/trans_plugins.java:121 build/trans_plugins.java:123
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "Створення та редагування морських мап для OpenSeaMap"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:123
+#: build/trans_plugins.java:125
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "Дозволяє додавати мітки/точки в поточній позиції GPS ."
 
 #. Plugin tageditor
-#: build/trans_plugins.java:125
+#: build/trans_plugins.java:127
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "Показує вікно для редагування теґів в табличному вигляді."
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:127
+#: build/trans_plugins.java:129
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -20043,17 +20051,17 @@ msgstr ""
 "також запустити JAR-файл як самостійний застосунок ."
 
 #. Plugin terracer
-#: build/trans_plugins.java:129
+#: build/trans_plugins.java:131
 msgid "Make terraced houses out of single blocks."
 msgstr "Зробити ряд будинків по вулиці з одного блоку."
 
 #. Plugin SeaMapEditor
-#: build/trans_plugins.java:131
+#: build/trans_plugins.java:133
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "Для створення та редагування навігаційних знаків для OpenSeaMap"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:133
+#: build/trans_plugins.java:135
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
@@ -20063,7 +20071,7 @@ msgstr ""
 "мапи."
 
 #. Plugin Tracer
-#: build/trans_plugins.java:135
+#: build/trans_plugins.java:137
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
@@ -20072,12 +20080,12 @@ msgstr ""
 "TracerServer (. NET або Mono)."
 
 #. Plugin trustosm
-#: build/trans_plugins.java:137
+#: build/trans_plugins.java:139
 msgid "Plugin to digital sign OSM-Data"
 msgstr "Втулок для накладення цифрового підпису на дані OSM"
 
 #. Plugin turnlanes
-#: build/trans_plugins.java:139
+#: build/trans_plugins.java:141
 msgid ""
 "Provides a straightforward GUI for adding, editing and deleting turn lanes."
 msgstr ""
@@ -20085,7 +20093,7 @@ msgstr ""
 "правил руху по смугах."
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:141
+#: build/trans_plugins.java:143
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -20094,17 +20102,17 @@ msgstr ""
 "до бази даних OpenStreetMap."
 
 #. Plugin undelete
-#: build/trans_plugins.java:143
+#: build/trans_plugins.java:145
 msgid "Allows undeleting object from OSM database"
 msgstr "Дозволяє відновлювати об’єкти, вилучені з бази даних OSM"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:145
+#: build/trans_plugins.java:147
 msgid "Several utilities that make your life easier."
 msgstr "Кілька інструментів, що полегшать ваше життя."
 
 #. Plugin videomapping
-#: build/trans_plugins.java:147
+#: build/trans_plugins.java:149
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -20115,7 +20123,7 @@ msgstr ""
 "ідентифікації видимих об’єктів."
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:149
+#: build/trans_plugins.java:151
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -20124,22 +20132,22 @@ msgstr ""
 "Цей втулок поки ще вдосконалюється і може погано працювати."
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:151
+#: build/trans_plugins.java:153
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "Просте завантаження уздовж довгого набору взаємопов’язаних шляхів"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:153
+#: build/trans_plugins.java:155
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "Дозволяє пошук маршрутних точок імпортованих із файлу gpx."
 
 #. Plugin wayselector
-#: build/trans_plugins.java:155
+#: build/trans_plugins.java:157
 msgid "Select a sequence of non-branching connected ways"
 msgstr "Виділити послідовність з’єднаних ліній, що не розгалужуються"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:157
+#: build/trans_plugins.java:159
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -20175,7 +20183,7 @@ msgstr ""
 #. text: fixed label to display
 #. default: default string to display
 #. delete_if_empty: true/false
-#. use_last_as_default: true/false
+#. use_last_as_default: true/false/force
 #. combo: combo box, with multiple choices and possible to enter free form text
 #. key: key to set
 #. text: fixed label to display
@@ -20191,7 +20199,7 @@ msgstr ""
 #. <short_description>last description</short_description>
 #. default: default string to display
 #. delete_if_empty: true/false
-#. use_last_as_default: true/false
+#. use_last_as_default: true/false/force
 #. multiselect: list of values from which zero or more can be selected
 #. key: key to set
 #. text: fixed label to display
@@ -20210,7 +20218,7 @@ msgstr ""
 #. <short_description>last description</short_description>
 #. default: default string to display
 #. delete_if_empty: true/false
-#. use_last_as_default: true/false
+#. use_last_as_default: true/false/force
 #. check: checkbox
 #. key: key to set
 #. text: fixed label to display
@@ -30585,9 +30593,8 @@ msgstr "гідро"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
-#, fuzzy
 msgid "solar"
-msgstr "ізольовано"
+msgstr "сонце"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
@@ -30602,35 +30609,32 @@ msgstr "теплова"
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
 msgid "biofuel"
-msgstr ""
+msgstr "біопаливо"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
-#, fuzzy
 msgid "waste"
-msgstr "Вставити"
+msgstr "відходи"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
 msgid "biomass"
-msgstr ""
+msgstr "біомаса"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
-#, fuzzy
 msgid "geothermal"
-msgstr "інша колія"
+msgstr "геотермальний"
 
 #. item "Power/Power Generator" combo "Source" display value
 #: build/trans_presets.java:3104
 msgid "biogas"
-msgstr ""
+msgstr "біогаз"
 
 #. item "Power/Power Generator" combo "Method"
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "Method"
-msgstr "методизм"
+msgstr "Спосіб"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
@@ -30639,38 +30643,33 @@ msgstr "сонячна"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "combustion"
-msgstr "зв’язку"
+msgstr "спалювання"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "fission"
-msgstr "Редакція"
+msgstr "розщеплення"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "thermal"
-msgstr "інша колія"
+msgstr "тепловий"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "gasification"
-msgstr "Перевірка"
+msgstr "газифікація"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
-#, fuzzy
 msgid "wind_turbine"
-msgstr "для тросів"
+msgstr "вітротурбіна"
 
 #. item "Power/Power Generator" combo "Method" display value
 #: build/trans_presets.java:3105
 msgid "anaerobic_digestion"
-msgstr ""
+msgstr "анаеробне перетравлення"
 
 #. item "Power/Power Station"
 #: build/trans_presets.java:3108
@@ -36284,9 +36283,8 @@ msgstr "OpenStreetMap (Mapnik)"
 
 #. tms[18]:http://{switch:a,b,c}.www.toolserver.org/tiles/bw-mapnik/{zoom}/{x}/{y}.png;;;osm;osm;osm
 #: build/trans_wms.java:8
-#, fuzzy
 msgid "OpenStreetMap (Mapnik B&W)"
-msgstr "OpenStreetMap (Mapnik)"
+msgstr "OpenStreetMap (Mapnik Ч&Б)"
 
 #. tms[17]:http://tile.opencyclemap.org/cycle;;;osm;osm;osm
 #: build/trans_wms.java:9
@@ -36461,7 +36459,7 @@ msgstr "Пангасінан (Філіппіни HiRes)"
 #. scanex:irs;;;IRS
 #: build/trans_wms.java:43
 msgid "ScanEx IRS"
-msgstr ""
+msgstr "ScanEx IRS"
 
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVImporter.java:43
 msgid "Columbus V-900 CSV Files"
@@ -36816,34 +36814,28 @@ msgid "Can not save preferences"
 msgstr "Неможливо зберегти налаштування"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:22
-#, fuzzy
 msgid "FastDraw configuration"
-msgstr "розширене налаштування"
+msgstr "Налаштування FastDraw"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:29
-#, fuzzy
 msgid "Epsilon multiplier"
-msgstr "Коефіцієнт швидкого програвання"
+msgstr "Множник епсілон"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:30
-#, fuzzy
 msgid "Starting Epsilon"
-msgstr "Починаючи з №:"
+msgstr "Початковий епсілон"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:57
-#, fuzzy
 msgid "FastDraw settings"
-msgstr "Швидке креслення"
+msgstr "Налаштування FastDraw"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:63
-#, fuzzy
 msgid "Save settings"
-msgstr "налаштування"
+msgstr "Зберегти налаштування"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawConfigDialog.java:76
-#, fuzzy
 msgid "Can not read settings"
-msgstr "Додаткові параметри"
+msgstr "Не можливо прочитати налаштування"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawingMode.java:55
 msgid ""
@@ -36879,9 +36871,9 @@ msgstr "Будь ласка, пересуньте мишу для креслен
 #. I18N: Eps = Epsilon, the tolerance parameter
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawingMode.java:367
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawingMode.java:487
-#, fuzzy, java-format
+#, java-format
 msgid "Eps={0}, {1} points"
-msgstr "{0} точка"
+msgstr "Eps={0}, {1} пунктів"
 
 #: ../plugins/FastDraw/src/org/openstreetmap/josm/plugins/fastdraw/FastDrawingMode.java:445
 msgid "Cannot place node outside of the world."
@@ -38710,7 +38702,7 @@ msgid "Edit tool"
 msgstr "Правити інструмент"
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:54
-#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:224
+#: ../plugins/smed/plugs/oseam/src/oseam/panels/PanelMain.java:223
 msgid "Name:"
 msgstr "Назва:"
 
@@ -41425,33 +41417,37 @@ msgid "Specify role"
 msgstr "Зазначити роль"
 
 #. Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:479
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:480
 #, java-format
 msgid "Change relation member roles to {0}"
 msgstr "Змінити роль члена зв’язку на {0}"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:500
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:501
 msgid "Change multipolygon creation settings"
 msgstr "Змінити налаштування для створення мультиполігонів"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:513
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:514
 msgid "Create administrative boundary relations"
 msgstr "Створити зв’язок з адміністративними кордонами"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:514
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:515
 msgid "Add tags boundary and admin_level to boundary relation ways"
 msgstr "Додати теґи boundary та admin_level до ліній членів зв’язку"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:515
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:516
 msgid "Move area tags from contour to relation"
 msgstr "Перемістити теґи ділянок з контурів на зв’язки"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:541
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:542
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:517
+msgid "When moving tags, consider even non-repeating ones"
+msgstr ""
+
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:543
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:544
 msgid "Enter role for selected members"
 msgstr "Ввести роль для виділених членів"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:542
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:544
 #: ../plugins/reltoolbox/src/relcontext/actions/AddRemoveMemberAction.java:35
 #: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:32
 #: ../plugins/reltoolbox/src/relcontext/actions/CreateRelationAction.java:40
@@ -41460,7 +41456,7 @@ msgstr "Ввести роль для виділених членів"
 msgid "Relation Toolbox: {0}"
 msgstr "Інструменти для роботи із зв’язками: {0}"
 
-#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:567
+#: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:569
 msgid "another..."
 msgstr "інше…"
 
@@ -41477,11 +41473,16 @@ msgstr "Очистити обраний зв’язок"
 msgid "Create a multipolygon from selected objects"
 msgstr "Створити мультиполігон із виділених об’єктів"
 
-#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:322
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:78
+#, fuzzy
+msgid "Move tags from ways to relation"
+msgstr "Перемістити теґи ділянок з контурів на зв’язки"
+
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:327
 msgid "Enter admin level and name for the border relation:"
 msgstr "Введіть занчення для admin level та name у зв’язках кордонів:"
 
-#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:326
+#: ../plugins/reltoolbox/src/relcontext/actions/CreateMultipolygonAction.java:331
 msgid "Admin level"
 msgstr "Admin level"
 
@@ -41504,6 +41505,11 @@ msgstr "Завантажити неповних членів обраного з
 #: ../plugins/reltoolbox/src/relcontext/actions/DownloadParentsAction.java:33
 msgid "Download referrers for the the chosen relation and its members"
 msgstr "Завантажити об’єкти, що посилаються на обраний зв’язок або його членів"
+
+#: ../plugins/reltoolbox/src/relcontext/actions/DuplicateChosenRelationAction.java:17
+#, fuzzy
+msgid "Duplicate relation"
+msgstr "Подвоєнні зв’язки"
 
 #: ../plugins/reltoolbox/src/relcontext/actions/EditChosenRelationAction.java:25
 msgid "Open relation editor for the chosen relation"
@@ -42532,30 +42538,30 @@ msgstr "Додати поворот"
 msgid "Delete lane."
 msgstr "Вилучити полосу."
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Turn.java:183
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Turn.java:193
 msgid "Delete turn."
 msgstr "Вилучити поворот"
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:129
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:132
 #, java-format
 msgid "{0} lanes are not referenced in any turn-relation."
 msgstr "{0} смуг(а|и) не належать до жодного зв’язку."
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:277
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:257
 msgid "Put the ways in order."
 msgstr "Встановіть порядок проїзду."
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:365
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:345
 #, java-format
 msgid "Relation references non-existent (regular) lane {0}"
 msgstr "Зв’язок посилається  на неіснуючу (звичайну) смугу {0}"
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:371
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:351
 #, java-format
 msgid "Relation references non-existent extra lane {0}"
 msgstr "Зв’язок посилається  на неіснуючу додаткову смугу {0}"
 
-#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:396
+#: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Validator.java:376
 #, java-format
 msgid "Integer list \"{0}\" contains unexpected values."
 msgstr "Список \"{0}\" містить не очікуванні значення."
@@ -43498,7 +43504,7 @@ msgstr "Розділити Зв’язки"
 msgid "Unglued Relations"
 msgstr "Розділені Зв’язки"
 
-#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:42
+#: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:43
 msgid "More tools"
 msgstr "Ще інструменти"
 
@@ -43556,6 +43562,21 @@ msgstr ""
 #, java-format
 msgid "Replace geometry for way {0}"
 msgstr "Змінити геометрію лінії {0}"
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/SplitOnIntersectionsAction.java:24
+#, fuzzy
+msgid "Split adjacent ways"
+msgstr "Суміжні лінії"
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/SplitOnIntersectionsAction.java:27
+msgid "Split adjacent ways on T-intersections"
+msgstr ""
+
+#: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/SplitOnIntersectionsAction.java:68
+msgid ""
+"There are several ways containing one of the splitting nodes. Select ways "
+"participating in this operation."
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/dumbutils/TagBufferAction.java:19
 msgid "Copy tags from previous selection"
@@ -43988,12 +44009,6 @@ msgstr "Кермувати"
 #: ../plugins/wms-turbo-challenge2/src/wmsturbochallenge/WMSRacer.java:43
 msgid "Drive a race car on this layer"
 msgstr "Керуйте гоночним автомобілем на цьому шарі"
-
-#~ msgid "Warning: no preference ''{0}'' found."
-#~ msgstr "Попередження: незнайдено налаштувань ''{0}''."
-
-#~ msgid "Eps={0}"
-#~ msgstr "Eps={0}"
 
 #~ msgid "Do not show again"
 #~ msgstr "Не показувати знову"
@@ -45119,6 +45134,9 @@ msgstr "Керуйте гоночним автомобілем на цьому �
 #~ msgstr ""
 #~ "Зіпсована заготовка теґів ''{0}''-{1}'' — кількість елементів "
 #~ "display_values повинна бути такою ж, як і у values"
+
+#~ msgid "Warning: no preference ''{0}'' found."
+#~ msgstr "Попередження: незнайдено налаштувань ''{0}''."
 
 #~ msgid ""
 #~ "Server replied with response code 404, retrying with an individual "
@@ -46413,6 +46431,9 @@ msgstr "Керуйте гоночним автомобілем на цьому �
 
 #~ msgid "Makes a paralell copy of the selected way(s)"
 #~ msgstr "Створює паралельну копію виділеної лінії(й)"
+
+#~ msgid "Eps={0}"
+#~ msgstr "Eps={0}"
 
 #~ msgid ""
 #~ "Surface values must not contain any of the following characters: ',' '{' "

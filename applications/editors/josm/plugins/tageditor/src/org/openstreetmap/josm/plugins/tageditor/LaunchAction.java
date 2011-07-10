@@ -33,7 +33,7 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
                         true
         );
 
-        DataSet.selListeners.add(this);
+        DataSet.addSelectionListener(this);
         setEnabled(false);
     }
 

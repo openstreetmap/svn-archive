@@ -78,7 +78,7 @@ public class OsbLayer extends Layer implements MouseListener {
         super(name);
         this.data = dataSet;
         this.dialog = dialog;
-        DataSet.selListeners.add(new SelectionChangedListener() {
+        DataSet.addSelectionListener(new SelectionChangedListener() {
             public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
                 selection = newSelection;
             }

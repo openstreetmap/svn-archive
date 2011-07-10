@@ -409,8 +409,8 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {/* irrelevant in this context */}
 
-    public void primtivesAdded(PrimitivesAddedEvent event) {/* irrelevant in this context */}
-    public void primtivesRemoved(PrimitivesRemovedEvent event) {
+    public void primitivesAdded(PrimitivesAddedEvent event) {/* irrelevant in this context */}
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {
         // relevant for the state of this model but not handled here. When the 
         // state of this model is applied to the dataset we check whether the 
         // the turn restriction refers to deleted or invisible primitives 

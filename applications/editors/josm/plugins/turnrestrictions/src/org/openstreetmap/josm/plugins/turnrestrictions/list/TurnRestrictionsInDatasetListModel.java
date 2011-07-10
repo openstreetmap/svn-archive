@@ -86,14 +86,14 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
         }
     }
 
-    public void primtivesAdded(PrimitivesAddedEvent event) {
+    public void primitivesAdded(PrimitivesAddedEvent event) {
         List<Relation> turnRestrictions = filterTurnRestrictions(event.getPrimitives());
         if (!turnRestrictions.isEmpty()) {
             addTurnRestrictions(turnRestrictions);
         }
     }
 
-    public void primtivesRemoved(PrimitivesRemovedEvent event) {
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {
         List<Relation> turnRestrictions = filterTurnRestrictions(event.getPrimitives());
         if (!turnRestrictions.isEmpty()) {
             removeTurnRestrictions(turnRestrictions);

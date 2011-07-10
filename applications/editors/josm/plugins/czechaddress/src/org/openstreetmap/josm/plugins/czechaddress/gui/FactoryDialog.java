@@ -90,7 +90,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         if (message == MESSAGE_LOCATION_CHANGED) {
-            DataSet.selListeners.add(this);
+            DataSet.addSelectionListener(this);
 
             streetModel.setParent(CzechAddressPlugin.getLocation());
             relocateButton.setText("Změnit místo");

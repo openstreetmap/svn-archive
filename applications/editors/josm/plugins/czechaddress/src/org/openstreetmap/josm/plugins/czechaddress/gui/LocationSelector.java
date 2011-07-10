@@ -100,7 +100,7 @@ public class LocationSelector extends ExtendedDialog {
         LatLon center;
 
         try {
-            center = Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
+            center = Main.getProjection().eastNorth2latlon(Main.map.mapView.getCenter());
         } catch (Exception e) {
             System.err.println("AUTO: No bounds to determine autolocation.");
             return;

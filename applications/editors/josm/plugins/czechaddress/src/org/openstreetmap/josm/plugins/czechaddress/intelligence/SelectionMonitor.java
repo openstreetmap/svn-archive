@@ -26,7 +26,7 @@ public class SelectionMonitor implements SelectionChangedListener {
     public  static SelectionMonitor getInstance() {
         if (singleton == null) {
             singleton = new SelectionMonitor();
-            DataSet.selListeners.add(singleton);
+            DataSet.addSelectionListener(singleton);
         }
         return singleton;
     }

@@ -237,7 +237,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
             double lon = tileXToLon(x);
             for (int y = viewportMinY - 1; y <= viewportMaxY + 1; y++) {
                 LatLon tmpLL = new LatLon(tileYToLat(y), lon);
-                pixelpos[x - viewportMinX + 1][y - viewportMinY + 1] = mv.getPoint(Main.proj
+                pixelpos[x - viewportMinX + 1][y - viewportMinY + 1] = mv.getPoint(Main.getProjection()
                         .latlon2eastNorth(tmpLL));
             }
         }

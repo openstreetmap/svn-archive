@@ -103,7 +103,7 @@ public class GameWindow extends JFrame implements ActionListener {
             /* We should count the satellites here, see if we
              * have a fix and add any distortions.  */
 
-            segment.add(new WayPoint(Main.proj.eastNorth2latlon(
+            segment.add(new WayPoint(Main.getProjection().eastNorth2latlon(
                     new EastNorth(lon, lat))));
         }
 

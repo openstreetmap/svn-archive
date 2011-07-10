@@ -450,9 +450,9 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
 
-    public void primtivesAdded(PrimitivesAddedEvent event) {}
+    public void primitivesAdded(PrimitivesAddedEvent event) {}
 
-    public void primtivesRemoved(PrimitivesRemovedEvent event) {}
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {}
 
     public void relationMembersChanged(RelationMembersChangedEvent event) {}
 

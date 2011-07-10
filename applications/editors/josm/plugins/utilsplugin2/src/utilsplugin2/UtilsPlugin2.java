@@ -33,6 +33,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem sourceTag;
     JMenuItem pasteRelations;
     JMenuItem alignWayNodes;
+    JMenuItem splitOnIntersections;
     JMenuItem selModifiedNodes;
     JMenuItem selModifiedWays;
 
@@ -50,6 +51,7 @@ public class UtilsPlugin2 extends Plugin {
         sourceTag = MainMenu.add(toolsMenu, new TagSourceAction());
         pasteRelations = MainMenu.add(toolsMenu, new PasteRelationsAction());
         alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
+        splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
 
         JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
@@ -78,6 +80,7 @@ public class UtilsPlugin2 extends Plugin {
         sourceTag.setEnabled(enabled);
         pasteRelations.setEnabled(enabled);
         alignWayNodes.setEnabled(enabled);
+        splitOnIntersections.setEnabled(enabled);
 
         selectWayNodes.setEnabled(enabled);
         adjNodes.setEnabled(enabled);

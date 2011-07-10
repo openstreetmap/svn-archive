@@ -100,7 +100,6 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
     public void editLayerChanged( OsmDataLayer oldLayer, OsmDataLayer newLayer ) {
         // todo: dim chosen relation when changing layer
         // todo: check this WTF!
-        System.out.println("editLayerChanged() oldLayer=" + oldLayer + ", newLayer=" + newLayer);
         clear();
         if( newLayer != null && oldLayer == null ) {
             Main.map.mapView.addTemporaryLayer(this);

@@ -16,6 +16,7 @@ import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.Reg;
 
 public class PanelStbd extends JPanel {
 
@@ -26,9 +27,24 @@ public class PanelStbd extends JPanel {
 	public JRadioButton regionCButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionCButton.png")));
 	private ActionListener alRegion = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			regionAButton.setBorderPainted(regionAButton.isSelected());
-			regionBButton.setBorderPainted(regionBButton.isSelected());
-			regionCButton.setBorderPainted(regionCButton.isSelected());
+			if (regionAButton.isSelected()) {
+				dlg.mark.setRegion(Reg.A);
+				regionAButton.setBorderPainted(true);
+			} else { 
+				regionAButton.setBorderPainted(false);
+			}
+			if (regionBButton.isSelected()) {
+				dlg.mark.setRegion(Reg.B);
+				regionBButton.setBorderPainted(true);
+			} else { 
+				regionBButton.setBorderPainted(false);
+			}
+			if (regionCButton.isSelected()) {
+				dlg.mark.setRegion(Reg.C);
+				regionCButton.setBorderPainted(true);
+			} else { 
+				regionCButton.setBorderPainted(false);
+			}
 			dlg.mark.paintSign();
 		}
 	};
@@ -50,6 +66,42 @@ public class PanelStbd extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
+					switch (shp) {
+					case UNKNOWN:
+							dlg.panelMain.shapeIcon.setIcon(null);
+					case PILLAR:
+// *************
+						dlg.panelMain.topButton.setEnabled(true);
+						dlg.panelMain.fogButton.setEnabled(true);
+						dlg.panelMain.radButton.setEnabled(true);
+						dlg.panelMain.litButton.setEnabled(true);
+// *************
+						switch (dlg.mark.getRegion()) {
+						case A:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_green.png")));
+							break;
+						case B:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_red.png")));
+							break;
+						case C:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/pillar_green;white;green;white.png")));
+							break;
+						}
+						break;
+					case SPAR:
+						switch (dlg.mark.getRegion()) {
+						case A:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_green.png")));
+							break;
+						case B:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_red.png")));
+							break;
+						case C:
+							dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource("/images/spar_green;white;green;white.png")));
+							break;
+						}
+						break;
+					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);

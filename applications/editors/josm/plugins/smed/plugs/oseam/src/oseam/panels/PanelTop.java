@@ -35,8 +35,7 @@ public class PanelTop extends JPanel {
 	public JRadioButton boardDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BoardDayButton.png")));
 	public JRadioButton diamondDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DiamondDayButton.png")));
 	public JRadioButton triangleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleDayButton.png")));
-	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource(
-			"/images/TriangleInvDayButton.png")));
+	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
 	public JRadioButton circleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CircleDayButton.png")));
 	public JRadioButton mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
@@ -49,6 +48,32 @@ public class PanelTop extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setTopmark(top);
 					dlg.mark.setDaymark(Day.NONE);
+					switch (top) {
+					case NONE:
+							dlg.panelMain.topIcon.setIcon(null);
+					case CAN:
+						switch (dlg.mark.getRegion()) {
+						case A:
+						case C:
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cylinder_red.png")));
+							break;
+						case B:
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cylinder_green.png")));
+							break;
+						}
+						break;
+					case CONE:
+						switch (dlg.mark.getRegion()) {
+						case A:
+						case C:
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone, point up_green.png")));
+							break;
+						case B:
+							dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource("/images/top_ih_cone, point up_red.png")));
+							break;
+						}
+						break;
+					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -101,6 +126,10 @@ public class PanelTop extends JPanel {
 		for (JRadioButton button : tops.values()) {
 			button.setEnabled(state);
 		}
+		for (JRadioButton button : days.values()) {
+			button.setEnabled(state);
+		}
+		mooringTopButton.setEnabled(state);
 	}
 
 	private JRadioButton getTopButton(JRadioButton button, int x, int y, int w, int h, String tip, Top top) {

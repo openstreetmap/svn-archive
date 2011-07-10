@@ -49,6 +49,13 @@ public class PanelChr extends JPanel {
 	private EnumMap<Chr, JToggleButton> buttons = new EnumMap<Chr, JToggleButton>(Chr.class);
 	private ActionListener alCharButton = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (noneButton.isSelected()) {
+				if (dlg.panelMain.panelLit.panelCol.offButton.isSelected()) {
+					dlg.panelMain.lightIcon.setIcon(null);
+				}
+			} else {
+				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+			}
 			JToggleButton source = (JToggleButton) e.getSource();
 			EnumSet<Chr> combo = EnumSet.noneOf(Chr.class);
 			for (Chr chr : buttons.keySet()) {

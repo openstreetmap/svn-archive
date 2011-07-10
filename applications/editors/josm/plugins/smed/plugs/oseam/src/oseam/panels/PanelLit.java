@@ -105,6 +105,7 @@ public class PanelLit extends JPanel {
 		this.add(groupLabel, null);
 		groupBox = new JTextField();
 		groupBox.setBounds(new Rectangle(135, 20, 40, 20));
+		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(groupBox, null);
 		groupBox.addActionListener(alGroupBox);
 
@@ -205,6 +206,7 @@ public class PanelLit extends JPanel {
 		exhibitionBox.setBounds(new Rectangle(280, 100, 70, 20));
 		this.add(exhibitionBox, null);
 		exhibitionBox.addActionListener(alExhibitionBox);
+		exhibitionBox.addItem("-");
 		exhibitionBox.addItem(Messages.getString("24h"));
 		exhibitionBox.addItem(Messages.getString("Day"));
 		exhibitionBox.addItem(Messages.getString("Night"));

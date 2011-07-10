@@ -14,6 +14,7 @@ import java.util.EnumMap;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Reg;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Obj;
 
@@ -26,9 +27,24 @@ public class PanelPort extends JPanel {
 	public JRadioButton regionCButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionCButton.png")));
 	private ActionListener alRegion = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			regionAButton.setBorderPainted(regionAButton.isSelected());
-			regionBButton.setBorderPainted(regionBButton.isSelected());
-			regionCButton.setBorderPainted(regionCButton.isSelected());
+			if (regionAButton.isSelected()) {
+				dlg.mark.setRegion(Reg.A);
+				regionAButton.setBorderPainted(true);
+			} else { 
+				regionAButton.setBorderPainted(false);
+			}
+			if (regionBButton.isSelected()) {
+				dlg.mark.setRegion(Reg.B);
+				regionBButton.setBorderPainted(true);
+			} else { 
+				regionBButton.setBorderPainted(false);
+			}
+			if (regionCButton.isSelected()) {
+				dlg.mark.setRegion(Reg.C);
+				regionCButton.setBorderPainted(true);
+			} else { 
+				regionCButton.setBorderPainted(false);
+			}
 			dlg.mark.paintSign();
 		}
 	};

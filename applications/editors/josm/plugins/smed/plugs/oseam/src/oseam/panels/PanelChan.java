@@ -41,20 +41,22 @@ public class PanelChan extends JPanel {
 			if (dlg.mark != null)
 				shp = dlg.mark.getShape();
 			if (portButton.isSelected() || prefPortButton.isSelected()) {
-				dlg.panelMain.topButton.setEnabled(true);
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
 				dlg.panelMain.panelTop.enableAll(false);
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.canTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.panelCol.enableAll(false);
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
-					dlg.panelMain.panelTop.panelCol.redButton.doClick();
-				} else {
+				dlg.panelMain.panelLit.panelCol.enableAll(false);
+				dlg.panelMain.panelLit.panelCol.offButton.setEnabled(true);
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.panelMain.panelTop.panelCol.greenButton.setEnabled(true);
 					dlg.panelMain.panelTop.panelCol.greenButton.doClick();
+					dlg.panelMain.panelLit.panelCol.greenButton.setEnabled(true);
+					dlg.panelMain.panelLit.panelCol.greenButton.doClick();
+				} else {
+					dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
+					dlg.panelMain.panelTop.panelCol.redButton.doClick();
+					dlg.panelMain.panelLit.panelCol.redButton.setEnabled(true);
+					dlg.panelMain.panelLit.panelCol.redButton.doClick();
 				}
 			}
 			if (portButton.isSelected()) {
@@ -65,12 +67,12 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					panelPort.regionAButton.doClick();
-				} else {
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN);
 					panelPort.regionBButton.doClick();
+				} else {
+					dlg.mark.setColour(Ent.BODY, Col.RED);
+					panelPort.regionAButton.doClick();
 				}
 				portButton.setBorderPainted(true);
 				panelPort.setVisible(true);
@@ -87,12 +89,12 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
-					panelPort.regionAButton.doClick();
-				} else {
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
 					panelPort.regionBButton.doClick();
+				} else {
+					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
+					panelPort.regionAButton.doClick();
 				}
 				prefPortButton.setBorderPainted(true);
 				panelPort.setVisible(true);
@@ -103,20 +105,22 @@ public class PanelChan extends JPanel {
 					panelPort.setVisible(false);
 			}
 			if (stbdButton.isSelected() || prefStbdButton.isSelected()) {
-				dlg.panelMain.topButton.setEnabled(true);
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
 				dlg.panelMain.panelTop.enableAll(false);
 				dlg.panelMain.panelTop.noTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.coneTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.panelCol.enableAll(false);
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.panelMain.panelTop.panelCol.greenButton.setEnabled(true);
-					dlg.panelMain.panelTop.panelCol.greenButton.doClick();
-				} else {
+				dlg.panelMain.panelLit.panelCol.enableAll(false);
+				dlg.panelMain.panelLit.panelCol.offButton.setEnabled(true);
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
 					dlg.panelMain.panelTop.panelCol.redButton.doClick();
+					dlg.panelMain.panelLit.panelCol.redButton.setEnabled(true);
+					dlg.panelMain.panelLit.panelCol.redButton.doClick();
+				} else {
+					dlg.panelMain.panelTop.panelCol.greenButton.setEnabled(true);
+					dlg.panelMain.panelTop.panelCol.greenButton.doClick();
+					dlg.panelMain.panelLit.panelCol.greenButton.setEnabled(true);
+					dlg.panelMain.panelLit.panelCol.greenButton.doClick();
 				}
 			}
 			if (stbdButton.isSelected()) {
@@ -127,12 +131,12 @@ public class PanelChan extends JPanel {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					panelStbd.regionAButton.doClick();
-				} else {
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.mark.setColour(Ent.BODY, Col.RED);
 					panelStbd.regionBButton.doClick();
+				} else {
+					dlg.mark.setColour(Ent.BODY, Col.GREEN);
+					panelStbd.regionAButton.doClick();
 				}
 				stbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
@@ -149,12 +153,12 @@ public class PanelChan extends JPanel {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.A) {
-					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
-					panelStbd.regionAButton.doClick();
-				} else {
+				if (dlg.mark.getRegion() == Reg.B) {
 					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
 					panelStbd.regionBButton.doClick();
+				} else {
+					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
+					panelStbd.regionAButton.doClick();
 				}
 				prefStbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);

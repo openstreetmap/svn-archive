@@ -90,7 +90,6 @@ public class PanelMain extends JPanel {
 		this.add(topIcon, null);
 		radarIcon = new JLabel();
 		radarIcon.setBounds(new Rectangle(250, 0, 150, 185));
-		radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 		this.add(radarIcon, null);
 		fogIcon = new JLabel();
 		fogIcon.setBounds(new Rectangle(250, 0, 150, 185));
@@ -267,8 +266,7 @@ public class PanelMain extends JPanel {
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);
-		// radarIcon.setIcon(null);
-		radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+		radarIcon.setIcon(null);
 		fogIcon.setIcon(null);
 	}
 

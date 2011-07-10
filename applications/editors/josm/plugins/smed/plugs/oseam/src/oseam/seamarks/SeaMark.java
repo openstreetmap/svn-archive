@@ -26,7 +26,7 @@ public class SeaMark {
 	}
 	
 	public enum Reg {
-		A, B
+		A, B, C
 	}
 
 	private Reg region = Reg.A;

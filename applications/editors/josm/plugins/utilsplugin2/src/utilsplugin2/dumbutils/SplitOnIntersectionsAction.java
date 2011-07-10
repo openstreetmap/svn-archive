@@ -74,7 +74,6 @@ public class SplitOnIntersectionsAction extends JosmAction {
         }
 
         for( Way splitWay : splitWays.keySet() ) {
-            System.out.println("For way " + splitWay.getUniqueId() + " nodes count is " + splitWays.get(splitWay));
             List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(splitWay, splitWays.get(splitWay));
             if( wayChunks != null ) {
                 List<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(selectedWays.size());

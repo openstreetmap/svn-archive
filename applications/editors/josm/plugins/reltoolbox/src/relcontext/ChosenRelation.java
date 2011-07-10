@@ -100,6 +100,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
     public void editLayerChanged( OsmDataLayer oldLayer, OsmDataLayer newLayer ) {
         // todo: dim chosen relation when changing layer
         // todo: check this WTF!
+        System.out.println("editLayerChanged() oldLayer=" + oldLayer + ", newLayer=" + newLayer);
         clear();
         if( newLayer != null && oldLayer == null ) {
             Main.map.mapView.addTemporaryLayer(this);
@@ -113,11 +114,16 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             return;
         }
 
+        OsmDataLayer dataLayer = Main.map.mapView.getEditLayer();
+        float opacity = dataLayer == null ? 0.0f : !dataLayer.isVisible() ? 0.0f : (float)dataLayer.getOpacity();
+        if( opacity < 0.01 )
+            return;
+
         Stroke oldStroke = g.getStroke();
         Composite oldComposite = g.getComposite();
         g.setColor(Color.yellow);
         g.setStroke(new BasicStroke(9, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f * opacity));
         for( OsmPrimitive element : chosenRelation.getMemberPrimitives() ) {
             if( element.getType() == OsmPrimitiveType.NODE ) {
                 Node node = (Node)element;

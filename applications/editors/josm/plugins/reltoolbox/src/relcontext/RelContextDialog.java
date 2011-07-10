@@ -452,6 +452,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public ChosenRelationPopupMenu( ChosenRelation chosenRelation ) {
             add(new SelectMembersAction(chosenRelation));
             add(new SelectRelationAction(chosenRelation));
+            add(new DuplicateChosenRelationAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));
             add(new DownloadParentsAction(chosenRelation));
             addSeparator();
@@ -513,6 +514,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             addMenuItem("boundary", tr("Create administrative boundary relations"));
             addMenuItem("boundaryways", tr("Add tags boundary and admin_level to boundary relation ways"));
             addMenuItem("tags", tr("Move area tags from contour to relation"));
+            addMenuItem("alltags", tr("When moving tags, consider even non-repeating ones"));
         }
 
         protected final JCheckBoxMenuItem addMenuItem( String property, String title ) {

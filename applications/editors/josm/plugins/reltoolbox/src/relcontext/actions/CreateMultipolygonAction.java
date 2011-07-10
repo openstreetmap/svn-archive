@@ -43,6 +43,7 @@ public class CreateMultipolygonAction extends JosmAction {
         if( property.equals("boundary") ) return false;
         else if( property.equals("boundaryways") ) return true;
         else if( property.equals("tags") ) return true;
+        else if( property.equals("alltags") ) return false;
         else if( property.equals("single") ) return true;
         throw new IllegalArgumentException(property);
     }
@@ -73,6 +74,10 @@ public class CreateMultipolygonAction extends JosmAction {
             for( Way w : poly.ways )
                 rel.addMember(new RelationMember("inner", w));
         List<Command> list = removeTagsFromInnerWays(rel);
+        if( !list.isEmpty() && isBoundary ) {
+            Main.main.undoRedo.add(new SequenceCommand(tr("Move tags from ways to relation"), list));
+            list = new ArrayList<Command>();
+        }
         if( isBoundary ) {
             if( !askForAdminLevelAndName(rel) )
                 return;
@@ -230,6 +235,8 @@ public class CreateMultipolygonAction extends JosmAction {
         }
 
         // filter out empty key conflicts - we need second iteration
+        boolean isBoundary = getPref("boundary");
+        if( isBoundary || !getPref("alltags") )
         for( RelationMember m: relation.getMembers() )
             if( m.hasRole() && m.getRole().equals("outer") && m.isWay() )
                 for( String key : values.keySet() )
@@ -245,9 +252,7 @@ public class CreateMultipolygonAction extends JosmAction {
         if( values.containsKey("natural") && values.get("natural").equals("coastline") )
             values.remove("natural");
 
-        boolean isBoundary = getPref("boundary");
         String name = values.get("name");
-        String adminLevel = values.get("admin_level");
         if( isBoundary ) {
             Set<String> keySet = new TreeSet<String>(values.keySet());
             for( String key : keySet )

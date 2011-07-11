@@ -21,6 +21,7 @@ package mwConfig ;
 use strict ;
 use warnings ;
 
+
 use Getopt::Long ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
@@ -71,6 +72,18 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruleDefaultAreaMinSize",0,"minimum size of area to be drawn", "areas"],
 			["ruledefaultAreaFromScale",0,"default fromScale of way", "areas"],
 			["ruledefaultAreaToScale",1000000,"default toScale of way", "areas"],
+
+			["ruledefaultRouteColor","black","default color of route", "routes"],
+			["ruledefaultRouteSize",5,"default size of route", "routes"],
+			["ruledefaultRouteDash","20,20","default dash of route", "routes"],
+			["ruledefaultRouteLinecap","round","default linecap of route", "routes"],
+			["ruledefaultRouteOpacity",100,"default opacity of route", "routes"],
+			["ruledefaultRouteLabel","ref","default label of route", "routes"],
+			["ruledefaultRouteLabelSize",30,"default label size of route", "routes"],
+			["ruledefaultRouteNodeSize",40,"default node size of route nodes", "routes"],
+
+			["ruledefaultRouteFromScale",0,"default fromScale of route", "routes"],
+			["ruledefaultRouteToScale",50000,"default toScale of route", "routes"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
 			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],

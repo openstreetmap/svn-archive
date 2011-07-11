@@ -8,8 +8,6 @@ icon=./icons/postbox.svg
 iconsize=40
 toscale=10000
 
-RULE CONFIG foot=hat wohl geklappt
-
 RULE NODE
 keyvalue=place=city
 size=40

@@ -23,7 +23,7 @@ use warnings ;
 
 use mwConfig ;
 use mwMap ;
-use mwMisc ;
+# use mwMisc ;
 
 use OSM::QuadTree ;
 
@@ -384,7 +384,7 @@ sub lineCrossings {
 
 	LABCR: foreach my $l1 (@testLines) {
 		foreach my $l2 (@linesInArea) {
-			my ($x, $y) = intersection (@$l1, @$l2) ;
+			my ($x, $y) = mwMisc::intersection (@$l1, @$l2) ;
 			if (($x !=0) and ($y != 0)) {
 				$found = 1 ;
 				last LABCR ;

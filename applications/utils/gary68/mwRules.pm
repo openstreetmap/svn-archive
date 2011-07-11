@@ -23,6 +23,7 @@ use warnings ;
 
 use mwConfig ;
 use mwMap ;
+use mwMisc ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -38,6 +39,8 @@ require Exporter ;
 			getAreaRule
 			printAreaRules
 			printValidObjectProperties
+			getRouteColors
+			getRouteRule
 		 ) ;
 
 my @validNodeProperties = qw (	keyValue
@@ -102,13 +105,28 @@ my @validAreaProperties = qw (	keyValue
 					) ;
 
 
+my @validRouteProperties = qw (	type
+						color
+						size
+						dash
+						linecap
+						opacity
+						label
+						labelSize
+						nodeSize
+						fromScale
+						toScale
+					) ;
+
 
 my %nodeRules = () ;
 my %areaRules = () ;
 my %wayRules = () ;
+my %routeRules = () ;
 my $nodeNr = 0 ;
 my $areaNr = 0 ;
 my $wayNr = 0 ;
+my $routeNr = 0 ;
 
 my $line ;
 my $ruleFile ;
@@ -129,6 +147,10 @@ sub printValidObjectProperties {
 	}
 	print "\nAreas\n-----\n" ;
 	foreach my $p (sort @validAreaProperties) {
+		print "$p\n" ;
+	}
+	print "\nRoutes\n-----\n" ;
+	foreach my $p (sort @validRouteProperties) {
 		print "$p\n" ;
 	}
 	print "\n" ;
@@ -153,6 +175,9 @@ sub readRules {
 
 	my %vap = () ;
 	foreach my $p ( @validAreaProperties ) { $vap{ lc ( $p ) } = 1 ; }
+
+	my %vrp = () ;
+	foreach my $p ( @validRouteProperties ) { $vrp{ lc ( $p ) } = 1 ; }
 
 	openRuleFile($fileName) ;
 	while (defined $line) {
@@ -278,6 +303,39 @@ sub readRules {
 			if ( ! defined $areaRules{ $areaNr }{ 'keyvalue' } ) { die "ERROR: rule without keyValue detected!\n" ; }
 
 		} # area
+
+		elsif ( grep /^rule area/i, $line ) {
+			$routeNr++ ;
+			$rrr++ ;
+			getRuleLine() ;
+
+			# set defaults first
+			$routeRules{ $routeNr }{ 'color' } = cv( 'ruleDefaultRouteColor' ) ;
+			$routeRules{ $routeNr }{ 'size' } = cv( 'ruleDefaultRouteSize' ) ;
+			$routeRules{ $routeNr }{ 'dash' } = cv( 'ruleDefaultRouteDash' ) ;
+			$routeRules{ $routeNr }{ 'linecap' } = cv( 'ruleDefaultRouteLinecap' ) ;
+			$routeRules{ $routeNr }{ 'opacity' } = cv( 'ruleDefaultRouteOpacity' ) ;
+			$routeRules{ $routeNr }{ 'label' } = cv( 'ruleDefaultRouteLabel' ) ;
+			$routeRules{ $routeNr }{ 'labelsize' } = cv( 'ruleDefaultRouteLabelSize' ) ;
+			$routeRules{ $routeNr }{ 'nodesize' } = cv( 'ruleDefaultRouteNodeSize' ) ;
+			$routeRules{ $routeNr }{ 'fromscale' } = cv( 'ruleDefaultRouteFromScale' ) ;
+			$routeRules{ $routeNr }{ 'toscale' } = cv( 'ruleDefaultRouteToScale' ) ;
+
+			while ( ( defined $line) and ( ! grep /^rule/i, $line) ) {
+				my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;
+				if ( ( ! defined $k ) or ( ! defined $v ) ) {
+					print "WARNING: could not parse rule line: $line" ;
+				}
+				else {
+					$k = lc ( $k ) ;
+					$routeRules{ $routeNr }{ $k } = $v ;
+					if ( ! defined $vrp{$k} ) { print "WARNING: $k is not a valid route property!\n" ; }
+				}
+				getRuleLine() ;
+			}
+			if ( ! defined $routeRules{ $routeNr }{ 'type' } ) { die "ERROR: route rule without type detected!\n" ; }
+
+		} # route
 
 		elsif ( grep /^rule config/i, $line ) {
 			$crr++ ;
@@ -497,6 +555,53 @@ sub printAreaRules {
 		print "\n" ;
 	}
 }
+
+# --------------------------------------------------------------------------------
+
+sub getRouteRule {
+	my $tagRef = shift ;
+
+	my $scale = getScale() ;
+	if ( cv('rulescaleset') != 0 ) { $scale = cv('rulescaleset') ; }
+
+	my $ruleFound ; undef $ruleFound ;
+
+	my $type = getValue ("type", $tagRef) ;
+
+	if (defined $type) {
+		RULA: foreach my $r (sort keys %routeRules) {
+			if ($routeRules{$r}{'type'} eq $type) {
+				$ruleFound = \%{ $routeRules{ $r } } ;
+				last RULA ;
+			}
+		}
+
+	}
+
+	return $ruleFound ;
+}
+
+sub getRouteColors {
+	my %routeColors = () ;
+	foreach my $n (keys %routeRules) {
+		my $type = $routeRules{$n}{'type'} ;
+		my $color = $routeRules{$n}{'color'} ;
+		@{$routeColors{$type}} = split ( /;/, $color ) ;
+	}
+	return \%routeColors ;
+}
+
+sub printRouteRules {
+	foreach my $n (sort keys %routeRules) {
+		print "route rule $n\n" ;
+		foreach my $v (sort keys %{$routeRules{$n}}) {
+			print "  $v=$routeRules{$n}{$v}\n" ;
+		} 
+		print "\n" ;
+	}
+}
+
+# --------------------------------------------------------------------------------
 
 
 sub openRuleFile {

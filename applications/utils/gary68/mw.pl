@@ -16,9 +16,10 @@
 # 0.10 coast lines fixed; auto bridge implemented
 # 0.11 area icons / patterns added; time; street directory; poi directory; pdf directoriy
 # 0.12 way shields
+# 0.13 routes, not yet working...
 # 
 
-my $version = "0.12" ;
+my $version = "0.13" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -31,6 +32,7 @@ use mwRules ;
 use mwFile ;
 use mwNodes ;
 use mwWays ;
+use mwRelations ;
 use mwMisc ;
 
 my $time0 = time() ; 
@@ -56,6 +58,13 @@ if ( cv('verbose') eq "1" ) {
 
 readRules() ;
 
+if ( cv('debug') eq "1" ) {
+	printNodeRules() ;
+	printWayRules() ;
+	printAreaRules() ;
+	printRouteRules() ;
+}
+
 readFile() ;
 
 processNodes() ;
@@ -75,7 +84,7 @@ if ( cv('dirpdf') eq "1") {
 	createDirPdf() ;
 }
 
-
+processRoutes() ;
 
 if ( cv('pagenumbers') ne "" ) { processPageNumbers() ; }
 if ( cv('rectangles') ne "" ) { processRectangles() ; }

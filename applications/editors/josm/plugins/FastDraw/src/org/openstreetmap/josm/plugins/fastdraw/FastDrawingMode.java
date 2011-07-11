@@ -363,8 +363,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             // first Enter = simplify, second = save the way
             if (!line.wasSimplified()) {
-                line.simplify(eps);
-                setStatusLine(tr("Eps={0}, {1} points", eps, line.getSimplePointsCount())+" "+SIMPLIFYMODE_MESSAGE);
+                //line.simplify(eps);
+                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.maxPointsPerKm);
+                repaint();
+                showSimplifyHint();
             } else saveAsWay();
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -388,10 +390,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             try {
                 Toolkit.getDefaultToolkit().removeAWTEventListener(this);
                 new FastDrawConfigDialog(settings);
+                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.maxPointsPerKm);
+                //System.out.println("final eps="+eps);
                 Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
             } catch (SecurityException ex) {  }
-            eps=settings.startingEps;
+            repaint();
         }
     }
 
@@ -484,7 +488,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         eps*=k;
         line.simplify(eps);
         /* I18N: Eps = Epsilon, the tolerance parameter */ 
-        setStatusLine(tr("Eps={0}, {1} points", eps, line.getSimplePointsCount()));
+        showSimplifyHint();
         repaint();
     }
 
@@ -537,4 +541,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }
 // </editor-fold>
 
+    private void showSimplifyHint() {
+            setStatusLine(tr("Eps={0}, {1} points, {2} p/km", 
+                eps, line.getSimplePointsCount(),line.getNodesPerKm())+" "
+            +SIMPLIFYMODE_MESSAGE);
+    }
 }

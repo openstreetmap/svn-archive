@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import javax.xml.stream.events.StartDocument;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MapView;
@@ -104,6 +105,21 @@ public class DrawnPolyLine {
         if (simplePoints!=null)return simplePoints.size(); else return -1;
     }
     
+    /**
+     * Increase epsilon to fit points count in maxPKM point per 1 km
+     */
+    double autoSimplify(double initEpsilon,double ekf,double maxPKM) {
+        double e=initEpsilon;
+        if (e<1e-3) e=1e-3;
+        if (ekf<1+1e-2) ekf=1.01;
+        do {
+             e=e*ekf;
+             simplify(e);
+             //System.out.printf("eps=%f n=%d\n", e,simplePoints.size());
+        } while (getNodesPerKm()>maxPKM && e<1e3);
+        return e;
+    }
+            
     /**
      * Simplified drawn line, not touching the nodes includes in "fixed" set.
      */
@@ -300,6 +316,29 @@ public class DrawnPolyLine {
                 fixed.remove(dragged);
                 fixed.add(coor);
          }
+    }
+    public double getNodesPerKm() {
+        if (points.size()<2) return 0;
+        Point p1, p2;
+        LatLon pp1, pp2=null;
+        Iterator<LatLon> it1,it2;
+        
+        it1=points.listIterator(0);
+        it2=points.listIterator(1);
+        int n=points.size();
+        double len=0;
+        for (int i = 0; i < n-1; i++) {
+                pp1 = it1.next();
+                //p1 = getPoint(pp1);
+                pp2 = it2.next();
+                //p2 = getPoint(pp2);
+                len+=pp1.greatCircleDistance(pp2);
+            }
+        if (isClosed()) len+=pp2.greatCircleDistance(points.get(0));
+        return Math.round((wasSimplified()?simplePoints.size():points.size())
+                /len*1000);
+        
+            
     }
 
 }

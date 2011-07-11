@@ -19,6 +19,8 @@ public class FDSettings {
     public double minPixelsBetweenPoints;
     /// Initial tolerance for Douglas-Pecker algorithm
     public double startingEps;    
+    /// Maximum number of points per 1 km of way
+    public double maxPointsPerKm;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -31,6 +33,7 @@ public class FDSettings {
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
         minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
+        maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 200);
     }
 
     public void savePrefs() {
@@ -44,6 +47,7 @@ public class FDSettings {
          //Main.pref.putDouble("fastdraw.deltasearch", deltaLatLon);
          Main.pref.putDouble("fastdraw.mindelta",minPixelsBetweenPoints);
          Main.pref.putDouble("fastdraw.startingEps",startingEps);
+         Main.pref.putDouble("fastdraw.maxpkm",maxPointsPerKm);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }

@@ -17,9 +17,9 @@
 # 0.11 area icons / patterns added; time; street directory; poi directory; pdf directoriy
 # 0.12 way shields
 # 0.13 routes, not yet working...
-# 
+# 0.14 route work
 
-my $version = "0.13" ;
+my $version = "0.14" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -190,4 +190,11 @@ keyvalue=landuse=cemetery
 icon=icons/areaCemetery.svg
 
 
+RULE ROUTE
+type=hiking
+color=blue
+
+RULE ROUTE
+type=bus
+color=green
 

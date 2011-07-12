@@ -73,6 +73,10 @@ sub processRoutes {
 
 	foreach my $relId (keys %$relationTagsRef) {
 		my $relationType = getValue ("type", $$relationTagsRef{$relId} ) ;
+		if ( ! defined $relationType ) { $relationType = "" ; }
+
+		print "    $relId, $relationType\n" ;
+
 		if ( ( $relationType eq "route" ) and ( (cv('relid') == $relId) or (cv('relid') == 0) ) ) {
 
 			my $ruleRef = getRouteRule( $$relationTagsRef{$relId} ) ;
@@ -82,13 +86,16 @@ sub processRoutes {
 				# new route detected
 				if (cv('debug') eq "1" ) { print "ROUTE: rule found for $relId, $$ruleRef{'type'}.\n" ;	}
 	
+
+				# try to get color from relation tags first
+				#
 				my $color = getValue ("color", $$relationTagsRef{$relId} ) ;
-				if ($color eq "") {
+				if ( ! defined $color) {
 					$color = getValue ("colour", $$relationTagsRef{$relId} ) ;
 				}
-				if (cv('debug') eq "1" ) { print "ROUTE:   color from tags: $color\n" ;	}
-
-				if ($color eq "") { 
+				# no color yet, then get color from rule
+				#
+				if ( ! defined $color) { 
 					if (cv('debug') eq "1" ) { print "ROUTE:   actual color index: $actualColorIndex{ $$ruleRef{'type'} }\n" ; }
 					$color = $routeColors{ $$ruleRef{'type'} }[$actualColorIndex{ $$ruleRef{'type'} }] ; 
 					$actualColorIndex{ $$ruleRef{'type'} } = ($actualColorIndex{ $$ruleRef{'type'} } + 1) % $colorNumber{ $$ruleRef{'type'} } ;
@@ -171,14 +178,14 @@ sub processRoutes {
 
 				foreach my $w (@relWays) {
 
-					drawWayRoute ($color, $$ruleRef{'size'}, $$ruleRef{'dash'}, $$ruleRef{'opacity'}, nodes2Coordinates (@{$$wayNodesRef{$w}} ) ) ;
 					my $op = $$ruleRef{'opacity'} ;
 					my $width = $$ruleRef{'size'} ;
 	
 					my $svgString = "stroke=\"$color\" stroke-opacity=\"$op\" stroke-width=\"$width\" " ;
 					drawWay ($$wayNodesRef{$w}, 1, $svgString, "routes", undef) ;
 
-					# $wayRouteLabels{$w} .= $label . " " ;
+					# collect labels and icons per way
+					#
 					$wayRouteLabels{$w}{$label} = 1 ;
 					if ($iconResult) {						
 						$wayRouteIcons{$w}{$iconName} = 1 ;
@@ -192,7 +199,7 @@ sub processRoutes {
 
 	# label route ways after all relations have been processed
 	foreach my $w (keys %wayRouteLabels) {
-		if (scalar @{$$wayNodesRef{$w}} > 1) {
+		if ( (defined $$wayNodesRef{$w}) and (scalar @{$$wayNodesRef{$w}} > 1) ) {
 			my $label = "" ;
 			foreach my $l (keys %{$wayRouteLabels{$w}}) {
 				$label .= $l . " " ;
@@ -204,8 +211,10 @@ sub processRoutes {
 			}
 
 			if (labelFitsWay ($$wayNodesRef{$w}, $label, cv('routelabelfont'), cv('routelabelsize') ) ) {
-				my $pathName = "RoutePath" . $pathNumber ; $pathNumber++ ;
-				my @points = nodes2coordinates( @{ $$wayNodesRef{$w} }) ;
+				my $pathName = "RoutePath" . $pathNumber ; 
+				$pathNumber++ ;
+
+				my @points = nodes2Coordinates( @{ $$wayNodesRef{$w} }) ;
 				createPath ($pathName, \@points, "definitions") ;
 
 				my $size = cv('routelabelsize') ;
@@ -220,9 +229,9 @@ sub processRoutes {
 		my $offset = 0 ;
 		my $nodeNumber = scalar @{$$wayNodesRef{$w}} ;
 		if ($nodeNumber > 1) {
-			my $node = $$wayNodesRef{$w}[int ($nodeNumber/2)] ;
+			my $node = $$wayNodesRef{$w}[int ($nodeNumber / 2)] ;
 			my $num = scalar (keys %{$wayRouteIcons{$w}}) ;
-			$offset = int (-($num-1)* cv('routeicondist') /2) ; 
+			$offset = int (-($num-1)* cv('routeicondist') / 2) ; 
 
 			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
 

@@ -41,6 +41,7 @@ require Exporter ;
 			printValidObjectProperties
 			getRouteColors
 			getRouteRule
+			printRouteRules
 		 ) ;
 
 my @validNodeProperties = qw (	keyValue
@@ -304,7 +305,7 @@ sub readRules {
 
 		} # area
 
-		elsif ( grep /^rule area/i, $line ) {
+		elsif ( grep /^rule route/i, $line ) {
 			$routeNr++ ;
 			$rrr++ ;
 			getRuleLine() ;
@@ -566,13 +567,17 @@ sub getRouteRule {
 
 	my $ruleFound ; undef $ruleFound ;
 
-	my $type = getValue ("type", $tagRef) ;
+	my $type = getValue ("route", $tagRef) ;
 
 	if (defined $type) {
+		# print "      GRR: $type \n" ;
 		RULA: foreach my $r (sort keys %routeRules) {
+			# print "        GRR: $routeRules{$r}{'type'}\n" ;
 			if ($routeRules{$r}{'type'} eq $type) {
-				$ruleFound = \%{ $routeRules{ $r } } ;
-				last RULA ;
+				if ( ( $routeRules{$r}{'fromscale'} <= $scale) and ( $routeRules{$r}{'toscale'} >= $scale) ) {
+					$ruleFound = \%{ $routeRules{ $r } } ;
+					last RULA ;
+				}
 			}
 		}
 

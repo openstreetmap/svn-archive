@@ -49,6 +49,7 @@ require Exporter ;
 		sizeSVG
 		createDirPdf
 		getPointOfWay
+		nodes2Coordinates
 		 ) ;
 
 
@@ -666,6 +667,27 @@ sub getPointOfWay {
 	# print "POW: $x, $y\n" ;
 
 	return ($x, $y) ;
+}
+
+# ----------------------------------------------------------------
+
+sub nodes2Coordinates {
+#
+# transform list of nodeIds to list of x/y
+# straight array in and out
+#
+	my @nodes = @_ ;
+	my $i ;
+	my @result = () ;
+
+	my ($lonRef, $latRef) = mwFile::getNodePointers() ;
+
+	foreach my $n (@nodes) {
+		my ($x, $y) = mwMap::convert ( $$lonRef{$n}, $$latRef{$n}) ;
+		push @result, $x, $y ;
+	}
+
+	return @result ;
 }
 
 

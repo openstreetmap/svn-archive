@@ -33,7 +33,7 @@ public class FDSettings {
         epsilonMult = Main.pref.getDouble("fastdraw.epsilonmult", 1.1);
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
         minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
-        startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
+        startingEps = Main.pref.getDouble("fastdraw.startingEps", 0.1);
         maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 20);
         pkmBlockSize = Main.pref.getInteger("fastdraw.pkmblocksize", 10);
     }

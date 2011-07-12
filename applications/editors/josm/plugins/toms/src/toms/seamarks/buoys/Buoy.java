@@ -124,8 +124,18 @@ abstract public class Buoy extends SeaMark {
 		return RaconGroup;
 	}
 
-	public void setRaconGroup(String raconGroup) {
-		RaconGroup = raconGroup;
+	public void setRaconGroup(String group) {
+		RaconGroup = group;
+	}
+
+	private String RaconPeriod = "";
+
+	public String getRaconPeriod() {
+		return RaconPeriod;
+	}
+
+	public void setRaconPeriod(String period) {
+		RaconPeriod = period;
 	}
 
 	private boolean Fog = false;
@@ -590,6 +600,7 @@ abstract public class Buoy extends SeaMark {
 
 		if (k.containsKey("seamark:radar_transponder")
 				|| k.containsKey("seamark:radar_transponder:category")
+				|| k.containsKey("seamark:radar_transponder:period")
 				|| k.containsKey("seamark:radar_transponder:group")) {
 			setRacon(true);
 			if (k.containsKey("seamark:radar_transponder:category")) {
@@ -605,6 +616,8 @@ abstract public class Buoy extends SeaMark {
 			}
 			if (k.containsKey("seamark:radar_transponder:group"))
 				setRaconGroup(k.get("seamark:radar_transponder:group"));
+			if (k.containsKey("seamark:radar_transponder:period"))
+				setRaconPeriod(k.get("seamark:radar_transponder:period"));
 		} else if (k.containsKey("seamark:radar_reflector"))
 			setRadar(true);
 		dlg.cM01Radar.setSelected(hasRadar());
@@ -1048,6 +1061,9 @@ abstract public class Buoy extends SeaMark {
 				if (!getRaconGroup().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:radar_transponder:group", getRaconGroup()));
+				if (!getRaconPeriod().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:radar_transponder:period", getRaconPeriod()));
 				break;
 			case RATYPE_RAMARK:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,

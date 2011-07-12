@@ -21,6 +21,7 @@ public class FDSettings {
     public double startingEps;    
     /// Maximum number of points per 1 km of way
     public double maxPointsPerKm;
+    public int pkmBlockSize;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -33,7 +34,8 @@ public class FDSettings {
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
         minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 20);
-        maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 200);
+        maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 20);
+        pkmBlockSize = Main.pref.getInteger("fastdraw.pkmblocksize", 10);
     }
 
     public void savePrefs() {
@@ -48,6 +50,7 @@ public class FDSettings {
          Main.pref.putDouble("fastdraw.mindelta",minPixelsBetweenPoints);
          Main.pref.putDouble("fastdraw.startingEps",startingEps);
          Main.pref.putDouble("fastdraw.maxpkm",maxPointsPerKm);
+         Main.pref.putInteger("fastdraw.pkmblocksize",pkmBlockSize);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }

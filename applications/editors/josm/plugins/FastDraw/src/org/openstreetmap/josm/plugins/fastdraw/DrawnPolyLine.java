@@ -108,15 +108,16 @@ public class DrawnPolyLine {
     /**
      * Increase epsilon to fit points count in maxPKM point per 1 km
      */
-    double autoSimplify(double initEpsilon,double ekf,double maxPKM) {
+    double autoSimplify(double initEpsilon,double ekf,int k,double maxPKM) {
         double e=initEpsilon;
         if (e<1e-3) e=1e-3;
         if (ekf<1+1e-2) ekf=1.01;
-        do {
+        simplify(e);
+        while (getNodesPerKm(k)>maxPKM && e<1e3) {
              e=e*ekf;
              simplify(e);
              //System.out.printf("eps=%f n=%d\n", e,simplePoints.size());
-        } while (getNodesPerKm()>maxPKM && e<1e3);
+        }
         return e;
     }
             
@@ -317,27 +318,46 @@ public class DrawnPolyLine {
                 fixed.add(coor);
          }
     }
-    public double getNodesPerKm() {
-        if (points.size()<2) return 0;
-        Point p1, p2;
+        
+    /**
+     * Returns maximum number of simplified line points divided by line segment length
+     * max((k-1) / (L(i,i+1)+L(i+1,i+2)+...+L(i+k-1,i+k))) [ i=1..n-k ]
+     * @param k - window size (number of points to average points per km
+     */
+    public double getNodesPerKm(int k) {
+        List<LatLon> pts = simplePoints;
+        if (!wasSimplified()) pts=points;
+        int n=pts.size();
+        if (n<2) return 0;
+        if (k<2) k=2;
+        if (k>n) k=n;
+        
         LatLon pp1, pp2=null;
         Iterator<LatLon> it1,it2;
-        
-        it1=points.listIterator(0);
-        it2=points.listIterator(1);
-        int n=points.size();
-        double len=0;
+        it1=pts.listIterator(0);
+        it2=pts.listIterator(1);
+        double lens[]=new double[n];
         for (int i = 0; i < n-1; i++) {
                 pp1 = it1.next();
                 //p1 = getPoint(pp1);
                 pp2 = it2.next();
                 //p2 = getPoint(pp2);
-                len+=pp1.greatCircleDistance(pp2);
+                lens[i]=pp1.greatCircleDistance(pp2);
             }
-        if (isClosed()) len+=pp2.greatCircleDistance(points.get(0));
-        return Math.round((wasSimplified()?simplePoints.size():points.size())
-                /len*1000);
-        
+        double pkm=0,maxpkm=0;
+        double len=0;
+        for (int i = 1; i < n; i++) {
+                len+=lens[i-1]; // add next next point
+                // remove old segment
+                if (i>k) len-=lens[i-k-1]; 
+                if (i>=k) {
+                    // len is length of points[i-windowSize] .. points[i]
+                    if (len>0) pkm = k / len * 1000;
+                    //System.out.println("i="+i+" pkm="+len+" pkm="+pkm);
+                    if (pkm > maxpkm) maxpkm=pkm;
+                }
+            }
+        return Math.round(maxpkm);
             
     }
 

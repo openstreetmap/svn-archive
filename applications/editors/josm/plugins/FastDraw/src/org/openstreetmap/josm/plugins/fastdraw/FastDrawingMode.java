@@ -364,7 +364,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             // first Enter = simplify, second = save the way
             if (!line.wasSimplified()) {
                 //line.simplify(eps);
-                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.maxPointsPerKm);
+                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, 
+                        settings.pkmBlockSize, settings.maxPointsPerKm);
                 repaint();
                 showSimplifyHint();
             } else saveAsWay();
@@ -390,7 +391,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             try {
                 Toolkit.getDefaultToolkit().removeAWTEventListener(this);
                 new FastDrawConfigDialog(settings);
-                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.maxPointsPerKm);
+                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.pkmBlockSize,settings.maxPointsPerKm);
                 //System.out.println("final eps="+eps);
                 Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
@@ -543,7 +544,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     private void showSimplifyHint() {
             setStatusLine(tr("Eps={0}, {1} points, {2} p/km", 
-                eps, line.getSimplePointsCount(),line.getNodesPerKm())+" "
+                eps, line.getSimplePointsCount(),line.getNodesPerKm(settings.pkmBlockSize))+" "
             +SIMPLIFYMODE_MESSAGE);
     }
 }

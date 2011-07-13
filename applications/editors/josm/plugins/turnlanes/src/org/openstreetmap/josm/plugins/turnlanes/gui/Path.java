@@ -208,14 +208,20 @@ abstract class Path {
         
         @Override
         public SimplePathIterator getIterator() {
-            return new SimplePathIterator(previous.getIteratorInternal(angle), PathIterator.SEG_LINETO, endX, endY, 0, 0, 0,
-                0);
+            return new SimplePathIterator(previous.getIteratorInternal(angle), PathIterator.SEG_LINETO, endX, endY, 0,
+                    0, 0, 0);
         }
         
         @Override
         public Path subpath(double from, double to) {
             final double PL = previous.getLength();
             final double ML = PL + length;
+            
+            if (from > ML) {
+                throw new IllegalArgumentException("from > length");
+            } else if (to > ML) {
+                throw new IllegalArgumentException("to > length");
+            }
             
             if (to < PL) {
                 return previous.subpath(from, to);
@@ -228,7 +234,7 @@ abstract class Path {
                 final Point2D start = getPoint(from);
                 return new Line(new Start(start.getX(), start.getY(), angle), end.getX(), end.getY(), EL - from);
             } else {
-                return new Line(previous.subpath(from, to), end.getX(), end.getY(), EL - PL);
+                return new Line(previous.subpath(from, PL), end.getX(), end.getY(), EL - PL);
             }
         }
         
@@ -236,6 +242,10 @@ abstract class Path {
         public Point2D getPoint(double offset) {
             final double PL = previous.getLength();
             final double ML = PL + length;
+            
+            if (offset > ML) {
+                throw new IllegalArgumentException("offset > length");
+            }
             
             if (offset <= ML && offset >= PL) {
                 final double LL = previous.getEnd().distance(getEnd());
@@ -375,7 +385,8 @@ abstract class Path {
                 final double w1 = ws + (PL - m1) * (we - ws) / (m2 - m1);
                 final double w2 = we - (m2 - ML) * (we - ws) / (m2 - m1);
                 
-                return new Curve(prev, fromRadius - s * w1, toRadius - s * w2, offsetAngle(prev, angle), length, fromAngle);
+                return new Curve(prev, fromRadius - s * w1, toRadius - s * w2, offsetAngle(prev, angle), length,
+                        fromAngle);
             }
         }
         
@@ -407,6 +418,12 @@ abstract class Path {
             final double PL = previous.getLength();
             final double ML = PL + length;
             
+            if (from > ML) {
+                throw new IllegalArgumentException("from > length");
+            } else if (to > ML) {
+                throw new IllegalArgumentException("to > length");
+            }
+            
             if (to < PL) {
                 return previous.subpath(from, to);
             }
@@ -426,7 +443,7 @@ abstract class Path {
                 
                 return new Curve(new Start(start.getX(), start.getY(), fa), fromR, toR, a, l, fa);
             } else {
-                return new Curve(previous.subpath(from, to), fromR, toR, a, l, fromAngle);
+                return new Curve(previous.subpath(from, PL), fromR, toR, a, l, fromAngle);
             }
         }
         
@@ -456,7 +473,7 @@ abstract class Path {
             final Point2D cp2 = relativePoint(getEnd(), cpf(angle, toRadius), endAngle + PI);
             
             return new SimplePathIterator(previous.getIteratorInternal(getEndAngle()), PathIterator.SEG_CUBICTO, //
-                cp1.getX(), cp1.getY(), cp2.getX(), cp2.getY(), endX, endY //
+                    cp1.getX(), cp1.getY(), cp2.getX(), cp2.getY(), endX, endY //
             );
             
         }
@@ -573,5 +590,22 @@ abstract class Path {
     
     public abstract Path subpath(double from, double to);
     
+    public Path subpath(double from, double to, boolean fixArgs) {
+        if (fixArgs) {
+            from = min(max(from, 0), getLength());
+            to = min(max(to, 0), getLength());
+        }
+        
+        return subpath(from, to);
+    }
+    
     public abstract Point2D getPoint(double offset);
+    
+    public Point2D getPoint(double offset, boolean fixArgs) {
+        if (fixArgs) {
+            offset = min(max(offset, 0), getLength());
+        }
+        
+        return getPoint(offset);
+    }
 }

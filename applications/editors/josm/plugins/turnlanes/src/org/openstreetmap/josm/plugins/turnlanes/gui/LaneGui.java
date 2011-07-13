@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.area;
 
 import java.awt.AlphaComposite;
@@ -87,10 +88,11 @@ final class LaneGui {
             final double offset = getRoad().getOffset(x, y);
             final double newLength = getModel().getOutgoingRoadEnd().isFromEnd() ? offset : getRoad().getLength()
                     - offset;
+            final double adjustedLength = min(max(newLength, 0.1), getRoad().getLength());
             
-            length = newLength;
-            if (updateModel && newLength > 0) {
-                getModel().setLength(newLength * getRoad().getContainer().getMpp());
+            length = adjustedLength;
+            if (updateModel) {
+                getModel().setLength(adjustedLength * getRoad().getContainer().getMpp());
             }
             
             center.setLocation(x, y);
@@ -325,27 +327,27 @@ final class LaneGui {
             final double SL = max(L, leftLength + AL);
             
             outer = inner.offset(W, SL, SL + AL, 0);
-            area(area, inner.subpath(0, L), outer.subpath(0, L + WW));
+            area(area, inner.subpath(0, L, true), outer.subpath(0, L + WW, true));
             
-            lengthSlider.move(inner.getPoint(L));
+            lengthSlider.move(inner.getPoint(L, true));
             
             if (L > leftLength) {
-                innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
+                innerLine.append(inner.subpath(leftLength + WW, L, true).getIterator(), leftLength >= 0
                         || getModel().getOutgoingRoadEnd().isFromEnd());
-                final Point2D op = outer.getPoint(L + WW);
+                final Point2D op = outer.getPoint(L + WW, true);
                 innerLine.lineTo(op.getX(), op.getY());
             }
         } else if (getModel().getKind() == Lane.Kind.EXTRA_RIGHT) {
             outer = inner.offset(W, L, L + WW, 0);
-            area(area, inner.subpath(0, L + WW), outer.subpath(0, L));
+            area(area, inner.subpath(0, L + WW, true), outer.subpath(0, L, true));
             
-            lengthSlider.move(outer.getPoint(L));
+            lengthSlider.move(outer.getPoint(L, true));
         } else {
             outer = inner.offset(W, -1, -1, W);
             area(area, inner, outer);
             
             if (leftLength < L) {
-                innerLine.append(inner.subpath(max(0, leftLength + WW), L).getIterator(), leftLength >= 0
+                innerLine.append(inner.subpath(leftLength + WW, L, true).getIterator(), leftLength >= 0
                         || getModel().getOutgoingRoadEnd().isFromEnd());
             }
         }

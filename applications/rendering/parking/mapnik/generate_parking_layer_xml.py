@@ -207,6 +207,8 @@ def main(options):
 
     # parking - bw-noicons background ans parking information on top - single layer containing all
 
+    source_file = "osm-parking-src.xml"
+
     dest_dir_parking = os.path.join(dest_dir,"parking")
     dest_dir_parking_symbols = os.path.join(dest_dir_parking,"symbols")
     dest_file_parking = 'osm-parking.xml'
@@ -218,6 +220,8 @@ def main(options):
     transmogrify_file(os.path.join(source_dir,source_file),parking_file,"")
     strip_doctype(parking_file)
     add_license_files(dest_dir_parking)
+
+    
 
 """
 ./generate_xml.py osm-parking-src.xml    osm-parking.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''

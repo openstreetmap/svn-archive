@@ -16,9 +16,11 @@ NOW=`date +%FT%H-%M-%S`
 # Render command
 RENDER=/home/project/o/s/m/osm/bin/render
 
-$RENDER --bbox $BBOX --style /home/kayd/deploy/bw-mapnik/osm-bw.xml --size $SIZE
-mv map.png map-bw-$NOW.png
-$RENDER --bbox $BBOX --style /home/kayd/deploy/bw-noicons/osm-bw-noicons.xml --size $SIZE
-mv map.png map-bw-noicons-$NOW.png
+#$RENDER --bbox $BBOX --style /home/kayd/deploy/bw-mapnik/osm-bw.xml --size $SIZE
+#mv map.png map-bw-$NOW.png
+#$RENDER --bbox $BBOX --style /home/kayd/deploy/bw-noicons/osm-bw-noicons.xml --size $SIZE
+#mv map.png map-bw-noicons-$NOW.png
+$RENDER --bbox $BBOX --style /home/kayd/deploy/parking/osm-parking.xml --size $SIZE
+mv map.png map-parking-$NOW.png
 $RENDER --bbox $BBOX --style /home/kayd/deploy/parktrans/osm-parktrans.xml --size $SIZE
 mv map.png map-parktrans-$NOW.png

@@ -29,10 +29,19 @@ def setup_deploy_directory(deploy_base_dir,style_name):
         os.makedirs(dest_dir_style_symbols)
     add_license_files(dest_dir_style)
 
+def copy_files(src,dest,files):
+    for f in files:
+        if type(f) is tuple:
+            print "copy ({a},{b})".format(a=os.path.join(src,f[0]),b=os.path.join(dest,f[1]))
+        else:
+            print "copy ({a},{b})".format(a=os.path.join(src,f),b=os.path.join(dest,f))
+
 def copy_settings_files(settings_dir,target_inc_dir):
-    shutil.copy2(os.path.join(settings_dir,"datasource-settings.xml.inc.toolserver"),os.path.join(target_inc_dir,"datasource-settings.xml.inc"))
-    shutil.copy2(os.path.join(settings_dir,"fontset-settings.xml.inc.toolserver"),os.path.join(target_inc_dir,"fontset-settings.xml.inc"))
-    shutil.copy2(os.path.join(settings_dir,"settings.xml.inc.toolserver"),os.path.join(target_inc_dir,"settings.xml.inc"))
+    copy_files(settings_dir,target_inc_dir,[
+        ("datasource-settings.xml.inc.toolserver","datasource-settings.xml.inc"),
+        ("fontset-settings.xml.inc.toolserver","fontset-settings.xml.inc"),
+        ("settings.xml.inc.toolserver","settings.xml.inc")]
+    )
 
 def main(options):
     original_mapnik_dir = options['mapnikdir']
@@ -57,21 +66,20 @@ def main(options):
     # (2) create the bw styles
     mapnik_to_bw.main({'sourcedir':patched_mapnik_dir, 'sourcefile':'osm.xml', 'destdir':deploy_dir})
 
-
-    # (3) copy the mapnik to temp and patch with local settings.
+    # (3) create the parking styles
     parking_dir = os.path.join(temp_dir,"parking")
+    parking_inc_dir = os.path.join(parking_dir,"inc")
     os.makedirs(parking_dir)
     #print "shutil.copytree(original_mapnik_dir={o},patched_mapnik_dir={p})".format(o=original_mapnik_dir,p=patched_mapnik_dir)
     shutil.copy2(os.path.join(original_parking_dir,"colorents.xml.inc"),os.path.join(parking_dir,"colorents.xml.inc"))
     shutil.copy2(os.path.join(original_parking_dir,"colorents-bw.xml.inc"),os.path.join(parking_dir,"colorents-bw.xml.inc"))
     # TODO ^^^^ remove this
     shutil.copy2(os.path.join(original_parking_dir,"osm-parktrans-src.xml"),os.path.join(parking_dir,"osm-parktrans-src.xml"))
-    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),os.path.join(parking_dir,"inc"))
+    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),parking_inc_dir)
     original_parking_inc_dir = os.path.join(original_parking_dir,"parking-inc-src")
-    shutil.copytree(original_parking_inc_dir,os.path.join(parking_dir,"inc"))
+    #shutil.copytree(original_parking_inc_dir,parking_inc_dir)
     ### files einzeln kopieren...
-
-
+    copy_files(original_parking_inc_dir,parking_inc_dir,["layer-parking-area-semi.xml","layer-parking-area.xml","layer-parking-lane.xml"])
 
 
 

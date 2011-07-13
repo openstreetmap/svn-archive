@@ -2,6 +2,7 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -19,7 +20,7 @@ public class MenuActionGrab extends JosmAction {
      */
     private static final long serialVersionUID = 1L;
 
-    public static String name = "Cadastre grab";
+    public static String name = marktr("Cadastre grab");
 
     public MenuActionGrab() {
         super(tr(name), "cadastre_small", tr("Download Image from French Cadastre WMS"),

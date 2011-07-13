@@ -2,6 +2,7 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      */
     private static final long serialVersionUID = 1L;
 
-    public static String name = "Georeference an image";
+    public static String name = marktr("Georeference an image");
 
     private DownloadWMSPlanImage downloadWMSPlanImage;
     private WMSLayer wmsLayer;

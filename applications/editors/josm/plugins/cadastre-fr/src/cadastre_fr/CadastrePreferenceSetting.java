@@ -54,19 +54,19 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JRadioButton grabMultiplier4 = new JRadioButton("", true);
 
-    private JRadioButton crosspiece1 = new JRadioButton("off");
+    private JRadioButton crosspiece1 = new JRadioButton(tr("off"));
 
-    private JRadioButton crosspiece2 = new JRadioButton("25m");
+    private JRadioButton crosspiece2 = new JRadioButton(tr("25 m"));
 
-    private JRadioButton crosspiece3 = new JRadioButton("50m");
+    private JRadioButton crosspiece3 = new JRadioButton(tr("50 m"));
 
-    private JRadioButton crosspiece4 = new JRadioButton("100m");
+    private JRadioButton crosspiece4 = new JRadioButton(tr("100 m"));
 
-    private JRadioButton grabRes1 = new JRadioButton("high");
+    private JRadioButton grabRes1 = new JRadioButton(tr("high"));
 
-    private JRadioButton grabRes2 = new JRadioButton("medium");
+    private JRadioButton grabRes2 = new JRadioButton(tr("medium"));
 
-    private JRadioButton grabRes3 = new JRadioButton("low");
+    private JRadioButton grabRes3 = new JRadioButton(tr("low"));
 
     private JCheckBox layerLS3 = new JCheckBox(tr("water"));
     private JCheckBox layerLS2 = new JCheckBox(tr("building"));

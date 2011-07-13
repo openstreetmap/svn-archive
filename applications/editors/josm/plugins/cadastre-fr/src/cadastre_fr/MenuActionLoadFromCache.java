@@ -2,6 +2,7 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -18,7 +19,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 public class MenuActionLoadFromCache extends JosmAction {
     private static final long serialVersionUID = 1L;
 
-    public static String name = "Load layer from cache";
+    public static String name = marktr("Load layer from cache");
 
     public MenuActionLoadFromCache() {
         super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false);

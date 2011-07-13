@@ -30,7 +30,7 @@ public class ExtractPointAction extends JosmAction {
 
     
     public ExtractPointAction() {
-        super(tr("Extract node"), "extpoint",
+        super(tr("Extract node"), "extnode",
                 tr("Extracts node from a way"),
                 Shortcut.registerShortcut("tools:extnode", tr("Tool: {0}","Extract node"),
                 KeyEvent.VK_J, Shortcut.GROUP_MNEMONIC,KeyEvent.ALT_MASK  ), true);

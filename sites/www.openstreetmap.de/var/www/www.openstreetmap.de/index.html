@@ -7,11 +7,11 @@
         <link rel="stylesheet" type="text/css" href="/css/common.css" />
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
         <link rel="shortcut icon" href="/img/favicon.png" />
-        <script type="text/javascript" src="/js/jquery.js"></script>
-        <script type="text/javascript" src="/ol28/OpenLayers.js"></script>
-        <script type="text/javascript" src="/js/OpenStreetMap.js"></script>
-        <script type="text/javascript" src="/js/util.js"></script>
-        <script type="text/javascript" src="/js/markers.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="ol28/OpenLayers.js"></script>
+        <script type="text/javascript" src="js/OpenStreetMap.js"></script>
+        <script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="js/markers.js"></script>
         <script type="text/javascript">
 
 var map;
@@ -51,10 +51,7 @@ function init() {
         new OpenLayers.Layer.OSM.Osmarender("OSM Tiles@Home", { attribution: '', keyname: 'osmarender' })
     ]);
 
-    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen");
-    map.addLayer(layer_local);
-
-    createMarkers();
+    createMarkers(map);
 
     jumpTo(lon, lat, zoom);
 

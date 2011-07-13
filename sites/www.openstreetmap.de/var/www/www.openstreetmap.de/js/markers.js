@@ -1,44 +1,99 @@
     /* markers.js */
 
-    function createMarkers() {
-            addMarker(layer_local, 6.098, 50.7681, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Aachen_Community">Städteregion Aachen</a></b></p><p>Treffen: </p>');
-            addMarker(layer_local, 9.146, 49.974, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Aschaffenburg">Aschaffenburg</a></b></p><p>Treffen: kein fester Regeltermin</p>');
-            addMarker(layer_local, 13.3481, 52.54885, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Berlin/Stammtisch">Berlin und Brandenburg</a></b></p><p>Treffen: 2. Donnerstag im Monat<br/>Mailingliste: <a href="http://wiki.openstreetmap.org/wiki/Berlin/Diskussionsliste">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/berlin/">Archiv</a></p>');
-            addMarker(layer_local, 7.09285, 50.74005, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Bonn_Stammtisch">Bonn</a></b></p><p>Treffen: Jeden 4. Dienstag im Monat</p>');
-            addMarker(layer_local, 10.556111, 52.319167, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Braunschweig/Stammtisch">Braunschweig</a></b></p><p>Treffen: 1. Dienstag im Monat, 21:00h <br/>Mailingliste: <a href="https://mail.atekon.de/mailman/listinfo/osm-bs">Webseite</a> | <a href="https://mail.atekon.de/mailman/private/osm-bs/">Archiv</a></p>');
-            addMarker(layer_local, 6.47178, 50.79624, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/DE:Kreis_Düren_Stammtisch">Stammtisch Kreis Düren</a></b></p><p>Treffen: mittwochs Mitte des Monats<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/dueren">Webseite</a> | <a href="http://lists.openstreetmap.de/pipermail/dueren">Archiv</a></p>');
-            addMarker(layer_local, 7.00712, 51.45866, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Essen/OSM-Treffen">Essen</a></b></p><p>Treffen: Etwa monatlich an wechselnden Wochentagen ab 19:00 Uhr<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/essen">Webseite</a> | <a href="http://lists.openstreetmap.de/pipermail/essen/">Archiv</a></p>');
-            addMarker(layer_local, 9.316, 48.743, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Esslingen_am_Neckar">Esslingen</a></b></p><p>Treffen: Terminabstimmung auf der Liste oder beim Treffen für den Folgetermin<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/stuttgart">Webseite</a> | <a href="">Archiv</a></p>');
-            addMarker(layer_local, 14.544029402738, 52.344568630607, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Frankfurt_(Oder)">Frankfurt (Oder)</a></b></p><p>Treffen: unregelmäßig, etwa alle zwei Monate<br/>Mailingliste: <a href="http://www.kryger.de/ML-osm-ffo/">Webseite</a> | <a href="http://news.gmane.org/gmane.comp.gis.openstreetmap.region.de.frankfurt-oder">Archiv</a></p>');
-            addMarker(layer_local, 8.6598, 50.1779, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Frankfurt_am_Main">Frankfurter OSM-Frühschoppen/Wandergruppe</a></b></p><p>Treffen: 1.Sonntag im Monat</p>');
-            addMarker(layer_local, 9.4784851, 47.6519684, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Friedrichshafen-Bodensee_Community">Friedrichshafen</a></b></p><p>Treffen: Nach Ankündigung</p>');
-            addMarker(layer_local, 9.930533, 51.53483, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Göttingen/Stammtisch">Stammtisch Göttingen</a></b></p><p>Treffen: Dienstag alle 4-5 Wochen, 19 Uhr<br/>Mailingliste: <a href="http://wiki.openstreetmap.org/wiki/G%C3%B6ttingen#Mailingliste">Webseite</a> | <a href="http://dir.gmane.org/gmane.comp.gis.openstreetmap.region.de.goettingen">Archiv</a></p>');
-            addMarker(layer_local, 9.975725, 53.56453, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Hamburger_Mappertreffen">Hamburg</a></b></p><p>Treffen: 2. Dienstag im Monat<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/hamburg">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/hamburg">Archiv</a></p>');
-            addMarker(layer_local, 8.40752, 49.00755, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Karlsruhe">Karlsruhe</a></b></p><p>Treffen: Jeden 3. Mittwoch im Monat<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/karlsruhe">Webseite</a> | <a href="http://lists.openstreetmap.de/mailman/private/karlsruhe/">Archiv</a></p>');
-            addMarker(layer_local, 6.1357296, 51.7850245, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Kreis_Kleve">Kleverland</a></b></p><p>Treffen: </p>');
-            addMarker(layer_local, 6.6223, 51.6573, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Kreis_Wesel">Kreis Wesel</a></b></p><p>Treffen: unregelmäßig</p>');
-            addMarker(layer_local, 12.149966, 48.535235, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Landshut">Mapper-Treffen Landshut</a></b></p><p>Treffen: 1. Montag im Monat<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/niederbayern">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/niederbayern">Archiv</a></p>');
-            addMarker(layer_local, 10.40614, 53.24804, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Lueneburger_Mappertreffen">Lüneburg</a></b></p><p>Treffen: Jeden 3. Dienstag im Monat<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/lueneburg">Webseite</a> | <a href="http://lists.openstreetmap.de/mailman/private/lueneburg/">Archiv</a></p>');
-            addMarker(layer_local, 10.6687, 53.8646, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Lübecker_Mappertreffen">Lübeck</a></b></p><p>Treffen: Jeden 1. Donnerstag im Monat</p>');
-            addMarker(layer_local, 9.7115, 49.5601, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Main-Tauber-Kreis">Main-Tauber-Kreis</a></b></p><p>Treffen: <br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/main-tauber">Webseite</a> | <a href="http://lists.openstreetmap.de/pipermail/main-tauber/">Archiv</a></p>');
-            addMarker(layer_local, 7.465, 51.52765, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Mappertreffen_Dortmund">Dortmund</a></b></p><p>Treffen: ein mal im Monat, bisher Sonntags<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/dortmund">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/dortmund">Archiv</a></p>');
-            addMarker(layer_local, 8.80943, 50.80983, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Stammtisch_Mittelhessen">Mittelhessen (LM/LDK/MR/GI/VB)</a></b></p><p>Treffen: </p>');
-            addMarker(layer_local, 11.61441, 48.11474, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/München/Treffen">München</a></b></p><p>Treffen: Jeder 3. Dienstag im Monat ab 19 Uhr<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/bayern">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/bayern">Archiv</a></p>');
-            addMarker(layer_local, 11.282, 49.508556, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/NFE-Treffen">Nürnberg/Fürth/Erlangen</a></b></p><p>Treffen: Jeder letzte Donnerstag im Monat ab 19 Uhr<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/franken">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/franken">Archiv</a></p>');
-            addMarker(layer_local, 9.0067755, 49.670144, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/OSM-Stammtisch-Odenwald">OSM-Stammtisch-Odenwald</a></b></p><p>Treffen: Nach Ankündigung<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/odenwald">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/odenwald">Archiv</a></p>');
-            addMarker(layer_local, 9.2059, 49.1394, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/OSM-Treff_Heilbronn">Heilbronn</a></b></p><p>Treffen: 1. Dienstag im Monat, 19 Uhr</p>');
-            addMarker(layer_local, 8.894309, 52.026131, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/OWL-Treffen">Ostwestfalen-Lippe</a></b></p><p>Treffen: 19:00<br/>Mailingliste: <a href="http://gt.owl.de/mailman/listinfo/osm">Webseite</a> | <a href="http://gt.owl.de/pipermail/osm/">Archiv</a></p>');
-            addMarker(layer_local, 7.481861, 53.468407, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Ostfriesland">OpenStreetMap Projektes Ostfriesland</a></b></p><p>Treffen: wechselnd<br/>Mailingliste: <a href="http://wiki.openstreetmap.org/wiki/Ostfriesland">Webseite</a> | <a href="http://wiki.openstreetmap.org/wiki/Ostfriesland">Archiv</a></p>');
-            addMarker(layer_local, 8.7029, 48.8936, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Pforzheim">Pforzheim</a></b></p><p>Treffen: nicht bekannt<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/pforzheim">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/pforzheim/">Archiv</a></p>');
-            addMarker(layer_local, 13.9454, 50.9616, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Pirna/OSM-Treff">Pirna</a></b></p><p>Treffen: unregelmässig</p>');
-            addMarker(layer_local, 12.121773, 54.088956, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Rostocker_Treffen">Rostock</a></b></p><p>Treffen: Jeden zweiten Montag des Monats um 19:30 Uhr<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/meckpomm">Webseite</a> | <a href="">Archiv</a></p>');
-            addMarker(layer_local, 11.418690, 53.624420, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Schweriner_Treffen">Schwerin</a></b></p><p>Treffen: <br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/meckpomm">Webseite</a> | <a href="">Archiv</a></p>');
-            addMarker(layer_local, 9.7357, 49.1117, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Schwäbisch_Hall">Schwäbisch Hall</a></b></p><p>Treffen: monatlich<br/>Mailingliste: <a href="http://osm-sha.ingmars-bastelecke.net">Webseite</a> | <a href="http://osm-sha.ingmars-bastelecke.net/newsletter.php">Archiv</a></p>');
-            addMarker(layer_local, 8.017, 50.876, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Siegen">OSM Siegerland</a></b></p><p>Treffen: <br/>Mailingliste: <a href="http://www.unix-ag.uni-siegen.de/mailman/listinfo/osm-siegen">Webseite</a> | <a href="http://www.unix-ag.uni-siegen.de/mailman/private/osm-siegen/">Archiv</a></p>');
-            addMarker(layer_local, 13.731133, 51.027051, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Stammtisch_Dresden">Dresden</a></b></p><p>Treffen: 1. Donnerstag im Monat, ab 19:00 Uhr<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/dresden">Webseite</a> | <a href="http://lists.openstreetmap.de/mailman/private/dresden/">Archiv</a></p>');
-            addMarker(layer_local, 9.717395, 52.386145, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Stammtisch_Hannover">Stammtisch Hannover</a></b></p><p>Treffen: alle 31 Tage<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/hannover">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/hannover">Archiv</a></p>');
-            addMarker(layer_local, 6.93536, 50.94276, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Stammtisch_Köln">Köln</a></b></p><p>Treffen: 3. Mittwoch im Monat</p>');
-            addMarker(layer_local, 9.18219, 48.77622, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Stuttgart/Stammtisch">Stuttgart</a></b></p><p>Treffen: <br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/stuttgart">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/stuttgart/">Archiv</a></p>');
-            addMarker(layer_local, 9.94649, 49.78042, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Würzburg">Würzburg</a></b></p><p>Treffen: unregelmäßig, wenn möglich monatlich<br/>Mailingliste: <a href="http://lists.openstreetmap.de/mailman/listinfo/wuerzburg">Webseite</a> | <a href="http://lists.openstreetmap.de/mailman/listinfo/wuerzburg">Archiv</a></p>');
-            addMarker(layer_local, 14.8120, 50.8983, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/OSM-Stammtisch_Zittau">Zittau</a></b></p><p>Treffen: unregelmäßig</p>');
+    function createMarkers(map) {			
+	proj4326 = new OpenLayers.Projection("EPSG:4326");
+        var strategy = new OpenLayers.Strategy.Cluster({distance: 25, threshold: 3});
+		var dynStyle = new OpenLayers.Style({label: "${name}",pointerEvents: "visiblePainted", graphicTitle: "${name}",externalGraphic: "${icon}",graphicWidth: "${graphicWidth}",graphicHeight: "${graphicHeight}",graphicYOffset:"${offsetY}",graphicXOffset:"${offsetX}",
+						fontColor: "black",fontSize: "10px",fontWeight:"bold",fontFamily: "Courier New, monospace",labelAlign: "lt"},
+					{context:{
+						name:function(feature){
+							 if(feature.cluster) {
+								return feature.cluster.length.toString(); //display number
+							}
+							else return "";
+						},
+						icon:function(feature){
+							return "/img/localgroup.png";
+						},
+						offsetX:function(feature){
+							if(feature.cluster) {
+								if(feature.cluster.length>=10) return -7; else return -10; //keep text centered
+							}
+							else return 10;
+						},
+						offsetY:function(feature){
+							if(feature.cluster) {
+								return -20;
+							}
+							else return -20;
+						},
+						graphicWidth:function(feature){
+							if(feature.cluster) {
+									return 22;
+								}
+								else return 12;
+						},
+						graphicHeight:function(feature){
+							if(feature.cluster) {
+								return 22;
+							}
+							else return 12;
+						}
+					}
+				});
+		groups = new OpenLayers.Layer.GML("Lokale Gruppen","osm_user_groups_dach.kml", { projection: proj4326, displayInLayerSwitcher: true, format: OpenLayers.Format.KML,formatOptions: { extractStyles: false, extractAttributes: true },strategies:[strategy],styleMap: new OpenLayers.StyleMap({"default": dynStyle})});
+	map.addLayers([groups]);
+	//init Interaction
+	var select = new OpenLayers.Control.SelectFeature(groups, {clickout: true,multiple: false,onSelect: groupSelect,onUnselect:groupUnselect});
+	map.addControl(select);
+	select.activate();
 }
+
+//create popup content for a POI
+	function getPOIContent(data)
+	{
+		text="<p class='pop_heading'>"+data.name+"<\/p>";
+		if(data.photo)
+		{
+			text+= '<img src="'+data.photo+'" width=300px style="margin-right:20px; margin-bottom:10px"><br>';
+		}
+		else
+		{
+			text+= '<img src="/img/nophoto.png" style="margin-right:20px; margin-bottom:10px" title="No photo available"><br>';
+		}
+		if(data.when) text+="<p class='pop_text'>"+data.when
+			else text+="<p class='pop_text'> When: ?";
+		if(data.where) text+="<br>Location: "+data.where+"<\/p>";
+			else text+="<br>Location: ?<\/p>";
+		text+='<a href="'+data.wiki+'"'+" class='pop_link'>Wiki<\/a> ";
+		if (data.url) {text+='<a href="'+data.url+'"'+" class='pop_link'>WWW<\/a>";}
+		if (data.mail) {text+='<a href="'+data.mail+'"'+" class='pop_link'>Mail<\/a>";}
+		return text;
+		//return data.toSource();
+	}  
+
+//make a popup with infos when POI is selected
+	function groupSelect(feature) {
+		if (feature.cluster==null)
+		{
+			poicontent='';
+			poicontent=getPOIContent(feature.data);
+			feature.popup = new OpenLayers.Popup.FramedCloud(null,
+		                        feature.geometry.getBounds().getCenterLonLat(),
+		                        new OpenLayers.Size(200,200),
+		                        "<div class='popupcontent'>"+poicontent+"<\/div>",
+		                        feature.marker,
+		                        true);
+			map.addPopup(feature.popup);
+			//feature.popup.updateSize();
+		}
+        }
+
+	//close popup
+	function groupUnselect(feature) {
+	    	if (feature.popup) {
+			map.removePopup(feature.popup);
+			feature.popup.destroy();
+			feature.popup = null;
+	    	} 
+	}      

@@ -187,7 +187,7 @@ def add_license_files(dirname):
 def main(options):
     source_dir = options['sourcedir']
     source_file = options['sourcefile']
-    source_symbols_dir_mapnik = os.path.join(source_dir,"symbols")
+    #source_symbols_dir_mapnik = os.path.join(source_dir,"symbols")
     source_symbols_dir_parking = os.path.join(source_dir,"parking-symbols-src")
     dest_dir = options['destdir']
 

@@ -52,7 +52,7 @@ public class JunctionSearchTask extends PleaseWaitRunnable{
 			return;
 		}
 		ArrayList<HashSet<Channel>> junctions = jc.getJunctions();
-		JOptionPane.showMessageDialog(Main.parent, tr ("Number of {0]-ways junctions found: ", n) + junctions.size() );
+		JOptionPane.showMessageDialog(Main.parent, tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
 		if (produceRelation) {
 			for (int i = 0; i < junctions.size(); i++) {
 				plugin.getRelationProducer().produceRelation(junctions.get(i) , n);

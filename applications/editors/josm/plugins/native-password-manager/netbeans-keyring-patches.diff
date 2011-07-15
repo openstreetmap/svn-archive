@@ -1,251 +1,364 @@
-diff -r src-netbeans-524f40b94a30-origin/org/netbeans/modules/keyring/fallback/FallbackProvider.java src/org/netbeans/modules/keyring/fallback/FallbackProvider.java
-45,47d44
-< import java.util.Arrays;
-< import java.util.HashMap;
-< import java.util.Map;
-49d45
-< import java.util.concurrent.Callable;
-52,54d47
-< import java.util.prefs.BackingStoreException;
-< import java.util.prefs.Preferences;
-< import org.netbeans.api.keyring.Keyring;
-58,63d50
-< import org.openide.DialogDisplayer;
-< import org.openide.NotifyDescriptor;
-< import org.openide.util.Lookup;
-< import org.openide.util.NbBundle;
-< import org.openide.util.NbPreferences;
-< import org.openide.util.lookup.ServiceProvider;
-68,69c55
-< @ServiceProvider(service=KeyringProvider.class, position=1000)
-< public class FallbackProvider implements KeyringProvider, Callable<Void> {
----
-> public class FallbackProvider implements KeyringProvider {
-76c62,75
-<  
----
->     private IPreferences pre;
->     
->     // simple interface for a generic preferences store
->     public interface IPreferences {
->         String get(String key, String def);
->         void put(String key, String val);
->         void remove(String key);
->     }
-> 
->     public FallbackProvider(EncryptionProvider encryption, IPreferences pref) {
->         this.encryption = encryption;
->         this.pre = pref;
->     }
->     
-78,87c77,79
-<         for (EncryptionProvider p : Lookup.getDefault().lookupAll(EncryptionProvider.class)) {
-<             if (p.enabled()) {
-<                 encryption = p;
-<                 Preferences prefs = prefs();
-<                 Utils.goMinusR(prefs);
-<                 p.encryptionChangingCallback(this);
-<                 if (!testSampleKey(prefs)) {
-<                     continue;
-<                 }
-<                 LOG.log(Level.FINE, "Using provider: {0}", p);
----
->         if (encryption.enabled()) {
->             if (testSampleKey()) {
->                 LOG.log(Level.FINE, "Using provider: {0}", encryption);
-95,106c87,92
-<     private boolean testSampleKey(Preferences prefs) {
-<         byte[] ciphertext = prefs.getByteArray(SAMPLE_KEY, null);
-<         if (ciphertext == null) {
-<             encryption.freshKeyring(true);
-<             if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
-<                     NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.sample_key.description"))) {
-<                 LOG.fine("saved sample key");
-<                 return true;
-<             } else {
-<                 LOG.fine("could not save sample key");
-<                 return false;
-<             }
----
->     private boolean testSampleKey() {
->         encryption.freshKeyring(true);
->         if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
->                 "Sample value ensuring that decryption is working.")) {
->             LOG.fine("saved sample key");
->             return true;
-108,143c94,95
-<             encryption.freshKeyring(false);
-<             while (true) {
-<                 try {
-<                     if (new String(encryption.decrypt(ciphertext)).startsWith(SAMPLE_KEY)) {
-<                         LOG.fine("succeeded in decrypting sample key");
-<                         return true;
-<                     } else {
-<                         LOG.fine("wrong result decrypting sample key");
-<                     }
-<                 } catch (Exception x) {
-<                     LOG.log(Level.FINE, "failed to decrypt sample key", x);
-<                 }
-<                 if (!encryption.decryptionFailed()) {
-<                     LOG.fine("sample key decryption failed");
-<                     return promptToDelete(prefs);
-<                 }
-<                 LOG.fine("will retry decryption of sample key");
-<             }
-<         }
-<     }
-< 
-<     private boolean promptToDelete(Preferences prefs) {
-<         Object result = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(
-<                 NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.msg_clear_keys"),
-<                 NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.title_clear_keys"),
-<                 NotifyDescriptor.OK_CANCEL_OPTION));
-<         if (result == NotifyDescriptor.OK_OPTION) {
-<             try {
-<                 LOG.log(Level.FINE, "agreed to delete stored passwords: {0}", Arrays.asList(prefs.keys()));
-<                 prefs.clear();
-<                 return testSampleKey(prefs);
-<             } catch (BackingStoreException x) {
-<                 LOG.log(Level.INFO, null, x);
-<             }
-<         } else {
-<             LOG.fine("refused to delete stored passwords");
----
->             LOG.fine("could not save sample key");
->             return false;
-145,149d96
-<         return false;
-<     }
-< 
-<     private Preferences prefs() {
-<         return NbPreferences.forModule(Keyring.class).node(encryption.id());
-153c100,101
-<         byte[] ciphertext = prefs().getByteArray(key, null);
----
->         String ciphertext_string = pre.get(key, null);
->         byte[] ciphertext = ciphertext_string == null ? null : Utils.chars2Bytes(ciphertext_string.toCharArray());
-169d116
-<         Preferences prefs = prefs();
-171c118,120
-<             prefs.putByteArray(key, encryption.encrypt(password));
----
->             byte[] encryptedPasswordByteArray = encryption.encrypt(password);
->             String encryptedPassword = encryptedPasswordByteArray == null ? null : String.valueOf(Utils.bytes2Chars(encryptedPasswordByteArray));
->             pre.put(key, encryptedPassword);
-178c127
-<             prefs.put(key + DESCRIPTION, description);
----
->             pre.put(key + DESCRIPTION, description);
-184,209c133,134
-<         Preferences prefs = prefs();
-<         prefs.remove(key);
-<         prefs.remove(key + DESCRIPTION);
-<     }
-< 
-<     public Void call() throws Exception { // encryption changing
-<         LOG.fine("encryption changing");
-<         Map<String,char[]> saved = new HashMap<String,char[]>();
-<         Preferences prefs = prefs();
-<         for (String k : prefs.keys()) {
-<             if (k.endsWith(DESCRIPTION)) {
-<                 continue;
-<             }
-<             byte[] ciphertext = prefs.getByteArray(k, null);
-<             if (ciphertext == null) {
-<                 continue;
-<             }
-<             saved.put(k, encryption.decrypt(ciphertext));
-<         }
-<         LOG.log(Level.FINE, "reencrypting keys: {0}", saved.keySet());
-<         encryption.encryptionChanged();
-<         for (Map.Entry<String,char[]> entry : saved.entrySet()) {
-<             prefs.putByteArray(entry.getKey(), encryption.encrypt(entry.getValue()));
-<         }
-<         LOG.fine("encryption changing finished");
-<         return null;
----
->         pre.remove(key);
->         pre.remove(key + DESCRIPTION);
-diff -r src-netbeans-524f40b94a30-origin/org/netbeans/modules/keyring/gnome/GnomeProvider.java src/org/netbeans/modules/keyring/gnome/GnomeProvider.java
-46,47d45
-< import java.text.MessageFormat;
-< import java.util.MissingResourceException;
-52,53d49
-< import org.openide.util.NbBundle;
-< import org.openide.util.lookup.ServiceProvider;
-55d50
-< @ServiceProvider(service=KeyringProvider.class, position=100)
-77,84c72
-<         String appName;
-<         try {
-<             appName = MessageFormat.format(
-<                     NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),
-<                     /*System.getProperty("netbeans.buildnumber")*/"…");
-<         } catch (MissingResourceException x) {
-<             appName = "NetBeans"; // NOI18N
-<         }
----
->         String appName = "JOSM";
-diff -r src-netbeans-524f40b94a30-origin/org/netbeans/modules/keyring/kde/KWalletProvider.java src/org/netbeans/modules/keyring/kde/KWalletProvider.java
-48d47
-< import java.text.MessageFormat;
-50d48
-< import java.util.MissingResourceException;
-54,55d51
-< import org.openide.util.NbBundle;
-< import org.openide.util.lookup.ServiceProvider;
-61d56
-< @ServiceProvider(service=KeyringProvider.class, position=99)
-224,230c219
-<         String appName;
-<         try {
-<             appName = MessageFormat.format(NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),version ? System.getProperty("netbeans.buildnumber"):"");
-<         } catch (MissingResourceException x) {
-<             appName = "NetBeans"+(version? " "+System.getProperty("netbeans.buildnumber"):"");
-<         }
-<         return appName.toCharArray();
----
->         return "JOSM".toCharArray();
-diff -r src-netbeans-524f40b94a30-origin/org/netbeans/modules/keyring/mac/MacProvider.java src/org/netbeans/modules/keyring/mac/MacProvider.java
-50,51d49
-< import org.openide.util.Utilities;
-< import org.openide.util.lookup.ServiceProvider;
-53d50
-< @ServiceProvider(service=KeyringProvider.class, position=200)
-59,63c56
-<         if (Boolean.getBoolean("netbeans.keyring.no.native")) {
-<             LOG.fine("native keyring integration disabled");
-<             return false;
-<         }
-<         return Utilities.isMac();
----
->         return true; // test elsewhere if we are on a mac
-69c62
-<             byte[] accountName = "NetBeans".getBytes("UTF-8");
----
->             byte[] accountName = "JOSM".getBytes("UTF-8");
-89c82
-<             byte[] accountName = "NetBeans".getBytes("UTF-8");
----
->             byte[] accountName = "JOSM".getBytes("UTF-8");
-103c96
-<             byte[] accountName = "NetBeans".getBytes("UTF-8");
----
->             byte[] accountName = "JOSM".getBytes("UTF-8");
-diff -r src-netbeans-524f40b94a30-origin/org/netbeans/modules/keyring/win32/Win32Protect.java src/org/netbeans/modules/keyring/win32/Win32Protect.java
-57,58d56
-< import org.openide.util.Utilities;
-< import org.openide.util.lookup.ServiceProvider;
-65d62
-< @ServiceProvider(service=EncryptionProvider.class, position=100)
-71,78c68
-<         if (!Utilities.isWindows()) {
-<             LOG.fine("not running on Windows");
-<             return false;
-<         }
-<         if (Boolean.getBoolean("netbeans.keyring.no.native")) {
-<             LOG.fine("native keyring integration disabled");
-<             return false;
-<         }
----
->         // asssume, we have windows os
+Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java
+===================================================================
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-15 21:52:52.064972526 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-15 21:17:50.000000000 +0200
+@@ -42,49 +42,41 @@
+ 
+ package org.netbeans.modules.keyring.fallback;
+ 
+-import java.util.Arrays;
+-import java.util.HashMap;
+-import java.util.Map;
+ import java.util.UUID;
+-import java.util.concurrent.Callable;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+-import java.util.prefs.BackingStoreException;
+-import java.util.prefs.Preferences;
+-import org.netbeans.api.keyring.Keyring;
+ import org.netbeans.modules.keyring.impl.Utils;
+ import org.netbeans.modules.keyring.spi.EncryptionProvider;
+ import org.netbeans.spi.keyring.KeyringProvider;
+-import org.openide.DialogDisplayer;
+-import org.openide.NotifyDescriptor;
+-import org.openide.util.Lookup;
+-import org.openide.util.NbBundle;
+-import org.openide.util.NbPreferences;
+-import org.openide.util.lookup.ServiceProvider;
+ 
+ /**
+  * Platform-independent keyring provider using a master password and the user directory.
+  */
+-@ServiceProvider(service=KeyringProvider.class, position=1000)
+-public class FallbackProvider implements KeyringProvider, Callable<Void> {
++public class FallbackProvider implements KeyringProvider {
+ 
+     private static final Logger LOG = Logger.getLogger(FallbackProvider.class.getName());
+     private static final String DESCRIPTION = ".description";
+     private static final String SAMPLE_KEY = "__sample__";
+ 
+     private EncryptionProvider encryption;
+- 
++    private IPreferences pre;
++    
++    // simple interface for a generic preferences store
++    public interface IPreferences {
++        String get(String key, String def);
++        void put(String key, String val);
++        void remove(String key);
++    }
++
++    public FallbackProvider(EncryptionProvider encryption, IPreferences pref) {
++        this.encryption = encryption;
++        this.pre = pref;
++    }
++    
+     public boolean enabled() {
+-        for (EncryptionProvider p : Lookup.getDefault().lookupAll(EncryptionProvider.class)) {
+-            if (p.enabled()) {
+-                encryption = p;
+-                Preferences prefs = prefs();
+-                Utils.goMinusR(prefs);
+-                p.encryptionChangingCallback(this);
+-                if (!testSampleKey(prefs)) {
+-                    continue;
+-                }
+-                LOG.log(Level.FINE, "Using provider: {0}", p);
++        if (encryption.enabled()) {
++            if (testSampleKey()) {
++                LOG.log(Level.FINE, "Using provider: {0}", encryption);
+                 return true;
+             }
+         }
+@@ -92,65 +84,21 @@
+         return false;
+     }
+     
+-    private boolean testSampleKey(Preferences prefs) {
+-        byte[] ciphertext = prefs.getByteArray(SAMPLE_KEY, null);
+-        if (ciphertext == null) {
+-            encryption.freshKeyring(true);
+-            if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
+-                    NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.sample_key.description"))) {
+-                LOG.fine("saved sample key");
+-                return true;
+-            } else {
+-                LOG.fine("could not save sample key");
+-                return false;
+-            }
++    private boolean testSampleKey() {
++        encryption.freshKeyring(true);
++        if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
++                "Sample value ensuring that decryption is working.")) {
++            LOG.fine("saved sample key");
++            return true;
+         } else {
+-            encryption.freshKeyring(false);
+-            while (true) {
+-                try {
+-                    if (new String(encryption.decrypt(ciphertext)).startsWith(SAMPLE_KEY)) {
+-                        LOG.fine("succeeded in decrypting sample key");
+-                        return true;
+-                    } else {
+-                        LOG.fine("wrong result decrypting sample key");
+-                    }
+-                } catch (Exception x) {
+-                    LOG.log(Level.FINE, "failed to decrypt sample key", x);
+-                }
+-                if (!encryption.decryptionFailed()) {
+-                    LOG.fine("sample key decryption failed");
+-                    return promptToDelete(prefs);
+-                }
+-                LOG.fine("will retry decryption of sample key");
+-            }
+-        }
+-    }
+-
+-    private boolean promptToDelete(Preferences prefs) {
+-        Object result = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(
+-                NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.msg_clear_keys"),
+-                NbBundle.getMessage(FallbackProvider.class, "FallbackProvider.title_clear_keys"),
+-                NotifyDescriptor.OK_CANCEL_OPTION));
+-        if (result == NotifyDescriptor.OK_OPTION) {
+-            try {
+-                LOG.log(Level.FINE, "agreed to delete stored passwords: {0}", Arrays.asList(prefs.keys()));
+-                prefs.clear();
+-                return testSampleKey(prefs);
+-            } catch (BackingStoreException x) {
+-                LOG.log(Level.INFO, null, x);
+-            }
+-        } else {
+-            LOG.fine("refused to delete stored passwords");
++            LOG.fine("could not save sample key");
++            return false;
+         }
+-        return false;
+-    }
+-
+-    private Preferences prefs() {
+-        return NbPreferences.forModule(Keyring.class).node(encryption.id());
+     }
+ 
+     public char[] read(String key) {
+-        byte[] ciphertext = prefs().getByteArray(key, null);
++        String ciphertext_string = pre.get(key, null);
++        byte[] ciphertext = ciphertext_string == null ? null : Utils.chars2Bytes(ciphertext_string.toCharArray());
+         if (ciphertext == null) {
+             return null;
+         }
+@@ -166,47 +114,24 @@
+         _save(key, password, description);
+     }
+     private boolean _save(String key, char[] password, String description) {
+-        Preferences prefs = prefs();
+         try {
+-            prefs.putByteArray(key, encryption.encrypt(password));
++            byte[] encryptedPasswordByteArray = encryption.encrypt(password);
++            String encryptedPassword = encryptedPasswordByteArray == null ? null : String.valueOf(Utils.bytes2Chars(encryptedPasswordByteArray));
++            pre.put(key, encryptedPassword);
+         } catch (Exception x) {
+             LOG.log(Level.FINE, "failed to encrypt password for " + key, x);
+             return false;
+         }
+         if (description != null) {
+             // Preferences interface gives no access to *.properties comments, so:
+-            prefs.put(key + DESCRIPTION, description);
++            pre.put(key + DESCRIPTION, description);
+         }
+         return true;
+     }
+ 
+     public void delete(String key) {
+-        Preferences prefs = prefs();
+-        prefs.remove(key);
+-        prefs.remove(key + DESCRIPTION);
+-    }
+-
+-    public Void call() throws Exception { // encryption changing
+-        LOG.fine("encryption changing");
+-        Map<String,char[]> saved = new HashMap<String,char[]>();
+-        Preferences prefs = prefs();
+-        for (String k : prefs.keys()) {
+-            if (k.endsWith(DESCRIPTION)) {
+-                continue;
+-            }
+-            byte[] ciphertext = prefs.getByteArray(k, null);
+-            if (ciphertext == null) {
+-                continue;
+-            }
+-            saved.put(k, encryption.decrypt(ciphertext));
+-        }
+-        LOG.log(Level.FINE, "reencrypting keys: {0}", saved.keySet());
+-        encryption.encryptionChanged();
+-        for (Map.Entry<String,char[]> entry : saved.entrySet()) {
+-            prefs.putByteArray(entry.getKey(), encryption.encrypt(entry.getValue()));
+-        }
+-        LOG.fine("encryption changing finished");
+-        return null;
++        pre.remove(key);
++        pre.remove(key + DESCRIPTION);
+     }
+ 
+ }
+Index: native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java
+===================================================================
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-15 21:53:22.269122311 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-15 21:17:50.000000000 +0200
+@@ -43,16 +43,11 @@
+ package org.netbeans.modules.keyring.gnome;
+ 
+ import com.sun.jna.Pointer;
+-import java.text.MessageFormat;
+-import java.util.MissingResourceException;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.*;
+ import org.netbeans.spi.keyring.KeyringProvider;
+-import org.openide.util.NbBundle;
+-import org.openide.util.lookup.ServiceProvider;
+ 
+-@ServiceProvider(service=KeyringProvider.class, position=100)
+ public class GnomeProvider implements KeyringProvider {
+ 
+     private static final Logger LOG = Logger.getLogger(GnomeProvider.class.getName());
+@@ -74,14 +69,7 @@
+             LOG.fine("no GNOME_KEYRING_* environment variable set");
+             return false;
+         }
+-        String appName;
+-        try {
+-            appName = MessageFormat.format(
+-                    NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),
+-                    /*System.getProperty("netbeans.buildnumber")*/"…");
+-        } catch (MissingResourceException x) {
+-            appName = "NetBeans"; // NOI18N
+-        }
++        String appName = "JOSM";
+         try {
+             // Need to do this somewhere, or we get warnings on console.
+             // Also used by confirmation dialogs to give the app access to the login keyring.
+Index: native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvider.java
+===================================================================
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-15 21:53:37.837199499 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-15 21:17:50.000000000 +0200
+@@ -45,20 +45,15 @@
+ import java.io.BufferedReader;
+ import java.io.IOException;
+ import java.io.InputStreamReader;
+-import java.text.MessageFormat;
+ import java.util.Arrays;
+-import java.util.MissingResourceException;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ import org.netbeans.spi.keyring.KeyringProvider;
+-import org.openide.util.NbBundle;
+-import org.openide.util.lookup.ServiceProvider;
+ 
+ /**
+  *
+  * @author psychollek, ynov
+  */
+-@ServiceProvider(service=KeyringProvider.class, position=99)
+ public class KWalletProvider implements KeyringProvider{
+ 
+     private static final Logger logger = Logger.getLogger(KWalletProvider.class.getName());
+@@ -221,13 +216,7 @@
+     }
+ 
+     private char[] getApplicationName(boolean version){
+-        String appName;
+-        try {
+-            appName = MessageFormat.format(NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),version ? System.getProperty("netbeans.buildnumber"):"");
+-        } catch (MissingResourceException x) {
+-            appName = "NetBeans"+(version? " "+System.getProperty("netbeans.buildnumber"):"");
+-        }
+-        return appName.toCharArray();
++        return "JOSM".toCharArray();
+     }
+ 
+     private void warning(String descr) {
+Index: native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.java
+===================================================================
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-15 21:53:47.897249389 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-15 21:17:50.000000000 +0200
+@@ -47,26 +47,19 @@
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ import org.netbeans.spi.keyring.KeyringProvider;
+-import org.openide.util.Utilities;
+-import org.openide.util.lookup.ServiceProvider;
+ 
+-@ServiceProvider(service=KeyringProvider.class, position=200)
+ public class MacProvider implements KeyringProvider {
+ 
+     private static final Logger LOG = Logger.getLogger(MacProvider.class.getName());
+ 
+     public boolean enabled() {
+-        if (Boolean.getBoolean("netbeans.keyring.no.native")) {
+-            LOG.fine("native keyring integration disabled");
+-            return false;
+-        }
+-        return Utilities.isMac();
++        return true; // test elsewhere if we are on a mac
+     }
+ 
+     public char[] read(String key) {
+         try {
+             byte[] serviceName = key.getBytes("UTF-8");
+-            byte[] accountName = "NetBeans".getBytes("UTF-8");
++            byte[] accountName = "JOSM".getBytes("UTF-8");
+             int[] dataLength = new int[1];
+             Pointer[] data = new Pointer[1];
+             error("find", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
+@@ -86,7 +79,7 @@
+         delete(key); // XXX supposed to use SecKeychainItemModifyContent instead, but this seems like too much work
+         try {
+             byte[] serviceName = key.getBytes("UTF-8");
+-            byte[] accountName = "NetBeans".getBytes("UTF-8");
++            byte[] accountName = "JOSM".getBytes("UTF-8");
+             // Keychain Access seems to expect UTF-8, so do not use Utils.chars2Bytes:
+             byte[] data = new String(password).getBytes("UTF-8");
+             error("save", SecurityLibrary.LIBRARY.SecKeychainAddGenericPassword(null, serviceName.length, serviceName,
+@@ -100,7 +93,7 @@
+     public void delete(String key) {
+         try {
+             byte[] serviceName = key.getBytes("UTF-8");
+-            byte[] accountName = "NetBeans".getBytes("UTF-8");
++            byte[] accountName = "JOSM".getBytes("UTF-8");
+             Pointer[] itemRef = new Pointer[1];
+             error("find (for delete)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
+                     accountName.length, accountName, null, null, itemRef));
+Index: native-password-manager/src/org/netbeans/modules/keyring/win32/Win32Protect.java
+===================================================================
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-15 21:53:58.733303122 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-15 21:17:50.000000000 +0200
+@@ -54,28 +54,18 @@
+ import java.util.logging.Logger;
+ import org.netbeans.modules.keyring.impl.Utils;
+ import org.netbeans.modules.keyring.spi.EncryptionProvider;
+-import org.openide.util.Utilities;
+-import org.openide.util.lookup.ServiceProvider;
+ 
+ /**
+  * Data protection utility for Microsoft Windows.
+  * XXX org.tmatesoft.svn.core.internal.util.jna.SVNWinCrypt is a possibly more robust implementation
+  * (though it seems to set CRYPTPROTECT_UI_FORBIDDEN which we do not necessarily want).
+  */
+-@ServiceProvider(service=EncryptionProvider.class, position=100)
+ public class Win32Protect implements EncryptionProvider {
+ 
+     private static final Logger LOG = Logger.getLogger(Win32Protect.class.getName());
+     
+     public @Override boolean enabled() {
+-        if (!Utilities.isWindows()) {
+-            LOG.fine("not running on Windows");
+-            return false;
+-        }
+-        if (Boolean.getBoolean("netbeans.keyring.no.native")) {
+-            LOG.fine("native keyring integration disabled");
+-            return false;
+-        }
++        // asssume, we have windows os
+         try {
+             if (CryptLib.INSTANCE == null) {
+                 LOG.fine("loadLibrary -> null");

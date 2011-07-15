@@ -213,8 +213,8 @@ sub checkstring
   $v =~ s/''//g; # replace all twice occuring single quotes
   if($v =~ /'/)
   {
-    #warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\n";
-    #$error = 1;
+    warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\n";
+    $error = 1;
   }
   # Test two - check if there are {..} which should not be
   my @fmt = ();

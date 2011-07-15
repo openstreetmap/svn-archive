@@ -197,7 +197,46 @@ sub makestring($)
   $str =~ s/\\\\/\\/g;
   $str =~ s/\\n/\n/g;
   $str = encode("utf8", $str);
-  return pack("n",length($str)).$str;
+  return $str;
+}
+
+sub checkstring
+{
+  my ($la, $tr, $en, $cnt, $en1) = @_;
+  $tr = makestring($tr);
+  $en = makestring($en);
+  $en1 = makestring($en1) if defined($en1);
+  my $error = 0;
+
+  # Test one - are there single quotes which don't occur twice
+  my $v = $tr;
+  $v =~ s/''//g; # replace all twice occuring single quotes
+  if($v =~ /'/)
+  {
+    #warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\n";
+    #$error = 1;
+  }
+  # Test two - check if there are {..} which should not be
+  my @fmt = ();
+  my $fmt;
+  my $fmte;
+  my $fmte1 = "";
+  while($tr =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmt = join("_", sort @fmt); @fmt = ();
+  while($en =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte = join("_", sort @fmt); @fmt = ();
+  if($en1) {while($en1 =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte1 = join("_", sort @fmt);}
+  if($fmt ne $fmte && $fmt ne $fmte1)
+  {
+    if(!($fmte eq '0' && $fmt eq "" && $cnt == 1)) # Don't warn when a single value is left for first multi-translation
+    {
+      $cnt == $cnt || 0;
+      warn "JAVA translation issue for language $la ($cnt): Mismatching format entries:\nTranslated text: $tr\nOriginal text: $en\n";
+      $error = 1;
+    }
+  }
+
+  #$tr = "" if($error && $la ne "en");
+
+  return pack("n",length($tr)).$tr;
 }
 
 sub createlang($@)
@@ -242,7 +281,7 @@ sub createlang($@)
         ++$cnt if $val;
         $val = "" if($ennoctx eq $val);
       }
-      print FILE makestring($val);
+      print FILE checkstring($la, $val, $en);
     }
     print FILE pack "n",0xFFFF;
     foreach my $en (sort keys %{$data})
@@ -274,10 +313,10 @@ sub createlang($@)
       print FILE pack "C",$num;
       if($num)
       {
-        print FILE makestring($val);
+        print FILE checkstring($la, $val, $en, 1, $data->{$en}{"en.1"});
         for($num = 1; exists($data->{$en}{"$la.$num"}); ++$num)
         {
-          print FILE makestring($data->{$en}{"$la.$num"});
+          print FILE checkstring($la, $data->{$en}{"$la.$num"}, $en, $num+1, $data->{$en}{"en.1"});
         }
       }
     }

@@ -205,15 +205,16 @@ sub checkstring
   my ($la, $tr, $en, $cnt, $en1) = @_;
   $tr = makestring($tr);
   $en = makestring($en);
+  $cnt = $cnt || 0;
   $en1 = makestring($en1) if defined($en1);
   my $error = 0;
 
   # Test one - are there single quotes which don't occur twice
   my $v = $tr;
   $v =~ s/''//g; # replace all twice occuring single quotes
-  if($v =~ /'/)
+  if($v =~ /'/)#&& $la ne "en")
   {
-    warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\n";
+    warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\nOriginal text: $en\n";
     $error = 1;
   }
   # Test two - check if there are {..} which should not be
@@ -228,7 +229,6 @@ sub checkstring
   {
     if(!($fmte eq '0' && $fmt eq "" && $cnt == 1)) # Don't warn when a single value is left for first multi-translation
     {
-      $cnt == $cnt || 0;
       warn "JAVA translation issue for language $la ($cnt): Mismatching format entries:\nTranslated text: $tr\nOriginal text: $en\n";
       $error = 1;
     }

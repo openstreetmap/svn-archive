@@ -184,42 +184,67 @@ def add_license_files(dirname):
     f.write("This derived work is published by the author, Kay Drangmeister, under the same license as the original OSM mapnik style sheet (found here: http://svn.openstreetmap.org/applications/rendering/mapnik)")
     f.close
 
-def main(options):
+def main_parktrans(options):
+    style_name = options['stylename']
     source_dir = options['sourcedir']
     source_file = options['sourcefile']
     #source_symbols_dir_mapnik = os.path.join(source_dir,"symbols")
-    source_symbols_dir_parking = os.path.join(source_dir,"parking-symbols-src")
+    source_symbols_dir_style = os.path.join(source_dir,"parking-symbols-src")
     dest_dir = options['destdir']
 
     # parktrans - transparent layer to be put on top of mapnik or bw-noicons base layer
     
-    dest_dir_parktrans = os.path.join(dest_dir,"parktrans")
-    dest_dir_parktrans_symbols = os.path.join(dest_dir_parktrans,"symbols")
-    dest_file_parktrans = 'osm-parktrans.xml'
-    parktrans_file = os.path.join(dest_dir_parktrans,dest_file_parktrans)
-    if not os.path.exists(dest_dir_parktrans_symbols):
-        os.makedirs(dest_dir_parktrans_symbols)
+    dest_dir_style = os.path.join(dest_dir,style_name)
+    dest_dir_style_symbols = os.path.join(dest_dir_style,"symbols")
+    dest_file_style = 'osm-{style}.xml'.format(style=style_name)
+    style_file = os.path.join(dest_dir_style,dest_file_style)
+    if not os.path.exists(dest_dir_style_symbols):
+        os.makedirs(dest_dir_style_symbols)
 
-    create_parking_icons(source_symbols_dir_parking,dest_dir_parktrans_symbols)
-    transmogrify_file(os.path.join(source_dir,source_file),parktrans_file,"")
-    strip_doctype(parktrans_file)
-    add_license_files(dest_dir_parktrans)
+    create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
+    transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
+    strip_doctype(style_file)
+    add_license_files(dest_dir_style)
+
+def main_parking(options):
+    style_name = options['stylename']
+    source_dir = options['sourcedir']
+    source_file = options['sourcefile']
+    source_symbols_dir_style = os.path.join(source_dir,"parking-symbols-src")
+    dest_dir = options['destdir']
 
     # parking - bw-noicons background ans parking information on top - single layer containing all
 
-    source_file = "osm-parking-src.xml"
+    dest_dir_style = os.path.join(dest_dir,style_name)
+    dest_dir_style_symbols = os.path.join(dest_dir_style,"symbols")
+    dest_file_style = 'osm-{style}.xml'.format(style=style_name)
+    style_file = os.path.join(dest_dir_style,dest_file_style)
+    if not os.path.exists(dest_dir_style_symbols):
+        os.makedirs(dest_dir_style_symbols)
 
-    dest_dir_parking = os.path.join(dest_dir,"parking")
-    dest_dir_parking_symbols = os.path.join(dest_dir_parking,"symbols")
-    dest_file_parking = 'osm-parking.xml'
-    parking_file = os.path.join(dest_dir_parking,dest_file_parking)
-    if not os.path.exists(dest_dir_parking_symbols):
-        os.makedirs(dest_dir_parking_symbols)
+    create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
+    transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
+    strip_doctype(style_file)
+    add_license_files(dest_dir_style)
 
-    create_parking_icons(source_symbols_dir_parking,dest_dir_parking_symbols)
-    transmogrify_file(os.path.join(source_dir,source_file),parking_file,"")
-    strip_doctype(parking_file)
-    add_license_files(dest_dir_parking)
+def main_parking_neu(options):
+    style_name = options['stylename']
+    source_dir = options['sourcedir']
+    source_file = options['sourcefile']
+    source_symbols_dir_style = os.path.join(source_dir,"parking-symbols-src")
+    dest_dir = options['destdir']
+
+    dest_dir_style = os.path.join(dest_dir,style_name)
+    dest_dir_style_symbols = os.path.join(dest_dir_style,"symbols")
+    dest_file_style = 'osm-parking-neu.xml'
+    style_file = os.path.join(dest_dir_style,dest_file_style)
+    if not os.path.exists(dest_dir_style_symbols):
+        os.makedirs(dest_dir_style_symbols)
+
+    create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
+    transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
+    strip_doctype(style_file)
+    add_license_files(dest_dir_style)
 
     
 
@@ -235,6 +260,10 @@ if __name__ == '__main__':
     parser.add_option("-f", "--sourcefile", dest="sourcefile", help="source filename, default is 'osm.xml')", default="osm.xml")
     parser.add_option("-d", "--destdir", dest="destdir", help="path to the destination directory, further dirs are created within. default is '/tmp'", default="/tmp")
     (options, args) = parser.parse_args()
+    options['stylename'] = "parktrans"
     print options
-    main(options.__dict__)
+    main_parktrans(options.__dict__)
+    options['sourcefile'] = "osm-parking-src.xml"
+    options['stylename'] = "parking"
+    main_parking(options.__dict__)
     sys.exit(0)

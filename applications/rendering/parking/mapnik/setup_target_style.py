@@ -88,8 +88,10 @@ def main(options):
     # TODO: kludge to copy bw icons to parking/symbols dir
     # this is ugly because it relies on knowledge of mapnik_to_bw.main() i.e. how the dirs are named.
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(os.path.join(deploy_dir,"parking"),"symbols"))
-    
-    generate_parking_layer_xml.main({'sourcedir':parking_dir, 'sourcefile':'osm-parktrans-src.xml', 'destdir':deploy_dir})
+
+    generate_parking_layer_xml.main_parktrans({'sourcedir':parking_dir, 'sourcefile':'osm-parktrans-src.xml', 'destdir':deploy_dir, 'stylename':'parktrans'})
+    generate_parking_layer_xml.main_parking({'sourcedir':parking_dir, 'sourcefile':'osm-parking-src.xml', 'destdir':deploy_dir, 'stylename':'parking'})
+    generate_parking_layer_xml.main_parking_neu({'sourcedir':parking_dir, 'sourcefile':'osm-parking-src.xml', 'destdir':deploy_dir, 'stylename':'parking-new'})
 
 if __name__ == '__main__':
     parser = OptionParser()

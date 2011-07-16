@@ -51,7 +51,10 @@ public class AlignWaysTipsPanel extends javax.swing.JPanel {
 
         setAutoscrolls(true);
 
-        WelcomeTo.setText(tr("<html>\n<div style=\"font-family: 'sans-serif'; font-weight: bold; font-style: italic;\">\n<span style=\"font-size: large;\">Welcome to the</span><br>\n<span style=\"font-size: xx-large;\">AlignWay<span style=\"color: rgb(204, 85, 0);\">S</span> Plugin<br>\n</span><span style=\"font-size: medium;\"><br>\n...or it rather should be called <br>\n<span style=\"font-size: large;\">AlignWayS(egments)</span> Plugin...</span>\n</div>\n</html>"));
+        WelcomeTo.setText("<html>\n<div style=\"font-family: \"sans-serif\"; font-weight: bold; font-style: italic;\">\n<span style=\"font-size: large;\">"
+        + tr("Welcome to the</span><br>\n<span style=\"font-size: xx-large;\">AlignWay<span style=\"color: rgb(204, 85, 0);\">S</span> Plugin<br>\n</span>"
+        + "<span style=\"font-size: medium;\"><br>\n...or it rather should be called <br>\n<span style=\"font-size: large;\">AlignWayS(egments)</span> Plugin...")
+        + "</span>\n</div>\n</html>");
 
         WelcomeTo.setVerticalAlignment(SwingConstants.TOP);
         WelcomeTo.setPreferredSize(new Dimension(400, 128));
@@ -95,9 +98,9 @@ public class AlignWaysTipsPanel extends javax.swing.JPanel {
         step03.setVerticalAlignment(SwingConstants.TOP);
 
         step04.setIcon(new ImageIcon(getClass().getResource("/images/tipsdialog/hlpAlgCmd.png"))); // NOI18N
-        step04.setText(tr("<html>\n<div style=\"font-family:sans-serif\">\n<ul>\n  <li><b>Align the segments.</b> Press <b><i><span style=\"color:green\">"
-                + AlignWaysPlugin.awAction.getShortcut().getKeyText()
-                + "</span></i></b>. Alternatively you''ll find the command in the <b>Tools</b>\n menu or may want to place the action on the <b>toolbar</b>.\n  </li>\n</ul>\n</div>\n</html>\n\n"));
+        step04.setText(tr("<html>\n<div style=\"font-family:sans-serif\">\n<ul>\n  <li><b>Align the segments.</b> Press <b><i><span style=\"color:green\">{0}"
+                + "</span></i></b>. Alternatively you''ll find the command in the <b>Tools</b>\n menu or may want to place the action on the <b>toolbar</b>.\n  </li>\n</ul>\n</div>\n</html>\n\n",
+                AlignWaysPlugin.awAction.getShortcut().getKeyText()));
         step04.setVerticalAlignment(SwingConstants.TOP);
 
         lastHint.setText(tr("<html>\n<div style=\"font-family:sans-serif\">\n<b>Last hint:</b> There is an easy way to start over your selections if you want: <b><i><span style=\"color:green\">Alt-Click</span></i></b> somewhere on the map.\n</div>\n</html>\n\n"));

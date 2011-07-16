@@ -115,7 +115,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	@Override
 	public String getToolTipText() {
 		if (profile != null) {
-			return tr("Elevation profile for track '" + profile.getName() + "'.");
+			return tr("Elevation profile for track ''{0}''.", profile.getName());
 		} else {
 			return tr("Elevation profile");
 		}

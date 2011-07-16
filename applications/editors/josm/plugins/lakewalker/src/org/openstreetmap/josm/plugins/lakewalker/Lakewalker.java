@@ -66,7 +66,7 @@ public class Lakewalker {
         } else if(direction.equals("Southeast") || direction.equals("southeast")){
             i =  7;
         } else {
-            throw new ArrayIndexOutOfBoundsException(tr("Direction index '{0}' not found",direction));
+            throw new ArrayIndexOutOfBoundsException(tr("Direction index ''{0}'' not found",direction));
         }
         return i;
     }

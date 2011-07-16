@@ -55,7 +55,7 @@ public class TrackReference
       if (this.gpsSyncTime == null)
       {
     JOptionPane.showMessageDialog
-        (null, tr("The GPX file doesn't contain valid trackpoints. "
+        (null, tr("The GPX file doesn''t contain valid trackpoints. "
         + "Please use a GPX file that has trackpoints."), tr("GPX File Trouble"),
      JOptionPane.ERROR_MESSAGE);
 
@@ -109,7 +109,7 @@ public class TrackReference
     stoplistTM.setValueAt
         (stoplistTM.timeAt(e.getFirstRow()), e.getFirstRow(), 0);
     JOptionPane.showMessageDialog
-        (null, tr("Can't parse a time from this string."), tr("Invalid value"),
+        (null, tr("Can''t parse a time from this string."), tr("Invalid value"),
          JOptionPane.ERROR_MESSAGE);
     return;
       }

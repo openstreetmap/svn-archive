@@ -451,7 +451,7 @@ public class GTFSImporterDialog
     else
     {
       JOptionPane.showMessageDialog
-      (null, tr("Can't parse a time from this string."), tr("Invalid value"),
+      (null, tr("Can''t parse a time from this string."), tr("Invalid value"),
        JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -476,7 +476,7 @@ public class GTFSImporterDialog
     else
     {
       JOptionPane.showMessageDialog
-      (null, tr("Can't parse a time from this string."), tr("Invalid value"),
+      (null, tr("Can''t parse a time from this string."), tr("Invalid value"),
        JOptionPane.ERROR_MESSAGE);
       return false;
     }

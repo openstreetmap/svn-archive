@@ -262,7 +262,7 @@ public class ViaList extends JList{
         
         public PasteAction(){
             putValue(NAME, tr("Paste"));
-            putValue(SHORT_DESCRIPTION, tr("Insert 'via' objects from the clipboard"));
+            putValue(SHORT_DESCRIPTION, tr("Insert ''via'' objects from the clipboard"));
             putValue(SMALL_ICON, ImageProvider.get("paste"));
             putValue(ACCELERATOR_KEY, Shortcut.getPasteKeyStroke());
             delegate = ViaList.this.getActionMap().get("paste");

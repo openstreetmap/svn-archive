@@ -73,7 +73,7 @@ public class NewAction {
         if(m.matches()) {
             id = m.group(1);
         } else {
-            throw new RuntimeException(tr("Couldn't create new bug. Result: {0}", result));
+            throw new RuntimeException(tr("Couldn''t create new bug. Result: {0}", result));
         }
 
         Node osmNode = new Node(latlon);

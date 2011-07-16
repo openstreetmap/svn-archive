@@ -44,7 +44,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
 
-    private JCheckBox dontUseRelation = new JCheckBox(tr("Don't use relation for addresses (but \"addr:street\" on elements)."));
+    private JCheckBox dontUseRelation = new JCheckBox(tr("Don''t use relation for addresses (but \"addr:street\" on elements)."));
 
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 
@@ -291,7 +291,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cadastrewms.add(disableImageCropping, GBC.std().insets(0, 0, 10, 0));
         // option to add the "Tableau d'assemblage" in list of sheets to grab
         enableTableauAssemblage.setSelected(Main.pref.getBoolean("cadastrewms.useTA", false));
-        enableTableauAssemblage.setToolTipText(tr("Add the \"Tableau(x) d'assemblage\" in the list of cadastre sheets to grab."));
+        enableTableauAssemblage.setToolTipText(tr("Add the \"Tableau(x) d''assemblage\" in the list of cadastre sheets to grab."));
         cadastrewms.add(enableTableauAssemblage, GBC.eop().insets(0, 0, 0, 0));
         // the crosspiece display
         JLabel jLabelCrosspieces = new JLabel(tr("Display crosspieces:"));

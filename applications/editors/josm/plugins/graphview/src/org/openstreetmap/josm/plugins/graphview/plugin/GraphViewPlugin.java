@@ -207,7 +207,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             if (rulesetURL != null) {
                 rulesetInputStream = rulesetURL.openStream();
             } else {
-                throw new FileNotFoundException(tr("Couldn't find built-in ruleset {0}", ruleset));
+                throw new FileNotFoundException(tr("Couldn''t find built-in ruleset {0}", ruleset));
             }
 
         } else {

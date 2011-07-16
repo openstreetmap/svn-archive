@@ -92,7 +92,7 @@ public class ImplicationXMLReader {
 
                 if (name.equals("condition")) {
                     if (!currentConditionReader.isFinished()) {
-                        throw new SAXException(tr("Condition isn't finished at </condition> tag"));
+                        throw new SAXException(tr("Condition isn''t finished at </condition> tag"));
                     } else {
                         currentCondition = currentConditionReader.getCondition();
                         currentConditionReader = null;

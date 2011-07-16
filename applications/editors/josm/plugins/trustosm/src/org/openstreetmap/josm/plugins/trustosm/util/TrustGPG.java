@@ -187,7 +187,7 @@ public class TrustGPG {
 		keyBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		p.add(keyBox);
 
-		JCheckBox keepkeyBox = new JCheckBox(tr("Don't ask again for the key"));
+		JCheckBox keepkeyBox = new JCheckBox(tr("Don''t ask again for the key"));
 		keepkeyBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		p.add(keepkeyBox);
 

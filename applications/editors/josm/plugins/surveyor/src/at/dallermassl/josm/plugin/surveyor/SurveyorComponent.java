@@ -104,7 +104,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     public void addButton(ButtonDescription description) {
         if(description.getHotkey() != "" &&  hotKeys.contains(description.getHotkey())) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button '{0}' - button will be ignored!",description.getLabel()));
+            JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button ''{0}'' - button will be ignored!",description.getLabel()));
         } else {
             if(rows == 0 && columns == 0) {
                 setColumns("4");

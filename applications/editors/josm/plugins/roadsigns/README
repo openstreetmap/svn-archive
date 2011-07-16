@@ -1,25 +1,25 @@
 Road Signs Plugin
-_________________
+=================
 
-Shows a GUI dialog to tag objects by clicking on road sign symbols. 
+Shows a GUI dialog to tag objects by clicking on road sign symbols.
 It tries to generate the corresponding tags for the object.
 As tagging schemes are under constant development, the definitions
 need to be updated when needed.
- 
-Author: 
-    Sebastian Klein <bastikln@gmail.com>
+
+Author:
+    Paul Hartmann <phaaurlt@googlemail.com>
 
 License:
     GPL v2 or later.
 
-Attribution:
-    Inspired by the Verkehrszeichen Tool [1] by Sebastian Hohmann. 
+Acknowledgements:
+    Inspired by the Verkehrszeichen Tool [1] by Sebastian Hohmann.
     Basically, this plugin is a port to Java and the JOSM (plugin) framework.
     [1] http://osmtools.de/traffic_signs/
 
     Pics have been derived from
         http://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_Deutschland (german street sign SVGs)
-    
+
 JavaCC usage:
 -------------
 
@@ -32,5 +32,5 @@ javacc is used for easier tokenization. All *.java files in the folder
 plugins/roadsigns/javacc are auto generated. To create them, execute
 
     javacc ParamString.jj
-    
+
 (Provided javacc is installed. Not necessary if that file is not changed.)

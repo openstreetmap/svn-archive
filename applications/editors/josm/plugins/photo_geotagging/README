@@ -1,5 +1,6 @@
-README 
-======
+Photo Geotagging Plugin
+=======================
+
 This plugin is used to write latitude and longitude information to the EXIF 
 header of jpg files. It extends the core geoimage feature of JOSM by adding a 
 new entry to the right click menu of any image layer.
@@ -11,7 +12,7 @@ to a specific revision. When updating that revision, you should check if the
 workarounds (SanselanFixes.java) are still needed.
 
 
-Author: Sebastian Klein
+Author: Paul Hartmann <phaaurlt@googlemail.com>
 
 License: GPL v2 or any later version. (Note: When distributed together with
 the sanselan library, only GPL v3 (or later) can be used.)

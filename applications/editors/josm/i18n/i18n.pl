@@ -212,6 +212,7 @@ sub checkstring
   # Test one - are there single quotes which don't occur twice
   my $v = $tr;
   $v =~ s/''//g; # replace all twice occuring single quotes
+  $v =~ s/'[{}]'//g; # replace all bracketquoting single quotes
   if($v =~ /'/)#&& $la ne "en")
   {
     warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\nOriginal text: $en\n";
@@ -222,9 +223,15 @@ sub checkstring
   my $fmt;
   my $fmte;
   my $fmte1 = "";
-  while($tr =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmt = join("_", sort @fmt); @fmt = ();
-  while($en =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte = join("_", sort @fmt); @fmt = ();
-  if($en1) {while($en1 =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte1 = join("_", sort @fmt);}
+  my $trt = $tr; $trt =~ s/'[{}]'//g;
+  while($trt =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmt = join("_", sort @fmt); @fmt = ();
+  my $ent = $en; $ent =~ s/'[{}]'//g;
+  while($ent =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte = join("_", sort @fmt); @fmt = ();
+  if($en1)
+  {
+     my $en1t = $en1; $en1t =~ s/'[{}]'//g;
+     while($en1t =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte1 = join("_", sort @fmt);
+  }
   if($fmt ne $fmte && $fmt ne $fmte1)
   {
     if(!($fmte eq '0' && $fmt eq "" && $cnt == 1)) # Don't warn when a single value is left for first multi-translation

@@ -279,6 +279,7 @@ sub readRules {
 			getRuleLine() ;
 
 			# set defaults first
+			$areaRules{ $areaNr }{ 'label' } = "none" ;
 			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
 			$areaRules{ $areaNr }{ 'icon' } = "none" ;
 			$areaRules{ $areaNr }{ 'base' } = "no"  ;
@@ -627,9 +628,3 @@ sub getRuleLine {
 }
 
 1 ;
-
-
-
-
-
-

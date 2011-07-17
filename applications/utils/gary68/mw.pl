@@ -18,8 +18,10 @@
 # 0.12 way shields
 # 0.13 routes, not yet working...
 # 0.14 route work
+# 0.15 routes working now - finetuning needed; bgbolor implemented; multipolygons
+# 
 
-my $version = "0.14" ;
+my $version = "0.15" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -33,6 +35,7 @@ use mwFile ;
 use mwNodes ;
 use mwWays ;
 use mwRelations ;
+use mwMulti ;
 use mwMisc ;
 
 my $time0 = time() ; 
@@ -67,24 +70,31 @@ if ( cv('debug') eq "1" ) {
 
 readFile() ;
 
-processNodes() ;
+if ( cv('multionly') eq "0" ) {
 
-if ( cv('poi') eq "1") {
-	createPoiDirectory() ;
-}
+	processNodes() ;
 
-initOneways() ;
-processWays() ;
+	if ( cv('poi') eq "1") {
+		createPoiDirectory() ;
+	}
 
-if ( cv('dir') eq "1") {
-	createDirectory() ;
-}
+	initOneways() ;
+	processWays() ;
 
-if ( cv('dirpdf') eq "1") {
-	createDirPdf() ;
-}
+	if ( cv('dir') eq "1") {
+		createDirectory() ;
+	}
 
-processRoutes() ;
+	if ( cv('dirpdf') eq "1") {
+		createDirPdf() ;
+	}
+
+	processRoutes() ;
+
+} # multionly
+
+processMultipolygons() ;
+
 
 if ( cv('pagenumbers') ne "" ) { processPageNumbers() ; }
 if ( cv('rectangles') ne "" ) { processRectangles() ; }

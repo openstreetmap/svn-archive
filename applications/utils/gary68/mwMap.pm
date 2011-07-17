@@ -124,6 +124,12 @@ sub initGraph {
 	$right = $r ;
 	$bottom = $b ;
 
+	if ( ( cv('bgcolor') ne "none" ) and ( cv('bgcolor') ne "" ) ) {
+		my $col = cv('bgcolor') ;
+		my $svgText = "fill=\"$col\" " ;
+		drawRect (0, 0, $sizeX, $sizeY, 0, $svgText, "background") ;
+	}
+
 	if ( cv('ruler') ne "0" ) {
 		drawRuler() ;
 	}
@@ -404,7 +410,7 @@ sub drawArea {
 	my ($svgText, $icon, $ref, $convert, $layer) = @_ ;
 	my @ways = @$ref ;
 	my $i ;
-	my $svg ;
+	my $svg = "" ;
 
 	if ($convert) {
 		my ($lonRef, $latRef, $tagRef) = mwFile::getNodePointers () ;
@@ -522,8 +528,9 @@ sub writeMap {
 	if (cv('png') eq "1") {
 		my ($pngName) = $fileName ;
 		$pngName =~ s/\.svg/\.png/ ;
-		print "creating png file $pngName ...\n" ;
-		`inkscape --export-dpi=300 -e $pngName $fileName` ;
+		my $dpi = cv('pngdpi') ;
+		print "creating png file $pngName ($dpi dpi)...\n" ;
+		`inkscape --export-dpi=$dpi -e $pngName $fileName` ;
 	}
 
 

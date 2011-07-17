@@ -75,12 +75,12 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 
 			["ruledefaultRouteColor","black","default color of route", "routes"],
 			["ruledefaultRouteSize",5,"default size of route", "routes"],
-			["ruledefaultRouteDash","20,20","default dash of route", "routes"],
+			["ruledefaultRouteDash","","default dash of route", "routes"],
 			["ruledefaultRouteLinecap","round","default linecap of route", "routes"],
 			["ruledefaultRouteOpacity",100,"default opacity of route", "routes"],
 			["ruledefaultRouteLabel","ref","default label of route", "routes"],
-			["ruledefaultRouteLabelSize",30,"default label size of route", "routes"],
-			["ruledefaultRouteNodeSize",40,"default node size of route nodes", "routes"],
+			["ruledefaultRouteLabelSize",25,"default label size of route", "routes"],
+			["ruledefaultRouteNodeSize",10,"default node size of route nodes", "routes"],
 
 			["ruledefaultRouteFromScale",0,"default fromScale of route", "routes"],
 			["ruledefaultRouteToScale",50000,"default toScale of route", "routes"],
@@ -104,6 +104,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ppc",6,"points per character (CLO)", "misc", "map"],
 			["pdf",0,"convert output to pdf (CLO)", "job"],
 			["png",0,"convert output to png (CLO)", "job"],
+			["pngdpi",115,"png resolution (CLO)", "job"],
 			["dir",0,"add directory (CLO)", "additional information"],
 			["poi",0,"add POI directory (CLO)", "additional information"],
 			["dirpdf",0,"create directory pdf (CLO)", "additional information"],
@@ -133,12 +134,12 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["scaleset",0,"set scale of map (i.e. 10000) (CLO)", "map"],
 			["rulescaleset",0,"set assumed scale for rules (CLO)", "map"],
 			["routelabelcolor","black","", "routes"],
-			["routelabelsize",30,"", "routes"],
+			["routelabelsize",20,"", "routes"],
 			["routelabelfont","sans-serif","", "routes"],
-			["routelabeloffset",-5,"", "routes"],
+			["routelabeloffset",20,"", "routes"],
 			["routeicondist",70,"", "routes"],
 			["routeiconscale",1,"", "routes"],
-			["icondir","./routeicons","", "routes"],
+			["routeicondir","./routeicons","", "routes"],
 			["poifile","","name of external POI file (CLO)", "job"],
 			["relid",0,"relation ID for hikingbook (CLO)", "misc"],
 			["rectangles","","draw rectangles for hikingbook (CLO)", "misc"],
@@ -278,6 +279,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"ppc:f"		=> \$cv{'ppc'},		# pixels needed per label char in font size 10
 				"pdf"		=> \$cv{'pdf'},		# specifies if pdf will be created
 				"png"		=> \$cv{'png'},		# specifies if png will be created
+				"pngdpi:i"		=> \$cv{'pngdpi'},		# specifies png resolution
 				"dir"		=> \$cv{'dir'},		# specifies if directory of streets will be created
 				"poi"		=> \$cv{'poi'},		# specifies if directory of pois will be created
 				"dirpdf"		=> \$cv{'dirpdf'},

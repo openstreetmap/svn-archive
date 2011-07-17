@@ -53,7 +53,7 @@ bordersize=2
 RULE WAY
 keyvalue=highway=trunk
 color=blue
-size=60
+size=26
 label=shield:icons/shield_ger_bs.def
 bordercolor=black
 bordersize=4
@@ -178,6 +178,80 @@ color=lightblue
 base=yes
 
 RULE AREA
+keyvalue=natural=land
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=leisure=park
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=natural=wood
+color=darkgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=forest
+color=darkgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=farmland
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=farmyard
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=farm
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=grass
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=meadow
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=village_green
+color=lightgreen
+base=yes
+
+RULE AREA
+keyvalue=landuse=industrial
+color=lightgray
+base=yes
+
+RULE AREA
+keyvalue=landuse=commercial
+color=lightgray
+base=yes
+
+RULE AREA
+keyvalue=aeroway=runway
+color=gray
+base=yes
+
+RULE AREA
+keyvalue=aeroway=taxiway
+color=gray
+base=yes
+
+
+
+
+
+RULE AREA
 keyvalue=amenity=parking
 icon=icons/areaParking.svg
 
@@ -192,9 +266,12 @@ icon=icons/areaCemetery.svg
 
 RULE ROUTE
 type=hiking
-color=blue
+color=blue;green;yellow
+opacity=100
+label=name
+dash=20,20
 
 RULE ROUTE
 type=bus
-color=green
-
+color=black;brown
+label=ref

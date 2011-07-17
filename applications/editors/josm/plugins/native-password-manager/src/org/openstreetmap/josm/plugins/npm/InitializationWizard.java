@@ -255,7 +255,7 @@ public class InitializationWizard extends JDialog {
 
             HtmlPanel intro = new HtmlPanel("<html><b>"+type.getIntroText()+"</b></html>");
             rbManage = new JRadioButton("<html>"+type.getSelectionText()+"</html>");
-            rbPlain = new JRadioButton("<html>"+tr("No thanks, use JOSM's plain text preferences storage")+"</html>");
+            rbPlain = new JRadioButton("<html>"+tr("No thanks, use JOSM''s plain text preferences storage")+"</html>");
             rbManage.addActionListener(this);
             rbPlain.addActionListener(this);
             

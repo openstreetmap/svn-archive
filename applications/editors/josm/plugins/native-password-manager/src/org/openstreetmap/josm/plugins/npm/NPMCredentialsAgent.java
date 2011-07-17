@@ -231,10 +231,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
             sensitive.add(tr("oauth secret"));
         }
         if (!sensitive.isEmpty()) {
-            text.append(tr("<br><strong>Warning:</strong> There may be sensitive data left in your preference file. (")
-                    + Utils.join(", ", sensitive)
-                    + ")"
-            );
+            text.append(tr("<br><strong>Warning:</strong> There may be sensitive data left in your preference file. ({0})", Utils.join(", ", sensitive)));
         }
         pnlMessage.setText(text.toString());
         return pnlMessage;

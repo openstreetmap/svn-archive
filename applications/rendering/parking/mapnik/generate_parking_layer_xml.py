@@ -5,6 +5,7 @@ import sys,os,subprocess
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
+
 #import colorsys
 
 condition_colors = {
@@ -75,6 +76,7 @@ def dom_strip_style_and_layer(document,stylename,layername):
     for el in els:
         if el.getAttribute("name")==layername:
             removeElements.append(el)
+    print "removing the following elements:"
     print removeElements
     for el in removeElements:
         parent = el.parentNode
@@ -229,9 +231,11 @@ def main_parking(options):
 
 def main_parking_neu(options):
     style_name = options['stylename']
-    source_dir = options['sourcedir']
-    source_file = options['sourcefile']
-    source_symbols_dir_style = os.path.join(source_dir,"parking-symbols-src")
+    source_bwn_dir = options['sourcebwndir']
+    source_bwn_file = options['sourcebwnfile']
+    source_p_dir = options['sourcepdir']
+    source_p_file = options['sourcepfile']
+    source_symbols_dir_style = os.path.join(source_p_dir,"parking-symbols-src")
     dest_dir = options['destdir']
 
     dest_dir_style = os.path.join(dest_dir,style_name)
@@ -242,11 +246,91 @@ def main_parking_neu(options):
         os.makedirs(dest_dir_style_symbols)
 
     create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
-    transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
-    strip_doctype(style_file)
+    merge_bw_noicons_and_parktrans_style(os.path.join(source_bwn_dir,source_bwn_file),os.path.join(source_p_dir,source_p_file),style_file)
+    #strip_doctype(style_file)
     add_license_files(dest_dir_style)
 
-    
+def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_file,dest_parking_style_file):
+    dom= pxdom.getDOMImplementation('') 
+    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None)
+    parser.domConfig.setParameter('entities', 0) # 1 -> exception if attribute values is set
+    #parser.domConfig.setParameter('disallow-doctype', 1)
+    parser.domConfig.setParameter('pxdom-resolve-resources', 1) # 1 -> replace &xyz; with text
+    dest_parking_style_document = parser.parseURI(bwnoicons_style_file)
+    parktrans_style_document = parser.parseURI(parktrans_style_file)
+
+#    dom_convert_to_grey(document)
+    parking_area_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area'))
+    parking_area_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area'))
+    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
+    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
+    things=[parking_area_style,parking_area_layer]
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
+
+    pllno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-no'))
+    plrno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-no'))
+    pllin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-inline'))
+    plrin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-inline'))
+    plldi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-diagonal'))
+    plrdi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-diagonal'))
+    pllor = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-orthogonal'))
+    plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-orthogonal'))
+    pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
+    plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
+
+    things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pll,plr]
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
+
+    output= dest_parking_style_document.implementation.createLSOutput() 
+    output.systemId= dest_parking_style_file
+    output.encoding= 'utf-8' 
+    serialiser= dest_parking_style_document.implementation.createLSSerializer() 
+    serialiser.write(dest_parking_style_document, output)
+
+    ''' write a "rest" file to check if everything has been cut out
+    output= parktrans_style_document.implementation.createLSOutput() 
+    output.systemId= 'rest.xml'
+    output.encoding= 'utf-8' 
+    serialiser= parktrans_style_document.implementation.createLSSerializer() 
+    serialiser.write(parktrans_style_document, output)
+    '''
+
+def parking_dom_insert_things_before_layer(document,things,here):
+    # insert things after the "leisure" layer
+    els = document.getElementsByTagName("Layer")
+    #print "els="
+    #print els
+    for el in els:
+        #print "layername={ln}".format(ln=el.getAttribute("name"))
+        if el.getAttribute("name")==here:
+            #print "found it"
+            if type(things) is list:
+                for s in things:
+                    el.parentNode.insertBefore(s,el)
+            else:
+                el.parentNode.insertBefore(things,el)
+            return
+    raise 'Layer name not found'
+
+def parking_dom_cut_layer(document,what):
+    els = document.getElementsByTagName("Layer")
+    for el in els:
+        #print "layername={ln}".format(ln=el.getAttribute("name"))
+        if el.getAttribute("name")==what:
+            #print "found it"
+            el.parentNode.removeChild(el)
+            return el
+    raise 'Layer name not found'
+
+def parking_dom_cut_style(document,what):
+    els = document.getElementsByTagName("Style")
+    for el in els:
+        #print "layername={ln}".format(ln=el.getAttribute("name"))
+        if el.getAttribute("name")==what:
+            #print "found it"
+            el.parentNode.removeChild(el)
+            return el
+    raise 'Style name not found'
 
 """
 ./generate_xml.py osm-parking-src.xml    osm-parking.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''

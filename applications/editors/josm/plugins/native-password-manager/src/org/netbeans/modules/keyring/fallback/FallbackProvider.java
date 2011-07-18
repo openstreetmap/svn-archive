@@ -59,20 +59,20 @@ public class FallbackProvider implements KeyringProvider {
     private static final String SAMPLE_KEY = "__sample__";
 
     private EncryptionProvider encryption;
-    private IPreferences pre;
-    
+    private IPreferences prefs;
+
     // simple interface for a generic preferences store
     public interface IPreferences {
-        String get(String key, String def);
-        void put(String key, String val);
+        byte[] getByteArray(String key, byte[] def);
+        void putByteArray(String key, byte[] val);
         void remove(String key);
     }
 
-    public FallbackProvider(EncryptionProvider encryption, IPreferences pref) {
+    public FallbackProvider(EncryptionProvider encryption, IPreferences prefs) {
         this.encryption = encryption;
-        this.pre = pref;
+        this.prefs = prefs;
     }
-    
+
     public boolean enabled() {
         if (encryption.enabled()) {
             if (testSampleKey()) {
@@ -97,8 +97,7 @@ public class FallbackProvider implements KeyringProvider {
     }
 
     public char[] read(String key) {
-        String ciphertext_string = pre.get(key, null);
-        byte[] ciphertext = ciphertext_string == null ? null : Utils.chars2Bytes(ciphertext_string.toCharArray());
+        byte[] ciphertext = prefs.getByteArray(key, null);
         if (ciphertext == null) {
             return null;
         }
@@ -115,23 +114,17 @@ public class FallbackProvider implements KeyringProvider {
     }
     private boolean _save(String key, char[] password, String description) {
         try {
-            byte[] encryptedPasswordByteArray = encryption.encrypt(password);
-            String encryptedPassword = encryptedPasswordByteArray == null ? null : String.valueOf(Utils.bytes2Chars(encryptedPasswordByteArray));
-            pre.put(key, encryptedPassword);
+            prefs.putByteArray(key, encryption.encrypt(password));
         } catch (Exception x) {
             LOG.log(Level.FINE, "failed to encrypt password for " + key, x);
             return false;
-        }
-        if (description != null) {
-            // Preferences interface gives no access to *.properties comments, so:
-            pre.put(key + DESCRIPTION, description);
         }
         return true;
     }
 
     public void delete(String key) {
-        pre.remove(key);
-        pre.remove(key + DESCRIPTION);
+        prefs.remove(key);
+        prefs.remove(key + DESCRIPTION);
     }
 
 }

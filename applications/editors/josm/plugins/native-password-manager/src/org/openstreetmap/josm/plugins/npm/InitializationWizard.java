@@ -398,12 +398,12 @@ public class InitializationWizard extends JDialog {
     private static NPMType detectNativePasswordManager() {
         NPMType[] potentialManagers;
         
-        if (Main.platform instanceof PlatformHookUnixoid) {
-            potentialManagers = new NPMType[] { NPMType.GNOME_KEYRING, NPMType.KWALLET };
+        if (Main.platform instanceof PlatformHookWindows) {
+            potentialManagers = new NPMType[] { NPMType.CRYPT32 };
         } else if (Main.platform instanceof PlatformHookOsx) {
             potentialManagers = new NPMType[] { NPMType.KEYCHAIN };
-        } else if (Main.platform instanceof PlatformHookWindows) {
-            potentialManagers = new NPMType[] { NPMType.CRYPT32 };
+        } else if (Main.platform instanceof PlatformHookUnixoid) {
+            potentialManagers = new NPMType[] { NPMType.GNOME_KEYRING, NPMType.KWALLET };
         } else
             throw new AssertionError();
             

@@ -1,7 +1,7 @@
 Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java
 ===================================================================
---- native-password-manager.orig/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-15 21:52:52.064972526 +0200
-+++ native-password-manager/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-15 21:17:50.000000000 +0200
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-18 13:04:37.141522563 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/fallback/FallbackProvider.java	2011-07-18 13:09:34.194995561 +0200
 @@ -42,49 +42,41 @@
  
  package org.netbeans.modules.keyring.fallback;
@@ -39,20 +39,20 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
  
      private EncryptionProvider encryption;
 - 
-+    private IPreferences pre;
-+    
++    private IPreferences prefs;
++
 +    // simple interface for a generic preferences store
 +    public interface IPreferences {
-+        String get(String key, String def);
-+        void put(String key, String val);
++        byte[] getByteArray(String key, byte[] def);
++        void putByteArray(String key, byte[] val);
 +        void remove(String key);
 +    }
 +
-+    public FallbackProvider(EncryptionProvider encryption, IPreferences pref) {
++    public FallbackProvider(EncryptionProvider encryption, IPreferences prefs) {
 +        this.encryption = encryption;
-+        this.pre = pref;
++        this.prefs = prefs;
 +    }
-+    
++
      public boolean enabled() {
 -        for (EncryptionProvider p : Lookup.getDefault().lookupAll(EncryptionProvider.class)) {
 -            if (p.enabled()) {
@@ -70,7 +70,7 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
                  return true;
              }
          }
-@@ -92,65 +84,21 @@
+@@ -92,65 +84,20 @@
          return false;
      }
      
@@ -86,13 +86,7 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
 -                LOG.fine("could not save sample key");
 -                return false;
 -            }
-+    private boolean testSampleKey() {
-+        encryption.freshKeyring(true);
-+        if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
-+                "Sample value ensuring that decryption is working.")) {
-+            LOG.fine("saved sample key");
-+            return true;
-         } else {
+-        } else {
 -            encryption.freshKeyring(false);
 -            while (true) {
 -                try {
@@ -127,7 +121,13 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
 -            } catch (BackingStoreException x) {
 -                LOG.log(Level.INFO, null, x);
 -            }
--        } else {
++    private boolean testSampleKey() {
++        encryption.freshKeyring(true);
++        if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
++                "Sample value ensuring that decryption is working.")) {
++            LOG.fine("saved sample key");
++            return true;
+         } else {
 -            LOG.fine("refused to delete stored passwords");
 +            LOG.fine("could not save sample key");
 +            return false;
@@ -141,39 +141,34 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
  
      public char[] read(String key) {
 -        byte[] ciphertext = prefs().getByteArray(key, null);
-+        String ciphertext_string = pre.get(key, null);
-+        byte[] ciphertext = ciphertext_string == null ? null : Utils.chars2Bytes(ciphertext_string.toCharArray());
++        byte[] ciphertext = prefs.getByteArray(key, null);
          if (ciphertext == null) {
              return null;
          }
-@@ -166,47 +114,24 @@
+@@ -166,47 +113,18 @@
          _save(key, password, description);
      }
      private boolean _save(String key, char[] password, String description) {
 -        Preferences prefs = prefs();
          try {
--            prefs.putByteArray(key, encryption.encrypt(password));
-+            byte[] encryptedPasswordByteArray = encryption.encrypt(password);
-+            String encryptedPassword = encryptedPasswordByteArray == null ? null : String.valueOf(Utils.bytes2Chars(encryptedPasswordByteArray));
-+            pre.put(key, encryptedPassword);
+             prefs.putByteArray(key, encryption.encrypt(password));
          } catch (Exception x) {
              LOG.log(Level.FINE, "failed to encrypt password for " + key, x);
              return false;
          }
-         if (description != null) {
-             // Preferences interface gives no access to *.properties comments, so:
+-        if (description != null) {
+-            // Preferences interface gives no access to *.properties comments, so:
 -            prefs.put(key + DESCRIPTION, description);
-+            pre.put(key + DESCRIPTION, description);
-         }
+-        }
          return true;
      }
  
      public void delete(String key) {
 -        Preferences prefs = prefs();
--        prefs.remove(key);
--        prefs.remove(key + DESCRIPTION);
--    }
--
+         prefs.remove(key);
+         prefs.remove(key + DESCRIPTION);
+     }
+ 
 -    public Void call() throws Exception { // encryption changing
 -        LOG.fine("encryption changing");
 -        Map<String,char[]> saved = new HashMap<String,char[]>();
@@ -195,15 +190,13 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/fallback/Fallbac
 -        }
 -        LOG.fine("encryption changing finished");
 -        return null;
-+        pre.remove(key);
-+        pre.remove(key + DESCRIPTION);
-     }
- 
+-    }
+-
  }
 Index: native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java
 ===================================================================
---- native-password-manager.orig/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-15 21:53:22.269122311 +0200
-+++ native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-15 21:17:50.000000000 +0200
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-18 13:04:37.141522563 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvider.java	2011-07-18 13:05:00.841640080 +0200
 @@ -43,16 +43,11 @@
  package org.netbeans.modules.keyring.gnome;
  
@@ -239,8 +232,8 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/gnome/GnomeProvi
              // Also used by confirmation dialogs to give the app access to the login keyring.
 Index: native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvider.java
 ===================================================================
---- native-password-manager.orig/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-15 21:53:37.837199499 +0200
-+++ native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-15 21:17:50.000000000 +0200
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-18 13:04:37.149522597 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvider.java	2011-07-18 13:05:00.849640122 +0200
 @@ -45,20 +45,15 @@
  import java.io.BufferedReader;
  import java.io.IOException;
@@ -279,8 +272,8 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/kde/KWalletProvi
      private void warning(String descr) {
 Index: native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.java
 ===================================================================
---- native-password-manager.orig/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-15 21:53:47.897249389 +0200
-+++ native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-15 21:17:50.000000000 +0200
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-18 13:04:37.157522639 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.java	2011-07-18 13:05:00.849640122 +0200
 @@ -47,26 +47,19 @@
  import java.util.logging.Level;
  import java.util.logging.Logger;
@@ -330,8 +323,8 @@ Index: native-password-manager/src/org/netbeans/modules/keyring/mac/MacProvider.
                      accountName.length, accountName, null, null, itemRef));
 Index: native-password-manager/src/org/netbeans/modules/keyring/win32/Win32Protect.java
 ===================================================================
---- native-password-manager.orig/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-15 21:53:58.733303122 +0200
-+++ native-password-manager/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-15 21:17:50.000000000 +0200
+--- native-password-manager.orig/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-18 13:04:37.165522672 +0200
++++ native-password-manager/src/org/netbeans/modules/keyring/win32/Win32Protect.java	2011-07-18 13:05:00.849640122 +0200
 @@ -54,28 +54,18 @@
  import java.util.logging.Logger;
  import org.netbeans.modules.keyring.impl.Utils;

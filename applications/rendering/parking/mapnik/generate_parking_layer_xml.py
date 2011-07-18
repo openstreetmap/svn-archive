@@ -239,7 +239,7 @@ def main_parking_neu(options):
 
     dest_dir_style = os.path.join(dest_dir,style_name)
     dest_dir_style_symbols = os.path.join(dest_dir_style,"symbols")
-    dest_file_style = 'osm-parking-neu.xml'
+    dest_file_style = 'osm-{style}.xml'.format(style=style_name)
     style_file = os.path.join(dest_dir_style,dest_file_style)
     if not os.path.exists(dest_dir_style_symbols):
         os.makedirs(dest_dir_style_symbols)

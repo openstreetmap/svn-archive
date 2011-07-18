@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import sys,os,subprocess
+import sys,os,subprocess,shutil
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
@@ -116,12 +116,13 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
 """
 
 def strip_doctype(f):
-    p = subprocess.Popen(['sed','-i','2,9 d',f]) # -i means 'in place'
+    p = subprocess.Popen(['sed','-i','2,10 d',f]) # -i means 'in place'
     p.wait()
 
 def create_parking_icons(source_symbols_dir,dest_symbols_dir):
     create_parking_lane_icons(source_symbols_dir,dest_symbols_dir)
     create_parking_area_icons(source_symbols_dir,dest_symbols_dir)
+    create_parking_point_icons(source_symbols_dir,dest_symbols_dir)
     
 def create_parking_lane_icons(source_symbols_dir,dest_symbols_dir):
     # first create mirror images (from left to right)
@@ -153,18 +154,16 @@ def create_parking_area_icons(source_symbols_dir,dest_symbols_dir):
         p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',df.replace('source',c)])
         p.wait()
 
-def create_parking_area_icons_delete(source_symbols_dir,dest_symbols_dir):
-    image_files = os.listdir(source_symbols_dir)
-    image_files = [f for f in image_files if f.startswith('parking_area') and f.endswith('source.png')]
-    print "all image files:", image_files
-    for f in image_files:
-        sf = os.path.join(source_symbols_dir,f)
-        df = os.path.join(dest_symbols_dir,f)
-        stampf = sf.replace('source','stamp')
-        print "stampf", stampf
-        for c in condition_colors.iterkeys():
-            colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
-            stamp_icon(df.replace('source',c),df.replace('source',c),stampf)
+def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):
+    # for now there's only the parking-vending icon
+    copy_files(source_symbols_dir,dest_symbols_dir,['parking-vending.png'])
+
+def copy_files(src,dest,files):
+    for f in files:
+        if type(f) is tuple:
+            shutil.copy2(os.path.join(src,f[0]),os.path.join(dest,f[1]))
+        else:
+            shutil.copy2(os.path.join(src,f),os.path.join(dest,f))
 
 def colorize_icon(sf,df,color):
     p = subprocess.Popen(['convert',sf,'-fill','#'+color,'-colorize','100',df])
@@ -279,6 +278,13 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
 
     things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pll,plr]
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
+
+    parking_points_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-points'))
+    parking_points_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-points'))
+    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
+    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
+    things=[parking_points_style,parking_points_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
     output= dest_parking_style_document.implementation.createLSOutput() 

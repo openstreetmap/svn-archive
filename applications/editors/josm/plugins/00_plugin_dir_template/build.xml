@@ -27,11 +27,11 @@
 **
 **
 -->
-<project name="myPluginName" default="dist" basedir=".">
+<project name="InfoMode" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
+    <property name="commit.message" value="InfoMode initial commit"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value=""/>
+    <property name="plugin.main.version" value="4201"/>
     <!-- should not be necessary to change the following properties -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.build.dir" value="build"/>
@@ -93,12 +93,13 @@
             ************************************************
             -->
             <manifest>
-                <attribute name="Author" value="..."/>
-                <attribute name="Plugin-Class" value="..."/>
+                <attribute name="Author" value="Alexei Kasatkin"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.infomode.InfoModePlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="..."/>
-                <attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
+                <attribute name="Plugin-Description" value="Extra information about current layer objects pop ups - currently GPX trackpoint info"/>
+<!--                <attribute name="Plugin-Icon" value="..."/> -->
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/InfoMode"/>
+                <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/InfoMode"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
@@ -230,4 +231,10 @@
     </target>
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
+    <target name="runjosm" depends="install">
+        <java jar="${josm}" fork="true">
+            <arg line="../../core/data_nodist/munich.gpx"/>
+        </java>
+    </target>
+
 </project>

@@ -42,6 +42,7 @@ require Exporter ;
 			getRouteColors
 			getRouteRule
 			printRouteRules
+			adaptRuleSizes
 		 ) ;
 
 my @validNodeProperties = qw (	keyValue
@@ -625,6 +626,63 @@ sub getRuleLine {
 		$line = <$ruleFile> ;
 	}
 	return $line ;
+}
+
+sub adaptRuleSizes {
+	foreach my $r ( keys %nodeRules ) {
+		foreach my $p ( qw (iconSize labelOffset labelSize shieldSize size) ) {
+			if ( defined $nodeRules{ $r }{ $p } ) {
+				if ( grep /:/, $nodeRules{ $r }{ $p } ) {
+					my $old = $nodeRules{ $r }{ $p } ;
+					my $new = scaleSize ($nodeRules{ $r }{ $p }, $nodeRules{ $r }{ 'fromscale' }, $nodeRules{ $r }{ 'toscale' }) ;
+					$nodeRules{ $r }{ $p } = $new ;
+					if ( cv('debug') eq "1" ) {
+						print "RULES/scale/node: $old -> $new\n" ;
+					}
+				}
+			}
+		}
+	}
+	foreach my $r ( keys %wayRules ) {
+		foreach my $p ( qw (bordersize labelsize labeloffset size ) ) {
+			if ( defined $wayRules{ $r }{ $p } ) {
+				if ( grep /:/, $wayRules{ $r }{ $p } ) {
+					my $kv = $wayRules{ $r }{ 'keyvalue' } ;
+					my $old = $wayRules{ $r }{ $p } ;
+					my $new = 0 ;
+					$new = scaleSize ($wayRules{ $r }{ $p }, $wayRules{ $r }{ 'fromscale' }, $wayRules{ $r }{ 'toscale' }) ;
+					$wayRules{ $r }{ $p } = $new ;
+					if ( cv('debug') eq "1" ) {
+						print "RULES/scale/way: $kv $p $old to $new\n" ;
+					}
+				}
+			}
+		}
+	}
+}
+
+sub scaleSize {
+	my ($str, $fromScale, $toScale) = @_ ;
+	my @tmp = split /:/, $str ;
+	my $lower = $tmp[0] ;
+	my $upper = $tmp[1] ;
+	my $newSize = 0 ;
+
+	my $scale = getScale() ;
+	if ( cv('rulescaleset') ne "0" ) { $scale = cv('rulescaleset') } ;
+
+	if ( $scale < $fromScale) {
+		$newSize = $upper ;
+	}
+	elsif ( $scale > $toScale ) {
+		$newSize = $lower ;
+	}
+	else {
+		my $percent = ( $scale - $fromScale ) / ($toScale - $fromScale) ;
+		$newSize = $upper - $percent * ($upper - $lower) ;
+	}
+	$newSize = int ( $newSize * 10 ) / 10 ;
+	return $newSize ;
 }
 
 1 ;

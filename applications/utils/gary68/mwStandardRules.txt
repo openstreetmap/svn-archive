@@ -122,18 +122,9 @@ RULE WAY
 keyvalue=highway=residential
 label=none
 color=grey
-size=10
+size=5:10
 bordersize=0
 fromscale=10001
-toscale=25000
-
-RULE WAY
-keyvalue=highway=residential
-label=none
-color=grey
-size=5
-bordersize=0
-fromscale=25001
 toscale=50000
 
 RULE WAY

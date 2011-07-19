@@ -53,7 +53,8 @@ my %wayUsed = () ;
 # -------------------------------------------------------------------------
 
 sub processMultipolygons {
-
+	my $notDrawnMP = 0 ;
+	my $mp = 0 ;
 	print "draw multipolygons...\n" ;
 
 	preprocessMultipolygons() ;
@@ -63,8 +64,6 @@ sub processMultipolygons {
 		my $ruleRef = getAreaRule ( \@{$multiTags{$multiId}} ) ;
 
 		if (defined $ruleRef) {
-
-			# TODO test size first!
 
 			my $svgText = "" ;
 			my $icon = "" ;
@@ -76,7 +75,16 @@ sub processMultipolygons {
 				$svgText = "fill=\"$col\" " ;
 			}
 
-			drawArea ($svgText, $icon, $multiPaths{$multiId}, 1, "multi") ;
+			my $ref = $multiPaths{$multiId}[0] ; # first, outer way
+			my $size = areaSize ( $ref ) ;
+
+			if ($size >= cv('minareasize') ) {
+				drawArea ($svgText, $icon, $multiPaths{$multiId}, 1, "multi") ;
+				$mp++ ;
+			}
+			else {
+				$notDrawnMP++ ;
+			}
 
 			# LABELS
 			my $name = "" ; my $ref1 ;
@@ -101,6 +109,7 @@ sub processMultipolygons {
 			} # if
 		} # if rule
 	} # foreach multi
+	print "$mp multipolygon areas drawn, $notDrawnMP not drawn because they were too small.\n" ;
 }
 
 # ------------------------------------------------------------------------------------------

@@ -19,9 +19,14 @@
 # 0.13 routes, not yet working...
 # 0.14 route work
 # 0.15 routes working now - finetuning needed; bgbolor implemented; multipolygons
+# 0.16 size check for multipolygon areas; scale rule sizes (x:y)
 # 
 
-my $version = "0.15" ;
+# TODO
+# -area labels
+# -different tempfilenames
+
+my $version = "0.16" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -69,6 +74,8 @@ if ( cv('debug') eq "1" ) {
 }
 
 readFile() ;
+
+adaptRuleSizes() ;
 
 if ( cv('multionly') eq "0" ) {
 

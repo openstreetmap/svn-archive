@@ -54,7 +54,7 @@ public class CheckAction extends JosmAction
      */
     public void doCheck(ActionEvent ev)
     {
-        if (plugin.validateAction == null || Main.map == null || !Main.map.isVisible())
+        if (plugin.checkAction == null || Main.map == null || !Main.map.isVisible())
             return;
 
         plugin.initializeProblemLayer();
@@ -98,7 +98,8 @@ public class CheckAction extends JosmAction
          */
         public CheckTask(Collection<OsmPrimitive> validatedPrimitives, Collection<OsmPrimitive> formerValidatedPrimitives) 
         {
-            super(tr("Loading from Quick History Service"), false /*don't ignore exceptions */);
+            super(tr("Loading"), false /*don't ignore exceptions */);
+
             this.validatedPrimitives  = validatedPrimitives;
             this.formerValidatedPrimitives = formerValidatedPrimitives;
             this.licenseCheck = new BasicLicenseCheck(plugin);
@@ -119,8 +120,8 @@ public class CheckAction extends JosmAction
             //
             Runnable r = new Runnable()  {
                 public void run() {
-                    plugin.validationDialog.tree.setErrors(problems);
-                    plugin.validationDialog.setVisible(true);
+                    plugin.problemDialog.tree.setErrors(problems);
+                    plugin.problemDialog.setVisible(true);
                     Main.main.getCurrentDataSet().fireSelectionChanged();
                 }
             };
@@ -138,12 +139,13 @@ public class CheckAction extends JosmAction
         protected void realRun() throws SAXException, IOException,
                 OsmTransferException 
         {
+            getProgressMonitor().indeterminateSubTask(tr("Loading from Quick History Service..."));
             plugin.loadDataFromQuickHistoryService(validatedPrimitives);
             problems = new ArrayList<LicenseProblem>(200);
-            getProgressMonitor().setTicksCount(validatedPrimitives.size());
             int testCounter = 0;
-            getProgressMonitor().setCustomText(tr("Analyzing"));
-            licenseCheck.startCheck(getProgressMonitor().createSubTaskMonitor(validatedPrimitives.size(), false));
+            getProgressMonitor().indeterminateSubTask(tr("Analyzing..."));
+            //licenseCheck.startCheck(getProgressMonitor().createSubTaskMonitor(validatedPrimitives.size(), false));
+            licenseCheck.startCheck(getProgressMonitor());
             licenseCheck.visit(validatedPrimitives);
             licenseCheck.endCheck();
             problems.addAll(licenseCheck.getProblems());

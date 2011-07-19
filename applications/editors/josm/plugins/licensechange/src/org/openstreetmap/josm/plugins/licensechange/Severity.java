@@ -13,15 +13,15 @@ public enum Severity {
 
     /** Error messages */
     DATA_LOSS(tr("Data loss"), "error.gif",                     
-        Main.pref.getColor(marktr("license validation error"), Color.RED)),
+        Main.pref.getColor(marktr("license check error"), Color.RED)),
 
     /** Warning messages */
     POSSIBLE_DATA_LOSS(tr("Possible data loss"), "warning.gif", 
-        Main.pref.getColor(marktr("license validation warning"), Color.ORANGE)),
+        Main.pref.getColor(marktr("license check warning"), Color.ORANGE)),
 
     /** Other messages */
     DATA_REDUCTION(tr("Data reduction"), "other.gif",           
-        Main.pref.getColor(marktr("license validation other"), Color.YELLOW));
+        Main.pref.getColor(marktr("license check notice"), Color.YELLOW));
 
     /** Description of the severity code */
     private final String message;

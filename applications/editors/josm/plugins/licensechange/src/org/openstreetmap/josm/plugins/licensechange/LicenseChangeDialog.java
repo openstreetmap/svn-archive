@@ -35,7 +35,6 @@ import javax.swing.tree.TreePath;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -54,7 +53,7 @@ import org.xml.sax.SAXException;
  * respects clicks into the selection list. Ctrl-click will remove entries from
  * the list while single click will make the clicked entry the only selection.
  */
-public class LicenseChangeDialog extends ToggleDialog implements ActionListener, SelectionChangedListener {
+public class LicenseChangeDialog extends ToggleDialog implements ActionListener {
     private LicenseChangePlugin plugin;
 
     /** The display tree */
@@ -76,7 +75,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener,
     {
         super(tr("Relicensing problems"), "licensechange", tr("Open the relicensing window."),
                 Shortcut.registerShortcut("subwindow:licensechange", tr("Toggle: {0}", tr("Relicensing problems")),
-                        KeyEvent.VK_V, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
+                        KeyEvent.VK_L, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
 
         this.plugin = plugin;
         popupMenu = new JPopupMenu();
@@ -101,7 +100,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener,
                 tr("Set the selected elements on the map to the selected items in the list above."), this);
         selectButton.setEnabled(false);
         buttonPanel.add(selectButton);
-        buttonPanel.add(new SideButton(plugin.validateAction), "refresh");
+        buttonPanel.add(new SideButton(plugin.checkAction), "refresh");
         add(buttonPanel, BorderLayout.SOUTH);
 
     }
@@ -109,17 +108,10 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener,
     @Override
     public void showNotify() 
     {
-        DataSet.addSelectionListener(this);
         DataSet ds = Main.main.getCurrentDataSet();
         if (ds != null) {
             updateSelection(ds.getSelected());
         }
-    }
-
-    @Override
-    public void hideNotify() 
-    {
-        DataSet.removeSelectionListener(this);
     }
 
     @Override
@@ -320,8 +312,4 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener,
         tree.setFilter(filter);
     }
 
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) 
-    {
-        updateSelection(newSelection);
-    }
 }

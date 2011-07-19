@@ -89,7 +89,6 @@ public class Check extends AbstractVisitor
         } else {
                 this.progressMonitor = progressMonitor;
         }
-        this.progressMonitor.beginTask(tr("Running test {0}", name));
         errors = new ArrayList<LicenseProblem>(30);
     }
 

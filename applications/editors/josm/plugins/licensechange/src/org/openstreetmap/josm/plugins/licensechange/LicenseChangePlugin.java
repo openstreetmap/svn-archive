@@ -64,10 +64,10 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
     protected static ProblemLayer problemLayer = null;
 
     /** The validate action */
-    CheckAction validateAction = new CheckAction(this);
+    CheckAction checkAction = new CheckAction(this);
 
     /** The validation dialog */
-    LicenseChangeDialog validationDialog;
+    LicenseChangeDialog problemDialog;
 
     /** The list of errors per layer*/
     Map<Layer, List<LicenseProblem>> layerProblems = new HashMap<Layer, List<LicenseProblem>>();
@@ -94,8 +94,8 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
     {
         if (newFrame != null) 
         {
-            validationDialog = new LicenseChangeDialog(this);
-            newFrame.addToggleDialog(validationDialog);
+            problemDialog = new LicenseChangeDialog(this);
+            newFrame.addToggleDialog(problemDialog);
             initializeProblemLayer();
             MapView.addLayerChangeListener(this);
         } 
@@ -122,7 +122,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
     {
         if (newLayer instanceof OsmDataLayer) {
             List<LicenseProblem> errors = layerProblems.get(newLayer);
-            validationDialog.tree.setErrorList(errors);
+            problemDialog.tree.setErrorList(errors);
             Main.map.repaint();
         }
     }

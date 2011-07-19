@@ -60,8 +60,8 @@ public class ProblemLayer extends Layer implements LayerChangeListener
     @Override
     public void paint(final Graphics2D g, final MapView mv, Bounds bounds) 
     {
-        updateCount = plugin.validationDialog.tree.getUpdateCount();
-        DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
+        updateCount = plugin.problemDialog.tree.getUpdateCount();
+        DefaultMutableTreeNode root = plugin.problemDialog.tree.getRoot();
         if (root == null || root.getChildCount() == 0)
             return;
 
@@ -85,7 +85,7 @@ public class ProblemLayer extends Layer implements LayerChangeListener
     public String getToolTipText() 
     {
         Bag<Severity, LicenseProblem> problemTree = new Bag<Severity, LicenseProblem>();
-        List<LicenseProblem> problems = plugin.validationDialog.tree.getErrors();
+        List<LicenseProblem> problems = plugin.problemDialog.tree.getErrors();
         for (LicenseProblem e : problems) {
             problemTree.add(e.getSeverity(), e);
         }
@@ -117,7 +117,7 @@ public class ProblemLayer extends Layer implements LayerChangeListener
     @Override
     public boolean isChanged() 
     {
-        return updateCount != plugin.validationDialog.tree.getUpdateCount();
+        return updateCount != plugin.problemDialog.tree.getUpdateCount();
     }
 
     @Override

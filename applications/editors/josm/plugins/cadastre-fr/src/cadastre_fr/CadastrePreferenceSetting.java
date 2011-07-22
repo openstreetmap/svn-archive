@@ -322,7 +322,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             }
         });
         enableCache.setSelected(Main.pref.getBoolean("cadastrewms.enableCaching", true));
-        enableCache.setToolTipText(tr("Replace the original white background by the backgound color defined in JOSM preferences."));
+        enableCache.setToolTipText(tr("Allows an automatic caching"));
         cadastrewms.add(enableCache, GBC.eop().insets(0, 0, 0, 0));
 
         // option to fix the cache size(in MB)

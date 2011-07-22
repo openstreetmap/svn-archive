@@ -31,7 +31,7 @@
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="commit.message" value="Changed constructor for Plugin"/>
-    <property name="plugin.main.version" value="3835"/>
+    <property name="plugin.main.version" value="4126"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>

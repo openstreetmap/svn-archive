@@ -1,6 +1,7 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.ActionEvent;
 
@@ -9,7 +10,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 @SuppressWarnings("serial")
 public class MenuActionCancelGrab extends JosmAction {
 
-    public static String name = "Cancel current grab";
+    public static String name = marktr("Cancel current grab");
 
     private WMSLayer wmsLayer;
     

@@ -21,6 +21,9 @@
                     <location>src</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
+                <build-file>
+                    <location>../../dist/InfoMode.jar</location>
+                </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -36,7 +39,16 @@
                 <action name="run">
                     <target>runjosm</target>
                 </action>
+                <action name="debug">
+                    <script>nbproject/ide-targets.xml</script>
+                    <target>debug-nb</target>
+                </action>
             </ide-actions>
+            <export>
+                <type>jar</type>
+                <location>../../dist/InfoMode.jar</location>
+                <build-target>install</build-target>
+            </export>
             <view>
                 <items>
                     <source-folder style="packages">
@@ -52,6 +64,7 @@
                     <ide-action name="rebuild"/>
                     <ide-action name="clean"/>
                     <ide-action name="run"/>
+                    <ide-action name="debug"/>
                 </context-menu>
             </view>
             <subprojects/>
@@ -60,6 +73,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="compile">../../core/src</classpath>
+                <built-to>../../dist/InfoMode.jar</built-to>
                 <source-level>1.6</source-level>
             </compilation-unit>
         </java-data>

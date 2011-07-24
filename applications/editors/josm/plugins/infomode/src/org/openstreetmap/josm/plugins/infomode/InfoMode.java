@@ -24,8 +24,10 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
-import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -48,14 +50,16 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private boolean oldCtrl;
     private boolean oldShift;
     private EastNorth pos;
-    DateFormat df;
+    private WayPoint wpOld;
+    private Popup oldPopup;
+    private InfoPanel infoPanel;
 
     InfoMode(MapFrame mapFrame) {
         super(tr("InfoMode"), "infomode.png", tr("GPX info mode"), Shortcut.registerShortcut(
                 "mapmode/infomode",
                 tr("Mode: {0}", tr("GPX info mode")),
                 KeyEvent.VK_BACK_SLASH, Shortcut.GROUP_EDIT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT, Locale.getDefault()); 
+        infoPanel=new InfoPanel();
         
     }
 
@@ -91,6 +95,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
         Main.map.mapView.removeMouseMotionListener(this);
 
         Main.map.mapView.removeTemporaryLayer(this);
+        if (oldPopup!=null) oldPopup.hide();
 
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
@@ -118,38 +123,43 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
             GpxLayer gpxL = (GpxLayer )l;
             
             double minDist=1e9,d,len=0;
-            WayPoint wp=null;
+            WayPoint wp=null,oldWp=null,prevWp=null;
             GpxTrack trk=null;
             for (GpxTrack track : gpxL.data.tracks) {
                 for (GpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
                         d = S.getEastNorth().distance(pos);
-                        if (d<minDist && d<10) {
+                        if (d<minDist && d<100) {
                             minDist = d;
+                            prevWp=oldWp;
                             wp=S;
                             trk=track;
                             }
-                        if (track==trk) len+=seg.length();
-                        }
+                        oldWp=wp;
                     }
+                }
             }
             if (wp!=null) {
                 Point p = mv.getPoint(wp.getCoor());
+                                
                 g.setColor(Color.RED);
                 g.fillOval(p.x-10, p.y-10, 20, 20); // mark selected point
-                p.translate(20, 5);
-                g.setColor(Color.WHITE);
-                g.fillRoundRect(p.x, p.y-25, 200, 50,10,10);
-                g.setColor(Color.BLACK);
-                g.drawString(df.format(wp.getTime()), p.x+5, p.y-10);
-                String s = (String) trk.getAttributes().get("name");
-                if (s!=null) g.drawString(s, p.x+5, p.y+5);
-                System.out.println(trk.getAttributes().toString());                
-                System.out.println(wp.attr.toString());                
-                s = (String) wp.attr.get("ele");
-                String s1=null;
-                try {s1 = String.format("%3.1f", Double.parseDouble(s));} catch (Exception e) {  }
-                if (s1!=null) g.drawString("H="+s1, p.x+5, p.y+20);
+                
+                if (wp!=wpOld) {
+                if (oldPopup!=null) oldPopup.hide();
+                double vel=-1;
+                if (prevWp!=null && wp.time!=prevWp.time) {
+                    vel=wp.getCoor().greatCircleDistance(prevWp.getCoor())/
+                            (wp.time-prevWp.time)*3.6;
+                }
+                infoPanel.setData(wp,trk,vel,gpxL.data.tracks);
+                Point s=mv.getLocationOnScreen();
+                Popup pp=PopupFactory.getSharedInstance().getPopup(mv, infoPanel, 
+                        s.x+p.x+10, s.y+p.y+10);
+                pp.show();
+                wpOld=wp;
+                oldPopup=pp;
+                }
             }
             
         }
@@ -169,7 +179,6 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     public void mousePressed(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        
         //setStatusLine(tr("Please move the mouse to draw new way"));
         repaint();
 
@@ -179,13 +188,19 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     public void mouseReleased(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        
+        if (oldPopup!=null) {
+            oldPopup.hide();
+            oldPopup=null;        wpOld=null;
+        }        
         repaint();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mouseMoved(e);
+        if (oldPopup!=null) {
+            oldPopup.hide();
+            oldPopup=null;        wpOld=null;
+        }
     }
 
     @Override
@@ -198,8 +213,11 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private void doKeyEvent(KeyEvent e) {
         ///  System.out.println(e);
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            filterTracks();
+            repaint();
         }
     }
+    
 
     /**
      * Updates shift and ctrl key states
@@ -221,11 +239,32 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
 
     private void repaint() {
-        Main.map.mapView.repaint();
+        if (Main.map!=null) Main.map.mapView.repaint();
     }
     private void setStatusLine(String tr) {
         statusText=tr;
         updateStatusLine();
+    }
+
+    private synchronized void filterTracks() {
+        Layer l = Main.main.getActiveLayer();
+        
+        if (l instanceof GpxLayer && pos!=null) {
+            GpxLayer gpxL = (GpxLayer )l;
+            Set<GpxTrack> toRemove = new HashSet<GpxTrack>();
+            for (GpxTrack track : gpxL.data.tracks) {
+                boolean f=true;
+                sg: for (GpxTrackSegment seg : track.getSegments()) {
+                    for (WayPoint S : seg.getWayPoints()) {
+                        if (S.time!=0) {f=false; break sg;}
+                    }
+                }
+                if (f) toRemove.add(track);
+            }
+            gpxL.data.tracks.removeAll(toRemove);
+                                
+
+        }
     }
 
     

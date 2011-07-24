@@ -20,13 +20,14 @@
 # 0.14 route work
 # 0.15 routes working now - finetuning needed; bgbolor implemented; multipolygons
 # 0.16 size check for multipolygon areas; scale rule sizes (x:y)
+# 0.17 -forcenodes; projection in footer
 # 
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.16" ;
+my $version = "0.17" ;
 my $programName = "mapweaver" ;
 
 use strict ;

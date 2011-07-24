@@ -123,7 +123,7 @@ sub placeLabelAndIcon {
 			LABAB: foreach my $xShift (@shifts) {
 				foreach my $yShift (@shifts) {
 					$posCount++ ;
-					if ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) {
+					if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
 						placeIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1, "nodes") ;
 						occupyArea ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ;
 						$posFound = 1 ;
@@ -258,7 +258,10 @@ sub checkAndDrawText {
 	my ($size) = ( $svgText =~ /font-size=\"(\d+)\"/ ) ;
 	if ( ! defined $size ) { die ("ERROR: font size could not be determined from svg format string \"$svgText\"\n") ; }
 
-	if ( ! areaOccupied ($x1, $x2, $y1, $y2)) {
+	if ( 
+	( ! areaOccupied ($x1, $x2, $y1, $y2) ) or 
+	( cv('forcenodes') eq "1" ) 
+	)  {
 
 		for (my $i=0; $i<=$#lines; $i++) {
 

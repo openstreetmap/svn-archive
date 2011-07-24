@@ -320,7 +320,7 @@ public class InitializationWizard extends JDialog {
             HtmlPanel l = new HtmlPanel();
             l.setText("<html><b>"+tr("Found sensitive data that is still saved"
                     + " in JOSM''s preference file (plain text).")+"<b></html>");
-            rbClear = new JRadioButton("<html>"+tr("Erase and transfer to password manager")+"</html>");
+            rbClear = new JRadioButton("<html>"+tr("Transfer to password manager and remove from prefence file")+"</html>");
             rbKeep = new JRadioButton("<html>"+tr("No, just keep it")+"</html>");
             rbClear.setSelected(true);
             ButtonGroup group = new ButtonGroup();

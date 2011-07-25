@@ -27,7 +27,7 @@
 -->
 <project name="RoadSigns" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="preset maintenance"/>
+    <property name="commit.message" value="preset maintenance (Fahrradstraße)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3835"/>
 

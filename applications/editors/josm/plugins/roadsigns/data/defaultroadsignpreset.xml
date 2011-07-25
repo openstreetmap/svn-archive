@@ -18,7 +18,7 @@ plugin.roadsigns.icon.sources=/path/to/image/folder
 
 Preset format
 =============
-
+		
 Some values can contain parameters like $foo, that will be replaced by the value of the parameter named foo.
 
 sign:
@@ -159,9 +159,11 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:244" name="Bicycle road" de.name="Fahrradstraße">
         <!-- highway=* -->
+        <tag key="bicycle_road" value="yes"/>
         <tag key="bicycle" value="official"/>
+        <tag key="vehicle" value="no" ident="mode"/>
         <tag key="maxspeed" value="30"/> <!-- FIXME: no override but min. value -->
-        <tag key="access" value="" ident="mode"/>
+        <tag key="source:maxspeed" value="DE:bicycle_road"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
@@ -170,7 +172,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
-        <!-- Kraftfahrzeuge frei -->
+        <supplementary id="DE:Kraftfahrzeuge-frei"/> <!-- Kraftfahrzeuge frei -->
     </sign>
 
     <sign ref="DE:250" name="All vehicles prohibited" de.name="Verbot für Fahrzeuge aller Art">
@@ -421,5 +423,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:1052-36" supplementary="yes" name="When the road is wet" de.name="Bei nasser Fahrbahn">
         <tag tag_ref="restriction" condition="wet"/>
+    </sign>
+
+    <sign ref="DE:Kraftfahrzeuge-frei" supplementary="yes" name="Motor vehicles allowed" de.name="Kraftfahrzeuge frei">
+        <tag key="motor_vehicle" value="yes"/>
     </sign>
 </roadsignpreset>

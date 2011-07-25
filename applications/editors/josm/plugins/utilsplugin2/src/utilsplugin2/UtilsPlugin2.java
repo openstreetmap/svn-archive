@@ -16,6 +16,7 @@ import static org.openstreetmap.josm.tools.I18n.marktr;
 
 public class UtilsPlugin2 extends Plugin {
     JMenuItem unglueRelation;
+    JMenuItem symmetry;
     JMenuItem addIntersections;
     JMenuItem splitObject;
     JMenuItem selectWayNodes;
@@ -45,7 +46,7 @@ public class UtilsPlugin2 extends Plugin {
         unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
-
+        
         toolsMenu.addSeparator();
         replaceGeometry = MainMenu.add(toolsMenu, new ReplaceGeometryAction());
         tagBuffer = MainMenu.add(toolsMenu, new TagBufferAction());
@@ -54,6 +55,7 @@ public class UtilsPlugin2 extends Plugin {
         alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
         splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
         extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
+        symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
 
         JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());

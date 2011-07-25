@@ -29,7 +29,7 @@
 -->
 <project name="InfoMode" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="InfoMode : link and velocity works, shift=highlight track"/>
+    <property name="commit.message" value="InfoMode : new icon, keys for exit mode"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4201"/>
     <!-- should not be necessary to change the following properties -->
@@ -97,7 +97,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.infomode.InfoModePlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Extra information about current layer objects pop ups - currently GPX trackpoint info"/>
-<!--                <attribute name="Plugin-Icon" value="..."/> -->
+                <attribute name="Plugin-Icon" value="images/mapmode/infomode.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/InfoMode"/>
                 <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/InfoMode"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

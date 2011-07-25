@@ -234,6 +234,11 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
             filterTracks();
             repaint();
         }
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH ||
+                e.getKeyCode() == KeyEvent.VK_ENTER ||
+                e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            Main.map.selectSelectTool(false);
+        }
     }
     
 

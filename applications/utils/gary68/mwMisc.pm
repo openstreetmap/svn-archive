@@ -465,47 +465,47 @@ sub processPageNumbers {
 
 sub drawPageNumber {
 	my ($size, $col, $num) = @_ ;
-	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
 	my $x = $sizeX - 2 * $size ;
 	my $y = $sizeY - 2 * $size ;
 	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
-	drawText ($x, $y, 0, $num, $svgString, "text")
+	mwMap::drawText ($x, $y, 0, $num, $svgString, "text")
 }
 
 sub drawPageNumberLeft {
 	my ($size, $col, $num) = @_ ;
-	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
 	my $x = 2 * $size ;
 	my $y = $sizeY / 2 ;
 	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
-	drawText ($x, $y, 0, $num, $svgString, "text")
+	mwMap::drawText ($x, $y, 0, $num, $svgString, "text")
 }
 
 sub drawPageNumberBottom {
 	my ($size, $col, $num) = @_ ;
-	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
 	my $x = $sizeX / 2 ;
 	my $y = $sizeY - 2 * $size ;
 	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
-	drawText ($x, $y, 0, $num, $svgString, "text")
+	mwMap::drawText ($x, $y, 0, $num, $svgString, "text")
 }
 
 sub drawPageNumberRight {
 	my ($size, $col, $num) = @_ ;
-	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
 	my $x = $sizeX - 2 * $size ;
 	my $y = $sizeY / 2 ;
 	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
-	drawText ($x, $y, 0, $num, $svgString, "text")
+	mwMap::drawText ($x, $y, 0, $num, $svgString, "text")
 }
 
 sub drawPageNumberTop {
 	my ($size, $col, $num) = @_ ;
-	my ($sizeX, $sizeY) = getDimensions() ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
 	my $x = $sizeX / 2 ;
 	my $y = 2 * $size ;
 	my $svgString = "fill=\"$col\" font-size=\"$size\" " ;
-	drawText ($x, $y, 0, $num, $svgString, "text")
+	mwMap::drawText ($x, $y, 0, $num, $svgString, "text")
 }
 
 # ---------------------------------------------------------------------

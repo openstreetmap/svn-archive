@@ -22,13 +22,13 @@
 # 0.16 size check for multipolygon areas; scale rule sizes (x:y)
 # 0.17 -forcenodes; projection in footer
 # 0.18 direxclude options and rule properties
-# 
+# 0.19 pagenumber bug solved
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.18" ;
+my $version = "0.19" ;
 my $programName = "mapweaver" ;
 
 use strict ;

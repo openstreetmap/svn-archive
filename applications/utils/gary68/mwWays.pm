@@ -143,7 +143,7 @@ sub processWays {
 				if ($name ne "") { 
 					addWayLabel ($wayId, $name, $ruleRef) ; 
 				}
-				if ( cv('dir') eq "1") {
+				if ( ( cv('dir') eq "1") and ( $$ruleRef{'direxclude'} eq "no") ) {
 					if ( cv('grid') > 0) {
 						foreach my $node ( @nodes ) {
 							foreach my $name (@names) {

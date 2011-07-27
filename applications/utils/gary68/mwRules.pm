@@ -74,6 +74,7 @@ my @validNodeProperties = qw (	keyValue
 						shieldLabel
 						fromScale
 						toScale
+						direxclude
 					) ;
 
 my @validWayProperties = qw (	keyValue
@@ -95,6 +96,8 @@ my @validWayProperties = qw (	keyValue
 					
 					fromScale
 					toScale
+
+					direxclude
 					) ;
 
 my @validAreaProperties = qw (	keyValue
@@ -217,6 +220,8 @@ sub readRules {
 			$nodeRules{ $nodeNr }{ 'fromscale' } = cv ('ruledefaultnodefromscale') ;
 			$nodeRules{ $nodeNr }{ 'toscale' } =  cv ('ruledefaultnodetoscale') ;
 
+			$nodeRules{ $nodeNr }{ 'direxclude' } = cv('direxcludedefault') ;
+
 			while ( ( defined $line) and ( ! grep /^rule/i, $line) ) {
 				my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;
 				if ( ( ! defined $k ) or ( ! defined $v ) ) {
@@ -257,6 +262,8 @@ sub readRules {
 
 			$wayRules{ $wayNr }{ 'fromscale' } = cv ('ruledefaultwayfromscale') ;
 			$wayRules{ $wayNr }{ 'toscale' } =  cv ('ruledefaultwaytoscale') ;
+
+			$wayRules{ $wayNr }{ 'direxclude' } = cv('direxcludedefault') ;
 
 			while ( ( defined $line) and ( ! grep /^rule/i, $line) ) {
 				my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;

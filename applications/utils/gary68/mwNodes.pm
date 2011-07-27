@@ -122,7 +122,10 @@ sub processNodes {
 			my ($thing) = ( $thing0 =~ /.+=(.+)/ ) ;
 
 			my $dirName = getValue ("name", $$tagRef{$nodeId} ) ;
-			if ( ( cv('poi') eq "1" ) and ( defined $dirName ) ) {
+			if ( 	( cv('poi') eq "1" ) and 
+				( defined $dirName ) and 
+				( $$ruleRef{'direxclude'} eq "no") 
+			) {
 				$dirName .=  " ($thing)" ;
 				if ( cv('grid') > 0) {
 					my $sq = gridSquare($$lonRef{$nodeId}, $$latRef{$nodeId}, cv('grid')) ;

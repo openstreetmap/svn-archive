@@ -43,6 +43,7 @@ require Exporter ;
 			getRouteRule
 			printRouteRules
 			adaptRuleSizes
+			createLegend
 		 ) ;
 
 my @validNodeProperties = qw (	keyValue
@@ -89,6 +90,8 @@ my @validWayProperties = qw (	keyValue
 					labelSize
 					labelFont
 					labelOffset
+					legend
+					legendLabel
 
 					svgStringBottom
 					svgStringTop
@@ -105,6 +108,8 @@ my @validAreaProperties = qw (	keyValue
 						icon
 						base
 						svgString
+						legend
+						legendLabel
 						fromScale
 						toScale
 					) ;
@@ -203,6 +208,8 @@ sub readRules {
 			$nodeRules{ $nodeNr }{ 'legend' } = "no" ;
 			$nodeRules{ $nodeNr }{ 'shieldname' } = "none" ;
 			$nodeRules{ $nodeNr }{ 'svgstring' } = "" ;
+			$nodeRules{ $nodeNr }{ 'legend' } = "no" ;
+			$nodeRules{ $nodeNr }{ 'legendlabel' } = "" ;
 
 			$nodeRules{ $nodeNr }{ 'circle' } = 'no' ;
 			$nodeRules{ $nodeNr }{ 'circlecolor' } = 'black' ;
@@ -250,6 +257,8 @@ sub readRules {
 			$wayRules{ $wayNr }{ 'labelcolor' } = cv( 'ruleDefaultWayLabelColor' ) ;
 			$wayRules{ $wayNr }{ 'labelfont' } = cv( 'ruleDefaultWayLabelFont' ) ;
 			$wayRules{ $wayNr }{ 'labeloffset' } = cv( 'ruleDefaultWayLabelOffset' ) ;
+			$wayRules{ $wayNr }{ 'legend' } = "no" ;
+			$wayRules{ $wayNr }{ 'legendlabel' } = "" ;
 			$wayRules{ $wayNr }{ 'color' } = cv( 'ruleDefaultWayColor' ) ;
 			$wayRules{ $wayNr }{ 'size' } = cv( 'ruleDefaultWaySize' ) ;
 			$wayRules{ $wayNr }{ 'bordercolor' } = cv( 'ruleDefaultWayBorderColor' ) ;
@@ -293,6 +302,8 @@ sub readRules {
 			$areaRules{ $areaNr }{ 'base' } = "no"  ;
 			$areaRules{ $areaNr }{ 'svgstring' } = ""  ;
 			$areaRules{ $areaNr }{ 'minsize' } = cv ('ruledefaultareaminsize')  ;
+			$areaRules{ $areaNr }{ 'legend' } = "no" ;
+			$areaRules{ $areaNr }{ 'legendlabel' } = "" ;
 			$areaRules{ $areaNr }{ 'fromscale' } = cv ('ruledefaultareafromscale') ;
 			$areaRules{ $areaNr }{ 'toscale' } =  cv ('ruledefaultareatoscale') ;
 
@@ -690,6 +701,148 @@ sub scaleSize {
 	}
 	$newSize = int ( $newSize * 10 ) / 10 ;
 	return $newSize ;
+}
+
+sub createLegend {
+
+	# TODO Auto size
+
+	my $nx = 80 ;
+	my $ny = 80 ;
+	my $ey = 1.5 * $ny ;
+	my $sx = 700 ;
+	my $tx = 200 ;
+	my $ty = $ey / 2 ;
+	my $fs = 40 ;
+	my $actualLine = 0 ;
+
+	my $preCount = 0 ;
+	foreach my $n (keys %nodeRules) {
+		if ( $nodeRules{$n}{"legend"} eq "yes" ) { $preCount++ ; }
+	}
+	foreach my $n (keys %wayRules) {
+		if ( $wayRules{$n}{"legend"} eq "yes" ) { $preCount++ ; }
+	}
+	foreach my $n (keys %areaRules) {
+		if ( $areaRules{$n}{"legend"} eq "yes" ) { $preCount++ ; }
+	}
+	if ( cv('debug') eq "1" ) { print "LEGEND: $preCount elements found\n" ; }
+
+	my $sy = $preCount * $ey ;
+	addToLayer ("definitions", "<g id=\"legenddef\" width=\"$sx\" height=\"$sy\" >") ;
+
+	my $color = "white" ;
+	my $svgString = "fill=\"$color\"" ;
+	drawRect (0, 0, $sx, $sy, 0, $svgString, "definitions") ;
+
+	foreach my $n (keys %nodeRules) {
+		if ( $nodeRules{$n}{"legend"} eq "yes" ) {
+			my $x = $nx ;
+			my $y = $actualLine * $ey + $ny ;
+			
+			if ( ($nodeRules{$n}{'size'} > 0) and ($nodeRules{$n}{'icon'} eq "none") )  {
+				my $svgString = "" ;
+				if ( $nodeRules{$n}{'svgstring'} ne "" ) {
+					$svgString = $nodeRules{$n}{'svgstring'} ;
+				}
+				else {
+					$svgString = "fill=\"$nodeRules{$n}{'color'}\"" ;
+				}
+
+				if ( $nodeRules{$n}{'shape'} eq "circle") {
+					drawCircle ($x, $y, 0, $nodeRules{$n}{'size'}, 0, $svgString, 'definitions') ;
+				}
+				elsif ( $nodeRules{$n}{'shape'} eq "square") {
+					drawSquare ($x, $y, 0, $nodeRules{$n}{'size'}, 0, $svgString, 'definitions') ;
+				}
+				elsif ( $nodeRules{$n}{'shape'} eq "triangle") {
+					drawTriangle ($x, $y, 0, $nodeRules{$n}{'size'}, 0, $svgString, 'definitions') ;
+				}
+				elsif ( $nodeRules{$n}{'shape'} eq "diamond") {
+					drawDiamond ($x, $y, 0, $nodeRules{$n}{'size'}, 0, $svgString, 'definitions') ;
+				}
+				my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+				drawText ($tx, ($actualLine+0.5) * $ey + $fs/2, 0, $nodeRules{$n}{'legendlabel'}, $textSvgString, "definitions") ;
+			}
+			else {
+				# TODO icon
+			}
+		$actualLine ++ ;
+		}
+	}
+
+	foreach my $w (keys %wayRules) {
+		if ( $wayRules{$w}{"legend"} eq "yes" ) {
+			my ($x1, $x2) ;
+			$x1 = 0.5 * $nx ;
+			$x2 = 1.5 * $nx ;
+			my $y = $actualLine * $ey + $ny ;
+			my ($svg1, $layer1, $svg2, $layer2) = mwWays::createWayParameters ($wayRules{$w}, 0, 0, 0) ;
+			my @coords = ($x1, $y, $x2, $y) ;
+			if ($svg2 ne "") {
+				drawWay ( \@coords, 0, $svg2, "definitions", undef ) ;
+			}
+			drawWay ( \@coords, 0, $svg1, "definitions", undef ) ;
+			my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+			drawText ($tx, ($actualLine+0.5)*$ey + $fs/2, 0, $wayRules{$w}{'legendlabel'}, $textSvgString, "definitions") ;
+
+			$actualLine++ ;
+
+		}
+	}
+
+	foreach my $a (keys %areaRules) {
+		if ( $areaRules{$a}{"legend"} eq "yes" ) {
+			my ($x1, $x2) ;
+			my ($y1, $y2) ;
+			$x1 = 0.7 * $nx ;
+			$x2 = 1.3 * $nx ;
+			$y1 = $actualLine * $ey + 0.7 * $ny ;
+			$y2 = $actualLine * $ey + 1.3 * $ny ;
+
+			my $color = $areaRules{$a}{'color'} ;
+			my $icon = $areaRules{$a}{'icon'} ;
+			my $base = $areaRules{$a}{'base'} ;
+			my $svgString = $areaRules{$a}{'svgstring'} ;
+
+			if ( ($svgString eq "") and ($icon eq "none") ) {
+				$svgString = "fill=\"$color\" " ;
+			}
+
+			my @coords = ([$x1, $y1, $x2, $y1, $x2, $y2, $x1, $y2, $x1, $y1]) ;
+			drawArea ($svgString, $icon, \@coords, 0, "definitions") ;
+
+			my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+			drawText ($tx, ($actualLine+0.5)*$ey + $fs/2, 0, $areaRules{$a}{'legendlabel'}, $textSvgString, "definitions") ;
+			$actualLine++ ;
+		}
+	}
+
+
+	addToLayer ("definitions", "</g>") ;
+
+	my $posX = 0 ;
+	my $posY = 0 ;
+
+	my ($sizeX, $sizeY) = getDimensions() ;
+
+	if ( cv('legend') eq "2") {
+		$posX = $sizeX - $sx ;
+		$posY = 0 ;
+	}
+
+	if ( cv('legend') eq "3") {
+		$posX = 0 ;
+		$posY = $sizeY - $sy ;
+	}
+
+	if ( cv('legend') eq "4") {
+		$posX = $sizeX - $sx ;
+		$posY = $sizeY - $sy ;
+	}
+
+	addToLayer ("legend", "<use x=\"$posX\" y=\"$posY\" xlink:href=\"#legenddef\" />") ;
+
 }
 
 1 ;

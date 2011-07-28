@@ -13,12 +13,16 @@ keyvalue=place=city
 size=40
 labelsize=60
 shape=square
+legend=yes
+legendlabel=Großstadt
 
 RULE NODE
 keyvalue=place=town
 label=name
 labelsize=45
 size=30
+legend=yes
+legendlabel=Stadt
 
 RULE NODE
 keyvalue=place=village
@@ -26,12 +30,16 @@ size=20
 labelsize=30
 svgString=fill="black"
 toscale=50000
+legend=yes
+legendlabel=Dorf
 
 RULE NODE
 keyvalue=place=suburb
 size=20
 labelsize=30
 toscale=50000
+legend=yes
+legendlabel=Vorort
 
 RULE WAY
 keyvalue=highway=motorway
@@ -78,6 +86,8 @@ color=red
 size=26
 bordercolor=black
 bordersize=4
+legend=yes
+legendlabel=Bundesstraße
 
 RULE WAY
 keyvalue=highway=primary_link
@@ -95,6 +105,8 @@ color=orange
 size=24
 bordercolor=black
 bordersize=4
+legend=yes
+legendlabel=Landstraße
 
 RULE WAY
 keyvalue=highway=secondary_link
@@ -105,12 +117,14 @@ bordersize=2
 
 RULE WAY
 keyvalue=highway=tertiary
-color=green
+color=lightgreen
 labelsize=22
 labeloffset=9
 size=24
 bordercolor=black
 bordersize=4
+legend=yes
+legendlabel=Kreisstraße
 
 RULE WAY
 keyvalue=highway=residential
@@ -121,6 +135,8 @@ color=grey
 size=22
 bordersize=4
 toscale=10000
+legend=yes
+legendlabel=Wohnstraße
 
 RULE WAY
 keyvalue=highway=residential
@@ -162,10 +178,14 @@ RULE AREA
 keyvalue=landuse=residential
 color=lightgray
 base=yes
+legend=yes
+legendlabel=Wohngegend
 
 RULE AREA
 keyvalue=building=yes
 color=darkgray
+legend=yes
+legendlabel=Gebäude
 
 RULE AREA
 keyvalue=natural=water
@@ -249,6 +269,8 @@ base=yes
 RULE AREA
 keyvalue=amenity=parking
 icon=icons/areaParking.svg
+legend=yes
+legendlabel=Parkplatz
 
 RULE AREA
 keyvalue=leisure=golf_course

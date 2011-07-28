@@ -23,12 +23,13 @@
 # 0.17 -forcenodes; projection in footer
 # 0.18 direxclude options and rule properties
 # 0.19 pagenumber bug solved
+# 0.20 legend
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.19" ;
+my $version = "0.20" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -104,6 +105,8 @@ if ( cv('multionly') eq "0" ) {
 
 processMultipolygons() ;
 
+
+if ( cv('legend') ne "0" ) { createLegend() ; }
 
 if ( cv('pagenumbers') ne "" ) { processPageNumbers() ; }
 if ( cv('rectangles') ne "" ) { processRectangles() ; }

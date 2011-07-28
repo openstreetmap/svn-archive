@@ -36,7 +36,6 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3872"/>
-    <property name="libproj4j" value="lib/proj4j-0.1.0.jar"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -67,7 +66,6 @@
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}">
             <classpath>
                 <pathelement location="${josm}"/>
-                <pathelement location="${libproj4j}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
@@ -97,7 +95,6 @@
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <!-- All jar files necessary to run plugin (no tests) -->
-            <zipfileset src="${libproj4j}"/>
             <!--
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins

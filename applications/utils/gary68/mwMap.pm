@@ -66,6 +66,7 @@ require Exporter ;
 			getShieldSizes
 			getShieldId
 			addToLayer
+			createLegendFile
 		 ) ;
 
 
@@ -502,8 +503,6 @@ sub writeMap {
 		}
 	}
 
-
-	# TODO use groups
 
 	foreach my $layer (@elements) {
 		if (defined @{$svgLayer{$layer}}) {
@@ -1103,6 +1102,52 @@ sub getShieldSizes {
 sub getShieldId {
 	my $name = shift ;
 	return $createdShields{$name} ;
+}
+
+# --------------------------------------------------------------------
+
+sub createLegendFile {
+	my ($x, $y) = @_ ;
+
+	my $svgName = cv('out') ;
+	$svgName =~ s/\.svg/\_legend\.svg/i ;	
+	my $pngName = $svgName ;
+	$pngName =~ s/\.svg/\.png/i ;
+	my $pdfName = $svgName ;
+	$pdfName =~ s/\.svg/\.pdf/i ;
+
+
+	open (my $file, ">", $svgName) || die "can't open legend svg output file $svgName\n";
+
+	print $file "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n" ;
+	print $file "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n" ;
+
+	my $w = $x / 300 * 2.54 ; # cm
+	my $h = $y / 300 * 2.54 ;
+
+	my ($svg) = "<svg version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\" " ;
+	$svg .= "xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" " ;
+	$svg .= "width=\"$w" . "cm\" height=\"$h" . "cm\" viewBox=\"0 0 $x $y\">\n" ;
+	print $file $svg ;
+
+	print $file "<defs>\n" ;
+	foreach ( @{$svgLayer{'definitions'}} ) { print $file $_, "\n" ; }
+	print $file "</defs>\n" ;
+
+	print $file "<use x=\"0\" y=\"0\" xlink:href=\"#legenddef\" />\n" ;
+	print $file "</svg>\n" ;
+	close $file ;
+
+	if (cv('pdf') eq "1") {
+		print "creating pdf file $pdfName ...\n" ;
+		`inkscape -A $pdfName $svgName` ;
+	}
+
+	if (cv('png') eq "1") {
+		my $dpi = cv('pngdpi') ;
+		print "creating png file $pngName ($dpi dpi)...\n" ;
+		`inkscape --export-dpi=$dpi -e $pngName $svgName` ;
+	}
 }
 
 1 ;

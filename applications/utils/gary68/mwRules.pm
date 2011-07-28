@@ -841,7 +841,13 @@ sub createLegend {
 		$posY = $sizeY - $sy ;
 	}
 
-	addToLayer ("legend", "<use x=\"$posX\" y=\"$posY\" xlink:href=\"#legenddef\" />") ;
+	if ( (cv('legend') >=1) and (cv('legend')<=4) ) {
+		addToLayer ("legend", "<use x=\"$posX\" y=\"$posY\" xlink:href=\"#legenddef\" />") ;
+	}
+	elsif (cv('legend') == 5) {
+		# separate file
+		createLegendFile($sx, $sy) ;
+	}
 
 }
 

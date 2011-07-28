@@ -24,12 +24,14 @@
 # 0.18 direxclude options and rule properties
 # 0.19 pagenumber bug solved
 # 0.20 legend
+# 0.21 legend in separate file
+# 
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.20" ;
+my $version = "0.21" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.ImportImagePlugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -67,8 +68,6 @@ public class ImageLayer extends Layer {
     // reference system of the oringinal image
     private CoordinateReferenceSystem sourceRefSys;
 
-
-
     /**
      * Constructor
      * 
@@ -81,7 +80,6 @@ public class ImageLayer extends Layer {
         this.imageFile = file;
         this.image = (BufferedImage) createImage();
         layericon = new ImageIcon(ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png"));
-        
     }
 
     /**
@@ -96,7 +94,7 @@ public class ImageLayer extends Layer {
         GridCoverage2D coverage = null;
         try {
             // create a grid coverage from the image
-            coverage = PluginOperations.createGridFromFile(imageFile, null);
+            coverage = PluginOperations.createGridFromFile(imageFile, null, true);
             this.sourceRefSys = coverage.getCoordinateReferenceSystem();
             
             // now reproject grid coverage
@@ -108,26 +106,21 @@ public class ImageLayer extends Layer {
         } catch (Exception e) {
             if(e.getMessage().contains("No projection file found"))
             {
-                int useDefaultCRS = JOptionPane.showConfirmDialog(Main.parent, "<html>No projection file (.prj) found.<br>Use the default Coordinate Reference System instead?</html>", "Missing projection", JOptionPane.YES_NO_OPTION);
-                if (useDefaultCRS == 0)
-                {
+                int useUnprojected = JOptionPane.showConfirmDialog(Main.parent, "<html>No projection file (.prj) found.<br />Use the image unprojected?</html>", "Missing projection", JOptionPane.YES_NO_OPTION);
+                if (useUnprojected == 0) { // Yes
+                    logger.debug("Passing through image un-projected.");
                     try {
                         // create a grid coverage from the image
-                        coverage = PluginOperations.createGridFromFile(imageFile, PluginOperations.defaultSourceCRS);
+                        coverage = PluginOperations.createGridFromFile(imageFile, null, false);
                         this.sourceRefSys = coverage.getCoordinateReferenceSystem();
-                        
-                        // now reproject grid coverage
-                        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.proj.toCode()));
                     } catch (Exception e1) {
                         logger.error("Error while creating GridCoverage:",e1);
                         throw new IOException(e1);
                     }
-                }
-                else{
-                    logger.debug("Layer creation cancled by user due to missing projection information.");
+                } else { // No
+                    logger.debug("No projection and user declined un-projected use");
                     throw new LayerCreationCancledException();
                 }
-
             }
             else
             {
@@ -139,9 +132,8 @@ public class ImageLayer extends Layer {
         logger.debug("Coverage created: " + coverage);
 
         // TODO
-        upperLeft = new EastNorth(coverage.getEnvelope2D().y, coverage
-                .getEnvelope2D().x
-                + coverage.getEnvelope2D().width);
+        upperLeft = new EastNorth(coverage.getEnvelope2D().x,
+                coverage.getEnvelope2D().y + coverage.getEnvelope2D().height);
         angle = 0;
         bbox = coverage.getEnvelope2D();
 
@@ -162,14 +154,14 @@ public class ImageLayer extends Layer {
             // Position image at the right graphical place
             EastNorth center = Main.map.mapView.getCenter();
             EastNorth leftop = Main.map.mapView.getEastNorth(0, 0);
-            double pixel_per_lon_degree = (Main.map.mapView.getWidth() / 2.0)
+            double pixel_per_east_unit = (Main.map.mapView.getWidth() / 2.0)
                     / (center.east() - leftop.east());
-            double pixel_per_lat_degree = (Main.map.mapView.getHeight() / 2.0)
+            double pixel_per_north_unit = (Main.map.mapView.getHeight() / 2.0)
                     / (leftop.north() - center.north());
 
             // This is now the offset in screen pixels
-            double pic_offset_x = ((upperLeft.east() - leftop.east()) * pixel_per_lon_degree);
-            double pic_offset_y = ((leftop.north() - upperLeft.north()) * pixel_per_lat_degree);
+            double pic_offset_x = ((upperLeft.east() - leftop.east()) * pixel_per_east_unit);
+            double pic_offset_y = ((leftop.north() - upperLeft.north()) * pixel_per_north_unit);
 
             Graphics2D g = (Graphics2D) g2.create();
 
@@ -186,9 +178,9 @@ public class ImageLayer extends Layer {
             double width = projbounds.maxEast - projbounds.minEast;
             double height = projbounds.maxNorth - projbounds.minNorth;
 
-            double ratio_x = (this.bbox.getMaxY() - this.bbox.getMinY())
+            double ratio_x = (this.bbox.getMaxX() - this.bbox.getMinX())
                     / width;
-            double ratio_y = (this.bbox.getMaxX() - this.bbox.getMinX())
+            double ratio_y = (this.bbox.getMaxY() - this.bbox.getMinY())
                     / height;
 
             double pixels4bbox_width = ratio_x * Main.map.mapView.getWidth();
@@ -198,6 +190,10 @@ public class ImageLayer extends Layer {
             double scalex = pixels4bbox_width / image.getWidth();
             double scaley = pixels4bbox_height / image.getHeight();
 
+            if ((scalex > 10) || (scaley > 10)) {
+                logger.warn("Not drawing image - scale too big");
+                return;
+            }
             g.scale(scalex, scaley);
 
             // Draw picture
@@ -281,8 +277,8 @@ public class ImageLayer extends Layer {
      */
     void resample(CoordinateReferenceSystem refSys) throws IOException, NoSuchAuthorityCodeException, FactoryException
     {
-        
-        GridCoverage2D coverage =  PluginOperations.createGridFromFile(this.imageFile, refSys);
+        logger.debug("resample");
+        GridCoverage2D coverage =  PluginOperations.createGridFromFile(this.imageFile, refSys, true);
         coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.proj.toCode()));
         this.bbox = coverage.getEnvelope2D();
         this.image = ((PlanarImage)coverage.getRenderedImage()).getAsBufferedImage();
@@ -331,8 +327,6 @@ public class ImageLayer extends Layer {
      */
     class LayerCreationCancledException extends IOException{
     }
-    
-    
     
     public CoordinateReferenceSystem getSourceRefSys() {
         return sourceRefSys;

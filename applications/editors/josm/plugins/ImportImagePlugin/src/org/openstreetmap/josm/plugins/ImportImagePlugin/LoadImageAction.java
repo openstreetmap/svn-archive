@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCancledException;
 
@@ -44,13 +44,13 @@ public class LoadImageAction extends JosmAction {
         
         ImageLayer layer = null;
         if (result == JFileChooser.APPROVE_OPTION) {
-            logger.info("File choosed:" + fc.getSelectedFile());
+            logger.info("File choosen:" + fc.getSelectedFile());
             try {
                 layer = new ImageLayer(fc.getSelectedFile());
             } catch (LayerCreationCancledException e) {
                 // if user decides that layer should not be created just return.
                 return;
-            }catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("Error while creating image layer: \n" + e.getMessage());
                 JOptionPane.showMessageDialog(null, marktr("Error while creating image layer: " + e.getCause()));
                 return;
@@ -59,12 +59,12 @@ public class LoadImageAction extends JosmAction {
             
             // Add layer:
             Main.main.addLayer(layer);
-            LatLon min = new LatLon(layer.getBbox().getMinX(), layer.getBbox().getMinY());
-            LatLon max = new LatLon(layer.getBbox().getMaxX(), layer.getBbox().getMaxY());
+            EastNorth min = new EastNorth(layer.getBbox().getMinX(), layer.getBbox().getMinY());
+            EastNorth max = new EastNorth(layer.getBbox().getMaxX(), layer.getBbox().getMaxY());
             BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
-            boundingXYVisitor.visit(new Bounds(min, max));
+            boundingXYVisitor.visit(min);
+            boundingXYVisitor.visit(max);
             Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
-            Main.map.mapView.zoomTo(new Bounds(min, max));
         }
     }
 }

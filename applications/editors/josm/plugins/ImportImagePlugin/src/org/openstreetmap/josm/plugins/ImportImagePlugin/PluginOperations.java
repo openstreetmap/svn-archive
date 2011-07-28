@@ -106,7 +106,7 @@ public class PluginOperations {
      * @throws IOException 
      * @throws Exception
      */
-    public static GridCoverage2D createGridFromFile(File file, CoordinateReferenceSystem refSys) throws IOException{
+    public static GridCoverage2D createGridFromFile(File file, CoordinateReferenceSystem refSys, boolean failIfNoPrjFile) throws IOException {
 
         GridCoverage2D coverage = null;
         
@@ -124,11 +124,11 @@ public class PluginOperations {
         {
             
             // try to read GeoTIFF:
-            try{
+            try {
                 coverage = readGeoTiff(file, refSys);
                 return coverage;
-            }catch (DataSourceException dse) {
-                if(!dse.getMessage().contains("Coordinate Reference System is not available")){
+            } catch (DataSourceException dse) {
+                if (!dse.getMessage().contains("Coordinate Reference System is not available")){
                     dse.printStackTrace();
                 }
             } catch (FactoryException facte) {
@@ -142,18 +142,22 @@ public class PluginOperations {
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if(prjFile.exists()){
+                if (prjFile.exists()){
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
-            if(tfwReader == null){
+
+            if (tfwReader == null) {
                 throw new IOException("No Worldfile found.");
             }
             
-            if(refSys == null){
+            if (refSys == null) {
                 // if no crs is delivered try to read projection file:
                 refSys = readPrjFile(file);
-                if(refSys == null) throw new IOException("No projection file found.");
+                if (refSys == null) {
+                    if (failIfNoPrjFile) throw new IOException("No projection file found.");
+                    logger.debug("no projection given, no projection file found; using unprojected file.");
+                }
             }
             
             BufferedImage img = ImageIO.read(file);
@@ -177,16 +181,19 @@ public class PluginOperations {
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if(prjFile.exists()){
+                if (prjFile.exists()){
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
-            if(tfwReader == null) throw new IOException("No Worldfile found.");
+            if (tfwReader == null) throw new IOException("No Worldfile found.");
             
-            if(refSys == null){
+            if (refSys == null) {
                 // if no crs is delivered try to read projection file:
                 refSys = readPrjFile(file);
-                if(refSys == null) throw new IOException("No projection file found.");
+                if (refSys == null) {
+                    if (failIfNoPrjFile) throw new IOException("No projection file found.");
+                    logger.debug("no projection given, no projection file found; using unprojected file.");
+                }
             }
             
             BufferedImage img = ImageIO.read(file);
@@ -208,16 +215,19 @@ public class PluginOperations {
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if(prjFile.exists()){
+                if (prjFile.exists()){
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
-            if(tfwReader == null) throw new IOException("No Worldfile found.");
+            if (tfwReader == null) throw new IOException("No Worldfile found.");
 
-            if(refSys == null){
+            if (refSys == null) {
                 // if no crs is delivered try to read projection file:
                 refSys = readPrjFile(file);
-                if(refSys == null) throw new IOException("No projection file found.");
+                if (refSys == null) {
+                    if (failIfNoPrjFile) throw new IOException("No projection file found.");
+                    logger.debug("no projection given, no projection file found; using unprojected file.");
+                }
             }
             
             BufferedImage img = ImageIO.read(file);
@@ -239,16 +249,19 @@ public class PluginOperations {
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if(prjFile.exists()){
+                if (prjFile.exists()){
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
             if(tfwReader == null) throw new IOException("No Worldfile found.");
             
-            if(refSys == null){
+            if (refSys == null) {
                 // if no crs is delivered try to read projection file:
                 refSys = readPrjFile(file);
-                if(refSys == null) throw new IOException("No projection file found.");
+                if (refSys == null) {
+                    if (failIfNoPrjFile) throw new IOException("No projection file found.");
+                    logger.debug("no projection given, no projection file found; using unprojected file.");
+                }
             }
             
             BufferedImage img = ImageIO.read(file);
@@ -289,7 +302,7 @@ public class PluginOperations {
         prjFilename = file.getAbsolutePath().substring(0, dotPos) + ".prj";
         
         File prjFile = new File(prjFilename);
-        if(!prjFile.exists()) throw new IOException("No projection file found (.prj) for image '" + file.getName() + "'");
+        if (!prjFile.exists()) return null;
         logger.debug("Loading .prj file: " + prjFile.getAbsolutePath());
         
         StringBuilder sb = new StringBuilder();

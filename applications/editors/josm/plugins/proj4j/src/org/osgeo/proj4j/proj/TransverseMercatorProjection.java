@@ -16,6 +16,11 @@ limitations under the License.
 
 /*
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
+ *
+ * Bernhard Jenny, February 2 2010: Corrected code for spherical case in
+ * projectInverse, added isConformal.
+ * 27 September 2010: added missing tests to forward spherical, removed
+ * initialization code in constructor.
  */
 package org.osgeo.proj4j.proj;
 
@@ -154,13 +159,24 @@ public class TransverseMercatorProjection extends CylindricalProjection {
 
 	public ProjCoordinate projectInverse(double x, double y, ProjCoordinate out) {
 		if (spherical) {
-			double h = Math.exp(x / scaleFactor);
-			double g = .5 * (h - 1. / h);
-			h = Math.cos(projectionLatitude + y / scaleFactor);
-			out.y = ProjectionMath.asin(Math.sqrt((1. - h*h) / (1. + g*g)));
-			if (y < 0)
-				out.y = -out.y;
-			out.x = Math.atan2(g, h);
+			/*
+			Original code
+			x = Math.exp(x / scaleFactor);
+			y = .5 * (x - 1. / x);
+			x = Math.cos(projectionLatitude + y / scaleFactor);
+			out.y = MapMath.asin(Math.sqrt((1. - x * x) / (1. + y * y)));
+			if (y < 0) {
+			out.y = -out.y;
+			}
+			out.x = Math.atan2(y, x);
+			 */
+
+			// new code by Bernhard Jenny, February 2 2010
+			double D = y / scaleFactor + projectionLatitude;
+			double xp = x / scaleFactor;
+
+			out.y = Math.asin(Math.sin(D) / Math.cosh(xp));
+			out.x = Math.atan2(Math.sinh(xp), Math.cos(D));
 		} else {
 			double n, con, cosphi, d, ds, sinphi, t;
 
@@ -194,6 +210,10 @@ public class TransverseMercatorProjection extends CylindricalProjection {
 	}
 
 	public boolean hasInverse() {
+		return true;
+	}
+	
+	public boolean isConformal() {
 		return true;
 	}
 

@@ -114,6 +114,7 @@
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Proj4J"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Early" value="true"/>
             </manifest>
         </jar>
     </target>

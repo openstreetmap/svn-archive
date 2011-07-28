@@ -167,6 +167,7 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
             if (array.length > 1) {
                 filterText = array[1];
             }
+            setupTransformations();
         }
     }
 
@@ -198,7 +199,7 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
     public LatLon eastNorth2latlon(EastNorth p) {
         org.osgeo.proj4j.ProjCoordinate pc1 = new org.osgeo.proj4j.ProjCoordinate(p.east(), p.north());
         org.osgeo.proj4j.ProjCoordinate pc2 = new org.osgeo.proj4j.ProjCoordinate();
-        //System.out.println("InvFrom " + pc1.x + " " + pc2.y);
+        //System.out.println("InvFrom " + pc1.x + " " + pc1.y);
         transformToWGS84.transform(pc1, pc2);
         //System.out.println("InvTo " + pc2.x + " " + pc2.y);
         return new LatLon(pc2.y, pc2.x);

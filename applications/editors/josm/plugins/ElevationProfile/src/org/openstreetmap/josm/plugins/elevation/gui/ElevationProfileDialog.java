@@ -420,7 +420,9 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		}
 		if (layerMap.size() == 0) {
 			setModel(null);
-			profileLayer.setProfile(null);
+			if (profileLayer != null) {
+				profileLayer.setProfile(null);
+			}
 		}
 	}
 

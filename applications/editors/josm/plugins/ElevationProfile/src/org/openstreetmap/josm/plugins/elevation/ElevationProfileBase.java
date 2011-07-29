@@ -145,11 +145,11 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 			setMaxWayPoint(wayPoints.get(n-1));
 		}		
 		
-		if (start.after(end) || start.equals(end)) {
+		//if (start.after(end) || start.equals(end)) {
 			// GPX does not contain time stamps -> use sequential order
 			setStart(wayPoints.get(0));
 			setEnd(wayPoints.get(n-1));
-		}
+		//}
 		
 		avrgHeight = sumEle / n;
 	}

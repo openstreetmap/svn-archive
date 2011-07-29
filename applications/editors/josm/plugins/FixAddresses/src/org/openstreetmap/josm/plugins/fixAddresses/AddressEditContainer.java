@@ -645,7 +645,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
 	 */
-	@Override
 	public void primitivesAdded(PrimitivesAddedEvent event) {
 		invalidate();
 	}
@@ -653,7 +652,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
 	 */
-	@Override
 	public void primitivesRemoved(PrimitivesRemovedEvent event) {
 		invalidate();
 	}
@@ -819,5 +817,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
 			return new Integer(score).compareTo(new Integer(arg0.score));
 		}
+	}
+
+	@Override
+	public void primtivesAdded(PrimitivesAddedEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void primtivesRemoved(PrimitivesRemovedEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

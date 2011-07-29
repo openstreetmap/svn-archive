@@ -246,6 +246,9 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
                 crsCode = model.getCRSEntryAt(index).getName();
                 selectedLabel.setText(tr("Selected: {0}", crsCode));
                 setupTransformations();
+                if (actionListener != null) {
+                    actionListener.actionPerformed(new ActionEvent(selectedLabel, 0, "CRS changed"));
+                }
             }
         }
     }
@@ -276,10 +279,6 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
         // Create transformations between CRS
         transformToWGS84 = transFactory.createTransform(proj4jCRS, wgs84CRS);
         transformFromWGS84 = transFactory.createTransform(wgs84CRS, proj4jCRS);
-
-        if (actionListener != null) {
-            actionListener.actionPerformed(new ActionEvent(selectedLabel, 0, "CRS changed"));
-        }
     }
 
     private void newFilter() {

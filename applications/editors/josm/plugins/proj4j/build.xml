@@ -79,7 +79,10 @@
     <target name="dist" depends="compile,revision">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
+            <fileset dir="resources" excludes="nad/"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/nad">
+            <fileset dir="resources/nad"/>
         </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>

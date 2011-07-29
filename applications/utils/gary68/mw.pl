@@ -25,13 +25,13 @@
 # 0.19 pagenumber bug solved
 # 0.20 legend
 # 0.21 legend in separate file
-# 
+# 0.22 help texts for object properties in rule file
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.21" ;
+my $version = "0.22" ;
 my $programName = "mapweaver" ;
 
 use strict ;

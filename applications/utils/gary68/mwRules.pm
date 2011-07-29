@@ -46,86 +46,90 @@ require Exporter ;
 			createLegend
 		 ) ;
 
-my @validNodeProperties = qw (	keyValue
-						color
-						size
-						shape
-						svgString
-						circle
-						circleColor
-						circleRadius
-						circleThickness
-						circleSVGString
-						disc
-						discColor
-						discOpacity
-						discRadius
-						discSVGString
-						label
-						labelColor
-						labelSize
-						labelFont
-						labelOffset
-						legend
-						legendLabel
-						icon
-						iconSize
-						shieldName
-						shieldSize
-						shieldLabel
-						fromScale
-						toScale
-						direxclude
+my @validNodeProperties = (	
+			["keyValue","key and value like [amenity=hospital]"],
+			["color","color of node i.e. [black]"],
+			["size","size of node i.e. [50]"],
+			["shape","shape of node [circle|disc|triangle|diamond|rectangle]"],
+			["svgString","svg format of shape [valid svg string]"],
+			["circle","add a circle to the node [yes|no]"],
+			["circleColor","color of the circle i.e. [blue]"],
+			["circleRadius","circle radius in meters i.e. [1000]"],
+			["circleThickness","thickness of the circle i.e. [5]"],
+			["circleSVGString","format of the circle []"],
+			["disc","add a disc to the node [yes|no]"],
+			["discColor","color of the disc i.e. [green]"],
+			["discOpacity","opacity of the disc [0..100]"],
+			["discRadius","radius of disc in meters i.e. [5000]"],
+			["discSVGString","format of the disc []"],
+			["label","label for the node like [name|ref]"],
+			["labelColor","color for label text i.e. [white]"],
+			["labelSize","size of label text i.e. [20]"],
+			["labelFont","NOT YET IMPLEMENTED"],
+			["labelOffset","distance of label to node i.e. [10]"],
+			["legend","is this object to be listed in map legend? [yes|no]"],
+			["legendLabel","label text of object in legend i.e. [city]"],
+			["icon","icon to use for node, overrides shape i.e. [icondir/icon.svg]"],
+			["iconSize","size of the icon i.e. [40]"],
+			["shieldName","NOT YET IMPLEMENTED"],
+			["shieldSize","NOT YET IMPLEMENTED"],
+			["shieldLabel","NOT YET IMPLEMENTED"],
+			["fromScale","rule will only applied if scale is bigger than fromScale i.e. [5000]"],
+			["toScale","rule will only applied if scale is lower than fromScale i.e. [25000]"],
+			["direxclude","should these objects be excluded from directory? [yes|no]"]
 					) ;
 
-my @validWayProperties = qw (	keyValue
-					color
-					size
-					dash
-					dashCap
-					borderColor
-					borderSize
-					label
-					labelColor
-					labelSize
-					labelFont
-					labelOffset
-					legend
-					legendLabel
+my @validWayProperties =  (	
+			["keyValue","key and value like [highway=residential]"],
+			["color","color for the way i.e. [gray]"],
+			["size","size of the way i.e. [15]"],
+			["dash","svg dash array for the way i.e. [20,20]; old mapgen values are also possible"],
+			["dashCap","linecap shape for dashes like [butt|round|square]"],
+			["borderColor","color of the border of the way i.e. [black]"],
+			["borderSize","thickness os the border i.e. [2]"],
+			["label","label to be used i.e. [name|ref]"],
+			["labelColor","color of label text i.e. [blue]"],
+			["labelSize","size of the label i.e. [20]"],
+			["labelFont","NOT YET IMPLEMENTED"],
+			["labelOffset","distance of label to middle of way i.e. [5]"],
+			["legend","is this object to be listed in map legend? [yes|no]"],
+			["legendLabel","label text of object in legend i.e. [Highway]"],
 
-					svgStringBottom
-					svgStringTop
-					bottomBorder
-					
-					fromScale
-					toScale
+			["svgStringBottom","format of lower way part (i.e. border) []"],
+			["svgStringTop","format of upper way part []"],
+			["bottomBorder","NOT YET IMPLEMENTED"],
+			
+			["fromScale","rule will only applied if scale is bigger than fromScale i.e. [5000]"],
+			["toScale","rule will only applied if scale is lower than fromScale i.e. [25000]"],
 
-					direxclude
+			["direxclude","should these objects be excluded from directory? [yes|no]"]
 					) ;
 
-my @validAreaProperties = qw (	keyValue
-						color
-						icon
-						base
-						svgString
-						legend
-						legendLabel
-						fromScale
-						toScale
+my @validAreaProperties = (	
+			["keyValue","key and value of object i.e. [amenity=parking]"],
+			["color","color of area i.e. [lightgrey]"],
+			["icon","icon for fill pattern to be used i.e. [icondir/parking.svg]"],
+			["base","should this object be drawn underneath other objects? (applies for landuse residential i.e.) [yes|no]"],
+			["svgString","format of area []"],
+			["legend","is this object to be listed in map legend? [yes|no]"],
+			["legendLabel","label text of object in legend i.e. [Parking]"],
+			["fromScale","rule will only applied if scale is bigger than fromScale i.e. [5000]"],
+			["toScale","rule will only applied if scale is lower than fromScale i.e. [25000]"]
 					) ;
 
 
-my @validRouteProperties = qw (	type
-						color
-						size
-						dash
-						linecap
-						opacity
-						label
-						labelSize
-						nodeSize
-						fromScale
-						toScale
+my @validRouteProperties =  (	
+			["type","type of route like [bus|hiking]"],
+			["color","color of route like [red]"],
+			["size","size of route i.e. [10]"],
+			["dash","svg dash array style like [20,20]"],
+			["linecap","linecap style [butt|round|square]"],
+			["opacity","opacity of the route [0..100]"],
+			["label","label to be used like [ref]"],
+			["labelSize","size of the label i.e. [15]"],
+			["nodeSize","size of nodes belonging to route i.e. [20]"],
+			["fromScale","rule will only applied if scale is bigger than fromScale i.e. [5000]"],
+			["toScale","rule will only applied if scale is lower than fromScale i.e. [25000]"]
 					) ;
 
 
@@ -148,20 +152,20 @@ sub printValidObjectProperties {
 	print "\nValid Object Properties\n" ;
 
 	print "\nNodes\n-----\n" ;
-	foreach my $p (sort @validNodeProperties) {
-		print "$p\n" ;
+	foreach my $p (sort {$a->[0] cmp $b->[0]} @validNodeProperties) {
+		printf "%-20s %s\n", $p->[0], $p->[1] ;
 	}
 	print "\nWays\n----\n" ;
-	foreach my $p (sort @validWayProperties) {
-		print "$p\n" ;
+	foreach my $p (sort {$a->[0] cmp $b->[0]} @validWayProperties) {
+		printf "%-20s %s\n", $p->[0], $p->[1] ;
 	}
 	print "\nAreas\n-----\n" ;
-	foreach my $p (sort @validAreaProperties) {
-		print "$p\n" ;
+	foreach my $p (sort {$a->[0] cmp $b->[0]} @validAreaProperties) {
+		printf "%-20s %s\n", $p->[0], $p->[1] ;
 	}
 	print "\nRoutes\n-----\n" ;
-	foreach my $p (sort @validRouteProperties) {
-		print "$p\n" ;
+	foreach my $p (sort {$a->[0] cmp $b->[0]} @validRouteProperties) {
+		printf "%-20s %s\n", $p->[0], $p->[1] ;
 	}
 	print "\n" ;
 }
@@ -178,16 +182,16 @@ sub readRules {
 	print "reading rule file $fileName\n" ;
 
 	my %vnp = () ;
-	foreach my $p ( @validNodeProperties ) { $vnp{ lc ( $p ) } = 1 ; }
+	foreach my $p ( @validNodeProperties ) { $vnp{ lc ( $p->[0] ) } = 1 ; }
 
 	my %vwp = () ;
-	foreach my $p ( @validWayProperties ) { $vwp{ lc ( $p ) } = 1 ; }
+	foreach my $p ( @validWayProperties ) { $vwp{ lc ( $p->[0] ) } = 1 ; }
 
 	my %vap = () ;
-	foreach my $p ( @validAreaProperties ) { $vap{ lc ( $p ) } = 1 ; }
+	foreach my $p ( @validAreaProperties ) { $vap{ lc ( $p->[0] ) } = 1 ; }
 
 	my %vrp = () ;
-	foreach my $p ( @validRouteProperties ) { $vrp{ lc ( $p ) } = 1 ; }
+	foreach my $p ( @validRouteProperties ) { $vrp{ lc ( $p->[0] ) } = 1 ; }
 
 	openRuleFile($fileName) ;
 	while (defined $line) {

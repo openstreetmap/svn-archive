@@ -48,7 +48,6 @@ public class OSeaMAction {
 			if (nextNode == null) {
 				node = null;
 				mark = null;
-				panelMain.clearSelections();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}

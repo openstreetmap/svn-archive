@@ -85,8 +85,6 @@ public class PanelHaz extends JPanel {
 			} else {
 				isolButton.setBorderPainted(false);
 			}
-			if (dlg.mark != null)
-				dlg.mark.paintSign();
 		}
 	};
 
@@ -116,8 +114,6 @@ public class PanelHaz extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null)
-				dlg.mark.paintSign();
 		}
 	};
 

@@ -24,7 +24,7 @@ public class SeaMark {
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
 	}
-	
+
 	public enum Reg {
 		A, B, C
 	}
@@ -50,7 +50,7 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SIGSTA
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SIGSTA
 	}
 
 	public static final EnumMap<Obj, String> ObjMAP = new EnumMap<Obj, String>(Obj.class);
@@ -66,6 +66,10 @@ public class SeaMark {
 		ObjMAP.put(Obj.BOYLAT, "buoy_lateral");
 		ObjMAP.put(Obj.BOYSAW, "buoy_safe_water");
 		ObjMAP.put(Obj.BOYSPP, "buoy_special_purpose");
+		ObjMAP.put(Obj.FLTCAR, "light_float");
+		ObjMAP.put(Obj.FLTLAT, "light_float");
+		ObjMAP.put(Obj.FLTSAW, "light_float");
+		ObjMAP.put(Obj.FLTSPP, "light_float");
 		ObjMAP.put(Obj.LITMAJ, "light_major");
 		ObjMAP.put(Obj.LITMIN, "light_minor");
 		ObjMAP.put(Obj.LITFLT, "light_float");
@@ -234,8 +238,8 @@ public class SeaMark {
 			return topColour;
 		case DAYMARK:
 			return dayColour;
-//		case LIGHT:
-//			return light.getLightColour();
+			// case LIGHT:
+			// return light.getLightColour();
 		}
 		return Col.UNKNOWN;
 	}
@@ -254,9 +258,9 @@ public class SeaMark {
 		case DAYMARK:
 			dayColour = col;
 			break;
-//		case LIGHT:
-//			light.setLightColour(col);
-//			break;
+		// case LIGHT:
+		// light.setLightColour(col);
+		// break;
 		}
 	}
 
@@ -412,12 +416,11 @@ public class SeaMark {
 	}
 
 	public Light light = new Light(dlg);
-	
+
 	private boolean paintlock = false;
 
 	public void parseMark(Node node) {
-		region = Main.pref.get("tomsplugin.IALA").equals("A") ? Reg.A : Reg.B;
-		paintlock = true;
+		region = Main.pref.get("smedplugin.IALA").equals("C") ? Reg.C : (Main.pref.get("smedplugin.IALA").equals("B") ? Reg.B : Reg.A);
 		dlg.panelMain.clearSelections();
 		dlg.manager.showVisualMessage("");
 		String typeStr = "";
@@ -434,7 +437,7 @@ public class SeaMark {
 				setObject(obj);
 
 		if (typeStr.equals("light_float") || typeStr.equals("") || keys.containsKey("seamark:light_float:colour")
-		    || keys.containsKey("seamark:light_float:colour_pattern")) {
+				|| keys.containsKey("seamark:light_float:colour_pattern")) {
 			if (keys.containsKey("seamark:light_float:colour_pattern")) {
 				setObject(Obj.LITFLT);
 				typeStr = "light_float";
@@ -444,7 +447,7 @@ public class SeaMark {
 				if (colStr.equals("red") || colStr.equals("green") || colStr.equals("red;green;red") || colStr.equals("green;red;green")) {
 					setObject(Obj.BOYLAT);
 				} else if (colStr.equals("black;yellow") || colStr.equals("black;yellow;black") || colStr.equals("yellow;black")
-				    || colStr.equals("yellow;black;yellow")) {
+						|| colStr.equals("yellow;black;yellow")) {
 					setObject(Obj.BOYCAR);
 				} else if (colStr.equals("black;red;black")) {
 					setObject(Obj.BOYISD);
@@ -458,45 +461,45 @@ public class SeaMark {
 			}
 			if (typeStr.equals("")) {
 				if (keys.containsKey("seamark:buoy_lateral:category") || keys.containsKey("seamark:buoy_lateral:shape")
-				    || keys.containsKey("seamark:buoy_lateral:colour")) {
+						|| keys.containsKey("seamark:buoy_lateral:colour")) {
 					setObject(Obj.BOYLAT);
 					typeStr = "buoy_lateral";
 				} else if (keys.containsKey("seamark:beacon_lateral:category") || keys.containsKey("seamark:beacon_lateral:shape")
-				    || keys.containsKey("seamark:beacon_lateral:colour")) {
+						|| keys.containsKey("seamark:beacon_lateral:colour")) {
 					setObject(Obj.BCNLAT);
 					typeStr = "beacon_lateral";
 				} else if (keys.containsKey("seamark:buoy_cardinal:category") || keys.containsKey("seamark:buoy_cardinal:shape")
-				    || keys.containsKey("seamark:buoy_cardinal:colour")) {
+						|| keys.containsKey("seamark:buoy_cardinal:colour")) {
 					setObject(Obj.BOYCAR);
 					typeStr = "buoy_cardinal";
 				} else if (keys.containsKey("seamark:beacon_cardinal:category") || keys.containsKey("seamark:beacon_cardinal:shape")
-				    || keys.containsKey("seamark:beacon_cardinal:colour")) {
+						|| keys.containsKey("seamark:beacon_cardinal:colour")) {
 					setObject(Obj.BCNCAR);
 					typeStr = "beacon_cardinal";
 				} else if (keys.containsKey("seamark:buoy_isolated_danger:category")
-				    || keys.containsKey("seamark:buoy_isolated_danger:shape") || keys.containsKey("seamark:buoy_isolated_danger:colour")) {
+						|| keys.containsKey("seamark:buoy_isolated_danger:shape") || keys.containsKey("seamark:buoy_isolated_danger:colour")) {
 					setObject(Obj.BOYISD);
 					typeStr = "buoy_isolated_danger";
 				} else if (keys.containsKey("seamark:beacon_isolated_danger:category")
-				    || keys.containsKey("seamark:beacon_isolated_danger:shape")
-				    || keys.containsKey("seamark:beacon_isolated_danger:colour")) {
+						|| keys.containsKey("seamark:beacon_isolated_danger:shape")
+						|| keys.containsKey("seamark:beacon_isolated_danger:colour")) {
 					setObject(Obj.BCNISD);
 					typeStr = "beacon_isolated_danger";
 				} else if (keys.containsKey("seamark:buoy_safe_water:category") || keys.containsKey("seamark:buoy_safe_water:shape")
-				    || keys.containsKey("seamark:buoy_safe_water:colour")) {
+						|| keys.containsKey("seamark:buoy_safe_water:colour")) {
 					setObject(Obj.BOYSAW);
 					typeStr = "buoy_safe_water";
 				} else if (keys.containsKey("seamark:beacon_safe_water:category") || keys.containsKey("seamark:beacon_safe_water:shape")
-				    || keys.containsKey("seamark:beacon_safe_water:colour")) {
+						|| keys.containsKey("seamark:beacon_safe_water:colour")) {
 					setObject(Obj.BCNSAW);
 					typeStr = "beacon_safe_water";
 				} else if (keys.containsKey("seamark:buoy_special_purpose:category")
-				    || keys.containsKey("seamark:buoy_special_purpose:shape") || keys.containsKey("seamark:buoy_special_purpose:colour")) {
+						|| keys.containsKey("seamark:buoy_special_purpose:shape") || keys.containsKey("seamark:buoy_special_purpose:colour")) {
 					setObject(Obj.BOYSPP);
 					typeStr = "buoy_special_purpose";
 				} else if (keys.containsKey("seamark:beacon_special_purpose:category")
-				    || keys.containsKey("seamark:beacon_special_purpose:shape")
-				    || keys.containsKey("seamark:beacon_special_purpose:colour")) {
+						|| keys.containsKey("seamark:beacon_special_purpose:shape")
+						|| keys.containsKey("seamark:beacon_special_purpose:colour")) {
 					setObject(Obj.BCNSPP);
 					typeStr = "beacon_special_purpose";
 				}
@@ -511,7 +514,8 @@ public class SeaMark {
 		if (keys.containsKey("seamark:" + typeStr + ":colour"))
 			colStr = keys.get("seamark:" + typeStr + ":colour");
 		for (Col col : ColMAP.keySet())
-			if (ColMAP.get(col).equals(colStr)) setColour(Ent.BODY, col);
+			if (ColMAP.get(col).equals(colStr))
+				setColour(Ent.BODY, col);
 
 		if (keys.containsKey("seamark:" + typeStr + ":name")) {
 			dlg.panelMain.nameBox.setText(keys.get("seamark:" + typeStr + ":name"));
@@ -633,7 +637,8 @@ public class SeaMark {
 			str = keys.get("seamark:" + typeStr + ":shape");
 		else if (typeStr.equals("light_float"))
 			str = "float";
-		else str = "";
+		else
+			str = "";
 		if ((str.isEmpty() && (EntMAP.get(getObject()) == Ent.BEACON)) || str.equals("stake"))
 			str = "beacon";
 		if (!str.isEmpty()) {
@@ -676,58 +681,30 @@ public class SeaMark {
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 		}
-/*
-		for (Map.Entry<String, String> entry : keys.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue().trim();
-			if (key.contains("seamark:light:")) {
-				light.setFired(true);
-				int index = 0;
-				key = key.substring(14);
-				if (key.matches("^\\d:.*")) {
-					index = key.charAt(0) - '0';
-					key = key.substring(2);
-				} else if (key.matches("^\\d$")) {
-					index = key.charAt(0) - '0';
-					String values[] = value.split(":");
-					if (values[0].equals("red"))
-						lightColour[index] = Col.RED;
-					else if (values[0].equals("green"))
-						lightColour[index] = Col.GREEN;
-					else if (values[0].equals("white"))
-						lightColour[index] = Col.WHITE;
-					if (values.length > 1)
-						Bearing1[index] = values[1];
-					if (values.length > 2)
-						Bearing2[index] = values[2];
-				} else {
-					index = 0;
-				}
-				if (index != 0)
-					setSectored(true);
-				if (key.equals("colour")) {
-					if (value.equals("red"))
-						lightColour[index] = Col.RED;
-					else if (value.equals("green"))
-						lightColour[index] = Col.GREEN;
-					else if (value.equals("white"))
-						lightColour[index] = Col.WHITE;
-				} else if (key.equals("character")) {
-					LightChar[index] = value;
-				} else if (key.equals("group")) {
-					LightGroup[index] = value;
-				} else if (key.equals("period")) {
-					LightPeriod[index] = value;
-				} else if (key.equals("height")) {
-					Height[index] = value;
-				} else if (key.equals("range")) {
-					Range[index] = value;
-				}
-			}
-		}
-*/
+		/*
+		 * for (Map.Entry<String, String> entry : keys.entrySet()) { String key =
+		 * entry.getKey(); String value = entry.getValue().trim(); if
+		 * (key.contains("seamark:light:")) { light.setFired(true); int index = 0;
+		 * key = key.substring(14); if (key.matches("^\\d:.*")) { index =
+		 * key.charAt(0) - '0'; key = key.substring(2); } else if
+		 * (key.matches("^\\d$")) { index = key.charAt(0) - '0'; String values[] =
+		 * value.split(":"); if (values[0].equals("red")) lightColour[index] =
+		 * Col.RED; else if (values[0].equals("green")) lightColour[index] =
+		 * Col.GREEN; else if (values[0].equals("white")) lightColour[index] =
+		 * Col.WHITE; if (values.length > 1) Bearing1[index] = values[1]; if
+		 * (values.length > 2) Bearing2[index] = values[2]; } else { index = 0; } if
+		 * (index != 0) setSectored(true); if (key.equals("colour")) { if
+		 * (value.equals("red")) lightColour[index] = Col.RED; else if
+		 * (value.equals("green")) lightColour[index] = Col.GREEN; else if
+		 * (value.equals("white")) lightColour[index] = Col.WHITE; } else if
+		 * (key.equals("character")) { LightChar[index] = value; } else if
+		 * (key.equals("group")) { LightGroup[index] = value; } else if
+		 * (key.equals("period")) { LightPeriod[index] = value; } else if
+		 * (key.equals("height")) { Height[index] = value; } else if
+		 * (key.equals("range")) { Range[index] = value; } } }
+		 */
 		if (keys.containsKey("seamark:fog_signal") || keys.containsKey("seamark:fog_signal:category")
-		    || keys.containsKey("seamark:fog_signal:group") || keys.containsKey("seamark:fog_signal:period")) {
+				|| keys.containsKey("seamark:fog_signal:group") || keys.containsKey("seamark:fog_signal:period")) {
 			setFog(true);
 			if (keys.containsKey("seamark:fog_signal:category")) {
 				str = keys.get("seamark:fog_signal:category");
@@ -755,7 +732,7 @@ public class SeaMark {
 		}
 
 		if (keys.containsKey("seamark:radar_transponder") || keys.containsKey("seamark:radar_transponder:category")
-		    || keys.containsKey("seamark:radar_transponder:group")) {
+				|| keys.containsKey("seamark:radar_transponder:group")) {
 			setRacon(true);
 			if (keys.containsKey("seamark:radar_transponder:category")) {
 				str = keys.get("seamark:radar_transponder:category");
@@ -772,8 +749,6 @@ public class SeaMark {
 				setRaconGroup(keys.get("seamark:radar_transponder:group"));
 		} else if (keys.containsKey("seamark:radar_reflector"))
 			setRadar(true);
-		paintlock = false;
-		paintSign();
 	}
 
 	public void paintSign() {
@@ -781,115 +756,224 @@ public class SeaMark {
 		if (paintlock)
 			return;
 
-		String imgStr = "/images/";
-		String shpStr = ShpMAP.get(shape);
-		if (shpStr == null)
-			dlg.panelMain.shapeIcon.setIcon(null);
-		else {
-			imgStr += shpStr;
-			if (shpStr.equals("perch")) {
-				imgStr += (getCategory() == Cat.LAT_PORT ? "_port" : "_stbd");
-			} else {
-				String colStr = ColMAP.get(bodyColour);
-				if (colStr != null)
-					imgStr += ("_" + colStr);
-			}
-			imgStr += ".png";
-			if (getClass().getResource(imgStr) == null)
-				System.out.println("Body:" + imgStr);
-			else
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
-		}
+		dlg.panelMain.shapeIcon.setIcon(null);
+		dlg.panelMain.lightIcon.setIcon(null);
+		dlg.panelMain.topIcon.setIcon(null);
+		dlg.panelMain.radarIcon.setIcon(null);
+		dlg.panelMain.fogIcon.setIcon(null);
 
-		if (topShape == Top.NONE)
-			dlg.panelMain.topIcon.setIcon(null);
-		else {
-			imgStr = "/images/top_";
-			switch (getShape()) {
-			case CAN:
-			case CONE:
-			case SPHERE:
-			case BARREL:
-				imgStr += "il_";
+		String imgStr = "/images/";
+		switch (dlg.mark.getObject()) {
+		case BCNCAR:
+		case BOYCAR:
+		case FLTCAR:
+			switch (dlg.mark.getShape()) {
+			case TOWER:
+				imgStr += "Cardinal_Tower_";
 				break;
 			case PILLAR:
+				imgStr += "Cardinal_Pillar_";
+				break;
 			case SPAR:
-				imgStr += "ih_";
+				imgStr += "Cardinal_Spar_";
+				break;
+			case CAN:
+				imgStr += "Cardinal_Can_";
+				break;
+			case CONE:
+				imgStr += "Cardinal_Cone_";
+				break;
+			case SPHERE:
+				imgStr += "Cardinal_Sphere_";
 				break;
 			case FLOAT:
-			case SUPER:
-				imgStr += "vl_";
+				imgStr += "Cardinal_Float_";
 				break;
 			case BEACON:
-			case TOWER:
-				imgStr += "vh_";
+				imgStr += "Cardinal_Beacon_";
 				break;
 			default:
-				imgStr = null;
-				dlg.panelMain.topIcon.setIcon(null);
+				if (dlg.mark.getObject() == Obj.BCNCAR)
+					imgStr += "Cardinal_Beacon_";
+				else
+					imgStr += "Cardinal_Pillar_";
+			}
+			switch (dlg.mark.getCategory()) {
+			case CARD_NORTH:
+				imgStr += "North.png";
+				break;
+			case CARD_SOUTH:
+				imgStr += "South.png";
+				break;
+			case CARD_EAST:
+				imgStr += "East.png";
+				break;
+			case CARD_WEST:
+				imgStr += "West.png";
 				break;
 			}
-			if (imgStr != null) {
-				imgStr += (TopMAP.get(topShape) + "_");
-				String colStr = ColMAP.get(topColour);
-				if (colStr != null)
-					imgStr += colStr;
-				imgStr += ".png";
-				if (getClass().getResource(imgStr) == null)
-					System.out.println("Top:" + imgStr);
+			break;
+		case BCNLAT:
+		case BOYLAT:
+		case FLTLAT:
+			switch (dlg.mark.getShape()) {
+			case TOWER:
+				imgStr += "Lateral_Tower_";
+				break;
+			case PILLAR:
+				imgStr += "Lateral_Pillar_";
+				break;
+			case SPAR:
+				imgStr += "Lateral_Spar_";
+				break;
+			case CAN:
+				imgStr += "Lateral_Can_";
+				break;
+			case CONE:
+				imgStr += "Lateral_Cone_";
+				break;
+			case SPHERE:
+				imgStr += "Lateral_Sphere_";
+				break;
+			case FLOAT:
+				imgStr += "Lateral_Float_";
+				break;
+			case BEACON:
+				imgStr += "Lateral_Beacon_";
+				break;
+			case STAKE:
+				imgStr += "Lateral_Stake_";
+				break;
+			case PERCH:
+				imgStr += "Lateral_Perch_";
+				break;
+			default:
+				if (dlg.mark.getObject() == Obj.BCNLAT)
+					imgStr += "Lateral_Beacon_";
 				else
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					imgStr += "Lateral_Pillar_";
+			}
+			switch (dlg.mark.getCategory()) {
+			case LAT_PORT:
+				if (getShape() == Shp.PERCH) {
+					imgStr += "Port.png";
+					break;
+				}
+				switch (getRegion()) {
+				case A:
+					imgStr += "Red.png";
+					break;
+				case B:
+					imgStr += "Green.png";
+					break;
+				case C:
+					imgStr += "Red_White_Red_White.png";
+					break;
+				}
+				break;
+			case LAT_STBD:
+				if (getShape() == Shp.PERCH) {
+					imgStr += "Starboard.png";
+					break;
+				}
+				switch (getRegion()) {
+				case A:
+					imgStr += "Green.png";
+					break;
+				case B:
+					imgStr += "Red.png";
+					break;
+				case C:
+					imgStr += "Green_White_Green_White.png";
+					break;
+				}
+				break;
+			case LAT_PREF_PORT:
+				if (getShape() == Shp.STAKE || getShape() == Shp.PERCH) {
+					imgStr = "/images/";
+					break;
+				}
+				switch (getRegion()) {
+				case A:
+					imgStr += "Red_Green_Red.png";
+					break;
+				case B:
+					imgStr += "Green_Red_Green.png";
+					break;
+				case C:
+					imgStr = imgStr.replaceFirst("Lateral", "Special_Purpose");
+					imgStr += "Red_Green_Red_Green.png";
+					break;
+				}
+				break;
+			case LAT_PREF_STBD:
+				if (getShape() == Shp.STAKE || getShape() == Shp.PERCH) {
+					imgStr = "/images/";
+					break;
+				}
+				switch (getRegion()) {
+				case A:
+					imgStr += "Green_Red_Green.png";
+					break;
+				case B:
+					imgStr += "Red_Green_Red.png";
+					break;
+				case C:
+					imgStr = imgStr.replaceFirst("Lateral", "Special_Purpose");
+					imgStr += "Red_Green_Red_Green.png";
+					break;
+				}
+				break;
+			}
+			break;
+		case BCNSAW:
+		case BOYSAW:
+		case FLTSAW:
+			switch (dlg.mark.getShape()) {
+			case PILLAR:
+				imgStr += "Safe_Water_Pillar.png";
+				break;
+			case SPAR:
+				imgStr += "Safe_Water_Spar.png";
+				break;
+			case SPHERE:
+				imgStr += "Safe_Water_Sphere.png";
+				break;
+			case FLOAT:
+				imgStr += "Safe_Water_Float.png";
+				break;
+			case BEACON:
+				imgStr += "Safe_Water_Beacon.png";
+				break;
+			default:
+				if (dlg.mark.getObject() == Obj.BCNSAW)
+					imgStr += "Safe_Water_Beacon.png";
+				else
+					imgStr += "Safe_Water_Pillar.png";
+			}
+			break;
+		}
+		if (!imgStr.equals("/images/")) {
+			if (getClass().getResource(imgStr) == null) {
+				System.out.println("Missing image: " + imgStr);
+				return;
+			} else {
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 			}
 		}
-		/*
-		 * if (hasRadar()) { dlg.panelMain.radarIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png"))); }
-		 * else if (hasRacon()) { dlg.panelMain.radarIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Radar_Station.png"))); // if
-		 * (getRaType() != 0) { // String c = (String)
-		 * dlg.cbM01Racon.getSelectedItem(); // if ((getRaType() == RATYPE_RACON) &&
-		 * !getRaconGroup().isEmpty()) // c += ("(" + getRaconGroup() + ")"); //
-		 * dlg.lM01RadarMarkeys.setText(c); // } }
-		 * 
-		 * if (hasFog()) { dlg.panelMain.fogIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Fog_Signal.png"))); // if
-		 * (getFogSound() != 0) { // String c = (String)
-		 * dlg.cbM01Fog.getSelectedItem(); // if (!getFogGroup().isEmpty()) // c +=
-		 * ("(" + getFogGroup() + ")"); // if (!getFogPeriod().isEmpty()) // c +=
-		 * (" " + getFogPeriod() + "s"); // dlg.lM01FogMarkeys.setText(c); // } }
-		 * 
-		 * if (isFired()) { String lp, c; String tmp = null; int i1;
-		 * 
-		 * Col col = getColour(Ent.LIGHT); if (col == Col.WHITE) {
-		 * dlg.panelMain.lightIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Light_White_120.png"))); } else
-		 * if (col == Col.RED) { dlg.panelMain.lightIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Light_Red_120.png"))); } else
-		 * if (col == Col.GREEN) { dlg.panelMain.lightIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Light_Green_120.png"))); } else
-		 * { dlg.panelMain.lightIcon.setIcon(new
-		 * ImageIcon(getClass().getResource("/images/Light_Magenta_120.png"))); }
-		 * 
-		 * c = getLightChar(); if (c.contains("+")) { i1 = c.indexOf("+"); tmp =
-		 * c.substring(i1, c.length()); c = c.substring(0, i1); if
-		 * (!getLightGroup().isEmpty()) { c = c + "(" + getLightGroup() + ")"; } if
-		 * (tmp != null) c = c + tmp; } else if (!getLightGroup().isEmpty()) c = c +
-		 * "(" + getLightGroup() + ")"; c = c + " " + getLightColour(); lp =
-		 * getLightPeriod(); if (!lp.isEmpty()) c = c + " " + lp + "s"; }
-		 */
 	}
 
 	public void saveSign(Node node) {
 
-		Main.pref.put("tomsplugin.IALA", getRegion() == Reg.A ? "A" : "B");
+		Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C" : (getRegion() == Reg.B ? "B" : "A"));
 
-//		for (String str : node.getKeys().keySet()) {
-//			if (str.contains("seamark"))
-//				if (!str.equals("seamark")) {
-//					Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
-//				}
-//		}
-		
+		// for (String str : node.getKeys().keySet()) {
+		// if (str.contains("seamark"))
+		// if (!str.equals("seamark")) {
+		// Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
+		// }
+		// }
+
 		if (!name.isEmpty())
 			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", name));
 
@@ -940,61 +1024,57 @@ public class SeaMark {
 			if (str != null)
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:daymark:colour", str));
 		}
-/*
-		Col colour;
-		if (isFired()) {
-			if ((colour = lightColour[0]) != Col.UNKNOWN)
-				if (colour == Col.RED) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:colour", "red"));
-				} else if (colour.equals("G")) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:colour", "green"));
-				} else if (colour.equals("W")) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:colour", "white"));
-				}
-			if (!LightPeriod[0].isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:period", LightPeriod[0]));
-			if (!LightChar[0].isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:character", LightChar[0]));
-			if (!LightGroup[0].isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:group", LightGroup[0]));
-			if (!Height[0].isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:height", Height[0]));
-			if (!Range[0].isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:range", Range[0]));
-			for (int i = 1; i < 10; i++) {
-				if ((colour = lightColour[i]) != Col.UNKNOWN)
-//					if (colour.equals("R")) {
-//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "red"));
-//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "red:" + Bearing1[i] + ":"
-//							    + Bearing2[i] + ":" + Radius[i]));
-//					} else if (colour.equals("G")) {
-//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "green"));
-//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "green:" + Bearing1[i] + ":"
-//							    + Bearing2[i] + ":" + Radius[i]));
-//					} else if (colour.equals("W")) {
-//						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "white"));
-//						if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] != null))
-//							Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i, "white:" + Bearing1[i] + ":"
-//							    + Bearing2[i] + ":" + Radius[i]));
-//					}
-				if (LightPeriod[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":period", LightPeriod[i]));
-				if (LightChar[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":character", LightChar[i]));
-				if (LightGroup[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":group", LightGroup[i]));
-				if (Height[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":height", Height[i]));
-				if (Range[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":range", Range[i]));
-				if (Bearing1[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":sector_start", Bearing1[i]));
-				if (Bearing2[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" + i + ":sector_end", Bearing2[i]));
-			}
-		}*/
+		/*
+		 * Col colour; if (isFired()) { if ((colour = lightColour[0]) !=
+		 * Col.UNKNOWN) if (colour == Col.RED) { Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:colour", "red")); } else if
+		 * (colour.equals("G")) { Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:colour", "green")); } else if
+		 * (colour.equals("W")) { Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:colour", "white")); } if
+		 * (!LightPeriod[0].isEmpty()) Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:period", LightPeriod[0])); if
+		 * (!LightChar[0].isEmpty()) Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:character", LightChar[0])); if
+		 * (!LightGroup[0].isEmpty()) Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:group", LightGroup[0])); if
+		 * (!Height[0].isEmpty()) Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:height", Height[0])); if
+		 * (!Range[0].isEmpty()) Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:range", Range[0])); for (int i
+		 * = 1; i < 10; i++) { if ((colour = lightColour[i]) != Col.UNKNOWN) // if
+		 * (colour.equals("R")) { // Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "red")); //
+		 * if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] !=
+		 * null)) // Main.main.undoRedo.add(new ChangePropertyCommand(node,
+		 * "seamark:light:" + i, "red:" + Bearing1[i] + ":" // + Bearing2[i] + ":" +
+		 * Radius[i])); // } else if (colour.equals("G")) { //
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":colour", "green")); // if ((Bearing1[i] != null) && (Bearing2[i] !=
+		 * null) && (Radius[i] != null)) // Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:" + i, "green:" + Bearing1[i]
+		 * + ":" // + Bearing2[i] + ":" + Radius[i])); // } else if
+		 * (colour.equals("W")) { // Main.main.undoRedo.add(new
+		 * ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "white"));
+		 * // if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] !=
+		 * null)) // Main.main.undoRedo.add(new ChangePropertyCommand(node,
+		 * "seamark:light:" + i, "white:" + Bearing1[i] + ":" // + Bearing2[i] + ":"
+		 * + Radius[i])); // } if (LightPeriod[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":period", LightPeriod[i])); if (LightChar[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":character", LightChar[i])); if (LightGroup[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":group", LightGroup[i])); if (Height[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":height", Height[i])); if (Range[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":range", Range[i])); if (Bearing1[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":sector_start", Bearing1[i])); if (Bearing2[i] != null)
+		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
+		 * i + ":sector_end", Bearing2[i])); } }
+		 */
 		if (hasRadar()) {
 			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_reflector", "yes"));
 		}

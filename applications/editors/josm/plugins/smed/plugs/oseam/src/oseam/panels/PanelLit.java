@@ -86,7 +86,6 @@ public class PanelLit extends JPanel {
 					dlg.mark.light.setSectored(false);
 					panelSector.setVisible(false);
 				}
-				dlg.mark.paintSign();
 			}
 		};
 		typeButtons = new ButtonGroup();

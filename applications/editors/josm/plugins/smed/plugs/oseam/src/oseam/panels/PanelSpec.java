@@ -46,8 +46,6 @@ public class PanelSpec extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null)
-				dlg.mark.paintSign();
 		}
 	};
 

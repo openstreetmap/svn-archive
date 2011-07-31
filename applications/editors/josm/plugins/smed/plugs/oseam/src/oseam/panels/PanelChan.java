@@ -77,6 +77,7 @@ public class PanelChan extends JPanel {
 				portButton.setBorderPainted(true);
 				panelPort.setVisible(true);
 				panelPort.perchButton.setVisible(true);
+				panelPort.stakeButton.setVisible(true);
 			} else {
 				portButton.setBorderPainted(false);
 				panelPort.setVisible(false);
@@ -99,6 +100,11 @@ public class PanelChan extends JPanel {
 				prefPortButton.setBorderPainted(true);
 				panelPort.setVisible(true);
 				panelPort.perchButton.setVisible(false);
+				panelPort.stakeButton.setVisible(false);
+				if (dlg.mark.getShape() == Shp.PERCH || dlg.mark.getShape() == Shp.STAKE) {
+					dlg.mark.setShape(Shp.UNKNOWN);
+					panelPort.clearSelections();
+				}
 			} else {
 				prefPortButton.setBorderPainted(false);
 				if (!portButton.isSelected())
@@ -141,6 +147,7 @@ public class PanelChan extends JPanel {
 				stbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
 				panelStbd.perchButton.setVisible(true);
+				panelStbd.stakeButton.setVisible(true);
 			} else {
 				stbdButton.setBorderPainted(false);
 				panelStbd.setVisible(false);
@@ -163,6 +170,11 @@ public class PanelChan extends JPanel {
 				prefStbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
 				panelStbd.perchButton.setVisible(false);
+				panelStbd.stakeButton.setVisible(false);
+				if (dlg.mark.getShape() == Shp.PERCH || dlg.mark.getShape() == Shp.STAKE) {
+					dlg.mark.setShape(Shp.UNKNOWN);
+					panelStbd.clearSelections();
+				}
 			} else {
 				prefStbdButton.setBorderPainted(false);
 				if (!stbdButton.isSelected())
@@ -188,8 +200,6 @@ public class PanelChan extends JPanel {
 				safeWaterButton.setBorderPainted(false);
 				panelSaw.setVisible(false);
 			}
-			if (dlg.mark != null)
-				dlg.mark.paintSign();
 		}
 	};
 

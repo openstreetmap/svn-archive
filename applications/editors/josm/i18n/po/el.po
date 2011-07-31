@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 13:04+0200\n"
+"POT-Creation-Date: 2011-07-31 15:02+0200\n"
 "PO-Revision-Date: 2011-07-20 15:55+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-07-27 10:22+0000\n"
-"X-Generator: Launchpad (build 13503)\n"
+"X-Launchpad-Export-Date: 2011-07-31 11:33+0000\n"
+"X-Generator: Launchpad (build 13543)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
@@ -76,7 +76,7 @@ msgstr "Αγνοήθηκε κακοσχηματισμένο URL αρχείου:\
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1100
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:188
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:421
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:745
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:775
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:412
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:658
 #: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:327
@@ -160,7 +160,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:134
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:399
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:412
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1054
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1084
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:298
 #: ../core/src/org/openstreetmap/josm/gui/layer/TMSLayer.java:857
 #: ../core/src/org/openstreetmap/josm/gui/layer/WMSLayer.java:572
@@ -392,7 +392,7 @@ msgstr "Πιέστε για να συνεχίσετε και να ανοίξετ
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:378
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:443
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:262
-#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:66
+#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:67
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:659
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:665
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
@@ -1200,7 +1200,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:350
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:266
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1239
-#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:66
+#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:67
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:356
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:702
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:288
@@ -1431,7 +1431,7 @@ msgid "Zoom (in metres)"
 msgstr "Μεγέθυνση (σε μέτρα)"
 
 #: ../core/src/org/openstreetmap/josm/actions/JumpToAction.java:96
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:146
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:151
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:159
 msgid "URL"
 msgstr "URL"
@@ -2386,7 +2386,7 @@ msgstr ""
 #. bounds defined? => use the bbox downloader
 #.
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:90
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:963
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:993
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:231
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:879
 msgid "Download data"
@@ -7793,7 +7793,7 @@ msgid "Save a copy of this Style to file and add it to the list"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/MapPaintDialog.java:478
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:223
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:231
 msgid "Reloading style sources"
 msgstr ""
 
@@ -9268,7 +9268,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentTableColumnModel.java:41
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:433
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:144
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:149
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:72
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:766
 #: build/specialmessages.java:70 build/trans_presets.java:116
@@ -12047,18 +12047,18 @@ msgstr[1] ""
 msgid "Customize Color"
 msgstr "Προσαρμογή Χρώματος"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:66
+#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:67
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1304
 msgid "Default"
 msgstr "Προκαθορισμένο"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:70
+#: ../core/src/org/openstreetmap/josm/gui/layer/CustomizeColor.java:71
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1308
 msgid "Choose a color"
 msgstr "Επιλέξτε ένα χρώμα"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:134
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:281
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:139
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:287
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:189
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:147
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:278
@@ -12066,8 +12066,8 @@ msgstr "Επιλέξτε ένα χρώμα"
 msgid "Name: {0}"
 msgstr "Όνομα: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:138
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:285
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:143
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:291
 #: ../core/src/org/openstreetmap/josm/gui/preferences/SourceEditor.java:643
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:151
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:282
@@ -12075,7 +12075,7 @@ msgstr "Όνομα: {0}"
 msgid "Description: {0}"
 msgstr "Περιγραφή: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:143
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:148
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:156
 #, java-format
 msgid "{0} track"
@@ -12085,7 +12085,7 @@ msgstr[1] ""
 
 #. item "Relations/Route" text "Description"
 #. description
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:145
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:150
 #: build/trans_presets.java:4153
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:229
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:137
@@ -12095,26 +12095,26 @@ msgstr[1] ""
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:145
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:150
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:158
 msgid "Timespan"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:146
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:151
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:159
 msgid "Length"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:207
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:292
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:212
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:298
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:220
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:289
 #, java-format
 msgid "Length: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:209
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:289
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:214
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:295
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:222
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:286
 #, java-format
@@ -12123,8 +12123,8 @@ msgid_plural "{0} routes, "
 msgstr[0] "{0} διαδρομή, "
 msgstr[1] "{0} διαδρομές, "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:210
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:290
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:215
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:296
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:223
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:287
 #, java-format
@@ -12133,13 +12133,13 @@ msgid_plural "{0} waypoints"
 msgstr[0] "{0} σημείο αναφοράς"
 msgstr[1] "{0} σημεία αναφοράς"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:225
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:240
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:230
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:246
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:237
 msgid "gps point"
 msgstr "σημείο gps"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:288
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:294
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:285
 #, java-format
 msgid "{0} track, "
@@ -12147,23 +12147,23 @@ msgid_plural "{0} tracks, "
 msgstr[0] "{0} τροχιά, "
 msgstr[1] "{0} τροχιές, "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:733
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:763
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:651
 msgid "Convert to data layer"
 msgstr "Μετατροπή σε επίπεδο δεδομένων"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:742
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:772
 msgid ""
 "<html>Upload of unprocessed GPS data as map data is considered harmful."
 "<br>If you want to upload traces, look here:</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:744
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:774
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:661
 msgid "http://www.openstreetmap.org/traces"
 msgstr "http://www.openstreetmap.org/traces"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:767
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:797
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:548
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:148
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:161
@@ -12172,9 +12172,9 @@ msgstr "http://www.openstreetmap.org/traces"
 msgid "Converted from: {0}"
 msgstr "Μετατράπηκε από: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:789
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:828
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:951
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:819
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:858
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:981
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:103
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:220
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:706
@@ -12183,53 +12183,53 @@ msgstr "Μετατράπηκε από: {0}"
 msgid "Download from OSM along this track"
 msgstr "Λήψη από OSM κατά μηκός αυτού του ίχνους"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:798
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:828
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:82
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:714
 msgid "Download everything within:"
 msgstr "Λήψη όλων εντός:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:801
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:831
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:85
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:717
 #, java-format
 msgid "{0} meters"
 msgstr "{0} μέτρα"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:807
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:837
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:92
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:723
 msgid "Maximum area per request:"
 msgstr "Μέγιστη περιοχή ανά αίτημα:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:810
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:840
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:95
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:726
 #, java-format
 msgid "{0} sq km"
 msgstr "{0} τετρ. χλμ"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:816
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:846
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:732
 msgid "Download near:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:817
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:847
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "track only"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:817
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:847
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "waypoints only"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:817
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:847
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:733
 msgid "track and waypoints"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:943
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:973
 #: ../plugins/download_along/src/org/openstreetmap/josm/plugin/download_along/DownloadAlong.java:214
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:859
 #, java-format
@@ -12240,68 +12240,48 @@ msgstr ""
 "<html>Αυτή η ενέργεια {0} ξεχωριστές<br>αιτήσεις λήψης. Επιθυμείτε<br>να "
 "συνεχίσετε;</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1053
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1083
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:968
 msgid "No GPX track available in layer to associate audio with."
 msgstr ""
 "Δεν υπάρχει διαθέσιμο ίχνος GPX  στο επίπεδο για την συσχέτιση με τον ήχο."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1214
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1244
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1128
 msgid ""
 "Some waypoints with timestamps from before the start of the track or after "
 "the end were omitted or moved to the start."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1221
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1251
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1135
 msgid ""
 "Some waypoints which were too far from the track to sensibly estimate their "
 "time were omitted."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1355
-#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1257
-msgid "Customize line drawing"
-msgstr "Προσαρμογή του σχεδιασμού γραμμών"
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1383
-#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1262
-msgid "Use global settings."
-msgstr "Χρηση καθολικών ρυθμίσεων."
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1384
-#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1263
-msgid "Draw lines between points for this layer."
-msgstr "Σχεδίαση γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
-
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1385
-#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1264
-msgid "Do not draw lines between points for this layer."
-msgstr "ΠΑράλειψη σχεδίασης γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1419
+msgid "Customize track drawing"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1400
-#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1278
-msgid "Select line drawing options"
-msgstr "Επιλογή προτιμήσεων για τον σχεδιασμό γραμμών"
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1423
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1434
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1332
 msgid "Markers From Named Points"
 msgstr "Σημάδια από Ονομασμένα Σημεία"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1439
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1450
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1347
 #, java-format
 msgid "Named Trackpoints from {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1451
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1462
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1359
 msgid "Import Audio"
 msgstr "Εισαγωγή Ήχου"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1456
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1467
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1364
 #, java-format
 msgid ""
@@ -12310,30 +12290,30 @@ msgid ""
 "them with audio data.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1463
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1553
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1474
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1564
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1371
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1459
 msgid "Import not possible"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1487
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1498
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1394
 msgid "Wave Audio files (*.wav)"
 msgstr "Αρχεία Κυματομορφής (*.wav)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1522
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1533
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1428
 #, java-format
 msgid "Audio markers from {0}"
 msgstr "Σημάδια ήχου από {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1541
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1552
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1447
 msgid "Import images"
 msgstr "Εισαγωγή εικόνων"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1546
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1557
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1452
 #, java-format
 msgid ""
@@ -13114,7 +13094,7 @@ msgstr "Το URL ήταν: "
 msgid "Error displaying URL"
 msgstr "Σφάλμα στην εμφάνιση του URL"
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:191
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:199
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/mapcss/MapCSSStyleSource.java:70
 #: ../core/src/org/openstreetmap/josm/gui/mappaint/xml/XmlStyleSource.java:77
 #, java-format
@@ -13122,7 +13102,7 @@ msgid ""
 "Warning: failed to load Mappaint styles from ''{0}''. Exception was: {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:252
+#: ../core/src/org/openstreetmap/josm/gui/mappaint/MapPaintStyles.java:260
 #, java-format
 msgid "loading style ''{0}''..."
 msgstr ""
@@ -14047,7 +14027,101 @@ msgstr "Χρώματα που χρησιμοποιούνται από διάφο
 msgid "Colors"
 msgstr "Χρώματα"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:36
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:37
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:44
+msgid "Draw Direction Arrows"
+msgstr "Σχεδιασμός Βελών Κατεύθυνσης"
+
+#. only on the head of a way
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:38
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:74
+msgid "Only on the head of a way."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:39
+msgid "Draw oneway arrows."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:40
+msgid "Draw segment order numbers"
+msgstr "Σχεδιασμός αριθμών σειράς τμημάτων"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:41
+msgid "Draw boundaries of downloaded data"
+msgstr "Σχεδιασμός ορίων δεδομένων που έχουν ληφθεί"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:42
+msgid "Draw virtual nodes in select mode"
+msgstr "Σχεδιασμός εικονικών κόμβων σε κατάσταση επιλογής"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:43
+msgid "Draw inactive layers in other color"
+msgstr "Σχεδιασμός ανενεργών επιπέδων με άλλο χρώμα"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:44
+msgid "Smooth map graphics (antialiasing)"
+msgstr "Εξομάλυνση γραφικών χάρτη (antialiasing)"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:45
+msgid "Draw only outlines of areas"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:54
+msgid "GPS Points"
+msgstr "Σημεία GPS"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:69
+msgid "Draw direction hints for way segments."
+msgstr ""
+
+#. draw oneway arrows
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:80
+msgid "Draw arrows in the direction of oneways and other directed features."
+msgstr ""
+
+#. segment order number
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:85
+msgid "Draw the order numbers of all segments within their way."
+msgstr ""
+
+#. antialiasing
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:90
+msgid "Apply antialiasing to the map view resulting in a smoother appearance."
+msgstr ""
+"Εφαρμογή antialiasing σετην προβολή χάρτη με αποτέλεσμα ομαλότερη απεικόνηση."
+
+#. downloaded area
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:95
+msgid "Draw the boundaries of data loaded from the server."
+msgstr "Σχεδιασμός των ορίων των δεδομένων που λήφθηκαν από τον διακομιστή."
+
+#. virtual nodes
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:100
+msgid "Draw virtual nodes in select mode for easy way modification."
+msgstr ""
+
+#. background layers in inactive color
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:105
+msgid "Draw the inactive data layers in a different color."
+msgstr "Σχεδιασμός των ανενερών επιπέδων με διαφορετικό χρώμα."
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:111
+msgid ""
+"This option suppresses the filling of areas, overriding anything specified "
+"in the selected style."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:117
+msgid "OSM Data"
+msgstr "Δεδομένα OSM"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:25
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:41
+#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1262
+msgid "Use global settings."
+msgstr "Χρηση καθολικών ρυθμίσεων."
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:26
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:329
@@ -14056,50 +14130,55 @@ msgstr "Χρώματα"
 msgid "All"
 msgstr "Όλα"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:37
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:27
 msgid "Local files"
 msgstr "Τοπικά αρχεία"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:38
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:66
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:28
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:49
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:130
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:168
 #: ../plugins/turnlanes/src/org/openstreetmap/josm/plugins/turnlanes/model/Issue.java:21
 msgid "None"
 msgstr "Κανένα"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:42
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:32
 msgid "Force lines if no segments imported."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:43
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:33
 msgid "Draw large GPS points."
 msgstr "Σχεδιασμός μεγάλων σημείων GPS."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:44
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:162
+#. hdopCircleGpsPoints
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:34
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:142
 msgid "Draw a circle form HDOP value."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:46
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:36
 msgid "Velocity (red = slow, green = fast)"
 msgstr "Ταχύτητα (κόκκινο = αργό, πράσινο = γρήγορο)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:47
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:37
 msgid "Direction (red = west, yellow = north, green = east, blue = south)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:48
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:38
 msgid "Dilution of Position (red = high, green = low, if available)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:49
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:39
+msgid "Track date"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:40
 msgid "Single Color (can be customized for named layers)"
 msgstr ""
 
 #. <separator/>
 #. group "Car"
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:50
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:42
 #: build/trans_presets.java:1438
 msgid "Car"
 msgstr "Αυτοκίνητο"
@@ -14121,7 +14200,7 @@ msgstr "Αυτοκίνητο"
 #. item "Barriers/Sally Port" check "Bicycle"
 #. group "Bicycle"
 #. item "Public Transport/Subway Entrance" check "Bicycle"
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:50
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:42
 #: build/trans_presets.java:441 build/trans_presets.java:564
 #: build/trans_presets.java:843 build/trans_presets.java:862
 #: build/trans_presets.java:876 build/trans_presets.java:898
@@ -14162,7 +14241,7 @@ msgstr "Ποδήλατο"
 #. item "Barriers/Turnstile" check "Foot"
 #. <space />
 #. item "Barriers/Sally Port" check "Foot"
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:50
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:42
 #: build/trans_presets.java:437 build/trans_presets.java:563
 #: build/trans_presets.java:842 build/trans_presets.java:861
 #: build/trans_presets.java:875 build/trans_presets.java:897
@@ -14174,219 +14253,148 @@ msgstr "Ποδήλατο"
 msgid "Foot"
 msgstr "Πεζοί"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:51
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:52
-msgid "Draw Direction Arrows"
-msgstr "Σχεδιασμός Βελών Κατεύθυνσης"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:53
-msgid "Fast drawing (looks uglier)"
-msgstr "Γρήγορος σχεδιασμός (δείχνει άσχημος)"
-
-#. only on the head of a way
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:258
-msgid "Only on the head of a way."
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:56
-msgid "Draw oneway arrows."
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:57
-msgid "Draw segment order numbers"
-msgstr "Σχεδιασμός αριθμών σειράς τμημάτων"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:58
-msgid "Draw boundaries of downloaded data"
-msgstr "Σχεδιασμός ορίων δεδομένων που έχουν ληφθεί"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:59
-msgid "Draw virtual nodes in select mode"
-msgstr "Σχεδιασμός εικονικών κόμβων σε κατάσταση επιλογής"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:60
-msgid "Draw inactive layers in other color"
-msgstr "Σχεδιασμός ανενεργών επιπέδων με άλλο χρώμα"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:61
-msgid "Smooth map graphics (antialiasing)"
-msgstr "Εξομάλυνση γραφικών χάρτη (antialiasing)"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:62
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:43
 msgid "Create markers when reading GPX."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
-msgid "Draw only outlines of areas"
-msgstr ""
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:45
+msgid "Fast drawing (looks uglier)"
+msgstr "Γρήγορος σχεδιασμός (δείχνει άσχημος)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:47
 msgid "Dynamic color range based on data limits"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:65
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:48
 msgid "Auto"
 msgstr ""
 
 #. gpx data field name
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:65
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:48
 msgctxt "gpx_field"
 msgid "Name"
 msgstr ""
 
 #. gpx data field name
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:66
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:49
 msgctxt "gpx_field"
 msgid "Desc(ription)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:66
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:49
 msgid "Both"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:75
+#. makeAutoMarkers
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:73
 msgid ""
 "Automatically make a marker layer from any waypoints when opening a GPX "
 "layer."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:95
+#. ensure that default is in data base
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:85
 msgid "Draw lines between raw GPS points"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:117
+#. drawRawGpsMaxLineLengthLocal
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:109
 msgid ""
 "Maximum length (in meters) to draw lines for local files. Set to ''-1'' to "
 "draw all lines."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:119
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:110
 msgid "Maximum length for local files (meters)"
 msgstr "Μέγιστο μήκος για τοπικά αρχεία (μέτρα)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:124
+#. drawRawGpsMaxLineLength
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:114
 msgid ""
 "Maximum length (in meters) to draw lines. Set to ''-1'' to draw all lines."
 msgstr ""
 "Μέγιστο μήκος (σε μέτρα) γαι τον σχεδιασμό γραμμών. Θέστε σε ''-1'' για τον "
 "σχεδιασμό όλων των γραμμών."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:126
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:115
 msgid "Maximum length (meters)"
 msgstr "Μέγιστο μήκος (μέτρα)"
 
 #. forceRawGpsLines
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:130
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:119
 msgid ""
 "Force drawing of lines if the imported data contain no line information."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:142
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:223
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:129
 msgid "Draw direction arrows for lines, connecting GPS points."
 msgstr "Σχεδιασμός βελών κατεύθυνσης για γραμμές που συνδέουν σημεία GPS."
 
 #. drawGpsArrowsFast
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:148
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:133
 msgid "Draw the direction arrows using table lookups instead of complex math."
 msgstr ""
 
 #. drawGpsArrowsMinDist
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:154
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:137
 msgid ""
 "Do not draw arrows if they are not at least this distance away from the last "
 "one."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:157
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:138
 msgid "Minimum distance (pixels)"
 msgstr "Ελάχιστη απόσταση (pixels)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:167
+#. largeGpsPoints
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:146
 msgid "Draw larger dots for the GPS points."
 msgstr "Σχεδιασμός μεγαλύτερων κουκίδων για τα σημεία GPS."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:204
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:170
 msgid ""
 "All points and track segments will have the same color. Can be customized in "
 "Layer Manager."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:205
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:171
 msgid "Colors points and track segments by velocity."
 msgstr "Χρωματισμός σημείων και τμημάτων ιχνών ανάλογα με την ταχύτητα."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:206
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:172
 msgid "Colors points and track segments by direction."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:207
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:173
 msgid ""
 "Colors points and track segments by dilution of position (HDOP). Your "
 "capture device needs to log that information."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:212
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:174
+msgid "Colors points and track segments by its timestamp."
+msgstr ""
+
+#. color Tracks by Velocity Tune
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:177
 msgid "Allows to tune the track coloring for different average speeds."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:217
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:181
 msgid "Track and Point Coloring"
 msgstr "Χρωματισμός Ιχνών και Σημείων"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:232
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:190
+msgid "Colors points and track segments by data limits."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:195
 msgid "Waypoint labelling"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:238
-msgid "GPS Points"
-msgstr "Σημεία GPS"
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:253
-msgid "Draw direction hints for way segments."
+#: ../core/src/org/openstreetmap/josm/gui/preferences/GPXSettingsPanel.java:197
+msgid "Global settings"
 msgstr ""
-
-#. draw oneway arrows
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:264
-msgid "Draw arrows in the direction of oneways and other directed features."
-msgstr ""
-
-#. segment order number
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:269
-msgid "Draw the order numbers of all segments within their way."
-msgstr ""
-
-#. antialiasing
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:274
-msgid "Apply antialiasing to the map view resulting in a smoother appearance."
-msgstr ""
-"Εφαρμογή antialiasing σετην προβολή χάρτη με αποτέλεσμα ομαλότερη απεικόνηση."
-
-#. downloaded area
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:279
-msgid "Draw the boundaries of data loaded from the server."
-msgstr "Σχεδιασμός των ορίων των δεδομένων που λήφθηκαν από τον διακομιστή."
-
-#. virtual nodes
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:284
-msgid "Draw virtual nodes in select mode for easy way modification."
-msgstr ""
-
-#. background layers in inactive color
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:289
-msgid "Draw the inactive data layers in a different color."
-msgstr "Σχεδιασμός των ανενερών επιπέδων με διαφορετικό χρώμα."
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:295
-msgid ""
-"This option suppresses the filling of areas, overriding anything specified "
-"in the selected style."
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:301
-msgid "OSM Data"
-msgstr "Δεδομένα OSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:110
 msgid "imagery fade"
@@ -16168,26 +16176,26 @@ msgstr ""
 msgid "Failed to load {0}, use cached file and retry next time: {1}"
 msgstr ""
 
+#. I18n: argument is HTTP response code
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:300
 #, java-format
 msgid ""
-"Fatal: unexpected response from HTTP server. Got {0} response without "
-"'Location' header. Can''t redirect. Aborting."
+"Unexpected response from HTTP server. Got {0} response without ''Location'' "
+"header. Can''t redirect. Aborting."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:308
-msgid "Fatal: too many redirects to the download URL detected. Aborting."
+msgid "Too many redirects to the download URL detected. Aborting."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:311
-#, fuzzy, java-format
+#, java-format
 msgid "Download redirected to ''{0}''"
-msgstr "Λήψη πλακιδίου WMS από {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:314
 #, java-format
-msgid ""
-"Error: failed to read from ''{0}''. Server responded with status code {1}."
+msgid "Failed to read from ''{0}''. Server responded with status code {1}."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:113
@@ -17809,20 +17817,21 @@ msgstr ""
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:95
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:82
+#: ../core/src/org/openstreetmap/josm/tools/ImageRequest.java:81
 #, java-format
 msgid ""
 "Fatal: failed to locate image ''{0}''. This is a serious configuration "
 "problem. JOSM will stop working."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:290
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:283
 #, java-format
 msgid "Warning: failed to handle zip file ''{0}''. Exception was: {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:347
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:361
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:340
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:354
 #, java-format
 msgid ""
 "Warning: failed to access directory ''{0}'' for security reasons. Exception "
@@ -35677,11 +35686,11 @@ msgstr ""
 msgid "Show incomplete addresses"
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:218
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:216
 msgid "items"
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:220
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:218
 msgid "no items"
 msgstr ""
 
@@ -35778,7 +35787,7 @@ msgstr ""
 msgid "Selects all addresses with incomplete data."
 msgstr ""
 
-#: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:314
+#: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:310
 msgid "Layer Properties"
 msgstr ""
 
@@ -37456,6 +37465,22 @@ msgstr ""
 "<html>Η αποστολή μη επεξεργασμένων δεδομένων GPS ως δεδομένα χάρτη θεωρείτε "
 "βλαβερή.<br>Αν θέλετε να αποστείλετε ίχνη, κοιτάξτε εδώ:"
 
+#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1257
+msgid "Customize line drawing"
+msgstr "Προσαρμογή του σχεδιασμού γραμμών"
+
+#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1263
+msgid "Draw lines between points for this layer."
+msgstr "Σχεδίαση γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
+
+#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1264
+msgid "Do not draw lines between points for this layer."
+msgstr "ΠΑράλειψη σχεδίασης γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
+
+#: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1278
+msgid "Select line drawing options"
+msgstr "Επιλογή προτιμήσεων για τον σχεδιασμό γραμμών"
+
 #: ../plugins/gpxfilter/src/gpxfilter/GpxFilterPlugin.java:19
 msgid "GPX"
 msgstr ""
@@ -38068,9 +38093,8 @@ msgid "GPX info mode"
 msgstr ""
 
 #: ../plugins/infomode/src/org/openstreetmap/josm/plugins/infomode/InfoPanel.java:40
-#, fuzzy
 msgid "Hide this"
-msgstr "Κρυψώνα"
+msgstr ""
 
 #: ../plugins/infomode/src/org/openstreetmap/josm/plugins/infomode/InfoPanel.java:41
 msgid "Hide this&older"
@@ -38081,16 +38105,12 @@ msgid "No timestamp"
 msgstr ""
 
 #: ../plugins/infomode/src/org/openstreetmap/josm/plugins/infomode/InfoPanel.java:106
-#, fuzzy
 msgid "km/h"
 msgstr ""
-"\n"
-"{0} χμ/ω"
 
 #: ../plugins/infomode/src/org/openstreetmap/josm/plugins/infomode/InfoPanel.java:109
-#, fuzzy
 msgid "Track name: "
-msgstr "Όνομα οδού: "
+msgstr ""
 
 #: ../plugins/irsrectify/src/irsrectify/IRSRectifyPlugin.java:58
 msgid ""
@@ -39684,13 +39704,13 @@ msgid "Drag to shear the picture"
 msgstr ""
 
 #: ../plugins/proj4j/src/org/openstreetmap/josm/plugins/proj4j/ProjectionProj4J.java:108
-#: ../plugins/proj4j/src/org/openstreetmap/josm/plugins/proj4j/ProjectionProj4J.java:246
+#: ../plugins/proj4j/src/org/openstreetmap/josm/plugins/proj4j/ProjectionProj4J.java:247
 #, java-format
 msgid "Selected: {0}"
 msgstr ""
 
 #. TODO: include description in string
-#: ../plugins/proj4j/src/org/openstreetmap/josm/plugins/proj4j/ProjectionProj4J.java:210
+#: ../plugins/proj4j/src/org/openstreetmap/josm/plugins/proj4j/ProjectionProj4J.java:211
 msgid "Proj4J: "
 msgstr ""
 
@@ -42084,11 +42104,10 @@ msgid "Symmetry"
 msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/SymmetryAction.java:63
-#, fuzzy
 msgid ""
 "Please select at least two nodes for symmetry axis and something else to "
 "mirror."
-msgstr "Παρακαλώ επιλέξτε τουλάχιστον δύο κόμβους για συγχώνευση."
+msgstr ""
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/UnGlueRelationAction.java:44
 msgid "UnGlue Relation"
@@ -42982,6 +43001,9 @@ msgstr ""
 #~ msgid "Those nodes are not in a circle."
 #~ msgstr "Αυτοι οι κόμβοι δεν βρίσκονται σε κύκλο."
 
+#~ msgid "Please select at least two nodes to merge."
+#~ msgstr "Παρακαλώ επιλέξτε τουλάχιστον δύο κόμβους για συγχώνευση."
+
 #~ msgid ""
 #~ "Internal Error: cannot check conditions for no layer. Please report this "
 #~ "as a bug."
@@ -43217,6 +43239,9 @@ msgstr ""
 
 #~ msgid "Exception occurred"
 #~ msgstr "Δημιοθργήθηκε εξαίρεση"
+
+#~ msgid "Download WMS tile from {0}"
+#~ msgstr "Λήψη πλακιδίου WMS από {0}"
 
 #~ msgid "WMS Plugin Help"
 #~ msgstr "Βοήθεια πρόσθετου WMS"

@@ -21,6 +21,8 @@ package mwNodes ;
 use strict ;
 use warnings ;
 
+use OSM::osm 8.21 ;
+
 use mwConfig ;
 use mwFile ;
 use mwRules ;
@@ -161,11 +163,13 @@ sub createPoiDirectory {
 
 	if ( cv('grid') eq "0") {
 		foreach my $poi (sort keys %poiHash) {
+			$poi = latexStringSanitize ( $poi ) ;
 			print $poiFile "$poi\n" ;
 		}
 	}
 	else {
 		foreach my $poi (sort keys %poiHash) {
+			$poi = latexStringSanitize ( $poi ) ;
 			print $poiFile "$poi\t" ;
 			foreach my $square (sort keys %{$poiHash{$poi}}) {
 				print $poiFile "$square " ;

@@ -21,6 +21,8 @@ package mwWays ;
 use strict ;
 use warnings ;
 
+use OSM::osm 8.21 ;
+
 use mwConfig ;
 use mwFile ;
 use mwRules ;
@@ -332,11 +334,13 @@ sub createDirectory {
 
 	if ( cv('grid') eq "0") {
 		foreach my $street (sort keys %directory) {
+			$street = latexStringSanitize ( $street ) ;
 			print $dirFile "$street\n" ;
 		}
 	}
 	else {
 		foreach my $street (sort keys %directory) {
+			$street = latexStringSanitize ( $street ) ;
 			print $dirFile "$street\t" ;
 			foreach my $square (sort keys %{$directory{$street}}) {
 				print $dirFile "$square " ;

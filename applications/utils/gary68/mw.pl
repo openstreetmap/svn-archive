@@ -26,12 +26,14 @@
 # 0.20 legend
 # 0.21 legend in separate file
 # 0.22 help texts for object properties in rule file
+# 0.23 latex string sanitize
+#
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.22" ;
+my $version = "0.23" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -120,3 +122,4 @@ print "map ($x cm x $y cm) fits paper $paper\n\n" ;
 
 my $time1 = time() ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
+

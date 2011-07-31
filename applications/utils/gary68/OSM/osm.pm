@@ -186,7 +186,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.2' ; 
+$VERSION = '8.21' ;
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -1575,6 +1575,7 @@ sub APIgetWay {
 				}
 			}
 		}
+
 	}
 
 	#print "\nAPI result:\n$wayId\nNodes: @wayNodes\nTags: " ;
@@ -1661,6 +1662,34 @@ sub applyDiffFile {
 
 sub latexStringSanitize {
 	my $text = shift ;
+
+	my %validLatex = () ;
+	my %replaceLatex = () ;
+
+	$replaceLatex{'_'} = '\\_' ;	
+	$replaceLatex{'&'} = '\\&' ;	
+	$replaceLatex{'$'} = '\\$' ;	
+	$replaceLatex{'%'} = '\\%' ;	
+	$replaceLatex{'{'} = '\\{' ;	
+	$replaceLatex{'}'} = '\\}' ;	
+	$replaceLatex{'#'} = '\\#' ;	
+
+	foreach my $c (0..9) {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ("a".."z") {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ("A".."Z") {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ( qw (! + * - : . ; § / = ?) ) {
+		$validLatex{$c} = 1 ;
+	}
+	foreach my $c ( ' ', '"', "\'", '(', ')', '[', ']', ',' ) {
+		$validLatex{$c} = 1 ;
+	}
+
 
 	($text) = ($text =~ /^(.*)$/ ) ;
 

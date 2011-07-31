@@ -72,7 +72,7 @@ require Exporter ;
 
 my @belowWays = ("background", "base", "area", "multi") ;
 
-my @aboveWays = ( "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional") ;
+my @aboveWays = ( "arealabels", "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional") ;
 
 my @elements = ("scale", "ruler", "legend", "header", "footer", "rectangles", "title") ;
 

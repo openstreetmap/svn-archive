@@ -27,13 +27,14 @@
 # 0.21 legend in separate file
 # 0.22 help texts for object properties in rule file
 # 0.23 latex string sanitize
-#
+# 0.24 labels for areas
+# 
 
 # TODO
 # -area labels
 # -different tempfilenames
 
-my $version = "0.23" ;
+my $version = "0.24" ;
 my $programName = "mapweaver" ;
 
 use strict ;

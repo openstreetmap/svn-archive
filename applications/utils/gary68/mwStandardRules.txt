@@ -191,6 +191,7 @@ RULE AREA
 keyvalue=natural=water
 color=lightblue
 base=yes
+label=name
 
 RULE AREA
 keyvalue=natural=land
@@ -201,31 +202,37 @@ RULE AREA
 keyvalue=leisure=park
 color=lightgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=natural=wood
 color=darkgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=landuse=forest
 color=darkgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=landuse=farmland
 color=lightgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=landuse=farmyard
 color=lightgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=landuse=farm
 color=lightgreen
 base=yes
+label=name
 
 RULE AREA
 keyvalue=landuse=grass

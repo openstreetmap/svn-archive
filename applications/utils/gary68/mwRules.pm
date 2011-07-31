@@ -109,6 +109,9 @@ my @validAreaProperties = (
 			["keyValue","key and value of object i.e. [amenity=parking]"],
 			["color","color of area i.e. [lightgrey]"],
 			["icon","icon for fill pattern to be used i.e. [icondir/parking.svg]"],
+			["label", "label text to be rendered i.e. [name]"] ,
+			["labelColor", "color of label i.e. [green]"] ,
+			["labelSize", "size of label text i.e. [20]"] ,
 			["base","should this object be drawn underneath other objects? (applies for landuse residential i.e.) [yes|no]"],
 			["svgString","format of area []"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
@@ -301,6 +304,8 @@ sub readRules {
 
 			# set defaults first
 			$areaRules{ $areaNr }{ 'label' } = "none" ;
+			$areaRules{ $areaNr }{ 'labelcolor' } = "black" ;
+			$areaRules{ $areaNr }{ 'labelsize' } = 30 ;
 			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
 			$areaRules{ $areaNr }{ 'icon' } = "none" ;
 			$areaRules{ $areaNr }{ 'base' } = "no"  ;

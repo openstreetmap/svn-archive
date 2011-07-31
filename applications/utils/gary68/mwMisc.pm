@@ -50,6 +50,7 @@ require Exporter ;
 		createDirPdf
 		getPointOfWay
 		nodes2Coordinates
+		areaCenter
 		 ) ;
 
 
@@ -691,7 +692,28 @@ sub nodes2Coordinates {
 }
 
 
+sub areaCenter {
+#
+# calculate center of area by averageing lons/lats. could be smarter because result could be outside of area! TODO
+#
+	my $ref = shift ;
+	my @nodes = @$ref ;
+	my $x = 0 ;
+	my $y = 0 ;
+	my $num = 0 ;
 
+	my ($lonRef, $latRef) = getNodePointers() ;
+
+	foreach my $n (@nodes) {
+		$x +=  $$lonRef{$n} ;
+		$y +=  $$latRef{$n} ;
+		$num++ ;
+	}
+	$x = $x / $num ;
+	$y = $y / $num ;
+	return ($x, $y) ;
+
+}
 
 1 ;
 

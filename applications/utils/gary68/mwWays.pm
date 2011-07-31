@@ -45,6 +45,9 @@ require Exporter ;
 my $areasOmitted = 0 ;
 my $areasDrawn = 0 ;
 
+my $areaLabels = 0 ;
+my $areaLabelsOmitted = 0 ;
+
 my @coastWays = () ;
 
 sub processWays {
@@ -190,6 +193,31 @@ sub processWays {
 					drawArea ($svgString, $icon, \@ways, 1, "area") ;
 				}
 				$areasDrawn++ ;
+
+
+				# DRAW label
+				if ( $$ruleRef{'label'} ne "none" )  {
+					$areaLabels++ ;
+					if ($size > cv('minarealabelsize') ) {
+						# text
+						my ($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'},0, 0) ;
+					
+						# pos
+						my ($lon, $lat) = areaCenter ( $$nodesRef{$wayId} ) ;
+
+						# draw
+						my $labelSize = $$ruleRef{'labelsize'} ;
+						my $color = $$ruleRef{'labelcolor'} ;
+						my $svgText = "font-size=\"$labelSize\" fill=\"$color\"" ;
+
+						mwLabel::placeLabelAndIcon ($lon, $lat, 0, 0, $name, $svgText, "none", 0, 0, "arealabels") ;
+					}
+					else {
+						$areaLabelsOmitted++ ;
+					}
+				}
+
+
 			}
 			else {
 				$areasOmitted++ ;
@@ -199,6 +227,7 @@ sub processWays {
 	}
 
 	print "$areasDrawn areas drawn, $areasOmitted omitted because they are too small\n" ;
+	print "$areaLabels area labels total, $areaLabelsOmitted omitted because belonging areas were too small\n" ;
 
 	my $cw = scalar @coastWays ;
 	if ( cv('verbose')) { print "$cw coast line ways found.\n" ; }

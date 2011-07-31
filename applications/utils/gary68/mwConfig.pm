@@ -158,6 +158,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["headsize",40,"font size for header (CLO)", "map"],
 
 			["minAreaSize",400,"min size of area to be drawn on map", "map"],
+			["minAreaLabelSize",10000,"min size of area to be labeled on map", "map"],
 			["oceanColor","lightblue","color of ocean", "map"],
 			["cIE",0,"osmosis clipIncompleteEntities instead of completeObjects (CLP)", "map"]
 

@@ -96,6 +96,8 @@
 # Version 8.1
 # - diff db sub
 #
+# Version 8.2 
+# - latexSanitizeString
 #
 # USAGE
 #
@@ -184,7 +186,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.12' ; 
+$VERSION = '8.2' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -1653,6 +1655,49 @@ sub applyDiffFile {
 	print "$nodeCount nodes processed.\n" ;
 	print "$wayCount ways processed.\n" ;
 	print "$relationCount relations processed.\n" ;
+}
+
+# -----------------------------------------------------------------------------------------------------
+
+sub latexStringSanitize {
+	my $text = shift ;
+
+	($text) = ($text =~ /^(.*)$/ ) ;
+
+	$text =~ s/\&apos;/\'/g ;
+	$text =~ s/\&quot;/\'/g ;
+
+	my $out = "" ;
+	my @chars ;
+	@chars = split //, $text ;
+
+	for (my $i=0; $i<=$#chars; $i++) {
+		my $c = $chars[$i] ;
+		# print "$c ", ord ($c), "\n" ;
+		if (defined $validLatex{$c}) {
+			$out .= $c ;
+		}
+		elsif (defined $replaceLatex{$c}) {
+			$out .= $replaceLatex{$c} ;
+		}
+		else {
+			if ( ($i < $#chars) and ($c eq chr (195)) ) {
+				my $found = 0 ;
+				foreach my $c2 (164, 182, 188, 132, 150, 156, 159) {
+					if ($chars[$i+1] eq chr($c2)) {
+						$found = 1 ;
+					}
+				}
+				if ($found) {
+					$out .= $c . $chars[$i+1] ;
+					$i++ ;
+				}
+			}
+		}
+	} 
+
+	return $out ;
+
 }
 
 1 ;

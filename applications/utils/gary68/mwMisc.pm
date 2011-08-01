@@ -51,6 +51,7 @@ require Exporter ;
 		getPointOfWay
 		nodes2Coordinates
 		areaCenter
+		createTextSVG
 		 ) ;
 
 
@@ -373,23 +374,6 @@ sub intersection {
 } 
 
 
-sub areaSize {
-	my $ref = shift ; # nodes
-	my @nodes = @$ref ;
-
-	my ($lonRef, $latRef) = mwFile::getNodePointers() ;
-
-	my @poly = () ;
-	foreach my $node ( @nodes ) {
-		my ($x, $y) = mwMap::convert ($$lonRef{$node}, $$latRef{$node}) ;
-		push @poly, [$x, $y] ;
-	}
-	my ($p) = Math::Polygon->new(@poly) ;
-	my $size = $p->area ;
-
-	return $size ;
-}
-
 sub isIn {
 # checks two polygons
 # return 0 = neither
@@ -679,6 +663,7 @@ sub nodes2Coordinates {
 #
 	my @nodes = @_ ;
 	my $i ;
+
 	my @result = () ;
 
 	my ($lonRef, $latRef) = mwFile::getNodePointers() ;
@@ -698,6 +683,9 @@ sub areaCenter {
 #
 	my $ref = shift ;
 	my @nodes = @$ref ;
+
+	# print "CENTER: @nodes\n" ;
+
 	my $x = 0 ;
 	my $y = 0 ;
 	my $num = 0 ;
@@ -714,6 +702,58 @@ sub areaCenter {
 	return ($x, $y) ;
 
 }
+
+
+sub areaSize {
+	my $ref = shift ; # nodes
+	my @nodes = @$ref ;
+
+	# print "SIZE: @nodes\n" ;
+
+	my ($lonRef, $latRef) = mwFile::getNodePointers() ;
+
+	my @poly = () ;
+	foreach my $node ( @nodes ) {
+		my ($x, $y) = mwMap::convert ($$lonRef{$node}, $$latRef{$node}) ;
+		push @poly, [$x, $y] ;
+	}
+	my ($p) = Math::Polygon->new(@poly) ;
+	my $size = $p->area ;
+
+	return $size ;
+}
+
+# ---------------------------------------------------------------
+
+sub createTextSVG {
+	my ($fontFamily, $font, $size, $color, $strokeWidth, $strokeColor) = @_ ;
+
+	my $svg = "" ;
+
+	if ( (defined $font) and ( $font ne "") ) {
+		$svg .= "font=\"$font\" " ;
+	}
+	if ( (defined $fontFamily) and ( $fontFamily ne "") ) {
+
+		$svg .= "font-family=\"$fontFamily\" " ;
+	}
+	if ( (defined $size) and ( $size ne "") ) {
+		$svg .= "font-size=\"$size\" " ;
+	}
+	if ( (defined $color) and ( $color ne "") ) {
+		$svg .= "fill=\"$color\" " ;
+	}
+
+	if ( (defined $strokeColor) and ( $strokeColor ne "") ) {
+		$svg .= "stroke=\"$strokeColor\" " ;
+	}
+	if ( (defined $strokeWidth) and ( $strokeWidth ne "") ) {
+		$svg .= "stroke-width=\"$strokeWidth\" " ;
+	}
+	return $svg ;
+}
+
+
 
 1 ;
 

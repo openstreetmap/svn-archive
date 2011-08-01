@@ -55,6 +55,8 @@ my %wayUsed = () ;
 sub processMultipolygons {
 	my $notDrawnMP = 0 ;
 	my $mp = 0 ;
+	my $mpLabels = 0 ;
+	my $mpNotDrawnLabels = 0 ;
 	print "draw multipolygons...\n" ;
 
 	preprocessMultipolygons() ;
@@ -81,35 +83,43 @@ sub processMultipolygons {
 			if ($size >= cv('minareasize') ) {
 				drawArea ($svgText, $icon, $multiPaths{$multiId}, 1, "multi") ;
 				$mp++ ;
+
+
+				# LABELS
+				my $name = "" ; my $ref1 ;
+				($name, $ref1) = createLabel ( $multiTags{$multiId}, $$ruleRef{'label'}, 0, 0) ;
+
+				if ( ( $$ruleRef{'label'} ne "none") and 
+					( cv('nolabel') eq "1" ) and 
+					($name eq "") ) 
+				{ 
+					$name = "NO LABEL" ; 
+				}
+
+				if ($name ne "") {
+					if ($size >= cv('minarealabelsize') ) {
+						$mpLabels++ ;
+						print "MP LABEL: $name\n" ;
+						my ($x, $y) = areaCenter ( $multiPaths{$multiId}[0] ) ;
+						$svgText = createTextSVG ( undef, undef, $$ruleRef{'labelsize'}, $$ruleRef{'labelcolor'}, undef, undef ) ;
+						placeLabelAndIcon ($x, $y, 1, 0, $name, $svgText, "none", 0, 0, "arealabels") ;
+					} # if size
+					else {
+						$mpNotDrawnLabels++ ;
+					}
+				}
+				else {
+
+				}
 			}
 			else {
 				$notDrawnMP++ ;
 			}
 
-			# LABELS
-			my $name = "" ; my $ref1 ;
-			($name, $ref1) = createLabel ( $multiTags{$multiId}, $$ruleRef{'label'}, 0, 0) ;
-
-			if ( ( $$ruleRef{'label'} ne "none") and 
-				( cv('nolabel') eq "1" ) and 
-				($name eq "") ) 
-			{ 
-				$name = "NO LABEL" ; 
-			}
-
-			if ($name ne "") {
-				my ($x, $y) = center (nodes2Coordinates( @{$multiNodes{$multiId}} ) ) ;
-
-				# placeLabelAndIcon ($x,$y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
-
-				$svgText = "" ;
-				my $iSize = $$ruleRef{'iconsize'} ;
-				placeLabelAndIcon ($x, $y, 0, 0, $name, $svgText, $icon, $iSize, $iSize, "multi") ;
-
-			} # if
 		} # if rule
 	} # foreach multi
 	print "$mp multipolygon areas drawn, $notDrawnMP not drawn because they were too small.\n" ;
+	print "$mpLabels multipolygon labels drawn, $mpNotDrawnLabels not drawn because belonging areas were too small.\n" ;
 }
 
 # ------------------------------------------------------------------------------------------

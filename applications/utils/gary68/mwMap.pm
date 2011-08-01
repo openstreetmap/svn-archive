@@ -412,6 +412,9 @@ sub drawArea {
 	my @ways = @$ref ;
 	my $i ;
 	my $svg = "" ;
+	my @newArray = () ;
+
+	# TODO loop converts original data !!!
 
 	if ($convert) {
 		my ($lonRef, $latRef, $tagRef) = mwFile::getNodePointers () ;
@@ -422,8 +425,9 @@ sub drawArea {
 				my ($x, $y) = convert ($$lonRef{$n}, $$latRef{$n}) ;
 				push @newCoords, $x, $y ;
 			}
-			@$aRef = @newCoords ;
+			push @newArray , [@newCoords] ;
 		}
+		@ways = @newArray ;
 	}
 
 	if (defined $areaDef{$icon}) {

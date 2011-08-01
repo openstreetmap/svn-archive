@@ -28,13 +28,13 @@
 # 0.22 help texts for object properties in rule file
 # 0.23 latex string sanitize
 # 0.24 labels for areas
+# 0.25 labels for multipolygons
 # 
 
 # TODO
-# -area labels
 # -different tempfilenames
 
-my $version = "0.24" ;
+my $version = "0.25" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -163,13 +163,13 @@ sub createPoiDirectory {
 
 	if ( cv('grid') eq "0") {
 		foreach my $poi (sort keys %poiHash) {
-			$poi = latexStringSanitize ( $poi ) ;
+			$poi = replaceHTMLCode ( $poi ) ;
 			print $poiFile "$poi\n" ;
 		}
 	}
 	else {
 		foreach my $poi (sort keys %poiHash) {
-			$poi = latexStringSanitize ( $poi ) ;
+			$poi = replaceHTMLCode ( $poi ) ;
 			print $poiFile "$poi\t" ;
 			foreach my $square (sort keys %{$poiHash{$poi}}) {
 				print $poiFile "$square " ;

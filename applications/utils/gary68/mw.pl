@@ -29,12 +29,13 @@
 # 0.23 latex string sanitize
 # 0.24 labels for areas
 # 0.25 labels for multipolygons
+# 0.26 fix directory bugs
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.25" ;
+my $version = "0.26" ;
 my $programName = "mapweaver" ;
 
 use strict ;

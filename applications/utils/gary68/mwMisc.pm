@@ -598,7 +598,7 @@ sub sizeSVG {
 
 sub createDirPdf {
 	if ((cv('dir') eq "1") or (cv('poi') eq "1")) {
-		if (cv('grid') >0) {
+		if (cv('grid') > 0) {
 			my $dirPdfName = cv('out') ;
 			$dirPdfName =~ s/.svg/_dir.pdf/ ;
 			my $sName = "none" ;
@@ -610,8 +610,8 @@ sub createDirPdf {
 			if (cv('poi') eq "1") { $pName = cv('poiname') ; }
 			my $dirColNum = cv ('dircolnum') ;
 			my $dirTitle = cv ('dirtitle') ;
-			print "\ncalling perl dir.pl $sName $pName $dirTitle $dirPdfName $dirColNum\n\n" ;
-			`perl dir.pl $sName $pName \"$dirTitle\" $dirPdfName $dirColNum > out.txt` ;
+			print "\ncalling perl mwDir.pl $sName $pName $dirTitle $dirPdfName $dirColNum\n\n" ;
+			`perl mwDir.pl $sName $pName \"$dirTitle\" $dirPdfName $dirColNum > out.txt` ;
 		}
 		else {
 			print "WARNING: directory PDF will not be created because -grid was not specified\n" ;

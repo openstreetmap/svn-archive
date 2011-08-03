@@ -186,7 +186,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.21' ;
+$VERSION = '8.3' ;
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -194,7 +194,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink applyDiffFile getBugs getNode getNode2 getNode3 getNodeXml getWay getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay latexStringSanitize ) ;
+@EXPORT = qw (analyzerLink applyDiffFile getBugs getNode getNode2 getNode3 getNodeXml getWay getWay2 getWay3 getWayXml getRelation getRelation3 getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay convertToLatex replaceHTMLCode ) ;
 
 our $line ; 
 our $file ; 
@@ -1576,6 +1576,7 @@ sub APIgetWay {
 			}
 		}
 
+
 	}
 
 	#print "\nAPI result:\n$wayId\nNodes: @wayNodes\nTags: " ;
@@ -1660,7 +1661,7 @@ sub applyDiffFile {
 
 # -----------------------------------------------------------------------------------------------------
 
-sub latexStringSanitize {
+sub convertToLatex {
 	my $text = shift ;
 
 	my %validLatex = () ;
@@ -1674,6 +1675,9 @@ sub latexStringSanitize {
 	$replaceLatex{'}'} = '\\}' ;	
 	$replaceLatex{'#'} = '\\#' ;	
 
+	$replaceLatex{'^'} = "\\textasciicircum " ;	
+	$replaceLatex{'\\'} = "\\textbackslash " ;	
+
 	foreach my $c (0..9) {
 		$validLatex{$c} = 1 ;
 	}
@@ -1683,18 +1687,15 @@ sub latexStringSanitize {
 	foreach my $c ("A".."Z") {
 		$validLatex{$c} = 1 ;
 	}
-	foreach my $c ( qw (! + * - : . ; § / = ?) ) {
+	foreach my $c ( qw (! + * - : . ; § / = ? ) ) {
 		$validLatex{$c} = 1 ;
 	}
 	foreach my $c ( ' ', '"', "\'", '(', ')', '[', ']', ',' ) {
 		$validLatex{$c} = 1 ;
 	}
 
-
+	$validLatex{"\t"} = 1 ;
 	($text) = ($text =~ /^(.*)$/ ) ;
-
-	$text =~ s/\&apos;/\'/g ;
-	$text =~ s/\&quot;/\'/g ;
 
 	my $out = "" ;
 	my @chars ;
@@ -1722,12 +1723,32 @@ sub latexStringSanitize {
 					$i++ ;
 				}
 			}
+			if ( ($i < $#chars) and ($c eq chr (194)) ) {
+				if ( ord $chars[$i+1] == 176 ) {
+					$out .= '$^{\\circ }$' ;
+					$i++ ;
+				}
+			}
 		}
 	} 
 
 	return $out ;
 
 }
+
+
+sub replaceHTMLCode {
+	my $text = shift ;
+
+	($text) = ($text =~ /^(.*)$/ ) ;
+
+	$text =~ s/\&apos;/\'/g ;
+	$text =~ s/\&quot;/\'/g ;
+	$text =~ s/\&amp;/\&/g ;
+
+	return $text ;
+}
+
 
 1 ;
 

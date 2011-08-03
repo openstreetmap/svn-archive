@@ -4,6 +4,7 @@
  *
  * Licence: GPL v2 or later
  * Author:  Alexei Kasatkin, 2011
+ * Ideas: Kotelnikov, Michael Barabanov (ticket #3840)
  */
 
 package org.openstreetmap.josm.plugins.fastdraw;

@@ -52,6 +52,7 @@ require Exporter ;
 		nodes2Coordinates
 		areaCenter
 		createTextSVG
+		wayVisible
 		 ) ;
 
 
@@ -753,7 +754,24 @@ sub createTextSVG {
 	return $svg ;
 }
 
+# --------------------------------------------------------------------
 
+sub wayVisible {
+	my $ref = shift ;
+	my @points = @$ref ;
+	my ($sizeX, $sizeY) = mwMap::getDimensions() ;
+
+	my $result = 0 ;
+
+	for (my $i = 0; $i < $#points; $i += 2) {
+		my $x = $points[$i] ;
+		my $y = $points[$i+1] ;
+		if ( ( $x >= 0 ) and ( $y >= 0 ) and ( $x <= $sizeX ) and ( $y <= $sizeY ) ) {
+			$result = 1 ;
+		}
+	}
+	return $result ;
+}
 
 1 ;
 

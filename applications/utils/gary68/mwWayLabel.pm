@@ -47,6 +47,11 @@ my %ruleRefs = () ;
 my $pathNumber = 0 ;
 
 my $numWayLabelsOmitted = 0 ;
+my $wnsNumber = 1 ;
+my @wns =() ;
+
+
+# ------------------------------------------------------------------------
 
 sub addToDirectory {
 	my ($name, $square) = @_ ;
@@ -288,13 +293,25 @@ sub createWayLabels {
 			$toLabel = 0 ;
 		}
 
-		if ($lLen > $wLen*0.95) {
-			$notDrawnLabels { $name } = 1 ;
+
+		# wns?
+		if ( ($lLen > $wLen * 0.95) and ( cv('wns') > 0 ) ) {
+			if ( ( $toLabel != 0 ) and ( ! grep /shield/i, $name) and ( wayVisible( \@points ) ) ) {
+				my $oldName = $name ;
+				push @wns, [ $wnsNumber, $name] ;
+				$name = $wnsNumber ;
+				$lLen = cv('ppc') / 10 * $$ruleRef{'labelsize'} * length ($name) ;
+				# print "WNS: $oldName - $name\n" ;
+				$wnsNumber++ ;
+			}
 		}
+
 
 		if ( ($lLen > $wLen*0.95) or ($toLabel == 0) ) {
 			# label too long
 			$numWayLabelsOmitted++ ;
+			$notDrawnLabels { $name } = 1 ;
+
 		}
 		else {
 
@@ -446,6 +463,85 @@ sub createWayLabels {
 	}
 	close ($labelFile) ;
 
+
+	# way name substitutes legend?
+
+	if ( cv('wns') > 0 ) {
+		createWNSLegend() ;
+	}
+
+}
+
+# ------------------------------------------------------------
+
+sub createWNSLegend {
+	my $size = cv('wnssize') ;	
+	my $color = cv('wnscolor') ;
+
+	# TODO max len auto size
+	my $maxLen = 0 ;
+	foreach my $e ( @wns ) {
+		if ( length $e->[1] > $maxLen ) { $maxLen = length $e->[1] ; }
+	}
+
+	my $sy = 2 * $size ;
+	my $sx = (4 + $maxLen) * $size / 10 * cv('ppc') ;
+	my $tx = 4 * $size / 10 * cv('ppc') ;
+	my $nx = 1 * $size / 10 * cv('ppc') ;
+	my $ty = 1.5 * $size ;
+
+	my $sizeX = $sx ;
+	my $sizeY = $sy * scalar @wns ;
+
+	# defs
+
+	my $actualLine = 0 ;
+
+	addToLayer ("definitions", "<g id=\"wnsdef\" width=\"$sizeX\" height=\"$sizeY\" >") ;
+
+	# bg
+	my $bg = cv('wnsbgcolor') ;
+	my $svgString = "fill=\"$bg\"" ;
+	drawRect (0, 0, $sizeX, $sizeY, 0, $svgString, "definitions") ;
+
+	$svgString = createTextSVG (undef, undef, cv('wnssize'), cv('wnscolor'), undef, undef) ;
+	foreach my $e ( @wns ) {
+		my $y = $actualLine * $sy + $ty ;
+		drawText ($nx, $y, 0, $e->[0], $svgString, "definitions") ;
+		drawText ($tx, $y, 0, $e->[1], $svgString, "definitions") ;
+		
+		$actualLine++ ;
+	}
+
+	addToLayer ("definitions", "</g>") ;
+
+	my $posX = 0 ;
+	my $posY = 0 ;
+
+	# reset some variables
+	($sizeX, $sizeY) = getDimensions() ;
+	$sy = $sy * scalar @wns ;
+
+	if ( cv('wns') eq "2") {
+		$posX = $sizeX - $sx ;
+		$posY = 0 ;
+	}
+
+	if ( cv('wns') eq "3") {
+		$posX = 0 ;
+		$posY = $sizeY - $sy ;
+	}
+
+	if ( cv('wns') eq "4") {
+		$posX = $sizeX - $sx ;
+		$posY = $sizeY - $sy ;
+	}
+
+	if ( ( cv('wns') >=1 ) and ( cv('wns') <= 4 ) ) {
+		addToLayer ("wns", "<use x=\"$posX\" y=\"$posY\" xlink:href=\"#wnsdef\" />") ;
+	}
+
+	
 }
 
 1 ;

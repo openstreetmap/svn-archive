@@ -30,12 +30,13 @@
 # 0.24 labels for areas
 # 0.25 labels for multipolygons
 # 0.26 fix directory bugs
+# 0.27 way name substitution, if name is too long for way. incl. legend for map
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.26" ;
+my $version = "0.27" ;
 my $programName = "mapweaver" ;
 
 use strict ;

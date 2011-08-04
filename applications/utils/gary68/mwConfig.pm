@@ -157,6 +157,11 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["headbackground","none","background color for header (CLO)", "map"],
 			["headsize",40,"font size for header (CLO)", "map"],
 
+			["wns",0,"substitute unfitting way names by numbers; 0..4 1..4=positions in map (CLO)", "map"],
+			["wnssize",20,"size of labels in wns legend", "map"],
+			["wnscolor","black","color of labels in wns legend", "map"],
+			["wnsbgcolor","white","color of background of wns legend", "map"],
+
 			["minAreaSize",400,"min size of area to be drawn on map", "map"],
 			["minAreaLabelSize",10000,"min size of area to be labeled on map", "map"],
 			["oceanColor","lightblue","color of ocean", "map"],
@@ -292,6 +297,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"declutter"	=> \$cv{'declutter'},
 				"allowiconmove"	=> \$cv{'allowiconmove'},
 				"help"		=> \$cv{'help'},		# 
+				"wns:i"		=> \$cv{'wns'},		# 
 				"oneways"	=> \$cv{'oneways'},
 				"onewaycolor:s" => \$cv{'onewaycolor'},
 				"onewaysize:i" => \$cv{'onewaysize'},

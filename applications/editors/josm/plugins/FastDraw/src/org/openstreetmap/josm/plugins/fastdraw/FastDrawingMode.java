@@ -24,19 +24,17 @@ import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.lang.annotation.Target;
 import java.util.*;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.PasteTagsAction.TagPaster;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -83,7 +81,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private int dragNode=-1;
     private SequenceCommand delCmd;
     private List<Node> oldNodes;
-
+    
+    private final TreeSet set = new TreeSet();
+    private Timer timer;
+  
+    private KeyEvent releaseEvent;
 
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), Shortcut.registerShortcut(
@@ -134,7 +136,16 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             
             if (w.isNew()) loadFromWay(w);
         }
-
+        timer = new Timer(0, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                 timer.stop();
+                 if (set.remove(releaseEvent.getKeyCode())) {
+                  doKeyReleaseEvent(releaseEvent);
+                 }
+            }
+        });
+        
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
@@ -212,20 +223,21 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     g.fillRect(p2.x - 1, p2.y - 1, 3, 3);
                 }
                 if (!drawing) {
-                    if (shift && !line.wasSimplified() && nearestIdx==i+1 ) {
+                    if (!line.wasSimplified() && nearestIdx==i+1 ) {
+                    if (shift) {
                         // highlight node to delete
                         g.setStroke(strokeForDelete);
                         g.setColor(settings.COLOR_DELETE);
                         g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
                         g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
                         g.setStroke(strokeForOriginal);
-                    }
-                    if (ctrl && !line.wasSimplified() && nearestIdx==i+1 ) {
+                    } else if (ctrl) {
                         // highlight node to toggle fixation
                         g.setStroke(strokeForDelete);
                         g.setColor( line.isFixed(pp2) ? settings.COLOR_NORMAL: settings.COLOR_FIXED);
                         g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
                         g.setStroke(strokeForOriginal);
+                    } 
                     }
                 }
             }
@@ -239,15 +251,29 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             return;
         }
         updateKeyModifiers((InputEvent) event);
+        if (event instanceof KeyEvent) {
+        KeyEvent e=(KeyEvent) event;
+        
         if (event.getID() == KeyEvent.KEY_PRESSED) {
+             if (timer.isRunning()) {
+                  timer.stop();
+                } else {
+                  set.add((e.getKeyCode()));
+                }
             doKeyEvent((KeyEvent) event);
         }
         if (event.getID() == KeyEvent.KEY_RELEASED) {
-            doKeyReleaseEvent((KeyEvent) event);
+            if (timer.isRunning()) {
+              timer.stop();
+               if (set.remove(e.getKeyCode())) {
+                  doKeyReleaseEvent(e);
+               }
+            } else {
+              releaseEvent = e;
+              timer.restart();
+            }
         }
-        updateCursor();
-//        updateStatusLine();
-        repaint();
+        }
     }
 
     @Override
@@ -331,9 +357,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         if (!isEnabled()) return;
         Node nd1 = getNearestNode(e.getPoint(), settings.maxDist);
         boolean nearpoint2=nd1!=null;
-        if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();}
+        boolean needRepaint=false;
+        if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();needRepaint=true;}
 
-        nearestIdx=line.findClosestPoint(e.getPoint(),settings.maxDist);
+        int nearestIdx2=line.findClosestPoint(e.getPoint(),settings.maxDist);
+        if (nearestIdx != nearestIdx2) {nearestIdx=nearestIdx2; updateCursor();needRepaint=true;}
         
         if (!drawing) {
             if (dragNode>=0) {
@@ -349,10 +377,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     highlighted=h2;
                     repaint();
                 }
+            } else if (needRepaint) {
+                repaint();
             }
             return;
         }
-        updateCursor();
         if (line.isClosed()) setStatusLine(SIMPLIFYMODE_MESSAGE);
 
         // do not draw points close to existing points - we do not want self-intersections
@@ -360,23 +389,27 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         Point lastP = line.getLastPoint(); // last point of line fragment being edited
 
-            if (nearpoint){
+        if (nearpoint){
             if ( Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > 1e-2) {
                 line.addFixed(nd1.getCoor()); // snap to node coords
                 repaint();
+                return;
             }
         } else {
             if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > settings.minPixelsBetweenPoints) {
-                          line.addLast(getLatLon(e)); // free mouse-drawing
+                line.addLast(getLatLon(e)); // free mouse-drawing
                 repaint();
+                return;
             }
         }
+        if (nearpoint!=nearpoint2) {nearpoint=nearpoint2;updateCursor();}
+
 
         //statusText = getLatLon(e).toString();        updateStatusLine();
     }
 
     private void doKeyEvent(KeyEvent e) {
-        ///  System.out.println(e);
+       // System.out.println(e);
         switch(e.getKeyCode()) {
         case KeyEvent.VK_BACK_SPACE:
             if (line.wasSimplified()) {
@@ -434,7 +467,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }
     
     private void doKeyReleaseEvent(KeyEvent keyEvent) {
+            //System.out.println("released "+keyEvent);
             if (keyEvent.getKeyCode()==KeyEvent.VK_SPACE) stopDrawing();
+            updateCursor();
     }
     /**
      * Updates shift and ctrl key states
@@ -442,6 +477,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private void updateKeyModifiers(InputEvent e) {
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
+        updateCursor();
     }
 
     @Override

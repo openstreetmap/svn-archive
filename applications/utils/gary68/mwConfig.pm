@@ -276,6 +276,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"size:i"	=> \$cv{'size'},		# specifies pic size longitude in pixels
 				"legend:i"	=> \$cv{'legend'},		# legend?
 				"bgcolor:s"	=> \$cv{'bgcolor'},		# background color
+				"oceancolor:s"	=> \$cv{'oceancolor'},		# ocean color
 				"grid:i"	=> \$cv{'grid'},		# specifies grid, number of parts
 				"gridcolor:s"	=> \$cv{'gridcolor'},		# color used for grid and labels
 				"coords"	=> \$cv{'coords'},		# 

@@ -246,7 +246,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 g.setColor(lineColor);
                 Point lp=line.getLastPoint();
                 Point mp=Main.map.mapView.getMousePosition();
-                g.drawLine(lp.x,lp.y,mp.x,mp.y);
+                if (lp!=null && mp!=null) g.drawLine(lp.x,lp.y,mp.x,mp.y);
             }
         }
     }

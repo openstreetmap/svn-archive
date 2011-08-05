@@ -22,6 +22,7 @@ public class FDSettings {
     /// Maximum number of points per 1 km of way
     public double maxPointsPerKm;
     public int pkmBlockSize;
+    public boolean drawLastSegment;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -36,6 +37,7 @@ public class FDSettings {
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 0.1);
         maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 20);
         pkmBlockSize = Main.pref.getInteger("fastdraw.pkmblocksize", 10);
+        drawLastSegment = Main.pref.getBoolean("fastdraw.drawlastsegment", true);
     }
 
     public void savePrefs() {
@@ -51,6 +53,7 @@ public class FDSettings {
          Main.pref.putDouble("fastdraw.startingEps",startingEps);
          Main.pref.putDouble("fastdraw.maxpkm",maxPointsPerKm);
          Main.pref.putInteger("fastdraw.pkmblocksize",pkmBlockSize);
+         Main.pref.put("fastdraw.drawlastsegment",drawLastSegment);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }

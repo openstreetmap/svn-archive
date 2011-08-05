@@ -82,7 +82,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private SequenceCommand delCmd;
     private List<Node> oldNodes;
     
-    private final TreeSet set = new TreeSet();
+    private final TreeSet<Integer> set = new TreeSet<Integer>();
     private Timer timer;
   
     private KeyEvent releaseEvent;
@@ -241,6 +241,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     }
                 }
             }
+            if (settings.drawLastSegment && !drawing && !shift && !line.wasSimplified()) {
+                // draw line to current point
+                g.setColor(lineColor);
+                Point lp=line.getLastPoint();
+                Point mp=Main.map.mapView.getMousePosition();
+                g.drawLine(lp.x,lp.y,mp.x,mp.y);
+            }
         }
     }
 
@@ -362,6 +369,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         int nearestIdx2=line.findClosestPoint(e.getPoint(),settings.maxDist);
         if (nearestIdx != nearestIdx2) {nearestIdx=nearestIdx2; updateCursor();needRepaint=true;}
+        if (settings.drawLastSegment) needRepaint=true;
         
         if (!drawing) {
             if (dragNode>=0) {
@@ -432,12 +440,14 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         case KeyEvent.VK_DOWN:
             // more details
             e.consume();
-            changeEpsilon(settings.epsilonMult);
+            if (line.wasSimplified()) changeEpsilon(settings.epsilonMult);
+            else changeDelta(1/1.1);
         break;
         case KeyEvent.VK_UP:
             // less details
             e.consume();
-            changeEpsilon(1/settings.epsilonMult);
+            if (line.wasSimplified()) changeEpsilon(1/settings.epsilonMult);
+            else changeDelta(1.1);
         break;
         case KeyEvent.VK_ESCAPE:
             // less details
@@ -573,6 +583,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         /* I18N: Eps = Epsilon, the tolerance parameter */ 
         showSimplifyHint();
         repaint();
+    }
+
+    void changeDelta(double k) {
+        settings.minPixelsBetweenPoints*=k;
+        setStatusLine(tr("min distance={0} pixes",(int)settings.minPixelsBetweenPoints));
+        
     }
 
     private void setStatusLine(String tr) {

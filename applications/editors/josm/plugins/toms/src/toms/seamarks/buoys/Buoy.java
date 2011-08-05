@@ -236,9 +236,7 @@ abstract public class Buoy extends SeaMark {
 
 	public void setSectored(boolean sectored) {
 		Sectored = sectored;
-		if (sectored) {
-			LightColour[0] = "";
-		} else {
+		if (!sectored) {
 			setSectorIndex(0);
 			setLightChar("");
 			setLightColour("");
@@ -271,11 +269,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setLightChar(String lightChar) {
-		if (SectorIndex == 0) {
-			LightChar = new String[10];
-			LightChar[0] = lightChar;
-		} else if (LightChar[0].isEmpty())
-			LightChar[SectorIndex] = lightChar;
+		LightChar[SectorIndex] = lightChar;
 	}
 
 	private String[] LightColour = new String[10];
@@ -299,8 +293,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setLightGroup(String lightGroup) {
-		if (SectorIndex == 0)
-			LightGroup = new String[10];
 		LightGroup[SectorIndex] = lightGroup;
 	}
 
@@ -321,8 +313,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setHeight(String height) {
-		if (SectorIndex == 0)
-			Height = new String[10];
 		Height[SectorIndex] = height;
 	}
 
@@ -335,8 +325,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setRange(String range) {
-		if (SectorIndex == 0)
-			Range = new String[10];
 		Range[SectorIndex] = range;
 	}
 
@@ -349,8 +337,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setSeq(String seq) {
-		if (SectorIndex == 0)
-			Sequence = new String[10];
 		Sequence[SectorIndex] = seq;
 	}
 
@@ -363,8 +349,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setBearing1(String bearing) {
-		if (SectorIndex == 0)
-			Bearing1 = new String[10];
 		Bearing1[SectorIndex] = bearing;
 	}
 
@@ -377,8 +361,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setBearing2(String bearing) {
-		if (SectorIndex == 0)
-			Bearing2 = new String[10];
 		Bearing2[SectorIndex] = bearing;
 	}
 
@@ -391,8 +373,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setRadius(String radius) {
-		if (SectorIndex == 0)
-			Radius = new String[10];
 		Radius[SectorIndex] = radius;
 	}
 
@@ -420,8 +400,6 @@ abstract public class Buoy extends SeaMark {
 				dlg.tfM01RepeatTime.requestFocus();
 			}
 		}
-		if (SectorIndex == 0)
-			LightPeriod = new String[10];
 		LightPeriod[SectorIndex] = lightPeriod;
 	}
 
@@ -501,12 +479,14 @@ abstract public class Buoy extends SeaMark {
 						LightColour[index] = "G";
 					else if (values[0].equals("white"))
 						LightColour[index] = "W";
+					else if (values[0].equals("yellow"))
+						LightColour[index] = "Y";
 					if (values.length > 1)
 						Bearing1[index] = values[1];
 					if (values.length > 2)
 						Bearing2[index] = values[2];
 					if (values.length > 3)
-						Radius[index] = values[3];
+						Radius[index] = String.valueOf((((Integer.parseInt(values[3])*100)+50)/278)/100.0);
 				} else {
 					index = 0;
 				}
@@ -527,6 +507,8 @@ abstract public class Buoy extends SeaMark {
 						LightColour[index] = "G";
 					else if (value.equals("white"))
 						LightColour[index] = "W";
+					else if (value.equals("yellow"))
+						LightColour[index] = "Y";
 				} else if (key.equals("character")) {
 					LightChar[index] = value;
 				} else if (key.equals("group")) {
@@ -543,6 +525,8 @@ abstract public class Buoy extends SeaMark {
 					Bearing1[index] = value;
 				} else if (key.equals("sector_end")) {
 					Bearing2[index] = value;
+				} else if (key.equals("radius")) {
+					Radius[index] = value;
 				}
 			}
 		}
@@ -924,7 +908,7 @@ abstract public class Buoy extends SeaMark {
 	protected void saveLightData() {
 		String colour;
 		if (dlg.cM01Fired.isSelected()) {
-			if (!(colour = LightColour[0]).isEmpty() && !Sectored)
+			if (!(colour = LightColour[0]).isEmpty()) {
 				if (colour.equals("R")) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:colour", "red"));
@@ -934,7 +918,11 @@ abstract public class Buoy extends SeaMark {
 				} else if (colour.equals("W")) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:colour", "white"));
+				} else if (colour.equals("Y")) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:colour", "yellow"));
 				}
+			}
 
 			if (!LitRef.isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -976,33 +964,30 @@ abstract public class Buoy extends SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:sequence", Sequence[0]));
 
+			if (!Radius[0].isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:radius", Radius[0]));
+
 			for (int i = 1; i < 10; i++) {
-				if ((colour = LightColour[i]) != null)
-					if (colour.equals("R")) {
+
+				if (LightColour[i] != null) {
+					if (LightColour[i].equals("R")) {
 						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 								"seamark:light:" + i + ":colour", "red"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null)
-								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "red:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
-					} else if (colour.equals("G")) {
+						}
+					else if (LightColour[i].equals("G")) {
 						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 								"seamark:light:" + i + ":colour", "green"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null)
-								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "green:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
-					} else if (colour.equals("W")) {
+						}
+					else if (LightColour[i].equals("W")) {
 						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 								"seamark:light:" + i + ":colour", "white"));
-						if ((Bearing1[i] != null) && (Bearing2[i] != null)
-								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "white:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
-					}
+						}
+					else if (LightColour[i].equals("Y")) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+								"seamark:light:" + i + ":colour", "yellow"));
+						}
+				}
 
 				if (LightPeriod[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -1035,6 +1020,10 @@ abstract public class Buoy extends SeaMark {
 				if (Bearing2[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:" + i + ":sector_end", Bearing2[i]));
+				
+				if (Radius[i] != null)
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:" + i + ":radius", Radius[i]));
 			}
 		}
 	}

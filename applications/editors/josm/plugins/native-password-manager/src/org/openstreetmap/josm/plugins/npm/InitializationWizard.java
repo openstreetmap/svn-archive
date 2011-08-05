@@ -205,7 +205,7 @@ public class InitializationWizard extends JDialog {
 
             HtmlPanel intro = new HtmlPanel("<html>"+
                     tr("No native password manager could be found!")+"<br>"+
-                    tr("Depending on your Operating Stystem / Distribution, you may have to create a default keyring / wallet first.")+
+                    tr("Depending on your Operating System / Distribution, you may have to create a default keyring / wallet first.")+
                     "</html>");
 
             cbDoNotShowAgain = new JCheckBox("Do not show this wizard again on next start");
@@ -320,7 +320,7 @@ public class InitializationWizard extends JDialog {
             HtmlPanel l = new HtmlPanel();
             l.setText("<html><b>"+tr("Found sensitive data that is still saved"
                     + " in JOSM''s preference file (plain text).")+"<b></html>");
-            rbClear = new JRadioButton("<html>"+tr("Transfer to password manager and remove from prefence file")+"</html>");
+            rbClear = new JRadioButton("<html>"+tr("Transfer to password manager and remove from preference file")+"</html>");
             rbKeep = new JRadioButton("<html>"+tr("No, just keep it")+"</html>");
             rbClear.setSelected(true);
             ButtonGroup group = new ButtonGroup();

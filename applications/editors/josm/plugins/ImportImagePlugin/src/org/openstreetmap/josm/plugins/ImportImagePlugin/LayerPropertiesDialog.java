@@ -564,6 +564,7 @@ public class LayerPropertiesDialog extends JFrame{
         if (eastingFirstCheckBox == null) {
             eastingFirstCheckBox = new JCheckBox();
             eastingFirstCheckBox.setBounds(new Rectangle(345, 255, 21, 21));
+            eastingFirstCheckBox.setSelected(true);
         }
         return eastingFirstCheckBox;
     }

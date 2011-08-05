@@ -2,8 +2,6 @@ package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -16,9 +14,6 @@ import javax.swing.Action;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 
 import org.apache.log4j.Logger;
 import org.geotools.coverage.grid.GridCoverage2D;
@@ -35,6 +30,7 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -42,7 +38,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 
 /**
  *  Layer which contains spatial referenced image data.
- * 
+ *
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
@@ -51,7 +47,7 @@ public class ImageLayer extends Layer {
     private Logger logger = Logger.getLogger(ImageLayer.class);
 
     private File imageFile;
-    
+
     private BufferedImage image = null;
 
     // coordinates of upper left corner
@@ -61,22 +57,22 @@ public class ImageLayer extends Layer {
 
     // current bbox
     private Envelope2D bbox;
-    
+
     // Layer icon
     private Icon layericon = null;
-    
+
     // reference system of the oringinal image
     private CoordinateReferenceSystem sourceRefSys;
 
     /**
      * Constructor
-     * 
+     *
      * @param file
-     * @throws IOException 
+     * @throws IOException
      */
     public ImageLayer(File file) throws IOException {
         super(file.getName());
-        
+
         this.imageFile = file;
         this.image = (BufferedImage) createImage();
         layericon = new ImageIcon(ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png"));
@@ -84,7 +80,7 @@ public class ImageLayer extends Layer {
 
     /**
      * create spatial referenced image.
-     * 
+     *
      * @return
      * @throws IOException
      */
@@ -96,30 +92,44 @@ public class ImageLayer extends Layer {
             // create a grid coverage from the image
             coverage = PluginOperations.createGridFromFile(imageFile, null, true);
             this.sourceRefSys = coverage.getCoordinateReferenceSystem();
-            
+
             // now reproject grid coverage
-            coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.proj.toCode()));
-        
+            coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
+
         } catch (FactoryException e) {
             logger.error("Error while creating GridCoverage:",e);
             throw new IOException(e.getMessage());
         } catch (Exception e) {
             if(e.getMessage().contains("No projection file found"))
             {
-                int useUnprojected = JOptionPane.showConfirmDialog(Main.parent, "<html>No projection file (.prj) found.<br />Use the image unprojected?</html>", "Missing projection", JOptionPane.YES_NO_OPTION);
-                if (useUnprojected == 0) { // Yes
-                    logger.debug("Passing through image un-projected.");
-                    try {
-                        // create a grid coverage from the image
-                        coverage = PluginOperations.createGridFromFile(imageFile, null, false);
-                        this.sourceRefSys = coverage.getCoordinateReferenceSystem();
-                    } catch (Exception e1) {
-                        logger.error("Error while creating GridCoverage:",e1);
-                        throw new IOException(e1);
-                    }
-                } else { // No
+                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), new String[] {tr("Default image projection"), tr("JOSM's current projection"), tr("Cancel")});
+                ex.setContent(tr("No projection file (.prj) found.<br>"
+                        + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
+                        + "(It can be changed later from the right click menu of the image layer.)", 
+                        ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
+                ex.showDialog();
+                int val = ex.getValue();
+                if (val == 3) {
                     logger.debug("No projection and user declined un-projected use");
                     throw new LayerCreationCancledException();
+                }
+                CoordinateReferenceSystem src = null;
+                try {
+                    if (val == 1) {
+                        src = PluginOperations.defaultSourceCRS;
+                    } else {
+                        logger.debug("Passing through image un-projected.");
+                        src = CRS.decode(Main.getProjection().toCode());
+                    }
+                    // create a grid coverage from the image
+                    coverage = PluginOperations.createGridFromFile(imageFile, src, false);
+                    this.sourceRefSys = coverage.getCoordinateReferenceSystem();
+                    if (val == 1) {
+                        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
+                    }
+                } catch (Exception e1) {
+                    logger.error("Error while creating GridCoverage:",e1);
+                    throw new IOException(e1);
                 }
             }
             else
@@ -170,7 +180,7 @@ public class ImageLayer extends Layer {
 
             // Rotate image by angle
             g.rotate(angle * Math.PI / 180.0);
-            
+
             // Determine scale to fit JOSM extents
             ProjectionBounds projbounds = Main.map.mapView
                     .getProjectionBounds();
@@ -198,12 +208,12 @@ public class ImageLayer extends Layer {
 
             // Draw picture
             g.drawImage(image, 0, 0, null);
-            
+
         } else {
             logger.error("Error while dawing image: image == null or Graphics == null");
         }
     }
-    
+
     public Envelope2D getBbox() {
         return bbox;
     }
@@ -235,28 +245,28 @@ public class ImageLayer extends Layer {
 
     @Override
     public boolean isMergable(Layer arg0) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public void mergeFrom(Layer arg0) {
-        // TODO Auto-generated method stub
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void visitBoundingBox(BoundingXYVisitor arg0) {
-        // TODO Auto-generated method stub
+    public void visitBoundingBox(BoundingXYVisitor visitor) {
+            EastNorth min = new EastNorth(getBbox().getMinX(), getBbox().getMinY());
+            EastNorth max = new EastNorth(getBbox().getMaxX(), getBbox().getMaxY());
+            visitor.visit(min);
+            visitor.visit(max);
     }
-    
 
     @Override
     public String getToolTipText() {
         // TODO Auto-generated method stub
         return this.getName();
     }
-    
+
 
     public File getImageFile() {
         return imageFile;
@@ -265,61 +275,57 @@ public class ImageLayer extends Layer {
     public BufferedImage getImage() {
         return image;
     }
-    
+
     /**
      * loads the image and reprojects it using a transformation
      * calculated by the new reference system.
-     * 
+     *
      * @param newRefSys
-     * @throws IOException 
-     * @throws FactoryException 
-     * @throws NoSuchAuthorityCodeException 
+     * @throws IOException
+     * @throws FactoryException
+     * @throws NoSuchAuthorityCodeException
      */
     void resample(CoordinateReferenceSystem refSys) throws IOException, NoSuchAuthorityCodeException, FactoryException
     {
         logger.debug("resample");
         GridCoverage2D coverage =  PluginOperations.createGridFromFile(this.imageFile, refSys, true);
-        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.proj.toCode()));
+        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
         this.bbox = coverage.getEnvelope2D();
         this.image = ((PlanarImage)coverage.getRenderedImage()).getAsBufferedImage();
-        
-        // TODO
-        upperLeft = new EastNorth(coverage.getEnvelope2D().y, coverage
-                .getEnvelope2D().x
-                + coverage.getEnvelope2D().width);
+
+        upperLeft = new EastNorth(coverage.getEnvelope2D().x, coverage
+                .getEnvelope2D().y
+                + coverage.getEnvelope2D().height);
         angle = 0;
 
         // repaint and zoom to new bbox
-        Main.map.mapView.repaint();
-        LatLon min = new LatLon(bbox.getMinX(), bbox.getMinY());
-        LatLon max = new LatLon(bbox.getMaxX(), bbox.getMaxY());
-        Main.map.mapView.zoomTo(new Bounds(min, max));
-        
-        
+        BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
+        visitBoundingBox(boundingXYVisitor);
+        Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
     }
-    
+
     /**
      * Action that creates a dialog GUI element with properties of a layer.
-     * 
+     *
      */
     public class LayerPropertiesAction extends AbstractAction
     {
         public ImageLayer imageLayer;
-        
+
         public LayerPropertiesAction(ImageLayer imageLayer){
             super(tr("Layer Properties"));
             this.imageLayer = imageLayer;
         }
 
         public void actionPerformed(ActionEvent arg0) {
-            
+
             LayerPropertiesDialog layerProps = new LayerPropertiesDialog(imageLayer, PluginOperations.crsDescriptions);
             layerProps.setLocation(Main.parent.getWidth() / 4 , Main.parent.getHeight() / 4);
             layerProps.setVisible(true);
         }
-        
+
     }
-    
+
     /**
      * Exception which represents that the layer creation has been cancled by the
      * user.
@@ -327,7 +333,7 @@ public class ImageLayer extends Layer {
      */
     class LayerCreationCancledException extends IOException{
     }
-    
+
     public CoordinateReferenceSystem getSourceRefSys() {
         return sourceRefSys;
     }

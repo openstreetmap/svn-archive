@@ -65,7 +65,8 @@ my @validNodeProperties = (
 			["label","label for the node like [name|ref]"],
 			["labelColor","color for label text i.e. [white]"],
 			["labelSize","size of label text i.e. [20]"],
-			["labelFont","NOT YET IMPLEMENTED"],
+			["labelFont","font for label"],
+			["labelFontFamily","font family for label"],
 			["labelOffset","distance of label to node i.e. [10]"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
 			["legendLabel","label text of object in legend i.e. [city]"],
@@ -90,7 +91,8 @@ my @validWayProperties =  (
 			["label","label to be used i.e. [name|ref]"],
 			["labelColor","color of label text i.e. [blue]"],
 			["labelSize","size of the label i.e. [20]"],
-			["labelFont","NOT YET IMPLEMENTED"],
+			["labelFont","font for label"],
+			["labelFontFamily","font family for label"],
 			["labelOffset","distance of label to middle of way i.e. [5]"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
 			["legendLabel","label text of object in legend i.e. [Highway]"],
@@ -110,6 +112,8 @@ my @validAreaProperties = (
 			["color","color of area i.e. [lightgrey]"],
 			["icon","icon for fill pattern to be used i.e. [icondir/parking.svg]"],
 			["label", "label text to be rendered i.e. [name]"] ,
+			["labelFont","font for label"],
+			["labelFontFamily","font family for label"],
 			["labelColor", "color of label i.e. [green]"] ,
 			["labelSize", "size of label text i.e. [20]"] ,
 			["base","should this object be drawn underneath other objects? (applies for landuse residential i.e.) [yes|no]"],
@@ -129,6 +133,8 @@ my @validRouteProperties =  (
 			["linecap","linecap style [butt|round|square]"],
 			["opacity","opacity of the route [0..100]"],
 			["label","label to be used like [ref]"],
+			["labelFont","font for label"],
+			["labelFontFamily","font family for label"],
 			["labelSize","size of the label i.e. [15]"],
 			["nodeSize","size of nodes belonging to route i.e. [20]"],
 			["fromScale","rule will only applied if scale is bigger than fromScale i.e. [5000]"],
@@ -209,6 +215,8 @@ sub readRules {
 			$nodeRules{ $nodeNr }{ 'shape' } = cv( 'ruleDefaultNodeShape' ) ;
 
 			$nodeRules{ $nodeNr }{ 'label' } = cv( 'ruleDefaultNodeLabel' ) ;
+			$nodeRules{ $nodeNr }{ 'labelfont' } = cv( 'ruleDefaultNodeLabelFont' ) ;
+			$nodeRules{ $nodeNr }{ 'labelfontfamily' } = cv( 'ruleDefaultNodeLabelFontFamily' ) ;
 			$nodeRules{ $nodeNr }{ 'labelsize' } = cv( 'ruleDefaultNodeLabelSize' ) ;
 			$nodeRules{ $nodeNr }{ 'icon' } = "none" ;
 			$nodeRules{ $nodeNr }{ 'iconsize' } = cv( 'ruleDefaultNodeIconSize' ) ;
@@ -260,6 +268,8 @@ sub readRules {
 
 			# set defaults first
 			$wayRules{ $wayNr }{ 'label' } = cv( 'ruleDefaultWayLabel' ) ;
+			$wayRules{ $wayNr }{ 'labelfont' } = cv( 'ruleDefaultWayLabelFont' ) ;
+			$wayRules{ $wayNr }{ 'labelfontfamily' } = cv( 'ruleDefaultWayLabelFontFamily' ) ;
 			$wayRules{ $wayNr }{ 'labelsize' } = cv( 'ruleDefaultWayLabelSize' ) ;
 			$wayRules{ $wayNr }{ 'labelcolor' } = cv( 'ruleDefaultWayLabelColor' ) ;
 			$wayRules{ $wayNr }{ 'labelfont' } = cv( 'ruleDefaultWayLabelFont' ) ;
@@ -304,6 +314,8 @@ sub readRules {
 
 			# set defaults first
 			$areaRules{ $areaNr }{ 'label' } = "none" ;
+			$areaRules{ $areaNr }{ 'labelfont' } = cv( 'ruleDefaultAreaLabelFont' ) ;
+			$areaRules{ $areaNr }{ 'labelfontfamily' } = cv( 'ruleDefaultAreaLabelFontFamily' ) ;
 			$areaRules{ $areaNr }{ 'labelcolor' } = "black" ;
 			$areaRules{ $areaNr }{ 'labelsize' } = 30 ;
 			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
@@ -346,7 +358,9 @@ sub readRules {
 			$routeRules{ $routeNr }{ 'linecap' } = cv( 'ruleDefaultRouteLinecap' ) ;
 			$routeRules{ $routeNr }{ 'opacity' } = cv( 'ruleDefaultRouteOpacity' ) ;
 			$routeRules{ $routeNr }{ 'label' } = cv( 'ruleDefaultRouteLabel' ) ;
-			$routeRules{ $routeNr }{ 'labelsize' } = cv( 'ruleDefaultRouteLabelSize' ) ;
+			# $routeRules{ $routeNr }{ 'labelfont' } = cv( 'ruleDefaultRouteLabelFont' ) ;
+			# $routeRules{ $routeNr }{ 'labelfontfamily' } = cv( 'ruleDefaultRouteLabelFontFamily' ) ;
+			# $routeRules{ $routeNr }{ 'labelsize' } = cv( 'ruleDefaultRouteLabelSize' ) ;
 			$routeRules{ $routeNr }{ 'nodesize' } = cv( 'ruleDefaultRouteNodeSize' ) ;
 			$routeRules{ $routeNr }{ 'fromscale' } = cv( 'ruleDefaultRouteFromScale' ) ;
 			$routeRules{ $routeNr }{ 'toscale' } = cv( 'ruleDefaultRouteToScale' ) ;
@@ -770,7 +784,8 @@ sub createLegend {
 				elsif ( $nodeRules{$n}{'shape'} eq "diamond") {
 					drawDiamond ($x, $y, 0, $nodeRules{$n}{'size'}, 0, $svgString, 'definitions') ;
 				}
-				my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+
+				my $textSvgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fs, "black", undef, undef ) ;
 				drawText ($tx, ($actualLine+0.5) * $ey + $fs/2, 0, $nodeRules{$n}{'legendlabel'}, $textSvgString, "definitions") ;
 			}
 			else {
@@ -792,7 +807,8 @@ sub createLegend {
 				drawWay ( \@coords, 0, $svg2, "definitions", undef ) ;
 			}
 			drawWay ( \@coords, 0, $svg1, "definitions", undef ) ;
-			my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+
+			my $textSvgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fs, "black", undef, undef ) ;
 			drawText ($tx, ($actualLine+0.5)*$ey + $fs/2, 0, $wayRules{$w}{'legendlabel'}, $textSvgString, "definitions") ;
 
 			$actualLine++ ;
@@ -821,7 +837,7 @@ sub createLegend {
 			my @coords = ([$x1, $y1, $x2, $y1, $x2, $y2, $x1, $y2, $x1, $y1]) ;
 			drawArea ($svgString, $icon, \@coords, 0, "definitions") ;
 
-			my $textSvgString="font-family=\"sans-serif\" font-size=\"$fs\" fill=\"black\"" ;
+			my $textSvgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fs, "black", undef, undef ) ;
 			drawText ($tx, ($actualLine+0.5)*$ey + $fs/2, 0, $areaRules{$a}{'legendlabel'}, $textSvgString, "definitions") ;
 			$actualLine++ ;
 		}

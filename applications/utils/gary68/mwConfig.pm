@@ -49,6 +49,8 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruleDefaultNodeShape",     "circle",  "default shape of node",          "nodes"],
 			["ruleDefaultNodeLabel",     "name",  "default key for label",          "nodes"],
 			["ruleDefaultNodelabelSize",     30,  "default size of label text",          "nodes"],
+			["ruleDefaultNodeLabelFont",     "",  "DON'T USE",          "nodes"],
+			["ruleDefaultNodeLabelFontFamily",     "sans-serif",  "default font family for label",          "nodes"],
 			["ruleDefaultNodeIconSize",  40,        "default size of icon",           "nodes"],
 			["ruleDefaultNodeFromScale",  0,        "default fromScale of node",      "nodes"],
 			["ruleDefaultNodeToScale",   1000000,   "default toScale of node",        "nodes"],
@@ -56,7 +58,8 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruleDefaultWayLabel","name","default label of way", "ways"],
 			["ruleDefaultWayLabelColor","black","default label color of way", "ways"],
 			["ruleDefaultWayLabelSize",30,"default label size of way", "ways"],
-			["ruleDefaultWayLabelFont","sans-serif","default label font of way", "ways"],
+			["ruleDefaultWayLabelFont","","DON'T USE", "ways"],
+			["ruleDefaultWayLabelFontFamily","sans-serif","default label font of way", "ways"],
 			["ruleDefaultWayLabelOffset",15,"default label Tspan offset of way", "ways"],
 
 			["ruleDefaultWayColor","gray","default color of way", "ways"],
@@ -69,6 +72,8 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["ruleDefaultWayToScale",1000000,"default toScale of way", "ways"],
 
 			["ruleDefaultAreaColor","lightgray","default area color", "areas"],
+			["ruleDefaultAreaLabelFont","","DON'T USE", "areas"],
+			["ruleDefaultAreaLabelFontFamily","sans-serif","default font family for area labels", "areas"],
 			["ruleDefaultAreaMinSize",0,"minimum size of area to be drawn", "areas"],
 			["ruledefaultAreaFromScale",0,"default fromScale of way", "areas"],
 			["ruledefaultAreaToScale",1000000,"default toScale of way", "areas"],
@@ -84,6 +89,9 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 
 			["ruledefaultRouteFromScale",0,"default fromScale of route", "routes"],
 			["ruledefaultRouteToScale",50000,"default toScale of route", "routes"],
+
+			["elementFont","","DON'T USE", "map"],
+			["elementFontFamily","sans-serif","default font family for map elements like title, scale, grid etc.", "map"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
 			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],
@@ -137,7 +145,8 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["rulescaleset",0,"set assumed scale for rules (CLO)", "map"],
 			["routelabelcolor","black","", "routes"],
 			["routelabelsize",20,"", "routes"],
-			["routelabelfont","sans-serif","", "routes"],
+			["routelabelfontfamily","sans-serif","font-family for route labels", "routes"],
+			["routelabelfont","","DON'T USE", "routes"],
 			["routelabeloffset",20,"", "routes"],
 			["routeicondist",70,"", "routes"],
 			["routeiconscale",1,"", "routes"],
@@ -164,7 +173,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 
 			["minAreaSize",400,"min size of area to be drawn on map", "map"],
 			["minAreaLabelSize",10000,"min size of area to be labeled on map", "map"],
-			["oceanColor","lightblue","color of ocean", "map"],
+			["oceanColor","lightblue","color of ocean (CLO)", "map"],
 			["cIE",0,"osmosis clipIncompleteEntities instead of completeObjects (CLP)", "map"]
 
 		  ) ;
@@ -249,7 +258,7 @@ sub readConfigFile {
 	while ($line = <$file>) {
 		$lc ++ ;
 		if ( ! grep /^#/, $line) {
-			my ($k, $v) = ( $line =~ /(.+?)=(.+)/ ) ;
+			my ($k, $v) = ( $line =~ /(.+?)=(.*)/ ) ;
 			if ( ( ! defined $k ) or ( ! defined $v ) ) {
 				print "WARNING: could not parse config line: $line" ;
 			}

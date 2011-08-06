@@ -555,7 +555,7 @@ sub drawGrid {
 
 	my $svgStringLine="stroke=\"$color\" stroke-width=\"5\" stroke-dasharray=\"30,30\"" ;
 
-	my $svgStringText="font-family=\"sans-serif\" font-size=\"60\" fill=\"$color\"" ;
+	my $svgStringText = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), 60, $color, undef, undef) ;
 
 	# vertical lines
 	for (my $i = 1; $i <= $number; $i++) {
@@ -587,7 +587,7 @@ sub drawCoords {
 	my $actual = $start * $step ;
 
 	my $svgStringLine="stroke=\"$color\" stroke-width=\"3\"" ;
-	my $svgStringText="font-family=\"sans-serif\" font-size=\"30\" fill=\"$color\"" ;
+	my $svgStringText = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), 30, $color, undef, undef) ;
 
 	while ($actual < $right) {
 		my ($x1, $y1) = convert ($actual, 0) ;
@@ -719,9 +719,12 @@ sub drawRuler {
 	@coords = ($xOffset+$Lpix/2, $yOffset, $xOffset+$Lpix/2, $yOffset+$lineLen/2) ;
 	drawWay (\@coords, 0, $svgString, "definitions", undef) ;
 
-	$svgString = "fill=\"$col\" stroke=\"$col\" font-size=\"45\" " ;
+
 	my $scale= getScale() ;
 	$text .= "(1:$scale)" ;
+
+
+	$svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), 45, $col, undef, undef) ;
 	drawText ($xOffset, $yOffset+$textDist+30, 0, $text, $svgString, "definitions") ;
 
 	addToLayer ("definitions", "</g>") ;
@@ -768,7 +771,8 @@ sub drawScale {
 	}
 
 	my $scale= getScale() ;
-	my $svgString = "fill=\"$col\" stroke=\"$col\" font-size=\"$fontSize\" " ;
+
+	my $svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fontSize, $col, undef, undef) ;
 	drawText ($xOffset, $fontSize + $yOffset, 0, "1:$scale", $svgString, "definitions") ;
 
 	addToLayer ("definitions", "</g>") ;
@@ -817,7 +821,7 @@ sub drawFoot {
 		drawRect (0, 0, $rSizeX, $rSizeY, 0, $svgString, "definitions") ;
 	}
 
-	my $svgString = "fill=\"$col\" stroke=\"$col\" font-size=\"$fontSize\" " ;
+	my $svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fontSize, $col, undef, undef) ;
 	drawText ($xOffset, $fontSize + $yOffset, 0, $text, $svgString, "definitions") ;
 
 	addToLayer ("definitions", "</g>") ;
@@ -851,7 +855,7 @@ sub drawHead {
 		drawRect (0, 0, $rSizeX, $rSizeY, 0, $svgString, "definitions") ;
 	}
 
-	my $svgString = "fill=\"$col\" stroke=\"$col\" font-size=\"$fontSize\" " ;
+	my $svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), $fontSize, $col, undef, undef) ;
 	drawText ($xOffset, $fontSize + $yOffset, 0, $text, $svgString, "definitions") ;
 
 	addToLayer ("definitions", "</g>") ;

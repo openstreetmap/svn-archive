@@ -32,12 +32,13 @@
 # 0.26 fix directory bugs
 # 0.27 way name substitution, if name is too long for way. incl. legend for map
 # 0.28 oceancolor bug fixed
+# 0.29 fonts/families
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.28" ;
+my $version = "0.29" ;
 my $programName = "mapweaver" ;
 
 use strict ;

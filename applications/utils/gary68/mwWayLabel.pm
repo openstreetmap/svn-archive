@@ -387,22 +387,16 @@ sub createWayLabels {
 						my ($ref, $angle) = subWay (\@points, $lLen, $pos->[0], $pos->[1]) ;
 						my @finalWay = @$ref ;
 
-
-
-
-
-
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 						createPath ($pathName, \@points, "definitions") ;
 
 						my $size = $$ruleRef{'labelsize'} ;
 						my $color = $$ruleRef{'labelcolor'} ;
 						my $font = $$ruleRef{'labelfont'} ;
-						my $svgText = "font-size=\"$size\" font-family=\"$font\" fill=\"$color\"" ;  
+						my $fontFamily = $$ruleRef{'labelfontfamily'} ;
+
+						my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;  
 						pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
-
-
-
 
 						occupyLines (\@finalWay) ;
 					}
@@ -432,7 +426,9 @@ sub createWayLabels {
 							my $size = $$ruleRef{'labelsize'} ;
 							my $color = $$ruleRef{'labelcolor'} ;
 							my $font = $$ruleRef{'labelfont'} ;
-							my $svgText = "font-size=\"$size\" font-family=\"$font\" fill=\"$color\"" ;  
+							my $fontFamily = $$ruleRef{'labelfontfamily'} ;
+
+							my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;  
 							pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, "middle", 50, "text") ;
 
 							occupyLines (\@finalWay) ;
@@ -504,7 +500,7 @@ sub createWNSLegend {
 	my $svgString = "fill=\"$bg\"" ;
 	drawRect (0, 0, $sizeX, $sizeY, 0, $svgString, "definitions") ;
 
-	$svgString = createTextSVG (undef, undef, cv('wnssize'), cv('wnscolor'), undef, undef) ;
+	$svgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), cv('wnssize'), cv('wnscolor'), undef, undef) ;
 	foreach my $e ( @wns ) {
 		my $y = $actualLine * $sy + $ty ;
 		drawText ($nx, $y, 0, $e->[0], $svgString, "definitions") ;

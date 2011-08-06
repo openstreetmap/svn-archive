@@ -21,7 +21,7 @@ package mwWays ;
 use strict ;
 use warnings ;
 
-use OSM::osm 8.21 ;
+use OSM::osm 8.3 ;
 
 use mwConfig ;
 use mwFile ;
@@ -206,9 +206,12 @@ sub processWays {
 						my ($lon, $lat) = areaCenter ( $$nodesRef{$wayId} ) ;
 
 						# draw
+						my $labelFont = $$ruleRef{'labelfont'} ;
+						my $labelFontFamily = $$ruleRef{'labelfontfamily'} ;
 						my $labelSize = $$ruleRef{'labelsize'} ;
 						my $color = $$ruleRef{'labelcolor'} ;
-						my $svgText = "font-size=\"$labelSize\" fill=\"$color\"" ;
+
+						my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelSize, $color, undef, undef) ;  
 
 						mwLabel::placeLabelAndIcon ($lon, $lat, 0, 0, $name, $svgText, "none", 0, 0, "arealabels") ;
 					}

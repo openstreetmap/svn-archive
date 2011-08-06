@@ -54,13 +54,6 @@ sub processNodes {
 
 		my $ruleRef = getNodeRule (\@tags) ;
 		if (defined $ruleRef) {
-			# foreach my $t (@tags) { $tagsString .= $t->[0] . "=" . $t->[1] . " " ; }
-			# print "$nodeId $tagsString\n" ;
-			# print "rule found\n" ;
-			# foreach my $prop (keys %$ruleRef) {
-			#	print "$prop=$$ruleRef{$prop}\n" ;
-			# }
-			# print "\n" ;
 
 			# draw disc first !
 			if (grep /yes/, $$ruleRef{'disc'})  {
@@ -111,9 +104,13 @@ sub processNodes {
 			if ( ($$ruleRef{'label'} ne "none") or ($$ruleRef{'icon'} ne "none") ) {
 				my ($labelText, $ref) = createLabel (\@tags, $$ruleRef{'label'}, $$lonRef{$nodeId}, $$latRef{$nodeId}) ;
 				my $labelSize = $$ruleRef{'labelsize'} ;
+				my $labelColor = $$ruleRef{'labelcolor'} ;
+				my $labelFont = $$ruleRef{'labelfont'} ;
+				my $labelFontFamily = $$ruleRef{'labelfontfamily'} ;
 				my $icon = $$ruleRef{'icon'} ;
 				my $iconSize = $$ruleRef{'iconsize'} ;
-				my $svgText = "font-size=\"$labelSize\"" ;
+
+				my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelSize, $labelColor, undef, undef) ;
 
 				placeLabelAndIcon($$lonRef{$nodeId}, $$latRef{$nodeId}, 0, $$ruleRef{'size'}, $labelText, $svgText, $icon, $iconSize, $iconSize, "nodes") ;
 			}

@@ -225,8 +225,11 @@ sub processRoutes {
 				createPath ($pathName, \@points, "definitions") ;
 
 				my $size = cv('routelabelsize') ;
+				my $font = cv('routelabelfont') ;
+				my $fontFamily = cv('routelabelfontfamily') ;
 				my $color = cv('routelabelcolor') ;
-				my $svgText = "font-size=\"$size\" fill=\"$color\"" ;  
+
+				my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;
 				pathText ($svgText, $label, $pathName, cv('routelabeloffset'), "middle", 50, "routes") ;
 			}
 		}

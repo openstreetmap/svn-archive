@@ -871,7 +871,7 @@ sub createLegend {
 	}
 	elsif (cv('legend') == 5) {
 		# separate file
-		createLegendFile($sx, $sy) ;
+		createLegendFile($sx, $sy, "_legend", "#legenddef") ;
 	}
 
 }

@@ -1115,10 +1115,10 @@ sub getShieldId {
 # --------------------------------------------------------------------
 
 sub createLegendFile {
-	my ($x, $y) = @_ ;
+	my ($x, $y, $extension, $group) = @_ ;
 
 	my $svgName = cv('out') ;
-	$svgName =~ s/\.svg/\_legend\.svg/i ;	
+	$svgName =~ s/\.svg/$extension\.svg/i ;	
 	my $pngName = $svgName ;
 	$pngName =~ s/\.svg/\.png/i ;
 	my $pdfName = $svgName ;
@@ -1142,7 +1142,7 @@ sub createLegendFile {
 	foreach ( @{$svgLayer{'definitions'}} ) { print $file $_, "\n" ; }
 	print $file "</defs>\n" ;
 
-	print $file "<use x=\"0\" y=\"0\" xlink:href=\"#legenddef\" />\n" ;
+	print $file "<use x=\"0\" y=\"0\" xlink:href=\"$group\" />\n" ;
 	print $file "</svg>\n" ;
 	close $file ;
 

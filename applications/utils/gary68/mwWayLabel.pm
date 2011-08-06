@@ -537,7 +537,9 @@ sub createWNSLegend {
 		addToLayer ("wns", "<use x=\"$posX\" y=\"$posY\" xlink:href=\"#wnsdef\" />") ;
 	}
 
-	
+	if ( cv('wns') eq "5") {
+		createLegendFile ($sx, $sy, "_wns", "#wnsdef") ;
+	}
 }
 
 1 ;

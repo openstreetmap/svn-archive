@@ -166,7 +166,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["headbackground","none","background color for header (CLO)", "map"],
 			["headsize",40,"font size for header (CLO)", "map"],
 
-			["wns",0,"substitute unfitting way names by numbers; 0..4 1..4=positions in map (CLO)", "map"],
+			["wns",0,"substitute unfitting way names by numbers; 0..4 1..4=positions in map; 5=file (CLO)", "map"],
 			["wnssize",20,"size of labels in wns legend", "map"],
 			["wnscolor","black","color of labels in wns legend", "map"],
 			["wnsbgcolor","white","color of background of wns legend", "map"],

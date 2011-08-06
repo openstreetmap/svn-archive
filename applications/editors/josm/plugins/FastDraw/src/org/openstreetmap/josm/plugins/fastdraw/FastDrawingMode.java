@@ -553,7 +553,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 if (!nodes.contains(nd)) {
                     List<OsmPrimitive> refs = nd.getReferrers();
                     // does someone need this node? if no-delete it.
-                    if (refs.isEmpty()) cmds.add(new DeleteCommand(nd));                                       
+                    if (refs.isEmpty() && !nd.isDeleted() && nd.isUsable()) cmds.add(new DeleteCommand(nd));                                       
                 }
             }
             cmds.add(new AddCommand(w));
@@ -662,7 +662,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         }
         if (w.isClosed()) line.closeLine();
         oldNodes = w.getNodes();
-        cmds.add(new DeleteCommand(w));
+        List <OsmPrimitive> wl = new ArrayList(); wl.add(w);
+        
+        Command c = DeleteCommand.delete(getEditLayer(), wl, false);
+        if (c != null) cmds.add(c);
         delCmd = new SequenceCommand(tr("Convert way to FastDraw line"), cmds);
         Main.main.undoRedo.add(delCmd);
     }

@@ -23,6 +23,15 @@ public class FDSettings {
     public double maxPointsPerKm;
     public int pkmBlockSize;
     public boolean drawLastSegment;
+    // snap to nodes
+    public boolean snapNodes; 
+    // add fixed foints on mouse click
+    public boolean fixedClick; 
+    // add fixed foints on spacebar
+    public boolean fixedSpacebar;
+    // option for simplifiction: 0="Autosimplify and wait",
+    //1="Simplify and wait", 2="Save as is"
+    public int simplifyMode;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -38,6 +47,10 @@ public class FDSettings {
         maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 20);
         pkmBlockSize = Main.pref.getInteger("fastdraw.pkmblocksize", 10);
         drawLastSegment = Main.pref.getBoolean("fastdraw.drawlastsegment", true);
+        snapNodes = Main.pref.getBoolean("fastdraw.snapnodes", true);
+        fixedClick = Main.pref.getBoolean("fastdraw.fixedclick", false);
+        fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
+        simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
     }
 
     public void savePrefs() {
@@ -54,9 +67,12 @@ public class FDSettings {
          Main.pref.putDouble("fastdraw.maxpkm",maxPointsPerKm);
          Main.pref.putInteger("fastdraw.pkmblocksize",pkmBlockSize);
          Main.pref.put("fastdraw.drawlastsegment",drawLastSegment);
+         Main.pref.put("fastdraw.snapnodes", snapNodes);
+         Main.pref.put("fastdraw.fixedclick", fixedClick);
+         Main.pref.put("fastdraw.fixedspacebar", fixedSpacebar);
+         Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }
-    
     }
 }

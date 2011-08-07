@@ -86,6 +86,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private Timer timer;
   
     private KeyEvent releaseEvent;
+    private boolean lineWasSaved;
+    private boolean deltaChanged;
 
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), Shortcut.registerShortcut(
@@ -112,6 +114,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void enterMode() {
         if (!isEnabled()) return;
         super.enterMode();
+        lineWasSaved=false;
         settings=new FDSettings();
         settings.loadPrefs();
         settings.savePrefs();
@@ -156,6 +159,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     @Override
     public void exitMode() {
         super.exitMode();
+        if (line.wasSimplified() && !lineWasSaved) saveAsWay(false);
 
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
@@ -241,12 +245,18 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     }
                 }
             }
-            if (settings.drawLastSegment && !drawing && !shift && !line.wasSimplified()) {
+            if (settings.drawLastSegment && !drawing && !shift && nearestIdx<0 && !line.wasSimplified()) {
                 // draw line to current point
                 g.setColor(lineColor);
                 Point lp=line.getLastPoint();
                 Point mp=Main.map.mapView.getMousePosition();
                 if (lp!=null && mp!=null) g.drawLine(lp.x,lp.y,mp.x,mp.y);
+            }
+            if (deltaChanged) {
+                g.setColor(lineColor);
+                Point lp=line.getLastPoint();
+                int r=(int) settings.minPixelsBetweenPoints;
+                if (lp!=null) g.drawOval(lp.x-r,lp.y-r,2*r,2*r);
             }
         }
     }
@@ -314,26 +324,35 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             dragNode=idx;
             return;
         }
-        startDrawing(e.getPoint());
+        startDrawing(e.getPoint(),settings.fixedClick);
     }
 
-    private void startDrawing(Point point) {
+    private void startDrawing(Point point, boolean fixFlag) {
         //if (line.isClosed()) { setStatusLine(tr(SIMPLIFYMODE_MESSAGE));return;  }
         drawing = true;
+        if (line.wasSimplified()) { 
+            // new line started after simplification
+            // we need to save old line
+            saveAsWay(false);
+            newDrawing();
+            //line.clearSimplifiedVersion();
+        }
+
 
         LatLon p = mv.getLatLon(point.x, point.y);
-        Node nd1 = getNearestNode(point, settings.maxDist);
-        if (nd1!=null) {
-            // found node, make it fixed point of the line
-            //System.out.println("node "+nd1);
-            p=nd1.getCoor();
-            line.fixPoint(p);
+        if (settings.snapNodes) { // find existing node near point and use it
+            Node nd1 = getNearestNode(point, settings.maxDist);
+            if (nd1!=null) {
+                // found node, make it fixed point of the line
+                //System.out.println("node "+nd1);
+                p=nd1.getCoor();
+                line.fixPoint(p);
+            }
         }
 
         line.addLast(p);
-        if (ctrl) line.fixPoint(p);
-        line.clearSimplifiedVersion();
-
+        if (ctrl || fixFlag) line.fixPoint(p);
+        
         setStatusLine(tr("Please move the mouse to draw new way"));
         repaint();
     }
@@ -362,6 +381,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!isEnabled()) return;
+        deltaChanged=false;
         Node nd1 = getNearestNode(e.getPoint(), settings.maxDist);
         boolean nearpoint2=nd1!=null;
         boolean needRepaint=false;
@@ -421,6 +441,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         switch(e.getKeyCode()) {
         case KeyEvent.VK_BACK_SPACE:
             if (line.wasSimplified()) {
+                // return to line editing
                 line.clearSimplifiedVersion();
                 repaint();
                 eps=settings.startingEps;
@@ -428,14 +449,27 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             back();
         break;
         case KeyEvent.VK_ENTER:
+            e.consume();
             // first Enter = simplify, second = save the way
             if (!line.wasSimplified()) {
                 //line.simplify(eps);
-                eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, 
+                switch(settings.simplifyMode) {
+                    case 0: //case 1:
+                        eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, 
                         settings.pkmBlockSize, settings.maxPointsPerKm);
-                repaint();
-                showSimplifyHint();
-            } else saveAsWay();
+                        break;
+                    case 1: //case 2: case 3:
+                        line.simplify(eps);
+                        break;
+                }
+                if (settings.simplifyMode==2) {
+                    // autosave
+                    saveAsWay(true);
+                } else {
+                    repaint();
+                    showSimplifyHint();
+                }
+            } else {saveAsWay(true);}
         break;
         case KeyEvent.VK_DOWN:
             // more details
@@ -460,7 +494,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             try {
                 Toolkit.getDefaultToolkit().removeAWTEventListener(this);
                 new FastDrawConfigDialog(settings);
+                if (line.wasSimplified()) {
                 eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.pkmBlockSize,settings.maxPointsPerKm);
+                showSimplifyHint();
+                }
                 //System.out.println("final eps="+eps);
                 Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
@@ -470,7 +507,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         case KeyEvent.VK_SPACE:
             if (!drawing) {
                 Point p = Main.map.mapView.getMousePosition();
-                if (p!=null) startDrawing(p);
+                if (p!=null) startDrawing(p,settings.fixedSpacebar);
             }
         break;
         }
@@ -503,7 +540,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         eps=settings.startingEps;
         line.clear();
     }
-    private void saveAsWay() {
+    private void saveAsWay(boolean autoExit) {
         List<LatLon> pts=line.getPoints();
         int n = pts.size();
         if (n == 0) return;
@@ -560,12 +597,17 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         } else cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
         Main.main.undoRedo.add(c);
+        lineWasSaved = true;
         newDrawing(); // stop drawing
-        // Select this way and switch drawing mode off
-        exitMode();
-        getCurrentDataSet().setSelected(w);
-        Main.map.selectSelectTool(false);
+        if (autoExit) {
+            // Select this way and switch drawing mode off
+            exitMode();
+            getCurrentDataSet().setSelected(w);
+            Main.map.selectSelectTool(false);
+        }
     }
+
+  
 
     private void repaint() {
         Main.map.mapView.repaint();
@@ -587,8 +629,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     void changeDelta(double k) {
         settings.minPixelsBetweenPoints*=k;
+        deltaChanged=true;
         setStatusLine(tr("min distance={0} pixes",(int)settings.minPixelsBetweenPoints));
-        
+        repaint();
     }
 
     private void setStatusLine(String tr) {

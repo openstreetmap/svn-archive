@@ -29,7 +29,7 @@
 -->
 <project name="FastDraw" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="FastDraw: fix NPE and relation bugs after editing"/>
+    <property name="commit.message" value="FastDraw: more settings, autosave"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4201"/>
     <!--

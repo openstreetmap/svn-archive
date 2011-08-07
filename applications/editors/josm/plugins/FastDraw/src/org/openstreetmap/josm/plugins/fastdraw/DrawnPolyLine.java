@@ -341,7 +341,7 @@ public class DrawnPolyLine {
                 pp1 = it1.next();
                 //p1 = getPoint(pp1);
                 pp2 = it2.next();
-                //p2 = getPoint(pp2);
+                //p2 =sa getPoint(pp2);
                 lens[i]=pp1.greatCircleDistance(pp2);
             }
         double pkm=0,maxpkm=0;

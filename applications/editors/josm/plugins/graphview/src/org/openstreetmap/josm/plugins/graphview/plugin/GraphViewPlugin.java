@@ -118,6 +118,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                     graphViewLayer = new GraphViewLayer();
                     graphViewLayer.setWayGraph(graph);
                     graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
+                    graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
                     graphViewLayer.setNodePositioner(new DefaultNodePositioner());
 
                     Main.main.addLayer(graphViewLayer);
@@ -268,6 +269,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
         if (arg0 == preferences) {
             if (graphViewLayer != null) {
                 graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
+                graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
             }
         }
     }

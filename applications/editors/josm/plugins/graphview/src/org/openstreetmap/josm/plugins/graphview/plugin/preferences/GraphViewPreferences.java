@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
-
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.AXLELOAD;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.HEIGHT;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.LENGTH;
@@ -37,7 +35,7 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehicleProper
  * Observers will be notified when preferences change,
  * changes will also be synchronized (two-way) with JOSM's preference storage.
  * This is a singleton class.
- * 
+ *
  * Note: Currently, manual updates in the "advanced preferences" will not have any effect
  * because this class isn't registered as a preference listener.
  */
@@ -68,9 +66,11 @@ public class GraphViewPreferences extends Observable {
     private ColorScheme currentColorScheme;
     private Color nodeColor;
     private Color segmentColor;
+    private Color arrowheadFillColor;
 
     private boolean separateDirections;
 
+    private double arrowheadPlacement;
 
     public synchronized boolean getUseInternalRulesets() {
         return useInternalRulesets;
@@ -167,11 +167,25 @@ public class GraphViewPreferences extends Observable {
         this.segmentColor = segmentColor;
     }
 
-    public synchronized boolean getSeparateDirections() {
+    public synchronized Color getArrowheadFillColor() {
+		return arrowheadFillColor;
+	}
+	public synchronized void setArrowheadFillColor(Color arrowheadFillColor) {
+		this.arrowheadFillColor = arrowheadFillColor;
+	}
+
+	public synchronized boolean getSeparateDirections() {
         return separateDirections;
     }
     public synchronized void setSeparateDirections(boolean separateDirections) {
         this.separateDirections = separateDirections;
+    }
+
+    public synchronized double getArrowheadPlacement() {
+    	return arrowheadPlacement;
+    }
+    public synchronized void setArrowheadPlacement(double arrowheadPlacement) {
+        this.arrowheadPlacement = arrowheadPlacement;
     }
 
     /**
@@ -219,6 +233,10 @@ public class GraphViewPreferences extends Observable {
 
         currentColorScheme = new PreferencesColorScheme(this);
 
+        nodeColor = Color.WHITE;
+        segmentColor = Color.WHITE;
+        arrowheadFillColor = Color.BLACK;
+
         separateDirections = false;
 
     }
@@ -243,10 +261,13 @@ public class GraphViewPreferences extends Observable {
             Main.pref.put("graphview.rulesetResource", currentInternalRuleset.toString());
         }
 
-        Main.pref.putColor(marktr("GraphView default node"), nodeColor);
-        Main.pref.putColor(marktr("Graphview default segment"), segmentColor);
+        Main.pref.put("graphview.defaultNodeColor", createColorString(nodeColor));
+        Main.pref.put("graphview.defaultSegmentColor", createColorString(segmentColor));
+        Main.pref.put("graphview.defaultArrowheadCoreColor", createColorString(arrowheadFillColor));
 
         Main.pref.put("graphview.separateDirections", separateDirections);
+
+        Main.pref.putDouble("graphview.arrowheadPlacement", arrowheadPlacement);
 
     }
 
@@ -288,9 +309,31 @@ public class GraphViewPreferences extends Observable {
             }
         }
 
-        nodeColor = Main.pref.getColor(marktr("GraphView default node"), Color.white);
-        segmentColor = Main.pref.getColor(marktr("Graphview default segment"), Color.white);
+        if (Main.pref.hasKey("graphview.defaultNodeColor")) {
+            Color color = parseColorString(Main.pref.get("graphview.defaultNodeColor"));
+            if (color != null) {
+                nodeColor = color;
+            }
+        }
+        if (Main.pref.hasKey("graphview.defaultSegmentColor")) {
+            Color color = parseColorString(Main.pref.get("graphview.defaultSegmentColor"));
+            if (color != null) {
+                segmentColor = color;
+            }
+        }
+        if (Main.pref.hasKey("graphview.defaultArrowheadCoreColor")) {
+            Color color = parseColorString(Main.pref.get("graphview.defaultArrowheadCoreColor"));
+            if (color != null) {
+            	arrowheadFillColor = color;
+            }
+        }
+
         separateDirections = Main.pref.getBoolean("graphview.separateDirections", false);
+
+        arrowheadPlacement = Main.pref.getDouble("graphview.arrowheadPlacement", 1.0);
+        if (arrowheadPlacement < 0.0 || arrowheadPlacement >= 1.0) {
+        	arrowheadPlacement = 1.0;
+        }
 
     }
 
@@ -459,4 +502,24 @@ public class GraphViewPreferences extends Observable {
 
         }
     }
+
+    private static final Pattern COLOR_PATTERN =
+        Pattern.compile("^(\\d{1,3}),\\s*(\\d{1,3}),\\s*(\\d{1,3})$");
+
+    private String createColorString(Color color) {
+        return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+    }
+
+    private Color parseColorString(String string) {
+        Matcher matcher = COLOR_PATTERN.matcher(string);
+        if (!matcher.matches()) {
+            return null;
+        } else {
+            int r = Integer.parseInt(matcher.group(1));
+            int g = Integer.parseInt(matcher.group(2));
+            int b = Integer.parseInt(matcher.group(3));
+            return new Color(r, g, b);
+        }
+    }
+
 }

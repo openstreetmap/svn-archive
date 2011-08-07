@@ -44,7 +44,7 @@ public final class VehiclePropertyStringParser {
     public static final String ERROR_TRACKTYPE =
         tr("Tracktype grades must be given as integers between 0 and 5.");
     public static final String ERROR_SURFACE =
-        tr("Surface values must not contain any of the following characters: '','', '''{''',  '''}''', ''='', ''|''");
+        tr("Surface values must not contain any of the following characters: '','', '' '{' '',  '' '}' '', ''='', ''|''");
 
     private static final List<Character> FORBIDDEN_SURFACE_CHARS =
         Arrays.asList(',', '{', '}', '=', '|');

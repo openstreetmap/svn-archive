@@ -132,7 +132,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
         internalRulesetCheckBox.addActionListener(internalRulesetActionListener);
         rulesetPanel.add(internalRulesetCheckBox);
 
-        rulesetFolderLabel = new JLabel(tr("Wxternal ruleset directory:"));
+        rulesetFolderLabel = new JLabel(tr("External ruleset directory:"));
         rulesetPanel.add(rulesetFolderLabel);
 
         rulesetFolderTextField = new JTextField();

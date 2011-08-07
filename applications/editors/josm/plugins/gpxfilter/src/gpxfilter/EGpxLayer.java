@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,7 +124,7 @@ public class EGpxLayer extends Layer {
                     synchronized (this) {
                         data.mergeFrom(newData);
                     }
-                    
+
                     if (!EGpxLayer.this.painting) {
                         Main.map.repaint();
                     }
@@ -933,7 +935,12 @@ public class EGpxLayer extends Layer {
      * @param markers : keeps track of warning messages to avoid repeated warnings
      */
     private void importAudio(File wavFile, MarkerLayer ml, double firstStartTime, Markers markers) {
-        String uri = "file:".concat(wavFile.getAbsolutePath());
+        URL url = null;
+        try {
+            url = wavFile.toURI().toURL();
+        } catch (MalformedURLException e) {
+            System.err.println("Unable to convert filename " + wavFile.getAbsolutePath() + " to URL");
+        }
         Collection<WayPoint> waypoints = new ArrayList<WayPoint>();
         boolean timedMarkersOmitted = false;
         boolean untimedMarkersOmitted = false;
@@ -1102,15 +1109,7 @@ public class EGpxLayer extends Layer {
                 firstTime = w.time;
             }
             double offset = w.time - firstTime;
-            String name;
-            if (w.attr.containsKey("name")) {
-                name = w.getString("name");
-            } else if (w.attr.containsKey("desc")) {
-                name = w.getString("desc");
-            } else {
-                name = AudioMarker.inventName(offset);
-            }
-            AudioMarker am = AudioMarker.create(w.getCoor(), name, uri, ml, w.time, offset);
+            AudioMarker am = new AudioMarker(w.getCoor(), w, url, ml, w.time, offset);
             /*
              * timeFromAudio intended for future use to shift markers of this type on
              * synchronization

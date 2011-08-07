@@ -264,6 +264,7 @@ sub createWayLabels {
 # finally take all way label candidates and try to label them
 #
 
+	my %wnsUnique = () ;
 	print "placing way labels...\n" ;
 
 	my %notDrawnLabels = () ;
@@ -297,12 +298,15 @@ sub createWayLabels {
 		# wns?
 		if ( ($lLen > $wLen * 0.95) and ( cv('wns') > 0 ) ) {
 			if ( ( $toLabel != 0 ) and ( ! grep /shield/i, $name) and ( wayVisible( \@points ) ) ) {
-				my $oldName = $name ;
-				push @wns, [ $wnsNumber, $name] ;
-				$name = $wnsNumber ;
-				$lLen = cv('ppc') / 10 * $$ruleRef{'labelsize'} * length ($name) ;
-				# print "WNS: $oldName - $name\n" ;
-				$wnsNumber++ ;
+				if ( ! defined $wnsUnique{$name} ) {
+					my $oldName = $name ;
+					$wnsUnique{$name} = 1 ;
+					push @wns, [ $wnsNumber, $name] ;
+					$name = $wnsNumber ;
+					$lLen = cv('ppc') / 10 * $$ruleRef{'labelsize'} * length ($name) ;
+					# print "WNS: $oldName - $name\n" ;
+					$wnsNumber++ ;
+				}
 			}
 		}
 

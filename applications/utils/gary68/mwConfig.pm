@@ -170,6 +170,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["wnssize",20,"size of labels in wns legend", "map"],
 			["wnscolor","black","color of labels in wns legend", "map"],
 			["wnsbgcolor","white","color of background of wns legend", "map"],
+			["wnsunique",0,"wns will label each way only once (CLO)", "map"],
 
 			["minAreaSize",400,"min size of area to be drawn on map", "map"],
 			["minAreaLabelSize",10000,"min size of area to be labeled on map", "map"],
@@ -308,6 +309,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"allowiconmove"	=> \$cv{'allowiconmove'},
 				"help"		=> \$cv{'help'},		# 
 				"wns:i"		=> \$cv{'wns'},		# 
+				"wnsunique"		=> \$cv{'wnsunique'},		# 
 				"oneways"	=> \$cv{'oneways'},
 				"onewaycolor:s" => \$cv{'onewaycolor'},
 				"onewaysize:i" => \$cv{'onewaysize'},

@@ -34,12 +34,13 @@
 # 0.28 oceancolor bug fixed
 # 0.29 fonts/families
 # 0.30 -wns=5 now possible; way name substitutions in separate file
+# 0.31 getXXXrule bug fixed; wnsunique
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.30" ;
+my $version = "0.31" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -420,7 +420,7 @@ sub getNodeRule {
 
 	# print "\n" ;
 
-	RUL2: foreach my $rule (keys %nodeRules) {
+	RUL2: foreach my $rule ( sort { $a <=> $b } keys %nodeRules) {
 		# print "rule $rule\n" ;
 		if ( ( $nodeRules{$rule}{'fromscale'} <= $scale) and ( $nodeRules{$rule}{'toscale'} >= $scale) ) {
 
@@ -460,7 +460,7 @@ sub getNodeRule {
 }
 
 sub printNodeRules {
-	foreach my $n (sort keys %nodeRules) {
+	foreach my $n ( sort { $a <=> $b }  keys %nodeRules) {
 		print "node rule $n\n" ;
 		foreach my $v (sort keys %{$nodeRules{$n}}) {
 			print "  $v=$nodeRules{$n}{$v}\n" ;
@@ -484,7 +484,7 @@ sub getWayRule {
 
 	my $ruleFound ; undef $ruleFound ;
 
-	RUL5: foreach my $rule (keys %wayRules) {
+	RUL5: foreach my $rule ( sort { $a <=> $b } keys %wayRules) {
 		# print "rule $rule\n" ;
 		if ( ( $wayRules{$rule}{'fromscale'} <= $scale) and ( $wayRules{$rule}{'toscale'} >= $scale) ) {
 
@@ -525,7 +525,7 @@ sub getWayRule {
 
 
 sub printWayRules {
-	foreach my $n (sort keys %wayRules) {
+	foreach my $n ( sort { $a <=> $b }  keys %wayRules) {
 		print "way rule $n\n" ;
 		foreach my $v (sort keys %{$wayRules{$n}}) {
 			print "  $v=$wayRules{$n}{$v}\n" ;
@@ -550,7 +550,7 @@ sub getAreaRule {
 
 	my $ruleFound ; undef $ruleFound ;
 
-	RUL8: foreach my $rule (keys %areaRules) {
+	RUL8: foreach my $rule ( sort { $a <=> $b } keys %areaRules) {
 		# print "rule $rule\n" ;
 		if ( ( $areaRules{$rule}{'fromscale'} <= $scale) and ( $areaRules{$rule}{'toscale'} >= $scale) ) {
 
@@ -591,7 +591,7 @@ sub getAreaRule {
 
 
 sub printAreaRules {
-	foreach my $n (sort keys %areaRules) {
+	foreach my $n ( sort { $a <=> $b }  keys %areaRules) {
 		print "area rule $n\n" ;
 		foreach my $v (sort keys %{$areaRules{$n}}) {
 			print "  $v=$areaRules{$n}{$v}\n" ;
@@ -614,7 +614,7 @@ sub getRouteRule {
 
 	if (defined $type) {
 		# print "      GRR: $type \n" ;
-		RULA: foreach my $r (sort keys %routeRules) {
+		RULA: foreach my $r ( sort { $a <=> $b }  keys %routeRules) {
 			# print "        GRR: $routeRules{$r}{'type'}\n" ;
 			if ($routeRules{$r}{'type'} eq $type) {
 				if ( ( $routeRules{$r}{'fromscale'} <= $scale) and ( $routeRules{$r}{'toscale'} >= $scale) ) {
@@ -640,7 +640,7 @@ sub getRouteColors {
 }
 
 sub printRouteRules {
-	foreach my $n (sort keys %routeRules) {
+	foreach my $n ( sort { $a <=> $b }  keys %routeRules) {
 		print "route rule $n\n" ;
 		foreach my $v (sort keys %{$routeRules{$n}}) {
 			print "  $v=$routeRules{$n}{$v}\n" ;

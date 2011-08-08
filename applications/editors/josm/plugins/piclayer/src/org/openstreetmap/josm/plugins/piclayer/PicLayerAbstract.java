@@ -63,7 +63,7 @@ public abstract class PicLayerAbstract extends Layer
     // Counter - just for naming of layers
     private static int m_counter = 0;
     // This is the main image to be displayed
-    private BufferedImage m_image = null;
+    private Image m_image = null;
     // Initial position of the image in the real world
     private EastNorth m_initial_position;
     // Position of the image in the real world
@@ -131,14 +131,12 @@ public abstract class PicLayerAbstract extends Layer
         }
 
         // Create image
-        Image image = createImage();
-        if ( image == null ) {
+        m_image = createImage();
+        if ( m_image == null ) {
             throw new IOException(tr("PicLayer failed to load or import the image."));
         }
-        // Convert to Buffered Image - not sure if this is the right way...
-        m_image = new BufferedImage( image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB );
-        Graphics g = m_image.getGraphics();
-        g.drawImage( image, 0, 0, null );
+        // Load image completely
+        (new ImageIcon(m_image)).getImage();
     }
 
     /**
@@ -223,16 +221,16 @@ public abstract class PicLayerAbstract extends Layer
             g.shear(m_shearx, m_sheary);
 
             // Draw picture
-            g.drawImage( m_image, -m_image.getWidth() / 2, -m_image.getHeight() / 2, null );
+            g.drawImage( m_image, -m_image.getWidth(null) / 2, -m_image.getHeight(null) / 2, null );
 
             // Draw additional rectangle for the active pic layer
             if ( Main.map.mapView.getActiveLayer() == this ) {
                 g.setColor( new Color( 0xFF0000 ) );
                 g.drawRect(
-                    -m_image.getWidth() / 2,
-                    -m_image.getHeight() / 2,
-                    m_image.getWidth(),
-                    m_image.getHeight()
+                    -m_image.getWidth(null) / 2,
+                    -m_image.getHeight(null) / 2,
+                    m_image.getWidth(null),
+                    m_image.getHeight(null)
                 );
             }
         } else {
@@ -319,7 +317,7 @@ public abstract class PicLayerAbstract extends Layer
         // in meters, depending on the projection used at creation), but the 
         // initial scale is in m/100pix
         // So for now, we support the bounding box only when everything is in meters
-        if ( projcode.equals("EPSG:3857") || projcode.equals("EPSG:4326") )
+        if (projcode.equals("EPSG:4326") )
             return;
             
         EastNorth center = m_position;

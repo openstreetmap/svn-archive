@@ -65,4 +65,8 @@ public class PicLayerFromClipboard extends PicLayerAbstract {
         return "Clipboard";
     }
 
+    @Override
+    protected void lookForCalibration() throws IOException {
+    }
+
 }

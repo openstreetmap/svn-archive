@@ -27,8 +27,8 @@ import org.openstreetmap.josm.Main;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 /**
  * Layer displaying a picture loaded from a file.
@@ -65,7 +65,11 @@ public class PicLayerFromFile extends PicLayerAbstract {
         // Try to load file
         Image image = null;
         image = ImageIO.read( m_file );
-        
+        return image;
+    }
+    
+    @Override
+    protected void lookForCalibration() throws IOException {
         // Manage a potential existing calibration file
         File calFile = getDefaultCalPath();
         if ( calFile.exists() ) {
@@ -103,9 +107,38 @@ public class PicLayerFromFile extends PicLayerAbstract {
             }
             if ( loadcal )
                 loadCalibration(calFile);
+        } else {
+            
+            // try to find and load world file
+            int dotIdx = m_file.getName().lastIndexOf(".");
+            if (dotIdx == -1) return;
+            String extension = m_file.getName().substring(dotIdx);
+            String namepart = m_file.getName().substring(0, dotIdx);
+            String[][] imgExtensions = new String[][] {
+                { ".jpg", ".jpeg" },
+                { ".png" },
+                { ".tif", ".tiff" },
+                { ".bmp" },
+            };
+            String[][] wldExtensions = new String[][] {
+                { ".wld", ".jgw", ".jpgw" },
+                { ".wld", ".pgw", ".pngw" },
+                { ".wld", ".tfw", ".tifw" },
+                { ".wld", ".bmpw", ".bpw"},
+            };
+            for (int i=0; i<imgExtensions.length; ++i) {
+                if (Arrays.asList(imgExtensions[i]).contains(extension.toLowerCase())) {
+                    for (String wldExtension : wldExtensions[i]) {
+                        File wldFile = new File(m_file.getParentFile(), namepart+wldExtension);
+                        if (wldFile.exists()) {
+                            System.out.println("Loading world file: "+wldFile);
+                            loadWorldfile(wldFile);
+                            return;
+                        }
+                    }
+                }
+            }
         }
-                
-        return image;
     }
 
     @Override

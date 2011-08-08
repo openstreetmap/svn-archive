@@ -28,8 +28,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -134,6 +136,8 @@ public abstract class PicLayerAbstract extends Layer
         }
         // Load image completely
         (new ImageIcon(m_image)).getImage();
+        
+        lookForCalibration();
     }
 
     /**
@@ -144,6 +148,7 @@ public abstract class PicLayerAbstract extends Layer
      */
     protected abstract Image createImage() throws IOException;
 
+    protected abstract void lookForCalibration() throws IOException;
     /**
      * To be overridden by subclasses. Returns the user readable name of the layer.
      */
@@ -433,6 +438,31 @@ public abstract class PicLayerAbstract extends Layer
             m_initial_scale = in_scale;
             // Refresh
             Main.map.mapView.repaint();
+    }
+    
+    public void loadWorldfile(File file) throws IOException {
+        FileReader reader = new FileReader(file);
+        BufferedReader br = new BufferedReader(reader);
+        double e[] = new double[6];
+        for (int i=0; i<6; ++i) {
+            String line = br.readLine();
+            e[i] = Double.parseDouble(line);
+        }
+        double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
+        int w = m_image.getWidth(null);
+        int h = m_image.getHeight(null);
+        m_position.setLocation(
+                dx + w/2*sx + h/2*rx, 
+                dy + w/2*ry + h/2*sy
+        );
+        m_initial_position.setLocation(m_position);
+        m_angle = 0;
+        m_scalex = 100*sx*getMetersPerEasting(m_position);
+        m_scaley = -100*sy*getMetersPerNorthing(m_position);
+        m_shearx = rx / sx;
+        m_sheary = ry / sy;
+        m_initial_scale = 1;
+        Main.map.mapView.repaint();
     }
 
     private class ResetSubmenuAction extends AbstractAction implements LayerAction {

@@ -557,6 +557,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 // there may be a node with same ccoords!
                 nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive.isUsablePredicate);
             //}
+            if (nd!=null) if (p.greatCircleDistance(nd.getCoor())>0.01) nd=null;
             if (nd==null) {
                 if (i>0 && p.equals(first)) nd=firstNode; else {
                     nd = new Node(p);

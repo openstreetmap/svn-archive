@@ -249,7 +249,7 @@ public class TrustOSMplugin extends Plugin {
 		MainMenu menu = Main.main.menu;
 
 		if (gpgJMenu == null) {
-			gpgJMenu = menu.addMenu(marktr("GPG"), KeyEvent.VK_G, menu.defaultMenuPos, ht("/Plugin/trustosm"));
+			gpgJMenu = menu.addMenu(marktr("GPG"), KeyEvent.VK_G, menu.defaultMenuPos, ht("/Plugin/TrustOSM"));
 			gpgJMenu.add(new JMenuItem(new ExportSigsAction()));
 		}
 

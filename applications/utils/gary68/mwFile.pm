@@ -266,12 +266,33 @@ sub readFile {
 		}
 	}
 
-	# calc pic size if scale is set
 	my $size = cv('size') ;
+
+	# calc pic size
+
 	if ( cv('scaleSet') != 0 ) {
 		my $dist = distance ($lonMin, $latMin, $lonMax, $latMin) ;
 		my $width = $dist / cv('scaleSet') * 1000 * 100 / 2.54 ; # inches
 		$size = int ($width * 300) ;
+	}
+
+	if ( cv('maxTargetSize') ne "" ) {
+		my @a = split /,/, cv('maxTargetSize') ;
+		my $targetWidth = $a[0] ;
+		my $targetHeight = $a[1] ;
+		# print "TS: $targetWidth, $targetHeight [cm]\n" ;
+		my $distLon = distance ($lonMin, $latMin, $lonMax, $latMin) ;
+		my $distLat = distance ($lonMin, $latMin, $lonMin, $latMax) ;
+		# print "TS: $distLon, $distLat [km]\n" ;
+		my $scaleLon = ($distLon * 1000 * 100) / $targetWidth ;
+		my $scaleLat = ($distLat * 1000 * 100) / $targetHeight ;
+		my $targetScale = int $scaleLon ;
+		if ( $scaleLat > $targetScale ) { $targetScale = int $scaleLat ; }
+		# print "TS: $targetScale [1:n]\n" ;
+
+		my $width = $distLon / $targetScale * 1000 * 100 / 2.54 ; # inches
+		$size = int ($width * 300) ;
+		print "Map width now $size [px] due to maxTargetSize parameter\n" ;		
 	}
 
 	mwMap::initGraph ($size, $lonMin, $latMin, $lonMax, $latMax) ;

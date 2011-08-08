@@ -99,6 +99,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["style","mwStandardRules.txt","file with render rules (CLO)", "job"],
 			["svgname","mapweaver.svg","output file name for svg graphics (CLO)", "job"],
 			["size",2200,"size in pixels x axis, 300dpi (CLO)", "map"],
+			["maxTargetSize","","sizes w,h in cm [21,29.7] (CLO)", "map"],
 			["legend",0,"appearance and position of legend (CLO)", "map"],
 			["bgcolor","white","background color of map (CLO)", "map"],
 			["grid",0,"number of grid cells, 0 = no grid (CLO)", "map"],
@@ -284,6 +285,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"style=s" 	=> \$cv{'style'},		# the style file, mandatory
 				"out:s"		=> \$cv{'svgname'},		# outfile name or default
 				"size:i"	=> \$cv{'size'},		# specifies pic size longitude in pixels
+				"maxtargetsize:s"	=> \$cv{'maxtargetsize'},		# specifies pic size in cm
 				"legend:i"	=> \$cv{'legend'},		# legend?
 				"bgcolor:s"	=> \$cv{'bgcolor'},		# background color
 				"oceancolor:s"	=> \$cv{'oceancolor'},		# ocean color

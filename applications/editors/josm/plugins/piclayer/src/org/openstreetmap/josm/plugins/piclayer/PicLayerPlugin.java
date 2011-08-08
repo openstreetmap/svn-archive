@@ -61,7 +61,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     public PicLayerPlugin(PluginInformation info) {
         super(info);
 
-        System.err.println("hi there!");
         // Create menu entry
         if ( Main.main.menu != null ) {
             m_menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_I, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));

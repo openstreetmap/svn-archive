@@ -24,16 +24,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -48,6 +44,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -201,21 +198,22 @@ public abstract class PicLayerAbstract extends Layer
             // Position image at the right graphical place
             EastNorth center = Main.map.mapView.getCenter();
             EastNorth leftop = Main.map.mapView.getEastNorth( 0, 0 );
+            // Number of pixels for one unit in east north space.
+            // This is the same in x- and y- direction.
             double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
 
             //     This is now the offset in screen pixels
             double pic_offset_x = (( m_position.east() - leftop.east() ) * pixel_per_en);
             double pic_offset_y = (( leftop.north() - m_position.north() ) * pixel_per_en);
 
-            // Let's use Graphics 2D
             Graphics2D g = (Graphics2D)g2.create();
             // Move
             g.translate( pic_offset_x, pic_offset_y );
             // Rotate
             g.rotate( m_angle * Math.PI / 180.0 );
             // Scale
-            double scalex = m_scalex * m_initial_scale / Main.map.mapView.getDist100Pixel();
-            double scaley = m_scaley * m_initial_scale / Main.map.mapView.getDist100Pixel();
+            double scalex = m_scalex * m_initial_scale * pixel_per_en / getMetersPerEasting(m_position) / 100;
+            double scaley = m_scaley * m_initial_scale * pixel_per_en / getMetersPerNorthing(m_position) / 100;
             g.scale( scalex, scaley );
             // Shear
             g.shear(m_shearx, m_sheary);
@@ -238,7 +236,49 @@ public abstract class PicLayerAbstract extends Layer
             System.out.println( "PicLayerAbstract::paint - general drawing error (m_image is null or Graphics not 2D" );
         }
     }
+    
+    /**
+     * Returns the distance in meter, that corresponds to one unit in east north
+     * space. For normal projections, it is about 1 (but usually changing with 
+     * latitude).
+     * For EPSG:4326, it is the distance from one meridian of full degree to the 
+     * next (a couple of kilometers).
+     */
+    private double getMetersPerEasting(EastNorth en) {
+        /* Natural scale in east/north units per pixel.
+         * This means, the projection should be able to handle
+         * a shift of that size in east north space without
+         * going out of bounds.
+         * 
+         * Also, this should get us somewhere in the range of meters,
+         * so we get the result at the point 'en' and not some average.
+         */
+        double naturalScale = Main.getProjection().getDefaultZoomInPPD();
+        naturalScale *= 0.01; // make a little smaller
+        
+        LatLon ll1 = Main.getProjection().eastNorth2latlon(
+                new EastNorth(en.east() - naturalScale, en.north()));
+        LatLon ll2 = Main.getProjection().eastNorth2latlon(
+                new EastNorth(en.east() + naturalScale, en.north()));
+        
+        double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
+        return dist;
+    }
 
+    /* see getMetersPerEasting */
+    private double getMetersPerNorthing(EastNorth en) {
+        double naturalScale = Main.getProjection().getDefaultZoomInPPD();
+        naturalScale *= 0.01;
+        
+        LatLon ll1 = Main.getProjection().eastNorth2latlon(
+                new EastNorth(en.east(), en.north()- naturalScale));
+        LatLon ll2 = Main.getProjection().eastNorth2latlon(
+                new EastNorth(en.east(), en.north() + naturalScale));
+        
+        double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
+        return dist;
+    }
+    
     /**
      * Moves the picture. Scaled in EastNorth...
      */

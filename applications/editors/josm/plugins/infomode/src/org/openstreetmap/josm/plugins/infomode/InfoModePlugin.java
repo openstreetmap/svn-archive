@@ -4,6 +4,7 @@
  *
  * Licence: GPL v2 or later
  * Author:  Alexei Kasatkin, 2011
+ * Ideas by siberiano, Ilis, chnav, Polarbear-j, 
  */
 
 package org.openstreetmap.josm.plugins.infomode;

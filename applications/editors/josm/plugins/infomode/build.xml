@@ -29,7 +29,7 @@
 -->
 <project name="InfoMode" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="InfoMode : new icon, keys for exit mode"/>
+    <property name="commit.message" value="InfoMode : scan all layers, URL bug fixed"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4201"/>
     <!-- should not be necessary to change the following properties -->

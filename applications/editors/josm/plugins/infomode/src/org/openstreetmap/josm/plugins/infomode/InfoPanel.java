@@ -21,7 +21,6 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OpenBrowser;
-import org.openstreetmap.josm.tools.UrlLabel;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -117,7 +116,7 @@ class InfoPanel extends JPanel {
         label5.setText(s1);
         if (trk.getAttributes().containsKey("url")) {
            label6.setText(trk.getAttributes().get("url").toString());
-        }
+        } else label6.setText(null);
     }
     
 }

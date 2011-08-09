@@ -20,7 +20,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
@@ -29,6 +28,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 
@@ -37,6 +37,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -72,12 +73,20 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     public void enterMode() {
         if (!isEnabled()) return;
         super.enterMode();
-        
         mv = Main.map.mapView;
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
         Main.map.mapView.addTemporaryLayer(this);
+        /*if (!(Main.main.getActiveLayer() instanceof GpxLayer)) {
+            boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
+                    "scan_all_layers", Main.parent,
+                    tr("Please select GPX layer to view only its trackpoint info. Do you want to scan all GPX layers?"),
+                    tr("Select layer to scan"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION );
+                 if(!answer) return;
+        }*/
 
+        Main.map.statusLine.setHelpText(tr("Move the mouse to show trackpoint info for current layer. Hold shift to highlight tracks"));
+        Main.map.statusLine.repaint();
 
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
@@ -114,72 +123,14 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
-        
-        Layer l = Main.main.getActiveLayer();
-        
-        if (l instanceof GpxLayer && pos!=null) {
-            GpxLayer gpxL = (GpxLayer )l;
-            
-            double minDist=1e9,d;
-            WayPoint wp=null,oldWp=null,prevWp=null;
-            GpxTrack trk=null;
-            double maxD = mv.getDist100Pixel()/3;
-            for (GpxTrack track : gpxL.data.tracks) {
-                for (GpxTrackSegment seg : track.getSegments()) {
-                    oldWp=null;// next segment will have new previous point
-                    for (WayPoint S : seg.getWayPoints()) {
-                        d = S.getEastNorth().distance(pos);
-                        
-                        if (d<minDist && d<maxD) {
-                            minDist = d;
-                            prevWp=oldWp;
-                            wp=S;
-                            trk=track;
-                            }
-                        oldWp=S;
-                    }
+        if (pos==null) return;
+        Layer curL= Main.main.getActiveLayer();
+        if (curL instanceof GpxLayer) showLayerInfo(g,curL,mv); else {       
+            for (Layer l:mv.getAllLayers()) {
+                if (l instanceof GpxLayer) {
+                    if (showLayerInfo(g,l,mv)) return;
                 }
             }
-            if (wp!=null) {
-                Point p = mv.getPoint(wp.getCoor());
-                                
-                g.setColor(Color.RED);
-                g.fillOval(p.x-10, p.y-10, 20, 20); // mark selected point
-                if (shift) { // highlight track
-                    g.setColor(new Color(255,30,0,128));
-                    Stroke oldStroke = g.getStroke();
-                    g.setStroke( new BasicStroke(10) );
-                    for (GpxTrackSegment seg : trk.getSegments()) {
-                    Point oldP=null,curP=null;// next segment will have new previous point
-                        for (WayPoint S : seg.getWayPoints()) {
-                            curP = mv.getPoint(S.getEastNorth());
-                            if (oldP!=null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
-                            oldP = curP;
-                        }
-                    }
-                    g.setStroke(oldStroke);
-                }
-                Point s=mv.getLocationOnScreen();
-                int pcx = s.x+p.x-40;
-                int pcy = s.y+p.y+30;
-                if (shift) {pcx+=40; pcy-=30;}
-                
-                if (wp!=wpOld) {
-                    if (oldPopup!=null) oldPopup.hide();
-                    double vel=-1;
-                    if (prevWp!=null && wp.time!=prevWp.time) {
-                        vel=wp.getCoor().greatCircleDistance(prevWp.getCoor())/
-                                (wp.time-prevWp.time)*3.6;
-                    }
-                    infoPanel.setData(wp,trk,vel,gpxL.data.tracks);
-                    Popup pp=PopupFactory.getSharedInstance().getPopup(mv, infoPanel, 
-                            pcx, pcy);
-                    pp.show();
-                    wpOld=wp;
-                    oldPopup=pp;
-                }
-            }
-            
         }
     }
 
@@ -288,5 +239,71 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                                 
 
         }
+    }
+
+    private boolean showLayerInfo(Graphics2D g, Layer l, MapView mv) {
+            GpxLayer gpxL = (GpxLayer )l;
+            
+            double minDist=1e9,d;
+            WayPoint wp=null,oldWp=null,prevWp=null;
+            GpxTrack trk=null;
+            double maxD = mv.getDist100Pixel()/3;
+            for (GpxTrack track : gpxL.data.tracks) {
+                for (GpxTrackSegment seg : track.getSegments()) {
+                    oldWp=null;// next segment will have new previous point
+                    for (WayPoint S : seg.getWayPoints()) {
+                        d = S.getEastNorth().distance(pos);
+                        
+                        if (d<minDist && d<maxD) {
+                            minDist = d;
+                            prevWp=oldWp;
+                            wp=S;
+                            trk=track;
+                            }
+                        oldWp=S;
+                    }
+                }
+            }
+            if (wp!=null) {
+                Point p = mv.getPoint(wp.getCoor());
+                                
+                g.setColor(Color.RED);
+                g.fillOval(p.x-10, p.y-10, 20, 20); // mark selected point
+                if (shift) { // highlight track
+                    g.setColor(new Color(255,30,0,128));
+                    Stroke oldStroke = g.getStroke();
+                    g.setStroke( new BasicStroke(10) );
+                    for (GpxTrackSegment seg : trk.getSegments()) {
+                    Point oldP=null,curP=null;// next segment will have new previous point
+                        for (WayPoint S : seg.getWayPoints()) {
+                            curP = mv.getPoint(S.getEastNorth());
+                            if (oldP!=null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
+                            oldP = curP;
+                        }
+                    }
+                    g.setStroke(oldStroke);
+                }
+                Point s=mv.getLocationOnScreen();
+                int pcx = s.x+p.x-40;
+                int pcy = s.y+p.y+30;
+                if (shift) {pcx+=40; pcy-=30;}
+                
+                if (wp!=wpOld) {
+                    if (oldPopup!=null) oldPopup.hide();
+                    double vel=-1;
+                    if (prevWp!=null && wp.time!=prevWp.time) {
+                        vel=wp.getCoor().greatCircleDistance(prevWp.getCoor())/
+                                (wp.time-prevWp.time)*3.6;
+                    }
+                    infoPanel.setData(wp,trk,vel,gpxL.data.tracks);
+                    Popup pp=PopupFactory.getSharedInstance().getPopup(mv, infoPanel, 
+                            pcx, pcy);
+                    pp.show();
+                    wpOld=wp;
+                    oldPopup=pp;
+                }
+                return true;
+            }
+            return false;
     }
 }

@@ -94,7 +94,8 @@ public class DrawnPolyLine {
     }
   
     Point getLastPoint() {
-        return getPoint(points.get(lastIdx));
+        if (lastIdx<points.size()) return getPoint(points.get(lastIdx));
+        else return null;
     }
 
     Point getPoint(LatLon p) {

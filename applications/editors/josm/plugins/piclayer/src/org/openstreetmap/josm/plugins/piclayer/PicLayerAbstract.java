@@ -33,6 +33,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Properties;
 
@@ -50,6 +53,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Base class for layers showing images. Actually it does all the showing. The
@@ -405,9 +409,9 @@ public abstract class PicLayerAbstract extends Layer
      * @param file The file to read from
      * @return
      */
-    public void loadCalibration(File file) throws IOException {
+    public void loadCalibration(InputStream is) throws IOException {
         Properties props = new Properties();
-        props.load(new FileInputStream(file));
+        props.load(is);
         loadCalibration(props);
     }
 
@@ -440,29 +444,34 @@ public abstract class PicLayerAbstract extends Layer
             Main.map.mapView.repaint();
     }
     
-    public void loadWorldfile(File file) throws IOException {
-        FileReader reader = new FileReader(file);
-        BufferedReader br = new BufferedReader(reader);
-        double e[] = new double[6];
-        for (int i=0; i<6; ++i) {
-            String line = br.readLine();
-            e[i] = Double.parseDouble(line);
+    public void loadWorldfile(InputStream is) throws IOException {
+        BufferedReader br = null;
+        try {
+            Reader reader = new InputStreamReader(is);
+            br = new BufferedReader(reader);
+            double e[] = new double[6];
+            for (int i=0; i<6; ++i) {
+                String line = br.readLine();
+                e[i] = Double.parseDouble(line);
+            }
+            double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
+            int w = m_image.getWidth(null);
+            int h = m_image.getHeight(null);
+            m_position.setLocation(
+                    dx + w/2*sx + h/2*rx, 
+                    dy + w/2*ry + h/2*sy
+            );
+            m_initial_position.setLocation(m_position);
+            m_angle = 0;
+            m_scalex = 100*sx*getMetersPerEasting(m_position);
+            m_scaley = -100*sy*getMetersPerNorthing(m_position);
+            m_shearx = rx / sx;
+            m_sheary = ry / sy;
+            m_initial_scale = 1;
+            Main.map.mapView.repaint();
+        } finally {
+            Utils.close(br);
         }
-        double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
-        int w = m_image.getWidth(null);
-        int h = m_image.getHeight(null);
-        m_position.setLocation(
-                dx + w/2*sx + h/2*rx, 
-                dy + w/2*ry + h/2*sy
-        );
-        m_initial_position.setLocation(m_position);
-        m_angle = 0;
-        m_scalex = 100*sx*getMetersPerEasting(m_position);
-        m_scaley = -100*sy*getMetersPerNorthing(m_position);
-        m_shearx = rx / sx;
-        m_sheary = ry / sy;
-        m_initial_scale = 1;
-        Main.map.mapView.repaint();
     }
 
     private class ResetSubmenuAction extends AbstractAction implements LayerAction {

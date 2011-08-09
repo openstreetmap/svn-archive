@@ -72,7 +72,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
                     
             // Load 
             try {
-                m_owner.loadCalibration(fc.getSelectedFile());
+                m_owner.loadCalibration(new FileInputStream(fc.getSelectedFile()));
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();

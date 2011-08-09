@@ -53,9 +53,12 @@ public class NewLayerFromFileAction extends JosmAction {
             if ( f.isDirectory() )
                 return true;
 
-            String fileExtension = f.getName().substring(f.getName().lastIndexOf('.')+1);
+            int dotIdx = f.getName().lastIndexOf('.');
+            if (dotIdx == -1) return false;
+            String fileExtension = f.getName().substring(dotIdx+1);
             String[] supportedExtensions = ImageIO.getReaderFormatNames();
 
+            if ("zip".equalsIgnoreCase(fileExtension)) return true;
             // Unfortunately, getReaderFormatNames does not always return ALL extensions in 
             // both lower and upper case, so we can not do a search in the array
             for (String e: supportedExtensions)

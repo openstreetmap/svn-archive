@@ -36,12 +36,13 @@
 # 0.30 -wns=5 now possible; way name substitutions in separate file
 # 0.31 getXXXrule bug fixed; wnsunique
 # 0.32 -targetSize
+# 0.33 -onewayautosize
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.32" ;
+my $version = "0.33" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -53,6 +53,7 @@ require Exporter ;
 		areaCenter
 		createTextSVG
 		wayVisible
+		labelTransform
 		 ) ;
 
 
@@ -727,7 +728,7 @@ sub areaSize {
 # ---------------------------------------------------------------
 
 sub createTextSVG {
-	my ($fontFamily, $font, $size, $color, $strokeWidth, $strokeColor) = @_ ;
+	my ($fontFamily, $font, $bold, $italic, $size, $color, $strokeWidth, $strokeColor) = @_ ;
 
 	my $svg = "" ;
 
@@ -735,9 +736,16 @@ sub createTextSVG {
 		$svg .= "font=\"$font\" " ;
 	}
 	if ( (defined $fontFamily) and ( $fontFamily ne "") ) {
-
 		$svg .= "font-family=\"$fontFamily\" " ;
 	}
+
+	if ( (defined $bold) and ( lc ($bold) eq "yes") ) {
+		$svg .= "font-weight=\"bold\" " ;
+	}
+	if ( (defined $italic) and ( lc ($italic) eq "yes") ) {
+		$svg .= "font-style=\"italic\" " ;
+	}
+
 	if ( (defined $size) and ( $size ne "") ) {
 		$svg .= "font-size=\"$size\" " ;
 	}
@@ -751,6 +759,9 @@ sub createTextSVG {
 	if ( (defined $strokeWidth) and ( $strokeWidth ne "") ) {
 		$svg .= "stroke-width=\"$strokeWidth\" " ;
 	}
+
+	
+
 	return $svg ;
 }
 
@@ -772,6 +783,18 @@ sub wayVisible {
 	}
 	return $result ;
 }
+
+# --------------------------------------------------------------------
+
+sub labelTransform {
+	my ($label, $cmd) = @_ ;
+	if ($cmd ne "") {
+		eval $cmd ;
+		if ($@) { print "ERROR  processing label '$label' with command: '$cmd'\nERROR: $@\n" ; }
+	}
+	return $label ;
+}
+
 
 1 ;
 

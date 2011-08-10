@@ -141,6 +141,7 @@ sub processWays {
 				else {
 					($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'}, 0, 0) ;
 					@names = @$ref1 ;
+					$name = labelTransform ($name, $$ruleRef{'labeltransform'}) ;
 				}
 
 				if ( ( cv('nolabel') eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
@@ -201,6 +202,7 @@ sub processWays {
 					if ($size > cv('minarealabelsize') ) {
 						# text
 						my ($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'},0, 0) ;
+						$name = labelTransform ($name, $$ruleRef{'labeltransform'}) ;
 					
 						# pos
 						my ($lon, $lat) = areaCenter ( $$nodesRef{$wayId} ) ;
@@ -210,8 +212,12 @@ sub processWays {
 						my $labelFontFamily = $$ruleRef{'labelfontfamily'} ;
 						my $labelSize = $$ruleRef{'labelsize'} ;
 						my $color = $$ruleRef{'labelcolor'} ;
+						my $labelBold = $$ruleRef{'labelbold'} ;
+						my $labelItalic = $$ruleRef{'labelitalic'} ;
+						my $labelHalo = $$ruleRef{'labelhalo'} ;
+						my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 
-						my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelSize, $color, undef, undef) ;  
+						my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelBold, $labelItalic, $labelSize, $color, $labelHalo, $labelHaloColor) ;  
 
 						mwLabel::placeLabelAndIcon ($lon, $lat, 0, 0, $name, $svgText, "none", 0, 0, "arealabels") ;
 					}

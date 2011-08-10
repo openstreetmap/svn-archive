@@ -37,12 +37,13 @@
 # 0.31 getXXXrule bug fixed; wnsunique
 # 0.32 -targetSize
 # 0.33 -onewayautosize
+# 0.34 pbf support; halo; label transform; bold print of labels
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.33" ;
+my $version = "0.34" ;
 my $programName = "mapweaver" ;
 
 use strict ;

@@ -62,6 +62,21 @@ sub readFile {
 	my $osmName ;
 	if (defined cv('in')) { $osmName = cv('in') ; }
 
+
+	if ( grep /\.pbf/, $osmName ) {
+		my $newName = $osmName ;
+		$newName =~ s/\.pbf/\.osm/i ;
+
+		# osmosis
+		print "call osmosis to convert pbf file to osm file.\n" ;
+		`osmosis --read-pbf $osmName --write-xml $newName` ;
+
+		# change config
+		$osmName = $newName ;
+		setConfigValue ("in", $newName) ;
+	}
+
+
 	my $clipbbox = "" ;
 	if (defined cv('clipbbox')) { $clipbbox = cv('clipbbox') ; }
 

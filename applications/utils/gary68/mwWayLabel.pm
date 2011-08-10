@@ -398,8 +398,12 @@ sub createWayLabels {
 						my $color = $$ruleRef{'labelcolor'} ;
 						my $font = $$ruleRef{'labelfont'} ;
 						my $fontFamily = $$ruleRef{'labelfontfamily'} ;
+						my $labelBold = $$ruleRef{'labelbold'} ;
+						my $labelItalic = $$ruleRef{'labelitalic'} ;
+						my $labelHalo = $$ruleRef{'labelhalo'} ;
+						my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 
-						my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;  
+						my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
 						pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
 
 						occupyLines (\@finalWay) ;
@@ -431,8 +435,12 @@ sub createWayLabels {
 							my $color = $$ruleRef{'labelcolor'} ;
 							my $font = $$ruleRef{'labelfont'} ;
 							my $fontFamily = $$ruleRef{'labelfontfamily'} ;
+							my $labelBold = $$ruleRef{'labelbold'} ;
+							my $labelItalic = $$ruleRef{'labelitalic'} ;
+							my $labelHalo = $$ruleRef{'labelhalo'} ;
+							my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 
-							my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;  
+							my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
 							pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, "middle", 50, "text") ;
 
 							occupyLines (\@finalWay) ;

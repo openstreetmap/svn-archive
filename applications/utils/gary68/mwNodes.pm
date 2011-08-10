@@ -103,14 +103,19 @@ sub processNodes {
 
 			if ( ($$ruleRef{'label'} ne "none") or ($$ruleRef{'icon'} ne "none") ) {
 				my ($labelText, $ref) = createLabel (\@tags, $$ruleRef{'label'}, $$lonRef{$nodeId}, $$latRef{$nodeId}) ;
+				$labelText = labelTransform ($labelText, $$ruleRef{'labeltransform'}) ;
 				my $labelSize = $$ruleRef{'labelsize'} ;
 				my $labelColor = $$ruleRef{'labelcolor'} ;
 				my $labelFont = $$ruleRef{'labelfont'} ;
 				my $labelFontFamily = $$ruleRef{'labelfontfamily'} ;
+				my $labelBold = $$ruleRef{'labelbold'} ;
+				my $labelItalic = $$ruleRef{'labelitalic'} ;
+				my $labelHalo = $$ruleRef{'labelhalo'} ;
+				my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 				my $icon = $$ruleRef{'icon'} ;
 				my $iconSize = $$ruleRef{'iconsize'} ;
 
-				my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelSize, $labelColor, undef, undef) ;
+				my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelBold, $labelItalic, $labelSize, $labelColor, $labelHalo, $labelHaloColor) ;
 
 				placeLabelAndIcon($$lonRef{$nodeId}, $$latRef{$nodeId}, 0, $$ruleRef{'size'}, $labelText, $svgText, $icon, $iconSize, $iconSize, "nodes") ;
 			}

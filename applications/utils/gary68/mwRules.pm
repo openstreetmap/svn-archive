@@ -68,6 +68,11 @@ my @validNodeProperties = (
 			["labelFont","font for label"],
 			["labelFontFamily","font family for label"],
 			["labelOffset","distance of label to node i.e. [10]"],
+			["labelBold","bold font for label"],
+			["labelItalic","italic font for label"],
+			["labelHalo","halo for label, width in pixels"],
+			["labelHaloColor","color for halo"],
+			["labelTransform","perl code for label name transformation"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
 			["legendLabel","label text of object in legend i.e. [city]"],
 			["icon","icon to use for node, overrides shape i.e. [icondir/icon.svg]"],
@@ -94,6 +99,11 @@ my @validWayProperties =  (
 			["labelFont","font for label"],
 			["labelFontFamily","font family for label"],
 			["labelOffset","distance of label to middle of way i.e. [5]"],
+			["labelBold","bold font for label"],
+			["labelItalic","italic font for label"],
+			["labelHalo","halo for label, width in pixels"],
+			["labelHaloColor","color for halo"],
+			["labelTransform","perl code for label name transformation"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
 			["legendLabel","label text of object in legend i.e. [Highway]"],
 
@@ -116,6 +126,11 @@ my @validAreaProperties = (
 			["labelFontFamily","font family for label"],
 			["labelColor", "color of label i.e. [green]"] ,
 			["labelSize", "size of label text i.e. [20]"] ,
+			["labelBold","bold font for label"],
+			["labelItalic","italic font for label"],
+			["labelHalo","halo for label, width in pixels"],
+			["labelHaloColor","color for halo"],
+			["labelTransform","perl code for label name transformation"],
 			["base","should this object be drawn underneath other objects? (applies for landuse residential i.e.) [yes|no]"],
 			["svgString","format of area []"],
 			["legend","is this object to be listed in map legend? [yes|no]"],
@@ -218,6 +233,11 @@ sub readRules {
 			$nodeRules{ $nodeNr }{ 'labelfont' } = cv( 'ruleDefaultNodeLabelFont' ) ;
 			$nodeRules{ $nodeNr }{ 'labelfontfamily' } = cv( 'ruleDefaultNodeLabelFontFamily' ) ;
 			$nodeRules{ $nodeNr }{ 'labelsize' } = cv( 'ruleDefaultNodeLabelSize' ) ;
+			$nodeRules{ $nodeNr }{ 'labelitalic' } = "no" ;
+			$nodeRules{ $nodeNr }{ 'labelbold' } = "no" ;
+			$nodeRules{ $nodeNr }{ 'labelhalo' } = 0 ;
+			$nodeRules{ $nodeNr }{ 'labelhalocolor' } = "white" ;
+			$nodeRules{ $nodeNr }{ 'labeltransform' } = "" ;
 			$nodeRules{ $nodeNr }{ 'icon' } = "none" ;
 			$nodeRules{ $nodeNr }{ 'iconsize' } = cv( 'ruleDefaultNodeIconSize' ) ;
 			$nodeRules{ $nodeNr }{ 'legend' } = "no" ;
@@ -274,6 +294,11 @@ sub readRules {
 			$wayRules{ $wayNr }{ 'labelcolor' } = cv( 'ruleDefaultWayLabelColor' ) ;
 			$wayRules{ $wayNr }{ 'labelfont' } = cv( 'ruleDefaultWayLabelFont' ) ;
 			$wayRules{ $wayNr }{ 'labeloffset' } = cv( 'ruleDefaultWayLabelOffset' ) ;
+			$wayRules{ $wayNr }{ 'labelitalic' } = "no" ;
+			$wayRules{ $wayNr }{ 'labelbold' } = "no" ;
+			$wayRules{ $wayNr }{ 'labelhalo' } = 0 ;
+			$wayRules{ $wayNr }{ 'labelhalocolor' } = "white" ;
+			$wayRules{ $wayNr }{ 'labeltransform' } = "" ;
 			$wayRules{ $wayNr }{ 'legend' } = "no" ;
 			$wayRules{ $wayNr }{ 'legendlabel' } = "" ;
 			$wayRules{ $wayNr }{ 'color' } = cv( 'ruleDefaultWayColor' ) ;
@@ -318,7 +343,12 @@ sub readRules {
 			$areaRules{ $areaNr }{ 'labelfontfamily' } = cv( 'ruleDefaultAreaLabelFontFamily' ) ;
 			$areaRules{ $areaNr }{ 'labelcolor' } = "black" ;
 			$areaRules{ $areaNr }{ 'labelsize' } = 30 ;
-			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor' ) ;
+			$areaRules{ $areaNr }{ 'labelitalic' } = "no" ;
+			$areaRules{ $areaNr }{ 'labelbold' } = "no" ;
+			$areaRules{ $areaNr }{ 'labelhalo' } = 0 ;
+			$areaRules{ $areaNr }{ 'labelhalocolor' } = "white" ;
+			$areaRules{ $areaNr }{ 'labeltransform' } = "" ;
+			$areaRules{ $areaNr }{ 'color' } = cv( 'ruleDefaultAreaColor') ;
 			$areaRules{ $areaNr }{ 'icon' } = "none" ;
 			$areaRules{ $areaNr }{ 'base' } = "no"  ;
 			$areaRules{ $areaNr }{ 'svgstring' } = ""  ;

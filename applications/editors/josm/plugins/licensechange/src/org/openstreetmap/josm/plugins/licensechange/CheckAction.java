@@ -88,7 +88,7 @@ public class CheckAction extends JosmAction
         private Check licenseCheck;
         private Collection<OsmPrimitive> validatedPrimitives;
         private Collection<OsmPrimitive> formerValidatedPrimitives;
-        private boolean cancelled;
+        private boolean canceled;
         private List<LicenseProblem> problems;
 
         /**
@@ -108,13 +108,13 @@ public class CheckAction extends JosmAction
         @Override
         protected void cancel() 
         {
-            this.cancelled = true;
+            this.canceled = true;
         }
 
         @Override
         protected void finish() 
         {
-            if (cancelled) return;
+            if (canceled) return;
 
             // update GUI on Swing EDT
             //

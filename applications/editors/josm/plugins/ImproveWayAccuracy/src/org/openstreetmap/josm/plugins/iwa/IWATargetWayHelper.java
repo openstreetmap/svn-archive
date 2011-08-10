@@ -142,7 +142,7 @@ public class IWATargetWayHelper {
                             wpp.b.getEastNorth(), pEN);
 
             if (altitudeIntersection != null) {
-                // If the the segment intersects with the altitude from p
+                // If the segment intersects with the altitude from p
                 currentDistance = pEN.distance(altitudeIntersection);
 
                 // Making an angle too big to let this candidate win any others

@@ -67,7 +67,7 @@ public class RevertChangesetAction extends JosmAction {
                 } finally {
                     monitor.close();
                 }
-                return !monitor.isCancelled();
+                return !monitor.isCanceled();
             }
 
             @Override
@@ -75,7 +75,7 @@ public class RevertChangesetAction extends JosmAction {
                 progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
                 rev = new ChangesetReverter(changesetId, revertType,
                         progressMonitor.createSubTaskMonitor(0, true));
-                if (progressMonitor.isCancelled()) return;
+                if (progressMonitor.isCanceled()) return;
 
                 // Check missing objects
                 rev.checkMissingCreated();
@@ -90,9 +90,9 @@ public class RevertChangesetAction extends JosmAction {
                     rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
                 }
 
-                if (progressMonitor.isCancelled()) return;
+                if (progressMonitor.isCanceled()) return;
                 rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
-                if (progressMonitor.isCancelled()) return;
+                if (progressMonitor.isCanceled()) return;
                 if (!checkAndDownloadMissing()) return;
                 List<Command> cmds = rev.getCommands();
                 Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :

@@ -118,14 +118,14 @@ public class GlobalsatDg100
     private CommPortIdentifier portIdentifier;
     private SerialPort port = null;
 
-    private boolean cancelled = false;
+    private boolean canceled = false;
 
     public GlobalsatDg100(CommPortIdentifier portId){
         this.portIdentifier = portId;
     }
 
     public void cancel(){
-        cancelled = true;
+        canceled = true;
         disconnect();
     }
 
@@ -137,7 +137,7 @@ public class GlobalsatDg100
         progressMonitor.beginTask(null);
         try {
             GpxData result = null;
-            cancelled = false;
+            canceled = false;
             if(port == null){
                 connect();
             }
@@ -151,7 +151,7 @@ public class GlobalsatDg100
                 result = new GpxData();
                 Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
                 for(GpsRec r:gpsRecList){
-                    if(cancelled){
+                    if(canceled){
                         return result;
                     }
                     WayPoint p = wayPointFrom(r);
@@ -305,8 +305,8 @@ public class GlobalsatDg100
         }
     }
 
-    public boolean isCancelled(){
-        return cancelled;
+    public boolean isCanceled(){
+        return canceled;
     }
 
     private Response sendCmdGetGpsRecs(int idx) throws IOException, UnsupportedCommOperationException

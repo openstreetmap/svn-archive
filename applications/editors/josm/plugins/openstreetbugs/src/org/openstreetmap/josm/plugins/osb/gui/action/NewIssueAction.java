@@ -78,7 +78,7 @@ public class NewIssueAction extends OsbAction {
                 history, l);
 
         if(result == null) {
-            cancelled = true;
+            canceled = true;
         }
     }
 
@@ -104,7 +104,7 @@ public class NewIssueAction extends OsbAction {
     @Override
     public OsbAction clone() {
         NewIssueAction action = new NewIssueAction(plugin, p);
-        action.cancelled = cancelled;
+        action.canceled = canceled;
         action.p = p;
         action.result = result;
         return action;

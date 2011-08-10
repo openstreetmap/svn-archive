@@ -55,7 +55,7 @@ public class GlobalsatPlugin extends Plugin {
         }
 
         @Override protected void finish() {
-            if(deleteAfter && GlobalsatPlugin.dg100().isCancelled() == false){
+            if(deleteAfter && GlobalsatPlugin.dg100().isCanceled() == false){
                 Main.pref.put("globalsat.deleteAfterDownload", true);
                 try{
                     GlobalsatPlugin.dg100().deleteData();

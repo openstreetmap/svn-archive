@@ -75,7 +75,7 @@ public class CloseIssueAction extends OsbAction {
                 history, l);
 
         if(comment == null) {
-            cancelled = true;
+            canceled = true;
         }
 
     }
@@ -98,7 +98,7 @@ public class CloseIssueAction extends OsbAction {
     @Override
     public CloseIssueAction clone() {
         CloseIssueAction action = new CloseIssueAction(dialog);
-        action.cancelled = cancelled;
+        action.canceled = canceled;
         action.comment = comment;
         action.node = node;
         return action;

@@ -170,12 +170,12 @@ public class ChangesetReverter {
             for (HistoryOsmPrimitive entry : updated) {
                 rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
                         progressMonitor.createSubTaskMonitor(1, true));
-                if (progressMonitor.isCancelled()) return;
+                if (progressMonitor.isCanceled()) return;
             }
             for (HistoryOsmPrimitive entry : deleted) {
                 rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
                         progressMonitor.createSubTaskMonitor(1, true));
-                if (progressMonitor.isCancelled()) return;
+                if (progressMonitor.isCanceled()) return;
             }
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
             for (OsmPrimitive p : nds.allPrimitives()) {

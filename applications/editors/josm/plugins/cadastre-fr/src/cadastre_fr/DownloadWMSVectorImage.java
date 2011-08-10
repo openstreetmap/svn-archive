@@ -67,7 +67,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     protected void cancel() {
         wmsLayer.grabber.getWmsInterface().cancel();
         if (wmsLayer != null)
-            wmsLayer.grabThread.setCancelled(true);
+            wmsLayer.grabThread.setCanceled(true);
     }
 
     @Override

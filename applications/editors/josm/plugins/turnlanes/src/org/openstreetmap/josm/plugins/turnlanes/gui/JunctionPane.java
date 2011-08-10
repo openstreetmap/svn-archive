@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -332,17 +334,17 @@ class JunctionPane extends JComponent {
         if (e.getKind() == UnexpectedDataException.Kind.MISSING_TAG
                 && UnexpectedDataException.Kind.MISSING_TAG.format("lanes").equals(e.getMessage())) {
             
-            error.setText("<html>The number of lanes is not specified for one or more roads;"
-                    + " please add missing lanes tags.</html>");
+            error.setText(tr("<html>The number of lanes is not specified for one or more roads;"
+                    + " please add missing lanes tags.</html>"));
         } else {
             displayError((RuntimeException) e);
         }
     }
     
     private void displayError(RuntimeException e) {
-        error.setText("<html>An error occured while constructing the model."
-                + " Please run the validator to make sure the data is consistent.<br><br>Error: " + e.getMessage()
-                + "</html>");
+        error.setText(tr("<html>An error occurred while constructing the model."
+                + " Please run the validator to make sure the data is consistent."
+                + "<br><br>Error: {0}</html>", e.getMessage()));
     }
     
     void scale(int x, int y, double scale) {

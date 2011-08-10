@@ -85,7 +85,7 @@ public class SplitObjectAction extends JosmAction {
                     }
                     int last = w.getNodesCount() - 1;
                     // Only closed ways with at least four nodes
-                    // (i.e. five members since the the first/last is listed twice)
+                    // (i.e. five members since the first/last is listed twice)
                     // can be split into two objects
                     if (last <= 4 || !w.isClosed()) {
                         continue;

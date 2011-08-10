@@ -358,7 +358,7 @@ public abstract class PicLayerAbstract extends Layer
     public void visitBoundingBox(BoundingXYVisitor arg0) {
         if ( m_image == null )
             return;
-        String projcode = Main.proj.toCode();
+        String projcode = Main.getProjection().toCode();
 
         // TODO: bounding box only supported when coordinates are in meters
         // The reason for that is that this .cal think makes us a hard time. 

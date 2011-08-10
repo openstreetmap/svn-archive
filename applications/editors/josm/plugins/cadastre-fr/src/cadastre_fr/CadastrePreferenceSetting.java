@@ -113,7 +113,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
         // option to alter the original colors of the wms images
         alterColors.setSelected(Main.pref.getBoolean("cadastrewms.alterColors", false));
-        alterColors.setToolTipText(tr("Replace the original white background by the backgound color defined in JOSM preferences."));
+        alterColors.setToolTipText(tr("Replace the original white background by the background color defined in JOSM preferences."));
         cadastrewms.add(alterColors, GBC.eop().insets(0, 0, 0, 0));
 
         // option to reverse the grey colors (to see texts background)

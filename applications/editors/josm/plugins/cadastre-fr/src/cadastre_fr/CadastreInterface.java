@@ -25,7 +25,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
 public class CadastreInterface {
-    public boolean downloadCancelled = false;
+    public boolean downloadCanceled = false;
     public HttpURLConnection urlConn = null;
 
     private String cookie;
@@ -75,7 +75,7 @@ public class CadastreInterface {
         if (!wmsLayer.getName().equals(lastWMSLayerName))
             interfaceRef = null;
         // open the session with the French Cadastre web front end
-        downloadCancelled = false;
+        downloadCanceled = false;
         try {
             if (cookie == null || isCookieExpired) {
                 getCookie();
@@ -305,7 +305,7 @@ public class CadastreInterface {
                 } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
                     // list of values parsed in listOfFeuilles (list all non-georeferenced images)
                     lines = getFeuillesList();
-                    if (!downloadCancelled) {
+                    if (!downloadCanceled) {
                         parseFeuillesList(lines);
                         if (listOfFeuilles.size() > 0) {
                             int res = selectFeuilleDialog();
@@ -566,7 +566,7 @@ public class CadastreInterface {
             urlConn.setReadTimeout(1);
             //urlConn.disconnect();
         }
-        downloadCancelled = true;
+        downloadCanceled = true;
         lastWMSLayerName = null;
     }
 

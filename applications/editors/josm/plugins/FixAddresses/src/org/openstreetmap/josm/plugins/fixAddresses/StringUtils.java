@@ -119,7 +119,7 @@ public class StringUtils {
 
 	/**
 	 * @param needle The string to find the best match for.
-	 * @param haystack The list of strings to pick the the best match from.
+	 * @param haystack The list of strings to pick the best match from.
 	 * @return The string of the list with the longest common substring to needle or
 	 * <tt>null</tt>, if either <tt>needle</tt> or <tt>haystack</tt> is empty or null.
 	 */

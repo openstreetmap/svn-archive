@@ -133,7 +133,7 @@ public class ImportVectorAction extends JosmAction {
         LinkedList<Way> ways = new LinkedList<Way>();
 
         private List<File> files;
-        private boolean cancelled;
+        private boolean canceled;
 
         public ImportTask(List<File> files) {
             super(tr("Importing..."), false);
@@ -141,7 +141,7 @@ public class ImportVectorAction extends JosmAction {
         }
         @Override
         protected void cancel() {
-            this.cancelled = true;
+            this.canceled = true;
         }
 
         @Override
@@ -249,7 +249,7 @@ public class ImportVectorAction extends JosmAction {
             this.center = projection.latlon2eastNorth(center);
             try {
                 for (File f : files) {
-                    if (cancelled) return;
+                    if (canceled) return;
                     SVGLoader loader = new SVGLoader(new URI("about:blank"),true);
                     XMLReader rdr = XMLReaderFactory.createXMLReader();
                     rdr.setContentHandler(loader);

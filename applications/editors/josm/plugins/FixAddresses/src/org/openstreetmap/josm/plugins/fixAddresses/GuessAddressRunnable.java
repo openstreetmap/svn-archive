@@ -45,7 +45,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 	private double minDist;
 	private OSMAddress curAddressNode;
 	private boolean isRunning = false;
-	private boolean cancelled;
+	private boolean canceled;
 
 
 	/**
@@ -169,7 +169,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 	 */
 	@Override
 	protected void cancel() {
-		cancelled = true;
+		canceled = true;
 	}
 
 	/* (non-Javadoc)
@@ -189,7 +189,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 		if (Main.main.getCurrentDataSet() == null || addressesToGuess == null) return;
 
 		isRunning = true;
-		cancelled = false;
+		canceled = false;
 
 		// Start progress monitor to guess address values
 		progressMonitor.subTask(tr("Searching") + "...");
@@ -220,7 +220,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 				}
 
 				// check for cancel
-				if (cancelled) {
+				if (canceled) {
 					break;
 				}
 				// Update progress monitor
@@ -228,7 +228,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 
 				// visit osm data
 				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().allPrimitives()) {
-					if (cancelled) {
+					if (canceled) {
 						break;
 					}
 

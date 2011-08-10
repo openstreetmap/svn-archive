@@ -272,7 +272,7 @@ public class WayDownloaderPlugin extends Plugin {
         return null;
     }
 
-    /** Given the the node on one end of the way, return the node on the other end */
+    /** Given the node on one end of the way, return the node on the other end */
     private Node findOtherEnd(Way way, Node firstEnd) {
         Node otherEnd = way.firstNode();
         if (otherEnd.equals(firstEnd)) otherEnd = way.lastNode();

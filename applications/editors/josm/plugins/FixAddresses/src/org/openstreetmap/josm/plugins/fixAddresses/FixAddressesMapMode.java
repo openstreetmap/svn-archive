@@ -25,7 +25,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 public class FixAddressesMapMode extends MapMode {
 
 	public FixAddressesMapMode(MapFrame mapFrame) {
-		super(tr("Fix adresses"), "incompleteaddress_24",
+		super(tr("Fix addresses"), "incompleteaddress_24",
 				tr("Show dialog with incomplete addresses"),
 				mapFrame,
 				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

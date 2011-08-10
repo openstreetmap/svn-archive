@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 
-	private boolean cancelled;
+	private boolean canceled;
 	private Exception lastException;
 	private final Collection<OsmPrimitive> missing;
 	private final OsmDataLayer curLayer;
@@ -43,7 +43,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 
 	@Override
 	protected void cancel() {
-		cancelled = true;
+		canceled = true;
 		synchronized(this) {
 			if (objectReader != null) {
 				objectReader.cancel();
@@ -54,7 +54,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 	@Override
 	protected void finish() {
 		Main.map.repaint();
-		if (cancelled)
+		if (canceled)
 			return;
 		if (lastException != null) {
 			ExceptionDialogUtil.explainException(lastException);
@@ -74,7 +74,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 	protected void realRun() throws SAXException, IOException, OsmTransferException {
 		try {
 			synchronized (this) {
-				if (cancelled) return;
+				if (canceled) return;
 				objectReader = new MultiFetchServerObjectReader();
 			}
 			objectReader.append(missing);
@@ -86,7 +86,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 			if (dataSet == null)
 				return;
 			synchronized (this) {
-				if (cancelled) return;
+				if (canceled) return;
 				objectReader = null;
 			}
 
@@ -102,8 +102,8 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 			);
 
 		} catch (Exception e) {
-			if (cancelled) {
-				System.out.println(tr("Warning: ignoring exception because task is cancelled. Exception: {0}", e.toString()));
+			if (canceled) {
+				System.out.println(tr("Warning: ignoring exception because task is canceled. Exception: {0}", e.toString()));
 				return;
 			}
 			lastException = e;

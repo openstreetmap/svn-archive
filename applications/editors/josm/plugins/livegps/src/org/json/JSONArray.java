@@ -728,7 +728,7 @@ public class JSONArray {
      * @param index The subscript.
      * @param value The Map value.
      * @return      this.
-     * @throws JSONException If the index is negative or if the the value is
+     * @throws JSONException If the index is negative or if the value is
      *  an invalid number.
      */
     public JSONArray put(int index, Map value) throws JSONException {
@@ -746,7 +746,7 @@ public class JSONArray {
      *  Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the
      *  JSONObject.NULL object.
      * @return this.
-     * @throws JSONException If the index is negative or if the the value is
+     * @throws JSONException If the index is negative or if the value is
      *  an invalid number.
      */
     public JSONArray put(int index, Object value) throws JSONException {

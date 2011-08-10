@@ -484,7 +484,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             sb.append("<html>");
             sb.append(trn("This turn restriction refers to an object which was deleted outside "
                        + "of this turn restriction editor:",
-                       "This turn restriction refers to {0} which were deleted outside "
+                       "This turn restriction refers to {0} objects which were deleted outside "
                        + "of this turn restriction editor:", deletedMembers.size(), deletedMembers.size()));
             sb.append("<ul>");
             for(RelationMember rm: deletedMembers){

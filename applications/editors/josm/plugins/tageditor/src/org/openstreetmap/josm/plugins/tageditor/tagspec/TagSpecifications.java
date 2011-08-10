@@ -60,7 +60,7 @@ public class TagSpecifications {
     private static TagSpecifications instance = null;
 
     /**
-     * loads the the tag specifications from the resource file given by
+     * loads the tag specifications from the resource file given by
      * {@link #RES_NAME_TAG_SPECIFICATIONS}.
      * 
      * @return the list of {@link TagSpecification}s

@@ -149,7 +149,7 @@ public class ButtonDescription {
         try {
         this.type = ButtonType.valueOf(type.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.err.println("Unkown button type '" + type + "' given. Allowed values are " + Arrays.toString(ButtonType.values()));
+            System.err.println("Unknown button type '" + type + "' given. Allowed values are " + Arrays.toString(ButtonType.values()));
         }
     }
     /**

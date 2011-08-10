@@ -337,7 +337,7 @@ public class ManagerDialog extends ExtendedDialog {
             dbTreeValue = (AddressElement) dbTree.getSelectionPath().getLastPathComponent();
         } catch (NullPointerException except) {
             dbTreeValue = null;
-            System.err.println("Strange exception has occured."+
+            System.err.println("Strange exception has occurred."+
                 " If you find a way to reproduce it, please report a bug!");
             except.printStackTrace();
         }

@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 
 public class KeyGenerationTask extends PleaseWaitRunnable {
 
-	private boolean cancelled;
+	private boolean canceled;
 	private Exception lastException;
 
 	public KeyGenerationTask() {
@@ -20,7 +20,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 
 	@Override
 	protected void cancel() {
-		cancelled = true;
+		canceled = true;
 		synchronized(this) {
 			/*		if (objectReader != null) {
 				objectReader.cancel();
@@ -30,7 +30,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 
 	@Override
 	protected void finish() {
-		if (cancelled)
+		if (canceled)
 			return;
 		if (lastException != null) {
 			ExceptionDialogUtil.explainException(lastException);
@@ -43,7 +43,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 	OsmTransferException {
 		try {
 			/*			synchronized (this) {
-				if (cancelled) return;
+				if (canceled) return;
 				objectReader = new MultiFetchServerObjectReader();
 			}
 			objectReader.append(missing);
@@ -55,7 +55,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 			if (dataSet == null)
 				return;
 			synchronized (this) {
-				if (cancelled) return;
+				if (canceled) return;
 				objectReader = null;
 			}
 
@@ -70,8 +70,8 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 			);
 			 */
 		} catch (Exception e) {
-			if (cancelled) {
-				System.out.println(tr("Warning: ignoring exception because task is cancelled. Exception: {0}", e
+			if (canceled) {
+				System.out.println(tr("Warning: ignoring exception because task is canceled. Exception: {0}", e
 						.toString()));
 				return;
 			}

@@ -77,7 +77,7 @@ public class DirectDownload extends Plugin {
                         }
                     }
                     if (!parsedProperly) {
-                        JOptionPane.showMessageDialog(null, tr("Error occured while parsing gpx file {0}. Only part of the file will be available", urlString));
+                        JOptionPane.showMessageDialog(null, tr("Error occurred while parsing gpx file {0}. Only a part of the file will be available.", urlString));
                     }
 
 		} catch (java.net.MalformedURLException e) {

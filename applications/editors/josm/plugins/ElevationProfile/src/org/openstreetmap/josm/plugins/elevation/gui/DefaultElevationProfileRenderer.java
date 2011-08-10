@@ -275,7 +275,7 @@ public class DefaultElevationProfileRenderer implements
 	 * @param c
 	 *            The fill color of the triangle.
 	 * @param dir
-	 *            The direction of the the triangle
+	 *            The direction of the triangle
 	 * @param x
 	 *            The x coordinate in the graphics context.
 	 * @param y

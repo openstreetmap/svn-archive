@@ -74,7 +74,7 @@ public class AddCommentAction extends OsbAction {
                 history, l);
 
         if(comment == null) {
-            cancelled = true;
+            canceled = true;
         }
     }
 
@@ -93,7 +93,7 @@ public class AddCommentAction extends OsbAction {
     public AddCommentAction clone() {
         AddCommentAction action = new AddCommentAction(dialog);
         action.comment = comment;
-        action.cancelled = cancelled;
+        action.canceled = canceled;
         action.node = node;
         return action;
     }

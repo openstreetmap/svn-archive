@@ -212,7 +212,7 @@ public class StopImporterAction extends JosmAction
 
       if (!parsedProperly)
       {
-        JOptionPane.showMessageDialog(null, tr("Error occured while parsing gpx file {0}. Only part of the file will be available", file.getName()));
+        JOptionPane.showMessageDialog(null, tr("Error occurred while parsing gpx file {0}. Only a part of the file will be available.", file.getName()));
       }
     }
     catch (FileNotFoundException e)

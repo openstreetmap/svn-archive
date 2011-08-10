@@ -107,7 +107,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         if (loadedFromCache) {
             Main.map.repaint();
         } else if (wmsLayer.getImages().size() == 0) {
-            // action cancelled or image loaded from cache (and already georeferenced)
+            // action canceled or image loaded from cache (and already georeferenced)
             actionInterrupted();
         } else {
             int reply = JOptionPane.CANCEL_OPTION;

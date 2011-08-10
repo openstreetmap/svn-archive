@@ -149,7 +149,7 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
 	}
 
 	private Point getCoord(OSMNode node, MapView mv) {
-		return mv.getPoint(Main.proj.latlon2eastNorth(new LatLon(node.getLatitude(), node.getLongitude())));
+		return mv.getPoint(Main.getProjection().latlon2eastNorth(new LatLon(node.getLatitude(), node.getLongitude())));
 	}
 
 	/**

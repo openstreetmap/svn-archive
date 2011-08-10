@@ -99,7 +99,7 @@
                 <attribute name="Author" value="Upliner"/>
                 <attribute name="Plugin-Class" value="gpxfilter.GpxFilterPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Allows to filter out unnececary GPS tracks"/>
+                <attribute name="Plugin-Description" value="Allows to filter out unnecessary GPS tracks"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPXFilter"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

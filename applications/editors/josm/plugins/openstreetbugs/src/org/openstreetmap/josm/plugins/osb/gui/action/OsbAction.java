@@ -51,7 +51,7 @@ public abstract class OsbAction extends AbstractAction {
 
     protected final OsbDialog dialog;
 
-    protected boolean cancelled = false;
+    protected boolean canceled = false;
     protected final ActionQueue actionQueue;
 
     public OsbAction(String name, OsbDialog osbDialog) {
@@ -61,10 +61,10 @@ public abstract class OsbAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        cancelled = false;
+        canceled = false;
         try {
             doActionPerformed(e);
-            if(!cancelled) {
+            if(!canceled) {
                 if (!Main.pref.getBoolean(ConfigKeys.OSB_API_OFFLINE)) {
                     execute();
                     for (OsbActionObserver obs : observers) {

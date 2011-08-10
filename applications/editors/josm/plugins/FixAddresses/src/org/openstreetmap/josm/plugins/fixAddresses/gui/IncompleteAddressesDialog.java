@@ -156,6 +156,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
 	 */
+        @Override
 	public void primitivesAdded(PrimitivesAddedEvent event) {
 		container.invalidate();
 
@@ -164,6 +165,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
 	 */
+        @Override
 	public void primitivesRemoved(PrimitivesRemovedEvent event) {
 		container.invalidate();
 	}
@@ -225,15 +227,5 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void entityChanged(IOSMEntity node) {
 		container.invalidate();
-	}
-
-	@Override
-	public void primtivesAdded(PrimitivesAddedEvent event) {
-		// do something here?		
-	}
-
-	@Override
-	public void primtivesRemoved(PrimitivesRemovedEvent event) {
-		// do something here?		
 	}
 }

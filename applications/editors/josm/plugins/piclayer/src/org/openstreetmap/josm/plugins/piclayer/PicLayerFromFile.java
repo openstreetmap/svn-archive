@@ -231,7 +231,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
         policy = policy.trim().toLowerCase();
         boolean loadcal = false;
 
-        String msg = tr("A calibration file associated to the picture file was found:")+"\n"+fileName;
+        String msg = tr("A calibration file associated to the picture file was found: {0}\n", fileName);
         if ( policy.equals("yes") ) {
             loadcal = true;
         }
@@ -239,8 +239,8 @@ public class PicLayerFromFile extends PicLayerAbstract {
             loadcal = false;
         }
         else if ( policy.equals("ask") ) {
-            msg += "\n" + tr("(set  \"{0}\"  to yes/no/ask in the preferences\n"+
-                            "to control the autoloading of calibration files)", prefkey);
+            msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
+                            "to control the autoloading of calibration files.", prefkey);
             msg += "\n" + tr("Do you want to apply it ?");
             int answer = JOptionPane.showConfirmDialog(Main.parent, msg, tr("Load calibration file ?"), JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION) {
@@ -249,8 +249,8 @@ public class PicLayerFromFile extends PicLayerAbstract {
         }
         else {
             msg += "\n" + tr("It will be applied automatically.");
-            msg += "\n" + tr("Also, frow now on, cal files will always be loaded automatically.");
-            msg += "\n" + tr("Set  \"{0}\"  to yes/no/ask in the preferences\n"+
+            msg += "\n" + tr("Also, from now on, calibration files will always be loaded automatically.");
+            msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
                             "to control the autoloading of calibration files.", prefkey);
             // TODO: there should be here a yes/no dialog with a checkbox "do not ask again"
             JOptionPane.showMessageDialog(Main.parent, msg,

@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.turnlanes.gui;
 
 import static java.lang.Math.sqrt;
 import static org.openstreetmap.josm.plugins.turnlanes.gui.GuiUtil.locs;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -145,7 +146,7 @@ class GuiContainer {
             }
         }
         
-        throw new IllegalArgumentException("No such lane.");
+        throw new IllegalArgumentException(tr("No such lane."));
     }
     
     public ModelContainer getModel() {

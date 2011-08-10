@@ -166,7 +166,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         final private boolean keep_backup;
         final private int mTimeMode;
 
-        private boolean cancelled = false;
+        private boolean canceled = false;
         private Boolean override_backup = null;
 
         private File fileFrom;
@@ -185,7 +185,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             progressMonitor.setTicksCount(images.size());
 
             for (int i=0; i<images.size(); ++i) {
-                if (cancelled) return;
+                if (canceled) return;
 
                 ImageEntry e = images.get(i);
                 if (debug) {
@@ -209,7 +209,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     }
 
                     chooseFiles(e.getFile());
-                    if (cancelled) return;
+                    if (canceled) return;
                     ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(), e.getGpsTime().getTime());
 
                     if (mTimeMode == MTIME_MODE_GPS) {
@@ -253,7 +253,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             File fileBackup = new File(file.getParentFile(),file.getName()+"_");
             if (fileBackup.exists()) {
                 confirm_override();
-                if (cancelled)
+                if (canceled)
                     return;
 
                 if (override_backup) {
@@ -315,13 +315,13 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                         } else if (override == 3) {
                             override_backup = true;
                         } else {
-                            cancelled = true;
+                            canceled = true;
                         }
                     }
                 });
             } catch (Exception e) {
                 System.err.println(e);
-                cancelled = true;
+                canceled = true;
             }
         }
 
@@ -355,7 +355,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         @Override
         protected void cancel() {
-            cancelled = true;
+            canceled = true;
         }
     }
 

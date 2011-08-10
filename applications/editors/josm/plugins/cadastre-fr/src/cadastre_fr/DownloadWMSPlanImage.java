@@ -44,7 +44,7 @@ public class DownloadWMSPlanImage {
                         dialog.setVisible(true);
                         // till here
                         dontGeoreference = true;
-                    } else if (wmsLayer.grabber.getWmsInterface().downloadCancelled){
+                    } else if (wmsLayer.grabber.getWmsInterface().downloadCanceled){
                         // do nothing
                     } else {
                         // first time we grab an image for this layer
@@ -61,7 +61,7 @@ public class DownloadWMSPlanImage {
                             wmsLayer.setRasterBounds(bounds);
                             // grab new images from wms server into active layer
                             wmsLayer.grab(bounds);
-                            if (wmsLayer.grabber.getWmsInterface().downloadCancelled) {
+                            if (wmsLayer.grabber.getWmsInterface().downloadCanceled) {
                                 wmsLayer.clearImages();
                                 Main.map.mapView.repaint();
                             } else {

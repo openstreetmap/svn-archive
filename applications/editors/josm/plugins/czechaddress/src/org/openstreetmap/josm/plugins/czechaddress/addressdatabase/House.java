@@ -44,7 +44,7 @@ public class House extends AddressElement {
 
         assert (co != null) || (cp != null);
 
-        //... but the the name is overwritten.
+        //... but the name is overwritten.
         this.name = generateName(this.cp, this.co);
     }
 

@@ -16,7 +16,7 @@ import org.openstreetmap.josm.io.OsmTransferException;
 
 public class GrabThread extends Thread {
 
-    private boolean cancelled;
+    private boolean canceled;
 
     private CadastreGrabber grabber;
 
@@ -83,7 +83,7 @@ public class GrabThread extends Thread {
                 lockCurrentGrabImage.unlock();
                 imagesToGrab.remove(0);
                 lockImagesToGrag.unlock();
-                if (cancelled) {
+                if (canceled) {
                     break;
                 } else {
                     GeorefImage newImage;
@@ -92,17 +92,17 @@ public class GrabThread extends Thread {
                         newImage = grabber.grab(wmsLayer, currentGrabImage.min, currentGrabImage.max);
                     } catch (IOException e) {
                         System.out
-                                .println("Download action cancelled by user or server did not respond");
-                        setCancelled(true);
+                                .println("Download action canceled by user or server did not respond");
+                        setCanceled(true);
                         break;
                     } catch (OsmTransferException e) {
                         System.out.println("OSM transfer failed");
-                        setCancelled(true);
+                        setCanceled(true);
                         break;
                     }
-                    if (grabber.getWmsInterface().downloadCancelled) {
-                        System.out.println("Download action cancelled by user");
-                        setCancelled(true);
+                    if (grabber.getWmsInterface().downloadcanceled) {
+                        System.out.println("Download action canceled by user");
+                        setCanceled(true);
                         break;
                     }
                     try {
@@ -124,7 +124,7 @@ public class GrabThread extends Thread {
                     saveToCache(newImage);
                     } catch (NullPointerException e) {
                         System.out.println("Layer destroyed. Cancel grab thread");
-                        setCancelled(true);
+                        setCanceled(true);
                     }
                 }
             }
@@ -132,9 +132,9 @@ public class GrabThread extends Thread {
             lockCurrentGrabImage.lock();
             currentGrabImage = null;
             lockCurrentGrabImage.unlock();
-            if (cancelled) {
+            if (canceled) {
                 clearImagesToGrab();
-                cancelled = false;
+                canceled = false;
             }
             if (wmsLayer.isRaster()) {
                 notifyWaiter();
@@ -206,12 +206,12 @@ public class GrabThread extends Thread {
         }
     }
     
-    public boolean isCancelled() {
-        return cancelled;
+    public boolean isCanceled() {
+        return canceled;
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     public CadastreGrabber getGrabber() {

@@ -214,7 +214,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
      */
     class EditAction extends AbstractAction implements ListSelectionListener{
         public EditAction() {
-            putValue(SHORT_DESCRIPTION,tr( "Open an editor for the selected turn restricion"));
+            putValue(SHORT_DESCRIPTION,tr("Open an editor for the selected turn restriction"));
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "edit"));
             putValue(NAME, tr("Edit"));
             setEnabled(false);

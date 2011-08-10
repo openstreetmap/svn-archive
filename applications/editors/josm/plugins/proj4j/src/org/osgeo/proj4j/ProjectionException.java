@@ -20,7 +20,7 @@ import org.osgeo.proj4j.proj.Projection;
 
 /**
  * Signals that an erroneous situation has
- * occured during the computation of
+ * occurred during the computation of
  * a projected coordinate system value. 
  * 
  * @author mbdavis

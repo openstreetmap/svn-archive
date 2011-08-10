@@ -51,7 +51,7 @@ public interface IOSMEntity extends Comparable<IOSMEntity> {
 	public List<IOSMEntity> getChildren();
 
 	/**
-	 * Gets the coordinate of the node. If the the underlying object is a
+	 * Gets the coordinate of the node. If the underlying object is a
 	 * node, it just returns the node coordinate. For ways and areas, this
 	 * method returns the coordinate of the center (balance point).
 	 * @return

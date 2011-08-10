@@ -22,7 +22,7 @@
 -->
 <project name="PicLayer" default="dist" basedir=".">
     <property name="commit.message" value="applied #J5852 (patch by Petschge) - new shear option"/>
-    <property name="plugin.main.version" value="3835"/>
+    <property name="plugin.main.version" value="4126"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

@@ -36,7 +36,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
      * Yes, there is another cache in AbstractCredentialsAgent. It is used
      * to avoid prompting the user for login multiple times in one session,
      * when they decide not to save the credentials.
-     * In contrast, this cache avoids read request the the backend in general.
+     * In contrast, this cache avoids read request the backend in general.
      */
     private Map<RequestorType, PasswordAuthentication> credentialsCache = new HashMap<RequestorType, PasswordAuthentication>();
     private OAuthToken oauthCache;

@@ -13,7 +13,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  * The issue has a {@see Severity}. It is described to the user with a HTML formatted
  * text (see {@see #getText()}) and it suggests a list of possible actions to fix
- * the the issue (see {@see #getActions()}).
+ * the issue (see {@see #getActions()}).
  * 
  */
 abstract public class Issue {

@@ -70,7 +70,7 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	}
 
 	/**
-	 * Gets the the GPX data instance used by this model.
+	 * Gets the GPX data instance used by this model.
 	 * 
 	 * @return
 	 */

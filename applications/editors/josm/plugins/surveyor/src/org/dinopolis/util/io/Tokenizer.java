@@ -546,7 +546,7 @@ public class Tokenizer
 /**
  * Closes the tokenizer (and the reader is uses internally).
  *
- * @exception IOException if an error occured.
+ * @exception IOException if an error occurred.
  */
   public void close()
     throws IOException
@@ -562,7 +562,7 @@ public class Tokenizer
  * character is ignored.
  *
  * @return the next character.
- * @exception IOException if an error occured.
+ * @exception IOException if an error occurred.
  */
   protected int readNextChar()
     throws IOException
@@ -609,7 +609,7 @@ public class Tokenizer
  * getWord method.
  *
  * @return the next token.
- * @exception IOException if an error occured.
+ * @exception IOException if an error occurred.
  */
   public int nextToken()
     throws IOException
@@ -693,7 +693,7 @@ public class Tokenizer
  * Returns true, if the tokenizer can return another line.
  *
  * @return true, if the tokenizer can return another line.
- * @exception IOException if an error occured.
+ * @exception IOException if an error occurred.
  */
   public boolean hasNextLine()
     throws IOException
@@ -723,7 +723,7 @@ public class Tokenizer
  *
  * @return a list of elements (Strings) from the next line of the
  * tokenizer.
- * @exception IOException if an error occured.
+ * @exception IOException if an error occurred.
  */
   public List<String> nextLine()
     throws IOException

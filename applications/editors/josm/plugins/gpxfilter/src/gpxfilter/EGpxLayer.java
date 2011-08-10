@@ -1245,7 +1245,7 @@ public class EGpxLayer extends Layer {
         }
         if (bestEN == null)
             return null;
-        WayPoint best = new WayPoint(Main.proj.eastNorth2latlon(bestEN));
+        WayPoint best = new WayPoint(Main.getProjection().eastNorth2latlon(bestEN));
         best.time = bestTime;
         return best;
     }

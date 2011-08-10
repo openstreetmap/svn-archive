@@ -70,7 +70,7 @@ public class ToggleConnectionModeAction extends AbstractAction {
                 try {
                     actionQueue.processQueue();
 
-                    // toggle queue panel visibility, if now error occured
+                    // toggle queue panel visibility, if now error occurred
                     dialog.hideQueuePanel();
 
                     // refresh, if the api is enabled

@@ -97,7 +97,7 @@ public class UploadDataGui extends ExtendedDialog {
     private static final String LINE_END = "\r\n";
     private static final String uploadTraceText = tr("Upload Trace");
 
-    private boolean cancelled = false;
+    private boolean canceled = false;
     
     public UploadDataGui() {
         // Initalizes ExtendedDialog
@@ -224,11 +224,11 @@ public class UploadDataGui extends ExtendedDialog {
 
             flushToServer(bais, conn.getOutputStream(), progressMonitor);
 
-            if (cancelled) {
+            if (canceled) {
                 conn.disconnect();
-                OutputDisplay.setText(tr("Upload cancelled"));
+                OutputDisplay.setText(tr("Upload canceled"));
                 buttons.get(0).setEnabled(true);
-                cancelled = false;
+                canceled = false;
             }
             else {
                 boolean success = finishUpConnection(conn);
@@ -317,11 +317,11 @@ public class UploadDataGui extends ExtendedDialog {
                 progressMonitor.worked(nread);
                 progressMonitor.subTask(getProgressText(cur, progressMonitor));
 
-                if(cancelled)
+                if(canceled)
                     break;
             }
         }
-        if(!cancelled)
+        if(!canceled)
             out.flush();
         progressMonitor.subTask("Waiting for server reply...");
         buffer = null;
@@ -405,7 +405,7 @@ public class UploadDataGui extends ExtendedDialog {
             }
             @Override protected void finish() {}
             @Override protected void cancel() {
-                cancelled = true;
+                canceled = true;
             }
         };
 

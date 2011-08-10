@@ -564,7 +564,7 @@ public class Reasoner {
             }
 
         } catch (NullPointerException except) {
-            System.err.println("Strange exception occured." +
+            System.err.println("Strange exception occurred." +
                 " If you find a way to reproduce this situation, please "+
                 "e-mail the author of the CzechAddress plugin.");
             except.printStackTrace();
@@ -614,7 +614,7 @@ public class Reasoner {
             }
 
         } catch (NullPointerException except) {
-            System.err.println("Strange exception occured." +
+            System.err.println("Strange exception occurred." +
                 " If you find a way to reproduce this situation, please "+
                 "e-mail the author of the CzechAddress plugin.");
             except.printStackTrace();

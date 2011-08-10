@@ -32,8 +32,9 @@ foreach my $plugin (@names)
     $svnversion = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
     $svnmversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
     my $changed = ($svndate ne $date || $svnversion ne $version);
-    printf " SVN: %28s %6s (%4s)%s", $svndate,$svnversion,$svnmversion,
-    $changed ? " changed" : "";
+    my $changedm = $svnmversion ne $mversion;
+    printf " SVN: %28s %6s (%4s)%s%s", $svndate,$svnversion,$svnmversion,
+    $changed ? " changed" : "", $changedm ? " main" : "";
     `svn revert $plugin` if !$changed;
   }
   printf "\n";

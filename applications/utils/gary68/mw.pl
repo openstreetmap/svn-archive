@@ -38,12 +38,13 @@
 # 0.32 -targetSize
 # 0.33 -onewayautosize
 # 0.34 pbf support; halo; label transform; bold print of labels
-# 
+# 0.35 svg text creation bug fixed
+# 0.36 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.34" ;
+my $version = "0.35" ;
 my $programName = "mapweaver" ;
 
 use strict ;

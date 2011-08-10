@@ -153,6 +153,25 @@ public class CadastrePlugin extends Plugin {
 
     static private boolean menuEnabled = false;
 
+    private static String LAYER_BULDINGS = "CDIF:LS2";
+    private static String STYLE_BUILDING = "LS2_90";
+    private static String LAYER_WATER = "CDIF:LS3";
+    private static String STYLE_WATER = "LS3_90";
+    private static String LAYER_SYMBOL = "CDIF:LS1";
+    private static String STYLE_SYMBOL = "LS1_90";
+    private static String LAYER_PARCELS = "CDIF:PARCELLE";
+    private static String STYLE_PARCELS = "PARCELLE_90";
+    private static String LAYER_NUMERO = "CDIF:NUMERO";
+    private static String STYLE_NUMERO = "NUMERO_90";
+    private static String LAYER_LABEL = "CDIF:PT3,CDIF:PT2,CDIF:PT1";
+    private static String STYLE_LABEL = "PT3_90,PT2_90,PT1_90";
+    private static String LAYER_LIEUDIT = "CDIF:LIEUDIT";
+    private static String STYLE_LIEUDIT = "LIEUDIT_90";
+    private static String LAYER_SECTION = "CDIF:SUBSECTION,CDIF:SECTION";
+    private static String STYLE_SECTION = "SUBSECTION_90,SECTION_90";
+    private static String LAYER_COMMUNE = "CDIF:COMMUNE";
+    private static String STYLE_COMMUNE = "COMMUNE_90";
+    
     /**
      * Creates the plugin and setup the default settings if necessary
      *
@@ -275,45 +294,62 @@ public class CadastrePlugin extends Plugin {
     private static void refreshLayersURL() {
         grabLayers = "";
         grabStyles = "";
+        int countLayers = 0;
         if (Main.pref.getBoolean("cadastrewms.layerWater", true)) {
-            grabLayers += "CDIF:LS3,";
-            grabStyles += "LS3_90,";
+            grabLayers += LAYER_WATER + ",";
+            grabStyles += STYLE_WATER + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerBuilding", true)) {
-            grabLayers += "CDIF:LS2,";
-            grabStyles += "LS2_90,";
+            grabLayers += LAYER_BULDINGS + ",";
+            grabStyles += STYLE_BUILDING + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerSymbol", true)) {
-            grabLayers += "CDIF:LS1,";
-            grabStyles += "LS1_90,";
+            grabLayers += LAYER_SYMBOL + ",";
+            grabStyles += STYLE_SYMBOL + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerParcel", true)) {
-            grabLayers += "CDIF:PARCELLE,";
-            grabStyles += "PARCELLE_90,";
+            grabLayers += LAYER_PARCELS + ",";
+            grabStyles += STYLE_PARCELS + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerNumero", true)) {
-            grabLayers += "CDIF:NUMERO,";
-            grabStyles += "NUMERO_90,";
+            grabLayers += LAYER_NUMERO + ",";
+            grabStyles += STYLE_NUMERO + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerLabel", true)) {
-            grabLayers += "CDIF:PT3,CDIF:PT2,CDIF:PT1,";
-            grabStyles += "PT3_90,PT2_90,PT1_90,";
+            grabLayers += LAYER_LABEL + ",";
+            grabStyles += STYLE_LABEL + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerLieudit", true)) {
-            grabLayers += "CDIF:LIEUDIT,";
-            grabStyles += "LIEUDIT_90,";
+            grabLayers += LAYER_LIEUDIT + ",";
+            grabStyles += STYLE_LIEUDIT + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerSection", true)) {
-            grabLayers += "CDIF:SUBSECTION,CDIF:SECTION,";
-            grabStyles += "SUBSECTION_90,SECTION_90,";
+            grabLayers += LAYER_SECTION + ",";
+            grabStyles += STYLE_SECTION + ",";
+            countLayers++;
         }
         if (Main.pref.getBoolean("cadastrewms.layerCommune", true)) {
-            grabLayers += "CDIF:COMMUNE,";
-            grabStyles += "COMMUNE_90,";
+            grabLayers += LAYER_COMMUNE + ",";
+            grabStyles += STYLE_COMMUNE + ",";
+            countLayers++;
         }
-        if (grabLayers.length() > 0) { // remove the last ','
+        if (countLayers > 2) { // remove the last ','
             grabLayers = grabLayers.substring(0, grabLayers.length()-1);
             grabStyles = grabStyles.substring(0, grabStyles.length()-1);
+        } else {
+            JOptionPane.showMessageDialog(Main.parent,tr("Please enable at least two WMS layers in the cadastre-fr " 
+                    + "plugin configuration.\nLayers ''Building'' and ''Parcel'' added by default."));
+            Main.pref.put("cadastrewms.layerBuilding", true);
+            Main.pref.put("cadastrewms.layerParcel", true);
+            grabLayers += LAYER_BULDINGS + "," + LAYER_PARCELS;
+            grabStyles += STYLE_BUILDING + "," + STYLE_PARCELS;
         }
     }
 

@@ -32,6 +32,22 @@ public class DrawnPolyLine {
     boolean isFixed(LatLon pp2) {
         return fixed.contains(pp2);
     }
+    
+    double getLength() {
+        List<LatLon> pts = getPoints();
+        Iterator<LatLon> it1,it2;
+        LatLon pp1,pp2;
+        if (pts.size()<2) return 0;
+        it1=pts.listIterator(0);
+        it2=pts.listIterator(1);
+        double len=0;
+        for (int i = 0; i < pts.size() - 1; i++) {
+                pp1 = it1.next();
+                pp2 = it2.next();
+                len+=pp1.greatCircleDistance(pp2);
+        }
+        return len;
+    }
 
     LinkedList<LatLon> getPoints() {
         if (simplePoints!=null) return simplePoints; else return points;
@@ -347,13 +363,14 @@ public class DrawnPolyLine {
             }
         double pkm=0,maxpkm=0;
         double len=0;
+        int seg=0; // averaged segments counts
         for (int i = 1; i < n; i++) {
                 len+=lens[i-1]; // add next next point
                 // remove old segment
-                if (i>k) len-=lens[i-k-1]; 
-                if (i>=k) {
+                if (i>k) {seg=k; len-=lens[i-k-1];} else seg=i;
+                if (i>=k || i==n-1) {
                     // len is length of points[i-windowSize] .. points[i]
-                    if (len>0) pkm = k / len * 1000;
+                    if (len>0) pkm = seg / len * 1000;
                     //System.out.println("i="+i+" pkm="+len+" pkm="+pkm);
                     if (pkm > maxpkm) maxpkm=pkm;
                 }

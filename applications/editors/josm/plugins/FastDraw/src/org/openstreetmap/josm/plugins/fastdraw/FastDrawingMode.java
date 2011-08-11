@@ -497,6 +497,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         case KeyEvent.VK_T:
             tryToLoadWay();
         break;
+        case KeyEvent.VK_I:
+           JOptionPane.showMessageDialog(Main.parent,
+                        tr("{0} m - length of the line\n{1} nodes\n{2} points per km (maximum)\n{3} points per km (average)",
+                        line.getLength(),line.getPoints().size(),line.getNodesPerKm(settings.pkmBlockSize),
+                        line.getNodesPerKm(1000000)),
+                        tr("Line information"),JOptionPane.INFORMATION_MESSAGE);
+        break;            
         case KeyEvent.VK_Q:
             // less details
             e.consume();

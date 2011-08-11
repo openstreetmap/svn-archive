@@ -29,7 +29,7 @@
 -->
 <project name="FastDraw" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="FastDraw: snapping fixed, do not save degenerate lines"/>
+    <property name="commit.message" value="FastDraw: I = drawn line info"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4201"/>
     <!--

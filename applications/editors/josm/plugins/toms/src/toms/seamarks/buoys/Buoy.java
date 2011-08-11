@@ -456,6 +456,8 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void parseLights(Map<String, String> k) {
+		if (k.containsKey("seamark:ref"))
+			setLitRef(k.get("seamark:ref"));
 		setFired(false);
 		setSectored(false);
 		Iterator it = k.entrySet().iterator();
@@ -1025,6 +1027,10 @@ abstract public class Buoy extends SeaMark {
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:light:" + i + ":radius", Radius[i]));
 			}
+		} else {
+			if (!LitRef.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:ref", LitRef));
 		}
 	}
 

@@ -71,7 +71,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
 			 */
 		} catch (Exception e) {
 			if (canceled) {
-				System.out.println(tr("Warning: ignoring exception because task is canceled. Exception: {0}", e
+				System.out.println(tr("Warning: Ignoring exception because task was canceled. Exception: {0}", e
 						.toString()));
 				return;
 			}

@@ -103,7 +103,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 
 		} catch (Exception e) {
 			if (canceled) {
-				System.out.println(tr("Warning: ignoring exception because task is canceled. Exception: {0}", e.toString()));
+				System.out.println(tr("Warning: Ignoring exception because task was canceled. Exception: {0}", e.toString()));
 				return;
 			}
 			lastException = e;

@@ -100,7 +100,7 @@ public class GrabThread extends Thread {
                         setCanceled(true);
                         break;
                     }
-                    if (grabber.getWmsInterface().downloadcanceled) {
+                    if (grabber.getWmsInterface().downloadCanceled) {
                         System.out.println("Download action canceled by user");
                         setCanceled(true);
                         break;

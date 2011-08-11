@@ -29,7 +29,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         JLabel label1=new JLabel(tr("Epsilon multiplier"));
         JLabel label2=new JLabel(tr("Starting Epsilon"));
         JLabel label3=new JLabel(tr("Max points count per 1 km"));
-        JLabel label4=new JLabel(tr("Enter key mode"));
+        JLabel label4=new JLabel(/* I18n: Combobox to select what a press to return key does */ tr("Enter key mode"));
         JFormattedTextField text1=new JFormattedTextField(NumberFormat.getInstance());
         JFormattedTextField text2=new  JFormattedTextField(NumberFormat.getInstance());
         JFormattedTextField text3=new  JFormattedTextField(NumberFormat.getInstance());

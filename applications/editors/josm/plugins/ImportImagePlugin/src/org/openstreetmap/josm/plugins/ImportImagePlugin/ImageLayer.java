@@ -102,7 +102,7 @@ public class ImageLayer extends Layer {
         } catch (Exception e) {
             if(e.getMessage().contains("No projection file found"))
             {
-                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), new String[] {tr("Default image projection"), tr("JOSM's current projection"), tr("Cancel")});
+                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
                 ex.setContent(tr("No projection file (.prj) found.<br>"
                         + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
                         + "(It can be changed later from the right click menu of the image layer.)", 

@@ -521,6 +521,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             repaint();
         break;
         case KeyEvent.VK_SPACE:
+            e.consume();
             if (!drawing) {
                 Point p = Main.map.mapView.getMousePosition();
                 if (p!=null) startDrawing(p,settings.fixedSpacebar);

@@ -1622,12 +1622,12 @@ public class RoutePatternAction extends JosmAction {
               if (sr.distance <
                 Double.parseDouble(tfSuggestStopsLimit.getText()) * 9.0 / 1000000.0 )
               {
-            sr.role = (String)stoplistData.getValueAt(i, 1);
+            sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
             srm.addElement(sr);
               }
               else
               {
-            sr.role = (String)stoplistData.getValueAt(i, 1);
+            sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
             sr.index = segmentMetrics.size()*2;
             sr.pos = 0;
             srm.addElement(sr);
@@ -1654,12 +1654,12 @@ public class RoutePatternAction extends JosmAction {
             if (sr.distance <
                   Double.parseDouble(tfSuggestStopsLimit.getText()) * 9.0 / 1000000.0 )
             {
-              sr.role = (String)stoplistData.getValueAt(i, 1);
+              sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
               srm.addElement(sr);
             }
             else
             {
-              sr.role = (String)stoplistData.getValueAt(i, 1);
+              sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
               sr.index = segmentMetrics.size()*2;
               sr.pos = 0;
               srm.addElement(sr);
@@ -1692,7 +1692,7 @@ public class RoutePatternAction extends JosmAction {
         {
           if (stoplistTable.isRowSelected(i))
           {
-            String role = (String)(stoplistData.getValueAt(i, 1));
+            String role = (String)(stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN));
             RelationMember markedNode = new RelationMember
             (role, stoplistData.nodes.elementAt(i));
             itemsToReflect.addElement(markedNode);
@@ -1706,7 +1706,7 @@ public class RoutePatternAction extends JosmAction {
       {
         for (int i = stoplistData.getRowCount()-1; i >=0; --i)
         {
-          String role = (String)(stoplistData.getValueAt(i, 1));
+          String role = (String)(stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN));
           RelationMember markedNode = new RelationMember
               (role, stoplistData.nodes.elementAt(i));
           itemsToReflect.addElement(markedNode);
@@ -1942,7 +1942,8 @@ public class RoutePatternAction extends JosmAction {
     for (int i = 0; i < stoplistData.getRowCount(); ++i)
     {
       RelationMember member = new RelationMember
-      ((String)(stoplistData.getValueAt(i, 1)), stoplistData.nodes.elementAt(i));
+          ((String)(stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN)),
+           stoplistData.nodes.elementAt(i));
       currentRoute.addMember(member);
     }
   }

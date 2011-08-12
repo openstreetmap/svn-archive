@@ -26,6 +26,7 @@ use mwFile ;
 use mwMisc ;
 use mwMap ;
 use mwLabel ;
+use mwOccupy ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -344,12 +345,12 @@ sub createWayLabels {
 
 						# print "AREA: $x2, $y2, $x2+$lLen, $y2+$lLen\n" ;
 
-						if ( ! mwLabel::areaOccupied ($x2, $x2+$ssx, $y2+$ssy, $y2) ) {
+						if ( ! mwLabel::boxAreaOccupied ($x2, $y2+$ssy, $x2+$ssx, $y2) ) {
 
 							my $id = getShieldId ($name) ;
 							addToLayer ("shields", "<use xlink:href=\"#$id\" x=\"$x2\" y=\"$y2\" />") ;
 
-							mwLabel::occupyArea ($x2, $x2+$ssx, $y2+$ssy, $y2) ;
+							mwLabel::boxOccupyArea ($x2, $y2+$ssy, $x2+$ssx, $y2, 0, 3) ;
 						}
 
 						$position += $step ;
@@ -366,6 +367,7 @@ sub createWayLabels {
 				if ($numLabels > 4) { $numLabels = 4 ; }
 
 				if ($numLabels == 1) {
+					# print "LA: $name *1*\n" ;
 					my $spare = 0.95 * $wLen - $lLen ;
 					my $sparePercentHalf = $spare / ($wLen*0.95) *100 / 2 ;
 					my $startOffset = 50 - $sparePercentHalf ;
@@ -374,10 +376,12 @@ sub createWayLabels {
 					my $step = ($endOffset - $startOffset) / 5 ;
 					my @positions = () ;
 					my $actual = $startOffset ;
+					my $size = $$ruleRef{'labelsize'} ;
 					while ($actual <= $endOffset) {
 						my ($ref, $angle) = subWay (\@points, $lLen, "middle", $actual) ;
 						my @way = @$ref ;
-						my ($col) = lineCrossings (\@way) ;
+						# my ($col) = lineCrossings (\@way) ;
+						my ($col) = boxLinesOccupied (\@way, $size/2) ;
 						# calc quality of position. distance from middle and bend angles
 						my $quality = $angle + abs (50 - $actual) ;
 						if ($col == 0) { push @positions, ["middle", $actual, $quality] ; }
@@ -392,7 +396,7 @@ sub createWayLabels {
 						my @finalWay = @$ref ;
 
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
-						createPath ($pathName, \@points, "definitions") ;
+						createPath ($pathName, \@finalWay, "definitions") ;
 
 						my $size = $$ruleRef{'labelsize'} ;
 						my $color = $$ruleRef{'labelcolor'} ;
@@ -404,15 +408,17 @@ sub createWayLabels {
 						my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 
 						my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
-						pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
+						# pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
+						pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], 50, "text") ;
 
-						occupyLines (\@finalWay) ;
+						boxOccupyLines (\@finalWay, $size/2, 3) ;
 					}
 					else {
 						$numWayLabelsOmitted++ ;
 					}
 				}
 				else { # more than one label
+					# print "LA: $name *X*\n" ;
 					my $labelDrawn = 0 ;
 					my $interval = int (100 / ($numLabels + 1)) ;
 					my @positions = () ;
@@ -423,13 +429,18 @@ sub createWayLabels {
 					foreach my $position (@positions) {
 						my ($refFinal, $angle) = subWay (\@points, $lLen, "middle", $position) ;
 						my (@finalWay) = @$refFinal ;
-						my ($collision) = lineCrossings (\@finalWay) ;
+						# my ($collision) = lineCrossings (\@finalWay) ;
+
+						my $size = $$ruleRef{'labelsize'} ;
+						my ($collision) = boxLinesOccupied (\@finalWay, $size/2 ) ;
+
 						if ($collision == 0) {
 							$labelDrawn = 1 ;
 							$drawnLabels { $name } = 1 ;
 							my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 
-							createPath ($pathName, \@points, "definitions") ;
+							# createPath ($pathName, \@points, "definitions") ;
+							createPath ($pathName, \@finalWay, "definitions") ;
 
 							my $size = $$ruleRef{'labelsize'} ;
 							my $color = $$ruleRef{'labelcolor'} ;
@@ -443,7 +454,7 @@ sub createWayLabels {
 							my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
 							pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, "middle", 50, "text") ;
 
-							occupyLines (\@finalWay) ;
+							boxOccupyLines (\@finalWay, $size/2, 3) ;
 
 
 
@@ -512,7 +523,7 @@ sub createWNSLegend {
 	my $svgString = "fill=\"$bg\"" ;
 	drawRect (0, 0, $sizeX, $sizeY, 0, $svgString, "definitions") ;
 
-	$svgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), cv('wnssize'), cv('wnscolor'), undef, undef) ;
+	$svgString = createTextSVG ( cv('elementFontFamily'), cv('elementFont'), undef, undef, cv('wnssize'), cv('wnscolor'), undef, undef) ;
 	foreach my $e ( @wns ) {
 		my $y = $actualLine * $sy + $ty ;
 		drawText ($nx, $y, 0, $e->[0], $svgString, "definitions") ;

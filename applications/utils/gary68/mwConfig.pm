@@ -110,7 +110,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["clip",0," (CLO)", "job"],
 			["clipbbox",""," (CLO)", "job"],
 			["pad",0," (CLO)", "job"],
-			["ppc",6,"points per character (CLO)", "misc", "map"],
+			["ppc",6.3,"points per character (CLO)", "misc", "map"],
 			["pdf",0,"convert output to pdf (CLO)", "job"],
 			["png",0,"convert output to png (CLO)", "job"],
 			["pngdpi",115,"png resolution (CLO)", "job"],
@@ -354,7 +354,8 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"ra:s"		=> \$cv{'ra'},		# 
 				"debug" 	=> \$cv{'debug'},			# turns debug messages on 
 				"cie" 	=> \$cv{'cie'},			# turns debug messages on 
-				"verbose" 	=> \$cv{'verbose'} ) ;		# turns twitter on
+				"verbose" 	=> \$cv{'verbose'},		# turns twitter on
+				"test" 	=> \$cv{'test'} ) ;		# test
 
 
 }

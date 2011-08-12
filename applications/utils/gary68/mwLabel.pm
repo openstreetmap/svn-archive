@@ -24,14 +24,10 @@ use warnings ;
 use mwConfig ;
 use mwMap ;
 # use mwMisc ;
-
-use OSM::QuadTree ;
+use mwOccupy ;
 
 my $labelPathId = 0 ;
 
-my $qtWayLabels ;
-my $qtPoiLabels ;
-my @occupiedAreas = () ;
 my @lines = () ;
 
 my $numIconsMoved = 0 ;
@@ -51,29 +47,11 @@ require Exporter ;
 
 @EXPORT = qw ( 
 			placeLabelAndIcon
-			initQuadTrees
-			occupyLines
-			lineCrossings
 			addToPoiHash
 			getPoiHash
-			occupyArea
-			areaOccupied
 		 ) ;
 
 
-sub initQuadTrees {
-	my ( $sizeX, $sizeY ) = @_ ;
-	$qtWayLabels = OSM::QuadTree->new(  -xmin  => 0,
-                                      -xmax  => $sizeX+100,
-                                      -ymin  => 0,
-                                      -ymax  => $sizeY+40,
-                                      -depth => 5);
-	$qtPoiLabels = OSM::QuadTree->new(  -xmin  => 0,
-                                      -xmax  => $sizeX+100,
-                                      -ymin  => 0,
-                                      -ymax  => $sizeY+40,
-                                      -depth => 5);
-}
 
 
 sub placeLabelAndIcon {
@@ -120,12 +98,18 @@ sub placeLabelAndIcon {
 				@shifts = ( 0, -15, 15 ) ;
 			}
 			my $posFound = 0 ; my $posCount = 0 ;
+			my ($iconAreaX1, $iconAreaY1, $iconAreaX2, $iconAreaY2) ;
 			LABAB: foreach my $xShift (@shifts) {
 				foreach my $yShift (@shifts) {
 					$posCount++ ;
-					if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
+					# if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
+					if ( ( ! boxAreaOccupied ($iconX+$xShift, $iconY+$sizeY1+$yShift, $iconX+$sizeX1+$xShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
 						placeIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1, "nodes") ;
-						occupyArea ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ;
+						$iconAreaX1 = $iconX+$xShift ;
+						$iconAreaY1 = $iconY+$sizeY1+$yShift ;
+						$iconAreaX2 = $iconX+$sizeX1+$xShift ;
+						$iconAreaY2 = $iconY+$yShift ;
+
 						$posFound = 1 ;
 						if ($posCount > 1) { $numIconsMoved++ ; }
 						$iconX = $iconX + $xShift ; # for later use with label
@@ -194,8 +178,10 @@ sub placeLabelAndIcon {
 					}
 					if ($positionFound == 0) { $numLabelsOmitted++ ; }
 					if ($tries > 1) { $numLabelsMoved++ ; }
-				}
-			}
+				} # label
+
+				boxOccupyArea ($iconAreaX1, $iconAreaX1, $iconAreaX2, $iconAreaY2, 0, 2) ;
+			} # pos found
 			else {
 				# no, count omitted
 				$numIconsOmitted++ ;
@@ -258,8 +244,10 @@ sub checkAndDrawText {
 	my ($size) = ( $svgText =~ /font-size=\"(\d+)\"/ ) ;
 	if ( ! defined $size ) { die ("ERROR: font size could not be determined from svg format string \"$svgText\"\n") ; }
 
+
+	# WATCH for variable sequence!
 	if ( 
-	( ! areaOccupied ($x1, $x2, $y1, $y2) ) or 
+	( ! boxAreaOccupied ($x1, $y1, $x2, $y2) ) or 
 	( cv('forcenodes') eq "1" ) 
 	)  {
 
@@ -281,7 +269,7 @@ sub checkAndDrawText {
 			}
 		}
 
-		occupyArea ($x1, $x2, $y1, $y2) ;
+		boxOccupyArea ($x1, $y1, $x2, $y2, 0, 2) ;
 		
 		return (1) ;
 	}
@@ -313,113 +301,6 @@ sub splitLabel {
 
 
 
-sub occupyArea {
-#
-# occupy area and make entry in quad tree for later use
-#
-	my ($x1, $x2, $y1, $y2) = @_ ;
-	# left, right, bottom, top (bottom > top!)
-	push @occupiedAreas, [$x1, $x2, $y1, $y2] ;
-	$qtPoiLabels->add ($#occupiedAreas, $x1, $y1, $x2, $y2) ;
-}
-
-sub areaOccupied {
-#
-# look up possible interfering objects in quad tree and check for collision
-#
-	my ($x1, $x2, $y1, $y2) = @_ ;
-	# left, right, bottom, top (bottom > top!)
-	my $occupied = 0 ;
-
-	my $ref2 = $qtPoiLabels->getEnclosedObjects ($x1, $y2, $x2, $y1) ;
-	my @index = @$ref2 ;
-	my @occupiedAreasTemp = () ;
-	foreach my $nr (@index) {
-		push @occupiedAreasTemp, $occupiedAreas[$nr] ;
-	} 
-
-	LAB1: foreach my $area (@occupiedAreasTemp) {
-		my $intersection = 1 ;
-		if ($x1 > $area->[1]) { $intersection = 0 ; } ;
-		if ($x2 < $area->[0]) { $intersection = 0 ; } ;
-		if ($y1 < $area->[3]) { $intersection = 0 ; } ;
-		if ($y2 > $area->[2]) { $intersection = 0 ; } ;
-		if ($intersection == 1) { 
-			$occupied = 1 ; 
-			last LAB1 ;	
-		}
-	}
-	return ($occupied) ;
-}
-
-sub lineCrossings {
-#
-# checks for line collisions
-# accepts multiple lines in form of multiple coordinates
-#
-	my ($ref) = shift ;
-	my @coordinates = @$ref ;
-	my @testLines = () ;
-
-	for (my $i=0; $i<$#coordinates-2; $i+=2) {
-		push @testLines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
-	}
-
-	# find area of way
-	my ($found) = 0 ;
-	my $xMin = 999999 ; my $xMax = 0 ;
-	my $yMin = 999999 ; my $yMax = 0 ;
-	foreach my $l1 (@testLines) {
-		if ($l1->[0] > $xMax) { $xMax = $l1->[0] ; }
-		if ($l1->[0] < $xMin) { $xMin = $l1->[0] ; }
-		if ($l1->[1] > $yMax) { $yMax = $l1->[1] ; }
-		if ($l1->[1] < $yMin) { $yMin = $l1->[1] ; }
-	}
-	
-	# get indexes from quad tree
-	my $ref2 = $qtWayLabels->getEnclosedObjects ($xMin, $yMin, $xMax, $yMax) ;
-	# create array linesInArea
-	my @linesInAreaIndex = @$ref2 ;
-	my @linesInArea = () ;
-	foreach my $lineNr (@linesInAreaIndex) {
-		push @linesInArea, $lines[$lineNr] ;
-	} 
-
-	LABCR: foreach my $l1 (@testLines) {
-		foreach my $l2 (@linesInArea) {
-			my ($x, $y) = mwMisc::intersection (@$l1, @$l2) ;
-			if (($x !=0) and ($y != 0)) {
-				$found = 1 ;
-				last LABCR ;
-			}
-		}
-	}
-	if ($found == 0) {
-		return 0 ;
-	}
-	else {
-		return 1 ;
-	}	
-}
-
-
-sub occupyLines {
-#
-# store drawn lines and make quad tree entries
-# accepts multiple coordinates that form a way
-#
-	my ($ref) = shift ;
-	my @coordinates = @$ref ;
-
-	for (my $i=0; $i<$#coordinates-2; $i+=2) {
-		push @lines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
-		# print "PUSHED $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]\n" ;
-		# drawWayPix ("black", 1, 0, @coordinates)
-
-		$qtWayLabels->add ($#lines, $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]) ;
-
-	}
-}
 
 # ------------------------------------------------------------
 

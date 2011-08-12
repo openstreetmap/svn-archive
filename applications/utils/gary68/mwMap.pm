@@ -72,7 +72,7 @@ require Exporter ;
 
 my @belowWays = ("background", "base", "area", "multi") ;
 
-my @aboveWays = ( "arealabels", "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional") ;
+my @aboveWays = ( "arealabels", "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional", "occupied") ;
 
 my @elements = ("scale", "ruler", "legend", "wns", "header", "footer", "rectangles", "title") ;
 
@@ -117,8 +117,6 @@ sub initGraph {
 
 	$sizeX = int ($x) ;
 	$sizeY = int ($x * $factor) ;
-
-	mwLabel::initQuadTrees ($sizeX, $sizeY) ;
 
 	$top = $t ;
 	$left = $l ;
@@ -724,7 +722,7 @@ sub drawRuler {
 	$text .= "(1:$scale)" ;
 
 
-	$svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), undef, undef, 45, $col, undef, undef) ;
+	$svgString = mwMisc::createTextSVG ( cv('elementFontFamily'), cv('elementFont'), undef, undef, 35, $col, undef, undef) ;
 	drawText ($xOffset, $yOffset+$textDist+30, 0, $text, $svgString, "definitions") ;
 
 	addToLayer ("definitions", "</g>") ;

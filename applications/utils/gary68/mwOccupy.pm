@@ -137,8 +137,97 @@ sub boxOccupyLines {
 
 
 sub boxLinesOccupied {
-	my ($refCoords) = @_ ;
+	my ($refCoords, $buffer) = @_ ;
+	my @coordinates = @$refCoords ;
+	my @lines = () ;
+	my $result = 0 ;
 
+	for ( my $i = 0; $i < $#coordinates-2; $i += 2 ) {
+		push @lines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
+	}
+
+	foreach my $line ( @lines ) {
+		my $x1 = $line->[0] ;
+		my $y1 = $line->[1] ;
+		my $x2 = $line->[2] ;
+		my $y2 = $line->[3] ;
+
+
+		# print "$x1, $y1, $x2, $y2\n" ;
+
+		if ( $x1 != $x2) {
+
+			my $m = ($y2 - $y1) / ($x2 - $x1) ;
+			my $b = $y1 - $m * $x1 ;
+
+			if ( abs ( $x1 - $x2 ) > abs ( $y1 - $y2 ) ) {
+
+				# calc points on x axis
+				my $x = $x1 ;
+				my $stepX = $boxSize ;
+				if ( $x2 < $x1 ) { $stepX = - $boxSize ; }
+				while ( ( $x >= min ($x1, $x2) ) and ( $x <= max ($x1, $x2) ) ) {
+
+					my $y = $m * $x + $b ;
+
+					# ACTUAL COORDINATE $x, $y
+					my $ax1 = $x - $buffer ;
+					my $ax2 = $x + $buffer ;
+					my $ay1 = $y - $buffer ;
+					my $ay2 = $y + $buffer ;
+					my $tmp = boxAreaOccupied ($ax1, $ay1, $ax2, $ay2) ;
+					if ($tmp > $result) { $result = $tmp ; }
+					$x += $stepX ;	
+				}
+
+			}
+			else {		
+
+				# calc points on y axis
+				my $y = $y1 ;
+				my $stepY = $boxSize ;
+				if ( $y2 < $y1 ) { $stepY = - $boxSize ; }
+				while ( ( $y >= min ($y1, $y2) ) and ( $y <= max ($y1, $y2) ) ) {
+
+					my $x = ($y - $b) / $m ;
+
+					# ACTUAL COORDINATE $x, $y
+					my $ax1 = $x - $buffer ;
+					my $ax2 = $x + $buffer ;
+					my $ay1 = $y - $buffer ;
+					my $ay2 = $y + $buffer ;
+					my $tmp = boxAreaOccupied ($ax1, $ay1, $ax2, $ay2) ;
+					if ($tmp > $result) { $result = $tmp ; }
+
+					$y += $stepY ;	
+				}
+
+			} # abs	
+
+		}
+		else {
+			my $x = $x1 ;
+
+			# calc points on y axis
+			my $y = $y1 ;
+			my $stepY = $boxSize ;
+			if ( $y2 < $y1 ) { $stepY = - $boxSize ; }
+			while ( ( $y >= min ($y1, $y2) ) and ( $y <= max ($y1, $y2) ) ) {
+
+				# ACTUAL COORDINATE $x, $y
+				my $ax1 = $x - $buffer ;
+				my $ax2 = $x + $buffer ;
+				my $ay1 = $y - $buffer ;
+				my $ay2 = $y + $buffer ;
+				my $tmp = boxAreaOccupied ($ax1, $ay1, $ax2, $ay2) ;
+				if ($tmp > $result) { $result = $tmp ; }
+
+				$y += $stepY ;	
+			}
+		}	
+
+	}
+	return $result ; 
 }
 
 
@@ -212,8 +301,9 @@ sub boxAreaOccupied {
 
 
 sub boxDrawOccupiedAreas {
-	my $format1 = "fill=\"orange\" fill-opacity=\"0.5\" " ;
-	my $format2 = "fill=\"blue\" fill-opacity=\"0.5\" " ;
+	my $format1 = "fill=\"red\" fill-opacity=\"0.3\" " ;
+	my $format2 = "fill=\"blue\" fill-opacity=\"0.3\" " ;
+	my $format3 = "fill=\"green\" fill-opacity=\"0.5\" " ;
 	foreach my $bx ( sort {$a <=> $b} keys %box ) {
 		foreach my $by ( sort {$a <=> $b} keys %{$box{$bx}} ) {
 			my $x1 = $bx * $boxSize ;
@@ -224,8 +314,11 @@ sub boxDrawOccupiedAreas {
 			if ( $box{$bx}{$by} == 1) {
 				drawRect ($x1, $y1, $x2, $y2, 0, $format1, "occupied") ;
 			}
-			else {
+			elsif ( $box{$bx}{$by} == 2) {
 				drawRect ($x1, $y1, $x2, $y2, 0, $format2, "occupied") ;
+			}
+			else  {
+				drawRect ($x1, $y1, $x2, $y2, 0, $format3, "occupied") ;
 			}
 			# print "occupied $bx, $by\n" ;
 		}

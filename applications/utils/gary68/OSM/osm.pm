@@ -99,6 +99,10 @@
 # Version 8.2 
 # - latexSanitizeString
 #
+# Version 8.4
+# - negative IDs
+#
+# 
 # USAGE
 #
 # analyzerLink ($id) 					> $htmlString, link to relation analyzer
@@ -186,7 +190,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '8.3' ;
+$VERSION = '8.4' ;
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -563,7 +567,7 @@ sub getWay {
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data
 			#get nodes and type
-			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
+			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"]([\d\-]+)[\'\"]/); # get node id
 
 			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
 
@@ -636,7 +640,7 @@ sub readWay {
 			nextLine() ;
 			while (not($line =~ /\/way>/)) { # more way data
 				#get nodes and type
-				my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
+				my ($node) = ($line =~ /^\s*\<nd ref=[\'\"]([\d\-]+)[\'\"]/); # get node id
 				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
 	
 				if (!(($node) or ($k and defined($v) ))) {
@@ -738,7 +742,7 @@ sub readRelation {
 			while (not($line =~ /\/relation>/)) { # more data
 				if ($line =~ /<member/) {
 					my ($memberType)   = ($line =~ /^\s*\<member type=[\'\"]([\w]*)[\'\"]/); 
-					my ($memberRef) = ($line =~ /^.+ref=[\'\"](\d*)[\'\"]/);       
+					my ($memberRef) = ($line =~ /^.+ref=[\'\"]([\d\-]+)[\'\"]/);       
 					my ($memberRole) = ($line =~ /^.+role=[\'\"](.*)[\'\"]/);
 					if (!$memberRole) { $memberRole = "none" ; }
 					my @member = [$memberType, $memberRef, $memberRole] ;
@@ -1265,6 +1269,7 @@ sub printGPXWaypoint {
 }
 
 #######
+
 # other
 #######
 

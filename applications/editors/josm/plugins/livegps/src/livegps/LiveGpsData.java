@@ -17,10 +17,11 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  */
 public class LiveGpsData {
+    private boolean fix;
     private LatLon latLon;
     private float course;
     private float speed;
-    private boolean fix;
+    private float epx, epy;
     private String wayString;
     private Way way;
 
@@ -31,19 +32,32 @@ public class LiveGpsData {
      * @param speed
      * @param haveFix
      */
-    public LiveGpsData(double latitude, double longitude, float course, float speed, boolean haveFix) {
+    public LiveGpsData(double latitude, double longitude, float course, float speed) {
         super();
+        this.fix = true;
         this.latLon = new LatLon(latitude, longitude);
         this.course = course;
         this.speed = speed;
-        this.fix = haveFix;
     }
     /**
-     *
+     * @param latitude
+     * @param longitude
+     * @param course
+     * @param speed
+     * @param haveFix
+     * @param epx
+     * @param epy
      */
-    public LiveGpsData() {
-        // TODO Auto-generated constructor stub
+    public LiveGpsData(double latitude, double longitude, float course, float speed, float epx, float epy) {
+        super();
+        this.fix = true;
+        this.latLon = new LatLon(latitude, longitude);
+        this.course = course;
+        this.speed = speed;
+	this.epx = epx;
+	this.epy = epy;
     }
+
     /**
      * @return the course
      */
@@ -105,6 +119,22 @@ public class LiveGpsData {
      */
     public void setLatLon(LatLon latLon) {
         this.latLon = latLon;
+    }
+
+    public void setEpy(float epy) {
+	this.epy = epy;
+    }
+
+    public void setEpx(float epx) {
+	this.epx = epx;
+    }
+
+    public float getEpy() {
+	return this.epy;
+    }
+
+    public float getEpx() {
+	return this.epx;
     }
 
     public String toString() {

@@ -264,6 +264,8 @@ public class LiveGpsAcquirer implements Runnable {
         double lon = 0;
         float speed = 0;
         float course = 0;
+        float epx = 0;
+        float epy = 0;
 
         try {
             report = new JSONObject(line);
@@ -280,8 +282,10 @@ public class LiveGpsAcquirer implements Runnable {
             lon = report.getDouble("lon");
             speed = (new Float(report.getDouble("speed"))).floatValue();
             course = (new Float(report.getDouble("track"))).floatValue();
+            epx = (new Float(report.getDouble("epx"))).floatValue();
+            epy = (new Float(report.getDouble("epy"))).floatValue();
 
-            return new LiveGpsData(lat, lon, course, speed, true);
+            return new LiveGpsData(lat, lon, course, speed, epx, epy);
         } catch (JSONException je) {}
 
         return null;
@@ -317,7 +321,7 @@ public class LiveGpsAcquirer implements Runnable {
                         speed = Float.parseFloat(status[9]);
                         course = Float.parseFloat(status[8]);
                     } catch (NumberFormatException nex) {}
-                    return new LiveGpsData(lat, lon, course, speed, true);
+                    return new LiveGpsData(lat, lon, course, speed);
                 }
                 break;
             case 'P':
@@ -328,7 +332,7 @@ public class LiveGpsAcquirer implements Runnable {
                     lon = Double.parseDouble(pos[1]);
                     speed = Float.NaN;
                     course = Float.NaN;
-                    return new LiveGpsData(lat, lon, course, speed, true);
+                    return new LiveGpsData(lat, lon, course, speed);
                 }
                 break;
             default:

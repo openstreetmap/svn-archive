@@ -25,7 +25,8 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
-    public static final String KEY_LIVEGPS_COLOR = "color.livegps.position";
+    public static final String C_LIVEGPS_COLOR_POSITION = "color.livegps.position";
+    public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
 
     private static final int DEFAULT_REFRESH_INTERVAL = 250;
     private static final int DEFAULT_CENTER_INTERVAL = 5000;
@@ -42,11 +43,10 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     private long lastRedraw = 0;
     private long lastCenter = 0;
 
+    LiveGpsData lastData;
     LatLon lastPos;
     WayPoint lastPoint;
     private final AppendableGpxTrackSegment trackSegment;
-    float speed;
-    float course;
     boolean autocenter;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
@@ -98,21 +98,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 	}
     }
 
-    // void setStatus(String status)
-    // {
-    // this.status = status;
-    // Main.map.repaint();
-    // System.out.println("LiveGps status: " + status);
-    // }
-
-    void setSpeed(float metresPerSecond) {
-        speed = metresPerSecond;
-    }
-
-    void setCourse(float degrees) {
-        course = degrees;
-    }
-
     public void setAutoCenter(boolean ac) {
         autocenter = ac;
     }
@@ -125,13 +110,14 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 		return;
 
 	Point screen = mv.getPoint(lastPoint.getCoor());
-	g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
+	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
 
 	int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
 	int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
 
 	int[] x = new int[4];
 	int[] y = new int[4];
+	float course = lastData.getCourse();
 
 	x[0] = screen.x + Math.round(TriaHeight * (float )Math.sin(Math.toRadians(course)));
 	y[0] = screen.y - Math.round(TriaHeight * (float )Math.cos(Math.toRadians(course)));
@@ -143,6 +129,23 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 	y[3] = screen.y - Math.round(TriaWidth * (float )Math.cos(Math.toRadians(course + 240)));
 
 	g.drawPolygon(x, y, 4);
+
+	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN));
+
+	int w, h;
+	double ppm = 100 / mv.getDist100Pixel();	/* pixels per metre */
+
+	w = (int )Math.round(lastData.getEpx() * ppm);
+	h = (int )Math.round(lastData.getEpy() * ppm);
+
+	if (w > TriaWidth || h > TriaWidth) {
+		int xo, yo;
+
+		yo = screen.y - Math.round(h/2);
+		xo = screen.x - Math.round(w/2);
+
+		g.drawOval(xo, yo, w, h);
+	}
     }
 
     /* (non-Javadoc)
@@ -153,15 +156,9 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
             return;
         }
         if ("gpsdata".equals(evt.getPropertyName())) {
-            LiveGpsData data = (LiveGpsData) evt.getNewValue();
-            if (data.isFix()) {
-                setCurrentPosition(data.getLatitude(), data.getLongitude());
-                if (!Float.isNaN(data.getSpeed())) {
-                    setSpeed(data.getSpeed());
-                }
-                if (!Float.isNaN(data.getCourse())) {
-                    setCourse(data.getCourse());
-                }
+            lastData = (LiveGpsData) evt.getNewValue();
+            if (lastData.isFix()) {
+                setCurrentPosition(lastData.getLatitude(), lastData.getLongitude());
                 if (allowRedraw())
                     Main.map.repaint();
             }

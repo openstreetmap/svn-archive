@@ -34,6 +34,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     private static final String C_REFRESH_INTERVAL = "livegps.refresh_interval_msec";  /* in msec */
     private static final String C_CENTER_INTERVAL = "livegps.center_interval_msec";  /* in msec */
     private static final String C_CENTER_FACTOR = "livegps.center_factor" /* in percent */;
+    private static final String C_CURSOR_H = "livegps.cursor_height"; /* in pixels */
+    private static final String C_CURSOR_W = "livegps.cursor_width"; /* in pixels */
     private int refreshInterval;
     private int centerInterval;
     private double centerFactor;
@@ -45,7 +47,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     private final AppendableGpxTrackSegment trackSegment;
     float speed;
     float course;
-    // JLabel lbl;
     boolean autocenter;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
@@ -120,32 +121,28 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         super.paint(g, mv, bounds);
 
-        // int statusHeight = 50;
-        // Rectangle mvs = mv.getBounds();
-        // mvs.y = mvs.y + mvs.height - statusHeight;
-        // mvs.height = statusHeight;
-        // g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f));
-        // g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
+	if (lastPoint == null)
+		return;
 
-        if (lastPoint != null) {
-            Point screen = mv.getPoint(lastPoint.getCoor());
-            g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
-            g.drawOval(screen.x - 10, screen.y - 10, 20, 20);
-            g.drawOval(screen.x - 9, screen.y - 9, 18, 18);
-        }
+	Point screen = mv.getPoint(lastPoint.getCoor());
+	g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
 
-        // lbl.setText("gpsd: "+status+" Speed: " + speed +
-        // " Course: "+course);
-        // lbl.setBounds(0, 0, mvs.width-10, mvs.height-10);
-        // Graphics sub = g.create(mvs.x+5, mvs.y+5, mvs.width-10,
-        // mvs.height-10);
-        // lbl.paint(sub);
+	int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
+	int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
 
-        // if(status != null) {
-        // g.setColor(Color.WHITE);
-        // g.drawString("gpsd: " + status, 5, mv.getBounds().height - 15);
-        // // lower left corner
-        // }
+	int[] x = new int[4];
+	int[] y = new int[4];
+
+	x[0] = screen.x + Math.round(TriaHeight * (float )Math.sin(Math.toRadians(course)));
+	y[0] = screen.y - Math.round(TriaHeight * (float )Math.cos(Math.toRadians(course)));
+	x[1] = screen.x + Math.round(TriaWidth * (float )Math.sin(Math.toRadians(course + 120)));
+	y[1] = screen.y - Math.round(TriaWidth * (float )Math.cos(Math.toRadians(course + 120)));
+	x[2] = screen.x;
+	y[2] = screen.y;
+	x[3] = screen.x + Math.round(TriaWidth * (float )Math.sin(Math.toRadians(course + 240)));
+	y[3] = screen.y - Math.round(TriaWidth * (float )Math.cos(Math.toRadians(course + 240)));
+
+	g.drawPolygon(x, y, 4);
     }
 
     /* (non-Javadoc)

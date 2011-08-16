@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -16,6 +15,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -59,7 +59,7 @@ public class MultipolyAction extends JosmAction {
                 continue;
             for (RelationMember rm : r.getMembers()) {
                 OsmPrimitive m = rm.getMember();
-                if (m instanceof Way) {
+                if (m instanceof Way && rm.getRole().compareTo("inner") != 0) {
                     relationsInMulti.add(m);
                 }
             }
@@ -67,7 +67,6 @@ public class MultipolyAction extends JosmAction {
 
         // List of selected ways
         ArrayList<Way> selectedWays = new ArrayList<Way>();
-
 
         // For every selected way
         for (OsmPrimitive osm : Main.main.getCurrentDataSet().getSelected()) {
@@ -94,25 +93,25 @@ public class MultipolyAction extends JosmAction {
         Collection<Command> cmds = new LinkedList<Command>();
         // Add ways to it
         for (int i = 0; i < selectedWays.size(); i++) {
-                Way way = selectedWays.get(i);
+            Way way = selectedWays.get(i);
 
-                // Create new relation
-                    Relation rel = new Relation();
-                    rel.put("type", "multipolygon");
+            // Create new relation
+            Relation rel = new Relation();
+            rel.put("type", "multipolygon");
 
             RelationMember rm = new RelationMember("outer", way);
             rel.addMember(rm);
 
-            for (Iterator<String> keyi = way.getKeys().keySet().iterator() ; keyi.hasNext() ; ) {
-                    String key = keyi.next();
+            for (String key : way.getKeys().keySet()) {
+                if (!key.equals("area") || !way.get(key).equals("yes")) {
                     rel.put(key, way.get(key));
-                    System.out.println(key);
-                    if (key.compareTo("source") != 0) {
-                            way.remove(key);
-                    }
+                }
+                if (!key.equals("source")) {
+                    cmds.add(new ChangePropertyCommand(way, key, null));
+                }
             }
-                    // Add relation
-                    cmds.add(new AddCommand(rel));
+            // Add relation
+            cmds.add(new AddCommand(rel));
         }
         // Commit
         Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), cmds));
@@ -131,8 +130,29 @@ public class MultipolyAction extends JosmAction {
 
     /** Enable this action only if something is selected */
     @Override
-    protected void updateEnabledState(
-            Collection<? extends OsmPrimitive> selection) {
-        setEnabled(selection != null && !selection.isEmpty());
+    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
+        if (selection == null) {
+            setEnabled(false);
+            return;
+        }
+        for (OsmPrimitive primitive: selection) {
+            if (!(primitive instanceof Way)) {
+                setEnabled(false);
+                return;
+            }
+            if (!((Way)primitive).isClosed()) {
+                setEnabled(false);
+                return;
+            }
+            for (Relation r: OsmPrimitive.getFilteredList(primitive.getReferrers(), Relation.class)) {
+                for (RelationMember rm: r.getMembers()) {
+                    if (rm.getMember() == primitive && !"inner".equals(rm.getRole())) {
+                        setEnabled(false);
+                        return;
+                    }
+                }
+            }
+        }
+        setEnabled(selection.size() >= 1);
     }
 }

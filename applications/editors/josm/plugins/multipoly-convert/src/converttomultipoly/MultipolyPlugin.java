@@ -16,7 +16,6 @@ public class MultipolyPlugin extends Plugin {
 
     protected String name;
 
-//        public MultipolyPlugin(PluginInformation info) {
         public MultipolyPlugin(PluginInformation info) {
         super(info);
         name = tr("Convert to multipolygon");

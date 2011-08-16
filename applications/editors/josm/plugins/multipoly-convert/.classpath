@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-6-openjdk"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/josm"/>
 	<classpathentry kind="lib" path="/usr/share/josm/josm.jar" sourcepath="/home2/brunner/workspace/josm-0.0.svn3094/src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

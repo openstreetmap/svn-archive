@@ -43,7 +43,8 @@ public class PanelHaz extends JPanel {
 			}
 			if (northButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CARD_NORTH);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK);
+				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.panelMain.panelTop.northTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.northTopButton.doClick();
 				northButton.setBorderPainted(true);
@@ -52,7 +53,8 @@ public class PanelHaz extends JPanel {
 			}
 			if (southButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CARD_SOUTH);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
+				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.panelMain.panelTop.southTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.southTopButton.doClick();
 				southButton.setBorderPainted(true);
@@ -61,7 +63,9 @@ public class PanelHaz extends JPanel {
 			}
 			if (eastButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CARD_EAST);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK_YELLOW_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK);
+				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
+				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.panelMain.panelTop.eastTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.eastTopButton.doClick();
 				eastButton.setBorderPainted(true);
@@ -70,7 +74,9 @@ public class PanelHaz extends JPanel {
 			}
 			if (westButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CARD_WEST);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW_BLACK_YELLOW);
+				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
+				dlg.mark.addColour(Ent.BODY, Col.BLACK);
+				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.panelMain.panelTop.westTopButton.setEnabled(true);
 				dlg.panelMain.panelTop.westTopButton.doClick();
 				westButton.setBorderPainted(true);
@@ -78,7 +84,9 @@ public class PanelHaz extends JPanel {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
-				dlg.mark.setColour(Ent.BODY, Col.BLACK_RED_BLACK);
+				dlg.mark.setColour(Ent.BODY, Col.BLACK);
+				dlg.mark.addColour(Ent.BODY, Col.RED);
+				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.panelMain.panelTop.spheres2TopButton.setEnabled(true);
 				dlg.panelMain.panelTop.spheres2TopButton.doClick();
 				isolButton.setBorderPainted(true);

@@ -91,10 +91,14 @@ public class PanelChan extends JPanel {
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
 				if (dlg.mark.getRegion() == Reg.B) {
-					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
+					dlg.mark.setColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
 					panelPort.regionBButton.doClick();
 				} else {
-					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
+					dlg.mark.setColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
 					panelPort.regionAButton.doClick();
 				}
 				prefPortButton.setBorderPainted(true);
@@ -161,10 +165,14 @@ public class PanelChan extends JPanel {
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
 				if (dlg.mark.getRegion() == Reg.B) {
-					dlg.mark.setColour(Ent.BODY, Col.RED_GREEN_RED);
+					dlg.mark.setColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
 					panelStbd.regionBButton.doClick();
 				} else {
-					dlg.mark.setColour(Ent.BODY, Col.GREEN_RED_GREEN);
+					dlg.mark.setColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
 					panelStbd.regionAButton.doClick();
 				}
 				prefStbdButton.setBorderPainted(true);
@@ -193,7 +201,8 @@ public class PanelChan extends JPanel {
 				dlg.panelMain.panelTop.panelCol.enableAll(false);
 				dlg.panelMain.panelTop.panelCol.redButton.setEnabled(true);
 				dlg.panelMain.panelTop.panelCol.redButton.doClick();
-				dlg.mark.setColour(Ent.BODY, Col.RED_WHITE);
+				dlg.mark.setColour(Ent.BODY, Col.RED);
+				dlg.mark.addColour(Ent.BODY, Col.WHITE);
 				safeWaterButton.setBorderPainted(true);
 				panelSaw.setVisible(true);
 			} else {

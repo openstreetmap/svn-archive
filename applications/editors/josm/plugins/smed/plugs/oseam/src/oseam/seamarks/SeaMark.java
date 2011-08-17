@@ -619,6 +619,40 @@ public class SeaMark {
 				}
 			}
 		}
+		
+		switch (GrpMAP.get(dlg.mark.getObject())) {
+		case LAT:
+			dlg.panelMain.chanButton.doClick();
+			switch (getCategory()) {
+			case LAT_PORT:
+				dlg.panelMain.panelChan.portButton.doClick();
+				break;
+			case LAT_STBD:
+				dlg.panelMain.panelChan.stbdButton.doClick();
+				break;
+			case LAT_PREF_PORT:
+				dlg.panelMain.panelChan.prefPortButton.doClick();
+				break;
+			case LAT_PREF_STBD:
+				dlg.panelMain.panelChan.prefStbdButton.doClick();
+				break;
+			}
+			break;
+		case SAW:
+			dlg.panelMain.chanButton.doClick();
+			dlg.panelMain.panelChan.safeWaterButton.doClick();
+			break;
+		case CAR:
+		case ISD:
+			dlg.panelMain.hazButton.doClick();
+			break;
+		case SPP:
+			dlg.panelMain.specButton.doClick();
+			break;
+		case LIT:
+			dlg.panelMain.lightsButton.doClick();
+			break;
+		}
 
 	}
 

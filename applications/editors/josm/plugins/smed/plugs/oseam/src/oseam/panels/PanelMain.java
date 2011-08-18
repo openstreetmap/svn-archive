@@ -29,6 +29,7 @@ public class PanelMain extends JPanel {
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
+	private ActionListener alSave = null;
 	public ButtonGroup typeButtons = null;
 	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
 	public JRadioButton hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
@@ -239,6 +240,14 @@ public class PanelMain extends JPanel {
 		saveButton.setBounds(new Rectangle(285, 330, 100, 20));
 		saveButton.setText(tr("Save"));
 		this.add(saveButton, null);
+		alSave = new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (dlg.mark != null) {
+					dlg.mark.saveSign(dlg.node);
+				}
+			}
+		};
+		saveButton.addActionListener(alSave);
 	}
 
 	public void clearSelections() {

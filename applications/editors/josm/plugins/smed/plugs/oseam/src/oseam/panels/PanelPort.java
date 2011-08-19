@@ -14,6 +14,10 @@ import java.util.EnumMap;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.Cat;
+import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Pat;
+import oseam.seamarks.SeaMark.Ent;
 import oseam.seamarks.SeaMark.Reg;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Obj;
@@ -29,20 +33,46 @@ public class PanelPort extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (regionAButton.isSelected()) {
 				dlg.mark.setRegion(Reg.A);
+				dlg.mark.setColour(Ent.BODY, Col.RED);
+				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+				if (dlg.mark.getCategory() == Cat.LAT_PREF_PORT) {
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+				}
 				regionAButton.setBorderPainted(true);
-			} else { 
+			} else {
 				regionAButton.setBorderPainted(false);
 			}
 			if (regionBButton.isSelected()) {
 				dlg.mark.setRegion(Reg.B);
+				dlg.mark.setColour(Ent.BODY, Col.GREEN);
+				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+				if (dlg.mark.getCategory() == Cat.LAT_PREF_PORT) {
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+				}
 				regionBButton.setBorderPainted(true);
-			} else { 
+			} else {
 				regionBButton.setBorderPainted(false);
 			}
 			if (regionCButton.isSelected()) {
 				dlg.mark.setRegion(Reg.C);
+				if (dlg.mark.getCategory() == Cat.LAT_PREF_PORT) {
+					dlg.mark.setColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+				} else {
+					dlg.mark.setColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.WHITE);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.WHITE);
+				}
+				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
 				regionCButton.setBorderPainted(true);
-			} else { 
+			} else {
 				regionCButton.setBorderPainted(false);
 			}
 			dlg.mark.paintSign();

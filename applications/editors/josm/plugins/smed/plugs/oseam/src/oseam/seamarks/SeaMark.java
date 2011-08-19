@@ -575,17 +575,6 @@ public class SeaMark {
 		}
 
 		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":system")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":system");
-				if (str.equals("iala-a"))
-					setRegion(Reg.A);
-				else if (str.equals("iala-b"))
-					setRegion(Reg.B);
-				else setRegion(Reg.C);
-			}
-		}
-
-		for (Obj obj : ObjMAP.keySet()) {
 			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":category")) {
 				str = keys.get("seamark:" + ObjMAP.get(obj) + ":category");
 				setCategory(Cat.UNKNOWN);
@@ -636,6 +625,42 @@ public class SeaMark {
 				for (Pat pat : PatMAP.keySet()) {
 					if (PatMAP.get(pat).equals(str)) {
 						setPattern(Ent.BODY, pat);
+					}
+				}
+			}
+		}
+
+		for (Obj obj : ObjMAP.keySet()) {
+			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":system")) {
+				str = keys.get("seamark:" + ObjMAP.get(obj) + ":system");
+				if (str.equals("iala-a"))
+					setRegion(Reg.A);
+				else if (str.equals("iala-b"))
+					setRegion(Reg.B);
+				else setRegion(Reg.C);
+			} else if (GrpMAP.get(object) == Grp.LAT) {
+				if (getCategory() != Cat.UNKNOWN) {
+					switch (getCategory()) {
+					case LAT_PORT:
+					case LAT_PREF_PORT:
+						if (getColour(Ent.BODY, 0) == Col.RED) {
+							setRegion(Reg.A);
+							if (getColour(Ent.BODY, 1) == Col.WHITE)
+								setRegion(Reg.C);
+						}
+						if (getColour(Ent.BODY, 0) == Col.GREEN)
+							setRegion(Reg.B);
+						break;
+					case LAT_STBD:
+					case LAT_PREF_STBD:
+						if (getColour(Ent.BODY, 0) == Col.GREEN) {
+							setRegion(Reg.A);
+							if (getColour(Ent.BODY, 1) == Col.WHITE)
+								setRegion(Reg.C);
+						}
+						if (getColour(Ent.BODY, 0) == Col.RED)
+							setRegion(Reg.B);
+						break;
 					}
 				}
 			}

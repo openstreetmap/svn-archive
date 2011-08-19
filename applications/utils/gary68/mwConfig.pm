@@ -94,6 +94,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["elementFontFamily","sans-serif","default font family for map elements like title, scale, grid etc.", "map"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
+			["gpx","","gpx file to overlay (CLO)", "map"],
 			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],
 			["out","mapweaver.svg","svg output name (CLO)", "job"],
 			["style","mwStandardRules.txt","file with render rules (CLO)", "job"],
@@ -115,6 +116,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["png",0,"convert output to png (CLO)", "job"],
 			["pngdpi",115,"png resolution (CLO)", "job"],
 			["dir",0,"add directory (CLO)", "additional information"],
+			["dirprg","mwDir.pl","program to create directory (CLO)", "additional information"],
 			["direxcludedefault", "no", "object default property for directory entries", "additional information"],
 			["poi",0,"add POI directory (CLO)", "additional information"],
 			["dirpdf",0,"create directory pdf (CLO)", "additional information"],
@@ -159,6 +161,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["pagenumbers","","add page numbers to map (CLO)", "misc"],
 			["ra",0,"relation analyzer mode (CLO)", "misc"],
 			["multionly",0,"draw only multipolygons (CLO)", "misc"],
+			["test",0,"test feature (CLO)", "misc"],
 			["foot","mapweaver by gary68 - data by www.openstreetmap.org","text for footer (CLO)", "map"],
 			["footcolor","black","color for footer (CLO)", "map"],
 			["footbackground","none","background color for footer (CLO)", "map"],
@@ -282,6 +285,7 @@ sub getProgramOptions {
 
 
 my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
+				"gpx:s"		=> \$cv{'gpx'},
 				"ini:s"		=> \$cv{'ini'},
 				"style=s" 	=> \$cv{'style'},		# the style file, mandatory
 				"out:s"		=> \$cv{'svgname'},		# outfile name or default
@@ -303,6 +307,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"png"		=> \$cv{'png'},		# specifies if png will be created
 				"pngdpi:i"		=> \$cv{'pngdpi'},		# specifies png resolution
 				"dir"		=> \$cv{'dir'},		# specifies if directory of streets will be created
+				"dirprg"		=> \$cv{'dirprg'},		# 
 				"poi"		=> \$cv{'poi'},		# specifies if directory of pois will be created
 				"dirpdf"		=> \$cv{'dirpdf'},
 				"dircolnum:i"	=> \$cv{'dircolnum'},

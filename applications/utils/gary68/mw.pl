@@ -40,12 +40,13 @@
 # 0.34 pbf support; halo; label transform; bold print of labels
 # 0.35 svg text creation bug fixed
 # 0.36 font size error wns corrected; box occupy; new place management
+# 0.37 -dirprg program to create directory; gpx support
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.36" ;
+my $version = "0.37" ;
 my $programName = "mapweaver" ;
 
 use strict ;
@@ -62,6 +63,7 @@ use mwRelations ;
 use mwMulti ;
 use mwMisc ;
 use mwOccupy ;
+use mwGPX ;
 
 my $time0 = time() ; 
 
@@ -134,17 +136,21 @@ if ( cv ('test') eq "1") {
 	boxDrawOccupiedAreas() ;
 }
 
-my $renderTime1 = time() ;
+if ( cv ('gpx') ne "") {
+	processGPXFile() ;
+}
+
 
 writeMap() ;
 
+my $renderTime1 = time() ;
 
 
 my ($paper, $x, $y) = fitsPaper () ; $x = int ($x*10) / 10 ; $y = int ($y*10) / 10 ;
 print "map ($x cm x $y cm) fits paper $paper\n\n" ;
 
 my $time1 = time() ;
-print "\nrender time ", stringTimeSpent ($renderTime1-$renderTime0), "\n" ;
+print "\nrender time (excluding all file operations) ", stringTimeSpent ($renderTime1-$renderTime0), "\n" ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 
 

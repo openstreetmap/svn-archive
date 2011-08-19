@@ -74,7 +74,7 @@ my @belowWays = ("background", "base", "area", "multi") ;
 
 my @aboveWays = ( "arealabels", "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional", "occupied") ;
 
-my @elements = ("scale", "ruler", "legend", "wns", "header", "footer", "rectangles", "title") ;
+my @elements = ("scale", "ruler", "legend", "wns", "header", "footer", "rectangles", "title", "gpx") ;
 
 my %svgLayer = () ;
 my %wayLayer = () ;

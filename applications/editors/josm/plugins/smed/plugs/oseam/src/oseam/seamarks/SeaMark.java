@@ -51,7 +51,6 @@ public class SeaMark {
 
 	public static final EnumMap<Obj, String> ObjMAP = new EnumMap<Obj, String>(Obj.class);
 	static {
-		ObjMAP.put(Obj.UNKNOWN, "");
 		ObjMAP.put(Obj.BCNCAR, "beacon_cardinal");
 		ObjMAP.put(Obj.BCNISD, "beacon_isolated_danger");
 		ObjMAP.put(Obj.BCNLAT, "beacon_lateral");
@@ -143,7 +142,6 @@ public class SeaMark {
 
 	public static final EnumMap<Cat, String> CatMAP = new EnumMap<Cat, String>(Cat.class);
 	static {
-		CatMAP.put(Cat.UNKNOWN, "");
 		CatMAP.put(Cat.LAT_PORT, "port");
 		CatMAP.put(Cat.LAT_STBD, "starboard");
 		CatMAP.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
@@ -171,7 +169,6 @@ public class SeaMark {
 
 	public static final EnumMap<Shp, String> ShpMAP = new EnumMap<Shp, String>(Shp.class);
 	static {
-		ShpMAP.put(Shp.UNKNOWN, "");
 		ShpMAP.put(Shp.PILLAR, "pillar");
 		ShpMAP.put(Shp.SPAR, "spar");
 		ShpMAP.put(Shp.CAN, "can");
@@ -202,7 +199,6 @@ public class SeaMark {
 
 	public static final EnumMap<Col, String> ColMAP = new EnumMap<Col, String>(Col.class);
 	static {
-		ColMAP.put(Col.UNKNOWN, "");
 		ColMAP.put(Col.WHITE, "white");
 		ColMAP.put(Col.RED, "red");
 		ColMAP.put(Col.ORANGE, "orange");
@@ -334,7 +330,6 @@ public class SeaMark {
 
 	public static final EnumMap<Pat, String> PatMAP = new EnumMap<Pat, String>(Pat.class);
 	static {
-		PatMAP.put(Pat.NONE, "");
 		PatMAP.put(Pat.HORIZ, "horizontal_stripes");
 		PatMAP.put(Pat.VERT, "vertical_stripes");
 		PatMAP.put(Pat.DIAG, "diagonal_stripes");
@@ -384,7 +379,6 @@ public class SeaMark {
 
 	public static final EnumMap<Top, String> TopMAP = new EnumMap<Top, String>(Top.class);
 	static {
-		TopMAP.put(Top.NONE, "");
 		TopMAP.put(Top.CAN, "cylinder");
 		TopMAP.put(Top.CONE, "cylinder");
 		TopMAP.put(Top.SPHERE, "SPHERE");
@@ -416,7 +410,6 @@ public class SeaMark {
 
 	public static final EnumMap<Day, String> DayMAP = new EnumMap<Day, String>(Day.class);
 	static {
-		DayMAP.put(Day.NONE, "");
 		DayMAP.put(Day.BOARD, "board");
 		DayMAP.put(Day.DIAMOND, "diamond");
 		DayMAP.put(Day.CIRCLE, "circle");
@@ -637,7 +630,8 @@ public class SeaMark {
 					setRegion(Reg.A);
 				else if (str.equals("iala-b"))
 					setRegion(Reg.B);
-				else setRegion(Reg.C);
+				else
+					setRegion(Reg.C);
 			} else if (GrpMAP.get(object) == Grp.LAT) {
 				if (getCategory() != Cat.UNKNOWN) {
 					switch (getCategory()) {
@@ -706,7 +700,11 @@ public class SeaMark {
 			case RED:
 				dlg.panelMain.chanButton.doClick();
 				if (getColour(Ent.FLOAT, 1) == Col.WHITE)
-					dlg.panelMain.panelChan.safeWaterButton.doClick();
+					if (getColour(Ent.FLOAT, 2) == Col.RED) {
+						dlg.panelMain.panelChan.portButton.doClick();
+						setRegion(Reg.C);
+					} else
+						dlg.panelMain.panelChan.safeWaterButton.doClick();
 				else if (getColour(Ent.FLOAT, 1) == Col.GREEN)
 					if (getRegion().equals("B"))
 						dlg.panelMain.panelChan.prefStbdButton.doClick();
@@ -846,161 +844,57 @@ public class SeaMark {
 
 	public void saveSign(Node node) {
 
-		Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C" : (getRegion() == Reg.B ? "B" : "A"));
+		if (getObject() != Obj.UNKNOWN) {
 
-		for (String str : node.getKeys().keySet()) {
-			if (str.trim().matches("^seamark:\\S+"))
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
+			Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C" : (getRegion() == Reg.B ? "B" : "A"));
+
+			for (String str : node.getKeys().keySet()) {
+				if (str.trim().matches("^seamark:\\S+"))
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, str, null));
+			}
+
+			if (!getName().isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
+
+			String objStr = ObjMAP.get(object);
+			if (objStr != null) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
+
+				if (getShape() != Shp.FLOAT) {
+					String str = CatMAP.get(category);
+					if (str != null)
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
+					if (getShape() != Shp.BEACON)
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpMAP.get(getShape())));
+				}
+
+				if ((getColour(Ent.BODY, 0) != Col.UNKNOWN) && getShape() != Shp.PERCH) {
+					String str = ColMAP.get(getColour(Ent.BODY, 0));
+					for (int i = 1; bodyColour.size() > i; i++) {
+						str += (";" + ColMAP.get(getColour(Ent.BODY, i)));
+					}
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour", str));
+				}
+
+				if (getPattern(Ent.BODY) != Pat.NONE) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatMAP.get(getPattern(Ent.BODY))));
+				}
+
+				if (((GrpMAP.get(object) == Grp.LAT) && getShape() != Shp.PERCH) || getShape() == Shp.FLOAT) {
+					switch (region) {
+					case A:
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-a"));
+						break;
+					case B:
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-b"));
+						break;
+					case C:
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
+						break;
+					}
+				}
+			}
 		}
-
-		if (!getName().isEmpty())
-			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
-
-		String objStr = ObjMAP.get(object);
-		if (objStr != null) {
-			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
-
-			String str = CatMAP.get(category);
-			if (str != null)
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
-
-			Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpMAP.get(shape)));
-
-			if (getColour(Ent.BODY, 0) != Col.UNKNOWN) {
-				str = ColMAP.get(getColour(Ent.BODY, 0));
-				for (int i = 1; bodyColour.size() > i; i++) {
-					str += (";" + ColMAP.get(getColour(Ent.BODY, i)));
-				}
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour", str));
-			}
-
-			if (getPattern(Ent.BODY) != Pat.NONE) {
-				str = PatMAP.get(getPattern(Ent.BODY));
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", str));
-			}
-			
-			if (GrpMAP.get(object) == Grp.LAT) {
-				switch (region) {
-				case A:
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-a"));
-					break;
-				case B:
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-b"));
-					break;
-				case C:
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
-					break;
-				}
-			}
-
-			/*
-			 * switch (bodyColour) { case RED_GREEN_RED: case GREEN_RED_GREEN: case
-			 * BLACK_YELLOW: case BLACK_YELLOW_BLACK: case YELLOW_BLACK: case
-			 * YELLOW_BLACK_YELLOW: case BLACK_RED_BLACK: Main.main.undoRedo.add(new
-			 * ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern",
-			 * "horizontal stripes")); break; case RED_WHITE:
-			 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" +
-			 * objStr + ":colour_pattern", "vertical stripes")); break; }
-			 */}
-
-		/*
-		 * String str = TopMAP.get(topShape); if (str != null) {
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:topmark:shape", str));
-		 * 
-		 * str = ColMAP.get(topColour); if (str != null) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:topmark:colour", str)); }
-		 * 
-		 * str = DayMAP.get(dayShape); if (str != null) { Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:daymark:shape", str));
-		 * 
-		 * str = ColMAP.get(dayColour); if (str != null) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:daymark:colour", str)); } /* Col
-		 * colour; if (isFired()) { if ((colour = lightColour[0]) != Col.UNKNOWN) if
-		 * (colour == Col.RED) { Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:colour", "red")); } else if
-		 * (colour.equals("G")) { Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:colour", "green")); } else if
-		 * (colour.equals("W")) { Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:colour", "white")); } if
-		 * (!LightPeriod[0].isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:period", LightPeriod[0])); if
-		 * (!LightChar[0].isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:character", LightChar[0])); if
-		 * (!LightGroup[0].isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:group", LightGroup[0])); if
-		 * (!Height[0].isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:height", Height[0])); if
-		 * (!Range[0].isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:range", Range[0])); for (int i
-		 * = 1; i < 10; i++) { if ((colour = lightColour[i]) != Col.UNKNOWN) // if
-		 * (colour.equals("R")) { // Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "red")); //
-		 * if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] !=
-		 * null)) // Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:light:" + i, "red:" + Bearing1[i] + ":" // + Bearing2[i] + ":" +
-		 * Radius[i])); // } else if (colour.equals("G")) { //
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":colour", "green")); // if ((Bearing1[i] != null) && (Bearing2[i] !=
-		 * null) && (Radius[i] != null)) // Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:" + i, "green:" + Bearing1[i]
-		 * + ":" // + Bearing2[i] + ":" + Radius[i])); // } else if
-		 * (colour.equals("W")) { // Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:light:" + i + ":colour", "white"));
-		 * // if ((Bearing1[i] != null) && (Bearing2[i] != null) && (Radius[i] !=
-		 * null)) // Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:light:" + i, "white:" + Bearing1[i] + ":" // + Bearing2[i] + ":"
-		 * + Radius[i])); // } if (LightPeriod[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":period", LightPeriod[i])); if (LightChar[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":character", LightChar[i])); if (LightGroup[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":group", LightGroup[i])); if (Height[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":height", Height[i])); if (Range[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":range", Range[i])); if (Bearing1[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":sector_start", Bearing1[i])); if (Bearing2[i] != null)
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:" +
-		 * i + ":sector_end", Bearing2[i])); } }
-		 */
-		/*
-		 * if (hasRadar()) { Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:radar_reflector", "yes")); } if (hasRacon()) { switch (RaType) {
-		 * case RACON: Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:radar_transponder:category", "racon")); if
-		 * (!getRaconGroup().isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:radar_transponder:group",
-		 * getRaconGroup())); break; case RAMARK: Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:radar_transponder:category",
-		 * "ramark")); break; case LEADING: Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:radar_transponder:category",
-		 * "leading")); break; default: Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:radar_transponder", "yes")); } } if
-		 * (hasFog()) { switch (getFogSound()) { case HORN:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "horn")); break; case SIREN:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "siren")); break; case DIA:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "diaphone")); break; case BELL:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "bell")); break; case WHIS:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "whistle")); break; case GONG:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "gong")); break; case EXPLOS:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:category", "explosive")); break; default:
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal", "yes")); } if (!getFogGroup().isEmpty())
-		 * Main.main.undoRedo.add(new ChangePropertyCommand(node,
-		 * "seamark:fog_signal:group", getFogGroup())); if
-		 * (!getFogPeriod().isEmpty()) Main.main.undoRedo.add(new
-		 * ChangePropertyCommand(node, "seamark:fog_signal:period",
-		 * getFogPeriod())); }
-		 */}
+	}
 
 }

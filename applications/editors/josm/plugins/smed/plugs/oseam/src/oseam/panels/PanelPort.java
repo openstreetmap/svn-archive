@@ -101,7 +101,8 @@ public class PanelPort extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			dlg.mark.paintSign();
+			if (dlg.mark != null)
+				dlg.mark.paintSign();
 		}
 	};
 

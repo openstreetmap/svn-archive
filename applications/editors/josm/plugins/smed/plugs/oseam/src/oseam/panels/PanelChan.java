@@ -17,6 +17,7 @@ import oseam.panels.PanelStbd;
 import oseam.panels.PanelSaw;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Pat;
 import oseam.seamarks.SeaMark.Ent;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Reg;
@@ -143,14 +144,16 @@ public class PanelChan extends JPanel {
 					panelStbd.setVisible(false);
 			}
 			if (safeWaterButton.isSelected()) {
+				dlg.mark.setCategory(Cat.UNKNOWN);
+				dlg.mark.setColour(Ent.BODY, Col.RED);
+				dlg.mark.addColour(Ent.BODY, Col.WHITE);
+				dlg.mark.setPattern(Ent.BODY, Pat.VERT);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).doClick();
 				} else {
 					panelSaw.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				dlg.mark.setColour(Ent.BODY, Col.RED);
-				dlg.mark.addColour(Ent.BODY, Col.WHITE);
 				safeWaterButton.setBorderPainted(true);
 				panelSaw.setVisible(true);
 			} else {

@@ -248,6 +248,7 @@ public class PanelMain extends JPanel {
 			}
 		};
 		saveButton.addActionListener(alSave);
+		this.clearSelections();
 	}
 
 	public void clearSelections() {

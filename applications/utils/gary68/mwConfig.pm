@@ -95,6 +95,8 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
 			["gpx","","gpx file to overlay (CLO)", "map"],
+			["gpxColor","black","color for gpx objects (CLO)", "map"],
+			["gpxSize",10,"base size of gpx objects (CLO)", "map"],
 			["ini","mwconfig.ini","file with configuration values (CLO)", "misc"],
 			["out","mapweaver.svg","svg output name (CLO)", "job"],
 			["style","mwStandardRules.txt","file with render rules (CLO)", "job"],
@@ -286,6 +288,8 @@ sub getProgramOptions {
 
 my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"gpx:s"		=> \$cv{'gpx'},
+				"gpxcolor:s"		=> \$cv{'gpxcolor'},
+				"gpxsize:i"		=> \$cv{'gpxsize'},
 				"ini:s"		=> \$cv{'ini'},
 				"style=s" 	=> \$cv{'style'},		# the style file, mandatory
 				"out:s"		=> \$cv{'svgname'},		# outfile name or default

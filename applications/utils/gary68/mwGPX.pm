@@ -45,6 +45,8 @@ sub processGPXFile {
 	my %rteHash = %$ref2 ;
 	my %trkHash = %$ref3 ;
 
+	my $size = cv('gpxsize') ;
+	my $color = cv('gpxcolor') ;
 
 	foreach my $wptNr ( sort { $a <=> $b } keys %wptHash) {
 		# print "WPT $wptNr: $wptHash{$wptNr}{'lon'} $wptHash{$wptNr}{'lat'}\n" ;
@@ -56,10 +58,10 @@ sub processGPXFile {
 		}
 
 
-		my $svgString = "fill=\"black\" stroke=\"none\" " ;
+		my $svgString = "fill=\"$color\" stroke=\"none\" " ;
 		my $lon = $wptHash{$wptNr}{'lon'} ;
 		my $lat = $wptHash{$wptNr}{'lat'} ;
-		drawCircle ($lon, $lat, 1, 30, 0, $svgString, 'gpx') ;
+		drawCircle ($lon, $lat, 1, 3*$size, 0, $svgString, 'gpx') ;
 
 	}
 
@@ -71,19 +73,16 @@ sub processGPXFile {
 		foreach my $rteWptNr ( sort { $a <=> $b } keys %{$rteHash{$rteNr}}) {
 			# print "   wpt $rteWptNr: $rteHash{$rteNr}{$rteWptNr}{'lon'} $rteHash{$rteNr}{$rteWptNr}{'lat'}\n" ;
 
-			my $svgString = "fill=\"black\" stroke=\"none\" " ;
+			my $svgString = "fill=\"$color\" stroke=\"none\" " ;
 			my $lon = $rteHash{$rteNr}{$rteWptNr}{'lon'} ;
 			my $lat = $rteHash{$rteNr}{$rteWptNr}{'lat'} ;
-			drawCircle ($lon, $lat, 1, 20, 0, $svgString, 'gpx') ;
+			drawCircle ($lon, $lat, 1, 2*$size, 0, $svgString, 'gpx') ;
 
 			my ($x, $y) = convert ($lon, $lat) ;
 			push @coords, $x, $y ;
 		}
 
 		my $svgString = "" ;
-
-		my $size = 10 ;
-		my $color = "black" ;
 
 		my $lc = "round" ;
 		my $lj = "round" ;
@@ -105,10 +104,10 @@ sub processGPXFile {
 			foreach my $ptNr ( sort { $a <=> $b } keys %points) {
 				# print "   trkpt $ptNr: $points{$ptNr}{'lon'} $points{$ptNr}{'lat'}\n" ;
 
-				my $svgString = "fill=\"black\" stroke=\"none\" " ;
+				my $svgString = "fill=\"$color\" stroke=\"none\" " ;
 				my $lon = $points{$ptNr}{'lon'} ;
 				my $lat = $points{$ptNr}{'lat'} ;
-				drawCircle ($lon, $lat, 1, 10, 0, $svgString, 'gpx') ;
+				drawCircle ($lon, $lat, 1, $size, 0, $svgString, 'gpx') ;
 			}
 		}
 	}

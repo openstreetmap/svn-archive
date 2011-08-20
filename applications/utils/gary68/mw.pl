@@ -41,12 +41,13 @@
 # 0.35 svg text creation bug fixed
 # 0.36 font size error wns corrected; box occupy; new place management
 # 0.37 -dirprg program to create directory; gpx support
+# 0.38 -gpxcolor; -gpxsize
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.37" ;
+my $version = "0.38" ;
 my $programName = "mapweaver" ;
 
 use strict ;

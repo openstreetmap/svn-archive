@@ -66,7 +66,7 @@ public class PanelChan extends JPanel {
 			}
 			if (prefPortButton.isSelected()) {
 				dlg.mark.setCategory(Cat.LAT_PREF_PORT);
-				if (panelPort.shapes.containsKey(shp) && (shp != Shp.PERCH)) {
+				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).doClick();
 				} else {
 					panelPort.clearSelections();
@@ -81,12 +81,6 @@ public class PanelChan extends JPanel {
 				}
 				prefPortButton.setBorderPainted(true);
 				panelPort.setVisible(true);
-				panelPort.perchButton.setVisible(false);
-				panelPort.stakeButton.setVisible(false);
-				if (dlg.mark.getShape() == Shp.PERCH || dlg.mark.getShape() == Shp.STAKE) {
-					dlg.mark.setShape(Shp.UNKNOWN);
-					panelPort.clearSelections();
-				}
 			} else {
 				prefPortButton.setBorderPainted(false);
 				if (!portButton.isSelected())
@@ -117,7 +111,7 @@ public class PanelChan extends JPanel {
 			}
 			if (prefStbdButton.isSelected()) {
 				dlg.mark.setCategory(Cat.LAT_PREF_STBD);
-				if (panelStbd.shapes.containsKey(shp) && (shp != Shp.PERCH)) {
+				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).doClick();
 				} else {
 					panelStbd.clearSelections();
@@ -132,12 +126,6 @@ public class PanelChan extends JPanel {
 				}
 				prefStbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
-				panelStbd.perchButton.setVisible(false);
-				panelStbd.stakeButton.setVisible(false);
-				if (dlg.mark.getShape() == Shp.PERCH || dlg.mark.getShape() == Shp.STAKE) {
-					dlg.mark.setShape(Shp.UNKNOWN);
-					panelStbd.clearSelections();
-				}
 			} else {
 				prefStbdButton.setBorderPainted(false);
 				if (!stbdButton.isSelected())

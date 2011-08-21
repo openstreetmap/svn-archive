@@ -164,7 +164,7 @@ public class SeaMark {
 	}
 
 	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
 	public static final EnumMap<Shp, String> ShpMAP = new EnumMap<Shp, String>(Shp.class);
@@ -177,7 +177,10 @@ public class SeaMark {
 		ShpMAP.put(Shp.BARREL, "barrel");
 		ShpMAP.put(Shp.FLOAT, "float");
 		ShpMAP.put(Shp.SUPER, "super-buoy");
-		ShpMAP.put(Shp.BEACON, "beacon");
+		ShpMAP.put(Shp.BUOYANT, "buoyant");
+		ShpMAP.put(Shp.CAIRN, "cairn");
+		ShpMAP.put(Shp.PILE, "pile");
+		ShpMAP.put(Shp.LATTICE, "lattice");
 		ShpMAP.put(Shp.TOWER, "tower");
 		ShpMAP.put(Shp.STAKE, "stake");
 		ShpMAP.put(Shp.PERCH, "perch");
@@ -330,11 +333,11 @@ public class SeaMark {
 
 	public static final EnumMap<Pat, String> PatMAP = new EnumMap<Pat, String>(Pat.class);
 	static {
-		PatMAP.put(Pat.HORIZ, "horizontal_stripes");
-		PatMAP.put(Pat.VERT, "vertical_stripes");
-		PatMAP.put(Pat.DIAG, "diagonal_stripes");
+		PatMAP.put(Pat.HORIZ, "horizontal stripes");
+		PatMAP.put(Pat.VERT, "vertical stripes");
+		PatMAP.put(Pat.DIAG, "diagonal stripes");
 		PatMAP.put(Pat.SQUARE, "squared");
-		PatMAP.put(Pat.BORDER, "border_stripe");
+		PatMAP.put(Pat.BORDER, "border stripe");
 	}
 
 	private Pat bodyPattern = Pat.NONE;
@@ -591,6 +594,8 @@ public class SeaMark {
 			}
 		}
 		if (getShape() == Shp.UNKNOWN) {
+			if (EntMAP.get(getObject()) == Ent.BUOY)
+				setShape(Shp.BUOY);
 			if (EntMAP.get(getObject()) == Ent.BEACON)
 				setShape(Shp.BEACON);
 			if (EntMAP.get(getObject()) == Ent.FLOAT)
@@ -633,29 +638,47 @@ public class SeaMark {
 				else
 					setRegion(Reg.C);
 			} else if (GrpMAP.get(object) == Grp.LAT) {
-				if (getCategory() != Cat.UNKNOWN) {
-					switch (getCategory()) {
-					case LAT_PORT:
-					case LAT_PREF_PORT:
-						if (getColour(Ent.BODY, 0) == Col.RED) {
+				switch (getCategory()) {
+				case LAT_PORT:
+					if (getColour(Ent.BODY, 0) == Col.RED) {
+						if (getColour(Ent.BODY, 1) == Col.WHITE)
+							setRegion(Reg.C);
+						else
 							setRegion(Reg.A);
-							if (getColour(Ent.BODY, 1) == Col.WHITE)
-								setRegion(Reg.C);
-						}
-						if (getColour(Ent.BODY, 0) == Col.GREEN)
-							setRegion(Reg.B);
-						break;
-					case LAT_STBD:
-					case LAT_PREF_STBD:
-						if (getColour(Ent.BODY, 0) == Col.GREEN) {
-							setRegion(Reg.A);
-							if (getColour(Ent.BODY, 1) == Col.WHITE)
-								setRegion(Reg.C);
-						}
-						if (getColour(Ent.BODY, 0) == Col.RED)
-							setRegion(Reg.B);
-						break;
 					}
+					if (getColour(Ent.BODY, 0) == Col.GREEN)
+						setRegion(Reg.B);
+					break;
+				case LAT_PREF_PORT:
+					if (getColour(Ent.BODY, 0) == Col.RED) {
+						if (getColour(Ent.BODY, 3) == Col.GREEN)
+							setRegion(Reg.C);
+						else
+							setRegion(Reg.A);
+					}
+					if (getColour(Ent.BODY, 0) == Col.GREEN)
+						setRegion(Reg.B);
+					break;
+				case LAT_STBD:
+					if (getColour(Ent.BODY, 0) == Col.GREEN) {
+						if (getColour(Ent.BODY, 1) == Col.WHITE)
+							setRegion(Reg.C);
+						else
+							setRegion(Reg.A);
+					}
+					if (getColour(Ent.BODY, 0) == Col.RED)
+						setRegion(Reg.B);
+					break;
+				case LAT_PREF_STBD:
+					if (getColour(Ent.BODY, 0) == Col.GREEN)
+						setRegion(Reg.A);
+					if (getColour(Ent.BODY, 0) == Col.RED) {
+						if (getColour(Ent.BODY, 3) == Col.GREEN)
+							setRegion(Reg.C);
+						else
+							setRegion(Reg.B);
+					}
+					break;
 				}
 			}
 		}
@@ -701,31 +724,45 @@ public class SeaMark {
 				dlg.panelMain.chanButton.doClick();
 				if (getColour(Ent.FLOAT, 1) == Col.WHITE)
 					if (getColour(Ent.FLOAT, 2) == Col.RED) {
-						dlg.panelMain.panelChan.portButton.doClick();
 						setRegion(Reg.C);
-					} else
+						dlg.panelMain.panelChan.portButton.doClick();
+					} else {
 						dlg.panelMain.panelChan.safeWaterButton.doClick();
-				else if (getColour(Ent.FLOAT, 1) == Col.GREEN)
-					if (getRegion().equals("B"))
+					}
+				else if (getColour(Ent.FLOAT, 1) == Col.GREEN) {
+					if (getColour(Ent.FLOAT, 3) == Col.GREEN) {
+						setRegion(Reg.C);
+					}
+					if (getRegion().equals("B")) {
 						dlg.panelMain.panelChan.prefStbdButton.doClick();
-					else
+					} else {
 						dlg.panelMain.panelChan.prefPortButton.doClick();
-				if (getRegion().equals("B"))
-					dlg.panelMain.panelChan.stbdButton.doClick();
-				else
-					dlg.panelMain.panelChan.portButton.doClick();
+					}
+				} else {
+					if (getRegion().equals("B"))
+						dlg.panelMain.panelChan.stbdButton.doClick();
+					else
+						dlg.panelMain.panelChan.portButton.doClick();
+				}
 				break;
 			case GREEN:
 				dlg.panelMain.chanButton.doClick();
-				if (getColour(Ent.FLOAT, 1) == Col.RED)
-					if (getRegion().equals("B"))
+				if (getColour(Ent.FLOAT, 1) == Col.RED) {
+					if (getRegion().equals("B")) {
 						dlg.panelMain.panelChan.prefPortButton.doClick();
-					else
+					} else {
 						dlg.panelMain.panelChan.prefStbdButton.doClick();
-				if (getRegion().equals("B"))
-					dlg.panelMain.panelChan.portButton.doClick();
-				else
+					}
+				} else if (getColour(Ent.FLOAT, 1) == Col.WHITE) {
+					setRegion(Reg.C);
 					dlg.panelMain.panelChan.stbdButton.doClick();
+				} else {
+					if (getRegion().equals("B")) {
+						dlg.panelMain.panelChan.portButton.doClick();
+					} else {
+						dlg.panelMain.panelChan.stbdButton.doClick();
+					}
+				}
 				break;
 			case BLACK:
 				dlg.panelMain.hazButton.doClick();
@@ -758,6 +795,7 @@ public class SeaMark {
 		case TOWER:
 			imgStr += "Tower";
 			break;
+		case BUOY:
 		case PILLAR:
 			imgStr += "Pillar";
 			break;
@@ -777,19 +815,20 @@ public class SeaMark {
 			imgStr += "Float";
 			break;
 		case BEACON:
+		case CAIRN:
+		case PILE:
+		case LATTICE:
+		case BUOYANT:
 			imgStr += "Beacon";
 			break;
 		case SUPER:
 			imgStr += "Float_Major";
 			break;
 		case STAKE:
+		case POLE:
+		case POST:
 			imgStr += "Stake";
 			break;
-		default:
-			if (EntMAP.get(getObject()) == Ent.BEACON)
-				imgStr += "Beacon";
-			if (EntMAP.get(getObject()) == Ent.BUOY)
-				imgStr += "Pillar";
 		}
 		if (!imgStr.equals("/images/")) {
 			for (Col col : bodyColour) {
@@ -864,7 +903,7 @@ public class SeaMark {
 					String str = CatMAP.get(category);
 					if (str != null)
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
-					if (getShape() != Shp.BEACON)
+					if ((getShape() != Shp.BUOY) && (getShape() != Shp.BEACON))
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpMAP.get(getShape())));
 				}
 
@@ -877,10 +916,11 @@ public class SeaMark {
 				}
 
 				if (getPattern(Ent.BODY) != Pat.NONE) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatMAP.get(getPattern(Ent.BODY))));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatMAP
+							.get(getPattern(Ent.BODY))));
 				}
 
-				if (((GrpMAP.get(object) == Grp.LAT) && getShape() != Shp.PERCH) || getShape() == Shp.FLOAT) {
+				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH) || (getObject() == Obj.FLTLAT)) {
 					switch (region) {
 					case A:
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-a"));

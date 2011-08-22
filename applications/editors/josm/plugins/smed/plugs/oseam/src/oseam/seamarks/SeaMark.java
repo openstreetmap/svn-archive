@@ -49,30 +49,30 @@ public class SeaMark {
 		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SIGSTA
 	}
 
-	public static final EnumMap<Obj, String> ObjMAP = new EnumMap<Obj, String>(Obj.class);
+	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
 	static {
-		ObjMAP.put(Obj.BCNCAR, "beacon_cardinal");
-		ObjMAP.put(Obj.BCNISD, "beacon_isolated_danger");
-		ObjMAP.put(Obj.BCNLAT, "beacon_lateral");
-		ObjMAP.put(Obj.BCNSAW, "beacon_safe_water");
-		ObjMAP.put(Obj.BCNSPP, "beacon_special_purpose");
-		ObjMAP.put(Obj.BOYCAR, "buoy_cardinal");
-		ObjMAP.put(Obj.BOYISD, "buoy_isolated_danger");
-		ObjMAP.put(Obj.BOYLAT, "buoy_lateral");
-		ObjMAP.put(Obj.BOYSAW, "buoy_safe_water");
-		ObjMAP.put(Obj.BOYSPP, "buoy_special_purpose");
-		ObjMAP.put(Obj.FLTCAR, "light_float");
-		ObjMAP.put(Obj.FLTLAT, "light_float");
-		ObjMAP.put(Obj.FLTSAW, "light_float");
-		ObjMAP.put(Obj.FLTSPP, "light_float");
-		ObjMAP.put(Obj.LITMAJ, "light_major");
-		ObjMAP.put(Obj.LITMIN, "light_minor");
-		ObjMAP.put(Obj.LITFLT, "light_float");
-		ObjMAP.put(Obj.LITVES, "light_vessel");
-		ObjMAP.put(Obj.LNDMRK, "landmark");
-		ObjMAP.put(Obj.MORFAC, "mooring");
-		ObjMAP.put(Obj.SIGSTA, "signal_station_warning");
-		ObjMAP.put(Obj.SIGSTA, "signal_station_traffic");
+		ObjSTR.put(Obj.BCNCAR, "beacon_cardinal");
+		ObjSTR.put(Obj.BCNISD, "beacon_isolated_danger");
+		ObjSTR.put(Obj.BCNLAT, "beacon_lateral");
+		ObjSTR.put(Obj.BCNSAW, "beacon_safe_water");
+		ObjSTR.put(Obj.BCNSPP, "beacon_special_purpose");
+		ObjSTR.put(Obj.BOYCAR, "buoy_cardinal");
+		ObjSTR.put(Obj.BOYISD, "buoy_isolated_danger");
+		ObjSTR.put(Obj.BOYLAT, "buoy_lateral");
+		ObjSTR.put(Obj.BOYSAW, "buoy_safe_water");
+		ObjSTR.put(Obj.BOYSPP, "buoy_special_purpose");
+		ObjSTR.put(Obj.FLTCAR, "light_float");
+		ObjSTR.put(Obj.FLTLAT, "light_float");
+		ObjSTR.put(Obj.FLTSAW, "light_float");
+		ObjSTR.put(Obj.FLTSPP, "light_float");
+		ObjSTR.put(Obj.LITMAJ, "light_major");
+		ObjSTR.put(Obj.LITMIN, "light_minor");
+		ObjSTR.put(Obj.LITFLT, "light_float");
+		ObjSTR.put(Obj.LITVES, "light_vessel");
+		ObjSTR.put(Obj.LNDMRK, "landmark");
+		ObjSTR.put(Obj.MORFAC, "mooring");
+		ObjSTR.put(Obj.SIGSTA, "signal_station_warning");
+		ObjSTR.put(Obj.SIGSTA, "signal_station_traffic");
 	}
 
 	private Obj object = Obj.UNKNOWN;
@@ -140,17 +140,17 @@ public class SeaMark {
 		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT, MOORING_BUOY, SIGNAL_STATION
 	}
 
-	public static final EnumMap<Cat, String> CatMAP = new EnumMap<Cat, String>(Cat.class);
+	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
 	static {
-		CatMAP.put(Cat.LAT_PORT, "port");
-		CatMAP.put(Cat.LAT_STBD, "starboard");
-		CatMAP.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
-		CatMAP.put(Cat.LAT_PREF_STBD, "preferred_channel_starboard");
-		CatMAP.put(Cat.CARD_NORTH, "north");
-		CatMAP.put(Cat.CARD_EAST, "east");
-		CatMAP.put(Cat.CARD_SOUTH, "south");
-		CatMAP.put(Cat.CARD_WEST, "west");
-		CatMAP.put(Cat.MOORING_BUOY, "mooring_buoy");
+		CatSTR.put(Cat.LAT_PORT, "port");
+		CatSTR.put(Cat.LAT_STBD, "starboard");
+		CatSTR.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
+		CatSTR.put(Cat.LAT_PREF_STBD, "preferred_channel_starboard");
+		CatSTR.put(Cat.CARD_NORTH, "north");
+		CatSTR.put(Cat.CARD_EAST, "east");
+		CatSTR.put(Cat.CARD_SOUTH, "south");
+		CatSTR.put(Cat.CARD_WEST, "west");
+		CatSTR.put(Cat.MOORING_BUOY, "mooring_buoy");
 	}
 
 	private Cat category = Cat.UNKNOWN;
@@ -167,23 +167,23 @@ public class SeaMark {
 		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
-	public static final EnumMap<Shp, String> ShpMAP = new EnumMap<Shp, String>(Shp.class);
+	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(Shp.class);
 	static {
-		ShpMAP.put(Shp.PILLAR, "pillar");
-		ShpMAP.put(Shp.SPAR, "spar");
-		ShpMAP.put(Shp.CAN, "can");
-		ShpMAP.put(Shp.CONE, "conical");
-		ShpMAP.put(Shp.SPHERE, "spherical");
-		ShpMAP.put(Shp.BARREL, "barrel");
-		ShpMAP.put(Shp.FLOAT, "float");
-		ShpMAP.put(Shp.SUPER, "super-buoy");
-		ShpMAP.put(Shp.BUOYANT, "buoyant");
-		ShpMAP.put(Shp.CAIRN, "cairn");
-		ShpMAP.put(Shp.PILE, "pile");
-		ShpMAP.put(Shp.LATTICE, "lattice");
-		ShpMAP.put(Shp.TOWER, "tower");
-		ShpMAP.put(Shp.STAKE, "stake");
-		ShpMAP.put(Shp.PERCH, "perch");
+		ShpSTR.put(Shp.PILLAR, "pillar");
+		ShpSTR.put(Shp.SPAR, "spar");
+		ShpSTR.put(Shp.CAN, "can");
+		ShpSTR.put(Shp.CONE, "conical");
+		ShpSTR.put(Shp.SPHERE, "spherical");
+		ShpSTR.put(Shp.BARREL, "barrel");
+		ShpSTR.put(Shp.FLOAT, "float");
+		ShpSTR.put(Shp.SUPER, "super-buoy");
+		ShpSTR.put(Shp.BUOYANT, "buoyant");
+		ShpSTR.put(Shp.CAIRN, "cairn");
+		ShpSTR.put(Shp.PILE, "pile");
+		ShpSTR.put(Shp.LATTICE, "lattice");
+		ShpSTR.put(Shp.TOWER, "tower");
+		ShpSTR.put(Shp.STAKE, "stake");
+		ShpSTR.put(Shp.PERCH, "perch");
 	}
 
 	private Shp shape = Shp.UNKNOWN;
@@ -200,17 +200,17 @@ public class SeaMark {
 		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK,
 	}
 
-	public static final EnumMap<Col, String> ColMAP = new EnumMap<Col, String>(Col.class);
+	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);
 	static {
-		ColMAP.put(Col.WHITE, "white");
-		ColMAP.put(Col.RED, "red");
-		ColMAP.put(Col.ORANGE, "orange");
-		ColMAP.put(Col.AMBER, "amber");
-		ColMAP.put(Col.YELLOW, "yellow");
-		ColMAP.put(Col.GREEN, "green");
-		ColMAP.put(Col.BLUE, "blue");
-		ColMAP.put(Col.VIOLET, "violet");
-		ColMAP.put(Col.BLACK, "black");
+		ColSTR.put(Col.WHITE, "white");
+		ColSTR.put(Col.RED, "red");
+		ColSTR.put(Col.ORANGE, "orange");
+		ColSTR.put(Col.AMBER, "amber");
+		ColSTR.put(Col.YELLOW, "yellow");
+		ColSTR.put(Col.GREEN, "green");
+		ColSTR.put(Col.BLUE, "blue");
+		ColSTR.put(Col.VIOLET, "violet");
+		ColSTR.put(Col.BLACK, "black");
 	}
 
 	private ArrayList<Col> bodyColour = new ArrayList<Col>();
@@ -380,17 +380,17 @@ public class SeaMark {
 		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2
 	}
 
-	public static final EnumMap<Top, String> TopMAP = new EnumMap<Top, String>(Top.class);
+	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
 	static {
-		TopMAP.put(Top.CAN, "cylinder");
-		TopMAP.put(Top.CONE, "cylinder");
-		TopMAP.put(Top.SPHERE, "SPHERE");
-		TopMAP.put(Top.X_SHAPE, "X-SHAPE");
-		TopMAP.put(Top.NORTH, "2 cones up");
-		TopMAP.put(Top.SOUTH, "2 cones down");
-		TopMAP.put(Top.EAST, "2 cones base together");
-		TopMAP.put(Top.WEST, "2 cones points together");
-		TopMAP.put(Top.SPHERES2, "2 spheres");
+		TopSTR.put(Top.CAN, "cylinder");
+		TopSTR.put(Top.CONE, "cylinder");
+		TopSTR.put(Top.SPHERE, "SPHERE");
+		TopSTR.put(Top.X_SHAPE, "X-SHAPE");
+		TopSTR.put(Top.NORTH, "2 cones up");
+		TopSTR.put(Top.SOUTH, "2 cones down");
+		TopSTR.put(Top.EAST, "2 cones base together");
+		TopSTR.put(Top.WEST, "2 cones points together");
+		TopSTR.put(Top.SPHERES2, "2 spheres");
 	}
 
 	private Top topShape = Top.NONE;
@@ -411,14 +411,14 @@ public class SeaMark {
 		NONE, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
-	public static final EnumMap<Day, String> DayMAP = new EnumMap<Day, String>(Day.class);
+	public static final EnumMap<Day, String> DaySTR = new EnumMap<Day, String>(Day.class);
 	static {
-		DayMAP.put(Day.BOARD, "board");
-		DayMAP.put(Day.DIAMOND, "diamond");
-		DayMAP.put(Day.CIRCLE, "circle");
-		DayMAP.put(Day.TRIANGLE, "triangle, point up");
-		DayMAP.put(Day.TRIANGLE_INV, "triangle, point down");
-		DayMAP.put(Day.SQUARE, "square");
+		DaySTR.put(Day.BOARD, "board");
+		DaySTR.put(Day.DIAMOND, "diamond");
+		DaySTR.put(Day.CIRCLE, "circle");
+		DaySTR.put(Day.TRIANGLE, "triangle, point up");
+		DaySTR.put(Day.TRIANGLE_INV, "triangle, point down");
+		DaySTR.put(Day.SQUARE, "square");
 	}
 
 	private Day dayShape = Day.NONE;
@@ -539,8 +539,8 @@ public class SeaMark {
 			str = keys.get("seamark:type");
 
 		setObject(Obj.UNKNOWN);
-		for (Obj obj : ObjMAP.keySet()) {
-			if (ObjMAP.get(obj).equals(str)) {
+		for (Obj obj : ObjSTR.keySet()) {
+			if (ObjSTR.get(obj).equals(str)) {
 				setObject(obj);
 			}
 		}
@@ -553,9 +553,9 @@ public class SeaMark {
 		}
 
 		setName("");
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":name")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":name");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":name")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":name");
 				setName(str);
 			}
 		}
@@ -570,24 +570,24 @@ public class SeaMark {
 			}
 		}
 
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":category")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":category");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":category")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":category");
 				setCategory(Cat.UNKNOWN);
-				for (Cat cat : CatMAP.keySet()) {
-					if (CatMAP.get(cat).equals(str)) {
+				for (Cat cat : CatSTR.keySet()) {
+					if (CatSTR.get(cat).equals(str)) {
 						setCategory(cat);
 					}
 				}
 			}
 		}
 
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":shape")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":shape");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":shape")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":shape");
 				setShape(Shp.UNKNOWN);
-				for (Shp shp : ShpMAP.keySet()) {
-					if (ShpMAP.get(shp).equals(str)) {
+				for (Shp shp : ShpSTR.keySet()) {
+					if (ShpSTR.get(shp).equals(str)) {
 						setShape(shp);
 					}
 				}
@@ -602,13 +602,13 @@ public class SeaMark {
 				setShape(Shp.FLOAT);
 		}
 
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":colour")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":colour");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":colour")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":colour");
 				bodyColour.clear();
 				for (String item : str.split(";")) {
-					for (Col col : ColMAP.keySet()) {
-						if (ColMAP.get(col).equals(item)) {
+					for (Col col : ColSTR.keySet()) {
+						if (ColSTR.get(col).equals(item)) {
 							bodyColour.add(col);
 						}
 					}
@@ -616,9 +616,9 @@ public class SeaMark {
 			}
 		}
 
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":colour_pattern")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":colour_pattern");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":colour_pattern")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":colour_pattern");
 				setPattern(Ent.BODY, Pat.NONE);
 				for (Pat pat : PatMAP.keySet()) {
 					if (PatMAP.get(pat).equals(str)) {
@@ -628,9 +628,9 @@ public class SeaMark {
 			}
 		}
 
-		for (Obj obj : ObjMAP.keySet()) {
-			if (keys.containsKey("seamark:" + ObjMAP.get(obj) + ":system")) {
-				str = keys.get("seamark:" + ObjMAP.get(obj) + ":system");
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":system")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":system");
 				if (str.equals("iala-a"))
 					setRegion(Reg.A);
 				else if (str.equals("iala-b"))
@@ -709,8 +709,25 @@ public class SeaMark {
 			dlg.panelMain.panelChan.safeWaterButton.doClick();
 			break;
 		case CAR:
+			dlg.panelMain.hazButton.doClick();
+			switch (getCategory()) {
+			case CARD_NORTH:
+				dlg.panelMain.panelHaz.northButton.doClick();
+				break;
+			case CARD_SOUTH:
+				dlg.panelMain.panelHaz.southButton.doClick();
+				break;
+			case CARD_EAST:
+				dlg.panelMain.panelHaz.eastButton.doClick();
+				break;
+			case CARD_WEST:
+				dlg.panelMain.panelHaz.westButton.doClick();
+				break;
+			}
+			break;
 		case ISD:
 			dlg.panelMain.hazButton.doClick();
+			dlg.panelMain.panelHaz.isolButton.doClick();
 			break;
 		case SPP:
 			dlg.panelMain.specButton.doClick();
@@ -766,12 +783,28 @@ public class SeaMark {
 				break;
 			case BLACK:
 				dlg.panelMain.hazButton.doClick();
+				switch (getColour(Ent.FLOAT, 1)) {
+				case YELLOW:
+					if (getColour(Ent.FLOAT, 2) == Col.BLACK)
+						dlg.panelMain.panelHaz.eastButton.doClick();
+					else
+						dlg.panelMain.panelHaz.northButton.doClick();
+					break;
+				case RED:
+					dlg.panelMain.panelHaz.isolButton.doClick();
+					break;
+				}
 				break;
 			case YELLOW:
-				if (getColour(Ent.FLOAT, 1) == Col.BLACK)
+				if (getColour(Ent.FLOAT, 1) == Col.BLACK) {
 					dlg.panelMain.hazButton.doClick();
-				else
+					if (getColour(Ent.FLOAT, 2) == Col.YELLOW)
+						dlg.panelMain.panelHaz.westButton.doClick();
+					else
+						dlg.panelMain.panelHaz.southButton.doClick();
+				} else {
 					dlg.panelMain.specButton.doClick();
+				}
 				break;
 			}
 			break;
@@ -895,22 +928,22 @@ public class SeaMark {
 			if (!getName().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
 
-			String objStr = ObjMAP.get(object);
+			String objStr = ObjSTR.get(object);
 			if (objStr != null) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
 
 				if (getShape() != Shp.FLOAT) {
-					String str = CatMAP.get(category);
+					String str = CatSTR.get(category);
 					if (str != null)
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
 					if ((getShape() != Shp.BUOY) && (getShape() != Shp.BEACON))
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpMAP.get(getShape())));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpSTR.get(getShape())));
 				}
 
 				if ((getColour(Ent.BODY, 0) != Col.UNKNOWN) && getShape() != Shp.PERCH) {
-					String str = ColMAP.get(getColour(Ent.BODY, 0));
+					String str = ColSTR.get(getColour(Ent.BODY, 0));
 					for (int i = 1; bodyColour.size() > i; i++) {
-						str += (";" + ColMAP.get(getColour(Ent.BODY, i)));
+						str += (";" + ColSTR.get(getColour(Ent.BODY, i)));
 					}
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour", str));
 				}

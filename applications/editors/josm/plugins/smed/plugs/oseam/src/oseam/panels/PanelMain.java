@@ -30,6 +30,8 @@ public class PanelMain extends JPanel {
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	private ActionListener alSave = null;
+	private JButton moreButton = null;
+	private ActionListener alMore = null;
 	public ButtonGroup typeButtons = null;
 	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
 	public JRadioButton hazButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/HazButton.png")));
@@ -56,16 +58,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 185, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 165, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 185, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 165, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 185, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 165, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 185, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 165, 160));
 		panelLights.setVisible(false);
 		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
@@ -136,14 +138,12 @@ public class PanelMain extends JPanel {
 				}
 				if (specButton.isSelected()) {
 					dlg.panelMain.panelSpec.panelCol.yellowButton.doClick();
-					dlg.panelMain.panelTop.enableAll(true);
-					dlg.panelMain.panelTop.noTopButton.doClick();
-					dlg.panelMain.panelTop.panelCol.enableAll(true);
-					dlg.panelMain.panelTop.panelCol.yellowButton.doClick();
-					topButton.setEnabled(true);
-					fogButton.setEnabled(true);
-					radButton.setEnabled(true);
-					litButton.setEnabled(true);
+					if ((dlg.mark != null) && (dlg.panelMain.panelSpec.shapes.containsKey(dlg.mark.getShape()))) {
+						dlg.panelMain.panelSpec.shapes.get(dlg.mark.getShape()).doClick();
+					} else {
+						dlg.panelMain.panelSpec.shapeButtons.clearSelection();
+						dlg.panelMain.panelSpec.alShape.actionPerformed(null);
+					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
 				} else {
@@ -152,8 +152,6 @@ public class PanelMain extends JPanel {
 					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
-					fogButton.setEnabled(true);
-					radButton.setEnabled(true);
 					litButton.setEnabled(true);
 					litButton.doClick();
 					lightsButton.setBorderPainted(true);
@@ -248,7 +246,19 @@ public class PanelMain extends JPanel {
 			}
 		};
 		saveButton.addActionListener(alSave);
+		
+		moreButton = new JButton();
+		moreButton.setBounds(new Rectangle(230, 145, 50, 15));
+		moreButton.setText("more...");
+		this.add(moreButton, null);
+		alMore = new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+			}
+		};
+		moreButton.addActionListener(alMore);
+		
 		this.clearSelections();
+		
 	}
 
 	public void clearSelections() {

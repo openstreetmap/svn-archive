@@ -17,11 +17,12 @@ import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark.Shp;
 import oseam.seamarks.SeaMark.Obj;
 import oseam.seamarks.SeaMark.Ent;
+import oseam.seamarks.SeaMark.Col;
 
 public class PanelSpec extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup shapeButtons = new ButtonGroup();
+	public ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
 	public JRadioButton canButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanButton.png")));
@@ -32,20 +33,26 @@ public class PanelSpec extends JPanel {
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
+	public JRadioButton stakeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StakeButton.png")));
+	public JRadioButton cairnButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CairnButton.png")));
 	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
 	public PanelCol panelCol = null;
-	private ActionListener alShape = new ActionListener() {
+	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
+					if (button == cairnButton)
+						panelCol.offButton.doClick();
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
+			if (dlg.mark != null)
+				dlg.mark.paintSign();
 		}
 	};
 
@@ -66,6 +73,8 @@ public class PanelSpec extends JPanel {
 		this.add(getShapeButton(floatButton, 90, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
 		this.add(getShapeButton(beaconButton, 90, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
 		this.add(getShapeButton(towerButton, 90, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(stakeButton, 125, 0, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
+		this.add(getShapeButton(cairnButton, 125, 32, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
 	}
 
 	public void clearSelections() {

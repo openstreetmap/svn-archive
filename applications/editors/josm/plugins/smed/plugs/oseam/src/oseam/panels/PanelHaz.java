@@ -40,12 +40,8 @@ public class PanelHaz extends JPanel {
 				dlg.mark.setColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp)) {
+				if (shapes.containsKey(shp))
 					shapes.get(shp).doClick();
-				} else {
-					clearSelections();
-					dlg.mark.setShape(Shp.UNKNOWN);
-				}
 				northButton.setBorderPainted(true);
 			} else {
 				northButton.setBorderPainted(false);
@@ -55,12 +51,8 @@ public class PanelHaz extends JPanel {
 				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp)) {
+				if (shapes.containsKey(shp))
 					shapes.get(shp).doClick();
-				} else {
-					clearSelections();
-					dlg.mark.setShape(Shp.UNKNOWN);
-				}
 				southButton.setBorderPainted(true);
 			} else {
 				southButton.setBorderPainted(false);
@@ -71,12 +63,8 @@ public class PanelHaz extends JPanel {
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp)) {
+				if (shapes.containsKey(shp))
 					shapes.get(shp).doClick();
-				} else {
-					clearSelections();
-					dlg.mark.setShape(Shp.UNKNOWN);
-				}
 				eastButton.setBorderPainted(true);
 			} else {
 				eastButton.setBorderPainted(false);
@@ -87,27 +75,20 @@ public class PanelHaz extends JPanel {
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp)) {
+				if (shapes.containsKey(shp))
 					shapes.get(shp).doClick();
-				} else {
-					clearSelections();
-					dlg.mark.setShape(Shp.UNKNOWN);
-				}
 				westButton.setBorderPainted(true);
 			} else {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
+				dlg.mark.setCategory(Cat.UNKNOWN);
 				dlg.mark.setColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.RED);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp)) {
+				if (shapes.containsKey(shp))
 					shapes.get(shp).doClick();
-				} else {
-					clearSelections();
-					dlg.mark.setShape(Shp.UNKNOWN);
-				}
 				isolButton.setBorderPainted(true);
 			} else {
 				isolButton.setBorderPainted(false);

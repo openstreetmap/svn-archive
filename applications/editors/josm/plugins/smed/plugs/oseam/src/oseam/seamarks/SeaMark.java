@@ -844,11 +844,16 @@ public class SeaMark {
 		case SPHERE:
 			imgStr += "Sphere";
 			break;
+		case BARREL:
+			imgStr += "Barrel";
+			break;
+		case CAIRN:
+			imgStr += "Cairn";
+			break;
 		case FLOAT:
 			imgStr += "Float";
 			break;
 		case BEACON:
-		case CAIRN:
 		case PILE:
 		case LATTICE:
 		case BUOYANT:

@@ -1,23 +1,13 @@
 package oseam.panels;
 
-import java.awt.event.ActionListener;
-import java.awt.Color;
-import java.awt.Rectangle;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
-
-import java.util.EnumMap;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Shp;
-import oseam.seamarks.SeaMark.Obj;
-import oseam.seamarks.SeaMark.Ent;
-import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelSpec extends JPanel {
 
@@ -45,7 +35,7 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if (button == cairnButton)
+					if ((button == cairnButton) && !(panelCol.offButton.isSelected()))
 						panelCol.offButton.doClick();
 					button.setBorderPainted(true);
 				} else
@@ -58,27 +48,28 @@ public class PanelSpec extends JPanel {
 
 	public PanelSpec(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, Ent.BODY);
-		panelCol.setBounds(new Rectangle(9, 0, 34, 160));
+		panelCol = new PanelCol(dlg, alShape, Ent.BODY);
+		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 
 		this.setLayout(null);
 		this.add(panelCol, null);
-		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
-		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
-		this.add(getShapeButton(barrelButton, 90, 0, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
-		this.add(getShapeButton(superButton, 90, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
-		this.add(getShapeButton(floatButton, 90, 64, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 90, 96, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 90, 128, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
-		this.add(getShapeButton(stakeButton, 125, 0, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
-		this.add(getShapeButton(cairnButton, 125, 32, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
+		this.add(getShapeButton(pillarButton, 35, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(sparButton, 35, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(canButton, 35, 64, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
+		this.add(getShapeButton(coneButton, 35, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sphereButton, 70, 0, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
+		this.add(getShapeButton(barrelButton, 70, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
+		this.add(getShapeButton(superButton, 70, 64, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
+		this.add(getShapeButton(floatButton, 70, 96, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 105, 0, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
+		this.add(getShapeButton(towerButton, 105, 32, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(stakeButton, 105, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
+		this.add(getShapeButton(cairnButton, 105, 96, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
 	}
 
 	public void clearSelections() {
-
+		shapeButtons.clearSelection();
+		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {

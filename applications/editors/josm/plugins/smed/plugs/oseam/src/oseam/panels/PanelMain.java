@@ -2,21 +2,13 @@ package oseam.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelMain extends JPanel {
 
@@ -49,6 +41,7 @@ public class PanelMain extends JPanel {
 	public PanelHaz panelHaz = null;
 	public PanelSpec panelSpec = null;
 	public PanelLights panelLights = null;
+	public PanelMore panelMore = null;
 	public PanelTop panelTop = null;
 	public PanelFog panelFog = null;
 	public PanelRadar panelRadar = null;
@@ -69,6 +62,9 @@ public class PanelMain extends JPanel {
 		panelLights = new PanelLights(dlg);
 		panelLights.setBounds(new Rectangle(65, 0, 165, 160));
 		panelLights.setVisible(false);
+		panelMore = new PanelMore(dlg);
+		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
+		panelMore.setVisible(false);
 		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
 		panelTop.setVisible(false);
@@ -137,12 +133,17 @@ public class PanelMain extends JPanel {
 					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
-					dlg.panelMain.panelSpec.panelCol.yellowButton.doClick();
-					if ((dlg.mark != null) && (dlg.panelMain.panelSpec.shapes.containsKey(dlg.mark.getShape()))) {
-						dlg.panelMain.panelSpec.shapes.get(dlg.mark.getShape()).doClick();
-					} else {
-						dlg.panelMain.panelSpec.shapeButtons.clearSelection();
-						dlg.panelMain.panelSpec.alShape.actionPerformed(null);
+					if (dlg.mark != null) {
+						if (dlg.mark.getObject() == Obj.UNKNOWN) {
+							panelSpec.clearSelections();
+							panelSpec.panelCol.yellowButton.doClick();
+						}
+						if (panelSpec.shapes.containsKey(dlg.mark.getShape())) {
+							panelSpec.shapes.get(dlg.mark.getShape()).doClick();
+						} else {
+							panelSpec.shapeButtons.clearSelection();
+							panelSpec.alShape.actionPerformed(null);
+						}
 					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
@@ -183,6 +184,8 @@ public class PanelMain extends JPanel {
 					miscButtons.clearSelection();
 				}
 				if (topButton.isSelected()) {
+					moreButton.setText("v v v");
+					panelMore.setVisible(false);
 					topButton.setBorderPainted(true);
 					panelTop.setVisible(true);
 				} else {
@@ -190,6 +193,8 @@ public class PanelMain extends JPanel {
 					panelTop.setVisible(false);
 				}
 				if (fogButton.isSelected()) {
+					moreButton.setText("v v v");
+					panelMore.setVisible(false);
 					fogButton.setBorderPainted(true);
 					panelFog.setVisible(true);
 				} else {
@@ -197,6 +202,8 @@ public class PanelMain extends JPanel {
 					panelFog.setVisible(false);
 				}
 				if (radButton.isSelected()) {
+					moreButton.setText("v v v");
+					panelMore.setVisible(false);
 					radButton.setBorderPainted(true);
 					panelRadar.setVisible(true);
 				} else {
@@ -204,6 +211,8 @@ public class PanelMain extends JPanel {
 					panelRadar.setVisible(false);
 				}
 				if (litButton.isSelected()) {
+					moreButton.setText("v v v");
+					panelMore.setVisible(false);
 					litButton.setBorderPainted(true);
 					panelLit.setVisible(true);
 				} else {
@@ -246,19 +255,43 @@ public class PanelMain extends JPanel {
 			}
 		};
 		saveButton.addActionListener(alSave);
-		
+
 		moreButton = new JButton();
-		moreButton.setBounds(new Rectangle(230, 145, 50, 15));
-		moreButton.setText("more...");
+		moreButton.setBounds(new Rectangle(357, 145, 38, 15));
+		moreButton.setMargin(new Insets(0, 0, 0, 0));
+		moreButton.setText("v v v");
 		this.add(moreButton, null);
 		alMore = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (panelMore.isVisible()) {
+					moreButton.setText("v v v");
+					panelMore.setVisible(false);
+					if (topButton.isSelected())
+						panelTop.setVisible(true);
+					if (radButton.isSelected())
+						panelRadar.setVisible(true);
+					if (fogButton.isSelected())
+						panelFog.setVisible(true);
+					if (litButton.isSelected())
+						panelLit.setVisible(true);
+				} else {
+					panelMore.setVisible(true);
+					moreButton.setText("^ ^ ^");
+					if (topButton.isSelected())
+						panelTop.setVisible(false);
+					if (radButton.isSelected())
+						panelRadar.setVisible(false);
+					if (fogButton.isSelected())
+						panelFog.setVisible(false);
+					if (litButton.isSelected())
+						panelLit.setVisible(false);
+				}
 			}
 		};
 		moreButton.addActionListener(alMore);
-		
+
 		this.clearSelections();
-		
+
 	}
 
 	public void clearSelections() {

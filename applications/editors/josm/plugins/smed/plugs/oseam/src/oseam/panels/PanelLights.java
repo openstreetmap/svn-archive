@@ -1,21 +1,13 @@
 package oseam.panels;
 
-import java.awt.event.ActionListener;
-import java.awt.Color;
-import java.awt.Rectangle;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
-
-import java.util.EnumMap;
+import java.awt.event.*;
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Cat;
-import oseam.seamarks.SeaMark.Obj;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelLights extends JPanel {
 

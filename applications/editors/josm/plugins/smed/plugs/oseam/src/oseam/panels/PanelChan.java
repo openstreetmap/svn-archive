@@ -1,28 +1,12 @@
 package oseam.panels;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
-import java.awt.Color;
-import java.awt.Rectangle;
-
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.panels.PanelPort;
-import oseam.panels.PanelStbd;
-import oseam.panels.PanelSaw;
-import oseam.seamarks.SeaMark.Cat;
-import oseam.seamarks.SeaMark.Col;
-import oseam.seamarks.SeaMark.Pat;
-import oseam.seamarks.SeaMark.Ent;
-import oseam.seamarks.SeaMark.Shp;
-import oseam.seamarks.SeaMark.Reg;
-
-import java.awt.event.ActionListener;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelChan extends JPanel {
 

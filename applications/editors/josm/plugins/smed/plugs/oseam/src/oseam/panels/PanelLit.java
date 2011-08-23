@@ -1,22 +1,12 @@
 package oseam.panels;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.SwingConstants;
-
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Ent;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelLit extends JPanel {
 
@@ -60,7 +50,7 @@ public class PanelLit extends JPanel {
 		dlg = dia;
 		panelChr = new PanelChr(dlg);
 		panelChr.setBounds(new Rectangle(0, 0, 88, 160));
-		panelCol = new PanelCol(dlg, Ent.LIGHT);
+		panelCol = new PanelCol(dlg, alType, Ent.LIGHT);
 		panelCol.setBounds(new Rectangle(88, 0, 34, 160));
 		panelCol.blackButton.setVisible(false);
 		this.setLayout(null);

@@ -1,10 +1,9 @@
 package oseam.seamarks;
 
-import javax.swing.ImageIcon;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -19,6 +18,7 @@ public class SeaMark {
 
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
+		dlg.panelMain.clearSelections();
 	}
 
 	public enum Reg {
@@ -333,11 +333,11 @@ public class SeaMark {
 
 	public static final EnumMap<Pat, String> PatMAP = new EnumMap<Pat, String>(Pat.class);
 	static {
-		PatMAP.put(Pat.HORIZ, "horizontal stripes");
-		PatMAP.put(Pat.VERT, "vertical stripes");
-		PatMAP.put(Pat.DIAG, "diagonal stripes");
+		PatMAP.put(Pat.HORIZ, "horizontal");
+		PatMAP.put(Pat.VERT, "vertical");
+		PatMAP.put(Pat.DIAG, "diagonal");
 		PatMAP.put(Pat.SQUARE, "squared");
-		PatMAP.put(Pat.BORDER, "border stripe");
+		PatMAP.put(Pat.BORDER, "border");
 	}
 
 	private Pat bodyPattern = Pat.NONE;
@@ -821,6 +821,7 @@ public class SeaMark {
 		dlg.panelMain.lightIcon.setIcon(null);
 		dlg.panelMain.topIcon.setIcon(null);
 		dlg.panelMain.radarIcon.setIcon(null);
+dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 		dlg.panelMain.fogIcon.setIcon(null);
 
 		String imgStr = "/images/";
@@ -868,54 +869,61 @@ public class SeaMark {
 			imgStr += "Stake";
 			break;
 		}
-		if (!imgStr.equals("/images/")) {
-			for (Col col : bodyColour) {
-				switch (col) {
-				case WHITE:
-					imgStr += "_White";
-					break;
-				case RED:
-					imgStr += "_Red";
-					break;
-				case ORANGE:
-					imgStr += "_Orange";
-					break;
-				case AMBER:
-					imgStr += "_Amber";
-					break;
-				case YELLOW:
-					imgStr += "_Yellow";
-					break;
-				case GREEN:
-					imgStr += "_Green";
-					break;
-				case BLUE:
-					imgStr += "_Blue";
-					break;
-				case VIOLET:
-					imgStr += "_Violet";
-					break;
-				case BLACK:
-					imgStr += "_Black";
-					break;
-				}
+		String colStr = imgStr;
+		for (Col col : bodyColour) {
+			switch (col) {
+			case WHITE:
+				colStr += "_White";
+				break;
+			case RED:
+				colStr += "_Red";
+				break;
+			case ORANGE:
+				colStr += "_Orange";
+				break;
+			case AMBER:
+				colStr += "_Amber";
+				break;
+			case YELLOW:
+				colStr += "_Yellow";
+				break;
+			case GREEN:
+				colStr += "_Green";
+				break;
+			case BLUE:
+				colStr += "_Blue";
+				break;
+			case VIOLET:
+				colStr += "_Violet";
+				break;
+			case BLACK:
+				colStr += "_Black";
+				break;
 			}
 		}
 		if (getShape() == Shp.PERCH) {
 			if (getCategory() == Cat.LAT_PORT) {
-				imgStr = "/images/Perch_Port";
+				colStr = "/images/Perch_Port";
 			} else {
-				imgStr = "/images/Perch_Starboard";
+				colStr = "/images/Perch_Starboard";
 			}
 		}
 		if (!imgStr.equals("/images/")) {
-			imgStr += ".png";
-			if (getClass().getResource(imgStr) == null) {
-				System.out.println("Missing image: " + imgStr);
-				return;
+			colStr += ".png";
+			if (getClass().getResource(colStr) == null) {
+				System.out.println("Missing image: " + colStr);
+				imgStr += ".png";
+				if (getClass().getResource(imgStr) == null) {
+					System.out.println("Missing image: " + imgStr);
+					return;
+				} else {
+					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+				}
 			} else {
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
 			}
+		} else {
+			dlg.panelMain.shapeIcon.setIcon(null);
 		}
 	}
 

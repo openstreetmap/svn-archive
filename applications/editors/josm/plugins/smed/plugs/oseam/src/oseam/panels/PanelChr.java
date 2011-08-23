@@ -2,26 +2,17 @@ package oseam.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
-import javax.swing.JToggleButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
+import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark;
-import oseam.seamarks.Light;
-import oseam.seamarks.Light.Chr;
+import oseam.seamarks.*;
+import oseam.seamarks.Light.*;
 
 public class PanelChr extends JPanel {
 	// System.out.println(map);

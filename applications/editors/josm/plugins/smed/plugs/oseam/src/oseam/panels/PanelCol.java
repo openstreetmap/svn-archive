@@ -2,26 +2,19 @@ package oseam.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
-
-import java.util.EnumMap;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Col;
-import oseam.seamarks.SeaMark.Ent;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelCol extends JPanel {
 
 	private OSeaMAction dlg;
+	private ActionListener act;
 	private Ent ent;
 	private ButtonGroup colourButtons = new ButtonGroup();
 	public JRadioButton offButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
@@ -40,8 +33,10 @@ public class PanelCol extends JPanel {
 			for (Col col : colours.keySet()) {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
-					if (dlg.mark != null)
+					if (dlg.mark != null) {
 						dlg.mark.setColour(ent, col);
+						act.actionPerformed(null);
+					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -49,8 +44,9 @@ public class PanelCol extends JPanel {
 		}
 	};
 
-	public PanelCol(OSeaMAction dia, Ent entity) {
+	public PanelCol(OSeaMAction dia, ActionListener al, Ent entity) {
 		dlg = dia;
+		act = al;
 		ent = entity;
 		this.setLayout(null);
 		this.add(getColButton(offButton, 0, 0, 34, 16, Messages.getString("NoColour"), Col.UNKNOWN), null);

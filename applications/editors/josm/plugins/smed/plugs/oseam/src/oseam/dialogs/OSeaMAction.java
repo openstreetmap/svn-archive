@@ -2,16 +2,13 @@ package oseam.dialogs;
 
 import oseam.panels.*;
 
-import java.awt.Dimension;
-import java.util.Collection;
-
-import javax.swing.JPanel;
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.*;
+import org.openstreetmap.josm.data.osm.*;
 
 import oseam.Messages;
 import oseam.seamarks.SeaMark;

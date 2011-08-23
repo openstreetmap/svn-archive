@@ -1,16 +1,14 @@
 package oseam.seamarks;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
+import java.util.regex.*;
+import javax.swing.table.*;
 
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.*;
 
 public class Light extends AbstractTableModel {
 	

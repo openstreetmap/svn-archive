@@ -1,6 +1,9 @@
 package oseam.panels;
 
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
 
 import oseam.dialogs.OSeaMAction;
 

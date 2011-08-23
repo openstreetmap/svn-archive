@@ -1,21 +1,13 @@
 package oseam.panels;
 
-import javax.swing.JPanel;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
-
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-import java.util.EnumMap;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.Top;
-import oseam.seamarks.SeaMark.Day;
-import oseam.seamarks.SeaMark.Ent;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelTop extends JPanel {
 
@@ -67,7 +59,7 @@ public class PanelTop extends JPanel {
 
 	public PanelTop(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, Ent.TOPMARK);
+		panelCol = new PanelCol(dlg, alTop, Ent.TOPMARK);
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelCol, null);

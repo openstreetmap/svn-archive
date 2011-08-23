@@ -342,7 +342,7 @@ public class BuoyCard extends Buoy {
 				break;
 			}
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_cardinal:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_cardinal:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case CARD_BEACON:
 		case CARD_TOWER:
@@ -380,7 +380,7 @@ public class BuoyCard extends Buoy {
 				break;
 			}
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_cardinal:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_cardinal:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case CARD_FLOAT:
 			switch (getBuoyIndex()) {
@@ -409,7 +409,7 @@ public class BuoyCard extends Buoy {
 				break;
 			}
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		}
 		saveTopMarkData(shape, "black"); //$NON-NLS-1$

@@ -240,19 +240,19 @@ public class BuoySaw extends Buoy {
 		case SAFE_SPAR:
 		case SAFE_SPHERE:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safe_water:colour_pattern", "vertical stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_safe_water:colour_pattern", "vertical")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:colour", "red;white")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case SAFE_BEACON:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_safe_water:colour_pattern", "vertical stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_safe_water:colour_pattern", "vertical")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:beacon_safe_water:colour", "red;white")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case SAFE_FLOAT:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour_pattern", "vertical stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour_pattern", "vertical")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:light_float:colour", "red;white")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;

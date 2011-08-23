@@ -227,7 +227,7 @@ public class BuoyIsol extends Buoy {
 		case ISOL_PILLAR:
 		case ISOL_SPAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_isolated_danger:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_isolated_danger:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
@@ -235,13 +235,13 @@ public class BuoyIsol extends Buoy {
 		case ISOL_TOWER:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:beacon_isolated_danger:colour_pattern", //$NON-NLS-1$
-					"horizontal stripes")); //$NON-NLS-1$
+					"horizontal")); //$NON-NLS-1$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:beacon_isolated_danger:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case ISOL_FLOAT:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:light_float:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;

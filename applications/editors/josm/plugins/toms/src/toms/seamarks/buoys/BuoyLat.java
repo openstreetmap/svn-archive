@@ -862,7 +862,7 @@ public class BuoyLat extends Buoy {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:category", "preferred_channel_port")); //$NON-NLS-1$ //$NON-NLS-2$
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -878,7 +878,7 @@ public class BuoyLat extends Buoy {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:category", "preferred_channel_port")); //$NON-NLS-1$ //$NON-NLS-2$
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -891,7 +891,7 @@ public class BuoyLat extends Buoy {
 				break;
 			case LAT_FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:light_float:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1027,7 +1027,7 @@ public class BuoyLat extends Buoy {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:category", "preferred_channel_starboard")); //$NON-NLS-1$ //$NON-NLS-2$
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1043,7 +1043,7 @@ public class BuoyLat extends Buoy {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:category", "preferred_channel_starboard")); //$NON-NLS-1$ //$NON-NLS-2$
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1056,7 +1056,7 @@ public class BuoyLat extends Buoy {
 				break;
 			case LAT_FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:light_float:colour_pattern", "horizontal")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$

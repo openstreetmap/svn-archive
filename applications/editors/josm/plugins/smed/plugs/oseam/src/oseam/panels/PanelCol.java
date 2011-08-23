@@ -27,7 +27,7 @@ public class PanelCol extends JPanel {
 	public JRadioButton blueButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlueButton.png")));
 	public JRadioButton violetButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/VioletButton.png")));
 	public JRadioButton blackButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlackButton.png")));
-	private EnumMap<Col, JRadioButton> colours = new EnumMap<Col, JRadioButton>(Col.class);
+	public EnumMap<Col, JRadioButton> colours = new EnumMap<Col, JRadioButton>(Col.class);
 	private ActionListener alColour = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Col col : colours.keySet()) {

@@ -27,12 +27,9 @@ public class PanelChr extends JPanel {
 	public JToggleButton quickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/QuickButton.png")));
 	public JToggleButton veryQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/VeryQuickButton.png")));
 	public JToggleButton ultraQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/UltraQuickButton.png")));
-	public JToggleButton interruptedQuickButton = new JToggleButton(new ImageIcon(getClass().getResource(
-			"/images/InterruptedQuickButton.png")));
-	public JToggleButton interruptedVeryQuickButton = new JToggleButton(new ImageIcon(getClass().getResource(
-			"/images/InterruptedVeryQuickButton.png")));
-	public JToggleButton interruptedUltraQuickButton = new JToggleButton(new ImageIcon(getClass().getResource(
-			"/images/InterruptedUltraQuickButton.png")));
+	public JToggleButton interruptedQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedQuickButton.png")));
+	public JToggleButton interruptedVeryQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedVeryQuickButton.png")));
+	public JToggleButton interruptedUltraQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedUltraQuickButton.png")));
 	public JToggleButton isophasedButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/IsophasedButton.png")));
 	public JToggleButton occultingButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/OccultingButton.png")));
 	public JToggleButton morseButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MorseButton.png")));

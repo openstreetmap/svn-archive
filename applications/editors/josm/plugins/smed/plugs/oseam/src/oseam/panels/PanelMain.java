@@ -51,16 +51,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 165, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 180, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 165, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 180, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 165, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 180, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 165, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 180, 160));
 		panelLights.setVisible(false);
 		panelMore = new PanelMore(dlg);
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
@@ -79,19 +79,19 @@ public class PanelMain extends JPanel {
 		panelLit.setVisible(false);
 
 		shapeIcon = new JLabel();
-		shapeIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		shapeIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(shapeIcon, null);
 		lightIcon = new JLabel();
-		lightIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		lightIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(lightIcon, null);
 		topIcon = new JLabel();
-		topIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		topIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(topIcon, null);
 		radarIcon = new JLabel();
-		radarIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		radarIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(radarIcon, null);
 		fogIcon = new JLabel();
-		fogIcon.setBounds(new Rectangle(250, 0, 150, 185));
+		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(fogIcon, null);
 
 		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
@@ -137,6 +137,8 @@ public class PanelMain extends JPanel {
 						if (dlg.mark.getObject() == Obj.UNKNOWN) {
 							panelSpec.clearSelections();
 							panelSpec.panelCol.yellowButton.doClick();
+						} else {
+							panelSpec.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
 						}
 						if (panelSpec.shapes.containsKey(dlg.mark.getShape())) {
 							panelSpec.shapes.get(dlg.mark.getShape()).doClick();
@@ -257,7 +259,7 @@ public class PanelMain extends JPanel {
 		saveButton.addActionListener(alSave);
 
 		moreButton = new JButton();
-		moreButton.setBounds(new Rectangle(357, 145, 38, 15));
+		moreButton.setBounds(new Rectangle(350, 145, 40, 15));
 		moreButton.setMargin(new Insets(0, 0, 0, 0));
 		moreButton.setText("v v v");
 		this.add(moreButton, null);

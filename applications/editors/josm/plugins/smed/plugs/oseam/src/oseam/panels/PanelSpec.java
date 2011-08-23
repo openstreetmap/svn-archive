@@ -2,7 +2,9 @@ package oseam.panels;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.util.*;
 
 import oseam.Messages;
@@ -12,6 +14,13 @@ import oseam.seamarks.SeaMark.*;
 public class PanelSpec extends JPanel {
 
 	private OSeaMAction dlg;
+	public JLabel categoryLabel;
+	public JComboBox categoryBox;
+	private ActionListener alCategoryBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+		}
+	};
+
 	public ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
@@ -54,17 +63,37 @@ public class PanelSpec extends JPanel {
 		this.setLayout(null);
 		this.add(panelCol, null);
 		this.add(getShapeButton(pillarButton, 35, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(sparButton, 35, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(canButton, 35, 64, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
-		this.add(getShapeButton(coneButton, 35, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 70, 0, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sparButton, 70, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(canButton, 105, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
+		this.add(getShapeButton(coneButton, 140, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sphereButton, 35, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
 		this.add(getShapeButton(barrelButton, 70, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
-		this.add(getShapeButton(superButton, 70, 64, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
-		this.add(getShapeButton(floatButton, 70, 96, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 105, 0, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 105, 32, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(superButton, 105, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
+		this.add(getShapeButton(floatButton, 140, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 35, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
+		this.add(getShapeButton(towerButton, 70, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
 		this.add(getShapeButton(stakeButton, 105, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
-		this.add(getShapeButton(cairnButton, 105, 96, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
+		this.add(getShapeButton(cairnButton, 140, 64, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
+
+		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
+		categoryLabel.setBounds(new Rectangle(35, 100, 140, 20));
+		this.add(categoryLabel, null);
+		categoryBox = new JComboBox();
+		categoryBox.setBounds(new Rectangle(35, 120, 140, 20));
+		this.add(categoryBox, null);
+		categoryBox.addActionListener(alCategoryBox);
+		categoryBox.addItem(Messages.getString("NoneSpecified"));
+		categoryBox.addItem(Messages.getString("General"));
+		categoryBox.addItem(Messages.getString("ChannelSeparation"));
+		categoryBox.addItem(Messages.getString("EntryProhibited"));
+		categoryBox.addItem(Messages.getString("Yachting"));
+		categoryBox.addItem(Messages.getString("Diving"));
+		categoryBox.addItem(Messages.getString("Anchorage"));
+		categoryBox.addItem(Messages.getString("Pipeline"));
+		categoryBox.addItem(Messages.getString("SpeedLimit"));
+		categoryBox.addItem(Messages.getString("FerryCrossing"));
+		categoryBox.addItem(Messages.getString("FoulGround"));
+		categoryBox.addItem(Messages.getString("UnknownPurpose"));
 	}
 
 	public void clearSelections() {

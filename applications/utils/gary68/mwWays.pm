@@ -378,8 +378,8 @@ sub createDirectory {
 	}
 	else {
 		foreach my $street (sort keys %directory) {
-			$street = replaceHTMLCode ( $street ) ;
-			print $dirFile "$street\t" ;
+			my $streetSanitized = replaceHTMLCode ( $street ) ;
+			print $dirFile "$streetSanitized\t" ;
 			foreach my $square (sort keys %{$directory{$street}}) {
 				print $dirFile "$square " ;
 			}

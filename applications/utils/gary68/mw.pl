@@ -42,12 +42,13 @@
 # 0.36 font size error wns corrected; box occupy; new place management
 # 0.37 -dirprg program to create directory; gpx support
 # 0.38 -gpxcolor; -gpxsize
-# 
+# 0.39 parameter bug dirprg fixed; sanitize bug fixed 
+# 0.40 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.38" ;
+my $version = "0.39" ;
 my $programName = "mapweaver" ;
 
 use strict ;

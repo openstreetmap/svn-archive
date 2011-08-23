@@ -311,7 +311,7 @@ my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
 				"png"		=> \$cv{'png'},		# specifies if png will be created
 				"pngdpi:i"		=> \$cv{'pngdpi'},		# specifies png resolution
 				"dir"		=> \$cv{'dir'},		# specifies if directory of streets will be created
-				"dirprg"		=> \$cv{'dirprg'},		# 
+				"dirprg:s"		=> \$cv{'dirprg'},		# 
 				"poi"		=> \$cv{'poi'},		# specifies if directory of pois will be created
 				"dirpdf"		=> \$cv{'dirpdf'},
 				"dircolnum:i"	=> \$cv{'dircolnum'},

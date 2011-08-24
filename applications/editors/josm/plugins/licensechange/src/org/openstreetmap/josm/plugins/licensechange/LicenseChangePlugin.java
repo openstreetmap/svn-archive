@@ -96,7 +96,6 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
         {
             problemDialog = new LicenseChangeDialog(this);
             newFrame.addToggleDialog(problemDialog);
-            initializeProblemLayer();
             MapView.addLayerChangeListener(this);
         } 
         else

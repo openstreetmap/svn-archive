@@ -46,7 +46,8 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SIGSTA
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
+		LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SISTAW, SISTAT
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -71,8 +72,8 @@ public class SeaMark {
 		ObjSTR.put(Obj.LITVES, "light_vessel");
 		ObjSTR.put(Obj.LNDMRK, "landmark");
 		ObjSTR.put(Obj.MORFAC, "mooring");
-		ObjSTR.put(Obj.SIGSTA, "signal_station_warning");
-		ObjSTR.put(Obj.SIGSTA, "signal_station_traffic");
+		ObjSTR.put(Obj.SISTAW, "signal_station_warning");
+		ObjSTR.put(Obj.SISTAT, "signal_station_traffic");
 	}
 
 	private Obj object = Obj.UNKNOWN;
@@ -107,7 +108,8 @@ public class SeaMark {
 		EntMAP.put(Obj.LITVES, Ent.LIGHT);
 		EntMAP.put(Obj.LNDMRK, Ent.LIGHT);
 		EntMAP.put(Obj.MORFAC, Ent.MOORING);
-		EntMAP.put(Obj.SIGSTA, Ent.STATION);
+		EntMAP.put(Obj.SISTAW, Ent.STATION);
+		EntMAP.put(Obj.SISTAT, Ent.STATION);
 	}
 
 	public enum Grp {
@@ -133,11 +135,12 @@ public class SeaMark {
 		GrpMAP.put(Obj.LITVES, Grp.LIT);
 		GrpMAP.put(Obj.LNDMRK, Grp.LIT);
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
-		GrpMAP.put(Obj.SIGSTA, Grp.SIS);
+		GrpMAP.put(Obj.SISTAW, Grp.SIS);
+		GrpMAP.put(Obj.SISTAT, Grp.SIS);
 	}
 
 	public enum Cat {
-		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL, LIGHT_FLOAT, MOORING_BUOY, SIGNAL_STATION
+		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, MOORING_BUOY
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);

@@ -9,6 +9,7 @@
 # http://www.gnu.org/copyleft/gpl.html
 
 target_base='http://gis.lebensministerium.at/wmsgw/?key=%s&FORMAT=image/%s&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&Layers=Luftbild_MR,Luftbild_1m,Luftbild_8m,Satellitenbild_30m&SRS=EPSG:900913&WIDTH=256&HEIGHT=256&BBOX=%s'
+SLIPPYURL='http://geoimage.openstreetmap.at/geoimagemap.html'
 
 import re
 
@@ -37,12 +38,17 @@ def application(environ, start_response):
 	uri = environ.get('REQUEST_URI', '')
 	res=re.findall(regex,uri)
 	
+	# Show Slippymap if base index is requested
 	if len(res) != 1:
-	  out='ERROR, invalid Tile URL: %s\n' % uri
-	  response_headers = [('Content-type', 'text/plain'),
-                              ('Content-Length', str(len(out)))]
-          start_response('200 OK', response_headers)
-          return [out]
+	  if uri == "/":
+	    start_response('301 Redirect', [('Location', SLIPPYURL),])
+            return []
+          else:
+            out='ERROR, invalid Tile URL: %s\n' % uri
+            response_headers = [('Content-type', 'text/plain'),
+	                        ('Content-Length', str(len(out)))]
+            start_response('200 OK', response_headers)
+            return [out]
         else:
 	  key=res[0][0]
 	  z=res[0][1]

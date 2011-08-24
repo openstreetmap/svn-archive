@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<HEAD>
+<meta http-equiv="content-type" content="text/html; charset=latin9"/>
+<TITLE>Openstreetmap.de TMS Slippymap</TITLE>
+<style type="text/css">
+html,body {
+  background-color: #ffffff;
+  height: 100%;
+  width: 100%;
+  margin: 0; padding: 0;
+  font-family: Helvetica,Arial,sans-serif;
+  overflow: hidden;
+  color: #000000;
+}
+
+div#map {
+  height: 100%;
+  width: 100%;
+  background-color:white;
+}
+
+div#permalink {
+  position:absolute;
+  top: 25px;
+  left: 80px;
+  height: 30px;
+  width: 400px;
+  z-index:4;
+}
+</style>
+                                
+
+<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"></script>
+ 
+<script type="text/javascript">
+//<![CDATA[
+
+
+var map;
+var layer_mapnik;
+var layer_tah;
+//var queryData = parseQueryString();
+
+function drawmap() {
+
+    OpenLayers.Lang.setCode('de');
+    
+    var proj4326 = new OpenLayers.Projection("EPSG:4326");
+    var projmerc = new OpenLayers.Projection("EPSG:900913");
+    
+
+    map = new OpenLayers.Map('map', {
+        projection: new OpenLayers.Projection("EPSG:900913"),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        controls: [
+            new OpenLayers.Control.MouseDefaults(),
+            new OpenLayers.Control.PanZoomBar(),
+            new OpenLayers.Control.Permalink(),
+            new OpenLayers.Control.Attribution()],
+        maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+        numZoomLevels: 19,
+        maxResolution: 156543,
+        units: 'meters'
+    });
+
+    var layer_wms = new OpenLayers.Layer.XYZ( 'WMS',
+    'http://geoimage.openstreetmap.at/4d80de696cd562a63ce463a58a61488d/${z}/${x}/${y}.jpg',{numZoomLevels:19});
+
+    map.addLayers([layer_wms]);
+
+    // zoom to WMS extend
+    wmsextend = new OpenLayers.Bounds(9.35676,46.0872,17.3099,49.2092);
+    
+    wmsextend.transform(proj4326, projmerc)
+    if (!map.getCenter()) {
+      map.zoomToExtent(wmsextend);
+    }
+};
+
+//]]>
+    </script>
+  </head>
+  <body onload=drawmap();>
+  <div id="map"></div>
+</BODY>
+</HTML>
+  

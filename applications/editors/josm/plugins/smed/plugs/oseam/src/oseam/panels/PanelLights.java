@@ -44,8 +44,8 @@ public class PanelLights extends JPanel {
 		this.add(getCatButton(minorButton, 70, 0, 34, 32, "MinorLight", Cat.LIGHT_MINOR, Obj.LITMIN), null);
 		this.add(getCatButton(vesselButton, 105, 0, 34, 32, "LightVessel", Cat.LIGHT_VESSEL, Obj.LITVES), null);
 		this.add(getCatButton(floatButton, 140, 0, 34, 32, "LightFloat", Cat.LIGHT_FLOAT, Obj.LITFLT), null);
-		this.add(getCatButton(trafficButton, 35, 32, 34, 32, "SSTraffic", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
-		this.add(getCatButton(warningButton, 105, 32, 34, 32, "SSWarning", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
+		this.add(getCatButton(trafficButton, 50, 32, 34, 32, "SSTraffic", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
+		this.add(getCatButton(warningButton, 125, 32, 34, 32, "SSWarning", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
 	}
 
 	public void clearSelections() {

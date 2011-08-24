@@ -17,7 +17,9 @@ public class PanelLights extends JPanel {
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
 	public JRadioButton minorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMinorButton.png")));
 	public JRadioButton vesselButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightVesselButton.png")));
-	public JRadioButton stationButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StationButton.png")));
+	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
+	public JRadioButton trafficButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TrafficButton.png")));
+	public JRadioButton warningButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WarningButton.png")));
 	private EnumMap<Cat, JRadioButton> categories = new EnumMap<Cat, JRadioButton>(Cat.class);
 	private EnumMap<Cat, Obj> objects = new EnumMap<Cat, Obj>(Cat.class);
 	private ActionListener alCat = new ActionListener() {
@@ -38,10 +40,12 @@ public class PanelLights extends JPanel {
 		dlg = dia;
 		this.setLayout(null);
 		this.add(getCatButton(houseButton, 0, 0, 34, 32, "Lighthouse", Cat.LIGHT_HOUSE, Obj.LNDMRK), null);
-		this.add(getCatButton(majorButton, 0, 32, 34, 32, "MajorLight", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
-		this.add(getCatButton(minorButton, 0, 64, 34, 32, "MinorLight", Cat.LIGHT_MINOR, Obj.LITMIN), null);
-		this.add(getCatButton(vesselButton, 0, 96, 34, 32, "LightVessel", Cat.LIGHT_VESSEL, Obj.LITVES), null);
-		this.add(getCatButton(stationButton, 0, 128, 34, 32, "SignalStation", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
+		this.add(getCatButton(majorButton, 35, 0, 34, 32, "MajorLight", Cat.LIGHT_MAJOR, Obj.LITMAJ), null);
+		this.add(getCatButton(minorButton, 70, 0, 34, 32, "MinorLight", Cat.LIGHT_MINOR, Obj.LITMIN), null);
+		this.add(getCatButton(vesselButton, 105, 0, 34, 32, "LightVessel", Cat.LIGHT_VESSEL, Obj.LITVES), null);
+		this.add(getCatButton(floatButton, 140, 0, 34, 32, "LightFloat", Cat.LIGHT_FLOAT, Obj.LITFLT), null);
+		this.add(getCatButton(trafficButton, 35, 32, 34, 32, "SSTraffic", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
+		this.add(getCatButton(warningButton, 105, 32, 34, 32, "SSWarning", Cat.SIGNAL_STATION, Obj.SIGSTA), null);
 	}
 
 	public void clearSelections() {

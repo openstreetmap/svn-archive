@@ -38,14 +38,17 @@ public class OSeaMAction {
 							mark = new SeaMark(dlg);
 							mark.parseMark(node);
 						}
-					} else
+					} else {
 						manager.showVisualMessage(Messages.getString("OneNode"));
+						panelMain.clearSelections();
+					}
 				}
 			}
 			if (nextNode == null) {
 				node = null;
 				mark = null;
 				manager.showVisualMessage(Messages.getString("SelectNode"));
+				panelMain.clearSelections();
 			}
 		}
 	};
@@ -62,9 +65,6 @@ public class OSeaMAction {
 				str += new String(new char[] { 0x1e });
 			Main.pref.put("mappaint.style.sources", str + "http://dev.openseamap.org/josm/seamark_styles.xml");
 		}
-		str = Main.pref.get("color.background");
-		if (str.equals("#000000") || str.isEmpty())
-			Main.pref.put("color.background", "#606060");
 	}
 
 	public JPanel getOSeaMPanel() {

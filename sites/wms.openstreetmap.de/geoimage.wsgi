@@ -8,7 +8,7 @@
 # GNU GPL Version 3 or later
 # http://www.gnu.org/copyleft/gpl.html
 
-target_base='http://gis.lebensministerium.at/wmsgw/?key=%s&FORMAT=image/jpeg&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&Layers=Luftbild_MR,Luftbild_1m,Luftbild_8m,Satellitenbild_30m&SRS=EPSG:900913&WIDTH=256&HEIGHT=256&BBOX=%s'
+target_base='http://gis.lebensministerium.at/wmsgw/?key=%s&FORMAT=image/%s&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&Layers=Luftbild_MR,Luftbild_1m,Luftbild_8m,Satellitenbild_30m&SRS=EPSG:900913&WIDTH=256&HEIGHT=256&BBOX=%s'
 
 import re
 
@@ -31,9 +31,9 @@ def TileToBBox(x,y,z):
 
 def application(environ, start_response):
 	status = '200 OK'
-	# our URI is in the form http://<our-server>/<key>/<z>/<x>/<y>.jpg
-	# we are only interested in /<key>/<z>/<x>/<y>.jpg
-	regex='/([0-9a-fxA-FX]+)/([0-9]+)/([0-9]+)/([0-9]+)\.jpg'
+	# our URI is in the form http://<our-server>/<key>/<z>/<x>/<y>.<ext>
+	# we are only interested in /<key>/<z>/<x>/<y>.<ext>
+	regex='/([0-9a-fxA-FX]+)/([0-9]+)/([0-9]+)/([0-9]+)\.(...)'
 	uri = environ.get('REQUEST_URI', '')
 	res=re.findall(regex,uri)
 	
@@ -48,7 +48,10 @@ def application(environ, start_response):
 	  z=res[0][1]
 	  x=res[0][2]
 	  y=res[0][3]
+	  ext=res[0][4]
+	  if ext == "jpg":
+	    ext="jpeg"
 	  bbox="%f,%f,%f,%f" % TileToBBox(int(x),int(y),int(z))
-	  target=target_base % (key,bbox)
+	  target=target_base % (key,ext,bbox)
 	  start_response('301 Redirect', [('Location', target),])
 	  return []

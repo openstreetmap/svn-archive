@@ -44,6 +44,10 @@
 # Version 4.2
 # - display cities
 #
+# Version 4.3
+# - uninitialized versions bug fixed
+# 
+
 
 use strict ;
 use warnings ;
@@ -57,7 +61,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "4.2" ;
+my $version = "4.3" ;
 
 my $topMax = 10 ;
 
@@ -1103,8 +1107,9 @@ sub getNode1 {
 		($uid) = ($line1 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
 		($changeset) = ($line1 =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
 
-		if (!defined $user) { $user = "unknown" ; }
-		if (!defined $uid) { $uid = 0 ; }
+		if (! defined $user) { $user = "unknown" ; }
+		if (! defined $uid) { $uid = 0 ; }
+		if (! defined $version) { $version = 1 ; }
 
 		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
 			print "WARNING reading osm file1, line follows (expecting id, lon, lat and user for node):\n", $line1, "\n" ; 
@@ -1145,9 +1150,12 @@ sub getNodeFile2 {
 		($lat) = ($line2 =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
 		($version) = ($line2 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
 		($timestamp) = ($line2 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
-		($uid) = ($line2 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;		($changeset) = ($line2 =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
-		if (!defined $user) { $user = "unknown" ; }
-		if (!defined $uid) { $uid = 0 ; }
+		($uid) = ($line2 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
+		($changeset) = ($line2 =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
+
+		if (! defined $user) { $user = "unknown" ; }
+		if (! defined $uid) { $uid = 0 ; }
+		if (! defined $version) { $version = 1 ; }
 
 		if ( (! defined $id) or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
 			print "WARNING reading osm file 2, line follows (expecting id, lon, lat and user for node):\n", $line2, "\n" ; 
@@ -1192,6 +1200,7 @@ sub getWay1 {
 
 		if (! defined $u) { $u = "unknown" ; }
 		if (! defined $uid) { $uid = 0 ; }
+		if (! defined $version) { $version = 1 ; }
 		if (! defined $id) { print "ERROR reading osm file1, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine1() ;
@@ -1224,6 +1233,7 @@ sub getWayFile2 {
 
 		if (! defined $u) { $u = "unknown" ; }
 		if (! defined $uid) { $uid = 0 ; }
+		if (! defined $version) { $version = 1 ; }
 		if (! defined $id) { print "ERROR reading osm file2, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine2() ;
@@ -1333,7 +1343,8 @@ sub nextLine2 {
 	if ($isBz22) { $bz2->bzreadline($line2) ; }
 	else { $line2 = <$file2> ; }
 }
-#------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------
 # Basic date operations
 #------------------------------------------------------------------------------------
 
@@ -1383,7 +1394,8 @@ sub userTimestamp {
 }
 
 
-#------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------
 # Black and white lists
 #------------------------------------------------------------------------------------
 sub readLists {

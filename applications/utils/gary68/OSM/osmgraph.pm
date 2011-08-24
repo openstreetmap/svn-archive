@@ -77,7 +77,7 @@ use Encode ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '2.5' ; # PUBLISHED
+$VERSION = '3.0' ; # PUBLISHED
 
 require Exporter ;
 
@@ -581,7 +581,7 @@ sub writeSVG {
 	my ($fileName) = shift ;
 	my $file ;
 	open ($file, ">", $fileName) || die "can't open svg output file";
-	print $file "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"no\"?>\n" ;
+	print $file "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n" ;
 	print $file "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n" ;
 	print $file "<svg version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" width=\"$sizeX\" height=\"$sizeY\" >\n" ;
 	print $file "<rect width=\"$sizeX\" height=\"$sizeY\" y=\"0\" x=\"0\" fill=\"#ffffff\" />\n" ;
@@ -621,7 +621,7 @@ sub svgElementText {
 #
 	my ($x, $y, $text, $size, $col, $font) = @_ ; 
 	my $fontSize = 12 + ($size - 1) * 4 ;
-	my $svg = "<text x=\"" . $x . "\" y=\"" . $y . "\" font-size=\"" . $fontSize . "\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\">" . encode("iso-8859-1", decode("utf8", $text)) . "</text>" ;
+	my $svg = "<text x=\"" . $x . "\" y=\"" . $y . "\" font-size=\"" . $fontSize . "\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\">" . $text . "</text>" ;
 	return $svg ;
 }
 
@@ -696,7 +696,7 @@ sub svgElementPathText {
 	$svg = $svg . "font-size=\"" . $fontSize . "\" " ;
 	$svg = $svg . "fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"middle\" startOffset=\"50%\" >\n" ;
-	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
+	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . $text . " </tspan>\n" ;
 	$svg = $svg . "</textPath>\n</text>\n" ;
 	return $svg ;
 }

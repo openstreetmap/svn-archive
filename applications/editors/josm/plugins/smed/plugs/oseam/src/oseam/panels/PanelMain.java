@@ -22,7 +22,7 @@ public class PanelMain extends JPanel {
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	private ActionListener alSave = null;
-	private JButton moreButton = null;
+	public JButton moreButton = null;
 	private ActionListener alMore = null;
 	public ButtonGroup typeButtons = null;
 	public JRadioButton chanButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ChanButton.png")));
@@ -102,6 +102,7 @@ public class PanelMain extends JPanel {
 		this.add(panelHaz, null);
 		this.add(panelSpec, null);
 		this.add(panelLights, null);
+		this.add(panelMore, null);
 		this.add(panelTop, null);
 		this.add(panelFog, null);
 		this.add(panelRadar, null);
@@ -303,6 +304,7 @@ public class PanelMain extends JPanel {
 
 	public void clearSelections() {
 		typeButtons.clearSelection();
+		moreButton.setVisible(false);
 		alType.actionPerformed(null);
 		nameBox.setText("");
 		clearType();

@@ -61,8 +61,10 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
-			if (dlg.mark != null)
+			if (dlg.mark != null) {
+				dlg.panelMain.moreButton.setVisible(true);
 				dlg.mark.paintSign();
+			}
 		}
 	};
 
@@ -86,7 +88,7 @@ public class PanelLights extends JPanel {
 		trafficCatBox.setBounds(new Rectangle(20, 100, 140, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
-		trafficCatBox.addItem(Messages.getString("NoneSpecified"));
+		trafficCatBox.addItem(Messages.getString("UKCategory"));
 		trafficCatBox.addItem(Messages.getString("Lock"));
 		trafficCatBox.setVisible(false);
 
@@ -94,7 +96,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setBounds(new Rectangle(20, 100, 140, 20));
 		this.add(warningCatBox, null);
 		warningCatBox.addActionListener(alWarningCatBox);
-		warningCatBox.addItem(Messages.getString("NoneSpecified"));
+		warningCatBox.addItem(Messages.getString("UKCategory"));
 		warningCatBox.addItem(Messages.getString("Storm"));
 		warningCatBox.setVisible(false);
 

@@ -14,7 +14,7 @@ public class PanelTop extends JPanel {
 	private OSeaMAction dlg;
 	public PanelCol panelCol = null;
 	private ButtonGroup topButtons = new ButtonGroup();
-	public JRadioButton noTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NoTopButton.png")));
+	public JRadioButton noTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NoneButton.png")));
 	public JRadioButton canTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanTopButton.png")));
 	public JRadioButton coneTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/ConeTopButton.png")));
 	public JRadioButton sphereTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereTopButton.png")));

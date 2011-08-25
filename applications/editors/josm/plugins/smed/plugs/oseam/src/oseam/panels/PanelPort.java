@@ -88,8 +88,10 @@ public class PanelPort extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null)
+			if (dlg.mark != null) {
+				dlg.panelMain.moreButton.setVisible(true);
 				dlg.mark.paintSign();
+			}
 		}
 	};
 

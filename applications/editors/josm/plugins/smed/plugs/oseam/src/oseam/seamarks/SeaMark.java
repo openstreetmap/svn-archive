@@ -46,8 +46,7 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
-		LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SISTAW, SISTAT
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SISTAW, SISTAT
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -140,20 +139,20 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		UNKNOWN, LAT_PORT, LAT_STBD, LAT_PREF_PORT, LAT_PREF_STBD, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, MOORING_BUOY
+		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_CHBF, SPM_YCHT, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_DOCK, SIS_LOCK, SIS_STRM, SIS_TIDE, LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
 	static {
-		CatSTR.put(Cat.LAT_PORT, "port");
-		CatSTR.put(Cat.LAT_STBD, "starboard");
-		CatSTR.put(Cat.LAT_PREF_PORT, "preferred_channel_port");
-		CatSTR.put(Cat.LAT_PREF_STBD, "preferred_channel_starboard");
-		CatSTR.put(Cat.CARD_NORTH, "north");
-		CatSTR.put(Cat.CARD_EAST, "east");
-		CatSTR.put(Cat.CARD_SOUTH, "south");
-		CatSTR.put(Cat.CARD_WEST, "west");
-		CatSTR.put(Cat.MOORING_BUOY, "mooring_buoy");
+		CatSTR.put(Cat.LAM_PORT, "port");
+		CatSTR.put(Cat.LAM_STBD, "starboard");
+		CatSTR.put(Cat.LAM_PPORT, "preferred_channel_port");
+		CatSTR.put(Cat.LAM_PSTBD, "preferred_channel_starboard");
+		CatSTR.put(Cat.CAM_NORTH, "north");
+		CatSTR.put(Cat.CAM_EAST, "east");
+		CatSTR.put(Cat.CAM_SOUTH, "south");
+		CatSTR.put(Cat.CAM_WEST, "west");
+		CatSTR.put(Cat.MOR_BUOY, "buoy");
 	}
 
 	private Cat category = Cat.UNKNOWN;
@@ -200,7 +199,7 @@ public class SeaMark {
 	}
 
 	public enum Col {
-		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK,
+		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
 	}
 
 	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);
@@ -214,6 +213,10 @@ public class SeaMark {
 		ColSTR.put(Col.BLUE, "blue");
 		ColSTR.put(Col.VIOLET, "violet");
 		ColSTR.put(Col.BLACK, "black");
+		ColSTR.put(Col.GREY, "grey");
+		ColSTR.put(Col.BROWN, "brown");
+		ColSTR.put(Col.MAGENTA, "magenta");
+		ColSTR.put(Col.PINK, "pink");
 	}
 
 	private ArrayList<Col> bodyColour = new ArrayList<Col>();
@@ -642,7 +645,7 @@ public class SeaMark {
 					setRegion(Reg.C);
 			} else if (GrpMAP.get(object) == Grp.LAT) {
 				switch (getCategory()) {
-				case LAT_PORT:
+				case LAM_PORT:
 					if (getColour(Ent.BODY, 0) == Col.RED) {
 						if (getColour(Ent.BODY, 1) == Col.WHITE)
 							setRegion(Reg.C);
@@ -652,7 +655,7 @@ public class SeaMark {
 					if (getColour(Ent.BODY, 0) == Col.GREEN)
 						setRegion(Reg.B);
 					break;
-				case LAT_PREF_PORT:
+				case LAM_PPORT:
 					if (getColour(Ent.BODY, 0) == Col.RED) {
 						if (getColour(Ent.BODY, 3) == Col.GREEN)
 							setRegion(Reg.C);
@@ -662,7 +665,7 @@ public class SeaMark {
 					if (getColour(Ent.BODY, 0) == Col.GREEN)
 						setRegion(Reg.B);
 					break;
-				case LAT_STBD:
+				case LAM_STBD:
 					if (getColour(Ent.BODY, 0) == Col.GREEN) {
 						if (getColour(Ent.BODY, 1) == Col.WHITE)
 							setRegion(Reg.C);
@@ -672,7 +675,7 @@ public class SeaMark {
 					if (getColour(Ent.BODY, 0) == Col.RED)
 						setRegion(Reg.B);
 					break;
-				case LAT_PREF_STBD:
+				case LAM_PSTBD:
 					if (getColour(Ent.BODY, 0) == Col.GREEN)
 						setRegion(Reg.A);
 					if (getColour(Ent.BODY, 0) == Col.RED) {
@@ -693,16 +696,16 @@ public class SeaMark {
 		case LAT:
 			dlg.panelMain.chanButton.doClick();
 			switch (getCategory()) {
-			case LAT_PORT:
+			case LAM_PORT:
 				dlg.panelMain.panelChan.portButton.doClick();
 				break;
-			case LAT_STBD:
+			case LAM_STBD:
 				dlg.panelMain.panelChan.stbdButton.doClick();
 				break;
-			case LAT_PREF_PORT:
+			case LAM_PPORT:
 				dlg.panelMain.panelChan.prefPortButton.doClick();
 				break;
-			case LAT_PREF_STBD:
+			case LAM_PSTBD:
 				dlg.panelMain.panelChan.prefStbdButton.doClick();
 				break;
 			}
@@ -714,16 +717,16 @@ public class SeaMark {
 		case CAR:
 			dlg.panelMain.hazButton.doClick();
 			switch (getCategory()) {
-			case CARD_NORTH:
+			case CAM_NORTH:
 				dlg.panelMain.panelHaz.northButton.doClick();
 				break;
-			case CARD_SOUTH:
+			case CAM_SOUTH:
 				dlg.panelMain.panelHaz.southButton.doClick();
 				break;
-			case CARD_EAST:
+			case CAM_EAST:
 				dlg.panelMain.panelHaz.eastButton.doClick();
 				break;
-			case CARD_WEST:
+			case CAM_WEST:
 				dlg.panelMain.panelHaz.westButton.doClick();
 				break;
 			}
@@ -736,6 +739,7 @@ public class SeaMark {
 			dlg.panelMain.specButton.doClick();
 			break;
 		case LIT:
+		case SIS:
 			dlg.panelMain.lightsButton.doClick();
 			break;
 		case FLT:
@@ -809,6 +813,8 @@ public class SeaMark {
 					dlg.panelMain.specButton.doClick();
 				}
 				break;
+				default:
+					dlg.panelMain.lightsButton.doClick();
 			}
 			break;
 		}
@@ -824,97 +830,135 @@ public class SeaMark {
 		dlg.panelMain.lightIcon.setIcon(null);
 		dlg.panelMain.topIcon.setIcon(null);
 		dlg.panelMain.radarIcon.setIcon(null);
-dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 		dlg.panelMain.fogIcon.setIcon(null);
 
 		String imgStr = "/images/";
-		switch (getShape()) {
-		case TOWER:
-			imgStr += "Tower";
-			break;
-		case BUOY:
-		case PILLAR:
-			imgStr += "Pillar";
-			break;
-		case SPAR:
-			imgStr += "Spar";
-			break;
-		case CAN:
-			imgStr += "Can";
-			break;
-		case CONE:
-			imgStr += "Cone";
-			break;
-		case SPHERE:
-			imgStr += "Sphere";
-			break;
-		case BARREL:
-			imgStr += "Barrel";
-			break;
-		case CAIRN:
-			imgStr += "Cairn";
-			break;
-		case FLOAT:
-			imgStr += "Float";
-			break;
-		case BEACON:
-		case PILE:
-		case LATTICE:
-		case BUOYANT:
-			imgStr += "Beacon";
-			break;
-		case SUPER:
-			imgStr += "Float_Major";
-			break;
-		case STAKE:
-		case POLE:
-		case POST:
-			imgStr += "Stake";
-			break;
-		}
-		String colStr = imgStr;
-		for (Col col : bodyColour) {
-			switch (col) {
-			case WHITE:
-				colStr += "_White";
+		if (getShape() != Shp.UNKNOWN) {
+			switch (getShape()) {
+			case TOWER:
+				imgStr += "Tower";
 				break;
-			case RED:
-				colStr += "_Red";
+			case BUOY:
+			case PILLAR:
+				imgStr += "Pillar";
 				break;
-			case ORANGE:
-				colStr += "_Orange";
+			case SPAR:
+				imgStr += "Spar";
 				break;
-			case AMBER:
-				colStr += "_Amber";
+			case CAN:
+				imgStr += "Can";
 				break;
-			case YELLOW:
-				colStr += "_Yellow";
+			case CONE:
+				imgStr += "Cone";
 				break;
-			case GREEN:
-				colStr += "_Green";
+			case SPHERE:
+				imgStr += "Sphere";
 				break;
-			case BLUE:
-				colStr += "_Blue";
+			case BARREL:
+				imgStr += "Barrel";
 				break;
-			case VIOLET:
-				colStr += "_Violet";
+			case CAIRN:
+				imgStr += "Cairn";
 				break;
-			case BLACK:
-				colStr += "_Black";
+			case FLOAT:
+				imgStr += "Float";
+				break;
+			case BEACON:
+			case PILE:
+			case LATTICE:
+			case BUOYANT:
+				imgStr += "Beacon";
+				break;
+			case SUPER:
+				imgStr += "Super";
+				break;
+			case STAKE:
+			case POLE:
+			case POST:
+				imgStr += "Stake";
 				break;
 			}
-		}
-		if (getShape() == Shp.PERCH) {
-			if (getCategory() == Cat.LAT_PORT) {
-				colStr = "/images/Perch_Port";
+			String colStr = imgStr;
+			for (Col col : bodyColour) {
+				switch (col) {
+				case WHITE:
+					colStr += "_White";
+					break;
+				case RED:
+					colStr += "_Red";
+					break;
+				case ORANGE:
+					colStr += "_Orange";
+					break;
+				case AMBER:
+					colStr += "_Amber";
+					break;
+				case YELLOW:
+					colStr += "_Yellow";
+					break;
+				case GREEN:
+					colStr += "_Green";
+					break;
+				case BLUE:
+					colStr += "_Blue";
+					break;
+				case VIOLET:
+					colStr += "_Violet";
+					break;
+				case BLACK:
+					colStr += "_Black";
+					break;
+				}
+			}
+			if (getShape() == Shp.PERCH) {
+				if (getCategory() == Cat.LAM_PORT) {
+					colStr = "/images/Perch_Port";
+				} else {
+					colStr = "/images/Perch_Starboard";
+				}
+			}
+			if (!imgStr.equals("/images/")) {
+				colStr += ".png";
+				if (getClass().getResource(colStr) == null) {
+					System.out.println("Missing image: " + colStr);
+					imgStr += ".png";
+					if (getClass().getResource(imgStr) == null) {
+						System.out.println("Missing image: " + imgStr);
+						return;
+					} else {
+						dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					}
+				} else {
+					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+				}
 			} else {
-				colStr = "/images/Perch_Starboard";
+				dlg.panelMain.shapeIcon.setIcon(null);
 			}
-		}
-		if (!imgStr.equals("/images/")) {
-			colStr += ".png";
-			if (getClass().getResource(colStr) == null) {
-				System.out.println("Missing image: " + colStr);
+		} else if (getObject() != Obj.UNKNOWN) {
+			switch (getObject()) {
+			case LNDMRK:
+				imgStr += "Light_House";
+				break;
+			case LITMAJ:
+				imgStr += "Light_Major";
+				break;
+			case LITMIN:
+				imgStr += "Light_Minor";
+				break;
+			case LITFLT:
+				imgStr += "Float";
+				break;
+			case LITVES:
+				imgStr += "Super";
+				break;
+			case SISTAW:
+				imgStr += "Signal_Station";
+				break;
+			case SISTAT:
+				imgStr += "Signal_Station";
+				break;
+			}
+			if (!imgStr.equals("/images/")) {
 				imgStr += ".png";
 				if (getClass().getResource(imgStr) == null) {
 					System.out.println("Missing image: " + imgStr);
@@ -923,10 +967,8 @@ dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Ra
 					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 				}
 			} else {
-				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+				dlg.panelMain.shapeIcon.setIcon(null);
 			}
-		} else {
-			dlg.panelMain.shapeIcon.setIcon(null);
 		}
 	}
 

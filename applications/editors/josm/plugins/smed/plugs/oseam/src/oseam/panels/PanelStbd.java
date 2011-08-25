@@ -22,7 +22,7 @@ public class PanelStbd extends JPanel {
 				dlg.mark.setRegion(Reg.A);
 				dlg.mark.setColour(Ent.BODY, Col.GREEN);
 				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-				if (dlg.mark.getCategory() == Cat.LAT_PREF_STBD) {
+				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
 					dlg.mark.addColour(Ent.BODY, Col.RED);
 					dlg.mark.addColour(Ent.BODY, Col.GREEN);
 					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
@@ -35,7 +35,7 @@ public class PanelStbd extends JPanel {
 				dlg.mark.setRegion(Reg.B);
 				dlg.mark.setColour(Ent.BODY, Col.RED);
 				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-				if (dlg.mark.getCategory() == Cat.LAT_PREF_STBD) {
+				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
 					dlg.mark.addColour(Ent.BODY, Col.GREEN);
 					dlg.mark.addColour(Ent.BODY, Col.RED);
 					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
@@ -46,7 +46,7 @@ public class PanelStbd extends JPanel {
 			}
 			if (regionCButton.isSelected()) {
 				dlg.mark.setRegion(Reg.C);
-				if (dlg.mark.getCategory() == Cat.LAT_PREF_STBD) {
+				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
 					dlg.mark.setColour(Ent.BODY, Col.RED);
 					dlg.mark.addColour(Ent.BODY, Col.GREEN);
 					dlg.mark.addColour(Ent.BODY, Col.RED);

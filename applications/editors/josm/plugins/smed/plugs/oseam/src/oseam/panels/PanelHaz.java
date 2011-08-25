@@ -24,7 +24,7 @@ public class PanelHaz extends JPanel {
 			if (dlg.mark != null)
 				shp = dlg.mark.getShape();
 			if (northButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CARD_NORTH);
+				dlg.mark.setCategory(Cat.CAM_NORTH);
 				dlg.mark.setColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
@@ -35,7 +35,7 @@ public class PanelHaz extends JPanel {
 				northButton.setBorderPainted(false);
 			}
 			if (southButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CARD_SOUTH);
+				dlg.mark.setCategory(Cat.CAM_SOUTH);
 				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
@@ -46,7 +46,7 @@ public class PanelHaz extends JPanel {
 				southButton.setBorderPainted(false);
 			}
 			if (eastButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CARD_EAST);
+				dlg.mark.setCategory(Cat.CAM_EAST);
 				dlg.mark.setColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
@@ -58,7 +58,7 @@ public class PanelHaz extends JPanel {
 				eastButton.setBorderPainted(false);
 			}
 			if (westButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CARD_WEST);
+				dlg.mark.setCategory(Cat.CAM_WEST);
 				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
 				dlg.mark.addColour(Ent.BODY, Col.BLACK);
 				dlg.mark.addColour(Ent.BODY, Col.YELLOW);

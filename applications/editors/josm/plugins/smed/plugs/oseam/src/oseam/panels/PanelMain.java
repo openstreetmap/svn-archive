@@ -155,8 +155,13 @@ public class PanelMain extends JPanel {
 					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
-					litButton.setEnabled(true);
-					litButton.doClick();
+					if (dlg.mark != null) {
+						if (dlg.mark.getObject() == Obj.UNKNOWN) {
+							panelLights.clearSelections();
+						} else {
+							panelLights.objects.get(dlg.mark.getObject()).doClick();
+						}
+					}
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
 				} else {

@@ -26,7 +26,7 @@ public class PanelChan extends JPanel {
 			if (dlg.mark != null)
 				shp = dlg.mark.getShape();
 			if (portButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAT_PORT);
+				dlg.mark.setCategory(Cat.LAM_PORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).doClick();
 				} else {
@@ -49,7 +49,7 @@ public class PanelChan extends JPanel {
 				panelPort.setVisible(false);
 			}
 			if (prefPortButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAT_PREF_PORT);
+				dlg.mark.setCategory(Cat.LAM_PPORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).doClick();
 				} else {
@@ -71,7 +71,7 @@ public class PanelChan extends JPanel {
 					panelPort.setVisible(false);
 			}
 			if (stbdButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAT_STBD);
+				dlg.mark.setCategory(Cat.LAM_STBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).doClick();
 				} else {
@@ -94,7 +94,7 @@ public class PanelChan extends JPanel {
 				panelStbd.setVisible(false);
 			}
 			if (prefStbdButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAT_PREF_STBD);
+				dlg.mark.setCategory(Cat.LAM_PSTBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).doClick();
 				} else {

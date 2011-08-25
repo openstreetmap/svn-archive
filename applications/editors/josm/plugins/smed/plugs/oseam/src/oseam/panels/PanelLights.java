@@ -37,7 +37,7 @@ public class PanelLights extends JPanel {
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
 	public JRadioButton trafficButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TrafficButton.png")));
 	public JRadioButton warningButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WarningButton.png")));
-	private EnumMap<Obj, JRadioButton> objects = new EnumMap<Obj, JRadioButton>(Obj.class);
+	public EnumMap<Obj, JRadioButton> objects = new EnumMap<Obj, JRadioButton>(Obj.class);
 	private ActionListener alObj = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Obj obj : objects.keySet()) {
@@ -48,6 +48,21 @@ public class PanelLights extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
+			if (trafficButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				trafficCatBox.setVisible(true);
+				warningCatBox.setVisible(false);
+			} else if (warningButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				warningCatBox.setVisible(true);
+				trafficCatBox.setVisible(false);
+			} else {
+				categoryLabel.setVisible(false);
+				trafficCatBox.setVisible(false);
+				warningCatBox.setVisible(false);
+			}
+			if (dlg.mark != null)
+				dlg.mark.paintSign();
 		}
 	};
 
@@ -62,26 +77,32 @@ public class PanelLights extends JPanel {
 		this.add(getObjButton(trafficButton, 50, 35, 34, 32, "SSTraffic", Obj.SISTAT), null);
 		this.add(getObjButton(warningButton, 90, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
 
-		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
+		categoryLabel = new JLabel(Messages.getString("SSCategory"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(20, 80, 140, 20));
 		this.add(categoryLabel, null);
+		categoryLabel.setVisible(false);
 		
 		trafficCatBox = new JComboBox();
-		trafficCatBox.setBounds(new Rectangle(20, 110, 140, 20));
+		trafficCatBox.setBounds(new Rectangle(20, 100, 140, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
 		trafficCatBox.addItem(Messages.getString("NoneSpecified"));
+		trafficCatBox.addItem(Messages.getString("Lock"));
+		trafficCatBox.setVisible(false);
 
 		warningCatBox = new JComboBox();
-		warningCatBox.setBounds(new Rectangle(20, 110, 140, 20));
-//		this.add(warningCatBox, null);
+		warningCatBox.setBounds(new Rectangle(20, 100, 140, 20));
+		this.add(warningCatBox, null);
 		warningCatBox.addActionListener(alWarningCatBox);
 		warningCatBox.addItem(Messages.getString("NoneSpecified"));
+		warningCatBox.addItem(Messages.getString("Storm"));
+		warningCatBox.setVisible(false);
 
 	}
 
 	public void clearSelections() {
-
+		objButtons.clearSelection();
+		alObj.actionPerformed(null);
 	}
 
 	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip,Obj obj) {

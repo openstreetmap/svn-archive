@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** This is the build file for the merge-overlap plugin.
+**
+** Maintaining versions
+** ====================
+** see README.template
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant  dist
+**
+** To install the generated plugin locally (in you default plugin directory) run
+**
+**    > ant  install
+**
+** The generated plugin jar is not automatically available in JOSMs plugin configuration
+** dialog. You have to check it in first.
+**
+** Use the ant target 'publish' to check in the plugin and make it available to other
+** JOSM users:
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
+**
+**
+-->
+<project name="merge-overlap" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="preset maintenance (${ant.project.name})"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="4279"/>
+
+    <import file="../build-common.xml"/>
+
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
+	    <copy todir="${plugin.build.dir}">
+	        <fileset dir=".">
+	            <include name="README"/>
+	            <include name="LICENSE"/>
+	        </fileset>
+	    </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Stéphane Brunner"/>
+                <attribute name="Plugin-Class" value="mergeoverlap.MergeOverlapPlugin"/>
+                <attribute name="Plugin-Description" value="Merge overlapping part of ways."/>
+                <attribute name="Plugin-Icon" value="images/merge_overlap.png"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

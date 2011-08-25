@@ -52,7 +52,7 @@
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
                 <attribute name="Author" value="Stéphane Brunner"/>
-                <attribute name="Plugin-Class" value="converttomultipoly.MultipolyPlugin"/>q
+                <attribute name="Plugin-Class" value="converttomultipoly.MultipolyPlugin"/>
                 <attribute name="Plugin-Description" value="Simply convert an area to a multipolygon."/>
                 <attribute name="Plugin-Icon" value="images/multipoly_convert.png"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

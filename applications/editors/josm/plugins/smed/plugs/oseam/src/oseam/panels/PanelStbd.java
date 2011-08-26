@@ -89,7 +89,10 @@ public class PanelStbd extends JPanel {
 					button.setBorderPainted(false);
 			}
 			if (dlg.mark != null) {
-				dlg.panelMain.moreButton.setVisible(true);
+				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
+					dlg.panelMain.moreButton.setVisible(true);
+				else
+					dlg.panelMain.moreButton.setVisible(false);
 				dlg.mark.paintSign();
 			}
 		}

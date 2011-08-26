@@ -51,7 +51,10 @@ public class PanelSpec extends JPanel {
 					button.setBorderPainted(false);
 			}
 			if (dlg.mark != null) {
-				dlg.panelMain.moreButton.setVisible(true);
+				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
+					dlg.panelMain.moreButton.setVisible(true);
+				else
+					dlg.panelMain.moreButton.setVisible(false);
 				dlg.mark.paintSign();
 			}
 		}
@@ -96,6 +99,24 @@ public class PanelSpec extends JPanel {
 		categoryBox.addItem(Messages.getString("FerryCrossing"));
 		categoryBox.addItem(Messages.getString("FoulGround"));
 		categoryBox.addItem(Messages.getString("UnknownPurpose"));
+	}
+
+	public void updateSelections() {
+		if (dlg.mark != null) {
+			if (dlg.mark.getObject() == Obj.UNKNOWN) {
+				clearSelections();
+				panelCol.yellowButton.doClick();
+			} else {
+				panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
+			}
+			if (shapes.containsKey(dlg.mark.getShape())) {
+				shapes.get(dlg.mark.getShape()).doClick();
+			} else {
+				shapeButtons.clearSelection();
+				alShape.actionPerformed(null);
+			}
+		} else
+			clearSelections();
 	}
 
 	public void clearSelections() {

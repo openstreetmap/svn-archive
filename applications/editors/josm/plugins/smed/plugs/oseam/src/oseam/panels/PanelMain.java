@@ -134,37 +134,18 @@ public class PanelMain extends JPanel {
 					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
-					if (dlg.mark != null) {
-						if (dlg.mark.getObject() == Obj.UNKNOWN) {
-							panelSpec.clearSelections();
-							panelSpec.panelCol.yellowButton.doClick();
-						} else {
-							panelSpec.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
-						}
-						if (panelSpec.shapes.containsKey(dlg.mark.getShape())) {
-							panelSpec.shapes.get(dlg.mark.getShape()).doClick();
-						} else {
-							panelSpec.shapeButtons.clearSelection();
-							panelSpec.alShape.actionPerformed(null);
-						}
-					}
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
+					panelSpec.updateSelections();
 				} else {
 					specButton.setBorderPainted(false);
 					panelSpec.setVisible(false);
 					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
-					if (dlg.mark != null) {
-						if (dlg.mark.getObject() == Obj.UNKNOWN) {
-							panelLights.clearSelections();
-						} else {
-							panelLights.objects.get(dlg.mark.getObject()).doClick();
-						}
-					}
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
+					panelLights.updateSelections();
 				} else {
 					lightsButton.setBorderPainted(false);
 					panelLights.setVisible(false);

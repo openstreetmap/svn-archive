@@ -139,7 +139,14 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_CHBF, SPM_YCHT, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_DOCK, SIS_LOCK, SIS_STRM, SIS_TIDE, LIT_DIRF, LIT_LEDG
+		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD,
+		CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
+		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
+		SPM_CHBF, SPM_YCHT,
+		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
+		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
+		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG,
+		LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -152,7 +159,38 @@ public class SeaMark {
 		CatSTR.put(Cat.CAM_EAST, "east");
 		CatSTR.put(Cat.CAM_SOUTH, "south");
 		CatSTR.put(Cat.CAM_WEST, "west");
+		CatSTR.put(Cat.MOR_DLPN, "dolphin");
+		CatSTR.put(Cat.MOR_DDPN, "deviation_dolphon");
+		CatSTR.put(Cat.MOR_BLRD, "bollard");
+		CatSTR.put(Cat.MOR_WALL, "wall");
+		CatSTR.put(Cat.MOR_POST, "post");
+		CatSTR.put(Cat.MOR_CHWR, "chain");
 		CatSTR.put(Cat.MOR_BUOY, "buoy");
+		CatSTR.put(Cat.SIS_PTCL, "control");
+		CatSTR.put(Cat.SIS_PTED, "entry");
+		CatSTR.put(Cat.SIS_IPT, "ipt");
+		CatSTR.put(Cat.SIS_BRTH, "berthing");
+		CatSTR.put(Cat.SIS_DOCK, "dock");
+		CatSTR.put(Cat.SIS_LOCK, "lock");
+		CatSTR.put(Cat.SIS_FBAR, "barrage");
+		CatSTR.put(Cat.SIS_BRDG, "bridge");
+		CatSTR.put(Cat.SIS_DRDG, "dredging");
+		CatSTR.put(Cat.SIS_TRFC, "traffic");
+		CatSTR.put(Cat.SIS_DNGR, "danger");
+		CatSTR.put(Cat.SIS_OBST, "obstruction");
+		CatSTR.put(Cat.SIS_CABL, "cable");
+		CatSTR.put(Cat.SIS_MILY, "military");
+		CatSTR.put(Cat.SIS_DSTR, "distress");
+		CatSTR.put(Cat.SIS_WTHR, "weather");
+		CatSTR.put(Cat.SIS_STRM, "storm");
+		CatSTR.put(Cat.SIS_ICE, "ice");
+		CatSTR.put(Cat.SIS_TIME, "time");
+		CatSTR.put(Cat.SIS_TIDE, "tide");
+		CatSTR.put(Cat.SIS_TSTM, "stream");
+		CatSTR.put(Cat.SIS_TGAG, "gauge");
+		CatSTR.put(Cat.SIS_TSCL, "scale");
+		CatSTR.put(Cat.SIS_DIVE, "diving");
+		CatSTR.put(Cat.SIS_LGAG, "level");
 	}
 
 	private Cat category = Cat.UNKNOWN;

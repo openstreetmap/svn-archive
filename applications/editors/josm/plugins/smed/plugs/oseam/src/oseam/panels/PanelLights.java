@@ -14,18 +14,32 @@ import oseam.seamarks.SeaMark.*;
 public class PanelLights extends JPanel {
 
 	private OSeaMAction dlg;
-	
+
 	public JLabel categoryLabel;
 
 	public JComboBox trafficCatBox;
+	public EnumMap<Cat, Integer> trafficCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alTrafficCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : trafficCats.keySet()) {
+				int idx = trafficCats.get(cat);
+				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex()))
+					dlg.mark.setCategory(cat);
+			}
+			checkValidity();
 		}
 	};
 
 	public JComboBox warningCatBox;
+	public EnumMap<Cat, Integer> warningCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alWarningCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : warningCats.keySet()) {
+				int idx = warningCats.get(cat);
+				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex()))
+					dlg.mark.setCategory(cat);
+			}
+			checkValidity();
 		}
 	};
 
@@ -61,10 +75,7 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
-			if (dlg.mark != null) {
-				dlg.panelMain.moreButton.setVisible(true);
-				dlg.mark.paintSign();
-			}
+			checkValidity();
 		}
 	};
 
@@ -80,34 +91,102 @@ public class PanelLights extends JPanel {
 		this.add(getObjButton(warningButton, 90, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
 
 		categoryLabel = new JLabel(Messages.getString("SSCategory"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(20, 80, 140, 20));
+		categoryLabel.setBounds(new Rectangle(10, 80, 160, 20));
 		this.add(categoryLabel, null);
 		categoryLabel.setVisible(false);
-		
+
 		trafficCatBox = new JComboBox();
-		trafficCatBox.setBounds(new Rectangle(20, 100, 140, 20));
+		trafficCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
-		trafficCatBox.addItem(Messages.getString("UKCategory"));
-		trafficCatBox.addItem(Messages.getString("Lock"));
+		addTCItem(Messages.getString("UKCategory"), Cat.UNKNOWN);
+		addTCItem(Messages.getString("Traffic"), Cat.SIS_TRFC);
+		addTCItem(Messages.getString("PortControl"), Cat.SIS_PTCL);
+		addTCItem(Messages.getString("PortEntry"), Cat.SIS_PTED);
+		addTCItem(Messages.getString("IPT"), Cat.SIS_IPT);
+		addTCItem(Messages.getString("Berthing"), Cat.SIS_BRTH);
+		addTCItem(Messages.getString("Dock"), Cat.SIS_DOCK);
+		addTCItem(Messages.getString("Lock"), Cat.SIS_LOCK);
+		addTCItem(Messages.getString("Barrage"), Cat.SIS_FBAR);
+		addTCItem(Messages.getString("Bridge"), Cat.SIS_BRDG);
+		addTCItem(Messages.getString("Dredging"), Cat.SIS_DRDG);
 		trafficCatBox.setVisible(false);
 
 		warningCatBox = new JComboBox();
-		warningCatBox.setBounds(new Rectangle(20, 100, 140, 20));
+		warningCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(warningCatBox, null);
 		warningCatBox.addActionListener(alWarningCatBox);
-		warningCatBox.addItem(Messages.getString("UKCategory"));
-		warningCatBox.addItem(Messages.getString("Storm"));
+		addWCItem(Messages.getString("UKCategory"), Cat.UNKNOWN);
+		addWCItem(Messages.getString("Danger"), Cat.SIS_DNGR);
+		addWCItem(Messages.getString("Storm"), Cat.SIS_STRM);
+		addWCItem(Messages.getString("Weather"), Cat.SIS_WTHR);
+		addWCItem(Messages.getString("Obstruction"), Cat.SIS_OBST);
+		addWCItem(Messages.getString("Cable"), Cat.SIS_CABL);
+		addWCItem(Messages.getString("Distress"), Cat.SIS_DSTR);
+		addWCItem(Messages.getString("Time"), Cat.SIS_TIME);
+		addWCItem(Messages.getString("Tide"), Cat.SIS_TIDE);
+		addWCItem(Messages.getString("TidalStream"), Cat.SIS_TSTM);
+		addWCItem(Messages.getString("TideGauge"), Cat.SIS_TGAG);
+		addWCItem(Messages.getString("TideScale"), Cat.SIS_TSCL);
+		addWCItem(Messages.getString("Diving"), Cat.SIS_DIVE);
+		addWCItem(Messages.getString("Ice"), Cat.SIS_ICE);
+		addWCItem(Messages.getString("LevelGauge"), Cat.SIS_LGAG);
+		addWCItem(Messages.getString("Military"), Cat.SIS_MILY);
 		warningCatBox.setVisible(false);
 
 	}
 
+	private void checkValidity() {
+		if (dlg.mark != null) {
+			if (dlg.mark.getObject() != Obj.UNKNOWN) {
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.moreButton.setVisible(true);
+			} else {
+				dlg.panelMain.fogButton.setEnabled(false);
+				dlg.panelMain.radButton.setEnabled(false);
+				dlg.panelMain.litButton.setEnabled(false);
+				dlg.panelMain.moreButton.setVisible(false);
+			}
+			dlg.mark.paintSign();
+		}
+	}
+	
+	public void updateSelections() {
+		if (dlg.mark != null) {
+			if (dlg.mark.getObject() == Obj.UNKNOWN) {
+				clearSelections();
+			} else {
+				objects.get(dlg.mark.getObject()).doClick();
+				if (dlg.mark.getObject() == Obj.SISTAT) {
+					trafficCatBox.setSelectedIndex(trafficCats.get(dlg.mark.getCategory()));
+				}
+				if (dlg.mark.getObject() == Obj.SISTAW) {
+					warningCatBox.setSelectedIndex(warningCats.get(dlg.mark.getCategory()));
+				}
+			}
+		}
+	}
+
 	public void clearSelections() {
+		warningCatBox.setSelectedIndex(0);
+		trafficCatBox.setSelectedIndex(0);
 		objButtons.clearSelection();
 		alObj.actionPerformed(null);
 	}
 
-	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip,Obj obj) {
+	private void addTCItem(String str, Cat cat) {
+		trafficCats.put(cat, trafficCatBox.getItemCount());
+		trafficCatBox.addItem(str);
+	}
+
+	private void addWCItem(String str, Cat cat) {
+		warningCats.put(cat, warningCatBox.getItemCount());
+		warningCatBox.addItem(str);
+	}
+
+	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 		button.setToolTipText(Messages.getString(tip));

@@ -133,18 +133,24 @@ public class RoutePatternAction extends JosmAction {
       String buf = route.get("route");
       if ((route.get("ref") != null) && (route.get("ref") != ""))
       {
-        if ((route.get("to") != null) && (route.get("to") != ""))
-        {
-          buf += " " + route.get("ref") + ": " + route.get("to");
-        }
-        else if ((route.get("direction") != null) && (route.get("direction") != ""))
-        {
-          buf += " " + route.get("ref") + ": " + route.get("direction");
-        }
-        else
-        {
-          buf += " " + route.get("ref");
-        }
+        buf += " " + route.get("ref");
+      }
+      if ((route.get("loc_ref") != null) && (route.get("loc_ref") != ""))
+      {
+        buf += " [" + route.get("loc_ref") + "]";
+      }
+
+      if ((route.get("to") != null) && (route.get("to") != ""))
+      {
+        buf += ": " + route.get("to");
+      }
+      else if ((route.get("direction") != null) && (route.get("direction") != ""))
+      {
+        buf += " " + route.get("ref") + ": " + route.get("direction");
+      }
+      else
+      {
+        buf += " " + route.get("ref");
       }
       buf += tr(" [ID] {0}", Long.toString(route.getId()));
 
@@ -636,6 +642,11 @@ public class RoutePatternAction extends JosmAction {
       commonTagsData = new TagTableModel(true);
       commonTagsData.addColumn(tr("Key"));
       commonTagsData.addColumn(tr("Value"));
+      rowContent = new Vector< String >();
+      rowContent.add(0, "loc_ref");
+      tagBlacklist.add("loc_ref");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
       rowContent = new Vector< String >();
       rowContent.add(0, "direction");
       tagBlacklist.add("direction");

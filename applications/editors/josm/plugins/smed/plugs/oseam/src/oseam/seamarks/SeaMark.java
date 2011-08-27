@@ -142,7 +142,8 @@ public class SeaMark {
 		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD,
 		CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
 		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
-		SPM_CHBF, SPM_YCHT,
+		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN,
+		SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
 		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG,
@@ -159,6 +160,23 @@ public class SeaMark {
 		CatSTR.put(Cat.CAM_EAST, "east");
 		CatSTR.put(Cat.CAM_SOUTH, "south");
 		CatSTR.put(Cat.CAM_WEST, "west");
+		CatSTR.put(Cat.SPM_UNKN, "unknown");
+		CatSTR.put(Cat.SPM_WARN, "warning");
+		CatSTR.put(Cat.SPM_CHBF, "channel_separation");
+		CatSTR.put(Cat.SPM_YCHT, "yachting");
+		CatSTR.put(Cat.SPM_CABL, "cable");
+		CatSTR.put(Cat.SPM_OFAL, "outfall");
+		CatSTR.put(Cat.SPM_ODAS, "ODAS");
+		CatSTR.put(Cat.SPM_RECN, "recreational");
+		CatSTR.put(Cat.SPM_MOOR, "mooring");
+		CatSTR.put(Cat.SPM_LNBY, "LANBY");
+		CatSTR.put(Cat.SPM_LDNG, "leading");
+		CatSTR.put(Cat.SPM_NOTC, "notice");
+		CatSTR.put(Cat.SPM_TSS, "TSS");
+		CatSTR.put(Cat.SPM_FOUL, "foul");
+		CatSTR.put(Cat.SPM_DIVE, "diving");
+		CatSTR.put(Cat.SPM_FRRY, "ferry");
+		CatSTR.put(Cat.SPM_ANCH, "anchorage");
 		CatSTR.put(Cat.MOR_DLPN, "dolphin");
 		CatSTR.put(Cat.MOR_DDPN, "deviation_dolphon");
 		CatSTR.put(Cat.MOR_BLRD, "bollard");

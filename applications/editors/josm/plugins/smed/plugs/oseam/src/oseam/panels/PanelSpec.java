@@ -16,8 +16,15 @@ public class PanelSpec extends JPanel {
 	private OSeaMAction dlg;
 	public JLabel categoryLabel;
 	public JComboBox categoryBox;
+	public EnumMap<Cat, Integer> categories = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alCategoryBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : categories.keySet()) {
+				int idx = categories.get(cat);
+				if (dlg.mark != null && (idx == categoryBox.getSelectedIndex()))
+					dlg.mark.setCategory(cat);
+			}
+			checkValidity();
 		}
 	};
 
@@ -50,13 +57,7 @@ public class PanelSpec extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
-					dlg.panelMain.moreButton.setVisible(true);
-				else
-					dlg.panelMain.moreButton.setVisible(false);
-				dlg.mark.paintSign();
-			}
+			checkValidity();
 		}
 	};
 
@@ -87,20 +88,42 @@ public class PanelSpec extends JPanel {
 		categoryBox.setBounds(new Rectangle(35, 120, 140, 20));
 		this.add(categoryBox, null);
 		categoryBox.addActionListener(alCategoryBox);
-		categoryBox.addItem(Messages.getString("NoneSpecified"));
-		categoryBox.addItem(Messages.getString("General"));
-		categoryBox.addItem(Messages.getString("ChannelSeparation"));
-		categoryBox.addItem(Messages.getString("EntryProhibited"));
-		categoryBox.addItem(Messages.getString("Yachting"));
-		categoryBox.addItem(Messages.getString("Diving"));
-		categoryBox.addItem(Messages.getString("Anchorage"));
-		categoryBox.addItem(Messages.getString("Pipeline"));
-		categoryBox.addItem(Messages.getString("SpeedLimit"));
-		categoryBox.addItem(Messages.getString("FerryCrossing"));
-		categoryBox.addItem(Messages.getString("FoulGround"));
-		categoryBox.addItem(Messages.getString("UnknownPurpose"));
+		addCatItem(Messages.getString("UKPurpose"), Cat.SPM_UNKN);
+		addCatItem(Messages.getString("Warning"), Cat.SPM_WARN);
+		addCatItem(Messages.getString("ChanSeparation"), Cat.SPM_CHBF);
+		addCatItem(Messages.getString("Yachting"), Cat.SPM_YCHT);
+		addCatItem(Messages.getString("Cable"), Cat.SPM_CABL);
+		addCatItem(Messages.getString("Outfall"), Cat.SPM_OFAL);
+		addCatItem(Messages.getString("ODAS"), Cat.SPM_ODAS);
+		addCatItem(Messages.getString("RecreationZone"), Cat.SPM_RECN);
+		addCatItem(Messages.getString("Mooring"), Cat.SPM_MOOR);
+		addCatItem(Messages.getString("LANBY"), Cat.SPM_LNBY);
+		addCatItem(Messages.getString("Leading"), Cat.SPM_LDNG);
+		addCatItem(Messages.getString("Notice"), Cat.SPM_NOTC);
+		addCatItem(Messages.getString("TSS"), Cat.SPM_TSS);
+		addCatItem(Messages.getString("FoulGround"), Cat.SPM_FOUL);
+		addCatItem(Messages.getString("Diving"), Cat.SPM_DIVE);
+		addCatItem(Messages.getString("FerryCross"), Cat.SPM_FRRY);
+		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
 	}
 
+	private void checkValidity() {
+		if (dlg.mark != null) {
+			if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.moreButton.setVisible(true);
+			} else {
+				dlg.panelMain.fogButton.setEnabled(false);
+				dlg.panelMain.radButton.setEnabled(false);
+				dlg.panelMain.litButton.setEnabled(false);
+				dlg.panelMain.moreButton.setVisible(false);
+			}
+			dlg.mark.paintSign();
+		}
+	}
+	
 	public void updateSelections() {
 		if (dlg.mark != null) {
 			if (dlg.mark.getObject() == Obj.UNKNOWN) {
@@ -117,6 +140,11 @@ public class PanelSpec extends JPanel {
 			}
 		} else
 			clearSelections();
+	}
+
+	private void addCatItem(String str, Cat cat) {
+		categories.put(cat, categoryBox.getItemCount());
+		categoryBox.addItem(str);
 	}
 
 	public void clearSelections() {

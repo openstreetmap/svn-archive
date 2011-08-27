@@ -166,6 +166,7 @@ public class PanelLights extends JPanel {
 					warningCatBox.setSelectedIndex(warningCats.get(dlg.mark.getCategory()));
 				}
 			}
+			checkValidity();
 		}
 	}
 

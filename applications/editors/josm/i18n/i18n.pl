@@ -202,7 +202,7 @@ sub makestring($)
 
 sub checkstring
 {
-  my ($la, $tr, $en, $cnt, $en1) = @_;
+  my ($la, $tr, $en, $cnt, $en1, $eq) = @_;
   $tr = makestring($tr);
   $en = makestring($en);
   $cnt = $cnt || 0;
@@ -242,6 +242,7 @@ sub checkstring
   }
 
   #$tr = "" if($error && $la ne "en");
+  return pack("n",65534) if $eq;
 
   return pack("n",length($tr)).$tr;
 }
@@ -274,6 +275,7 @@ sub createlang($@)
     {
       next if $data->{$en}{"en.1"};
       my $val;
+      my $eq;
       if($la eq "en")
       {
         ++$cnt;
@@ -286,9 +288,12 @@ sub createlang($@)
         $ennoctx =~ s/^___(.*)___//;
         $val = (exists($data->{$en}{$la})) ? $data->{$en}{$la} : "";
         ++$cnt if $val;
-        $val = "" if($ennoctx eq $val);
+        if($ennoctx eq $val)
+        {
+          $val = ""; $eq = 1;
+        }
       }
-      print FILE checkstring($la, $val, $en);
+      print FILE checkstring($la, $val, $en, undef, undef, $eq);
     }
     print FILE pack "n",0xFFFF;
     foreach my $en (sort keys %{$data})

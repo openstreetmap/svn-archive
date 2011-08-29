@@ -30,17 +30,9 @@ for my $line (@lines)
 {
   $line =~ s/\r//g;
   chomp($line);
-  if($line =~ /^#(.*)$/)
+  if($line =~ /<name>(.*)<\/name>/)
   {
-    print "/* $1 */\n";
-  }
-  elsif($line =~ /^$/)
-  {
-    print "\n";
-  }
-  elsif($line =~ /^(.*?);(.*?);(.*)$/)
-  {
-    print "/* $3 */ tr(\"$2\");\n";
+    print "/* $line */ tr(\"$1\");\n";
   }
   else
   {

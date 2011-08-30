@@ -43,7 +43,6 @@ public class PanelSpec extends JPanel {
 	public JRadioButton cairnButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CairnButton.png")));
 	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
-	public PanelCol panelCol = null;
 	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {
@@ -51,8 +50,8 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if ((button == cairnButton) && !(panelCol.offButton.isSelected()))
-						panelCol.offButton.doClick();
+					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelCol.offButton.isSelected()))
+						dlg.panelMain.panelMore.panelCol.offButton.doClick();
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -63,29 +62,26 @@ public class PanelSpec extends JPanel {
 
 	public PanelSpec(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, alShape, Ent.BODY);
-		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 
 		this.setLayout(null);
-		this.add(panelCol, null);
-		this.add(getShapeButton(pillarButton, 35, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(sparButton, 70, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(canButton, 105, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
-		this.add(getShapeButton(coneButton, 140, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 35, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
-		this.add(getShapeButton(barrelButton, 70, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
-		this.add(getShapeButton(superButton, 105, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
-		this.add(getShapeButton(floatButton, 140, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 35, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 70, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
-		this.add(getShapeButton(stakeButton, 105, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
-		this.add(getShapeButton(cairnButton, 140, 64, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
+		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(sparButton, 35, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
+		this.add(getShapeButton(canButton, 70, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
+		this.add(getShapeButton(coneButton, 105, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sphereButton, 140, 0, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
+		this.add(getShapeButton(barrelButton, 35, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
+		this.add(getShapeButton(superButton, 70, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
+		this.add(getShapeButton(floatButton, 105, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
+		this.add(getShapeButton(beaconButton, 17, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
+		this.add(getShapeButton(towerButton, 52, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(stakeButton, 87, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
+		this.add(getShapeButton(cairnButton, 122, 64, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(35, 100, 140, 20));
+		categoryLabel.setBounds(new Rectangle(5, 100, 170, 20));
 		this.add(categoryLabel, null);
 		categoryBox = new JComboBox();
-		categoryBox.setBounds(new Rectangle(35, 120, 140, 20));
+		categoryBox.setBounds(new Rectangle(5, 120, 170, 20));
 		this.add(categoryBox, null);
 		categoryBox.addActionListener(alCategoryBox);
 		addCatItem(Messages.getString("UKPurpose"), Cat.SPM_UNKN);
@@ -110,11 +106,13 @@ public class PanelSpec extends JPanel {
 	private void checkValidity() {
 		if (dlg.mark != null) {
 			if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
+				dlg.panelMain.topButton.setEnabled(true);
 				dlg.panelMain.fogButton.setEnabled(true);
 				dlg.panelMain.radButton.setEnabled(true);
 				dlg.panelMain.litButton.setEnabled(true);
 				dlg.panelMain.moreButton.setVisible(true);
 			} else {
+				dlg.panelMain.topButton.setEnabled(false);
 				dlg.panelMain.fogButton.setEnabled(false);
 				dlg.panelMain.radButton.setEnabled(false);
 				dlg.panelMain.litButton.setEnabled(false);
@@ -128,9 +126,9 @@ public class PanelSpec extends JPanel {
 		if (dlg.mark != null) {
 			if (dlg.mark.getObject() == Obj.UNKNOWN) {
 				clearSelections();
-				panelCol.yellowButton.doClick();
+				dlg.panelMain.panelMore.panelCol.yellowButton.doClick();
 			} else {
-				panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
+				dlg.panelMain.panelMore.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
 			}
 			if (shapes.containsKey(dlg.mark.getShape())) {
 				shapes.get(dlg.mark.getShape()).doClick();

@@ -35,7 +35,7 @@ public class PanelCol extends JPanel {
 				if (button.isSelected()) {
 					if (dlg.mark != null) {
 						dlg.mark.setColour(ent, col);
-						act.actionPerformed(null);
+//						act.actionPerformed(null);
 					}
 					button.setBorderPainted(true);
 				} else

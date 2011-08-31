@@ -5,6 +5,7 @@
 
 use strict;
 use LWP::Simple;
+use encoding 'utf8';
 
 my $item;
 my $comment = 0;

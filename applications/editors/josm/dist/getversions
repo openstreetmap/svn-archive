@@ -35,7 +35,7 @@ foreach my $plugin (@names)
     my $changedm = $svnmversion ne $mversion;
     printf " SVN: %28s %6s (%4s)%s%s", $svndate,$svnversion,$svnmversion,
     $changed ? " changed" : "", $changedm ? " main" : "";
-    `svn revert $plugin` if !$changed;
+    `svn revert $plugin` if !$changed && !$changedm;
   }
   printf "\n";
 }

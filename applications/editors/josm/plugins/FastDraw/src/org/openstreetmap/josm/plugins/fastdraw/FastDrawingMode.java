@@ -538,7 +538,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     /**
      * Updates shift and ctrl key states
      */
-    private void updateKeyModifiers(InputEvent e) {
+    protected void updateKeyModifiers(InputEvent e) {
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
         updateCursor();
@@ -685,7 +685,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         }
         if (w.isClosed()) line.closeLine();
         oldNodes = w.getNodes();
-        List <OsmPrimitive> wl = new ArrayList(); wl.add(w);
+        List <OsmPrimitive> wl = new ArrayList<OsmPrimitive>(); wl.add(w);
         
         Command c = DeleteCommand.delete(getEditLayer(), wl, false);
         if (c != null) cmds.add(c);

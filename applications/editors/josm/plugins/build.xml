@@ -23,6 +23,7 @@
         <ant antfile="build.xml" target="dist" dir="download_along"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="ElevationProfile"/>
+        <ant antfile="build.xml" target="dist" dir="epci-fr"/>
         <ant antfile="build.xml" target="dist" dir="epsg31287"/>
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="FastDraw"/>
@@ -35,15 +36,18 @@
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
         <ant antfile="build.xml" target="dist" dir="ImproveWayAccuracy"/>
+        <ant antfile="build.xml" target="dist" dir="infomode"/>
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
         <ant antfile="build.xml" target="dist" dir="junctionchecking"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
+        <ant antfile="build.xml" target="dist" dir="licensechange"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
         <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="namemanager"/>
+        <ant antfile="build.xml" target="dist" dir="native-password-manager"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
@@ -103,6 +107,7 @@
         <ant antfile="build.xml" target="clean" dir="download_along"/>
         <ant antfile="build.xml" target="clean" dir="editgpx"/>
         <ant antfile="build.xml" target="clean" dir="ElevationProfile"/>
+        <ant antfile="build.xml" target="clean" dir="epci-fr"/>
         <ant antfile="build.xml" target="clean" dir="epsg31287"/>
         <ant antfile="build.xml" target="clean" dir="ext_tools"/>
         <ant antfile="build.xml" target="clean" dir="FastDraw"/>
@@ -115,15 +120,18 @@
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>
         <ant antfile="build.xml" target="clean" dir="ImproveWayAccuracy"/>
+        <ant antfile="build.xml" target="clean" dir="infomode"/>
         <ant antfile="build.xml" target="clean" dir="irsrectify"/>
         <ant antfile="build.xml" target="clean" dir="junctionchecking"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
+        <ant antfile="build.xml" target="clean" dir="licensechange"/>
         <ant antfile="build.xml" target="clean" dir="livegps"/>
         <ant antfile="build.xml" target="clean" dir="mapdust"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="namemanager"/>
+        <ant antfile="build.xml" target="clean" dir="native-password-manager"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>

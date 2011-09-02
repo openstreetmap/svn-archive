@@ -30,7 +30,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Changed constructor signature, updated build.xml"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="3835"/>
+    <property name="plugin.main.version" value="4394"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

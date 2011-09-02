@@ -66,7 +66,7 @@
                 <attribute name="Plugin-Description" value="Drive a race car from point A to point B over aerial imagery, leave cacti behind."/>
                 <attribute name="Plugin-Icon" value="images/wmsracer.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMS_Racer"/>
-                <attribute name="Plugin-Mainversion" value="4126"/>
+                <attribute name="Plugin-Mainversion" value="4394"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

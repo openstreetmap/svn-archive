@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="some new features in internationalising"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="3329"/>
+    <property name="plugin.main.version" value="4394"/>
     <!-- Declaring  time-stamps-->
     <tstamp/>
     <!--

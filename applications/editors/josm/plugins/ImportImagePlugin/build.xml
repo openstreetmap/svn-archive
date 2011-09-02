@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="use consistent plugin name (don't mix up the words)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3376" />
+	<property name="plugin.main.version" value="4394" />
 
 
 	<!--

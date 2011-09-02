@@ -33,7 +33,7 @@
     <property name="stylesheets" location="./stylesheets"/>
     <property name="xslt" location="./xslt"/>
     <property name="commit.message" value="Fixed #4360 - osmarender plugin does not load"/>
-    <property name="plugin.main.version" value="3835"/>
+    <property name="plugin.main.version" value="4394"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>

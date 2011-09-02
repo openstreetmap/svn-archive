@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="recompile after change in OsmPrimitive in JOSM 4099"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4310"/>
+    <property name="plugin.main.version" value="4394"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

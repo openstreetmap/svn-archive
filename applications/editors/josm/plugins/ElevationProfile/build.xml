@@ -94,7 +94,7 @@
                 <attribute name="Plugin-Description" value="Shows the elevation profile and some statistical data of a GPX track."/>
                 <attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil und statistische Werte eines GPX-Tracks."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>
-                <attribute name="Plugin-Mainversion" value="3835"/>
+                <attribute name="Plugin-Mainversion" value="4394"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Icon" value="images/elevation.png"/>
             </manifest>

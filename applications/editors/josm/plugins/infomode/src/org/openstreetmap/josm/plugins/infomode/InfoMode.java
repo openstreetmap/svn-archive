@@ -196,7 +196,8 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     /**
      * Updates shift and ctrl key states
      */
-    private void updateKeyModifiers(InputEvent e) {
+    @Override
+    protected void updateKeyModifiers(InputEvent e) {
         oldCtrl = ctrl;
         oldShift = shift;
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;

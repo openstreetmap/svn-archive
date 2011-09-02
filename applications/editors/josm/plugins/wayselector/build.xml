@@ -29,9 +29,9 @@
 -->
 <project name="wayselector" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Optimize WaySelection.findWay()."/>
+    <property name="commit.message" value="recompile due to core change"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="3835"/>
+    <property name="plugin.main.version" value="4395"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

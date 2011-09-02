@@ -29,9 +29,9 @@
 -->
 <project name="buildings_tools" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="update (23630 was committed together with the code which is not right)"/>
+    <property name="commit.message" value="recompilie due to core change"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="3922"/>
+    <property name="plugin.main.version" value="4395"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

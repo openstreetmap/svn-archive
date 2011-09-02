@@ -447,7 +447,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
     /**
      * Updates shift and ctrl key states
      */
-    private void updateKeyModifiers(InputEvent e) {
+    @Override
+    protected void updateKeyModifiers(InputEvent e) {
         oldCtrl = ctrl;
         oldShift = shift;
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;

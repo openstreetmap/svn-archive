@@ -36,7 +36,7 @@ public final class SymmetryAction extends JosmAction {
         super(tr("Symmetry"), "symmetry", tr("Mirror selected nodes and ways."),
                 Shortcut.registerShortcut("tools:symmetry", tr("Tool: {0}", tr("Symmetry")),
                         KeyEvent.VK_S, Shortcut.GROUP_EDIT,  KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK ), true);
-        putValue("help", ht("/Action/Symmtry"));
+        putValue("help", ht("/Action/Symmetry"));
     }
 
     public void actionPerformed(ActionEvent e) {

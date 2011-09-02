@@ -36,6 +36,10 @@
                     <target>clean</target>
                     <target>dist</target>
                 </action>
+                <action name="debug">
+                    <script>nbproject/ide-targets.xml</script>
+                    <target>debug-nb</target>
+                </action>
             </ide-actions>
             <export>
                 <type>jar</type>
@@ -57,6 +61,7 @@
                     <ide-action name="rebuild"/>
                     <ide-action name="clean"/>
                     <ide-action name="run"/>
+                    <ide-action name="debug"/>
                 </context-menu>
             </view>
         </general-data>

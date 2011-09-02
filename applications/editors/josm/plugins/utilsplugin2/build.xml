@@ -29,9 +29,9 @@
 -->
 <project name="utilsplugin2" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: Symmetry tool Alt-Shift-S"/>
+    <property name="commit.message" value="Utilsplugin2: Open custom URL in browser by Shift-\"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4201"/>
+    <property name="plugin.main.version" value="4935"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -241,7 +241,7 @@
     </target>
     <target name="runjosm" depends="install">
         <java jar="${josm}" fork="true">
-            <arg line="../../core/data_nodist/neubrandenburg.osm"/>
+            <arg line="e:/test.osm"/>
         </java>
     </target>
 </project>

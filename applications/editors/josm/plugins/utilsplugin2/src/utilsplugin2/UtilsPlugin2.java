@@ -29,7 +29,8 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem intWaysR;
     JMenuItem undoSelection;
     JMenuItem extractPoint;
-
+    JMenuItem wiki;
+    
     JMenuItem replaceGeometry;
     JMenuItem tagBuffer;
     JMenuItem sourceTag;
@@ -56,6 +57,7 @@ public class UtilsPlugin2 extends Plugin {
         splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
         extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
         symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
+        wiki = MainMenu.add(toolsMenu, new OpenPageAction());
 
         JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
@@ -85,6 +87,7 @@ public class UtilsPlugin2 extends Plugin {
         pasteRelations.setEnabled(enabled);
         alignWayNodes.setEnabled(enabled);
         splitOnIntersections.setEnabled(enabled);
+        wiki.setEnabled(enabled);
 
         selectWayNodes.setEnabled(enabled);
         adjNodes.setEnabled(enabled);

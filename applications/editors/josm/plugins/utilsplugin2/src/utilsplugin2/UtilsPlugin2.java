@@ -1,6 +1,7 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package utilsplugin2;
 
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -101,4 +102,9 @@ public class UtilsPlugin2 extends Plugin {
         selModifiedWays.setEnabled(enabled);
         undoSelection.setEnabled(enabled);
     }
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return new UtilsPluginPreferences();
+    }
+
 }

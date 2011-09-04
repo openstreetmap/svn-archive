@@ -54,7 +54,12 @@ public final class OpenPageAction extends JosmAction {
         if (sel.size()==1) {
             p=sel.iterator().next();
         } else {
-            showConfigDialog();
+            JOptionPane.showMessageDialog(
+                    Main.parent,
+                    tr("Please select one element to open custom URL for it. You can choose the URL in Preferences, Utils tab."),
+                    tr("Information"),
+                    JOptionPane.INFORMATION_MESSAGE
+            );
             return;
         }
         
@@ -66,7 +71,6 @@ public final class OpenPageAction extends JosmAction {
         int i=0;
         try {
         while (m.find()) {
-                System.out.println(m.group());
                 key=m.group(1);
                 if (key.equals("#id")) {
                     val=Long.toString(p.getId());
@@ -90,11 +94,9 @@ public final class OpenPageAction extends JosmAction {
             System.err.println("Encoding error");
             return;
         }
-        System.out.println(i);
         for (int j=0;j<i;j++){
             addr = addr.replace(keys[j],vals[j]);
         }
-        System.out.println(addr);
         try {
             OpenBrowser.displayUrl(addr);
         } catch (Exception ex) {
@@ -118,45 +120,5 @@ public final class OpenPageAction extends JosmAction {
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(selection != null );
-    }
-
-    private void showConfigDialog() {
-        JPanel all = new JPanel();
-        GridBagLayout layout = new GridBagLayout();
-        all.setLayout(layout);
-        
-        HistoryComboBox combo1=new HistoryComboBox();
-        
-        // FIXME: get rid of hardcoded URLS
-        ArrayList<String> items=new ArrayList<String>();
-        items.add(defaultURL);
-        items.add("http://latlon.org/buildings?zoom=17&lat={#lat}&lon={#lon}&layers=B");
-        items.add("http://addresses.amdmi3.ru/?zoom=11&lat={#lat}&lon={#lon}&layers=B00");
-        items.add("http://www.openstreetmap.org/browse/{#type}/{#id}/history");
-        items.add("http://www.openstreetmap.org/browse/{#type}/{#id}");
-        String addr = Main.pref.get("utilsplugin2.customurl", defaultURL);
-        System.out.println("pref:"+addr);
-        combo1.setPossibleItems(items);
-        
-        HtmlPanel help = new HtmlPanel(tr("You can open custom URL for <b>one</b> selected object<br/>"
-                + " <b>&#123;key&#125;</b> is replaced with the tag walue<br/>"
-                + " <b>&#123;#id&#125;</b> is replaced with the element ID<br/>"
-                + " <b>&#123;#type&#125;</b> is replaced with \"node\",\"way\" or \"relation\" <br/>"
-                + " <b>&#123;#lat&#125; , &#123;#lon&#125;</b> is replaced with element latitude/longitude"));
-        help.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-        all.add(help,GBC.eop().insets(5,10,0,0));
-        all.add(combo1,GBC.eop().insets(5,10,0,0));
-        
-        ExtendedDialog dialog = new ExtendedDialog(Main.parent,
-                tr("Configure custom URL"),
-                new String[] {tr("OK"),tr("Cancel"),}
-        );
-        dialog.setContent(all, false);
-        dialog.setButtonIcons(new String[] {"ok.png","cancel.png",});
-        dialog.setDefaultButton(1);
-        dialog.showDialog();
-        
-        addr=combo1.getText();
-        if (dialog.getValue() ==1 && addr.length()>6) Main.pref.put("utilsplugin2.customurl",addr);
     }
 }

@@ -67,7 +67,7 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
         fillRows(items);
         
         HtmlPanel help = new HtmlPanel(tr("Please edit custom URLs and select one row to use with the tool<br/>"
-                + " <b>&#123;key&#125;</b> is replaced with the tag walue<br/>"
+                + " <b>&#123;key&#125;</b> is replaced with the tag value<br/>"
                 + " <b>&#123;#id&#125;</b> is replaced with the element ID<br/>"
                 + " <b>&#123;#type&#125;</b> is replaced with \"node\",\"way\" or \"relation\" <br/>"
                 + " <b>&#123;#lat&#125; , &#123;#lon&#125;</b> is replaced with element latitude/longitude"));

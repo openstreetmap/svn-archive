@@ -5,6 +5,7 @@
 # Replaces (and is based on) poly2osm.pl, poly2wkt.pl, poly2bb.pl, gpx2poly.pl, osm2poly.pl
 #
 # written by Ilya Zverev <zverik@textual.ru>, public domain.
+# installed at http://textual.ru/poly/
 
 use strict;
 use CGI;
@@ -95,7 +96,7 @@ sub poly2gpx {
 		{
 			last if ($line =~ /^END/); # end of poly
 			my ($dummy, $x, $y) = split(/\s+/, $line);
-			$tracks .= sprintf("  <trkpt lat=\"%f\" lon=\"%f\" />\n  </trkpt>\n", $y, $x);
+			$tracks .= sprintf("  <trkpt lat=\"%f\" lon=\"%f\">\n  </trkpt>\n", $y, $x);
 		}
 		$tracks .= "</trkseg>\n</trk>\n";	
 		$workaround=0;

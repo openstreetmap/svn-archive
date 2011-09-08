@@ -18,6 +18,7 @@ public class PanelCol extends JPanel {
 	private Ent ent;
 	private ButtonGroup colourButtons = new ButtonGroup();
 	public JRadioButton offButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
+	public JRadioButton addButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/AddButton.png")));
 	public JRadioButton whiteButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WhiteButton.png")));
 	public JRadioButton redButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RedButton.png")));
 	public JRadioButton orangeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OrangeButton.png")));
@@ -27,6 +28,10 @@ public class PanelCol extends JPanel {
 	public JRadioButton blueButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlueButton.png")));
 	public JRadioButton violetButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/VioletButton.png")));
 	public JRadioButton blackButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlackButton.png")));
+	public JRadioButton greyButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/GreyButton.png")));
+	public JRadioButton brownButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BrownButton.png")));
+	public JRadioButton magentaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MagentaButton.png")));
+	public JRadioButton pinkButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PinkButton.png")));
 	public EnumMap<Col, JRadioButton> colours = new EnumMap<Col, JRadioButton>(Col.class);
 	private ActionListener alColour = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -35,7 +40,7 @@ public class PanelCol extends JPanel {
 				if (button.isSelected()) {
 					if (dlg.mark != null) {
 						dlg.mark.setColour(ent, col);
-//						act.actionPerformed(null);
+						// act.actionPerformed(null);
 					}
 					button.setBorderPainted(true);
 				} else
@@ -58,7 +63,14 @@ public class PanelCol extends JPanel {
 		this.add(getColButton(greenButton, 0, 96, 34, 16, Messages.getString("Green"), Col.GREEN), null);
 		this.add(getColButton(blueButton, 0, 112, 34, 16, Messages.getString("Blue"), Col.BLUE), null);
 		this.add(getColButton(violetButton, 0, 128, 34, 16, Messages.getString("Violet"), Col.VIOLET), null);
-		this.add(getColButton(blackButton, 0, 144, 34, 16, Messages.getString("Black"), Col.BLACK), null);
+		if (ent != Ent.LIGHT) {
+			this.add(getColButton(addButton, 0, 144, 34, 16, Messages.getString("AddColour"), Col.UNKNOWN), null);
+			this.add(getColButton(blackButton, 35, 0, 34, 16, Messages.getString("Black"), Col.BLACK), null);
+			this.add(getColButton(greyButton, 35, 16, 34, 16, Messages.getString("Grey"), Col.GREY), null);
+			this.add(getColButton(brownButton, 35, 32, 34, 16, Messages.getString("Brown"), Col.BROWN), null);
+			this.add(getColButton(magentaButton, 35, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA), null);
+			this.add(getColButton(pinkButton, 35, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
+		}
 	}
 
 	public void clearSelections() {

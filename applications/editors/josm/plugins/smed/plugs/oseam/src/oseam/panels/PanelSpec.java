@@ -50,8 +50,8 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelCol.offButton.isSelected()))
-						dlg.panelMain.panelMore.panelCol.offButton.doClick();
+					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.offButton.isSelected()))
+						dlg.panelMain.panelMore.panelPat.panelCol.offButton.doClick();
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -126,9 +126,9 @@ public class PanelSpec extends JPanel {
 		if (dlg.mark != null) {
 			if (dlg.mark.getObject() == Obj.UNKNOWN) {
 				clearSelections();
-				dlg.panelMain.panelMore.panelCol.yellowButton.doClick();
+				dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
 			} else {
-				dlg.panelMain.panelMore.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
+				dlg.panelMain.panelMore.panelPat.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
 			}
 			if (shapes.containsKey(dlg.mark.getShape())) {
 				shapes.get(dlg.mark.getShape()).doClick();

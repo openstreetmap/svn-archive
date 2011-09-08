@@ -52,7 +52,6 @@ public class PanelLit extends JPanel {
 		panelChr.setBounds(new Rectangle(0, 0, 88, 160));
 		panelCol = new PanelCol(dlg, alType, Ent.LIGHT);
 		panelCol.setBounds(new Rectangle(88, 0, 34, 160));
-		panelCol.blackButton.setVisible(false);
 		this.setLayout(null);
 		this.add(panelChr, null);
 		this.add(panelCol, null);

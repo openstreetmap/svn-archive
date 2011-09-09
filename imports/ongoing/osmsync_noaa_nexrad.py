@@ -105,6 +105,6 @@ changeSetTags = {
 myfetch = osmsync_noaa_nexrad()
 myfetch.run(description='Mirror NOAA NEXRAD Weather Radar Stations into OpenStreetMap',
             ext_url='http://www.ncdc.noaa.gov/oa/radar/nexrad.kmz',
-            osm_url=osmsync.xapi_url + urllib.quote('node[radar_transponder=NEXRAD]')
+            osm_url=osmsync.xapi_url + urllib.quote('node[source=osmsync:noaa:nexrad]')
             )
 myfetch.output(changeSetTags)

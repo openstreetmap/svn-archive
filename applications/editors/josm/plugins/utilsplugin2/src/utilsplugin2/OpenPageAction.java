@@ -9,13 +9,14 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Collection;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import javax.swing.JPanel;
@@ -62,6 +63,8 @@ public final class OpenPageAction extends JosmAction {
             );
             return;
         }
+        if (Main.pref.getBoolean("utilsplugin2.askurl",false)==true) 
+            ChooseURLAction.showConfigDialog();
         
         String addr = Main.pref.get("utilsplugin2.customurl", defaultURL);
         Pattern pat = Pattern.compile("\\{([^\\}]*)\\}");
@@ -121,4 +124,5 @@ public final class OpenPageAction extends JosmAction {
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(selection != null );
     }
+
 }

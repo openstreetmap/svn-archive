@@ -29,6 +29,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem adjWaysAll;
     JMenuItem intWays;
     JMenuItem intWaysR;
+    JMenuItem allInside;
     JMenuItem undoSelection;
     JMenuItem extractPoint;
     JMenuItem wiki;
@@ -72,6 +73,7 @@ public class UtilsPlugin2 extends Plugin {
         adjWaysAll = MainMenu.add(selectionMenu, new ConnectedWaysAction());
         intWays = MainMenu.add(selectionMenu, new IntersectedWaysAction());
         intWaysR = MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
+        allInside = MainMenu.add(selectionMenu, new SelectAllInsideAction());
         selModifiedNodes = MainMenu.add(selectionMenu, new SelectModNodesAction());
         selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
         undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
@@ -109,6 +111,7 @@ public class UtilsPlugin2 extends Plugin {
         selModifiedWays.setEnabled(enabled);
         undoSelection.setEnabled(enabled);
         selectURL.setEnabled(enabled);
+        allInside.setEnabled(enabled);
     }
     @Override
     public PreferenceSetting getPreferenceSetting() {

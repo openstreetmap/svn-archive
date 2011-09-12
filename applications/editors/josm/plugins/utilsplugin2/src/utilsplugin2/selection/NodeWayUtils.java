@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -262,5 +264,33 @@ public final class NodeWayUtils {
             }
     }
 
+    
 
+    static void addAllInsideWay(DataSet data, Way way, Set<Way> newWays, Set<Node> newNodes) {
+        if (!way.isClosed()) return;
+        BBox box = way.getBBox();
+        List<Node> polyNodes = way.getNodes();
+        List<Node> searchNodes = data.searchNodes(box);
+        Set<Node> newestNodes = new HashSet<Node>();
+        Set<Way> newestWays = new HashSet<Way>();
+        for (Node n : searchNodes) {
+            if (Geometry.nodeInsidePolygon(n, polyNodes)) {
+                newestNodes.add(n);
+            }
+        }
+        
+        List<Way> searchWays = data.searchWays(box);
+        for (Way w : searchWays) {
+            if (newestNodes.containsAll(w.getNodes())) {
+                newestWays.add(w);
+            }
+        }
+        for (Way w : newestWays) {
+            newestNodes.removeAll(w.getNodes());
+            // do not select nodes of already selected ways
+        }
+        
+        newNodes.addAll(newestNodes);
+        newWays.addAll(newestWays);
+    }
 }

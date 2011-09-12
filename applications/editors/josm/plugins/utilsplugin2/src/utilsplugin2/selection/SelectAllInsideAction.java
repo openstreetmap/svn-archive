@@ -15,6 +15,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
 
 import org.openstreetmap.josm.tools.Shortcut;
+import sun.awt.windows.WWindowPeer;
 
 /**
  *    Extends current selection by selecting nodes on all touched ways
@@ -34,6 +35,9 @@ public class SelectAllInsideAction extends JosmAction {
         Set<Way> activeWays = new HashSet<Way>();
 
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
+        for (Way w: selectedWays) {
+            if (!w.isClosed()) selectedWays.remove(w);
+        }
 
         // select ways attached to already selected ways
         if (!selectedWays.isEmpty()) {
@@ -47,7 +51,7 @@ public class SelectAllInsideAction extends JosmAction {
             return;
         } else {
              JOptionPane.showMessageDialog(Main.parent,
-               tr("Please select some ways to find connected and intersecting ways!"),
+               tr("Please select some closed ways to find all primitives inside them!"),
                tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
 

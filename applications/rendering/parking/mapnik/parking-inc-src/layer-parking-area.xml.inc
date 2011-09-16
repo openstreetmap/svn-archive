@@ -3,6 +3,7 @@
     <Rule>
       <Filter>[parking:condition:area] = 'ticket'</Filter>
       &maxscale_zoom10;
+      &minscale_zoom15;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_fee;</CssParameter>
         <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
@@ -23,6 +24,7 @@
     <Rule>
       <Filter>[amenity] = 'parking' and [fee]='yes'</Filter>
       &maxscale_zoom10;
+      &minscale_zoom15;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_fee;</CssParameter>
         <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
@@ -39,10 +41,95 @@
       <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png" type="png" width="16" height="16"/>
     </Rule>
 
+    <!-- parking area: disc -->
+    <Rule>
+      <Filter>[parking:condition:area]='disc'</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom15;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">&pa_customers;</CssParameter>
+        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
+        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
+        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom16;
+      <Filter>[parking:condition:area]='disc'</Filter>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_disc.png" type="png" width="16" height="16"/>
+    </Rule>
+
+    <!-- parking area: customers -->
+    <Rule>
+      <Filter>[amenity]='parking' and ([parking:condition:area]='customers' or [access]='customers')</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom15;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">&pa_customers;</CssParameter>
+        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
+        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
+        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom16;
+      <Filter>[amenity]='parking' and ([parking:condition:area]='customers' or [access]='customers')</Filter>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png" type="png" width="16" height="16"/>
+    </Rule>
+
+    <!-- parking area: residents (new and old) -->
+    <Rule>
+      <Filter>[amenity] = 'parking' and ([parking:condition:area]='residents' or [access]='residents')</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom15;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">&pa_residents;</CssParameter>
+        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&pa_residents_stroke;</CssParameter>
+        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
+        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom16;
+      <Filter>[amenity] = 'parking' and ([parking:condition:area]='residents' or [access]='residents')</Filter>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png" type="png" width="16" height="16"/>
+    </Rule>
+
+    <!-- parking area: private -->
+    <Rule>
+      <Filter>[amenity] = 'parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom15;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">&pa_private;</CssParameter>
+        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&pa_private_stroke;</CssParameter>
+        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
+        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom16;
+      <Filter>[amenity]='parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png" type="png" width="16" height="16"/>
+    </Rule>
+
     <!-- parking area: free (new) -->
     <Rule>
       <Filter>[parking:condition:area] = 'free'</Filter>
       &maxscale_zoom10;
+      &minscale_zoom15;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_free;</CssParameter>
         <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
@@ -63,6 +150,7 @@
     <Rule>
       <Filter>[amenity] = 'parking' and [fee]='no'</Filter>
       &maxscale_zoom10;
+      &minscale_zoom15;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_free;</CssParameter>
         <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
@@ -79,89 +167,10 @@
       <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png" type="png" width="16" height="16"/>
     </Rule>
 
-    <!-- parking area: disc -->
-    <Rule>
-      <Filter>[parking:condition:area]='disc'</Filter>
-      &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_customers;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
-    </Rule>
-    <Rule>
-      &maxscale_zoom16;
-      <Filter>[parking:condition:area]='disc'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_disc.png" type="png" width="16" height="16"/>
-    </Rule>
-
-    <!-- parking area: customers -->
-    <Rule>
-      <Filter>[parking:condition:area]='customers' or ([amenity]='parking' and [access]='customers')</Filter>
-      &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_customers;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
-    </Rule>
-    <Rule>
-      &maxscale_zoom16;
-      <Filter>[parking:condition:area]='customers' or ([amenity]='parking' and [access]='customers')</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png" type="png" width="16" height="16"/>
-    </Rule>
-
-    <!-- parking area: residents -->
-    <Rule>
-      <Filter>[amenity] = 'parking' and [parking:condition:area]='residents'</Filter>
-      &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_residents;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_residents_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
-    </Rule>
-    <Rule>
-      &maxscale_zoom16;
-      <Filter>[amenity] = 'parking' and [parking:condition:area]='residents'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png" type="png" width="16" height="16"/>
-    </Rule>
-
-    <!-- parking area: private -->
-    <Rule>
-      <Filter>[amenity] = 'parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
-      &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_private;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_private_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
-    </Rule>
-    <Rule>
-      &maxscale_zoom16;
-      <Filter>[amenity]='parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png" type="png" width="16" height="16"/>
-    </Rule>
-
     <Rule>
       <ElseFilter/>
       &maxscale_zoom10;
+      &minscale_zoom15;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_unknown;</CssParameter>
         <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>

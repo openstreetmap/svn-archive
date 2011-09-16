@@ -35,7 +35,7 @@ for my $line (@lines)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;
-    print "/* $line */ tr(\"$1\");\n";
+    print "/* $line */ tr(\"$val\");\n";
   }
   else
   {

@@ -49,16 +49,12 @@ def main(options):
     temp_dir = options['tempdir']
     deploy_dir = options['deploydir']
 
-    # clean temp and deploy dirs
-    print "** cleaning temp dir "+temp_dir
+    # (0) clean temp and deploy dirs
     shutil.rmtree(temp_dir,ignore_errors=True)
-    print "** cleaning deploy dir "+deploy_dir
     shutil.rmtree(deploy_dir,ignore_errors=True)
 
     # (1) copy the mapnik to temp and patch with local settings.
     patched_mapnik_dir = os.path.join(temp_dir,"mapnik")
-    #os.makedirs(patched_mapnik_dir)
-    #print "shutil.copytree(original_mapnik_dir={o},patched_mapnik_dir={p})".format(o=original_mapnik_dir,p=patched_mapnik_dir)
     shutil.copytree(original_mapnik_dir,patched_mapnik_dir)
     copy_settings_files(settings_dir,os.path.join(patched_mapnik_dir,"inc"))
 
@@ -69,12 +65,7 @@ def main(options):
     parking_dir = os.path.join(temp_dir,"parking")
     parking_inc_dir = os.path.join(parking_dir,"inc")
     os.makedirs(parking_dir)
-    #print "shutil.copytree(original_mapnik_dir={o},patched_mapnik_dir={p})".format(o=original_mapnik_dir,p=patched_mapnik_dir)
-    #shutil.copy2(os.path.join(original_parking_dir,"colorents.xml.inc"),os.path.join(parking_base_dir,"colorents.xml.inc"))
-    #shutil.copy2(os.path.join(original_parking_dir,"colorents-bw.xml.inc"),os.path.join(parking_base_dir,"colorents-bw.xml.inc"))
-    # TODO: ^^^^ remove this
     shutil.copy2(os.path.join(original_parking_dir,"osm-parktrans-src.xml"),os.path.join(parking_dir,"osm-parktrans-src.xml"))
-    #shutil.copy2(os.path.join(original_parking_dir,"osm-parking-old-src.xml"),os.path.join(parking_dir,"osm-parking-old-src.xml"))
     shutil.copy2(os.path.join(original_parking_dir,"osm-parking-src.xml"),os.path.join(parking_dir,"osm-parking-src.xml"))
     # prepare the parking/inc dir: copy mapnik/inc, then patch with files from parking-inc-src
     shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),parking_inc_dir)
@@ -84,13 +75,11 @@ def main(options):
     # TODO: kludge to copy bw icons to parking/symbols dir
     # this is ugly because it relies on knowledge of mapnik_to_bw.main() i.e. how the dirs are named.
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(parking_dir,"symbols"))
-    #shutil.copytree(os.path.join(original_mapnik_dir,"symbols"),os.path.join(parking_dir,"symbols"))
     shutil.copytree(os.path.join(original_parking_dir,"parking-symbols-src"),os.path.join(parking_dir,"parking-symbols-src"))
 
     generate_parking_layer_xml.main_parktrans({'sourcedir':parking_dir, 'sourcefile':'osm-parktrans-src.xml', 'destdir':deploy_dir, 'stylename':'parktrans'})
-    #generate_parking_layer_xml.main_parking({'sourcedir':parking_dir, 'sourcefile':'osm-parking-old-src.xml', 'destdir':deploy_dir, 'stylename':'parking-old'})
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(os.path.join(deploy_dir,"parking"),"symbols"))
-    generate_parking_layer_xml.main_parking_neu({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':parking_dir, 'sourcepfile':'osm-parking-src.xml', 'destdir':deploy_dir, 'stylename':'parking'})
+    generate_parking_layer_xml.main_parking({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':parking_dir, 'sourcepfile':'osm-parking-src.xml', 'destdir':deploy_dir, 'stylename':'parking'})
 
 if __name__ == '__main__':
     parser = OptionParser()

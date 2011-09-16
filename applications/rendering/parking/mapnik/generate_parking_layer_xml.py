@@ -15,7 +15,7 @@ condition_colors = {
     'resi': '785534',
     'priv': '3f2920',
     'fee':  '67a1eb',
-    'unkn': 'bc73e2'
+    'unkn': 'bc73e2' # purple:'bc73e2' ; bluegreen:'6fc58a' 
     }
 
 forbidden_colors = {
@@ -148,11 +148,18 @@ def create_parking_lane_icons(source_symbols_dir,dest_symbols_dir):
                 colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
 
 def create_parking_area_icons(source_symbols_dir,dest_symbols_dir):
+    tempf = "/tmp/2347856893476512873465.png"
     df = os.path.join(dest_symbols_dir,"parking_area_source.png")
     stampf = os.path.join(source_symbols_dir,"parking_area_stamp.png")
     for c in condition_colors.iterkeys():
-        p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',df.replace('source',c)])
+        # step 1: colorize a "stamp" template image
+        p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',tempf])
         p.wait()
+        # step 2: make it 50% transparent
+        # convert -size 16x16 parking_area_free.png xc:grey -alpha off -compose Copy_Opacity -composite  /tmp/a.png && gwenview /tmp/a.png
+        p = subprocess.Popen(['convert','-size','16x16',tempf,'xc:gray','-alpha','off','-compose','Copy_Opacity','-composite',df.replace('source',c)])
+        p.wait()
+
 
 def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):
     # for now there's only the parking-vending icon
@@ -209,27 +216,6 @@ def main_parktrans(options):
 
 def main_parking(options):
     style_name = options['stylename']
-    source_dir = options['sourcedir']
-    source_file = options['sourcefile']
-    source_symbols_dir_style = os.path.join(source_dir,"parking-symbols-src")
-    dest_dir = options['destdir']
-
-    # parking - bw-noicons background ans parking information on top - single layer containing all
-
-    dest_dir_style = os.path.join(dest_dir,style_name)
-    dest_dir_style_symbols = os.path.join(dest_dir_style,"symbols")
-    dest_file_style = 'osm-{style}.xml'.format(style=style_name)
-    style_file = os.path.join(dest_dir_style,dest_file_style)
-    if not os.path.exists(dest_dir_style_symbols):
-        os.makedirs(dest_dir_style_symbols)
-
-    create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
-    transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
-    strip_doctype(style_file)
-    add_license_files(dest_dir_style)
-
-def main_parking_neu(options):
-    style_name = options['stylename']
     source_bwn_dir = options['sourcebwndir']
     source_bwn_file = options['sourcebwnfile']
     source_p_dir = options['sourcepdir']
@@ -264,7 +250,9 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
     things=[parking_area_style,parking_area_layer]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
+    #parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
+    #better put parking area layer earlier, before all roads 
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
 
     pllno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-no'))
     plrno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-no'))

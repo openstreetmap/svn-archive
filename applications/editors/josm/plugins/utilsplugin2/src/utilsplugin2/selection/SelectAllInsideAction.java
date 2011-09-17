@@ -30,28 +30,37 @@ public class SelectAllInsideAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
+        long t=System.currentTimeMillis();
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        Set<Way> activeWays = new HashSet<Way>();
-
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
+        Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
+        
         for (Way w: selectedWays) {
             if (!w.isClosed()) selectedWays.remove(w);
         }
+        for (Relation r: selectedRels) {
+            if (!r.isMultipolygon()) selectedRels.remove(r);
+        }
 
+        Set<Way> newWays = new HashSet<Way>();
+        Set<Node> newNodes = new HashSet<Node>();
         // select ways attached to already selected ways
         if (!selectedWays.isEmpty()) {
-            Set<Way> newWays = new HashSet<Way>();
-            Set<Node> newNodes = new HashSet<Node>();
             for (Way w: selectedWays) {
                 NodeWayUtils.addAllInsideWay(getCurrentDataSet(),w,newWays,newNodes);
             }
+        }
+        if (!selectedRels.isEmpty()) {
+            for (Relation r: selectedRels) {
+                NodeWayUtils.addAllInsideMultipolygon(getCurrentDataSet(),r,newWays,newNodes);
+            }
+        }
+        if (!newWays.isEmpty() || !newNodes.isEmpty()) {
             getCurrentDataSet().addSelected(newWays);
             getCurrentDataSet().addSelected(newNodes);
-            return;
-        } else {
-             JOptionPane.showMessageDialog(Main.parent,
-               tr("Please select some closed ways to find all primitives inside them!"),
+        } else{
+        JOptionPane.showMessageDialog(Main.parent,
+               tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"),
                tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
 

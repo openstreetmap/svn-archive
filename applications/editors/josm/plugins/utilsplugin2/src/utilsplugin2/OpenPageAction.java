@@ -43,9 +43,10 @@ public final class OpenPageAction extends JosmAction {
     private final String defaultURL = "http://ru.wikipedia.org/w/index.php?search={name}&fulltext=Search";
 
     public OpenPageAction() {
-        super(tr("Open custom URL"), "openurl", tr("Opens specified URL browser"),
-                Shortcut.registerShortcut("tools:openaddress", tr("Tool: {0}", tr("Open custom URL")),
-                        KeyEvent.VK_BACK_SLASH, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+        super(tr("Open custom URL"), "openurl",
+                tr("Opens specified URL browser"),
+                Shortcut.registerShortcut("tools:openurl", tr("Tool: {0}", tr("Open custom URL")),
+                KeyEvent.VK_BACK_SLASH, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
         putValue("help", ht("/Action/OpenPage"));
     }
 

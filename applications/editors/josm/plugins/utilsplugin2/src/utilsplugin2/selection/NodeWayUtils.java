@@ -1,13 +1,17 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
 package utilsplugin2.selection;
 
+import org.openstreetmap.josm.data.osm.Relation;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -265,16 +269,25 @@ public final class NodeWayUtils {
     }
 
     
-
-    static void addAllInsideWay(DataSet data, Way way, Set<Way> newWays, Set<Node> newNodes) {
-        if (!way.isClosed()) return;
-        BBox box = way.getBBox();
-        List<Node> polyNodes = way.getNodes();
+    static void addAllInsideMultipolygon(DataSet data, Relation rel, Set<Way> newWays, Set<Node> newNodes) {
+        if (!rel.isMultipolygon()) return;
+        BBox box = rel.getBBox();
+        Set<Way> usedWays = OsmPrimitive.getFilteredSet(rel.getMemberPrimitives(), Way.class);
+        List<EastNorth> polyPoints = new ArrayList<EastNorth>(10000);
+        
+        for (Way way: usedWays) {
+            List<Node> polyNodes = way.getNodes();
+            // converts all points to EastNorth
+            for (Node n: polyNodes) polyPoints.add(n.getEastNorth());  
+        }
+        
+        
         List<Node> searchNodes = data.searchNodes(box);
         Set<Node> newestNodes = new HashSet<Node>();
         Set<Way> newestWays = new HashSet<Way>();
         for (Node n : searchNodes) {
-            if (Geometry.nodeInsidePolygon(n, polyNodes)) {
+            //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
+            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)>0) {
                 newestNodes.add(n);
             }
         }
@@ -293,4 +306,84 @@ public final class NodeWayUtils {
         newNodes.addAll(newestNodes);
         newWays.addAll(newestWays);
     }
+
+    static void addAllInsideWay(DataSet data, Way way, Set<Way> newWays, Set<Node> newNodes) {
+        if (!way.isClosed()) return;
+        BBox box = way.getBBox();
+        List<Node> polyNodes = way.getNodes();
+        List<EastNorth> polyPoints = new ArrayList<EastNorth>(polyNodes.size());
+        
+        // converts all points to EastNorth
+        for (Node n: polyNodes) polyPoints.add(n.getEastNorth());  
+        
+        List<Node> searchNodes = data.searchNodes(box);
+        Set<Node> newestNodes = new HashSet<Node>();
+        Set<Way> newestWays = new HashSet<Way>();
+        for (Node n : searchNodes) {
+            //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
+            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)>0) {
+                newestNodes.add(n);
+            }
+        }
+        
+        List<Way> searchWays = data.searchWays(box);
+        for (Way w : searchWays) {
+            if (newestNodes.containsAll(w.getNodes())) {
+                newestWays.add(w);
+            }
+        }
+        for (Way w : newestWays) {
+            newestNodes.removeAll(w.getNodes());
+            // do not select nodes of already selected ways
+        }
+        
+        newNodes.addAll(newestNodes);
+        newWays.addAll(newestWays);
+    }
+    
+    /**
+     * @return 0 =  not inside polygon, 1 = strictly inside, 2 = near edge, 3 = near vertex
+     */
+    public static int isPointInsidePolygon(EastNorth point, List<EastNorth> polygonPoints) {
+        int n=polygonPoints.size();
+        EastNorth oldPoint = polygonPoints.get(n-1);
+        double n1,n2,n3,e1,e2,e3,d;
+        int interCount=0;
+        
+        for (EastNorth curPoint : polygonPoints) {
+            n1 = curPoint.north(); n2 = oldPoint.north();  n3 =  point.north();
+            e1 = curPoint.east(); e2 = oldPoint.east();  e3 =  point.east();
+            
+            if (Math.abs(n1-n3)<1e-5 && Math.abs(e1-e3)<1e-5) return 3; // vertex
+            if (Math.abs(n2-n3)<1e-5 && Math.abs(e2-e3)<1e-5) return 3; // vertex
+            
+            // looking at oldPoint-curPoint segment
+            if ( n1 > n2) {
+                if (n1 > n3 && n3 >= n2) {
+                    n1-=n3; n2-=n3; e1-=e3; e2-=e3;
+                    d = e1*n2 - n1*e2;
+                    if (d<-1e-5) {
+                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
+                    } else if (d<=1e-5) return 2; // boundary detected
+                }
+            } else if (n1 == n2) {
+                if (n1 == n3) {
+                    e1-=e3; e2-=e3;
+                    if ((e1 <=0 && e2 >= 0) || (e1 >=0 && e2 <= 0)) return 2;// boundary detected
+                }
+            } else {
+                if (n1 <= n3 && n3 < n2) {
+                    n1-=n3; n2-=n3; e1-=e3; e2-=e3;
+                    d = e1*n2 - n1*e2;
+                    if (d>1e-5) {
+                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
+                    } else if (d>=-1e-5) return 2; // boundary detected
+                }
+            }
+            oldPoint = curPoint;
+        }
+       // System.out.printf("Intersected intercount %d %s\n",interCount, point.toString());
+        if (interCount%2 == 1) return 1; else return 0;
+    }
+
 }

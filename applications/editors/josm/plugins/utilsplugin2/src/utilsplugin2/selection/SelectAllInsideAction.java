@@ -9,13 +9,16 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.*;
-
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Shortcut;
-import sun.awt.windows.WWindowPeer;
 
 /**
  *    Extends current selection by selecting nodes on all touched ways
@@ -34,7 +37,7 @@ public class SelectAllInsideAction extends JosmAction {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
-        
+
         for (Way w: selectedWays) {
             if (!w.isClosed()) selectedWays.remove(w);
         }

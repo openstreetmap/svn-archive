@@ -54,6 +54,7 @@ public class PanelSearchPois extends JPanel implements PropertyChangeListener{
 	private List<Layer> layers 			= new ArrayList<Layer>();  //  @jve:decl-index=0:
 	private JButton setButton 			= null;
 	private DataSet pois 				= null;
+	private DataSet activeDS			= null;  //  @jve:decl-index=0:
 	
 	/**
 	 * This is the default constructor
@@ -195,6 +196,7 @@ public class PanelSearchPois extends JPanel implements PropertyChangeListener{
 					
 					if(i >= 0) { 
 						Main.map.mapView.setActiveLayer(layers.get(i));
+						activeDS = Main.main.getCurrentDataSet();
 					}
 				}
 			});
@@ -222,6 +224,8 @@ public class PanelSearchPois extends JPanel implements PropertyChangeListener{
 		Layer a = Main.map.mapView.getActiveLayer();
 		String name = null;
 		 
+		activeDS = Main.main.getCurrentDataSet();
+		
 		layerComboBox.removeAllItems();
 		layers.clear();
 
@@ -269,11 +273,12 @@ public class PanelSearchPois extends JPanel implements PropertyChangeListener{
 	}
 
 	public void searchPois() {
-		DataSet data = Main.main.getCurrentDataSet();
-		Collection<Node> nodes = data.getNodes();
+		// DataSet data = Main.main.getCurrentDataSet();
+		Collection<Node> nodes = activeDS.getNodes();
 		SearchTableModel searchModel = (SearchTableModel) searchTable.getModel();
 
 		pois.clear();
+		Main.map.mapView.setActiveLayer(layerHarbour);
 		
 		for(Node n : nodes) {
 			if(layerHarbour.isNodeinCircle(n)) {
@@ -296,6 +301,9 @@ public class PanelSearchPois extends JPanel implements PropertyChangeListener{
 				}
 			}
 		}
+		
+		layerHarbour.setChanged(true);
+		Main.map.repaint();
 	}
 	
 	public void setPois(DataSet pois) { this.pois = pois; }

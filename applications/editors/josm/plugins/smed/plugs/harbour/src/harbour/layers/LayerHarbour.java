@@ -143,7 +143,8 @@ public class LayerHarbour extends OsmDataLayer implements LayerChangeListener {
 	}
 	
 	public boolean isChanged() { return isChanged; }
-
+	public void setChanged(Boolean state) { isChanged = state; }
+	
 	public void setCenter(LatLon coor) {
 		if(lm != coor) {
 			lm = coor;

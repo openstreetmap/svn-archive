@@ -247,21 +247,27 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
 #    dom_convert_to_grey(document)
     parking_area_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area'))
     parking_area_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area'))
+    parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
+    parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
-    things=[parking_area_style,parking_area_layer]
+    things=[parking_area_style,parking_area_layer,parking_area_text_style,parking_area_text_layer]
     #parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
     #better put parking area layer earlier, before all roads 
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
+    #add a second parking area layer on top of the parking-aisle roads.
+    parking_area_top_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-top'))
+    things=[parking_area_top_layer]
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
     pllno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-no'))
     plrno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-no'))
-    pllin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-inline'))
-    plrin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-inline'))
+    pllin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-parallel'))
+    plrin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-parallel'))
     plldi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-diagonal'))
     plrdi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-diagonal'))
-    pllor = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-orthogonal'))
-    plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-orthogonal'))
+    pllor = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-perpendicular'))
+    plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-perpendicular'))
     pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
     plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
 
@@ -314,7 +320,7 @@ def parking_dom_cut_layer(document,what):
             #print "found it"
             el.parentNode.removeChild(el)
             return el
-    raise 'Layer name not found'
+    raise BaseException('Layer name {ln} not found'.format(ln=what))
 
 def parking_dom_cut_style(document,what):
     els = document.getElementsByTagName("Style")
@@ -324,7 +330,7 @@ def parking_dom_cut_style(document,what):
             #print "found it"
             el.parentNode.removeChild(el)
             return el
-    raise 'Style name not found'
+    raise BaseException('Style name {sn} not found'.format(sn=what))
 
 """
 ./generate_xml.py osm-parking-src.xml    osm-parking.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''

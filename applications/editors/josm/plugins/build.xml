@@ -30,6 +30,7 @@
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
+        <ant antfile="build.xml" target="dist" dir="gpxpoints"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imageryadjust"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
@@ -114,6 +115,7 @@
         <ant antfile="build.xml" target="clean" dir="FixAddresses"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
+        <ant antfile="build.xml" target="clean" dir="gpxpoints"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="imageryadjust"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>

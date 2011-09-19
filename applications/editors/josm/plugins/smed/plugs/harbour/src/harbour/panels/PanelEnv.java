@@ -29,7 +29,7 @@ public class PanelEnv extends JPanel {
 	private void initialize() {
 		envLabel = new JLabel();
 		envLabel.setBounds(new Rectangle(126, 17, 99, 46));
-		envLabel.setText("nvironment");
+		envLabel.setText("Environment");
 		
 		this.setSize(330, 270);
 		this.setLayout(null);

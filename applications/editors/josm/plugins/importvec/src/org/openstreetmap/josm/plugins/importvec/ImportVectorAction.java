@@ -2,16 +2,15 @@ package org.openstreetmap.josm.plugins.importvec;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -34,16 +33,11 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGElement;
-import com.kitfox.svg.SVGLoader;
+import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.ShapeElement;
 
 public class ImportVectorAction extends JosmAction {
@@ -196,14 +190,25 @@ public class ImportVectorAction extends JosmAction {
                     cube(1-t)*ax+3*sqr(1-t)*t*bx+3*(1-t)*t*t*cx+t*t*t*dx,
                     cube(1-t)*ay+3*sqr(1-t)*t*by+3*(1-t)*t*t*cy+t*t*t*dy);
         }
-
-        private void processElement(SVGElement el) throws IOException {
+        private void processElement(SVGElement el, AffineTransform transform) throws IOException {
             if (el instanceof Group) {
-                for (SVGElement child : ((Group)el).getChildren(null)) {
-                    processElement(child);
+                AffineTransform oldTransform = transform;
+                AffineTransform xform = ((Group)el).getXForm();
+                if (transform == null)
+                {
+                    transform = xform;
+                } else if (xform != null) {
+                    transform = new AffineTransform(transform);
+                    transform.concatenate(xform);
                 }
+                for (Object child : ((Group)el).getChildren(null)) {
+                    processElement((SVGElement)child, transform);
+                }
+                transform = oldTransform;
             } else if (el instanceof ShapeElement) {
-                PathIterator it = ((ShapeElement)el).getShape().getPathIterator(null);
+                Shape shape = ((ShapeElement)el).getShape();
+                if (transform != null) shape = transform.createTransformedShape(shape);
+                PathIterator it = shape.getPathIterator(null);
                 while (!it.isDone()) {
                     double[] coords = new double[6];
                     switch (it.currentSegment(coords)) {
@@ -243,40 +248,22 @@ public class ImportVectorAction extends JosmAction {
             }
         }
         @Override
-        protected void realRun() throws SAXException, IOException, OsmTransferException {
-            LatLon center = Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
+        protected void realRun() throws IOException, OsmTransferException {
+            LatLon center = Main.getProjection().eastNorth2latlon(Main.map.mapView.getCenter());
             scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
             this.center = projection.latlon2eastNorth(center);
             try {
+                SVGUniverse universe = new SVGUniverse();
                 for (File f : files) {
                     if (canceled) return;
-                    SVGLoader loader = new SVGLoader(new URI("about:blank"),true);
-                    XMLReader rdr = XMLReaderFactory.createXMLReader();
-                    rdr.setContentHandler(loader);
-                    rdr.setEntityResolver(new EntityResolver() {
-                                @Override
-                                public InputSource resolveEntity(String publicId, String systemId) {
-                                    //Ignore all DTDs
-                                    return new InputSource(new ByteArrayInputStream(new byte[0]));
-                                }
-                            });
-                    FileInputStream in = new FileInputStream(f);
-                    try {
-                        rdr.parse(new InputSource(in));
-                    } finally {
-                        in.close();
-                    }
-
-                    SVGDiagram diagram = loader.getLoadedDiagram();
+                    SVGDiagram diagram = universe.getDiagram(f.toURI());
                     ShapeElement root = diagram.getRoot();
                     if (root == null) throw new IOException("Can't find root SVG element");
                     Rectangle2D bbox = root.getBoundingBox();
                     this.center = this.center.add(-bbox.getCenterX()*scale, bbox.getCenterY()*scale);
 
-                    processElement(root);
+                    processElement(root, null);
                 }
-            } catch(SAXException e) {
-                throw e;
             } catch(IOException e) {
                 throw e;
             } catch(Exception e) {

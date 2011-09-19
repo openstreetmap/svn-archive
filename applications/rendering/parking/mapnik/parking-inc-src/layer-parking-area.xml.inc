@@ -267,7 +267,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
       <Filter>[amenity] = 'parking'</Filter>
       &maxscale_zoom14;
       &minscale_zoom18;
-      <TextSymbolizer name="fac" fontset_name="book-fonts" size="8" fill="#101010" dy="0" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="parkname" fontset_name="book-fonts" size="8" fill="#101010" dy="0" halo_radius="1" wrap_width="20"/>
     </Rule>
 </Style>
 
@@ -276,7 +276,9 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <Datasource>
       <Parameter name="table">
       (SELECT way,(tags->'amenity') AS "amenity",(tags->'tourism') AS "tourism",(tags->'name') AS "name",(tags->'fee') AS "fee",(tags->'access') AS "access",(tags->'parking:condition:area') AS "parking:condition:area",
-        LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(tags->'access','-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)) AS "fac"
+        (COALESCE(tags->'name',tags->'parking:condition:area:customers',tags->'operator','')
+        /* || ' (' || LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(tags->'access','-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)) || ')' */
+        ) AS "parkname" 
       from &prefix;_polygon
       where 
           (tags ? 'amenity') AND (tags->'amenity') in ('parking')

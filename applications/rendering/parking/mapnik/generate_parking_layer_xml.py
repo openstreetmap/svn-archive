@@ -162,8 +162,20 @@ def create_parking_area_icons(source_symbols_dir,dest_symbols_dir):
 
 
 def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):
+    tempf = "/tmp/2347856893476512873465.png"
+    stampf = os.path.join(source_symbols_dir,"parking_node_stamp.png")
     # for now there's only the parking-vending icon
     copy_files(source_symbols_dir,dest_symbols_dir,['parking-vending.png'])
+    # parking nodes
+    image_files = ['parking_node_{cond}.png'.format(cond=f) for f in condition_colors.keys()]
+    for condition in condition_colors.keys():
+        # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
+        sf = os.path.join(source_symbols_dir,'parking_node_source.png')
+        df = os.path.join(dest_symbols_dir,'parking_node_{cond}.png'.format(cond=condition))
+        colorize_icon(sf,tempf,condition_colors.get(condition))
+        p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+        print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+        p.wait()
 
 def copy_files(src,dest,files):
     for f in files:
@@ -247,11 +259,9 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
 #    dom_convert_to_grey(document)
     parking_area_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area'))
     parking_area_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area'))
-    parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
-    parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
-    things=[parking_area_style,parking_area_layer,parking_area_text_style,parking_area_text_layer]
+    things=[parking_area_style,parking_area_layer]
     #parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
     #better put parking area layer earlier, before all roads 
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
@@ -276,9 +286,11 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
 
     parking_points_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-points'))
     parking_points_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-points'))
+    parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
+    parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
     #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
-    things=[parking_points_style,parking_points_layer]
+    things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
     output= dest_parking_style_document.implementation.createLSOutput() 

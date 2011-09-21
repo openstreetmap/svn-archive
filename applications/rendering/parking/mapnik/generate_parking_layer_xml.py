@@ -167,7 +167,6 @@ def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):
     # for now there's only the parking-vending icon
     copy_files(source_symbols_dir,dest_symbols_dir,['parking-vending.png'])
     # parking nodes
-    image_files = ['parking_node_{cond}.png'.format(cond=f) for f in condition_colors.keys()]
     for condition in condition_colors.keys():
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,'parking_node_source.png')
@@ -256,20 +255,22 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     dest_parking_style_document = parser.parseURI(bwnoicons_style_file)
     parktrans_style_document = parser.parseURI(parktrans_style_file)
 
-#    dom_convert_to_grey(document)
     parking_area_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area'))
     parking_area_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area'))
-    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
-    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
     things=[parking_area_style,parking_area_layer]
-    #parking_dom_insert_things_before_layer(dest_parking_style_document,things,'planet roads text osm low zoom')
     #better put parking area layer earlier, before all roads 
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
+    # duplicate the parking-area layer in order to make it less transparent
+    clone_of_parking_area_layer = parking_dom_clone_layer(dest_parking_style_document,'parking-area')
+    clone_of_parking_area_layer.setAttribute('name','parking-area-double')
+    parking_dom_insert_things_before_layer(dest_parking_style_document,clone_of_parking_area_layer,'turning_circle-casing')
+
     #add a second parking area layer on top of the parking-aisle roads.
     parking_area_top_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-top'))
     things=[parking_area_top_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
+    # handle the parking lanes
     pllno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-no'))
     plrno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-no'))
     pllin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-parallel'))
@@ -280,16 +281,14 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-perpendicular'))
     pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
     plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
-
     things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pll,plr]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
+    # handle the parking points / nodes
     parking_points_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-points'))
     parking_points_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-points'))
     parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
     parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
-    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_style,'planet roads text osm low zoom')
-    #parking_dom_insert_things_before_layer(dest_parking_style_document,parking_area_layer,'planet roads text osm low zoom')
     things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
@@ -323,6 +322,16 @@ def parking_dom_insert_things_before_layer(document,things,here):
                 el.parentNode.insertBefore(things,el)
             return
     raise 'Layer name not found'
+
+def parking_dom_clone_layer(document,what):
+    els = document.getElementsByTagName("Layer")
+    for el in els:
+        #print "layername={ln}".format(ln=el.getAttribute("name"))
+        if el.getAttribute("name")==what:
+            #print "found it"
+            clone = el.cloneNode(True)
+            return clone
+    raise BaseException('Layer name {ln} not found'.format(ln=what))
 
 def parking_dom_cut_layer(document,what):
     els = document.getElementsByTagName("Layer")

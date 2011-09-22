@@ -92,7 +92,7 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
                 + " <b>&#123;key&#125;</b> is replaced with the tag value<br/>"
                 + " <b>&#123;#id&#125;</b> is replaced with the element ID<br/>"
                 + " <b>&#123;#type&#125;</b> is replaced with \"node\",\"way\" or \"relation\" <br/>"
-                + " <b>&#123;#lat&#125; , &#123;#lon&#125;</b> is replaced with element latitude/longitude <br/>"
+                + " <b>&#123;#lat&#125; , &#123;#lon&#125;</b> is replaced with map center latitude/longitude <br/>"
                 + " Your can manually load settings from file <b>customurl.txt</b> in JOSM folder"));
         
         all.add(new JLabel(tr("Custom URL configuration")),GBC.std().insets(5,10,0,0));

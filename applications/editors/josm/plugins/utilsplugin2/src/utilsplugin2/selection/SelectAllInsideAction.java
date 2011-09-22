@@ -38,9 +38,6 @@ public class SelectAllInsideAction extends JosmAction {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
 
-        for (Way w: selectedWays) {
-            if (!w.isClosed()) selectedWays.remove(w);
-        }
         for (Relation r: selectedRels) {
             if (!r.isMultipolygon()) selectedRels.remove(r);
         }

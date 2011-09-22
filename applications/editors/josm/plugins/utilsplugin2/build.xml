@@ -29,7 +29,7 @@
 -->
 <project name="utilsplugin2" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: republish with JAR and JOSM>=4399"/>
+    <property name="commit.message" value="Utilsplugin2: opening URL works without selected object"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4399"/>
     <!--

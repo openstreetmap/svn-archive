@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2007 by Immanuel Scholz and others
 package utilsplugin2;
 
-import java.awt.GridBagLayout;
 import java.io.UnsupportedEncodingException;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -11,24 +10,16 @@ import java.awt.event.KeyEvent;
 import java.net.URLEncoder;
 import java.util.Collection;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
-import org.openstreetmap.josm.gui.widgets.HtmlPanel;
-import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -53,19 +44,17 @@ public final class OpenPageAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         OsmPrimitive p=null;
-        if (sel.size()==1) {
+        if (sel.size()>=1) {
             p=sel.iterator().next();
-        } else {
-            JOptionPane.showMessageDialog(
-                    Main.parent,
-                    tr("Please select one element to open custom URL for it. You can choose the URL in Preferences, Utils tab."),
-                    tr("Information"),
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            return;
         }
+        
         if (Main.pref.getBoolean("utilsplugin2.askurl",false)==true) 
-            ChooseURLAction.showConfigDialog();
+            ChooseURLAction.showConfigDialog(true);
+        
+        //lat = p.getBBox().getTopLeft().lat();
+        //lon = p.getBBox().getTopLeft().lon();
+        LatLon center = Main.map.mapView.getLatLon(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2);
+                
         
         String addr = Main.pref.get("utilsplugin2.customurl", defaultURL);
         Pattern pat = Pattern.compile("\\{([^\\}]*)\\}");
@@ -75,19 +64,21 @@ public final class OpenPageAction extends JosmAction {
         int i=0;
         try {
         while (m.find()) {
-                key=m.group(1);
+                key=m.group(1); val=null;                
                 if (key.equals("#id")) {
-                    val=Long.toString(p.getId());
+                    if (p!=null) val=Long.toString(p.getId()); ;
                 } else if (key.equals("#type")) {
-                    val = OsmPrimitiveType.from(p).getAPIName();
+                    if (p!=null) val = OsmPrimitiveType.from(p).getAPIName(); ;
                 } else if (key.equals("#lat")) {
-                    val = Double.toString(p.getBBox().getTopLeft().lat());
+                    val = Double.toString(center.lat());
                 } else if (key.equals("#lon")) {
-                    val = Double.toString(p.getBBox().getTopLeft().lon());
+                    val = Double.toString(center.lon());
                 }
                 else {
-                    val =p.get(key);
-                    if (val!=null) val =URLEncoder.encode(p.get(key), "UTF-8"); else return;
+                    if (p!=null) {
+                        val =p.get(key);
+                        if (val!=null) val =URLEncoder.encode(p.get(key), "UTF-8"); else return;
+                    }
                 }
                 keys[i]=m.group();
                 if  (val!=null) vals[i]=val;
@@ -117,13 +108,9 @@ public final class OpenPageAction extends JosmAction {
         if (getCurrentDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            setEnabled(true);
         }
     }
 
-    @Override
-    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(selection != null );
-    }
-
+    
 }

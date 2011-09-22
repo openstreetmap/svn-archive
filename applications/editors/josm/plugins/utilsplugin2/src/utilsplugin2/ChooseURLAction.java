@@ -3,17 +3,25 @@ package utilsplugin2;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.Main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.SelectionManager;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class ChooseURLAction extends JosmAction {
@@ -25,7 +33,7 @@ public class ChooseURLAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       showConfigDialog();
+       showConfigDialog(false);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class ChooseURLAction extends JosmAction {
         }
     }
         
-    public static void showConfigDialog() {
+    public static void showConfigDialog(final boolean fast) {
         JPanel all = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         all.setLayout(layout);
@@ -53,38 +61,39 @@ public class ChooseURLAction extends JosmAction {
             if (vals[i].equals(addr)) idxToSelect=i; 
         }
         final JLabel label1=new JLabel(tr("Please select one of custom URLs (configured in Preferences)"));
-        final JComboBox combo1=new JComboBox(names);
+        final JList list1=new JList(names);
         final JTextField editField=new JTextField();
         final JCheckBox check1=new JCheckBox(tr("Ask every time"));
         
-        
-        combo1.addItemListener(new ItemListener() {
+        final ExtendedDialog dialog = new ExtendedDialog(Main.parent,
+                tr("Configure custom URL"),
+                new String[] {tr("OK"),tr("Cancel"),}
+        );
+        list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list1.addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void itemStateChanged(ItemEvent e) {
-                int idx=combo1.getSelectedIndex();
+            public void valueChanged(ListSelectionEvent e) {
+                int idx=list1.getSelectedIndex();
                 if (idx>=0) editField.setText(vals[idx]);
             }
         });
-        combo1.setSelectedIndex(idxToSelect);
+        list1.setSelectedIndex(idxToSelect);
         check1.setSelected(Main.pref.getBoolean("utilsplugin2.askurl",false));
         
         editField.setEditable(false);
         
         all.add(label1,GBC.eop().fill(GBC.HORIZONTAL).insets(15,5,15,0));
-        all.add(combo1,GBC.eop().fill(GBC.HORIZONTAL).insets(5,5,0,0));
+        all.add(list1,GBC.eop().fill(GBC.HORIZONTAL).insets(5,5,0,0));
         all.add(editField,GBC.eop().fill(GBC.HORIZONTAL).insets(5,5,0,0));
         all.add(check1,GBC.eop().fill(GBC.HORIZONTAL).insets(5,5,0,0));
         
-        ExtendedDialog dialog = new ExtendedDialog(Main.parent,
-                tr("Configure custom URL"),
-                new String[] {tr("OK"),tr("Cancel"),}
-        );
+        
         dialog.setContent(all, false);
         dialog.setButtonIcons(new String[] {"ok.png","cancel.png",});
         dialog.setDefaultButton(1);
         dialog.showDialog();
         
-        int idx = combo1.getSelectedIndex();
+        int idx = list1.getSelectedIndex();
         if (dialog.getValue() ==1 && idx>=0) {
            Main.pref.put("utilsplugin2.customurl", vals[idx]);
            Main.pref.put("utilsplugin2.askurl", check1.isSelected());

@@ -18,12 +18,12 @@ public class MergeOverlapPlugin extends Plugin {
 
         public MergeOverlapPlugin(PluginInformation info) {
         super(info);
-        name = tr("Merge overlap");
+        name = tr("Merge overlap", null);
         JMenu toolsMenu = null;
         for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
             JMenu menu = Main.main.menu.getMenu(i);
             String name = menu.getText();
-            if (name != null && name.equals(tr("Tools"))) {
+            if (name != null && name.equals(tr("Tools", null))) {
                 toolsMenu = menu;
             }
         }

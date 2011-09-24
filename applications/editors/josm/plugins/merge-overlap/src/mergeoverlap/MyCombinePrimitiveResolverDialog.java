@@ -172,7 +172,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
     protected void updateTitle() {
         if (targetPrimitive == null) {
-            setTitle(tr("Conflicts when combining primitives"));
+            setTitle(tr("Conflicts when combining primitives", null));
             return;
         }
         if (targetPrimitive instanceof Way) {
@@ -323,7 +323,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     protected JPanel buildEmptyConflictsPanel() {
         JPanel pnl = new JPanel();
         pnl.setLayout(new BorderLayout());
-        pnl.add(new JLabel(tr("No conflicts to resolve")));
+        pnl.add(new JLabel(tr("No conflicts to resolve", null)));
         return pnl;
     }
 
@@ -385,8 +385,8 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     class CancelAction extends AbstractAction {
 
         public CancelAction() {
-            putValue(Action.SHORT_DESCRIPTION, tr("Cancel conflict resolution"));
-            putValue(Action.NAME, tr("Cancel"));
+            putValue(Action.SHORT_DESCRIPTION, tr("Cancel conflict resolution", null));
+            putValue(Action.NAME, tr("Cancel", null));
             putValue(Action.SMALL_ICON, ImageProvider.get("", "cancel"));
             setEnabled(true);
         }
@@ -400,8 +400,8 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     class ApplyAction extends AbstractAction implements PropertyChangeListener {
 
         public ApplyAction() {
-            putValue(Action.SHORT_DESCRIPTION, tr("Apply resolved conflicts"));
-            putValue(Action.NAME, tr("Apply"));
+            putValue(Action.SHORT_DESCRIPTION, tr("Apply resolved conflicts", null));
+            putValue(Action.NAME, tr("Apply", null));
             putValue(Action.SMALL_ICON, ImageProvider.get("ok"));
             updateEnabledState();
         }
@@ -799,9 +799,9 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         protected JPanel buildRoleEditingPanel() {
             JPanel pnl = new JPanel();
             pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-            pnl.add(new JLabel(tr("Role:")));
+            pnl.add(new JLabel(tr("Role:", null)));
             pnl.add(tfRole = new AutoCompletingTextField(10));
-            tfRole.setToolTipText(tr("Enter a role for all relation memberships"));
+            tfRole.setToolTipText(tr("Enter a role for all relation memberships", null));
             pnl.add(new JButton(new ApplyRoleAction()));
             tfRole.addActionListener(new ApplyRoleAction());
             tfRole.addFocusListener(
@@ -818,18 +818,18 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         protected JPanel buildTagRelationsPanel() {
             JPanel pnl = new JPanel();
             pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-            cbTagRelations = new JCheckBox(tr("Tag modified relations with "));
+            cbTagRelations = new JCheckBox(tr("Tag modified relations with ", null));
             cbTagRelations.addChangeListener(new ToggleTagRelationsAction());
             cbTagRelations.setToolTipText(
                     tr("<html>Select to enable entering a tag which will be applied<br>"
-                            + "to all modified relations.</html>"));
+                            + "to all modified relations.</html>", null));
             pnl.add(cbTagRelations);
             pnl.add(new JLabel(trc("tag", "Key:")));
             pnl.add(tfKey = new AutoCompletingTextField(10));
-            tfKey.setToolTipText(tr("<html>Enter a tag key, i.e. <strong><tt>fixme</tt></strong></html>"));
-            pnl.add(new JLabel(tr("Value:")));
+            tfKey.setToolTipText(tr("<html>Enter a tag key, i.e. <strong><tt>fixme</tt></strong></html>", null));
+            pnl.add(new JLabel(tr("Value:", null)));
             pnl.add(tfValue = new AutoCompletingTextField(10));
-            tfValue.setToolTipText(tr("<html>Enter a tag value, i.e. <strong><tt>check members</tt></strong></html>"));
+            tfValue.setToolTipText(tr("<html>Enter a tag value, i.e. <strong><tt>check members</tt></strong></html>", null));
             cbTagRelations.setSelected(false);
             tfKey.setEnabled(false);
             tfValue.setEnabled(false);
@@ -847,7 +847,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     + "The default is to <strong>keep</strong> the first way and <strong>remove</strong> "
                     + "the other ways that are members of the same relation: the combined way will "
                     + "take the place of the original way in the relation."
-                    + "</html>"));
+                    + "</html>", null));
             invalidate();
         }
 
@@ -858,15 +858,15 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     + "The default is to <strong>keep</strong> the first node and <strong>remove</strong> "
                     + "the other nodes that are members of the same relation: the target node will "
                     + "take the place of the original node in the relation."
-                    + "</html>"));
+                    + "</html>", null));
             invalidate();
         }
 
         class ApplyRoleAction extends AbstractAction {
             public ApplyRoleAction() {
-                putValue(NAME, tr("Apply"));
+                putValue(NAME, tr("Apply", null));
                 putValue(SMALL_ICON, ImageProvider.get("ok"));
-                putValue(SHORT_DESCRIPTION, tr("Apply this role to all members"));
+                putValue(SHORT_DESCRIPTION, tr("Apply this role to all members", null));
             }
 
             public void actionPerformed(ActionEvent e) {
@@ -1269,13 +1269,13 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             gc.weighty = 1.0;
             gc.weightx = 1.0;
             gc.anchor = GridBagConstraints.LINE_START;
-            pnl.add(new JLabel(tr("<html>Please select the values to keep for the following tags.</html>")), gc);
+            pnl.add(new JLabel(tr("<html>Please select the values to keep for the following tags.</html>", null)), gc);
 
             gc.gridy = 1;
             gc.fill = GridBagConstraints.HORIZONTAL;
             gc.weighty = 0.0;
-            pnl.add(cbShowTagsWithConflictsOnly = new JCheckBox(tr("Show tags with conflicts only")), gc);
-            pnl.add(cbShowTagsWithMultiValuesOnly = new JCheckBox(tr("Show tags with multiple values only")), gc);
+            pnl.add(cbShowTagsWithConflictsOnly = new JCheckBox(tr("Show tags with conflicts only", null)), gc);
+            pnl.add(cbShowTagsWithMultiValuesOnly = new JCheckBox(tr("Show tags with multiple values only", null)), gc);
             cbShowTagsWithConflictsOnly.addChangeListener(
                     new ChangeListener() {
                         public void stateChanged(ChangeEvent e) {

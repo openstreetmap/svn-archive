@@ -260,7 +260,7 @@ abstract public class Buoy extends SeaMark {
 		SectorIndex = sector;
 	}
 
-	private String[] LightChar = new String[10];
+	private String[] LightChar = new String[20];
 
 	public String getLightChar() {
 		if (LightChar[SectorIndex] == null)
@@ -272,7 +272,7 @@ abstract public class Buoy extends SeaMark {
 		LightChar[SectorIndex] = lightChar;
 	}
 
-	private String[] LightColour = new String[10];
+	private String[] LightColour = new String[20];
 
 	public String getLightColour() {
 		if (LightColour[SectorIndex] == null)
@@ -284,7 +284,7 @@ abstract public class Buoy extends SeaMark {
 		LightColour[SectorIndex] = lightColour;
 	}
 
-	private String[] LightGroup = new String[10];
+	private String[] LightGroup = new String[20];
 
 	public String getLightGroup() {
 		if (LightGroup[SectorIndex] == null)
@@ -304,7 +304,7 @@ abstract public class Buoy extends SeaMark {
 		}
 	}
 
-	private String[] Height = new String[10];
+	private String[] Height = new String[20];
 
 	public String getHeight() {
 		if (Height[SectorIndex] == null)
@@ -316,7 +316,7 @@ abstract public class Buoy extends SeaMark {
 		Height[SectorIndex] = height;
 	}
 
-	private String[] Range = new String[10];
+	private String[] Range = new String[20];
 
 	public String getRange() {
 		if (Range[SectorIndex] == null)
@@ -328,7 +328,7 @@ abstract public class Buoy extends SeaMark {
 		Range[SectorIndex] = range;
 	}
 
-	private String[] Sequence = new String[10];
+	private String[] Sequence = new String[20];
 
 	public String getSeq() {
 		if (Sequence[SectorIndex] == null)
@@ -340,7 +340,7 @@ abstract public class Buoy extends SeaMark {
 		Sequence[SectorIndex] = seq;
 	}
 
-	private String[] Bearing1 = new String[10];
+	private String[] Bearing1 = new String[20];
 
 	public String getBearing1() {
 		if (Bearing1[SectorIndex] == null)
@@ -352,7 +352,7 @@ abstract public class Buoy extends SeaMark {
 		Bearing1[SectorIndex] = bearing;
 	}
 
-	private String[] Bearing2 = new String[10];
+	private String[] Bearing2 = new String[20];
 
 	public String getBearing2() {
 		if (Bearing2[SectorIndex] == null)
@@ -364,7 +364,7 @@ abstract public class Buoy extends SeaMark {
 		Bearing2[SectorIndex] = bearing;
 	}
 
-	private String[] Radius = new String[10];
+	private String[] Radius = new String[20];
 
 	public String getRadius() {
 		if (Radius[SectorIndex] == null)
@@ -376,7 +376,7 @@ abstract public class Buoy extends SeaMark {
 		Radius[SectorIndex] = radius;
 	}
 
-	private String[] LightPeriod = new String[10];
+	private String[] LightPeriod = new String[20];
 
 	public String getLightPeriod() {
 		if (LightPeriod[SectorIndex] == null)
@@ -469,11 +469,17 @@ abstract public class Buoy extends SeaMark {
 				setFired(true);
 				int index = 0;
 				key = key.substring(14);
-				if (key.matches("^\\d:.*")) {
+				if (key.matches("^\\d\\d:.*")) {
+					index = ((key.charAt(0) - '0') * 10) + key.charAt(1) - '0';
+					key = key.substring(3);
+				} else if (key.matches("^\\d:.*")) {
+						index = key.charAt(0) - '0';
+						key = key.substring(2);
+				} else if ((key.matches("^\\d$")) || (key.matches("^\\d\\d$"))) {
 					index = key.charAt(0) - '0';
-					key = key.substring(2);
-				} else if (key.matches("^\\d$")) {
-					index = key.charAt(0) - '0';
+					if (key.matches("^\\d\\d$")) {
+						index = (index * 10) + key.charAt(1) - '0';
+					}
 					String values[] = value.split(":");
 					if (values[0].equals("red"))
 						LightColour[index] = "R";
@@ -970,7 +976,7 @@ abstract public class Buoy extends SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:radius", Radius[0]));
 
-			for (int i = 1; i < 10; i++) {
+			for (int i = 1; i < 20; i++) {
 
 				if (LightColour[i] != null) {
 					if (LightColour[i].equals("R")) {

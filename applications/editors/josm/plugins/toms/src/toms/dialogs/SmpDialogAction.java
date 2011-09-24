@@ -1322,6 +1322,16 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Sector.addItem(Messages.getString("SmpDialogAction.201")); //$NON-NLS-1$
 			cbM01Sector.addItem(Messages.getString("SmpDialogAction.202")); //$NON-NLS-1$
 			cbM01Sector.addItem(Messages.getString("SmpDialogAction.203")); //$NON-NLS-1$
+			cbM01Sector.addItem("10");
+			cbM01Sector.addItem("11");
+			cbM01Sector.addItem("12");
+			cbM01Sector.addItem("13");
+			cbM01Sector.addItem("14");
+			cbM01Sector.addItem("15");
+			cbM01Sector.addItem("16");
+			cbM01Sector.addItem("17");
+			cbM01Sector.addItem("18");
+			cbM01Sector.addItem("19");
 			cbM01Sector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (buoy == null)

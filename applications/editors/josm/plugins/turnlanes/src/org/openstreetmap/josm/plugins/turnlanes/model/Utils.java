@@ -19,10 +19,10 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
 public class Utils {
-    private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-        "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary", "secondary_link",
-        "tertiary", "residential", "unclassified", "road", "living_street", "service", "track", "pedestrian", "raceway",
-        "services")));
+    private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<String>(Arrays
+            .asList("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
+                    "secondary_link", "tertiary", "residential", "unclassified", "road", "living_street", "service",
+                    "track", "pedestrian", "raceway", "services")));
     
     public static boolean isRoad(Way w) {
         return ROAD_HIGHWAY_VALUES.contains(w.get("highway"));
@@ -143,12 +143,12 @@ public class Utils {
      * </ul>
      * 
      * @param ways
-     *          ways to be ordered
+     *            ways to be ordered
      * @param nodes
-     *          start/end nodes
+     *            start/end nodes
      * @return
      * @throws IllegalArgumentException
-     *           if the ways can't be ordered
+     *             if the ways can't be ordered
      */
     public static List<Route> orderWays(Iterable<Way> ways, Iterable<Node> nodes) {
         final List<Way> ws = new LinkedList<Way>(CollectionUtils.toList(ways));
@@ -209,7 +209,7 @@ public class Utils {
         Node n = start;
         for (Road r : via) {
             final Iterable<Route.Segment> segments = r.getRoute().getFirstSegment().getWay().isFirstLastNode(n) ? r
-                .getRoute().getSegments() : CollectionUtils.reverse(r.getRoute().getSegments());
+                    .getRoute().getSegments() : CollectionUtils.reverse(r.getRoute().getSegments());
             
             for (Route.Segment s : segments) {
                 result.add(s.getWay());
@@ -221,5 +221,19 @@ public class Utils {
         }
         
         return result;
+    }
+    
+    public static int parseIntTag(OsmPrimitive primitive, String tag) {
+        final String value = primitive.get(tag);
+        
+        if (value != null) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                throw UnexpectedDataException.Kind.INVALID_TAG_FORMAT.chuck(tag, value);
+            }
+        }
+        
+        throw UnexpectedDataException.Kind.MISSING_TAG.chuck(tag);
     }
 }

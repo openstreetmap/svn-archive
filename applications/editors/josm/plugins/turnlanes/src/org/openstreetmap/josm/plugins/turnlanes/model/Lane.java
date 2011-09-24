@@ -66,37 +66,38 @@ public class Lane {
         return result;
     }
     
-    private static int getCount(Way w) {
-        final String countStr = w.get("lanes");
-        
-        if (countStr != null) {
-            try {
-                return Integer.parseInt(countStr);
-            } catch (NumberFormatException e) {
-                throw UnexpectedDataException.Kind.INVALID_TAG_FORMAT.chuck("lanes", countStr);
-            }
-        }
-        
-        throw UnexpectedDataException.Kind.MISSING_TAG.chuck("lanes");
-    }
-    
     static int getRegularCount(Way w, Node end) {
-        final int count = getCount(w);
+        final int count = Utils.parseIntTag(w, "lanes");
+        final boolean forward = w.lastNode().equals(end);
         
         if (w.hasDirectionKeys()) {
-            // TODO check for oneway=-1
-            if (w.lastNode().equals(end)) {
-                return count;
-            } else {
-                return 0;
-            }
+            return getRegularCountOneWay(w, forward, count);
         } else {
-            if (w.lastNode().equals(end)) {
-                return (count + 1) / 2; // round up in direction of end
-            } else {
-                return count / 2; // round down in other direction
-            }
+            return getRegularCountTwoWay(w, forward, count);
         }
+    }
+    
+    private static int getRegularCountOneWay(Way w, boolean forward, final int count) {
+        if (forward ^ "-1".equals(w.get("oneway"))) {
+            return count;
+        } else {
+            return 0;
+        }
+    }
+    
+    private static int getRegularCountTwoWay(Way w, boolean forward, final int count) {
+        if (w.get("lanes:backward") != null) {
+            final int backwardCount = Utils.parseIntTag(w, "lanes:backward");
+            return forward ? count - backwardCount : backwardCount;
+        }
+        
+        if (w.get("lanes:forward") != null) {
+            final int forwardCount = Utils.parseIntTag(w, "lanes:forward");
+            return forward ? forwardCount : count - forwardCount;
+        }
+        
+        // default: round up in forward direction...
+        return forward ? (count + 1) / 2 : count / 2;
     }
     
     private final Road.End roadEnd;

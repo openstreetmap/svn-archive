@@ -2,6 +2,7 @@ package oseam.seamarks;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.Color.*;
 import javax.swing.*;
 import java.util.*;
 
@@ -256,6 +257,23 @@ public class SeaMark {
 
 	public enum Col {
 		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
+	}
+
+	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(Col.class);
+	static {
+		ColMAP.put(Col.WHITE, Color.WHITE);
+		ColMAP.put(Col.RED, Color.RED);
+		ColMAP.put(Col.ORANGE, Color.ORANGE);
+		ColMAP.put(Col.AMBER, new Color(0xffbf00f));
+		ColMAP.put(Col.YELLOW, Color.YELLOW);
+		ColMAP.put(Col.GREEN, Color.GREEN);
+		ColMAP.put(Col.BLUE, Color.BLUE);
+		ColMAP.put(Col.VIOLET, new Color(0x8f00ff));
+		ColMAP.put(Col.BLACK, Color.BLACK);
+		ColMAP.put(Col.GREY, Color.GRAY);
+		ColMAP.put(Col.BROWN, new Color(0xa45a58));
+		ColMAP.put(Col.MAGENTA, Color.MAGENTA);
+		ColMAP.put(Col.PINK, Color.PINK);
 	}
 
 	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);

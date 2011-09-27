@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.util.*;
 
 import oseam.Messages;
@@ -40,8 +41,26 @@ public class PanelCol extends JPanel {
 				if (button.isSelected()) {
 					if (dlg.mark != null) {
 						dlg.mark.setColour(ent, col);
-						// act.actionPerformed(null);
+						if (ent != Ent.LIGHT) {
+							stackCol.get(stackIdx).setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, stackIdx)));
+						}
 					}
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
+			}
+		}
+	};
+	private JPanel stack;
+	private ButtonGroup stackColours = new ButtonGroup();
+	private ArrayList<JRadioButton> stackCol = new ArrayList<JRadioButton>();
+	private int stackIdx = 0;
+	private ActionListener alStack = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (int i = 0; stackCol.size() > i; i++) {
+				JRadioButton button = stackCol.get(i);
+				if (button.isSelected()) {
+					stackIdx = i;
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -70,6 +89,16 @@ public class PanelCol extends JPanel {
 			this.add(getColButton(brownButton, 35, 32, 34, 16, Messages.getString("Brown"), Col.BROWN), null);
 			this.add(getColButton(magentaButton, 35, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA), null);
 			this.add(getColButton(pinkButton, 35, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
+
+			stack = new JPanel();
+			stack.setBorder(BorderFactory.createLineBorder(Color.black));
+			stack.setBounds(37, 89, 30, 60);
+			this.add(stack);
+			Col col;
+			for (int i = 0; (col = dlg.mark.getColour(ent, i)) != Col.UNKNOWN; i++) {
+				stackCol.add(new JRadioButton());
+			}
+
 		}
 	}
 

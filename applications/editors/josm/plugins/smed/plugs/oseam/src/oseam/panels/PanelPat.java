@@ -52,7 +52,7 @@ public class PanelPat extends JPanel {
 		this.add(getPatButton(diagButton, 72, 78, 27, 27, "DiagPat", Pat.DIAG), null);
 		this.add(getPatButton(squareButton, 72, 104, 27, 27, "SquarePat", Pat.SQUARE), null);
 		this.add(getPatButton(borderButton, 72, 130, 27, 27, "BorderPat", Pat.BORDER), null);
-
+		
 	}
 
 	public void clearSelections() {

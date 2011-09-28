@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="relationTagsPlugin" default="package">
+    <description>
+            Builds the Osmosis relationTags plugin.
+    </description>
+
+    <path id="libs">
+        <fileset dir="../../trunk/core/lib" includes="**/*.jar"/>
+    </path>
+    <property name="osmosis-install" location="C:/Maps/osmosis-0.39"/>
+
+    <target name="build">
+        <mkdir dir="build"/>
+        <mkdir dir="build/classes"/>
+    	
+        <javac srcdir="src" destdir="build/classes" debug="on" debuglevel="lines,vars,source" classpathref="libs" classpath="../../trunk/core/build/binary/osmosis-core.jar" />
+    	
+        <copy todir="build/classes">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="package" depends="build">
+        <mkdir dir="build/dist"/>
+        <jar
+            destfile="build/dist/relationTagsPlugin.jar"
+            basedir="build/classes" />
+    </target>
+
+    <target name="install" depends="package">
+        <copy todir="${osmosis-install}/lib/default">
+            <fileset dir="build/dist"/>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+</project>

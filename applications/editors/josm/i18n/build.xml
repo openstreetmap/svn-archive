@@ -74,7 +74,7 @@
             <arg line="i18n.pl ${i18n.install.dir}/ ${po.build.dir}/core/*.po"/>
         </exec>
     </target>
-    <target name="plugintrans">
+    <target name="plugintrans" depends="init">
         <basename file="${path}" property="dir"/>
         <mkdir dir="${po.build.dir}/plugin_${dir}"/>
         <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">

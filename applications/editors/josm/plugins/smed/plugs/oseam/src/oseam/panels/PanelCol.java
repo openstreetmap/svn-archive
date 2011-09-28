@@ -42,7 +42,18 @@ public class PanelCol extends JPanel {
 					if (dlg.mark != null) {
 						dlg.mark.setColour(ent, col);
 						if (ent != Ent.LIGHT) {
-							stackCol.get(stackIdx).setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, stackIdx)));
+							if (button == offButton) {
+								stack.remove(stackCol.get(stackIdx));
+								stackCol.remove(stackIdx);
+							} else if (button == addButton) {
+								stackCol.add(stackIdx, new JRadioButton());
+								stackCol.get(stackIdx).setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+								stack.add(stackCol.get(stackIdx));
+							}
+							for (int i = 0; stackCol.size() > i; i++) {
+								stackCol.get(i).setBounds(37, (89 + (i * (60 / stackCol.size()))), 30, (60 / stackCol.size()));
+								stackCol.get(i).setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
+							}
 						}
 					}
 					button.setBorderPainted(true);
@@ -94,11 +105,11 @@ public class PanelCol extends JPanel {
 			stack.setBorder(BorderFactory.createLineBorder(Color.black));
 			stack.setBounds(37, 89, 30, 60);
 			this.add(stack);
-			Col col;
-			for (int i = 0; (col = dlg.mark.getColour(ent, i)) != Col.UNKNOWN; i++) {
-				stackCol.add(new JRadioButton());
+			if (dlg.mark != null) {
+				for (int i = 0; dlg.mark.getColour(ent, i) != Col.UNKNOWN; i++) {
+					stackCol.add(new JRadioButton());
+				}
 			}
-
 		}
 	}
 

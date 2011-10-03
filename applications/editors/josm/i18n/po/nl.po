@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-02 14:06+0200\n"
-"PO-Revision-Date: 2011-09-13 10:29+0000\n"
-"Last-Translator: DiGro <Unknown>\n"
+"POT-Creation-Date: 2011-10-03 17:33+0200\n"
+"PO-Revision-Date: 2011-10-03 10:50+0000\n"
+"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-10-02 11:36+0000\n"
+"X-Launchpad-Export-Date: 2011-10-03 15:19+0000\n"
 "X-Generator: Launchpad (build 14071)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -124,7 +124,7 @@ msgstr "Waarschuwing"
 #: ../core/src/org/openstreetmap/josm/Main.java:516
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr ""
-"Parameter \"downloadgps\" accepteert geen bestandsnamen of URL's voor "
+"Parameter \"downloadgps\" accepteert geen bestandsnamen of URL’s voor "
 "bestanden"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:603
@@ -395,8 +395,8 @@ msgstr "Klik om door te gaan en {0} browservensters te openen"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:138
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:170
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:324
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:329
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1046
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1274
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:357
@@ -918,7 +918,7 @@ msgstr "U moet minstens één weg selecteren."
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:643
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:144
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:354
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1069
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1053
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:665
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
@@ -1043,7 +1043,7 @@ msgid ""
 "5</li><li>1,2,5</li></ul><br/></b> In mixed mode, specify objects like this: "
 "<b>w123, n110, w12, r15</b><br/>"
 msgstr ""
-"Object-ID's kunnen gescheiden worden door een komma of spatie. <br /> "
+"Object-ID’s kunnen gescheiden worden door een komma of spatie. <br /> "
 "Bijvoorbeeld: <b><ul><li>1 2 5</li><li>1,2,5</li></ul><br/></b> Specificeer, "
 "in gemengde modus, objecten als volgt: <b>w123, n110, w12, r15</b><br/>"
 
@@ -5538,7 +5538,7 @@ msgstr "Voorkeuzen bevatten geen waarde voor eigenschap"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:520
 msgid "FIXMES"
-msgstr "HERSTEL-MIJ'S"
+msgstr "HERSTEL-MIJ’S"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:565
 msgid "Check property keys."
@@ -5561,7 +5561,7 @@ msgstr ""
 #. JButton
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:590
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1088
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1102
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:128
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:876
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:466
@@ -5584,7 +5584,7 @@ msgstr "Bron TagChecker"
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:606
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:187
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:131
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1114
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:178
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:141
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:137
@@ -5648,7 +5648,7 @@ msgstr "Valideer waarden van eigenschap door te controleren met voorkeuzen"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:691
 msgid "Check for FIXMES."
-msgstr "Controleer op HERSTEL-MIJ'S."
+msgstr "Controleer op HERSTEL-MIJ’S."
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:692
 msgid "Looks for nodes or ways with FIXME in any property value."
@@ -6715,7 +6715,7 @@ msgstr "Positie"
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:336
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/relation/RelationMemberListColumnModel.java:26
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolverColumnModel.java:42
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:741
@@ -7379,8 +7379,8 @@ msgstr "Mijn gegevensset bevat geen tag met de sleutel {0}"
 #. setting up the properties table
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:28
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:231
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:236
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:624
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:78
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:116
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:276
@@ -7400,8 +7400,8 @@ msgstr "Sleutel"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:25
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:35
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:266
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:271
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:624
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:27
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:78
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:79
@@ -7841,7 +7841,7 @@ msgstr "Open een lijst van alle opdrachten (buffer Ongedaan maken)."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:129
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:71
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:90
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:608
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:613
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
@@ -8638,7 +8638,7 @@ msgid "Select relation (add)"
 msgstr "Selecteer relatie (toevoegen)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:426
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1232
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1275
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "Selecteer relatie"
@@ -8657,7 +8657,7 @@ msgid "Select members (add)"
 msgstr "Selecteer leden (toevoegen)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:465
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1263
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1304
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "Selecteer de leden"
@@ -8672,13 +8672,13 @@ msgstr "Download leden"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:532
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:817
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1282
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1321
 msgid "Download incomplete members of selected relations"
 msgstr "Download incomplete leden van de geselecteerde relaties"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:534
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:819
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1284
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1323
 msgid "Download incomplete members"
 msgstr "Download incomplete leden"
 
@@ -8727,13 +8727,13 @@ msgid "Call relation editor for selected relation"
 msgstr "Roep bewerkingsvenster op voor geselecteerde relatie"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:402
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1236
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1279
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "Selecteer in relatielijst"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:403
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1237
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1280
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "Selecteer relatie in relatielijst"
@@ -10712,26 +10712,26 @@ msgstr ""
 msgid "This changeset query URL is invalid"
 msgstr "Deze URL voor de zoekopdracht voor wijzigingenset is ongeldig"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:180
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:185
 msgid "Add Properties"
 msgstr "Eigenschappen toevoegen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:212
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:217
 #, java-format
 msgid "This will change {0} object."
 msgid_plural "This will change up to {0} objects."
 msgstr[0] "Dit zal {0} object wijzigen."
 msgstr[1] "Dit verandert maximaal {0} objecten."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:214
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:219
 msgid "An empty value deletes the tag."
 msgstr "Een lege waarde verwijdert de tag."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:263
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:314
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:340
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:646
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:720
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:268
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:319
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:345
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:652
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:734
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:164
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:173
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:309
@@ -10742,21 +10742,21 @@ msgstr "Een lege waarde verwijdert de tag."
 msgid "<different>"
 msgstr "<verschillend>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:277
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:282
 msgid "Change value?"
 msgid_plural "Change values?"
 msgstr[0] "Waarde wijzigen?"
 msgstr[1] "Waarden wijzigen?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:323
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:328
 msgid "Overwrite key"
 msgstr "Sleutel overschrijven"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:324
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:329
 msgid "Replace"
 msgstr "Vervangen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:326
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:331
 #, java-format
 msgid ""
 "You changed the key from ''{0}'' to ''{1}''.\n"
@@ -10765,7 +10765,7 @@ msgstr ""
 "U wijzigde de sleutel van ''{0}'' naar ''{1}''.\n"
 "De nieuwe sleutel is al gebruikt, waarden overschrijven?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:362
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:367
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:336
 #, java-format
 msgid "Change properties of up to {0} object"
@@ -10773,128 +10773,127 @@ msgid_plural "Change properties of up to {0} objects"
 msgstr[0] "Eigenschappen van maximaal {0} object aanpassen"
 msgstr[1] "Eigenschappen van maximaal {0} objecten aanpassen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:417
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:422
 #, java-format
 msgid "This will change up to {0} object."
 msgid_plural "This will change up to {0} objects."
 msgstr[0] "Dit verandert maximaal {0} object."
 msgstr[1] "Dit verandert maximaal {0} objecten."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:419
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:424
 msgid "Please select a key"
 msgstr "Selecteer een sleutel"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:450
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:455
 msgid "Please select a value"
 msgstr "Selecteer een waarde"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:471
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:476
 msgid "Add value?"
 msgstr "Waarde toevoegen?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:554
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:559
 msgid "Please select the objects you want to change properties for."
 msgstr "Selecteer de objecten waarvan de eigenschappen moet veranderen."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:607
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:608
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:613
 msgid "Properties/Memberships"
 msgstr "Eigenschappen/Lidmaatschappen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:607
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
 msgid "Properties for selected objects."
 msgstr "Eigenschappen voor geselecteerde objecten."
 
-#. setting up the membership table
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "Lid van"
 
 #. <space />
 #. item "Facilities/Fire Hydrant" combo "Position"
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: build/trans_presets.java:2747
 msgid "Position"
 msgstr "Positie"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:975
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:989
 #, java-format
 msgid "Properties: {0} / Memberships: {1}"
 msgstr "Eigenschappen: {0} / Leden: {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:978
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:992
 msgid "Properties / Memberships"
 msgstr "Eigenschappen / Leden"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1031
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1045
 msgid "Change relation"
 msgstr "Relatie wijzigen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1046
 msgid "Delete from relation"
 msgstr "Uit relatie verwijderen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1034
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1048
 #, java-format
 msgid "Really delete selection from relation {0}?"
 msgstr "Selectie uit relatie {0} zeker verwijderen?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1056
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1070
 msgid "Delete the selected key in all objects"
 msgstr "Verwijder de geselecteerde sleutel uit alle objecten"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1058
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1072
 msgid "Delete Properties"
 msgstr "Eigenschappen verwijderen"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1089
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1103
 msgid "Add a new key/value pair to all objects"
 msgstr "Voeg een nieuwe sleutel/waarde aan alle objecten toe"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1101
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1115
 msgid "Edit the value of the selected key for all objects"
 msgstr "Bewerk de waarde van de geselecteerde sleutel voor alle objecten"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1132
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1146
 msgid "Go to OSM wiki for tag help (F1)"
 msgstr "Ga naar de wiki van OSM  voor hulp over tags (F1)"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1133
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1147
 #: ../plugins/reltoolbox/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
 msgstr "Browser starten met wiki-hulp voor het geselecteerde object"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1233
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1276
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "Selecteer relatie in hoofdselectie."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1261
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1302
 msgid "Select the members of selected relation"
 msgstr "Selecteer de leden van de geselecteerde relatie"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1333
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1372
 msgid "Copy Value"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1334
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1373
 msgid "Copy the value of the selected tag to clipboard"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1346
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1385
 msgid "Copy Key/Value"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1347
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1386
 msgid "Copy the key and value of the selected tag to clipboard"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1360
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1399
 msgid "Copy all Keys/Values"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1361
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1400
 msgid "Copy the key and value of the all tags to clipboard"
 msgstr ""
 
@@ -13245,7 +13244,7 @@ msgstr ""
 "<html>Selecteer alle sporen die u wilt weergeven. U kunt een bereik met "
 "sporen selecteren door te slepen of door CTRL+klik te gebruiken om "
 "specifieke sporen te selecteren. De kaart wordt op de achtergrond live "
-"bijgewerkt. Open de URL's door er op te dubbelklikken.</html>"
+"bijgewerkt. Open de URL’s door er op te dubbelklikken.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1004
 #, java-format
@@ -13878,13 +13877,13 @@ msgid ""
 "An error occurred while trying to match the photos to the GPX track. You can "
 "adjust the sliders to manually match the photos."
 msgstr ""
-"Er trad een fout op bij het proberen te koppelen van de foto's aan het GPX-"
-"spoor. U kunt de schuifbalken handmatig aanpassen om de foto's handmatig te "
+"Er trad een fout op bij het proberen te koppelen van de foto’s aan het GPX-"
+"spoor. U kunt de schuifbalken handmatig aanpassen om de foto’s handmatig te "
 "matchen."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:962
 msgid "Matching photos to track failed"
-msgstr "Koppelen van foto's aan spoor is mislukt"
+msgstr "Koppelen van foto’s aan spoor is mislukt"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:978
 msgid "Adjust timezone and offset"
@@ -13950,7 +13949,7 @@ msgstr "Een van de geselecteerde bestanden was leeg (null)"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:122
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:125
 msgid "Read photos..."
-msgstr "Foto's lezen..."
+msgstr "Foto’s lezen..."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:137
 #, java-format
@@ -15795,7 +15794,7 @@ msgstr "TMS-instellingen"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:266
 msgid "Imagery Preferences"
-msgstr "Voorkeuren voor achtergrondafbeeldingen/luchtfoto's"
+msgstr "Voorkeuren voor achtergrondafbeeldingen/luchtfoto’s"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:266
 msgid "Modify list of imagery layers displayed in the Imagery menu"
@@ -16785,7 +16784,7 @@ msgid ""
 "programs."
 msgstr ""
 "Gegevensvalidatie voor OSM die op gebruikelijke fouten van gebruikers en "
-"andere programma's voor bewerking controleert."
+"andere programma’s voor bewerking controleert."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ValidatorPreference.java:115
 msgid "Data validator"
@@ -20083,7 +20082,7 @@ msgstr ""
 #. Plugin buildings_tools
 #: build/trans_plugins.java:7
 msgid "Tools for drawing buildings."
-msgstr "Programma's voor het tekenen van gebouwen."
+msgstr "Programma’s voor het tekenen van gebouwen."
 
 #. Plugin cadastre-fr
 #: build/trans_plugins.java:9
@@ -20100,9 +20099,9 @@ msgid ""
 "sunlight. See dialog in preferences and ''Map Settings'' (strange but "
 "true :-)"
 msgstr ""
-"Maakt het de gebruiker mogelijk om verschillende kleurenschema's te maken  "
-"en daar tussen te schakelen. Wijzig eenvoudigweg de kleuren en maak een "
-"nieuw schema. Gebruikt om te schakelen naar een witte achtergrond met "
+"Maakt het de gebruiker mogelijk om verschillende kleurenschema’s te maken en "
+"daar tussen te schakelen. Wijzig eenvoudigweg de kleuren en maak een nieuw "
+"schema. Gebruikt om te schakelen naar een witte achtergrond met "
 "overeenkomende kleuren voor betere zichtbaarheid in helder zonlicht. Bekijk "
 "het dialoogvenster in Voorkeuren en ''Kaartinstellingen'' (raar maar waar :-)"
 
@@ -20187,7 +20186,7 @@ msgstr ""
 #. Plugin epci-fr
 #: build/trans_plugins.java:35
 msgid "Handling of French EPCIs (boundary=local_authority)"
-msgstr "Afhandeling van Franse EPCI's (boundary=local_authority)"
+msgstr "Afhandeling van Franse EPCI’s (boundary=local_authority)"
 
 #. Plugin epsg31287
 #: build/trans_plugins.java:37
@@ -20603,7 +20602,7 @@ msgstr ""
 #. Plugin utilsplugin2
 #: build/trans_plugins.java:155
 msgid "Several utilities that make your life easier."
-msgstr "Verschillende programma's die uw leven eenvoudiger maken."
+msgstr "Verschillende programma’s die uw leven eenvoudiger maken."
 
 #. Plugin videomapping
 #: build/trans_plugins.java:157
@@ -20649,7 +20648,7 @@ msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
 msgstr ""
-"Stuur een racewagen van punt A naar punt B over luchtfoto's, stof "
+"Stuur een racewagen van punt A naar punt B over luchtfoto’s, stof "
 "achterlatend."
 
 #. <?xml version="1.0" encoding="UTF-8"?>
@@ -26524,7 +26523,7 @@ msgstr "Oplaadstation"
 #. item "Car/Charging Station" label "Edit Charging Station (for electric cars)"
 #: build/trans_presets.java:1633
 msgid "Edit Charging Station (for electric cars)"
-msgstr "Oplaadstation (voor elektrische auto's) bewerken"
+msgstr "Oplaadstation (voor elektrische auto’s) bewerken"
 
 #. item "Car/Charging Station" text "Amperage"
 #: build/trans_presets.java:1637
@@ -28619,7 +28618,7 @@ msgstr "Evangelist"
 #: build/trans_presets.java:2450 build/trans_presets.java:4154
 #: build/trans_presets.java:4163
 msgid "jehovahs_witness"
-msgstr "Jehova's getuigen"
+msgstr "Jehova’s getuigen"
 
 #. item "Culture/Place of Worship" combo "Denomination" display value
 #. item "Land use/Graveyard" combo "Denomination" display value
@@ -31024,12 +31023,12 @@ msgstr "Modelvliegtuigen bewerken"
 #. item "Motorsport/RC Car"
 #: build/trans_presets.java:3078
 msgid "RC Car"
-msgstr "Op afstand bestuurbare auto's"
+msgstr "Op afstand bestuurbare auto’s"
 
 #. item "Motorsport/RC Car" label "Edit RC Car"
 #: build/trans_presets.java:3079
 msgid "Edit RC Car"
-msgstr "Op afstand bestuurbare auto's bewerken"
+msgstr "Op afstand bestuurbare auto’s bewerken"
 
 #. group "Man Made"
 #. group "Man Made/Man Made"
@@ -32789,7 +32788,7 @@ msgstr "sigaretten"
 #. item "Vending machine" multiselect "Vending products" display value
 #: build/trans_presets.java:3820
 msgid "photos"
-msgstr "foto's"
+msgstr "foto’s"
 
 #. item "Vending machine" multiselect "Vending products" display value
 #: build/trans_presets.java:3820
@@ -39038,11 +39037,28 @@ msgstr "ScanEx IRS"
 #. <country-code>RU</country-code>
 #. </entry>
 #.
+#. <!--only for Cambodia, Laos, Thailand, Vietnam-->
+#.
+#. <entry>
+#. <name>Cambodia, Laos, Thailand, Vietnam bilingual</name>
+#: build/trans_wms.java:1221
+msgid "Cambodia, Laos, Thailand, Vietnam bilingual"
+msgstr ""
+
+#. <type>tms</type>
+#. <url>http://{switch:a,b,c,d}.tile.osm-tools.org/osm_then/{zoom}/{x}/{y}.png</url>
+#. <max-zoom>19</max-zoom>
+#. <bounds min-lat='5.6' min-lon='97.3' max-lat='23.4' max-lon='109.6'/>
+#. <attribution-text mandatory='true'>© osm-tools.org &amp; OpenStreetMap contributors, CC-BY-SA</attribution-text>
+#. <attribution-url>http://www.osm-tools.org/</attribution-url>
+#. <country-code>TH</country-code>
+#. </entry>
+#.
 #. <!--only for South Africa-->
 #.
 #. <entry>
 #. <name>South Africa Topo (OOC)</name>
-#: build/trans_wms.java:1221
+#: build/trans_wms.java:1234
 msgid "South Africa Topo (OOC)"
 msgstr "South Africa Topo (OOC)"
 
@@ -41225,7 +41241,7 @@ msgstr "Verwijder het geselecteerde schema uit de lijst."
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:116
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:127
 msgid "Color Schemes"
-msgstr "Kleurenschema's"
+msgstr "Kleurenschema’s"
 
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:21
 #: ../plugins/conflation/src/org/openstreetmap/josm/plugins/conflation/ConflationAction.java:22
@@ -41453,7 +41469,7 @@ msgstr "OpdrRegel:"
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/ExtToolsPreference.java:26
 msgid "External tools"
-msgstr "Externe programma's"
+msgstr "Externe programma’s"
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/MyToolsPanel.java:73
 #, java-format
@@ -41928,7 +41944,7 @@ msgid ""
 "(;)"
 msgstr ""
 "Lijst van oppervlakten die het voertuig niet kan gebruiken, waarden worden "
-"gescheiden door punt-komma's (;)"
+"gescheiden door punt-komma’s (;)"
 
 #: ../plugins/graphview/src/org/openstreetmap/josm/plugins/graphview/plugin/dialogs/AccessParameterDialog.java:290
 msgid "max. tracktype grade"
@@ -42227,7 +42243,7 @@ msgstr "Afbeelding wegpunt"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:189
 msgid "Display non-geotagged photos"
-msgstr "Foto's zonder geo-tags weergeven"
+msgstr "Foto’s zonder geo-tags weergeven"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointLayer.java:68
 msgid "Imported Images"
@@ -45978,19 +45994,19 @@ msgstr "Niet-standaard uitzonderingen gebruiken"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:157
 msgid "Remove the currently selected vias"
-msgstr "De huidige geselecteerde via's verwijderen"
+msgstr "De huidige geselecteerde via’s verwijderen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:178
 msgid "Move the selected vias down by one position"
-msgstr "De geselecteerde via's down één positie naar beneden verplaatsen"
+msgstr "De geselecteerde via’s down één positie naar beneden verplaatsen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:204
 msgid "Move the selected vias up by one position"
-msgstr "De geselecteerde via's down één positie naar boven verplaatsen"
+msgstr "De geselecteerde via’s down één positie naar boven verplaatsen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:232
 msgid "Copy the selected vias to the clipboard"
-msgstr "De geselecteerde via's naar het klembord kopiëren"
+msgstr "De geselecteerde via’s naar het klembord kopiëren"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:265
 msgid "Insert ''via'' objects from the clipboard"
@@ -46612,7 +46628,7 @@ msgstr "Losgemaakte relaties"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPlugin2.java:51
 msgid "More tools"
-msgstr "Meer programma's"
+msgstr "Meer programma’s"
 
 #: ../plugins/utilsplugin2/src/utilsplugin2/UtilsPluginPreferences.java:52
 msgid "Utilsplugin2 settings [TESTING]"
@@ -47055,7 +47071,7 @@ msgstr "Walking Papers-laag ({0}) in zoom {1}"
 
 #: ../plugins/walkingpapers/src/org/openstreetmap/josm/plugins/walkingpapers/WalkingPapersPlugin.java:30
 msgid "Walking Papers"
-msgstr "[DG]Walking Papers: {0}"
+msgstr ""
 
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:56
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:59

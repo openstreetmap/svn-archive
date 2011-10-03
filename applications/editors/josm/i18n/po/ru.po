@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-02 14:06+0200\n"
-"PO-Revision-Date: 2011-09-30 08:09+0000\n"
-"Last-Translator: Aleksey Kabanov <Unknown>\n"
+"POT-Creation-Date: 2011-10-03 17:33+0200\n"
+"PO-Revision-Date: 2011-10-03 10:51+0000\n"
+"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Koptev Oleg <koptev.oleg@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-10-02 11:32+0000\n"
+"X-Launchpad-Export-Date: 2011-10-03 15:25+0000\n"
 "X-Generator: Launchpad (build 14071)\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-Language: Russian\n"
@@ -398,8 +398,8 @@ msgstr "Нажмите, чтобы продолжить и открыть {0} б
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:138
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:170
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:324
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:329
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1046
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1274
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:357
@@ -920,7 +920,7 @@ msgstr "Выберите хотя бы одну линию"
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:643
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:144
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:354
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1055
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1069
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1053
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:665
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
@@ -5549,7 +5549,7 @@ msgstr "Проверка написания значений и ключей с 
 #. JButton
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:590
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1088
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1102
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:128
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ImageryPreference.java:876
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:466
@@ -5572,7 +5572,7 @@ msgstr "Источник средства проверки тегов"
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:606
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:187
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:131
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1114
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:178
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:141
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:137
@@ -6701,7 +6701,7 @@ msgstr "Поз."
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:336
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/relation/RelationMemberListColumnModel.java:26
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolverColumnModel.java:42
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:741
@@ -7356,8 +7356,8 @@ msgstr "Мой набор данных не содержит тег с ключ�
 #. setting up the properties table
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:28
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:231
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:236
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:624
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:78
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:116
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:276
@@ -7377,8 +7377,8 @@ msgstr "Ключ"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:25
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:35
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:266
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:271
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:624
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:27
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:78
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:79
@@ -7812,7 +7812,7 @@ msgstr "Показать список всех действий (буфер от
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:129
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:71
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ValidatorDialog.java:90
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:608
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:613
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/junctionchecking/src/org/openstreetmap/josm/plugins/JunctionChecker/JunctionCheckDialog.java:48
 #: ../plugins/licensechange/src/org/openstreetmap/josm/plugins/licensechange/LicenseChangeDialog.java:77
@@ -8600,7 +8600,7 @@ msgid "Select relation (add)"
 msgstr "Выбрать связь (добавить)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:426
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1232
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1275
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectRelationAction.java:16
 msgid "Select relation"
 msgstr "Выбрать отношение"
@@ -8618,7 +8618,7 @@ msgid "Select members (add)"
 msgstr "Выбрать элемент (добавить)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:465
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1263
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1304
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectMembersAction.java:16
 msgid "Select members"
 msgstr "Выбрать участников"
@@ -8633,13 +8633,13 @@ msgstr "Скачать участников"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:532
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:817
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1282
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1321
 msgid "Download incomplete members of selected relations"
 msgstr "Докачать с сервера участников выбранных отношений"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:534
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:819
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1284
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1323
 msgid "Download incomplete members"
 msgstr "Докачать участников"
 
@@ -8688,13 +8688,13 @@ msgid "Call relation editor for selected relation"
 msgstr "Запустить редактор отношений для выделенного отношения"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:402
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1236
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1279
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectInRelationPanelAction.java:17
 msgid "Select in relation list"
 msgstr "Выбрать в списке отношений"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:403
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1237
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1280
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectInRelationPanelAction.java:18
 msgid "Select relation in relation list."
 msgstr "Выбрать отношение в списке отношений."
@@ -10652,11 +10652,11 @@ msgstr ""
 msgid "This changeset query URL is invalid"
 msgstr "Неправильный URL запроса пакета правок"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:180
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:185
 msgid "Add Properties"
 msgstr "Добавить параметры"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:212
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:217
 #, java-format
 msgid "This will change {0} object."
 msgid_plural "This will change up to {0} objects."
@@ -10664,15 +10664,15 @@ msgstr[0] "Это изменит {0} объект."
 msgstr[1] "Это изменит {0} объекта."
 msgstr[2] "Это изменит {0} объектов."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:214
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:219
 msgid "An empty value deletes the tag."
 msgstr "Пустое значение удаляет тег"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:263
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:314
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:340
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:646
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:720
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:268
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:319
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:345
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:652
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:734
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:164
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:173
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:309
@@ -10683,22 +10683,22 @@ msgstr "Пустое значение удаляет тег"
 msgid "<different>"
 msgstr "<различные>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:277
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:282
 msgid "Change value?"
 msgid_plural "Change values?"
 msgstr[0] "Изменить значение?"
 msgstr[1] "Изменить значения?"
 msgstr[2] "Изменить значения?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:323
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:328
 msgid "Overwrite key"
 msgstr "Затереть клавишу"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:324
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:329
 msgid "Replace"
 msgstr "Заменить"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:326
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:331
 #, java-format
 msgid ""
 "You changed the key from ''{0}'' to ''{1}''.\n"
@@ -10707,7 +10707,7 @@ msgstr ""
 "Вы изменили клавишу с ''{0}'' на ''{1}''.\n"
 "Новая клавиша уже используется, хотите перезаписать значения?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:362
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:367
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:336
 #, java-format
 msgid "Change properties of up to {0} object"
@@ -10716,7 +10716,7 @@ msgstr[0] "Изменить параметры {0} объекта"
 msgstr[1] "Изменить параметры {0} объектов"
 msgstr[2] "Изменить параметры {0} объектов"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:417
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:422
 #, java-format
 msgid "This will change up to {0} object."
 msgid_plural "This will change up to {0} objects."
@@ -10724,121 +10724,120 @@ msgstr[0] "Количество изменяемых объектов: {0}"
 msgstr[1] "Это изменит до {0} объектов."
 msgstr[2] "Это изменит до {0} объектов."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:419
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:424
 msgid "Please select a key"
 msgstr "Пожалуйста, выберите ключ"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:450
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:455
 msgid "Please select a value"
 msgstr "Выберите значение"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:471
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:476
 msgid "Add value?"
 msgstr "Добавить значение?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:554
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:559
 msgid "Please select the objects you want to change properties for."
 msgstr "Выберите объекты, для которых вы желаете изменить параметры."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:607
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:608
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:613
 msgid "Properties/Memberships"
 msgstr "Параметры/Участники"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:607
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
 msgid "Properties for selected objects."
 msgstr "Параметры выделенных объектов."
 
-#. setting up the membership table
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: ../plugins/reltoolbox/src/relcontext/RelContextDialog.java:82
 msgid "Member Of"
 msgstr "Участник"
 
 #. <space />
 #. item "Facilities/Fire Hydrant" combo "Position"
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:661
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:674
 #: build/trans_presets.java:2747
 msgid "Position"
 msgstr "Расположение"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:975
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:989
 #, java-format
 msgid "Properties: {0} / Memberships: {1}"
 msgstr "Свойств: {0} / Участников: {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:978
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:992
 msgid "Properties / Memberships"
 msgstr "Параметры / Участники"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1031
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1045
 msgid "Change relation"
 msgstr "Изменить отношение"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1032
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1046
 msgid "Delete from relation"
 msgstr "Удалить из отношения"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1034
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1048
 #, java-format
 msgid "Really delete selection from relation {0}?"
 msgstr "Вы действительно хотите удалить отмеченное из отношения {0}?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1056
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1070
 msgid "Delete the selected key in all objects"
 msgstr "Удалить выделенный ключ из всех объектов"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1058
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1072
 msgid "Delete Properties"
 msgstr "Удалить параметры"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1089
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1103
 msgid "Add a new key/value pair to all objects"
 msgstr "Добавить новую пару ключ/значение для всех объектов"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1101
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1115
 msgid "Edit the value of the selected key for all objects"
 msgstr "Изменить значение выбранного ключа для всех объектов"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1132
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1146
 msgid "Go to OSM wiki for tag help (F1)"
 msgstr "Открыть описание тега в OSM wiki (F1)"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1133
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1147
 #: ../plugins/reltoolbox/src/relcontext/actions/RelationHelpAction.java:25
 msgid "Launch browser with wiki help for selected object"
 msgstr "Открыть браузер с описанием wiki для выбранного объекта"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1233
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1276
 #: ../plugins/reltoolbox/src/relcontext/actions/SelectRelationAction.java:17
 msgid "Select relation in main selection."
 msgstr "Выберите отношение в основном выборе."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1261
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1302
 msgid "Select the members of selected relation"
 msgstr "Выбрать участников выделенных отношений"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1333
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1372
 msgid "Copy Value"
 msgstr "Копировать значение"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1334
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1373
 msgid "Copy the value of the selected tag to clipboard"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1346
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1385
 msgid "Copy Key/Value"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1347
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1386
 msgid "Copy the key and value of the selected tag to clipboard"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1360
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1399
 msgid "Copy all Keys/Values"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1361
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1400
 msgid "Copy the key and value of the all tags to clipboard"
 msgstr ""
 
@@ -38951,11 +38950,28 @@ msgstr "ScanEx IRS"
 #. <country-code>RU</country-code>
 #. </entry>
 #.
+#. <!--only for Cambodia, Laos, Thailand, Vietnam-->
+#.
+#. <entry>
+#. <name>Cambodia, Laos, Thailand, Vietnam bilingual</name>
+#: build/trans_wms.java:1221
+msgid "Cambodia, Laos, Thailand, Vietnam bilingual"
+msgstr ""
+
+#. <type>tms</type>
+#. <url>http://{switch:a,b,c,d}.tile.osm-tools.org/osm_then/{zoom}/{x}/{y}.png</url>
+#. <max-zoom>19</max-zoom>
+#. <bounds min-lat='5.6' min-lon='97.3' max-lat='23.4' max-lon='109.6'/>
+#. <attribution-text mandatory='true'>© osm-tools.org &amp; OpenStreetMap contributors, CC-BY-SA</attribution-text>
+#. <attribution-url>http://www.osm-tools.org/</attribution-url>
+#. <country-code>TH</country-code>
+#. </entry>
+#.
 #. <!--only for South Africa-->
 #.
 #. <entry>
 #. <name>South Africa Topo (OOC)</name>
-#: build/trans_wms.java:1221
+#: build/trans_wms.java:1234
 msgid "South Africa Topo (OOC)"
 msgstr "South Africa Topo (OOC)"
 
@@ -39666,7 +39682,7 @@ msgstr "Проекция изображения по умолчанию"
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:105
 msgid "JOSM''s current projection"
-msgstr "Текущая проекция JOSM'а"
+msgstr "Текущая проекция JOSM’а"
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:106
 #, java-format

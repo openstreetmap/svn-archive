@@ -10,60 +10,11 @@ import pxdom
 
 condition_colors = {
     'free': '7fff00',
-    'disc': '50a100',
     'cust': 'b68529',
-    'resi': '785534',
-    'priv': '3f2920',
+    'none': '3f2920',
     'fee':  '67a1eb',
     'unkn': 'bc73e2' # purple:'bc73e2' ; bluegreen:'6fc58a' 
     }
-
-forbidden_colors = {
-    'nopa': 'f8b81f',
-    'nost': 'f85b1f',
-    'fire': 'f81f1f'
-    }
-
-
-"""
-def dom_convert_to_grey(document):
-    els = document.getElementsByTagName("CssParameter")
-    #print "els=",els
-    for el in els:
-        at = el.getAttribute("name")
-        if at=="stroke" or at=="fill":
-            col=el.firstChild.nodeValue
-            bw=rgb_to_css(color_to_bw(parse_color(col)))
-            print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
-            el.firstChild.nodeValue=bw
-
-    #<Map bgcolor="---" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" minimum_version="0.7.1">
-    els = document.getElementsByTagName("Map")
-    for el in els:
-        col = el.getAttribute("bgcolor")
-        assert(col!='')
-        assert(col!=None)
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
-        el.setAttribute("bgcolor",bw)
-
-    #<TextSymbolizer ... fill="#6699cc"/>
-    els = document.getElementsByTagName("TextSymbolizer")
-    for el in els:
-        col = el.getAttribute("fill")
-        assert(col!='')
-        assert(col!=None)
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        print "converted {typ} from {a} to {bw}." .format(typ='TS-fill',a=col,bw=bw)
-        el.setAttribute("fill",bw)
-        #<TextSymbolizer halo_fill="#fed7a5"/> (optional)
-        col = el.getAttribute("halo_fill")
-        assert(col!=None)
-        if col!='':
-            bw=rgb_to_css(color_to_bw(parse_color(col)))
-            print "converted {typ} from {a} to {bw}." .format(typ='TS-halo_fill',a=col,bw=bw)
-            el.setAttribute("halo_fill",bw)
-"""
 
 def dom_strip_style_and_layer(document,stylename,layername):
     removeElements=[]
@@ -95,7 +46,6 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     parser.domConfig.setParameter('entities', 0) # 1 -> exception if attribute values is set
     #parser.domConfig.setParameter('disallow-doctype', 1)
     parser.domConfig.setParameter('pxdom-resolve-resources', 1) # 1 -> replace &xyz; with text
-    print "###########", sf
     document = parser.parseURI(sf)
 
 #    dom_convert_to_grey(document)
@@ -121,33 +71,9 @@ def strip_doctype(f):
     p.wait()
 
 def create_wifi_icons(source_symbols_dir,dest_symbols_dir):
-    create_wifi_lane_icons(source_symbols_dir,dest_symbols_dir)
     create_wifi_area_icons(source_symbols_dir,dest_symbols_dir)
     create_wifi_point_icons(source_symbols_dir,dest_symbols_dir)
     
-def create_wifi_lane_icons(source_symbols_dir,dest_symbols_dir):
-    # first create mirror images (from left to right)
-    image_files = os.listdir(source_symbols_dir)
-    image_files = [f for f in image_files if f.startswith('park-l') and f.endswith('png')]
-    for f in image_files:
-        sf = os.path.join(source_symbols_dir,f)
-        df = os.path.join(source_symbols_dir,f) # this is changed so that we write in the source dir
-        hflip_icon(sf,df.replace('-l','-r'))
-
-    # then, create the colors
-    image_files = os.listdir(source_symbols_dir)
-    image_files = [f for f in image_files if f.endswith('source.png')]
-    for f in image_files:
-        # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
-        sf = os.path.join(source_symbols_dir,f)
-        df = os.path.join(dest_symbols_dir,f)
-        if 'n-' in f:      # then it's a non-wifi thing
-            for c in forbidden_colors.iterkeys():
-                colorize_icon(sf,df.replace('source',c),forbidden_colors.get(c))
-        else:
-            for c in condition_colors.iterkeys():
-                colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
-
 def create_wifi_area_icons(source_symbols_dir,dest_symbols_dir):
     return
 

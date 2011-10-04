@@ -102,7 +102,7 @@
                 <attribute name="fr_Plugin-Description" value="Genere les limites au format XML d'une source d'imagerie a partir d'un multipolygone"/>
                 <attribute name="Plugin-Early" value="false"/>
                 <attribute name="Plugin-Icon" value="images/xml_24.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugin/Imagery-XML-Bounds"/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Imagery-XML-Bounds"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

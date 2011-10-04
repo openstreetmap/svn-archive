@@ -1,0 +1,17 @@
+README 
+======
+
+Readme for imagery-xml-bounds JOSM plugin
+
+    * Author: Don-vip
+    * License: GPL v3 (see gpl-3.0.txt)
+    
+This plugin allows to generate textual Imagery boundaries in XML format from a multipolygon, compatible with JOSM Maps wiki page.
+
+See http://josm.openstreetmap.de/wiki/Maps
+
+The icon has been created by schollidesign, is licensed under "GPL, CC sa nc, LGPL and many more (copiable and for non commercial use)" and comes from:
+http://schollidesign.deviantart.com/art/Human-O2-Iconset-105344123
+
+The Java sources in net.boplicity.xmleditor have been created by Kees de Kooter, are licensed under Apache License 2.0 (see LICENSE-2.0.txt) and come from:
+http://code.google.com/p/xml-text-editor/ 

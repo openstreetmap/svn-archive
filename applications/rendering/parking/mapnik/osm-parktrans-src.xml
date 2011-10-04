@@ -4,8 +4,8 @@
 %entities;
 <!ENTITY % layer-parking-entities SYSTEM "inc/layer-parking-entities.xml.inc">
 %layer-parking-entities;
-<!ENTITY layer-parking-lane SYSTEM "inc/layer-parking-area.xml.inc">
-<!ENTITY layer-parking-area SYSTEM "inc/layer-parking-lane.xml.inc">
+<!ENTITY layer-parking-area SYSTEM "inc/layer-parking-area.xml.inc">
+<!ENTITY layer-parking-lane SYSTEM "inc/layer-parking-lane.xml.inc">
 <!ENTITY layer-parking-point SYSTEM "inc/layer-parking-point.xml.inc">
 ]>
 

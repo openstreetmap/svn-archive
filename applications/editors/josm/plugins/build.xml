@@ -33,6 +33,7 @@
         <ant antfile="build.xml" target="dist" dir="gpxpoints"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imageryadjust"/>
+        <ant antfile="build.xml" target="dist" dir="imagery-xml-bounds"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
@@ -118,6 +119,7 @@
         <ant antfile="build.xml" target="clean" dir="gpxpoints"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="imageryadjust"/>
+        <ant antfile="build.xml" target="clean" dir="imagery-xml-bounds"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>

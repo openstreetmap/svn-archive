@@ -95,6 +95,7 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     parser.domConfig.setParameter('entities', 0) # 1 -> exception if attribute values is set
     #parser.domConfig.setParameter('disallow-doctype', 1)
     parser.domConfig.setParameter('pxdom-resolve-resources', 1) # 1 -> replace &xyz; with text
+    print "###########", sf
     document = parser.parseURI(sf)
 
 #    dom_convert_to_grey(document)
@@ -148,33 +149,23 @@ def create_wifi_lane_icons(source_symbols_dir,dest_symbols_dir):
                 colorize_icon(sf,df.replace('source',c),condition_colors.get(c))
 
 def create_wifi_area_icons(source_symbols_dir,dest_symbols_dir):
-    tempf = "/tmp/2347856893476512873465.png"
-    df = os.path.join(dest_symbols_dir,"wifi_area_source.png")
-    stampf = os.path.join(source_symbols_dir,"wifi_area_stamp.png")
-    for c in condition_colors.iterkeys():
-        # step 1: colorize a "stamp" template image
-        p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',tempf])
-        p.wait()
-        # step 2: make it 50% transparent
-        # convert -size 16x16 wifi_area_free.png xc:grey -alpha off -compose Copy_Opacity -composite  /tmp/a.png && gwenview /tmp/a.png
-        p = subprocess.Popen(['convert','-size','16x16',tempf,'xc:gray','-alpha','off','-compose','Copy_Opacity','-composite',df.replace('source',c)])
-        p.wait()
+    return
 
 
 def create_wifi_point_icons(source_symbols_dir,dest_symbols_dir):
     tempf = "/tmp/2347856893476512873465.png"
-    stampf = os.path.join(source_symbols_dir,"wifi_node_stamp.png")
+#    stampf = os.path.join(source_symbols_dir,"wifi_node_stamp.png")
     # for now there's only the wifi-vending icon
     copy_files(source_symbols_dir,dest_symbols_dir,['wifi-vending.png'])
     # wifi nodes
     for condition in condition_colors.keys():
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
-        sf = os.path.join(source_symbols_dir,'wifi_node_source.png')
+        sf = os.path.join(source_symbols_dir,'wifi-source.png')
         df = os.path.join(dest_symbols_dir,'wifi_node_{cond}.png'.format(cond=condition))
-        colorize_icon(sf,tempf,condition_colors.get(condition))
-        p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
-        print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
-        p.wait()
+        colorize_icon(sf,df,condition_colors.get(condition))
+ #       p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+  #      print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+    #    p.wait()
 
 def copy_files(src,dest,files):
     for f in files:

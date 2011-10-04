@@ -2,11 +2,10 @@
 <!DOCTYPE Map [
 <!ENTITY % entities SYSTEM "inc/entities.xml.inc">
 %entities;
-<!ENTITY % layer-parking-entities SYSTEM "inc/layer-parking-entities.xml.inc">
-%layer-parking-entities;
-<!ENTITY layer-parking-lane SYSTEM "inc/layer-parking-area.xml.inc">
-<!ENTITY layer-parking-area SYSTEM "inc/layer-parking-lane.xml.inc">
-<!ENTITY layer-parking-point SYSTEM "inc/layer-parking-point.xml.inc">
+<!ENTITY % layer-wifi-entities SYSTEM "inc/layer-wifi-entities.xml.inc">
+%layer-wifi-entities;
+<!ENTITY layer-wifi-area SYSTEM "inc/layer-wifi-area.xml.inc">
+<!ENTITY layer-wifi-point SYSTEM "inc/layer-wifi-point.xml.inc">
 ]>
 
 <!-- This stylesheet uses features only available in mapnik builds with
@@ -15,8 +14,7 @@
 <Map srs="&srs900913;" minimum_version="0.6.1">
 &fontset-settings;
 
-&layer-parking-area;
-&layer-parking-lane;
-&layer-parking-point;
+&layer-wifi-area;
+&layer-wifi-point;
 
 </Map>

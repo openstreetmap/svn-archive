@@ -30,20 +30,23 @@ public class SelectHighwayAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         List<Way> selectedWays = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
-        Set<Way> newWays = new HashSet<Way>();
 
         if( selectedWays.size() == 1 ) {
-            Way firstWay = selectedWays.get(0);
-            String key = firstWay.hasKey("name") ? "name" : "ref";
-            if( !firstWay.hasKey(key) ) {
-                JOptionPane.showMessageDialog(Main.parent, "The selected way should have either name or ref tag.", "Select Highway", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            String value = firstWay.get(key);
+            getCurrentDataSet().setSelected(selectNamedRoad(selectedWays.get(0)));
+        } else if( selectedWays.size() == 2 ) {
+            getCurrentDataSet().setSelected(selectHighwayBetween(selectedWays.get(0), selectedWays.get(1)));
+        } else {
+            JOptionPane.showMessageDialog(Main.parent, "Please select one or two ways for this action", "Select Highway", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
+    private Set<Way> selectNamedRoad( Way firstWay ) {
+        Set<Way> newWays = new HashSet<Way>();
+        String key = firstWay.hasKey("name") ? "name" : "ref";
+        if( firstWay.hasKey(key) ) {
+            String value = firstWay.get(key);
             Queue<Node> nodeQueue = new LinkedList<Node>();
             nodeQueue.add(firstWay.firstNode());
-
             while( !nodeQueue.isEmpty() ) {
                 Node node = nodeQueue.remove();
                 for( Way p : OsmPrimitive.getFilteredList(node.getReferrers(), Way.class) ) {
@@ -53,17 +56,42 @@ public class SelectHighwayAction extends JosmAction {
                     }
                 }
             }
-        } else if( selectedWays.size() == 2 ) {
-            JOptionPane.showMessageDialog(Main.parent, "Sorry, two ways are not supported yet", "Select Highway", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else {
-            JOptionPane.showMessageDialog(Main.parent, "Please select exactly one way for this action", "Select Highway", JOptionPane.ERROR_MESSAGE);
-            return;
         }
-
-        getCurrentDataSet().setSelected(newWays);
+        return newWays;
     }
-
+    
+    private Set<Way> selectHighwayBetween( Way firstWay, Way lastWay ) {
+        int minRank = Math.min(getHighwayRank(firstWay), getHighwayRank(lastWay));
+        Set<Way> newWays = new HashSet<Way>();
+        // todo: make two trees and expand them until they touch.
+        // do not lower highway rank!
+        JOptionPane.showMessageDialog(Main.parent, "Sorry, two ways are not supported yet", "Select Highway", JOptionPane.ERROR_MESSAGE);
+        newWays.add(lastWay);
+        newWays.add(firstWay);
+        return newWays;
+    }
+    
+    private int getHighwayRank( OsmPrimitive way ) {
+        if( !way.hasKey("highway") )
+            return 0;
+        String highway = way.get("highway");
+        if( highway.equals("path") || highway.equals("footway") || highway.equals("cycleway") )
+            return 1;
+        else if( highway.equals("track") || highway.equals("service") )
+            return 2;
+        else if( highway.equals("unclassified") || highway.equals("residential") )
+            return 3;
+        else if( highway.equals("tertiary") || highway.equals("tertiary_link") )
+            return 4;
+        else if( highway.equals("secondary") || highway.equals("secondary_link") )
+            return 5;
+        else if( highway.equals("primary") || highway.equals("primary_link") )
+            return 6;
+        else if( highway.equals("trunk") || highway.equals("trunk_link") || highway.equals("motorway") || highway.equals("motorway_link") )
+            return 7;
+        return 0;
+    }
+    
     @Override
     protected void updateEnabledState() {
         if (getCurrentDataSet() == null)
@@ -78,10 +106,13 @@ public class SelectHighwayAction extends JosmAction {
             setEnabled(false);
             return;
         }
-        int count = 0;
-        for( OsmPrimitive p : selection )
-            if( p instanceof Way )
+        int count = 0, rank = 100;
+        for( OsmPrimitive p : selection ) {
+            if( p instanceof Way ) {
                 count++;
-        setEnabled(count == 1); // todo: or 2
+                rank = Math.min(rank, getHighwayRank(p));
+            }
+        }
+        setEnabled(count == 1 || (count == 2 && rank > 0));
     }
 }

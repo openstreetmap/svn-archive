@@ -9,7 +9,6 @@ import utilsplugin2.selection.*;
 import utilsplugin2.dumbutils.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -42,6 +41,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem splitOnIntersections;
     JMenuItem selModifiedNodes;
     JMenuItem selModifiedWays;
+    JMenuItem selectHighway;
     
     JMenuItem selectURL;
     
@@ -77,6 +77,7 @@ public class UtilsPlugin2 extends Plugin {
         selModifiedNodes = MainMenu.add(selectionMenu, new SelectModNodesAction());
         selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
         undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
+        selectHighway = MainMenu.add(selectionMenu, new SelectHighwayAction());
         
         selectURL = MainMenu.add(toolsMenu, new ChooseURLAction());
         

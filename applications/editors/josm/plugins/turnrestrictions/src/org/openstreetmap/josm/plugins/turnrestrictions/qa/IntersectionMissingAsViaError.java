@@ -35,8 +35,8 @@ public class IntersectionMissingAsViaError extends Issue{
     @Override
     public String getText() {       
         String msg = tr("The <strong>from</strong>-way <span class=\"object-name\">{0}</span> and the <strong>to</strong>-way <span class=\"object-name\">{1}</span> "
-               + "intersect at node <span class=\"object-name\">{2}</span> but <span class=\"object-name\">{2}</span> isn''t a <strong>via</strong>-object.<br> "
-               + "It is recommended to set <span class=\"object-name\">{2}</span> as unique <strong>via</strong>-object.",
+               + "intersect at node <span class=\"object-name\">{2}</span> but this node isn''t a <strong>via</strong>-object.<br> "
+               + "It is recommended to set it as unique <strong>via</strong>-object.",
                this.from.getDisplayName(DefaultNameFormatter.getInstance()),
                this.to.getDisplayName(DefaultNameFormatter.getInstance()),
                this.intersect.getDisplayName(DefaultNameFormatter.getInstance())

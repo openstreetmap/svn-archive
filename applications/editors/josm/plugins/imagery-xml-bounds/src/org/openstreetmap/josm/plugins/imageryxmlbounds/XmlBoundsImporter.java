@@ -147,10 +147,12 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
 		safePut(osmImagery, KEY_URL, imagery.getUrl());
 		safePut(osmImagery, KEY_PROJECTIONS, imagery.getServerProjections());
 		safePut(osmImagery, KEY_EULA, imagery.getEulaAcceptanceRequired());
-		safePut(osmImagery, KEY_ATTR_TEXT, imagery.getAttributionText());
+		safePut(osmImagery, KEY_ATTR_TEXT, imagery.getAttributionText(0, null, null));
 		safePut(osmImagery, KEY_ATTR_URL, imagery.getAttributionLinkURL());
+        safePut(osmImagery, KEY_TERMS_TEXT, imagery.getTermsOfUseText());
 		safePut(osmImagery, KEY_TERMS_URL, imagery.getTermsOfUseURL());
 		safePut(osmImagery, KEY_COUNTRY_CODE, imagery.getCountryCode());
+		safePut(osmImagery, KEY_LOGO_URL, imagery.getAttributionImageURL());
 
 		if (imagery.getImageryType().equals(ImageryType.TMS)) {
 			safePut(osmImagery, KEY_MAX_ZOOM, imagery.getMaxZoom());

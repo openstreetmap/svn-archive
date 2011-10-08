@@ -32,7 +32,7 @@ public interface XmlBoundsConstants {
 	/**
 	 * Plugin version.
 	 */
-	public static final String PLUGIN_VERSION = "1.0";
+	public static final String PLUGIN_VERSION = "1.1";
 	
 	/**
 	 * XML namespace for JOSM Imagery schema.
@@ -44,26 +44,48 @@ public interface XmlBoundsConstants {
 	 */
 	public static final String XML_SCHEMA = "resource://data/maps.xsd";
 	
-	/**
-	 * Prefix used in front of OSM keys.
-	 */
-	public static final String PREFIX = "imagery:";
-	
+    /**
+     * XML tags
+     */
+    public static final String XML_NAME = "name";
+    public static final String XML_TYPE = "type";
+    public static final String XML_URL = "url";
+    public static final String XML_DEFAULT = "default";
+    public static final String XML_EULA = "eula";
+    public static final String XML_ATTR_TEXT = "attribution-text";
+    public static final String XML_ATTR_URL = "attribution-url";
+    public static final String XML_TERMS_TEXT = "terms-of-use-text";
+    public static final String XML_TERMS_URL = "terms-of-use-url";
+    public static final String XML_PROJECTIONS = "projections";
+    public static final String XML_MAX_ZOOM = "max-zoom";
+    public static final String XML_MIN_ZOOM = "min-zoom";
+    public static final String XML_COUNTRY_CODE = "country-code";
+    public static final String XML_LOGO_IMAGE = "logo-image";// TODO
+    public static final String XML_LOGO_URL = "logo-url";
+
+    /**
+     * Prefix used in front of OSM keys.
+     */
+    public static final String PREFIX = "imagery:";
+
 	/**
 	 * OSM keys, equivalent to those used in XML schema, but prefixed (except for name).
 	 */
-	public static final String KEY_NAME = "name";
-	public static final String KEY_TYPE = PREFIX + "type";
-	public static final String KEY_URL = PREFIX + "url";
-	public static final String KEY_DEFAULT = PREFIX + "default";
-	public static final String KEY_EULA = PREFIX + "eula";
-	public static final String KEY_ATTR_TEXT = PREFIX + "attribution-text";
-	public static final String KEY_ATTR_URL = PREFIX + "attribution-url";
-	public static final String KEY_TERMS_URL = PREFIX + "terms-of-use-url";
-	public static final String KEY_PROJECTIONS = PREFIX + "projections";
-	public static final String KEY_MAX_ZOOM = PREFIX + "max-zoom";
-	public static final String KEY_MIN_ZOOM = PREFIX + "min-zoom";
-	public static final String KEY_COUNTRY_CODE = PREFIX + "country-code";
+	public static final String KEY_NAME = XML_NAME;
+	public static final String KEY_TYPE = PREFIX + XML_TYPE;
+	public static final String KEY_URL = PREFIX + XML_URL;
+	public static final String KEY_DEFAULT = PREFIX + XML_DEFAULT;
+	public static final String KEY_EULA = PREFIX + XML_EULA;
+	public static final String KEY_ATTR_TEXT = PREFIX + XML_ATTR_TEXT;
+	public static final String KEY_ATTR_URL = PREFIX + XML_ATTR_URL;
+    public static final String KEY_TERMS_TEXT = PREFIX + XML_TERMS_TEXT;
+	public static final String KEY_TERMS_URL = PREFIX + XML_TERMS_URL;
+	public static final String KEY_PROJECTIONS = PREFIX + XML_PROJECTIONS;
+	public static final String KEY_MAX_ZOOM = PREFIX + XML_MAX_ZOOM;
+	public static final String KEY_MIN_ZOOM = PREFIX + XML_MIN_ZOOM;
+	public static final String KEY_COUNTRY_CODE = PREFIX + XML_COUNTRY_CODE;
+    public static final String KEY_LOGO_IMAGE = PREFIX + XML_LOGO_IMAGE;// TODO
+    public static final String KEY_LOGO_URL = PREFIX + XML_LOGO_URL;
 	
 	/**
 	 * File extension.

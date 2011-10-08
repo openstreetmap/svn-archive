@@ -26,11 +26,12 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsPropert
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsSelectionAction;
 
 /**
- * Main class of Imagery XLM bounds plugin.
+ * Main class of Imagery XML bounds plugin.
  * @author Don-vip
- * @version 1.0
+ * @version 1.1
  * History:
- * 2.0 03-Oct-2011 first version
+ * 1.1 08-Oct-2011 Update for #6934 and JOSM 4506, code refactorisation, removing debug code
+ * 1.0 03-Oct-2011 first version
  */
 public class ImageryXmlBoundsPlugin extends Plugin {
 

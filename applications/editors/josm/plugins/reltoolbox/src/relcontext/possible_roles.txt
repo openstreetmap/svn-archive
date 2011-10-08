@@ -9,3 +9,5 @@ tunnel: through, outline, edge
 surveillance: camera, extent, visible, hidden
 street: street, address, house, associated
 collection: member, street, river, railway, address, associated
+associatedStreet: street, house
+lane_restriction: from, to, via

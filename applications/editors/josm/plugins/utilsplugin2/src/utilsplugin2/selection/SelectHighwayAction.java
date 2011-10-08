@@ -62,16 +62,21 @@ public class SelectHighwayAction extends JosmAction {
     
     private Set<Way> selectHighwayBetween( Way firstWay, Way lastWay ) {
         int minRank = Math.min(getHighwayRank(firstWay), getHighwayRank(lastWay));
-        Set<Way> newWays = new HashSet<Way>();
-        // todo: make two trees and expand them until they touch.
-        // do not lower highway rank!
-        JOptionPane.showMessageDialog(Main.parent, "Sorry, two ways are not supported yet", "Select Highway", JOptionPane.ERROR_MESSAGE);
-        newWays.add(lastWay);
-        newWays.add(firstWay);
-        return newWays;
+	HighwayTree firstTree = new HighwayTree(firstWay, minRank);
+	HighwayTree secondTree = new HighwayTree(lastWay, minRank);
+	Way intersection = firstTree.getIntersection(secondTree);
+	while( intersection == null && (firstTree.canMoveOn() || secondTree.canMoveOn()) ) {
+	    firstTree.processNextLevel();
+	    secondTree.processNextLevel();
+	    intersection = firstTree.getIntersection(secondTree);
+	}
+	Set<Way> newWays = new HashSet<Way>();
+	newWays.addAll(firstTree.getPath(intersection));
+	newWays.addAll(secondTree.getPath(intersection));
+	return newWays;
     }
     
-    private int getHighwayRank( OsmPrimitive way ) {
+    private static int getHighwayRank( OsmPrimitive way ) {
         if( !way.hasKey("highway") )
             return 0;
         String highway = way.get("highway");
@@ -114,5 +119,77 @@ public class SelectHighwayAction extends JosmAction {
             }
         }
         setEnabled(count == 1 || (count == 2 && rank > 0));
+    }
+    
+    private static class HighwayTree {
+	private List<Way> tree;
+	private List<Integer> refs;
+	private List<Node> nodesToCheck;
+	private List<Integer> nodeRefs;
+	private int minHighwayRank;
+
+	public HighwayTree( Way from, int minHighwayRank ) {
+	    tree = new ArrayList<Way>(1);
+	    refs = new ArrayList<Integer>(1);
+	    tree.add(from);
+	    refs.add(Integer.valueOf(-1));
+	    this.minHighwayRank = minHighwayRank;
+	    nodesToCheck = new ArrayList<Node>(2);
+	    nodeRefs = new ArrayList<Integer>(2);
+	    nodesToCheck.add(from.firstNode());
+	    nodesToCheck.add(from.lastNode());
+	    nodeRefs.add(Integer.valueOf(0));
+	    nodeRefs.add(Integer.valueOf(0));
+	}
+	
+	public void processNextLevel() {
+	    List<Node> newNodes = new ArrayList<Node>();
+	    List<Integer> newIdx = new ArrayList<Integer>();
+	    for( int i = 0; i < nodesToCheck.size(); i++ ) {
+		Node node = nodesToCheck.get(i);
+		Integer nodeRef = nodeRefs.get(i);
+                for( Way way : OsmPrimitive.getFilteredList(node.getReferrers(), Way.class) ) {
+		    if( (way.firstNode().equals(node) || way.lastNode().equals(node)) &&
+			!tree.contains(way) && suits(way) ) {
+			tree.add(way);
+			refs.add(nodeRef);
+			Node newNode = way.firstNode().equals(node) ? way.lastNode() : way.firstNode();
+			newNodes.add(newNode);
+			newIdx.add(Integer.valueOf(tree.size() - 1));
+		    }
+		}
+	    }
+	    nodesToCheck = newNodes;
+	    nodeRefs = newIdx;
+	}
+	
+	private boolean suits( Way w ) {
+	    return getHighwayRank(w) >= minHighwayRank;
+	}
+	
+	public boolean canMoveOn() {
+	    return !nodesToCheck.isEmpty() && tree.size() < 10000;
+	}
+	
+	public Way getIntersection( HighwayTree other ) {
+	    for( Way w : other.tree )
+		if( tree.contains(w) )
+		    return w;
+	    return null;
+	}
+	
+	public List<Way> getPath( Way to ) {
+	    if( to == null )
+		return Collections.singletonList(tree.get(0));
+	    int pos = tree.indexOf(to);
+	    if( pos < 0 )
+		throw new ArrayIndexOutOfBoundsException("Way " + to + " is not in the tree.");
+	    List<Way> result = new ArrayList<Way>(1);
+	    while( pos >= 0 ) {
+		result.add(tree.get(pos));
+		pos = refs.get(pos);
+	    }
+	    return result;
+	}
     }
 }

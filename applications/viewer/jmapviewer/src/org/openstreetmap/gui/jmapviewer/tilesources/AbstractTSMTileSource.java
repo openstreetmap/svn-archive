@@ -1,7 +1,6 @@
-/**
- * 
- */
 package org.openstreetmap.gui.jmapviewer.tilesources;
+
+//License: GPL.
 
 import java.awt.Image;
 import java.io.IOException;
@@ -11,23 +10,17 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
-public abstract class AbstractTSMTileSource implements TileSource {
+public abstract class AbstractTSMTileSource extends AbstractTileSource {
 
     protected String name;
     protected String baseUrl;
-    protected String attrImgUrl;
 
     public AbstractTSMTileSource(String name, String base_url) {
-        this(name, base_url, null);
-    }
-
-    public AbstractTSMTileSource(String name, String base_url, String attr_img_url) {
         this.name = name;
         this.baseUrl = base_url;
         if(baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(0,baseUrl.length()-1);
         }
-        attrImgUrl = attr_img_url;
     }
 
     @Override
@@ -78,45 +71,6 @@ public abstract class AbstractTSMTileSource implements TileSource {
     @Override
     public int getTileSize() {
         return 256;
-    }
-
-    @Override
-    public boolean requiresAttribution() {
-        return false;
-    }
-
-    @Override
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
-        throw new UnsupportedOperationException("no attribution");
-    }
-
-    @Override
-    public String getAttributionLinkURL() {
-        throw new UnsupportedOperationException("no attribution");
-    }
-
-    @Override
-    public Image getAttributionImage() {
-        if (attrImgUrl != null)
-            return new ImageIcon(attrImgUrl).getImage();
-
-        else
-            return null;
-    }
-
-    @Override
-    public String getAttributionImageURL() {
-        throw new UnsupportedOperationException("no attribution");
-    }
-
-    @Override
-    public String getTermsOfUseText() {
-        throw new UnsupportedOperationException("no attribution");
-    }
-
-    @Override
-    public String getTermsOfUseURL() {
-        throw new UnsupportedOperationException("no attribution");
     }
 
     @Override

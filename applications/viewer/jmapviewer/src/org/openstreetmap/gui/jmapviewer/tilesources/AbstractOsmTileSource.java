@@ -16,9 +16,6 @@ public abstract class AbstractOsmTileSource extends AbstractTSMTileSource {
         super(name, base_url);
     }
 
-    public AbstractOsmTileSource(String name, String base_url, String attr_img_url) {
-        super(name, base_url, attr_img_url);
-    }
     public int getMaxZoom() {
         return 18;
     }

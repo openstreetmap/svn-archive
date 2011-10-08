@@ -6,7 +6,7 @@ import java.awt.Image;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-public class TMSTileSource extends AbstractTSMTileSource {
+public class TMSTileSource extends AbstractTMSTileSource {
 
     protected int maxZoom;
     protected int minZoom = 0;

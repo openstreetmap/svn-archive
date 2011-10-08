@@ -10,12 +10,12 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
-public abstract class AbstractTSMTileSource extends AbstractTileSource {
+public abstract class AbstractTMSTileSource extends AbstractTileSource {
 
     protected String name;
     protected String baseUrl;
 
-    public AbstractTSMTileSource(String name, String base_url) {
+    public AbstractTMSTileSource(String name, String base_url) {
         this.name = name;
         this.baseUrl = base_url;
         if(baseUrl.endsWith("/")) {

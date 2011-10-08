@@ -36,7 +36,7 @@ public class SelectHighwayAction extends JosmAction {
         } else if( selectedWays.size() == 2 ) {
             getCurrentDataSet().setSelected(selectHighwayBetween(selectedWays.get(0), selectedWays.get(1)));
         } else {
-            JOptionPane.showMessageDialog(Main.parent, "Please select one or two ways for this action", "Select Highway", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Please select one or two ways for this action"), "Select Highway", JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -31,6 +31,7 @@ public class ReplaceGeometryAction extends JosmAction {
                 Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT), true);
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         if( getCurrentDataSet() == null ) return;
         // There must be two ways selected: one with id > 0 and one new.
@@ -42,9 +43,22 @@ public class ReplaceGeometryAction extends JosmAction {
             return;
         }
         int idxNew = selection.get(0).isNew() ? 0 : 1;
+	boolean overrideNewCheck = false;
+	if( selection.get(1-idxNew).isNew() ) {
+	    // if both are new, select the one with all the DB nodes
+	    boolean areNewNodes = false;
+	    for( Node n : selection.get(0).getNodes() )
+		if( n.isNew() )
+		    areNewNodes = true;
+	    idxNew = areNewNodes ? 0 : 1;
+	    overrideNewCheck = true;
+	    for( Node n : selection.get(1-idxNew).getNodes() )
+		if( n.isNew() )
+		    overrideNewCheck = false;
+	}
         Way geometry = selection.get(idxNew);
         Way way = selection.get(1 - idxNew);
-        if( way.isNew() || !geometry.isNew() ) {
+        if( !overrideNewCheck && (way.isNew() || !geometry.isNew()) ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select one way that exists in the database and one new way with correct geometry."),
                     TITLE, JOptionPane.WARNING_MESSAGE);

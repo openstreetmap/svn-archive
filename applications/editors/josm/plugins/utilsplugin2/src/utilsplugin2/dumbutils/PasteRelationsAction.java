@@ -54,7 +54,7 @@ public class PasteRelationsAction extends JosmAction {
             Relation r = new Relation(rel);
             boolean changed = false;
             for( OsmPrimitive p : selection ) {
-                if( !r.getMemberPrimitives().contains(p) ) {
+                if( !r.getMemberPrimitives().contains(p) && !r.equals(p) ) {
                     r.addMember(new RelationMember(relations.get(rel), p));
                     changed = true;
                 }

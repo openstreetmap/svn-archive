@@ -155,7 +155,6 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	public void paint(Graphics2D g, MapView mv, Bounds box) {
 		WayPoint lastWpt = null;
 		int lastEle = 0;
-		int index = 0;
 
 		renderer.beginRendering();
 		if (profile != null) {			
@@ -193,7 +192,6 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 				// remember some things for next iteration
 				lastEle = (int) WayPointHelper.getElevation(wpt);
 				lastWpt = wpt;
-				index++;
 			}
 
 			// paint selected way point, if available

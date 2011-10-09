@@ -47,7 +47,6 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	private List<WayPoint> tmpWaypoints = new ArrayList<WayPoint>(1000);
 
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
-	private int numberOfWayPoints;
 
 	public ElevationModel() {
 		this("", null, 100);
@@ -224,7 +223,6 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 		
 		buffer.add(wp);
 		tmpWaypoints.add(wp);
-		numberOfWayPoints++;
 	}
 
 	/*

@@ -364,14 +364,15 @@ public class ColumbusCSVReader {
 		// Check for audio file and link it, if present
 		String voxFile = null;
 		if (isExtMode) {
-			voxFile = csvLine[14].toLowerCase();
+			voxFile = csvLine[14];
 		} else {
-			voxFile = csvLine[9].toLowerCase();
+			voxFile = csvLine[9];
 		}
 
 		if (!ColumbusCSVUtils.isStringNullOrEmpty(voxFile)) {
 			File file = getVoxFilePath(fileDir, voxFile);
-			if (file.exists()) {
+			if (file != null && file.exists()) {
+				// link vox file
 				int voxNum = getNumberOfVoxfile(voxFile);
 				lastVoxNumber = Math.max(voxNum, lastVoxNumber);
 				firstVoxNumber = Math.min(voxNum, firstVoxNumber);
@@ -446,8 +447,18 @@ public class ColumbusCSVReader {
 	 * @return
 	 */
 	public File getVoxFilePath(String fileDir, String voxFile) {
-		File file = new File(fileDir + File.separator + voxFile + ".wav");
-		return file;
+		// The FAT16 file name is interpreted differently from case-sensitive file systems, so we
+		// have to test several variants
+		String[] fileNameVariants = new String[] {voxFile, voxFile.toLowerCase(), voxFile.toUpperCase()};
+		
+		for (int i = 0; i < fileNameVariants.length; i++) {
+			File file = new File(fileDir + File.separator + fileNameVariants[i] + ".wav");
+			if (file.exists()) {
+				return file;
+			}
+		}
+		return null; // give up...
+		
 	}
 
 	/**

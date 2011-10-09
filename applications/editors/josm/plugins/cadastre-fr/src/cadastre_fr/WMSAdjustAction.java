@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -21,14 +20,12 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.gui.layer.Layer;
 
 public class WMSAdjustAction extends MapMode implements
         MouseListener, MouseMotionListener{
 
     private static final long serialVersionUID = 1L;
-    private ArrayList<WMSLayer> modifiedLayers = new ArrayList<WMSLayer>();
-    WMSLayer selectedLayer;
+    private WMSLayer modifiedLayer = null;
     private boolean rasterMoved;
     private EastNorth prevEastNorth;
     enum Mode { moveXY, moveZ, rotate}
@@ -37,36 +34,22 @@ public class WMSAdjustAction extends MapMode implements
 
     public WMSAdjustAction(MapFrame mapFrame) {
         super(tr("Adjust WMS"), "adjustxywms",
-                        tr("Adjust the position of the WMS layer (raster images only)"), mapFrame,
+                        tr("Adjust the position of the WMS layer (saved for raster images only)"), mapFrame,
                         ImageProvider.getCursor("normal", "move"));
     }
 
     @Override public void enterMode() {
         if (Main.map != null) {
-            selectedLayer = null;
-            WMSLayer possibleLayer = null;
-            int cRasterLayers = 0;
-            for (Layer l : Main.map.mapView.getAllLayers()) {
-                if (l instanceof WMSLayer && ((WMSLayer)l).isRaster()) {
-                    possibleLayer = (WMSLayer)l;
-                    cRasterLayers++;
-                }
-            }
-            Layer activeLayer = Main.map.mapView.getActiveLayer();
-            if (activeLayer instanceof WMSLayer && ((WMSLayer)activeLayer).isRaster()) {
-                selectedLayer = (WMSLayer)activeLayer;
-            } else if (cRasterLayers == 1) {
-                selectedLayer = possibleLayer;
-            }
-            if (selectedLayer != null) {
+            if (Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
+                modifiedLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
                 super.enterMode();
                 Main.map.mapView.addMouseListener(this);
                 Main.map.mapView.addMouseMotionListener(this);
                 rasterMoved = false;
-                selectedLayer.adjustModeEnabled = true;
+                modifiedLayer.adjustModeEnabled = true;
             } else {
-                JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
-                        +"a cadastre \"plan image\" (raster image)"));
+//                JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
+//                        +"a cadastre layer"));
                 exitMode();
                 Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
             }
@@ -77,7 +60,7 @@ public class WMSAdjustAction extends MapMode implements
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
-        if (rasterMoved && CacheControl.cacheEnabled) {
+        if (rasterMoved && CacheControl.cacheEnabled && modifiedLayer.isRaster()) {
             int reply = JOptionPane.showConfirmDialog(null,
                     "Save the changes in cache ?",
                     "Update cache",
@@ -86,10 +69,10 @@ public class WMSAdjustAction extends MapMode implements
                 saveModifiedLayers();
             }
         }
-        modifiedLayers.clear();
-        if (selectedLayer != null) {
-            selectedLayer.adjustModeEnabled = false;
-            selectedLayer = null;
+        rasterMoved = false;
+        if (modifiedLayer != null) {
+            modifiedLayer.adjustModeEnabled = false;
+            modifiedLayer = null;
         }
     }
 
@@ -100,9 +83,9 @@ public class WMSAdjustAction extends MapMode implements
         boolean ctrl = (e.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
         // boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
         boolean shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-        if (shift && !ctrl)
+        if (shift && !ctrl && modifiedLayer.isRaster())
             mode = Mode.moveZ;
-        else if (shift && ctrl)
+        else if (shift && ctrl && modifiedLayer.isRaster())
             mode = Mode.rotate;
         else
             mode = Mode.moveXY;
@@ -123,8 +106,6 @@ public class WMSAdjustAction extends MapMode implements
             } 
             prevEastNorth = newEastNorth;
         }
-        if (!modifiedLayers.contains(selectedLayer))
-            modifiedLayers.add(selectedLayer);
         Main.map.mapView.repaint();
     }
     
@@ -140,33 +121,33 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     private void displace(EastNorth start, EastNorth end) {
-        selectedLayer.displace(end.east()-start.east(), end.north()-start.north());
+        modifiedLayer.displace(end.east()-start.east(), end.north()-start.north());
     }
 
     private void resize(EastNorth newEastNorth) {
-        EastNorth center = selectedLayer.getRasterCenter();
+        EastNorth center = modifiedLayer.getRasterCenter();
         double dPrev = prevEastNorth.distance(center.east(), center.north());
         double dNew = newEastNorth.distance(center.east(), center.north());
-        selectedLayer.resize(center, dNew/dPrev);
+        modifiedLayer.resize(center, dNew/dPrev);
     }
 
     private void rotate(EastNorth start, EastNorth end) {
-        EastNorth pivot = selectedLayer.getRasterCenter();
+        EastNorth pivot = modifiedLayer.getRasterCenter();
         double startAngle = Math.atan2(start.east()-pivot.east(), start.north()-pivot.north());
         double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
         double rotationAngle = endAngle - startAngle;
-        selectedLayer.rotate(pivot, rotationAngle);
+        modifiedLayer.rotate(pivot, rotationAngle);
     }
 
     private void rotateFrameOnly(EastNorth start, EastNorth end) {
         if (start != null && end != null) {
-            EastNorth pivot = selectedLayer.getRasterCenter();
+            EastNorth pivot = modifiedLayer.getRasterCenter();
             double startAngle = Math.atan2(start.east()-pivot.east(), start.north()-pivot.north());
             double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
             double rotationAngle = endAngle - startAngle;
-            if (selectedLayer.getImage(0).orgCroppedRaster != null) {
+            if (modifiedLayer.getImage(0).orgCroppedRaster != null) {
                 for (int i=0; i<4; i++) {
-                    croppedRaster[i] = selectedLayer.getImage(0).orgCroppedRaster[i].rotate(pivot, rotationAngle);
+                    croppedRaster[i] = modifiedLayer.getImage(0).orgCroppedRaster[i].rotate(pivot, rotationAngle);
                 }
                 croppedRaster[4] = croppedRaster[0];
             }
@@ -196,8 +177,6 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     private void saveModifiedLayers() {
-        for (WMSLayer wmsLayer : modifiedLayers) {
-            wmsLayer.grabThread.saveNewCache();
-        }
+            modifiedLayer.grabThread.saveNewCache();
     }
 }

@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.EOFException;
@@ -28,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -86,6 +88,24 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private Action cancelGrab;
 
+    @SuppressWarnings("serial")
+    class ResetOffsetActionMenu extends JosmAction {
+        private WMSLayer wmsLayer;
+        public ResetOffsetActionMenu(WMSLayer wmsLayer) {
+            super(tr("Reset offset"), null, tr("Reset offset (only vector images)"), null, false);
+            this.wmsLayer = wmsLayer;
+        }
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            for (GeorefImage img:wmsLayer.images) {
+                img.deltaEast = 0;
+                img.deltaNorth = 0;
+            }
+            Main.map.mapView.repaint();
+        }
+        
+    }
+    
     public boolean adjustModeEnabled;
 
     public GrabThread grabThread;
@@ -212,14 +232,6 @@ public class WMSLayer extends Layer implements ImageObserver {
                 mid = new EastNorth(mid.east() + dx[currDir]*c, mid.north() + dy[currDir]*c);
                 dividedBbox.add(new EastNorthBound(mid, new EastNorth(mid.east()+c, mid.north()+c)));
             }
-//            // simple algorithm to grab all squares
-//            minEast = minEast - minEast % cSquare;
-//            minNorth = minNorth - minNorth % cSquare;
-//            for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)
-//                for (int xNorth = (int)minNorth; xNorth < lambertMax.north(); xNorth+=cSquare) {
-//                    dividedBbox.add(new EastNorthBound(new EastNorth(xEast, xNorth),
-//                                new EastNorth(xEast + cSquare, xNorth + cSquare)));
-//            }
         }
     }
 
@@ -296,12 +308,15 @@ public class WMSLayer extends Layer implements ImageObserver {
         saveAsPng.setEnabled(isRaster);
         cancelGrab = new MenuActionCancelGrab(this);
         cancelGrab.setEnabled(!isRaster && grabThread.getImagesToGrabSize() > 0);
+        Action resetOffset = new ResetOffsetActionMenu(this);
+        resetOffset.setEnabled(!isRaster && images.size() > 0 && (images.get(0).deltaEast!=0.0 || images.get(0).deltaNorth!=0.0));
         return new Action[] {
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 new MenuActionLoadFromCache(),
                 saveAsPng,
                 cancelGrab,
+                resetOffset, 
                 new LayerListPopup.InfoAction(this),
 
         };
@@ -565,6 +580,24 @@ public class WMSLayer extends Layer implements ImageObserver {
     public EastNorthBound getCommuneBBox() {
         return communeBBox;
     }
+    
+    public EastNorthBound getFirstViewFromCacheBBox() {
+        if (isRaster) {
+            return communeBBox;
+        }
+        double min_x = Double.MAX_VALUE;
+        double max_x = Double.MIN_VALUE;
+        double min_y = Double.MAX_VALUE;
+        double max_y = Double.MIN_VALUE;
+        for (GeorefImage image:images){
+            min_x = image.min.east() < min_x ? image.min.east() : min_x;
+            max_x = image.max.east() > max_x ? image.max.east() : max_x; 
+            min_y = image.min.north() < min_y ? image.min.north() : min_y;
+            max_y = image.max.north() > max_y ? image.max.north() : max_y; 
+        }
+        EastNorthBound maxGrabbedBBox = new EastNorthBound(new EastNorth(min_x, min_y), new EastNorth(max_x, max_y));
+        return maxGrabbedBBox;
+    }
 
     public void setCommuneBBox(EastNorthBound entireCommune) {
         this.communeBBox = entireCommune;
@@ -587,9 +620,14 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public void displace(double dx, double dy) {
-        this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
-        this.rasterMax = new EastNorth(rasterMax.east() + dx, rasterMax.north() + dy);
-        images.get(0).shear(dx, dy);
+        if (isRaster) {
+            this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
+            this.rasterMax = new EastNorth(rasterMax.east() + dx, rasterMax.north() + dy);
+            images.get(0).shear(dx, dy);
+        } else {
+            for (GeorefImage image:images)
+                image.tempShear(dx, dy);
+        }
     }
 
     public void resize(EastNorth rasterCenter, double proportion) {

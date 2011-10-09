@@ -35,7 +35,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
                         if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
-                            Main.map.mapView.zoomTo(wmsLayer.getCommuneBBox().toBounds());
+                            Main.map.mapView.zoomTo(wmsLayer.getFirstViewFromCacheBBox().toBounds());
                             //Main.map.mapView.repaint();
                             return;
                         }

@@ -28,6 +28,9 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     // bbox of the georeferenced image (the nice horizontal and vertical box)
     public EastNorth min;
     public EastNorth max;
+    // offset for vector images temporarily shifted (correcting Cadastre artifacts), in pixels
+    public double deltaEast=0;
+    public double deltaNorth=0;
     // bbox of the georeferenced original image (raster only) (inclined if rotated and before cropping)
     // P[0] is bottom,left then next are clockwise.
     public EastNorth[] orgRaster = new EastNorth[4];
@@ -106,7 +109,9 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         if (image == null || min == null || max == null)
             return;
 
-        Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
+        // apply offsets defined manually when vector images are translated manually (not saved in cache)
+        Point minPt = nc.getPoint(new EastNorth(min.east()+deltaEast, min.north()+deltaNorth));
+        Point maxPt = nc.getPoint(new EastNorth(max.east()+deltaEast, max.north()+deltaNorth));
 
         if (!g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))
             return;
@@ -170,12 +175,12 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         double minMaskNorth = (georefImage.min.north() > this.min.north()) ? georefImage.min.north() : this.min.north();
         double maxMaskNorth = (georefImage.max.north() < this.max.north()) ? georefImage.max.north() : this.max.north();
         if ((maxMaskNorth - minMaskNorth) > 0 && (maxMaskEast - minMaskEast) > 0) {
-            double pixelPerEast = (max.east() - min.east()) / image.getWidth();
-            double pixelPerNorth = (max.north() - min.north()) / image.getHeight();
-            int minXMaskPixel = (int) ((minMaskEast - min.east()) / pixelPerEast);
-            int minYMaskPixel = (int) ((max.north() - maxMaskNorth) / pixelPerNorth);
-            int widthXMaskPixel = Math.abs((int) ((maxMaskEast - minMaskEast) / pixelPerEast));
-            int heightYMaskPixel = Math.abs((int) ((maxMaskNorth - minMaskNorth) / pixelPerNorth));
+            double pxPerEast = (max.east() - min.east()) / image.getWidth();
+            double pxPerNorth = (max.north() - min.north()) / image.getHeight();
+            int minXMaskPixel = (int) ((minMaskEast - min.east()) / pxPerEast);
+            int minYMaskPixel = (int) ((max.north() - maxMaskNorth) / pxPerNorth);
+            int widthXMaskPixel = Math.abs((int) ((maxMaskEast - minMaskEast) / pxPerEast));
+            int heightYMaskPixel = Math.abs((int) ((maxMaskNorth - minMaskNorth) / pxPerNorth));
             Graphics g = image.getGraphics();
             for (int x = minXMaskPixel; x < minXMaskPixel + widthXMaskPixel; x++)
                 for (int y = minYMaskPixel; y < minYMaskPixel + heightYMaskPixel; y++)
@@ -278,7 +283,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
             orgCroppedRaster[i] = new EastNorth(orgCroppedRaster[i].east() + dx, orgCroppedRaster[i].north() + dy);
         }
     }
-
+    
     /**
      * Change this image scale by moving the min,max coordinates around an anchor
      * @param anchor
@@ -363,4 +368,13 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         return false;
     }
 
+    /**
+     * Add a temporary translation (dx, dy) to this image (for vector images only)
+     * @param dx delta added to X image coordinate
+     * @param dy delta added to Y image coordinate
+     */
+    public void tempShear(double dx, double dy) {
+        this.deltaEast+=dx;
+        this.deltaNorth+=dy;
+    }
 }

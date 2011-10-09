@@ -10,12 +10,10 @@ import java.util.*;
 import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.MultipolygonCreate.JoinedPolygon;
-import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.JoinedWay;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Geometry;
@@ -73,6 +71,7 @@ public class CreateMultipolygonAction extends JosmAction {
 		if( newRelation != null ) {
 		    if( chRel != null )
 			chRel.set(newRelation);
+		    getCurrentDataSet().setSelected(newRelation);
 		    return;
 		}
 	    }
@@ -80,6 +79,10 @@ public class CreateMultipolygonAction extends JosmAction {
 		List<Relation> rels = makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays());
 		if( chRel != null )
 		    chRel.set(rels.size() == 1 ? rels.get(0) : null);
+		if( rels.size() == 1 )
+		    getCurrentDataSet().setSelected(rels);
+		else
+		    getCurrentDataSet().clearSelection();
 		return;
 	    }
 	}
@@ -448,6 +451,29 @@ public class CreateMultipolygonAction extends JosmAction {
      * @return list of new relations.
      */
     private List<Relation> makeManySimpleMultipolygons( Collection<Way> selection ) {
+	System.out.println("---------------------------------------");
+	List<TheRing> rings = new ArrayList<TheRing>(selection.size());
+	for( Way w : selection )
+	    rings.add(new TheRing(w));
+	for( int i = 0; i < rings.size()-1; i++ )
+	    for( int j = i+1; j < rings.size(); j++ )
+		rings.get(i).collide(rings.get(j));
+	redistributeSegments(rings);
+	List<Command> commands = new ArrayList<Command>();
+	List<Relation> relations = new ArrayList<Relation>();
+	for( TheRing r : rings ) {
+	    commands.addAll(r.getCommands());
+	    relations.add(r.getRelation());
+	}
+	Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
+	return relations;
+    }
+    
+    /**
+     * Creates ALOT of Multipolygons and pets him gently.
+     * @return list of new relations.
+     */
+    private List<Relation> makeManySimpleMultipolygonsOld( Collection<Way> selection ) {
 	List<Command> commands = new ArrayList<Command>();
 	List<Way> ways = new ArrayList<Way>(selection.size());
 	Map<Way, Way> wayDiff = new HashMap<Way, Way>(selection.size());
@@ -538,7 +564,7 @@ public class CreateMultipolygonAction extends JosmAction {
     /**
      * Appends "append" to "base" so the closed polygon forms.
      */
-    private void closePolygon( List<Node> base, List<Node> append ) {
+    private static void closePolygon( List<Node> base, List<Node> append ) {
 	if( append.get(0).equals(base.get(0)) && append.get(append.size() - 1).equals(base.get(base.size() - 1)) ) {
 	    List<Node> ap2 = new ArrayList<Node>(append);
 	    Collections.reverse(ap2);
@@ -551,7 +577,7 @@ public class CreateMultipolygonAction extends JosmAction {
     /**
      * Checks if a middle point between two nodes is inside a polygon. Useful to check if the way is inside.
      */
-    private boolean segmentInsidePolygon( Node n1, Node n2, List<Node> polygon ) {
+    private static boolean segmentInsidePolygon( Node n1, Node n2, List<Node> polygon ) {
 	EastNorth en1 = n1.getEastNorth();
 	EastNorth en2 = n2.getEastNorth();
 	Node testNode = new Node(new EastNorth((en1.east() + en2.east()) / 2.0, (en1.north() + en2.north()) / 2.0));
@@ -567,6 +593,17 @@ public class CreateMultipolygonAction extends JosmAction {
      * a ChangeCommand is issued.
      */
     private static void collideMultipolygons( Relation r1, Relation r2, List<Command> commands, Map<Way, Way> wayDiff ) {
+    }
+    
+    /**
+     * merges two ways from two multipolygons. The result is several new ways and changed old ones.
+     * But it can also remove one old way — it is returned then.
+     * @param w1
+     * @param w2
+     * @param commands 
+     */
+    private static Way collideWays( Way w1, Way w2, List<Command> commands ) {
+	return null;
     }
 
     /**
@@ -871,5 +908,389 @@ public class CreateMultipolygonAction extends JosmAction {
 	    if( list2.contains(item) )
 		result.add(item);
 	return result;
+    }
+    
+    /**
+     * Tries to arrange segments in order for each ring to have at least one.
+     */
+    public static void redistributeSegments( List<TheRing> rings ) {
+	// todo
+    }
+    
+    public static class TheRing {
+	private Way source;
+	private List<RingSegment> segments;
+	private Relation relation = null;
+
+	public TheRing( Way source ) {
+	    this.source = source;
+	    segments = new ArrayList<RingSegment>(1);
+	    segments.add(new RingSegment(source));
+	}
+	
+	public void collide( TheRing other ) {
+	    System.out.println("Ring 1: " + this);
+	    System.out.println("Ring 2: " + other);
+	    List<Node> intersectionNodes = new ArrayList<Node>();
+	    List<RingSegment> segmentsList1 = new ArrayList<RingSegment>(segments);
+	    List<RingSegment> segmentsList2 = new ArrayList<RingSegment>(other.segments);
+	    for( int i = 0; i < segmentsList1.size(); i++ ) {
+		if( !segmentsList1.get(i).isReference() )
+		for( int j = 0; j < segmentsList2.size(); j++ ) {
+		    // not colliding referencing nodes: they've already collided, and
+		    // there should be no more than two ways passing through two points.
+		    if( !segmentsList1.get(i).isReference() ) {
+			intersectionNodes.clear();
+			boolean colliding = false;
+			List<Node> nodes1 = segmentsList1.get(i).getNodes();
+			List<Node> nodes2 = segmentsList2.get(j).getNodes();
+			for( int ni = 0; ni < nodes2.size(); ni++ ) {
+			    if( nodes1.contains(nodes2.get(ni)) != colliding ) {
+				intersectionNodes.add(nodes2.get(colliding ? ni-1 : ni));
+				colliding = !colliding;
+			    }
+			}
+			if( colliding )
+			    intersectionNodes.add(nodes2.get(nodes2.size()-1));
+			// todo: when an intersection of two rings spans a ring's beginning
+			if( segmentsList1.get(i).isRing() && segmentsList2.get(j).isRing() && intersectionNodes.contains(nodes2.get(0)) && intersectionNodes.contains(nodes2.get(nodes2.size()-1)) ) {
+			    intersectionNodes.remove(0);
+			    intersectionNodes.remove(intersectionNodes.size()-1);
+			    intersectionNodes.add(intersectionNodes.get(0));
+			    intersectionNodes.remove(0);
+			}
+			System.out.print("Intersection nodes for segments " + segmentsList1.get(i) + " and " + segmentsList2.get(j) + ": ");
+			for( Node inode : intersectionNodes )
+			    System.out.print(inode.getUniqueId() + ",");
+			System.out.println();
+			// unclosed ways produce duplicate nodes
+			int ni = 1;
+			while( ni < intersectionNodes.size() ) {
+			    if( intersectionNodes.get(ni-1).equals(intersectionNodes.get(ni)) )
+				intersectionNodes.remove(ni-1);
+			    else
+				ni++;
+			}
+//			boolean thisWayIsReversed = !intersectionNodes.isEmpty() && nodes1.indexOf(intersectionNodes.get(0)) > nodes1.indexOf(intersectionNodes.get(1));
+			// now split both ways at control points and remove duplicate parts
+			ni = 0;
+			while( ni+1 < intersectionNodes.size() ) {
+			    if( !segmentsList1.get(i).isReferencingEqual(segmentsList2.get(j)) ) {
+				System.out.println("Splitting segment 1: " + segmentsList1.get(i));
+				System.out.println("Splitting segment 2: " + segmentsList2.get(j));
+				boolean[] isarc = new boolean[] {
+				    segments.size() == 1 && !segments.get(0).isRing(),
+				    other.segments.size() == 1 && !other.segments.get(0).isRing()
+				};
+				RingSegment segment = splitRingAt(i, intersectionNodes.get(ni), intersectionNodes.get(ni+1));
+				RingSegment otherSegment = other.splitRingAt(j, intersectionNodes.get(ni), intersectionNodes.get(ni+1));
+				if( !isarc[0] && !isarc[1] )
+				    segment.makeReference(otherSegment);
+				else {
+				    // 1. A ring is an arc. It should have only 2 segments after this
+				    // 2. But it has one, so add otherSegment as the second.
+				    // todo: determine which segment!
+				    if( isarc[0] ) {
+					if( other.segments.size() > 2 )
+					    segments.add(new RingSegment(otherSegment));
+					else {
+					    // choose between 2 segments
+					    List<Node> testRing = new ArrayList<Node>(segments.get(0).getNodes());
+					    closePolygon(testRing, other.segments.get(0).getNodes());
+					    int segmentToAdd = segmentInsidePolygon(other.segments.get(1).getNodes().get(0),
+						    other.segments.get(1).getNodes().get(1), testRing) ? 1 : 0;
+					    segments.add(new RingSegment(other.segments.get(segmentToAdd)));
+					}
+				    } else
+					if( segments.size() > 2 )
+					    other.segments.add(new RingSegment(segment));
+					else {
+					    // choose between 2 segments
+					    List<Node> testRing = new ArrayList<Node>(other.segments.get(0).getNodes());
+					    closePolygon(testRing, segments.get(0).getNodes());
+					    int segmentToAdd = segmentInsidePolygon(segments.get(1).getNodes().get(0),
+						    segments.get(1).getNodes().get(1), testRing) ? 1 : 0;
+					    other.segments.add(new RingSegment(segments.get(segmentToAdd)));
+					}
+				}
+			    }
+			    ni += 2;
+			}
+		    }
+		}
+	    }
+	    System.out.println("Resulting ring 1: " + this);
+	    System.out.println("Resulting ring 2: " + other);
+	}
+	
+	/**
+	 * Split the segment in this ring at those nodes.
+	 * @return The segment between nodes.
+	 */
+	private RingSegment splitRingAt( int segmentIndex, Node n1, Node n2 ) {
+	    if( n1.equals(n2) )
+		throw new IllegalArgumentException("Both nodes are equal, id=" + n1.getUniqueId());
+	    RingSegment segment = segments.get(segmentIndex);
+	    boolean isRing = segment.isRing();
+	    System.out.println("Split segment " + segment + " at nodes " + n1.getUniqueId() + " and " + n2.getUniqueId());
+	    boolean reversed = segment.getNodes().indexOf(n2) < segment.getNodes().indexOf(n1);
+	    if( reversed && !isRing ) {
+		// order nodes
+		Node tmp = n1;
+		n1 = n2;
+		n2 = tmp;
+	    }
+	    RingSegment secondPart = isRing ? segment.split(n1, n2) : segment.split(n1);
+	    // if secondPart == null, then n1 == firstNode
+	    RingSegment thirdPart = isRing ? null : secondPart == null ? segment.split(n2) : secondPart.split(n2);
+	    // if secondPart == null, then thirdPart is between n1 and n2
+	    // otherwise, thirdPart is between n2 and lastNode
+	    // if thirdPart == null, then n2 == lastNode
+	    int pos = segmentIndex + 1;
+	    if( secondPart != null )
+		segments.add(pos++, secondPart);
+	    if( thirdPart != null )
+		segments.add(pos++, thirdPart);
+	    for( int i = segmentIndex; i < pos; i++ )
+		System.out.println("Split result "+(i-segmentIndex+1) + ": "+segments.get(i));
+	    RingSegment result = isRing || secondPart == null ? segment : secondPart;
+	    System.out.println("Returning segment " + result);
+	    return result;
+	}
+	
+	/**
+	 * Returns a list of commands to make a new relation and all newly created ways.
+	 * The first way is copied from the source one, ChangeCommand is issued in this case.
+	 */
+	public List<Command> getCommands() {
+	    System.out.println("Making ring " + this);
+	    Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS);
+	    relation = new Relation();
+	    relation.put("type", "multipolygon");
+	    Way sourceCopy = new Way(source);
+	    for( String key : sourceCopy.keySet() ) {
+		if( !linearTags.contains(key) ) {
+		    relation.put(key, sourceCopy.get(key));
+		    sourceCopy.remove(key);
+		}
+	    }
+	    
+	    // todo: copy relations from source to all new ways
+	    
+	    List<Command> commands = new ArrayList<Command>();
+	    boolean foundOwnWay = false;
+	    Way w;
+	    for( RingSegment seg : segments ) {
+		if( seg.isWayConstructed() || seg.isReference() || foundOwnWay ) {
+		    boolean needAdding = !seg.isWayConstructed();
+		    w = seg.constructWay(seg.isReference() ? null : sourceCopy);
+		    if( needAdding )
+			commands.add(new AddCommand(w));
+		} else {
+		    w = source;
+		    if( segments.size() == 1 ) {
+			// one segment means that it is a ring
+			List<Node> segnodes = seg.getNodes();
+			segnodes.add(segnodes.get(0));
+			sourceCopy.setNodes(segnodes);
+		    } else
+			sourceCopy.setNodes(seg.getNodes());
+		    seg.overrideWay(source);
+		    commands.add(new ChangeCommand(source, sourceCopy));
+		    foundOwnWay = true;
+		}
+		relation.addMember(new RelationMember("outer", w));
+	    }
+	    if( !foundOwnWay )
+		commands.add(new DeleteCommand(source));
+	    commands.add(new AddCommand(relation));
+	    return commands;
+	}
+	
+	private List<Node> constructRing() {
+	    List<Node> result = new ArrayList<Node>();
+	    for( RingSegment segment : segments )
+		result.addAll(segment.getNodes());
+	    return result;
+	}
+	
+	/**
+	 * Returns the relation created in {@link #getCommands()}.
+	 */
+	public Relation getRelation() {
+	    return relation;
+	}
+
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder("TheRing@");
+	    sb.append(this.hashCode()).append('[').append("wayId: ").append(source == null ? "null" : source.getUniqueId()).append("; segments: ");
+	    if( segments.isEmpty() )
+		sb.append("empty");
+	    else {
+		sb.append(segments.get(0));
+		for( int i = 1; i < segments.size(); i++ )
+		    sb.append(", ").append(segments.get(i));
+	    }
+	    return sb.append(']').toString();
+	}	
+    }
+    
+    private static class RingSegment {
+	private List<Node> nodes;
+	private RingSegment references;
+	private Way resultingWay = null;
+	private boolean wasTemplateApplied = false;
+	private boolean isRing;
+	
+	private RingSegment() {}
+	
+	public RingSegment( Way w ) {
+	    this(w.getNodes());
+	}
+	
+	public RingSegment( List<Node> nodes ) {
+	    this.nodes = nodes;
+	    isRing = nodes.size() > 1 && nodes.get(0).equals(nodes.get(nodes.size()-1));
+	    if( isRing )
+		nodes.remove(nodes.size()-1);
+	    references = null;
+	}
+	
+	public RingSegment( RingSegment ref ) {
+	    this.nodes = null;
+	    this.references = ref;
+	}
+	
+	/**
+	 * Splits this segment at node n. Retains nodes 0..n and moves
+	 * nodes n..N to a separate segment that is returned.
+	 * @param n node at which to split.
+	 * @return new segment, {@code null} if splitting is unnecessary.
+	 */
+	public RingSegment split( Node n ) {
+	    if( nodes == null )
+		throw new IllegalArgumentException("Cannot split segment: it is a reference");
+	    int pos = nodes.indexOf(n);
+	    if( pos <= 0 || pos >= nodes.size()-1 )
+		return null;
+	    List<Node> newNodes = new ArrayList<Node>(nodes.subList(pos, nodes.size()));
+	    nodes.subList(pos+1, nodes.size()).clear();
+	    return new RingSegment(newNodes);
+	}
+	
+	/**
+	 * Split this segment as a way at two nodes. If one of them is null or at the end,
+	 * split as an arc. Note: order of nodes is important.
+	 * @return A new segment from n2 to n1.
+	 */
+	public RingSegment split( Node n1, Node n2 ) {
+	    if( nodes == null )
+		throw new IllegalArgumentException("Cannot split segment: it is a reference");
+	    if( !isRing ) {
+		if( n1 == null || nodes.get(0).equals(n1) || nodes.get(nodes.size()-1).equals(n1) )
+		    return split(n2);
+		if( n2 == null || nodes.get(0).equals(n2) || nodes.get(nodes.size()-1).equals(n2) )
+		    return split(n1);
+		throw new IllegalArgumentException("Split for two nodes is called for not-ring: " + this);
+	    }
+	    int pos1 = nodes.indexOf(n1);
+	    int pos2 = nodes.indexOf(n2);
+	    if( pos1 == pos2 )
+		return null;
+	    
+	    List<Node> newNodes = new ArrayList<Node>();
+	    if( pos2 > pos1 ) {
+		newNodes.addAll(nodes.subList(pos2, nodes.size()));
+		newNodes.addAll(nodes.subList(0, pos1 + 1));
+		if( pos2+1 < nodes.size() )
+		    nodes.subList(pos2+1, nodes.size()).clear();
+		if( pos1 > 0 )
+		    nodes.subList(0, pos1).clear();
+	    } else {
+		newNodes.addAll(nodes.subList(pos2, pos1+1));
+		nodes.addAll(new ArrayList<Node>(nodes.subList(0, pos2+1)));
+		nodes.subList(0, pos1).clear();
+	    }
+	    isRing = false;
+	    return new RingSegment(newNodes);
+	}
+	
+	public List<Node> getNodes() {
+	    return nodes == null ? references.nodes : nodes;
+	}
+	
+	public boolean isReference() {
+	    return nodes == null;
+	}
+	
+	public boolean isRing() {
+	    return isRing;
+	}
+	
+	public void makeReference( RingSegment segment ) {
+	    this.nodes = null;
+	    this.references = segment;
+	}
+	
+	public void swapReference() {
+	    this.nodes = references.nodes;
+	    references.nodes = null;
+	    references.references = this;
+	    this.references = null;
+	}
+	
+	public boolean isWayConstructed() {
+	    return isReference() ? references.isWayConstructed() : resultingWay != null;
+	}
+	
+	public Way constructWay( Way template ) {
+	    if( isReference() )
+		return references.constructWay(template);
+	    if( resultingWay == null ) {
+		resultingWay = new Way();
+		resultingWay.setNodes(nodes);
+	    }
+	    if( template != null && !wasTemplateApplied ) {
+		resultingWay.setKeys(template.getKeys());
+		wasTemplateApplied = true;
+	    }
+	    return resultingWay;
+	}
+	
+	public void overrideWay( Way source ) {
+	    if( isReference() )
+		references.overrideWay(source);
+	    else {
+		resultingWay = source;
+		wasTemplateApplied = true;
+	    }
+	}
+	
+	/**
+	 * Compares two segments with respect to referencing.
+	 * @return true if ways are equals, or one references another.
+	 */
+	public boolean isReferencingEqual( RingSegment other ) {
+	    return this.equals(other) || (other.isReference() && other.references == this ) || (isReference() && references == other);
+	}
+
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder("RingSegment@");
+	    sb.append(this.hashCode()).append('[');
+	    if( isReference() )
+		sb.append("references ").append(references.hashCode());
+	    else if( nodes.isEmpty() )
+		sb.append("empty");
+	    else {
+		if( isRing )
+		    sb.append("ring:");
+		sb.append(nodes.get(0).getUniqueId());
+		for( int i = 1; i < nodes.size(); i++ )
+		    sb.append(',').append(nodes.get(i).getUniqueId());
+	    }
+	    return sb.append(']').toString();
+	}
     }
 }

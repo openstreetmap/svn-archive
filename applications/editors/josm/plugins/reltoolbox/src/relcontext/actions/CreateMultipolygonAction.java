@@ -458,7 +458,7 @@ public class CreateMultipolygonAction extends JosmAction {
 	for( int i = 0; i < rings.size()-1; i++ )
 	    for( int j = i+1; j < rings.size(); j++ )
 		rings.get(i).collide(rings.get(j));
-	redistributeSegments(rings);
+	TheRing.redistributeSegments(rings);
 	List<Command> commands = new ArrayList<Command>();
 	List<Relation> relations = new ArrayList<Relation>();
 	for( TheRing r : rings ) {
@@ -910,13 +910,6 @@ public class CreateMultipolygonAction extends JosmAction {
 	return result;
     }
     
-    /**
-     * Tries to arrange segments in order for each ring to have at least one.
-     */
-    public static void redistributeSegments( List<TheRing> rings ) {
-	// todo
-    }
-    
     public static class TheRing {
 	private Way source;
 	private List<RingSegment> segments;
@@ -929,11 +922,10 @@ public class CreateMultipolygonAction extends JosmAction {
 	}
 	
 	public void collide( TheRing other ) {
-	    System.out.println("Ring 1: " + this);
-	    System.out.println("Ring 2: " + other);
 	    List<Node> intersectionNodes = new ArrayList<Node>();
 	    List<RingSegment> segmentsList1 = new ArrayList<RingSegment>(segments);
 	    List<RingSegment> segmentsList2 = new ArrayList<RingSegment>(other.segments);
+	    boolean collideNoted = false;
 	    for( int i = 0; i < segmentsList1.size(); i++ ) {
 		if( !segmentsList1.get(i).isReference() )
 		for( int j = 0; j < segmentsList2.size(); j++ ) {
@@ -952,12 +944,16 @@ public class CreateMultipolygonAction extends JosmAction {
 			}
 			if( colliding )
 			    intersectionNodes.add(nodes2.get(nodes2.size()-1));
-			// todo: when an intersection of two rings spans a ring's beginning
+			// when an intersection of two rings spans a ring's beginning
 			if( segmentsList1.get(i).isRing() && segmentsList2.get(j).isRing() && intersectionNodes.contains(nodes2.get(0)) && intersectionNodes.contains(nodes2.get(nodes2.size()-1)) ) {
 			    intersectionNodes.remove(0);
 			    intersectionNodes.remove(intersectionNodes.size()-1);
 			    intersectionNodes.add(intersectionNodes.get(0));
 			    intersectionNodes.remove(0);
+			}
+			if( !collideNoted && !intersectionNodes.isEmpty() ) {
+			    System.out.println("Rings " + this + " and " + other + " collide.");
+			    collideNoted = true;
 			}
 			System.out.print("Intersection nodes for segments " + segmentsList1.get(i) + " and " + segmentsList2.get(j) + ": ");
 			for( Node inode : intersectionNodes )
@@ -976,20 +972,28 @@ public class CreateMultipolygonAction extends JosmAction {
 			ni = 0;
 			while( ni+1 < intersectionNodes.size() ) {
 			    if( !segmentsList1.get(i).isReferencingEqual(segmentsList2.get(j)) ) {
-				System.out.println("Splitting segment 1: " + segmentsList1.get(i));
-				System.out.println("Splitting segment 2: " + segmentsList2.get(j));
 				boolean[] isarc = new boolean[] {
 				    segments.size() == 1 && !segments.get(0).isRing(),
 				    other.segments.size() == 1 && !other.segments.get(0).isRing()
 				};
 				RingSegment segment = splitRingAt(i, intersectionNodes.get(ni), intersectionNodes.get(ni+1));
 				RingSegment otherSegment = other.splitRingAt(j, intersectionNodes.get(ni), intersectionNodes.get(ni+1));
-				if( !isarc[0] && !isarc[1] )
-				    segment.makeReference(otherSegment);
-				else {
+				if( !isarc[0] && !isarc[1] ) {
+				    if( segments.size() > 2 )
+					segment.makeReference(otherSegment);
+				    else {
+					// this ring was a ring, and we're not sure "segment" is a correct segment
+					if( segments.get(0).getNodes().size() == otherSegment.getNodes().size() &&
+						(segments.get(0).getNodes().get(1).equals(otherSegment.getNodes().get(1))) ||
+						(segments.get(0).getNodes().get(segments.get(0).getNodes().size()-2).equals(otherSegment.getNodes().get(1))))
+					    segments.get(0).makeReference(otherSegment);
+					else
+					    segments.get(1).makeReference(otherSegment);
+				    }
+				} else {
 				    // 1. A ring is an arc. It should have only 2 segments after this
 				    // 2. But it has one, so add otherSegment as the second.
-				    // todo: determine which segment!
+				    // 3. determine which segment!
 				    if( isarc[0] ) {
 					if( other.segments.size() > 2 )
 					    segments.add(new RingSegment(otherSegment));
@@ -1019,8 +1023,6 @@ public class CreateMultipolygonAction extends JosmAction {
 		    }
 		}
 	    }
-	    System.out.println("Resulting ring 1: " + this);
-	    System.out.println("Resulting ring 2: " + other);
 	}
 	
 	/**
@@ -1051,11 +1053,60 @@ public class CreateMultipolygonAction extends JosmAction {
 		segments.add(pos++, secondPart);
 	    if( thirdPart != null )
 		segments.add(pos++, thirdPart);
-	    for( int i = segmentIndex; i < pos; i++ )
-		System.out.println("Split result "+(i-segmentIndex+1) + ": "+segments.get(i));
 	    RingSegment result = isRing || secondPart == null ? segment : secondPart;
 	    System.out.println("Returning segment " + result);
 	    return result;
+	}
+
+	/**
+	 * Tries to arrange segments in order for each ring to have at least one.
+	 * Also, sets source way for all rings.
+	 * 
+	 * This method should be called, even if there is just one ring.
+	 */
+	public static void redistributeSegments( List<TheRing> rings ) {
+	    // build segments map
+	    Map<RingSegment, TheRing> segmentMap = new HashMap<RingSegment, TheRing>();
+	    for( TheRing ring : rings )
+		for( RingSegment seg : ring.segments )
+		    if( !seg.isReference())
+			segmentMap.put(seg, ring);
+	    
+	    // rearrange references
+	    for( int i = 0; i < rings.size(); i++) {
+		TheRing ring = rings.get(i);
+		if( ring.countNonReferenceSegments() == 0 ) {
+		    // need to find one non-reference segment
+		    for( RingSegment seg : ring.segments ) {
+			TheRing otherRing = segmentMap.get(seg.references);
+			if( otherRing.countNonReferenceSegments() > 1 ) {
+			    // we could check for >0, but it is prone to deadlocking
+			    seg.swapReference();
+			}
+		    }
+		}
+	    }
+
+	    // initializing source way for each ring
+	    for( TheRing ring : rings )
+		ring.putSourceWayFirst();
+	}
+	
+	private int countNonReferenceSegments() {
+	    int count = 0;
+	    for( RingSegment seg : segments )
+		if( !seg.isReference() )
+		    count++;
+	    return count;
+	}
+	
+	private void putSourceWayFirst() {
+	    for( RingSegment seg : segments ) {
+		if( !seg.isReference() ) {
+		    seg.overrideWay(source);
+		    return;
+		}
+	    }
 	}
 	
 	/**
@@ -1075,19 +1126,27 @@ public class CreateMultipolygonAction extends JosmAction {
 		}
 	    }
 	    
-	    // todo: copy relations from source to all new ways
-	    
+	    // build a map of referencing relations
+	    Map<Relation, Integer> referencingRelations = new HashMap<Relation, Integer>();
+	    List<Command> relationCommands = new ArrayList<Command>();
+	    for( OsmPrimitive p : source.getReferrers() ) {
+		if( p instanceof Relation ) {
+		    Relation rel = new Relation((Relation)p);
+		    relationCommands.add(new ChangeCommand((Relation)p, rel));
+		    for( int i = 0; i < rel.getMembersCount(); i++ )
+			if( rel.getMember(i).getMember().equals(source) )
+			    referencingRelations.put(rel, Integer.valueOf(i));
+		}
+	    }
+
 	    List<Command> commands = new ArrayList<Command>();
 	    boolean foundOwnWay = false;
-	    Way w;
 	    for( RingSegment seg : segments ) {
-		if( seg.isWayConstructed() || seg.isReference() || foundOwnWay ) {
-		    boolean needAdding = !seg.isWayConstructed();
-		    w = seg.constructWay(seg.isReference() ? null : sourceCopy);
-		    if( needAdding )
-			commands.add(new AddCommand(w));
-		} else {
-		    w = source;
+		boolean needAdding = !seg.isWayConstructed();
+		Way w = seg.constructWay(seg.isReference() ? null : sourceCopy);
+		if( needAdding )
+		    commands.add(new AddCommand(w));
+		if( w.equals(source) ) {
 		    if( segments.size() == 1 ) {
 			// one segment means that it is a ring
 			List<Node> segnodes = seg.getNodes();
@@ -1095,23 +1154,21 @@ public class CreateMultipolygonAction extends JosmAction {
 			sourceCopy.setNodes(segnodes);
 		    } else
 			sourceCopy.setNodes(seg.getNodes());
-		    seg.overrideWay(source);
 		    commands.add(new ChangeCommand(source, sourceCopy));
 		    foundOwnWay = true;
+		} else {
+		    for( Relation rel : referencingRelations.keySet() ) {
+			int relIndex = referencingRelations.get(rel);
+			rel.addMember(new RelationMember(rel.getMember(relIndex).getRole(), w));
+		    }
 		}
 		relation.addMember(new RelationMember("outer", w));
 	    }
 	    if( !foundOwnWay )
 		commands.add(new DeleteCommand(source));
+	    commands.addAll(relationCommands);
 	    commands.add(new AddCommand(relation));
 	    return commands;
-	}
-	
-	private List<Node> constructRing() {
-	    List<Node> result = new ArrayList<Node>();
-	    for( RingSegment segment : segments )
-		result.addAll(segment.getNodes());
-	    return result;
 	}
 	
 	/**

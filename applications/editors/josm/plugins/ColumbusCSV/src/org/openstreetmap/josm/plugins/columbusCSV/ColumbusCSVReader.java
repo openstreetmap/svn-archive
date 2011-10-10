@@ -230,8 +230,8 @@ public class ColumbusCSVReader {
 		int rescuedFiles = 0;
 
 		for (int i = first; i < last; i++) {			
-			String voxFile = String.format("vox%05d", i);
-			String nextVoxFile = String.format("vox%05d", i+1);
+			String voxFile = String.format("vox%05d.wav", i);
+			String nextVoxFile = String.format("vox%05d.wav", i+1);
 			if (!voxFiles.containsKey(voxFile)) {
 				System.out.println("Found lost vox file " + voxFile);
 
@@ -370,6 +370,7 @@ public class ColumbusCSVReader {
 		}
 
 		if (!ColumbusCSVUtils.isStringNullOrEmpty(voxFile)) {
+			voxFile = voxFile + ".wav";
 			File file = getVoxFilePath(fileDir, voxFile);
 			if (file != null && file.exists()) {
 				// link vox file
@@ -452,7 +453,8 @@ public class ColumbusCSVReader {
 		String[] fileNameVariants = new String[] {voxFile, voxFile.toLowerCase(), voxFile.toUpperCase()};
 		
 		for (int i = 0; i < fileNameVariants.length; i++) {
-			File file = new File(fileDir + File.separator + fileNameVariants[i] + ".wav");
+			System.out.println("Probing "+ fileNameVariants[i]);
+			File file = new File(fileDir + File.separator + fileNameVariants[i]);
 			if (file.exists()) {
 				return file;
 			}

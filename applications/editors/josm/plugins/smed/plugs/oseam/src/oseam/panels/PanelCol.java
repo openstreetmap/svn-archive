@@ -40,19 +40,42 @@ public class PanelCol extends JPanel {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
 					if (dlg.mark != null) {
-						dlg.mark.setColour(ent, col);
-						if (ent != Ent.LIGHT) {
+						if (ent == Ent.LIGHT) {
+							dlg.mark.setColour(ent, col);
+						} else {
 							if (button == offButton) {
-								stack.remove(stackCol.get(stackIdx));
-								stackCol.remove(stackIdx);
+								if (stackCol.size() != 0) {
+									dlg.mark.subColour(ent, stackIdx);
+									stackCol.get(stackIdx).removeActionListener(alStack);
+									stackColours.remove(stackCol.get(stackIdx));
+									stack.remove(stackCol.get(stackIdx));
+									stackCol.remove(stackIdx);
+									if ((stackCol.size() == stackIdx) && (stackIdx != 0))
+										stackIdx--;
+								}
 							} else if (button == addButton) {
-								stackCol.add(stackIdx, new JRadioButton());
+								if (stackCol.size() != 0) stackIdx++;
+								dlg.mark.addColour(ent, stackIdx, col);
+								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 								stackCol.get(stackIdx).setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 								stack.add(stackCol.get(stackIdx));
+								stackColours.add(stackCol.get(stackIdx));
+								stackCol.get(stackIdx).addActionListener(alStack);
+							} else {
+								dlg.mark.setColour(ent, stackIdx, col);
 							}
-							for (int i = 0; stackCol.size() > i; i++) {
-								stackCol.get(i).setBounds(37, (89 + (i * (60 / stackCol.size()))), 30, (60 / stackCol.size()));
-								stackCol.get(i).setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
+							if (stackCol.size() != 0) {
+								int height = 60 / stackCol.size();
+								for (int i = 0; stackCol.size() > i; i++) {
+									JRadioButton btnI = stackCol.get(i);
+									btnI.setBounds(2, (2 + (i * height)), 30, height);
+									btnI.setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
+									if (stackIdx == i) {
+										btnI.setBorderPainted(true);
+									} else {
+										btnI.setBorderPainted(false);
+									}
+								}
 							}
 						}
 					}
@@ -73,8 +96,9 @@ public class PanelCol extends JPanel {
 				if (button.isSelected()) {
 					stackIdx = i;
 					button.setBorderPainted(true);
-				} else
+				} else {
 					button.setBorderPainted(false);
+				}
 			}
 		}
 	};
@@ -94,16 +118,17 @@ public class PanelCol extends JPanel {
 		this.add(getColButton(blueButton, 0, 112, 34, 16, Messages.getString("Blue"), Col.BLUE), null);
 		this.add(getColButton(violetButton, 0, 128, 34, 16, Messages.getString("Violet"), Col.VIOLET), null);
 		if (ent != Ent.LIGHT) {
-			this.add(getColButton(addButton, 0, 144, 34, 16, Messages.getString("AddColour"), Col.UNKNOWN), null);
-			this.add(getColButton(blackButton, 35, 0, 34, 16, Messages.getString("Black"), Col.BLACK), null);
-			this.add(getColButton(greyButton, 35, 16, 34, 16, Messages.getString("Grey"), Col.GREY), null);
-			this.add(getColButton(brownButton, 35, 32, 34, 16, Messages.getString("Brown"), Col.BROWN), null);
-			this.add(getColButton(magentaButton, 35, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA), null);
-			this.add(getColButton(pinkButton, 35, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
+			this.add(getColButton(addButton, 0, 144, 34, 16, Messages.getString("AddColour"), Col.BLANK), null);
+			this.add(getColButton(blackButton, 37, 0, 34, 16, Messages.getString("Black"), Col.BLACK), null);
+			this.add(getColButton(greyButton, 37, 16, 34, 16, Messages.getString("Grey"), Col.GREY), null);
+			this.add(getColButton(brownButton, 37, 32, 34, 16, Messages.getString("Brown"), Col.BROWN), null);
+			this.add(getColButton(magentaButton, 37, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA), null);
+			this.add(getColButton(pinkButton, 37, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
 
 			stack = new JPanel();
 			stack.setBorder(BorderFactory.createLineBorder(Color.black));
-			stack.setBounds(37, 89, 30, 60);
+			stack.setBounds(38, 87, 34, 64);
+			stack.setLayout(null);
 			this.add(stack);
 			if (dlg.mark != null) {
 				for (int i = 0; dlg.mark.getColour(ent, i) != Col.UNKNOWN; i++) {

@@ -20,7 +20,7 @@ public class PanelMore extends JPanel {
 		dlg = dia;
 		this.setLayout(null);
 		panelPat = new PanelPat(dlg);
-		panelPat.setBounds(new Rectangle(0, 0, 100, 160));
+		panelPat.setBounds(new Rectangle(0, 0, 110, 160));
 		this.add(panelPat, null);
 
 	}

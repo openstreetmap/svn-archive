@@ -256,7 +256,7 @@ public class SeaMark {
 	}
 
 	public enum Col {
-		UNKNOWN, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
+		UNKNOWN, BLANK, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
 	}
 
 	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(Col.class);
@@ -363,6 +363,26 @@ public class SeaMark {
 			break;
 		case LIGHT:
 			lightColour.set(i, col);
+			break;
+		}
+	}
+
+	public void addColour(Ent ent, int i, Col col) {
+		switch (ent) {
+		case BODY:
+		case BUOY:
+		case BEACON:
+		case FLOAT:
+			bodyColour.add(i, col);
+			break;
+		case TOPMARK:
+			topColour.add(i, col);
+			break;
+		case DAYMARK:
+			dayColour.add(i, col);
+			break;
+		case LIGHT:
+			lightColour.add(i, col);
 			break;
 		}
 	}

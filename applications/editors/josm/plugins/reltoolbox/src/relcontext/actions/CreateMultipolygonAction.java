@@ -407,27 +407,14 @@ public class CreateMultipolygonAction extends JosmAction {
 
     private boolean areAllOfThoseRings( Collection<Way> ways ) {
 	List<Way> rings = new ArrayList<Way>();
-	List<Way> otherWays = new ArrayList<Way>();
 	for( Way way : ways ) {
 	    if( way.isClosed() )
 		rings.add(way);
 	    else
-		otherWays.add(way);
+		return false;
 	}
 	if( rings.isEmpty() || ways.size() == 1 )
 	    return false; // todo: for one ring, attach it to neares multipolygons
-
-	// check that every segment touches just one ring
-	for( Way segment : otherWays ) {
-	    boolean found = false;
-	    for( Way ring : rings ) {
-		if( ring.containsNode(segment.firstNode()) && ring.containsNode(segment.lastNode())
-			&& !segmentInsidePolygon(segment.getNode(0), segment.getNode(1), ring.getNodes()) )
-		    found = true;
-	    }
-	    if( !found )
-		return false;
-	}
 
 	// check for non-containment of rings
 	for( int i = 0; i < rings.size() - 1; i++ ) {

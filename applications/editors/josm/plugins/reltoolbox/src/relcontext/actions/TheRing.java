@@ -1,6 +1,7 @@
 package relcontext.actions;
 
 import java.util.*;
+import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -29,135 +30,103 @@ public class TheRing {
     public void collide( TheRing other ) {
 	boolean collideNoted = false;
 	for( int i = 0; i < segments.size(); i++ ) {
-	    if( !segments.get(i).isReference() ) {
+	    RingSegment segment1 = segments.get(i);
+	    if( !segment1.isReference() ) {
 		for( int j = 0; j < other.segments.size(); j++ ) {
-		    if( !other.segments.get(j).isReference() ) {
-			RingSegment seg1 = segments.get(i);
-			RingSegment seg2 = other.segments.get(j);
-			boolean firstSegmentIsNotARing = !seg1.isRing() && segments.size() == 1;
-			if( !seg2.isRing() && other.segments.size() == 1 ) {
-			    if( firstSegmentIsNotARing )
-				break; // not doing two arcs collision
-			    RingSegment tmp = seg1;
-			    seg1 = seg2;
-			    seg2 = tmp;
-			    firstSegmentIsNotARing = true;
-			}
-			if( firstSegmentIsNotARing ) {
-			    if( seg2.getNodes().contains(seg1.getNodes().get(0)) && seg2.getNodes().contains(seg1.getNodes().get(seg1.getNodes().size()-2))) {
-				// segment touches a ring
-			    
-			    }
-			} else {
-			    // both are segments from rings, find intersection
-			}
-			
-			
-			Node[] intersection = getFirstIntersection(segments.get(i), other.segments.get(j));
-			if( intersection.length > 1 ) {
-			    if( !collideNoted ) {
-				System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
-				collideNoted = true;
-			    }
-			    // now split both ways at control points and remove duplicate parts
-			    boolean[] isarc = new boolean[] {
-				segments.size() == 1 && !segments.get(0).isRing(),
-				other.segments.size() == 1 && !other.segments.get(0).isRing()
-			    };
-			    RingSegment segment = splitRingAt(i, intersection[0], intersection[1]);
-			    RingSegment otherSegment = other.splitRingAt(j, intersection[0], intersection[1]);
-			    if( !isarc[0] && !isarc[1] ) {
-				if( segments.size() > 2 && other.segments.size() > 2 )
-				    segment.makeReference(otherSegment);
-				else {
-				    System.out.println("Starting complex procedure. Rings: " + this + " and " + other);
-				    // this ring was a ring, and we're not sure "segment" is a correct segment
-				    // actually, we're not sure always
-				    if( segments.size() == 2 )
-					segment = segments.get(0);
-				    if( other.segments.size() == 2 )
-					otherSegment = other.segments.get(0);
-				    System.out.println("segment="+segment + ", otherSegment=" + otherSegment);
+		    RingSegment segment2 = other.segments.get(j);
+		    if( !segment2.isReference() ) {
+			List<Node> nodes1 = segment1.getNodes();
+			List<Node> nodes2 = segment2.getNodes();
+			boolean isRing1 = segment1.isRing();
+			boolean isRing2 = segment2.isRing();
 
-				    if( areSegmentsEqual(segment, otherSegment) )
-					segment.makeReference(otherSegment);
-				    else if( segments.size() == 2 && areSegmentsEqual(segments.get(1), otherSegment) )
-					segments.get(1).makeReference(otherSegment);
-				    else if( areSegmentsEqual(segment, other.segments.get(1)) )
-					segment.makeReference(other.segments.get(1));
-				    else 
-					segments.get(1).makeReference(other.segments.get(1));
+			int pos = 0;
+			while( pos < nodes1.size() && !nodes2.contains(nodes1.get(pos)) )
+			    pos++;
+			boolean collideFound = pos == nodes1.size();
+			if( pos == 0 && isRing1 ) {
+			    // rewind a bit
+			    pos = nodes1.size() - 1;
+			    while( pos > 0 && nodes2.contains(nodes1.get(pos)) ) pos--;
+			    if( pos == 0 ) {
+				JOptionPane.showMessageDialog(Main.parent, "Two rings are equal, and this must not be.", "Multipolygon from rings", JOptionPane.ERROR_MESSAGE);
+				return;
+			    }
+			    pos = pos == nodes1.size() ? 0 : pos + 1;
+			}
+			System.out.println("Comparing " + segment1 + " and " + segment2);
+			int firstPos = isRing1 ? pos : nodes1.size();
+			while( !collideFound ) {
+			    System.out.println("pos="+pos);
+			    int start1 = pos;
+			    int start2 = nodes2.indexOf(nodes1.get(start1));
+			    int last1 = incrementBy(start1, 1, nodes1.size(), isRing1);
+			    int last2 = start2;
+			    int increment2 = 0;
+			    if( last1 >= 0 ) {
+				last2 = incrementBy(start2, -1, nodes2.size(), isRing2);
+				if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
+				    increment2 = -1;
+				else {
+				    last2 = incrementBy(start2, 1, nodes2.size(), isRing2);
+				    if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
+					increment2 = 1;
 				}
+			    }
+			    System.out.println("last1="+last1+" last2="+last2+" increment2="+increment2);
+			    if( increment2 != 0 ) {
+				if( !collideNoted ) {
+				    System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
+				    collideNoted = true;
+				}
+				// find the first nodes
+				boolean reachedEnd = false;
+				while( !reachedEnd ) {
+				    int newLast1 = incrementBy(last1, 1, nodes1.size(), isRing1);
+				    int newLast2 = incrementBy(last2, increment2, nodes2.size(), isRing2);
+				    if( newLast1 < 0 || newLast2 < 0 || !nodes1.get(newLast1).equals(nodes2.get(newLast2)) )
+					reachedEnd = true;
+				    else {
+					last1 = newLast1;
+					last2 = newLast2;
+				    }
+				}
+				System.out.println("last1=" + last1 + " last2=" + last2);
+				if( increment2 < 0 ) {
+				    int tmp = start2;
+				    start2 = last2;
+				    last2 = tmp;
+				}
+				RingSegment segment = splitRingAt(i, nodes1.get(start1), nodes1.get(last1));
+				RingSegment otherSegment = other.splitRingAt(j, nodes2.get(start2), nodes2.get(last2));
+				if( !areSegmentsEqual(segment, otherSegment) )
+				    throw new IllegalArgumentException("Error: algorithm gave incorrect segments: " + segment + " and " + otherSegment);
+				segment.makeReference(otherSegment);
+				collideFound = true;
 			    } else {
-				// 1. A ring is an arc. It should have only 2 segments after this
-				// 2. But it has one, so add otherSegment as the second.
-				// 3. determine which segment!
-				if( isarc[0] ) {
-				    if( other.segments.size() > 2 )
-					segments.add(new RingSegment(otherSegment));
-				    else {
-					// choose between 2 segments
-					int segmentToAdd = whichSegmentIsCloser(segments.get(0), other.segments.get(0), other.segments.get(1));
-					segments.add(new RingSegment(other.segments.get(segmentToAdd)));
-				    }
-				} else {
-				    if( segments.size() > 2 )
-					other.segments.add(new RingSegment(segment));
-				    else {
-					// choose between 2 segments
-					int segmentToAdd = whichSegmentIsCloser(other.segments.get(0), segments.get(0), segments.get(1));
-					other.segments.add(new RingSegment(segments.get(segmentToAdd)));
-				    }
-				}
+				pos = last1;
+				while( pos != firstPos && pos >= 0 && !nodes2.contains(nodes1.get(pos)) )
+				    pos = incrementBy(pos, 1, nodes1.size(), isRing1);
+				if( pos < 0 || !nodes2.contains(nodes1.get(pos)) )
+				    collideFound = true;
 			    }
 			}
 		    }
-		    if( segments.get(i).isReference() )
+		    if( segment1.isReference() )
 			break;
 		}
 	    }
 	}
     }
     
-    private Node[] getFirstIntersection( RingSegment seg1, RingSegment seg2 ) {
-	List<Node> intersectionNodes = new ArrayList<Node>();
-	boolean colliding = false;
-	List<Node> nodes1 = seg1.getNodes();
-	List<Node> nodes2 = seg2.getNodes();
-	for( int ni = 0; ni < nodes2.size(); ni++ ) {
-	    if( nodes1.contains(nodes2.get(ni)) != colliding ) {
-		intersectionNodes.add(nodes2.get(colliding ? ni - 1 : ni));
-		colliding = !colliding;
-	    }
-	}
-	if( colliding )
-	    intersectionNodes.add(nodes2.get(nodes2.size() - 1));
-	// when an intersection of two rings spans a ring's beginning
-	if( seg1.isRing() && seg2.isRing() && intersectionNodes.contains(nodes2.get(0)) && intersectionNodes.contains(nodes2.get(nodes2.size() - 1)) ) {
-	    intersectionNodes.remove(0);
-	    intersectionNodes.remove(intersectionNodes.size() - 1);
-	    intersectionNodes.add(intersectionNodes.get(0));
-	    intersectionNodes.remove(0);
-	}
-	System.out.print("Intersection nodes for segments " + seg1 + " and " + seg2 + ": ");
-	for( Node inode : intersectionNodes )
-	    System.out.print(inode.getUniqueId() + ",");
-	System.out.println();
-	// unclosed ways produce duplicate nodes
-	int ni = 1;
-	while( ni < intersectionNodes.size() ) {
-	    if( intersectionNodes.get(ni - 1).equals(intersectionNodes.get(ni)) )
-		intersectionNodes.remove(ni - 1);
-	    else
-		ni++;
-	}
-	return intersectionNodes.toArray(new Node[2]);
-    }
-    
-    private int whichSegmentIsCloser( RingSegment base, RingSegment test0, RingSegment test1 ) {
-	List<Node> testRing = new ArrayList<Node>(base.getNodes());
-	closePolygon(testRing, test1.getNodes());
-	return segmentInsidePolygon(test1.getNodes().get(0), test1.getNodes().get(1), testRing) ? 1 : 0;
+    private int incrementBy( int value, int increment, int limit1, boolean isRing ) {
+	int result = value + increment;
+	if( result < 0 )
+	    return isRing ? result + limit1 : -1;
+	else if( result >= limit1 )
+	    return isRing ? result - limit1 : -1;
+	else
+	    return result;
     }
     
     private boolean areSegmentsEqual( RingSegment seg1, RingSegment seg2 ) {
@@ -363,50 +332,6 @@ public class TheRing {
 	return Geometry.nodeInsidePolygon(testNode, polygon);
     }
     
-    /**
-     * Copies segment from {@code ring} to close a multipolygon containing {@code segment}.
-     * @param segment Unclosed segment.
-     * @param ring Closed ring.
-     * @return Missing way.
-     */
-    private Way makeIntersectionLine( Way segment, Way ring ) {
-	List<Node> nodes = new ArrayList<Node>(ring.getNodes());
-	nodes.remove(nodes.size() - 1);
-	int index1 = nodes.indexOf(segment.firstNode());
-	int index2 = nodes.indexOf(segment.lastNode());
-	if( index1 == index2 || index1 < 0 || index2 < 0 )
-	    return null;
-
-	// split ring
-	List<List<Node>> chunks = new ArrayList<List<Node>>(2);
-	chunks.add(new ArrayList<Node>());
-	chunks.add(new ArrayList<Node>());
-	int chunk = 0, i = index1;
-	boolean madeCircle = false;
-	while( i != index1 || !madeCircle ) {
-	    chunks.get(chunk).add(nodes.get(i));
-	    if( i == index2 ) {
-		chunk = 1 - chunk;
-		chunks.get(chunk).add(nodes.get(i));
-	    }
-	    if( ++i >= nodes.size() )
-		i = 0;
-	    madeCircle = true;
-	}
-	chunks.get(chunk).add(nodes.get(i));
-
-	// check which segment to add
-	List<Node> testRing = new ArrayList<Node>(segment.getNodes());
-	closePolygon(testRing, chunks.get(0));
-	chunk = segmentInsidePolygon(chunks.get(1).get(0), chunks.get(1).get(1), testRing) ? 1 : 0;
-
-	// create way
-	Way w = new Way();
-	w.setKeys(segment.getKeys());
-	w.setNodes(chunks.get(chunk));
-	return w;
-    }
-
     private static class RingSegment {
 	private List<Node> nodes;
 	private RingSegment references;

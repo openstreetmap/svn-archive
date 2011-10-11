@@ -139,16 +139,23 @@ public class CacheControl implements Runnable {
 
     public boolean loadCache(File file, int currentLambertZone) {
         boolean successfulRead = false;
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
         try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            fis = new FileInputStream(file);
+            ois = new ObjectInputStream(fis);
             successfulRead = wmsLayer.read(ois, currentLambertZone);
-            ois.close();
-            fis.close();
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
             JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
+        } finally {
+            try {
+                ois.close();
+                fis.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (successfulRead && wmsLayer.isRaster()) {
             // serialized raster bufferedImage hangs-up on Java6. Recreate them here

@@ -35,7 +35,7 @@ public class CadastreGrabber {
                 imageModified = new RasterImageModifier(img);
             else
                 imageModified = new VectorImageModifier(img, false);
-            return new GeorefImage(imageModified.bufferedImage, lambertMin, lambertMax);
+            return new GeorefImage(imageModified.bufferedImage, lambertMin, lambertMax, wmsLayer);
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }

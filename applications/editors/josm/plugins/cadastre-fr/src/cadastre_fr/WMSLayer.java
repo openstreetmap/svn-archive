@@ -84,23 +84,23 @@ public class WMSLayer extends Layer implements ImageObserver {
     private EastNorth rasterMax;
     private double rasterRatio;
 
+    // offset for vector images temporarily shifted (correcting Cadastre artifacts), in pixels
+    public double deltaEast=0;
+    public double deltaNorth=0;
+
     private Action saveAsPng;
 
     private Action cancelGrab;
 
     @SuppressWarnings("serial")
     class ResetOffsetActionMenu extends JosmAction {
-        private WMSLayer wmsLayer;
-        public ResetOffsetActionMenu(WMSLayer wmsLayer) {
+        public ResetOffsetActionMenu() {
             super(tr("Reset offset"), null, tr("Reset offset (only vector images)"), null, false);
-            this.wmsLayer = wmsLayer;
         }
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            for (GeorefImage img:wmsLayer.images) {
-                img.deltaEast = 0;
-                img.deltaNorth = 0;
-            }
+            deltaEast = 0;
+            deltaNorth = 0;
             Main.map.mapView.repaint();
         }
         
@@ -179,8 +179,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private void divideBbox(Bounds b, int factor) {
         EastNorth lambertMin = Main.getProjection().latlon2eastNorth(b.getMin());
         EastNorth lambertMax = Main.getProjection().latlon2eastNorth(b.getMax());
-        double minEast = lambertMin.east();
-        double minNorth = lambertMin.north();
+        double minEast = lambertMin.east()+deltaEast;
+        double minNorth = lambertMin.north()+deltaNorth;
         double dEast = (lambertMax.east() - minEast) / factor;
         double dNorth = (lambertMax.north() - minNorth) / factor;
         dividedBbox.clear();
@@ -308,8 +308,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         saveAsPng.setEnabled(isRaster);
         cancelGrab = new MenuActionCancelGrab(this);
         cancelGrab.setEnabled(!isRaster && grabThread.getImagesToGrabSize() > 0);
-        Action resetOffset = new ResetOffsetActionMenu(this);
-        resetOffset.setEnabled(!isRaster && images.size() > 0 && (images.get(0).deltaEast!=0.0 || images.get(0).deltaNorth!=0.0));
+        Action resetOffset = new ResetOffsetActionMenu();
+        resetOffset.setEnabled(!isRaster && images.size() > 0 && (deltaEast!=0.0 || deltaNorth!=0.0));
         return new Action[] {
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
@@ -337,7 +337,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         GeorefImage georefImage =
             new GeorefImage(null,
             Main.getProjection().latlon2eastNorth(bounds.getMin()),
-            Main.getProjection().latlon2eastNorth(bounds.getMax()));
+            Main.getProjection().latlon2eastNorth(bounds.getMax()), this);
         for (GeorefImage img : images) {
             if (img.overlap(georefImage))
                 return true;
@@ -508,6 +508,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                                 newImage.withdraw(img);
                         }
                     }
+                    newImage.wmsLayer = this;
                     this.images.add(newImage);
                 }
             } catch (EOFException ex) {
@@ -549,7 +550,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
             synchronized(this) {
                 images.clear();
-                images.add(new GeorefImage(new_img, min, max));
+                images.add(new GeorefImage(new_img, min, max, this));
             }
         }
     }
@@ -625,8 +626,8 @@ public class WMSLayer extends Layer implements ImageObserver {
             this.rasterMax = new EastNorth(rasterMax.east() + dx, rasterMax.north() + dy);
             images.get(0).shear(dx, dy);
         } else {
-            for (GeorefImage image:images)
-                image.tempShear(dx, dy);
+            deltaEast+=dx;
+            deltaNorth+=dy;
         }
     }
 

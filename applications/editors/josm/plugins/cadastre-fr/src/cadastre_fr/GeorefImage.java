@@ -28,9 +28,6 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     // bbox of the georeferenced image (the nice horizontal and vertical box)
     public EastNorth min;
     public EastNorth max;
-    // offset for vector images temporarily shifted (correcting Cadastre artifacts), in pixels
-    public double deltaEast=0;
-    public double deltaNorth=0;
     // bbox of the georeferenced original image (raster only) (inclined if rotated and before cropping)
     // P[0] is bottom,left then next are clockwise.
     public EastNorth[] orgRaster = new EastNorth[4];
@@ -42,11 +39,13 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     public int imageOriginalWidth = 0;
 
     public BufferedImage image;
+    public WMSLayer wmsLayer;
 
     private double pixelPerEast;
     private double pixelPerNorth;
+    
 
-    public GeorefImage(BufferedImage img, EastNorth min, EastNorth max) {
+    public GeorefImage(BufferedImage img, EastNorth min, EastNorth max, WMSLayer wmsLayer) {
         image = img;
  
         this.min = min;
@@ -62,6 +61,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         // img can be null for a hack used in overlapping detection
         this.imageOriginalHeight = (img == null ? 1 : img.getHeight());
         this.imageOriginalWidth = (img == null ? 1 : img.getWidth());
+        this.wmsLayer = wmsLayer;
         updatePixelPer();
     }
 
@@ -110,8 +110,13 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
             return;
 
         // apply offsets defined manually when vector images are translated manually (not saved in cache)
-        Point minPt = nc.getPoint(new EastNorth(min.east()+deltaEast, min.north()+deltaNorth));
-        Point maxPt = nc.getPoint(new EastNorth(max.east()+deltaEast, max.north()+deltaNorth));
+        double dx=0, dy=0;
+        if (wmsLayer!=null) {
+            dx = wmsLayer.deltaEast;
+            dy = wmsLayer.deltaNorth;
+        }
+        Point minPt = nc.getPoint(new EastNorth(min.east()+dx, min.north()+dy));
+        Point maxPt = nc.getPoint(new EastNorth(max.east()+dx, max.north()+dy));
 
         if (!g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))
             return;
@@ -126,7 +131,8 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
             } else {
                 Point[] croppedPoint = new Point[5];
                 for (int i=0; i<4; i++)
-                    croppedPoint[i] = nc.getPoint(orgCroppedRaster[i]);
+                    croppedPoint[i] = nc.getPoint(
+                            new EastNorth(orgCroppedRaster[i].east()+dx, orgCroppedRaster[i].north()+dy));
                 croppedPoint[4] = croppedPoint[0];
                 for (int i=0; i<4; i++) {
                     g.setColor(Color.green);
@@ -368,13 +374,4 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         return false;
     }
 
-    /**
-     * Add a temporary translation (dx, dy) to this image (for vector images only)
-     * @param dx delta added to X image coordinate
-     * @param dy delta added to Y image coordinate
-     */
-    public void tempShear(double dx, double dy) {
-        this.deltaEast+=dx;
-        this.deltaNorth+=dy;
-    }
 }

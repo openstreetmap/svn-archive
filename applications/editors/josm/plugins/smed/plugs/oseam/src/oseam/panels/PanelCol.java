@@ -45,10 +45,11 @@ public class PanelCol extends JPanel {
 						} else {
 							if (button == offButton) {
 								if (stackCol.size() != 0) {
+									JRadioButton btnI = stackCol.get(stackIdx);
 									dlg.mark.subColour(ent, stackIdx);
-									stackCol.get(stackIdx).removeActionListener(alStack);
-									stackColours.remove(stackCol.get(stackIdx));
-									stack.remove(stackCol.get(stackIdx));
+									btnI.removeActionListener(alStack);
+									stackColours.remove(btnI);
+									stack.remove(btnI);
 									stackCol.remove(stackIdx);
 									if ((stackCol.size() == stackIdx) && (stackIdx != 0))
 										stackIdx--;
@@ -57,10 +58,11 @@ public class PanelCol extends JPanel {
 								if (stackCol.size() != 0) stackIdx++;
 								dlg.mark.addColour(ent, stackIdx, col);
 								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
-								stackCol.get(stackIdx).setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-								stack.add(stackCol.get(stackIdx));
-								stackColours.add(stackCol.get(stackIdx));
-								stackCol.get(stackIdx).addActionListener(alStack);
+								JRadioButton btnI = stackCol.get(stackIdx);
+								btnI.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+								stack.add(btnI);
+								stackColours.add(btnI);
+								btnI.addActionListener(alStack);
 							} else {
 								dlg.mark.setColour(ent, stackIdx, col);
 							}

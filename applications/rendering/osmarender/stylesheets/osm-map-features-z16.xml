@@ -1576,7 +1576,15 @@
 			<area class="building-block no-bezier"/>
 		</rule>
 		<rule e="node" k="building" v="*">
-			<symbol ref="building" position="center"/>
+			<rule e="node" k="building" v="entrance">
+				<symbol ref="entrance" position="center"/>
+			</rule>
+			<else>
+				<symbol ref="building" position="center"/>
+			</else>
+		</rule>
+		<rule e="node" k="entrance" v="*">
+			<symbol ref="entrance" position="center"/>
 		</rule>
 		
 		<!-- Linear cores -->

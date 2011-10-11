@@ -747,7 +747,10 @@
 			<area class="building-block no-bezier"/>
 		</rule>
 		<rule e="node" k="building" v="*">
-			<symbol ref="building" position="center" transform="scale(0.5)"/>
+			<rule e="node" k="building" v="entrance"></rule>
+			<else>
+				<symbol ref="building" position="center" transform="scale(0.5)"/>
+			</else>
 		</rule>
 		
 		<!-- Linear cores -->

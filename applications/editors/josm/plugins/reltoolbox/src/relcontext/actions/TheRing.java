@@ -25,47 +25,36 @@ public class TheRing {
 	segments = new ArrayList<RingSegment>(1);
 	segments.add(new RingSegment(source));
     }
-
+    
     public void collide( TheRing other ) {
 	boolean collideNoted = false;
 	for( int i = 0; i < segments.size(); i++ ) {
 	    if( !segments.get(i).isReference() ) {
 		for( int j = 0; j < other.segments.size(); j++ ) {
-		    // not colliding referencing nodes: they've already collided, and
-		    // there should be no more than two ways passing through two points.
 		    if( !other.segments.get(j).isReference() ) {
-			List<Node> intersectionNodes = new ArrayList<Node>();
-			boolean colliding = false;
-			List<Node> nodes1 = segments.get(i).getNodes();
-			List<Node> nodes2 = other.segments.get(j).getNodes();
-			for( int ni = 0; ni < nodes2.size(); ni++ ) {
-			    if( nodes1.contains(nodes2.get(ni)) != colliding ) {
-				intersectionNodes.add(nodes2.get(colliding ? ni - 1 : ni));
-				colliding = !colliding;
+			RingSegment seg1 = segments.get(i);
+			RingSegment seg2 = other.segments.get(j);
+			boolean firstSegmentIsNotARing = !seg1.isRing() && segments.size() == 1;
+			if( !seg2.isRing() && other.segments.size() == 1 ) {
+			    if( firstSegmentIsNotARing )
+				break; // not doing two arcs collision
+			    RingSegment tmp = seg1;
+			    seg1 = seg2;
+			    seg2 = tmp;
+			    firstSegmentIsNotARing = true;
+			}
+			if( firstSegmentIsNotARing ) {
+			    if( seg2.getNodes().contains(seg1.getNodes().get(0)) && seg2.getNodes().contains(seg1.getNodes().get(seg1.getNodes().size()-2))) {
+				// segment touches a ring
+			    
 			    }
+			} else {
+			    // both are segments from rings, find intersection
 			}
-			if( colliding )
-			    intersectionNodes.add(nodes2.get(nodes2.size() - 1));
-			// when an intersection of two rings spans a ring's beginning
-			if( segments.get(i).isRing() && other.segments.get(j).isRing() && intersectionNodes.contains(nodes2.get(0)) && intersectionNodes.contains(nodes2.get(nodes2.size() - 1)) ) {
-			    intersectionNodes.remove(0);
-			    intersectionNodes.remove(intersectionNodes.size() - 1);
-			    intersectionNodes.add(intersectionNodes.get(0));
-			    intersectionNodes.remove(0);
-			}
-			System.out.print("Intersection nodes for segments " + segments.get(i) + " and " + other.segments.get(j) + ": ");
-			for( Node inode : intersectionNodes )
-			    System.out.print(inode.getUniqueId() + ",");
-			System.out.println();
-			// unclosed ways produce duplicate nodes
-			int ni = 1;
-			while( ni < intersectionNodes.size() ) {
-			    if( intersectionNodes.get(ni - 1).equals(intersectionNodes.get(ni)) )
-				intersectionNodes.remove(ni - 1);
-			    else
-				ni++;
-			}
-			if( intersectionNodes.size() > 1 ) {
+			
+			
+			Node[] intersection = getFirstIntersection(segments.get(i), other.segments.get(j));
+			if( intersection.length > 1 ) {
 			    if( !collideNoted ) {
 				System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
 				collideNoted = true;
@@ -75,8 +64,8 @@ public class TheRing {
 				segments.size() == 1 && !segments.get(0).isRing(),
 				other.segments.size() == 1 && !other.segments.get(0).isRing()
 			    };
-			    RingSegment segment = splitRingAt(i, intersectionNodes.get(0), intersectionNodes.get(1));
-			    RingSegment otherSegment = other.splitRingAt(j, intersectionNodes.get(0), intersectionNodes.get(1));
+			    RingSegment segment = splitRingAt(i, intersection[0], intersection[1]);
+			    RingSegment otherSegment = other.splitRingAt(j, intersection[0], intersection[1]);
 			    if( !isarc[0] && !isarc[1] ) {
 				if( segments.size() > 2 && other.segments.size() > 2 )
 				    segment.makeReference(otherSegment);
@@ -123,11 +112,46 @@ public class TheRing {
 			    }
 			}
 		    }
+		    if( segments.get(i).isReference() )
+			break;
 		}
-		if( segments.get(i).isReference() )
-		    break;
 	    }
 	}
+    }
+    
+    private Node[] getFirstIntersection( RingSegment seg1, RingSegment seg2 ) {
+	List<Node> intersectionNodes = new ArrayList<Node>();
+	boolean colliding = false;
+	List<Node> nodes1 = seg1.getNodes();
+	List<Node> nodes2 = seg2.getNodes();
+	for( int ni = 0; ni < nodes2.size(); ni++ ) {
+	    if( nodes1.contains(nodes2.get(ni)) != colliding ) {
+		intersectionNodes.add(nodes2.get(colliding ? ni - 1 : ni));
+		colliding = !colliding;
+	    }
+	}
+	if( colliding )
+	    intersectionNodes.add(nodes2.get(nodes2.size() - 1));
+	// when an intersection of two rings spans a ring's beginning
+	if( seg1.isRing() && seg2.isRing() && intersectionNodes.contains(nodes2.get(0)) && intersectionNodes.contains(nodes2.get(nodes2.size() - 1)) ) {
+	    intersectionNodes.remove(0);
+	    intersectionNodes.remove(intersectionNodes.size() - 1);
+	    intersectionNodes.add(intersectionNodes.get(0));
+	    intersectionNodes.remove(0);
+	}
+	System.out.print("Intersection nodes for segments " + seg1 + " and " + seg2 + ": ");
+	for( Node inode : intersectionNodes )
+	    System.out.print(inode.getUniqueId() + ",");
+	System.out.println();
+	// unclosed ways produce duplicate nodes
+	int ni = 1;
+	while( ni < intersectionNodes.size() ) {
+	    if( intersectionNodes.get(ni - 1).equals(intersectionNodes.get(ni)) )
+		intersectionNodes.remove(ni - 1);
+	    else
+		ni++;
+	}
+	return intersectionNodes.toArray(new Node[2]);
     }
     
     private int whichSegmentIsCloser( RingSegment base, RingSegment test0, RingSegment test1 ) {

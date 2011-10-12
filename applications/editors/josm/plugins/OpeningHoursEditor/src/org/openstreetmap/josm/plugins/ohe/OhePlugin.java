@@ -249,8 +249,12 @@ public class OhePlugin extends Plugin {
                 newButton.setSelected(true);
             }
 
+            // load the preference for the clocksystem (12h/24h)
+            ClockSystem clockSystem = ClockSystem.valueOf(Main.pref.get("ohe.clocksystem",
+                    ClockSystem.getClockSystem(Locale.getDefault()).toString()));
+
             JCheckBox useTwelveHourClock = new JCheckBox(tr("Display clock in 12h mode."),
-                    ClockSystem.getClockSystem(Locale.getDefault()) == ClockSystem.TWELVE_HOURS);
+                    clockSystem == ClockSystem.TWELVE_HOURS);
 
             JPanel dlgPanel = new JPanel(new GridBagLayout());
             dlgPanel.add(editButton, GBC.std().anchor(GBC.WEST));
@@ -279,6 +283,10 @@ public class OhePlugin extends Plugin {
                 }
             if (keyToEdit == null)
                 return;
+
+            // save the value for the clocksystem (12h/24h)
+            Main.pref.put("ohe.clocksystem", (useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS
+                    : ClockSystem.TWENTYFOUR_HOURS).toString());
 
             OheDialogPanel panel = new OheDialogPanel(OhePlugin.this, keyToEdit, valuesToEdit,
                     useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS : ClockSystem.TWENTYFOUR_HOURS);

@@ -233,6 +233,9 @@ public class TimeRect extends JPanel implements MouseListener,
     @Override
     public void mouseReleased(MouseEvent evt) {
         transformType = -1;
+        if (evt.isPopupTrigger()) {
+            showMenu(evt);
+        }
     }
 
     @Override

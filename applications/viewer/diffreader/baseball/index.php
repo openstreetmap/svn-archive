@@ -3,7 +3,7 @@ include('header.php.inc');
 ?>
 <center>
 
-<h3 class="tablelabel">Edits<!-- so far-->:</h3>
+<h3 class="tablelabel">Edits so far:</h3>
 
 <table border="0" id="list">
 <tr>

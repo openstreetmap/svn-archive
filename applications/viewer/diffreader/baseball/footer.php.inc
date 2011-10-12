@@ -1,5 +1,5 @@
 
-<P>Last update time: <?php print $lastUpdate; ?></p>
+<P>Lasted update time: <?php print $lastUpdate; ?></p>
 
 <P>Have you added your local baseball fields yet? <a href="http://wiki.openstreetmap.org/wiki/Big baseball project 2011" title="Details on the OpenStreetMap wiki">Find out more</a></p>
 

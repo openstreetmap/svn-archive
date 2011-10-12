@@ -7,6 +7,7 @@ import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.Geometry;
+import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 
 /**
  * One ring that contains segments forming an outer way of multipolygon.
@@ -27,6 +28,50 @@ public class TheRing {
 	segments.add(new RingSegment(source));
     }
     
+    public static boolean areAllOfThoseRings( Collection<Way> ways ) {
+	List<Way> rings = new ArrayList<Way>();
+	for( Way way : ways ) {
+	    if( way.isClosed() )
+		rings.add(way);
+	    else
+		return false;
+	}
+	if( rings.isEmpty() || ways.size() == 1 )
+	    return false;
+
+	// check for non-containment of rings
+	for( int i = 0; i < rings.size() - 1; i++ ) {
+	    for( int j = i + 1; j < rings.size(); j++ ) {
+		PolygonIntersection intersection = Geometry.polygonIntersection(rings.get(i).getNodes(), rings.get(j).getNodes());
+		if( intersection == PolygonIntersection.FIRST_INSIDE_SECOND || intersection == PolygonIntersection.SECOND_INSIDE_FIRST )
+		    return false;
+	    }
+	}
+
+	return true;
+    }
+
+    /**
+     * Creates ALOT of Multipolygons and pets him gently.
+     * @return list of new relations.
+     */
+    public static List<Relation> makeManySimpleMultipolygons( Collection<Way> selection, List<Command> commands ) {
+	System.out.println("---------------------------------------");
+	List<TheRing> rings = new ArrayList<TheRing>(selection.size());
+	for( Way w : selection )
+	    rings.add(new TheRing(w));
+	for( int i = 0; i < rings.size() - 1; i++ )
+	    for( int j = i + 1; j < rings.size(); j++ )
+		rings.get(i).collide(rings.get(j));
+	redistributeSegments(rings);
+	List<Relation> relations = new ArrayList<Relation>();
+	for( TheRing r : rings ) {
+	    commands.addAll(r.getCommands());
+	    relations.add(r.getRelation());
+	}
+	return relations;
+    }
+
     public void collide( TheRing other ) {
 	boolean collideNoted = false;
 	for( int i = 0; i < segments.size(); i++ ) {

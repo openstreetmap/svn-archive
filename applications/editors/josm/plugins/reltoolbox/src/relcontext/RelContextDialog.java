@@ -515,6 +515,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             addMenuItem("boundaryways", tr("Add tags boundary and admin_level to boundary relation ways"));
             addMenuItem("tags", tr("Move area tags from contour to relation"));
             addMenuItem("alltags", tr("When moving tags, consider even non-repeating ones"));
+            addMenuItem("allowsplit", tr("Allow splitting of ways in neighbouring multipolygons"));
         }
 
         protected final JCheckBoxMenuItem addMenuItem( String property, String title ) {

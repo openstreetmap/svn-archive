@@ -11,12 +11,8 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Geometry;
-import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 import org.openstreetmap.josm.tools.Shortcut;
 import relcontext.ChosenRelation;
 
@@ -54,6 +50,8 @@ public class CreateMultipolygonAction extends JosmAction {
 	    return false;
 	else if( property.equals("single") )
 	    return true;
+	else if( property.equals("allowsplit") )
+	    return false;
 	throw new IllegalArgumentException(property);
     }
 
@@ -65,17 +63,17 @@ public class CreateMultipolygonAction extends JosmAction {
 	boolean isBoundary = getPref("boundary");
 	Collection<Way> selectedWays = getCurrentDataSet().getSelectedWays();
 	if( !isBoundary && getPref("tags") ) {
-	    if( selectedWays.size() == 1 && !selectedWays.iterator().next().isClosed() ) {
-		Relation newRelation = tryToCloseOneWay(selectedWays.iterator().next());
-		if( newRelation != null ) {
-		    if( chRel != null )
-			chRel.set(newRelation);
-		    getCurrentDataSet().setSelected(newRelation);
-		    return;
-		}
+	    List<Command> commands = new ArrayList<Command>();
+	    List<Relation> rels = null;
+	    if( getPref("allowsplit")) {
+		if( SplittingMultipolygons.canProcess(selectedWays) )
+		    rels = SplittingMultipolygons.process(getCurrentDataSet().getSelectedWays(), commands);
+	    } else {
+		if( TheRing.areAllOfThoseRings(selectedWays) )
+		    rels = TheRing.makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays(), commands);
 	    }
-	    if( areAllOfThoseRings(getCurrentDataSet().getSelectedWays()) ) {
-		List<Relation> rels = makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays());
+	    if( !commands.isEmpty() && rels != null && !rels.isEmpty() ) {
+		Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
 		if( chRel != null )
 		    chRel.set(rels.size() == 1 ? rels.get(0) : null);
 		if( rels.size() == 1 )
@@ -403,248 +401,5 @@ public class CreateMultipolygonAction extends JosmAction {
 	if( new_name.length() > 0 )
 	    rel.put("name", new_name);
 	return true;
-    }
-
-    private boolean areAllOfThoseRings( Collection<Way> ways ) {
-	List<Way> rings = new ArrayList<Way>();
-	for( Way way : ways ) {
-	    if( way.isClosed() )
-		rings.add(way);
-	    else
-		return false;
-	}
-	if( rings.isEmpty() || ways.size() == 1 )
-	    return false; // todo: for one ring, attach it to neares multipolygons
-
-	// check for non-containment of rings
-	for( int i = 0; i < rings.size() - 1; i++ ) {
-	    for( int j = i + 1; j < rings.size(); j++ ) {
-		PolygonIntersection intersection = Geometry.polygonIntersection(rings.get(i).getNodes(), rings.get(j).getNodes());
-		if( intersection == PolygonIntersection.FIRST_INSIDE_SECOND || intersection == PolygonIntersection.SECOND_INSIDE_FIRST )
-		    return false;
-	    }
-	}
-
-	return true;
-    }
-
-    /**
-     * Creates ALOT of Multipolygons and pets him gently.
-     * @return list of new relations.
-     */
-    private List<Relation> makeManySimpleMultipolygons( Collection<Way> selection ) {
-	System.out.println("---------------------------------------");
-	List<TheRing> rings = new ArrayList<TheRing>(selection.size());
-	for( Way w : selection )
-	    rings.add(new TheRing(w));
-	for( int i = 0; i < rings.size()-1; i++ )
-	    for( int j = i+1; j < rings.size(); j++ )
-		rings.get(i).collide(rings.get(j));
-	TheRing.redistributeSegments(rings);
-	List<Command> commands = new ArrayList<Command>();
-	List<Relation> relations = new ArrayList<Relation>();
-	for( TheRing r : rings ) {
-	    commands.addAll(r.getCommands());
-	    relations.add(r.getRelation());
-	}
-	Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
-	return relations;
-    }
-
-    /**
-     * Appends "append" to "base" so the closed polygon forms.
-     */
-    private static void closePolygon( List<Node> base, List<Node> append ) {
-	if( append.get(0).equals(base.get(0)) && append.get(append.size() - 1).equals(base.get(base.size() - 1)) ) {
-	    List<Node> ap2 = new ArrayList<Node>(append);
-	    Collections.reverse(ap2);
-	    append = ap2;
-	}
-	base.remove(base.size() - 1);
-	base.addAll(append);
-    }
-
-    /**
-     * Checks if a middle point between two nodes is inside a polygon. Useful to check if the way is inside.
-     */
-    private static boolean segmentInsidePolygon( Node n1, Node n2, List<Node> polygon ) {
-	EastNorth en1 = n1.getEastNorth();
-	EastNorth en2 = n2.getEastNorth();
-	Node testNode = new Node(new EastNorth((en1.east() + en2.east()) / 2.0, (en1.north() + en2.north()) / 2.0));
-	return Geometry.nodeInsidePolygon(testNode, polygon);
-    }
-
-    /**
-     * Splits a way with regard to containing relations. This modifies the way and the relation, be prepared.
-     * @param w The way.
-     * @param n The node to split at.
-     * @param commands List of commands to add way/relation changing to. If null, never mind.
-     * @return Newly created ways. <b>Warning:</b> if commands is no not, newWays contains {@code w}.
-     */
-    public static List<Way> splitWay( Way w, Node n1, Node n2, List<Command> commands ) {
-	List<Node> nodes = new ArrayList<Node>(w.getNodes());
-	if( w.isClosed())
-	    nodes.remove(nodes.size()-1);
-	int index1 = nodes.indexOf(n1);
-	int index2 = n2 == null ? -1 : nodes.indexOf(n2);
-	if( index1 > index2 ) {
-	    int tmp = index1;
-	    index1 = index2;
-	    index2 = tmp;
-	}
-	// right now index2 >= index1
-	if( index2 < 1 || index1 >= w.getNodesCount() - 1 || index2 >= w.getNodesCount() )
-	    return Collections.emptyList();
-	if( w.isClosed() && (index1 < 0 || index1 == index2 || index1 + w.getNodesCount() == index2) )
-	    return Collections.emptyList();
-
-	// make a list of segments
-	List<List<Node>> chunks = new ArrayList<List<Node>>(2);
-	List<Node> chunk = new ArrayList<Node>();
-	for( int i = 0; i < nodes.size(); i++ ) {
-	    chunk.add(nodes.get(i));
-	    if( (w.isClosed() || chunk.size() > 1) && (i == index1 || i == index2) ) {
-		chunks.add(chunk);
-		chunk = new ArrayList<Node>();
-		chunk.add(nodes.get(i));
-	    }
-	}
-	chunks.add(chunk);
-
-	// for closed way ignore the way boundary
-	if( w.isClosed() ) {
-	    chunks.get(chunks.size() - 1).addAll(chunks.get(0));
-	    chunks.remove(0);
-	} else if( chunks.get(chunks.size()-1).size() < 2 )
-	    chunks.remove(chunks.size()-1);
-	
-	// todo remove debug: show chunks array contents
-	/*for( List<Node> c1 : chunks ) {
-	    for( Node cn1 : c1 )
-		System.out.print(cn1.getId() + ",");
-	    System.out.println();
-	}*/
-
-	// build a map of referencing relations
-	Map<Relation, Integer> references = new HashMap<Relation, Integer>();
-	List<Command> relationCommands = new ArrayList<Command>();
-	for( OsmPrimitive p : w.getReferrers() ) {
-	    if( p instanceof Relation ) {
-		Relation rel = commands == null ? (Relation)p : new Relation((Relation)p);
-		if( commands != null )
-		    relationCommands.add(new ChangeCommand((Relation)p, rel));
-		for( int i = 0; i < rel.getMembersCount(); i++ )
-		    if( rel.getMember(i).getMember().equals(w) )
-			references.put(rel, Integer.valueOf(i));
-	    }
-	}
-
-	// build ways
-	List<Way> result = new ArrayList<Way>();
-	Way updatedWay = commands == null ? w : new Way(w);
-	updatedWay.setNodes(chunks.get(0));
-	if( commands != null ) {
-	    commands.add(new ChangeCommand(w, updatedWay));
-	    result.add(updatedWay);
-	}
-
-	for( int i = 1; i < chunks.size(); i++ ) {
-	    List<Node> achunk = chunks.get(i);
-	    Way newWay = new Way();
-	    newWay.setKeys(w.getKeys());
-	    result.add(newWay);
-	    for( Relation rel : references.keySet() ) {
-		int relIndex = references.get(rel);
-		rel.addMember(relIndex + 1, new RelationMember(rel.getMember(relIndex).getRole(), newWay));
-	    }
-	    newWay.setNodes(achunk);
-	    if( commands != null )
-		commands.add(new AddCommand(newWay));
-	}
-	if( commands != null )
-	    commands.addAll(relationCommands);
-	return result;
-    }
-
-    public static List<Way> splitWay( Way w, Node n1, Node n2 ) {
-	return splitWay(w, n1, n2, null);
-    }
-
-    /**
-     * Find a way the tips of a segment, ensure it's in a multipolygon and try to close the relation.
-     */
-    private Relation tryToCloseOneWay( Way segment ) {
-	if( segment.isClosed() || segment.isIncomplete() )
-	    return null;
-
-	List<Way> ways = intersection(
-		OsmPrimitive.getFilteredList(segment.firstNode().getReferrers(), Way.class),
-		OsmPrimitive.getFilteredList(segment.lastNode().getReferrers(), Way.class));
-	ways.remove(segment);
-	for( Iterator<Way> iter = ways.iterator(); iter.hasNext(); ) {
-	    boolean save = false;
-	    for( OsmPrimitive ref : iter.next().getReferrers() )
-		if( ref instanceof Relation && ((Relation)ref).isMultipolygon() && !ref.isDeleted() )
-		    save = true;
-	    if( !save )
-		iter.remove();
-	}
-	if( ways.isEmpty() )
-	    return null; // well...
-	Way target = ways.get(0);
-
-	// time to create a new multipolygon relation and a command stack
-	List<Command> commands = new ArrayList<Command>();
-	Relation newRelation = new Relation();
-	newRelation.put("type", "multipolygon");
-	newRelation.addMember(new RelationMember("outer", segment));
-	Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS);
-	Way segmentCopy = new Way(segment);
-	boolean changed = false;
-	for( String key : segmentCopy.keySet() ) {
-	    if( !linearTags.contains(key) ) {
-		newRelation.put(key, segmentCopy.get(key));
-		segmentCopy.remove(key);
-		changed = true;
-	    }
-	}
-	if( changed )
-	    commands.add(new ChangeCommand(segment, segmentCopy));
-
-	// now split the way, at last
-	List<Way> newWays = new ArrayList<Way>(splitWay(target, segment.firstNode(), segment.lastNode(), commands));
-
-	Way addingWay = null;
-	if( target.isClosed() ) {
-	    Way utarget = newWays.get(1);
-	    Way alternate = newWays.get(0);
-	    List<Node> testRing = new ArrayList<Node>(segment.getNodes());
-	    closePolygon(testRing, utarget.getNodes());
-	    addingWay = segmentInsidePolygon(alternate.getNode(0), alternate.getNode(1), testRing) ? alternate : utarget;
-	} else {
-	    for( Way w : newWays ) {
-		if( (w.firstNode().equals(segment.firstNode()) && w.lastNode().equals(segment.lastNode()))
-			|| (w.firstNode().equals(segment.lastNode()) && w.lastNode().equals(segment.firstNode())) ) {
-		    addingWay = w;
-		    break;
-		}
-	    }
-	}
-	newRelation.addMember(new RelationMember("outer", addingWay.getUniqueId() == target.getUniqueId() ? target : addingWay));
-	commands.add(new AddCommand(newRelation));
-	Main.main.undoRedo.add(new SequenceCommand(tr("Complete multipolygon for way {0}",
-		DefaultNameFormatter.getInstance().format(segment)), commands));
-	return newRelation;
-    }
-
-    /**
-     * Returns all elements from {@code list1} that are in {@code list2}.
-     */
-    private static <T> List<T> intersection( Collection<T> list1, Collection<T> list2 ) {
-	List<T> result = new ArrayList<T>();
-	for( T item : list1 )
-	    if( list2.contains(item) )
-		result.add(item);
-	return result;
     }
 }

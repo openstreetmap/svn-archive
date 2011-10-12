@@ -80,81 +80,18 @@ public class TheRing {
 		for( int j = 0; j < other.segments.size(); j++ ) {
 		    RingSegment segment2 = other.segments.get(j);
 		    if( !segment2.isReference() ) {
-			List<Node> nodes1 = segment1.getNodes();
-			List<Node> nodes2 = segment2.getNodes();
-			boolean isRing1 = segment1.isRing();
-			boolean isRing2 = segment2.isRing();
-
-			int pos = 0;
-			while( pos < nodes1.size() && !nodes2.contains(nodes1.get(pos)) )
-			    pos++;
-			boolean collideFound = pos == nodes1.size();
-			if( pos == 0 && isRing1 ) {
-			    // rewind a bit
-			    pos = nodes1.size() - 1;
-			    while( pos > 0 && nodes2.contains(nodes1.get(pos)) ) pos--;
-			    if( pos == 0 ) {
-				JOptionPane.showMessageDialog(Main.parent, "Two rings are equal, and this must not be.", "Multipolygon from rings", JOptionPane.ERROR_MESSAGE);
-				return;
-			    }
-			    pos = pos == nodes1.size() ? 0 : pos + 1;
-			}
 			System.out.println("Comparing " + segment1 + " and " + segment2);
-			int firstPos = isRing1 ? pos : nodes1.size();
-			while( !collideFound ) {
-			    System.out.println("pos="+pos);
-			    int start1 = pos;
-			    int start2 = nodes2.indexOf(nodes1.get(start1));
-			    int last1 = incrementBy(start1, 1, nodes1.size(), isRing1);
-			    int last2 = start2;
-			    int increment2 = 0;
-			    if( last1 >= 0 ) {
-				last2 = incrementBy(start2, -1, nodes2.size(), isRing2);
-				if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
-				    increment2 = -1;
-				else {
-				    last2 = incrementBy(start2, 1, nodes2.size(), isRing2);
-				    if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
-					increment2 = 1;
-				}
+			Node[] split = getSplitNodes(segment1.getNodes(), segment2.getNodes(), segment1.isRing(), segment2.isRing());
+			if( split != null ) {
+			    if( !collideNoted ) {
+				System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
+				collideNoted = true;
 			    }
-			    System.out.println("last1="+last1+" last2="+last2+" increment2="+increment2);
-			    if( increment2 != 0 ) {
-				if( !collideNoted ) {
-				    System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
-				    collideNoted = true;
-				}
-				// find the first nodes
-				boolean reachedEnd = false;
-				while( !reachedEnd ) {
-				    int newLast1 = incrementBy(last1, 1, nodes1.size(), isRing1);
-				    int newLast2 = incrementBy(last2, increment2, nodes2.size(), isRing2);
-				    if( newLast1 < 0 || newLast2 < 0 || !nodes1.get(newLast1).equals(nodes2.get(newLast2)) )
-					reachedEnd = true;
-				    else {
-					last1 = newLast1;
-					last2 = newLast2;
-				    }
-				}
-				System.out.println("last1=" + last1 + " last2=" + last2);
-				if( increment2 < 0 ) {
-				    int tmp = start2;
-				    start2 = last2;
-				    last2 = tmp;
-				}
-				RingSegment segment = splitRingAt(i, nodes1.get(start1), nodes1.get(last1));
-				RingSegment otherSegment = other.splitRingAt(j, nodes2.get(start2), nodes2.get(last2));
-				if( !areSegmentsEqual(segment, otherSegment) )
-				    throw new IllegalArgumentException("Error: algorithm gave incorrect segments: " + segment + " and " + otherSegment);
-				segment.makeReference(otherSegment);
-				collideFound = true;
-			    } else {
-				pos = last1;
-				while( pos != firstPos && pos >= 0 && !nodes2.contains(nodes1.get(pos)) )
-				    pos = incrementBy(pos, 1, nodes1.size(), isRing1);
-				if( pos < 0 || !nodes2.contains(nodes1.get(pos)) )
-				    collideFound = true;
-			    }
+			    RingSegment segment = splitRingAt(i, split[0], split[1]);
+			    RingSegment otherSegment = other.splitRingAt(j, split[2], split[3]);
+			    if( !areSegmentsEqual(segment, otherSegment) )
+				throw new IllegalArgumentException("Error: algorithm gave incorrect segments: " + segment + " and " + otherSegment);
+			    segment.makeReference(otherSegment);
 			}
 		    }
 		    if( segment1.isReference() )
@@ -164,7 +101,76 @@ public class TheRing {
 	}
     }
     
-    private int incrementBy( int value, int increment, int limit1, boolean isRing ) {
+    /**
+     * Returns array of {start1, last1, start2, last2} or null if there is no common nodes.
+     */
+    public static Node[] getSplitNodes( List<Node> nodes1, List<Node> nodes2, boolean isRing1, boolean isRing2 ) {
+	int pos = 0;
+	while( pos < nodes1.size() && !nodes2.contains(nodes1.get(pos)) )
+	    pos++;
+	boolean collideFound = pos == nodes1.size();
+	if( pos == 0 && isRing1 ) {
+	    // rewind a bit
+	    pos = nodes1.size() - 1;
+	    while( pos > 0 && nodes2.contains(nodes1.get(pos)) )
+		pos--;
+	    if( pos == 0 ) {
+		JOptionPane.showMessageDialog(Main.parent, "Two rings are equal, and this must not be.", "Multipolygon from rings", JOptionPane.ERROR_MESSAGE);
+		return null;
+	    }
+	    pos = pos == nodes1.size() - 1 ? 0 : pos + 1;
+	}
+	int firstPos = isRing1 ? pos : nodes1.size();
+	while( !collideFound ) {
+	    System.out.println("pos=" + pos);
+	    int start1 = pos;
+	    int start2 = nodes2.indexOf(nodes1.get(start1));
+	    int last1 = incrementBy(start1, 1, nodes1.size(), isRing1);
+	    int last2 = start2;
+	    int increment2 = 0;
+	    if( last1 >= 0 ) {
+		last2 = incrementBy(start2, -1, nodes2.size(), isRing2);
+		if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
+		    increment2 = -1;
+		else {
+		    last2 = incrementBy(start2, 1, nodes2.size(), isRing2);
+		    if( last2 >= 0 && nodes1.get(last1).equals(nodes2.get(last2)) )
+			increment2 = 1;
+		}
+	    }
+	    System.out.println("last1=" + last1 + " last2=" + last2 + " increment2=" + increment2);
+	    if( increment2 != 0 ) {
+		// find the first nodes
+		boolean reachedEnd = false;
+		while( !reachedEnd ) {
+		    int newLast1 = incrementBy(last1, 1, nodes1.size(), isRing1);
+		    int newLast2 = incrementBy(last2, increment2, nodes2.size(), isRing2);
+		    if( newLast1 < 0 || newLast2 < 0 || !nodes1.get(newLast1).equals(nodes2.get(newLast2)) )
+			reachedEnd = true;
+		    else {
+			last1 = newLast1;
+			last2 = newLast2;
+		    }
+		}
+		System.out.println("last1=" + last1 + " last2=" + last2);
+		if( increment2 < 0 ) {
+		    int tmp = start2;
+		    start2 = last2;
+		    last2 = tmp;
+		}
+		return new Node[] {nodes1.get(start1), nodes1.get(last1), nodes2.get(start2), nodes2.get(last2)};
+	    } else {
+		pos = last1;
+		while( pos != firstPos && pos >= 0 && !nodes2.contains(nodes1.get(pos)) )
+		    pos = incrementBy(pos, 1, nodes1.size(), isRing1);
+		if( pos < 0 || pos == firstPos || !nodes2.contains(nodes1.get(pos)) )
+		    collideFound = true;
+	    }
+	}
+	return null;
+    }
+    
+    private static int incrementBy( int value, int increment, int limit1, boolean isRing ) {
 	int result = value + increment;
 	if( result < 0 )
 	    return isRing ? result + limit1 : -1;
@@ -215,16 +221,14 @@ public class TheRing {
 	    segments.add(pos++, secondPart);
 	if( thirdPart != null )
 	    segments.add(pos++, thirdPart);
-	RingSegment result = isRing || secondPart == null ? segment : secondPart;
-//	System.out.println("Returning segment " + result);
-	return result;
+	return isRing || secondPart == null ? segment : secondPart;
     }
 
     /**
      * Tries to arrange segments in order for each ring to have at least one.
      * Also, sets source way for all rings.
      * 
-     * This method should be called, even if there is just one ring.
+     * If this method is not called, do not forget to call {@link #putSourceWayFirst()} for all rings.
      */
     public static void redistributeSegments( List<TheRing> rings ) {
 	// build segments map
@@ -262,7 +266,7 @@ public class TheRing {
 	return count;
     }
 
-    private void putSourceWayFirst() {
+    public void putSourceWayFirst() {
 	for( RingSegment seg : segments ) {
 	    if( !seg.isReference() ) {
 		seg.overrideWay(source);
@@ -270,21 +274,26 @@ public class TheRing {
 	    }
 	}
     }
-
+    
+    public List<Command> getCommands() {
+	return getCommands(true);
+    }
+    
     /**
      * Returns a list of commands to make a new relation and all newly created ways.
      * The first way is copied from the source one, ChangeCommand is issued in this case.
      */
-    public List<Command> getCommands() {
-	System.out.println("Making ring " + this);
-	Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
-	relation = new Relation();
-	relation.put("type", "multipolygon");
+    public List<Command> getCommands( boolean createMultipolygon ) {
 	Way sourceCopy = new Way(source);
-	for( String key : sourceCopy.keySet() ) {
-	    if( !linearTags.contains(key) ) {
-		relation.put(key, sourceCopy.get(key));
-		sourceCopy.remove(key);
+	if( createMultipolygon ) {
+	    Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
+	    relation = new Relation();
+	    relation.put("type", "multipolygon");
+	    for( String key : sourceCopy.keySet() ) {
+		if( !linearTags.contains(key) ) {
+		    relation.put(key, sourceCopy.get(key));
+		    sourceCopy.remove(key);
+		}
 	    }
 	}
 
@@ -309,14 +318,10 @@ public class TheRing {
 	    if( needAdding )
 		commands.add(new AddCommand(w));
 	    if( w.equals(source) ) {
-		if( segments.size() == 1 ) {
-		    // one segment means that it is a ring
-		    List<Node> segnodes = seg.getNodes();
-		    segnodes.add(segnodes.get(0));
-		    sourceCopy.setNodes(segnodes);
-		} else
-		    sourceCopy.setNodes(seg.getNodes());
-		commands.add(new ChangeCommand(source, sourceCopy));
+		if( createMultipolygon || !seg.getWayNodes().equals(source.getNodes()) ) {
+		    sourceCopy.setNodes(seg.getWayNodes());
+		    commands.add(new ChangeCommand(source, sourceCopy));
+		}
 		foundOwnWay = true;
 	    } else {
 		for( Relation rel : referencingRelations.keySet() ) {
@@ -324,12 +329,14 @@ public class TheRing {
 		    rel.addMember(new RelationMember(rel.getMember(relIndex).getRole(), w));
 		}
 	    }
-	    relation.addMember(new RelationMember("outer", w));
+	    if( createMultipolygon )
+		relation.addMember(new RelationMember("outer", w));
 	}
 	if( !foundOwnWay )
 	    commands.add(new DeleteCommand(source));
 	commands.addAll(relationCommands);
-	commands.add(new AddCommand(relation));
+	if( createMultipolygon )
+	    commands.add(new AddCommand(relation));
 	return commands;
     }
 
@@ -462,6 +469,15 @@ public class TheRing {
 	    return nodes == null ? references.nodes : nodes;
 	}
 
+	public List<Node> getWayNodes() {
+	    if( nodes == null )
+		throw new IllegalArgumentException("Won't give you wayNodes: it is a reference");
+	    List<Node> wayNodes = new ArrayList<Node>(nodes);
+	    if( isRing )
+		wayNodes.add(wayNodes.get(0));
+	    return wayNodes;
+	}
+
 	public boolean isReference() {
 	    return nodes == null;
 	}
@@ -492,7 +508,7 @@ public class TheRing {
 		return references.constructWay(template);
 	    if( resultingWay == null ) {
 		resultingWay = new Way();
-		resultingWay.setNodes(nodes);
+		resultingWay.setNodes(getWayNodes());
 	    }
 	    if( template != null && !wasTemplateApplied ) {
 		resultingWay.setKeys(template.getKeys());

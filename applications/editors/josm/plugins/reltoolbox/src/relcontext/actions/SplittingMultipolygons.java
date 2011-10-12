@@ -54,6 +54,7 @@ public class SplittingMultipolygons {
     }
     
     public static List<Relation> process( Collection<Way> selectedWays, List<Command> commands ) {
+	System.out.println("---------------------------------------");
 	List<Relation> result = new ArrayList<Relation>();
 	List<Way> rings = new ArrayList<Way>();
 	List<Way> arcs = new ArrayList<Way>();
@@ -278,12 +279,56 @@ public class SplittingMultipolygons {
     }
     
     /**
-     * Find a way the tips of a segment, ensure it's in a multipolygon and try to close the relation.
+     * Make a multipolygon out of the ring, but split it to attach to neighboring multipolygons.
      */
-    public static Relation attachRingToNeighbours( Way segment, List<Command> resultingCommands ) {
-	if( !segment.isClosed() || segment.isIncomplete() )
+    public static Relation attachRingToNeighbours( Way ring, List<Command> resultingCommands ) {
+	if( !ring.isClosed() || ring.isIncomplete() )
 	    return null;
+	Map<Way, Boolean> touchingWays = new HashMap<Way, Boolean>();
+	for( Node n : ring.getNodes() ) {
+	    for( OsmPrimitive p : n.getReferrers() ) {
+		if( p instanceof Way && !p.equals(ring) ) {
+		    for( OsmPrimitive r : p.getReferrers() ) {
+			if( r instanceof Relation && ((Relation)r).hasKey("type") && ((Relation)r).get("type").equals("multipolygon") ) {
+			    if( touchingWays.containsKey((Way)p) )
+				touchingWays.put((Way)p, Boolean.TRUE);
+			    else
+				touchingWays.put((Way)p, Boolean.FALSE);
+			    break;
+			}
+		    }
+		}
+	    }
+	}
 	
-	return null; // todo
+	List<TheRing> otherWays = new ArrayList<TheRing>();
+	for( Way w : touchingWays.keySet() )
+	    if( touchingWays.get(w) ) {
+		otherWays.add(new TheRing(w));
+		System.out.println("Touching ring: " + otherWays.get(otherWays.size()-1));
+	    }
+	
+//	for( Iterator<Way> keys = touchingWays.keySet().iterator(); keys.hasNext(); ) {
+//	    if( !touchingWays.get(keys.next()) )
+//		keys.remove();
+//	}
+	
+	// now touchingWays has only ways that touch the ring twice
+	List<Command> commands = new ArrayList<Command>();
+	TheRing theRing = new TheRing(ring); // this is actually useful
+	
+	for( TheRing otherRing : otherWays )
+	    theRing.collide(otherRing);
+	
+	theRing.putSourceWayFirst();
+	for( TheRing otherRing : otherWays )
+	    otherRing.putSourceWayFirst();
+	
+	for( TheRing otherRing : otherWays )
+	    commands.addAll(otherRing.getCommands(false));
+	commands.addAll(theRing.getCommands());
+	resultingCommands.add(new SequenceCommand(tr("Complete multipolygon for way {0}",
+		DefaultNameFormatter.getInstance().format(ring)), commands));
+	return theRing.getRelation();
     }
 }

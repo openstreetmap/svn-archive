@@ -148,7 +148,7 @@ public class PanelHaz extends JPanel {
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alCat);
 		catButtons.add(button);
@@ -157,7 +157,7 @@ public class PanelHaz extends JPanel {
 
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj car, Obj isd) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alShape);
 		shapeButtons.add(button);

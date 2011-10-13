@@ -217,7 +217,7 @@ public class PanelLit extends JPanel {
 
 	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alType);
 		typeButtons.add(button);

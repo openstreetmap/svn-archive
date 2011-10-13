@@ -189,7 +189,7 @@ public class PanelLights extends JPanel {
 
 	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alObj);
 		objButtons.add(button);

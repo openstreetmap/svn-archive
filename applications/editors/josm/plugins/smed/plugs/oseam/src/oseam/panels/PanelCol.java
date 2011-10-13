@@ -59,7 +59,7 @@ public class PanelCol extends JPanel {
 								dlg.mark.addColour(ent, stackIdx, col);
 								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 								JRadioButton btnI = stackCol.get(stackIdx);
-								btnI.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+								btnI.setBorder(BorderFactory.createLoweredBevelBorder());
 								stack.add(btnI);
 								stackColours.add(btnI);
 								btnI.addActionListener(alStack);
@@ -110,7 +110,7 @@ public class PanelCol extends JPanel {
 		act = al;
 		ent = entity;
 		this.setLayout(null);
-		this.add(getColButton(offButton, 0, 0, 34, 16, Messages.getString("NoColour"), Col.UNKNOWN), null);
+		this.add(getColButton(offButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN), null);
 		this.add(getColButton(whiteButton, 0, 16, 34, 16, Messages.getString("White"), Col.WHITE), null);
 		this.add(getColButton(redButton, 0, 32, 34, 16, Messages.getString("Red"), Col.RED), null);
 		this.add(getColButton(orangeButton, 0, 48, 34, 16, Messages.getString("Orange"), Col.ORANGE), null);
@@ -128,7 +128,7 @@ public class PanelCol extends JPanel {
 			this.add(getColButton(pinkButton, 37, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
 
 			stack = new JPanel();
-			stack.setBorder(BorderFactory.createLineBorder(Color.black));
+			stack.setBorder(BorderFactory.createLoweredBevelBorder());
 			stack.setBounds(38, 87, 34, 64);
 			stack.setLayout(null);
 			this.add(stack);
@@ -153,7 +153,7 @@ public class PanelCol extends JPanel {
 
 	private JRadioButton getColButton(JRadioButton button, int x, int y, int w, int h, String tip, Col col) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(tr(tip));
 		button.addActionListener(alColour);
 		colourButtons.add(button);

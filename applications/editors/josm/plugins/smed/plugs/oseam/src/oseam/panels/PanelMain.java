@@ -315,7 +315,7 @@ public class PanelMain extends JPanel {
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		return button;
 	}

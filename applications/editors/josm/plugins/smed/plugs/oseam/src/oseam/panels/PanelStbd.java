@@ -12,59 +12,6 @@ import oseam.seamarks.SeaMark.*;
 public class PanelStbd extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup regionButtons = new ButtonGroup();
-	public JRadioButton regionAButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionAButton.png")));
-	public JRadioButton regionBButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionBButton.png")));
-	public JRadioButton regionCButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RegionCButton.png")));
-	private ActionListener alRegion = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (regionAButton.isSelected()) {
-				dlg.mark.setRegion(Reg.A);
-				dlg.mark.setColour(Ent.BODY, Col.GREEN);
-				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				}
-				regionAButton.setBorderPainted(true);
-			} else { 
-				regionAButton.setBorderPainted(false);
-			}
-			if (regionBButton.isSelected()) {
-				dlg.mark.setRegion(Reg.B);
-				dlg.mark.setColour(Ent.BODY, Col.RED);
-				dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				}
-				regionBButton.setBorderPainted(true);
-			} else { 
-				regionBButton.setBorderPainted(false);
-			}
-			if (regionCButton.isSelected()) {
-				dlg.mark.setRegion(Reg.C);
-				if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-				} else {
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
-				}
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				regionCButton.setBorderPainted(true);
-			} else { 
-				regionCButton.setBorderPainted(false);
-			}
-			dlg.mark.paintSign();
-		}
-	};
 	private ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
@@ -101,9 +48,6 @@ public class PanelStbd extends JPanel {
 	public PanelStbd(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getRegionButton(regionAButton, 70, 0, 34, 30, "RegionA"), null);
-		this.add(getRegionButton(regionBButton, 70, 32, 34, 30, "RegionB"), null);
-		this.add(getRegionButton(regionCButton, 70, 64, 34, 30, "RegionC"), null);
 		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT), null);
 		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT), null);
 		this.add(getShapeButton(coneButton, 0, 64, 34, 32, "Cone", Shp.CONE, Obj.BOYLAT), null);
@@ -120,18 +64,9 @@ public class PanelStbd extends JPanel {
 		alShape.actionPerformed(null);
 	}
 
-	private JRadioButton getRegionButton(JRadioButton button, int x, int y, int w, int h, String tip) {
-		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-		button.setToolTipText(Messages.getString(tip));
-		button.addActionListener(alRegion);
-		regionButtons.add(button);
-		return button;
-	}
-
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alShape);
 		shapeButtons.add(button);

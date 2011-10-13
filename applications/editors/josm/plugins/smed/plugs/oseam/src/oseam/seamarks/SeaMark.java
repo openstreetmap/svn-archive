@@ -628,13 +628,19 @@ public class SeaMark {
 	private boolean paintlock = false;
 
 	public void parseMark(Node node) {
-		region = Main.pref.get("smedplugin.IALA").equals("C") ? Reg.C : (Main.pref.get("smedplugin.IALA").equals("B") ? Reg.B : Reg.A);
 		dlg.panelMain.clearSelections();
 		dlg.manager.showVisualMessage("");
-		String str = "";
+		String str = Main.pref.get("smedplugin.IALA");
+		if (str.equals("C"))
+			dlg.panelMain.panelMore.regionCButton.doClick();
+		else if (str.equals("B"))
+			dlg.panelMain.panelMore.regionBButton.doClick();
+		else
+			dlg.panelMain.panelMore.regionAButton.doClick();
 
 		Map<String, String> keys = node.getKeys();
 
+		str = "";
 		if (keys.containsKey("seamark:type"))
 			str = keys.get("seamark:type");
 

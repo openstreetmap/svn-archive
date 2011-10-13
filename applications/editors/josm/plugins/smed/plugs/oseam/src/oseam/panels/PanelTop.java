@@ -100,7 +100,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getTopButton(JRadioButton button, int x, int y, int w, int h, String tip, Top top) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alTop);
 		topButtons.add(button);
@@ -110,7 +110,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getDayButton(JRadioButton button, int x, int y, int w, int h, String tip, Day day) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alTop);
 		topButtons.add(button);
@@ -120,7 +120,7 @@ public class PanelTop extends JPanel {
 
 	private JRadioButton getMoorButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alTop);
 		topButtons.add(button);

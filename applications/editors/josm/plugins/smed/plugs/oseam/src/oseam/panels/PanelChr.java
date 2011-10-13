@@ -141,7 +141,7 @@ public class PanelChr extends JPanel {
 
 	private JToggleButton getChrButton(JToggleButton button, int x, int y, int w, int h, String tip, Chr chr) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setBorderPainted(false);
 		button.setToolTipText(tr(tip));
 		button.addActionListener(alCharButton);

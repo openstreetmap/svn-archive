@@ -33,13 +33,6 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.C) {
-					panelPort.regionCButton.doClick();
-				} else if (dlg.mark.getRegion() == Reg.B) {
-					panelPort.regionBButton.doClick();
-				} else {
-					panelPort.regionAButton.doClick();
-				}
 				portButton.setBorderPainted(true);
 				panelPort.setVisible(true);
 				panelPort.perchButton.setVisible(true);
@@ -56,13 +49,6 @@ public class PanelChan extends JPanel {
 					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				if (dlg.mark.getRegion() == Reg.C) {
-					panelPort.regionCButton.doClick();
-				} else if (dlg.mark.getRegion() == Reg.B) {
-					panelPort.regionBButton.doClick();
-				} else {
-					panelPort.regionAButton.doClick();
-				}
 				prefPortButton.setBorderPainted(true);
 				panelPort.setVisible(true);
 			} else {
@@ -77,13 +63,6 @@ public class PanelChan extends JPanel {
 				} else {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
-				}
-				if (dlg.mark.getRegion() == Reg.C) {
-					panelStbd.regionCButton.doClick();
-				} else if (dlg.mark.getRegion() == Reg.B) {
-					panelStbd.regionBButton.doClick();
-				} else {
-					panelStbd.regionAButton.doClick();
 				}
 				stbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
@@ -100,13 +79,6 @@ public class PanelChan extends JPanel {
 				} else {
 					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
-				}
-				if (dlg.mark.getRegion() == Reg.C) {
-					panelStbd.regionCButton.doClick();
-				} else if (dlg.mark.getRegion() == Reg.B) {
-					panelStbd.regionBButton.doClick();
-				} else {
-					panelStbd.regionAButton.doClick();
 				}
 				prefStbdButton.setBorderPainted(true);
 				panelStbd.setVisible(true);
@@ -167,7 +139,7 @@ public class PanelChan extends JPanel {
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {
 		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
+		button.setBorder(BorderFactory.createLoweredBevelBorder());
 		button.setToolTipText(Messages.getString(tip));
 		button.addActionListener(alCat);
 		catButtons.add(button);

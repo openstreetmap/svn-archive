@@ -455,6 +455,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             add(new DuplicateChosenRelationAction(chosenRelation));
             add(new DeleteChosenRelationAction(chosenRelation));
             add(new DownloadParentsAction(chosenRelation));
+            add(new ReconstructPolygonAction(chosenRelation));
             addSeparator();
             add(new SelectInRelationPanelAction(chosenRelation));
             add(new RelationHelpAction(chosenRelation));

@@ -6,5 +6,6 @@ if [ -n "$PID" ]
 then
    echo "'diffreader.rb' Process is already Running with PIS=$PID ...exiting. `date`"
 else
+   echo "RESTARTING 'diffreader.rb' Process, since it appears to not be running `date`"
    ruby diffreader.rb
 fi

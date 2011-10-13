@@ -1,13 +1,31 @@
 <?php
 include('header.php.inc');
 ?>
+
 <center>
 
-<h3 class="tablelabel">Edits so far:</h3>
+<?php
+$results = $db->query('SELECT count(*) FROM edits');
+$res_array = $results->fetchArray();
+$edit_count = $res_array[0];
+
+$results = $db->query('SELECT count(*) FROM ( SELECT * FROM edits GROUP BY user_name);');
+$res_array = $results->fetchArray();
+$user_count = $res_array[0];
+
+print "<h3><span style=\"font-size:1.2em; background:YELLOW;\">$user_count people</span> have done $edit_count baseball edits</h3>\n";
+print "<br>\n";
+
+$table_size_limit = 300;
+?>
+
+
+<h3 class="tablelabel">Edits coming in</h3>
+<p>The most recent <?php echo $table_size_limit ?> edits (latest first):</p>
 
 <table border="0" id="list">
 <tr>
-  <th>time (latest first)</th>
+  <th>time</th>
   <th>optype</th>
   <th>element</th>
   <th>user</th>
@@ -16,7 +34,7 @@ include('header.php.inc');
 
 <?php
 
-$results = $db->query('SELECT timestamp, op_type, element_type, osm_id, user_name, changeset FROM edits ORDER BY timestamp DESC LIMIT 500');
+$results = $db->query("SELECT timestamp, op_type, element_type, osm_id, user_name, changeset FROM edits ORDER BY timestamp DESC LIMIT " . $table_size_limit );
 while ($data = $results->fetchArray()) {
    $timestamp    = $data[0];
    $optype       = $data[1];
@@ -41,11 +59,18 @@ while ($data = $results->fetchArray()) {
    print "<td><a href=\"http://www.openstreetmap.org/browse/changeset/".$changeset."\">$changeset</a></td>\n";
    print "</tr>\n";                          
       
-}            
+}
 ?>
 
 </td></tr>
 </table>
+
+<?php
+if ($edit_count > $table_size_limit) {
+   print "<p>...and " . ($edit_count - $table_size_limit) . " more edits since we started</p>\n";
+}
+?>
+
 </center>
 <?php
 include('footer.php.inc');

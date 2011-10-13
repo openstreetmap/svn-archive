@@ -3,7 +3,7 @@ include('countdown.php.inc');
 
 $dbFile = "./baseball-edits.db";
 
-$lastUpdate = date ("F d Y H:i:s.", filemtime("../diffreader.log"));
+$lastUpdate = date ("F d Y H:i:s.", filemtime("../on_seq.txt"));
 
 
 if (!file_exists($dbFile)) die('Missing db file ' . $dbFile);

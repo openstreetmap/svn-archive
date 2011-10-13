@@ -100,4 +100,10 @@
             <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
         </delete>
     </target>
+    <target name="test">
+        <mkdir dir="${i18n.build.dir}/test"/>
+        <exec executable="perl">
+            <arg line="i18n.pl ${i18n.build.dir}/test/ po/*.po"/>
+        </exec>
+    </target>
 </project>

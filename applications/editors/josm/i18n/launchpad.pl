@@ -11,12 +11,13 @@ if($#ARGV != 0)
 }
 else
 {
-    mkdir "new";
-    die "Could not change into new data dir." if !chdir "new";
+    mkdir "build";
+    mkdir "build/new";
+    die "Could not change into new data dir." if !chdir "build/new";
     system "wget $ARGV[0]";
     system "tar -xf laun*";
-    chdir "..";
-    foreach my $name (split("\n", `find new -name "*.po"`))
+    chdir "../..";
+    foreach my $name (split("\n", `find build/new -name "*.po"`))
     {
       my $a=$name;
       $a =~ s/.*-//;
@@ -40,8 +41,9 @@ else
 system "ant";
 my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
 chomp $outdate;
-mkdir "josm";
-system "cp po/*.po po/josm.pot josm";
+mkdir "build/josm";
+system "cp po/*.po po/josm.pot build/josm";
+chdir "build";
 if(!$count)
 {
   system "tar -cjf launchpad_upload_josm_$outdate.tar.bz2 josm";
@@ -58,3 +60,4 @@ else
   }
 }
 system "rm -rv josm new";
+chdir "..";

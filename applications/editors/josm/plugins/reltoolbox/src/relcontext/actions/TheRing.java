@@ -309,6 +309,9 @@ public class TheRing {
 			referencingRelations.put(rel, Integer.valueOf(i));
 	    }
 	}
+	// todo: когда два кольца меняют одно и то же отношение, в список команд добавляется
+	// изменение базового отношения на новое, а не предыдущего
+	// поэтому сохраняется только первое изменение
 
 	List<Command> commands = new ArrayList<Command>();
 	boolean foundOwnWay = false;

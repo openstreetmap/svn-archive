@@ -63,17 +63,19 @@ public class CreateMultipolygonAction extends JosmAction {
 	boolean isBoundary = getPref("boundary");
 	Collection<Way> selectedWays = getCurrentDataSet().getSelectedWays();
 	if( !isBoundary && getPref("tags") ) {
-	    List<Command> commands = new ArrayList<Command>();
 	    List<Relation> rels = null;
-	    if( getPref("allowsplit")) {
+	    if( getPref("allowsplit") || selectedWays.size() == 1 ) {
 		if( SplittingMultipolygons.canProcess(selectedWays) )
-		    rels = SplittingMultipolygons.process(getCurrentDataSet().getSelectedWays(), commands);
+		    rels = SplittingMultipolygons.process(getCurrentDataSet().getSelectedWays());
 	    } else {
-		if( TheRing.areAllOfThoseRings(selectedWays) )
+		if( TheRing.areAllOfThoseRings(selectedWays) ) {
+		    List<Command> commands = new ArrayList<Command>();
 		    rels = TheRing.makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays(), commands);
+		    if( !commands.isEmpty() )
+			Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
+		}
 	    }
-	    if( !commands.isEmpty() && rels != null && !rels.isEmpty() ) {
-		Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
+	    if( rels != null && !rels.isEmpty() ) {
 		if( chRel != null )
 		    chRel.set(rels.size() == 1 ? rels.get(0) : null);
 		if( rels.size() == 1 )

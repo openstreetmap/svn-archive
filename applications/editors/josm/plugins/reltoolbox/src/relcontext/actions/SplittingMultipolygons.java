@@ -1,5 +1,6 @@
 package relcontext.actions;
 
+import java.awt.geom.Area;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.*;
 import org.openstreetmap.josm.Main;
@@ -20,7 +21,16 @@ public class SplittingMultipolygons {
     public static boolean canProcess( Collection<Way> ways ) {
 	List<Way> rings = new ArrayList<Way>();
 	List<Way> arcs = new ArrayList<Way>();
+	Area a = Main.main.getCurrentDataSet().getDataSourceArea();
 	for( Way way : ways ) {
+	    if( way.isDeleted() )
+		return false;
+	    for( Node n : way.getNodes() ) {
+		if( n == null )
+		    System.out.println("Node is null");
+		if( n.isIncomplete() || (a != null && !a.contains(n.getCoor())) )
+		    return false;
+	    }
 	    if( way.isClosed() )
 		rings.add(way);
 	    else
@@ -53,7 +63,7 @@ public class SplittingMultipolygons {
 	return true;
     }
     
-    public static List<Relation> process( Collection<Way> selectedWays, List<Command> commands ) {
+    public static List<Relation> process( Collection<Way> selectedWays ) {
 	System.out.println("---------------------------------------");
 	List<Relation> result = new ArrayList<Relation>();
 	List<Way> rings = new ArrayList<Way>();
@@ -66,15 +76,21 @@ public class SplittingMultipolygons {
 	}
 
 	for( Way ring : rings ) {
+	    List<Command> commands = new ArrayList<Command>();
 	    Relation newRelation = SplittingMultipolygons.attachRingToNeighbours(ring, commands);
-	    if( newRelation != null )
+	    if( newRelation != null && !commands.isEmpty() ) {
+		Main.main.undoRedo.add(commands.get(0));
 		result.add(newRelation);
+	    }
 	}
 
 	for( Way arc : arcs) {
+	    List<Command> commands = new ArrayList<Command>();
 	    Relation newRelation = SplittingMultipolygons.tryToCloseOneWay(arc, commands);
-	    if( newRelation != null )
+	    if( newRelation != null && !commands.isEmpty() ) {
+		Main.main.undoRedo.add(commands.get(0));
 		result.add(newRelation);
+	    }
 	}
 	return result;
     }

@@ -71,7 +71,7 @@ public class ReplaceGeometryAction extends JosmAction {
         for( Node node : way.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( !node.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
-                    && (node.isNewOrUndeleted() || a.contains(node.getCoor())) )
+                    && (node.isNewOrUndeleted() || a == null || a.contains(node.getCoor())) )
                 nodePool.add(node);
         }
 

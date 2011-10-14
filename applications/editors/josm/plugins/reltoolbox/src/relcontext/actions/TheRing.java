@@ -65,10 +65,12 @@ public class TheRing {
 		rings.get(i).collide(rings.get(j));
 	redistributeSegments(rings);
 	List<Relation> relations = new ArrayList<Relation>();
+	Map<Relation, Relation> relationCache = new HashMap<Relation, Relation>();
 	for( TheRing r : rings ) {
-	    commands.addAll(r.getCommands());
+	    commands.addAll(r.getCommands(relationCache));
 	    relations.add(r.getRelation());
 	}
+	updateCommandsWithRelations(commands, relationCache);
 	return relations;
     }
 
@@ -276,14 +278,18 @@ public class TheRing {
     }
     
     public List<Command> getCommands() {
-	return getCommands(true);
+	return getCommands(true, null);
+    }
+    
+    public List<Command> getCommands( Map<Relation, Relation> relationChangeMap ) {
+	return getCommands(true, relationChangeMap);
     }
     
     /**
      * Returns a list of commands to make a new relation and all newly created ways.
      * The first way is copied from the source one, ChangeCommand is issued in this case.
      */
-    public List<Command> getCommands( boolean createMultipolygon ) {
+    public List<Command> getCommands( boolean createMultipolygon, Map<Relation, Relation> relationChangeMap ) {
 	Way sourceCopy = new Way(source);
 	if( createMultipolygon ) {
 	    Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
@@ -302,8 +308,18 @@ public class TheRing {
 	List<Command> relationCommands = new ArrayList<Command>();
 	for( OsmPrimitive p : source.getReferrers() ) {
 	    if( p instanceof Relation ) {
-		Relation rel = new Relation((Relation)p);
-		relationCommands.add(new ChangeCommand((Relation)p, rel));
+		Relation rel = null;
+		if( relationChangeMap != null ) {
+		    if( relationChangeMap.containsKey((Relation)p) )
+			rel = relationChangeMap.get((Relation)p);
+		    else {
+			rel = new Relation((Relation)p);
+			relationChangeMap.put((Relation)p, rel);
+		    }
+		} else {		    
+		    rel = new Relation((Relation)p);
+		    relationCommands.add(new ChangeCommand((Relation)p, rel));
+		}
 		for( int i = 0; i < rel.getMembersCount(); i++ )
 		    if( rel.getMember(i).getMember().equals(source) )
 			referencingRelations.put(rel, Integer.valueOf(i));
@@ -341,6 +357,11 @@ public class TheRing {
 	if( createMultipolygon )
 	    commands.add(new AddCommand(relation));
 	return commands;
+    }
+    
+    public static void updateCommandsWithRelations( List<Command> commands, Map<Relation, Relation> relationCache ) {
+	for( Relation src : relationCache.keySet() )
+	    commands.add(new ChangeCommand(src, relationCache.get(src)));
     }
 
     /**

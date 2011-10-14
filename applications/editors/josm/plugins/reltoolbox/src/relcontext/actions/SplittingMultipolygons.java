@@ -340,9 +340,11 @@ public class SplittingMultipolygons {
 	for( TheRing otherRing : otherWays )
 	    otherRing.putSourceWayFirst();
 	
+	Map<Relation, Relation> relationCache = new HashMap<Relation, Relation>();
 	for( TheRing otherRing : otherWays )
-	    commands.addAll(otherRing.getCommands(false));
-	commands.addAll(theRing.getCommands());
+	    commands.addAll(otherRing.getCommands(false, relationCache));
+	commands.addAll(theRing.getCommands(relationCache));
+	TheRing.updateCommandsWithRelations(commands, relationCache);
 	resultingCommands.add(new SequenceCommand(tr("Complete multipolygon for way {0}",
 		DefaultNameFormatter.getInstance().format(ring)), commands));
 	return theRing.getRelation();

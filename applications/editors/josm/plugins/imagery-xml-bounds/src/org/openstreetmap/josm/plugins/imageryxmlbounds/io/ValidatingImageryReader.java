@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openstreetmap.josm.plugins.imageryxmlbounds;
+package org.openstreetmap.josm.plugins.imageryxmlbounds.io;
 
 import java.io.IOException;
 
@@ -12,6 +12,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.io.imagery.ImageryReader;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.xml.sax.SAXException;
 
 /**

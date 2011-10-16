@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.imageryxmlbounds;
+package org.openstreetmap.josm.plugins.imageryxmlbounds.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -43,6 +43,8 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.imagery.ImageryReader;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 import org.xml.sax.SAXException;
 
 /**
@@ -162,55 +164,75 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
 		return osmImagery;
 	}
 	
+	public DataSet parseDataSet(final String source) throws IOException, SAXException {
+	    return parseDataSet(source, null);
+	}
+
+	public DataSet parseDataSet(final File file) throws IOException, SAXException {
+        return parseDataSet(null, file);
+    }
+	
+	protected DataSet parseDataSet(final String source, final File file) throws IOException, SAXException {
+        ImageryReader reader = null;
+        
+        try {
+            reader = new ValidatingImageryReader(source != null ? source : file.getAbsolutePath());
+        } catch (SAXException e)  {
+            if (JOptionPane.showConfirmDialog(
+                    Main.parent,
+                    tr("Validating error in file {0}:\n{1}\nDo you want to continue without validating the file ?", 
+                            source != null ? source : file.getPath(), e.getLocalizedMessage()),
+                    tr("Open Imagery XML file"),
+                    JOptionPane.YES_NO_CANCEL_OPTION) != JOptionPane.YES_OPTION) {
+                return null;
+            }
+
+            reader = new ImageryReader(source != null ? source : file.getAbsolutePath());
+        }
+        
+        return convertImageryEntries(reader.parse());
+	}
+	
+    protected void importData(final String source, final String layerName, final File file, ProgressMonitor progressMonitor)
+            throws IOException, IllegalDataException {
+        try {
+            final DataSet dataSet = parseDataSet(source, file);
+            final XmlBoundsLayer layer = new XmlBoundsLayer(dataSet, source != null ? layerName : file.getName(), file);
+            Runnable uiStuff = new Runnable() {
+                @Override
+                public void run() {
+                    if (dataSet.allPrimitives().isEmpty()) {
+                        JOptionPane.showMessageDialog(
+                                Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
+                                tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    Main.main.addLayer(layer);
+                    layer.onPostLoadFromFile();
+                }
+            };
+            if (SwingUtilities.isEventDispatchThread()) {
+                uiStuff.run();
+            } else {
+                SwingUtilities.invokeLater(uiStuff);
+            }
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+    }
+	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.io.FileImporter#importData(java.io.File, org.openstreetmap.josm.gui.progress.ProgressMonitor)
 	 */
 	@Override
 	public void importData(final File file, ProgressMonitor progressMonitor)
 			throws IOException, IllegalDataException {
-		try {
-			ImageryReader reader = null;
-			
-			try {
-				reader = new ValidatingImageryReader(file.getAbsolutePath());
-			} catch (SAXException e)  {
-                if (JOptionPane.showConfirmDialog(
-                        Main.parent,
-                        tr("Validating error in file {0}:\n{1}\nDo you want to continue without validating the file ?", file.getPath(), e.getLocalizedMessage()),
-                        tr("Open Imagery XML file"),
-                        JOptionPane.YES_NO_CANCEL_OPTION) != JOptionPane.YES_OPTION) {
-                	return;
-                }
-
-				reader = new ImageryReader(file.getAbsolutePath());
-			}
-			
-			final DataSet dataSet = convertImageryEntries(reader.parse());
-			        
-	        final XmlBoundsLayer layer = new XmlBoundsLayer(dataSet, file.getName(), file);
-	        Runnable uiStuff = new Runnable() {
-	            @Override
-	            public void run() {
-	                if (dataSet.allPrimitives().isEmpty()) {
-	                    JOptionPane.showMessageDialog(
-	                            Main.parent,
-	                            tr("No data found in file {0}.", file.getPath()),
-	                            tr("Open Imagery XML file"),
-	                            JOptionPane.INFORMATION_MESSAGE);
-	                }
-	                Main.main.addLayer(layer);
-	                layer.onPostLoadFromFile();
-	            }
-	        };
-	        if (SwingUtilities.isEventDispatchThread()) {
-	            uiStuff.run();
-	        } else {
-	            SwingUtilities.invokeLater(uiStuff);
-	        }
-		} catch (SAXException e) {
-			e.printStackTrace();
-		}
+		importData(null, null, file, progressMonitor);
 	}
+	
+	public void importData(final String source, final String layerName, ProgressMonitor progressMonitor)
+	        throws IOException, IllegalDataException {
+	    importData(source, layerName, null, progressMonitor);
+    }
 
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.io.FileImporter#importData(java.util.List, org.openstreetmap.josm.gui.progress.ProgressMonitor)

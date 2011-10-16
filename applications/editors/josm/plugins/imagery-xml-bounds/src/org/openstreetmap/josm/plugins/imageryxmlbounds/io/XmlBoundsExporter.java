@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.imageryxmlbounds;
+package org.openstreetmap.josm.plugins.imageryxmlbounds.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,6 +25,7 @@ import java.io.Writer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.FileExporter;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ComputeBoundsAction;
 
 /**

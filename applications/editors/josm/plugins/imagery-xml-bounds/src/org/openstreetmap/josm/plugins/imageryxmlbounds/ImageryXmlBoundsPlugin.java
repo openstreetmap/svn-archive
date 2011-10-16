@@ -24,12 +24,16 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsListAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsPropertiesAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsSelectionAction;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.downloadtask.DownloadXmlBoundsTask;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.io.XmlBoundsExporter;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.io.XmlBoundsImporter;
 
 /**
  * Main class of Imagery XML bounds plugin.
  * @author Don-vip
- * @version 1.1
+ * @version 1.2
  * History:
+ * 1.2 17-Oct-2011 Update for #6960 and JOSM 4523 (allow to download imagery XML bounds with Ctrl-L)
  * 1.1 08-Oct-2011 Update for #6934 and JOSM 4506, code refactorisation, removing debug code
  * 1.0 03-Oct-2011 first version
  */
@@ -68,6 +72,8 @@ public class ImageryXmlBoundsPlugin extends Plugin {
         // Initialize the selection action
 		DataSet.addSelectionListener(selectionAction);
 		Main.toolbar.register(selectionAction);
+		// Allow JOSM to download *.imagery.xml files
+		Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
 	}
 
 	/* (non-Javadoc)

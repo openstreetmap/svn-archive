@@ -32,13 +32,18 @@ public interface XmlBoundsConstants {
 	/**
 	 * Plugin version.
 	 */
-	public static final String PLUGIN_VERSION = "1.1";
+	public static final String PLUGIN_VERSION = "1.2";
 	
 	/**
 	 * XML namespace for JOSM Imagery schema.
 	 */
 	public static final String XML_NAMESPACE = "http://josm.openstreetmap.de/maps-1.0";
-	
+
+    /**
+     * XML file location.
+     */
+    public static final String XML_LOCATION = "http://josm.openstreetmap.de/maps";
+
 	/**
 	 * XML Schema
 	 */

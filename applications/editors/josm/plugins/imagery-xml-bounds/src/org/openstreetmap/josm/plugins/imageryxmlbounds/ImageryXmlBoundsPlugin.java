@@ -22,7 +22,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.graphview.plugin.data.JOSMDataSource;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsListAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsPropertiesAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsSelectionAction;

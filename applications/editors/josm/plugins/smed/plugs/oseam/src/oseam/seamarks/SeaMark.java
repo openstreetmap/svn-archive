@@ -187,7 +187,7 @@ public class SeaMark {
 		CatSTR.put(Cat.MOR_BUOY, "buoy");
 		CatSTR.put(Cat.SIS_PTCL, "control");
 		CatSTR.put(Cat.SIS_PTED, "entry");
-		CatSTR.put(Cat.SIS_IPT, "ipt");
+		CatSTR.put(Cat.SIS_IPT, "IPT");
 		CatSTR.put(Cat.SIS_BRTH, "berthing");
 		CatSTR.put(Cat.SIS_DOCK, "dock");
 		CatSTR.put(Cat.SIS_LOCK, "lock");
@@ -623,6 +623,43 @@ public class SeaMark {
 		FogPeriod = period;
 	}
 
+	public enum Sts {
+		UNKNOWN, PERM, OCC, REC, NIU, INT, RESV, TEMP, PRIV, MAND, DEST, EXT, ILLUM, HIST, PUB, SYNC, WATCH, UNWAT, DOUBT
+	}
+	
+	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(Sts.class);
+	static {
+		StsSTR.put(Sts.PERM, "permanent");
+		StsSTR.put(Sts.OCC, "occasional");
+		StsSTR.put(Sts.REC, "recommended");
+		StsSTR.put(Sts.NIU, "not_in_use");
+		StsSTR.put(Sts.INT, "intermittent");
+		StsSTR.put(Sts.RESV, "reserved");
+		StsSTR.put(Sts.TEMP, "tempory");
+		StsSTR.put(Sts.PRIV, "private");
+		StsSTR.put(Sts.MAND, "mandatory");
+		StsSTR.put(Sts.DEST, "destroyed");
+		StsSTR.put(Sts.EXT, "extinguished");
+		StsSTR.put(Sts.ILLUM, "illuminated");
+		StsSTR.put(Sts.HIST, "historic");
+		StsSTR.put(Sts.PUB, "public");
+		StsSTR.put(Sts.SYNC, "synchronized");
+		StsSTR.put(Sts.WATCH, "watched");
+		StsSTR.put(Sts.UNWAT, "unwatched");
+		StsSTR.put(Sts.DOUBT, "existence_doubtful");
+	}
+
+	private Sts status = Sts.UNKNOWN;
+	
+	public Sts getStatus() {
+		return status;
+	}
+
+	public void setStatus(Sts sts) {
+		status = sts;
+	}
+
+	// **********************!!!!!!!!!
 	public Light light = new Light(dlg);
 
 	private boolean paintlock = false;

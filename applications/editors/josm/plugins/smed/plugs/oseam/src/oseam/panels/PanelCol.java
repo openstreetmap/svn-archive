@@ -128,7 +128,7 @@ public class PanelCol extends JPanel {
 			this.add(getColButton(pinkButton, 37, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
 
 			stack = new JPanel();
-			stack.setBorder(BorderFactory.createLoweredBevelBorder());
+			stack.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 			stack.setBounds(38, 87, 34, 64);
 			stack.setLayout(null);
 			this.add(stack);

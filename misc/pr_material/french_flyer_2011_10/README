@@ -1,0 +1,22 @@
+This directory contains files for an OSM flyer (in French, from the 
+original German version) that was created by Frederik Ramm 
+<frederik@remote.org> and contributors from the talk-de list in 
+January 2008, and subsequently updated over the years. 
+The latest version was mainly made by Soeren Gasch 
+<soeren@geofabrik.de>, then translated by Frédéric Rodrigo and
+Vincent Privat.
+
+All contents are in the public domain except those derived from OSM 
+which are CC-BY-SA.
+
+The flyer is designed for DIN A7 as the final size (105mm high and
+74mm wide), with 8 pages in a zig-zag ("Leporello") fold, and full
+colour printing.
+
+The flyers have been made with Inkscape:
+Light version: osmflyer1.svg and osmflyer2.svg are the front and 
+reverse side. 
+Complete version: osmdepliant1.svg and osmdepliant2.svg are the front 
+and reverse side. 
+
+See German README file for further information.

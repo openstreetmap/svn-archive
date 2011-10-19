@@ -659,6 +659,84 @@ public class SeaMark {
 		status = sts;
 	}
 
+	public enum Cns {
+		UNKNOWN, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GRP, PAINT
+	}
+	
+	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
+	static {
+		CnsSTR.put(Cns.BRICK, "masonry");
+		CnsSTR.put(Cns.CONC, "concreted");
+		CnsSTR.put(Cns.BOULD, "boulders");
+		CnsSTR.put(Cns.HSURF, "hard_surfaced");
+		CnsSTR.put(Cns.USURF, "unsurfaced");
+		CnsSTR.put(Cns.WOOD, "wooden");
+		CnsSTR.put(Cns.METAL, "metal");
+		CnsSTR.put(Cns.GRP, "grp");
+		CnsSTR.put(Cns.PAINT, "painted");
+	}
+
+	private Cns construction = Cns.UNKNOWN;
+	
+	public Cns getConstr() {
+		return construction;
+	}
+
+	public void setConstr(Cns cns) {
+		construction = cns;
+	}
+
+	public enum Vis {
+		UNKNOWN, CONSP, NCONS, REFL
+	}
+	
+	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
+	static {
+		VisSTR.put(Vis.CONSP, "conspicuous");
+		VisSTR.put(Vis.NCONS, "not_conspicuous");
+		VisSTR.put(Vis.REFL, "reflector");
+	}
+
+	private Vis visibility = Vis.UNKNOWN;
+	
+	public Vis getVis() {
+		return visibility;
+	}
+
+	public void setVis(Vis vis) {
+		visibility = vis;
+	}
+
+	private Vis reflectivity = Vis.UNKNOWN;
+	
+	public Vis getRvis() {
+		return reflectivity;
+	}
+
+	public void setRvis(Vis vis) {
+		reflectivity = vis;
+	}
+
+	public String information = "";
+	
+	public String getInfo() {
+		return information;
+	}
+	
+	public void setInfo(String str) {
+		information = str;
+	}
+	
+	public String source = "";
+	
+	public String getSource() {
+		return source;
+	}
+	
+	public void setSource(String str) {
+		source = str;
+	}
+	
 	// **********************!!!!!!!!!
 	public Light light = new Light(dlg);
 

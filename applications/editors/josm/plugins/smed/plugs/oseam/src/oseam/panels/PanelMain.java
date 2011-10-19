@@ -227,7 +227,7 @@ public class PanelMain extends JPanel {
 				if (dlg.mark == null)
 					return;
 				else
-					dlg.mark.setName(nameBox.getText());
+					dlg.mark.setName(nameBox.getText().trim());
 			}
 		};
 		nameBox.addActionListener(alName);

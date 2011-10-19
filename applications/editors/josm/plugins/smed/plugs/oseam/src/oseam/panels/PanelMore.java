@@ -22,6 +22,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark == null)
 				return;
+			else
+				dlg.mark.setInfo(infoBox.getText().trim());
 		}
 	};
 	public JLabel sourceLabel;
@@ -30,6 +32,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark == null)
 				return;
+			else
+				dlg.mark.setSource(sourceBox.getText().trim());
 		}
 	};
 	public JLabel elevLabel;
@@ -62,26 +66,38 @@ public class PanelMore extends JPanel {
 	};
 	public JLabel constrLabel;
 	public JComboBox constrBox;
+	public EnumMap<Cns, Integer> constructions = new EnumMap<Cns, Integer>(Cns.class);
 	private ActionListener alConstr = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
+			for (Cns cns : constructions.keySet()) {
+				int idx = constructions.get(cns);
+				if (dlg.mark != null && (idx == constrBox.getSelectedIndex()))
+					dlg.mark.setConstr(cns);
+			}
 		}
 	};
 	public JLabel visLabel;
 	public JComboBox visBox;
+	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
 	private ActionListener alVis = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
+			for (Vis vis : visibilities.keySet()) {
+				int idx = visibilities.get(vis);
+				if (dlg.mark != null && (idx == visBox.getSelectedIndex()))
+					dlg.mark.setVis(vis);
+			}
 		}
 	};
-	public JLabel conspLabel;
-	public JComboBox conspBox;
-	private ActionListener alConsp = new ActionListener() {
+	public JLabel reflLabel;
+	public JComboBox reflBox;
+	public EnumMap<Vis, Integer> reflectivities = new EnumMap<Vis, Integer>(Vis.class);
+	private ActionListener alRefl = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
+			for (Vis vis : reflectivities.keySet()) {
+				int idx = reflectivities.get(vis);
+				if (dlg.mark != null && (idx == reflBox.getSelectedIndex()))
+					dlg.mark.setRvis(vis);
+			}
 		}
 	};
 	public PanelPat panelPat;
@@ -227,6 +243,24 @@ public class PanelMore extends JPanel {
 		statusBox = new JComboBox();
 		statusBox.setBounds(new Rectangle(250, 20, 100, 20));
 		addStsItem(Messages.getString("NotSet"), Sts.UNKNOWN);
+		addStsItem(Messages.getString("Permanent"), Sts.PERM);
+		addStsItem(Messages.getString("Occasional"), Sts.OCC);
+		addStsItem(Messages.getString("Recommended"), Sts.REC);
+		addStsItem(Messages.getString("NotInUse"), Sts.NIU);
+		addStsItem(Messages.getString("Intermittent"), Sts.INT);
+		addStsItem(Messages.getString("Reserved"), Sts.RESV);
+		addStsItem(Messages.getString("Temporary"), Sts.TEMP);
+		addStsItem(Messages.getString("Private"), Sts.PRIV);
+		addStsItem(Messages.getString("Mandatory"), Sts.MAND);
+		addStsItem(Messages.getString("Destroyed"), Sts.DEST);
+		addStsItem(Messages.getString("Extinguished"), Sts.EXT);
+		addStsItem(Messages.getString("Illuminated"), Sts.ILLUM);
+		addStsItem(Messages.getString("Historic"), Sts.HIST);
+		addStsItem(Messages.getString("Public"), Sts.PUB);
+		addStsItem(Messages.getString("Synchronized"), Sts.SYNC);
+		addStsItem(Messages.getString("Watched"), Sts.WATCH);
+		addStsItem(Messages.getString("UnWatched"), Sts.UNWAT);
+		addStsItem(Messages.getString("Doubtful"), Sts.DOUBT);
 		this.add(statusBox, null);
 		statusBox.addActionListener(alStatus);
 
@@ -235,24 +269,41 @@ public class PanelMore extends JPanel {
 		this.add(constrLabel, null);
 		constrBox = new JComboBox();
 		constrBox.setBounds(new Rectangle(250, 60, 100, 20));
+		addCnsItem(Messages.getString("NotSet"), Cns.UNKNOWN);
+		addCnsItem(Messages.getString("Masonry"), Cns.BRICK);
+		addCnsItem(Messages.getString("Concreted"), Cns.CONC);
+		addCnsItem(Messages.getString("Boulders"), Cns.BOULD);
+		addCnsItem(Messages.getString("HardSurfaced"), Cns.HSURF);
+		addCnsItem(Messages.getString("Unsurfaced"), Cns.USURF);
+		addCnsItem(Messages.getString("Wooden"), Cns.WOOD);
+		addCnsItem(Messages.getString("Metal"), Cns.METAL);
+		addCnsItem(Messages.getString("GRP"), Cns.GRP);
+		addCnsItem(Messages.getString("Painted"), Cns.PAINT);
 		this.add(constrBox, null);
 		constrBox.addActionListener(alConstr);
 
-		conspLabel = new JLabel(Messages.getString("Reflectivity"), SwingConstants.CENTER);
-		conspLabel.setBounds(new Rectangle(250, 80, 100, 20));
-		this.add(conspLabel, null);
-		conspBox = new JComboBox();
-		conspBox.setBounds(new Rectangle(250, 100, 100, 20));
-		this.add(conspBox, null);
-		conspBox.addActionListener(alConsp);
-
 		visLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
-		visLabel.setBounds(new Rectangle(250, 120, 100, 20));
+		visLabel.setBounds(new Rectangle(250, 80, 100, 20));
 		this.add(visLabel, null);
 		visBox = new JComboBox();
-		visBox.setBounds(new Rectangle(250, 140, 100, 20));
+		visBox.setBounds(new Rectangle(250, 100, 100, 20));
+		addVisItem(Messages.getString("NotSet"), Vis.UNKNOWN);
+		addVisItem(Messages.getString("Conspicuous"), Vis.CONSP);
+		addVisItem(Messages.getString("NotConspicuous"), Vis.NCONS);
 		this.add(visBox, null);
 		visBox.addActionListener(alVis);
+
+		reflLabel = new JLabel(Messages.getString("Reflectivity"), SwingConstants.CENTER);
+		reflLabel.setBounds(new Rectangle(250, 120, 100, 20));
+		this.add(reflLabel, null);
+		reflBox = new JComboBox();
+		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
+		addRvsItem(Messages.getString("NotSet"), Vis.UNKNOWN);
+		addRvsItem(Messages.getString("Conspicuous"), Vis.CONSP);
+		addRvsItem(Messages.getString("NotConspicuous"), Vis.NCONS);
+		addRvsItem(Messages.getString("Reflector"), Vis.REFL);
+		this.add(reflBox, null);
+		reflBox.addActionListener(alRefl);
 
 		}
 
@@ -263,6 +314,21 @@ public class PanelMore extends JPanel {
 	private void addStsItem(String str, Sts sts) {
 		statuses.put(sts, statusBox.getItemCount());
 		statusBox.addItem(str);
+	}
+
+	private void addCnsItem(String str, Cns cns) {
+		constructions.put(cns, constrBox.getItemCount());
+		constrBox.addItem(str);
+	}
+
+	private void addVisItem(String str, Vis vis) {
+		visibilities.put(vis, visBox.getItemCount());
+		visBox.addItem(str);
+	}
+
+	private void addRvsItem(String str, Vis vis) {
+		reflectivities.put(vis, reflBox.getItemCount());
+		reflBox.addItem(str);
 	}
 
 	private JRadioButton getRegionButton(JRadioButton button, int x, int y, int w, int h, String tip) {

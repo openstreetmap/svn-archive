@@ -78,6 +78,8 @@ public class PanelCol extends JPanel {
 										btnI.setBorderPainted(false);
 									}
 								}
+							} else {
+								stack.repaint();
 							}
 						}
 					}

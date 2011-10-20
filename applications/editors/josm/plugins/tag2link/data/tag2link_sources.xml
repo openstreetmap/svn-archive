@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+//    JOSM tag2link plugin.
+//    Copyright (C) 2011 Don-vip & FrViPofm
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<tag2link>
+
+    <!-- Global -->
+
+    <source name="Common">
+       <rule>
+           <condition k="website" />
+           <link name="View website" href="{v}" />
+       </rule>
+       <rule>
+           <condition k="url" />
+           <link name="View URL" href="{v}" />
+       </rule>
+    </source>
+	
+	<source name="Wikipedia">
+	   <rule>
+	       <condition k="wikipedia(?::([\p{Lower}]{2,}))?" />
+           <link name="View {name} article" href="http://{k.1:en}.wikipedia.org/wiki/{v}" />
+	   </rule>
+	</source>
+	
+	<!-- Only for France -->
+    
+    <source name="SANDRE" country-code="FR">
+       <rule>
+           <condition k="ref:sandre" v="[A-Z0-9-]{8}" />
+           <link name="View {name} sheet of river" href="http://services.sandre.eaufrance.fr/Courdo/Fiche/client/fiche_courdo.php?CdSandre={v}" />
+       </rule>
+    </source>
+    
+    <source name="INSEE" country-code="FR">
+       <rule>
+           <condition k="admin_level" v="8"/>
+           <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{3})"/>
+           <link name="View {name} municipality sheet" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/fichecommunale.asp?codedep={v.1}&amp;codecom={v.2}" />
+       </rule>
+       <rule>
+           <condition k="political_division" v="FR:canton"/>
+           <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{2})"/>
+           <link name="View {name} map of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_comcan.asp?codecan={v}" />
+           <link name="View {name} list of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/comcan.asp?codedep={v.1}&amp;codecan={v.2}" />
+       </rule>
+       <rule>
+           <condition k="admin_level" v="7"/>
+           <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{1})"/>
+           <link name="View {name} map of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_canarr.asp?codearr={v}" />
+           <link name="View {name} list of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/canarr.asp?codedep={v.1}&amp;codearr={v.2}" />
+       </rule>
+       <rule>
+           <condition k="admin_level" v="6"/>
+           <condition k="ref:INSEE" v="\p{Digit}{2}"/>
+           <link name="View {name} map of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_arrdep.asp?codedep={v}" />
+           <link name="View {name} list of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/arrdep.asp?codedep={v}" />
+       </rule>
+       <rule>
+           <condition k="admin_level" v="4"/>
+           <condition k="ref:INSEE" v="\p{Digit}{2}"/>
+           <link name="View {name} map of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_depreg.asp?codereg={v}" />
+           <link name="View {name} list of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/depreg.asp?codereg={v}" />
+       </rule>
+       <rule>
+           <condition k="admin_level" v="2"/>
+           <condition k="name" v="France*"/>
+           <link name="View {name} map of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_regions.asp" />
+           <link name="View {name} list of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/region.asp" />
+       </rule>
+    </source>
+    
+</tag2link>

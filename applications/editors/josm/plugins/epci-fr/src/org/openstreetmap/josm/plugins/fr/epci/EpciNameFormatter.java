@@ -16,7 +16,8 @@ public class EpciNameFormatter implements NameFormatterHook {
         if (relation == null) return null;
 		String local_authority_FR = relation.get("local_authority:FR");
         if (local_authority_FR != null) {
-        	return (defaultName != null ? defaultName : "") + "["+local_authority_FR+"]";
+        	return (defaultName != null ? defaultName : "") + 
+        	        "["+(local_authority_FR.equals("metropole") ? "MP" : local_authority_FR)+"]";
         } else {
         	return null;
         }

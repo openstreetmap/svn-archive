@@ -25,7 +25,8 @@ public class TemplatedTMSTileSource extends TMSTileSource {
 
     public TemplatedTMSTileSource(String name, String url, int minZoom, int maxZoom) {
         super(name, url, minZoom, maxZoom);
-        Matcher m = Pattern.compile(".*"+PATTERN_SWITCH+".*").matcher(url);
+        // Capturing group pattern on switch values
+        Matcher m = Pattern.compile(".*\\{switch:([^}]+)\\}.*").matcher(url);
         if (m.matches()) {
             rand = new Random();
             randomParts = m.group(1).split(",");

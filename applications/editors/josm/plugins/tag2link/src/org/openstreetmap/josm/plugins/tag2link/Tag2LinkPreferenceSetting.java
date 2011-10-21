@@ -15,27 +15,24 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link;
 
-/**
- * Main constants of JOSM tag2link plugin.
- * @author Don-vip
- *
- */
-public interface Tag2LinkConstants {
+import static org.openstreetmap.josm.tools.I18n.tr;
 
-	/**
-	 * XML Schema
-	 */
-	public static final String XML_LOCATION = "/resources/tag2link_sources.xml";
-	
-	/**
-	 * File encoding.
-	 */
-	public static final String ENCODING = "UTF-8";
-	
-	/**
-	 * Plugin icons.
-	 */
-	public static String ICON_16 = "tag2linkv2_16x16.png";
-	public static String ICON_24 = "tag2linkv2_24x24.png";
-    public static String ICON_48 = "tag2linkv2_48x48.png";
+import javax.swing.JPanel;
+
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+
+public class Tag2LinkPreferenceSetting implements PreferenceSetting, Tag2LinkConstants {
+
+    @Override
+    public void addGui(PreferenceTabbedPane gui) {
+        JPanel p = gui.createPreferenceTab(ICON_48, tr("Tag2Link Preferences"),
+                tr("Tag2Link Preferences"), false);
+        // TODO
+    }
+
+    @Override
+    public boolean ok() {
+        return false;
+    }
 }

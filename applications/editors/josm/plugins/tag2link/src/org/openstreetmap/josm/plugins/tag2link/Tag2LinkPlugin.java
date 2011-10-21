@@ -15,8 +15,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link;
 
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.tag2link.listeners.MembershipPopupListener;
+import org.openstreetmap.josm.plugins.tag2link.listeners.PropertyPopupListener;
+import org.openstreetmap.josm.plugins.tag2link.listeners.RelationPopupListener;
+import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
 
 /**
  * Main class of tag2links plugin.
@@ -27,11 +33,37 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class Tag2LinkPlugin extends Plugin {
 
+    private Tag2LinkPreferenceSetting preferenceSetting;
+    
 	/**
 	 * Initializes the plugin.
 	 * @param info
 	 */
 	public Tag2LinkPlugin(PluginInformation info) {
 		super(info);
+		this.preferenceSetting = new Tag2LinkPreferenceSetting();
+		Tag2LinkRuleChecker.init();
 	}
+
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
+     */
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return this.preferenceSetting;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (newFrame != null) {
+            // Initialize dialogs listeners only after the main frame is created 
+            newFrame.selectionListDialog.addPopupMenuListener(new SelectionPopupListener(newFrame));
+            newFrame.propertiesDialog.addMembershipPopupMenuListener(new MembershipPopupListener(newFrame));
+            newFrame.propertiesDialog.addPropertyPopupMenuListener(new PropertyPopupListener(newFrame));
+            newFrame.relationListDialog.addPopupMenuListener(new RelationPopupListener(newFrame));
+        }
+    }
 }

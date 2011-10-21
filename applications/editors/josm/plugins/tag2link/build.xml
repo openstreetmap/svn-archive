@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="imagery-xml-bounds" default="dist" basedir=".">
+<project name="tag2link" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
@@ -101,7 +101,7 @@
                 <attribute name="Plugin-Description" value="TODO"/>
                 <attribute name="fr_Plugin-Description" value="TODO"/>
                 <attribute name="Plugin-Early" value="false"/>
-                <attribute name="Plugin-Icon" value="images/tag2link_24.png"/>
+                <attribute name="Plugin-Icon" value="images/tag2linkv2_24x24.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

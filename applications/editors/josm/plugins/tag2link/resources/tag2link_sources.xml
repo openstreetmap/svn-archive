@@ -23,18 +23,18 @@
     <source name="Common">
        <rule>
            <condition k="website" />
-           <link name="View website" href="{v}" />
+           <link name="View website" href="%v%" />
        </rule>
        <rule>
            <condition k="url" />
-           <link name="View URL" href="{v}" />
+           <link name="View URL" href="%v%" />
        </rule>
     </source>
 	
 	<source name="Wikipedia">
 	   <rule>
 	       <condition k="wikipedia(?::([\p{Lower}]{2,}))?" />
-           <link name="View {name} article" href="http://{k.1:en}.wikipedia.org/wiki/{v}" />
+           <link name="View %name% article" href="http://%k.1:en%.wikipedia.org/wiki/%v%" />
 	   </rule>
 	</source>
 	
@@ -43,7 +43,7 @@
     <source name="SANDRE" country-code="FR">
        <rule>
            <condition k="ref:sandre" v="[A-Z0-9-]{8}" />
-           <link name="View {name} sheet of river" href="http://services.sandre.eaufrance.fr/Courdo/Fiche/client/fiche_courdo.php?CdSandre={v}" />
+           <link name="View %name% sheet of river" href="http://services.sandre.eaufrance.fr/Courdo/Fiche/client/fiche_courdo.php?CdSandre=%v%" />
        </rule>
     </source>
     
@@ -51,37 +51,37 @@
        <rule>
            <condition k="admin_level" v="8"/>
            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{3})" id="ref"/>
-           <link name="View {name} municipality sheet" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/fichecommunale.asp?codedep={ref.v.1}&amp;codecom={ref.v.2}" />
+           <link name="View %name% municipality sheet" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/fichecommunale.asp?codedep=%ref.v.1%&amp;codecom=%ref.v.2%" />
        </rule>
        <rule>
            <condition k="political_division" v="FR:canton"/>
            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{2})" id="ref"/>
-           <link name="View {name} map of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_comcan.asp?codecan={ref.v}" />
-           <link name="View {name} list of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/comcan.asp?codedep={ref.v.1}&amp;codecan={ref.v.2}" />
+           <link name="View %name% map of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_comcan.asp?codecan=%ref.v%" />
+           <link name="View %name% list of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/comcan.asp?codedep={ref.v.1}&amp;codecan=%ref.v.2%" />
        </rule>
        <rule>
            <condition k="admin_level" v="7"/>
            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{1})" id="ref"/>
-           <link name="View {name} map of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_canarr.asp?codearr={ref.v}" />
-           <link name="View {name} list of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/canarr.asp?codedep={ref.v.1}&amp;codearr={ref.v.2}" />
+           <link name="View %name% map of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_canarr.asp?codearr=%ref.v%" />
+           <link name="View %name% list of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/canarr.asp?codedep=%ref.v.1%&amp;codearr=%ref.v.2%" />
        </rule>
        <rule>
            <condition k="admin_level" v="6"/>
            <condition k="ref:INSEE" v="\p{Digit}{2}" id="ref"/>
-           <link name="View {name} map of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_arrdep.asp?codedep={ref.v}" />
-           <link name="View {name} list of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/arrdep.asp?codedep={ref.v}" />
+           <link name="View %name% map of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_arrdep.asp?codedep=%ref.v%" />
+           <link name="View %name% list of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/arrdep.asp?codedep=%ref.v%" />
        </rule>
        <rule>
            <condition k="admin_level" v="4"/>
            <condition k="ref:INSEE" v="\p{Digit}{2}" id="ref"/>
-           <link name="View {name} map of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_depreg.asp?codereg={ref.v}" />
-           <link name="View {name} list of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/depreg.asp?codereg={ref.v}" />
+           <link name="View %name% map of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_depreg.asp?codereg=%ref.v%" />
+           <link name="View %name% list of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/depreg.asp?codereg=%ref.v%" />
        </rule>
        <rule>
            <condition k="admin_level" v="2"/>
            <condition k="name" v="France*"/>
-           <link name="View {name} map of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_regions.asp" />
-           <link name="View {name} list of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/region.asp" />
+           <link name="View %name% map of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_regions.asp" />
+           <link name="View %name% list of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/region.asp" />
        </rule>
     </source>
     

@@ -125,7 +125,7 @@ public class SourcesReader implements Tag2LinkConstants {
     }
 
     private Source parseSource() throws XMLStreamException {
-        Source source = new Source();
+        Source source = new Source(parser.getAttributeValue(null, "name"));
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
@@ -173,9 +173,10 @@ public class SourcesReader implements Tag2LinkConstants {
     }
 
     private Link parseLink() throws XMLStreamException {
-        Link link = new Link();
-        link.name = parser.getAttributeValue(null, "name");
-        link.url  = parser.getAttributeValue(null, "href");
+        Link link = new Link(
+	        parser.getAttributeValue(null, "name"),
+	        parser.getAttributeValue(null, "href")
+        );
         jumpToEnd();
         return link;
     }

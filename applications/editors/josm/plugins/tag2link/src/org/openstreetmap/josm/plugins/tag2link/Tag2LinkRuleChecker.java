@@ -17,8 +17,6 @@ package org.openstreetmap.josm.plugins.tag2link;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -47,9 +45,13 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
             for (Rule rule : source.rules) {
                 EvalResult eval = rule.evaluates(p);
                 if (eval.matches()) {
-                    Set<String> links = new HashSet<String>();
-                    for (MatchingTag tag : eval.matchingTags) {
-                        
+                    for (Link link : rule.links) {
+                    	Link copy = new Link(link);
+                    	copy.name = copy.name.replaceAll("%name%", source.name);
+                    	MatchingTag firstTag = eval.matchingTags.iterator().next();
+                    	copy.url = copy.url.replaceAll("%k%", firstTag.key)
+                    			           .replaceAll("%v%", firstTag.value);
+                    	result.add(copy);
                     }
                 }
             }

@@ -16,6 +16,15 @@ public class Rule {
         public String key;
         public String value;
         public final Map<String, String> params = new HashMap<String, String>();
+        public MatchingTag(String key, String value) {
+        	this.key = key;
+        	this.value = value;
+        }
+        public void addParams(Matcher m, String prefix) {
+    		for (int i = 1; i<=m.groupCount(); i++) {
+    			this.params.put(prefix+i, m.group(i));
+    		}
+        }
     }
     
     public static class EvalResult {
@@ -30,9 +39,23 @@ public class Rule {
         Map<String, String> tags = p.getKeys();
         for (Condition c : conditions) {
             for (String key : tags.keySet()) {
-                Matcher m = c.keyPattern.matcher(key);
-                if (m.matches()) {
-                    
+                Matcher keyMatcher = c.keyPattern.matcher(key);
+                if (keyMatcher.matches()) {
+                	String idPrefix = c.id == null ? "" : c.id+".";
+            		MatchingTag tag = new MatchingTag(key, tags.get(key));
+            		tag.addParams(keyMatcher, idPrefix+"k.");
+                	boolean matchingTag = true;
+                	if (c.valPattern != null) {
+                		Matcher valMatcher = c.valPattern.matcher(tag.value);
+                		if (valMatcher.matches()) {
+                			tag.addParams(valMatcher, idPrefix+"v.");
+                		} else {
+                			matchingTag = false;
+                		}
+                	}
+                	if (matchingTag) {
+                		result.matchingTags.add(tag);
+                	}
                 }
             }
         }

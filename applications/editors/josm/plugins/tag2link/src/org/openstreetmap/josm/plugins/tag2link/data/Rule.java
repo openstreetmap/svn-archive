@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 
 public class Rule {
     public final Collection<Condition> conditions = new ArrayList<Condition>();
@@ -15,15 +15,27 @@ public class Rule {
     public static class MatchingTag {
         public String key;
         public String value;
-        public final Map<String, String> params = new HashMap<String, String>();
-        public MatchingTag(String key, String value) {
+        public final Map<String, String> params;
+        private String prefix;
+        public MatchingTag(String key, String value, String prefix) {
         	this.key = key;
         	this.value = value;
+        	this.params = new HashMap<String, String>();
+        	this.prefix = prefix;
+        	addKeyValueParams();
         }
-        public void addParams(Matcher m, String prefix) {
+        public void addParams(Matcher m, String paramName) {
     		for (int i = 1; i<=m.groupCount(); i++) {
-    			this.params.put(prefix+i, m.group(i));
+    			params.put(prefix+paramName+"."+i, m.group(i));
     		}
+        }
+        private void addKeyValueParams() {
+        	params.put("k", key);
+        	params.put("v", value);
+        	if (!prefix.isEmpty()) {
+            	params.put(prefix+"k", key);
+            	params.put(prefix+"v", value);
+        	}
         }
     }
     
@@ -34,7 +46,7 @@ public class Rule {
         }
     }
     
-    public EvalResult evaluates(OsmPrimitive p) {
+    public EvalResult evaluates(IPrimitive p) {
         EvalResult result = new EvalResult();
         Map<String, String> tags = p.getKeys();
         for (Condition c : conditions) {
@@ -42,13 +54,13 @@ public class Rule {
                 Matcher keyMatcher = c.keyPattern.matcher(key);
                 if (keyMatcher.matches()) {
                 	String idPrefix = c.id == null ? "" : c.id+".";
-            		MatchingTag tag = new MatchingTag(key, tags.get(key));
-            		tag.addParams(keyMatcher, idPrefix+"k.");
+            		MatchingTag tag = new MatchingTag(key, tags.get(key), idPrefix);
+            		tag.addParams(keyMatcher, "k");
                 	boolean matchingTag = true;
                 	if (c.valPattern != null) {
                 		Matcher valMatcher = c.valPattern.matcher(tag.value);
                 		if (valMatcher.matches()) {
-                			tag.addParams(valMatcher, idPrefix+"v.");
+                			tag.addParams(valMatcher, "v");
                 		} else {
                 			matchingTag = false;
                 		}

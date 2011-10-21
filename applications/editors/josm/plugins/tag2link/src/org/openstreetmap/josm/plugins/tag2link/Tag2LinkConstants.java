@@ -30,7 +30,7 @@ public interface Tag2LinkConstants {
 	/**
 	 * File encoding.
 	 */
-	public static final String ENCODING = "UTF-8";
+	public static final String UTF8_ENCODING = "UTF-8";
 	
 	/**
 	 * Plugin icons.

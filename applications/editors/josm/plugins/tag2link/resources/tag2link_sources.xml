@@ -30,15 +30,15 @@
            <link name="View URL" href="%v%" />
        </rule>
     </source>
-	
-	<source name="Wikipedia">
-	   <rule>
-	       <condition k="wikipedia(?::([\p{Lower}]{2,}))?" />
-           <link name="View %name% article" href="http://%k.1:en%.wikipedia.org/wiki/%v%" />
-	   </rule>
-	</source>
-	
-	<!-- Only for France -->
+    
+    <source name="Wikipedia">
+       <rule>
+           <condition k="wikipedia(?::([\p{Lower}]{2,}))?" v="(?:([\p{Lower}]{2,}):)?(.*)" />
+           <link name="View %name% article" href="http://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
+       </rule>
+    </source>
+    
+    <!-- Only for France -->
     
     <source name="SANDRE" country-code="FR">
        <rule>

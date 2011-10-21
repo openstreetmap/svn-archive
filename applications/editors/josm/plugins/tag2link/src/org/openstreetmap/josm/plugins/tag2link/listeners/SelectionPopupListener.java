@@ -15,17 +15,17 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.listeners;
 
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.gui.MapFrame;
 
-public class SelectionPopupListener extends AbstractOsmPrimitivePopupListener {
+public class SelectionPopupListener extends AbstractIPrimitivePopupListener {
 
     public SelectionPopupListener(MapFrame frame) {
         super(frame);
     }
 
     @Override
-    protected OsmPrimitive getFirstSelectedPrimitive() {
+    protected IPrimitive getFirstSelectedPrimitive() {
         return frame.selectionListDialog.getSelectedPrimitives().iterator().next();
     }
 }

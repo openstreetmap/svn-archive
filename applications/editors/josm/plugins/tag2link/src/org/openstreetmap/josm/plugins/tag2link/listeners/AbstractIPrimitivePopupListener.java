@@ -18,22 +18,22 @@ package org.openstreetmap.josm.plugins.tag2link.listeners;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkRuleChecker;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 
-public abstract class AbstractOsmPrimitivePopupListener extends AbstractPopupListener {
+public abstract class AbstractIPrimitivePopupListener extends AbstractPopupListener {
 
-    protected AbstractOsmPrimitivePopupListener(MapFrame frame) {
+    protected AbstractIPrimitivePopupListener(MapFrame frame) {
         super(frame);
     }
 
-    protected abstract OsmPrimitive getFirstSelectedPrimitive();
+    protected abstract IPrimitive getFirstSelectedPrimitive();
     
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        OsmPrimitive p = getFirstSelectedPrimitive();
+        IPrimitive p = getFirstSelectedPrimitive();
         if (p != null) {
             JPopupMenu popup = (JPopupMenu) e.getSource();
             for (Link link : Tag2LinkRuleChecker.getLinks(p)) {

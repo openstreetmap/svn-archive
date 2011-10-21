@@ -15,10 +15,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule.EvalResult;
@@ -39,7 +43,16 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         }
     }
     
-    public static Collection<Link> getLinks(OsmPrimitive p) {
+    private static String findValue(String arg, Collection<MatchingTag> matchingTags) {
+		for (MatchingTag tag : matchingTags) {
+			if (tag.params.containsKey(arg)) {
+				return tag.params.get(arg);
+			}
+		}
+		return null;
+    }
+    
+    public static Collection<Link> getLinks(IPrimitive p) {
         Collection<Link> result = new ArrayList<Link>();
         for (Source source : sources) {
             for (Rule rule : source.rules) {
@@ -48,9 +61,39 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
                     for (Link link : rule.links) {
                     	Link copy = new Link(link);
                     	copy.name = copy.name.replaceAll("%name%", source.name);
-                    	MatchingTag firstTag = eval.matchingTags.iterator().next();
-                    	copy.url = copy.url.replaceAll("%k%", firstTag.key)
-                    			           .replaceAll("%v%", firstTag.value);
+						Matcher m = Pattern.compile("%([^%]*)%").matcher(copy.url);
+						while (m.find()) {
+							String arg = m.group(1);
+							String val = findValue(arg, eval.matchingTags);
+							if (val == null && arg.contains(":")) {
+								String[] vars = arg.split(":");
+								for (int i = 0; val == null && i < vars.length-1; i++) {
+									val = findValue(vars[i], eval.matchingTags);
+								}
+								if (val == null) {
+									// Default value
+									val = vars[vars.length-1];
+								}
+							}
+							if (val != null) {
+								try {
+									// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
+									if (copy.url.contains("wikipedia.")) {
+										val = val.replaceAll(" ", "_");
+									}
+									// Encode param to be included in the URL, except if it is the URL itself !
+									if (!m.group().equals(copy.url)) {
+										val = URLEncoder.encode(val, UTF8_ENCODING);
+									}
+									// Finally replace parameter
+									copy.url = copy.url.replaceFirst(m.group(), val);
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
+							} else {
+								System.err.println("Invalid argument: "+arg);
+							}
+						}
                     	result.add(copy);
                     }
                 }

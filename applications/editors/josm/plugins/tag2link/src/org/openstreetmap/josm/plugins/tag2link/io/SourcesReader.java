@@ -36,7 +36,7 @@ public class SourcesReader implements Tag2LinkConstants {
 
         try {
             InputStream is = SourcesReader.class.getResourceAsStream(XML_LOCATION);
-            InputStreamReader ir = UTFInputStreamReader.create(is, ENCODING);
+            InputStreamReader ir = UTFInputStreamReader.create(is, UTF8_ENCODING);
             XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
             result.addAll(new SourcesReader(parser).parseDoc());
         } catch (IOException e) {

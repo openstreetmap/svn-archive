@@ -15,12 +15,13 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
     private String url;
     
     public OpenLinkAction(Link link) {
-        super(tr(link.name), ICON_24, tr("Launch browser with information about the selected object"), null, true);
+        super(tr(link.name), ICON_24, tr("Launch browser with information about the selected object"), null, false);
         this.url = link.url;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	System.out.println("Opening "+url);
         OpenBrowser.displayUrl(url);
     }
 }

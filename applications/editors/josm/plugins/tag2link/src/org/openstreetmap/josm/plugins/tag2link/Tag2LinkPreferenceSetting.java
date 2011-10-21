@@ -15,10 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import javax.swing.JPanel;
-
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
@@ -26,8 +22,8 @@ public class Tag2LinkPreferenceSetting implements PreferenceSetting, Tag2LinkCon
 
     @Override
     public void addGui(PreferenceTabbedPane gui) {
-        JPanel p = gui.createPreferenceTab(ICON_48, tr("Tag2Link Preferences"),
-                tr("Tag2Link Preferences"), false);
+        /*JPanel p = gui.createPreferenceTab(ICON_48, tr("Tag2Link Preferences"),
+                tr("Tag2Link Preferences"), false);*/
         // TODO
     }
 

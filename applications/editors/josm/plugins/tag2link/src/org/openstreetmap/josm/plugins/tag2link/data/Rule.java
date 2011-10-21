@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 
 public class Rule {
     public final Collection<Condition> conditions = new ArrayList<Condition>();
@@ -46,9 +47,8 @@ public class Rule {
         }
     }
     
-    public EvalResult evaluates(IPrimitive p) {
+    public EvalResult evaluates(Map<String, String> tags) {
         EvalResult result = new EvalResult();
-        Map<String, String> tags = p.getKeys();
         for (Condition c : conditions) {
             for (String key : tags.keySet()) {
                 Matcher keyMatcher = c.keyPattern.matcher(key);
@@ -72,5 +72,16 @@ public class Rule {
             }
         }
         return result;
+
     }
+    
+    public EvalResult evaluates(IPrimitive p) {
+    	return evaluates(p.getKeys());
+    }
+
+	public EvalResult evaluates(Tag tag) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(tag.getKey(), tag.getValue());
+		return evaluates(map);
+	}
 }

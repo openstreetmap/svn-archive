@@ -26,6 +26,6 @@ public class MembershipPopupListener extends AbstractIPrimitivePopupListener {
 
     @Override
     protected IPrimitive getFirstSelectedPrimitive() {
-        return frame.propertiesDialog.getSelectedMembershipRelations().iterator().next();
+        return frame.propertiesDialog.getSelectedMembershipRelation();
     }
 }

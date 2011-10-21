@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule.EvalResult;
@@ -52,53 +53,68 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 		return null;
     }
     
-    public static Collection<Link> getLinks(IPrimitive p) {
-        Collection<Link> result = new ArrayList<Link>();
-        for (Source source : sources) {
-            for (Rule rule : source.rules) {
-                EvalResult eval = rule.evaluates(p);
-                if (eval.matches()) {
-                    for (Link link : rule.links) {
-                    	Link copy = new Link(link);
-                    	copy.name = copy.name.replaceAll("%name%", source.name);
-						Matcher m = Pattern.compile("%([^%]*)%").matcher(copy.url);
-						while (m.find()) {
-							String arg = m.group(1);
-							String val = findValue(arg, eval.matchingTags);
-							if (val == null && arg.contains(":")) {
-								String[] vars = arg.split(":");
-								for (int i = 0; val == null && i < vars.length-1; i++) {
-									val = findValue(vars[i], eval.matchingTags);
-								}
-								if (val == null) {
-									// Default value
-									val = vars[vars.length-1];
-								}
-							}
-							if (val != null) {
-								try {
-									// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
-									if (copy.url.contains("wikipedia.")) {
-										val = val.replaceAll(" ", "_");
-									}
-									// Encode param to be included in the URL, except if it is the URL itself !
-									if (!m.group().equals(copy.url)) {
-										val = URLEncoder.encode(val, UTF8_ENCODING);
-									}
-									// Finally replace parameter
-									copy.url = copy.url.replaceFirst(m.group(), val);
-								} catch (UnsupportedEncodingException e) {
-									e.printStackTrace();
-								}
-							} else {
-								System.err.println("Invalid argument: "+arg);
-							}
+    private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source) {
+    	Collection<Link> result = new ArrayList<Link>();
+        if (eval.matches()) {
+            for (Link link : rule.links) {
+            	Link copy = new Link(link);
+            	copy.name = copy.name.replaceAll("%name%", source.name);
+				Matcher m = Pattern.compile("%([^%]*)%").matcher(copy.url);
+				while (m.find()) {
+					String arg = m.group(1);
+					String val = findValue(arg, eval.matchingTags);
+					if (val == null && arg.contains(":")) {
+						String[] vars = arg.split(":");
+						for (int i = 0; val == null && i < vars.length-1; i++) {
+							val = findValue(vars[i], eval.matchingTags);
 						}
-                    	result.add(copy);
-                    }
-                }
+						if (val == null) {
+							// Default value
+							val = vars[vars.length-1];
+						}
+					}
+					if (val != null) {
+						try {
+							// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
+							if (copy.url.contains("wikipedia.")) {
+								val = val.replaceAll(" ", "_");
+							}
+							// Encode param to be included in the URL, except if it is the URL itself !
+							if (!m.group().equals(copy.url)) {
+								val = URLEncoder.encode(val, UTF8_ENCODING);
+							}
+							// Finally replace parameter
+							copy.url = copy.url.replaceFirst(m.group(), val);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					} else {
+						System.err.println("Invalid argument: "+arg);
+					}
+				}
+            	result.add(copy);
             }
         }
         return result;
     }
+    
+    public static Collection<Link> getLinks(IPrimitive p) {
+        Collection<Link> result = new ArrayList<Link>();
+        for (Source source : sources) {
+            for (Rule rule : source.rules) {
+                result.addAll(processEval(rule.evaluates(p), rule, source));
+            }
+        }
+        return result;
+    }
+
+	public static Collection<Link> getLinks(Tag tag) {
+		Collection<Link> result = new ArrayList<Link>();
+        for (Source source : sources) {
+            for (Rule rule : source.rules) {
+                result.addAll(processEval(rule.evaluates(tag), rule, source));
+            }
+        }
+		return result;
+	}
 }

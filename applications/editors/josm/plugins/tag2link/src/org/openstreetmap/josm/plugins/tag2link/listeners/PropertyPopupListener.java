@@ -15,21 +15,28 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.listeners;
 
+import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.tag2link.Tag2LinkRuleChecker;
+import org.openstreetmap.josm.plugins.tag2link.data.Link;
 
 public class PropertyPopupListener extends AbstractPopupListener {
 
     public PropertyPopupListener(MapFrame frame) {
         super(frame);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        // TODO Auto-generated method stub
-
+        Tag tag = frame.propertiesDialog.getSelectedProperty();
+        if (tag != null) {
+            JPopupMenu popup = (JPopupMenu) e.getSource();
+            for (Link link : Tag2LinkRuleChecker.getLinks(tag)) {
+                addLink(popup, link);
+            }
+        }
     }
-
 }

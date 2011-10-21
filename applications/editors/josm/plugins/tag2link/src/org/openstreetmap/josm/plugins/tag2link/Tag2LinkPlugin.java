@@ -27,9 +27,9 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
 /**
  * Main class of tag2links plugin.
  * @author Don-vip
- * @version 1.0
+ * @version 0.1
  * History:
- * 1.0 ??-Oct-2011 first version
+ * 0.1 22-Oct-2011 first working prototype
  */
 public class Tag2LinkPlugin extends Plugin {
 

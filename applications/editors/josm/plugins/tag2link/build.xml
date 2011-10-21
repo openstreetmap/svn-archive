@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4487"/>
+    <property name="plugin.main.version" value="4536"/>
     <!-- should not be necessary to change the following properties -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.build.dir" value="build"/>
@@ -98,8 +98,7 @@
                 <attribute name="Author" value="Don-vip &amp; FrViPofm"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.tag2link.Tag2LinkPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="TODO"/>
-                <attribute name="fr_Plugin-Description" value="TODO"/>
+                <attribute name="Plugin-Description" value="Launch browser to a Web resource about a selected object having known tags, such as Wikipedia"/>
                 <attribute name="Plugin-Early" value="false"/>
                 <attribute name="Plugin-Icon" value="images/tag2linkv2_24x24.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>

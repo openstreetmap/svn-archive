@@ -56,7 +56,7 @@ public class TheRing {
      * @return list of new relations.
      */
     public static List<Relation> makeManySimpleMultipolygons( Collection<Way> selection, List<Command> commands ) {
-	System.out.println("---------------------------------------");
+	log("---------------------------------------");
 	List<TheRing> rings = new ArrayList<TheRing>(selection.size());
 	for( Way w : selection )
 	    rings.add(new TheRing(w));
@@ -82,11 +82,11 @@ public class TheRing {
 		for( int j = 0; j < other.segments.size(); j++ ) {
 		    RingSegment segment2 = other.segments.get(j);
 		    if( !segment2.isReference() ) {
-			System.out.println("Comparing " + segment1 + " and " + segment2);
+			log("Comparing " + segment1 + " and " + segment2);
 			Node[] split = getSplitNodes(segment1.getNodes(), segment2.getNodes(), segment1.isRing(), segment2.isRing());
 			if( split != null ) {
 			    if( !collideNoted ) {
-				System.out.println("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
+				log("Rings for ways " + source.getUniqueId() + " and " + other.source.getUniqueId() + " collide.");
 				collideNoted = true;
 			    }
 			    RingSegment segment = splitRingAt(i, split[0], split[1]);
@@ -124,7 +124,7 @@ public class TheRing {
 	}
 	int firstPos = isRing1 ? pos : nodes1.size();
 	while( !collideFound ) {
-	    System.out.println("pos=" + pos);
+	    log("pos=" + pos);
 	    int start1 = pos;
 	    int start2 = nodes2.indexOf(nodes1.get(start1));
 	    int last1 = incrementBy(start1, 1, nodes1.size(), isRing1);
@@ -140,7 +140,7 @@ public class TheRing {
 			increment2 = 1;
 		}
 	    }
-	    System.out.println("last1=" + last1 + " last2=" + last2 + " increment2=" + increment2);
+	    log("last1=" + last1 + " last2=" + last2 + " increment2=" + increment2);
 	    if( increment2 != 0 ) {
 		// find the first nodes
 		boolean reachedEnd = false;
@@ -154,7 +154,7 @@ public class TheRing {
 			last2 = newLast2;
 		    }
 		}
-		System.out.println("last1=" + last1 + " last2=" + last2);
+		log("last1=" + last1 + " last2=" + last2);
 		if( increment2 < 0 ) {
 		    int tmp = start2;
 		    start2 = last2;
@@ -204,7 +204,7 @@ public class TheRing {
 	    throw new IllegalArgumentException("Both nodes are equal, id=" + n1.getUniqueId());
 	RingSegment segment = segments.get(segmentIndex);
 	boolean isRing = segment.isRing();
-	System.out.println("Split segment " + segment + " at nodes " + n1.getUniqueId() + " and " + n2.getUniqueId());
+	log("Split segment " + segment + " at nodes " + n1.getUniqueId() + " and " + n2.getUniqueId());
 	boolean reversed = segment.getNodes().indexOf(n2) < segment.getNodes().indexOf(n1);
 	if( reversed && !isRing ) {
 	    // order nodes
@@ -408,6 +408,10 @@ public class TheRing {
 	return Geometry.nodeInsidePolygon(testNode, polygon);
     }
     
+    private static void log( String s ) {
+//	System.out.println(s);
+    }
+    
     private static class RingSegment {
 	private List<Node> nodes;
 	private RingSegment references;
@@ -511,7 +515,7 @@ public class TheRing {
 	}
 
 	public void makeReference( RingSegment segment ) {
-	    System.out.println(this + " was made a reference to " + segment);
+	    log(this + " was made a reference to " + segment);
 	    this.nodes = null;
 	    this.references = segment;
 	}

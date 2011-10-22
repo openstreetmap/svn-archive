@@ -27,9 +27,10 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
 /**
  * Main class of tag2links plugin.
  * @author Don-vip
- * @version 0.1
+ * @version 0.1b
  * History:
- * 0.1 22-Oct-2011 first working prototype
+ * 0.1b 22-Oct-2011 add CEF rule (French christian churches)
+ * 0.1  22-Oct-2011 first working prototype
  */
 public class Tag2LinkPlugin extends Plugin {
 

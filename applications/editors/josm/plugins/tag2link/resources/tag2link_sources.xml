@@ -85,4 +85,11 @@
        </rule>
     </source>
     
+    <source name="CEF" country-code="FR">
+       <rule>
+           <condition k="ref:CEF" v="[A-Z0-9_]{8}" />
+           <link name="View %name% sheet of church" href="http://www.messesinfo.catholique.fr/public/fiche.php?valcode=%v%" />
+       </rule>
+    </source>
+    
 </tag2link>

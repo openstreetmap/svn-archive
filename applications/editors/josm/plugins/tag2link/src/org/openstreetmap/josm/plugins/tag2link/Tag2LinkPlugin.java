@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
  * @author Don-vip
  * @version 0.1b
  * History:
+ * 0.1c 23-Oct-2011 add MHS rule (French heritage)
  * 0.1b 22-Oct-2011 add CEF rule (French christian churches)
  * 0.1  22-Oct-2011 first working prototype
  */

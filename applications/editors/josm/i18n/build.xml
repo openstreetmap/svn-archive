@@ -59,6 +59,10 @@
             </path>
         </foreach>
     </target>
+    <target name="buildcore" depends="po/josm.pot,init">
+        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
+        <antcall target="coretrans"/>
+    </target>
     <target name="coretrans">
         <mkdir dir="${po.build.dir}/core"/>
         <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/core" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
@@ -92,6 +96,7 @@
                 </exec>
             </then>
         </if>
+        <delete dir="${po.build.dir}/plugin_${dir}"/>
     </target>
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>
@@ -99,11 +104,27 @@
         <delete>
             <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
         </delete>
+        <delete>
+            <fileset dir="po" includes="*.po" defaultexcludes="false"/>
+        </delete>
     </target>
     <target name="test">
         <mkdir dir="${i18n.build.dir}/test"/>
         <exec executable="perl">
             <arg line="i18n.pl ${i18n.build.dir}/test/ po/*.po"/>
         </exec>
+    </target>
+    <target name="pot" depends="po/josm.pot" />
+    <target name="update">
+        <exec executable="perl">
+            <arg line="launchpad.pl bzronly"/>
+        </exec>
+        <antcall target="build"/>       
+    </target>
+    <target name="updatecore">
+        <exec executable="perl">
+            <arg line="launchpad.pl bzronly"/>
+        </exec>
+        <antcall target="buildcore"/>       
     </target>
 </project>

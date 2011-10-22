@@ -116,7 +116,7 @@ public class TheRing {
 	    pos = nodes1.size() - 1;
 	    while( pos > 0 && nodes2.contains(nodes1.get(pos)) )
 		pos--;
-	    if( pos == 0 ) {
+	    if( pos == 0 && nodes1.size() == nodes2.size() ) {
 		JOptionPane.showMessageDialog(Main.parent, "Two rings are equal, and this must not be.", "Multipolygon from rings", JOptionPane.ERROR_MESSAGE);
 		return null;
 	    }

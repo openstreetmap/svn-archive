@@ -224,10 +224,8 @@ public class PanelMain extends JPanel {
 		this.add(nameBox, null);
 		alName = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (dlg.mark == null)
-					return;
-				else
-					dlg.mark.setName(nameBox.getText().trim());
+				if (dlg.mark != null)
+					dlg.mark.setName(nameBox.getText());
 			}
 		};
 		nameBox.addActionListener(alName);
@@ -284,10 +282,12 @@ public class PanelMain extends JPanel {
 	}
 
 	public void clearSelections() {
+		panelMore.clearSelections();
 		typeButtons.clearSelection();
-		moreButton.setVisible(false);
 		alType.actionPerformed(null);
+		moreButton.setVisible(false);
 		nameBox.setText("");
+		alName.actionPerformed(null);
 		clearType();
 	}
 

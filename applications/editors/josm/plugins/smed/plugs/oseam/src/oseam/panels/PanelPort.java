@@ -36,10 +36,65 @@ public class PanelPort extends JPanel {
 					button.setBorderPainted(false);
 			}
 			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
+				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
 					dlg.panelMain.moreButton.setVisible(true);
-				else
+					dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+					dlg.panelMain.panelMore.panelPat.panelCol.clearSelections();
+					if (dlg.mark.getCategory() == Cat.LAM_PORT) {
+						switch (dlg.mark.getRegion()) {
+						case A:
+							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							break;
+						case B:
+							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							break;
+						case C:
+							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.whiteButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.whiteButton.doClick();
+							break;
+						}
+					} else {
+						switch (dlg.mark.getRegion()) {
+						case A:
+							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							break;
+						case B:
+							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							break;
+						case C:
+							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							break;
+						}
+					}
+				} else {
 					dlg.panelMain.moreButton.setVisible(false);
+					dlg.panelMain.panelChan.topmarkButton.setVisible(false);
+				}
 				dlg.mark.paintSign();
 			}
 		}

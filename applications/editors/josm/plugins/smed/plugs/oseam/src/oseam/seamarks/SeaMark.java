@@ -22,6 +22,17 @@ public class SeaMark {
 		dlg.panelMain.clearSelections();
 	}
 
+	public String validDecimal(String str) {
+		str = str.trim().replace(',', '.');
+		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
+			dlg.manager.showVisualMessage("Not a valid decimal string");
+			return "";
+		} else {
+			dlg.manager.showVisualMessage("");
+			return str;
+		}
+	}
+	
 	public enum Reg {
 		A, B, C
 	}
@@ -43,7 +54,7 @@ public class SeaMark {
 	}
 
 	public void setName(String nam) {
-		name = nam;
+		name = nam.trim();
 	}
 
 	public enum Obj {
@@ -724,7 +735,7 @@ public class SeaMark {
 	}
 	
 	public void setInfo(String str) {
-		information = str;
+		information = str.trim();
 	}
 	
 	public String source = "";
@@ -734,7 +745,27 @@ public class SeaMark {
 	}
 	
 	public void setSource(String str) {
-		source = str;
+		source = str.trim();
+	}
+	
+	public String elevation = "";
+	
+	public String getElevation() {
+		return elevation;
+	}
+	
+	public void setElevation(String str) {
+		elevation = validDecimal(str);
+	}
+	
+	public String height = "";
+	
+	public String getHeight() {
+		return height;
+	}
+	
+	public void setHeight(String str) {
+		height = validDecimal(str);
 	}
 	
 	// **********************!!!!!!!!!

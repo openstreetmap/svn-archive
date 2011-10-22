@@ -50,8 +50,8 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.offButton.isSelected()))
-						dlg.panelMain.panelMore.panelPat.panelCol.offButton.doClick();
+					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.delButton.isSelected()))
+						dlg.panelMain.panelMore.panelPat.panelCol.delButton.doClick();
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);

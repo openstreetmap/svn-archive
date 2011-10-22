@@ -20,36 +20,32 @@ public class PanelMore extends JPanel {
 	public JTextField infoBox;
 	private ActionListener alInfo = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
-			else
-				dlg.mark.setInfo(infoBox.getText().trim());
+			if (dlg.mark != null)
+				dlg.mark.setInfo(infoBox.getText());
 		}
 	};
 	public JLabel sourceLabel;
 	public JTextField sourceBox;
 	private ActionListener alSource = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
-			else
-				dlg.mark.setSource(sourceBox.getText().trim());
+			if (dlg.mark != null)
+				dlg.mark.setSource(sourceBox.getText());
 		}
 	};
 	public JLabel elevLabel;
 	public JTextField elevBox;
 	private ActionListener alElev = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
+			if (dlg.mark != null)
+				dlg.mark.setElevation(elevBox.getText());
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null)
-				return;
+			if (dlg.mark != null)
+				dlg.mark.setHeight(heightBox.getText());
 		}
 	};
 	public JLabel statusLabel;
@@ -198,7 +194,7 @@ public class PanelMore extends JPanel {
 	public PanelMore(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		panelPat = new PanelPat(dlg);
+		panelPat = new PanelPat(dlg, Ent.BODY);
 		panelPat.setBounds(new Rectangle(0, 0, 110, 160));
 		this.add(panelPat, null);
 		this.add(getRegionButton(regionAButton, 110, 0, 34, 30, "RegionA"), null);
@@ -309,6 +305,22 @@ public class PanelMore extends JPanel {
 
 	public void clearSelections() {
 		panelPat.clearSelections();
+		heightBox.setText("");
+		alHeight.actionPerformed(null);
+		elevBox.setText("");
+		alElev.actionPerformed(null);
+		sourceBox.setText("");
+		alSource.actionPerformed(null);
+		infoBox.setText("");
+		alInfo.actionPerformed(null);
+		statusBox.setSelectedIndex(0);
+		alStatus.actionPerformed(null);
+		constrBox.setSelectedIndex(0);
+		alConstr.actionPerformed(null);
+		visBox.setSelectedIndex(0);
+		alVis.actionPerformed(null);
+		reflBox.setSelectedIndex(0);
+		alRefl.actionPerformed(null);
 	}
 
 	private void addStsItem(String str, Sts sts) {

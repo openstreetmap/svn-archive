@@ -18,7 +18,7 @@ public class PanelCol extends JPanel {
 	private ActionListener act;
 	private Ent ent;
 	private ButtonGroup colourButtons = new ButtonGroup();
-	public JRadioButton offButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
+	public JRadioButton delButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton addButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/AddButton.png")));
 	public JRadioButton whiteButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WhiteButton.png")));
 	public JRadioButton redButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RedButton.png")));
@@ -43,19 +43,22 @@ public class PanelCol extends JPanel {
 						if (ent == Ent.LIGHT) {
 							dlg.mark.setColour(ent, col);
 						} else {
-							if (button == offButton) {
-								if (stackCol.size() != 0) {
+							if (button == delButton) {
+								if (stackCol.size() > 1) {
 									JRadioButton btnI = stackCol.get(stackIdx);
 									dlg.mark.subColour(ent, stackIdx);
 									btnI.removeActionListener(alStack);
 									stackColours.remove(btnI);
 									stack.remove(btnI);
 									stackCol.remove(stackIdx);
-									if ((stackCol.size() == stackIdx) && (stackIdx != 0))
+									if (stackCol.size() == stackIdx)
 										stackIdx--;
+								} else {
+									dlg.mark.setColour(Ent.BODY, Col.UNKNOWN);
 								}
 							} else if (button == addButton) {
-								if (stackCol.size() != 0) stackIdx++;
+								if (stackCol.size() != 0)
+									stackIdx++;
 								dlg.mark.addColour(ent, stackIdx, col);
 								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 								JRadioButton btnI = stackCol.get(stackIdx);
@@ -66,20 +69,16 @@ public class PanelCol extends JPanel {
 							} else {
 								dlg.mark.setColour(ent, stackIdx, col);
 							}
-							if (stackCol.size() != 0) {
-								int height = 60 / stackCol.size();
-								for (int i = 0; stackCol.size() > i; i++) {
-									JRadioButton btnI = stackCol.get(i);
-									btnI.setBounds(2, (2 + (i * height)), 30, height);
-									btnI.setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
-									if (stackIdx == i) {
-										btnI.setBorderPainted(true);
-									} else {
-										btnI.setBorderPainted(false);
-									}
+							int height = 60 / stackCol.size();
+							for (int i = 0; stackCol.size() > i; i++) {
+								JRadioButton btnI = stackCol.get(i);
+								btnI.setBounds(2, (2 + (i * height)), 30, height);
+								btnI.setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
+								if (stackIdx == i) {
+									btnI.setBorderPainted(true);
+								} else {
+									btnI.setBorderPainted(false);
 								}
-							} else {
-								stack.repaint();
 							}
 						}
 					}
@@ -112,7 +111,7 @@ public class PanelCol extends JPanel {
 		act = al;
 		ent = entity;
 		this.setLayout(null);
-		this.add(getColButton(offButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN), null);
+		this.add(getColButton(delButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN), null);
 		this.add(getColButton(whiteButton, 0, 16, 34, 16, Messages.getString("White"), Col.WHITE), null);
 		this.add(getColButton(redButton, 0, 32, 34, 16, Messages.getString("Red"), Col.RED), null);
 		this.add(getColButton(orangeButton, 0, 48, 34, 16, Messages.getString("Orange"), Col.ORANGE), null);
@@ -134,17 +133,25 @@ public class PanelCol extends JPanel {
 			stack.setBounds(38, 87, 34, 64);
 			stack.setLayout(null);
 			this.add(stack);
-			if (dlg.mark != null) {
-				for (int i = 0; dlg.mark.getColour(ent, i) != Col.UNKNOWN; i++) {
-					stackCol.add(new JRadioButton());
-				}
-			}
+		}
+	}
+
+	public void trimStack(int max) {
+		while (stackCol.size() > max) {
+			stackCol.get(stackCol.size() - 1).setSelected(true);
+			delButton.doClick();
 		}
 	}
 
 	public void clearSelections() {
 		colourButtons.clearSelection();
-		offButton.doClick();
+		if (stackCol.size() == 0) {
+			addButton.doClick();
+		}
+		do {
+			delButton.doClick();
+		} while (stackCol.size() > 1);
+		alStack.actionPerformed(null);
 	}
 
 	public void enableAll(boolean state) {

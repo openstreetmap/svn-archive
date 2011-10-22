@@ -9,7 +9,7 @@ import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.*	;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelPat extends JPanel {
 
@@ -27,23 +27,39 @@ public class PanelPat extends JPanel {
 	public EnumMap<Pat, JRadioButton> patterns = new EnumMap<Pat, JRadioButton>(Pat.class);
 	private ActionListener alPat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			for (Pat pat : patterns.keySet()) {
-				JRadioButton button = patterns.get(pat);
-				if (button.isSelected()) {
-					dlg.mark.setPattern(Ent.BODY, pat);
-					button.setBorderPainted(true);
-				} else
-					button.setBorderPainted(false);
-			}
-			if (dlg.mark != null)
+			if (dlg.mark != null) {
+				for (Pat pat : patterns.keySet()) {
+					JRadioButton button = patterns.get(pat);
+					if (button.isSelected()) {
+						dlg.mark.setPattern(Ent.BODY, pat);
+						button.setBorderPainted(true);
+					} else
+						button.setBorderPainted(false);
+				}
+				switch (dlg.mark.getPattern(Ent.BODY)) {
+				case NONE:
+					panelCol.trimStack(1);
+					break;
+				case HORIZ:
+				case VERT:
+				case DIAG:
+					break;
+				case SQUARE:
+					panelCol.trimStack(4);
+					break;
+				case BORDER:
+					panelCol.trimStack(2);
+					break;
+				}
 				dlg.mark.paintSign();
+			}
 		}
 	};
 
-	public PanelPat(OSeaMAction dia) {
+	public PanelPat(OSeaMAction dia, Ent entity) {
 		dlg = dia;
 		this.setLayout(null);
-		panelCol = new PanelCol(dlg, alType, Ent.BODY);
+		panelCol = new PanelCol(dlg, alType, entity);
 		panelCol.setBounds(new Rectangle(0, 0, 72, 160));
 		this.add(panelCol, null);
 		this.add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NONE), null);
@@ -52,10 +68,11 @@ public class PanelPat extends JPanel {
 		this.add(getPatButton(diagButton, 76, 78, 27, 27, "DiagPat", Pat.DIAG), null);
 		this.add(getPatButton(squareButton, 76, 104, 27, 27, "SquarePat", Pat.SQUARE), null);
 		this.add(getPatButton(borderButton, 76, 130, 27, 27, "BorderPat", Pat.BORDER), null);
-		
+
 	}
 
 	public void clearSelections() {
+		panelCol.clearSelections();
 		patButtons.clearSelection();
 		alPat.actionPerformed(null);
 	}

@@ -12,7 +12,7 @@ import oseam.seamarks.SeaMark.*;
 public class PanelTop extends JPanel {
 
 	private OSeaMAction dlg;
-	public PanelCol panelCol = null;
+	public PanelPat panelPat = null;
 	private ButtonGroup topButtons = new ButtonGroup();
 	public JRadioButton noTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NoneButton.png")));
 	public JRadioButton canTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanTopButton.png")));
@@ -59,33 +59,33 @@ public class PanelTop extends JPanel {
 
 	public PanelTop(OSeaMAction dia) {
 		dlg = dia;
-		panelCol = new PanelCol(dlg, alTop, Ent.TOPMARK);
-		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		this.setLayout(null);
-		this.add(panelCol, null);
-		this.add(getTopButton(noTopButton, 40, 5, 27, 27, "NoTop", Top.NONE), null);
-		this.add(getTopButton(canTopButton, 70, 5, 27, 27, "CanTop", Top.CAN), null);
-		this.add(getTopButton(coneTopButton, 100, 5, 27, 27, "ConeTop", Top.CONE), null);
-		this.add(getTopButton(sphereTopButton, 130, 5, 27, 27, "SphereTop", Top.SPHERE), null);
-		this.add(getTopButton(XTopButton, 160, 5, 27, 27, "XTop", Top.X_SHAPE), null);
-		this.add(getTopButton(northTopButton, 40, 35, 27, 27, "NorthTop", Top.NORTH), null);
-		this.add(getTopButton(southTopButton, 70, 35, 27, 27, "SouthTop", Top.SOUTH), null);
-		this.add(getTopButton(eastTopButton, 100, 35, 27, 27, "EastTop", Top.EAST), null);
-		this.add(getTopButton(westTopButton, 130, 35, 27, 27, "WestTop", Top.WEST), null);
-		this.add(getTopButton(spheres2TopButton, 160, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
-		this.add(getDayButton(boardDayButton, 40, 65, 27, 27, "BoardDay", Day.BOARD), null);
-		this.add(getDayButton(diamondDayButton, 70, 65, 27, 27, "DiamondDay", Day.DIAMOND), null);
-		this.add(getDayButton(triangleDayButton, 100, 65, 27, 27, "TriangleDay", Day.TRIANGLE), null);
-		this.add(getDayButton(triangleInvDayButton, 130, 65, 27, 27, "TriangleInvDay", Day.TRIANGLE_INV), null);
-		this.add(getDayButton(squareDayButton, 160, 65, 27, 27, "SquareDay", Day.SQUARE), null);
-		this.add(getDayButton(circleDayButton, 160, 95, 27, 27, "CircleDay", Day.CIRCLE), null);
-		this.add(getMoorButton(mooringTopButton, 40, 95, 27, 27, "MooringTop"), null);
+		panelPat = new PanelPat(dlg, Ent.TOPMARK);
+		panelPat.setBounds(new Rectangle(0, 0, 110, 160));
+		this.add(panelPat, null);
+		this.add(getTopButton(noTopButton, 110, 5, 27, 27, "NoTop", Top.NONE), null);
+		this.add(getTopButton(canTopButton, 140, 5, 27, 27, "CanTop", Top.CAN), null);
+		this.add(getTopButton(coneTopButton, 170, 5, 27, 27, "ConeTop", Top.CONE), null);
+		this.add(getTopButton(sphereTopButton, 200, 5, 27, 27, "SphereTop", Top.SPHERE), null);
+		this.add(getTopButton(XTopButton, 230, 5, 27, 27, "XTop", Top.X_SHAPE), null);
+		this.add(getTopButton(northTopButton, 110, 35, 27, 27, "NorthTop", Top.NORTH), null);
+		this.add(getTopButton(southTopButton, 140, 35, 27, 27, "SouthTop", Top.SOUTH), null);
+		this.add(getTopButton(eastTopButton, 170, 35, 27, 27, "EastTop", Top.EAST), null);
+		this.add(getTopButton(westTopButton, 200, 35, 27, 27, "WestTop", Top.WEST), null);
+		this.add(getTopButton(spheres2TopButton, 230, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
+		this.add(getDayButton(boardDayButton, 110, 65, 27, 27, "BoardDay", Day.BOARD), null);
+		this.add(getDayButton(diamondDayButton, 140, 65, 27, 27, "DiamondDay", Day.DIAMOND), null);
+		this.add(getDayButton(triangleDayButton, 170, 65, 27, 27, "TriangleDay", Day.TRIANGLE), null);
+		this.add(getDayButton(triangleInvDayButton, 200, 65, 27, 27, "TriangleInvDay", Day.TRIANGLE_INV), null);
+		this.add(getDayButton(squareDayButton, 230, 65, 27, 27, "SquareDay", Day.SQUARE), null);
+		this.add(getDayButton(circleDayButton, 230, 95, 27, 27, "CircleDay", Day.CIRCLE), null);
+		this.add(getMoorButton(mooringTopButton, 110, 95, 27, 27, "MooringTop"), null);
 	}
 
 	public void clearSelections() {
 		topButtons.clearSelection();
 		alTop.actionPerformed(null);
-		panelCol.clearSelections();
+		panelPat.clearSelections();
 	}
 
 	public void enableAll(boolean state) {

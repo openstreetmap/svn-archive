@@ -1,6 +1,7 @@
 package oseam.panels;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -89,9 +90,6 @@ public class PanelChan extends JPanel {
 			}
 			if (safeWaterButton.isSelected()) {
 				dlg.mark.setCategory(Cat.UNKNOWN);
-				dlg.mark.setColour(Ent.BODY, Col.RED);
-				dlg.mark.addColour(Ent.BODY, Col.WHITE);
-				dlg.mark.setPattern(Ent.BODY, Pat.VERT);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).doClick();
 				} else {
@@ -106,17 +104,28 @@ public class PanelChan extends JPanel {
 			}
 		}
 	};
+	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
+	private ActionListener alTop = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (topmarkButton.isSelected()) {
+				topmarkButton.setBorderPainted(true);
+			} else {
+//				dlg.panelMain.panelTop.clearSelections();
+				topmarkButton.setBorderPainted(false);
+			}
+		}
+	};
 
 	public PanelChan(OSeaMAction dia) {
 		dlg = dia;
 		panelPort = new PanelPort(dlg);
-		panelPort.setBounds(new Rectangle(55, 0, 180, 160));
+		panelPort.setBounds(new Rectangle(55, 0, 70, 160));
 		panelPort.setVisible(false);
 		panelStbd = new PanelStbd(dlg);
-		panelStbd.setBounds(new Rectangle(55, 0, 180, 160));
+		panelStbd.setBounds(new Rectangle(55, 0, 70, 160));
 		panelStbd.setVisible(false);
 		panelSaw = new PanelSaw(dlg);
-		panelSaw.setBounds(new Rectangle(55, 0, 180, 160));
+		panelSaw.setBounds(new Rectangle(55, 0, 70, 160));
 		panelSaw.setVisible(false);
 		this.setLayout(null);
 		this.add(panelPort, null);
@@ -127,9 +136,18 @@ public class PanelChan extends JPanel {
 		this.add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPort"), null);
 		this.add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbd"), null);
 		this.add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWater"), null);
+
+		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
+		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		topmarkButton.addActionListener(alTop);
+		topmarkButton.setVisible(false);
+		this.add(topmarkButton);
 	}
 
 	public void clearSelections() {
+		topmarkButton.setSelected(false);
+		topmarkButton.setVisible(false);
+		alTop.actionPerformed(null);
 		catButtons.clearSelection();
 		alCat.actionPerformed(null);
 		panelPort.clearSelections();

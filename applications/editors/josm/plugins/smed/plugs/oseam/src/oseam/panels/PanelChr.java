@@ -38,7 +38,7 @@ public class PanelChr extends JPanel {
 	private ActionListener alCharButton = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (noneButton.isSelected()) {
-				if (dlg.panelMain.panelLit.panelCol.offButton.isSelected()) {
+				if (dlg.panelMain.panelLit.panelCol.delButton.isSelected()) {
 					dlg.panelMain.lightIcon.setIcon(null);
 				}
 			} else {

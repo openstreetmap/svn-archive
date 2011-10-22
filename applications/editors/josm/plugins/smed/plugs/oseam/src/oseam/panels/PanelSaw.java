@@ -32,10 +32,17 @@ public class PanelSaw extends JPanel {
 					button.setBorderPainted(false);
 			}
 			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
+				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
 					dlg.panelMain.moreButton.setVisible(true);
-				else
+					dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+					dlg.panelMain.panelMore.panelPat.panelCol.clearSelections();
+					dlg.panelMain.panelMore.panelPat.vertButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.whiteButton.doClick();
+				} else {
 					dlg.panelMain.moreButton.setVisible(false);
+				}
 				dlg.mark.paintSign();
 			}
 		}

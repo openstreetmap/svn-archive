@@ -2,7 +2,9 @@ package oseam.panels;
 
 import java.awt.event.*;
 import java.awt.*;
+
 import javax.swing.*;
+
 import java.util.*;
 
 import oseam.Messages;
@@ -119,6 +121,16 @@ public class PanelHaz extends JPanel {
 			}
 		}
 	};
+	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/HazTopButton.png")));
+	private ActionListener alTop = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (topmarkButton.isSelected()) {
+				topmarkButton.setBorderPainted(true);
+			} else {
+				topmarkButton.setBorderPainted(false);
+			}
+		}
+	};
 
 	public PanelHaz(OSeaMAction dia) {
 		dlg = dia;
@@ -137,9 +149,16 @@ public class PanelHaz extends JPanel {
 		this.add(getShapeButton(floatButton, 90, 0,34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
 		this.add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
 		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
+
+		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
+		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		topmarkButton.addActionListener(alTop);
+		this.add(topmarkButton);
 	}
 
 	public void clearSelections() {
+		topmarkButton.setSelected(false);
+		alTop.actionPerformed(null);
 		catButtons.clearSelection();
 		alCat.actionPerformed(null);
 		shapeButtons.clearSelection();

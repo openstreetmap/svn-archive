@@ -48,7 +48,7 @@
 
     <source name="WHC">
         <rule>
-            <condition k="ref:whc" v="\p{Digit}+" />
+            <condition k="ref:whc" v="[0-9-]+" />
             <link name="View UNESCO sheet" href="http://whc.unesco.org/%lang(en,fr):en%/list/%v%" />
         </rule>
     </source>

@@ -19,9 +19,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -62,7 +64,29 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 				Matcher m = Pattern.compile("%([^%]*)%").matcher(copy.url);
 				while (m.find()) {
 					String arg = m.group(1);
+					
+					// Search for a standard value
 					String val = findValue(arg, eval.matchingTags);
+					
+					// No standard value found: test lang() function
+					if (val == null) {
+						Matcher lm = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*").matcher(arg);
+						if (lm.matches()) {
+							String josmLang = Main.pref.get("language");
+							String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
+							if (lm.groupCount() == 0) {
+								val = jvmLang;
+							} else {
+								for (int i = 1; i<=lm.groupCount() && val == null; i++) {
+									if (jvmLang.equals(lm.group(i))) {
+										val = jvmLang;
+									}
+								}
+							}
+						}
+					}
+					
+					// Find a default value if set after ":"
 					if (val == null && arg.contains(":")) {
 						String[] vars = arg.split(":");
 						for (int i = 0; val == null && i < vars.length-1; i++) {
@@ -73,16 +97,8 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 							val = vars[vars.length-1];
 						}
 					}
-					if (val == null) {
-						Matcher lm = Pattern.compile("lang(?:\\(\\p{Lower}{2,}(?:,\\p{Lower}{2,})*\\))?(?::(\\p{Lower}{2,}))?").matcher(arg);
-						if (lm.matches()) {
-							if (lm.groupCount() == 0) {
-								// TODO: get JOSM current language
-							} else {
-								// TODO: parse next groups
-							}
-						}
-					}
+					
+					// Has a value been found ?
 					if (val != null) {
 						try {
 							// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
@@ -94,7 +110,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 								val = URLEncoder.encode(val, UTF8_ENCODING);
 							}
 							// Finally replace parameter
-							copy.url = copy.url.replaceFirst(m.group(), val);
+							copy.url = copy.url.replaceFirst(Pattern.quote(m.group()), val);
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}

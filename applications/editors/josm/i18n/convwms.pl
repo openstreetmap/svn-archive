@@ -35,7 +35,15 @@ for my $line (@lines)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;
-    print "/* $line */ tr(\"$val\");\n";
+    print "tr(\"$val\"); /* $line */\n";
+  }
+  elsif($line =~ /^[ \t]*$/)
+  {
+    print "\n";
+  }
+  elsif($line =~ /<entry>/) # required or the gettext info texts get too large
+  {
+    print "public newEntry() {};\n";
   }
   else
   {

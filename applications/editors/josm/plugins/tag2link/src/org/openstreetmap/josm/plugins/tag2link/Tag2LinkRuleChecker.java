@@ -73,6 +73,16 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 							val = vars[vars.length-1];
 						}
 					}
+					if (val == null) {
+						Matcher lm = Pattern.compile("lang(?:\\(\\p{Lower}{2,}(?:,\\p{Lower}{2,})*\\))?(?::(\\p{Lower}{2,}))?").matcher(arg);
+						if (lm.matches()) {
+							if (lm.groupCount() == 0) {
+								// TODO: get JOSM current language
+							} else {
+								// TODO: parse next groups
+							}
+						}
+					}
 					if (val != null) {
 						try {
 							// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"

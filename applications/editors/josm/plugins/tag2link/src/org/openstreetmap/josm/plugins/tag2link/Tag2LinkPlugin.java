@@ -25,10 +25,11 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.RelationPopupListener;
 import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
 
 /**
- * Main class of tag2links plugin.
+ * Main class of tag2link plugin.
  * @author Don-vip
- * @version 0.1b
+ * @version 0.2a
  * History:
+ * 0.2a 23-Oct-2011 add Mail support + initial work on UNESCO WHC
  * 0.1c 23-Oct-2011 add MHS rule (French heritage)
  * 0.1b 22-Oct-2011 add CEF rule (French christian churches)
  * 0.1  22-Oct-2011 first working prototype

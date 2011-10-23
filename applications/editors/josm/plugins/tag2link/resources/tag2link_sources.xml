@@ -29,12 +29,27 @@
             <condition k="url" />
             <link name="View URL" href="%v%" />
         </rule>
+        <rule>
+            <condition k="email" v="[^@]+@[^@]+" />
+            <link name="Send Email" href="mailto:%v%" />
+        </rule>
+        <rule>
+            <condition k="contact:email"  v="[^@]+@[^@]+" />
+            <link name="Send Email" href="mailto:%v%" />
+        </rule>
     </source>
     
     <source name="Wikipedia">
         <rule>
-            <condition k="wikipedia(?::([\p{Lower}]{2,}))?" v="(?:([\p{Lower}]{2,}):)?(.*)" />
+            <condition k="wikipedia(?::(\p{Lower}{2,}))?" v="(?:(\p{Lower}{2,}):)?(.*)" />
             <link name="View %name% article" href="http://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
+        </rule>
+    </source>
+
+    <source name="WHC">
+        <rule>
+            <condition k="ref:whc" v="\p{Digit}+" />
+            <link name="View UNESCO sheet" href="http://whc.unesco.org/%lang(en,fr):en%/list/%v%" />
         </rule>
     </source>
     

@@ -23,65 +23,71 @@ public class PanelHaz extends JPanel {
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			Shp shp = Shp.UNKNOWN;
-			if (dlg.mark != null)
+			if (dlg.mark != null) {
 				shp = dlg.mark.getShape();
-			if (northButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CAM_NORTH);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp))
-					shapes.get(shp).doClick();
-				northButton.setBorderPainted(true);
-			} else {
-				northButton.setBorderPainted(false);
-			}
-			if (southButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CAM_SOUTH);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp))
-					shapes.get(shp).doClick();
-				southButton.setBorderPainted(true);
-			} else {
-				southButton.setBorderPainted(false);
-			}
-			if (eastButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CAM_EAST);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp))
-					shapes.get(shp).doClick();
-				eastButton.setBorderPainted(true);
-			} else {
-				eastButton.setBorderPainted(false);
-			}
-			if (westButton.isSelected()) {
-				dlg.mark.setCategory(Cat.CAM_WEST);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp))
-					shapes.get(shp).doClick();
-				westButton.setBorderPainted(true);
-			} else {
-				westButton.setBorderPainted(false);
-			}
-			if (isolButton.isSelected()) {
-				dlg.mark.setCategory(Cat.UNKNOWN);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.RED);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-				if (shapes.containsKey(shp))
-					shapes.get(shp).doClick();
-				isolButton.setBorderPainted(true);
-			} else {
-				isolButton.setBorderPainted(false);
+				dlg.panelMain.panelMore.panelPat.clearSelections();
+				dlg.panelMain.panelMore.panelPat.horizButton.doClick();
+				if (northButton.isSelected()) {
+					dlg.mark.setCategory(Cat.CAM_NORTH);
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					if (shapes.containsKey(shp))
+						shapes.get(shp).doClick();
+					northButton.setBorderPainted(true);
+				} else {
+					northButton.setBorderPainted(false);
+				}
+				if (southButton.isSelected()) {
+					dlg.mark.setCategory(Cat.CAM_SOUTH);
+					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					if (shapes.containsKey(shp))
+						shapes.get(shp).doClick();
+					southButton.setBorderPainted(true);
+				} else {
+					southButton.setBorderPainted(false);
+				}
+				if (eastButton.isSelected()) {
+					dlg.mark.setCategory(Cat.CAM_EAST);
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					if (shapes.containsKey(shp))
+						shapes.get(shp).doClick();
+					eastButton.setBorderPainted(true);
+				} else {
+					eastButton.setBorderPainted(false);
+				}
+				if (westButton.isSelected()) {
+					dlg.mark.setCategory(Cat.CAM_WEST);
+					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					if (shapes.containsKey(shp))
+						shapes.get(shp).doClick();
+					westButton.setBorderPainted(true);
+				} else {
+					westButton.setBorderPainted(false);
+				}
+				if (isolButton.isSelected()) {
+					dlg.mark.setCategory(Cat.UNKNOWN);
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
+					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					if (shapes.containsKey(shp))
+						shapes.get(shp).doClick();
+					isolButton.setBorderPainted(true);
+				} else {
+					isolButton.setBorderPainted(false);
+				}
 			}
 		}
 	};
@@ -113,10 +119,13 @@ public class PanelHaz extends JPanel {
 					button.setBorderPainted(false);
 			}
 			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN))
+				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
+					topmarkButton.setVisible(true);
 					dlg.panelMain.moreButton.setVisible(true);
-				else
+				} else {
+					topmarkButton.setVisible(false);
 					dlg.panelMain.moreButton.setVisible(false);
+				}
 				dlg.mark.paintSign();
 			}
 		}
@@ -124,10 +133,32 @@ public class PanelHaz extends JPanel {
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/HazTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (topmarkButton.isSelected()) {
-				topmarkButton.setBorderPainted(true);
-			} else {
-				topmarkButton.setBorderPainted(false);
+			if (dlg.mark != null) {
+				dlg.panelMain.panelTop.clearSelections();
+				if (topmarkButton.isSelected()) {
+					dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+					dlg.panelMain.panelTop.panelPat.panelCol.blackButton.doClick();
+					switch (dlg.mark.getCategory()) {
+					case CAM_NORTH:
+						dlg.panelMain.panelTop.northTopButton.doClick();
+						break;
+					case CAM_SOUTH:
+						dlg.panelMain.panelTop.southTopButton.doClick();
+						break;
+					case CAM_EAST:
+						dlg.panelMain.panelTop.eastTopButton.doClick();
+						break;
+					case CAM_WEST:
+						dlg.panelMain.panelTop.westTopButton.doClick();
+						break;
+					default:
+						dlg.panelMain.panelTop.spheres2TopButton.doClick();
+						break;
+					}
+					topmarkButton.setBorderPainted(true);
+				} else {
+					topmarkButton.setBorderPainted(false);
+				}
 			}
 		}
 	};
@@ -146,7 +177,7 @@ public class PanelHaz extends JPanel {
 		this.add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYCAR, Obj.BOYISD), null);
 		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYCAR, Obj.BOYISD), null);
 		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(floatButton, 90, 0,34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
+		this.add(getShapeButton(floatButton, 90, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
 		this.add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
 		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 
@@ -158,6 +189,7 @@ public class PanelHaz extends JPanel {
 
 	public void clearSelections() {
 		topmarkButton.setSelected(false);
+		topmarkButton.setVisible(false);
 		alTop.actionPerformed(null);
 		catButtons.clearSelection();
 		alCat.actionPerformed(null);

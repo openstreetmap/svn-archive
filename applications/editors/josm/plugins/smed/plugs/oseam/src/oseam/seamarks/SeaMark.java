@@ -96,7 +96,7 @@ public class SeaMark {
 	}
 
 	public enum Ent {
-		BODY, BUOY, BEACON, FLOAT, TOPMARK, DAYMARK, LIGHT, MOORING, STATION
+		BODY, BUOY, BEACON, FLOAT, TOPMARK, LIGHT, MOORING, STATION
 	}
 
 	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
@@ -304,7 +304,6 @@ public class SeaMark {
 
 	private ArrayList<Col> bodyColour = new ArrayList<Col>();
 	private ArrayList<Col> topColour = new ArrayList<Col>();
-	private ArrayList<Col> dayColour = new ArrayList<Col>();
 	private ArrayList<Col> lightColour = new ArrayList<Col>();
 
 	public Col getColour(Ent ent, int i) {
@@ -319,10 +318,6 @@ public class SeaMark {
 		case TOPMARK:
 			if (i < topColour.size())
 				return topColour.get(i);
-			break;
-		case DAYMARK:
-			if (i < dayColour.size())
-				return dayColour.get(i);
 			break;
 		case LIGHT:
 			if (i < lightColour.size())
@@ -345,10 +340,6 @@ public class SeaMark {
 			topColour.clear();
 			topColour.add(col);
 			break;
-		case DAYMARK:
-			dayColour.clear();
-			dayColour.add(col);
-			break;
 		case LIGHT:
 			lightColour.clear();
 			lightColour.add(col);
@@ -367,9 +358,6 @@ public class SeaMark {
 		case TOPMARK:
 			topColour.set(i, col);
 			break;
-		case DAYMARK:
-			dayColour.set(i, col);
-			break;
 		case LIGHT:
 			lightColour.set(i, col);
 			break;
@@ -386,9 +374,6 @@ public class SeaMark {
 			break;
 		case TOPMARK:
 			topColour.add(i, col);
-			break;
-		case DAYMARK:
-			dayColour.add(i, col);
 			break;
 		case LIGHT:
 			lightColour.add(i, col);
@@ -407,9 +392,6 @@ public class SeaMark {
 		case TOPMARK:
 			topColour.add(col);
 			break;
-		case DAYMARK:
-			dayColour.add(col);
-			break;
 		case LIGHT:
 			lightColour.add(col);
 			break;
@@ -426,9 +408,6 @@ public class SeaMark {
 			break;
 		case TOPMARK:
 			topColour.remove(i);
-			break;
-		case DAYMARK:
-			dayColour.remove(i);
 			break;
 		case LIGHT:
 			lightColour.remove(i);
@@ -451,7 +430,6 @@ public class SeaMark {
 
 	private Pat bodyPattern = Pat.NONE;
 	private Pat topPattern = Pat.NONE;
-	private Pat dayPattern = Pat.NONE;
 
 	public Pat getPattern(Ent ent) {
 		switch (ent) {
@@ -462,8 +440,6 @@ public class SeaMark {
 			return bodyPattern;
 		case TOPMARK:
 			return topPattern;
-		case DAYMARK:
-			return dayPattern;
 		}
 		return Pat.NONE;
 	}
@@ -478,9 +454,6 @@ public class SeaMark {
 			break;
 		case TOPMARK:
 			topPattern = pat;
-			break;
-		case DAYMARK:
-			dayPattern = pat;
 			break;
 		}
 	}

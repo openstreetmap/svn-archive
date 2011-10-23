@@ -14,8 +14,6 @@
 
 package org.openstreetmap.josm.plugins.elevation.gui;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -47,6 +45,7 @@ import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 import org.openstreetmap.josm.tools.Shortcut;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the 

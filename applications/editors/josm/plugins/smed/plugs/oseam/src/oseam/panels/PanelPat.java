@@ -14,8 +14,8 @@ import oseam.seamarks.SeaMark.*;
 public class PanelPat extends JPanel {
 
 	private OSeaMAction dlg;
+	private Ent ent;
 	public PanelCol panelCol;
-	private ActionListener alType;
 
 	private ButtonGroup patButtons = new ButtonGroup();
 	public JRadioButton noneButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/NoneButton.png")));
@@ -31,12 +31,12 @@ public class PanelPat extends JPanel {
 				for (Pat pat : patterns.keySet()) {
 					JRadioButton button = patterns.get(pat);
 					if (button.isSelected()) {
-						dlg.mark.setPattern(Ent.BODY, pat);
+						dlg.mark.setPattern(ent, pat);
 						button.setBorderPainted(true);
 					} else
 						button.setBorderPainted(false);
 				}
-				switch (dlg.mark.getPattern(Ent.BODY)) {
+				switch (dlg.mark.getPattern(ent)) {
 				case NONE:
 					panelCol.trimStack(1);
 					break;
@@ -58,8 +58,9 @@ public class PanelPat extends JPanel {
 
 	public PanelPat(OSeaMAction dia, Ent entity) {
 		dlg = dia;
+		ent = entity;
 		this.setLayout(null);
-		panelCol = new PanelCol(dlg, alType, entity);
+		panelCol = new PanelCol(dlg, ent);
 		panelCol.setBounds(new Rectangle(0, 0, 72, 160));
 		this.add(panelCol, null);
 		this.add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NONE), null);

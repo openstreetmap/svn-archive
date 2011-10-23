@@ -15,7 +15,6 @@ import oseam.seamarks.SeaMark.*;
 public class PanelCol extends JPanel {
 
 	private OSeaMAction dlg;
-	private ActionListener act;
 	private Ent ent;
 	private ButtonGroup colourButtons = new ButtonGroup();
 	public JRadioButton delButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DelButton.png")));
@@ -54,7 +53,7 @@ public class PanelCol extends JPanel {
 									if (stackCol.size() == stackIdx)
 										stackIdx--;
 								} else {
-									dlg.mark.setColour(Ent.BODY, Col.UNKNOWN);
+									dlg.mark.setColour(ent, Col.UNKNOWN);
 								}
 							} else if (button == addButton) {
 								if (stackCol.size() != 0)
@@ -106,9 +105,8 @@ public class PanelCol extends JPanel {
 		}
 	};
 
-	public PanelCol(OSeaMAction dia, ActionListener al, Ent entity) {
+	public PanelCol(OSeaMAction dia, Ent entity) {
 		dlg = dia;
-		act = al;
 		ent = entity;
 		this.setLayout(null);
 		this.add(getColButton(delButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN), null);

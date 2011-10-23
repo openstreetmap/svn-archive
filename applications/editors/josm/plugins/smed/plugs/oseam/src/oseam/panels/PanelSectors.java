@@ -1,9 +1,7 @@
 package oseam.panels;
 
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
 
 import oseam.seamarks.Light;
 

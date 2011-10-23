@@ -8,7 +8,6 @@ import javax.swing.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.*;
 
 public class PanelMain extends JPanel {
 

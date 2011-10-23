@@ -32,28 +32,19 @@ public class PanelTop extends JPanel {
 	public JRadioButton circleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CircleDayButton.png")));
 	public JRadioButton mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
 	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
-	private EnumMap<Day, JRadioButton> days = new EnumMap<Day, JRadioButton>(Day.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			for (Top top : tops.keySet()) {
-				JRadioButton button = tops.get(top);
-				if (button.isSelected()) {
-					dlg.mark.setTopmark(top);
-					dlg.mark.setDaymark(Day.NONE);
-					button.setBorderPainted(true);
-				} else
-					button.setBorderPainted(false);
+			if (dlg.mark != null) {
+				for (Top top : tops.keySet()) {
+					JRadioButton button = tops.get(top);
+					if (button.isSelected()) {
+						dlg.mark.setTopmark(top);
+						button.setBorderPainted(true);
+					} else
+						button.setBorderPainted(false);
+				}
+				mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
 			}
-			for (Day day : days.keySet()) {
-				JRadioButton button = days.get(day);
-				if (button.isSelected()) {
-					dlg.mark.setDaymark(day);
-					dlg.mark.setTopmark(Top.NONE);
-					button.setBorderPainted(true);
-				} else
-					button.setBorderPainted(false);
-			}
-			mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
 		}
 	};
 
@@ -73,26 +64,22 @@ public class PanelTop extends JPanel {
 		this.add(getTopButton(eastTopButton, 170, 35, 27, 27, "EastTop", Top.EAST), null);
 		this.add(getTopButton(westTopButton, 200, 35, 27, 27, "WestTop", Top.WEST), null);
 		this.add(getTopButton(spheres2TopButton, 230, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
-		this.add(getDayButton(boardDayButton, 110, 65, 27, 27, "BoardDay", Day.BOARD), null);
-		this.add(getDayButton(diamondDayButton, 140, 65, 27, 27, "DiamondDay", Day.DIAMOND), null);
-		this.add(getDayButton(triangleDayButton, 170, 65, 27, 27, "TriangleDay", Day.TRIANGLE), null);
-		this.add(getDayButton(triangleInvDayButton, 200, 65, 27, 27, "TriangleInvDay", Day.TRIANGLE_INV), null);
-		this.add(getDayButton(squareDayButton, 230, 65, 27, 27, "SquareDay", Day.SQUARE), null);
-		this.add(getDayButton(circleDayButton, 230, 95, 27, 27, "CircleDay", Day.CIRCLE), null);
+		this.add(getTopButton(boardDayButton, 110, 65, 27, 27, "BoardDay", Top.BOARD), null);
+		this.add(getTopButton(diamondDayButton, 140, 65, 27, 27, "DiamondDay", Top.DIAMOND), null);
+		this.add(getTopButton(triangleDayButton, 170, 65, 27, 27, "TriangleDay", Top.TRIANGLE), null);
+		this.add(getTopButton(triangleInvDayButton, 200, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV), null);
+		this.add(getTopButton(squareDayButton, 230, 65, 27, 27, "SquareDay", Top.SQUARE), null);
+		this.add(getTopButton(circleDayButton, 230, 95, 27, 27, "CircleDay", Top.CIRCLE), null);
 		this.add(getMoorButton(mooringTopButton, 110, 95, 27, 27, "MooringTop"), null);
 	}
 
 	public void clearSelections() {
-		topButtons.clearSelection();
-		alTop.actionPerformed(null);
+		noTopButton.doClick();
 		panelPat.clearSelections();
 	}
 
 	public void enableAll(boolean state) {
 		for (JRadioButton button : tops.values()) {
-			button.setEnabled(state);
-		}
-		for (JRadioButton button : days.values()) {
 			button.setEnabled(state);
 		}
 		mooringTopButton.setEnabled(state);
@@ -105,16 +92,6 @@ public class PanelTop extends JPanel {
 		button.addActionListener(alTop);
 		topButtons.add(button);
 		tops.put(top, button);
-		return button;
-	}
-
-	private JRadioButton getDayButton(JRadioButton button, int x, int y, int w, int h, String tip, Day day) {
-		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLoweredBevelBorder());
-		button.setToolTipText(Messages.getString(tip));
-		button.addActionListener(alTop);
-		topButtons.add(button);
-		days.put(day, button);
 		return button;
 	}
 

@@ -1,7 +1,5 @@
 package oseam.panels;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.*;
 import java.awt.event.*;
 

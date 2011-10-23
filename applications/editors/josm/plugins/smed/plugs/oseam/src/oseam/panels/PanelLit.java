@@ -50,7 +50,7 @@ public class PanelLit extends JPanel {
 		dlg = dia;
 		panelChr = new PanelChr(dlg);
 		panelChr.setBounds(new Rectangle(0, 0, 88, 160));
-		panelCol = new PanelCol(dlg, alType, Ent.LIGHT);
+		panelCol = new PanelCol(dlg, Ent.LIGHT);
 		panelCol.setBounds(new Rectangle(88, 0, 34, 160));
 		this.setLayout(null);
 		this.add(panelChr, null);

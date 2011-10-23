@@ -1,8 +1,6 @@
 package oseam.seamarks;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.Color.*;
 import javax.swing.*;
 import java.util.*;
 
@@ -442,13 +440,13 @@ public class SeaMark {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
 
-	public static final EnumMap<Pat, String> PatMAP = new EnumMap<Pat, String>(Pat.class);
+	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
 	static {
-		PatMAP.put(Pat.HORIZ, "horizontal");
-		PatMAP.put(Pat.VERT, "vertical");
-		PatMAP.put(Pat.DIAG, "diagonal");
-		PatMAP.put(Pat.SQUARE, "squared");
-		PatMAP.put(Pat.BORDER, "border");
+		PatSTR.put(Pat.HORIZ, "horizontal");
+		PatSTR.put(Pat.VERT, "vertical");
+		PatSTR.put(Pat.DIAG, "diagonal");
+		PatSTR.put(Pat.SQUARE, "squared");
+		PatSTR.put(Pat.BORDER, "border");
 	}
 
 	private Pat bodyPattern = Pat.NONE;
@@ -488,20 +486,27 @@ public class SeaMark {
 	}
 
 	public enum Top {
-		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2
+		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2,
+		BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
 	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
 	static {
 		TopSTR.put(Top.CAN, "cylinder");
 		TopSTR.put(Top.CONE, "cylinder");
-		TopSTR.put(Top.SPHERE, "SPHERE");
-		TopSTR.put(Top.X_SHAPE, "X-SHAPE");
+		TopSTR.put(Top.SPHERE, "sphere");
+		TopSTR.put(Top.X_SHAPE, "x-shape");
 		TopSTR.put(Top.NORTH, "2 cones up");
 		TopSTR.put(Top.SOUTH, "2 cones down");
 		TopSTR.put(Top.EAST, "2 cones base together");
 		TopSTR.put(Top.WEST, "2 cones points together");
 		TopSTR.put(Top.SPHERES2, "2 spheres");
+		TopSTR.put(Top.BOARD, "board");
+		TopSTR.put(Top.DIAMOND, "diamond");
+		TopSTR.put(Top.CIRCLE, "circle");
+		TopSTR.put(Top.TRIANGLE, "triangle, point up");
+		TopSTR.put(Top.TRIANGLE_INV, "triangle, point down");
+		TopSTR.put(Top.SQUARE, "square");
 	}
 
 	private Top topShape = Top.NONE;
@@ -516,34 +521,6 @@ public class SeaMark {
 
 	public void setTopmark(Top top) {
 		topShape = top;
-	}
-
-	public enum Day {
-		NONE, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
-	}
-
-	public static final EnumMap<Day, String> DaySTR = new EnumMap<Day, String>(Day.class);
-	static {
-		DaySTR.put(Day.BOARD, "board");
-		DaySTR.put(Day.DIAMOND, "diamond");
-		DaySTR.put(Day.CIRCLE, "circle");
-		DaySTR.put(Day.TRIANGLE, "triangle, point up");
-		DaySTR.put(Day.TRIANGLE_INV, "triangle, point down");
-		DaySTR.put(Day.SQUARE, "square");
-	}
-
-	private Day dayShape = Day.NONE;
-
-	public boolean hasDaymark() {
-		return (dayShape != Day.NONE);
-	}
-
-	public Day getDaymark() {
-		return dayShape;
-	}
-
-	public void setDaymark(Day day) {
-		dayShape = day;
 	}
 
 	private boolean Radar = false;
@@ -872,8 +849,8 @@ public class SeaMark {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":colour_pattern")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":colour_pattern");
 				setPattern(Ent.BODY, Pat.NONE);
-				for (Pat pat : PatMAP.keySet()) {
-					if (PatMAP.get(pat).equals(str)) {
+				for (Pat pat : PatSTR.keySet()) {
+					if (PatSTR.get(pat).equals(str)) {
 						setPattern(Ent.BODY, pat);
 					}
 				}
@@ -1253,8 +1230,7 @@ public class SeaMark {
 				}
 
 				if (getPattern(Ent.BODY) != Pat.NONE) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatMAP
-							.get(getPattern(Ent.BODY))));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR.get(getPattern(Ent.BODY))));
 				}
 
 				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH) || (getObject() == Obj.FLTLAT)) {
@@ -1269,6 +1245,18 @@ public class SeaMark {
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
 						break;
 					}
+				}
+			}
+			if (hasTopmark()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:shape", TopSTR.get(getTopmark())));
+				if (getPattern(Ent.TOPMARK) != Pat.NONE)
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour_pattern", PatSTR.get(getPattern(Ent.TOPMARK))));
+				if (getColour(Ent.TOPMARK, 0) != Col.UNKNOWN) {
+					String str = ColSTR.get(getColour(Ent.TOPMARK, 0));
+					for (int i = 1; topColour.size() > i; i++) {
+						str += (";" + ColSTR.get(getColour(Ent.TOPMARK, i)));
+					}
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour", str));
 				}
 			}
 		}

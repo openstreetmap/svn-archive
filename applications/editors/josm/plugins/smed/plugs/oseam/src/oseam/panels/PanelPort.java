@@ -39,6 +39,10 @@ public class PanelPort extends JPanel {
 				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
 					dlg.panelMain.moreButton.setVisible(true);
 					dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+					dlg.panelMain.topButton.setEnabled(true);
+					dlg.panelMain.fogButton.setEnabled(true);
+					dlg.panelMain.radButton.setEnabled(true);
+					dlg.panelMain.litButton.setEnabled(true);
 					dlg.panelMain.panelMore.panelPat.panelCol.clearSelections();
 					if (dlg.mark.getCategory() == Cat.LAM_PORT) {
 						switch (dlg.mark.getRegion()) {
@@ -94,6 +98,10 @@ public class PanelPort extends JPanel {
 				} else {
 					dlg.panelMain.moreButton.setVisible(false);
 					dlg.panelMain.panelChan.topmarkButton.setVisible(false);
+					dlg.panelMain.topButton.setEnabled(false);
+					dlg.panelMain.fogButton.setEnabled(false);
+					dlg.panelMain.radButton.setEnabled(false);
+					dlg.panelMain.litButton.setEnabled(false);
 				}
 				dlg.mark.paintSign();
 			}

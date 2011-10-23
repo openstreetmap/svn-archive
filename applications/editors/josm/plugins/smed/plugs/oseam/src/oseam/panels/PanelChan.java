@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelChan extends JPanel {
@@ -107,11 +108,61 @@ public class PanelChan extends JPanel {
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (topmarkButton.isSelected()) {
-				topmarkButton.setBorderPainted(true);
-			} else {
-//				dlg.panelMain.panelTop.clearSelections();
-				topmarkButton.setBorderPainted(false);
+			if (dlg.mark != null) {
+				dlg.panelMain.panelTop.clearSelections();
+				if (topmarkButton.isSelected()) {
+					if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
+						dlg.panelMain.panelTop.sphereTopButton.doClick();
+						dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+						dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+					} else {
+						switch (dlg.mark.getCategory()) {
+						case LAM_PORT:
+						case LAM_PPORT:
+							dlg.panelMain.panelTop.canTopButton.doClick();
+							switch (dlg.mark.getRegion()) {
+							case A:
+								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+								break;
+							case B:
+								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
+								break;
+							case C:
+								dlg.panelMain.panelTop.panelPat.horizButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.addButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.whiteButton.doClick();
+								break;
+							}
+							break;
+						case LAM_STBD:
+						case LAM_PSTBD:
+							dlg.panelMain.panelTop.coneTopButton.doClick();
+							switch (dlg.mark.getRegion()) {
+							case A:
+								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
+								break;
+							case B:
+								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+								break;
+							case C:
+								dlg.panelMain.panelTop.panelPat.horizButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.addButton.doClick();
+								dlg.panelMain.panelTop.panelPat.panelCol.whiteButton.doClick();
+								break;
+							}
+							break;
+						}
+					}
+					topmarkButton.setBorderPainted(true);
+				} else {
+					topmarkButton.setBorderPainted(false);
+				}
 			}
 		}
 	};

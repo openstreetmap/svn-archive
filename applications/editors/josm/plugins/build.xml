@@ -55,6 +55,7 @@
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
+        <ant antfile="build.xml" target="dist" dir="pbf"/>
         <ant antfile="build.xml" target="dist" dir="pdfimport"/>
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
@@ -142,6 +143,7 @@
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
+        <ant antfile="build.xml" target="clean" dir="pbf"/>
         <ant antfile="build.xml" target="clean" dir="pdfimport"/>
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>

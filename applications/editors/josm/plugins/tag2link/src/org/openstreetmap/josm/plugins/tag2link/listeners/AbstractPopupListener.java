@@ -23,8 +23,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.tag2link.action.OpenLinkAction;
+import org.openstreetmap.josm.plugins.tag2link.action.OpenMailAction;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 
 public abstract class AbstractPopupListener implements PopupMenuListener {
@@ -51,6 +53,13 @@ public abstract class AbstractPopupListener implements PopupMenuListener {
     }
     
     protected void addLink(JPopupMenu popup, Link link) {
-        itemList.add(popup.add(new OpenLinkAction(link)));
+    	JosmAction action = null;
+    	if (link.url.matches("mailto:.*")) {
+    		action = new OpenMailAction(link);
+    	} else {
+    		action = new OpenLinkAction(link);
+    	}
+
+        itemList.add(popup.add(action));
     }
 }

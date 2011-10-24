@@ -28,6 +28,7 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
  * Main class of tag2link plugin.
  * @author Don-vip
  * History:
+ * 0.2d 24-Oct-2011 Icon for Mail action
  * 0.2c 24-Oct-2011 Another MHS rule
  * 0.2b 24-Oct-2011 UNESCO WHC rule working
  * 0.2a 23-Oct-2011 add Mail support + initial work on UNESCO WHC

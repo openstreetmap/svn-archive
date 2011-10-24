@@ -38,4 +38,6 @@ public interface Tag2LinkConstants {
 	public static String ICON_16 = "tag2linkv2_16x16.png";
 	public static String ICON_24 = "tag2linkv2_24x24.png";
     public static String ICON_48 = "tag2linkv2_48x48.png";
+    
+    public static String MAIL_ICON_24 = "tag2mailv3_24x24.png";
 }

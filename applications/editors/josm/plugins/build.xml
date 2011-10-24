@@ -71,6 +71,7 @@
         <ant antfile="build.xml" target="dist" dir="smed"/>
         <ant antfile="build.xml" target="dist" dir="smed_fw"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
+        <ant antfile="build.xml" target="dist" dir="tag2link"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
@@ -159,6 +160,7 @@
         <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->
         <ant antfile="build.xml" target="clean" dir="smed_fw"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
+        <ant antfile="build.xml" target="clean" dir="tag2link"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>

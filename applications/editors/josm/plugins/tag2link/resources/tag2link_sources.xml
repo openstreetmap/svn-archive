@@ -112,6 +112,10 @@
             <condition k="ref:mhs" v="\p{Upper}{2}\p{Digit}{8}" />
             <link name="View Mérimée sheet of monument" href="http://www.culture.gouv.fr/public/mistral/mersri_fr?ACTION=CHERCHER&amp;FIELD_1=REF&amp;VALUE_1=%v%" />
         </rule>
+        <rule>
+            <condition k="ref:INSEE" v="\p{Digit}{5}" />
+            <link name="View Mérimée list for this municipality" href="http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION=CHERCHER&amp;FIELD_1=cmer1&amp;VALUE_1=%v%" />
+        </rule>
     </source>
     
 </tag2link>

@@ -51,7 +51,6 @@ public class PanelPat extends JPanel {
 					panelCol.trimStack(2);
 					break;
 				}
-				dlg.mark.paintSign();
 			}
 		}
 	};

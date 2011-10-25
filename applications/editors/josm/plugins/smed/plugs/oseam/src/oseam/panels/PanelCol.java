@@ -58,7 +58,10 @@ public class PanelCol extends JPanel {
 							} else if (button == addButton) {
 								if (stackCol.size() != 0)
 									stackIdx++;
-								dlg.mark.addColour(ent, stackIdx, col);
+								if (stackIdx == 0)
+									dlg.mark.setColour(ent, col);
+								else
+									dlg.mark.addColour(ent, stackIdx, col);
 								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 								JRadioButton btnI = stackCol.get(stackIdx);
 								btnI.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -72,7 +75,7 @@ public class PanelCol extends JPanel {
 							for (int i = 0; stackCol.size() > i; i++) {
 								JRadioButton btnI = stackCol.get(i);
 								btnI.setBounds(2, (2 + (i * height)), 30, height);
-								btnI.setBackground(dlg.mark.ColMAP.get(dlg.mark.getColour(ent, i)));
+								btnI.setBackground(oseam.seamarks.SeaMark.ColMAP.get(dlg.mark.getColour(ent, i)));
 								if (stackIdx == i) {
 									btnI.setBorderPainted(true);
 								} else {

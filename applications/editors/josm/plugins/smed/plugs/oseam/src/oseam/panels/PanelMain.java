@@ -281,10 +281,11 @@ public class PanelMain extends JPanel {
 	}
 
 	public void clearSelections() {
-		panelMore.clearSelections();
+//		panelMore.clearSelections();
+		panelMore.setVisible(false);
+		moreButton.setVisible(false);
 		typeButtons.clearSelection();
 		alType.actionPerformed(null);
-		moreButton.setVisible(false);
 		nameBox.setText("");
 		alName.actionPerformed(null);
 		clearType();
@@ -297,14 +298,14 @@ public class PanelMain extends JPanel {
 		litButton.setEnabled(false);
 		miscButtons.clearSelection();
 		alMisc.actionPerformed(null);
-		panelChan.clearSelections();
-		panelHaz.clearSelections();
-		panelSpec.clearSelections();
-		panelLights.clearSelections();
-		panelTop.clearSelections();
-		panelFog.clearSelections();
-		panelRadar.clearSelections();
-		panelLit.clearSelections();
+//		panelChan.clearSelections();
+//		panelHaz.clearSelections();
+//		panelSpec.clearSelections();
+//		panelLights.clearSelections();
+//		panelTop.clearSelections();
+//		panelFog.clearSelections();
+//		panelRadar.clearSelections();
+//		panelLit.clearSelections();
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);

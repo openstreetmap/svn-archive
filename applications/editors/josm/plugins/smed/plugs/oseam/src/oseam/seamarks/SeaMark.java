@@ -17,7 +17,6 @@ public class SeaMark {
 
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
-		dlg.panelMain.clearSelections();
 	}
 
 	public String validDecimal(String str) {
@@ -404,13 +403,16 @@ public class SeaMark {
 		case BUOY:
 		case BEACON:
 		case FLOAT:
-			bodyColour.remove(i);
+			if (bodyColour.size() > i)
+				bodyColour.remove(i);
 			break;
 		case TOPMARK:
-			topColour.remove(i);
+			if (topColour.size() > i)
+				topColour.remove(i);
 			break;
 		case LIGHT:
-			lightColour.remove(i);
+			if (lightColour.size() > i)
+				lightColour.remove(i);
 			break;
 		}
 	}
@@ -886,9 +888,6 @@ public class SeaMark {
 		}
 
 		switch (GrpMAP.get(getObject())) {
-		case NUL:
-			dlg.panelMain.clearSelections();
-			break;
 		case LAT:
 			dlg.panelMain.chanButton.doClick();
 			switch (getCategory()) {

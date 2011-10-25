@@ -122,11 +122,18 @@ public class PanelHaz extends JPanel {
 				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
 					topmarkButton.setVisible(true);
 					dlg.panelMain.moreButton.setVisible(true);
+					dlg.panelMain.topButton.setEnabled(true);
+					dlg.panelMain.fogButton.setEnabled(true);
+					dlg.panelMain.radButton.setEnabled(true);
+					dlg.panelMain.litButton.setEnabled(true);
 				} else {
 					topmarkButton.setVisible(false);
 					dlg.panelMain.moreButton.setVisible(false);
+					dlg.panelMain.topButton.setEnabled(false);
+					dlg.panelMain.fogButton.setEnabled(false);
+					dlg.panelMain.radButton.setEnabled(false);
+					dlg.panelMain.litButton.setEnabled(false);
 				}
-				dlg.mark.paintSign();
 			}
 		}
 	};

@@ -149,7 +149,6 @@ public class PanelLights extends JPanel {
 				dlg.panelMain.litButton.setEnabled(false);
 				dlg.panelMain.moreButton.setVisible(false);
 			}
-			dlg.mark.paintSign();
 		}
 	}
 	

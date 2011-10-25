@@ -103,7 +103,6 @@ public class PanelPort extends JPanel {
 					dlg.panelMain.radButton.setEnabled(false);
 					dlg.panelMain.litButton.setEnabled(false);
 				}
-				dlg.mark.paintSign();
 			}
 		}
 	};

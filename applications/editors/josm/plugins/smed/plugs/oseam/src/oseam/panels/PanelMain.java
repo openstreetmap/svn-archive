@@ -306,6 +306,25 @@ public class PanelMain extends JPanel {
 //		panelFog.clearSelections();
 //		panelRadar.clearSelections();
 //		panelLit.clearSelections();
+		panelChan = new PanelChan(dlg);
+//		panelChan.setBounds(new Rectangle(65, 0, 180, 160));
+		panelHaz = new PanelHaz(dlg);
+//		panelHaz.setBounds(new Rectangle(65, 0, 180, 160));
+		panelSpec = new PanelSpec(dlg);
+//		panelSpec.setBounds(new Rectangle(65, 0, 180, 160));
+		panelLights = new PanelLights(dlg);
+//		panelLights.setBounds(new Rectangle(65, 0, 180, 160));
+		panelMore = new PanelMore(dlg);
+//		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
+		panelTop = new PanelTop(dlg);
+//		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
+		panelFog = new PanelFog(dlg);
+//		panelFog.setBounds(new Rectangle(40, 165, 360, 160));
+		panelRadar = new PanelRadar(dlg);
+//		panelRadar.setBounds(new Rectangle(40, 165, 360, 160));
+		panelLit = new PanelLit(dlg);
+//		panelLit.setBounds(new Rectangle(40, 165, 360, 160));
+
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);

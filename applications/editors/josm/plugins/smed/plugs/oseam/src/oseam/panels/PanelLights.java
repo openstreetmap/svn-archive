@@ -152,30 +152,6 @@ public class PanelLights extends JPanel {
 		}
 	}
 	
-	public void updateSelections() {
-		if (dlg.mark != null) {
-			if (dlg.mark.getObject() == Obj.UNKNOWN) {
-				clearSelections();
-			} else {
-				objects.get(dlg.mark.getObject()).doClick();
-				if (dlg.mark.getObject() == Obj.SISTAT) {
-					trafficCatBox.setSelectedIndex(trafficCats.get(dlg.mark.getCategory()));
-				}
-				if (dlg.mark.getObject() == Obj.SISTAW) {
-					warningCatBox.setSelectedIndex(warningCats.get(dlg.mark.getCategory()));
-				}
-			}
-			checkValidity();
-		}
-	}
-
-	public void clearSelections() {
-		warningCatBox.setSelectedIndex(0);
-		trafficCatBox.setSelectedIndex(0);
-		objButtons.clearSelection();
-		alObj.actionPerformed(null);
-	}
-
 	private void addTCItem(String str, Cat cat) {
 		trafficCats.put(cat, trafficCatBox.getItemCount());
 		trafficCatBox.addItem(str);

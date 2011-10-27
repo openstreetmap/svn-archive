@@ -224,8 +224,4 @@ public class PanelLit extends JPanel {
 		return button;
 	}
 
-	public void clearSelections() {
-
-	}
-
 }

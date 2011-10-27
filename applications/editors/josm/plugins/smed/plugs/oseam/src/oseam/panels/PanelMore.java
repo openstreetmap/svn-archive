@@ -300,26 +300,6 @@ public class PanelMore extends JPanel {
 
 		}
 
-	public void clearSelections() {
-		panelPat.clearSelections();
-		heightBox.setText("");
-		alHeight.actionPerformed(null);
-		elevBox.setText("");
-		alElev.actionPerformed(null);
-		sourceBox.setText("");
-		alSource.actionPerformed(null);
-		infoBox.setText("");
-		alInfo.actionPerformed(null);
-		statusBox.setSelectedIndex(0);
-		alStatus.actionPerformed(null);
-		constrBox.setSelectedIndex(0);
-		alConstr.actionPerformed(null);
-		visBox.setSelectedIndex(0);
-		alVis.actionPerformed(null);
-		reflBox.setSelectedIndex(0);
-		alRefl.actionPerformed(null);
-	}
-
 	private void addStsItem(String str, Sts sts) {
 		statuses.put(sts, statusBox.getItemCount());
 		statusBox.addItem(str);

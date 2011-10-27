@@ -43,7 +43,6 @@ public class PanelStbd extends JPanel {
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-					dlg.panelMain.panelMore.panelPat.panelCol.clearSelections();
 					if (dlg.mark.getCategory() == Cat.LAM_PORT) {
 						switch (dlg.mark.getRegion()) {
 						case A:
@@ -119,11 +118,6 @@ public class PanelStbd extends JPanel {
 		this.add(getShapeButton(towerButton, 35, 32, 34, 32, "Tower", Shp.TOWER, Obj.BCNLAT), null);
 		this.add(getShapeButton(perchButton, 35, 64, 34, 32, "Perch", Shp.PERCH, Obj.BCNLAT), null);
 		this.add(getShapeButton(stakeButton, 35, 96, 34, 32, "Stake", Shp.STAKE, Obj.BCNLAT), null);
-	}
-
-	public void clearSelections() {
-		shapeButtons.clearSelection();
-		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {

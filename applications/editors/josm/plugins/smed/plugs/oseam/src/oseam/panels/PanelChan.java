@@ -16,7 +16,7 @@ public class PanelChan extends JPanel {
 	public PanelPort panelPort = null;
 	public PanelStbd panelStbd = null;
 	public PanelSaw panelSaw = null;
-	private ButtonGroup catButtons = new ButtonGroup();
+	public ButtonGroup catButtons = new ButtonGroup();
 	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
 	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
 	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
@@ -32,84 +32,48 @@ public class PanelChan extends JPanel {
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).doClick();
 				} else {
-					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				portButton.setBorderPainted(true);
-				panelPort.setVisible(true);
-				panelPort.perchButton.setVisible(true);
-				panelPort.stakeButton.setVisible(true);
-			} else {
-				portButton.setBorderPainted(false);
-				panelPort.setVisible(false);
 			}
 			if (prefPortButton.isSelected()) {
 				dlg.mark.setCategory(Cat.LAM_PPORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).doClick();
 				} else {
-					panelPort.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				prefPortButton.setBorderPainted(true);
-				panelPort.setVisible(true);
-			} else {
-				prefPortButton.setBorderPainted(false);
-				if (!portButton.isSelected())
-					panelPort.setVisible(false);
 			}
 			if (stbdButton.isSelected()) {
 				dlg.mark.setCategory(Cat.LAM_STBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).doClick();
 				} else {
-					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				stbdButton.setBorderPainted(true);
-				panelStbd.setVisible(true);
-				panelStbd.perchButton.setVisible(true);
-				panelStbd.stakeButton.setVisible(true);
-			} else {
-				stbdButton.setBorderPainted(false);
-				panelStbd.setVisible(false);
 			}
 			if (prefStbdButton.isSelected()) {
 				dlg.mark.setCategory(Cat.LAM_PSTBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).doClick();
 				} else {
-					panelStbd.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				prefStbdButton.setBorderPainted(true);
-				panelStbd.setVisible(true);
-			} else {
-				prefStbdButton.setBorderPainted(false);
-				if (!stbdButton.isSelected())
-					panelStbd.setVisible(false);
 			}
 			if (safeWaterButton.isSelected()) {
 				dlg.mark.setCategory(Cat.UNKNOWN);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).doClick();
 				} else {
-					panelSaw.clearSelections();
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
-				safeWaterButton.setBorderPainted(true);
-				panelSaw.setVisible(true);
-			} else {
-				safeWaterButton.setBorderPainted(false);
-				panelSaw.setVisible(false);
 			}
+			syncButtons();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark != null) {
-				dlg.panelMain.panelTop.clearSelections();
 				if (topmarkButton.isSelected()) {
 					if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
 						dlg.panelMain.panelTop.sphereTopButton.doClick();
@@ -194,16 +158,50 @@ public class PanelChan extends JPanel {
 		topmarkButton.setVisible(false);
 		this.add(topmarkButton);
 	}
+	
+	public void syncButtons() {
+		if (portButton.isSelected()) {
+			portButton.setBorderPainted(true);
+			panelPort.setVisible(true);
+			panelPort.perchButton.setVisible(true);
+			panelPort.stakeButton.setVisible(true);
+		} else {
+			portButton.setBorderPainted(false);
+			panelPort.setVisible(false);
+		}
+		if (prefPortButton.isSelected()) {
+			prefPortButton.setBorderPainted(true);
+			panelPort.setVisible(true);
+		} else {
+			prefPortButton.setBorderPainted(false);
+			if (!portButton.isSelected())
+				panelPort.setVisible(false);
+		}
+		if (stbdButton.isSelected()) {
+			stbdButton.setBorderPainted(true);
+			panelStbd.setVisible(true);
+			panelStbd.perchButton.setVisible(true);
+			panelStbd.stakeButton.setVisible(true);
+		} else {
+			stbdButton.setBorderPainted(false);
+			panelStbd.setVisible(false);
+		}
+		if (prefStbdButton.isSelected()) {
+			prefStbdButton.setBorderPainted(true);
+			panelStbd.setVisible(true);
+		} else {
+			prefStbdButton.setBorderPainted(false);
+			if (!stbdButton.isSelected())
+				panelStbd.setVisible(false);
+		}
+		if (safeWaterButton.isSelected()) {
+			safeWaterButton.setBorderPainted(true);
+			panelSaw.setVisible(true);
+		} else {
+			safeWaterButton.setBorderPainted(false);
+			panelSaw.setVisible(false);
+		}
 
-	public void clearSelections() {
-		topmarkButton.setSelected(false);
-		topmarkButton.setVisible(false);
-		alTop.actionPerformed(null);
-		catButtons.clearSelection();
-		alCat.actionPerformed(null);
-		panelPort.clearSelections();
-		panelStbd.clearSelections();
-		panelSaw.clearSelections();
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

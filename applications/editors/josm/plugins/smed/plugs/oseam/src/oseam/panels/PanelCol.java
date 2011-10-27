@@ -71,7 +71,7 @@ public class PanelCol extends JPanel {
 							} else {
 								dlg.mark.setColour(ent, stackIdx, col);
 							}
-							int height = 60 / stackCol.size();
+							int height = stackCol.size() == 0 ? 60 : 60 / stackCol.size();
 							for (int i = 0; stackCol.size() > i; i++) {
 								JRadioButton btnI = stackCol.get(i);
 								btnI.setBounds(2, (2 + (i * height)), 30, height);
@@ -144,20 +144,11 @@ public class PanelCol extends JPanel {
 		}
 	}
 
-	public void clearSelections() {
-		colourButtons.clearSelection();
-		if (stackCol.size() == 0) {
-			addButton.doClick();
-		}
-		do {
-			delButton.doClick();
-		} while (stackCol.size() > 1);
-		alStack.actionPerformed(null);
-	}
+	public void syncButtons() {
+		if (ent != Ent.LIGHT) {
+			for (stackIdx = 0; dlg.mark.getColour(ent, stackIdx) != Col.UNKNOWN; stackIdx++) {
 
-	public void enableAll(boolean state) {
-		for (JRadioButton button : colours.values()) {
-			button.setEnabled(state);
+			}
 		}
 	}
 

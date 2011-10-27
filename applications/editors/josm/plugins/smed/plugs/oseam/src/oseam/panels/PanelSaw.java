@@ -39,7 +39,6 @@ public class PanelSaw extends JPanel {
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-					dlg.panelMain.panelMore.panelPat.panelCol.clearSelections();
 					dlg.panelMain.panelMore.panelPat.vertButton.doClick();
 					dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
 					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
@@ -63,11 +62,6 @@ public class PanelSaw extends JPanel {
 		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW), null);
 		this.add(getShapeButton(floatButton, 0, 96, 34, 32, "Float", Shp.FLOAT, Obj.FLTSAW), null);
 		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.FLTSAW), null);
-	}
-
-	public void clearSelections() {
-		shapeButtons.clearSelection();
-		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {

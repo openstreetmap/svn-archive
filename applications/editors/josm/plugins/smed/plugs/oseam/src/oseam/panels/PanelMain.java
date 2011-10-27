@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelMain extends JPanel {
 
@@ -113,16 +114,14 @@ public class PanelMain extends JPanel {
 		typeButtons.add(lightsButton);
 		alType = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (dlg.node == null) {
+				if (dlg.node == null)
 					typeButtons.clearSelection();
-				}
 				if (chanButton.isSelected()) {
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
 				} else {
 					chanButton.setBorderPainted(false);
 					panelChan.setVisible(false);
-					panelChan.clearSelections();
 				}
 				if (hazButton.isSelected()) {
 					hazButton.setBorderPainted(true);
@@ -130,25 +129,20 @@ public class PanelMain extends JPanel {
 				} else {
 					hazButton.setBorderPainted(false);
 					panelHaz.setVisible(false);
-					panelHaz.clearSelections();
 				}
 				if (specButton.isSelected()) {
 					specButton.setBorderPainted(true);
 					panelSpec.setVisible(true);
-					panelSpec.updateSelections();
 				} else {
 					specButton.setBorderPainted(false);
 					panelSpec.setVisible(false);
-					panelSpec.clearSelections();
 				}
 				if (lightsButton.isSelected()) {
 					lightsButton.setBorderPainted(true);
 					panelLights.setVisible(true);
-					panelLights.updateSelections();
 				} else {
 					lightsButton.setBorderPainted(false);
 					panelLights.setVisible(false);
-					panelLights.clearSelections();
 				}
 			}
 		};
@@ -276,60 +270,33 @@ public class PanelMain extends JPanel {
 		};
 		moreButton.addActionListener(alMore);
 
-		this.clearSelections();
-
 	}
 
-	public void clearSelections() {
-//		panelMore.clearSelections();
-		panelMore.setVisible(false);
-		moreButton.setVisible(false);
-		typeButtons.clearSelection();
+	public void syncButtons() {
+		if (dlg.mark == null) {
+			topButton.setEnabled(false);
+			fogButton.setEnabled(false);
+			radButton.setEnabled(false);
+			litButton.setEnabled(false);
+			moreButton.setVisible(false);
+		} else {
+			if (dlg.mark.isValid()) {
+				topButton.setEnabled(true);
+				fogButton.setEnabled(true);
+				radButton.setEnabled(true);
+				litButton.setEnabled(true);
+				moreButton.setVisible(true);
+			} else {
+				topButton.setEnabled(false);
+				fogButton.setEnabled(false);
+				radButton.setEnabled(false);
+				litButton.setEnabled(false);
+				moreButton.setVisible(false);
+			}
+		}
+		nameBox.setText(dlg.mark.getName());
 		alType.actionPerformed(null);
-		nameBox.setText("");
-		alName.actionPerformed(null);
-		clearType();
-	}
-
-	public void clearType() {
-		topButton.setEnabled(false);
-		fogButton.setEnabled(false);
-		radButton.setEnabled(false);
-		litButton.setEnabled(false);
-		miscButtons.clearSelection();
 		alMisc.actionPerformed(null);
-//		panelChan.clearSelections();
-//		panelHaz.clearSelections();
-//		panelSpec.clearSelections();
-//		panelLights.clearSelections();
-//		panelTop.clearSelections();
-//		panelFog.clearSelections();
-//		panelRadar.clearSelections();
-//		panelLit.clearSelections();
-		panelChan = new PanelChan(dlg);
-//		panelChan.setBounds(new Rectangle(65, 0, 180, 160));
-		panelHaz = new PanelHaz(dlg);
-//		panelHaz.setBounds(new Rectangle(65, 0, 180, 160));
-		panelSpec = new PanelSpec(dlg);
-//		panelSpec.setBounds(new Rectangle(65, 0, 180, 160));
-		panelLights = new PanelLights(dlg);
-//		panelLights.setBounds(new Rectangle(65, 0, 180, 160));
-		panelMore = new PanelMore(dlg);
-//		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
-		panelTop = new PanelTop(dlg);
-//		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
-		panelFog = new PanelFog(dlg);
-//		panelFog.setBounds(new Rectangle(40, 165, 360, 160));
-		panelRadar = new PanelRadar(dlg);
-//		panelRadar.setBounds(new Rectangle(40, 165, 360, 160));
-		panelLit = new PanelLit(dlg);
-//		panelLit.setBounds(new Rectangle(40, 165, 360, 160));
-
-		shapeIcon.setIcon(null);
-		lightIcon.setIcon(null);
-		topIcon.setIcon(null);
-		radarIcon.setIcon(null);
-		fogIcon.setIcon(null);
 	}
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {

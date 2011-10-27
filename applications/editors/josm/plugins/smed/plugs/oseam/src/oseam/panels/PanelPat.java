@@ -71,12 +71,6 @@ public class PanelPat extends JPanel {
 
 	}
 
-	public void clearSelections() {
-		panelCol.clearSelections();
-		patButtons.clearSelection();
-		alPat.actionPerformed(null);
-	}
-
 	private JRadioButton getPatButton(JRadioButton button, int x, int y, int w, int h, String tip, Pat pat) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLoweredBevelBorder());

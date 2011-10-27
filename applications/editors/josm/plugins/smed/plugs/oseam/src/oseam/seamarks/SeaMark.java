@@ -720,21 +720,61 @@ public class SeaMark {
 		height = validDecimal(str);
 	}
 	
+	public boolean isValid() {
+		switch (getObject()) {
+		case BCNCAR:
+		case BCNLAT:
+		case BOYCAR:
+		case BOYLAT:
+			if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN))
+				return true;
+			break;
+		case BCNISD:
+		case BCNSAW:
+		case BCNSPP:
+		case BOYISD:
+		case BOYSAW:
+		case BOYSPP:
+			if (getShape() != Shp.UNKNOWN)
+				return true;
+			break;
+		case FLTCAR:
+		case FLTISD:
+		case FLTLAT:
+		case FLTSAW:
+		case FLTSPP:
+			if (getColour(Ent.BODY, 0) != Col.UNKNOWN)
+				return true;
+			break;
+		case LITMAJ:
+		case LITMIN:
+		case LITFLT:
+		case LITVES:
+		case LNDMRK:
+		case MORFAC:
+		case SISTAW:
+		case SISTAT:
+			return true;
+		default: return false;
+		}
+		return false;
+	}
+	
 	// **********************!!!!!!!!!
 	public Light light = new Light(dlg);
 
 	private boolean paintlock = false;
 
 	public void parseMark(Node node) {
-		dlg.panelMain.clearSelections();
+		paintlock = true;
 		dlg.manager.showVisualMessage("");
 		String str = Main.pref.get("smedplugin.IALA");
 		if (str.equals("C"))
-			dlg.panelMain.panelMore.regionCButton.doClick();
+			setRegion(Reg.C);
 		else if (str.equals("B"))
-			dlg.panelMain.panelMore.regionBButton.doClick();
+			setRegion(Reg.B);
 		else
-			dlg.panelMain.panelMore.regionAButton.doClick();
+			setRegion(Reg.A);
 
 		Map<String, String> keys = node.getKeys();
 
@@ -887,133 +927,142 @@ public class SeaMark {
 			}
 		}
 
+		dlg.panelMain.typeButtons.clearSelection();
+		dlg.panelMain.panelChan.catButtons.clearSelection();
+		dlg.panelMain.panelHaz.catButtons.clearSelection();
 		switch (GrpMAP.get(getObject())) {
 		case LAT:
-			dlg.panelMain.chanButton.doClick();
+			dlg.panelMain.chanButton.setSelected(true);
 			switch (getCategory()) {
 			case LAM_PORT:
-				dlg.panelMain.panelChan.portButton.doClick();
+				dlg.panelMain.panelChan.portButton.setSelected(true);
 				break;
 			case LAM_STBD:
-				dlg.panelMain.panelChan.stbdButton.doClick();
+				dlg.panelMain.panelChan.stbdButton.setSelected(true);
 				break;
 			case LAM_PPORT:
-				dlg.panelMain.panelChan.prefPortButton.doClick();
+				dlg.panelMain.panelChan.prefPortButton.setSelected(true);
 				break;
 			case LAM_PSTBD:
-				dlg.panelMain.panelChan.prefStbdButton.doClick();
+				dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
 				break;
 			}
 			break;
 		case SAW:
-			dlg.panelMain.chanButton.doClick();
-			dlg.panelMain.panelChan.safeWaterButton.doClick();
+			dlg.panelMain.chanButton.setSelected(true);
+			dlg.panelMain.panelChan.safeWaterButton.setSelected(true);
 			break;
 		case CAR:
-			dlg.panelMain.hazButton.doClick();
+			dlg.panelMain.hazButton.setSelected(true);
 			switch (getCategory()) {
 			case CAM_NORTH:
-				dlg.panelMain.panelHaz.northButton.doClick();
+				dlg.panelMain.panelHaz.northButton.setSelected(true);
 				break;
 			case CAM_SOUTH:
-				dlg.panelMain.panelHaz.southButton.doClick();
+				dlg.panelMain.panelHaz.southButton.setSelected(true);
 				break;
 			case CAM_EAST:
-				dlg.panelMain.panelHaz.eastButton.doClick();
+				dlg.panelMain.panelHaz.eastButton.setSelected(true);
 				break;
 			case CAM_WEST:
-				dlg.panelMain.panelHaz.westButton.doClick();
+				dlg.panelMain.panelHaz.westButton.setSelected(true);
 				break;
 			}
 			break;
 		case ISD:
-			dlg.panelMain.hazButton.doClick();
-			dlg.panelMain.panelHaz.isolButton.doClick();
+			dlg.panelMain.hazButton.setSelected(true);
+			dlg.panelMain.panelHaz.isolButton.setSelected(true);
 			break;
 		case SPP:
-			dlg.panelMain.specButton.doClick();
+			dlg.panelMain.specButton.setSelected(true);
 			break;
 		case LIT:
 		case SIS:
-			dlg.panelMain.lightsButton.doClick();
+			dlg.panelMain.lightsButton.setSelected(true);
 			break;
 		case FLT:
 			switch (getColour(Ent.FLOAT, 0)) {
 			case RED:
-				dlg.panelMain.chanButton.doClick();
+				dlg.panelMain.chanButton.setSelected(true);
 				if (getColour(Ent.FLOAT, 1) == Col.WHITE)
 					if (getColour(Ent.FLOAT, 2) == Col.RED) {
 						setRegion(Reg.C);
-						dlg.panelMain.panelChan.portButton.doClick();
+						dlg.panelMain.panelChan.portButton.setSelected(true);
 					} else {
-						dlg.panelMain.panelChan.safeWaterButton.doClick();
+						dlg.panelMain.panelChan.safeWaterButton.setSelected(true);
 					}
 				else if (getColour(Ent.FLOAT, 1) == Col.GREEN) {
 					if (getColour(Ent.FLOAT, 3) == Col.GREEN) {
 						setRegion(Reg.C);
 					}
 					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.prefStbdButton.doClick();
+						dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
 					} else {
-						dlg.panelMain.panelChan.prefPortButton.doClick();
+						dlg.panelMain.panelChan.prefPortButton.setSelected(true);
 					}
 				} else {
 					if (getRegion().equals("B"))
-						dlg.panelMain.panelChan.stbdButton.doClick();
+						dlg.panelMain.panelChan.stbdButton.setSelected(true);
 					else
-						dlg.panelMain.panelChan.portButton.doClick();
+						dlg.panelMain.panelChan.portButton.setSelected(true);
 				}
 				break;
 			case GREEN:
-				dlg.panelMain.chanButton.doClick();
+				dlg.panelMain.chanButton.setSelected(true);
 				if (getColour(Ent.FLOAT, 1) == Col.RED) {
 					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.prefPortButton.doClick();
+						dlg.panelMain.panelChan.prefPortButton.setSelected(true);
 					} else {
-						dlg.panelMain.panelChan.prefStbdButton.doClick();
+						dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
 					}
 				} else if (getColour(Ent.FLOAT, 1) == Col.WHITE) {
 					setRegion(Reg.C);
-					dlg.panelMain.panelChan.stbdButton.doClick();
+					dlg.panelMain.panelChan.stbdButton.setSelected(true);
 				} else {
 					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.portButton.doClick();
+						dlg.panelMain.panelChan.portButton.setSelected(true);
 					} else {
-						dlg.panelMain.panelChan.stbdButton.doClick();
+						dlg.panelMain.panelChan.stbdButton.setSelected(true);
 					}
 				}
 				break;
 			case BLACK:
-				dlg.panelMain.hazButton.doClick();
+				dlg.panelMain.hazButton.setSelected(true);
 				switch (getColour(Ent.FLOAT, 1)) {
 				case YELLOW:
 					if (getColour(Ent.FLOAT, 2) == Col.BLACK)
-						dlg.panelMain.panelHaz.eastButton.doClick();
+						dlg.panelMain.panelHaz.eastButton.setSelected(true);
 					else
-						dlg.panelMain.panelHaz.northButton.doClick();
+						dlg.panelMain.panelHaz.northButton.setSelected(true);
 					break;
 				case RED:
-					dlg.panelMain.panelHaz.isolButton.doClick();
+					dlg.panelMain.panelHaz.isolButton.setSelected(true);
 					break;
 				}
 				break;
 			case YELLOW:
 				if (getColour(Ent.FLOAT, 1) == Col.BLACK) {
-					dlg.panelMain.hazButton.doClick();
+					dlg.panelMain.hazButton.setSelected(true);
 					if (getColour(Ent.FLOAT, 2) == Col.YELLOW)
-						dlg.panelMain.panelHaz.westButton.doClick();
+						dlg.panelMain.panelHaz.westButton.setSelected(true);
 					else
-						dlg.panelMain.panelHaz.southButton.doClick();
+						dlg.panelMain.panelHaz.southButton.setSelected(true);
 				} else {
-					dlg.panelMain.specButton.doClick();
+					dlg.panelMain.specButton.setSelected(true);
 				}
 				break;
 				default:
-					dlg.panelMain.lightsButton.doClick();
+					dlg.panelMain.lightsButton.setSelected(true);
 			}
 			break;
 		}
+		
+		dlg.panelMain.syncButtons();
+		dlg.panelMain.panelChan.syncButtons();
+		dlg.panelMain.panelHaz.syncButtons();
 
+		paintlock = false;
+		paintSign();
 	}
 
 	public void paintSign() {

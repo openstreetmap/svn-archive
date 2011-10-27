@@ -120,33 +120,10 @@ public class PanelSpec extends JPanel {
 			}
 		}
 	}
-	
-	public void updateSelections() {
-		if (dlg.mark != null) {
-			if (dlg.mark.getObject() == Obj.UNKNOWN) {
-				clearSelections();
-				dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
-			} else {
-				dlg.panelMain.panelMore.panelPat.panelCol.colours.get(dlg.mark.getColour(Ent.BODY, 0)).doClick();
-			}
-			if (shapes.containsKey(dlg.mark.getShape())) {
-				shapes.get(dlg.mark.getShape()).doClick();
-			} else {
-				shapeButtons.clearSelection();
-				alShape.actionPerformed(null);
-			}
-		} else
-			clearSelections();
-	}
 
 	private void addCatItem(String str, Cat cat) {
 		categories.put(cat, categoryBox.getItemCount());
 		categoryBox.addItem(str);
-	}
-
-	public void clearSelections() {
-		shapeButtons.clearSelection();
-		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {

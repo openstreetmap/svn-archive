@@ -73,11 +73,6 @@ public class PanelTop extends JPanel {
 		this.add(getMoorButton(mooringTopButton, 110, 95, 27, 27, "MooringTop"), null);
 	}
 
-	public void clearSelections() {
-		noTopButton.doClick();
-		panelPat.clearSelections();
-	}
-
 	public void enableAll(boolean state) {
 		for (JRadioButton button : tops.values()) {
 			button.setEnabled(state);

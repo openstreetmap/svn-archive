@@ -14,7 +14,7 @@ import oseam.seamarks.SeaMark.*;
 public class PanelHaz extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup catButtons = new ButtonGroup();
+	public ButtonGroup catButtons = new ButtonGroup();
 	public JRadioButton northButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardNButton.png")));
 	public JRadioButton southButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardSButton.png")));
 	public JRadioButton eastButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CardEButton.png")));
@@ -25,7 +25,6 @@ public class PanelHaz extends JPanel {
 			Shp shp = Shp.UNKNOWN;
 			if (dlg.mark != null) {
 				shp = dlg.mark.getShape();
-				dlg.panelMain.panelMore.panelPat.clearSelections();
 				dlg.panelMain.panelMore.panelPat.horizButton.doClick();
 				if (northButton.isSelected()) {
 					dlg.mark.setCategory(Cat.CAM_NORTH);
@@ -141,7 +140,6 @@ public class PanelHaz extends JPanel {
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark != null) {
-				dlg.panelMain.panelTop.clearSelections();
 				if (topmarkButton.isSelected()) {
 					dlg.panelMain.panelTop.panelPat.noneButton.doClick();
 					dlg.panelMain.panelTop.panelPat.panelCol.blackButton.doClick();
@@ -194,14 +192,12 @@ public class PanelHaz extends JPanel {
 		this.add(topmarkButton);
 	}
 
-	public void clearSelections() {
-		topmarkButton.setSelected(false);
-		topmarkButton.setVisible(false);
-		alTop.actionPerformed(null);
-		catButtons.clearSelection();
-		alCat.actionPerformed(null);
-		shapeButtons.clearSelection();
-		alShape.actionPerformed(null);
+	public void syncButtons() {
+		northButton.setBorderPainted(northButton.isSelected());
+		southButton.setBorderPainted(southButton.isSelected());
+		eastButton.setBorderPainted(eastButton.isSelected());
+		westButton.setBorderPainted(westButton.isSelected());
+		isolButton.setBorderPainted(isolButton.isSelected());
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

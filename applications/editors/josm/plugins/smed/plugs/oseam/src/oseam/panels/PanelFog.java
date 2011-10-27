@@ -17,8 +17,4 @@ public class PanelFog extends JPanel {
 		this.setLayout(null);
 	}
 
-	public void clearSelections() {
-
-	}
-
 }

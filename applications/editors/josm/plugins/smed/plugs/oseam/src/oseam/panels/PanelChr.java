@@ -125,14 +125,6 @@ public class PanelChr extends JPanel {
 		charBox.addActionListener(alCharBox);
 	}
 
-	public void clearSelections() {
-		for (Chr chr : buttons.keySet()) {
-			JToggleButton button = buttons.get(chr);
-			button.setSelected(false);
-		}
-		noneButton.doClick();
-	}
-
 	public void enableAll(boolean state) {
 		for (JToggleButton button : buttons.values()) {
 			button.setEnabled(state);

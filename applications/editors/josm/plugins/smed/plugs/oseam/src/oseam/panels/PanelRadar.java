@@ -16,8 +16,4 @@ public class PanelRadar extends JPanel {
 		this.setLayout(null);
 	}
 
-	public void clearSelections() {
-
-	}
-
 }

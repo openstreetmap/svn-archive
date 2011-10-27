@@ -40,7 +40,6 @@ public class OSeaMAction {
 						}
 					} else {
 						manager.showVisualMessage(Messages.getString("OneNode"));
-						panelMain.clearSelections();
 					}
 				}
 			}
@@ -48,7 +47,6 @@ public class OSeaMAction {
 				node = null;
 				mark = null;
 				manager.showVisualMessage(Messages.getString("SelectNode"));
-				panelMain.clearSelections();
 			}
 		}
 	};

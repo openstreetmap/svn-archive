@@ -47,53 +47,44 @@ public class PanelStbd extends JPanel {
 						switch (dlg.mark.getRegion()) {
 						case A:
 							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.GREEN);
 							break;
 						case B:
 							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.RED);
 							break;
 						case C:
 							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.whiteButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.whiteButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.GREEN);
+							dlg.mark.addColour(Ent.BODY, Col.WHITE);
+							dlg.mark.addColour(Ent.BODY, Col.GREEN);
+							dlg.mark.addColour(Ent.BODY, Col.WHITE);
 							break;
 						}
 					} else {
 						switch (dlg.mark.getRegion()) {
 						case A:
 							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.GREEN);
+							dlg.mark.addColour(Ent.BODY, Col.RED);
+							dlg.mark.addColour(Ent.BODY, Col.GREEN);
 							break;
 						case B:
 							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.RED);
+							dlg.mark.addColour(Ent.BODY, Col.GREEN);
+							dlg.mark.addColour(Ent.BODY, Col.RED);
 							break;
 						case C:
 							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-							dlg.panelMain.panelMore.panelPat.panelCol.greenButton.doClick();
+							dlg.mark.setColour(Ent.BODY, Col.RED);
+							dlg.mark.addColour(Ent.BODY, Col.GREEN);
+							dlg.mark.addColour(Ent.BODY, Col.RED);
+							dlg.mark.addColour(Ent.BODY, Col.GREEN);
 							break;
 						}
 					}
+					dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
 				} else {
 					dlg.panelMain.moreButton.setVisible(false);
 					dlg.panelMain.panelChan.topmarkButton.setVisible(false);

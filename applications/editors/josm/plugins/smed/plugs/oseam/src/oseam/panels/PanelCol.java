@@ -41,52 +41,26 @@ public class PanelCol extends JPanel {
 					if (dlg.mark != null) {
 						if (ent == Ent.LIGHT) {
 							dlg.mark.setColour(ent, col);
+							button.setBorderPainted(true);
 						} else {
 							if (button == delButton) {
-								if (stackCol.size() > 1) {
-									JRadioButton btnI = stackCol.get(stackIdx);
-									dlg.mark.subColour(ent, stackIdx);
-									btnI.removeActionListener(alStack);
-									stackColours.remove(btnI);
-									stack.remove(btnI);
-									stackCol.remove(stackIdx);
-									if (stackCol.size() == stackIdx)
-										stackIdx--;
-								} else {
-									dlg.mark.setColour(ent, Col.UNKNOWN);
-								}
+								dlg.mark.subColour(ent, stackIdx);
 							} else if (button == addButton) {
 								if (stackCol.size() != 0)
 									stackIdx++;
-								if (stackIdx == 0)
+								if (stackCol.size() == 0)
 									dlg.mark.setColour(ent, col);
 								else
 									dlg.mark.addColour(ent, stackIdx, col);
-								stackCol.add(stackIdx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
-								JRadioButton btnI = stackCol.get(stackIdx);
-								btnI.setBorder(BorderFactory.createLoweredBevelBorder());
-								stack.add(btnI);
-								stackColours.add(btnI);
-								btnI.addActionListener(alStack);
 							} else {
 								dlg.mark.setColour(ent, stackIdx, col);
 							}
-							int height = stackCol.size() == 0 ? 60 : 60 / stackCol.size();
-							for (int i = 0; stackCol.size() > i; i++) {
-								JRadioButton btnI = stackCol.get(i);
-								btnI.setBounds(2, (2 + (i * height)), 30, height);
-								btnI.setBackground(oseam.seamarks.SeaMark.ColMAP.get(dlg.mark.getColour(ent, i)));
-								if (stackIdx == i) {
-									btnI.setBorderPainted(true);
-								} else {
-									btnI.setBorderPainted(false);
-								}
-							}
+							syncStack();
 						}
 					}
-					button.setBorderPainted(true);
-				} else
+				} else {
 					button.setBorderPainted(false);
+				}
 			}
 		}
 	};
@@ -144,10 +118,43 @@ public class PanelCol extends JPanel {
 		}
 	}
 
-	public void syncButtons() {
-		if (ent != Ent.LIGHT) {
-			for (stackIdx = 0; dlg.mark.getColour(ent, stackIdx) != Col.UNKNOWN; stackIdx++) {
-
+	public void syncStack() {
+		if (ent == Ent.LIGHT) {
+		} else {
+			int idx;
+			for (idx = 0; dlg.mark.getColour(ent, idx) != Col.UNKNOWN; idx++) {
+				if (stackCol.size() <= idx) {
+					stackCol.add(idx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
+					JRadioButton btnI = stackCol.get(idx);
+					btnI.setBorder(BorderFactory.createLoweredBevelBorder());
+					stack.add(btnI);
+					stackColours.add(btnI);
+					btnI.addActionListener(alStack);
+				}
+			}
+			while (idx < stackCol.size()) {
+				JRadioButton btnI = stackCol.get(idx);
+				btnI.removeActionListener(alStack);
+				stackColours.remove(btnI);
+				stack.remove(btnI);
+				stackCol.remove(idx);
+			}
+			if ((stackIdx >= stackCol.size()) && (stackIdx != 0))
+				stackIdx = stackCol.size() - 1;
+			if (stackCol.size() == 0) {
+				stack.repaint();
+			} else {
+				int height = 60 / stackCol.size();
+				for (idx = 0; stackCol.size() > idx; idx++) {
+					JRadioButton btnI = stackCol.get(idx);
+					btnI.setBounds(2, (2 + (idx * height)), 30, height);
+					btnI.setBackground(oseam.seamarks.SeaMark.ColMAP.get(dlg.mark.getColour(ent, idx)));
+					if (stackIdx == idx) {
+						btnI.setBorderPainted(true);
+					} else {
+						btnI.setBorderPainted(false);
+					}
+				}
 			}
 		}
 	}

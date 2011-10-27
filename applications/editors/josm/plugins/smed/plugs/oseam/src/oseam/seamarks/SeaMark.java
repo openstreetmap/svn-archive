@@ -352,13 +352,16 @@ public class SeaMark {
 		case BUOY:
 		case BEACON:
 		case FLOAT:
-			bodyColour.set(i, col);
+			if (bodyColour.size() > i)
+				bodyColour.set(i, col);
 			break;
 		case TOPMARK:
-			topColour.set(i, col);
+			if (topColour.size() > i)
+				topColour.set(i, col);
 			break;
 		case LIGHT:
-			lightColour.set(i, col);
+			if (lightColour.size() > i)
+				lightColour.set(i, col);
 			break;
 		}
 	}
@@ -369,13 +372,16 @@ public class SeaMark {
 		case BUOY:
 		case BEACON:
 		case FLOAT:
-			bodyColour.add(i, col);
+			if (bodyColour.size() >= i)
+				bodyColour.add(i, col);
 			break;
 		case TOPMARK:
-			topColour.add(i, col);
+			if (topColour.size() >= i)
+				topColour.add(i, col);
 			break;
 		case LIGHT:
-			lightColour.add(i, col);
+			if (lightColour.size() >= i)
+				lightColour.add(i, col);
 			break;
 		}
 	}
@@ -1060,6 +1066,7 @@ public class SeaMark {
 		dlg.panelMain.syncButtons();
 		dlg.panelMain.panelChan.syncButtons();
 		dlg.panelMain.panelHaz.syncButtons();
+		dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
 
 		paintlock = false;
 		paintSign();

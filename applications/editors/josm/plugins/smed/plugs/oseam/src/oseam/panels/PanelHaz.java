@@ -28,9 +28,8 @@ public class PanelHaz extends JPanel {
 				dlg.panelMain.panelMore.panelPat.horizButton.doClick();
 				if (northButton.isSelected()) {
 					dlg.mark.setCategory(Cat.CAM_NORTH);
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					dlg.mark.setColour(Ent.BODY, Col.BLACK);
+					dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 					if (shapes.containsKey(shp))
 						shapes.get(shp).doClick();
 					northButton.setBorderPainted(true);
@@ -39,9 +38,8 @@ public class PanelHaz extends JPanel {
 				}
 				if (southButton.isSelected()) {
 					dlg.mark.setCategory(Cat.CAM_SOUTH);
-					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.mark.setColour(Ent.BODY, Col.YELLOW);
+					dlg.mark.addColour(Ent.BODY, Col.BLACK);
 					if (shapes.containsKey(shp))
 						shapes.get(shp).doClick();
 					southButton.setBorderPainted(true);
@@ -50,11 +48,9 @@ public class PanelHaz extends JPanel {
 				}
 				if (eastButton.isSelected()) {
 					dlg.mark.setCategory(Cat.CAM_EAST);
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.mark.setColour(Ent.BODY, Col.BLACK);
+					dlg.mark.addColour(Ent.BODY, Col.YELLOW);
+					dlg.mark.addColour(Ent.BODY, Col.BLACK);
 					if (shapes.containsKey(shp))
 						shapes.get(shp).doClick();
 					eastButton.setBorderPainted(true);
@@ -63,11 +59,9 @@ public class PanelHaz extends JPanel {
 				}
 				if (westButton.isSelected()) {
 					dlg.mark.setCategory(Cat.CAM_WEST);
-					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.yellowButton.doClick();
+					dlg.mark.setColour(Ent.BODY, Col.YELLOW);
+					dlg.mark.addColour(Ent.BODY, Col.BLACK);
+					dlg.mark.addColour(Ent.BODY, Col.YELLOW);
 					if (shapes.containsKey(shp))
 						shapes.get(shp).doClick();
 					westButton.setBorderPainted(true);
@@ -77,16 +71,16 @@ public class PanelHaz extends JPanel {
 				if (isolButton.isSelected()) {
 					dlg.mark.setCategory(Cat.UNKNOWN);
 					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.redButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.addButton.doClick();
-					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
+					dlg.mark.setColour(Ent.BODY, Col.BLACK);
+					dlg.mark.addColour(Ent.BODY, Col.RED);
+					dlg.mark.addColour(Ent.BODY, Col.BLACK);
 					if (shapes.containsKey(shp))
 						shapes.get(shp).doClick();
 					isolButton.setBorderPainted(true);
 				} else {
 					isolButton.setBorderPainted(false);
 				}
+				dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
 			}
 		}
 	};

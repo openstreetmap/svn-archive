@@ -51,6 +51,7 @@ public class PanelSaw extends JPanel {
 					dlg.panelMain.litButton.setEnabled(false);
 				}
 				dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
+				dlg.mark.paintSign();
 			}
 		}
 	};

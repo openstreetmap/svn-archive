@@ -127,6 +127,7 @@ public class PanelChan extends JPanel {
 				} else {
 					topmarkButton.setBorderPainted(false);
 				}
+				dlg.mark.paintSign();
 			}
 		}
 	};

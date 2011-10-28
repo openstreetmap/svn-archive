@@ -94,6 +94,7 @@ public class PanelStbd extends JPanel {
 					dlg.panelMain.radButton.setEnabled(false);
 					dlg.panelMain.litButton.setEnabled(false);
 				}
+				dlg.mark.paintSign();
 			}
 		}
 	};

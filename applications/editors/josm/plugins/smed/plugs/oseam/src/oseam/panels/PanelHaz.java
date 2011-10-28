@@ -81,6 +81,7 @@ public class PanelHaz extends JPanel {
 					isolButton.setBorderPainted(false);
 				}
 				dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
+				dlg.mark.paintSign();
 			}
 		}
 	};

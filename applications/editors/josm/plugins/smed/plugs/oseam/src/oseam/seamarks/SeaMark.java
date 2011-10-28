@@ -29,7 +29,7 @@ public class SeaMark {
 			return str;
 		}
 	}
-	
+
 	public enum Reg {
 		A, B, C
 	}
@@ -159,15 +159,7 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD,
-		CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
-		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
-		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN,
-		SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
-		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
-		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
-		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG,
-		LIT_DIRF, LIT_LEDG
+		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -478,8 +470,7 @@ public class SeaMark {
 	}
 
 	public enum Top {
-		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2,
-		BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
+		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
 	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
@@ -606,7 +597,7 @@ public class SeaMark {
 	public enum Sts {
 		UNKNOWN, PERM, OCC, REC, NIU, INT, RESV, TEMP, PRIV, MAND, DEST, EXT, ILLUM, HIST, PUB, SYNC, WATCH, UNWAT, DOUBT
 	}
-	
+
 	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(Sts.class);
 	static {
 		StsSTR.put(Sts.PERM, "permanent");
@@ -630,7 +621,7 @@ public class SeaMark {
 	}
 
 	private Sts status = Sts.UNKNOWN;
-	
+
 	public Sts getStatus() {
 		return status;
 	}
@@ -642,7 +633,7 @@ public class SeaMark {
 	public enum Cns {
 		UNKNOWN, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GRP, PAINT
 	}
-	
+
 	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
 	static {
 		CnsSTR.put(Cns.BRICK, "masonry");
@@ -657,7 +648,7 @@ public class SeaMark {
 	}
 
 	private Cns construction = Cns.UNKNOWN;
-	
+
 	public Cns getConstr() {
 		return construction;
 	}
@@ -669,7 +660,7 @@ public class SeaMark {
 	public enum Vis {
 		UNKNOWN, CONSP, NCONS, REFL
 	}
-	
+
 	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
 	static {
 		VisSTR.put(Vis.CONSP, "conspicuous");
@@ -678,7 +669,7 @@ public class SeaMark {
 	}
 
 	private Vis visibility = Vis.UNKNOWN;
-	
+
 	public Vis getVis() {
 		return visibility;
 	}
@@ -688,7 +679,7 @@ public class SeaMark {
 	}
 
 	private Vis reflectivity = Vis.UNKNOWN;
-	
+
 	public Vis getRvis() {
 		return reflectivity;
 	}
@@ -698,45 +689,45 @@ public class SeaMark {
 	}
 
 	public String information = "";
-	
+
 	public String getInfo() {
 		return information;
 	}
-	
+
 	public void setInfo(String str) {
 		information = str.trim();
 	}
-	
+
 	public String source = "";
-	
+
 	public String getSource() {
 		return source;
 	}
-	
+
 	public void setSource(String str) {
 		source = str.trim();
 	}
-	
+
 	public String elevation = "";
-	
+
 	public String getElevation() {
 		return elevation;
 	}
-	
+
 	public void setElevation(String str) {
 		elevation = validDecimal(str);
 	}
-	
+
 	public String height = "";
-	
+
 	public String getHeight() {
 		return height;
 	}
-	
+
 	public void setHeight(String str) {
 		height = validDecimal(str);
 	}
-	
+
 	public boolean isValid() {
 		switch (getObject()) {
 		case BCNCAR:
@@ -772,11 +763,12 @@ public class SeaMark {
 		case SISTAW:
 		case SISTAT:
 			return true;
-		default: return false;
+		default:
+			return false;
 		}
 		return false;
 	}
-	
+
 	// **********************!!!!!!!!!
 	public Light light = new Light(dlg);
 
@@ -918,27 +910,27 @@ public class SeaMark {
 				}
 				break;
 			case GREEN:
-			if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
-				setObject(Obj.FLTLAT);
-				if (getRegion() == Reg.B) {
-					setCategory(Cat.LAM_PORT);
-				} else {
+				if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
+					setObject(Obj.FLTLAT);
+					if (getRegion() == Reg.B) {
+						setCategory(Cat.LAM_PORT);
+					} else {
+						setCategory(Cat.LAM_STBD);
+					}
+				} else if ((getColour(Ent.BODY, 1) == Col.RED) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+					setObject(Obj.FLTLAT);
+					if (getRegion() == Reg.B) {
+						setCategory(Cat.LAM_PPORT);
+					} else {
+						setCategory(Cat.LAM_PSTBD);
+					}
+				} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+					setObject(Obj.FLTLAT);
 					setCategory(Cat.LAM_STBD);
-				}
-			} else if ((getColour(Ent.BODY, 1) == Col.RED) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
-				setObject(Obj.FLTLAT);
-				if (getRegion() == Reg.B) {
-					setCategory(Cat.LAM_PPORT);
 				} else {
-					setCategory(Cat.LAM_PSTBD);
+					setObject(Obj.FLTSPP);
+					setCategory(Cat.UNKNOWN);
 				}
-			} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
-				setObject(Obj.FLTLAT);
-				setCategory(Cat.LAM_STBD);
-			} else {
-				setObject(Obj.FLTSPP);
-				setCategory(Cat.UNKNOWN);
-			}
 				break;
 			case YELLOW:
 				if (getColour(Ent.BODY, 1) == Col.BLACK) {
@@ -968,12 +960,12 @@ public class SeaMark {
 					setCategory(Cat.UNKNOWN);
 				}
 				break;
-				default:
-					setObject(Obj.FLTSPP);
-					setCategory(Cat.UNKNOWN);
+			default:
+				setObject(Obj.FLTSPP);
+				setCategory(Cat.UNKNOWN);
 			}
 		}
-		
+
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":system")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":system");
@@ -1153,12 +1145,12 @@ public class SeaMark {
 					dlg.panelMain.specButton.setSelected(true);
 				}
 				break;
-				default:
-					dlg.panelMain.lightsButton.setSelected(true);
+			default:
+				dlg.panelMain.lightsButton.setSelected(true);
 			}
 			break;
 		}
-		
+
 		dlg.panelMain.syncButtons();
 
 		paintlock = false;
@@ -1176,6 +1168,7 @@ public class SeaMark {
 		dlg.panelMain.radarIcon.setIcon(null);
 		dlg.panelMain.fogIcon.setIcon(null);
 
+		String colStr;
 		String imgStr = "/images/";
 		if (getShape() != Shp.UNKNOWN) {
 			switch (getShape()) {
@@ -1222,7 +1215,7 @@ public class SeaMark {
 				imgStr += "Stake";
 				break;
 			}
-			String colStr = imgStr;
+			colStr = imgStr;
 			for (Col col : bodyColour) {
 				switch (col) {
 				case WHITE:
@@ -1314,6 +1307,117 @@ public class SeaMark {
 				dlg.panelMain.shapeIcon.setIcon(null);
 			}
 		}
+
+		if (getTopmark() != Top.NONE) {
+			imgStr = "/images/Top_";
+			switch (getTopmark()) {
+			case CAN:
+				imgStr += "Can";
+				break;
+			case CONE:
+				imgStr += "Cone";
+				break;
+			case SPHERE:
+				imgStr += "Sphere";
+				break;
+			case X_SHAPE:
+				imgStr += "X";
+				break;
+			case NORTH:
+				imgStr += "North";
+				break;
+			case SOUTH:
+				imgStr += "South";
+				break;
+			case EAST:
+				imgStr += "East";
+				break;
+			case WEST:
+				imgStr += "West";
+				break;
+			case SPHERES2:
+				imgStr += "Isol";
+				break;
+			}
+			colStr = imgStr;
+			for (Col col : topColour) {
+				switch (col) {
+				case WHITE:
+					colStr += "_White";
+					break;
+				case RED:
+					colStr += "_Red";
+					break;
+				case ORANGE:
+					colStr += "_Orange";
+					break;
+				case AMBER:
+					colStr += "_Amber";
+					break;
+				case YELLOW:
+					colStr += "_Yellow";
+					break;
+				case GREEN:
+					colStr += "_Green";
+					break;
+				case BLUE:
+					colStr += "_Blue";
+					break;
+				case VIOLET:
+					colStr += "_Violet";
+					break;
+				case BLACK:
+					colStr += "_Black";
+					break;
+				}
+			}
+			switch (getShape()) {
+			case CAN:
+			case CONE:
+			case SPHERE:
+			case BARREL:
+				imgStr += "_Buoy_Small";
+				colStr += "_Buoy_Small";
+				break;
+			case PILLAR:
+			case SPAR:
+				imgStr += "_Buoy";
+				colStr += "_Buoy";
+				break;
+			case FLOAT:
+			case SUPER:
+				imgStr += "_Float";
+				colStr += "_Float";
+				break;
+			case BUOYANT:
+			case CAIRN:
+			case PILE:
+			case LATTICE:
+			case TOWER:
+			case STAKE:
+			case POLE:
+			case POST:
+			case BEACON:
+				imgStr += "_Beacon";
+				colStr += "_Beacon";
+				break;
+			}
+			colStr += ".png";
+			if (getClass().getResource(colStr) == null) {
+				System.out.println("Missing image: " + colStr);
+				imgStr += ".png";
+				if (getClass().getResource(imgStr) == null) {
+					System.out.println("Missing image: " + imgStr);
+					return;
+				} else {
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+				}
+			} else {
+				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+			}
+		} else {
+			dlg.panelMain.topIcon.setIcon(null);
+		}
 	}
 
 	public void saveSign(Node node) {
@@ -1351,7 +1455,8 @@ public class SeaMark {
 				}
 
 				if (getPattern(Ent.BODY) != Pat.NONE) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR.get(getPattern(Ent.BODY))));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR
+							.get(getPattern(Ent.BODY))));
 				}
 
 				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH) || (getObject() == Obj.FLTLAT)) {
@@ -1371,7 +1476,8 @@ public class SeaMark {
 			if (hasTopmark()) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:shape", TopSTR.get(getTopmark())));
 				if (getPattern(Ent.TOPMARK) != Pat.NONE)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour_pattern", PatSTR.get(getPattern(Ent.TOPMARK))));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour_pattern", PatSTR
+							.get(getPattern(Ent.TOPMARK))));
 				if (getColour(Ent.TOPMARK, 0) != Col.UNKNOWN) {
 					String str = ColSTR.get(getColour(Ent.TOPMARK, 0));
 					for (int i = 1; topColour.size() > i; i++) {

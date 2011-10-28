@@ -16,15 +16,16 @@ print "<tr>\n";
 print "<td valign=\"top\">\n";
 
 print "<ol>\n";
-$results = $db->query('SELECT count(*) AS count, user_name FROM edits GROUP BY user_name ORDER BY count DESC');
+$results = $db->query('SELECT count(*) AS count, user_name, min(timestamp) AS start_timestamp FROM edits GROUP BY user_name ORDER BY count DESC, start_timestamp ASC');
 while ($data = $results->fetchArray()) {
-   $count    = $data[0];
-   $user     = $data[1];
+   $count           = $data[0];
+   $user            = $data[1];
+   $start_timestamp = $data[2];
    
    $user_url = urlencode($user);
    $user_url = str_replace("+", "%20", $user_url);
    
-   print "<li><a href=\"http://www.openstreetmap.org/user/".$user_url."\" title=\"osm user page\">$user</a> - $count edits</li>";
+   print "<li><a href=\"http://www.openstreetmap.org/user/".$user_url."\" title=\"osm user page\">$user</a> - <span title=\"starting ".$start_timestamp."\">$count edits</span></li>";
 }
 print "</ol>\n";
 print "</td>\n";

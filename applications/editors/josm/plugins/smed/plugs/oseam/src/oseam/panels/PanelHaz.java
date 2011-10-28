@@ -187,11 +187,25 @@ public class PanelHaz extends JPanel {
 	}
 
 	public void syncButtons() {
-		northButton.setBorderPainted(northButton.isSelected());
-		southButton.setBorderPainted(southButton.isSelected());
-		eastButton.setBorderPainted(eastButton.isSelected());
-		westButton.setBorderPainted(westButton.isSelected());
-		isolButton.setBorderPainted(isolButton.isSelected());
+		northButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_NORTH);
+		southButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_SOUTH);
+		eastButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_EAST);
+		westButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_WEST);
+		isolButton.setBorderPainted(dlg.mark.getCategory() == Cat.UNKNOWN);
+		for (Shp shp : shapes.keySet()) {
+			JRadioButton button = shapes.get(shp);
+			if (dlg.mark.getShape() == shp) {
+				button.setBorderPainted(true);
+			} else
+				button.setBorderPainted(false);
+		}
+		if (dlg.mark.isValid()) {
+			topmarkButton.setVisible(true);
+			dlg.panelMain.moreButton.setVisible(true);
+		} else {
+			topmarkButton.setVisible(false);
+			dlg.panelMain.moreButton.setVisible(false);
+		}
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

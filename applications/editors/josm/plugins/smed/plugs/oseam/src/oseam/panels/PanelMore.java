@@ -299,6 +299,10 @@ public class PanelMore extends JPanel {
 		reflBox.addActionListener(alRefl);
 
 		}
+	
+	public void syncButtons() {
+		panelPat.syncButtons();
+	}
 
 	private void addStsItem(String str, Sts sts) {
 		statuses.put(sts, statusBox.getItemCount());

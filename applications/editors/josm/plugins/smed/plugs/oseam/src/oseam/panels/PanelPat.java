@@ -71,6 +71,17 @@ public class PanelPat extends JPanel {
 
 	}
 
+	public void syncButtons() {
+		for (Pat pat : patterns.keySet()) {
+			JRadioButton button = patterns.get(pat);
+			if (dlg.mark.getPattern(ent) == pat) {
+				button.setBorderPainted(true);
+			} else
+				button.setBorderPainted(false);
+		}
+		panelCol.syncStack();
+	}
+	
 	private JRadioButton getPatButton(JRadioButton button, int x, int y, int w, int h, String tip, Pat pat) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLoweredBevelBorder());

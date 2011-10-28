@@ -257,14 +257,15 @@ public class PanelMain extends JPanel {
 				} else {
 					panelMore.setVisible(true);
 					moreButton.setText("^ ^ ^");
-					if (topButton.isSelected())
+					miscButtons.clearSelection();
 						panelTop.setVisible(false);
-					if (radButton.isSelected())
+						topButton.setBorderPainted(false);
 						panelRadar.setVisible(false);
-					if (fogButton.isSelected())
+						radButton.setBorderPainted(false);
 						panelFog.setVisible(false);
-					if (litButton.isSelected())
+						fogButton.setBorderPainted(false);
 						panelLit.setVisible(false);
+						litButton.setBorderPainted(false);
 				}
 			}
 		};
@@ -297,6 +298,9 @@ public class PanelMain extends JPanel {
 		nameBox.setText(dlg.mark.getName());
 		alType.actionPerformed(null);
 		alMisc.actionPerformed(null);
+		dlg.panelMain.panelChan.syncButtons();
+		dlg.panelMain.panelHaz.syncButtons();
+		dlg.panelMain.panelMore.syncButtons();
 	}
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {

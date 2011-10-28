@@ -3,6 +3,7 @@ package oseam.panels;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.util.*;
 
 import oseam.Messages;
@@ -64,6 +65,16 @@ public class PanelSaw extends JPanel {
 		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.FLTSAW), null);
 	}
 
+	public void syncButtons() {
+		for (Shp shp : shapes.keySet()) {
+			JRadioButton button = shapes.get(shp);
+			if (dlg.mark.getShape() == shp) {
+				button.setBorderPainted(true);
+			} else
+				button.setBorderPainted(false);
+		}
+	}
+	
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLoweredBevelBorder());

@@ -73,6 +73,7 @@ public class SeaMark {
 		ObjSTR.put(Obj.FLTCAR, "light_float");
 		ObjSTR.put(Obj.FLTLAT, "light_float");
 		ObjSTR.put(Obj.FLTSAW, "light_float");
+		ObjSTR.put(Obj.FLTISD, "light_float");
 		ObjSTR.put(Obj.FLTSPP, "light_float");
 		ObjSTR.put(Obj.LITMAJ, "light_major");
 		ObjSTR.put(Obj.LITMIN, "light_minor");
@@ -113,6 +114,11 @@ public class SeaMark {
 		EntMAP.put(Obj.LITMAJ, Ent.LIGHT);
 		EntMAP.put(Obj.LITMIN, Ent.LIGHT);
 		EntMAP.put(Obj.LITFLT, Ent.FLOAT);
+		EntMAP.put(Obj.FLTCAR, Ent.FLOAT);
+		EntMAP.put(Obj.FLTLAT, Ent.FLOAT);
+		EntMAP.put(Obj.FLTSAW, Ent.FLOAT);
+		EntMAP.put(Obj.FLTISD, Ent.FLOAT);
+		EntMAP.put(Obj.FLTSPP, Ent.FLOAT);
 		EntMAP.put(Obj.LITVES, Ent.LIGHT);
 		EntMAP.put(Obj.LNDMRK, Ent.LIGHT);
 		EntMAP.put(Obj.MORFAC, Ent.MOORING);
@@ -140,6 +146,11 @@ public class SeaMark {
 		GrpMAP.put(Obj.LITMAJ, Grp.LIT);
 		GrpMAP.put(Obj.LITMIN, Grp.LIT);
 		GrpMAP.put(Obj.LITFLT, Grp.FLT);
+		GrpMAP.put(Obj.FLTCAR, Grp.CAR);
+		GrpMAP.put(Obj.FLTLAT, Grp.LAT);
+		GrpMAP.put(Obj.FLTSAW, Grp.SAW);
+		GrpMAP.put(Obj.FLTISD, Grp.ISD);
+		GrpMAP.put(Obj.FLTSPP, Grp.SPP);
 		GrpMAP.put(Obj.LITVES, Grp.LIT);
 		GrpMAP.put(Obj.LNDMRK, Grp.LIT);
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
@@ -878,6 +889,91 @@ public class SeaMark {
 			}
 		}
 
+		if (getObject() == Obj.LITFLT) {
+			switch (getColour(Ent.BODY, 0)) {
+			case RED:
+				if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.UNKNOWN)) {
+					setObject(Obj.FLTSAW);
+					setCategory(Cat.UNKNOWN);
+				} else if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
+					setObject(Obj.FLTLAT);
+					if (getRegion() == Reg.B) {
+						setCategory(Cat.LAM_STBD);
+					} else {
+						setCategory(Cat.LAM_PORT);
+					}
+				} else if ((getColour(Ent.BODY, 1) == Col.GREEN) && (getColour(Ent.BODY, 2) == Col.RED)) {
+					setObject(Obj.FLTLAT);
+					if (getRegion() == Reg.B) {
+						setCategory(Cat.LAM_PSTBD);
+					} else {
+						setCategory(Cat.LAM_PPORT);
+					}
+				} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.RED)) {
+					setObject(Obj.FLTLAT);
+					setCategory(Cat.LAM_PORT);
+				} else {
+					setObject(Obj.FLTSPP);
+					setCategory(Cat.UNKNOWN);
+				}
+				break;
+			case GREEN:
+			if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
+				setObject(Obj.FLTLAT);
+				if (getRegion() == Reg.B) {
+					setCategory(Cat.LAM_PORT);
+				} else {
+					setCategory(Cat.LAM_STBD);
+				}
+			} else if ((getColour(Ent.BODY, 1) == Col.RED) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+				setObject(Obj.FLTLAT);
+				if (getRegion() == Reg.B) {
+					setCategory(Cat.LAM_PPORT);
+				} else {
+					setCategory(Cat.LAM_PSTBD);
+				}
+			} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+				setObject(Obj.FLTLAT);
+				setCategory(Cat.LAM_STBD);
+			} else {
+				setObject(Obj.FLTSPP);
+				setCategory(Cat.UNKNOWN);
+			}
+				break;
+			case YELLOW:
+				if (getColour(Ent.BODY, 1) == Col.BLACK) {
+					setObject(Obj.FLTCAR);
+					if (getColour(Ent.BODY, 2) == Col.YELLOW) {
+						setCategory(Cat.CAM_WEST);
+					} else {
+						setCategory(Cat.CAM_SOUTH);
+					}
+				} else {
+					setObject(Obj.FLTSPP);
+					setCategory(Cat.UNKNOWN);
+				}
+				break;
+			case BLACK:
+				if (getColour(Ent.BODY, 1) == Col.RED) {
+					setObject(Obj.FLTISD);
+					setCategory(Cat.UNKNOWN);
+				} else if (getColour(Ent.BODY, 1) == Col.YELLOW) {
+					if (getColour(Ent.BODY, 2) == Col.BLACK) {
+						setCategory(Cat.CAM_EAST);
+					} else {
+						setCategory(Cat.CAM_NORTH);
+					}
+				} else {
+					setObject(Obj.FLTSPP);
+					setCategory(Cat.UNKNOWN);
+				}
+				break;
+				default:
+					setObject(Obj.FLTSPP);
+					setCategory(Cat.UNKNOWN);
+			}
+		}
+		
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":system")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":system");
@@ -1064,9 +1160,6 @@ public class SeaMark {
 		}
 		
 		dlg.panelMain.syncButtons();
-		dlg.panelMain.panelChan.syncButtons();
-		dlg.panelMain.panelHaz.syncButtons();
-		dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
 
 		paintlock = false;
 		paintSign();

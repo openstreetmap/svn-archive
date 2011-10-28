@@ -201,6 +201,16 @@ public class PanelChan extends JPanel {
 			safeWaterButton.setBorderPainted(false);
 			panelSaw.setVisible(false);
 		}
+		if (dlg.mark.isValid()) {
+			topmarkButton.setVisible(true);
+			dlg.panelMain.moreButton.setVisible(true);
+		} else {
+			topmarkButton.setVisible(false);
+			dlg.panelMain.moreButton.setVisible(false);
+		}
+		panelPort.syncButtons();
+		panelStbd.syncButtons();
+		panelSaw.syncButtons();
 
 	}
 

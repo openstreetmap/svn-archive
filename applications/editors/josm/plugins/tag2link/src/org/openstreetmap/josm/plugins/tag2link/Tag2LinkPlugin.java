@@ -28,6 +28,7 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
  * Main class of tag2link plugin.
  * @author Don-vip
  * History:
+ * 0.3b 29-Oct-2011 Add UAI support
  * 0.3a 29-Oct-2011 Add Country-code prefix, IGN support + not-yet-tested POST requests support
  * 0.2d 24-Oct-2011 Icon for Mail action
  * 0.2c 24-Oct-2011 Another MHS rule

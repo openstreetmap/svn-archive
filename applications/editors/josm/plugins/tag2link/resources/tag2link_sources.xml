@@ -140,5 +140,12 @@
             <link name="View %name% sheet of geodesic site" href="http://geodesie.ign.fr/fiches/index.php?module=e&amp;action=fichepdf&amp;source=carte&amp;sit_no=%ref.v.1%" />
         </rule>
     </source>
+
+    <source name="Education Nationale" country-code="FR">
+        <rule>
+            <condition k="ref:(FR:)?UAI" />
+            <link name="View UAI sheet of school/college" href="http://www.education.gouv.fr/bce/avancee/fiche.php?NUMERO_UAI=%v%&amp;type_info=UAI_all" />
+        </rule>
+    </source>
     
 </tag2link>

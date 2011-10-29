@@ -561,10 +561,22 @@ public class SeaMark {
 	}
 
 	public enum Fog {
-		UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
+		NONE, UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
 	}
 
-	private Fog FogSound = Fog.UNKNOWN;
+	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(Fog.class);
+	static {
+		FogSTR.put(Fog.UNKNOWN, "yes");
+		FogSTR.put(Fog.HORN, "horn");
+		FogSTR.put(Fog.SIREN, "siren");
+		FogSTR.put(Fog.DIA, "diaphone");
+		FogSTR.put(Fog.BELL, "bell");
+		FogSTR.put(Fog.WHIS, "whistle");
+		FogSTR.put(Fog.GONG, "gong");
+		FogSTR.put(Fog.EXPLOS, "explosion");
+	}
+
+	private Fog FogSound = Fog.NONE;
 
 	public Fog getFogSound() {
 		return FogSound;
@@ -580,8 +592,28 @@ public class SeaMark {
 		return FogGroup;
 	}
 
-	public void setFogGroup(String group) {
-		FogGroup = group;
+	public void setFogGroup(String grp) {
+		FogGroup = grp;
+	}
+
+	private String FogSequence = "";
+
+	public String getFogSequence() {
+		return FogSequence;
+	}
+
+	public void setFogSequence(String seq) {
+		FogSequence = seq;
+	}
+
+	private String FogRange = "";
+
+	public String getFogRange() {
+		return FogRange;
+	}
+
+	public void setFogRange(String rng) {
+		FogRange = validDecimal(rng);
 	}
 
 	private String FogPeriod = "";
@@ -590,8 +622,8 @@ public class SeaMark {
 		return FogPeriod;
 	}
 
-	public void setFogPeriod(String period) {
-		FogPeriod = period;
+	public void setFogPeriod(String per) {
+		FogPeriod = validDecimal(per);
 	}
 
 	public enum Sts {
@@ -1151,7 +1183,7 @@ public class SeaMark {
 			break;
 		}
 
-		dlg.panelMain.syncButtons();
+		dlg.panelMain.syncPanel();
 
 		paintlock = false;
 		paintSign();
@@ -1167,8 +1199,10 @@ public class SeaMark {
 		dlg.panelMain.topIcon.setIcon(null);
 		dlg.panelMain.radarIcon.setIcon(null);
 		dlg.panelMain.fogIcon.setIcon(null);
+		dlg.panelMain.colLabel.setText("");
 
 		String colStr;
+		String lblStr;
 		String imgStr = "/images/";
 		if (getShape() != Shp.UNKNOWN) {
 			switch (getShape()) {
@@ -1216,34 +1250,60 @@ public class SeaMark {
 				break;
 			}
 			colStr = imgStr;
+			lblStr = "";
 			for (Col col : bodyColour) {
 				switch (col) {
 				case WHITE:
 					colStr += "_White";
+					lblStr += "W";
 					break;
 				case RED:
 					colStr += "_Red";
+					lblStr += "R";
 					break;
 				case ORANGE:
 					colStr += "_Orange";
+					lblStr += "Or";
 					break;
 				case AMBER:
 					colStr += "_Amber";
+					lblStr += "Am";
 					break;
 				case YELLOW:
 					colStr += "_Yellow";
+					lblStr += "Y";
 					break;
 				case GREEN:
 					colStr += "_Green";
+					lblStr += "G";
 					break;
 				case BLUE:
 					colStr += "_Blue";
+					lblStr += "Bu";
 					break;
 				case VIOLET:
 					colStr += "_Violet";
+					lblStr += "Vi";
 					break;
 				case BLACK:
 					colStr += "_Black";
+					lblStr += "B";
+					break;
+				case GREY:
+					colStr += "_Grey";
+					lblStr += "Gr";
+					break;
+				case BROWN:
+					colStr += "_Brown";
+					lblStr += "Br";
+					break;
+				case MAGENTA:
+					colStr += "_Magenta";
+					lblStr += "Mg";
+					break;
+				case PINK:
+					colStr += "_Pink";
+					lblStr += "Pk";
 					break;
 				}
 			}
@@ -1261,9 +1321,9 @@ public class SeaMark {
 					imgStr += ".png";
 					if (getClass().getResource(imgStr) == null) {
 						System.out.println("Missing image: " + imgStr);
-						return;
 					} else {
 						dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+						dlg.panelMain.colLabel.setText(lblStr);
 					}
 				} else {
 					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
@@ -1299,7 +1359,6 @@ public class SeaMark {
 				imgStr += ".png";
 				if (getClass().getResource(imgStr) == null) {
 					System.out.println("Missing image: " + imgStr);
-					return;
 				} else {
 					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
 				}

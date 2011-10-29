@@ -66,7 +66,7 @@ public class PanelSaw extends JPanel {
 		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.FLTSAW), null);
 	}
 
-	public void syncButtons() {
+	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
 			if (dlg.mark.getShape() == shp) {

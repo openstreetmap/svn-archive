@@ -136,29 +136,34 @@ public class PanelHaz extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark != null) {
 				if (topmarkButton.isSelected()) {
-					dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-					dlg.panelMain.panelTop.panelPat.panelCol.blackButton.doClick();
+					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+					dlg.mark.setColour(Ent.TOPMARK, Col.BLACK);
 					switch (dlg.mark.getCategory()) {
 					case CAM_NORTH:
-						dlg.panelMain.panelTop.northTopButton.doClick();
+						dlg.mark.setTopmark(Top.NORTH);
 						break;
 					case CAM_SOUTH:
-						dlg.panelMain.panelTop.southTopButton.doClick();
+						dlg.mark.setTopmark(Top.SOUTH);
 						break;
 					case CAM_EAST:
-						dlg.panelMain.panelTop.eastTopButton.doClick();
+						dlg.mark.setTopmark(Top.EAST);
 						break;
 					case CAM_WEST:
-						dlg.panelMain.panelTop.westTopButton.doClick();
+						dlg.mark.setTopmark(Top.WEST);
 						break;
 					default:
-						dlg.panelMain.panelTop.spheres2TopButton.doClick();
+						dlg.mark.setTopmark(Top.SPHERES2);
 						break;
 					}
 					topmarkButton.setBorderPainted(true);
 				} else {
+					dlg.mark.setTopmark(Top.NONE);
+					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+					dlg.mark.setColour(Ent.TOPMARK, Col.UNKNOWN);
 					topmarkButton.setBorderPainted(false);
 				}
+				dlg.panelMain.panelTop.syncPanel();
+				dlg.mark.paintSign();
 			}
 		}
 	};
@@ -187,7 +192,7 @@ public class PanelHaz extends JPanel {
 		this.add(topmarkButton);
 	}
 
-	public void syncButtons() {
+	public void syncPanel() {
 		northButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_NORTH);
 		southButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_SOUTH);
 		eastButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_EAST);
@@ -200,13 +205,8 @@ public class PanelHaz extends JPanel {
 			} else
 				button.setBorderPainted(false);
 		}
-		if (dlg.mark.isValid()) {
-			topmarkButton.setVisible(true);
-			dlg.panelMain.moreButton.setVisible(true);
-		} else {
-			topmarkButton.setVisible(false);
-			dlg.panelMain.moreButton.setVisible(false);
-		}
+		topmarkButton.setBorderPainted(topmarkButton.isSelected());
+		topmarkButton.setVisible(dlg.mark.isValid());
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

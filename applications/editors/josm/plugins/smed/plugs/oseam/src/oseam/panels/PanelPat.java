@@ -71,7 +71,7 @@ public class PanelPat extends JPanel {
 
 	}
 
-	public void syncButtons() {
+	public void syncPanel() {
 		for (Pat pat : patterns.keySet()) {
 			JRadioButton button = patterns.get(pat);
 			if (dlg.mark.getPattern(ent) == pat) {

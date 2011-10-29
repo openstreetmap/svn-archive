@@ -113,7 +113,7 @@ public class PanelStbd extends JPanel {
 		this.add(getShapeButton(stakeButton, 35, 96, 34, 32, "Stake", Shp.STAKE, Obj.BCNLAT), null);
 	}
 
-	public void syncButtons() {
+	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
 			if (dlg.mark.getShape() == shp) {

@@ -300,8 +300,39 @@ public class PanelMore extends JPanel {
 
 		}
 	
-	public void syncButtons() {
-		panelPat.syncButtons();
+	public void syncPanel() {
+		panelPat.syncPanel();
+		regionAButton.setBorderPainted(dlg.mark.getRegion() == Reg.A);
+		regionBButton.setBorderPainted(dlg.mark.getRegion() == Reg.B);
+		regionCButton.setBorderPainted(dlg.mark.getRegion() == Reg.C);
+		elevBox.setText(dlg.mark.getElevation());
+		heightBox.setText(dlg.mark.getHeight());
+		sourceBox.setText(dlg.mark.getSource());
+		infoBox.setText(dlg.mark.getInfo());
+		statusBox.setSelectedIndex(0);
+		for (Sts sts : statuses.keySet()) {
+			int item = statuses.get(sts);
+			if (dlg.mark.getStatus() == sts)
+				statusBox.setSelectedIndex(item);
+		}
+		constrBox.setSelectedIndex(0);
+		for (Cns cns : constructions.keySet()) {
+			int item = constructions.get(cns);
+			if (dlg.mark.getConstr() == cns)
+				constrBox.setSelectedIndex(item);
+		}
+		visBox.setSelectedIndex(0);
+		for (Vis vis : visibilities.keySet()) {
+			int item = visibilities.get(vis);
+			if (dlg.mark.getVis() == vis)
+				visBox.setSelectedIndex(item);
+		}
+		reflBox.setSelectedIndex(0);
+		for (Vis vis : reflectivities.keySet()) {
+			int item = reflectivities.get(vis);
+			if (dlg.mark.getRvis() == vis)
+				reflBox.setSelectedIndex(item);
+		}
 	}
 
 	private void addStsItem(String str, Sts sts) {

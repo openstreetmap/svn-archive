@@ -3,6 +3,7 @@ package oseam.panels;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.util.*;
 
 import oseam.Messages;
@@ -53,25 +54,25 @@ public class PanelTop extends JPanel {
 		dlg = dia;
 		this.setLayout(null);
 		panelPat = new PanelPat(dlg, Ent.TOPMARK);
-		panelPat.setBounds(new Rectangle(0, 0, 110, 160));
+		panelPat.setBounds(new Rectangle(160, 0, 110, 160));
 		this.add(panelPat, null);
-		this.add(getTopButton(noTopButton, 110, 5, 27, 27, "NoTop", Top.NONE), null);
-		this.add(getTopButton(canTopButton, 140, 5, 27, 27, "CanTop", Top.CAN), null);
-		this.add(getTopButton(coneTopButton, 170, 5, 27, 27, "ConeTop", Top.CONE), null);
-		this.add(getTopButton(sphereTopButton, 200, 5, 27, 27, "SphereTop", Top.SPHERE), null);
-		this.add(getTopButton(XTopButton, 230, 5, 27, 27, "XTop", Top.X_SHAPE), null);
-		this.add(getTopButton(northTopButton, 110, 35, 27, 27, "NorthTop", Top.NORTH), null);
-		this.add(getTopButton(southTopButton, 140, 35, 27, 27, "SouthTop", Top.SOUTH), null);
-		this.add(getTopButton(eastTopButton, 170, 35, 27, 27, "EastTop", Top.EAST), null);
-		this.add(getTopButton(westTopButton, 200, 35, 27, 27, "WestTop", Top.WEST), null);
-		this.add(getTopButton(spheres2TopButton, 230, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
-		this.add(getTopButton(boardDayButton, 110, 65, 27, 27, "BoardDay", Top.BOARD), null);
-		this.add(getTopButton(diamondDayButton, 140, 65, 27, 27, "DiamondDay", Top.DIAMOND), null);
-		this.add(getTopButton(triangleDayButton, 170, 65, 27, 27, "TriangleDay", Top.TRIANGLE), null);
-		this.add(getTopButton(triangleInvDayButton, 200, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV), null);
-		this.add(getTopButton(squareDayButton, 230, 65, 27, 27, "SquareDay", Top.SQUARE), null);
-		this.add(getTopButton(circleDayButton, 230, 95, 27, 27, "CircleDay", Top.CIRCLE), null);
-		this.add(getMoorButton(mooringTopButton, 110, 95, 27, 27, "MooringTop"), null);
+		this.add(getTopButton(noTopButton, 0, 5, 27, 27, "NoTop", Top.NONE), null);
+		this.add(getTopButton(canTopButton, 30, 5, 27, 27, "CanTop", Top.CAN), null);
+		this.add(getTopButton(coneTopButton, 60, 5, 27, 27, "ConeTop", Top.CONE), null);
+		this.add(getTopButton(sphereTopButton, 90, 5, 27, 27, "SphereTop", Top.SPHERE), null);
+		this.add(getTopButton(XTopButton, 120, 5, 27, 27, "XTop", Top.X_SHAPE), null);
+		this.add(getTopButton(northTopButton, 0, 35, 27, 27, "NorthTop", Top.NORTH), null);
+		this.add(getTopButton(southTopButton, 30, 35, 27, 27, "SouthTop", Top.SOUTH), null);
+		this.add(getTopButton(eastTopButton, 60, 35, 27, 27, "EastTop", Top.EAST), null);
+		this.add(getTopButton(westTopButton, 90, 35, 27, 27, "WestTop", Top.WEST), null);
+		this.add(getTopButton(spheres2TopButton, 120, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
+		this.add(getTopButton(boardDayButton, 0, 65, 27, 27, "BoardDay", Top.BOARD), null);
+		this.add(getTopButton(diamondDayButton, 30, 65, 27, 27, "DiamondDay", Top.DIAMOND), null);
+		this.add(getTopButton(triangleDayButton, 60, 65, 27, 27, "TriangleDay", Top.TRIANGLE), null);
+		this.add(getTopButton(triangleInvDayButton, 90, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV), null);
+		this.add(getTopButton(squareDayButton, 120, 65, 27, 27, "SquareDay", Top.SQUARE), null);
+		this.add(getTopButton(circleDayButton, 120, 95, 27, 27, "CircleDay", Top.CIRCLE), null);
+		this.add(getMoorButton(mooringTopButton, 0, 95, 27, 27, "MooringTop"), null);
 	}
 
 	public void enableAll(boolean state) {
@@ -79,6 +80,17 @@ public class PanelTop extends JPanel {
 			button.setEnabled(state);
 		}
 		mooringTopButton.setEnabled(state);
+	}
+	
+	public void syncPanel() {
+		for (Top top : tops.keySet()) {
+			JRadioButton button = tops.get(top);
+			if (dlg.mark.getTopmark() == top) {
+				button.setBorderPainted(true);
+			} else
+				button.setBorderPainted(false);
+		}
+		panelPat.syncPanel();
 	}
 
 	private JRadioButton getTopButton(JRadioButton button, int x, int y, int w, int h, String tip, Top top) {

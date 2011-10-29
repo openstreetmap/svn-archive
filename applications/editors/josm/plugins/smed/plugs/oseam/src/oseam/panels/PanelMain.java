@@ -18,6 +18,7 @@ public class PanelMain extends JPanel {
 	public JLabel topIcon = null;
 	public JLabel radarIcon = null;
 	public JLabel fogIcon = null;
+	public JLabel colLabel = null;
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
@@ -93,6 +94,9 @@ public class PanelMain extends JPanel {
 		fogIcon = new JLabel();
 		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(fogIcon, null);
+		colLabel = new JLabel("", SwingConstants.CENTER);
+		colLabel.setBounds(new Rectangle(235, 100, 150, 20));
+		this.add(colLabel, null);
 
 		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
 		this.add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
@@ -273,7 +277,7 @@ public class PanelMain extends JPanel {
 
 	}
 
-	public void syncButtons() {
+	public void syncPanel() {
 		if (dlg.mark == null) {
 			topButton.setEnabled(false);
 			fogButton.setEnabled(false);
@@ -298,9 +302,13 @@ public class PanelMain extends JPanel {
 		nameBox.setText(dlg.mark.getName());
 		alType.actionPerformed(null);
 		alMisc.actionPerformed(null);
-		dlg.panelMain.panelChan.syncButtons();
-		dlg.panelMain.panelHaz.syncButtons();
-		dlg.panelMain.panelMore.syncButtons();
+		dlg.panelMain.panelChan.syncPanel();
+		dlg.panelMain.panelHaz.syncPanel();
+		dlg.panelMain.panelSpec.syncPanel();
+		dlg.panelMain.panelMore.setVisible(false);
+		dlg.panelMain.panelMore.syncPanel();
+		dlg.panelMain.panelTop.syncPanel();
+		moreButton.setVisible(dlg.mark.isValid());
 	}
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {

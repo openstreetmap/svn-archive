@@ -67,7 +67,7 @@ public class PanelChan extends JPanel {
 					dlg.mark.setShape(Shp.UNKNOWN);
 				}
 			}
-			syncButtons();
+			syncPanel();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
@@ -76,28 +76,27 @@ public class PanelChan extends JPanel {
 			if (dlg.mark != null) {
 				if (topmarkButton.isSelected()) {
 					if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
-						dlg.panelMain.panelTop.sphereTopButton.doClick();
-						dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-						dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+						dlg.mark.setTopmark(Top.SPHERE);
+						dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+						dlg.mark.setColour(Ent.TOPMARK, Col.RED);
 					} else {
 						switch (dlg.mark.getCategory()) {
 						case LAM_PORT:
 						case LAM_PPORT:
-							dlg.panelMain.panelTop.canTopButton.doClick();
+							dlg.mark.setTopmark(Top.CAN);
 							switch (dlg.mark.getRegion()) {
 							case A:
-								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+								dlg.mark.setColour(Ent.TOPMARK, Col.RED);
 								break;
 							case B:
-								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+								dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
 								break;
 							case C:
-								dlg.panelMain.panelTop.panelPat.horizButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.addButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.whiteButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.HORIZ);
+								dlg.mark.setColour(Ent.TOPMARK, Col.RED);
+								dlg.mark.addColour(Ent.TOPMARK, Col.WHITE);
 								break;
 							}
 							break;
@@ -106,18 +105,17 @@ public class PanelChan extends JPanel {
 							dlg.panelMain.panelTop.coneTopButton.doClick();
 							switch (dlg.mark.getRegion()) {
 							case A:
-								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+								dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
 								break;
 							case B:
-								dlg.panelMain.panelTop.panelPat.noneButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.redButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+								dlg.mark.setColour(Ent.TOPMARK, Col.RED);
 								break;
 							case C:
-								dlg.panelMain.panelTop.panelPat.horizButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.greenButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.addButton.doClick();
-								dlg.panelMain.panelTop.panelPat.panelCol.whiteButton.doClick();
+								dlg.mark.setPattern(Ent.TOPMARK, Pat.HORIZ);
+								dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
+								dlg.mark.addColour(Ent.TOPMARK, Col.WHITE);
 								break;
 							}
 							break;
@@ -125,8 +123,12 @@ public class PanelChan extends JPanel {
 					}
 					topmarkButton.setBorderPainted(true);
 				} else {
+					dlg.mark.setTopmark(Top.NONE);
+					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
+					dlg.mark.setColour(Ent.TOPMARK, Col.UNKNOWN);
 					topmarkButton.setBorderPainted(false);
 				}
+				dlg.panelMain.panelTop.syncPanel();
 				dlg.mark.paintSign();
 			}
 		}
@@ -160,7 +162,7 @@ public class PanelChan extends JPanel {
 		this.add(topmarkButton);
 	}
 	
-	public void syncButtons() {
+	public void syncPanel() {
 		if (portButton.isSelected()) {
 			portButton.setBorderPainted(true);
 			panelPort.setVisible(true);
@@ -209,9 +211,11 @@ public class PanelChan extends JPanel {
 			topmarkButton.setVisible(false);
 			dlg.panelMain.moreButton.setVisible(false);
 		}
-		panelPort.syncButtons();
-		panelStbd.syncButtons();
-		panelSaw.syncButtons();
+		topmarkButton.setBorderPainted(topmarkButton.isSelected());
+		topmarkButton.setVisible(dlg.mark.isValid());
+		panelPort.syncPanel();
+		panelStbd.syncPanel();
+		panelSaw.syncPanel();
 
 	}
 

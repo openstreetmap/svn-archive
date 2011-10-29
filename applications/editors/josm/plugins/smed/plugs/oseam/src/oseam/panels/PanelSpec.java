@@ -24,7 +24,6 @@ public class PanelSpec extends JPanel {
 				if (dlg.mark != null && (idx == categoryBox.getSelectedIndex()))
 					dlg.mark.setCategory(cat);
 			}
-			checkValidity();
 		}
 	};
 
@@ -50,14 +49,30 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.delButton.isSelected()))
-						dlg.panelMain.panelMore.panelPat.panelCol.delButton.doClick();
+					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.delButton.isSelected())) {
+						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+						dlg.mark.setColour(Ent.BODY, Col.UNKNOWN);
+					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			checkValidity();
-		}
+			if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
+				dlg.panelMain.topButton.setEnabled(true);
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.moreButton.setVisible(true);
+			} else {
+				dlg.panelMain.topButton.setEnabled(false);
+				dlg.panelMain.fogButton.setEnabled(false);
+				dlg.panelMain.radButton.setEnabled(false);
+				dlg.panelMain.litButton.setEnabled(false);
+				dlg.panelMain.moreButton.setVisible(false);
+			}
+			dlg.panelMain.panelMore.syncPanel();
+			dlg.mark.paintSign()
+;		}
 	};
 
 	public PanelSpec(OSeaMAction dia) {
@@ -103,21 +118,19 @@ public class PanelSpec extends JPanel {
 		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
 	}
 
-	private void checkValidity() {
-		if (dlg.mark != null) {
-			if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
-				dlg.panelMain.topButton.setEnabled(true);
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
-				dlg.panelMain.moreButton.setVisible(true);
-			} else {
-				dlg.panelMain.topButton.setEnabled(false);
-				dlg.panelMain.fogButton.setEnabled(false);
-				dlg.panelMain.radButton.setEnabled(false);
-				dlg.panelMain.litButton.setEnabled(false);
-				dlg.panelMain.moreButton.setVisible(false);
-			}
+	public void syncPanel() {
+		for (Shp shp : shapes.keySet()) {
+			JRadioButton button = shapes.get(shp);
+			if (dlg.mark.getShape() == shp) {
+				button.setBorderPainted(true);
+			} else
+				button.setBorderPainted(false);
+		}
+		categoryBox.setSelectedIndex(0);
+		for (Cat cat : categories.keySet()) {
+			int item = categories.get(cat);
+			if (dlg.mark.getCategory() == cat)
+				categoryBox.setSelectedIndex(item);
 		}
 	}
 

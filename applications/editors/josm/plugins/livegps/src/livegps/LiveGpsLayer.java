@@ -110,28 +110,16 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 		return;
 
 	Point screen = mv.getPoint(lastPoint.getCoor());
-	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
 
 	int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
 	int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
 
-	int[] x = new int[4];
-	int[] y = new int[4];
-	float course = lastData.getCourse();
-
-	x[0] = screen.x + Math.round(TriaHeight * (float )Math.sin(Math.toRadians(course)));
-	y[0] = screen.y - Math.round(TriaHeight * (float )Math.cos(Math.toRadians(course)));
-	x[1] = screen.x + Math.round(TriaWidth * (float )Math.sin(Math.toRadians(course + 120)));
-	y[1] = screen.y - Math.round(TriaWidth * (float )Math.cos(Math.toRadians(course + 120)));
-	x[2] = screen.x;
-	y[2] = screen.y;
-	x[3] = screen.x + Math.round(TriaWidth * (float )Math.sin(Math.toRadians(course + 240)));
-	y[3] = screen.y - Math.round(TriaWidth * (float )Math.cos(Math.toRadians(course + 240)));
-
-	g.drawPolygon(x, y, 4);
+	/*
+	 * Draw a bold triangle.
+	 * In case of deep zoom draw also a thin DOP oval.
+	 */
 
 	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN));
-
 	int w, h;
 	double ppm = 100 / mv.getDist100Pixel();	/* pixels per metre */
 
@@ -146,6 +134,33 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
 		g.drawOval(xo, yo, w, h);
 	}
+
+	int[] x = new int[4];
+	int[] y = new int[4];
+	float course = lastData.getCourse();
+	float csin = (float )Math.sin(Math.toRadians(course));
+	float ccos = (float )Math.cos(Math.toRadians(course));
+	float csin120 = (float )Math.sin(Math.toRadians(course + 120));
+	float ccos120 = (float )Math.cos(Math.toRadians(course + 120));
+	float csin240 = (float )Math.sin(Math.toRadians(course + 240));
+	float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
+
+	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
+
+	for (int i = 0; i <= 3; i++, TriaHeight--, TriaWidth--) {
+
+		x[0] = screen.x + Math.round(TriaHeight * csin);
+		y[0] = screen.y - Math.round(TriaHeight * ccos);
+		x[1] = screen.x + Math.round(TriaWidth * csin120);
+		y[1] = screen.y - Math.round(TriaWidth * ccos120);
+		x[2] = screen.x;
+		y[2] = screen.y;
+		x[3] = screen.x + Math.round(TriaWidth * csin240);
+		y[3] = screen.y - Math.round(TriaWidth * ccos240);
+
+		g.drawPolygon(x, y, 4);
+	}
+
     }
 
     /* (non-Javadoc)

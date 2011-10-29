@@ -1,3 +1,18 @@
+//    JOSM tag2link plugin.
+//    Copyright (C) 2011 Don-vip & FrViPofm
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.data;
 
 import java.util.ArrayList;
@@ -38,17 +53,39 @@ public class Rule {
             	params.put(prefix+"v", value);
         	}
         }
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "MatchingTag [" + (key != null ? "key=" + key + ", " : "")
+					+ (value != null ? "value=" + value + ", " : "")
+					+ (params != null ? "params=" + params + ", " : "")
+					+ (prefix != null ? "prefix=" + prefix : "") + "]";
+		}
     }
     
     public static class EvalResult {
+    	private final int conditionsNumber;
+    	public EvalResult(int conditionsNumber) {
+    		this.conditionsNumber = conditionsNumber;
+    	}
         public final Collection<MatchingTag> matchingTags = new ArrayList<MatchingTag>();
         public boolean matches() {
-            return !matchingTags.isEmpty();
+            return conditionsNumber > 0 && matchingTags.size() >= conditionsNumber;
         }
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "EvalResult [conditionsNumber=" + conditionsNumber
+					+ ", matchingTags=" + matchingTags + "]";
+		}
     }
     
     public EvalResult evaluates(Map<String, String> tags) {
-        EvalResult result = new EvalResult();
+        EvalResult result = new EvalResult(conditions.size());
         for (Condition c : conditions) {
             for (String key : tags.keySet()) {
                 Matcher keyMatcher = c.keyPattern.matcher(key);
@@ -72,7 +109,6 @@ public class Rule {
             }
         }
         return result;
-
     }
     
     public EvalResult evaluates(IPrimitive p) {
@@ -83,5 +119,13 @@ public class Rule {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(tag.getKey(), tag.getValue());
 		return evaluates(map);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Rule [conditions=" + conditions + ", links=" + links + "]";
 	}
 }

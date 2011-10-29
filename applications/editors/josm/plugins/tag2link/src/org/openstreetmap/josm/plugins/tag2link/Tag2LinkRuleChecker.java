@@ -19,7 +19,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +29,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
+import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule.EvalResult;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule.MatchingTag;
@@ -55,70 +58,104 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 		return null;
     }
     
+    private static String replaceParams(String s, EvalResult eval) {
+    	String result = s;
+		Matcher m = Pattern.compile("%([^%]*)%").matcher(s);
+		while (m.find()) {
+			String arg = m.group(1);
+			
+			// Search for a standard value
+			String val = findValue(arg, eval.matchingTags);
+			
+			// No standard value found: test lang() function
+			if (val == null) {
+				Matcher lm = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*").matcher(arg);
+				if (lm.matches()) {
+					String josmLang = Main.pref.get("language");
+					String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
+					if (lm.groupCount() == 0) {
+						val = jvmLang;
+					} else {
+						for (int i = 1; i<=lm.groupCount() && val == null; i++) {
+							if (jvmLang.equals(lm.group(i))) {
+								val = jvmLang;
+							}
+						}
+					}
+				}
+			}
+			
+			// Find a default value if set after ":"
+			if (val == null && arg.contains(":")) {
+				String[] vars = arg.split(":");
+				for (int i = 0; val == null && i < vars.length-1; i++) {
+					val = findValue(vars[i], eval.matchingTags);
+				}
+				if (val == null) {
+					// Default value
+					val = vars[vars.length-1];
+				}
+			}
+			
+			// Has a value been found ?
+			if (val != null) {
+				try {
+					// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
+					if (s.contains("wikipedia.")) {
+						val = val.replaceAll(" ", "_");
+					}
+					// Encode param to be included in the URL, except if it is the URL itself !
+					if (!m.group().equals(s)) {
+						val = URLEncoder.encode(val, UTF8_ENCODING);
+					}
+					// Finally replace parameter
+					result = result.replaceFirst(Pattern.quote(m.group()), val);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.err.println("Invalid argument: "+arg);
+			}
+		}
+    	return result;
+    }
+    
+    private static void replaceMapParams(Map<String, String> map, EvalResult eval) {
+		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
+			String key = it.next();
+			String value = map.get(key);
+			String key2 = replaceParams(key, eval);
+			String value2 = replaceParams(value, eval);
+			if (key.equals(key2) && value.equals(value2)) {
+				// Nothing to do
+			} else if (key.equals(key2)) {
+				// Update value
+				map.put(key, value2);
+			} else {
+				// Update key, and maybe value
+				map.remove(key);
+				map.put(key2, value2);
+			}
+		}
+    }
+    
     private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source) {
     	Collection<Link> result = new ArrayList<Link>();
         if (eval.matches()) {
             for (Link link : rule.links) {
-            	Link copy = new Link(link);
-            	copy.name = copy.name.replaceAll("%name%", source.name);
-				Matcher m = Pattern.compile("%([^%]*)%").matcher(copy.url);
-				while (m.find()) {
-					String arg = m.group(1);
-					
-					// Search for a standard value
-					String val = findValue(arg, eval.matchingTags);
-					
-					// No standard value found: test lang() function
-					if (val == null) {
-						Matcher lm = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*").matcher(arg);
-						if (lm.matches()) {
-							String josmLang = Main.pref.get("language");
-							String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
-							if (lm.groupCount() == 0) {
-								val = jvmLang;
-							} else {
-								for (int i = 1; i<=lm.groupCount() && val == null; i++) {
-									if (jvmLang.equals(lm.group(i))) {
-										val = jvmLang;
-									}
-								}
-							}
-						}
-					}
-					
-					// Find a default value if set after ":"
-					if (val == null && arg.contains(":")) {
-						String[] vars = arg.split(":");
-						for (int i = 0; val == null && i < vars.length-1; i++) {
-							val = findValue(vars[i], eval.matchingTags);
-						}
-						if (val == null) {
-							// Default value
-							val = vars[vars.length-1];
-						}
-					}
-					
-					// Has a value been found ?
-					if (val != null) {
-						try {
-							// Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
-							if (copy.url.contains("wikipedia.")) {
-								val = val.replaceAll(" ", "_");
-							}
-							// Encode param to be included in the URL, except if it is the URL itself !
-							if (!m.group().equals(copy.url)) {
-								val = URLEncoder.encode(val, UTF8_ENCODING);
-							}
-							// Finally replace parameter
-							copy.url = copy.url.replaceFirst(Pattern.quote(m.group()), val);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.err.println("Invalid argument: "+arg);
-					}
-				}
-            	result.add(copy);
+        		try {
+					Link copy = (Link) link.clone();
+	            	copy.name = copy.name.replaceAll("%name%", source.name);
+	            	copy.url = replaceParams(copy.url, eval);
+	            	if (copy instanceof LinkPost) {
+	            		LinkPost lp = (LinkPost) copy;
+	            		replaceMapParams(lp.headers, eval);
+	            		replaceMapParams(lp.params, eval);
+	            	}
+	            	result.add(copy);
+        		} catch (CloneNotSupportedException e) {
+        			System.err.println(e);
+        		}
             }
         }
         return result;

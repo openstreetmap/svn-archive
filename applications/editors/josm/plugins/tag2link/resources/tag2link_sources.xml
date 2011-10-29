@@ -18,7 +18,7 @@
  -->
 <tag2link>
 
-    <!-- Global -->
+    <!-- Global --> 
 
     <source name="Common">
         <rule>
@@ -53,11 +53,11 @@
         </rule>
     </source>
     
-    <!-- Only for France -->
+    <!-- Only for France --> 
     
     <source name="SANDRE" country-code="FR">
         <rule>
-            <condition k="ref:sandre" v="[A-Z0-9-]{8}" />
+            <condition k="ref:(FR:)?sandre" v="[A-Z0-9-]{8}" />
             <link name="View %name% sheet of river" href="http://services.sandre.eaufrance.fr/Courdo/Fiche/client/fiche_courdo.php?CdSandre=%v%" />
         </rule>
     </source>
@@ -65,30 +65,30 @@
     <source name="INSEE" country-code="FR">
         <rule>
             <condition k="admin_level" v="8"/>
-            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{3})" id="ref"/>
+            <condition k="ref:(FR:)?INSEE" v="(\p{Digit}{2})(\p{Digit}{3})" id="ref"/>
             <link name="View %name% municipality sheet" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/fichecommunale.asp?codedep=%ref.v.1%&amp;codecom=%ref.v.2%" />
         </rule>
         <rule>
             <condition k="political_division" v="FR:canton"/>
-            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{2})" id="ref"/>
+            <condition k="ref:(FR:)?INSEE" v="(\p{Digit}{2})(\p{Digit}{2})" id="ref"/>
             <link name="View %name% map of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_comcan.asp?codecan=%ref.v%" />
             <link name="View %name% list of municipalities" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/comcan.asp?codedep={ref.v.1}&amp;codecan=%ref.v.2%" />
         </rule>
         <rule>
             <condition k="admin_level" v="7"/>
-            <condition k="ref:INSEE" v="(\p{Digit}{2})(\p{Digit}{1})" id="ref"/>
+            <condition k="ref:(FR:)?INSEE" v="(\p{Digit}{2})(\p{Digit}{1})" id="ref"/>
             <link name="View %name% map of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_canarr.asp?codearr=%ref.v%" />
             <link name="View %name% list of cantons" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/canarr.asp?codedep=%ref.v.1%&amp;codearr=%ref.v.2%" />
         </rule>
         <rule>
             <condition k="admin_level" v="6"/>
-            <condition k="ref:INSEE" v="\p{Digit}{2}" id="ref"/>
+            <condition k="ref:(FR:)?INSEE" v="\p{Digit}{2}" id="ref"/>
             <link name="View %name% map of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_arrdep.asp?codedep=%ref.v%" />
             <link name="View %name% list of arrondissements" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/arrdep.asp?codedep=%ref.v%" />
         </rule>
         <rule>
             <condition k="admin_level" v="4"/>
-            <condition k="ref:INSEE" v="\p{Digit}{2}" id="ref"/>
+            <condition k="ref:(FR:)?INSEE" v="\p{Digit}{2}" id="ref"/>
             <link name="View %name% map of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_depreg.asp?codereg=%ref.v%" />
             <link name="View %name% list of departments" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/depreg.asp?codereg=%ref.v%" />
         </rule>
@@ -102,19 +102,42 @@
     
     <source name="CEF" country-code="FR">
         <rule>
-            <condition k="ref:CEF" v="[A-Z0-9_]{8}" />
+            <condition k="ref:(FR:)?CEF" v="[A-Z0-9_]{8}" />
             <link name="View %name% sheet of church" href="http://www.messesinfo.catholique.fr/public/fiche.php?valcode=%v%" />
         </rule>
     </source>
 
     <source name="MHS" country-code="FR">
         <rule>
-            <condition k="ref:mhs" v="\p{Upper}{2}\p{Digit}{8}" />
+            <condition k="ref:(FR:)?mhs" v="\p{Upper}{2}\p{Digit}{8}" />
             <link name="View Mérimée sheet of monument" href="http://www.culture.gouv.fr/public/mistral/mersri_fr?ACTION=CHERCHER&amp;FIELD_1=REF&amp;VALUE_1=%v%" />
         </rule>
         <rule>
-            <condition k="ref:INSEE" v="\p{Digit}{5}" />
+            <condition k="ref:(FR:)?INSEE" v="\p{Digit}{5}" />
             <link name="View Mérimée list for this municipality" href="http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION=CHERCHER&amp;FIELD_1=cmer1&amp;VALUE_1=%v%" />
+        </rule>
+    </source>
+
+    <source name="IGN" country-code="FR">
+		<!-- 
+		http://geodesie.ign.fr/fiches/index.php?module=e&action=fichepdf&source=carte&sit_no=4509302&geo_cid=0&lambda=1.90024744&phi=48.03041621
+		 -->
+        <rule>
+            <condition k="man_made" v="survey_point" />
+            <condition k="source" v="©IGN .*" />
+            <condition k="ref" v="(\p{Digit}{7}) - ." id="ref" />
+            <link name="View %name% sheet of geodesic site" href="http://geodesie.ign.fr/fiches/index.php?module=e&amp;action=fichepdf&amp;source=carte&amp;sit_no=%ref.v.1%" />
+            <!-- <link name="View %name% sheet of geodesic site" href="http://geodesie.ign.fr/fiches/index.php?module=e&amp;action=visugeod" method="POST" >
+                <param  name="h_panier"  value="pdf" />
+                <param  name="%ref.v.1%" value="on" />
+                <header name="Content-type" value="application/x-www-form-urlencoded" />
+            </link>-->
+        </rule>
+        <rule>
+            <condition k="site" v="geodesic" />
+            <condition k="source" v="©IGN .*" />
+            <condition k="ref" v="\p{Digit}{7}" id="ref" />
+            <link name="View %name% sheet of geodesic site" href="http://geodesie.ign.fr/fiches/index.php?module=e&amp;action=fichepdf&amp;source=carte&amp;sit_no=%ref.v.1%" />
         </rule>
     </source>
     

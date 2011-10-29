@@ -1,3 +1,18 @@
+//    JOSM tag2link plugin.
+//    Copyright (C) 2011 Don-vip & FrViPofm
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -7,7 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -20,6 +37,7 @@ import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Condition;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
+import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Source;
 
@@ -173,11 +191,40 @@ public class SourcesReader implements Tag2LinkConstants {
     }
 
     private Link parseLink() throws XMLStreamException {
-        Link link = new Link(
-	        parser.getAttributeValue(null, "name"),
-	        parser.getAttributeValue(null, "href")
-        );
-        jumpToEnd();
+        Link link = null;
+        String name = parser.getAttributeValue(null, "name");
+        String href = parser.getAttributeValue(null, "href");
+        
+        if ("POST".equals(parser.getAttributeValue(null, "method"))) {
+        	Map<String, String> headers = null;
+        	Map<String, String> params = null;
+        	while (parser.hasNext()) {
+                int event = parser.next();
+                if (event == XMLStreamConstants.START_ELEMENT) {
+                    if (parser.getLocalName().equals("header")) {
+                        if (headers == null) {
+                        	headers = new HashMap<String, String>();
+                        }
+                        headers.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
+                    } else if (parser.getLocalName().equals("param")) {
+                        if (params == null) {
+                        	params = new HashMap<String, String>();
+                        }
+                        params.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
+                    } else {
+                        parseUnknown();
+                    }
+                } else if (event == XMLStreamConstants.END_ELEMENT) {
+                    if (parser.getLocalName().equals("link")) {
+                    	break;
+                    }
+                }
+            }
+        	link = new LinkPost(name, href, headers, params);
+        } else {
+	        link = new Link(name, href);
+	        jumpToEnd();
+        }
         return link;
     }
 }

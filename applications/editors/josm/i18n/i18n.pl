@@ -303,6 +303,7 @@ sub createlang($@)
       for($num = 1; exists($data->{$en}{"$la.$num"}); ++$num)
       { }
       my $val;
+      $eq = 0;
       if($la eq "en")
       {
         ++$cnt;
@@ -318,11 +319,15 @@ sub createlang($@)
         {
           my $ennoctx = $en;
           $ennoctx =~ s/^___(.*)___//;
-          $num = 0 if $val eq $ennoctx && $data->{$en}{"$la.1"} eq $data->{$en}{"en.1"};
+          if($val eq $ennoctx && $data->{$en}{"$la.1"} eq $data->{$en}{"en.1"})
+          {
+            $num = 0;
+            $eq = 1;
+          }
         }
       }
 
-      print FILE pack "C",$num;
+      print FILE pack "C",$eq ? 0xFE : $num;
       if($num)
       {
         print FILE checkstring($la, $val, $en, 1, $data->{$en}{"en.1"});

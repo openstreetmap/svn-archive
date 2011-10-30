@@ -128,40 +128,25 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         parser.map("action", SurveyorActionDescription.class);
 
         SurveyorComponent surveyorComponent = null;
-        try {
-            parser.start(in);
-            List<SurveyorActionDescription> actions = new ArrayList<SurveyorActionDescription>();
-            while(parser.hasNext()) {
-                Object object = parser.next();
-                if (object instanceof SurveyorComponent) {
-                    System.out.println("SurveyorComponent " + object);
-                    surveyorComponent = (SurveyorComponent) object;
-                } else if (object instanceof ButtonDescription) {
-                    System.out.println("ButtonDescription " + object);
-                    ((ButtonDescription)object).setActions(actions);
-                    surveyorComponent.addButton(((ButtonDescription)object));
-                    actions.clear();
-                } else if (object instanceof SurveyorActionDescription) {
-                    System.out.println("SurveyorActionDescription " + object);
-                    actions.add((SurveyorActionDescription)object);
-                } else {
-                    System.err.println("unknown " + object);
-                }
+        parser.start(in);
+        List<SurveyorActionDescription> actions = new ArrayList<SurveyorActionDescription>();
+        while(parser.hasNext()) {
+            Object object = parser.next();
+            if (object instanceof SurveyorComponent) {
+                System.out.println("SurveyorComponent " + object);
+                surveyorComponent = (SurveyorComponent) object;
+            } else if (object instanceof ButtonDescription) {
+                System.out.println("ButtonDescription " + object);
+                ((ButtonDescription)object).setActions(actions);
+                surveyorComponent.addButton(((ButtonDescription)object));
+                actions.clear();
+            } else if (object instanceof SurveyorActionDescription) {
+                System.out.println("SurveyorActionDescription " + object);
+                actions.add((SurveyorActionDescription)object);
+            } else {
+                System.err.println("unknown " + object);
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
         }
-
-//        SurveyorComponent surveyorComponent = new SurveyorComponent();
-//        surveyorComponent.setGridSize(3,3);
-//        surveyorComponent.addButton(new ButtonDescription("Tunnel", "T", "images/symbols/tunnel.png", "ConsolePrinterAction", ButtonType.SINGLE));
-//        surveyorComponent.addButton(new ButtonDescription("Bridge", "B", null, "ConsolePrinterAction", ButtonType.TOGGLE));
-//        surveyorComponent.addButton(new ButtonDescription("Motorway", "M", null, "ConsolePrinterAction", null));
-//        surveyorComponent.addButton(new ButtonDescription("Primary", "P", null, "ConsolePrinterAction", null));
-//        surveyorComponent.addButton(new ButtonDescription("Secondary", "S", null, "ConsolePrinterAction", null));
-//        surveyorComponent.addButton(new ButtonDescription("Unclassified", "U", null, "ConsolePrinterAction", null));
-//        surveyorComponent.addButton(new ButtonDescription("Residential", "R", null, "ConsolePrinterAction", null));
-//        surveyorComponent.addButton(new ButtonDescription("Parking", "P", "images/symbols/parking.png", "ConsolePrinterAction", null));
 
         JFrame frame = new JFrame();
         frame.add(surveyorComponent);

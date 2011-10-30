@@ -159,7 +159,14 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		UNKNOWN, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
+		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
+		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
+		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
+		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
+		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
+		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
+		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
+		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -223,7 +230,7 @@ public class SeaMark {
 		CatSTR.put(Cat.SIS_LGAG, "level");
 	}
 
-	private Cat category = Cat.UNKNOWN;
+	private Cat category = Cat.NONE;
 
 	public Cat getCategory() {
 		return category;
@@ -527,10 +534,10 @@ public class SeaMark {
 	}
 
 	public enum Rtb {
-		UNKNOWN, RACON, RAMARK, LEADING
+		NONE, REFLECTOR, RACON, RAMARK, LEADING
 	}
 
-	private Rtb RaType = Rtb.UNKNOWN;
+	private Rtb RaType = Rtb.NONE;
 
 	public Rtb getRaType() {
 		return RaType;
@@ -546,8 +553,58 @@ public class SeaMark {
 		return RaconGroup;
 	}
 
-	public void setRaconGroup(String raconGroup) {
-		RaconGroup = raconGroup;
+	public void setRaconGroup(String grp) {
+		RaconGroup = grp;
+	}
+
+	private String RaconSequence = "";
+
+	public String getRaconSequence() {
+		return RaconSequence;
+	}
+
+	public void setRaconSequence(String seq) {
+		RaconSequence = seq;
+	}
+
+	private String RaconPeriod = "";
+
+	public String getRaconPeriod() {
+		return RaconPeriod;
+	}
+
+	public void setRaconPeriod(String per) {
+		RaconPeriod = validDecimal(per);
+	}
+
+	private String RaconRange = "";
+
+	public String getRaconRange() {
+		return RaconRange;
+	}
+
+	public void setRaconRange(String rng) {
+		RaconRange = validDecimal(rng);
+	}
+
+	private String RaconSector1 = "";
+
+	public String getRaconSector1() {
+		return RaconSector1;
+	}
+
+	public void setRaconSector1(String sec) {
+		RaconSector1 = validDecimal(sec);
+	}
+
+	private String RaconSector2 = "";
+
+	public String getRaconSector2() {
+		return RaconSector2;
+	}
+
+	public void setRaconSector2(String sec) {
+		RaconSector2 = validDecimal(sec);
 	}
 
 	private boolean FogSignal = false;
@@ -766,7 +823,7 @@ public class SeaMark {
 		case BCNLAT:
 		case BOYCAR:
 		case BOYLAT:
-			if ((getCategory() != Cat.UNKNOWN) && (getShape() != Shp.UNKNOWN))
+			if ((getCategory() != Cat.NONE) && (getShape() != Shp.UNKNOWN))
 				return true;
 			break;
 		case BCNISD:
@@ -858,7 +915,7 @@ public class SeaMark {
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":category")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":category");
-				setCategory(Cat.UNKNOWN);
+				setCategory(Cat.NONE);
 				for (Cat cat : CatSTR.keySet()) {
 					if (CatSTR.get(cat).equals(str)) {
 						setCategory(cat);
@@ -918,7 +975,7 @@ public class SeaMark {
 			case RED:
 				if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.UNKNOWN)) {
 					setObject(Obj.FLTSAW);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				} else if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
@@ -938,7 +995,7 @@ public class SeaMark {
 					setCategory(Cat.LAM_PORT);
 				} else {
 					setObject(Obj.FLTSPP);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				}
 				break;
 			case GREEN:
@@ -961,7 +1018,7 @@ public class SeaMark {
 					setCategory(Cat.LAM_STBD);
 				} else {
 					setObject(Obj.FLTSPP);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				}
 				break;
 			case YELLOW:
@@ -974,13 +1031,13 @@ public class SeaMark {
 					}
 				} else {
 					setObject(Obj.FLTSPP);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				}
 				break;
 			case BLACK:
 				if (getColour(Ent.BODY, 1) == Col.RED) {
 					setObject(Obj.FLTISD);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				} else if (getColour(Ent.BODY, 1) == Col.YELLOW) {
 					if (getColour(Ent.BODY, 2) == Col.BLACK) {
 						setCategory(Cat.CAM_EAST);
@@ -989,12 +1046,12 @@ public class SeaMark {
 					}
 				} else {
 					setObject(Obj.FLTSPP);
-					setCategory(Cat.UNKNOWN);
+					setCategory(Cat.NONE);
 				}
 				break;
 			default:
 				setObject(Obj.FLTSPP);
-				setCategory(Cat.UNKNOWN);
+				setCategory(Cat.NONE);
 			}
 		}
 
@@ -1477,6 +1534,10 @@ public class SeaMark {
 		} else {
 			dlg.panelMain.topIcon.setIcon(null);
 		}
+		
+		if (hasFog()) {
+			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+		}
 	}
 
 	public void saveSign(Node node) {
@@ -1544,6 +1605,45 @@ public class SeaMark {
 					}
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour", str));
 				}
+			}
+			if (hasFog()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal", FogSTR.get(getFogSound())));
+				if (!getFogGroup().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:group", getFogGroup()));
+				}
+				if (!getFogPeriod().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:period", getFogPeriod()));
+				}
+				if (!getFogSequence().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:sequence", getFogSequence()));
+				}
+				if (!getFogRange().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:range", getFogRange()));
+				}
+			}
+			if (!getInfo().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:information", getInfo()));
+			}
+			if (!getSource().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:source", getSource()));
+			}
+			if (!getHeight().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:height", getHeight()));
+			}
+			if (!getElevation().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:elevation", getElevation()));
+			}
+			if (getStatus() != Sts.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:status", StsSTR.get(getStatus())));
+			}
+			if (getConstr() != Cns.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:construction", CnsSTR.get(getConstr())));
+			}
+			if (getVis() != Vis.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:visibility", VisSTR.get(getVis())));
+			}
+			if (getRvis() != Vis.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reflectivity", VisSTR.get(getRvis())));
 			}
 		}
 	}

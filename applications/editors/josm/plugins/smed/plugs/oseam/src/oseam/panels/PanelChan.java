@@ -60,7 +60,7 @@ public class PanelChan extends JPanel {
 				}
 			}
 			if (safeWaterButton.isSelected()) {
-				dlg.mark.setCategory(Cat.UNKNOWN);
+				dlg.mark.setCategory(Cat.NONE);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).doClick();
 				} else {

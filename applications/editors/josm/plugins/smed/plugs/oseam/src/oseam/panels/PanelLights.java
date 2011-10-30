@@ -99,7 +99,7 @@ public class PanelLights extends JPanel {
 		trafficCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
-		addTCItem(Messages.getString("UKCategory"), Cat.UNKNOWN);
+		addTCItem(Messages.getString("UKCategory"), Cat.NONE);
 		addTCItem(Messages.getString("Traffic"), Cat.SIS_TRFC);
 		addTCItem(Messages.getString("PortControl"), Cat.SIS_PTCL);
 		addTCItem(Messages.getString("PortEntry"), Cat.SIS_PTED);
@@ -116,7 +116,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(warningCatBox, null);
 		warningCatBox.addActionListener(alWarningCatBox);
-		addWCItem(Messages.getString("UKCategory"), Cat.UNKNOWN);
+		addWCItem(Messages.getString("UKCategory"), Cat.NONE);
 		addWCItem(Messages.getString("Danger"), Cat.SIS_DNGR);
 		addWCItem(Messages.getString("Storm"), Cat.SIS_STRM);
 		addWCItem(Messages.getString("Weather"), Cat.SIS_WTHR);

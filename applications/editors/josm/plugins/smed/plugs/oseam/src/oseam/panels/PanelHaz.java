@@ -69,7 +69,7 @@ public class PanelHaz extends JPanel {
 					westButton.setBorderPainted(false);
 				}
 				if (isolButton.isSelected()) {
-					dlg.mark.setCategory(Cat.UNKNOWN);
+					dlg.mark.setCategory(Cat.NONE);
 					dlg.panelMain.panelMore.panelPat.panelCol.blackButton.doClick();
 					dlg.mark.setColour(Ent.BODY, Col.BLACK);
 					dlg.mark.addColour(Ent.BODY, Col.RED);
@@ -197,7 +197,7 @@ public class PanelHaz extends JPanel {
 		southButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_SOUTH);
 		eastButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_EAST);
 		westButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_WEST);
-		isolButton.setBorderPainted(dlg.mark.getCategory() == Cat.UNKNOWN);
+		isolButton.setBorderPainted(dlg.mark.getCategory() == Cat.NONE);
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
 			if (dlg.mark.getShape() == shp) {

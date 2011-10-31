@@ -229,8 +229,13 @@ public class SimplifyAreaAction extends JosmAction {
                 Node node1 = null;
                 Node node2 = null;
 
+                final int len = nodes.size();
+                if (len == 0) {
+                    break;
+                }
+
                 // find smallest distance
-                for (int i = 0, len = nodes.size(); i <= len; i++) {
+                for (int i = 0; i <= len; i++) {
                     final Node n1 = nodes.get(i % len);
                     final Node n2 = nodes.get((i + 1) % len);
 
@@ -352,6 +357,10 @@ public class SimplifyAreaAction extends JosmAction {
             Node bestMatch = null;
 
             final int size2 = nodes.size();
+
+            if (size2 == 0) {
+                break;
+            }
 
             for (int i = 0, len = size2 + (closed ? 2 : 1); i < len; i++) {
                 final int index = i % size2;

@@ -483,7 +483,7 @@ public class SeaMark {
 	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
 	static {
 		TopSTR.put(Top.CAN, "cylinder");
-		TopSTR.put(Top.CONE, "cylinder");
+		TopSTR.put(Top.CONE, "cone, point up");
 		TopSTR.put(Top.SPHERE, "sphere");
 		TopSTR.put(Top.X_SHAPE, "x-shape");
 		TopSTR.put(Top.NORTH, "2 cones up");
@@ -1110,136 +1110,105 @@ public class SeaMark {
 			}
 		}
 
-		dlg.panelMain.typeButtons.clearSelection();
-		dlg.panelMain.panelChan.catButtons.clearSelection();
-		dlg.panelMain.panelHaz.catButtons.clearSelection();
-		switch (GrpMAP.get(getObject())) {
-		case LAT:
-			dlg.panelMain.chanButton.setSelected(true);
-			switch (getCategory()) {
-			case LAM_PORT:
-				dlg.panelMain.panelChan.portButton.setSelected(true);
-				break;
-			case LAM_STBD:
-				dlg.panelMain.panelChan.stbdButton.setSelected(true);
-				break;
-			case LAM_PPORT:
-				dlg.panelMain.panelChan.prefPortButton.setSelected(true);
-				break;
-			case LAM_PSTBD:
-				dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
-				break;
+		if (keys.containsKey("seamark:topmark:shape")) {
+			str = keys.get("seamark:topmark:shape");
+			setTopmark(Top.NONE);
+			for (Top top : TopSTR.keySet()) {
+				if (TopSTR.get(top).equals(str)) {
+					setTopmark(top);
+				}
 			}
-			break;
-		case SAW:
-			dlg.panelMain.chanButton.setSelected(true);
-			dlg.panelMain.panelChan.safeWaterButton.setSelected(true);
-			break;
-		case CAR:
-			dlg.panelMain.hazButton.setSelected(true);
-			switch (getCategory()) {
-			case CAM_NORTH:
-				dlg.panelMain.panelHaz.northButton.setSelected(true);
-				break;
-			case CAM_SOUTH:
-				dlg.panelMain.panelHaz.southButton.setSelected(true);
-				break;
-			case CAM_EAST:
-				dlg.panelMain.panelHaz.eastButton.setSelected(true);
-				break;
-			case CAM_WEST:
-				dlg.panelMain.panelHaz.westButton.setSelected(true);
-				break;
+		}
+		if (keys.containsKey("seamark:topmark:colour")) {
+			str = keys.get("seamark:topmark:colour");
+			setColour(Ent.TOPMARK, Col.UNKNOWN);
+			for (Col col : ColSTR.keySet()) {
+				if (ColSTR.get(col).equals(str)) {
+					setColour(Ent.TOPMARK, col);
+				}
 			}
-			break;
-		case ISD:
-			dlg.panelMain.hazButton.setSelected(true);
-			dlg.panelMain.panelHaz.isolButton.setSelected(true);
-			break;
-		case SPP:
-			dlg.panelMain.specButton.setSelected(true);
-			break;
-		case LIT:
-		case SIS:
-			dlg.panelMain.lightsButton.setSelected(true);
-			break;
-		case FLT:
-			switch (getColour(Ent.FLOAT, 0)) {
-			case RED:
-				dlg.panelMain.chanButton.setSelected(true);
-				if (getColour(Ent.FLOAT, 1) == Col.WHITE)
-					if (getColour(Ent.FLOAT, 2) == Col.RED) {
-						setRegion(Reg.C);
-						dlg.panelMain.panelChan.portButton.setSelected(true);
-					} else {
-						dlg.panelMain.panelChan.safeWaterButton.setSelected(true);
-					}
-				else if (getColour(Ent.FLOAT, 1) == Col.GREEN) {
-					if (getColour(Ent.FLOAT, 3) == Col.GREEN) {
-						setRegion(Reg.C);
-					}
-					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
-					} else {
-						dlg.panelMain.panelChan.prefPortButton.setSelected(true);
-					}
-				} else {
-					if (getRegion().equals("B"))
-						dlg.panelMain.panelChan.stbdButton.setSelected(true);
-					else
-						dlg.panelMain.panelChan.portButton.setSelected(true);
+		}
+		if (keys.containsKey("seamark:topmark:colour_pattern")) {
+			str = keys.get("seamark:topmark:colour_pattern");
+			setPattern(Ent.TOPMARK, Pat.NONE);
+			for (Pat pat : PatSTR.keySet()) {
+				if (PatSTR.get(pat).equals(str)) {
+					setPattern(Ent.TOPMARK, pat);
 				}
-				break;
-			case GREEN:
-				dlg.panelMain.chanButton.setSelected(true);
-				if (getColour(Ent.FLOAT, 1) == Col.RED) {
-					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.prefPortButton.setSelected(true);
-					} else {
-						dlg.panelMain.panelChan.prefStbdButton.setSelected(true);
-					}
-				} else if (getColour(Ent.FLOAT, 1) == Col.WHITE) {
-					setRegion(Reg.C);
-					dlg.panelMain.panelChan.stbdButton.setSelected(true);
-				} else {
-					if (getRegion().equals("B")) {
-						dlg.panelMain.panelChan.portButton.setSelected(true);
-					} else {
-						dlg.panelMain.panelChan.stbdButton.setSelected(true);
-					}
-				}
-				break;
-			case BLACK:
-				dlg.panelMain.hazButton.setSelected(true);
-				switch (getColour(Ent.FLOAT, 1)) {
-				case YELLOW:
-					if (getColour(Ent.FLOAT, 2) == Col.BLACK)
-						dlg.panelMain.panelHaz.eastButton.setSelected(true);
-					else
-						dlg.panelMain.panelHaz.northButton.setSelected(true);
-					break;
-				case RED:
-					dlg.panelMain.panelHaz.isolButton.setSelected(true);
-					break;
-				}
-				break;
-			case YELLOW:
-				if (getColour(Ent.FLOAT, 1) == Col.BLACK) {
-					dlg.panelMain.hazButton.setSelected(true);
-					if (getColour(Ent.FLOAT, 2) == Col.YELLOW)
-						dlg.panelMain.panelHaz.westButton.setSelected(true);
-					else
-						dlg.panelMain.panelHaz.southButton.setSelected(true);
-				} else {
-					dlg.panelMain.specButton.setSelected(true);
-				}
-				break;
-			default:
-				dlg.panelMain.lightsButton.setSelected(true);
 			}
-			break;
 		}
 
+		if (keys.containsKey("seamark:fog_signal")) {
+			str = keys.get("seamark:fog_signal");
+			setFogSound(Fog.NONE);
+			for (Fog fog : FogSTR.keySet()) {
+				if (FogSTR.get(fog).equals(str)) {
+					setFogSound(fog);
+				}
+			}
+		}
+		if (keys.containsKey("seamark:fog_signal:group")) {
+			setFogGroup(keys.get("seamark:fog_signal:group"));
+		}
+		if (keys.containsKey("seamark:fog_signal:period")) {
+			setFogPeriod(keys.get("seamark:fog_signal:period"));
+		}
+		if (keys.containsKey("seamark:fog_signal:sequence")) {
+			setFogSequence(keys.get("seamark:fog_signal:sequence"));
+		}
+		if (keys.containsKey("seamark:fog_signal:range")) {
+			setFogRange(keys.get("seamark:fog_signal:range"));
+		}
+
+		if (keys.containsKey("seamark:information")) {
+			setInfo(keys.get("seamark:information"));
+		}
+		if (keys.containsKey("seamark:source")) {
+			setSource(keys.get("seamark:source"));
+		}
+		if (keys.containsKey("seamark:height")) {
+			setHeight(keys.get("seamark:height"));
+		}
+		if (keys.containsKey("seamark:elevation")) {
+			setElevation(keys.get("seamark:elevation"));
+		}
+		if (keys.containsKey("seamark:status")) {
+			str = keys.get("seamark:status");
+			setStatus(Sts.UNKNOWN);
+			for (Sts sts : StsSTR.keySet()) {
+				if (StsSTR.get(sts).equals(str)) {
+					setStatus(sts);
+				}
+			}
+		}
+		if (keys.containsKey("seamark:construction")) {
+			str = keys.get("seamark:construction");
+			setConstr(Cns.UNKNOWN);
+			for (Cns cns : CnsSTR.keySet()) {
+				if (CnsSTR.get(cns).equals(str)) {
+					setConstr(cns);
+				}
+			}
+		}
+		if (keys.containsKey("seamark:visibility")) {
+			str = keys.get("seamark:visibility");
+			setVis(Vis.UNKNOWN);
+			for (Vis vis : VisSTR.keySet()) {
+				if (VisSTR.get(vis).equals(str)) {
+					setVis(vis);
+				}
+			}
+		}
+		if (keys.containsKey("seamark:reflectivity")) {
+			str = keys.get("seamark:reflectivity");
+			setRvis(Vis.UNKNOWN);
+			for (Vis vis : VisSTR.keySet()) {
+				if (VisSTR.get(vis).equals(str)) {
+					setRvis(vis);
+				}
+			}
+		}
+		
 		dlg.panelMain.syncPanel();
 
 		paintlock = false;

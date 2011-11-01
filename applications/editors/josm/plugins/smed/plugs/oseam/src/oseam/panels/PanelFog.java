@@ -26,50 +26,44 @@ public class PanelFog extends JPanel {
 	private EnumMap<Fog, JRadioButton> fogs = new EnumMap<Fog, JRadioButton>(Fog.class);
 	private ActionListener alFog = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				for (Fog fog : fogs.keySet()) {
-					JRadioButton button = fogs.get(fog);
-					if (button.isSelected()) {
-						dlg.mark.setFogSound(fog);
-						button.setBorderPainted(true);
-					} else
-						button.setBorderPainted(false);
-				}
-				dlg.mark.setFog(!noFogButton.isSelected());
-				dlg.mark.paintSign();
+			for (Fog fog : fogs.keySet()) {
+				JRadioButton button = fogs.get(fog);
+				if (button.isSelected()) {
+					dlg.mark.setFogSound(fog);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
 			}
+			dlg.mark.setFog(!noFogButton.isSelected());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel groupLabel;
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setFogGroup(groupBox.getText());
+			dlg.mark.setFogGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setFogPeriod(periodBox.getText());
+			dlg.mark.setFogPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
 	private ActionListener alSeq = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setFogSequence(seqBox.getText());
+			dlg.mark.setFogSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setFogRange(rangeBox.getText());
+			dlg.mark.setFogRange(rangeBox.getText());
 		}
 	};
 
@@ -118,7 +112,7 @@ public class PanelFog extends JPanel {
 		rangeBox.addActionListener(alRange);
 
 	}
-	
+
 	public void syncPanel() {
 		for (Fog fog : fogs.keySet()) {
 			JRadioButton button = fogs.get(fog);

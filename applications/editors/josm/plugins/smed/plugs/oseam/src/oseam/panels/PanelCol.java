@@ -10,6 +10,7 @@ import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelCol extends JPanel {
@@ -55,7 +56,7 @@ public class PanelCol extends JPanel {
 							} else {
 								dlg.mark.setColour(ent, stackIdx, col);
 							}
-							syncStack();
+							syncPanel();
 						}
 						dlg.mark.paintSign();
 					}
@@ -120,7 +121,7 @@ public class PanelCol extends JPanel {
 		}
 	}
 
-	public void syncStack() {
+	public void syncPanel() {
 		if (ent == Ent.LIGHT) {
 		} else {
 			int idx;
@@ -150,7 +151,7 @@ public class PanelCol extends JPanel {
 				for (idx = 0; stackCol.size() > idx; idx++) {
 					JRadioButton btnI = stackCol.get(idx);
 					btnI.setBounds(2, (2 + (idx * height)), 30, height);
-					btnI.setBackground(oseam.seamarks.SeaMark.ColMAP.get(dlg.mark.getColour(ent, idx)));
+					btnI.setBackground(SeaMark.ColMAP.get(dlg.mark.getColour(ent, idx)));
 					if (stackIdx == idx) {
 						btnI.setBorderPainted(true);
 					} else {

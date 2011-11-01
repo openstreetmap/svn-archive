@@ -35,18 +35,16 @@ public class PanelTop extends JPanel {
 	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				for (Top top : tops.keySet()) {
-					JRadioButton button = tops.get(top);
-					if (button.isSelected()) {
-						dlg.mark.setTopmark(top);
-						button.setBorderPainted(true);
-					} else
-						button.setBorderPainted(false);
-				}
-				mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
-				dlg.mark.paintSign();
+			for (Top top : tops.keySet()) {
+				JRadioButton button = tops.get(top);
+				if (button.isSelected()) {
+					dlg.mark.setTopmark(top);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
 			}
+			mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
+			dlg.mark.paintSign();
 		}
 	};
 
@@ -81,7 +79,7 @@ public class PanelTop extends JPanel {
 		}
 		mooringTopButton.setEnabled(state);
 	}
-	
+
 	public void syncPanel() {
 		for (Top top : tops.keySet()) {
 			JRadioButton button = tops.get(top);

@@ -49,26 +49,17 @@ public class PanelSpec extends JPanel {
 				if (button.isSelected()) {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
-					if ((button == cairnButton) && !(dlg.panelMain.panelMore.panelPat.panelCol.delButton.isSelected())) {
+					if (button == cairnButton) {
 						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
 						dlg.mark.setColour(Ent.BODY, Col.UNKNOWN);
+					}
+					if (dlg.mark.getColour(Ent.BODY, 0) == Col.UNKNOWN) {
+						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+						dlg.mark.setColour(Ent.BODY, Col.YELLOW);
 					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
-			}
-			if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
-				dlg.panelMain.topButton.setEnabled(true);
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
-				dlg.panelMain.moreButton.setVisible(true);
-			} else {
-				dlg.panelMain.topButton.setEnabled(false);
-				dlg.panelMain.fogButton.setEnabled(false);
-				dlg.panelMain.radButton.setEnabled(false);
-				dlg.panelMain.litButton.setEnabled(false);
-				dlg.panelMain.moreButton.setVisible(false);
 			}
 			dlg.panelMain.panelMore.syncPanel();
 			dlg.mark.paintSign()

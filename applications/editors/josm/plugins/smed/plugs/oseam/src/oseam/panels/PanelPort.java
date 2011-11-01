@@ -36,66 +36,64 @@ public class PanelPort extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
-					dlg.panelMain.moreButton.setVisible(true);
-					dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-					dlg.panelMain.topButton.setEnabled(true);
-					dlg.panelMain.fogButton.setEnabled(true);
-					dlg.panelMain.radButton.setEnabled(true);
-					dlg.panelMain.litButton.setEnabled(true);
-					if (dlg.mark.getCategory() == Cat.LAM_PORT) {
-						switch (dlg.mark.getRegion()) {
-						case A:
-							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.RED);
-							break;
-						case B:
-							dlg.panelMain.panelMore.panelPat.noneButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.GREEN);
-							break;
-						case C:
-							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.WHITE);
-							dlg.mark.addColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.WHITE);
-							break;
-						}
-					} else {
-						switch (dlg.mark.getRegion()) {
-						case A:
-							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.GREEN);
-							dlg.mark.addColour(Ent.BODY, Col.RED);
-							break;
-						case B:
-							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.GREEN);
-							dlg.mark.addColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.GREEN);
-							break;
-						case C:
-							dlg.panelMain.panelMore.panelPat.horizButton.doClick();
-							dlg.mark.setColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.GREEN);
-							dlg.mark.addColour(Ent.BODY, Col.RED);
-							dlg.mark.addColour(Ent.BODY, Col.GREEN);
-							break;
-						}
+			if (dlg.mark.isValid()) {
+				dlg.panelMain.moreButton.setVisible(true);
+				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+				dlg.panelMain.saveButton.setEnabled(true);
+				dlg.panelMain.topButton.setEnabled(true);
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.saveButton.setEnabled(true);
+				if (dlg.mark.getCategory() == Cat.LAM_PORT) {
+					switch (dlg.mark.getRegion()) {
+					case A:
+						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+						dlg.mark.setColour(Ent.BODY, Col.RED);
+						break;
+					case B:
+						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+						dlg.mark.setColour(Ent.BODY, Col.GREEN);
+						break;
+					case C:
+						dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+						dlg.mark.setColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.WHITE);
+						dlg.mark.addColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.WHITE);
+						break;
 					}
-					dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
 				} else {
-					dlg.panelMain.moreButton.setVisible(false);
-					dlg.panelMain.panelChan.topmarkButton.setVisible(false);
-					dlg.panelMain.topButton.setEnabled(false);
-					dlg.panelMain.fogButton.setEnabled(false);
-					dlg.panelMain.radButton.setEnabled(false);
-					dlg.panelMain.litButton.setEnabled(false);
+					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					switch (dlg.mark.getRegion()) {
+					case A:
+						dlg.mark.setColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						dlg.mark.addColour(Ent.BODY, Col.RED);
+						break;
+					case B:
+						dlg.mark.setColour(Ent.BODY, Col.GREEN);
+						dlg.mark.addColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						break;
+					case C:
+						dlg.mark.setColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						dlg.mark.addColour(Ent.BODY, Col.RED);
+						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						break;
+					}
 				}
-				dlg.mark.paintSign();
+				dlg.panelMain.panelMore.syncPanel();
+			} else {
+				dlg.panelMain.moreButton.setVisible(false);
+				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
+				dlg.panelMain.topButton.setEnabled(false);
+				dlg.panelMain.fogButton.setEnabled(false);
+				dlg.panelMain.radButton.setEnabled(false);
+				dlg.panelMain.litButton.setEnabled(false);
 			}
+			dlg.mark.paintSign();
 		}
 	};
 
@@ -122,7 +120,7 @@ public class PanelPort extends JPanel {
 				button.setBorderPainted(false);
 		}
 	}
-	
+
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLoweredBevelBorder());

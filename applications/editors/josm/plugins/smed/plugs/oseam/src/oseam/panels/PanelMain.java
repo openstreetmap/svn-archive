@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.*;
+import oseam.seamarks.SeaMark;
 
 public class PanelMain extends JPanel {
 
@@ -36,7 +36,7 @@ public class PanelMain extends JPanel {
 				dlg.mark.setName(nameBox.getText());
 		}
 	};
-	private JButton saveButton = null;
+	public JButton saveButton = null;
 	private ActionListener alSave = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark != null) {
@@ -273,40 +273,76 @@ public class PanelMain extends JPanel {
 	}
 
 	public void syncPanel() {
+		typeButtons.clearSelection();
+		chanButton.setBorderPainted(false);
+		hazButton.setBorderPainted(false);
+		specButton.setBorderPainted(false);
+		lightsButton.setBorderPainted(false);
+		panelChan.setVisible(false);
+		panelHaz.setVisible(false);
+		panelSpec.setVisible(false);
+		panelLights.setVisible(false);
+		panelMore.setVisible(false);
+		colLabel.setText("");
+		shapeIcon.setIcon(null);
+		lightIcon.setIcon(null);
+		topIcon.setIcon(null);
+		radarIcon.setIcon(null);
+		fogIcon.setIcon(null);
 		if (dlg.mark == null) {
 			topButton.setEnabled(false);
 			fogButton.setEnabled(false);
 			radButton.setEnabled(false);
 			litButton.setEnabled(false);
 			moreButton.setVisible(false);
+			saveButton.setEnabled(false);
+			nameBox.setEnabled(false);
+			chanButton.setEnabled(false);
+			hazButton.setEnabled(false);
+			specButton.setEnabled(false);
+			lightsButton.setEnabled(false);
 		} else {
-			if (dlg.mark.isValid()) {
-				topButton.setEnabled(true);
-				fogButton.setEnabled(true);
-				radButton.setEnabled(true);
-				litButton.setEnabled(true);
-				moreButton.setVisible(true);
-			} else {
-				topButton.setEnabled(false);
-				fogButton.setEnabled(false);
-				radButton.setEnabled(false);
-				litButton.setEnabled(false);
-				moreButton.setVisible(false);
+			nameBox.setEnabled(true);
+			chanButton.setEnabled(true);
+			hazButton.setEnabled(true);
+			specButton.setEnabled(true);
+			lightsButton.setEnabled(true);
+			nameBox.setText(dlg.mark.getName());
+			panelChan.setVisible(false);
+			panelHaz.setVisible(false);
+			panelSpec.setVisible(false);
+			panelLights.setVisible(false);
+			switch (SeaMark.GrpMAP.get(dlg.mark.getObject())) {
+			case LAT:
+			case SAW:
+				chanButton.setBorderPainted(true);
+				panelChan.setVisible(true);
+				panelChan.syncPanel();
+				break;
+			case CAR:
+			case ISD:
+				hazButton.setBorderPainted(true);
+				panelHaz.setVisible(true);
+				panelHaz.syncPanel();
+				break;
+			case SPP:
+				specButton.setBorderPainted(true);
+				panelSpec.setVisible(true);
+				panelSpec.syncPanel();
+				break;
+			case LIT:
+			case SIS:
+				lightsButton.setBorderPainted(true);
+				panelLights.setVisible(true);
+				panelLights.syncPanel();
+				break;
 			}
+			panelMore.syncPanel();
+			panelTop.syncPanel();
+			panelFog.syncPanel();
+			panelRadar.syncPanel();
+			panelLit.syncPanel();
 		}
-		nameBox.setText(dlg.mark.getName());
-		alType.actionPerformed(null);
-		alMisc.actionPerformed(null);
-		dlg.panelMain.panelChan.syncPanel();
-		dlg.panelMain.panelHaz.syncPanel();
-		dlg.panelMain.panelSpec.syncPanel();
-		dlg.panelMain.panelMore.setVisible(false);
-		dlg.panelMain.panelMore.syncPanel();
-		moreButton.setVisible(dlg.mark.isValid());
-		dlg.panelMain.panelTop.syncPanel();
-		dlg.panelMain.panelFog.syncPanel();
-		dlg.panelMain.panelRadar.syncPanel();
-		dlg.panelMain.panelLit.syncPanel();
 	}
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {

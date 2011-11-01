@@ -23,65 +23,57 @@ public class PanelRadar extends JPanel {
 	private EnumMap<Rtb, JRadioButton> rads = new EnumMap<Rtb, JRadioButton>(Rtb.class);
 	private ActionListener alRad = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				for (Rtb rtb : rads.keySet()) {
-					JRadioButton button = rads.get(rtb);
-					if (button.isSelected()) {
-						dlg.mark.setRaType(rtb);
-						button.setBorderPainted(true);
-					} else
-						button.setBorderPainted(false);
-				}
-				dlg.mark.paintSign();
+			for (Rtb rtb : rads.keySet()) {
+				JRadioButton button = rads.get(rtb);
+				if (button.isSelected()) {
+					dlg.mark.setRaType(rtb);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
 			}
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel groupLabel;
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconGroup(groupBox.getText());
+			dlg.mark.setRaconGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconPeriod(periodBox.getText());
+			dlg.mark.setRaconPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
 	private ActionListener alSeq = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconSequence(seqBox.getText());
+			dlg.mark.setRaconSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconRange(rangeBox.getText());
+			dlg.mark.setRaconRange(rangeBox.getText());
 		}
 	};
 	public JLabel sector1Label;
 	public JTextField sector1Box;
 	private ActionListener alSector1 = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconSector1(rangeBox.getText());
+			dlg.mark.setRaconSector1(rangeBox.getText());
 		}
 	};
 	public JLabel sector2Label;
 	public JTextField sector2Box;
 	private ActionListener alSector2 = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setRaconSector2(rangeBox.getText());
+			dlg.mark.setRaconSector2(rangeBox.getText());
 		}
 	};
 

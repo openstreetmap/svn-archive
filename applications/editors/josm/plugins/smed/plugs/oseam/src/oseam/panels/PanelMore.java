@@ -9,7 +9,7 @@ import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark.*	;
+import oseam.seamarks.SeaMark.*;
 
 public class PanelMore extends JPanel {
 
@@ -18,32 +18,28 @@ public class PanelMore extends JPanel {
 	public JTextField infoBox;
 	private ActionListener alInfo = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setInfo(infoBox.getText());
+			dlg.mark.setInfo(infoBox.getText());
 		}
 	};
 	public JLabel sourceLabel;
 	public JTextField sourceBox;
 	private ActionListener alSource = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setSource(sourceBox.getText());
+			dlg.mark.setSource(sourceBox.getText());
 		}
 	};
 	public JLabel elevLabel;
 	public JTextField elevBox;
 	private ActionListener alElev = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setElevation(elevBox.getText());
+			dlg.mark.setElevation(elevBox.getText());
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setHeight(heightBox.getText());
+			dlg.mark.setHeight(heightBox.getText());
 		}
 	};
 	public JLabel statusLabel;
@@ -298,8 +294,8 @@ public class PanelMore extends JPanel {
 		this.add(reflBox, null);
 		reflBox.addActionListener(alRefl);
 
-		}
-	
+	}
+
 	public void syncPanel() {
 		panelPat.syncPanel();
 		regionAButton.setBorderPainted(dlg.mark.getRegion() == Reg.A);

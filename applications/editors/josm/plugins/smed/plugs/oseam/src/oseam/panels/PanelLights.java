@@ -26,7 +26,6 @@ public class PanelLights extends JPanel {
 				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex()))
 					dlg.mark.setCategory(cat);
 			}
-			checkValidity();
 		}
 	};
 
@@ -39,7 +38,6 @@ public class PanelLights extends JPanel {
 				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex()))
 					dlg.mark.setCategory(cat);
 			}
-			checkValidity();
 		}
 	};
 
@@ -75,7 +73,6 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
-			checkValidity();
 		}
 	};
 
@@ -136,20 +133,8 @@ public class PanelLights extends JPanel {
 
 	}
 
-	private void checkValidity() {
-		if (dlg.mark != null) {
-			if (dlg.mark.getObject() != Obj.UNKNOWN) {
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
-				dlg.panelMain.moreButton.setVisible(true);
-			} else {
-				dlg.panelMain.fogButton.setEnabled(false);
-				dlg.panelMain.radButton.setEnabled(false);
-				dlg.panelMain.litButton.setEnabled(false);
-				dlg.panelMain.moreButton.setVisible(false);
-			}
-		}
+	public void syncPanel() {
+		
 	}
 	
 	private void addTCItem(String str, Cat cat) {

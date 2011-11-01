@@ -79,7 +79,7 @@ public class PanelPat extends JPanel {
 			} else
 				button.setBorderPainted(false);
 		}
-		panelCol.syncStack();
+		panelCol.syncPanel();
 	}
 	
 	private JRadioButton getPatButton(JRadioButton button, int x, int y, int w, int h, String tip, Pat pat) {

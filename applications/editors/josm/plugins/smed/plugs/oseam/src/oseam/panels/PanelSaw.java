@@ -40,7 +40,7 @@ public class PanelSaw extends JPanel {
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-					dlg.panelMain.panelMore.panelPat.vertButton.doClick();
+					dlg.mark.setPattern(Ent.BODY, Pat.VERT);
 					dlg.mark.setColour(Ent.BODY, Col.RED);
 					dlg.mark.addColour(Ent.BODY, Col.WHITE);
 				} else {
@@ -50,7 +50,7 @@ public class PanelSaw extends JPanel {
 					dlg.panelMain.radButton.setEnabled(false);
 					dlg.panelMain.litButton.setEnabled(false);
 				}
-				dlg.panelMain.panelMore.panelPat.panelCol.syncStack();
+				dlg.panelMain.panelMore.syncPanel();
 				dlg.mark.paintSign();
 			}
 		}

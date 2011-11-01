@@ -39,6 +39,9 @@ public class OSeaMAction {
 							mark.parseMark(node);
 						}
 					} else {
+						node = null;
+						mark = null;
+						panelMain.syncPanel();
 						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
 				}
@@ -46,6 +49,7 @@ public class OSeaMAction {
 			if (nextNode == null) {
 				node = null;
 				mark = null;
+				panelMain.syncPanel();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}
@@ -70,6 +74,9 @@ public class OSeaMAction {
 			panelMain = new PanelMain(this);
 			panelMain.setLayout(null);
 			panelMain.setSize(new Dimension(400, 360));
+			node = null;
+			mark = null;
+			panelMain.syncPanel();
 		}
 		return panelMain;
 	}

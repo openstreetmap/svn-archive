@@ -18,8 +18,6 @@ public class SeaMark {
 		dlg = dia;
 	}
 
-	public Light light = new Light(dlg);
-
 	public String validDecimal(String str) {
 		str = str.trim().replace(',', '.');
 		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
@@ -425,6 +423,26 @@ public class SeaMark {
 				lightColour.remove(i);
 			break;
 		}
+	}
+
+	private boolean Fired = false;
+
+	public boolean isFired() {
+		return Fired;
+	}
+
+	public void setFired(boolean fired) {
+		Fired = fired;
+	}
+
+	private boolean Sectored = false;
+
+	public boolean isSectored() {
+		return Sectored;
+	}
+
+	public void setSectored(boolean sectored) {
+		Sectored = sectored;
 	}
 
 	public enum Chr {

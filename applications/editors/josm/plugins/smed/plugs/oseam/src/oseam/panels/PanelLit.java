@@ -84,17 +84,17 @@ public class PanelLit extends JPanel {
 			sectorButton.setBorderPainted(sectorButton.isSelected());
 			if (sectorButton.isSelected()) {
 				if (panelSector == null) {
-					panelSector = new PanelSectors(dlg.mark.light);
+					panelSector = new PanelSectors(dlg);
 					panelSector.setAlwaysOnTop(true);
 					panelSector.setLocation(450, 0);
 				}
 				if (panelSector.getSectorCount() == 0) {
 					panelSector.addSector(1);
-					panelSector.light.setSectored(true);
+					dlg.mark.setSectored(true);
 				}
 				panelSector.setVisible(true);
 			} else {
-				dlg.mark.light.setSectored(false);
+				dlg.mark.setSectored(false);
 				panelSector.setVisible(false);
 			}
 		}

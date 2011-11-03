@@ -60,26 +60,6 @@ public class Light extends AbstractTableModel {
 		lights.remove(idx);
 	}
 	
-	private boolean Fired = false;
-
-	public boolean isFired() {
-		return Fired;
-	}
-
-	public void setFired(boolean fired) {
-		Fired = fired;
-	}
-
-	private boolean Sectored = false;
-
-	public boolean isSectored() {
-		return Sectored;
-	}
-
-	public void setSectored(boolean sectored) {
-		Sectored = sectored;
-	}
-
 	public String getBearing1(int idx) {
 		return (String)dlg.panelMain.panelLit.panelSector.table.getValueAt(idx, 1);
 	}

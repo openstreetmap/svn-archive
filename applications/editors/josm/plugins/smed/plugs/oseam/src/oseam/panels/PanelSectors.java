@@ -3,7 +3,7 @@ package oseam.panels;
 import java.awt.event.*;
 import javax.swing.*;
 
-import oseam.seamarks.Light;
+import oseam.seamarks.*;
 
 public class PanelSectors extends JFrame {
 

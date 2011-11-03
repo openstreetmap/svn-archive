@@ -51,6 +51,7 @@ public class Light extends AbstractTableModel {
 	public void setValueAt(Object value, int row, int col) {
 		((Object[])lights.get(row+1))[col+1] = value;
 	}
+	
 	public void addSector(int idx) {
 		lights.add(idx, new Object[]{null, null, null, null, null, null, null, null, null, null, null, null});
 	}
@@ -103,42 +104,6 @@ public class Light extends AbstractTableModel {
 		dlg.panelMain.panelLit.panelSector.table.setValueAt(col, idx, 3);
 	}
 
-	public enum Chr {
-		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK,
-		ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
-	}
-
-	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
-	static {
-		ChrMAP.put(EnumSet.of(Chr.UNKNOWN), "");
-		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
-		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
-		ChrMAP.put(EnumSet.of(Chr.LONGFLASH), "LFl");
-		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK), "VQ");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK), "UQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDQUICK), "IQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDVERYQUICK), "IVQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDULTRAQUICK), "IUQ");
-		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
-		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LONGFLASH), "Al.LFl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LONGFLASH), "FLFl");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
-		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LONGFLASH), "FlLFl");
-		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
-	}
-	
 	public Chr getLightChar(int idx) {
 		return (Chr)dlg.panelMain.panelLit.panelSector.table.getValueAt(idx, 4);
 	}

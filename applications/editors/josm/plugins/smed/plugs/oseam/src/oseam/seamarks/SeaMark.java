@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.Light;
 
 public class SeaMark {
 
@@ -18,6 +17,8 @@ public class SeaMark {
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
 	}
+
+	public Light light = new Light(dlg);
 
 	public String validDecimal(String str) {
 		str = str.trim().replace(',', '.');
@@ -159,14 +160,7 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
-		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
-		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
-		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
-		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
-		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
-		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
-		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
+		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -431,6 +425,305 @@ public class SeaMark {
 				lightColour.remove(i);
 			break;
 		}
+	}
+
+	public enum Chr {
+		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK, ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
+	}
+
+	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
+	static {
+		ChrMAP.put(EnumSet.of(Chr.UNKNOWN), "");
+		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
+		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
+		ChrMAP.put(EnumSet.of(Chr.LONGFLASH), "LFl");
+		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
+		ChrMAP.put(EnumSet.of(Chr.VERYQUICK), "VQ");
+		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK), "UQ");
+		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDQUICK), "IQ");
+		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDVERYQUICK), "IVQ");
+		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDULTRAQUICK), "IUQ");
+		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
+		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LONGFLASH), "Al.LFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LONGFLASH), "FLFl");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
+		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LONGFLASH), "FlLFl");
+		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
+		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
+		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
+	}
+
+	private ArrayList<Chr> lightCharacter = new ArrayList<Chr>();
+
+	public Chr getLightChar(int i) {
+		if (i < lightCharacter.size())
+			return lightCharacter.get(i);
+		else
+			return Chr.UNKNOWN;
+	}
+
+	public void setLightChar(Chr chr) {
+		lightCharacter.clear();
+		lightCharacter.add(chr);
+	}
+
+	public void setLightChar(int i, Chr chr) {
+		if (lightCharacter.size() > i)
+			lightCharacter.set(i, chr);
+	}
+
+	public void addLightChar(int i, Chr chr) {
+		if (lightCharacter.size() >= i)
+			lightCharacter.add(i, chr);
+	}
+
+	public void addLightChar(Chr chr) {
+		lightCharacter.add(chr);
+	}
+
+	public void subLightChar(int i) {
+		if (lightCharacter.size() > i)
+			lightCharacter.remove(i);
+	}
+
+	private ArrayList<String> lightGroup = new ArrayList<String>();
+
+	public String getLightGroup(int i) {
+		if (i < lightGroup.size())
+			return lightGroup.get(i);
+		else
+			return "";
+	}
+
+	public void setLightGroup(String str) {
+		lightGroup.clear();
+		lightGroup.add(str);
+	}
+
+	public void setLightGroup(int i, String str) {
+		if (lightGroup.size() > i)
+			lightGroup.set(i, str);
+	}
+
+	public void addLightGroup(int i, String str) {
+		if (lightGroup.size() >= i)
+			lightGroup.add(i, str);
+	}
+
+	public void addLightGroup(String str) {
+		lightGroup.add(str);
+	}
+
+	public void subLightGroup(int i) {
+		if (lightGroup.size() > i)
+			lightGroup.remove(i);
+	}
+
+	private ArrayList<String> lightSequence = new ArrayList<String>();
+
+	public String getLightSeq(int i) {
+		if (i < lightSequence.size())
+			return lightSequence.get(i);
+		else
+			return "";
+	}
+
+	public void setLightSeq(String str) {
+		lightSequence.clear();
+		lightSequence.add(str);
+	}
+
+	public void setLightSeq(int i, String str) {
+		if (lightSequence.size() > i)
+			lightSequence.set(i, str);
+	}
+
+	public void addLightSeq(int i, String str) {
+		if (lightSequence.size() >= i)
+			lightSequence.add(i, str);
+	}
+
+	public void addLightSeq(String str) {
+		lightSequence.add(str);
+	}
+
+	public void subLightSeq(int i) {
+		if (lightSequence.size() > i)
+			lightSequence.remove(i);
+	}
+
+	private ArrayList<String> lightPeriod = new ArrayList<String>();
+
+	public String getLightPeriod(int i) {
+		if (i < lightPeriod.size())
+			return lightPeriod.get(i);
+		else
+			return "";
+	}
+
+	public void setLightPeriod(String str) {
+		lightPeriod.clear();
+		lightGroup.add(validDecimal(str));
+	}
+
+	public void setLightPeriod(int i, String str) {
+		if (lightPeriod.size() > i)
+			lightPeriod.set(i, validDecimal(str));
+	}
+
+	public void addLightPeriod(int i, String str) {
+		if (lightPeriod.size() >= i)
+			lightPeriod.add(i, validDecimal(str));
+	}
+
+	public void addLightPeriod(String str) {
+		lightPeriod.add(validDecimal(str));
+	}
+
+	public void subLightPeriod(int i) {
+		if (lightPeriod.size() > i)
+			lightPeriod.remove(i);
+	}
+
+	private ArrayList<String> lightHeight = new ArrayList<String>();
+
+	public String getLightHeight(int i) {
+		if (i < lightHeight.size())
+			return lightHeight.get(i);
+		else
+			return "";
+	}
+
+	public void setLightHeight(String str) {
+		lightHeight.clear();
+		lightHeight.add(validDecimal(str));
+	}
+
+	public void setLightHeight(int i, String str) {
+		if (lightHeight.size() > i)
+			lightHeight.set(i, validDecimal(str));
+	}
+
+	public void addLightHeight(int i, String str) {
+		if (lightHeight.size() >= i)
+			lightHeight.add(i, validDecimal(str));
+	}
+
+	public void addLightHeight(String str) {
+		lightHeight.add(validDecimal(str));
+	}
+
+	public void subLightHeight(int i) {
+		if (lightHeight.size() > i)
+			lightHeight.remove(i);
+	}
+
+	private ArrayList<String> lightRange = new ArrayList<String>();
+
+	public String getLightRange(int i) {
+		if (i < lightRange.size())
+			return lightRange.get(i);
+		else
+			return "";
+	}
+
+	public void setLightRange(String str) {
+		lightRange.clear();
+		lightRange.add(validDecimal(str));
+	}
+
+	public void setLightRange(int i, String str) {
+		if (lightRange.size() > i)
+			lightRange.set(i, validDecimal(str));
+	}
+
+	public void addLightRange(int i, String str) {
+		if (lightRange.size() >= i)
+			lightRange.add(i, validDecimal(str));
+	}
+
+	public void addLightRange(String str) {
+		lightRange.add(validDecimal(str));
+	}
+
+	public void subLightRange(int i) {
+		if (lightRange.size() > i)
+			lightRange.remove(i);
+	}
+
+	private ArrayList<String> lightSector1 = new ArrayList<String>();
+
+	public String getLightSector1(int i) {
+		if (i < lightSector1.size())
+			return lightSector1.get(i);
+		else
+			return "";
+	}
+
+	public void setLightSector1(String str) {
+		lightSector1.clear();
+		lightSector1.add(validDecimal(str));
+	}
+
+	public void setLightSector1(int i, String str) {
+		if (lightSector1.size() > i)
+			lightSector1.set(i, validDecimal(str));
+	}
+
+	public void addLightSector1(int i, String str) {
+		if (lightSector1.size() >= i)
+			lightSector1.add(i, validDecimal(str));
+	}
+
+	public void addLightSector1(String str) {
+		lightSector1.add(validDecimal(str));
+	}
+
+	public void subLightSector1(int i) {
+		if (lightSector1.size() > i)
+			lightSector1.remove(i);
+	}
+
+	private ArrayList<String> lightSector2 = new ArrayList<String>();
+
+	public String getLightSector2(int i) {
+		if (i < lightSector2.size())
+			return lightSector2.get(i);
+		else
+			return "";
+	}
+
+	public void setLightSector2(String str) {
+		lightSector2.clear();
+		lightSector2.add(validDecimal(str));
+	}
+
+	public void setLightSector2(int i, String str) {
+		if (lightSector2.size() > i)
+			lightSector2.set(i, validDecimal(str));
+	}
+
+	public void addLightSector2(int i, String str) {
+		if (lightSector2.size() >= i)
+			lightSector2.add(i, validDecimal(str));
+	}
+
+	public void addLightSector2(String str) {
+		lightSector2.add(validDecimal(str));
+	}
+
+	public void subLightSector2(int i) {
+		if (lightSector2.size() > i)
+			lightSector2.remove(i);
 	}
 
 	public enum Pat {
@@ -858,9 +1151,6 @@ public class SeaMark {
 		return false;
 	}
 
-	// **********************!!!!!!!!!
-	public Light light = new Light(dlg);
-
 	private boolean paintlock = false;
 
 	public void parseMark(Node node) {
@@ -1208,7 +1498,7 @@ public class SeaMark {
 				}
 			}
 		}
-		
+
 		dlg.panelMain.syncPanel();
 
 		paintlock = false;
@@ -1503,7 +1793,7 @@ public class SeaMark {
 		} else {
 			dlg.panelMain.topIcon.setIcon(null);
 		}
-		
+
 		if (hasFog()) {
 			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
 		}

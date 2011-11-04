@@ -105,7 +105,7 @@ public class PbfReader extends AbstractReader {
                         // Id (delta) and version (normal)
                         Node node = new Node(nodeId+=nodes.getId(i), nodes.getDenseinfo().getVersion(i));
                         // Lat/Lon (delta)
-                        node.setCoor(new LatLon(parseLat(nodeLat+=nodes.getLat(i)), parseLon(nodeLon+=nodes.getLon(i))).getRoundedToOsmPrecision());
+                        node.setCoor(new LatLon(parseLat(nodeLat+=nodes.getLat(i)), parseLon(nodeLon+=nodes.getLon(i))).getRoundedToOsmPrecisionStrict());
                         checkCoordinates(node.getCoor());
                         // Changeset (delta)
                         checkChangesetId(changesetId+=nodes.getDenseinfo().getChangeset(i));
@@ -146,7 +146,7 @@ public class PbfReader extends AbstractReader {
                     for (Osmformat.Node n : osmNodes) {
                     	final Info info = n.getInfo();
                         final Node node = new Node(n.getId(), info.getVersion());
-                        node.setCoor(new LatLon(parseLat(n.getLat()), parseLon(n.getLon())).getRoundedToOsmPrecision());
+                        node.setCoor(new LatLon(parseLat(n.getLat()), parseLon(n.getLon())).getRoundedToOsmPrecisionStrict());
                         checkCoordinates(node.getCoor());
                         checkChangesetId(info.getChangeset());
                         node.setChangesetId((int) info.getChangeset());

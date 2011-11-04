@@ -54,7 +54,9 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LNDMRK, MORFAC, SISTAW, SISTAT
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
+		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES,
+		LNDMRK, MORFAC, SISTAW, SISTAT
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -158,7 +160,14 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
+		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
+		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
+		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
+		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY,
+		SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
+		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
+		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
+		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -233,7 +242,8 @@ public class SeaMark {
 	}
 
 	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER,
+		BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
 	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(Shp.class);
@@ -446,7 +456,8 @@ public class SeaMark {
 	}
 
 	public enum Chr {
-		UNKNOWN, FIXED, FLASH, LONGFLASH, QUICK, VERYQUICK, ULTRAQUICK, ISOPHASED, OCCULTING, MORSE, ALTERNATING, INTERRUPTEDQUICK, INTERRUPTEDVERYQUICK, INTERRUPTEDULTRAQUICK
+		UNKNOWN, FIXED, FLASH, LFLASH, QUICK, VQUICK, UQUICK, ISOPHASED, OCCULTING,
+		MORSE, ALTERNATING, IQUICK, IVQUICK, IUQUICK
 	}
 
 	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
@@ -454,13 +465,13 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.UNKNOWN), "");
 		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
 		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
-		ChrMAP.put(EnumSet.of(Chr.LONGFLASH), "LFl");
+		ChrMAP.put(EnumSet.of(Chr.LFLASH), "LFl");
 		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK), "VQ");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK), "UQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDQUICK), "IQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDVERYQUICK), "IVQ");
-		ChrMAP.put(EnumSet.of(Chr.INTERRUPTEDULTRAQUICK), "IUQ");
+		ChrMAP.put(EnumSet.of(Chr.VQUICK), "VQ");
+		ChrMAP.put(EnumSet.of(Chr.UQUICK), "UQ");
+		ChrMAP.put(EnumSet.of(Chr.IQUICK), "IQ");
+		ChrMAP.put(EnumSet.of(Chr.IVQUICK), "IVQ");
+		ChrMAP.put(EnumSet.of(Chr.IUQUICK), "IUQ");
 		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
 		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
 		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
@@ -468,16 +479,16 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LONGFLASH), "Al.LFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LFLASH), "Al.LFl");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
 		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
 		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LONGFLASH), "FLFl");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LFLASH), "FLFl");
 		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
-		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LONGFLASH), "FlLFl");
-		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LONGFLASH), "Q+LFl");
-		ChrMAP.put(EnumSet.of(Chr.VERYQUICK, Chr.LONGFLASH), "VQ+LFl");
-		ChrMAP.put(EnumSet.of(Chr.ULTRAQUICK, Chr.LONGFLASH), "UQ+LFl");
+		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LFLASH), "FlLFl");
+		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LFLASH), "Q+LFl");
+		ChrMAP.put(EnumSet.of(Chr.VQUICK, Chr.LFLASH), "VQ+LFl");
+		ChrMAP.put(EnumSet.of(Chr.UQUICK, Chr.LFLASH), "UQ+LFl");
 	}
 
 	private ArrayList<Chr> lightCharacter = new ArrayList<Chr>();
@@ -744,6 +755,42 @@ public class SeaMark {
 			lightSector2.remove(i);
 	}
 
+	public enum Vis {
+		UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS
+	}
+
+	public static final Map<EnumSet<Vis>, String> VisMAP = new HashMap<EnumSet<Vis>, String>();
+	static {
+		VisMAP.put(EnumSet.of(Vis.UNKNOWN), "");
+		VisMAP.put(EnumSet.of(Vis.HIGH), "high");
+		VisMAP.put(EnumSet.of(Vis.LOW), "low");
+		VisMAP.put(EnumSet.of(Vis.FAINT), "faint");
+		VisMAP.put(EnumSet.of(Vis.INTEN), "intensified");
+		VisMAP.put(EnumSet.of(Vis.UNINTEN), "unintensified");
+		VisMAP.put(EnumSet.of(Vis.REST), "restricted");
+		VisMAP.put(EnumSet.of(Vis.OBS), "obscured");
+		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
+	}
+
+	public enum Lit {
+		UNKNOWN, VERT, VERT2, VERT3, VERT4, HORIZ, HORIZ2, HORIZ3, HORIZ4, UPPER, LOWER, REAR, FRONT, AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
+	}
+
+	public static final Map<EnumSet<Lit>, String> LitMAP = new HashMap<EnumSet<Lit>, String>();
+	static {
+		LitMAP.put(EnumSet.of(Lit.UNKNOWN), "");
+	}
+
+	public enum Exh { UNKNOWN, H24, DAY, NIGHT, FOG }
+	public static final Map<EnumSet<Exh>, String> ExhMAP = new HashMap<EnumSet<Exh>, String>();
+	static {
+		ExhMAP.put(EnumSet.of(Exh.UNKNOWN), "");
+		ExhMAP.put(EnumSet.of(Exh.H24), "24h");
+		ExhMAP.put(EnumSet.of(Exh.DAY), "day");
+		ExhMAP.put(EnumSet.of(Exh.NIGHT), "night");
+		ExhMAP.put(EnumSet.of(Exh.FOG), "fog");
+	}
+	
 	public enum Pat {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
@@ -1057,35 +1104,35 @@ public class SeaMark {
 		construction = cns;
 	}
 
-	public enum Vis {
+	public enum Con {
 		UNKNOWN, CONSP, NCONS, REFL
 	}
 
-	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
+	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(Con.class);
 	static {
-		VisSTR.put(Vis.CONSP, "conspicuous");
-		VisSTR.put(Vis.NCONS, "not_conspicuous");
-		VisSTR.put(Vis.REFL, "reflector");
+		ConSTR.put(Con.CONSP, "conspicuous");
+		ConSTR.put(Con.NCONS, "not_conspicuous");
+		ConSTR.put(Con.REFL, "reflector");
 	}
 
-	private Vis visibility = Vis.UNKNOWN;
+	private Con conspicuity = Con.UNKNOWN;
 
-	public Vis getVis() {
-		return visibility;
+	public Con getCon() {
+		return conspicuity;
 	}
 
-	public void setVis(Vis vis) {
-		visibility = vis;
+	public void setCon(Con con) {
+		conspicuity = con;
 	}
 
-	private Vis reflectivity = Vis.UNKNOWN;
+	private Con reflectivity = Con.UNKNOWN;
 
-	public Vis getRvis() {
+	public Con getRefl() {
 		return reflectivity;
 	}
 
-	public void setRvis(Vis vis) {
-		reflectivity = vis;
+	public void setRefl(Con con) {
+		reflectivity = con;
 	}
 
 	public String information = "";
@@ -1498,21 +1545,21 @@ public class SeaMark {
 				}
 			}
 		}
-		if (keys.containsKey("seamark:visibility")) {
-			str = keys.get("seamark:visibility");
-			setVis(Vis.UNKNOWN);
-			for (Vis vis : VisSTR.keySet()) {
-				if (VisSTR.get(vis).equals(str)) {
-					setVis(vis);
+		if (keys.containsKey("seamark:conspicuity")) {
+			str = keys.get("seamark:conspicuity");
+			setCon(Con.UNKNOWN);
+			for (Con con : ConSTR.keySet()) {
+				if (ConSTR.get(con).equals(str)) {
+					setCon(con);
 				}
 			}
 		}
 		if (keys.containsKey("seamark:reflectivity")) {
 			str = keys.get("seamark:reflectivity");
-			setRvis(Vis.UNKNOWN);
-			for (Vis vis : VisSTR.keySet()) {
-				if (VisSTR.get(vis).equals(str)) {
-					setRvis(vis);
+			setRefl(Con.UNKNOWN);
+			for (Con con : ConSTR.keySet()) {
+				if (ConSTR.get(con).equals(str)) {
+					setRefl(con);
 				}
 			}
 		}
@@ -1916,11 +1963,11 @@ public class SeaMark {
 			if (getConstr() != Cns.UNKNOWN) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:construction", CnsSTR.get(getConstr())));
 			}
-			if (getVis() != Vis.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:visibility", VisSTR.get(getVis())));
+			if (getCon() != Con.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:conspicuity", ConSTR.get(getCon())));
 			}
-			if (getRvis() != Vis.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reflectivity", VisSTR.get(getRvis())));
+			if (getRefl() != Con.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reflectivity", ConSTR.get(getRefl())));
 			}
 		}
 	}

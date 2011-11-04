@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.EnumMap;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
@@ -38,6 +39,7 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel visibilityLabel;
 	public JComboBox visibilityBox;
+	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
 	private ActionListener alVisibility = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 		}
@@ -71,6 +73,7 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel exhibitionLabel;
 	public JComboBox exhibitionBox;
+	public EnumMap<Exh, Integer> exhibitions = new EnumMap<Exh, Integer>(Exh.class);
 	private ActionListener alExhibition = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 		}
@@ -178,10 +181,10 @@ public class PanelLit extends JPanel {
 		visibilityBox.setBounds(new Rectangle(185, 60, 165, 20));
 		this.add(visibilityBox, null);
 		visibilityBox.addActionListener(alVisibility);
-		visibilityBox.addItem(Messages.getString("NoneSpecified"));
-		visibilityBox.addItem(Messages.getString("Intensified"));
-		visibilityBox.addItem(Messages.getString("Unintensified"));
-		visibilityBox.addItem(Messages.getString("PartiallyObscured"));
+		addVisibItem(Messages.getString("NoneSpecified"), Vis.UNKNOWN);
+		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
+		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
+		addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
 
 		exhibitionLabel = new JLabel(Messages.getString("Exhibition"), SwingConstants.CENTER);
 		exhibitionLabel.setBounds(new Rectangle(280, 80, 70, 20));
@@ -190,11 +193,11 @@ public class PanelLit extends JPanel {
 		exhibitionBox.setBounds(new Rectangle(280, 100, 70, 20));
 		this.add(exhibitionBox, null);
 		exhibitionBox.addActionListener(alExhibition);
-		exhibitionBox.addItem("-");
-		exhibitionBox.addItem(Messages.getString("24h"));
-		exhibitionBox.addItem(Messages.getString("Day"));
-		exhibitionBox.addItem(Messages.getString("Night"));
-		exhibitionBox.addItem(Messages.getString("Fog"));
+		addExhibItem(Messages.getString("NotSet"), Exh.UNKNOWN);
+		addExhibItem(Messages.getString("24h"), Exh.H24);
+		addExhibItem(Messages.getString("Day"), Exh.DAY);
+		addExhibItem(Messages.getString("Night"), Exh.NIGHT);
+		addExhibItem(Messages.getString("Fog"), Exh.FOG);
 
 		orientationLabel = new JLabel(Messages.getString("Orientation"), SwingConstants.CENTER);
 		orientationLabel.setBounds(new Rectangle(188, 80, 80, 20));
@@ -207,6 +210,16 @@ public class PanelLit extends JPanel {
 	}
 
 	public void syncPanel() {
+	}
+
+	private void addVisibItem(String str, Vis vis) {
+		visibilities.put(vis, visibilityBox.getItemCount());
+		visibilityBox.addItem(str);
+	}
+
+	private void addExhibItem(String str, Exh exh) {
+		exhibitions.put(exh, exhibitionBox.getItemCount());
+		exhibitionBox.addItem(str);
 	}
 
 	private JRadioButton getTypeButton(JRadioButton button, int x, int y, int w, int h, String tip) {

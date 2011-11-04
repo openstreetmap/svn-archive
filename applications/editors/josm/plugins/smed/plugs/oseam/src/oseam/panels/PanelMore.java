@@ -66,27 +66,27 @@ public class PanelMore extends JPanel {
 			}
 		}
 	};
-	public JLabel visLabel;
-	public JComboBox visBox;
-	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
-	private ActionListener alVis = new ActionListener() {
+	public JLabel conLabel;
+	public JComboBox conBox;
+	public EnumMap<Con, Integer> conspicuities = new EnumMap<Con, Integer>(Con.class);
+	private ActionListener alCon = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			for (Vis vis : visibilities.keySet()) {
-				int idx = visibilities.get(vis);
-				if (dlg.mark != null && (idx == visBox.getSelectedIndex()))
-					dlg.mark.setVis(vis);
+			for (Con con : conspicuities.keySet()) {
+				int idx = conspicuities.get(con);
+				if (dlg.mark != null && (idx == conBox.getSelectedIndex()))
+					dlg.mark.setCon(con);
 			}
 		}
 	};
 	public JLabel reflLabel;
 	public JComboBox reflBox;
-	public EnumMap<Vis, Integer> reflectivities = new EnumMap<Vis, Integer>(Vis.class);
+	public EnumMap<Con, Integer> reflectivities = new EnumMap<Con, Integer>(Con.class);
 	private ActionListener alRefl = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			for (Vis vis : reflectivities.keySet()) {
-				int idx = reflectivities.get(vis);
+			for (Con con : reflectivities.keySet()) {
+				int idx = reflectivities.get(con);
 				if (dlg.mark != null && (idx == reflBox.getSelectedIndex()))
-					dlg.mark.setRvis(vis);
+					dlg.mark.setRefl(con);
 			}
 		}
 	};
@@ -271,26 +271,26 @@ public class PanelMore extends JPanel {
 		this.add(constrBox, null);
 		constrBox.addActionListener(alConstr);
 
-		visLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
-		visLabel.setBounds(new Rectangle(250, 80, 100, 20));
-		this.add(visLabel, null);
-		visBox = new JComboBox();
-		visBox.setBounds(new Rectangle(250, 100, 100, 20));
-		addVisItem(Messages.getString("NotSet"), Vis.UNKNOWN);
-		addVisItem(Messages.getString("Conspicuous"), Vis.CONSP);
-		addVisItem(Messages.getString("NotConspicuous"), Vis.NCONS);
-		this.add(visBox, null);
-		visBox.addActionListener(alVis);
+		conLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
+		conLabel.setBounds(new Rectangle(250, 80, 100, 20));
+		this.add(conLabel, null);
+		conBox = new JComboBox();
+		conBox.setBounds(new Rectangle(250, 100, 100, 20));
+		addConItem(Messages.getString("NotSet"), Con.UNKNOWN);
+		addConItem(Messages.getString("Conspicuous"), Con.CONSP);
+		addConItem(Messages.getString("NotConspicuous"), Con.NCONS);
+		this.add(conBox, null);
+		conBox.addActionListener(alCon);
 
 		reflLabel = new JLabel(Messages.getString("Reflectivity"), SwingConstants.CENTER);
 		reflLabel.setBounds(new Rectangle(250, 120, 100, 20));
 		this.add(reflLabel, null);
 		reflBox = new JComboBox();
 		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
-		addRvsItem(Messages.getString("NotSet"), Vis.UNKNOWN);
-		addRvsItem(Messages.getString("Conspicuous"), Vis.CONSP);
-		addRvsItem(Messages.getString("NotConspicuous"), Vis.NCONS);
-		addRvsItem(Messages.getString("Reflector"), Vis.REFL);
+		addReflItem(Messages.getString("NotSet"), Con.UNKNOWN);
+		addReflItem(Messages.getString("Conspicuous"), Con.CONSP);
+		addReflItem(Messages.getString("NotConspicuous"), Con.NCONS);
+		addReflItem(Messages.getString("Reflector"), Con.REFL);
 		this.add(reflBox, null);
 		reflBox.addActionListener(alRefl);
 
@@ -317,16 +317,16 @@ public class PanelMore extends JPanel {
 			if (dlg.mark.getConstr() == cns)
 				constrBox.setSelectedIndex(item);
 		}
-		visBox.setSelectedIndex(0);
-		for (Vis vis : visibilities.keySet()) {
-			int item = visibilities.get(vis);
-			if (dlg.mark.getVis() == vis)
-				visBox.setSelectedIndex(item);
+		conBox.setSelectedIndex(0);
+		for (Con con : conspicuities.keySet()) {
+			int item = conspicuities.get(con);
+			if (dlg.mark.getCon() == con)
+				conBox.setSelectedIndex(item);
 		}
 		reflBox.setSelectedIndex(0);
-		for (Vis vis : reflectivities.keySet()) {
-			int item = reflectivities.get(vis);
-			if (dlg.mark.getRvis() == vis)
+		for (Con con : reflectivities.keySet()) {
+			int item = reflectivities.get(con);
+			if (dlg.mark.getRefl() == con)
 				reflBox.setSelectedIndex(item);
 		}
 	}
@@ -341,13 +341,13 @@ public class PanelMore extends JPanel {
 		constrBox.addItem(str);
 	}
 
-	private void addVisItem(String str, Vis vis) {
-		visibilities.put(vis, visBox.getItemCount());
-		visBox.addItem(str);
+	private void addConItem(String str, Con con) {
+		conspicuities.put(con, conBox.getItemCount());
+		conBox.addItem(str);
 	}
 
-	private void addRvsItem(String str, Vis vis) {
-		reflectivities.put(vis, reflBox.getItemCount());
+	private void addReflItem(String str, Con con) {
+		reflectivities.put(con, reflBox.getItemCount());
 		reflBox.addItem(str);
 	}
 

@@ -101,18 +101,17 @@ public class PanelChr extends JPanel {
 		this.add(getChrButton(noneButton, 0, 0, 44, 16, Messages.getString("NoChar"), Chr.UNKNOWN), null);
 		this.add(getChrButton(fixedButton, 0, 16, 44, 16, Messages.getString("FChar"), Chr.FIXED), null);
 		this.add(getChrButton(flashButton, 0, 32, 44, 16, Messages.getString("FlChar"), Chr.FLASH), null);
-		this.add(getChrButton(longFlashButton, 0, 48, 44, 16, Messages.getString("LFlChar"), Chr.LONGFLASH), null);
+		this.add(getChrButton(longFlashButton, 0, 48, 44, 16, Messages.getString("LFlChar"), Chr.LFLASH), null);
 		this.add(getChrButton(quickButton, 0, 64, 44, 16, Messages.getString("QChar"), Chr.QUICK), null);
-		this.add(getChrButton(veryQuickButton, 0, 80, 44, 16, Messages.getString("VQChar"), Chr.VERYQUICK), null);
-		this.add(getChrButton(ultraQuickButton, 0, 96, 44, 16, Messages.getString("UQChar"), Chr.ULTRAQUICK), null);
+		this.add(getChrButton(veryQuickButton, 0, 80, 44, 16, Messages.getString("VQChar"), Chr.VQUICK), null);
+		this.add(getChrButton(ultraQuickButton, 0, 96, 44, 16, Messages.getString("UQChar"), Chr.UQUICK), null);
 		this.add(getChrButton(alternatingButton, 44, 0, 44, 16, Messages.getString("AlChar"), Chr.ALTERNATING), null);
 		this.add(getChrButton(isophasedButton, 44, 16, 44, 16, Messages.getString("IsoChar"), Chr.ISOPHASED), null);
 		this.add(getChrButton(occultingButton, 44, 32, 44, 16, Messages.getString("OcChar"), Chr.OCCULTING), null);
 		this.add(getChrButton(morseButton, 44, 48, 44, 16, Messages.getString("MoChar"), Chr.MORSE), null);
-		this.add(getChrButton(interruptedQuickButton, 44, 64, 44, 16, Messages.getString("IQChar"), Chr.INTERRUPTEDQUICK), null);
-		this.add(getChrButton(interruptedVeryQuickButton, 44, 80, 44, 16, Messages.getString("IVQChar"), Chr.INTERRUPTEDVERYQUICK),
-				null);
-		this.add(getChrButton(interruptedUltraQuickButton, 44, 96, 44, 16, Messages.getString("IUQChar"), Chr.INTERRUPTEDULTRAQUICK),
+		this.add(getChrButton(interruptedQuickButton, 44, 64, 44, 16, Messages.getString("IQChar"), Chr.IQUICK), null);
+		this.add(getChrButton(interruptedVeryQuickButton, 44, 80, 44, 16, Messages.getString("IVQChar"), Chr.IVQUICK),null);
+		this.add(getChrButton(interruptedUltraQuickButton, 44, 96, 44, 16, Messages.getString("IUQChar"), Chr.IUQUICK),
 				null);
 		charLabel.setBounds(new Rectangle(0, 113, 88, 20));
 		charLabel.setHorizontalAlignment(SwingConstants.CENTER);

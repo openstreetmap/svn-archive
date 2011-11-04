@@ -49,8 +49,8 @@ public class SeaMark {
 		return name;
 	}
 
-	public void setName(String nam) {
-		name = nam.trim();
+	public void setName(String str) {
+		name = str.trim();
 	}
 
 	public enum Obj {
@@ -771,9 +771,30 @@ public class SeaMark {
 		VisMAP.put(EnumSet.of(Vis.OBS), "obscured");
 		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
 	}
+	
+	private Vis lightVisibility = Vis.UNKNOWN;
+	
+	public Vis getLightVisibility() {
+		return lightVisibility;
+	}
 
+	public void setLightVisibility(Vis vis) {
+		lightVisibility = vis;
+	}
+	
+	private String lightOrientation = "";
+	
+	public String getLightOrientation() {
+		return lightOrientation;
+	}
+	
+	public void setLightOrientation(String str) {
+		lightOrientation = validDecimal(str);
+	}
+	
 	public enum Lit {
-		UNKNOWN, VERT, VERT2, VERT3, VERT4, HORIZ, HORIZ2, HORIZ3, HORIZ4, UPPER, LOWER, REAR, FRONT, AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
+		UNKNOWN, VERT, HORIZ, UPPER, LOWER, REAR, FRONT, AERO, AIROBS,
+		FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
 	}
 
 	public static final Map<EnumSet<Lit>, String> LitMAP = new HashMap<EnumSet<Lit>, String>();
@@ -781,6 +802,16 @@ public class SeaMark {
 		LitMAP.put(EnumSet.of(Lit.UNKNOWN), "");
 	}
 
+	private Lit lightCategory = Lit.UNKNOWN;
+	
+	public Lit getLightCategory() {
+		return lightCategory;
+	}
+
+	public void setLightCategory(Lit lit) {
+		lightCategory = lit;
+	}
+	
 	public enum Exh { UNKNOWN, H24, DAY, NIGHT, FOG }
 	public static final Map<EnumSet<Exh>, String> ExhMAP = new HashMap<EnumSet<Exh>, String>();
 	static {
@@ -789,6 +820,16 @@ public class SeaMark {
 		ExhMAP.put(EnumSet.of(Exh.DAY), "day");
 		ExhMAP.put(EnumSet.of(Exh.NIGHT), "night");
 		ExhMAP.put(EnumSet.of(Exh.FOG), "fog");
+	}
+	
+	private Exh lightExhibition = Exh.UNKNOWN;
+	
+	public Exh getLightExhibition() {
+		return lightExhibition;
+	}
+
+	public void setLightExhibition(Exh exh) {
+		lightExhibition = exh;
 	}
 	
 	public enum Pat {

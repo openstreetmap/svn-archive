@@ -20,21 +20,21 @@ public class PanelLit extends JPanel {
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = groupBox.getText();
+			dlg.mark.setLightGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = periodBox.getText();
+			dlg.mark.setLightPeriod(periodBox.getText());
 		}
 	};
 	public JLabel sequenceLabel;
 	public JTextField sequenceBox;
 	private ActionListener alSequence = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = sequenceBox.getText();
+			dlg.mark.setLightSeq(sequenceBox.getText());
 		}
 	};
 	public JLabel visibilityLabel;
@@ -42,33 +42,44 @@ public class PanelLit extends JPanel {
 	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
 	private ActionListener alVisibility = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Vis vis : visibilities.keySet()) {
+				int idx = visibilities.get(vis);
+				if (idx == visibilityBox.getSelectedIndex())
+					dlg.mark.setLightVisibility(vis);
+			}
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = heightBox.getText();
+			dlg.mark.setLightHeight(heightBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = rangeBox.getText();
+			dlg.mark.setLightRange(rangeBox.getText());
 		}
 	};
 	public JLabel orientationLabel;
 	public JTextField orientationBox;
 	private ActionListener alOrientation = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			String str = orientationBox.getText();
+			dlg.mark.setLightOrientation(orientationBox.getText());
 		}
 	};
 	public JLabel categoryLabel;
 	public JComboBox categoryBox;
+	public EnumMap<Lit, Integer> categories = new EnumMap<Lit, Integer>(Lit.class);
 	private ActionListener alCategory = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Lit lit : categories.keySet()) {
+				int idx = categories.get(lit);
+				if (idx == categoryBox.getSelectedIndex())
+					dlg.mark.setLightCategory(lit);
+			}
 		}
 	};
 	public JLabel exhibitionLabel;
@@ -76,6 +87,11 @@ public class PanelLit extends JPanel {
 	public EnumMap<Exh, Integer> exhibitions = new EnumMap<Exh, Integer>(Exh.class);
 	private ActionListener alExhibition = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Exh exh : exhibitions.keySet()) {
+				int idx = exhibitions.get(exh);
+				if (idx == exhibitionBox.getSelectedIndex())
+					dlg.mark.setLightExhibition(exh);
+			}
 		}
 	};
 	private ButtonGroup typeButtons;
@@ -170,9 +186,24 @@ public class PanelLit extends JPanel {
 		categoryBox = new JComboBox();
 		categoryBox.setBounds(new Rectangle(185, 20, 165, 20));
 		this.add(categoryBox, null);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.UNKNOWN);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.VERT);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.HORIZ);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.UPPER);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.LOWER);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.REAR);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.FRONT);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.AERO);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.AIROBS);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.FOGDET);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.FLOOD);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.STRIP);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.SUBS);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.SPOT);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.MOIRE);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.EMERG);
+		addCatItem(Messages.getString("NoneSpecified"), Lit.BEAR);
 		categoryBox.addActionListener(alCategory);
-		categoryBox.addItem(Messages.getString("NoneSpecified"));
-		categoryBox.addItem(Messages.getString("Vert2"));
 
 		visibilityLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
 		visibilityLabel.setBounds(new Rectangle(185, 40, 165, 20));
@@ -180,11 +211,11 @@ public class PanelLit extends JPanel {
 		visibilityBox = new JComboBox();
 		visibilityBox.setBounds(new Rectangle(185, 60, 165, 20));
 		this.add(visibilityBox, null);
-		visibilityBox.addActionListener(alVisibility);
 		addVisibItem(Messages.getString("NoneSpecified"), Vis.UNKNOWN);
 		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
 		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
 		addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
+		visibilityBox.addActionListener(alVisibility);
 
 		exhibitionLabel = new JLabel(Messages.getString("Exhibition"), SwingConstants.CENTER);
 		exhibitionLabel.setBounds(new Rectangle(280, 80, 70, 20));
@@ -192,12 +223,12 @@ public class PanelLit extends JPanel {
 		exhibitionBox = new JComboBox();
 		exhibitionBox.setBounds(new Rectangle(280, 100, 70, 20));
 		this.add(exhibitionBox, null);
-		exhibitionBox.addActionListener(alExhibition);
 		addExhibItem(Messages.getString("NotSet"), Exh.UNKNOWN);
 		addExhibItem(Messages.getString("24h"), Exh.H24);
 		addExhibItem(Messages.getString("Day"), Exh.DAY);
 		addExhibItem(Messages.getString("Night"), Exh.NIGHT);
 		addExhibItem(Messages.getString("Fog"), Exh.FOG);
+		exhibitionBox.addActionListener(alExhibition);
 
 		orientationLabel = new JLabel(Messages.getString("Orientation"), SwingConstants.CENTER);
 		orientationLabel.setBounds(new Rectangle(188, 80, 80, 20));
@@ -210,6 +241,11 @@ public class PanelLit extends JPanel {
 	}
 
 	public void syncPanel() {
+	}
+
+	private void addCatItem(String str, Lit lit) {
+		categories.put(lit, categoryBox.getItemCount());
+		categoryBox.addItem(str);
 	}
 
 	private void addVisibItem(String str, Vis vis) {

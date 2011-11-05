@@ -30,9 +30,18 @@ public class SeaMark {
 	}
 
 	public enum Reg {
-		A, B, C
+		A, B, C, R, X
 	}
 
+	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(Reg.class);
+	static {
+		RegSTR.put(Reg.A, "iala-a");
+		RegSTR.put(Reg.B, "iala-b");
+		RegSTR.put(Reg.C, "cevni");
+		RegSTR.put(Reg.R, "riwr");
+		RegSTR.put(Reg.X, "other");
+	}
+	
 	private Reg region = Reg.A;
 
 	public Reg getRegion() {
@@ -316,6 +325,10 @@ public class SeaMark {
 	private ArrayList<Col> bodyColour = new ArrayList<Col>();
 	private ArrayList<Col> topColour = new ArrayList<Col>();
 	private ArrayList<Col> lightColour = new ArrayList<Col>();
+	
+	public int getSectorCount() {
+		return lightColour.size();
+	}
 
 	public Col getColour(Ent ent, int i) {
 		switch (ent) {
@@ -772,14 +785,14 @@ public class SeaMark {
 		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
 	}
 	
-	private Vis lightVisibility = Vis.UNKNOWN;
+	private ArrayList<Vis> lightVisibility = new ArrayList<Vis>();
 	
-	public Vis getLightVisibility() {
-		return lightVisibility;
+	public Vis getVisibility(int i) {
+		return lightVisibility.get(i);
 	}
 
-	public void setLightVisibility(Vis vis) {
-		lightVisibility = vis;
+	public void setVisibility(int i, Vis vis) {
+		lightVisibility.set(i, vis);
 	}
 	
 	private String lightOrientation = "";
@@ -793,13 +806,13 @@ public class SeaMark {
 	}
 	
 	public enum Lit {
-		UNKNOWN, VERT, HORIZ, UPPER, LOWER, REAR, FRONT, AERO, AIROBS,
-		FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
+		UNKNOWN, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT,
+		AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
 	}
 
-	public static final Map<EnumSet<Lit>, String> LitMAP = new HashMap<EnumSet<Lit>, String>();
+	public static final Map<EnumSet<Lit>, String> LitSTR = new HashMap<EnumSet<Lit>, String>();
 	static {
-		LitMAP.put(EnumSet.of(Lit.UNKNOWN), "");
+		LitSTR.put(EnumSet.of(Lit.VERT), "vertical");
 	}
 
 	private Lit lightCategory = Lit.UNKNOWN;
@@ -1217,6 +1230,7 @@ public class SeaMark {
 	}
 
 	public boolean isValid() {
+		dlg.manager.showVisualMessage("");
 		switch (getObject()) {
 		case BCNCAR:
 		case BCNLAT:
@@ -1252,8 +1266,10 @@ public class SeaMark {
 		case SISTAT:
 			return true;
 		default:
+			dlg.manager.showVisualMessage("Seamark not recognised");
 			return false;
 		}
+		dlg.manager.showVisualMessage("Seamark not recognised");
 		return false;
 	}
 

@@ -45,7 +45,7 @@ public class PanelLit extends JPanel {
 			for (Vis vis : visibilities.keySet()) {
 				int idx = visibilities.get(vis);
 				if (idx == visibilityBox.getSelectedIndex())
-					dlg.mark.setLightVisibility(vis);
+					dlg.mark.setVisibility(vis);
 			}
 		}
 	};

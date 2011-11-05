@@ -32,9 +32,8 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
  * @author Don-vip
  *
  */
+@SuppressWarnings("serial")
 public class ShowBoundsAction extends ComputeBoundsAction {
-
-	private static final long serialVersionUID = 6636454148615649794L;
 
 	public ShowBoundsAction() {
 	}

@@ -32,7 +32,7 @@ public interface XmlBoundsConstants {
 	/**
 	 * Plugin version.
 	 */
-	public static final String PLUGIN_VERSION = "1.2";
+	public static final String PLUGIN_VERSION = "1.3";
 	
 	/**
 	 * XML namespace for JOSM Imagery schema.

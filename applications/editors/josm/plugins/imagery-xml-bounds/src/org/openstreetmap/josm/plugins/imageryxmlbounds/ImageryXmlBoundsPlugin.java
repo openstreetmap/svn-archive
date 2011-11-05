@@ -20,6 +20,7 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsListAction;
@@ -32,8 +33,9 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.io.XmlBoundsImporter;
 /**
  * Main class of Imagery XML bounds plugin.
  * @author Don-vip
- * @version 1.2
+ * @version 1.3
  * History:
+ * 1.3 05-Nov-2011 Update for JOSM 4577 (allow to edit selected default imagery entries from Preferences dialog)
  * 1.2 17-Oct-2011 Update for #6960 and JOSM 4523 (allow to download imagery XML bounds with Ctrl-L)
  * 1.1 08-Oct-2011 Update for #6934 and JOSM 4506, code refactorisation, removing debug code
  * 1.0 03-Oct-2011 first version
@@ -61,6 +63,11 @@ public class ImageryXmlBoundsPlugin extends Plugin {
 	private final ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
 	
 	/**
+	 * Class modifying the Imagery preferences panel
+	 */
+	private final XmlBoundsPreferenceSetting preferenceSetting = new XmlBoundsPreferenceSetting();
+	
+	/**
 	 * Initializes the plugin.
 	 * @param info
 	 */
@@ -78,6 +85,14 @@ public class ImageryXmlBoundsPlugin extends Plugin {
 		    Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
 		}
 	}
+	
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
+     */
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return this.preferenceSetting;
+    }
 
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)

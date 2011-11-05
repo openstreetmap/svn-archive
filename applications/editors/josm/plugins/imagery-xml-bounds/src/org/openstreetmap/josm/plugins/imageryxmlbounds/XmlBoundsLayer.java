@@ -79,6 +79,10 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 	
 	private static final Map<JosmAction, Boolean> actionsStates = new HashMap<JosmAction, Boolean>();
 	
+	public XmlBoundsLayer(DataSet data) {
+		this(data, OsmDataLayer.createNewName(), null);
+	}
+
 	public XmlBoundsLayer(DataSet data, String name, File associatedFile) {
 		super(data, name, associatedFile);
 		MapView.addLayerChangeListener(this);

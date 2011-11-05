@@ -1,0 +1,7 @@
+##  Author: Bryce Nesbitt, June 2011
+##  Licence: Public Domain, no rights reserved
+##
+##  osmsync - imports external data into OpenStreetMap,
+##  then monitors the data over time.  Nodes added,
+##  removed or edited in the original source are flagged
+##  for a matching change in OSM.

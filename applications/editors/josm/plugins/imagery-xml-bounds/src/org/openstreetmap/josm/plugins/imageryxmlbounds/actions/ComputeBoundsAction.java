@@ -46,6 +46,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
  * @author Don-vip
  *
  */
+@SuppressWarnings("serial")
 public class ComputeBoundsAction extends AbstractAction implements XmlBoundsConstants {
 
 	protected static final DecimalFormat df = new DecimalFormat("#0.0000000", new DecimalFormatSymbols(Locale.UK));

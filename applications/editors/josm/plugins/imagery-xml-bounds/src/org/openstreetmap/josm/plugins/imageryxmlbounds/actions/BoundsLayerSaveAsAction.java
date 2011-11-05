@@ -32,6 +32,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
  * @author Don-vip
  *
  */
+@SuppressWarnings("serial")
 public class BoundsLayerSaveAsAction extends LayerSaveAsAction {
 
 	public static class SaveBoundsAsAction extends SaveAsAction {

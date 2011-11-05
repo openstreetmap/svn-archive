@@ -28,6 +28,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
  * @author Don-vip
  *
  */
+@SuppressWarnings("serial")
 public class BoundsLayerSaveAction extends LayerSaveAction {
 
 	public static class SaveBoundsAction extends SaveAction {

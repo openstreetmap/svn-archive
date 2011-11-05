@@ -20,6 +20,7 @@ import java.util.Collections;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog.RelationRelated;
 
+@SuppressWarnings("serial")
 public class ShowBoundsPropertiesAction extends ShowBoundsAction implements RelationRelated {
 
     protected Relation relation;

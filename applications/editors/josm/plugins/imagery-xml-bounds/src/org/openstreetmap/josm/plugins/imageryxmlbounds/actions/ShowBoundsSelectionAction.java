@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * @author Don-vip
  *
  */
+@SuppressWarnings("serial")
 public class ShowBoundsSelectionAction extends ShowBoundsAction implements SelectionChangedListener {
 
 	public ShowBoundsSelectionAction() {

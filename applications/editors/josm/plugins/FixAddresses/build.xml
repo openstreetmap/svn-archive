@@ -26,7 +26,6 @@
       ** should not be necessary to change the following properties
      -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
-    <property name="josm_3529" location="../../core/dist/3529/josm-tested.jar"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -93,7 +92,7 @@
                 <attribute name="Plugin-Description" value="Finds and fixes invalid street addresses in a comfortable way."/>
                 <attribute name="de_Plugin-Description" value="Findet ungültige Addressen und bietet Unterstützung zur deren Korrektur."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
-                <attribute name="Plugin-Mainversion" value="4394"/>
+                <attribute name="Plugin-Mainversion" value="4549"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Icon" value="images/fixaddresses.png"/>
             </manifest>

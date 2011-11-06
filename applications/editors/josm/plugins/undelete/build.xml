@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="adapt to core changes (backwards compatible)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4394"/>
+    <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

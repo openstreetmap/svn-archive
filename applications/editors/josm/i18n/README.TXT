@@ -16,6 +16,12 @@ This call always builds core and plugins, but safely can be aborted after core i
 Translation data (.po) must exist!
 Call "ant test".
 
+5) Upload POT file to launchpad:
+Call "./launchpad.pl upload". You need to set login information (see file how to do) or enter them when running.
+
+6) Request launchpad po file download:
+Call "./launchpad.pl download". You need to set login information (see file how to do) or enter them when running.
+
 NOTE:
 a) Your repositories should not have any local modifications which modify string elements!
 b) Always do an "svn up" for core and plugins before starting!

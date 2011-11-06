@@ -2,6 +2,16 @@
 
 use strict;
 
+my ($user, $pwd);
+
+# Three ways to handle login data:
+  # Enter data directly in these two lines (Be careful witn svn checkin later!)
+  # create a file "uploadpot.pl_credits" containing the two lines with proper values
+  # leave credits empty and enter them on runtime
+$user = '';
+$pwd = '';
+
+# list of supported languages
 my %lang = map {$_ => 1} (
 "ar", "bg", "cs", "da", "de", "el", "en_AU", "en_GB",
 "es", "et", "eu", "fi", "fr", "gl", "he", "id", "is",
@@ -15,7 +25,9 @@ my $upload = 0;#1;
 
 if($#ARGV != 0)
 {
-    warn "URL not given (try Launchpad download URL or \"bzr\")." 
+    warn "No argument given (try Launchpad download URL, \"bzr\", \"bzronly\", \"upload\" or \"download\").";
+    system "ant";
+    makeupload();
 }
 elsif($ARGV[0] eq "bzr" || $ARGV[0] eq "bzronly")
 {
@@ -25,7 +37,19 @@ elsif($ARGV[0] eq "bzr" || $ARGV[0] eq "bzronly")
     chdir "..";
     copypo("build/josm_trans/josm");
     system "rm -rv build/josm_trans";
-    exit(0) if $ARGV[0] eq "bzronly";
+    if($ARGV[0] ne "bzronly")
+    {
+      system "ant";
+      makeupload();
+    }
+}
+elsif($ARGV[0] eq "upload")
+{
+    potupload();
+}
+elsif($ARGV[0] eq "download")
+{
+    podownload();
 }
 else
 {
@@ -37,33 +61,37 @@ else
     chdir "../..";
     copypo("build/josm_trans");
     system "rm -rv build/josm_trans";
+    system "ant";
+    makeupload();
 }
 
-system "ant";
-if($upload)
+sub makeupload
 {
-  my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
-  chomp $outdate;
-  mkdir "build/josm";
-  system "cp po/*.po po/josm.pot build/josm";
-  chdir "build";
-  if(!$count)
-  {
-    system "tar -cjf ../launchpad_upload_josm_$outdate.tar.bz2 josm";
-  }
-  else
-  {
-    my @files = sort glob("josm/*.po");
-    my $num = 1;
-    while($#files >= 0)
+    if($upload)
     {
-      my @f = splice(@files, 0, $count);
-      system "tar -cjf ../launchpad_upload_josm_${outdate}_$num.tar.bz2 josm/josm.pot ".join(" ",@f);
-      ++$num;
+        my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
+        chomp $outdate;
+        mkdir "build/josm";
+        system "cp po/*.po po/josm.pot build/josm";
+        chdir "build";
+        if(!$count)
+        {
+          system "tar -cjf ../launchpad_upload_josm_$outdate.tar.bz2 josm";
+        }
+        else
+        {
+          my @files = sort glob("josm/*.po");
+          my $num = 1;
+          while($#files >= 0)
+          {
+            my @f = splice(@files, 0, $count);
+            system "tar -cjf ../launchpad_upload_josm_${outdate}_$num.tar.bz2 josm/josm.pot ".join(" ",@f);
+            ++$num;
+          }
+        }
+        system "rm -rv josm";
+        chdir "..";
     }
-  }
-  system "rm -rv josm";
-  chdir "..";
 }
 
 sub copypo
@@ -71,21 +99,118 @@ sub copypo
     my ($path) = @_;
     foreach my $name (split("\n", `find $path -name "*.po"`))
     {
-      $name =~ /([a-zA-Z_]+)\.po/;
-      if($lang{$1})
-      {
-        system "cp -v $name po/$1.po";
-      }
-      elsif($cleanall)
-      {
-        local $/; undef $/;
-        open FILE,"<",$name or die;
-        my $x = <FILE>;
-        close FILE;
-        $x =~ s/\n\n.*$/\n/s;
-        open FILE,">","po/$1.po" or die;
-        print FILE $x;
-        close FILE;
-      }
+        $name =~ /([a-zA-Z_]+)\.po/;
+        if($lang{$1})
+        {
+            system "cp -v $name po/$1.po";
+        }
+        elsif($cleanall)
+        {
+            local $/; undef $/;
+            open FILE,"<",$name or die;
+            my $x = <FILE>;
+            close FILE;
+            $x =~ s/\n\n.*$/\n/s;
+            open FILE,">","po/$1.po" or die;
+            print FILE $x;
+            close FILE;
+        }
+    }
+}
+
+sub dologin
+{
+    require WWW::Mechanize;
+
+    my $mech = WWW::Mechanize->new("agent" => "JOSM_Launchpad/1.0");
+
+      #$mech->add_handler("request_send" => sub {
+      #  my($request, $ua, $h) = @_;
+      #  printf "FORM: %s\n", $request->content();
+      #  return undef;
+      #});
+    $mech->get("https://translations.launchpad.net/josm/trunk/+login");
+      #print $mech->status() ." - ". $mech->uri()."\n"; 
+    $mech->submit_form(form_number => 1);
+    getcredits();
+      #print $mech->status() ." - ". $mech->uri()."\n"; 
+    $mech->submit_form(with_fields => {"email" => $user, "password" => $pwd});
+      #$mech->dump_headers();
+      #print $mech->status() ." - ". $mech->uri()."\n"; 
+      #print $mech->content();
+    my $form = $mech->form_name("decideform");
+    my %par = ("yes" => "");  # We need to add "yes" or it does not work
+    foreach my $p ($form->param)
+    {
+        $par{$p} = $form->value($p);
+    }
+    $mech->post($form->action, \%par);
+      #$mech->dump_headers(); 
+      #print $mech->content();
+      #print $mech->status() ." - ". $mech->uri()."\n"; 
+      #$mech->dump_forms();
+    return $mech;
+}
+
+sub potupload
+{
+    my $mech = dologin();
+    $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
+    chdir("po");
+    $mech->submit_form(with_fields => {"file" => "josm.pot"});
+    chdir("..");
+}
+
+sub podownload
+{
+    my $mech = dologin();
+    $mech->get("https://translations.launchpad.net/josm/trunk/+export");
+    $mech->submit_form(with_fields => {"format" => "PO"});
+    if(!($mech->content() =~ /receive an email shortly/))
+    {
+      warn "Error requesting file\n";
+    }
+}
+
+sub getcredits
+{
+    if(!$user || !$pwd)
+    {
+        require Term::ReadKey;
+        local undef $/;
+        if(open FILE, "launchpad.pl_credits")
+        {
+            eval <FILE>;
+            close FILE;
+        }
+
+        if(!$user)
+        {
+            Term::ReadKey::ReadMode(4); # Turn off controls keys
+            printf("Enter username: ");
+            for(;;)
+            {
+                my $c = getc();
+                print $c;
+                last if $c eq "\n";
+                $user .= $c;
+            }
+            Term::ReadKey::ReadMode(0);
+        }
+
+        if(!$pwd)
+        {
+            Term::ReadKey::ReadMode(4); # Turn off controls keys
+            printf("Enter password: ");
+            for(;;)
+            {
+                my $c = getc();
+                last if $c eq "\n";
+                print "*";
+                $pwd .= $c;
+            }
+            print "\n";
+            Term::ReadKey::ReadMode(0);
+        }
     }
 }

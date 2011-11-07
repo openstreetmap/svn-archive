@@ -282,8 +282,10 @@ public class LiveGpsAcquirer implements Runnable {
             lon = report.getDouble("lon");
             speed = (new Float(report.getDouble("speed"))).floatValue();
             course = (new Float(report.getDouble("track"))).floatValue();
-            epx = (new Float(report.getDouble("epx"))).floatValue();
-            epy = (new Float(report.getDouble("epy"))).floatValue();
+	    if (report.has("epx"))
+		epx = (new Float(report.getDouble("epx"))).floatValue();
+	    if (report.has("epy"))
+		epy = (new Float(report.getDouble("epy"))).floatValue();
 
             return new LiveGpsData(lat, lon, course, speed, epx, epy);
         } catch (JSONException je) {}

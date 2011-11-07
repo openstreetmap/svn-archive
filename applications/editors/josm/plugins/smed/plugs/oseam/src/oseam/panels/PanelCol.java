@@ -41,7 +41,7 @@ public class PanelCol extends JPanel {
 				if (button.isSelected()) {
 					if (dlg.mark != null) {
 						if (ent == Ent.LIGHT) {
-							dlg.mark.setLightAtt(Att.COL, col);
+							dlg.mark.setLightAtt(Att.COL, 0, col);
 							button.setBorderPainted(true);
 						} else {
 							if (button == delButton) {

@@ -36,13 +36,6 @@ public class PanelChr extends JPanel {
 	private EnumMap<Chr, JToggleButton> buttons = new EnumMap<Chr, JToggleButton>(Chr.class);
 	private ActionListener alCharButton = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (noneButton.isSelected()) {
-				if (dlg.panelMain.panelLit.panelCol.delButton.isSelected()) {
-					dlg.panelMain.lightIcon.setIcon(null);
-				}
-			} else {
-				dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
-			}
 			JToggleButton source = (JToggleButton) e.getSource();
 			EnumSet<Chr> combo = EnumSet.noneOf(Chr.class);
 			for (Chr chr : buttons.keySet()) {
@@ -70,11 +63,13 @@ public class PanelChr extends JPanel {
 					}
 				}
 			}
+			dlg.mark.setLightAtt(Att.CHR, 0, charBox.getText());
 		}
 	};
 	private ActionListener alCharBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			String str = charBox.getText();
+			dlg.mark.setLightAtt(Att.CHR, 0, str);
 			EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
 			for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
 				if (str.equals(SeaMark.ChrMAP.get(map))) {

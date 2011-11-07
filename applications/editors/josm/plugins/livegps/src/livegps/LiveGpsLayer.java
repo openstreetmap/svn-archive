@@ -37,6 +37,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     private static final String C_CENTER_FACTOR = "livegps.center_factor" /* in percent */;
     private static final String C_CURSOR_H = "livegps.cursor_height"; /* in pixels */
     private static final String C_CURSOR_W = "livegps.cursor_width"; /* in pixels */
+    private static final String C_CURSOR_T = "livegps.cursor_thickness"; /* in pixels */
     private int refreshInterval;
     private int centerInterval;
     private double centerFactor;
@@ -113,6 +114,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
 	int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
 	int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
+	int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
 
 	/*
 	 * Draw a bold triangle.
@@ -147,7 +149,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
 	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
 
-	for (int i = 0; i <= 3; i++, TriaHeight--, TriaWidth--) {
+	for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
 
 		x[0] = screen.x + Math.round(TriaHeight * csin);
 		y[0] = screen.y - Math.round(TriaHeight * ccos);

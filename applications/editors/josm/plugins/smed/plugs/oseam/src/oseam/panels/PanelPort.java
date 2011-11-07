@@ -48,39 +48,39 @@ public class PanelPort extends JPanel {
 				if (dlg.mark.getCategory() == Cat.LAM_PORT) {
 					switch (dlg.mark.getRegion()) {
 					case A:
-						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-						dlg.mark.setColour(Ent.BODY, Col.RED);
+						dlg.mark.setObjPattern(Pat.NONE);
+						dlg.mark.setObjColour(Col.RED);
 						break;
 					case B:
-						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-						dlg.mark.setColour(Ent.BODY, Col.GREEN);
+						dlg.mark.setObjPattern(Pat.NONE);
+						dlg.mark.setObjColour(Col.GREEN);
 						break;
 					case C:
-						dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
-						dlg.mark.setColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.WHITE);
-						dlg.mark.addColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.WHITE);
+						dlg.mark.setObjPattern(Pat.HORIZ);
+						dlg.mark.setObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.WHITE);
+						dlg.mark.addObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.WHITE);
 						break;
 					}
 				} else {
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					dlg.mark.setObjPattern(Pat.HORIZ);
 					switch (dlg.mark.getRegion()) {
 					case A:
-						dlg.mark.setColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.GREEN);
-						dlg.mark.addColour(Ent.BODY, Col.RED);
+						dlg.mark.setObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.GREEN);
+						dlg.mark.addObjColour(Col.RED);
 						break;
 					case B:
-						dlg.mark.setColour(Ent.BODY, Col.GREEN);
-						dlg.mark.addColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						dlg.mark.setObjColour(Col.GREEN);
+						dlg.mark.addObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.GREEN);
 						break;
 					case C:
-						dlg.mark.setColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.GREEN);
-						dlg.mark.addColour(Ent.BODY, Col.RED);
-						dlg.mark.addColour(Ent.BODY, Col.GREEN);
+						dlg.mark.setObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.GREEN);
+						dlg.mark.addObjColour(Col.RED);
+						dlg.mark.addObjColour(Col.GREEN);
 						break;
 					}
 				}

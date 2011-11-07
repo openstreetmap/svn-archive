@@ -50,12 +50,12 @@ public class PanelSpec extends JPanel {
 					dlg.mark.setShape(shp);
 					dlg.mark.setObject(objects.get(shp));
 					if (button == cairnButton) {
-						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-						dlg.mark.setColour(Ent.BODY, Col.UNKNOWN);
+						dlg.mark.setObjPattern(Pat.NONE);
+						dlg.mark.setObjColour(Col.UNKNOWN);
 					}
-					if (dlg.mark.getColour(Ent.BODY, 0) == Col.UNKNOWN) {
-						dlg.mark.setPattern(Ent.BODY, Pat.NONE);
-						dlg.mark.setColour(Ent.BODY, Col.YELLOW);
+					if (dlg.mark.getObjColour(0) == Col.UNKNOWN) {
+						dlg.mark.setObjPattern(Pat.NONE);
+						dlg.mark.setObjColour(Col.YELLOW);
 					}
 					button.setBorderPainted(true);
 				} else

@@ -101,24 +101,24 @@ public class PanelMore extends JPanel {
 				dlg.mark.setRegion(Reg.A);
 				switch (dlg.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PPORT:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.setObjPattern(Pat.HORIZ);
 					break;
 				case LAM_STBD:
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+					dlg.mark.setObjColour(Col.GREEN);
+					dlg.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PSTBD:
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					dlg.mark.setObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.setObjPattern(Pat.HORIZ);
 					break;
 				}
 				regionAButton.setBorderPainted(true);
@@ -129,24 +129,24 @@ public class PanelMore extends JPanel {
 				dlg.mark.setRegion(Reg.B);
 				switch (dlg.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+					dlg.mark.setObjColour(Col.GREEN);
+					dlg.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PPORT:
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					dlg.mark.setObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.setObjPattern(Pat.HORIZ);
 					break;
 				case LAM_STBD:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.setPattern(Ent.BODY, Pat.NONE);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PSTBD:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.setObjPattern(Pat.HORIZ);
 					break;
 				}
 				regionBButton.setBorderPainted(true);
@@ -155,26 +155,26 @@ public class PanelMore extends JPanel {
 			}
 			if (regionCButton.isSelected()) {
 				dlg.mark.setRegion(Reg.C);
-				dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+				dlg.mark.setObjPattern(Pat.HORIZ);
 				switch (dlg.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.WHITE);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.WHITE);
 					break;
 				case LAM_PPORT:
 				case LAM_PSTBD:
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.GREEN);
 					break;
 				case LAM_STBD:
-					dlg.mark.setColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
-					dlg.mark.addColour(Ent.BODY, Col.GREEN);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
+					dlg.mark.setObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.WHITE);
+					dlg.mark.addObjColour(Col.GREEN);
+					dlg.mark.addObjColour(Col.WHITE);
 					break;
 				}
 				regionCButton.setBorderPainted(true);

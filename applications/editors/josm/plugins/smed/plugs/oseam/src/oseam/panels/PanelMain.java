@@ -312,6 +312,13 @@ public class PanelMain extends JPanel {
 			panelHaz.setVisible(false);
 			panelSpec.setVisible(false);
 			panelLights.setVisible(false);
+			if (dlg.mark.isValid()) {
+				moreButton.setEnabled(true);
+				topButton.setEnabled(true);
+				fogButton.setEnabled(true);
+				radButton.setEnabled(true);
+				litButton.setEnabled(true);
+			}
 			switch (SeaMark.GrpMAP.get(dlg.mark.getObject())) {
 			case LAT:
 			case SAW:
@@ -333,6 +340,7 @@ public class PanelMain extends JPanel {
 			case LIT:
 			case SIS:
 				lightsButton.setBorderPainted(true);
+				topButton.setEnabled(false);
 				panelLights.setVisible(true);
 				panelLights.syncPanel();
 				break;

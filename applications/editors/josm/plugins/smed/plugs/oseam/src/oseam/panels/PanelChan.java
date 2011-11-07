@@ -65,8 +65,8 @@ public class PanelChan extends JPanel {
 			if (topmarkButton.isSelected()) {
 				if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
 					dlg.mark.setTopmark(Top.SPHERE);
-					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-					dlg.mark.setColour(Ent.TOPMARK, Col.RED);
+					dlg.mark.setTopPattern(Pat.NONE);
+					dlg.mark.setTopColour(Col.RED);
 				} else {
 					switch (dlg.mark.getCategory()) {
 					case LAM_PORT:
@@ -74,17 +74,17 @@ public class PanelChan extends JPanel {
 						dlg.mark.setTopmark(Top.CAN);
 						switch (dlg.mark.getRegion()) {
 						case A:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-							dlg.mark.setColour(Ent.TOPMARK, Col.RED);
+							dlg.mark.setTopPattern(Pat.NONE);
+							dlg.mark.setTopColour(Col.RED);
 							break;
 						case B:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-							dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
+							dlg.mark.setTopPattern(Pat.NONE);
+							dlg.mark.setTopColour(Col.GREEN);
 							break;
 						case C:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.HORIZ);
-							dlg.mark.setColour(Ent.TOPMARK, Col.RED);
-							dlg.mark.addColour(Ent.TOPMARK, Col.WHITE);
+							dlg.mark.setTopPattern(Pat.HORIZ);
+							dlg.mark.setTopColour(Col.RED);
+							dlg.mark.addTopColour(Col.WHITE);
 							break;
 						}
 						break;
@@ -93,17 +93,17 @@ public class PanelChan extends JPanel {
 						dlg.panelMain.panelTop.coneTopButton.doClick();
 						switch (dlg.mark.getRegion()) {
 						case A:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-							dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
+							dlg.mark.setTopPattern(Pat.NONE);
+							dlg.mark.setTopColour(Col.GREEN);
 							break;
 						case B:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-							dlg.mark.setColour(Ent.TOPMARK, Col.RED);
+							dlg.mark.setTopPattern(Pat.NONE);
+							dlg.mark.setTopColour(Col.RED);
 							break;
 						case C:
-							dlg.mark.setPattern(Ent.TOPMARK, Pat.HORIZ);
-							dlg.mark.setColour(Ent.TOPMARK, Col.GREEN);
-							dlg.mark.addColour(Ent.TOPMARK, Col.WHITE);
+							dlg.mark.setTopPattern(Pat.HORIZ);
+							dlg.mark.setTopColour(Col.GREEN);
+							dlg.mark.addTopColour(Col.WHITE);
 							break;
 						}
 						break;
@@ -112,8 +112,8 @@ public class PanelChan extends JPanel {
 				topmarkButton.setBorderPainted(true);
 			} else {
 				dlg.mark.setTopmark(Top.NONE);
-				dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-				dlg.mark.setColour(Ent.TOPMARK, Col.UNKNOWN);
+				dlg.mark.setTopPattern(Pat.NONE);
+				dlg.mark.setTopColour(Col.UNKNOWN);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();

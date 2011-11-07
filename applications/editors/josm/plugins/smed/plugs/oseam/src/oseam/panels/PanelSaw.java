@@ -40,9 +40,9 @@ public class PanelSaw extends JPanel {
 					dlg.panelMain.fogButton.setEnabled(true);
 					dlg.panelMain.radButton.setEnabled(true);
 					dlg.panelMain.litButton.setEnabled(true);
-					dlg.mark.setPattern(Ent.BODY, Pat.VERT);
-					dlg.mark.setColour(Ent.BODY, Col.RED);
-					dlg.mark.addColour(Ent.BODY, Col.WHITE);
+					dlg.mark.setObjPattern(Pat.VERT);
+					dlg.mark.setObjColour(Col.RED);
+					dlg.mark.addObjColour(Col.WHITE);
 				} else {
 					dlg.panelMain.moreButton.setVisible(false);
 					dlg.panelMain.topButton.setEnabled(false);

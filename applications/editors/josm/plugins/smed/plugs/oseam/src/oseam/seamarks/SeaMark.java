@@ -322,152 +322,107 @@ public class SeaMark {
 		ColSTR.put(Col.PINK, "pink");
 	}
 
-	private ArrayList<Col> bodyColour = new ArrayList<Col>();
-	private ArrayList<Col> topColour = new ArrayList<Col>();
-	private ArrayList<Col> lightColour = new ArrayList<Col>();
+	public Col getColour(Ent ent, int idx) {
+		if (ent == Ent.BODY)
+			return getObjColour(idx);
+		else
+			return getTopColour(idx);
+	}
 	
-	public int getSectorCount() {
-		return lightColour.size();
-	}
-
-	public Col getColour(Ent ent, int i) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			if (i < bodyColour.size())
-				return bodyColour.get(i);
-			break;
-		case TOPMARK:
-			if (i < topColour.size())
-				return topColour.get(i);
-			break;
-		case LIGHT:
-			if (i < lightColour.size())
-				return lightColour.get(i);
-			break;
-		}
-		return Col.UNKNOWN;
-	}
-
 	public void setColour(Ent ent, Col col) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			bodyColour.clear();
-			bodyColour.add(col);
-			break;
-		case TOPMARK:
-			topColour.clear();
-			topColour.add(col);
-			break;
-		case LIGHT:
-			lightColour.clear();
-			lightColour.add(col);
-			break;
-		}
+		if (ent == Ent.BODY)
+			setObjColour(col);
+		else
+			setTopColour(col);
+	}
+	
+	public void setColour(Ent ent, int idx, Col col) {
+		if (ent == Ent.BODY)
+			setObjColour(idx, col);
+		else
+			setTopColour(idx, col);
+	}
+	
+	public void addColour(Ent ent, int idx, Col col) {
+		if (ent == Ent.BODY)
+			addObjColour(idx, col);
+		else
+			addTopColour(idx, col);
+	}
+	
+	public void subColour(Ent ent, int idx) {
+		if (ent == Ent.BODY)
+			subObjColour(idx);
+		else
+			subTopColour(idx);
+	}
+	
+	private ArrayList<Col> bodyColour = new ArrayList<Col>();
+	
+	public Col getObjColour(int i) {
+		if (i < bodyColour.size())
+			return bodyColour.get(i);
+		else
+			return Col.UNKNOWN;
 	}
 
-	public void setColour(Ent ent, int i, Col col) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			if (bodyColour.size() > i)
-				bodyColour.set(i, col);
-			break;
-		case TOPMARK:
-			if (topColour.size() > i)
-				topColour.set(i, col);
-			break;
-		case LIGHT:
-			if (lightColour.size() > i)
-				lightColour.set(i, col);
-			break;
-		}
+	public void setObjColour(Col col) {
+		bodyColour.clear();
+		bodyColour.add(col);
 	}
 
-	public void addColour(Ent ent, int i, Col col) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			if (bodyColour.size() >= i)
-				bodyColour.add(i, col);
-			break;
-		case TOPMARK:
-			if (topColour.size() >= i)
-				topColour.add(i, col);
-			break;
-		case LIGHT:
-			if (lightColour.size() >= i)
-				lightColour.add(i, col);
-			break;
-		}
+	public void setObjColour(int i, Col col) {
+		if (bodyColour.size() > i)
+			bodyColour.set(i, col);
 	}
 
-	public void addColour(Ent ent, Col col) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			bodyColour.add(col);
-			break;
-		case TOPMARK:
-			topColour.add(col);
-			break;
-		case LIGHT:
-			lightColour.add(col);
-			break;
-		}
+	public void addObjColour(int i, Col col) {
+		if (bodyColour.size() >= i)
+			bodyColour.add(i, col);
 	}
 
-	public void subColour(Ent ent, int i) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			if (bodyColour.size() > i)
-				bodyColour.remove(i);
-			break;
-		case TOPMARK:
-			if (topColour.size() > i)
-				topColour.remove(i);
-			break;
-		case LIGHT:
-			if (lightColour.size() > i)
-				lightColour.remove(i);
-			break;
-		}
+	public void addObjColour(Col col) {
+		bodyColour.add(col);
 	}
 
-	private boolean Fired = false;
-
-	public boolean isFired() {
-		return Fired;
+	public void subObjColour(int i) {
+		if (bodyColour.size() > i)
+			bodyColour.remove(i);
+	}
+		
+	private ArrayList<Col> topmarkColour = new ArrayList<Col>();
+	
+	public Col getTopColour(int i) {
+		if (i < topmarkColour.size())
+			return topmarkColour.get(i);
+		else
+			return Col.UNKNOWN;
 	}
 
-	public void setFired(boolean fired) {
-		Fired = fired;
+	public void setTopColour(Col col) {
+		topmarkColour.clear();
+		topmarkColour.add(col);
 	}
 
-	private boolean Sectored = false;
-
-	public boolean isSectored() {
-		return Sectored;
+	public void setTopColour(int i, Col col) {
+		if (topmarkColour.size() > i)
+			topmarkColour.set(i, col);
 	}
 
-	public void setSectored(boolean sectored) {
-		Sectored = sectored;
+	public void addTopColour(int i, Col col) {
+		if (topmarkColour.size() >= i)
+			topmarkColour.add(i, col);
 	}
 
+	public void addTopColour(Col col) {
+		topmarkColour.add(col);
+	}
+
+	public void subTopColour(int i) {
+		if (topmarkColour.size() > i)
+			topmarkColour.remove(i);
+	}
+		
 	public enum Chr {
 		UNKNOWN, FIXED, FLASH, LFLASH, QUICK, VQUICK, UQUICK, ISOPHASED, OCCULTING,
 		MORSE, ALTERNATING, IQUICK, IVQUICK, IUQUICK
@@ -504,270 +459,6 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.UQUICK, Chr.LFLASH), "UQ+LFl");
 	}
 
-	private ArrayList<Chr> lightCharacter = new ArrayList<Chr>();
-
-	public Chr getLightChar(int i) {
-		if (i < lightCharacter.size())
-			return lightCharacter.get(i);
-		else
-			return Chr.UNKNOWN;
-	}
-
-	public void setLightChar(Chr chr) {
-		lightCharacter.clear();
-		lightCharacter.add(chr);
-	}
-
-	public void setLightChar(int i, Chr chr) {
-		if (lightCharacter.size() > i)
-			lightCharacter.set(i, chr);
-	}
-
-	public void addLightChar(int i, Chr chr) {
-		if (lightCharacter.size() >= i)
-			lightCharacter.add(i, chr);
-	}
-
-	public void addLightChar(Chr chr) {
-		lightCharacter.add(chr);
-	}
-
-	public void subLightChar(int i) {
-		if (lightCharacter.size() > i)
-			lightCharacter.remove(i);
-	}
-
-	private ArrayList<String> lightGroup = new ArrayList<String>();
-
-	public String getLightGroup(int i) {
-		if (i < lightGroup.size())
-			return lightGroup.get(i);
-		else
-			return "";
-	}
-
-	public void setLightGroup(String str) {
-		lightGroup.clear();
-		lightGroup.add(str);
-	}
-
-	public void setLightGroup(int i, String str) {
-		if (lightGroup.size() > i)
-			lightGroup.set(i, str);
-	}
-
-	public void addLightGroup(int i, String str) {
-		if (lightGroup.size() >= i)
-			lightGroup.add(i, str);
-	}
-
-	public void addLightGroup(String str) {
-		lightGroup.add(str);
-	}
-
-	public void subLightGroup(int i) {
-		if (lightGroup.size() > i)
-			lightGroup.remove(i);
-	}
-
-	private ArrayList<String> lightSequence = new ArrayList<String>();
-
-	public String getLightSeq(int i) {
-		if (i < lightSequence.size())
-			return lightSequence.get(i);
-		else
-			return "";
-	}
-
-	public void setLightSeq(String str) {
-		lightSequence.clear();
-		lightSequence.add(str);
-	}
-
-	public void setLightSeq(int i, String str) {
-		if (lightSequence.size() > i)
-			lightSequence.set(i, str);
-	}
-
-	public void addLightSeq(int i, String str) {
-		if (lightSequence.size() >= i)
-			lightSequence.add(i, str);
-	}
-
-	public void addLightSeq(String str) {
-		lightSequence.add(str);
-	}
-
-	public void subLightSeq(int i) {
-		if (lightSequence.size() > i)
-			lightSequence.remove(i);
-	}
-
-	private ArrayList<String> lightPeriod = new ArrayList<String>();
-
-	public String getLightPeriod(int i) {
-		if (i < lightPeriod.size())
-			return lightPeriod.get(i);
-		else
-			return "";
-	}
-
-	public void setLightPeriod(String str) {
-		lightPeriod.clear();
-		lightGroup.add(validDecimal(str));
-	}
-
-	public void setLightPeriod(int i, String str) {
-		if (lightPeriod.size() > i)
-			lightPeriod.set(i, validDecimal(str));
-	}
-
-	public void addLightPeriod(int i, String str) {
-		if (lightPeriod.size() >= i)
-			lightPeriod.add(i, validDecimal(str));
-	}
-
-	public void addLightPeriod(String str) {
-		lightPeriod.add(validDecimal(str));
-	}
-
-	public void subLightPeriod(int i) {
-		if (lightPeriod.size() > i)
-			lightPeriod.remove(i);
-	}
-
-	private ArrayList<String> lightHeight = new ArrayList<String>();
-
-	public String getLightHeight(int i) {
-		if (i < lightHeight.size())
-			return lightHeight.get(i);
-		else
-			return "";
-	}
-
-	public void setLightHeight(String str) {
-		lightHeight.clear();
-		lightHeight.add(validDecimal(str));
-	}
-
-	public void setLightHeight(int i, String str) {
-		if (lightHeight.size() > i)
-			lightHeight.set(i, validDecimal(str));
-	}
-
-	public void addLightHeight(int i, String str) {
-		if (lightHeight.size() >= i)
-			lightHeight.add(i, validDecimal(str));
-	}
-
-	public void addLightHeight(String str) {
-		lightHeight.add(validDecimal(str));
-	}
-
-	public void subLightHeight(int i) {
-		if (lightHeight.size() > i)
-			lightHeight.remove(i);
-	}
-
-	private ArrayList<String> lightRange = new ArrayList<String>();
-
-	public String getLightRange(int i) {
-		if (i < lightRange.size())
-			return lightRange.get(i);
-		else
-			return "";
-	}
-
-	public void setLightRange(String str) {
-		lightRange.clear();
-		lightRange.add(validDecimal(str));
-	}
-
-	public void setLightRange(int i, String str) {
-		if (lightRange.size() > i)
-			lightRange.set(i, validDecimal(str));
-	}
-
-	public void addLightRange(int i, String str) {
-		if (lightRange.size() >= i)
-			lightRange.add(i, validDecimal(str));
-	}
-
-	public void addLightRange(String str) {
-		lightRange.add(validDecimal(str));
-	}
-
-	public void subLightRange(int i) {
-		if (lightRange.size() > i)
-			lightRange.remove(i);
-	}
-
-	private ArrayList<String> lightSector1 = new ArrayList<String>();
-
-	public String getLightSector1(int i) {
-		if (i < lightSector1.size())
-			return lightSector1.get(i);
-		else
-			return "";
-	}
-
-	public void setLightSector1(String str) {
-		lightSector1.clear();
-		lightSector1.add(validDecimal(str));
-	}
-
-	public void setLightSector1(int i, String str) {
-		if (lightSector1.size() > i)
-			lightSector1.set(i, validDecimal(str));
-	}
-
-	public void addLightSector1(int i, String str) {
-		if (lightSector1.size() >= i)
-			lightSector1.add(i, validDecimal(str));
-	}
-
-	public void addLightSector1(String str) {
-		lightSector1.add(validDecimal(str));
-	}
-
-	public void subLightSector1(int i) {
-		if (lightSector1.size() > i)
-			lightSector1.remove(i);
-	}
-
-	private ArrayList<String> lightSector2 = new ArrayList<String>();
-
-	public String getLightSector2(int i) {
-		if (i < lightSector2.size())
-			return lightSector2.get(i);
-		else
-			return "";
-	}
-
-	public void setLightSector2(String str) {
-		lightSector2.clear();
-		lightSector2.add(validDecimal(str));
-	}
-
-	public void setLightSector2(int i, String str) {
-		if (lightSector2.size() > i)
-			lightSector2.set(i, validDecimal(str));
-	}
-
-	public void addLightSector2(int i, String str) {
-		if (lightSector2.size() >= i)
-			lightSector2.add(i, validDecimal(str));
-	}
-
-	public void addLightSector2(String str) {
-		lightSector2.add(validDecimal(str));
-	}
-
-	public void subLightSector2(int i) {
-		if (lightSector2.size() > i)
-			lightSector2.remove(i);
-	}
-
 	public enum Vis {
 		UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS
 	}
@@ -785,26 +476,6 @@ public class SeaMark {
 		VisMAP.put(EnumSet.of(Vis.PARTOBS), "part_obscured");
 	}
 	
-	private ArrayList<Vis> lightVisibility = new ArrayList<Vis>();
-	
-	public Vis getVisibility(int i) {
-		return lightVisibility.get(i);
-	}
-
-	public void setVisibility(int i, Vis vis) {
-		lightVisibility.set(i, vis);
-	}
-	
-	private String lightOrientation = "";
-	
-	public String getLightOrientation() {
-		return lightOrientation;
-	}
-	
-	public void setLightOrientation(String str) {
-		lightOrientation = validDecimal(str);
-	}
-	
 	public enum Lit {
 		UNKNOWN, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT,
 		AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
@@ -815,16 +486,6 @@ public class SeaMark {
 		LitSTR.put(EnumSet.of(Lit.VERT), "vertical");
 	}
 
-	private Lit lightCategory = Lit.UNKNOWN;
-	
-	public Lit getLightCategory() {
-		return lightCategory;
-	}
-
-	public void setLightCategory(Lit lit) {
-		lightCategory = lit;
-	}
-	
 	public enum Exh { UNKNOWN, H24, DAY, NIGHT, FOG }
 	public static final Map<EnumSet<Exh>, String> ExhMAP = new HashMap<EnumSet<Exh>, String>();
 	static {
@@ -835,16 +496,76 @@ public class SeaMark {
 		ExhMAP.put(EnumSet.of(Exh.FOG), "fog");
 	}
 	
-	private Exh lightExhibition = Exh.UNKNOWN;
+	public enum Att { COL, CHR, GRP, SEQ, PER, HGT, RNG, VIS, BEG, END, RAD, EXH, LIT, ORT }
 	
-	public Exh getLightExhibition() {
-		return lightExhibition;
+	private ArrayList<Object[]> sectors = new ArrayList<Object[]>();
+	
+	public int getSectorCount() {
+		return sectors.size();
 	}
 
-	public void setLightExhibition(Exh exh) {
-		lightExhibition = exh;
+	public Object getLightAtt(Att att, int i) {
+		return getLightAtt(att.ordinal(), i);
 	}
-	
+	public Object getLightAtt(int att, int i) {
+		if (i < sectors.size())
+			return sectors.get(i)[att];
+		else
+			return null;
+	}
+
+	public void setLightAtt(Att att, Object obj) {
+		sectors.clear();
+		sectors.add(new Object[14]);
+		sectors.get(0)[att.ordinal()] = obj;
+	}
+
+	public void setLightAtt(Att att, int i, Object obj) {
+		setLightAtt(att.ordinal(), i, obj);
+	}
+
+	public void setLightAtt(int att, int i, Object obj) {
+		if (sectors.size() > i)
+			sectors.get(i)[att] = obj;
+	}
+
+	public void addLightAtt(Att att, int i, Object obj) {
+		if (sectors.size() >= i) {
+			sectors.add(i, new Object[14]);
+			sectors.get(i)[att.ordinal()] = obj;
+		}
+	}
+
+	public void addLightAtt(Att att, Object obj) {
+		sectors.add(new Object[14]);
+		sectors.get(sectors.size()-1)[att.ordinal()] = obj;
+	}
+
+	public void subLightAtt(Att att, int i) {
+		if (sectors.size() > i)
+			sectors.remove(i);
+	}
+
+	private boolean Fired = false;
+
+	public boolean isFired() {
+		return Fired;
+	}
+
+	public void setFired(boolean fired) {
+		Fired = fired;
+	}
+
+	private boolean Sectored = false;
+
+	public boolean isSectored() {
+		return Sectored;
+	}
+
+	public void setSectored(boolean sectored) {
+		Sectored = sectored;
+	}
+
 	public enum Pat {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
@@ -858,34 +579,38 @@ public class SeaMark {
 		PatSTR.put(Pat.BORDER, "border");
 	}
 
-	private Pat bodyPattern = Pat.NONE;
-	private Pat topPattern = Pat.NONE;
-
 	public Pat getPattern(Ent ent) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			return bodyPattern;
-		case TOPMARK:
-			return topPattern;
-		}
-		return Pat.NONE;
+		if (ent == Ent.BODY)
+			return getObjPattern();
+		else
+			return getTopPattern();
+	}
+	
+	public void setPattern(Ent ent, Pat pat) {
+		if (ent == Ent.BODY)
+			setObjPattern(pat);
+		else
+			setTopPattern(pat);
+	}
+	
+	private Pat bodyPattern = Pat.NONE;
+
+	public Pat getObjPattern() {
+		return bodyPattern;
 	}
 
-	public void setPattern(Ent ent, Pat pat) {
-		switch (ent) {
-		case BODY:
-		case BUOY:
-		case BEACON:
-		case FLOAT:
-			bodyPattern = pat;
-			break;
-		case TOPMARK:
-			topPattern = pat;
-			break;
-		}
+	public void setObjPattern(Pat pat) {
+		bodyPattern = pat;
+	}
+
+	private Pat topPattern = Pat.NONE;
+
+	public Pat getTopPattern() {
+		return topPattern;
+	}
+
+	public void setTopPattern(Pat pat) {
+		topPattern = pat;
 	}
 
 	public enum Top {
@@ -1253,7 +978,7 @@ public class SeaMark {
 		case FLTLAT:
 		case FLTSAW:
 		case FLTSPP:
-			if (getColour(Ent.BODY, 0) != Col.UNKNOWN)
+			if (getObjColour(0) != Col.UNKNOWN)
 				return true;
 			break;
 		case LITMAJ:
@@ -1373,36 +1098,36 @@ public class SeaMark {
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":colour_pattern")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":colour_pattern");
-				setPattern(Ent.BODY, Pat.NONE);
+				setObjPattern(Pat.NONE);
 				for (Pat pat : PatSTR.keySet()) {
 					if (PatSTR.get(pat).equals(str)) {
-						setPattern(Ent.BODY, pat);
+						setObjPattern(pat);
 					}
 				}
 			}
 		}
 
 		if (getObject() == Obj.LITFLT) {
-			switch (getColour(Ent.BODY, 0)) {
+			switch (getObjColour(0)) {
 			case RED:
-				if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.UNKNOWN)) {
+				if ((getObjColour(1) == Col.WHITE) && (getObjColour(2) == Col.UNKNOWN)) {
 					setObject(Obj.FLTSAW);
 					setCategory(Cat.NONE);
-				} else if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
+				} else if (getObjColour(1) == Col.UNKNOWN) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_STBD);
 					} else {
 						setCategory(Cat.LAM_PORT);
 					}
-				} else if ((getColour(Ent.BODY, 1) == Col.GREEN) && (getColour(Ent.BODY, 2) == Col.RED)) {
+				} else if ((getObjColour(1) == Col.GREEN) && (getObjColour(2) == Col.RED)) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_PSTBD);
 					} else {
 						setCategory(Cat.LAM_PPORT);
 					}
-				} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.RED)) {
+				} else if ((getObjColour(1) == Col.WHITE) && (getObjColour(2) == Col.RED)) {
 					setObject(Obj.FLTLAT);
 					setCategory(Cat.LAM_PORT);
 				} else {
@@ -1411,21 +1136,21 @@ public class SeaMark {
 				}
 				break;
 			case GREEN:
-				if (getColour(Ent.BODY, 1) == Col.UNKNOWN) {
+				if (getObjColour(1) == Col.UNKNOWN) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_PORT);
 					} else {
 						setCategory(Cat.LAM_STBD);
 					}
-				} else if ((getColour(Ent.BODY, 1) == Col.RED) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+				} else if ((getObjColour(1) == Col.RED) && (getObjColour(2) == Col.GREEN)) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_PPORT);
 					} else {
 						setCategory(Cat.LAM_PSTBD);
 					}
-				} else if ((getColour(Ent.BODY, 1) == Col.WHITE) && (getColour(Ent.BODY, 2) == Col.GREEN)) {
+				} else if ((getObjColour(1) == Col.WHITE) && (getObjColour(2) == Col.GREEN)) {
 					setObject(Obj.FLTLAT);
 					setCategory(Cat.LAM_STBD);
 				} else {
@@ -1434,9 +1159,9 @@ public class SeaMark {
 				}
 				break;
 			case YELLOW:
-				if (getColour(Ent.BODY, 1) == Col.BLACK) {
+				if (getObjColour(1) == Col.BLACK) {
 					setObject(Obj.FLTCAR);
-					if (getColour(Ent.BODY, 2) == Col.YELLOW) {
+					if (getObjColour(2) == Col.YELLOW) {
 						setCategory(Cat.CAM_WEST);
 					} else {
 						setCategory(Cat.CAM_SOUTH);
@@ -1447,11 +1172,11 @@ public class SeaMark {
 				}
 				break;
 			case BLACK:
-				if (getColour(Ent.BODY, 1) == Col.RED) {
+				if (getObjColour(1) == Col.RED) {
 					setObject(Obj.FLTISD);
 					setCategory(Cat.NONE);
-				} else if (getColour(Ent.BODY, 1) == Col.YELLOW) {
-					if (getColour(Ent.BODY, 2) == Col.BLACK) {
+				} else if (getObjColour(1) == Col.YELLOW) {
+					if (getObjColour(2) == Col.BLACK) {
 						setCategory(Cat.CAM_EAST);
 					} else {
 						setCategory(Cat.CAM_NORTH);
@@ -1479,40 +1204,40 @@ public class SeaMark {
 			} else if (GrpMAP.get(object) == Grp.LAT) {
 				switch (getCategory()) {
 				case LAM_PORT:
-					if (getColour(Ent.BODY, 0) == Col.RED) {
-						if (getColour(Ent.BODY, 1) == Col.WHITE)
+					if (getObjColour(0) == Col.RED) {
+						if (getObjColour(1) == Col.WHITE)
 							setRegion(Reg.C);
 						else
 							setRegion(Reg.A);
 					}
-					if (getColour(Ent.BODY, 0) == Col.GREEN)
+					if (getObjColour(0) == Col.GREEN)
 						setRegion(Reg.B);
 					break;
 				case LAM_PPORT:
-					if (getColour(Ent.BODY, 0) == Col.RED) {
-						if (getColour(Ent.BODY, 3) == Col.GREEN)
+					if (getObjColour(0) == Col.RED) {
+						if (getObjColour(3) == Col.GREEN)
 							setRegion(Reg.C);
 						else
 							setRegion(Reg.A);
 					}
-					if (getColour(Ent.BODY, 0) == Col.GREEN)
+					if (getObjColour(0) == Col.GREEN)
 						setRegion(Reg.B);
 					break;
 				case LAM_STBD:
-					if (getColour(Ent.BODY, 0) == Col.GREEN) {
-						if (getColour(Ent.BODY, 1) == Col.WHITE)
+					if (getObjColour(0) == Col.GREEN) {
+						if (getObjColour(1) == Col.WHITE)
 							setRegion(Reg.C);
 						else
 							setRegion(Reg.A);
 					}
-					if (getColour(Ent.BODY, 0) == Col.RED)
+					if (getObjColour(0) == Col.RED)
 						setRegion(Reg.B);
 					break;
 				case LAM_PSTBD:
-					if (getColour(Ent.BODY, 0) == Col.GREEN)
+					if (getObjColour(0) == Col.GREEN)
 						setRegion(Reg.A);
-					if (getColour(Ent.BODY, 0) == Col.RED) {
-						if (getColour(Ent.BODY, 3) == Col.GREEN)
+					if (getObjColour(0) == Col.RED) {
+						if (getObjColour(3) == Col.GREEN)
 							setRegion(Reg.C);
 						else
 							setRegion(Reg.B);
@@ -1533,19 +1258,19 @@ public class SeaMark {
 		}
 		if (keys.containsKey("seamark:topmark:colour")) {
 			str = keys.get("seamark:topmark:colour");
-			setColour(Ent.TOPMARK, Col.UNKNOWN);
+			setTopColour(Col.UNKNOWN);
 			for (Col col : ColSTR.keySet()) {
 				if (ColSTR.get(col).equals(str)) {
-					setColour(Ent.TOPMARK, col);
+					setTopColour(col);
 				}
 			}
 		}
 		if (keys.containsKey("seamark:topmark:colour_pattern")) {
 			str = keys.get("seamark:topmark:colour_pattern");
-			setPattern(Ent.TOPMARK, Pat.NONE);
+			setTopPattern(Pat.NONE);
 			for (Pat pat : PatSTR.keySet()) {
 				if (PatSTR.get(pat).equals(str)) {
-					setPattern(Ent.TOPMARK, pat);
+					setTopPattern(pat);
 				}
 			}
 		}
@@ -1837,7 +1562,7 @@ public class SeaMark {
 				break;
 			}
 			colStr = imgStr;
-			for (Col col : topColour) {
+			for (Col col : topmarkColour) {
 				switch (col) {
 				case WHITE:
 					colStr += "_White";
@@ -1947,17 +1672,17 @@ public class SeaMark {
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpSTR.get(getShape())));
 				}
 
-				if ((getColour(Ent.BODY, 0) != Col.UNKNOWN) && getShape() != Shp.PERCH) {
-					String str = ColSTR.get(getColour(Ent.BODY, 0));
+				if ((getObjColour(0) != Col.UNKNOWN) && getShape() != Shp.PERCH) {
+					String str = ColSTR.get(getObjColour(0));
 					for (int i = 1; bodyColour.size() > i; i++) {
-						str += (";" + ColSTR.get(getColour(Ent.BODY, i)));
+						str += (";" + ColSTR.get(getObjColour(i)));
 					}
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour", str));
 				}
 
-				if (getPattern(Ent.BODY) != Pat.NONE) {
+				if (getObjPattern() != Pat.NONE) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR
-							.get(getPattern(Ent.BODY))));
+							.get(getObjPattern())));
 				}
 
 				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH) || (getObject() == Obj.FLTLAT)) {
@@ -1976,13 +1701,13 @@ public class SeaMark {
 			}
 			if (hasTopmark()) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:shape", TopSTR.get(getTopmark())));
-				if (getPattern(Ent.TOPMARK) != Pat.NONE)
+				if (getTopPattern() != Pat.NONE)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour_pattern", PatSTR
-							.get(getPattern(Ent.TOPMARK))));
-				if (getColour(Ent.TOPMARK, 0) != Col.UNKNOWN) {
-					String str = ColSTR.get(getColour(Ent.TOPMARK, 0));
-					for (int i = 1; topColour.size() > i; i++) {
-						str += (";" + ColSTR.get(getColour(Ent.TOPMARK, i)));
+							.get(getTopPattern())));
+				if (getTopColour(0) != Col.UNKNOWN) {
+					String str = ColSTR.get(getTopColour(0));
+					for (int i = 1; topmarkColour.size() > i; i++) {
+						str += (";" + ColSTR.get(getTopColour(i)));
 					}
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour", str));
 				}

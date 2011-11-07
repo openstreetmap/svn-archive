@@ -22,46 +22,46 @@ public class PanelHaz extends JPanel {
 	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/IsolButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setPattern(Ent.BODY, Pat.HORIZ);
+			dlg.mark.setObjPattern(Pat.HORIZ);
 			if (northButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CAM_NORTH);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
+				dlg.mark.setObjColour(Col.BLACK);
+				dlg.mark.addObjColour(Col.YELLOW);
 				northButton.setBorderPainted(true);
 			} else {
 				northButton.setBorderPainted(false);
 			}
 			if (southButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CAM_SOUTH);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
+				dlg.mark.setObjColour(Col.YELLOW);
+				dlg.mark.addObjColour(Col.BLACK);
 				southButton.setBorderPainted(true);
 			} else {
 				southButton.setBorderPainted(false);
 			}
 			if (eastButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CAM_EAST);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
+				dlg.mark.setObjColour(Col.BLACK);
+				dlg.mark.addObjColour(Col.YELLOW);
+				dlg.mark.addObjColour(Col.BLACK);
 				eastButton.setBorderPainted(true);
 			} else {
 				eastButton.setBorderPainted(false);
 			}
 			if (westButton.isSelected()) {
 				dlg.mark.setCategory(Cat.CAM_WEST);
-				dlg.mark.setColour(Ent.BODY, Col.YELLOW);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.YELLOW);
+				dlg.mark.setObjColour(Col.YELLOW);
+				dlg.mark.addObjColour(Col.BLACK);
+				dlg.mark.addObjColour(Col.YELLOW);
 				westButton.setBorderPainted(true);
 			} else {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
 				dlg.mark.setCategory(Cat.NONE);
-				dlg.mark.setColour(Ent.BODY, Col.BLACK);
-				dlg.mark.addColour(Ent.BODY, Col.RED);
-				dlg.mark.addColour(Ent.BODY, Col.BLACK);
+				dlg.mark.setObjColour(Col.BLACK);
+				dlg.mark.addObjColour(Col.RED);
+				dlg.mark.addObjColour(Col.BLACK);
 				isolButton.setBorderPainted(true);
 			} else {
 				isolButton.setBorderPainted(false);
@@ -123,8 +123,8 @@ public class PanelHaz extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (dlg.mark != null) {
 				if (topmarkButton.isSelected()) {
-					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-					dlg.mark.setColour(Ent.TOPMARK, Col.BLACK);
+					dlg.mark.setTopPattern(Pat.NONE);
+					dlg.mark.setTopColour(Col.BLACK);
 					switch (dlg.mark.getCategory()) {
 					case CAM_NORTH:
 						dlg.mark.setTopmark(Top.NORTH);
@@ -145,8 +145,8 @@ public class PanelHaz extends JPanel {
 					topmarkButton.setBorderPainted(true);
 				} else {
 					dlg.mark.setTopmark(Top.NONE);
-					dlg.mark.setPattern(Ent.TOPMARK, Pat.NONE);
-					dlg.mark.setColour(Ent.TOPMARK, Col.UNKNOWN);
+					dlg.mark.setTopPattern(Pat.NONE);
+					dlg.mark.setTopColour(Col.UNKNOWN);
 					topmarkButton.setBorderPainted(false);
 				}
 				dlg.panelMain.panelTop.syncPanel();

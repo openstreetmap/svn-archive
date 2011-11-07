@@ -139,6 +139,7 @@ sub dologin
       #print $mech->status() ." - ". $mech->uri()."\n"; 
       #print $mech->content();
     my $form = $mech->form_name("decideform");
+    die "Could not login.\n" if !$form;
     my %par = ("yes" => "");  # We need to add "yes" or it does not work
     foreach my $p ($form->param)
     {

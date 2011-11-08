@@ -9,6 +9,7 @@ import javax.swing.table.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelSectors extends JFrame {
@@ -34,13 +35,17 @@ public class PanelSectors extends JFrame {
 				addSector(table.getSelectedRow()+1);
 		}
 	};
+	public JComboBox colourBox;
+	public EnumMap<Col, ImageIcon> colours = new EnumMap<Col, ImageIcon>(Col.class);
 	public JComboBox visibilityBox;
 	public EnumMap<Vis, String> visibilities = new EnumMap<Vis, String>(Vis.class);
+	public JComboBox exhibitionBox;
+	public EnumMap<Exh, String> exhibitions = new EnumMap<Exh, String>(Exh.class);
 
 	public PanelSectors(OSeaMAction dia) {
 		super("Sector Table");
 		dlg = dia;
-		this.setSize(800, 100);
+		this.setSize(900, 100);
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
 		this.setLocation(450, 0);
@@ -55,26 +60,51 @@ public class PanelSectors extends JFrame {
 		plusButton.addActionListener(alPlusButton);
 		this.add(plusButton);
 		panel = new JPanel(new BorderLayout());
-		panel.setBounds(40, 0, 760, 512);
+		panel.setBounds(40, 0, 860, 512);
 		model = new SectorTable();
 		table = new JTable(model);
-		table.setBounds(0, 0, 760, 34);
+		table.setBounds(0, 0, 860, 34);
 		panel.add(new JScrollPane(table));
 		this.getContentPane().add(panel);
 		
-		TableColumn visColumn = table.getColumnModel().getColumn(11);
+		TableColumn col = table.getColumnModel().getColumn(1);
+		col.setCellRenderer(new ColourCellRenderer());
+
+		TableColumn colColumn = table.getColumnModel().getColumn(1);
+		colourBox = new JComboBox();
+		addColItem(new ImageIcon(getClass().getResource("/images/DelButton.png")), Col.UNKNOWN);
+		addColItem(new ImageIcon(getClass().getResource("/images/WhiteButton.png")), Col.WHITE);
+		addColItem(new ImageIcon(getClass().getResource("/images/RedButton.png")), Col.RED);
+		addColItem(new ImageIcon(getClass().getResource("/images/GreenButton.png")), Col.GREEN);
+		addColItem(new ImageIcon(getClass().getResource("/images/YellowButton.png")), Col.YELLOW);
+		addColItem(new ImageIcon(getClass().getResource("/images/OrangeButton.png")), Col.ORANGE);
+		addColItem(new ImageIcon(getClass().getResource("/images/AmberButton.png")), Col.AMBER);
+		addColItem(new ImageIcon(getClass().getResource("/images/BlueButton.png")), Col.BLUE);
+		addColItem(new ImageIcon(getClass().getResource("/images/VioletButton.png")), Col.VIOLET);
+		colColumn.setCellEditor(new DefaultCellEditor(colourBox));
+		
+		TableColumn visColumn = table.getColumnModel().getColumn(12);
 		visibilityBox = new JComboBox();
-		addVisibItem(Messages.getString("NoneSpecified"), Vis.UNKNOWN);
+		addVisibItem("", Vis.UNKNOWN);
 		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
 		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
 		addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
 		visColumn.setCellEditor(new DefaultCellEditor(visibilityBox));
+		
+		TableColumn exhColumn = table.getColumnModel().getColumn(13);
+		exhibitionBox = new JComboBox();
+		addExhibItem("", Exh.UNKNOWN);
+		addExhibItem(Messages.getString("24h"), Exh.H24);
+		addExhibItem(Messages.getString("Day"), Exh.DAY);
+		addExhibItem(Messages.getString("Night"), Exh.NIGHT);
+		addExhibItem(Messages.getString("Fog"), Exh.FOG);
+		exhColumn.setCellEditor(new DefaultCellEditor(exhibitionBox));
 	}
 
 	private class SectorTable extends AbstractTableModel {
 
 		private String[] headings = { "Sector", "Colour", "Character", "Group", "Sequence", "Period",
-				"Start", "End", "Radius", "Height", "Range", "Visibility", "Exhibition", "Category" };
+				"Directional", "Start", "End", "Radius", "Height", "Range", "Visibility", "Exhibition" };
 
 		public SectorTable() {
 		}
@@ -98,46 +128,95 @@ public class PanelSectors extends JFrame {
 		public Class getColumnClass(int col) {
 			switch (col) {
 			case 1:
-				return Color.class;
-			case 11:
-				return Vis.class;
-			case 12:
-				return Exh.class;
-			case 13:
-				return Lit.class;
+				return Col.class;
+			case 6:
+				return Boolean.class;
 			default:
 				return String.class;
 			}
 		}
 
 		public Object getValueAt(int row, int col) {
-			if (col == 0)
+			switch (col) {
+			case 0:
 				return row;
-			else
-				return dlg.mark.getLightAtt(col-1, row);
+			case 1:
+				return dlg.mark.getLightAtt(Att.COL, row);
+			case 6:
+				return (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
+			case 7:
+			case 8:
+				if (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR)
+					return dlg.mark.getLightAtt(Att.ORT, row);
+				else
+					return dlg.mark.getLightAtt(col - 1, row);
+			case 12:
+				return visibilities.get(dlg.mark.getLightAtt(Att.VIS, row));
+			case 13:
+				return exhibitions.get(dlg.mark.getLightAtt(Att.EXH, row));
+			default:
+				return dlg.mark.getLightAtt(col - 1, row);
+			}
 		}
 
 		public void setValueAt(Object value, int row, int col) {
 			switch (col) {
-			case 4:
+			case 1:
+				for (Col colour : colours.keySet()) {
+					ImageIcon img = colours.get(colour);
+					if (img == value)
+						dlg.mark.setLightAtt(Att.COL, row, colour);
+				}
+				break;
 			case 5:
+			case 9:
+			case 10:
+			case 11:
+				dlg.mark.setLightAtt(col - 1, row, dlg.mark.validDecimal((String) value));
+				break;
 			case 6:
+				if ((Boolean) value == true) {
+					dlg.mark.setLightAtt(Att.LIT, row, Lit.DIR);
+				} else {
+					dlg.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
+					dlg.mark.setLightAtt(Att.ORT, row, "");
+				}
+				break;
 			case 7:
 			case 8:
-			case 9:
-			case 13:
-				dlg.mark.setLightAtt(col-1, row, dlg.mark.validDecimal((String)value));
+				if (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
+					dlg.mark.setLightAtt(Att.ORT, row, dlg.mark.validDecimal((String) value));
+				} else {
+					dlg.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
+					dlg.mark.setLightAtt(col - 1, row, dlg.mark.validDecimal((String) value));
+				}
 				break;
-			case 11:
+			case 12:
 				for (Vis vis : visibilities.keySet()) {
 					String str = visibilities.get(vis);
 					if (str.equals(value))
 						dlg.mark.setLightAtt(Att.VIS, row, vis);
 				}
 				break;
+			case 13:
+				for (Exh exh : exhibitions.keySet()) {
+					String str = exhibitions.get(exh);
+					if (str.equals(value))
+						dlg.mark.setLightAtt(Att.EXH, row, exh);
+				}
+				break;
 			default:
-				dlg.mark.setLightAtt(col-1, row, value);
+				dlg.mark.setLightAtt(col - 1, row, value);
 			}
+		}
+	}
+
+	public class ColourCellRenderer extends JLabel implements TableCellRenderer {
+		public Component getTableCellRendererComponent(JTable table, Object value,
+				boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+			setHorizontalAlignment(SwingConstants.CENTER);
+			setIcon(colours.get(value));
+			return this;
 		}
 	}
 
@@ -147,27 +226,37 @@ public class PanelSectors extends JFrame {
 
 	public void addSector(int idx) {
 		dlg.mark.addLight(idx);
-		table.setSize(760, ((table.getRowCount() * 16) + 18));
+		table.setSize(860, ((table.getRowCount() * 16) + 18));
 		if (table.getRowCount() > 3) {
-			this.setSize(800, ((table.getRowCount() * 16) + 40));
+			this.setSize(900, ((table.getRowCount() * 16) + 40));
 		} else {
-			this.setSize(800, 100);
+			this.setSize(900, 100);
 		}
 	}
 
 	public void deleteSector(int idx) {
-		dlg.mark.subLight(idx);
-		table.setSize(760, ((table.getRowCount() * 16) + 18));
+		dlg.mark.delLight(idx);
+		table.setSize(860, ((table.getRowCount() * 16) + 18));
 		if (table.getRowCount() > 3) {
-			this.setSize(800, ((table.getRowCount() * 16) + 40));
+			this.setSize(900, ((table.getRowCount() * 16) + 40));
 		} else {
-			this.setSize(800, 100);
+			this.setSize(900, 100);
 		}
+	}
+
+	private void addColItem(ImageIcon img, Col col) {
+		colours.put(col, img);
+		colourBox.addItem(img);
 	}
 
 	private void addVisibItem(String str, Vis vis) {
 		visibilities.put(vis, str);
 		visibilityBox.addItem(str);
+	}
+
+	private void addExhibItem(String str, Exh exh) {
+		exhibitions.put(exh, str);
+		exhibitionBox.addItem(str);
 	}
 
 }

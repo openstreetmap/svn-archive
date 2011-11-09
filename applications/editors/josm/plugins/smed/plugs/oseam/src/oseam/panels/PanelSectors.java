@@ -9,7 +9,6 @@ import javax.swing.table.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelSectors extends JFrame {
@@ -67,8 +66,8 @@ public class PanelSectors extends JFrame {
 		panel.add(new JScrollPane(table));
 		this.getContentPane().add(panel);
 		
-		TableColumn col = table.getColumnModel().getColumn(1);
-		col.setCellRenderer(new ColourCellRenderer());
+		table.setDefaultRenderer(String.class, new CentreRenderer());
+		table.getColumnModel().getColumn(1).setCellRenderer(new ColourCellRenderer());
 
 		TableColumn colColumn = table.getColumnModel().getColumn(1);
 		colourBox = new JComboBox();
@@ -139,7 +138,10 @@ public class PanelSectors extends JFrame {
 		public Object getValueAt(int row, int col) {
 			switch (col) {
 			case 0:
-				return row;
+				if (row == 0)
+					return "Common";
+				else
+					return row;
 			case 1:
 				return dlg.mark.getLightAtt(Att.COL, row);
 			case 6:
@@ -211,10 +213,20 @@ public class PanelSectors extends JFrame {
 		}
 	}
 
+	static class CentreRenderer extends DefaultTableCellRenderer {
+		public CentreRenderer() {
+			super();
+			setHorizontalAlignment(SwingConstants.CENTER);
+		}
+	}
+
 	public class ColourCellRenderer extends JLabel implements TableCellRenderer {
+		public ColourCellRenderer() {
+			super();
+			setHorizontalAlignment(SwingConstants.CENTER);
+		}
 		public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-			setHorizontalAlignment(SwingConstants.CENTER);
 			setIcon(colours.get(value));
 			return this;
 		}

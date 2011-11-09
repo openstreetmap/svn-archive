@@ -109,7 +109,9 @@ public class PanelLit extends JPanel {
 				panelSector.setVisible(true);
 			} else {
 				dlg.mark.setSectored(false);
-				panelSector.setVisible(false);
+				if (panelSector != null) {
+					panelSector.setVisible(false);
+				}
 			}
 		}
 	};

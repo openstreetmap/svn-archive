@@ -670,37 +670,32 @@ public class SeaMark {
 		topShape = top;
 	}
 
-	private boolean Radar = false;
-
-	public boolean hasRadar() {
-		return Radar;
-	}
-
-	public void setRadar(boolean radar) {
-		Radar = radar;
-	}
-
-	private boolean Racon = false;
-
-	public boolean hasRacon() {
-		return Racon;
-	}
-
-	public void setRacon(boolean racon) {
-		Racon = racon;
-	}
-
 	public enum Rtb {
 		NONE, REFLECTOR, RACON, RAMARK, LEADING
 	}
 
+	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(Rtb.class);
+	static {
+		RtbSTR.put(Rtb.RACON, "racon");
+		RtbSTR.put(Rtb.RAMARK, "ramark");
+		RtbSTR.put(Rtb.LEADING, "leading");
+	}
+
 	private Rtb RaType = Rtb.NONE;
 
-	public Rtb getRaType() {
+	public boolean hasRadar() {
+		return (RaType != Rtb.NONE);
+	}
+
+	public boolean hasRacon() {
+		return (RaType == Rtb.RACON);
+	}
+
+	public Rtb getRadar() {
 		return RaType;
 	}
 
-	public void setRaType(Rtb type) {
+	public void setRadar(Rtb type) {
 		RaType = type;
 	}
 
@@ -1393,13 +1388,16 @@ public class SeaMark {
 
 		if (paintlock)
 			return;
+		paintlock = true;
 
 		dlg.panelMain.shapeIcon.setIcon(null);
-		dlg.panelMain.lightIcon.setIcon(null);
-		dlg.panelMain.topIcon.setIcon(null);
-		dlg.panelMain.radarIcon.setIcon(null);
-		dlg.panelMain.fogIcon.setIcon(null);
 		dlg.panelMain.colLabel.setText("");
+		dlg.panelMain.radarLabel.setText("");
+		dlg.panelMain.fogLabel.setText("");
+		dlg.panelMain.topIcon.setIcon(null);
+		dlg.panelMain.fogIcon.setIcon(null);
+		dlg.panelMain.radarIcon.setIcon(null);
+		dlg.panelMain.lightIcon.setIcon(null);
 
 		String colStr;
 		String lblStr;
@@ -1681,6 +1679,32 @@ public class SeaMark {
 		if (hasFog()) {
 			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
 		}
+		
+		if (hasRadar()) {
+			if (getRadar() == Rtb.REFLECTOR) {
+				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
+			} else {
+				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+				String str = "";
+				if (getRadar() == Rtb.RAMARK)
+					str += "Ramark";
+				else
+					str += "Racon";
+				if (!getRaconGroup().isEmpty())
+					str += ("(" + getRaconGroup() + ")");
+				else
+					str += " ";
+				if (!getRaconPeriod().isEmpty())
+					str += getRaconPeriod() + "s";
+				dlg.panelMain.radarLabel.setText(str);
+			}
+		}
+		
+		if (isFired()) {
+			dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+		}
+		
+		paintlock = false;
 	}
 
 	public void saveSign(Node node) {
@@ -1797,6 +1821,31 @@ public class SeaMark {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:range", getFogRange()));
 				}
 			}
+			
+			if (hasRadar()) {
+				if (getRadar() == Rtb.REFLECTOR) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_reflector", "yes"));
+				} else {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:category", RtbSTR.get(getRadar())));
+					if (!getRaconGroup().isEmpty()) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:group", getRaconGroup()));
+					}
+					if (!getRaconPeriod().isEmpty()) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:period", getRaconPeriod()));
+					}
+					if (!getRaconSequence().isEmpty()) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sequence", getRaconSequence()));
+					}
+					if (!getRaconRange().isEmpty()) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:range", getRaconRange()));
+					}
+					if ((!getRaconSector1().isEmpty()) && (!getRaconSector2().isEmpty())) {
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sector_start", getRaconSector1()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sector_end", getRaconSector2()));
+					}
+				}
+			}
+
 			if (!getInfo().isEmpty()) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:information", getInfo()));
 			}

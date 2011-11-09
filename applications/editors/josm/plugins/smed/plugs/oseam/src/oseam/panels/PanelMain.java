@@ -26,7 +26,9 @@ public class PanelMain extends JPanel {
 	public JLabel lightIcon = null;
 	public JLabel topIcon = null;
 	public JLabel radarIcon = null;
+	public JLabel radarLabel = null;
 	public JLabel fogIcon = null;
+	public JLabel fogLabel = null;
 	public JLabel colLabel = null;
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
@@ -207,6 +209,12 @@ public class PanelMain extends JPanel {
 		fogIcon = new JLabel();
 		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(fogIcon, null);
+		radarLabel = new JLabel("", SwingConstants.RIGHT);
+		radarLabel.setBounds(new Rectangle(210, 35, 100, 20));
+		this.add(radarLabel, null);
+		fogLabel = new JLabel("", SwingConstants.RIGHT);
+		fogLabel.setBounds(new Rectangle(210, 60, 100, 20));
+		this.add(fogLabel, null);
 		colLabel = new JLabel("", SwingConstants.CENTER);
 		colLabel.setBounds(new Rectangle(235, 100, 150, 20));
 		this.add(colLabel, null);
@@ -283,6 +291,8 @@ public class PanelMain extends JPanel {
 		panelSpec.setVisible(false);
 		panelLights.setVisible(false);
 		panelMore.setVisible(false);
+		radarLabel.setText("");
+		fogLabel.setText("");
 		colLabel.setText("");
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);

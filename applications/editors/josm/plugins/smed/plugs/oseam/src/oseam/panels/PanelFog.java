@@ -15,8 +15,8 @@ public class PanelFog extends JPanel {
 	private OSeaMAction dlg;
 	private ButtonGroup fogButtons = new ButtonGroup();
 	public JRadioButton noFogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton yesFogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton hornButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
+	public JRadioButton yesFogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogYesButton.png")));
+	public JRadioButton hornButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogHornButton.png")));
 	public JRadioButton sirenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton diaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton bellButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
@@ -43,6 +43,7 @@ public class PanelFog extends JPanel {
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setFogGroup(groupBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel periodLabel;
@@ -50,6 +51,7 @@ public class PanelFog extends JPanel {
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setFogPeriod(periodBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel seqLabel;
@@ -116,10 +118,7 @@ public class PanelFog extends JPanel {
 	public void syncPanel() {
 		for (Fog fog : fogs.keySet()) {
 			JRadioButton button = fogs.get(fog);
-			if (dlg.mark.getFogSound() == fog) {
-				button.setBorderPainted(true);
-			} else
-				button.setBorderPainted(false);
+			button.setBorderPainted(dlg.mark.getFogSound() == fog);
 		}
 		groupBox.setText(dlg.mark.getFogGroup());
 		seqBox.setText(dlg.mark.getFogSequence());

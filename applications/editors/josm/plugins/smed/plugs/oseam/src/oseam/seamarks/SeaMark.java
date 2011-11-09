@@ -1678,6 +1678,38 @@ public class SeaMark {
 
 		if (hasFog()) {
 			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+			String str = "";
+			if (getFogSound() != Fog.UNKNOWN)
+				switch (getFogSound()) {
+				case HORN:
+					str = "Horn";
+					break;
+				case SIREN:
+					str = "Siren";
+					break;
+				case DIA:
+					str = "Dia";
+					break;
+				case BELL:
+					str = "Bell";
+					break;
+				case WHIS:
+					str = "Whis";
+					break;
+				case GONG:
+					str = "Gong";
+					break;
+				case EXPLOS:
+					str = "Explos";
+					break;
+				}
+			if (!getFogGroup().isEmpty())
+				str += ("(" + getFogGroup() + ")");
+			else
+				str += " ";
+			if (!getFogPeriod().isEmpty())
+				str += getFogPeriod() + "s";
+			dlg.panelMain.fogLabel.setText(str);
 		}
 		
 		if (hasRadar()) {
@@ -1807,7 +1839,10 @@ public class SeaMark {
 			}
 			
 			if (hasFog()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal", FogSTR.get(getFogSound())));
+				if (getFogSound() == Fog.UNKNOWN)
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal", "yes"));
+				else
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:category", FogSTR.get(getFogSound())));
 				if (!getFogGroup().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:group", getFogGroup()));
 				}

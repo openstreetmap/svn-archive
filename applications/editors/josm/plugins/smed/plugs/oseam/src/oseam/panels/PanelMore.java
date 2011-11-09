@@ -231,7 +231,7 @@ public class PanelMore extends JPanel {
 		this.add(statusLabel, null);
 		statusBox = new JComboBox();
 		statusBox.setBounds(new Rectangle(250, 20, 100, 20));
-		addStsItem(Messages.getString("NotSet"), Sts.UNKNOWN);
+		addStsItem("", Sts.UNKNOWN);
 		addStsItem(Messages.getString("Permanent"), Sts.PERM);
 		addStsItem(Messages.getString("Occasional"), Sts.OCC);
 		addStsItem(Messages.getString("Recommended"), Sts.REC);
@@ -258,7 +258,7 @@ public class PanelMore extends JPanel {
 		this.add(constrLabel, null);
 		constrBox = new JComboBox();
 		constrBox.setBounds(new Rectangle(250, 60, 100, 20));
-		addCnsItem(Messages.getString("NotSet"), Cns.UNKNOWN);
+		addCnsItem("", Cns.UNKNOWN);
 		addCnsItem(Messages.getString("Masonry"), Cns.BRICK);
 		addCnsItem(Messages.getString("Concreted"), Cns.CONC);
 		addCnsItem(Messages.getString("Boulders"), Cns.BOULD);
@@ -271,12 +271,12 @@ public class PanelMore extends JPanel {
 		this.add(constrBox, null);
 		constrBox.addActionListener(alConstr);
 
-		conLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
+		conLabel = new JLabel(Messages.getString("Conspicuity"), SwingConstants.CENTER);
 		conLabel.setBounds(new Rectangle(250, 80, 100, 20));
 		this.add(conLabel, null);
 		conBox = new JComboBox();
 		conBox.setBounds(new Rectangle(250, 100, 100, 20));
-		addConItem(Messages.getString("NotSet"), Con.UNKNOWN);
+		addConItem("", Con.UNKNOWN);
 		addConItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addConItem(Messages.getString("NotConspicuous"), Con.NCONS);
 		this.add(conBox, null);
@@ -287,7 +287,7 @@ public class PanelMore extends JPanel {
 		this.add(reflLabel, null);
 		reflBox = new JComboBox();
 		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
-		addReflItem(Messages.getString("NotSet"), Con.UNKNOWN);
+		addReflItem("", Con.UNKNOWN);
 		addReflItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addReflItem(Messages.getString("NotConspicuous"), Con.NCONS);
 		addReflItem(Messages.getString("Reflector"), Con.REFL);

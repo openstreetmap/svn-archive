@@ -90,7 +90,7 @@ public class PanelSpec extends JPanel {
 		categoryBox.setBounds(new Rectangle(5, 120, 170, 20));
 		this.add(categoryBox, null);
 		categoryBox.addActionListener(alCategoryBox);
-		addCatItem(Messages.getString("NotSet"), Cat.NONE);
+		addCatItem("", Cat.NONE);
 		addCatItem(Messages.getString("UKPurpose"), Cat.SPM_UNKN);
 		addCatItem(Messages.getString("Warning"), Cat.SPM_WARN);
 		addCatItem(Messages.getString("ChanSeparation"), Cat.SPM_CHBF);

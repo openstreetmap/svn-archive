@@ -384,11 +384,12 @@ public class CadastreInterface {
     private void parseFeuillesList(String input) {
         listOfFeuilles.clear();
         // get "Tableau d'assemblage"
+        String inputTA = input;
         if (Main.pref.getBoolean("cadastrewms.useTA", false)) {
-            while (input.indexOf(cTAImageLinkStart) != -1) {
-                input = input.substring(input.indexOf(cTAImageLinkStart) + cTAImageLinkStart.length());
-                String refTA = input.substring(0, input.indexOf("'"));
-                String nameTA = input.substring(input.indexOf(cTAImageNameStart) + cTAImageNameStart.length());
+            while (inputTA.indexOf(cTAImageLinkStart) != -1) {
+                inputTA = inputTA.substring(inputTA.indexOf(cTAImageLinkStart) + cTAImageLinkStart.length());
+                String refTA = inputTA.substring(0, inputTA.indexOf("'"));
+                String nameTA = inputTA.substring(inputTA.indexOf(cTAImageNameStart) + cTAImageNameStart.length());
                 nameTA = nameTA.substring(0, nameTA.indexOf("<"));
                 listOfFeuilles.add(new PlanImage(nameTA, refTA));
             }

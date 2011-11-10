@@ -70,6 +70,13 @@ public class PanelLit extends JPanel {
 			dlg.mark.setLightAtt(Att.ORT, 0, orientationBox.getText());
 		}
 	};
+	public JLabel multipleLabel;
+	public JTextField multipleBox;
+	private ActionListener alMultiple = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			dlg.mark.setLightMultiple(multipleBox.getText());
+		}
+	};
 	public JLabel categoryLabel;
 	public JComboBox categoryBox;
 	public EnumMap<Lit, Integer> categories = new EnumMap<Lit, Integer>(Lit.class);
@@ -79,6 +86,22 @@ public class PanelLit extends JPanel {
 				int idx = categories.get(lit);
 				if (idx == categoryBox.getSelectedIndex())
 					dlg.mark.setLightAtt(Att.LIT, 0, lit);
+			}
+			if (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.DIR) {
+				orientationLabel.setVisible(true);
+				orientationBox.setVisible(true);
+				multipleLabel.setVisible(false);
+				multipleBox.setVisible(false);
+			} else if ((dlg.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
+				orientationLabel.setVisible(false);
+				orientationBox.setVisible(false);
+				multipleLabel.setVisible(true);
+				multipleBox.setVisible(true);
+			} else {
+				orientationLabel.setVisible(false);
+				orientationBox.setVisible(false);
+				multipleLabel.setVisible(false);
+				multipleBox.setVisible(false);
 			}
 		}
 	};
@@ -184,22 +207,23 @@ public class PanelLit extends JPanel {
 		categoryBox.setBounds(new Rectangle(185, 20, 165, 20));
 		this.add(categoryBox, null);
 		addCatItem("", Lit.UNKNOWN);
-		addCatItem(Messages.getString("VerticallyDisposedLights"), Lit.VERT);
-		addCatItem(Messages.getString("HorizontallyDisposedLights"), Lit.HORIZ);
+		addCatItem(Messages.getString("VertDisp"), Lit.VERT);
+		addCatItem(Messages.getString("HorizDisp"), Lit.HORIZ);
+		addCatItem(Messages.getString("Directional"), Lit.DIR);
 		addCatItem(Messages.getString("Upper"), Lit.UPPER);
 		addCatItem(Messages.getString("Lower"), Lit.LOWER);
 		addCatItem(Messages.getString("Rear"), Lit.REAR);
 		addCatItem(Messages.getString("Front"), Lit.FRONT);
-		addCatItem(Messages.getString("AeroLight"), Lit.AERO);
-		addCatItem(Messages.getString("AirObstructionLight"), Lit.AIROBS);
-		addCatItem(Messages.getString("FogDetectorLight"), Lit.FOGDET);
+		addCatItem(Messages.getString("Aero"), Lit.AERO);
+		addCatItem(Messages.getString("AirObstruction"), Lit.AIROBS);
+		addCatItem(Messages.getString("FogDetector"), Lit.FOGDET);
 		addCatItem(Messages.getString("Floodlight"), Lit.FLOOD);
 		addCatItem(Messages.getString("Striplight"), Lit.STRIP);
-		addCatItem(Messages.getString("SubsidiaryLight"), Lit.SUBS);
+		addCatItem(Messages.getString("Subsidiary"), Lit.SUBS);
 		addCatItem(Messages.getString("Spotlight"), Lit.SPOT);
-		addCatItem(Messages.getString("MoireEffectLight"), Lit.MOIRE);
-		addCatItem(Messages.getString("EmergencyLight"), Lit.EMERG);
-		addCatItem(Messages.getString("BearingLight"), Lit.BEAR);
+		addCatItem(Messages.getString("MoireEffect"), Lit.MOIRE);
+		addCatItem(Messages.getString("Emergency"), Lit.EMERG);
+		addCatItem(Messages.getString("Bearing"), Lit.BEAR);
 		categoryBox.addActionListener(alCategory);
 
 		visibilityLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
@@ -229,15 +253,32 @@ public class PanelLit extends JPanel {
 
 		orientationLabel = new JLabel(Messages.getString("Orientation"), SwingConstants.CENTER);
 		orientationLabel.setBounds(new Rectangle(188, 80, 80, 20));
+		orientationLabel.setVisible(false);
 		this.add(orientationLabel, null);
 		orientationBox = new JTextField();
 		orientationBox.setBounds(new Rectangle(208, 100, 40, 20));
 		orientationBox.setHorizontalAlignment(SwingConstants.CENTER);
+		orientationBox.setVisible(false);
 		this.add(orientationBox, null);
 		orientationBox.addActionListener(alOrientation);
+
+		multipleLabel = new JLabel(Messages.getString("Multiplicity"), SwingConstants.CENTER);
+		multipleLabel.setBounds(new Rectangle(188, 80, 80, 20));
+		multipleLabel.setVisible(false);
+		this.add(multipleLabel, null);
+		multipleBox = new JTextField();
+		multipleBox.setBounds(new Rectangle(208, 100, 40, 20));
+		multipleBox.setHorizontalAlignment(SwingConstants.CENTER);
+		multipleBox.setVisible(false);
+		this.add(multipleBox, null);
+		multipleBox.addActionListener(alMultiple);
 	}
 
 	public void syncPanel() {
+		orientationLabel.setVisible(false);
+		orientationBox.setVisible(false);
+		multipleLabel.setVisible(false);
+		multipleBox.setVisible(false);
 	}
 
 	private void addCatItem(String str, Lit lit) {

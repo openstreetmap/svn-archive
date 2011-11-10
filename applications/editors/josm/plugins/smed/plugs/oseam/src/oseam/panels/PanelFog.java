@@ -19,10 +19,10 @@ public class PanelFog extends JPanel {
 	public JRadioButton hornButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogHornButton.png")));
 	public JRadioButton sirenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton diaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton bellButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton whisButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton gongButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton explosButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
+	public JRadioButton bellButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogBellButton.png")));
+	public JRadioButton whisButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogWhisButton.png")));
+	public JRadioButton gongButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogGongButton.png")));
+	public JRadioButton explosButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogExplosButton.png")));
 	private EnumMap<Fog, JRadioButton> fogs = new EnumMap<Fog, JRadioButton>(Fog.class);
 	private ActionListener alFog = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -72,14 +72,15 @@ public class PanelFog extends JPanel {
 	public PanelFog(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getFogButton(noFogButton, 0, 5, 27, 27, "NoFog", Fog.NONE), null);
-		this.add(getFogButton(yesFogButton, 0, 35, 27, 27, "FogSignal", Fog.UNKNOWN), null);
-		this.add(getFogButton(hornButton, 0, 65, 27, 27, "Horn", Fog.HORN), null);
-		this.add(getFogButton(sirenButton, 0, 95, 27, 27, "Siren", Fog.SIREN), null);
-		this.add(getFogButton(diaButton, 30, 5, 27, 27, "Diaphone", Fog.DIA), null);
-		this.add(getFogButton(bellButton, 30, 35, 27, 27, "Bell", Fog.BELL), null);
-		this.add(getFogButton(whisButton, 30, 65, 27, 27, "Whistle", Fog.WHIS), null);
-		this.add(getFogButton(explosButton, 30, 95, 27, 27, "Explosion", Fog.EXPLOS), null);
+		this.add(getFogButton(noFogButton, 0, 2, 27, 27, "NoFog", Fog.NONE), null);
+		this.add(getFogButton(yesFogButton, 0, 32, 27, 27, "FogSignal", Fog.UNKNOWN), null);
+		this.add(getFogButton(hornButton, 0, 62, 27, 27, "Horn", Fog.HORN), null);
+		this.add(getFogButton(sirenButton, 0, 92, 27, 27, "Siren", Fog.SIREN), null);
+		this.add(getFogButton(gongButton, 0, 122, 27, 27, "Gong", Fog.SIREN), null);
+		this.add(getFogButton(diaButton, 30, 2, 27, 27, "Diaphone", Fog.DIA), null);
+		this.add(getFogButton(bellButton, 30, 32, 27, 27, "Bell", Fog.BELL), null);
+		this.add(getFogButton(whisButton, 30, 62, 27, 27, "Whistle", Fog.WHIS), null);
+		this.add(getFogButton(explosButton, 30, 92, 27, 27, "Explosion", Fog.EXPLOS), null);
 
 		groupLabel = new JLabel(Messages.getString("Group"), SwingConstants.CENTER);
 		groupLabel.setBounds(new Rectangle(75, 0, 100, 20));

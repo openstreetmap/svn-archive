@@ -153,14 +153,14 @@ public class SeaMark {
 		GrpMAP.put(Obj.BOYLAT, Grp.LAT);
 		GrpMAP.put(Obj.BOYSAW, Grp.SAW);
 		GrpMAP.put(Obj.BOYSPP, Grp.SPP);
-		GrpMAP.put(Obj.LITMAJ, Grp.LIT);
-		GrpMAP.put(Obj.LITMIN, Grp.LIT);
-		GrpMAP.put(Obj.LITFLT, Grp.FLT);
 		GrpMAP.put(Obj.FLTCAR, Grp.CAR);
 		GrpMAP.put(Obj.FLTLAT, Grp.LAT);
 		GrpMAP.put(Obj.FLTSAW, Grp.SAW);
 		GrpMAP.put(Obj.FLTISD, Grp.ISD);
 		GrpMAP.put(Obj.FLTSPP, Grp.SPP);
+		GrpMAP.put(Obj.LITFLT, Grp.FLT);
+		GrpMAP.put(Obj.LITMAJ, Grp.LIT);
+		GrpMAP.put(Obj.LITMIN, Grp.LIT);
 		GrpMAP.put(Obj.LITVES, Grp.LIT);
 		GrpMAP.put(Obj.LNDMRK, Grp.LIT);
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
@@ -586,6 +586,16 @@ public class SeaMark {
 		Sectored = sectored;
 	}
 
+	private String lightMultiple = "";
+
+	public String getLightMiltiple() {
+		return lightMultiple;
+	}
+
+	public void setLightMultiple(String str) {
+		lightMultiple = str;
+	}
+
 	public enum Pat {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
@@ -699,74 +709,74 @@ public class SeaMark {
 		RaType = type;
 	}
 
-	private String RaconGroup = "";
+	private String raconGroup = "";
 
 	public String getRaconGroup() {
-		return RaconGroup;
+		return raconGroup;
 	}
 
 	public void setRaconGroup(String grp) {
-		RaconGroup = grp;
+		raconGroup = grp;
 	}
 
-	private String RaconSequence = "";
+	private String raconSequence = "";
 
 	public String getRaconSequence() {
-		return RaconSequence;
+		return raconSequence;
 	}
 
 	public void setRaconSequence(String seq) {
-		RaconSequence = seq;
+		raconSequence = seq;
 	}
 
-	private String RaconPeriod = "";
+	private String raconPeriod = "";
 
 	public String getRaconPeriod() {
-		return RaconPeriod;
+		return raconPeriod;
 	}
 
 	public void setRaconPeriod(String per) {
-		RaconPeriod = validDecimal(per);
+		raconPeriod = validDecimal(per);
 	}
 
-	private String RaconRange = "";
+	private String raconRange = "";
 
 	public String getRaconRange() {
-		return RaconRange;
+		return raconRange;
 	}
 
 	public void setRaconRange(String rng) {
-		RaconRange = validDecimal(rng);
+		raconRange = validDecimal(rng);
 	}
 
-	private String RaconSector1 = "";
+	private String raconSector1 = "";
 
 	public String getRaconSector1() {
-		return RaconSector1;
+		return raconSector1;
 	}
 
 	public void setRaconSector1(String sec) {
-		RaconSector1 = validDecimal(sec);
+		raconSector1 = validDecimal(sec);
 	}
 
-	private String RaconSector2 = "";
+	private String raconSector2 = "";
 
 	public String getRaconSector2() {
-		return RaconSector2;
+		return raconSector2;
 	}
 
 	public void setRaconSector2(String sec) {
-		RaconSector2 = validDecimal(sec);
+		raconSector2 = validDecimal(sec);
 	}
 
-	private boolean FogSignal = false;
+	private boolean fogSignal = false;
 
 	public boolean hasFog() {
-		return FogSignal;
+		return fogSignal;
 	}
 
 	public void setFog(boolean fog) {
-		FogSignal = fog;
+		fogSignal = fog;
 	}
 
 	public enum Fog {
@@ -785,54 +795,54 @@ public class SeaMark {
 		FogSTR.put(Fog.EXPLOS, "explosion");
 	}
 
-	private Fog FogSound = Fog.NONE;
+	private Fog fogSound = Fog.NONE;
 
 	public Fog getFogSound() {
-		return FogSound;
+		return fogSound;
 	}
 
 	public void setFogSound(Fog sound) {
-		FogSound = sound;
+		fogSound = sound;
 	}
 
-	private String FogGroup = "";
+	private String fogGroup = "";
 
 	public String getFogGroup() {
-		return FogGroup;
+		return fogGroup;
 	}
 
 	public void setFogGroup(String grp) {
-		FogGroup = grp;
+		fogGroup = grp;
 	}
 
-	private String FogSequence = "";
+	private String fogSequence = "";
 
 	public String getFogSequence() {
-		return FogSequence;
+		return fogSequence;
 	}
 
 	public void setFogSequence(String seq) {
-		FogSequence = seq;
+		fogSequence = seq;
 	}
 
-	private String FogRange = "";
+	private String fogRange = "";
 
 	public String getFogRange() {
-		return FogRange;
+		return fogRange;
 	}
 
 	public void setFogRange(String rng) {
-		FogRange = validDecimal(rng);
+		fogRange = validDecimal(rng);
 	}
 
-	private String FogPeriod = "";
+	private String fogPeriod = "";
 
 	public String getFogPeriod() {
-		return FogPeriod;
+		return fogPeriod;
 	}
 
 	public void setFogPeriod(String per) {
-		FogPeriod = validDecimal(per);
+		fogPeriod = validDecimal(per);
 	}
 
 	public enum Sts {
@@ -1191,6 +1201,7 @@ public class SeaMark {
 					setObject(Obj.FLTISD);
 					setCategory(Cat.NONE);
 				} else if (getObjColour(1) == Col.YELLOW) {
+					setObject(Obj.FLTCAR);
 					if (getObjColour(2) == Col.BLACK) {
 						setCategory(Cat.CAM_EAST);
 					} else {

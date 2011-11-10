@@ -97,7 +97,7 @@ public class PanelLights extends JPanel {
 		trafficCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
-		addTCItem(Messages.getString("UKCategory"), Cat.NONE);
+		addTCItem("", Cat.NONE);
 		addTCItem(Messages.getString("Traffic"), Cat.SIS_TRFC);
 		addTCItem(Messages.getString("PortControl"), Cat.SIS_PTCL);
 		addTCItem(Messages.getString("PortEntry"), Cat.SIS_PTED);
@@ -114,7 +114,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		this.add(warningCatBox, null);
 		warningCatBox.addActionListener(alWarningCatBox);
-		addWCItem(Messages.getString("UKCategory"), Cat.NONE);
+		addWCItem("", Cat.NONE);
 		addWCItem(Messages.getString("Danger"), Cat.SIS_DNGR);
 		addWCItem(Messages.getString("Storm"), Cat.SIS_STRM);
 		addWCItem(Messages.getString("Weather"), Cat.SIS_WTHR);
@@ -135,7 +135,22 @@ public class PanelLights extends JPanel {
 	}
 
 	public void syncPanel() {
-		
+		trafficCatBox.setSelectedIndex(0);
+		for (Cat cat : trafficCats.keySet()) {
+			int item = trafficCats.get(cat);
+			if (dlg.mark.getCategory() == cat)
+				trafficCatBox.setSelectedIndex(item);
+		}
+		warningCatBox.setSelectedIndex(0);
+		for (Cat cat : warningCats.keySet()) {
+			int item = warningCats.get(cat);
+			if (dlg.mark.getCategory() == cat)
+				warningCatBox.setSelectedIndex(item);
+		}
+		for (Obj obj : objects.keySet()) {
+			JRadioButton button = objects.get(obj);
+			button.setBorderPainted(dlg.mark.getObject() == obj);
+		}
 	}
 	
 	private void addTCItem(String str, Cat cat) {

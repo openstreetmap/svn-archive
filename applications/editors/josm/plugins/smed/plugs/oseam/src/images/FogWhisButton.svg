@@ -15,8 +15,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="FogHornButton.svg"
-   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FogYesButton.png"
+   sodipodi:docname="FogExplosButton.svg"
+   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FogExplosButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    style="display:inline">
@@ -4706,9 +4706,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.999999"
-     inkscape:cx="-0.45615384"
-     inkscape:cy="0.40867263"
+     inkscape:zoom="14.191457"
+     inkscape:cx="-13.59349"
+     inkscape:cy="12.500068"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -4735,7 +4735,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -4758,57 +4758,50 @@
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g
-       id="g9261">
+       id="g9381"
+       transform="matrix(0.76604444,0.64278762,-0.64278762,0.76604444,693.32328,263.75196)">
+      <path
+         transform="matrix(0.94609716,0,0,1.0916505,10.137276,1033.7079)"
+         d="m -25.155979,0.30204329 c 0,2.78254441 -2.602728,5.03824231 -5.813357,5.03824231 -3.210628,0 -5.813356,-2.2556979 -5.813356,-5.03824231 0,-2.78254439 2.602728,-5.03824239 5.813356,-5.03824239 3.210629,0 5.813357,2.255698 5.813357,5.03824239 z"
+         sodipodi:ry="5.0382423"
+         sodipodi:rx="5.8133564"
+         sodipodi:cy="0.30204329"
+         sodipodi:cx="-30.969336"
+         id="path9373"
+         style="fill:none;stroke:#000000;stroke-width:0.98398918;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <rect
+         y="1028.7932"
+         x="-33.118515"
+         height="2.5"
+         width="9"
+         id="rect9375"
+         style="fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <path
          sodipodi:open="true"
-         sodipodi:end="1.3357842"
+         sodipodi:end="2.2793283"
          sodipodi:start="0"
-         transform="matrix(0.72765951,0,0,0.76211692,27.685572,1026.2279)"
-         d="m -10.437501,4.968749 c 0,5.189643 -3.727976,9.701931 -9.013957,10.910365"
-         sodipodi:ry="11.218751"
-         sodipodi:rx="11.750001"
-         sodipodi:cy="4.968749"
-         sodipodi:cx="-22.187502"
-         id="path8487"
-         style="fill:none;stroke:#000000;stroke-width:1.34284258;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         transform="matrix(-0.58239038,-0.48868358,0.54732558,-0.65227723,-43.647617,1002.2789)"
+         d="m -40.024079,-6.3568921 c 0,0.9729176 -0.88335,1.7616231 -1.973018,1.7616231 -0.470918,0 -0.926306,-0.150388 -1.283882,-0.423991"
+         sodipodi:ry="1.7616231"
+         sodipodi:rx="1.9730179"
+         sodipodi:cy="-6.3568921"
+         sodipodi:cx="-41.997097"
+         id="path9377"
+         style="fill:none;stroke:#000000;stroke-width:1.24288452;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
          sodipodi:type="arc" />
       <path
-         sodipodi:type="arc"
-         style="fill:none;stroke:#000000;stroke-width:1.34284258;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         id="path8489"
-         sodipodi:cx="-22.187502"
-         sodipodi:cy="4.968749"
-         sodipodi:rx="11.750001"
-         sodipodi:ry="11.218751"
-         d="m -10.437501,4.968749 c 0,5.189643 -3.727976,9.701931 -9.013957,10.910365"
-         transform="matrix(0.72765951,0,0,-0.76211692,27.685572,1053.4227)"
+         sodipodi:open="true"
+         sodipodi:end="2.160793"
          sodipodi:start="0"
-         sodipodi:end="1.3357842"
-         sodipodi:open="true" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path8491"
-         d="m 20.090626,1030.296 0,18.8438"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path8493"
-         d="m 13.565626,1038.3398 -7.0312503,1.5187"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 13.565626,1041.321 -7.0312503,-1.5187"
-         id="path8495"
-         inkscape:connector-curvature="0" />
-      <path
-         transform="matrix(0.66976738,0,0,0.58775506,28.504433,1035.5973)"
-         d="m -32,7.249999 c 0,1.6913722 -1.203235,3.0625 -2.6875,3.0625 -1.484265,0 -2.6875,-1.3711278 -2.6875,-3.0625 0,-1.6913721 1.203235,-3.0625002 2.6875,-3.0625002 1.484265,0 2.6875,1.3711281 2.6875,3.0625002 z"
-         sodipodi:ry="3.0625002"
-         sodipodi:rx="2.6875002"
-         sodipodi:cy="7.249999"
-         sodipodi:cx="-34.6875"
-         id="path8497"
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.593822;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         transform="matrix(-0.53138406,-0.63327886,0.91870036,-0.77088109,-39.10129,991.67111)"
+         d="m -41.010587,-7.8014231 c 0,1.381543 -1.624733,2.5015049 -3.628943,2.5015049 -0.71891,0 -1.421621,-0.1471898 -2.018993,-0.4228981"
+         sodipodi:ry="2.5015049"
+         sodipodi:rx="3.6289437"
+         sodipodi:cy="-7.8014231"
+         sodipodi:cx="-44.63953"
+         id="path9379"
+         style="fill:none;stroke:#000000;stroke-width:1.00431406;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
          sodipodi:type="arc" />
     </g>
   </g>

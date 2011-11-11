@@ -283,9 +283,19 @@ public class PanelMain extends JPanel {
 	public void syncPanel() {
 		typeButtons.clearSelection();
 		chanButton.setBorderPainted(false);
+		chanButton.setEnabled(false);
 		hazButton.setBorderPainted(false);
+		hazButton.setEnabled(false);
 		specButton.setBorderPainted(false);
+		specButton.setEnabled(false);
 		lightsButton.setBorderPainted(false);
+		lightsButton.setEnabled(false);
+		topButton.setEnabled(false);
+		fogButton.setEnabled(false);
+		radButton.setEnabled(false);
+		litButton.setEnabled(false);
+		saveButton.setEnabled(false);
+		moreButton.setVisible(false);
 		panelChan.setVisible(false);
 		panelHaz.setVisible(false);
 		panelSpec.setVisible(false);
@@ -299,35 +309,22 @@ public class PanelMain extends JPanel {
 		topIcon.setIcon(null);
 		radarIcon.setIcon(null);
 		fogIcon.setIcon(null);
-		if (dlg.mark == null) {
-			topButton.setEnabled(false);
-			fogButton.setEnabled(false);
-			radButton.setEnabled(false);
-			litButton.setEnabled(false);
-			moreButton.setVisible(false);
-			saveButton.setEnabled(false);
-			nameBox.setEnabled(false);
-			chanButton.setEnabled(false);
-			hazButton.setEnabled(false);
-			specButton.setEnabled(false);
-			lightsButton.setEnabled(false);
-		} else {
+		nameBox.setEnabled(false);
+		if (dlg.mark != null) {
 			nameBox.setEnabled(true);
 			chanButton.setEnabled(true);
 			hazButton.setEnabled(true);
 			specButton.setEnabled(true);
 			lightsButton.setEnabled(true);
 			nameBox.setText(dlg.mark.getName());
-			panelChan.setVisible(false);
-			panelHaz.setVisible(false);
-			panelSpec.setVisible(false);
-			panelLights.setVisible(false);
 			if (dlg.mark.isValid()) {
+				moreButton.setVisible(true);
 				moreButton.setEnabled(true);
 				topButton.setEnabled(true);
 				fogButton.setEnabled(true);
 				radButton.setEnabled(true);
 				litButton.setEnabled(true);
+				saveButton.setEnabled(true);
 			}
 			switch (SeaMark.GrpMAP.get(dlg.mark.getObject())) {
 			case LAT:
@@ -355,6 +352,10 @@ public class PanelMain extends JPanel {
 				panelLights.syncPanel();
 				break;
 			}
+			panelChan.syncPanel();
+			panelHaz.syncPanel();
+			panelSpec.syncPanel();
+			panelLights.syncPanel();
 			panelMore.syncPanel();
 			panelTop.syncPanel();
 			panelFog.syncPanel();

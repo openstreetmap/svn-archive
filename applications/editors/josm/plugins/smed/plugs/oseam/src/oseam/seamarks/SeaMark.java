@@ -1399,7 +1399,6 @@ public class SeaMark {
 
 		if (paintlock)
 			return;
-		paintlock = true;
 
 		dlg.panelMain.shapeIcon.setIcon(null);
 		dlg.panelMain.colLabel.setText("");

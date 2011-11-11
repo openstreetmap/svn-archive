@@ -13,7 +13,7 @@ import oseam.seamarks.SeaMark.*;
 public class PanelSaw extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup shapeButtons = new ButtonGroup();
+	public ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
 	public JRadioButton sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
@@ -21,7 +21,7 @@ public class PanelSaw extends JPanel {
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
-	private ActionListener alShape = new ActionListener() {
+	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
@@ -32,27 +32,27 @@ public class PanelSaw extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
-					dlg.panelMain.moreButton.setVisible(true);
-					dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-					dlg.panelMain.topButton.setEnabled(true);
-					dlg.panelMain.fogButton.setEnabled(true);
-					dlg.panelMain.radButton.setEnabled(true);
-					dlg.panelMain.litButton.setEnabled(true);
-					dlg.mark.setObjPattern(Pat.VERT);
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.WHITE);
-				} else {
-					dlg.panelMain.moreButton.setVisible(false);
-					dlg.panelMain.topButton.setEnabled(false);
-					dlg.panelMain.fogButton.setEnabled(false);
-					dlg.panelMain.radButton.setEnabled(false);
-					dlg.panelMain.litButton.setEnabled(false);
-				}
-				dlg.panelMain.panelMore.syncPanel();
-				dlg.mark.paintSign();
+			if (dlg.mark.isValid()) {
+				dlg.panelMain.moreButton.setVisible(true);
+				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+				dlg.panelMain.topButton.setEnabled(true);
+				dlg.panelMain.fogButton.setEnabled(true);
+				dlg.panelMain.radButton.setEnabled(true);
+				dlg.panelMain.litButton.setEnabled(true);
+				dlg.panelMain.saveButton.setEnabled(true);
+				dlg.mark.setObjPattern(Pat.VERT);
+				dlg.mark.setObjColour(Col.RED);
+				dlg.mark.addObjColour(Col.WHITE);
+			} else {
+				dlg.panelMain.moreButton.setVisible(false);
+				dlg.panelMain.topButton.setEnabled(false);
+				dlg.panelMain.fogButton.setEnabled(false);
+				dlg.panelMain.radButton.setEnabled(false);
+				dlg.panelMain.litButton.setEnabled(false);
+				dlg.panelMain.saveButton.setEnabled(false);
 			}
+			dlg.panelMain.panelMore.syncPanel();
+			dlg.mark.paintSign();
 		}
 	};
 
@@ -63,7 +63,7 @@ public class PanelSaw extends JPanel {
 		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSAW), null);
 		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW), null);
 		this.add(getShapeButton(floatButton, 0, 96, 34, 32, "Float", Shp.FLOAT, Obj.FLTSAW), null);
-		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.FLTSAW), null);
+		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSAW), null);
 	}
 
 	public void syncPanel() {

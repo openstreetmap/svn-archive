@@ -13,7 +13,7 @@ import oseam.seamarks.SeaMark.*;
 public class PanelPort extends JPanel {
 
 	private OSeaMAction dlg;
-	private ButtonGroup shapeButtons = new ButtonGroup();
+	public ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
 	public JRadioButton canButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CanButton.png")));
@@ -25,7 +25,7 @@ public class PanelPort extends JPanel {
 	public JRadioButton stakeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StakeButton.png")));
 	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
-	private ActionListener alShape = new ActionListener() {
+	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
@@ -39,7 +39,6 @@ public class PanelPort extends JPanel {
 			if (dlg.mark.isValid()) {
 				dlg.panelMain.moreButton.setVisible(true);
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-				dlg.panelMain.saveButton.setEnabled(true);
 				dlg.panelMain.topButton.setEnabled(true);
 				dlg.panelMain.fogButton.setEnabled(true);
 				dlg.panelMain.radButton.setEnabled(true);
@@ -92,6 +91,7 @@ public class PanelPort extends JPanel {
 				dlg.panelMain.fogButton.setEnabled(false);
 				dlg.panelMain.radButton.setEnabled(false);
 				dlg.panelMain.litButton.setEnabled(false);
+				dlg.panelMain.saveButton.setEnabled(false);
 			}
 			dlg.mark.paintSign();
 		}

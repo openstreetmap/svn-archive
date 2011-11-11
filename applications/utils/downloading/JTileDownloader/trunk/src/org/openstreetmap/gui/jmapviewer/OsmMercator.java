@@ -28,7 +28,6 @@ public class OsmMercator {
      * TILE_WIDTH where TILE_WIDTH is the width of a tile in pixels
      * 
      * @param aZoomlevel
-     * @return
      */
     public static int getMaxPixels(int aZoomlevel) {
         return TILE_SIZE * (1 << aZoomlevel);

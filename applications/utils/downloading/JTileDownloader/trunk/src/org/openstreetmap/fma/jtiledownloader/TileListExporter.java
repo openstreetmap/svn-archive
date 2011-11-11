@@ -26,14 +26,19 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.Collections;
+import java.util.logging.Logger;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileComparatorFactory;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 
 public class TileListExporter
 {
-    private Vector<Tile> _tilesToDownload;
+    private static final Logger log = Logger.getLogger(TileListExporter.class.getName());
+    private ArrayList<Tile> _tilesToDownload;
     private final String _downloadPathBase;
     private TileProviderIf _tileProvider;
 
@@ -42,7 +47,7 @@ public class TileListExporter
      * @param tilesToDownload
      * @param tileProvider 
      */
-    public TileListExporter(String downloadPathBase, Vector<Tile> tilesToDownload, TileProviderIf tileProvider)
+    public TileListExporter(String downloadPathBase, ArrayList<Tile> tilesToDownload, TileProviderIf tileProvider)
     {
         super();
         _downloadPathBase = downloadPathBase;
@@ -52,6 +57,10 @@ public class TileListExporter
 
     public void doExport()
     {
+        int tileSortingPolicy = AppConfiguration.getInstance().getTileSortingPolicy();
+        if (tileSortingPolicy > 0) {
+            Collections.sort(_tilesToDownload, TileComparatorFactory.getComparator(tileSortingPolicy));
+        }
 
         String exportFile = _downloadPathBase + File.separator + "export.txt";
 
@@ -60,7 +69,7 @@ public class TileListExporter
         File testDir = new File(_downloadPathBase);
         if (!testDir.exists())
         {
-            log("directory " + testDir.getPath() + " does not exist, so create it");
+            log.info("Creating directory " + testDir.getPath());
             testDir.mkdirs();
         }
 
@@ -87,7 +96,7 @@ public class TileListExporter
         }
         catch (IOException e)
         {
-            System.out.println(e);
+            log.warning("Failed to save tile: " + e.getLocalizedMessage());
         }
     }
 
@@ -95,17 +104,7 @@ public class TileListExporter
     {
         fileWriter.write(_tileProvider.getTileUrl(tileToDownload));
         fileWriter.newLine();
-        log("added url " + tileToDownload);
-    }
-
-    /**
-     * method to write to System.out
-     * 
-     * @param msg message to log
-     */
-    private static void log(String msg)
-    {
-        System.out.println(msg);
+        log.fine("added url " + tileToDownload);
     }
 
 }

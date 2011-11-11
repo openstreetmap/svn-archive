@@ -67,6 +67,7 @@ public class OsmTileSource {
             return url;
         }
 
+        @Override
         public int getMaxZoom() {
             return 17;
         }
@@ -85,6 +86,7 @@ public class OsmTileSource {
 
         public static String NAME = "TilesAtHome";
 
+        @Override
         public int getMaxZoom() {
             return 17;
         }

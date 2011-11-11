@@ -46,7 +46,7 @@ public class DownloadConfigurationUrlSquare
         setTemplateProperty(prop, TYPE, ID);
 
         setTemplateProperty(prop, PASTE_URL, _pasteUrl);
-        setTemplateProperty(prop, RADIUS, "" + _radius);
+        setTemplateProperty(prop, RADIUS, String.valueOf(_radius));
     }
 
     @Override

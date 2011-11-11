@@ -23,6 +23,7 @@ package org.openstreetmap.fma.jtiledownloader;
 
 import java.util.HashMap;
 
+import java.util.logging.LogManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -38,7 +39,9 @@ public class JTileDownloaderStart
 
     public static void main(String[] args)
     {
-
+        try {
+            LogManager.getLogManager().readConfiguration(JTileDownloaderStart.class.getClassLoader().getResourceAsStream("logging.properties"));
+        } catch( Exception e ) { /* oh well... */ }
         // get command line arguments
         HashMap<String, String> arguments = new HashMap<String, String>();
         if (args != null && args.length > 0)
@@ -72,7 +75,7 @@ public class JTileDownloaderStart
                     catch (Exception e)
                     {
                     }
-                    new JTileDownloaderMainView();
+                    new JTileDownloaderMainView().setVisible(true);
                 }
             });
         }

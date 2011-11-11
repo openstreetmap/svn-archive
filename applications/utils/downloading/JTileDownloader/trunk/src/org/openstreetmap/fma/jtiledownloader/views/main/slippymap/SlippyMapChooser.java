@@ -13,8 +13,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
@@ -38,6 +40,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 public class SlippyMapChooser
     extends JMapViewer
 {
+    private final static Logger log = Logger.getLogger(SlippyMapChooser.class.getName());
     // upper left and lower right corners of the selection rectangle (x/y on
     // ZOOM_MAX)
     Point iSelectionRectStart;
@@ -52,7 +55,7 @@ public class SlippyMapChooser
 
     JTileDownloaderTileLoader cachedLoader;
     TileLoader uncachedLoader;
-    JPanel slipyyMapTabPanel;
+    JPanel slippyMapTabPanel;
 
     /**
      * Create the chooser component.
@@ -73,7 +76,7 @@ public class SlippyMapChooser
 
         tileSource = new JTileDownloaderTileSourceWrapper(tileProvider);
 
-        new OsmMapControl(this, slipyyMapTabPanel);
+        new OsmMapControl(this).initialize(slippyMapTabPanel);
         this.bboxlatlonpanel = bboxlatlonpanel;
         boundingBoxChanged();
         bboxlatlonpanel.setChangeListener(this);
@@ -130,7 +133,7 @@ public class SlippyMapChooser
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error painting tile", e);
         }
     }
 
@@ -153,7 +156,7 @@ public class SlippyMapChooser
         MapMarkerDot xmin_ymin = new MapMarkerDot(bboxlatlonpanel.getMinLat(), bboxlatlonpanel.getMinLon());
         MapMarkerDot xmax_ymax = new MapMarkerDot(bboxlatlonpanel.getMaxLat(), bboxlatlonpanel.getMaxLon());
 
-        Vector<MapMarker> marker = new Vector<MapMarker>(2);
+        ArrayList<MapMarker> marker = new ArrayList<MapMarker>(2);
         marker.add(xmin_ymin);
         marker.add(xmax_ymax);
         setMapMarkerList(marker);

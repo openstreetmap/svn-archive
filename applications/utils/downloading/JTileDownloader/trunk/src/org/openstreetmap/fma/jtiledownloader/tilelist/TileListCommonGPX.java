@@ -22,8 +22,10 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,7 +42,8 @@ import org.xml.sax.SAXParseException;
 public class TileListCommonGPX
     extends TileListCommon
 {
-    private Vector<Tile> tilesToDownload = new Vector<Tile>();
+    private final static Logger log = Logger.getLogger(TileListCommonGPX.class.getName());
+    private ArrayList<Tile> tilesToDownload = new ArrayList<Tile>();
 
     public void updateList(String fileName, int corridorSize)
     {
@@ -98,23 +101,21 @@ public class TileListCommonGPX
             }
             catch (SAXParseException spe)
             {
-                System.out.println("\n** Parsing error, line " + spe.getLineNumber() + ", uri " + spe.getSystemId());
-                System.out.println("   " + spe.getMessage());
                 Exception e = (spe.getException() != null) ? spe.getException() : spe;
-                e.printStackTrace();
+                log.log(Level.SEVERE, "Error parsing " + spe.getSystemId() + " line " + spe.getLineNumber(), e);
             }
             catch (SAXException sxe)
             {
                 Exception e = (sxe.getException() != null) ? sxe.getException() : sxe;
-                e.printStackTrace();
+                log.log(Level.SEVERE, "Error parsing GPX", e);
             }
             catch (ParserConfigurationException pce)
             {
-                pce.printStackTrace();
+                log.log(Level.SEVERE, "Error in parser configuration", pce);
             }
             catch (IOException ioe)
             {
-                ioe.printStackTrace();
+                log.log(Level.SEVERE, "Error parsing GPX", ioe);
             }
         }
     }
@@ -151,14 +152,14 @@ public class TileListCommonGPX
                     maxDownloadTileYIndex = minDownloadTileYIndex;
                 }
 
-                for (int tileXIndex = getMin(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex <= getMax(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex++)
+                for (int tileXIndex = Math.min(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex <= Math.max(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex++)
                 {
-                    for (int tileYIndex = getMin(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex <= getMax(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex++)
+                    for (int tileYIndex = Math.min(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex <= Math.max(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex++)
                     {
                         Tile tile = new Tile(tileXIndex, tileYIndex, zoomLevel);
                         if (!tilesToDownload.contains(tile))
                         {
-                            log("add " + tile + " to download list.");
+                            log.fine("add " + tile + " to download list.");
                             tilesToDownload.add(tile);
                         }
                     }
@@ -175,7 +176,7 @@ public class TileListCommonGPX
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      */
-    public Vector<Tile> getTileListToDownload()
+    public ArrayList<Tile> getTileListToDownload()
     {
         return tilesToDownload;
     }

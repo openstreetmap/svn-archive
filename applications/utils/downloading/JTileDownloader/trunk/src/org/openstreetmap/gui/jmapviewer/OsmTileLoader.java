@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.logging.Logger;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
@@ -18,7 +19,9 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  * @author Jan Peter Stotz
  */
 public class OsmTileLoader implements TileLoader {
-
+    
+    private static final Logger log = Logger.getLogger(OsmTileLoader.class.getName());
+    
     /**
      * Holds the used user agent used for HTTP requests. If this field is 
      * <code>null</code>, the default Java user agent is used.
@@ -58,7 +61,7 @@ public class OsmTileLoader implements TileLoader {
                     tile.setImage(Tile.ERROR_IMAGE);
                     listener.tileLoadingFinished(tile, false);
                     if (input == null)
-                        System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
+                        log.warning("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
                 } finally {
                     tile.loading = false;
                     tile.setLoaded(true);

@@ -27,8 +27,10 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -53,7 +55,7 @@ public class ErrorTileListView
     private static final String RETRY = "RETRY";
     private static final String CLOSE = "CLOSE";
     private static final long serialVersionUID = 1L;
-    private final Vector<TileDownloadError> _errorTileList;
+    private final ArrayList<TileDownloadError> _errorTileList;
 
     private JTable _errorTable;
     private JButton _close;
@@ -67,7 +69,7 @@ public class ErrorTileListView
      * @param errorTileList
      * @throws HeadlessException
      */
-    public ErrorTileListView(Vector<TileDownloadError> errorTileList) throws HeadlessException
+    public ErrorTileListView(ArrayList<TileDownloadError> errorTileList) throws HeadlessException
     {
         super();
         setTitle("ErrorTileListView");
@@ -138,7 +140,7 @@ public class ErrorTileListView
      * Getter for errorTileList
      * @return the errorTileList
      */
-    public Vector<TileDownloadError> getErrorTileList()
+    public ArrayList<TileDownloadError> getErrorTileList()
     {
         return _errorTileList;
     }
@@ -171,7 +173,7 @@ public class ErrorTileListView
         public void actionPerformed(ActionEvent e)
         {
             String actionCommand = e.getActionCommand();
-            System.out.println("button pressed -> " + actionCommand);
+            log.log(Level.FINE, "button pressed -> {0}", actionCommand);
 
             if (actionCommand.equalsIgnoreCase(CLOSE))
             {
@@ -187,4 +189,5 @@ public class ErrorTileListView
         }
     }
 
+    private static final Logger log = Logger.getLogger(ErrorTileListView.class.getName());
 }

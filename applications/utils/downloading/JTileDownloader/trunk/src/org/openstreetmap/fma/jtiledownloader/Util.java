@@ -23,7 +23,6 @@
 
 package org.openstreetmap.fma.jtiledownloader;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
@@ -43,15 +42,27 @@ public class Util
      */
     public static int[] getOutputZoomLevelArray(TileProviderIf selectedTileProvider, String zoomLevelString)
     {
+        int minZoom = selectedTileProvider == null ? 0 : selectedTileProvider.getMinZoom();
+        int maxZoom = selectedTileProvider == null ? 20 : selectedTileProvider.getMaxZoom();
         LinkedList<Integer> zoomLevels = new LinkedList<Integer>();
-        for (String zoomLevel : Arrays.asList(zoomLevelString.split(",")))
+        for (String zoomLevel : zoomLevelString.split(","))
         {
-            int selectedZoom = Integer.parseInt(zoomLevel.trim());
-            if (selectedZoom <= selectedTileProvider.getMaxZoom() && selectedZoom >= selectedTileProvider.getMinZoom())
-            {
-                if (!zoomLevels.contains(selectedZoom))
+            int z1, z2;
+            int p = zoomLevel.indexOf('-');
+            if( p > 0 ) {
+                z1 = Integer.parseInt(zoomLevel.substring(0, p).trim());
+                z2 = Integer.parseInt(zoomLevel.substring(p + 1).trim());
+            } else {
+                z1 = Integer.parseInt(zoomLevel.trim());
+                z2 = z1;
+            }
+            for( int selectedZoom = z1; selectedZoom <= z2; selectedZoom ++ ) {
+                if (selectedZoom <= maxZoom && selectedZoom >= minZoom)
                 {
-                    zoomLevels.add(selectedZoom);
+                    if (!zoomLevels.contains(selectedZoom))
+                    {
+                        zoomLevels.add(selectedZoom);
+                    }
                 }
             }
         }
@@ -90,17 +101,24 @@ public class Util
             return;
         }
 
-        int posLat = url.indexOf("lat=");
-        String lat = url.substring(posLat);
-        int posLon = url.indexOf("lon=");
-        String lon = url.substring(posLon);
+        try {
+            int posLat = url.indexOf("lat=");
+            String lat = url.substring(posLat);
+            int posLon = url.indexOf("lon=");
+            String lon = url.substring(posLon);
 
-        int posAnd = lat.indexOf("&");
-        lat = lat.substring(4, posAnd);
-        posAnd = lon.indexOf("&");
-        lon = lon.substring(4, posAnd);
+            int posAnd = lat.indexOf("&");
+            lat = lat.substring(4, posAnd).replace(',', '.');
+            posAnd = lon.indexOf("&");
+            lon = lon.substring(4, posAnd).replace(',', '.');
 
-        tileList.setLatitude(Double.parseDouble(lat));
-        tileList.setLongitude(Double.parseDouble(lon));
+            if( lat.length() > 0 && lon.length() > 0 ) {
+                tileList.setLatitude(Double.parseDouble(lat));
+                tileList.setLongitude(Double.parseDouble(lon));
+            }
+        } catch( NumberFormatException e ) {
+            tileList.setLatitude(0);
+            tileList.setLongitude(0);
+        }
     }
 }

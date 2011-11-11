@@ -40,8 +40,8 @@ public class TileProviderList
     {
         super();
         tileProviders = new TileProviderIf[] {
-            new OsmarenderTileProvider(),
             new MapnikTileProvider(),
+            new OsmarenderTileProvider(),
             new GenericTileProvider("Cyclemap (CloudMade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"),
             new GenericTileProvider("Cyclemap (Thunderflames)", "http://thunderflames.org/tiles/cycle/"),
             new GenericTileProvider("OpenStreetBrowser (Europe)", "http://www.openstreetbrowser.org/tiles/base/"),

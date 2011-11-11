@@ -23,26 +23,21 @@
 package org.openstreetmap.fma.jtiledownloader.cmdline;
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
-import org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration;
-import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxLatLon;
-import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxXY;
-import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationGPX;
-import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationUrlSquare;
-import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
-import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
+import org.openstreetmap.fma.jtiledownloader.config.*;
+import org.openstreetmap.fma.jtiledownloader.datatypes.*;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 public class JTileDownloaderCommandLine
     implements TileDownloaderListener
 {
-
-    private static final Object CMDLINE_DL = "DL";
+    private static final Logger log = Logger.getLogger(JTileDownloaderCommandLine.class.getName());
+    private static final String CMDLINE_DL = "DL";
 
     private final HashMap<String, String> _arguments;
 
@@ -103,7 +98,7 @@ public class JTileDownloaderCommandLine
         }
         else
         {
-            log("File contains an unknown format. Please specify a valid file!");
+            log.severe("File contains an unknown format. Please specify a valid file!");
         }
 
         if (_downloadTemplate != null)
@@ -134,30 +129,30 @@ public class JTileDownloaderCommandLine
      */
     private void printStartUpMessage()
     {
-        log("JTileDownloader  Copyright (C) 2008  Friedrich Maier");
-        log("This program comes with ABSOLUTELY NO WARRANTY.");
-        log("This is free software, and you are welcome to redistribute it");
-        log("under certain conditions");
-        log("See file COPYING.txt and README.txt for details.");
-        log("");
-        log("");
+        log.info("JTileDownloader  Copyright (C) 2008  Friedrich Maier");
+        log.info("This program comes with ABSOLUTELY NO WARRANTY.");
+        log.info("This is free software, and you are welcome to redistribute it");
+        log.info("under certain conditions");
+        log.info("See file COPYING.txt and README.txt for details.");
+        log.info("");
+        log.info("");
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector, int)
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.ArrayList, int)
      */
-    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
+    public void downloadComplete(int errorCount, ArrayList<TileDownloadError> errorTileList, int updatedTileCount)
     {
-        log("updated " + updatedTileCount + " tiles");
-        log("download completed with " + errorCount + " errors");
+        log.log(Level.INFO, "updated {0} tiles", updatedTileCount);
+        log.log(Level.INFO, "download completed with {0} errors", errorCount);
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, int, boolean) 
      */
     public void downloadedTile(int actCount, int maxCount, String path, int updatedCount, boolean updatedTile)
     {
-        log("downloaded tile " + actCount + "/" + maxCount + " to " + path + ": updated flag is " + updatedTile);
+        log.info("downloaded tile " + actCount + "/" + maxCount + " to " + path + ": updated flag is " + updatedTile);
     }
 
     /**
@@ -165,7 +160,7 @@ public class JTileDownloaderCommandLine
      */
     public void waitResume(String message)
     {
-        log("wait to resume: " + message);
+        log.log(Level.INFO, "wait to resume: {0}", message);
     }
 
     /**
@@ -173,17 +168,7 @@ public class JTileDownloaderCommandLine
      */
     public void waitWaitHttp500ErrorToResume(String message)
     {
-        log("http 500 error occured: " + message);
-    }
-
-    /**
-     * method to write to System.out
-     * 
-     * @param msg message to log
-     */
-    private static void log(String msg)
-    {
-        System.out.println(msg);
+        log.log(Level.WARNING, "http 500 error occured: {0}", message);
     }
 
     /**
@@ -191,7 +176,7 @@ public class JTileDownloaderCommandLine
      */
     public void errorOccured(int actCount, int maxCount, Tile tile)
     {
-        log("Error downloading tile " + actCount + "/" + maxCount + " from " + tile);
+        log.warning("Error downloading tile " + actCount + "/" + maxCount + " from " + tile);
     }
 
     /**
@@ -199,7 +184,7 @@ public class JTileDownloaderCommandLine
      */
     public void downloadStopped(int actCount, int maxCount)
     {
-        log("Stopped download at  tile " + actCount + "/" + maxCount);
+        log.info("Stopped download at  tile " + actCount + "/" + maxCount);
     }
 
     /**
@@ -207,7 +192,7 @@ public class JTileDownloaderCommandLine
      */
     public void setInfo(String message)
     {
-        log(message);
+        log.info(message);
     }
 
     /**

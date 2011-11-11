@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.logging.Logger;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
@@ -27,6 +28,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 public class JTileDownloaderTileLoader
     extends OsmTileLoader
 {
+    private static final Logger log = Logger.getLogger(JTileDownloaderTileLoader.class.getName());
 
     protected String cacheDirBase;
     protected boolean noDownload = false;
@@ -38,6 +40,7 @@ public class JTileDownloaderTileLoader
         this.cacheDirBase = cacheDirBase;
     }
 
+    @Override
     public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley, final int zoom)
     {
         return new FileLoadJob(source, tilex, tiley, zoom);
@@ -139,11 +142,11 @@ public class JTileDownloaderTileLoader
                 FileOutputStream f = new FileOutputStream(new File(folder, tile.getYtile() + "." + source.getTileType()));
                 f.write(rawData);
                 f.close();
-                // System.out.println("Saved tile to file: " + tile);
+                log.finest("Saved tile to file: " + tile);
             }
             catch (Exception e)
             {
-                System.err.println("Failed to save tile content: " + e.getLocalizedMessage());
+                log.warning("Failed to save tile content: " + e.getLocalizedMessage());
             }
         }
 
@@ -158,7 +161,7 @@ public class JTileDownloaderTileLoader
                     throw new IOException("File empty");
                 tile.loadImage(fin);
                 fin.close();
-                // System.out.println("Loaded from file: " + tile);
+                log.finest("Loaded from file: " + tile);
                 tile.setLoaded(true);
                 listener.tileLoadingFinished(tile, true);
                 return true;

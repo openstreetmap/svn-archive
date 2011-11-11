@@ -48,10 +48,10 @@ public class DownloadConfigurationBBoxLatLon
     {
         setTemplateProperty(prop, TYPE, ID);
 
-        setTemplateProperty(prop, MIN_LAT, "" + _minLat);
-        setTemplateProperty(prop, MIN_LON, "" + _minLon);
-        setTemplateProperty(prop, MAX_LAT, "" + _maxLat);
-        setTemplateProperty(prop, MAX_LON, "" + _maxLon);
+        setTemplateProperty(prop, MIN_LAT, String.valueOf(_minLat));
+        setTemplateProperty(prop, MIN_LON, String.valueOf(_minLon));
+        setTemplateProperty(prop, MAX_LAT, String.valueOf(_maxLat));
+        setTemplateProperty(prop, MAX_LON, String.valueOf(_maxLon));
     }
 
     @Override

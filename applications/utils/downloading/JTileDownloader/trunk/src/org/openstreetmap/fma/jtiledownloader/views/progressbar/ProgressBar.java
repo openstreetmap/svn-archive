@@ -31,7 +31,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.Calendar;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -113,7 +113,6 @@ public class ProgressBar
         center();
         downloader.setListener(this);
         downloader.start();
-        setVisible(true);
     }
 
     /**
@@ -181,9 +180,9 @@ public class ProgressBar
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector, int)
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.ArrayList, int)
      */
-    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
+    public void downloadComplete(int errorCount, ArrayList<TileDownloadError> errorTileList, int updatedTileCount)
     {
         try
         {
@@ -302,13 +301,9 @@ public class ProgressBar
     /** Constant for days unit and conversion */
     public static final int DAYS = HOURS * 24;
 
-    /**
-     * @param millisToString
-     * @return
-     */
     private String timeDiff(long millis)
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (millis < 0)
         {
             sb.append("-");

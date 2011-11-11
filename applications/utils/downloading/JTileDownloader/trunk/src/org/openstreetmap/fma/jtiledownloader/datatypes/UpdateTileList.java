@@ -21,18 +21,18 @@
 
 package org.openstreetmap.fma.jtiledownloader.datatypes;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class UpdateTileList
 {
     private int _zoomLevel;
-    private Vector<YDirectory> _yDirectory;
+    private ArrayList<YDirectory> _yDirectory;
 
     public void addYDirectory(YDirectory yDirectory)
     {
         if (_yDirectory == null)
         {
-            _yDirectory = new Vector<YDirectory>();
+            _yDirectory = new ArrayList<YDirectory>();
         }
         _yDirectory.add(yDirectory);
     }
@@ -41,7 +41,7 @@ public class UpdateTileList
      * Getter for yDirectory
      * @return the yDirectory
      */
-    public final Vector<YDirectory> getYDirectory()
+    public final ArrayList<YDirectory> getYDirectory()
     {
         return _yDirectory;
     }
@@ -56,7 +56,7 @@ public class UpdateTileList
         int count = 0;
         for (int index = 0; index < _yDirectory.size(); index++)
         {
-            YDirectory yDir = _yDirectory.elementAt(index);
+            YDirectory yDir = _yDirectory.get(index);
             if (yDir.getTiles() != null)
             {
                 count += yDir.getTiles().length;

@@ -70,34 +70,6 @@ public abstract class TileListCommon
     }
 
     /**
-     * @param minValue
-     * @param maxValue
-     * @return
-     */
-    protected final int getMax(int minValue, int maxValue)
-    {
-        if (minValue > maxValue)
-        {
-            return minValue;
-        }
-        return maxValue;
-    }
-
-    /**
-     * @param minValue
-     * @param maxValue
-     * @return
-     */
-    protected final int getMin(int minValue, int maxValue)
-    {
-        if (minValue > maxValue)
-        {
-            return maxValue;
-        }
-        return minValue;
-    }
-
-    /**
      * Getter for downloadZoomLevel
      * @return the downloadZoomLevel
      */
@@ -113,16 +85,6 @@ public abstract class TileListCommon
     public final void setDownloadZoomLevels(int[] downloadZoomLevel)
     {
         _downloadZoomLevels = downloadZoomLevel.clone();
-    }
-
-    /**
-     * method to write to System.out
-     * 
-     * @param msg message to log
-     */
-    public void log(String msg)
-    {
-        System.out.println(msg);
     }
 
 }

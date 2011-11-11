@@ -25,6 +25,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -37,6 +38,7 @@ public class JTileDownloaderMainView
     extends JFrame
 {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(JTileDownloaderMainView.class.getName());
 
     private MainPanel _mainPanel;
     private OptionsPanel _optionsPanel;
@@ -81,7 +83,6 @@ public class JTileDownloaderMainView
 
         pack();
         center();
-        setVisible(true);
     }
 
     /**
@@ -106,7 +107,7 @@ public class JTileDownloaderMainView
         @Override
         public void windowClosing(WindowEvent e)
         {
-            System.out.println("WindowEvent windowClosing");
+            log.fine("WindowEvent windowClosing");
 
             _mainPanel.saveAllConfigOptions();
             updateAppConfig();
@@ -128,7 +129,7 @@ public class JTileDownloaderMainView
         {
             if (((JTabbedPane) e.getSource()).getSelectedIndex() == 1)
             {
-                System.out.println("changed to update tab");
+                log.fine("changed to update tab");
                 // selected update tab
                 getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
                 getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getName());
@@ -156,8 +157,10 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
         AppConfiguration.getInstance().setWaitSeconds(_optionsPanel.getWaitSeconds());
         AppConfiguration.getInstance().setWaitNrTiles(_optionsPanel.getWaitNrTiles());
+        AppConfiguration.getInstance().setMinimumAgeInDays(_optionsPanel.getMinimumAgeInDays());
         AppConfiguration.getInstance().setSlippyMap_NoDownload(_optionsPanel.isSlippyMapNoDownload());
         AppConfiguration.getInstance().setSlippyMap_SaveTiles(_optionsPanel.isSlippyMapSaveTiles());
+        AppConfiguration.getInstance().setTileSortingPolicy(_optionsPanel.getTileSortingPolicy());
         AppConfiguration.getInstance().saveToFile();
     }
 
@@ -165,7 +168,7 @@ public class JTileDownloaderMainView
      * Getter for mainPanel
      * @return the mainPanel
      */
-    private final MainPanel getMainPanel()
+    public final MainPanel getMainPanel()
     {
         return _mainPanel;
     }

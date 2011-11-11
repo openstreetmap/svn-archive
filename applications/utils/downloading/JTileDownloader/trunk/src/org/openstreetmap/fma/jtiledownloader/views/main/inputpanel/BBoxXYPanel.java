@@ -26,6 +26,7 @@ import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -90,10 +91,10 @@ public class BBoxXYPanel
         _downloadConfig = new DownloadConfigurationBBoxXY();
         configurationSaver.loadDownloadConfig(_downloadConfig);
 
-        _textMinX.setText("" + _downloadConfig.getMinX());
-        _textMinY.setText("" + _downloadConfig.getMinY());
-        _textMaxX.setText("" + _downloadConfig.getMaxX());
-        _textMaxY.setText("" + _downloadConfig.getMaxY());
+        _textMinX.setText(String.valueOf(_downloadConfig.getMinX()));
+        _textMinY.setText(String.valueOf(_downloadConfig.getMinY()));
+        _textMaxX.setText(String.valueOf(_downloadConfig.getMaxX()));
+        _textMaxY.setText(String.valueOf(_downloadConfig.getMaxY()));
     }
 
     /**
@@ -241,6 +242,8 @@ public class BBoxXYPanel
         return _tileList.getTileCount();
     }
 
+    private static final Logger log = Logger.getLogger(BBoxXYPanel.class.getName());
+
     class MyFocusListener
         implements FocusListener
     {
@@ -259,7 +262,7 @@ public class BBoxXYPanel
         public void focusLost(FocusEvent focusevent)
         {
             String componentName = focusevent.getComponent().getName();
-            System.out.println("focusLost: " + componentName);
+            log.fine("focusLost: " + componentName);
 
             if (componentName.equalsIgnoreCase(COMPONENT_MINX))
             {

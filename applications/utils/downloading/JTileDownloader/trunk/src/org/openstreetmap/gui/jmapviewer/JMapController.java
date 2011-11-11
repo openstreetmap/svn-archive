@@ -24,6 +24,9 @@ public abstract class JMapController {
 
     public JMapController(JMapViewer map) {
         this.map = map;
+    }
+
+    public void addListeners() {
         if (this instanceof MouseListener)
             map.addMouseListener((MouseListener) this);
         if (this instanceof MouseWheelListener)
@@ -31,5 +34,4 @@ public abstract class JMapController {
         if (this instanceof MouseMotionListener)
             map.addMouseMotionListener((MouseMotionListener) this);
     }
-
 }

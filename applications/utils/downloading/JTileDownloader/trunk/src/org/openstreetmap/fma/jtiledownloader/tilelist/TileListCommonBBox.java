@@ -20,8 +20,8 @@
 
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
-import java.util.Vector;
-
+import java.util.ArrayList;
+import java.util.logging.Logger;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 
 /**
@@ -30,6 +30,7 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 public class TileListCommonBBox
     extends TileListCommon
 {
+    private static final Logger log = Logger.getLogger(TileListCommonBBox.class.getName());
     private int[] _xTopLeft = new int[] { 0 };
     private int[] _yTopLeft = new int[] { 0 };
     private int[] _xBottomRight = new int[] { 0 };
@@ -38,32 +39,34 @@ public class TileListCommonBBox
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      */
-    public Vector<Tile> getTileListToDownload()
+    public ArrayList<Tile> getTileListToDownload()
     {
-        Vector<Tile> tilesToDownload = new Vector<Tile>();
+        ArrayList<Tile> tilesToDownload = new ArrayList<Tile>();
 
         for (int indexZoomLevel = 0; indexZoomLevel < getDownloadZoomLevels().length; indexZoomLevel++)
         {
-            int xStart = getMin(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
-            int xEnd = getMax(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
+            int zoom = getDownloadZoomLevels()[indexZoomLevel];
+           
+            int xStart = Math.min(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
+            int xEnd = Math.max(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
 
-            int yStart = getMin(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
-            int yEnd = getMax(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
+            int yStart = Math.min(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
+            int yEnd = Math.max(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
 
             for (int downloadTileXIndex = xStart; downloadTileXIndex <= xEnd; downloadTileXIndex++)
             {
                 for (int downloadTileYIndex = yStart; downloadTileYIndex <= yEnd; downloadTileYIndex++)
                 {
-                    String urlPathToFile = getDownloadZoomLevels()[indexZoomLevel] + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
+                    String urlPathToFile = zoom + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
 
-                    log("add " + urlPathToFile + " to download list.");
-                    tilesToDownload.addElement(new Tile(downloadTileXIndex, downloadTileYIndex, getDownloadZoomLevels()[indexZoomLevel]));
+                    log.fine("add " + urlPathToFile + " to download list.");
+                    tilesToDownload.add(new Tile(downloadTileXIndex, downloadTileYIndex, zoom));
                 }
             }
 
         }
 
-        log("finished");
+        log.fine("finished");
 
         return tilesToDownload;
 
@@ -91,10 +94,10 @@ public class TileListCommonBBox
             setXBottomRight(calculateTileX(maxLon, getDownloadZoomLevels()[indexZoomLevel]), indexZoomLevel);
             setYBottomRight(calculateTileY(minLat, getDownloadZoomLevels()[indexZoomLevel]), indexZoomLevel);
 
-            log("XTopLeft=" + getXTopLeft()[indexZoomLevel]);
-            log("YTopLeft=" + getYTopLeft()[indexZoomLevel]);
-            log("XBottomRight=" + getXBottomRight()[indexZoomLevel]);
-            log("YBottomRight=" + getYBottomRight()[indexZoomLevel]);
+            log.fine("XTopLeft=" + getXTopLeft()[indexZoomLevel]);
+            log.fine("YTopLeft=" + getYTopLeft()[indexZoomLevel]);
+            log.fine("XBottomRight=" + getXBottomRight()[indexZoomLevel]);
+            log.fine("YBottomRight=" + getYBottomRight()[indexZoomLevel]);
         }
 
     }
@@ -239,6 +242,7 @@ public class TileListCommonBBox
         int count = 0;
         for (int indexZoomLevels = 0; indexZoomLevels < getDownloadZoomLevels().length; indexZoomLevels++)
         {
+            // WTF?
             count += Integer.parseInt("" + (Math.abs(getXBottomRight()[indexZoomLevels] - getXTopLeft()[indexZoomLevels]) + 1) * (Math.abs(getYBottomRight()[indexZoomLevels] - getYTopLeft()[indexZoomLevels]) + 1));
         }
 

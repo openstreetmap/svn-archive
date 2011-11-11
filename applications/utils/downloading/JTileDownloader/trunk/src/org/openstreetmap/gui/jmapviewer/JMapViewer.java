@@ -81,7 +81,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      */
     public JMapViewer() {
         this(new MemoryTileCache(), 4);
-        new DefaultMapController(this);
+        new DefaultMapController(this).addListeners();
     }
 
     public JMapViewer(TileCache tileCache, int downloadThreadCount) {
@@ -215,7 +215,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * visible.
      */
     public void setDisplayToFitMapMarkers() {
-        if (mapMarkerList == null || mapMarkerList.size() == 0)
+        if (mapMarkerList == null || mapMarkerList.isEmpty())
             return;
         int x_min = Integer.MAX_VALUE;
         int y_min = Integer.MAX_VALUE;
@@ -232,14 +232,14 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         }
         int height = Math.max(0, getHeight());
         int width = Math.max(0, getWidth());
-        // System.out.println(x_min + " < x < " + x_max);
-        // System.out.println(y_min + " < y < " + y_max);
-        // System.out.println("tiles: " + width + " " + height);
+        // log.fine(x_min + " < x < " + x_max);
+        // log.fine(y_min + " < y < " + y_max);
+        // log.fine("tiles: " + width + " " + height);
         int newZoom = mapZoomMax;
         int x = x_max - x_min;
         int y = y_max - y_min;
         while (x > width || y > height) {
-            // System.out.println("zoom: " + zoom + " -> " + x + " " + y);
+            // log.fine("zoom: " + zoom + " -> " + x + " " + y);
             newZoom--;
             x >>= 1;
             y >>= 1;
@@ -360,7 +360,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             return;
         for (MapMarker marker : mapMarkerList) {
             Point p = getMapPosition(marker.getLat(), marker.getLon());
-            // System.out.println(marker + " -> " + p);
+            // log.fine(marker + " -> " + p);
             if (p != null)
                 marker.paint(g, p);
         }

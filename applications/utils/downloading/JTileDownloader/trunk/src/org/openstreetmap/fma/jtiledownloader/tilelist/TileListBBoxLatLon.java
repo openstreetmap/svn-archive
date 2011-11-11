@@ -21,10 +21,12 @@
 
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
+import java.util.logging.Logger;
+
 public class TileListBBoxLatLon
     extends TileListCommonBBox
 {
-
+    private static final Logger log = Logger.getLogger(TileListBBoxLatLon.class.getName());
     private double _minLat;
     private double _minLon;
     private double _maxLat;
@@ -33,12 +35,12 @@ public class TileListBBoxLatLon
     public void calculateTileValuesXY()
     {
 
-        log("calculate tile values for (BBoxLatLon):");
+        log.fine("calculate tile values for (BBoxLatLon):");
 
-        log("minLat=" + _minLat);
-        log("minLon=" + _minLon);
-        log("maxLat=" + _maxLat);
-        log("maxLon=" + _maxLon);
+        log.fine("minLat=" + _minLat);
+        log.fine("minLon=" + _minLon);
+        log.fine("maxLat=" + _maxLat);
+        log.fine("maxLon=" + _maxLon);
 
         calculateTileValuesXY(_minLat, _minLon, _maxLat, _maxLon);
     }

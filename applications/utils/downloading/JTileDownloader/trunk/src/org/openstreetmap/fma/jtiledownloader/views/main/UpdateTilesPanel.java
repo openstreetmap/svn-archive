@@ -32,8 +32,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Vector;
+import java.util.ArrayList;
 
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,6 +56,7 @@ public class UpdateTilesPanel
     extends JPanel
 {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(UpdateTilesPanel.class.getName());
 
     private JTable _updateTilesTable;
 
@@ -77,7 +79,7 @@ public class UpdateTilesPanel
 
     private JScrollPane _scrollPane;
 
-    private Vector<UpdateTileList> _updateList;
+    private ArrayList<UpdateTileList> _updateList;
 
     private String _tileServer = "";
     private String _folder = "";
@@ -197,7 +199,7 @@ public class UpdateTilesPanel
         public void actionPerformed(ActionEvent e)
         {
             String actionCommand = e.getActionCommand();
-            System.out.println("button pressed -> " + actionCommand);
+            log.fine("button pressed -> " + actionCommand);
 
             if (actionCommand.equalsIgnoreCase(COMMAND_SEARCH))
             {
@@ -229,18 +231,18 @@ public class UpdateTilesPanel
             for (int selectedRow : selectedRows)
             {
                 int zoomLevel = (Integer) _updateTilesTable.getValueAt(selectedRow, 0);
-                System.out.println("selected zoom level " + zoomLevel);
+                log.fine("selected zoom level " + zoomLevel);
 
                 for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
                 {
-                    UpdateTileList updateTileList = _updateList.elementAt(indexTileList);
+                    UpdateTileList updateTileList = _updateList.get(indexTileList);
                     if (updateTileList.getZoomLevel() == zoomLevel)
                     {
-                        System.out.println("found updateTileList for zoom level " + zoomLevel);
-                        Vector<YDirectory> directory = updateTileList.getYDirectory();
+                        log.fine("found updateTileList for zoom level " + zoomLevel);
+                        ArrayList<YDirectory> directory = updateTileList.getYDirectory();
                         for (int indexDirectoryY = 0; indexDirectoryY < directory.size(); indexDirectoryY++)
                         {
-                            YDirectory yDir = directory.elementAt(indexDirectoryY);
+                            YDirectory yDir = directory.get(indexDirectoryY);
                             Tile[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; tiles != null && indexTiles < tiles.length; indexTiles++)
                             {
@@ -251,12 +253,12 @@ public class UpdateTilesPanel
                 }
             }
 
-            System.out.println("folder:" + getFolder());
-            System.out.println("tileServer:" + _tileServer);
+            log.fine("folder:" + getFolder());
+            log.fine("tileServer:" + _tileServer);
 
             TileListDownloader tld = new TileListDownloader(getFolder(), updateList, _mainPanel.getSelectedTileProvider());
 
-            new ProgressBar(1, tld);
+            new ProgressBar(1, tld).setVisible(true);
         }
 
         /**
@@ -271,7 +273,7 @@ public class UpdateTilesPanel
                 return;
             }
 
-            _updateList = new Vector<UpdateTileList>();
+            _updateList = new ArrayList<UpdateTileList>();
 
             File[] zoomLevels = file.listFiles(new FileFilter() {
                 public boolean accept(File pathname)
@@ -365,7 +367,7 @@ public class UpdateTilesPanel
                                 {
                                     File tile = tiles[tileIndex];
                                     theTiles[tileIndex] = new Tile(Integer.parseInt(yDir.getName()), Integer.parseInt(tile.getName().substring(0, tile.getName().lastIndexOf("."))), Integer.parseInt(zoomLevel.getName()));
-                                    System.out.println("found tile to update: '" + theTiles[tileIndex] + "'");
+                                    log.fine("found tile to update: '" + theTiles[tileIndex] + "'");
                                 }
                                 yDirectory.setTiles(theTiles);
                             }
@@ -383,14 +385,14 @@ public class UpdateTilesPanel
         /**
          * @param updateList
          */
-        private void updateTable(Vector<UpdateTileList> updateList)
+        private void updateTable(ArrayList<UpdateTileList> updateList)
         {
             if (_updateList != null)
             {
                 for (int index = 0; index < _updateList.size(); index++)
                 {
-                    UpdateTileList list = _updateList.elementAt(index);
-                    System.out.println("zoom level = " + list.getZoomLevel() + " count = " + list.getFileCount());
+                    UpdateTileList list = _updateList.get(index);
+                    log.fine("zoom level = " + list.getZoomLevel() + " count = " + list.getFileCount());
                 }
 
                 TableModel tm = new UpdateTilesTableModel(_updateList);

@@ -34,6 +34,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
 
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -57,6 +58,7 @@ public class GPXPanel
     extends InputPanel
 {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(GPXPanel.class.getName());
 
     private static final String COMPONENT_GPX_FILE = "gpxFile";
 
@@ -230,7 +232,7 @@ public class GPXPanel
         public void focusLost(FocusEvent focusevent)
         {
             String componentName = focusevent.getComponent().getName();
-            System.out.println("focusLost: " + componentName);
+            log.fine("focusLost: " + componentName);
 
             if (componentName.equalsIgnoreCase(COMPONENT_GPX_FILE))
             {

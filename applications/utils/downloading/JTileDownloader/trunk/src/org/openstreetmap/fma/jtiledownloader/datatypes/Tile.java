@@ -89,25 +89,32 @@ public class Tile
     }
 
     @Override
-    public int hashCode()
-    {
-        assert false : "hashCode not designed";
-        return 42; // any arbitrary constant will do 
+    public int hashCode() {
+        int hash = 5;
+        hash = 17 * hash + this.x;
+        hash = 17 * hash + this.y;
+        hash = 17 * hash + this.z;
+        return hash;
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof Tile)
-        {
-            return this.toString().equals(obj.toString());
-        }
-        else
-        {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Tile other = (Tile) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        if (this.z != other.z) {
+            return false;
+        }
+        return true;
     }
 }

@@ -21,9 +21,7 @@
 
 package org.openstreetmap.fma.jtiledownloader.views.errortilelist;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
+import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
@@ -32,21 +30,19 @@ public class ErrorTileListViewTableModel
     extends AbstractTableModel
 {
     private static final long serialVersionUID = 1L;
-    private Vector _data;
+    private ArrayList _data;
 
     /**
      * @param errorTileList
      */
-    public ErrorTileListViewTableModel(Vector<TileDownloadError> errorTileList)
+    public ErrorTileListViewTableModel(ArrayList<TileDownloadError> errorTileList)
     {
-        _data = new Vector();
+        _data = new ArrayList();
         int count = 0;
-        for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+        for (TileDownloadError tde : errorTileList)
         {
-            TileDownloadError tde = enumeration.nextElement();
-            count++;
-            Vector rowData = new Vector();
-            rowData.add("" + count);
+            ArrayList rowData = new ArrayList();
+            rowData.add(Integer.toString(++count));
             rowData.add(tde.getTile());
             rowData.add(tde.getResult().getMessage());
             _data.add(rowData);
@@ -67,11 +63,7 @@ public class ErrorTileListViewTableModel
      */
     public int getRowCount()
     {
-        if (_data == null)
-        {
-            return 0;
-        }
-        return _data.size();
+        return _data == null ? 0 : _data.size();
     }
 
     /**
@@ -84,12 +76,8 @@ public class ErrorTileListViewTableModel
             return null;
         }
 
-        Vector rowData = (Vector) _data.elementAt(row);
-        if (rowData == null)
-        {
-            return null;
-        }
-
-        return rowData.elementAt(column);
+        ArrayList rowData = (ArrayList) _data.get(row);
+        
+        return rowData == null ? null : rowData.get(column);
     }
 }

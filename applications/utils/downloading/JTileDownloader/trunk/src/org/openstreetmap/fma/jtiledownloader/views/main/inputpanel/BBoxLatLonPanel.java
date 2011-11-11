@@ -30,6 +30,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -101,10 +103,10 @@ public class BBoxLatLonPanel
         _downloadConfig = new DownloadConfigurationBBoxLatLon();
         configurationSaver.loadDownloadConfig(_downloadConfig);
 
-        _textMinLat.setText("" + _downloadConfig.getMinLat());
-        _textMinLon.setText("" + _downloadConfig.getMinLon());
-        _textMaxLat.setText("" + _downloadConfig.getMaxLat());
-        _textMaxLon.setText("" + _downloadConfig.getMaxLon());
+        _textMinLat.setText(Double.toString(_downloadConfig.getMinLat()));
+        _textMinLon.setText(Double.toString(_downloadConfig.getMinLon()));
+        _textMaxLat.setText(Double.toString(_downloadConfig.getMaxLat()));
+        _textMaxLon.setText(Double.toString(_downloadConfig.getMaxLon()));
     }
 
     /**
@@ -113,15 +115,19 @@ public class BBoxLatLonPanel
     private void initializePanel()
     {
         _textMinLat.setName(COMPONENT_MINLAT);
+        _textMinLat.setHorizontalAlignment(JTextField.CENTER);
         _textMinLat.addFocusListener(new MyFocusListener());
 
         _textMinLon.setName(COMPONENT_MINLON);
+        _textMinLon.setHorizontalAlignment(JTextField.CENTER);
         _textMinLon.addFocusListener(new MyFocusListener());
 
         _textMaxLat.setName(COMPONENT_MAXLAT);
+        _textMaxLat.setHorizontalAlignment(JTextField.CENTER);
         _textMaxLat.addFocusListener(new MyFocusListener());
 
         _textMaxLon.setName(COMPONENT_MAXLON);
+        _textMaxLon.setHorizontalAlignment(JTextField.CENTER);
         _textMaxLon.addFocusListener(new MyFocusListener());
 
         _buttonSlippyMapChooser.addActionListener(new ActionListener() {
@@ -130,12 +136,12 @@ public class BBoxLatLonPanel
                 boolean isOk = false;
                 if (AppConfiguration.getInstance().isSlippyMap_NoDownload())
                 {
-                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will only display tiles which are already there (regardless of the selected tile-provider).");
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will only display\ntiles which are already there (regardless of the selected tile-provider).");
                     isOk=true;
                 }
                 else if (!AppConfiguration.getInstance().isSlippyMap_SaveTiles())
                 {
-                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will load missing tiles from tile provider \"" + _mainPanel.getSelectedTileProvider().getName() + "\" w/o saving them to the output-folder.");
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will load missing\ntiles from tile provider \"" + _mainPanel.getSelectedTileProvider().getName() + "\" w/o saving them to the output-folder.");
                     isOk=true;
                 }
                 if (isOk || (AppConfiguration.getInstance().isSlippyMap_SaveTiles() && JOptionPane.showConfirmDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local cache/download-folder and tileprovider \"" + _mainPanel.getSelectedTileProvider().getName() + "\".\nDo you want to continue?", "JTileDownloader SlippyMap", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION))
@@ -162,39 +168,30 @@ public class BBoxLatLonPanel
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.weightx = 1.0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
         constraints.insets = new Insets(5, 5, 0, 5);
 
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinLat, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMinLat, constraints);
-
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMaxLat, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMaxLat, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinLon, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMinLon, constraints);
-
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMaxLon, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMaxLon, constraints);
+
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        add(_textMinLat, constraints);
 
         add(_buttonSlippyMapChooser, constraints);
     }
 
     public void setCoordinates(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
     {
-        _textMaxLon.setText(String.valueOf(maxLongitude));
-        _textMaxLat.setText(String.valueOf(maxLatitude));
-        _textMinLon.setText(String.valueOf(minLongitude));
-        _textMinLat.setText(String.valueOf(minLatitude));
+        _textMaxLon.setText(String.valueOf(Math.round(maxLongitude * 1e5) / 1e5));
+        _textMaxLat.setText(String.valueOf(Math.round(maxLatitude * 1e5) / 1e5));
+        _textMinLon.setText(String.valueOf(Math.round(minLongitude * 1e5) / 1e5));
+        _textMinLat.setText(String.valueOf(Math.round(minLatitude * 1e5) / 1e5));
         updateTileList(true);
     }
 
@@ -292,6 +289,8 @@ public class BBoxLatLonPanel
         return _tileList.getTileCount();
     }
 
+    private static final Logger log = Logger.getLogger(BBoxLatLonPanel.class.getName());
+
     class MyFocusListener
         implements FocusListener
     {
@@ -310,7 +309,7 @@ public class BBoxLatLonPanel
         public void focusLost(FocusEvent focusevent)
         {
             String componentName = focusevent.getComponent().getName();
-            System.out.println("focusLost: " + componentName);
+            log.log(Level.FINE, "focusLost: {0}", componentName);
 
             if (componentName.equalsIgnoreCase(COMPONENT_MINLAT))
             {

@@ -25,10 +25,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileComparatorFactory;
 
 public class AppConfiguration
     implements DownloadConfigurationSaverIf
 {
+    private static final Logger log = Logger.getLogger(AppConfiguration.class.getName());
+    
     private static final String APP_CONFIG_PROPERTIES = "appConfig.xml";
 
     private static AppConfiguration instance = new AppConfiguration();
@@ -57,10 +62,11 @@ public class AppConfiguration
     private int _minimumAgeInDays = 7;
 
     private boolean _waitAfterNrTiles = true;
-    private int _waitSeconds = 5;
-    private int _waitNrTiles = 50;
+    private int _waitSeconds = 2;
+    private int _waitNrTiles = 10;
 
     private int _inputPanelIndex = 0;
+    private int _tileSortingPolicy = TileComparatorFactory.COMPARE_QUAD;
 
     private static final String USE_PROXY_SERVER = "UseProxyServer";
     private static final String PROXY_SERVER = "ProxyServer";
@@ -88,6 +94,7 @@ public class AppConfiguration
     private static final String WAIT_NR_TILES = "WaitNrTiles";
 
     private static final String INPUT_PANEL_INDEX = "InputPanelIndex";
+    private static final String TILE_SORTING_POLICY = "TileSortingPolicy";
 
     private AppConfiguration()
     {
@@ -107,13 +114,13 @@ public class AppConfiguration
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error storing preferences", e);
         }
     }
 
     private void setProperty(Properties prop, String key, String value)
     {
-        System.out.println("setting property " + key + " to value " + value);
+        log.config("setting property " + key + " to value " + value);
         prop.setProperty(key, value);
     }
 
@@ -122,10 +129,13 @@ public class AppConfiguration
         try
         {
             prop.loadFromXML(new FileInputStream(APP_CONFIG_PROPERTIES));
+            for (Object key : prop.keySet()) {
+                log.config("Property " + key + "=" + prop.get(key));
+            }
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error loading preferences", e);
         }
 
         _useProxyServer = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER, String.valueOf(_useProxyServer))).booleanValue();
@@ -154,6 +164,7 @@ public class AppConfiguration
         setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, String.valueOf(getWaitNrTiles()))));
 
         setInputPanelIndex(Integer.parseInt(prop.getProperty(INPUT_PANEL_INDEX, String.valueOf(getInputPanelIndex()))));
+        setTileSortingPolicy(Integer.parseInt(prop.getProperty(TILE_SORTING_POLICY, String.valueOf(getTileSortingPolicy()))));
     }
 
     /**
@@ -172,7 +183,7 @@ public class AppConfiguration
     public final void setUseProxyServer(boolean useProxyServer)
     {
         _useProxyServer = useProxyServer;
-        setProperty(prop, USE_PROXY_SERVER, "" + _useProxyServer);
+        setProperty(prop, USE_PROXY_SERVER, String.valueOf(_useProxyServer));
     }
 
     /**
@@ -191,7 +202,7 @@ public class AppConfiguration
     public final void setProxyServer(String proxyServer)
     {
         _proxyServer = proxyServer;
-        setProperty(prop, PROXY_SERVER, "" + _proxyServer);
+        setProperty(prop, PROXY_SERVER, _proxyServer);
     }
 
     /**
@@ -210,7 +221,7 @@ public class AppConfiguration
     public final void setProxyServerPort(String proxyServerPort)
     {
         _proxyServerPort = proxyServerPort;
-        setProperty(prop, PROXY_SERVER_PORT, "" + _proxyServerPort);
+        setProperty(prop, PROXY_SERVER_PORT, _proxyServerPort);
     }
 
     /**
@@ -229,7 +240,7 @@ public class AppConfiguration
     public final void setProxyServerRequiresAuthentitication(boolean useProxyServerAuthentitication)
     {
         _proxyServerRequireesAuthentitication = useProxyServerAuthentitication;
-        setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _proxyServerRequireesAuthentitication);
+        setProperty(prop, USE_PROXY_SERVER_AUTH, String.valueOf(_proxyServerRequireesAuthentitication));
     }
 
     /**
@@ -248,7 +259,7 @@ public class AppConfiguration
     public final void setProxyServerUser(String proxyServerUser)
     {
         _proxyServerUser = proxyServerUser;
-        setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
+        setProperty(prop, PROXY_SERVER_USER, _proxyServerUser);
     }
 
     /**
@@ -267,7 +278,7 @@ public class AppConfiguration
     public final void setProxyServerPassword(String proxyServerPassword)
     {
         _proxyServerPassword = proxyServerPassword;
-        setProperty(prop, PROXY_SERVER_PASSWORD, "" + _proxyServerPassword);
+        setProperty(prop, PROXY_SERVER_PASSWORD, _proxyServerPassword);
     }
 
     /**
@@ -277,7 +288,7 @@ public class AppConfiguration
     public void setShowTilePreview(boolean showTilePreview)
     {
         _showTilePreview = showTilePreview;
-        setProperty(prop, SHOW_TILE_PREVIEW, "" + _showTilePreview);
+        setProperty(prop, SHOW_TILE_PREVIEW, String.valueOf(_showTilePreview));
     }
 
     /**
@@ -296,7 +307,7 @@ public class AppConfiguration
     public void setWaitAfterNrTiles(boolean waitAfterNrTiles)
     {
         _waitAfterNrTiles = waitAfterNrTiles;
-        setProperty(prop, WAIT_AFTER_NR_TILES, "" + _waitAfterNrTiles);
+        setProperty(prop, WAIT_AFTER_NR_TILES, String.valueOf(_waitAfterNrTiles));
     }
 
     /**
@@ -318,7 +329,7 @@ public class AppConfiguration
         {
             _waitSeconds = waitSeconds;
         }
-        setProperty(prop, WAIT_SECONDS, "" + _waitSeconds);
+        setProperty(prop, WAIT_SECONDS, String.valueOf(_waitSeconds));
     }
 
     /**
@@ -340,7 +351,7 @@ public class AppConfiguration
         {
             _waitNrTiles = waitNrTiles;
         }
-        setProperty(prop, WAIT_AFTER_NR_TILES, "" + _waitNrTiles);
+        setProperty(prop, WAIT_NR_TILES, String.valueOf(_waitNrTiles));
     }
 
     /**
@@ -368,7 +379,7 @@ public class AppConfiguration
     public final void setInputPanelIndex(int inputPanelIndex)
     {
         _inputPanelIndex = inputPanelIndex;
-        setProperty(prop, INPUT_PANEL_INDEX, "" + _inputPanelIndex);
+        setProperty(prop, INPUT_PANEL_INDEX, String.valueOf(_inputPanelIndex));
     }
 
     /**
@@ -387,7 +398,7 @@ public class AppConfiguration
     public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
     {
         _overwriteExistingFiles = overwriteExistingFiles;
-        setProperty(prop, OVERWRITE_EXISTING_FILES, "" + _overwriteExistingFiles);
+        setProperty(prop, OVERWRITE_EXISTING_FILES, String.valueOf(_overwriteExistingFiles));
     }
 
     /**
@@ -409,7 +420,7 @@ public class AppConfiguration
         {
             _minimumAgeInDays = minimumAgeInDays;
         }
-        setProperty(prop, MINIMUM_AGE_IN_DAYS, "" + _minimumAgeInDays);
+        setProperty(prop, MINIMUM_AGE_IN_DAYS, String.valueOf(_minimumAgeInDays));
     }
 
     public void loadDownloadConfig(DownloadConfiguration config)
@@ -516,7 +527,7 @@ public class AppConfiguration
     public void setSlippyMap_NoDownload(boolean slippyMapNoDownload)
     {
         _slippyMap_NoDownload = slippyMapNoDownload;
-        setProperty(prop, SLIPPYMAP_NODOWNLOAD, "" + _slippyMap_NoDownload);
+        setProperty(prop, SLIPPYMAP_NODOWNLOAD, String.valueOf(_slippyMap_NoDownload));
     }
 
     /**
@@ -535,7 +546,7 @@ public class AppConfiguration
     public void setSlippyMap_SaveTiles(boolean slippyMapSaveTiles)
     {
         _slippyMap_SaveTiles = slippyMapSaveTiles;
-        setProperty(prop, SLIPPYMAP_SAVETILES, "" + _slippyMap_SaveTiles);
+        setProperty(prop, SLIPPYMAP_SAVETILES, String.valueOf(_slippyMap_SaveTiles));
     }
 
     /**
@@ -557,6 +568,17 @@ public class AppConfiguration
         {
             _downloadThreads = downloadThreads;
         }
-        setProperty(prop, DOWNLOAD_THREADS, "" + _downloadThreads);
+        setProperty(prop, DOWNLOAD_THREADS, String.valueOf(_downloadThreads));
+    }
+
+    public int getTileSortingPolicy() {
+        return _tileSortingPolicy;
+    }
+
+    public void setTileSortingPolicy(int tileSortingPolicy) {
+        if (tileSortingPolicy >= 0 && tileSortingPolicy < TileComparatorFactory.COMPARE_COUNT) {
+            this._tileSortingPolicy = tileSortingPolicy;
+        }
+        setProperty(prop, TILE_SORTING_POLICY, Integer.toString(this._tileSortingPolicy));
     }
 }

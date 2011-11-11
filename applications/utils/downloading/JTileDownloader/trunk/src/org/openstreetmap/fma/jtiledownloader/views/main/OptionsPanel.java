@@ -27,6 +27,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -59,6 +60,9 @@ public class OptionsPanel
 
     private JCheckBox _slippyMapNoDownload = new JCheckBox("Do not download new tiles");
     private JCheckBox _slippyMapSaveTiles = new JCheckBox("Save downloaded tiles");
+    
+    private JLabel _labelTileSortingPolicy = new JLabel("Downloading order");
+    private JComboBox _comboTileSortingPolicy = new JComboBox();
 
     /**
      * 
@@ -139,6 +143,11 @@ public class OptionsPanel
         innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_textMinimumAgeInDays, innerConstraints);
 
+        innerConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_labelTileSortingPolicy, innerConstraints);
+        innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_comboTileSortingPolicy, innerConstraints);
+
         innerConstraints.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_chkOverwriteExistingFiles, innerConstraints);
 
@@ -157,16 +166,21 @@ public class OptionsPanel
     private void initializeOptionsPanel()
     {
         _chkWaitAfterNrTiles.setSelected(AppConfiguration.getInstance().isWaitingAfterNrOfTiles());
-        _textWaitSeconds.setText("" + AppConfiguration.getInstance().getWaitSeconds());
-        _textWaitNrTiles.setText("" + AppConfiguration.getInstance().getWaitNrTiles());
+        _textWaitSeconds.setText(String.valueOf(AppConfiguration.getInstance().getWaitSeconds()));
+        _textWaitNrTiles.setText(String.valueOf(AppConfiguration.getInstance().getWaitNrTiles()));
 
-        _textMinimumAgeInDays.setText("" + AppConfiguration.getInstance().getMinimumAgeInDays());
+        _textMinimumAgeInDays.setText(String.valueOf(AppConfiguration.getInstance().getMinimumAgeInDays()));
 
         _sliderDownloadThreads.setValue(AppConfiguration.getInstance().getDownloadThreads());
         _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
         _slippyMapNoDownload.setSelected(AppConfiguration.getInstance().isSlippyMap_NoDownload());
         _slippyMapSaveTiles.setSelected(AppConfiguration.getInstance().isSlippyMap_SaveTiles());
+        
+        _comboTileSortingPolicy.addItem("Does not matter");
+        _comboTileSortingPolicy.addItem("Sequential");
+        _comboTileSortingPolicy.addItem("By quad tiles");
+        _comboTileSortingPolicy.setSelectedIndex(AppConfiguration.getInstance().getTileSortingPolicy());
     }
 
     /**
@@ -231,5 +245,9 @@ public class OptionsPanel
     public int getDownloadThreads()
     {
         return _sliderDownloadThreads.getValue();
+    }
+    
+    public int getTileSortingPolicy() {
+        return _comboTileSortingPolicy.getSelectedIndex();
     }
 }

@@ -61,9 +61,12 @@ public class OsmMapControl
     /**
      * Create a new OsmMapControl
      */
-    public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane)
-    {
+    public OsmMapControl(SlippyMapChooser navComp) {
         this.iSlippyMapChooser = navComp;
+    }
+    
+    public void initialize( JPanel contentPane )
+    {
         iSlippyMapChooser.addMouseListener(this);
         iSlippyMapChooser.addMouseMotionListener(this);
 
@@ -78,8 +81,8 @@ public class OsmMapControl
             }
         }
 
-        InputMap inputMap = navComp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = navComp.getActionMap();
+        InputMap inputMap = iSlippyMapChooser.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = iSlippyMapChooser.getActionMap();
 
         // map moving
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "MOVE_RIGHT");
@@ -126,6 +129,7 @@ public class OsmMapControl
 
     }
 
+    @Override
     public void mouseDragged(MouseEvent e)
     {
         if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == MouseEvent.BUTTON1_DOWN_MASK)
@@ -160,6 +164,7 @@ public class OsmMapControl
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent e)
     {}
 

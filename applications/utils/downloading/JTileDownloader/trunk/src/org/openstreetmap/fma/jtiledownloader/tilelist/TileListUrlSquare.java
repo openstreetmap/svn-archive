@@ -21,12 +21,14 @@
 
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.fma.jtiledownloader.Constants;
 
 public class TileListUrlSquare
     extends TileListCommonBBox
 {
-
+    private static final Logger log = Logger.getLogger(TileListUrlSquare.class.getName());
     private int _radius; // radius in m
     private double _latitude;
     private double _longitude;
@@ -34,7 +36,7 @@ public class TileListUrlSquare
     public void calculateTileValuesXY()
     {
 
-        log("calculate tile values for (UrlSquare:) lat " + _latitude + ", lon " + _longitude + ", radius " + _radius);
+        log.log(Level.FINE, "calculate tile values for (UrlSquare:) lat {0}, lon {1}, radius {2}", new Object[]{_latitude, _longitude, _radius});
 
         if (_radius > 6370000 * 2 * 4)
         {
@@ -46,10 +48,10 @@ public class TileListUrlSquare
         double maxLat = _latitude + 360 * (_radius / Constants.EARTH_CIRC_POLE);
         double maxLon = _longitude + 360 * (_radius / (Constants.EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
 
-        log("minLat=" + minLat);
-        log("minLon=" + minLon);
-        log("maxLat=" + maxLat);
-        log("maxLon=" + maxLon);
+        log.log(Level.FINE, "minLat={0}", minLat);
+        log.log(Level.FINE, "minLon={0}", minLon);
+        log.log(Level.FINE, "maxLat={0}", maxLat);
+        log.log(Level.FINE, "maxLon={0}", maxLon);
 
         calculateTileValuesXY(minLat, minLon, maxLat, maxLon);
 

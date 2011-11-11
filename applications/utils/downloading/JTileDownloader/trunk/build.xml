@@ -1,19 +1,13 @@
 <?xml version="1.0"?>
-<project name="jTileDownloader" default="generateAll" basedir=".">
+<project name="jTileDownloader" default="all" basedir=".">
 	<property file="application.properties" />
 	<property name="target.java.version" value="1.5" />
 	<property environment="env" />
-	<target name="generateAll" description="Generates all targets">
-		<antcall target="generateJavaDoc" />
-		<antcall target="generateSourcesZip" />
-		<antcall target="createJar" />
-		<antcall target="releaseZip" />
-	</target>
-	<target name="run" description="jTileDownloader" depends="createJar">
-		<antcall target="createJar" />
+	<target name="all" depends="sources,release" description="Generates all targets" />
+	<target name="run" description="jTileDownloader" depends="package">
 		<java jar="${basedir}/jar/jTileDownloader-${version}.jar" fork="true" />
 	</target>
-	<target name="generateSourcesZip" description="Generates the sources zip-file" depends="generateJavaDoc">
+	<target name="sources" description="Generates the sources zip-file" depends="javadoc">
 		<zip destfile="${basedir}/release/jTileDownloader-src-${version}.zip">
 			<zipfileset dir="." includes="COPYING.txt" prefix="jTileDownloader" />
 			<zipfileset dir="." includes="README.txt" prefix="jTileDownloader" />
@@ -26,15 +20,14 @@
 			<zipfileset dir="doc" prefix="jTileDownloader/doc" />
 		</zip>
 	</target>
-	<target name="releaseZip" description="Generates the release zip-file" depends="createJar">
+	<target name="release" description="Generates the release zip-file" depends="package">
 		<zip destfile="${basedir}/release/jTileDownloader-${version}.zip">
 			<zipfileset dir="." includes="COPYING.txt" prefix="jTileDownloader" />
 			<zipfileset dir="." includes="README.txt" prefix="jTileDownloader" />
 			<zipfileset dir="jar" includes="jTileDownloader-${version}.jar" prefix="jTileDownloader" />
 		</zip>
 	</target>
-	<target name="generateJavaDoc" description="Generate JavaDoc">
-		<delete dir="${basedir}/${doc.dir}" />
+	<target name="javadoc" description="Generate JavaDoc">
 		<mkdir dir="${basedir}/${doc.dir}" />
 		<javadoc
 			access="private"
@@ -56,7 +49,7 @@
 			<link href="http://java.sun.com/javase/6/docs/api/" />
 		</javadoc>
 	</target>
-	<target name="createJar" depends="compile" description="Generates the jar-file">
+	<target name="package" depends="compile" description="Generates the jar-file">
 		<jar destfile="${basedir}/jar/jTileDownloader-${version}.jar" basedir="${basedir}/bin">
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
@@ -70,12 +63,12 @@
 		</jar>
 	</target>
 	<target name="compile" description="Compiles the source">
-		<delete dir="${basedir}/${bin.dir}" />
 		<mkdir dir="${basedir}/${bin.dir}" />
-		<javac destdir="${basedir}/${bin.dir}" srcdir="${basedir}/${source.dir}" debug="${build.debug}" debuglevel="${build.debuglevel}" source="${target.java.version}" target="${target.java.version}" />
+		<javac destdir="${basedir}/${bin.dir}" srcdir="${basedir}/${source.dir}" debug="${build.debug}" debuglevel="${build.debuglevel}" source="${target.java.version}" target="${target.java.version}" includeantruntime="false" />
 		<copy todir="${basedir}/${bin.dir}/org/openstreetmap/gui/jmapviewer/images">
 			<fileset dir="${basedir}/${source.dir}/org/openstreetmap/gui/jmapviewer/images" />
 		</copy>
+		<copy todir="${basedir}/${bin.dir}" file="${basedir}/${source.dir}/logging.properties" />
 	</target>
 	<target name="clean" description="Remove most generated files">
 		<delete dir="${basedir}/${bin.dir}" />

@@ -49,10 +49,10 @@ public class DownloadConfigurationBBoxXY
     {
         setTemplateProperty(prop, TYPE, ID);
 
-        setTemplateProperty(prop, MIN_X, "" + _minX);
-        setTemplateProperty(prop, MIN_Y, "" + _minY);
-        setTemplateProperty(prop, MAX_X, "" + _maxX);
-        setTemplateProperty(prop, MAX_Y, "" + _maxY);
+        setTemplateProperty(prop, MIN_X, String.valueOf(_minX));
+        setTemplateProperty(prop, MIN_Y, String.valueOf(_minY));
+        setTemplateProperty(prop, MAX_X, String.valueOf(_maxX));
+        setTemplateProperty(prop, MAX_Y, String.valueOf(_maxY));
     }
 
     @Override

@@ -26,6 +26,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
@@ -33,6 +35,8 @@ import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf
 public class DownloadJob
     implements DownloadConfigurationSaverIf
 {
+    private static final Logger log = Logger.getLogger(DownloadJob.class.getName());
+
     private Properties prop = new Properties();
 
     private String _outputZoomLevels = "";
@@ -70,7 +74,7 @@ public class DownloadJob
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error saving job to file " + propertyFileName, e);
         }
     }
 
@@ -82,7 +86,7 @@ public class DownloadJob
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error loading job from file " + fileName, e);
         }
 
         _type = prop.getProperty(TYPE, "");
@@ -93,7 +97,7 @@ public class DownloadJob
 
     protected void setTemplateProperty(Properties prop, String key, String value)
     {
-        System.out.println("setting property " + key + " to value " + value);
+        log.log(Level.CONFIG, "setting property {0} to value {1}", new Object[]{key, value});
         prop.setProperty(key, value);
     }
 

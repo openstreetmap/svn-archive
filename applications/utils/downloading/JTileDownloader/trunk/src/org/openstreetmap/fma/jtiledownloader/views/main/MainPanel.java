@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -68,6 +69,7 @@ public class MainPanel
     extends JPanel
 {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(MainPanel.class.getName());
 
     public static final String COMPONENT_OUTPUT_ZOOM_LEVEL = "outputZoomLevel";
     public static final String COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT = "outputZoomLevelText";
@@ -160,7 +162,7 @@ public class MainPanel
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
         for (int outputZoomLevel = 0; outputZoomLevel <= 18; outputZoomLevel++)
         {
-            _comboOutputZoomLevel.addItem("" + outputZoomLevel);
+            _comboOutputZoomLevel.addItem(String.valueOf(outputZoomLevel));
         }
         _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
 
@@ -227,18 +229,29 @@ public class MainPanel
         if (zoomLevels.length == 1)
         {
             _textOutputZoomLevels.setText("");
-            _comboOutputZoomLevel.setSelectedItem("" + zoomLevels[0]);
+            _comboOutputZoomLevel.setSelectedItem(Integer.toString(zoomLevels[0]));
             return;
         }
 
-        String textZoomLevels = "";
-        for (int index = 0; index < zoomLevels.length; index++)
+        String textZoomLevels = Integer.toString(zoomLevels[0]);
+        int rangeSize = 1;
+        for (int index = 1; index < zoomLevels.length; index++)
         {
-            if (index > 0)
-            {
+            if( zoomLevels[index] == zoomLevels[index-1] + 1 )
+                rangeSize++;
+            else {
+                if( rangeSize > 1 ) {
+                    textZoomLevels += rangeSize > 2 ? "-" : ",";
+                    textZoomLevels += zoomLevels[index-1];
+                }
                 textZoomLevels += ",";
+                textZoomLevels += zoomLevels[index];
+                rangeSize = 1;
             }
-            textZoomLevels += zoomLevels[index];
+        }
+        if( rangeSize > 1 ) {
+            textZoomLevels += rangeSize > 2 ? "-" : ",";
+            textZoomLevels += zoomLevels[zoomLevels.length-1];
         }
         _textOutputZoomLevels.setText(textZoomLevels);
 
@@ -378,7 +391,7 @@ public class MainPanel
         public void actionPerformed(ActionEvent e)
         {
             String actionCommand = e.getActionCommand();
-            System.out.println("button pressed -> " + actionCommand);
+            log.fine("button pressed -> " + actionCommand);
 
             if (actionCommand.equalsIgnoreCase(COMMAND_DOWNLOAD))
             {
@@ -391,7 +404,7 @@ public class MainPanel
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
                     TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), getSelectedTileProvider());
-                    new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
+                    new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld).setVisible(true);
                 }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_LOADJOB))
@@ -522,7 +535,7 @@ public class MainPanel
                 if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Select"))
                 {
                     File dir = chooser.getSelectedFile();
-                    System.out.println(dir.getAbsolutePath());
+                    log.fine(dir.getAbsolutePath());
                     _textOutputFolder.setText(dir.getAbsolutePath());
                 }
             }
@@ -553,18 +566,19 @@ public class MainPanel
     }
 
     /**
-     * @return
+     * @return selected tile provider
      */
     private TileProviderIf getTileProvider()
     {
-        return _tileProviders[_comboTileServer.getSelectedIndex()];
+        return _comboTileServer.getSelectedIndex() < 0 || _comboTileServer.getSelectedIndex() >= _tileProviders.length
+                ? null : _tileProviders[_comboTileServer.getSelectedIndex()];
     }
 
     /**
      * Getter for input panels
      * @return a inputpanel
      */
-    private final InputPanel getInputPanel()
+    private InputPanel getInputPanel()
     {
         return inputPanels.get(_inputTabbedPane.getSelectedIndex());
     }

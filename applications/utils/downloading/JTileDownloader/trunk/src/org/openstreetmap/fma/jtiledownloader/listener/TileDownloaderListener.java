@@ -20,7 +20,7 @@
  */
 package org.openstreetmap.fma.jtiledownloader.listener;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
@@ -40,7 +40,7 @@ public interface TileDownloaderListener
      * @param errorTileList
      * @param updatedTileCount 
      */
-    void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount);
+    void downloadComplete(int errorCount, ArrayList<TileDownloadError> errorTileList, int updatedTileCount);
 
     /**
      * @param actCount

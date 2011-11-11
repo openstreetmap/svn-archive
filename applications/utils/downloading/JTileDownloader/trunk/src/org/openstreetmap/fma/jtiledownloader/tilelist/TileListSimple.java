@@ -21,7 +21,7 @@
 
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 
@@ -29,12 +29,12 @@ public class TileListSimple
     implements TileList
 {
 
-    Vector<Tile> _tileList;
+    ArrayList<Tile> _tileList;
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      */
-    public Vector<Tile> getTileListToDownload()
+    public ArrayList<Tile> getTileListToDownload()
     {
         return _tileList;
     }
@@ -43,7 +43,7 @@ public class TileListSimple
     {
         if (_tileList == null)
         {
-            _tileList = new Vector<Tile>();
+            _tileList = new ArrayList<Tile>();
         }
 
         _tileList.add(tile);
@@ -54,11 +54,7 @@ public class TileListSimple
      */
     public int getElementCount()
     {
-        if (_tileList == null)
-        {
-            return 0;
-        }
-        return _tileList.size();
+        return _tileList == null ? 0 : _tileList.size();
     }
 
 }

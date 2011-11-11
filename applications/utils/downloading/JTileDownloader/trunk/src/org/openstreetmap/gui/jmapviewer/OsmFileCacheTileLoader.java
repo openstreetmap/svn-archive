@@ -60,6 +60,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
         }
     }
 
+    @Override
     public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley, final int zoom) {
         return new FileLoadJob(source, tilex, tiley, zoom);
     }
@@ -173,7 +174,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 tile.setImage(Tile.ERROR_IMAGE);
                 listener.tileLoadingFinished(tile, false);
                 if (input == null)
-                    System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
+                    log.warning("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
             } finally {
                 tile.loading = false;
                 tile.setLoaded(true);
@@ -191,7 +192,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 fin.close();
                 fileAge = tileFile.lastModified();
                 boolean oldTile = System.currentTimeMillis() - fileAge > maxCacheFileAge;
-                // System.out.println("Loaded from file: " + tile);
+                log.finest("Loaded from file: " + tile);
                 if (!oldTile) {
                     tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
@@ -238,8 +239,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
          * Note: This does only work with servers providing the
          * <code>LastModified</code> header:
          * <ul>
-         * <li>{@link OsmTileLoader#MAP_OSMA} - supported</li>
-         * <li>{@link OsmTileLoader#MAP_MAPNIK} - not supported</li>
+         * <li>{@link OsmTileSource#MAP_OSMA} - supported</li>
+         * <li>{@link OsmTileSource#MAP_MAPNIK} - not supported</li>
          * </ul>
          * 
          * @param fileAge
@@ -254,9 +255,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             prepareHttpUrlConnection(urlConn);
             urlConn.setRequestMethod("HEAD");
             urlConn.setReadTimeout(30000); // 30 seconds read timeout
-            // System.out.println("Tile age: " + new
-            // Date(urlConn.getLastModified()) + " / "
-            // + new Date(fileAge));
+            // log.finest("Tile age: " + new Date(urlConn.getLastModified()) + " / " + new Date(fileAge));
             long lastModified = urlConn.getLastModified();
             if (lastModified == 0)
                 return true; // no LastModified time returned
@@ -270,9 +269,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             prepareHttpUrlConnection(urlConn);
             urlConn.setRequestMethod("HEAD");
             urlConn.setReadTimeout(30000); // 30 seconds read timeout
-            // System.out.println("Tile age: " + new
-            // Date(urlConn.getLastModified()) + " / "
-            // + new Date(fileAge));
+            // log.finest("Tile age: " + new Date(urlConn.getLastModified()) + " / " + new Date(fileAge));
             String osmETag = urlConn.getHeaderField("ETag");
             if (osmETag == null)
                 return true;
@@ -290,9 +287,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                         + "_" + tile.getYtile() + "." + source.getTileType());
                 f.write(rawData);
                 f.close();
-                // System.out.println("Saved tile to file: " + tile);
+                log.finest("Saved tile to file: " + tile);
             } catch (Exception e) {
-                System.err.println("Failed to save tile content: " + e.getLocalizedMessage());
+                log.warning("Failed to save tile content: " + e.getLocalizedMessage());
             }
         }
 
@@ -303,7 +300,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 f.write(eTag.getBytes(ETAG_CHARSET.name()));
                 f.close();
             } catch (Exception e) {
-                System.err.println("Failed to save ETag: " + e.getLocalizedMessage());
+                log.warning("Failed to save ETag: " + e.getLocalizedMessage());
             }
         }
 

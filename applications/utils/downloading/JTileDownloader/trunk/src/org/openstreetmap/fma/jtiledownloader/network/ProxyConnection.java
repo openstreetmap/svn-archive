@@ -23,47 +23,56 @@ package org.openstreetmap.fma.jtiledownloader.network;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.util.logging.Logger;
 
 public class ProxyConnection
 {
-    public ProxyConnection(String host, int port)
+    private static final Logger log = Logger.getLogger(ProxyConnection.class.getName());
+    
+    private ProxyConnection(String host, int port)
     {
         setProxyData(host, port);
     }
 
-    public ProxyConnection(String host, int port, String username, String passwort)
+    private ProxyConnection(String host, int port, String username, String passwort)
     {
         setProxyData(host, port);
-        System.out.println("Authenticator.setDefault...");
+        log.fine("Authenticator.setDefault...");
         Authenticator.setDefault(new ProxyAuth(username, passwort));
     }
 
-    private void setProxyData(String host, int port)
+    public static void setProxyData(String host, int port)
     {
         System.getProperties().put("http.proxySet", "true");
-        System.out.println("http.proxyHost = " + host);
+        log.config("http.proxyHost = " + host);
         System.getProperties().put("http.proxyHost", host);
-        System.out.println("http.proxyPort = " + port);
+        log.config("http.proxyPort = " + port);
         System.getProperties().put("http.proxyPort", String.valueOf(port));
+    }
+    
+    public static void setProxyData(String host, int port, String username, String password ) {
+        setProxyData(host, port);
+        log.fine("Authenticator.setDefault...");
+        Authenticator.setDefault(new ProxyAuth(username, password));
     }
 
     static private class ProxyAuth
         extends Authenticator
     {
         private String _username;
-        private String _passwort;
+        private String _password;
 
         public ProxyAuth(String username, String passwort)
         {
             _username = username;
-            _passwort = passwort;
+            _password = passwort;
         }
 
         @Override
         protected PasswordAuthentication getPasswordAuthentication()
         {
-            System.out.println("user " + _username + ", pw " + _passwort);
-            return (new PasswordAuthentication(_username, _passwort.toCharArray()));
+//            log.config("user " + _username + ", pw " + _password);
+            return (new PasswordAuthentication(_username, _password.toCharArray()));
         }
     }
 

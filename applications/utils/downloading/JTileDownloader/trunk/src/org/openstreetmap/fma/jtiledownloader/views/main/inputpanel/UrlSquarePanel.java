@@ -27,10 +27,13 @@ import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
@@ -46,6 +49,7 @@ public class UrlSquarePanel
     extends InputPanel
 {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(UrlSquarePanel.class.getName());
 
     private static final String COMPONENT_PASTE_URL = "pasteURL";
     private static final String COMPONENT_RADIUS = "radius";
@@ -87,13 +91,13 @@ public class UrlSquarePanel
     }
 
     @Override
-    public void loadConfig(DownloadConfigurationSaverIf configurationSaver)
+    public final void loadConfig(DownloadConfigurationSaverIf configurationSaver)
     {
         _downloadConfig = new DownloadConfigurationUrlSquare();
         configurationSaver.loadDownloadConfig(_downloadConfig);
 
         _textPasteUrl.setText(_downloadConfig.getPasteUrl());
-        _textRadius.setText("" + _downloadConfig.getRadius());
+        _textRadius.setText(String.valueOf(_downloadConfig.getRadius()));
 
         parsePasteUrl();
     }
@@ -105,6 +109,7 @@ public class UrlSquarePanel
     {
         _textPasteUrl.setPreferredSize(new Dimension(330, 20));
         _textPasteUrl.addFocusListener(new MyFocusListener());
+        _textPasteUrl.getDocument().addDocumentListener(new MyDocumentListener());
         _textPasteUrl.setName(COMPONENT_PASTE_URL);
 
         _textLatitude.setEditable(false);
@@ -168,7 +173,7 @@ public class UrlSquarePanel
         try
         {
             _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-            _tileList.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
+            _tileList.setRadius(Integer.parseInt(_textRadius.getText()) * 1000);
             _tileList.calculateTileValuesXY();
             updateNumberOfTiles();
         }
@@ -235,7 +240,7 @@ public class UrlSquarePanel
         public void focusLost(FocusEvent focusevent)
         {
             String componentName = focusevent.getComponent().getName();
-            System.out.println("focusLost: " + componentName);
+            log.fine("focusLost: " + componentName);
 
             if (componentName.equalsIgnoreCase(COMPONENT_PASTE_URL))
             {
@@ -246,6 +251,21 @@ public class UrlSquarePanel
                 updateAll();
             }
         }
+    }
+    
+    class MyDocumentListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            if( e.getLength() > 0 && _textPasteUrl.isShowing() )
+                updateAll();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            if( e.getLength() > 0 && _textPasteUrl.isShowing() )
+                updateAll();
+        }
+
+        public void changedUpdate(DocumentEvent e) { }
     }
 
     /**

@@ -23,11 +23,14 @@ package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
+import java.util.logging.Logger;
 import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 public abstract class DownloadConfiguration
 {
+    private static final Logger log = Logger.getLogger(DownloadConfiguration.class.getName());
+    
     public static final String TYPE = "Type";
 
     abstract public void save(Properties prop);
@@ -36,7 +39,7 @@ public abstract class DownloadConfiguration
 
     protected void setTemplateProperty(Properties prop, String key, String value)
     {
-        System.out.println("setting property " + key + " to value " + value);
+        log.config("setting property " + key + " to value " + value);
         prop.setProperty(key, value);
     }
 

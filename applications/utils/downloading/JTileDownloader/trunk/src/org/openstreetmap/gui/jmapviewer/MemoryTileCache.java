@@ -2,7 +2,7 @@ package org.openstreetmap.gui.jmapviewer;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
@@ -24,28 +24,27 @@ public class MemoryTileCache implements TileCache {
      */
     protected int cacheSize = 200;
 
-    protected Hashtable<String, CacheEntry> hashtable;
+    protected HashMap<String, CacheEntry> hashMap;
 
     /**
      * List of all tiles in their last recently used order
      */
-    protected CacheLinkedListElement lruTiles;
+    protected final CacheLinkedListElement lruTiles = new CacheLinkedListElement();
 
     public MemoryTileCache() {
-        hashtable = new Hashtable<String, CacheEntry>(cacheSize);
-        lruTiles = new CacheLinkedListElement();
+        hashMap = new HashMap<String, CacheEntry>(cacheSize);
     }
 
     public void addTile(Tile tile) {
         CacheEntry entry = createCacheEntry(tile);
-        hashtable.put(tile.getKey(), entry);
+        hashMap.put(tile.getKey(), entry);
         lruTiles.addFirst(entry);
-        if (hashtable.size() > cacheSize)
+        if (hashMap.size() > cacheSize)
             removeOldEntries();
     }
 
     public Tile getTile(TileSource source, int x, int y, int z) {
-        CacheEntry entry = hashtable.get(Tile.getTileKey(source, x, y, z));
+        CacheEntry entry = hashMap.get(Tile.getTileKey(source, x, y, z));
         if (entry == null)
             return null;
         // We don't care about placeholder tiles and hourglass image tiles, the
@@ -71,7 +70,7 @@ public class MemoryTileCache implements TileCache {
     }
 
     protected void removeEntry(CacheEntry entry) {
-        hashtable.remove(entry.tile.getKey());
+        hashMap.remove(entry.tile.getKey());
         lruTiles.removeEntry(entry);
     }
 
@@ -84,13 +83,13 @@ public class MemoryTileCache implements TileCache {
      */
     public void clear() {
         synchronized (lruTiles) {
-            hashtable.clear();
+            hashMap.clear();
             lruTiles.clear();
         }
     }
 
     public int getTileCount() {
-        return hashtable.size();
+        return hashMap.size();
     }
 
     public int getCacheSize() {
@@ -105,7 +104,7 @@ public class MemoryTileCache implements TileCache {
      */
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
-        if (hashtable.size() > cacheSize)
+        if (hashMap.size() > cacheSize)
             removeOldEntries();
     }
 
@@ -162,7 +161,7 @@ public class MemoryTileCache implements TileCache {
         /**
          * Add the element to the head of the list.
          * 
-         * @param new element to be added
+         * @param element element to be added
          */
         public synchronized void addFirst(CacheEntry element) {
             if (elementCount == 0) {

@@ -5,6 +5,8 @@ package org.openstreetmap.gui.jmapviewer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A generic class that processes a list of {@link Runnable} one-by-one using
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobDispatcher {
 
+    private static final Logger log = Logger.getLogger(JobDispatcher.class.getName());
     private static JobDispatcher instance;
 
     /**
@@ -136,7 +139,7 @@ public class JobDispatcher {
                     job.run();
                     job = null;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, "Error running job", e);
                 }
             }
         }

@@ -1,4 +1,11 @@
-#! /usr/bin/perl -w
+#! /usr/bin/perl -w -CDSL
+
+use Term::ReadKey;
+use strict;
+use utf8;
+use Encode;
+
+my $tlen = (GetTerminalSize())[0]-11;
 
 my $data;
 foreach my $file (@ARGV)
@@ -23,8 +30,11 @@ foreach my $file (@ARGV)
       {
         ++$num;
         read FILE,$data,$len;
-        $data =~ s/[\r\n]/./g;
-        printf("%4d %5d %.50s\n", $i, $len, $data);
+        $data = decode("utf-8", $data);
+        $data =~ s/\r/\\r/g;
+        $data =~ s/\n/\\n/g;
+        $data = substr($data, 0, $tlen);
+        printf("%4d %5d %s\n", $i, $len, $data);
       }
       else
       {
@@ -69,8 +79,11 @@ foreach my $file (@ARGV)
         if($len)
         {
           read FILE,$data,$len;
-          $data =~ s/[\r\n]/./g;
-          printf("%4d %5d %.50s\n", $i, $len, $data);
+          $data = decode("utf-8", $data);
+          $data =~ s/\r/\\r/g;
+          $data =~ s/\n/\\n/g;
+          $data = substr($data, 0, $tlen);
+          printf("%4d %5d %s\n", $i, $len, $data);
         }
         else
         {

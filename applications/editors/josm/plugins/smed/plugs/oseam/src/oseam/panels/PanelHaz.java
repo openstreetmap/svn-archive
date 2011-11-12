@@ -66,12 +66,11 @@ public class PanelHaz extends JPanel {
 			} else {
 				isolButton.setBorderPainted(false);
 			}
-			syncPanel();
+			alTop.actionPerformed(null);
 			dlg.panelMain.panelMore.syncPanel();
 			dlg.mark.paintSign();
 		}
 	};
-
 	private ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
@@ -116,42 +115,41 @@ public class PanelHaz extends JPanel {
 					dlg.panelMain.litButton.setEnabled(false);
 				}
 			}
+			dlg.mark.paintSign();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/HazTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				if (topmarkButton.isSelected()) {
-					dlg.mark.setTopPattern(Pat.NONE);
-					dlg.mark.setTopColour(Col.BLACK);
-					switch (dlg.mark.getCategory()) {
-					case CAM_NORTH:
-						dlg.mark.setTopmark(Top.NORTH);
-						break;
-					case CAM_SOUTH:
-						dlg.mark.setTopmark(Top.SOUTH);
-						break;
-					case CAM_EAST:
-						dlg.mark.setTopmark(Top.EAST);
-						break;
-					case CAM_WEST:
-						dlg.mark.setTopmark(Top.WEST);
-						break;
-					default:
-						dlg.mark.setTopmark(Top.SPHERES2);
-						break;
-					}
-					topmarkButton.setBorderPainted(true);
-				} else {
-					dlg.mark.setTopmark(Top.NONE);
-					dlg.mark.setTopPattern(Pat.NONE);
-					dlg.mark.setTopColour(Col.UNKNOWN);
-					topmarkButton.setBorderPainted(false);
+			if (topmarkButton.isSelected()) {
+				dlg.mark.setTopPattern(Pat.NONE);
+				dlg.mark.setTopColour(Col.BLACK);
+				switch (dlg.mark.getCategory()) {
+				case CAM_NORTH:
+					dlg.mark.setTopmark(Top.NORTH);
+					break;
+				case CAM_SOUTH:
+					dlg.mark.setTopmark(Top.SOUTH);
+					break;
+				case CAM_EAST:
+					dlg.mark.setTopmark(Top.EAST);
+					break;
+				case CAM_WEST:
+					dlg.mark.setTopmark(Top.WEST);
+					break;
+				default:
+					dlg.mark.setTopmark(Top.SPHERES2);
+					break;
 				}
-				dlg.panelMain.panelTop.syncPanel();
-				dlg.mark.paintSign();
+				topmarkButton.setBorderPainted(true);
+			} else {
+				dlg.mark.setTopmark(Top.NONE);
+				dlg.mark.setTopPattern(Pat.NONE);
+				dlg.mark.setTopColour(Col.UNKNOWN);
+				topmarkButton.setBorderPainted(false);
 			}
+			dlg.panelMain.panelTop.syncPanel();
+			dlg.mark.paintSign();
 		}
 	};
 
@@ -192,7 +190,7 @@ public class PanelHaz extends JPanel {
 			} else
 				button.setBorderPainted(false);
 		}
-		topmarkButton.setBorderPainted(topmarkButton.isSelected());
+		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setVisible(dlg.mark.isValid());
 	}
 

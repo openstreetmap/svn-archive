@@ -30,6 +30,7 @@ public class PanelMain extends JPanel {
 	public JLabel fogIcon = null;
 	public JLabel fogLabel = null;
 	public JLabel colLabel = null;
+	public JLabel litLabel = null;
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
 	private ActionListener alName = new ActionListener() {
@@ -210,10 +211,13 @@ public class PanelMain extends JPanel {
 		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(fogIcon, null);
 		radarLabel = new JLabel("", SwingConstants.CENTER);
-		radarLabel.setBounds(new Rectangle(210, 35, 100, 20));
+		litLabel = new JLabel("", SwingConstants.CENTER);
+		litLabel.setBounds(new Rectangle(210, 35, 100, 20));
+		this.add(litLabel, null);
+		radarLabel.setBounds(new Rectangle(210, 55, 100, 20));
 		this.add(radarLabel, null);
 		fogLabel = new JLabel("", SwingConstants.CENTER);
-		fogLabel.setBounds(new Rectangle(210, 60, 100, 20));
+		fogLabel.setBounds(new Rectangle(210, 75, 100, 20));
 		this.add(fogLabel, null);
 		colLabel = new JLabel("", SwingConstants.CENTER);
 		colLabel.setBounds(new Rectangle(235, 100, 150, 20));
@@ -314,6 +318,7 @@ public class PanelMain extends JPanel {
 		radarLabel.setText("");
 		fogLabel.setText("");
 		colLabel.setText("");
+		litLabel.setText("");
 		shapeIcon.setIcon(null);
 		lightIcon.setIcon(null);
 		topIcon.setIcon(null);

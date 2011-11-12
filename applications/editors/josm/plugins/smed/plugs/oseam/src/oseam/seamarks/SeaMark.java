@@ -1475,6 +1475,7 @@ public class SeaMark {
 			return;
 
 		dlg.panelMain.shapeIcon.setIcon(null);
+		dlg.panelMain.litLabel.setText("");
 		dlg.panelMain.colLabel.setText("");
 		dlg.panelMain.radarLabel.setText("");
 		dlg.panelMain.fogLabel.setText("");
@@ -1816,8 +1817,60 @@ public class SeaMark {
 			}
 		}
 		
-		if ((getLightAtt(Att.COL, 0) != Col.UNKNOWN) && (sectors.size() == 1)) {
-			dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+		if (getLightAtt(Att.COL, 0) != Col.UNKNOWN) {
+			if (sectors.size() == 1) {
+				switch ((Col) getLightAtt(Att.COL, 0)) {
+				case RED:
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
+					break;
+				case GREEN:
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+					break;
+				case WHITE:
+				case YELLOW:
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+					break;
+				default:
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+				}
+			}
+			String c = (String)getLightAtt(Att.CHR, 0);
+			String tmp = "";
+			if (c.contains("+")) {
+				int i1 = c.indexOf("+");
+				tmp = c.substring(i1, c.length());
+				c = c.substring(0, i1);
+				if (!((String)getLightAtt(Att.GRP, 0)).isEmpty()) {
+					c += "(" + (String)getLightAtt(Att.GRP, 0) + ")";
+				}
+				if (tmp != null)
+					c += tmp;
+			} else if (!((String)getLightAtt(Att.GRP, 0)).isEmpty())
+				c += "(" + (String)getLightAtt(Att.GRP, 0) + ")";
+			switch ((Col)getLightAtt(Att.COL, 0)) {
+			case RED:
+				c += " R";
+				break;
+			case GREEN:
+				c += " G";
+				break;
+			case AMBER:
+				c += " Am";
+				break;
+			case ORANGE:
+				c += " Or";
+				break;
+			case BLUE:
+				c += " Bu";
+				break;
+			case VIOLET:
+				c += " Vi";
+				break;
+			}
+			tmp = (String)getLightAtt(Att.PER, 0);
+			if (!tmp.isEmpty())
+				c += " " + tmp + "s";
+			dlg.panelMain.litLabel.setText(c);
 		}
 		
 		paintlock = false;

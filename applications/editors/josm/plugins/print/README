@@ -1,0 +1,43 @@
+README 
+======
+
+The Print Plugin adds a map printing feature to JOSM.
+
+Copyright 2011 Kai Pastor <dg0yt@darc.de>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+      
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+MA 02110-1301, USA.
+
+
+PREFERENCES
+===========
+
+print.attribution: 
+The attribution text which will be printed on the page.
+Default: "Map data (c) OpenStreetMap contributors, CC-BY-SA"
+
+print.resolution.dpi:
+The resolution in dpi which will be used for printing. 
+While a typical screen may have ~100 dpi, most printers offer a much 
+higher resolution. With a higher print resolution, lines will be finer,
+but icons and text will be smaller and might become unreadable.
+Default: "200"
+
+
+KNOWN LIMITATIONS
+=================
+
+ * No option to select a more usual scale
+ * No GUI for preferences

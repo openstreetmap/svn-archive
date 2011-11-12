@@ -74,7 +74,7 @@ public class PanelMore extends JPanel {
 			for (Con con : conspicuities.keySet()) {
 				int idx = conspicuities.get(con);
 				if (dlg.mark != null && (idx == conBox.getSelectedIndex()))
-					dlg.mark.setCon(con);
+					dlg.mark.setConsp(con);
 			}
 		}
 	};
@@ -320,7 +320,7 @@ public class PanelMore extends JPanel {
 		conBox.setSelectedIndex(0);
 		for (Con con : conspicuities.keySet()) {
 			int item = conspicuities.get(con);
-			if (dlg.mark.getCon() == con)
+			if (dlg.mark.getConsp() == con)
 				conBox.setSelectedIndex(item);
 		}
 		reflBox.setSelectedIndex(0);

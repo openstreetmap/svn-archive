@@ -628,7 +628,7 @@ public class SeaMark {
 		TopSTR.put(Top.NORTH, "2 cones up");
 		TopSTR.put(Top.SOUTH, "2 cones down");
 		TopSTR.put(Top.EAST, "2 cones base together");
-		TopSTR.put(Top.WEST, "2 cones points together");
+		TopSTR.put(Top.WEST, "2 cones point together");
 		TopSTR.put(Top.SPHERES2, "2 spheres");
 		TopSTR.put(Top.BOARD, "board");
 		TopSTR.put(Top.DIAMOND, "diamond");
@@ -871,11 +871,11 @@ public class SeaMark {
 
 	private Con conspicuity = Con.UNKNOWN;
 
-	public Con getCon() {
+	public Con getConsp() {
 		return conspicuity;
 	}
 
-	public void setCon(Con con) {
+	public void setConsp(Con con) {
 		conspicuity = con;
 	}
 
@@ -927,6 +927,36 @@ public class SeaMark {
 
 	public void setHeight(String str) {
 		height = validDecimal(str);
+	}
+
+	public String ref = "";
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String str) {
+		ref = str;
+	}
+
+	public String lightRef = "";
+
+	public String getLightRef() {
+		return lightRef;
+	}
+
+	public void setLightRef(String str) {
+		lightRef = str;
+	}
+
+	public String fixme = "";
+
+	public String getFixme() {
+		return fixme;
+	}
+
+	public void setFixme(String str) {
+		fixme = str;
 	}
 
 	public boolean isValid() {
@@ -1079,6 +1109,13 @@ public class SeaMark {
 						setObjPattern(pat);
 					}
 				}
+			}
+			
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":height")) {
+				setHeight(keys.get("seamark:" + ObjSTR.get(obj) + ":height"));
+			}
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":elevation")) {
+				setElevation(keys.get("seamark:" + ObjSTR.get(obj) + ":elevation"));
 			}
 		}
 
@@ -1306,7 +1343,10 @@ public class SeaMark {
 		}
 
 		if (keys.containsKey("seamark:fog_signal")) {
-			str = keys.get("seamark:fog_signal");
+			setFogSound(Fog.UNKNOWN);
+		}
+		if (keys.containsKey("seamark:fog_signal:category")) {
+			str = keys.get("seamark:fog_signal:category");
 			setFogSound(Fog.NONE);
 			for (Fog fog : FogSTR.keySet()) {
 				if (FogSTR.get(fog).equals(str)) {
@@ -1390,10 +1430,10 @@ public class SeaMark {
 		}
 		if (keys.containsKey("seamark:conspicuity")) {
 			str = keys.get("seamark:conspicuity");
-			setCon(Con.UNKNOWN);
+			setConsp(Con.UNKNOWN);
 			for (Con con : ConSTR.keySet()) {
 				if (ConSTR.get(con).equals(str)) {
-					setCon(con);
+					setConsp(con);
 				}
 			}
 		}
@@ -1405,6 +1445,22 @@ public class SeaMark {
 					setRefl(con);
 				}
 			}
+		}
+
+		if (keys.containsKey("seamark:ref")) {
+			setRef(keys.get("seamark:ref"));
+		}
+		if (keys.containsKey("seamark:reference")) {
+			setRef(keys.get("seamark:reference"));
+		}
+		if (keys.containsKey("seamark:light:ref")) {
+			setLightRef(keys.get("seamark:light:ref"));
+		}
+		if (keys.containsKey("seamark:light:reference")) {
+			setLightRef(keys.get("seamark:light:reference"));
+		}
+		if (keys.containsKey("seamark:fixme")) {
+			setFixme(keys.get("seamark:fixme"));
 		}
 
 		dlg.panelMain.syncPanel();
@@ -1786,7 +1842,7 @@ public class SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
 
 				if (getShape() != Shp.FLOAT) {
-					String str = CatSTR.get(category);
+					String str = CatSTR.get(getCategory());
 					if (str != null)
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
 					if ((getShape() != Shp.BUOY) && (getShape() != Shp.BEACON))
@@ -1818,6 +1874,12 @@ public class SeaMark {
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
 						break;
 					}
+				}
+				if (!getHeight().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + "height", getHeight()));
+				}
+				if (!getElevation().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + "elevation", getElevation()));
 				}
 			}
 			if (getTopmark() != Top.NONE) {
@@ -1917,23 +1979,26 @@ public class SeaMark {
 			if (!getSource().isEmpty()) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:source", getSource()));
 			}
-			if (!getHeight().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:height", getHeight()));
-			}
-			if (!getElevation().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:elevation", getElevation()));
-			}
 			if (getStatus() != Sts.UNKNOWN) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:status", StsSTR.get(getStatus())));
 			}
 			if (getConstr() != Cns.UNKNOWN) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:construction", CnsSTR.get(getConstr())));
 			}
-			if (getCon() != Con.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:conspicuity", ConSTR.get(getCon())));
+			if (getConsp() != Con.UNKNOWN) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:conspicuity", ConSTR.get(getConsp())));
 			}
 			if (getRefl() != Con.UNKNOWN) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reflectivity", ConSTR.get(getRefl())));
+			}
+			if (!getRef().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reference", getRef()));
+			}
+			if (!getLightRef().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:reference", getLightRef()));
+			}
+			if (!getFixme().isEmpty()) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fixme", getFixme()));
 			}
 		}
 	}

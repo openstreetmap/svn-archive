@@ -132,7 +132,10 @@ public class PanelLit extends JPanel {
 			} else {
 				if (panelSector != null) {
 					panelSector.setVisible(false);
+					panelSector = null;
 				}
+				while (dlg.mark.getSectorCount() > 1)
+					dlg.mark.delLight(1);
 			}
 		}
 	};
@@ -273,10 +276,43 @@ public class PanelLit extends JPanel {
 	}
 
 	public void syncPanel() {
+		if (panelSector != null) {
+			panelSector.setVisible(false);
+			panelSector = null;
+		}
+		singleButton.setBorderPainted(false);
+		sectorButton.setBorderPainted(false);
 		orientationLabel.setVisible(false);
 		orientationBox.setVisible(false);
 		multipleLabel.setVisible(false);
 		multipleBox.setVisible(false);
+		groupBox.setText((String)dlg.mark.getLightAtt(Att.GRP, 0));
+		periodBox.setText((String)dlg.mark.getLightAtt(Att.PER, 0));
+		sequenceBox.setText((String)dlg.mark.getLightAtt(Att.SEQ, 0));
+		heightBox.setText((String)dlg.mark.getLightAtt(Att.HGT, 0));
+		rangeBox.setText((String)dlg.mark.getLightAtt(Att.RNG, 0));
+		orientationBox.setText((String)dlg.mark.getLightAtt(Att.ORT, 0));
+		multipleBox.setText((String)dlg.mark.getLightAtt(Att.MLT, 0));
+		visibilityBox.setSelectedIndex(0);
+		for (Vis vis : visibilities.keySet()) {
+			int item = visibilities.get(vis);
+			if (dlg.mark.getLightAtt(Att.VIS, 0) == vis)
+				visibilityBox.setSelectedIndex(item);
+		}
+		categoryBox.setSelectedIndex(0);
+		for (Lit lit : categories.keySet()) {
+			int item = categories.get(lit);
+			if (dlg.mark.getLightAtt(Att.LIT, 0) == lit)
+				categoryBox.setSelectedIndex(item);
+		}
+		exhibitionBox.setSelectedIndex(0);
+		for (Exh exh : exhibitions.keySet()) {
+			int item = exhibitions.get(exh);
+			if (dlg.mark.getLightAtt(Att.EXH, 0) == exh)
+				exhibitionBox.setSelectedIndex(item);
+		}
+		panelCol.syncPanel();
+		panelChr.syncPanel();
 	}
 
 	private void addCatItem(String str, Lit lit) {

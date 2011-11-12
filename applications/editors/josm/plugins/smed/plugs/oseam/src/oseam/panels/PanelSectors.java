@@ -65,6 +65,11 @@ public class PanelSectors extends JFrame {
 		table.setBounds(0, 0, 860, 34);
 		panel.add(new JScrollPane(table));
 		this.getContentPane().add(panel);
+
+		table.setSize(860, ((table.getRowCount() * 16) + 18));
+		if (table.getRowCount() > 3) {
+			this.setSize(900, ((table.getRowCount() * 16) + 40));
+		}
 		
 		table.setDefaultRenderer(String.class, new CentreRenderer());
 		table.getColumnModel().getColumn(1).setCellRenderer(new ColourCellRenderer());

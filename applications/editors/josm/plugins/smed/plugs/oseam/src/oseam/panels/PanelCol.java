@@ -123,6 +123,13 @@ public class PanelCol extends JPanel {
 
 	public void syncPanel() {
 		if (ent == Ent.LIGHT) {
+			for (Col col : colours.keySet()) {
+				JRadioButton button = colours.get(col);
+				if (dlg.mark.getLightAtt(Att.COL, 0) == col) {
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
+			}
 		} else {
 			int idx;
 			for (idx = 0; dlg.mark.getColour(ent, idx) != Col.UNKNOWN; idx++) {

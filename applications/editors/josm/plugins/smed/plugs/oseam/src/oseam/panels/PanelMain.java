@@ -292,9 +292,13 @@ public class PanelMain extends JPanel {
 		lightsButton.setEnabled(false);
 		miscButtons.clearSelection();
 		topButton.setEnabled(false);
+		topButton.setBorderPainted(false);
 		fogButton.setEnabled(false);
+		fogButton.setBorderPainted(false);
 		radButton.setEnabled(false);
+		radButton.setBorderPainted(false);
 		litButton.setEnabled(false);
+		litButton.setBorderPainted(false);
 		saveButton.setEnabled(false);
 		moreButton.setVisible(false);
 		moreButton.setSelected(false);
@@ -303,6 +307,10 @@ public class PanelMain extends JPanel {
 		panelSpec.setVisible(false);
 		panelLights.setVisible(false);
 		panelMore.setVisible(false);
+		panelTop.setVisible(false);
+		panelFog.setVisible(false);
+		panelRadar.setVisible(false);
+		panelLit.setVisible(false);
 		radarLabel.setText("");
 		fogLabel.setText("");
 		colLabel.setText("");
@@ -354,10 +362,6 @@ public class PanelMain extends JPanel {
 				panelLights.syncPanel();
 				break;
 			}
-			panelChan.syncPanel();
-			panelHaz.syncPanel();
-			panelSpec.syncPanel();
-			panelLights.syncPanel();
 			panelMore.syncPanel();
 			panelTop.syncPanel();
 			panelFog.syncPanel();

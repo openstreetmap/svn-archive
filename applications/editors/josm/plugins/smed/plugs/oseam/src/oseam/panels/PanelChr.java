@@ -118,9 +118,25 @@ public class PanelChr extends JPanel {
 		charBox.addActionListener(alCharBox);
 	}
 
-	public void enableAll(boolean state) {
-		for (JToggleButton button : buttons.values()) {
-			button.setEnabled(state);
+	public void syncPanel() {
+		String str = (String)dlg.mark.getLightAtt(Att.CHR, 0);
+		charBox.setText(str);
+		EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
+		for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
+			if (str.equals(SeaMark.ChrMAP.get(map))) {
+				set = map;
+				break;
+			}
+		}
+		for (Chr chr : buttons.keySet()) {
+			JToggleButton button = buttons.get(chr);
+			if (set.contains(chr)) {
+				button.setSelected(true);
+				button.setBorderPainted(true);
+			} else {
+				button.setSelected(false);
+				button.setBorderPainted(false);
+			}
 		}
 	}
 

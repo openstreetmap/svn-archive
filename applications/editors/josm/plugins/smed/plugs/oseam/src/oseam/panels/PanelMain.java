@@ -209,10 +209,10 @@ public class PanelMain extends JPanel {
 		fogIcon = new JLabel();
 		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
 		this.add(fogIcon, null);
-		radarLabel = new JLabel("", SwingConstants.RIGHT);
+		radarLabel = new JLabel("", SwingConstants.CENTER);
 		radarLabel.setBounds(new Rectangle(210, 35, 100, 20));
 		this.add(radarLabel, null);
-		fogLabel = new JLabel("", SwingConstants.RIGHT);
+		fogLabel = new JLabel("", SwingConstants.CENTER);
 		fogLabel.setBounds(new Rectangle(210, 60, 100, 20));
 		this.add(fogLabel, null);
 		colLabel = new JLabel("", SwingConstants.CENTER);
@@ -290,12 +290,14 @@ public class PanelMain extends JPanel {
 		specButton.setEnabled(false);
 		lightsButton.setBorderPainted(false);
 		lightsButton.setEnabled(false);
+		miscButtons.clearSelection();
 		topButton.setEnabled(false);
 		fogButton.setEnabled(false);
 		radButton.setEnabled(false);
 		litButton.setEnabled(false);
 		saveButton.setEnabled(false);
 		moreButton.setVisible(false);
+		moreButton.setSelected(false);
 		panelChan.setVisible(false);
 		panelHaz.setVisible(false);
 		panelSpec.setVisible(false);

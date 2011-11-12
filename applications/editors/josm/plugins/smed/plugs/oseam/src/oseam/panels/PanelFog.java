@@ -17,8 +17,8 @@ public class PanelFog extends JPanel {
 	public JRadioButton noFogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton yesFogButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogYesButton.png")));
 	public JRadioButton hornButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogHornButton.png")));
-	public JRadioButton sirenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
-	public JRadioButton diaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
+	public JRadioButton sirenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogSirenButton.png")));
+	public JRadioButton diaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogDiaButton.png")));
 	public JRadioButton bellButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogBellButton.png")));
 	public JRadioButton whisButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogWhisButton.png")));
 	public JRadioButton gongButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogGongButton.png")));
@@ -34,7 +34,6 @@ public class PanelFog extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			dlg.mark.setFog(!noFogButton.isSelected());
 			dlg.mark.paintSign();
 		}
 	};

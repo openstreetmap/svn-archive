@@ -74,7 +74,7 @@ public class PanelLit extends JPanel {
 	public JTextField multipleBox;
 	private ActionListener alMultiple = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightMultiple(multipleBox.getText());
+			dlg.mark.setLightAtt(Att.MLT, 0, multipleBox.getText());
 		}
 	};
 	public JLabel categoryLabel;
@@ -128,10 +128,8 @@ public class PanelLit extends JPanel {
 				if (panelSector == null) {
 					panelSector = new PanelSectors(dlg);
 				}
-				dlg.mark.setSectored(true);
 				panelSector.setVisible(true);
 			} else {
-				dlg.mark.setSectored(false);
 				if (panelSector != null) {
 					panelSector.setVisible(false);
 				}

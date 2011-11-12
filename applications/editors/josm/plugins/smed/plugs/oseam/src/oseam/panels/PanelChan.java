@@ -235,7 +235,8 @@ public class PanelChan extends JPanel {
 		} else {
 			safeWaterButton.setBorderPainted(false);
 		}
-		topmarkButton.setBorderPainted(dlg.mark.hasTopmark());
+		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
+		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
 		if (dlg.mark.isValid()) {
 			topmarkButton.setVisible(true);
 			dlg.panelMain.moreButton.setVisible(true);

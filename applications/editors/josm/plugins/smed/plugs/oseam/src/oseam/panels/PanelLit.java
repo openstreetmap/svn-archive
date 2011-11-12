@@ -154,7 +154,7 @@ public class PanelLit extends JPanel {
 		singleButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SingleButton.png")));
 		this.add(getTypeButton(singleButton, 280, 125, 34, 30, "Single"), null);
 		sectorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SectorButton.png")));
-		this.add(getTypeButton(sectorButton, 315, 125, 34, 30, "Sector"), null);
+		this.add(getTypeButton(sectorButton, 315, 125, 34, 30, "Sectored"), null);
 
 		groupLabel = new JLabel(Messages.getString("Group"), SwingConstants.CENTER);
 		groupLabel.setBounds(new Rectangle(123, 0, 65, 20));

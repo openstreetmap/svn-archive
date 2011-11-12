@@ -42,7 +42,7 @@ public class PanelSectors extends JFrame {
 	public EnumMap<Exh, String> exhibitions = new EnumMap<Exh, String>(Exh.class);
 
 	public PanelSectors(OSeaMAction dia) {
-		super("Sector Table");
+		super(Messages.getString("SectorTable"));
 		dlg = dia;
 		this.setSize(900, 100);
 		this.setVisible(true);
@@ -107,8 +107,10 @@ public class PanelSectors extends JFrame {
 
 	private class SectorTable extends AbstractTableModel {
 
-		private String[] headings = { "Sector", "Colour", "Character", "Group", "Sequence", "Period",
-				"Directional", "Start", "End", "Radius", "Height", "Range", "Visibility", "Exhibition" };
+		private String[] headings = { Messages.getString("Sector"), Messages.getString("Colour"), Messages.getString("Character"),
+				Messages.getString("Group"), Messages.getString("Sequence"), Messages.getString("Period"), Messages.getString("Directional"),
+				Messages.getString("Start"), Messages.getString("End"), Messages.getString("Radius"), Messages.getString("Height"),
+				Messages.getString("Range"), Messages.getString("Visibility"), Messages.getString("Exhibition") };
 
 		public SectorTable() {
 		}
@@ -144,7 +146,7 @@ public class PanelSectors extends JFrame {
 			switch (col) {
 			case 0:
 				if (row == 0)
-					return "Common";
+					return Messages.getString("Common");
 				else
 					return row;
 			case 1:

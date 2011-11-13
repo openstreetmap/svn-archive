@@ -87,6 +87,8 @@ public class PanelMain extends JPanel {
 				typeButtons.clearSelection();
 			if (chanButton.isSelected()) {
 				chanButton.setBorderPainted(true);
+				dlg.mark.clearSign();
+				panelChan.syncPanel();
 				panelChan.setVisible(true);
 			} else {
 				chanButton.setBorderPainted(false);
@@ -94,6 +96,8 @@ public class PanelMain extends JPanel {
 			}
 			if (hazButton.isSelected()) {
 				hazButton.setBorderPainted(true);
+				dlg.mark.clearSign();
+				panelHaz.syncPanel();
 				panelHaz.setVisible(true);
 			} else {
 				hazButton.setBorderPainted(false);
@@ -101,6 +105,8 @@ public class PanelMain extends JPanel {
 			}
 			if (specButton.isSelected()) {
 				specButton.setBorderPainted(true);
+				dlg.mark.clearSign();
+				panelSpec.syncPanel();
 				panelSpec.setVisible(true);
 			} else {
 				specButton.setBorderPainted(false);
@@ -108,6 +114,8 @@ public class PanelMain extends JPanel {
 			}
 			if (lightsButton.isSelected()) {
 				lightsButton.setBorderPainted(true);
+				dlg.mark.clearSign();
+				panelLights.syncPanel();
 				panelLights.setVisible(true);
 			} else {
 				lightsButton.setBorderPainted(false);
@@ -332,15 +340,6 @@ public class PanelMain extends JPanel {
 			specButton.setEnabled(true);
 			lightsButton.setEnabled(true);
 			nameBox.setText(dlg.mark.getName());
-			if (dlg.mark.isValid()) {
-				moreButton.setVisible(true);
-				moreButton.setEnabled(true);
-				topButton.setEnabled(true);
-				fogButton.setEnabled(true);
-				radButton.setEnabled(true);
-				litButton.setEnabled(true);
-				saveButton.setEnabled(true);
-			}
 			switch (SeaMark.GrpMAP.get(dlg.mark.getObject())) {
 			case LAT:
 			case SAW:

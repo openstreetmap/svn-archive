@@ -27,30 +27,28 @@ public class PanelPat extends JPanel {
 	public EnumMap<Pat, JRadioButton> patterns = new EnumMap<Pat, JRadioButton>(Pat.class);
 	private ActionListener alPat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				for (Pat pat : patterns.keySet()) {
-					JRadioButton button = patterns.get(pat);
-					if (button.isSelected()) {
-						dlg.mark.setPattern(ent, pat);
-						button.setBorderPainted(true);
-					} else
-						button.setBorderPainted(false);
-				}
-				switch (dlg.mark.getPattern(ent)) {
-				case NONE:
-					panelCol.trimStack(1);
-					break;
-				case HORIZ:
-				case VERT:
-				case DIAG:
-					break;
-				case SQUARE:
-					panelCol.trimStack(4);
-					break;
-				case BORDER:
-					panelCol.trimStack(2);
-					break;
-				}
+			for (Pat pat : patterns.keySet()) {
+				JRadioButton button = patterns.get(pat);
+				if (button.isSelected()) {
+					dlg.mark.setPattern(ent, pat);
+					button.setBorderPainted(true);
+				} else
+					button.setBorderPainted(false);
+			}
+			switch (dlg.mark.getPattern(ent)) {
+			case NONE:
+				panelCol.trimStack(1);
+				break;
+			case HORIZ:
+			case VERT:
+			case DIAG:
+				break;
+			case SQUARE:
+				panelCol.trimStack(4);
+				break;
+			case BORDER:
+				panelCol.trimStack(2);
+				break;
 			}
 		}
 	};
@@ -81,7 +79,7 @@ public class PanelPat extends JPanel {
 		}
 		panelCol.syncPanel();
 	}
-	
+
 	private JRadioButton getPatButton(JRadioButton button, int x, int y, int w, int h, String tip, Pat pat) {
 		button.setBounds(new Rectangle(x, y, w, h));
 		button.setBorder(BorderFactory.createLoweredBevelBorder());

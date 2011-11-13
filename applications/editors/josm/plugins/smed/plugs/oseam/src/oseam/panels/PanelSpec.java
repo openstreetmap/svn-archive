@@ -61,9 +61,10 @@ public class PanelSpec extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
+			dlg.mark.testValid();
 			dlg.panelMain.panelMore.syncPanel();
-			dlg.mark.paintSign()
-;		}
+			dlg.mark.paintSign();
+		}
 	};
 
 	public PanelSpec(OSeaMAction dia) {
@@ -124,6 +125,7 @@ public class PanelSpec extends JPanel {
 			if (dlg.mark.getCategory() == cat)
 				categoryBox.setSelectedIndex(item);
 		}
+		dlg.mark.testValid();
 	}
 
 	private void addCatItem(String str, Cat cat) {

@@ -102,9 +102,7 @@ public class PanelChan extends JPanel {
 			} else {
 				safeWaterButton.setBorderPainted(false);
 			}
-			if (dlg.mark.isValid()) {
-				dlg.panelMain.moreButton.setVisible(true);
-				dlg.panelMain.saveButton.setEnabled(true);
+			if (dlg.mark.testValid()) {
 				topmarkButton.setVisible(true);
 			}
 			alTop.actionPerformed(null);
@@ -237,14 +235,10 @@ public class PanelChan extends JPanel {
 		}
 		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
-		if (dlg.mark.isValid()) {
+		if (dlg.mark.testValid()) {
 			topmarkButton.setVisible(true);
-			dlg.panelMain.moreButton.setVisible(true);
-			dlg.panelMain.saveButton.setEnabled(true);
 		} else {
 			topmarkButton.setVisible(false);
-			dlg.panelMain.moreButton.setVisible(false);
-			dlg.panelMain.saveButton.setEnabled(false);
 		}
 		panelPort.syncPanel();
 		panelStbd.syncPanel();

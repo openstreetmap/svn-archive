@@ -36,14 +36,8 @@ public class PanelPort extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark.isValid()) {
-				dlg.panelMain.moreButton.setVisible(true);
+			if (dlg.mark.testValid()) {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-				dlg.panelMain.topButton.setEnabled(true);
-				dlg.panelMain.fogButton.setEnabled(true);
-				dlg.panelMain.radButton.setEnabled(true);
-				dlg.panelMain.litButton.setEnabled(true);
-				dlg.panelMain.saveButton.setEnabled(true);
 				if (dlg.mark.getCategory() == Cat.LAM_PORT) {
 					switch (dlg.mark.getRegion()) {
 					case A:
@@ -85,13 +79,7 @@ public class PanelPort extends JPanel {
 				}
 				dlg.panelMain.panelMore.syncPanel();
 			} else {
-				dlg.panelMain.moreButton.setVisible(false);
 				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
-				dlg.panelMain.topButton.setEnabled(false);
-				dlg.panelMain.fogButton.setEnabled(false);
-				dlg.panelMain.radButton.setEnabled(false);
-				dlg.panelMain.litButton.setEnabled(false);
-				dlg.panelMain.saveButton.setEnabled(false);
 			}
 			dlg.mark.paintSign();
 		}

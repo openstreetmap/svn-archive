@@ -39,7 +39,6 @@ public class PanelCol extends JPanel {
 			for (Col col : colours.keySet()) {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
-					if (dlg.mark != null) {
 						if (ent == Ent.LIGHT) {
 							dlg.mark.setLightAtt(Att.COL, 0, col);
 							button.setBorderPainted(true);
@@ -59,7 +58,6 @@ public class PanelCol extends JPanel {
 							syncPanel();
 						}
 						dlg.mark.paintSign();
-					}
 				} else {
 					button.setBorderPainted(false);
 				}

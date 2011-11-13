@@ -97,23 +97,10 @@ public class PanelHaz extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark != null) {
-				if ((dlg.mark.getObject() != Obj.UNKNOWN) && (dlg.mark.getShape() != Shp.UNKNOWN)) {
-					topmarkButton.setVisible(true);
-					dlg.panelMain.moreButton.setVisible(true);
-					dlg.panelMain.saveButton.setEnabled(true);
-					dlg.panelMain.topButton.setEnabled(true);
-					dlg.panelMain.fogButton.setEnabled(true);
-					dlg.panelMain.radButton.setEnabled(true);
-					dlg.panelMain.litButton.setEnabled(true);
-				} else {
-					topmarkButton.setVisible(false);
-					dlg.panelMain.moreButton.setVisible(false);
-					dlg.panelMain.topButton.setEnabled(false);
-					dlg.panelMain.fogButton.setEnabled(false);
-					dlg.panelMain.radButton.setEnabled(false);
-					dlg.panelMain.litButton.setEnabled(false);
-				}
+			if (dlg.mark.testValid()) {
+				topmarkButton.setVisible(true);
+			} else {
+				topmarkButton.setVisible(false);
 			}
 			dlg.mark.paintSign();
 		}
@@ -185,13 +172,10 @@ public class PanelHaz extends JPanel {
 		isolButton.setBorderPainted(dlg.mark.getCategory() == Cat.NONE);
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.mark.getShape() == shp) {
-				button.setBorderPainted(true);
-			} else
-				button.setBorderPainted(false);
+			button.setBorderPainted(dlg.mark.getShape() == shp);
 		}
 		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
-		topmarkButton.setVisible(dlg.mark.isValid());
+		topmarkButton.setVisible(dlg.mark.testValid());
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

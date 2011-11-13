@@ -63,6 +63,7 @@ public class PanelSectors extends JFrame {
 		model = new SectorTable();
 		table = new JTable(model);
 		table.setBounds(0, 0, 860, 34);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		panel.add(new JScrollPane(table));
 		this.getContentPane().add(panel);
 

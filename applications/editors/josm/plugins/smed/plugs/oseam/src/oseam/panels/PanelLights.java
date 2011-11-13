@@ -74,6 +74,8 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
+			dlg.mark.testValid();
+			dlg.mark.paintSign();
 		}
 	};
 
@@ -151,6 +153,7 @@ public class PanelLights extends JPanel {
 			JRadioButton button = objects.get(obj);
 			button.setBorderPainted(dlg.mark.getObject() == obj);
 		}
+		dlg.mark.testValid();
 	}
 	
 	private void addTCItem(String str, Cat cat) {

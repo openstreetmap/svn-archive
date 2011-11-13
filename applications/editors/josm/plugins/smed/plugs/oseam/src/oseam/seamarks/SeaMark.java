@@ -18,6 +18,25 @@ public class SeaMark {
 		dlg = dia;
 	}
 
+	public void clearSign() {
+		setObject(Obj.UNKNOWN);
+		setCategory(Cat.NONE);
+		setShape(Shp.UNKNOWN);
+		setColour(Ent.BODY, Col.UNKNOWN);
+		setPattern(Ent.BODY, Pat.NONE);
+		setColour(Ent.TOPMARK, Col.UNKNOWN);
+		setPattern(Ent.TOPMARK, Pat.NONE);
+		dlg.panelMain.moreButton.setVisible(false);
+		dlg.panelMain.saveButton.setEnabled(false);
+		dlg.panelMain.topButton.setEnabled(false);
+		dlg.panelMain.fogButton.setEnabled(false);
+		dlg.panelMain.radButton.setEnabled(false);
+		dlg.panelMain.litButton.setEnabled(false);
+		dlg.panelMain.panelMore.syncPanel();
+		dlg.panelMain.panelMore.setVisible(false);
+		paintSign();
+	}
+	
 	public String validDecimal(String str) {
 		str = str.trim().replace(',', '.');
 		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
@@ -129,7 +148,7 @@ public class SeaMark {
 		EntMAP.put(Obj.FLTSAW, Ent.FLOAT);
 		EntMAP.put(Obj.FLTISD, Ent.FLOAT);
 		EntMAP.put(Obj.FLTSPP, Ent.FLOAT);
-		EntMAP.put(Obj.LITVES, Ent.LIGHT);
+		EntMAP.put(Obj.LITVES, Ent.FLOAT);
 		EntMAP.put(Obj.LNDMRK, Ent.LIGHT);
 		EntMAP.put(Obj.MORFAC, Ent.MOORING);
 		EntMAP.put(Obj.SISTAW, Ent.STATION);
@@ -959,7 +978,8 @@ public class SeaMark {
 		fixme = str;
 	}
 
-	public boolean isValid() {
+	public boolean testValid() {
+		boolean tmp = false;
 		dlg.manager.showVisualMessage("");
 		switch (getObject()) {
 		case BCNCAR:
@@ -967,7 +987,7 @@ public class SeaMark {
 		case BOYCAR:
 		case BOYLAT:
 			if ((getCategory() != Cat.NONE) && (getShape() != Shp.UNKNOWN))
-				return true;
+				tmp = true;
 			break;
 		case BCNISD:
 		case BCNSAW:
@@ -976,7 +996,7 @@ public class SeaMark {
 		case BOYSAW:
 		case BOYSPP:
 			if (getShape() != Shp.UNKNOWN)
-				return true;
+				tmp = true;
 			break;
 		case FLTCAR:
 		case FLTISD:
@@ -984,7 +1004,7 @@ public class SeaMark {
 		case FLTSAW:
 		case FLTSPP:
 			if (getObjColour(0) != Col.UNKNOWN)
-				return true;
+				tmp = true;
 			break;
 		case LITMAJ:
 		case LITMIN:
@@ -994,13 +1014,28 @@ public class SeaMark {
 		case MORFAC:
 		case SISTAW:
 		case SISTAT:
+			tmp = true;
+			break;
+		}
+		if (tmp) {
+			dlg.panelMain.moreButton.setVisible(true);
+			dlg.panelMain.saveButton.setEnabled(true);
+			Ent ent = EntMAP.get(getObject());
+			if ((ent == Ent.BUOY) || (ent == Ent.BEACON) || (ent == Ent.FLOAT))
+				dlg.panelMain.topButton.setEnabled(true);
+			dlg.panelMain.fogButton.setEnabled(true);
+			dlg.panelMain.radButton.setEnabled(true);
+			dlg.panelMain.litButton.setEnabled(true);
 			return true;
-		default:
+		} else {
+			dlg.panelMain.moreButton.setVisible(false);
+			dlg.panelMain.topButton.setEnabled(false);
+			dlg.panelMain.fogButton.setEnabled(false);
+			dlg.panelMain.radButton.setEnabled(false);
+			dlg.panelMain.litButton.setEnabled(false);
 			dlg.manager.showVisualMessage("Seamark not recognised");
 			return false;
 		}
-		dlg.manager.showVisualMessage("Seamark not recognised");
-		return false;
 	}
 
 	private boolean paintlock = false;

@@ -269,6 +269,7 @@ public class PanelMain extends JPanel {
 		this.add(nameLabel, null);
 		nameBox = new JTextField();
 		nameBox.setBounds(new Rectangle(60, 330, 200, 20));
+		nameBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(nameBox, null);
 		nameBox.addActionListener(alName);
 

@@ -95,6 +95,7 @@ public class PanelRadar extends JPanel {
 		this.add(groupLabel, null);
 		groupBox = new JTextField();
 		groupBox.setBounds(new Rectangle(55, 20, 50, 20));
+		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(groupBox, null);
 		groupBox.addActionListener(alGroup);
 
@@ -103,6 +104,7 @@ public class PanelRadar extends JPanel {
 		this.add(periodLabel, null);
 		periodBox = new JTextField();
 		periodBox.setBounds(new Rectangle(155, 20, 50, 20));
+		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(periodBox, null);
 		periodBox.addActionListener(alPeriod);
 
@@ -111,6 +113,7 @@ public class PanelRadar extends JPanel {
 		this.add(seqLabel, null);
 		seqBox = new JTextField();
 		seqBox.setBounds(new Rectangle(55, 60, 50, 20));
+		seqBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(seqBox, null);
 		seqBox.addActionListener(alSeq);
 
@@ -119,7 +122,7 @@ public class PanelRadar extends JPanel {
 		this.add(rangeLabel, null);
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(155, 60, 50, 20));
-		this.add(rangeBox, null);
+		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		rangeBox.addActionListener(alRange);
 		
 		sectorsLabel = new JLabel(Messages.getString("VisibleSector"), SwingConstants.CENTER);
@@ -131,6 +134,7 @@ public class PanelRadar extends JPanel {
 		this.add(sector1Label, null);
 		sector1Box = new JTextField();
 		sector1Box.setBounds(new Rectangle(55, 120, 50, 20));
+		sector1Box.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(sector1Box, null);
 		sector1Box.addActionListener(alSector1);
 
@@ -139,6 +143,7 @@ public class PanelRadar extends JPanel {
 		this.add(sector2Label, null);
 		sector2Box = new JTextField();
 		sector2Box.setBounds(new Rectangle(155, 120, 50, 20));
+		sector2Box.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(sector2Box, null);
 		sector2Box.addActionListener(alSector2);
 	}

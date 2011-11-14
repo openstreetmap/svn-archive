@@ -86,6 +86,7 @@ public class PanelFog extends JPanel {
 		this.add(groupLabel, null);
 		groupBox = new JTextField();
 		groupBox.setBounds(new Rectangle(100, 20, 50, 20));
+		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(groupBox, null);
 		groupBox.addActionListener(alGroup);
 
@@ -94,6 +95,7 @@ public class PanelFog extends JPanel {
 		this.add(periodLabel, null);
 		periodBox = new JTextField();
 		periodBox.setBounds(new Rectangle(100, 60, 50, 20));
+		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(periodBox, null);
 		periodBox.addActionListener(alPeriod);
 
@@ -102,6 +104,7 @@ public class PanelFog extends JPanel {
 		this.add(seqLabel, null);
 		seqBox = new JTextField();
 		seqBox.setBounds(new Rectangle(100, 100, 50, 20));
+		seqBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(seqBox, null);
 		seqBox.addActionListener(alSeq);
 
@@ -110,6 +113,7 @@ public class PanelFog extends JPanel {
 		this.add(rangeLabel, null);
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(100, 140, 50, 20));
+		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(rangeBox, null);
 		rangeBox.addActionListener(alRange);
 

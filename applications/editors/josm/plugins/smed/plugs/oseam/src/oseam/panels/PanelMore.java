@@ -199,6 +199,7 @@ public class PanelMore extends JPanel {
 		this.add(elevLabel, null);
 		elevBox = new JTextField();
 		elevBox.setBounds(new Rectangle(160, 20, 50, 20));
+		elevBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(elevBox, null);
 		elevBox.addActionListener(alElev);
 
@@ -207,6 +208,7 @@ public class PanelMore extends JPanel {
 		this.add(heightLabel, null);
 		heightBox = new JTextField();
 		heightBox.setBounds(new Rectangle(160, 60, 50, 20));
+		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(heightBox, null);
 		heightBox.addActionListener(alHeight);
 
@@ -215,6 +217,7 @@ public class PanelMore extends JPanel {
 		this.add(sourceLabel, null);
 		sourceBox = new JTextField();
 		sourceBox.setBounds(new Rectangle(110, 100, 130, 20));
+		sourceBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(sourceBox, null);
 		sourceBox.addActionListener(alSource);
 
@@ -223,6 +226,7 @@ public class PanelMore extends JPanel {
 		this.add(infoLabel, null);
 		infoBox = new JTextField();
 		infoBox.setBounds(new Rectangle(110, 140, 130, 20));
+		infoBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(infoBox, null);
 		infoBox.addActionListener(alInfo);
 

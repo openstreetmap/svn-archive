@@ -169,7 +169,7 @@ public class SeaMark {
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
 		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
-		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WTRT
+		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -239,6 +239,7 @@ public class SeaMark {
 		CatSTR.put(Cat.LMK_MNMT, "monument");
 		CatSTR.put(Cat.LMK_RADM, "radio_mast");
 		CatSTR.put(Cat.LMK_TOWR, "tower");
+		CatSTR.put(Cat.LMK_WNDM, "wind_motor");
 		CatSTR.put(Cat.LMK_WTRT, "water_tower");
 	}
 
@@ -1700,6 +1701,9 @@ public class SeaMark {
 					break;
 				case LMK_TOWR:
 					imgStr += "LandTower";
+					break;
+				case LMK_WNDM:
+					imgStr += "Wind_Motor";
 					break;
 				case LMK_WTRT:
 					imgStr += "WaterTower";

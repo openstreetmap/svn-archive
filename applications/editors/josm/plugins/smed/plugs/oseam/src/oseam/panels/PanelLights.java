@@ -136,6 +136,7 @@ public class PanelLights extends JPanel {
 		addLCItem(Messages.getString("Monument"), Cat.LMK_MNMT);
 		addLCItem(Messages.getString("RadioMast"), Cat.LMK_RADM);
 		addLCItem(Messages.getString("Tower"), Cat.LMK_TOWR);
+		addLCItem(Messages.getString("WindMotor"), Cat.LMK_WNDM);
 		addLCItem(Messages.getString("WaterTower"), Cat.LMK_WTRT);
 		landCatBox.setVisible(false);
 

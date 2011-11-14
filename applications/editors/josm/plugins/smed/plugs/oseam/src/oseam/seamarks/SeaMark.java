@@ -54,7 +54,7 @@ public class SeaMark {
 	public enum Obj {
 		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
 		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES,
-		LNDMRK, MORFAC, SISTAW, SISTAT
+		LITHSE, LNDMRK, MORFAC, SISTAW, SISTAT
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -79,6 +79,7 @@ public class SeaMark {
 		ObjSTR.put(Obj.LITFLT, "light_float");
 		ObjSTR.put(Obj.LITVES, "light_vessel");
 		ObjSTR.put(Obj.LNDMRK, "landmark");
+		ObjSTR.put(Obj.LITHSE, "landmark");
 		ObjSTR.put(Obj.MORFAC, "mooring");
 		ObjSTR.put(Obj.SISTAW, "signal_station_warning");
 		ObjSTR.put(Obj.SISTAT, "signal_station_traffic");
@@ -119,6 +120,7 @@ public class SeaMark {
 		EntMAP.put(Obj.FLTISD, Ent.FLOAT);
 		EntMAP.put(Obj.FLTSPP, Ent.FLOAT);
 		EntMAP.put(Obj.LITVES, Ent.FLOAT);
+		EntMAP.put(Obj.LITHSE, Ent.LIGHT);
 		EntMAP.put(Obj.LNDMRK, Ent.LIGHT);
 		EntMAP.put(Obj.MORFAC, Ent.MOORING);
 		EntMAP.put(Obj.SISTAW, Ent.STATION);
@@ -126,7 +128,7 @@ public class SeaMark {
 	}
 
 	public enum Grp {
-		NUL, LAT, CAR, SAW, ISD, SPP, FLT, LIT, SIS
+		NUL, LAT, CAR, SAW, ISD, SPP, LIT, SIS
 	}
 
 	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
@@ -147,10 +149,11 @@ public class SeaMark {
 		GrpMAP.put(Obj.FLTSAW, Grp.SAW);
 		GrpMAP.put(Obj.FLTISD, Grp.ISD);
 		GrpMAP.put(Obj.FLTSPP, Grp.SPP);
-		GrpMAP.put(Obj.LITFLT, Grp.FLT);
+		GrpMAP.put(Obj.LITFLT, Grp.LIT);
 		GrpMAP.put(Obj.LITMAJ, Grp.LIT);
 		GrpMAP.put(Obj.LITMIN, Grp.LIT);
 		GrpMAP.put(Obj.LITVES, Grp.LIT);
+		GrpMAP.put(Obj.LITHSE, Grp.LIT);
 		GrpMAP.put(Obj.LNDMRK, Grp.LIT);
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
 		GrpMAP.put(Obj.SISTAW, Grp.SIS);
@@ -165,7 +168,8 @@ public class SeaMark {
 		SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
-		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG
+		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
+		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WTRT
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -227,6 +231,15 @@ public class SeaMark {
 		CatSTR.put(Cat.SIS_TSCL, "scale");
 		CatSTR.put(Cat.SIS_DIVE, "diving");
 		CatSTR.put(Cat.SIS_LGAG, "level");
+		CatSTR.put(Cat.LMK_CHMY, "chimney");
+		CatSTR.put(Cat.LMK_CARN, "cairn");
+		CatSTR.put(Cat.LMK_DSHA, "dish_aerial");
+		CatSTR.put(Cat.LMK_FLGS, "flagstaff");
+		CatSTR.put(Cat.LMK_FLRS, "flare_stack");
+		CatSTR.put(Cat.LMK_MNMT, "monument");
+		CatSTR.put(Cat.LMK_RADM, "radio_mast");
+		CatSTR.put(Cat.LMK_TOWR, "tower");
+		CatSTR.put(Cat.LMK_WTRT, "water_tower");
 	}
 
 	private Cat category = Cat.NONE;
@@ -980,11 +993,15 @@ public class SeaMark {
 		case LITMIN:
 		case LITFLT:
 		case LITVES:
-		case LNDMRK:
+		case LITHSE:
 		case MORFAC:
 		case SISTAW:
 		case SISTAT:
 			tmp = true;
+			break;
+		case LNDMRK:
+			if (getCategory() != Cat.NONE)
+				tmp = true;
 			break;
 		}
 		if (tmp) {
@@ -998,6 +1015,7 @@ public class SeaMark {
 			return true;
 		} else {
 			dlg.panelMain.moreButton.setVisible(false);
+			dlg.panelMain.moreButton.setText("v v v");
 			dlg.panelMain.topButton.setEnabled(false);
 			dlg.panelMain.fogButton.setEnabled(false);
 			dlg.panelMain.radButton.setEnabled(false);
@@ -1013,6 +1031,7 @@ public class SeaMark {
 		setShape(Shp.UNKNOWN);
 		setColour(Ent.BODY, Col.UNKNOWN);
 		setPattern(Ent.BODY, Pat.NONE);
+		setTopmark(Top.NONE);
 		setColour(Ent.TOPMARK, Col.UNKNOWN);
 		setPattern(Ent.TOPMARK, Pat.NONE);
 		dlg.panelMain.moreButton.setVisible(false);
@@ -1117,7 +1136,10 @@ public class SeaMark {
 			if (EntMAP.get(getObject()) == Ent.BEACON)
 				setShape(Shp.BEACON);
 			if (EntMAP.get(getObject()) == Ent.FLOAT)
-				setShape(Shp.FLOAT);
+				if (getObject() == Obj.LITVES)
+					setShape(Shp.SUPER);
+				else
+					setShape(Shp.FLOAT);
 		}
 
 		for (Obj obj : ObjSTR.keySet()) {
@@ -1151,6 +1173,10 @@ public class SeaMark {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":elevation")) {
 				setElevation(keys.get("seamark:" + ObjSTR.get(obj) + ":elevation"));
 			}
+		}
+
+		if ((getObject() == Obj.LNDMRK) && (getCategory() == Cat.NONE)) {
+			setObject(Obj.LITHSE);
 		}
 
 		if (getObject() == Obj.LITFLT) {
@@ -1234,7 +1260,6 @@ public class SeaMark {
 				}
 				break;
 			default:
-				setObject(Obj.FLTSPP);
 				setCategory(Cat.NONE);
 			}
 		}
@@ -1651,6 +1676,37 @@ public class SeaMark {
 		} else if (getObject() != Obj.UNKNOWN) {
 			switch (getObject()) {
 			case LNDMRK:
+				switch (getCategory()) {
+				case LMK_CHMY:
+					imgStr += "Chimney";
+					break;
+				case LMK_CARN:
+					imgStr += "Cairn";
+					break;
+				case LMK_DSHA:
+					imgStr += "DishAerial";
+					break;
+				case LMK_FLGS:
+					imgStr += "Flagstaff";
+					break;
+				case LMK_FLRS:
+					imgStr += "FlareStack";
+					break;
+				case LMK_MNMT:
+					imgStr += "Monument";
+					break;
+				case LMK_RADM:
+					imgStr += "RadioMast";
+					break;
+				case LMK_TOWR:
+					imgStr += "LandTower";
+					break;
+				case LMK_WTRT:
+					imgStr += "WaterTower";
+					break;
+				}
+				break;
+			case LITHSE:
 				imgStr += "Light_House";
 				break;
 			case LITMAJ:

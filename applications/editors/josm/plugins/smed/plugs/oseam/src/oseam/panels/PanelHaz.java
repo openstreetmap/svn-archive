@@ -9,6 +9,7 @@ import java.util.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelHaz extends JPanel {
@@ -97,11 +98,7 @@ public class PanelHaz extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark.testValid()) {
-				topmarkButton.setVisible(true);
-			} else {
-				topmarkButton.setVisible(false);
-			}
+			topmarkButton.setVisible(dlg.mark.testValid());
 			dlg.mark.paintSign();
 		}
 	};
@@ -156,7 +153,7 @@ public class PanelHaz extends JPanel {
 		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD), null);
 		this.add(getShapeButton(floatButton, 90, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
 		this.add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
-		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
+		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 
 		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
 		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -169,12 +166,13 @@ public class PanelHaz extends JPanel {
 		southButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_SOUTH);
 		eastButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_EAST);
 		westButton.setBorderPainted(dlg.mark.getCategory() == Cat.CAM_WEST);
-		isolButton.setBorderPainted(dlg.mark.getCategory() == Cat.NONE);
+		isolButton.setBorderPainted(SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.ISD);
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
 			button.setBorderPainted(dlg.mark.getShape() == shp);
 		}
 		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
+		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setVisible(dlg.mark.testValid());
 	}
 

@@ -102,9 +102,7 @@ public class PanelChan extends JPanel {
 			} else {
 				safeWaterButton.setBorderPainted(false);
 			}
-			if (dlg.mark.testValid()) {
-				topmarkButton.setVisible(true);
-			}
+			topmarkButton.setVisible(dlg.mark.testValid());
 			alTop.actionPerformed(null);
 			dlg.mark.paintSign();
 		}
@@ -235,14 +233,11 @@ public class PanelChan extends JPanel {
 		}
 		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
-		if (dlg.mark.testValid()) {
-			topmarkButton.setVisible(true);
-		} else {
-			topmarkButton.setVisible(false);
-		}
+		topmarkButton.setVisible(dlg.mark.testValid());
 		panelPort.syncPanel();
 		panelStbd.syncPanel();
 		panelSaw.syncPanel();
+		dlg.mark.testValid();
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

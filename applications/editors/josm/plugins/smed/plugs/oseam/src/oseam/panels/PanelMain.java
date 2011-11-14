@@ -308,6 +308,7 @@ public class PanelMain extends JPanel {
 		litButton.setBorderPainted(false);
 		saveButton.setEnabled(false);
 		moreButton.setVisible(false);
+		moreButton.setText("v v v");
 		moreButton.setSelected(false);
 		panelChan.setVisible(false);
 		panelHaz.setVisible(false);

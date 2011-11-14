@@ -26,7 +26,6 @@ public class PanelSpec extends JPanel {
 			}
 		}
 	};
-
 	public ButtonGroup shapeButtons = new ButtonGroup();
 	public JRadioButton pillarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PillarButton.png")));
 	public JRadioButton sparButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SparButton.png")));
@@ -61,8 +60,26 @@ public class PanelSpec extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			dlg.mark.testValid();
+			topmarkButton.setVisible(dlg.mark.testValid());
 			dlg.panelMain.panelMore.syncPanel();
+			dlg.mark.paintSign();
+		}
+	};
+	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/SpecTopButton.png")));
+	private ActionListener alTop = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (topmarkButton.isSelected()) {
+				dlg.mark.setTopmark(Top.X_SHAPE);
+				dlg.mark.setTopPattern(Pat.NONE);
+				dlg.mark.setTopColour(Col.YELLOW);
+				topmarkButton.setBorderPainted(true);
+			} else {
+				dlg.mark.setTopmark(Top.NONE);
+				dlg.mark.setTopPattern(Pat.NONE);
+				dlg.mark.setTopColour(Col.UNKNOWN);
+				topmarkButton.setBorderPainted(false);
+			}
+			dlg.panelMain.panelTop.syncPanel();
 			dlg.mark.paintSign();
 		}
 	};
@@ -75,14 +92,14 @@ public class PanelSpec extends JPanel {
 		this.add(getShapeButton(sparButton, 35, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
 		this.add(getShapeButton(canButton, 70, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
 		this.add(getShapeButton(coneButton, 105, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 140, 0, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
+		this.add(getShapeButton(sphereButton, 0, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
 		this.add(getShapeButton(barrelButton, 35, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
 		this.add(getShapeButton(superButton, 70, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
 		this.add(getShapeButton(floatButton, 105, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 17, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 52, 64, 34, 32, "Tower", Shp.TOWER, Obj.BCNSPP), null);
-		this.add(getShapeButton(stakeButton, 87, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
-		this.add(getShapeButton(cairnButton, 122, 64, 34, 32, "Cairn", Shp.CAIRN, Obj.BCNSPP), null);
+		this.add(getShapeButton(beaconButton, 0, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
+		this.add(getShapeButton(towerButton, 35, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNSPP), null);
+		this.add(getShapeButton(stakeButton, 70, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
+		this.add(getShapeButton(cairnButton, 105, 64, 34, 32, "CairnB", Shp.CAIRN, Obj.BCNSPP), null);
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(5, 100, 170, 20));
@@ -109,6 +126,11 @@ public class PanelSpec extends JPanel {
 		addCatItem(Messages.getString("Diving"), Cat.SPM_DIVE);
 		addCatItem(Messages.getString("FerryCross"), Cat.SPM_FRRY);
 		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
+
+		topmarkButton.setBounds(new Rectangle(140, 0, 34, 32));
+		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		topmarkButton.addActionListener(alTop);
+		this.add(topmarkButton);
 	}
 
 	public void syncPanel() {
@@ -125,7 +147,9 @@ public class PanelSpec extends JPanel {
 			if (dlg.mark.getCategory() == cat)
 				categoryBox.setSelectedIndex(item);
 		}
-		dlg.mark.testValid();
+		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
+		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
+		topmarkButton.setVisible(dlg.mark.testValid());
 	}
 
 	private void addCatItem(String str, Cat cat) {

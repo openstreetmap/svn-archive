@@ -18,6 +18,20 @@ public class PanelLights extends JPanel {
 
 	public JLabel categoryLabel;
 
+	public JComboBox landCatBox;
+	public EnumMap<Cat, Integer> landCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alLandCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : landCats.keySet()) {
+				int idx = landCats.get(cat);
+				if (dlg.mark != null && (idx == landCatBox.getSelectedIndex())) {
+					dlg.mark.setCategory(cat);
+					dlg.mark.testValid();
+					dlg.mark.paintSign();
+				}
+			}
+		}
+	};
 	public JComboBox trafficCatBox;
 	public EnumMap<Cat, Integer> trafficCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alTrafficCatBox = new ActionListener() {
@@ -46,6 +60,7 @@ public class PanelLights extends JPanel {
 	public JRadioButton minorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMinorButton.png")));
 	public JRadioButton vesselButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightVesselButton.png")));
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightFloatButton.png")));
+	public JRadioButton landButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LandmarkButton.png")));
 	public JRadioButton trafficButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TrafficButton.png")));
 	public JRadioButton warningButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WarningButton.png")));
 	public EnumMap<Obj, JRadioButton> objects = new EnumMap<Obj, JRadioButton>(Obj.class);
@@ -59,16 +74,30 @@ public class PanelLights extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			if (trafficButton.isSelected()) {
+			if (dlg.mark.getObject() == Obj.LITVES)
+				dlg.mark.setShape(Shp.SUPER);
+			else if (dlg.mark.getObject() == Obj.LITFLT)
+				dlg.mark.setShape(Shp.FLOAT);
+			else dlg.mark.setShape(Shp.UNKNOWN);
+			if (landButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				landCatBox.setVisible(true);
+				trafficCatBox.setVisible(false);
+				warningCatBox.setVisible(false);
+			} else if (trafficButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
+				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			} else if (warningButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				warningCatBox.setVisible(true);
+				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
 			} else {
+				dlg.mark.setCategory(Cat.NONE);
 				categoryLabel.setVisible(false);
+				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
@@ -80,18 +109,35 @@ public class PanelLights extends JPanel {
 	public PanelLights(OSeaMAction dia) {
 		dlg = dia;
 		this.setLayout(null);
-		this.add(getObjButton(houseButton, 0, 0, 34, 32, "Lighthouse", Obj.LNDMRK), null);
+		this.add(getObjButton(houseButton, 0, 0, 34, 32, "Lighthouse", Obj.LITHSE), null);
 		this.add(getObjButton(majorButton, 35, 0, 34, 32, "MajorLight", Obj.LITMAJ), null);
 		this.add(getObjButton(minorButton, 70, 0, 34, 32, "MinorLight", Obj.LITMIN), null);
-		this.add(getObjButton(vesselButton, 105, 0, 34, 32, "LightVessel", Obj.LITVES), null);
-		this.add(getObjButton(floatButton, 140, 0, 34, 32, "LightFloat", Obj.LITFLT), null);
-		this.add(getObjButton(trafficButton, 50, 35, 34, 32, "SSTraffic", Obj.SISTAT), null);
-		this.add(getObjButton(warningButton, 90, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
+		this.add(getObjButton(landButton, 105, 0, 34, 32, "Landmark", Obj.LNDMRK), null);
+		this.add(getObjButton(vesselButton, 0, 35, 34, 32, "LightVessel", Obj.LITVES), null);
+		this.add(getObjButton(floatButton, 35, 35, 34, 32, "LightFloat", Obj.LITFLT), null);
+		this.add(getObjButton(trafficButton, 70, 35, 34, 32, "SSTraffic", Obj.SISTAT), null);
+		this.add(getObjButton(warningButton, 105, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
 
-		categoryLabel = new JLabel(Messages.getString("SSCategory"), SwingConstants.CENTER);
+		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(10, 80, 160, 20));
 		this.add(categoryLabel, null);
 		categoryLabel.setVisible(false);
+
+		landCatBox = new JComboBox();
+		landCatBox.setBounds(new Rectangle(10, 100, 160, 20));
+		this.add(landCatBox, null);
+		landCatBox.addActionListener(alLandCatBox);
+		addLCItem("", Cat.NONE);
+		addLCItem(Messages.getString("Chimney"), Cat.LMK_CHMY);
+		addLCItem(Messages.getString("Cairn"), Cat.LMK_CARN);
+		addLCItem(Messages.getString("DishAerial"), Cat.LMK_DSHA);
+		addLCItem(Messages.getString("Flagstaff"), Cat.LMK_FLGS);
+		addLCItem(Messages.getString("FlareStack"), Cat.LMK_FLRS);
+		addLCItem(Messages.getString("Monument"), Cat.LMK_MNMT);
+		addLCItem(Messages.getString("RadioMast"), Cat.LMK_RADM);
+		addLCItem(Messages.getString("Tower"), Cat.LMK_TOWR);
+		addLCItem(Messages.getString("WaterTower"), Cat.LMK_WTRT);
+		landCatBox.setVisible(false);
 
 		trafficCatBox = new JComboBox();
 		trafficCatBox.setBounds(new Rectangle(10, 100, 160, 20));
@@ -135,6 +181,33 @@ public class PanelLights extends JPanel {
 	}
 
 	public void syncPanel() {
+		if ((dlg.mark.getObject() == Obj.LNDMRK) && (dlg.mark.getCategory() != Cat.NONE)) {
+			categoryLabel.setVisible(true);
+			landCatBox.setVisible(true);
+			trafficCatBox.setVisible(false);
+			warningCatBox.setVisible(false);
+		} else if (dlg.mark.getObject() == Obj.SISTAT) {
+				categoryLabel.setVisible(true);
+				trafficCatBox.setVisible(true);
+				landCatBox.setVisible(false);
+				warningCatBox.setVisible(false);
+		} else if (dlg.mark.getObject() == Obj.SISTAW) {
+			categoryLabel.setVisible(true);
+			warningCatBox.setVisible(true);
+			landCatBox.setVisible(false);
+			trafficCatBox.setVisible(false);
+		} else {
+			categoryLabel.setVisible(false);
+			landCatBox.setVisible(false);
+			trafficCatBox.setVisible(false);
+			warningCatBox.setVisible(false);
+		}
+		landCatBox.setSelectedIndex(0);
+		for (Cat cat : landCats.keySet()) {
+			int item = landCats.get(cat);
+			if (dlg.mark.getCategory() == cat)
+				landCatBox.setSelectedIndex(item);
+		}
 		trafficCatBox.setSelectedIndex(0);
 		for (Cat cat : trafficCats.keySet()) {
 			int item = trafficCats.get(cat);
@@ -154,6 +227,11 @@ public class PanelLights extends JPanel {
 		dlg.mark.testValid();
 	}
 	
+	private void addLCItem(String str, Cat cat) {
+		landCats.put(cat, landCatBox.getItemCount());
+		landCatBox.addItem(str);
+	}
+
 	private void addTCItem(String str, Cat cat) {
 		trafficCats.put(cat, trafficCatBox.getItemCount());
 		trafficCatBox.addItem(str);

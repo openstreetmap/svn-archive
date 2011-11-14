@@ -166,7 +166,6 @@ public class PanelLit extends JPanel {
 		this.add(groupLabel, null);
 		groupBox = new JTextField();
 		groupBox.setBounds(new Rectangle(135, 20, 40, 20));
-		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(groupBox, null);
 		groupBox.addActionListener(alGroup);
 
@@ -175,7 +174,6 @@ public class PanelLit extends JPanel {
 		this.add(periodLabel, null);
 		periodBox = new JTextField();
 		periodBox.setBounds(new Rectangle(135, 60, 40, 20));
-		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(periodBox, null);
 		periodBox.addActionListener(alPeriod);
 
@@ -184,7 +182,6 @@ public class PanelLit extends JPanel {
 		this.add(heightLabel, null);
 		heightBox = new JTextField();
 		heightBox.setBounds(new Rectangle(135, 100, 40, 20));
-		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(heightBox, null);
 		heightBox.addActionListener(alHeight);
 
@@ -193,7 +190,6 @@ public class PanelLit extends JPanel {
 		this.add(rangeLabel, null);
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(135, 140, 40, 20));
-		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(rangeBox, null);
 		rangeBox.addActionListener(alRange);
 
@@ -202,7 +198,6 @@ public class PanelLit extends JPanel {
 		this.add(sequenceLabel, null);
 		sequenceBox = new JTextField();
 		sequenceBox.setBounds(new Rectangle(183, 140, 90, 20));
-		sequenceBox.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(sequenceBox, null);
 		sequenceBox.addActionListener(alSequence);
 
@@ -263,7 +258,6 @@ public class PanelLit extends JPanel {
 		this.add(orientationLabel, null);
 		orientationBox = new JTextField();
 		orientationBox.setBounds(new Rectangle(208, 100, 40, 20));
-		orientationBox.setHorizontalAlignment(SwingConstants.CENTER);
 		orientationBox.setVisible(false);
 		this.add(orientationBox, null);
 		orientationBox.addActionListener(alOrientation);
@@ -274,7 +268,6 @@ public class PanelLit extends JPanel {
 		this.add(multipleLabel, null);
 		multipleBox = new JTextField();
 		multipleBox.setBounds(new Rectangle(208, 100, 40, 20));
-		multipleBox.setHorizontalAlignment(SwingConstants.CENTER);
 		multipleBox.setVisible(false);
 		this.add(multipleBox, null);
 		multipleBox.addActionListener(alMultiple);

@@ -239,7 +239,7 @@ public class SeaMark {
 		CatSTR.put(Cat.LMK_MNMT, "monument");
 		CatSTR.put(Cat.LMK_RADM, "radio_mast");
 		CatSTR.put(Cat.LMK_TOWR, "tower");
-		CatSTR.put(Cat.LMK_WNDM, "wind_motor");
+		CatSTR.put(Cat.LMK_WNDM, "windmotor");
 		CatSTR.put(Cat.LMK_WTRT, "water_tower");
 	}
 

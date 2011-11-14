@@ -18,36 +18,6 @@ public class SeaMark {
 		dlg = dia;
 	}
 
-	public void clearSign() {
-		setObject(Obj.UNKNOWN);
-		setCategory(Cat.NONE);
-		setShape(Shp.UNKNOWN);
-		setColour(Ent.BODY, Col.UNKNOWN);
-		setPattern(Ent.BODY, Pat.NONE);
-		setColour(Ent.TOPMARK, Col.UNKNOWN);
-		setPattern(Ent.TOPMARK, Pat.NONE);
-		dlg.panelMain.moreButton.setVisible(false);
-		dlg.panelMain.saveButton.setEnabled(false);
-		dlg.panelMain.topButton.setEnabled(false);
-		dlg.panelMain.fogButton.setEnabled(false);
-		dlg.panelMain.radButton.setEnabled(false);
-		dlg.panelMain.litButton.setEnabled(false);
-		dlg.panelMain.panelMore.syncPanel();
-		dlg.panelMain.panelMore.setVisible(false);
-		paintSign();
-	}
-	
-	public String validDecimal(String str) {
-		str = str.trim().replace(',', '.');
-		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
-			dlg.manager.showVisualMessage("Not a valid decimal string");
-			return "";
-		} else {
-			dlg.manager.showVisualMessage("");
-			return str;
-		}
-	}
-
 	public enum Reg {
 		A, B, C, R, X
 	}
@@ -1021,8 +991,7 @@ public class SeaMark {
 			dlg.panelMain.moreButton.setVisible(true);
 			dlg.panelMain.saveButton.setEnabled(true);
 			Ent ent = EntMAP.get(getObject());
-			if ((ent == Ent.BUOY) || (ent == Ent.BEACON) || (ent == Ent.FLOAT))
-				dlg.panelMain.topButton.setEnabled(true);
+			dlg.panelMain.topButton.setEnabled((ent == Ent.BUOY) || (ent == Ent.BEACON) || (ent == Ent.FLOAT));
 			dlg.panelMain.fogButton.setEnabled(true);
 			dlg.panelMain.radButton.setEnabled(true);
 			dlg.panelMain.litButton.setEnabled(true);
@@ -1035,6 +1004,36 @@ public class SeaMark {
 			dlg.panelMain.litButton.setEnabled(false);
 			dlg.manager.showVisualMessage("Seamark not recognised");
 			return false;
+		}
+	}
+
+	public void clearSign() {
+		setObject(Obj.UNKNOWN);
+		setCategory(Cat.NONE);
+		setShape(Shp.UNKNOWN);
+		setColour(Ent.BODY, Col.UNKNOWN);
+		setPattern(Ent.BODY, Pat.NONE);
+		setColour(Ent.TOPMARK, Col.UNKNOWN);
+		setPattern(Ent.TOPMARK, Pat.NONE);
+		dlg.panelMain.moreButton.setVisible(false);
+		dlg.panelMain.saveButton.setEnabled(false);
+		dlg.panelMain.topButton.setEnabled(false);
+		dlg.panelMain.fogButton.setEnabled(false);
+		dlg.panelMain.radButton.setEnabled(false);
+		dlg.panelMain.litButton.setEnabled(false);
+		dlg.panelMain.panelMore.syncPanel();
+		dlg.panelMain.panelMore.setVisible(false);
+		paintSign();
+	}
+	
+	public String validDecimal(String str) {
+		str = str.trim().replace(',', '.');
+		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
+			dlg.manager.showVisualMessage("Not a valid decimal string");
+			return "";
+		} else {
+			dlg.manager.showVisualMessage("");
+			return str;
 		}
 	}
 

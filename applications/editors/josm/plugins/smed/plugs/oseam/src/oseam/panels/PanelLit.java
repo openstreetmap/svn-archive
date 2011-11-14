@@ -21,6 +21,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.GRP, 0, groupBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel periodLabel;
@@ -28,6 +29,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.PER, 0, periodBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel sequenceLabel;
@@ -35,6 +37,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alSequence = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.SEQ, 0, sequenceBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel visibilityLabel;
@@ -54,6 +57,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.HGT, 0, heightBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel rangeLabel;
@@ -61,6 +65,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.RNG, 0, rangeBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel orientationLabel;

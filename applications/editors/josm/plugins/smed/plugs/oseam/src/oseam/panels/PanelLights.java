@@ -29,7 +29,6 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-
 	public JComboBox warningCatBox;
 	public EnumMap<Cat, Integer> warningCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alWarningCatBox = new ActionListener() {
@@ -41,7 +40,6 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-
 	private ButtonGroup objButtons = new ButtonGroup();
 	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));

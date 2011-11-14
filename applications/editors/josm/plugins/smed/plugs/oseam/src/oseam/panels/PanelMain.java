@@ -83,8 +83,6 @@ public class PanelMain extends JPanel {
 	public JRadioButton lightsButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightsButton.png")));
 	private ActionListener alType = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.node == null)
-				typeButtons.clearSelection();
 			if (chanButton.isSelected()) {
 				chanButton.setBorderPainted(true);
 				dlg.mark.clearSign();
@@ -130,9 +128,6 @@ public class PanelMain extends JPanel {
 	public JRadioButton litButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LitButton.png")));
 	private ActionListener alMisc = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark == null) {
-				miscButtons.clearSelection();
-			}
 			if (topButton.isSelected()) {
 				moreButton.setText("v v v");
 				panelMore.setVisible(false);

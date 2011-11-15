@@ -60,11 +60,11 @@ class osmsync_findafountain(osmsync):
 
             # Build output record
             out = {}
-            out['pkey']	= pkey
             out['lat']	= node.attrib.get('lat')
             out['lon']	= node.attrib.get('lon')
             out['tag']  = {}
 
+            # 1=outdoor 2=indoor 3=broken
             category_id = tags.get('faf:category_id')
             if  ( category_id == '1' ):
                 out['tag']['maintenance'] = 'ok'
@@ -73,6 +73,7 @@ class osmsync_findafountain(osmsync):
 
             out['tag']['amenity']       = 'drinking_water'
             out['tag']['source']        = 'osmsync:findafountain'
+            out['tag']['source:pkey']   = pkey
             out['tag']['name']          = tags.get('faf:title')
             out['tag']['description']   = tags.get('faf:note')
             out['tag']['image']         = tags.get('faf:photo')

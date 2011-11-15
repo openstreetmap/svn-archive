@@ -23,7 +23,7 @@
 ##  An example use case: Car Sharing locations, a published
 ##  by a car sharing reservation system.
 ##
-import sys, re, urllib, urllib2
+import codecs, sys, re, urllib, urllib2
 import csv, demjson
 import xml.sax.saxutils
 import argparse
@@ -41,7 +41,7 @@ class osmsync:
     http_headers    = { 'User-Agent' : 'osmsync/0.1 (OpenStreetMap merge utility; http://www.obviously.com/)' }
     xapi_url        = "http://open.mapquestapi.com/xapi/api/0.6/"
     options         = None
-    output_buffer   = ""
+    output_buffer   = u""
 
     def __init__(self):
         return
@@ -81,21 +81,23 @@ class osmsync:
             return
         
         # attributes
-        temp = "\t<node action='{}' ".format(action);
+        temp = u"\t<node action='{}' ".format(action);
         for attribute,value in osmnode.items():
             if(attribute == 'tag'):
                 continue
-            temp += "{}='{}' ".format(attribute,value)
-        temp += ">\n".format(action);
+            temp += u"{}='{}' ".format(attribute,value)
+        temp += u">\n".format(action);
         self.output_buffer += temp
 
         # tags
         if( action != "delete" ):
             for key,value in osmnode['tag'].items():
-                assert value, 'Empty value in key={}'.format(key)
-                value = str(value)
+                #assert value, 'Empty value in key={}'.format(key)
+                if not value:
+                    continue
+                #value = str(value)
                 value = value.replace("'", "&apos;")
-                self.output_buffer += "\t\t<tag k='{}' v='{}'/>\n".format(key,value)
+                self.output_buffer += u"\t\t<tag k='{}' v='{}'/>\n".format(key,value)
         self.output_buffer += "\t</node>\n"
 
     # Find the osm node that matches each node in the source data
@@ -131,9 +133,9 @@ class osmsync:
                 for tag in source_is_master_for:
                     if( str(sourcenode['tag'].get(tag)) != str(osmnode['tag'].get(tag)) ):
                         if self.options.debug or self.options.verbose:
-                            sys.stderr.write("Source {} {}='{}'\n". format(pkey,tag,sourcenode['tag'].get(tag)))
+                            sys.stderr.write(u"Source {} {}='{}'\n". format(pkey,tag,sourcenode['tag'].get(tag)))
                             if osmnode['tag'].get(tag):
-                                sys.stderr.write("Osm    {} {}='{}'\n". format(pkey,tag,osmnode   ['tag'].get(tag)))
+                                sys.stderr.write(u"Osm    {} {}='{}'\n". format(pkey,tag,osmnode   ['tag'].get(tag)))
                         osmnode['tag'][tag] = sourcenode['tag'].get(tag)
                         modified = True
 
@@ -141,7 +143,7 @@ class osmsync:
                     count_modify += 1
                     self.record_action(osmnode, "modify")
                     if self.options.debug or self.options.verbose:
-                        sys.stderr.write("Osm    {} {}='{}'\n". format(pkey,'userid', osmnode.get('user')))
+                        sys.stderr.write(u"Osm    {} {}='{}'\n". format(pkey,'userid', osmnode.get('user')))
                         sys.stderr.write("\n");
                 else:
                     count_match += 1
@@ -153,19 +155,19 @@ class osmsync:
                 id_counter -= 1
                 self.record_action(sourcenode, "add")
                 if self.options.debug or self.options.verbose:
-                    sys.stderr.write("Add pkey={} description={}\n".format(pkey,sourcenode['tag'].get('description')))
+                    sys.stderr.write(u"Add pkey={} description={}\n".format(pkey,sourcenode['tag'].get('description')))
 
         for k,osmnode in osmnodes.items():   
             count_del += 1
             self.record_action(osmnode, "delete")    # Delete any leftovers
             if self.options.debug or self.options.verbose:
-                sys.stderr.write("Delete osmid={} with obsolete source pkey={} name={}\n".
+                sys.stderr.write(u"Delete osmid={} with obsolete source pkey={} name={}\n".
                                  format(osmnode['id'],
                                         osmnode['tag'].get('source:pkey'),
                                         osmnode['tag'].get('name')))
 
         if self.options.debug or self.options.verbose:
-            sys.stderr.write("match={0} add={1} del={2} modify={3}\n".
+            sys.stderr.write(u"match={0} add={1} del={2} modify={3}\n".
                             format(count_match,count_add,count_del,count_modify))
 
         return
@@ -178,9 +180,9 @@ class osmsync:
         print('<osm version="0.6" generator="osmsync">')
         print('<changeset>')
         for k,v in changeSetTags.items():
-            print('\t<tag k="{}" v="{}"/>'.format(k,v))
+            print(u'\t<tag k="{}" v="{}"/>'.format(k,v))
         print('</changeset>')
-        print(self.output_buffer + '</osm>')
+        print(self.output_buffer.encode('utf-8') + '</osm>')
         return
 
     #   Main executive, handles command line arguments
@@ -212,7 +214,7 @@ class osmsync:
         ##  the code clutter
         sourcenodes, source_is_master_for = self.fetch_source(self.options.ext_url)
         if self.options.debug or self.options.verbose:
-            sys.stderr.write("{} source nodes loaded from ".format(len(sourcenodes)))
+            sys.stderr.write(u"{} source nodes loaded from ".format(len(sourcenodes)))
             sys.stderr.write(self.options.ext_url+"\n")
             sys.stderr.write("source is master for tags: " + ",".join(source_is_master_for) + "\n")
         if self.options.debug:
@@ -221,7 +223,7 @@ class osmsync:
 
         osmnodes = self.fetch_osm(self.options.osm_url)
         if self.options.debug or self.options.verbose:
-            sys.stderr.write("{} osm nodes loaded from ".format(len(osmnodes)))
+            sys.stderr.write(u"{} osm nodes loaded from ".format(len(osmnodes)))
             sys.stderr.write(self.options.osm_url+"\n")
         if self.options.debug:
             print("\nLoaded osm data from: " + self.options.osm_url)

@@ -48,7 +48,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.SystemOfMeasurement;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
 /**
  * The PrintableMapView class implements a "Printable" perspective on
@@ -161,19 +160,18 @@ public class PrintableMapView extends MapView implements Printable {
         Bounds box = getRealBounds();
         List<Layer> visibleLayers = getVisibleLayersInZOrder();
         for (Layer l : visibleLayers) {
-            if (l instanceof ImageryLayer) {
-                try {
-                    /* This statement may have all kinds of unwanted side effects
-                     * but ImageryLayers heavily depend on Main.map.mapView. */
+            try {
+                if (! (l instanceof OsmDataLayer)) {
+                    /* OsmDataLayer does not need this.*/
+                    
+                    /* This manipulations may have all kinds of unwanted side effects
+                     * but many Layer implementations heavily depend on Main.map.mapView. */
                     Main.map.mapView = this;
-                    l.paint(g2d, this, box);
                 }
-                finally {
-                    Main.map.mapView = mapView;
-                }
-            }
-            else {
                 l.paint(g2d, this, box);
+            }
+            finally {
+                Main.map.mapView = mapView;
             }
         }
 

@@ -29,7 +29,7 @@
 -->
 <project name="print" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Release successfully tested with JOSM version 4064 (Ubuntu 11.10)"/>
+    <property name="commit.message" value="Prints more types of layers correctly now, tested with PicLayer"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4064"/>
     <!-- should not be necessary to change the following properties -->

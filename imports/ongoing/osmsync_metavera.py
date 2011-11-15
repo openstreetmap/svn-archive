@@ -50,7 +50,7 @@ class osmsync_metavera(osmsync):
             osmnode['lon']                  = pod['longitude']
             osmnode['tag']['amenity']       = 'car_sharing'
             osmnode['tag']['operator']      = 'Drivemint'
-            osmnode['tag']['capacity']      = str(commas + 1)
+            osmnode['tag']['capacity']      = str(commas - 1)
             osmnode['tag']['name']          = pod['descr'].strip()
            #osmnode['tag']['website']       = pod['url'].strip()
            #osmnode['tag']['description']   = pod['addr'] .strip()+ " with " + ccs_pod['vstring'].strip()
@@ -81,4 +81,6 @@ myfetch.run(description='Metavera car sharing location mirror script',
             ext_url="https://reserve.drivemint.com/maps/api/lots.php",
             osm_url=osmsync.xapi_url + urllib.quote("node[source=osmsync:metavera]"),
             )
+
+
 myfetch.output(changeSetTags)

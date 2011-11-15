@@ -38,8 +38,11 @@ public class PanelLights extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : trafficCats.keySet()) {
 				int idx = trafficCats.get(cat);
-				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex()))
+				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex())) {
 					dlg.mark.setCategory(cat);
+					dlg.mark.testValid();
+					dlg.mark.paintSign();
+				}
 			}
 		}
 	};
@@ -49,8 +52,11 @@ public class PanelLights extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : warningCats.keySet()) {
 				int idx = warningCats.get(cat);
-				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex()))
+				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex())) {
 					dlg.mark.setCategory(cat);
+					dlg.mark.testValid();
+					dlg.mark.paintSign();
+				}
 			}
 		}
 	};
@@ -84,16 +90,19 @@ public class PanelLights extends JPanel {
 				landCatBox.setVisible(true);
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				alLandCatBox.actionPerformed(null);
 			} else if (trafficButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				alTrafficCatBox.actionPerformed(null);
 			} else if (warningButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				warningCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
+				alWarningCatBox.actionPerformed(null);
 			} else {
 				dlg.mark.setCategory(Cat.NONE);
 				categoryLabel.setVisible(false);
@@ -187,39 +196,36 @@ public class PanelLights extends JPanel {
 			landCatBox.setVisible(true);
 			trafficCatBox.setVisible(false);
 			warningCatBox.setVisible(false);
+			for (Cat cat : landCats.keySet()) {
+				int item = landCats.get(cat);
+				if (dlg.mark.getCategory() == cat)
+					landCatBox.setSelectedIndex(item);
+			}
 		} else if (dlg.mark.getObject() == Obj.SISTAT) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				for (Cat cat : trafficCats.keySet()) {
+					int item = trafficCats.get(cat);
+					if (dlg.mark.getCategory() == cat)
+						trafficCatBox.setSelectedIndex(item);
+				}
 		} else if (dlg.mark.getObject() == Obj.SISTAW) {
 			categoryLabel.setVisible(true);
 			warningCatBox.setVisible(true);
 			landCatBox.setVisible(false);
 			trafficCatBox.setVisible(false);
+			for (Cat cat : warningCats.keySet()) {
+				int item = warningCats.get(cat);
+				if (dlg.mark.getCategory() == cat)
+					warningCatBox.setSelectedIndex(item);
+			}
 		} else {
 			categoryLabel.setVisible(false);
 			landCatBox.setVisible(false);
 			trafficCatBox.setVisible(false);
 			warningCatBox.setVisible(false);
-		}
-		landCatBox.setSelectedIndex(0);
-		for (Cat cat : landCats.keySet()) {
-			int item = landCats.get(cat);
-			if (dlg.mark.getCategory() == cat)
-				landCatBox.setSelectedIndex(item);
-		}
-		trafficCatBox.setSelectedIndex(0);
-		for (Cat cat : trafficCats.keySet()) {
-			int item = trafficCats.get(cat);
-			if (dlg.mark.getCategory() == cat)
-				trafficCatBox.setSelectedIndex(item);
-		}
-		warningCatBox.setSelectedIndex(0);
-		for (Cat cat : warningCats.keySet()) {
-			int item = warningCats.get(cat);
-			if (dlg.mark.getCategory() == cat)
-				warningCatBox.setSelectedIndex(item);
 		}
 		for (Obj obj : objects.keySet()) {
 			JRadioButton button = objects.get(obj);

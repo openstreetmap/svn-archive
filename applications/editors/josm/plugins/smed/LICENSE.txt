@@ -1,7 +1,7 @@
-toms License
+smed License
 ============
 
-toms, and all its integral parts, are released under the GNU General 
+smed, and all its integral parts, are released under the GNU General 
 Public License v2 or later.
 
 The GPL v3 is accessible here:

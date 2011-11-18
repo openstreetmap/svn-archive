@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+       "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>OpenStreetMap Deutschland: Karte</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="language" content="de" />
+	<meta name="robots" content="index,nofollow" />
+	<meta name="author" content="" />
+	<meta name="revisit-After" content="7 days" />
+	<meta name="distribution" content="global" />
+	<link rel="icon" href="img/favicon.png" type="image/png">
+	<link rel="Shortcut Icon" href="img/favicon.png" type="image/png">
+	
+   	<!-- <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script> -->
+	<!-- <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenLayers.js"></script> -->
+    <!-- <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script> -->
+    <script type="text/javascript" src="map_src/ol/OpenLayers.js"></script>
+    <script type="text/javascript" src="map_src/ol//OpenStreetMap.js"></script>
+    <script type="text/javascript" src="js/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="map_src/js/map.js"></script>
+    <script type="text/javascript" src="map_src/js/utils.js"></script>
+    <script type="text/javascript" src="map_src/js/markers.js"></script>
+    <script type="text/javascript" src="map_src/js/geocode.js"></script>
+    <script type="text/javascript" src="map_src/js/slider.js"></script>
+    
+        
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="map_src/style.css" type="text/css" media="all" />
+
+</head>
+
+<body onload="init()">
+	
+	<div id="karte_nav">
+		<div class="mtop">
+		    <div class="mnav lnav">
+		        <ul>
+		           	<li><a href="index.html">Startseite</a></li>
+	            	<li><a href="faq.html">FAQ</a></li>
+	            	<li><a href="karte.html">Karte</a></li>
+	            	<li><a href="community.html">Community</a></li>
+	            	<li><a target="_blank" href="http://blog.openstreetmap.de">Blog/News</a></li>
+	            	<li><a href="spenden.html">Spenden</a></li>
+	            	<li><a href="impressum.html">Kontakt/Impressum</a></li>
+		        </ul>
+		    </div>
+		</div>
+	</div>
+  
+	<div id="logo">
+	    <a href="index.html"><img id="osm_logo" src="img/osm_logo.png" alt="logo"/></a>
+	</div>
+
+    <div id="search">
+    	<input name="tfSearch" type="text" id="tfSearch" class="tfSearch" value="Unter den Linden, Berlin" title="Such nach deiner Adresse ..." onfocus="if(this.value=='Unter den Linden, Berlin') {this.value=''; this.style.color='#000000';}" onblur="if(this.value=='') {this.value='Unter den Linden, Berlin'; this.style.color='#999999';}" onKeyPress="checkReturn('geocode',event);">
+        <a href="#" class="btn" id="searchButton" onClick="geocodeAddress(this);">Suchen</a>
+    </div>
+    
+    <div id="editMap"></div>
+    <div id="errorMap"></div>	
+	
+	<div id="wrapper">
+    	<div id="slider" style="width:220px;overflow:hidden;display:none;">
+    	    <div id="slideButton"><a href="javascript:;" onmousedown="toggleSlide('slider');"><img src="map_src/img/close.gif"></a></div>
+			<div id="information"></div>
+		</div>
+    	<div id="map"></div>
+    </div>
+    
+    <div id="copyright"><a target="_blank" href="http://www.openstreetmap.org/">Karte hergestellt aus OpenStreetMap-Daten</a> | Lizenz: <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons BY-SA 2.0</a></div>
+	<script type="text/javascript">
+		  $('baseLbl').html('Grundkarte');
+ 	</script>
+</body>
+</html>

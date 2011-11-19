@@ -42,7 +42,7 @@ function init(){
     map = new OpenLayers.Map("map", {
 			controls: [
 				new OpenLayers.Control.Navigation(),
-				new OpenLayers.Control.MouseDefaults(),
+			// new OpenLayers.Control.MouseDefaults(),
             // new OpenLayers.Control.MousePosition(),
             // new OpenLayers.Control.ScaleLine()
             	new OpenLayers.Control.Permalink(),

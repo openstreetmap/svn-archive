@@ -29,7 +29,7 @@
 -->
 <project name="reverter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="recompile after change in OsmPrimitive in JOSM 4099"/>
+    <property name="commit.message" value="reverter: add support for remotecontrol for curl-scripted reverts"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4549"/>
     <!--

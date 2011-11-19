@@ -60,7 +60,7 @@ function init(){
     var layerswitcher = new OpenLayers.Control.LayerSwitcher({roundedCornerColor: "#575757"});
 	map.addControl(layerswitcher);
 	layerswitcher.maximizeControl();
-	
+		
 	//Add Panzoombar
 	var panZoomBar = new OpenLayers.Control.PanZoom({id:'panzoombar',displayClass:'olControlPanZoomBar'})
 	map.addControl(panZoomBar);
@@ -102,7 +102,9 @@ function init(){
     map.addLayer(markersLayer);
 
 	//Set Center of the Map
-    map.setCenter(new OpenLayers.LonLat(10.3,51.3).transform(proj4326,projmerc), 6);
+	if (!map.getCenter()){
+	    map.setCenter(new OpenLayers.LonLat(10.3,51.3).transform(proj4326,projmerc), 6);
+	}
          
     //Add Local Community Overlay
     createMarkers(map);

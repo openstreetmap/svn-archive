@@ -23,6 +23,7 @@ import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -89,6 +90,11 @@ public class ColumbusCSVImporter extends FileImporter {
 							"Markers from {0}", file.getName()), file, gpxLayer);
 					if (ml.data.size() > 0) {
 						Main.main.addLayer(ml);
+					}
+					
+					/* WORKAROUND (Bugfix: #6912): Set marker offset to 0.0 to avoid message "This is after the end of the recording" */ 
+					for (Marker marker : ml.data) {
+						marker.offset = 0.0;						
 					}
 				}
 			} catch (Exception e) {

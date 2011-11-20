@@ -22,7 +22,8 @@ public class SeaMark {
 		A, B, C, R, X
 	}
 
-	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(Reg.class);
+	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(
+			Reg.class);
 	static {
 		RegSTR.put(Reg.A, "iala-a");
 		RegSTR.put(Reg.B, "iala-b");
@@ -30,7 +31,7 @@ public class SeaMark {
 		RegSTR.put(Reg.R, "riwr");
 		RegSTR.put(Reg.X, "other");
 	}
-	
+
 	private Reg region = Reg.A;
 
 	public Reg getRegion() {
@@ -52,12 +53,11 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
-		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES,
-		LITHSE, LNDMRK, MORFAC, SISTAW, SISTAT
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK, MORFAC, SISTAW, SISTAT
 	}
 
-	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
+	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(
+			Obj.class);
 	static {
 		ObjSTR.put(Obj.BCNCAR, "beacon_cardinal");
 		ObjSTR.put(Obj.BCNISD, "beacon_isolated_danger");
@@ -99,7 +99,8 @@ public class SeaMark {
 		BODY, BUOY, BEACON, FLOAT, TOPMARK, LIGHT, MOORING, STATION
 	}
 
-	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
+	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(
+			Obj.class);
 	static {
 		EntMAP.put(Obj.BCNCAR, Ent.BEACON);
 		EntMAP.put(Obj.BCNISD, Ent.BEACON);
@@ -131,7 +132,8 @@ public class SeaMark {
 		NUL, LAT, CAR, SAW, ISD, SPP, LIT, SIS
 	}
 
-	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
+	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(
+			Obj.class);
 	static {
 		GrpMAP.put(Obj.UNKNOWN, Grp.NUL);
 		GrpMAP.put(Obj.BCNCAR, Grp.CAR);
@@ -161,18 +163,11 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
-		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
-		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
-		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY,
-		SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
-		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
-		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
-		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
-		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
+		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG, LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
 	}
 
-	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
+	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(
+			Cat.class);
 	static {
 		CatSTR.put(Cat.LAM_PORT, "port");
 		CatSTR.put(Cat.LAM_STBD, "starboard");
@@ -254,11 +249,11 @@ public class SeaMark {
 	}
 
 	public enum Shp {
-		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER,
-		BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
+		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
-	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(Shp.class);
+	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(
+			Shp.class);
 	static {
 		ShpSTR.put(Shp.PILLAR, "pillar");
 		ShpSTR.put(Shp.SPAR, "spar");
@@ -291,7 +286,8 @@ public class SeaMark {
 		UNKNOWN, BLANK, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
 	}
 
-	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(Col.class);
+	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(
+			Col.class);
 	static {
 		ColMAP.put(Col.UNKNOWN, new Color(0xc0c0c0));
 		ColMAP.put(Col.WHITE, Color.WHITE);
@@ -309,7 +305,8 @@ public class SeaMark {
 		ColMAP.put(Col.PINK, Color.PINK);
 	}
 
-	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);
+	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(
+			Col.class);
 	static {
 		ColSTR.put(Col.WHITE, "white");
 		ColSTR.put(Col.RED, "red");
@@ -332,37 +329,37 @@ public class SeaMark {
 		else
 			return getTopColour(idx);
 	}
-	
+
 	public void setColour(Ent ent, Col col) {
 		if (ent == Ent.BODY)
 			setObjColour(col);
 		else
 			setTopColour(col);
 	}
-	
+
 	public void setColour(Ent ent, int idx, Col col) {
 		if (ent == Ent.BODY)
 			setObjColour(idx, col);
 		else
 			setTopColour(idx, col);
 	}
-	
+
 	public void addColour(Ent ent, int idx, Col col) {
 		if (ent == Ent.BODY)
 			addObjColour(idx, col);
 		else
 			addTopColour(idx, col);
 	}
-	
+
 	public void subColour(Ent ent, int idx) {
 		if (ent == Ent.BODY)
 			subObjColour(idx);
 		else
 			subTopColour(idx);
 	}
-	
+
 	private ArrayList<Col> bodyColour = new ArrayList<Col>();
-	
+
 	public Col getObjColour(int i) {
 		if (i < bodyColour.size())
 			return bodyColour.get(i);
@@ -393,9 +390,9 @@ public class SeaMark {
 		if (bodyColour.size() > i)
 			bodyColour.remove(i);
 	}
-		
+
 	private ArrayList<Col> topmarkColour = new ArrayList<Col>();
-	
+
 	public Col getTopColour(int i) {
 		if (i < topmarkColour.size())
 			return topmarkColour.get(i);
@@ -426,10 +423,9 @@ public class SeaMark {
 		if (topmarkColour.size() > i)
 			topmarkColour.remove(i);
 	}
-		
+
 	public enum Chr {
-		UNKNOWN, FIXED, FLASH, LFLASH, QUICK, VQUICK, UQUICK, ISOPHASED, OCCULTING,
-		MORSE, ALTERNATING, IQUICK, IVQUICK, IUQUICK
+		UNKNOWN, FIXED, FLASH, LFLASH, QUICK, VQUICK, UQUICK, ISOPHASED, OCCULTING, MORSE, ALTERNATING, IQUICK, IVQUICK, IUQUICK
 	}
 
 	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
@@ -468,7 +464,8 @@ public class SeaMark {
 		UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS
 	}
 
-	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
+	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(
+			Vis.class);
 	static {
 		VisSTR.put(Vis.UNKNOWN, "");
 		VisSTR.put(Vis.HIGH, "high");
@@ -480,13 +477,13 @@ public class SeaMark {
 		VisSTR.put(Vis.OBS, "obscured");
 		VisSTR.put(Vis.PARTOBS, "part_obscured");
 	}
-	
+
 	public enum Lit {
-		UNKNOWN, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT,
-		AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
+		UNKNOWN, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT, AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
 	}
 
-	public static final EnumMap<Lit, String> LitSTR = new EnumMap<Lit, String>(Lit.class);
+	public static final EnumMap<Lit, String> LitSTR = new EnumMap<Lit, String>(
+			Lit.class);
 	static {
 		LitSTR.put(Lit.UNKNOWN, "");
 		LitSTR.put(Lit.VERT, "vertical");
@@ -509,9 +506,12 @@ public class SeaMark {
 		LitSTR.put(Lit.BEAR, "bearing");
 	}
 
-	public enum Exh { UNKNOWN, H24, DAY, NIGHT, FOG }
-	
-	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(Exh.class);
+	public enum Exh {
+		UNKNOWN, H24, DAY, NIGHT, FOG
+	}
+
+	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(
+			Exh.class);
 	static {
 		ExhSTR.put(Exh.UNKNOWN, "");
 		ExhSTR.put(Exh.H24, "24h");
@@ -519,20 +519,24 @@ public class SeaMark {
 		ExhSTR.put(Exh.NIGHT, "night");
 		ExhSTR.put(Exh.FOG, "fog");
 	}
-	
-	public enum Att { COL, CHR, GRP, SEQ, PER, LIT, BEG, END, RAD, HGT, RNG, VIS, EXH, ORT, MLT }
-	
-	public Object[] sector = {Col.UNKNOWN, "", "", "", "", Lit.UNKNOWN, "", "", "", "", "", Vis.UNKNOWN, Exh.UNKNOWN, "", "" };
-	
+
+	public enum Att {
+		COL, CHR, GRP, SEQ, PER, LIT, BEG, END, RAD, HGT, RNG, VIS, EXH, ORT, MLT
+	}
+
+	public Object[] sector = { Col.UNKNOWN, "", "", "", "", Lit.UNKNOWN, "", "",
+			"", "", "", Vis.UNKNOWN, Exh.UNKNOWN, "", "" };
+
 	private ArrayList<Object[]> sectors = new ArrayList<Object[]>();
-	
+
 	public int getSectorCount() {
 		return sectors.size();
 	}
-	
+
 	public Object getLightAtt(Att att, int i) {
 		return getLightAtt(att.ordinal(), i);
 	}
+
 	public Object getLightAtt(int att, int i) {
 		if (i < sectors.size())
 			return sectors.get(i)[att];
@@ -576,7 +580,8 @@ public class SeaMark {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
 
-	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
+	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(
+			Pat.class);
 	static {
 		PatSTR.put(Pat.HORIZ, "horizontal");
 		PatSTR.put(Pat.VERT, "vertical");
@@ -591,14 +596,14 @@ public class SeaMark {
 		else
 			return getTopPattern();
 	}
-	
+
 	public void setPattern(Ent ent, Pat pat) {
 		if (ent == Ent.BODY)
 			setObjPattern(pat);
 		else
 			setTopPattern(pat);
 	}
-	
+
 	private Pat bodyPattern = Pat.NONE;
 
 	public Pat getObjPattern() {
@@ -623,7 +628,8 @@ public class SeaMark {
 		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
-	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
+	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(
+			Top.class);
 	static {
 		TopSTR.put(Top.CAN, "cylinder");
 		TopSTR.put(Top.CONE, "cone, point up");
@@ -656,7 +662,8 @@ public class SeaMark {
 		NONE, REFLECTOR, RACON, RAMARK, LEADING
 	}
 
-	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(Rtb.class);
+	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(
+			Rtb.class);
 	static {
 		RtbSTR.put(Rtb.RACON, "racon");
 		RtbSTR.put(Rtb.RAMARK, "ramark");
@@ -737,7 +744,8 @@ public class SeaMark {
 		NONE, UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
 	}
 
-	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(Fog.class);
+	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(
+			Fog.class);
 	static {
 		FogSTR.put(Fog.UNKNOWN, "yes");
 		FogSTR.put(Fog.HORN, "horn");
@@ -803,7 +811,8 @@ public class SeaMark {
 		UNKNOWN, PERM, OCC, REC, NIU, INT, RESV, TEMP, PRIV, MAND, DEST, EXT, ILLUM, HIST, PUB, SYNC, WATCH, UNWAT, DOUBT
 	}
 
-	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(Sts.class);
+	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(
+			Sts.class);
 	static {
 		StsSTR.put(Sts.PERM, "permanent");
 		StsSTR.put(Sts.OCC, "occasional");
@@ -839,7 +848,8 @@ public class SeaMark {
 		UNKNOWN, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GRP, PAINT
 	}
 
-	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
+	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(
+			Cns.class);
 	static {
 		CnsSTR.put(Cns.BRICK, "masonry");
 		CnsSTR.put(Cns.CONC, "concreted");
@@ -866,7 +876,8 @@ public class SeaMark {
 		UNKNOWN, CONSP, NCONS, REFL
 	}
 
-	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(Con.class);
+	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(
+			Con.class);
 	static {
 		ConSTR.put(Con.CONSP, "conspicuous");
 		ConSTR.put(Con.NCONS, "not_conspicuous");
@@ -1010,7 +1021,8 @@ public class SeaMark {
 			dlg.panelMain.moreButton.setVisible(true);
 			dlg.panelMain.saveButton.setEnabled(true);
 			Ent ent = EntMAP.get(getObject());
-			dlg.panelMain.topButton.setEnabled((ent == Ent.BUOY) || (ent == Ent.BEACON) || (ent == Ent.FLOAT));
+			dlg.panelMain.topButton.setEnabled((ent == Ent.BUOY)
+					|| (ent == Ent.BEACON) || (ent == Ent.FLOAT));
 			dlg.panelMain.fogButton.setEnabled(true);
 			dlg.panelMain.radButton.setEnabled(true);
 			dlg.panelMain.litButton.setEnabled(true);
@@ -1046,7 +1058,7 @@ public class SeaMark {
 		dlg.panelMain.panelMore.setVisible(false);
 		paintSign();
 	}
-	
+
 	public String validDecimal(String str) {
 		str = str.trim().replace(',', '.');
 		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
@@ -1168,7 +1180,7 @@ public class SeaMark {
 					}
 				}
 			}
-			
+
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":height")) {
 				setHeight(keys.get("seamark:" + ObjSTR.get(obj) + ":height"));
 			}
@@ -1194,14 +1206,16 @@ public class SeaMark {
 					} else {
 						setCategory(Cat.LAM_PORT);
 					}
-				} else if ((getObjColour(1) == Col.GREEN) && (getObjColour(2) == Col.RED)) {
+				} else if ((getObjColour(1) == Col.GREEN)
+						&& (getObjColour(2) == Col.RED)) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_PSTBD);
 					} else {
 						setCategory(Cat.LAM_PPORT);
 					}
-				} else if ((getObjColour(1) == Col.WHITE) && (getObjColour(2) == Col.RED)) {
+				} else if ((getObjColour(1) == Col.WHITE)
+						&& (getObjColour(2) == Col.RED)) {
 					setObject(Obj.FLTLAT);
 					setCategory(Cat.LAM_PORT);
 				} else {
@@ -1217,14 +1231,16 @@ public class SeaMark {
 					} else {
 						setCategory(Cat.LAM_STBD);
 					}
-				} else if ((getObjColour(1) == Col.RED) && (getObjColour(2) == Col.GREEN)) {
+				} else if ((getObjColour(1) == Col.RED)
+						&& (getObjColour(2) == Col.GREEN)) {
 					setObject(Obj.FLTLAT);
 					if (getRegion() == Reg.B) {
 						setCategory(Cat.LAM_PPORT);
 					} else {
 						setCategory(Cat.LAM_PSTBD);
 					}
-				} else if ((getObjColour(1) == Col.WHITE) && (getObjColour(2) == Col.GREEN)) {
+				} else if ((getObjColour(1) == Col.WHITE)
+						&& (getObjColour(2) == Col.GREEN)) {
 					setObject(Obj.FLTLAT);
 					setCategory(Cat.LAM_STBD);
 				} else {
@@ -1348,7 +1364,7 @@ public class SeaMark {
 				}
 			}
 		}
-		
+
 		sectors.clear();
 		sectors.add(sector.clone());
 		for (int i = 0; i < 30; i++) {
@@ -1360,11 +1376,13 @@ public class SeaMark {
 						setLightAtt(Att.COL, i, col);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":character"))
-				setLightAtt(Att.CHR, i, keys.get("seamark:light" + secStr + ":character"));
+				setLightAtt(Att.CHR, i,
+						keys.get("seamark:light" + secStr + ":character"));
 			if (keys.containsKey("seamark:light" + secStr + ":group"))
 				setLightAtt(Att.GRP, i, keys.get("seamark:light" + secStr + ":group"));
 			if (keys.containsKey("seamark:light" + secStr + ":sequence"))
-				setLightAtt(Att.SEQ, i, keys.get("seamark:light" + secStr + ":sequence"));
+				setLightAtt(Att.SEQ, i,
+						keys.get("seamark:light" + secStr + ":sequence"));
 			if (keys.containsKey("seamark:light" + secStr + ":period"))
 				setLightAtt(Att.PER, i, keys.get("seamark:light" + secStr + ":period"));
 			if (keys.containsKey("seamark:light" + secStr + ":category")) {
@@ -1374,9 +1392,11 @@ public class SeaMark {
 						setLightAtt(Att.LIT, i, lit);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":sector_start"))
-				setLightAtt(Att.BEG, i, keys.get("seamark:light" + secStr + ":sector_start"));
+				setLightAtt(Att.BEG, i,
+						keys.get("seamark:light" + secStr + ":sector_start"));
 			if (keys.containsKey("seamark:light" + secStr + ":sector_end"))
-				setLightAtt(Att.END, i, keys.get("seamark:light" + secStr + ":sector_end"));
+				setLightAtt(Att.END, i,
+						keys.get("seamark:light" + secStr + ":sector_end"));
 			if (keys.containsKey("seamark:light" + secStr + ":radius"))
 				setLightAtt(Att.RAD, i, keys.get("seamark:light" + secStr + ":radius"));
 			if (keys.containsKey("seamark:light" + secStr + ":height"))
@@ -1385,9 +1405,9 @@ public class SeaMark {
 				setLightAtt(Att.RNG, i, keys.get("seamark:light" + secStr + ":range"));
 			if (keys.containsKey("seamark:light" + secStr + ":visibility")) {
 				str = keys.get("seamark:light" + secStr + ":visibility");
-			for (Vis vis : VisSTR.keySet())
-				if (VisSTR.get(vis).equals(str))
-					setLightAtt(Att.VIS, i, vis);
+				for (Vis vis : VisSTR.keySet())
+					if (VisSTR.get(vis).equals(str))
+						setLightAtt(Att.VIS, i, vis);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":exhibition")) {
 				str = keys.get("seamark:light" + secStr + ":exhibition");
@@ -1396,9 +1416,11 @@ public class SeaMark {
 						setLightAtt(Att.EXH, i, exh);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":orientation"))
-				setLightAtt(Att.ORT, i, keys.get("seamark:light" + secStr + ":orientation"));
+				setLightAtt(Att.ORT, i,
+						keys.get("seamark:light" + secStr + ":orientation"));
 			if (keys.containsKey("seamark:light" + secStr + ":multiple"))
-				setLightAtt(Att.HGT, i, keys.get("seamark:light" + secStr + ":multiple"));
+				setLightAtt(Att.HGT, i,
+						keys.get("seamark:light" + secStr + ":multiple"));
 			if (sectors.size() == i)
 				break;
 		}
@@ -1666,11 +1688,13 @@ public class SeaMark {
 					if (getClass().getResource(imgStr) == null) {
 						System.out.println("Missing image: " + imgStr);
 					} else {
-						dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+						dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
+								.getResource(imgStr)));
 						dlg.panelMain.colLabel.setText(lblStr);
 					}
 				} else {
-					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
+							colStr)));
 				}
 			} else {
 				dlg.panelMain.shapeIcon.setIcon(null);
@@ -1738,7 +1762,8 @@ public class SeaMark {
 				if (getClass().getResource(imgStr) == null) {
 					System.out.println("Missing image: " + imgStr);
 				} else {
-					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
+							imgStr)));
 				}
 			} else {
 				dlg.panelMain.shapeIcon.setIcon(null);
@@ -1847,17 +1872,20 @@ public class SeaMark {
 					System.out.println("Missing image: " + imgStr);
 					return;
 				} else {
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(
+							imgStr)));
 				}
 			} else {
-				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(
+						colStr)));
 			}
 		} else {
 			dlg.panelMain.topIcon.setIcon(null);
 		}
 
 		if (getFogSound() != Fog.NONE) {
-			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource(
+					"/images/Fog_Signal.png")));
 			String str = "";
 			if (getFogSound() != Fog.UNKNOWN)
 				switch (getFogSound()) {
@@ -1891,12 +1919,14 @@ public class SeaMark {
 				str += getFogPeriod() + "s";
 			dlg.panelMain.fogLabel.setText(str);
 		}
-		
+
 		if (RaType != Rtb.NONE) {
 			if (getRadar() == Rtb.REFLECTOR) {
-				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
+				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Radar_Reflector_355.png")));
 			} else {
-				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Radar_Station.png")));
 				String str = "";
 				if (getRadar() == Rtb.RAMARK)
 					str += "Ramark";
@@ -1911,38 +1941,42 @@ public class SeaMark {
 				dlg.panelMain.radarLabel.setText(str);
 			}
 		}
-		
+
 		if (getLightAtt(Att.COL, 0) != Col.UNKNOWN) {
 			if (sectors.size() == 1) {
 				switch ((Col) getLightAtt(Att.COL, 0)) {
 				case RED:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Red_120.png")));
 					break;
 				case GREEN:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Green_120.png")));
 					break;
 				case WHITE:
 				case YELLOW:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_White_120.png")));
 					break;
 				default:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Magenta_120.png")));
 				}
 			}
-			String c = (String)getLightAtt(Att.CHR, 0);
+			String c = (String) getLightAtt(Att.CHR, 0);
 			String tmp = "";
 			if (c.contains("+")) {
 				int i1 = c.indexOf("+");
 				tmp = c.substring(i1, c.length());
 				c = c.substring(0, i1);
-				if (!((String)getLightAtt(Att.GRP, 0)).isEmpty()) {
-					c += "(" + (String)getLightAtt(Att.GRP, 0) + ")";
+				if (!((String) getLightAtt(Att.GRP, 0)).isEmpty()) {
+					c += "(" + (String) getLightAtt(Att.GRP, 0) + ")";
 				}
 				if (tmp != null)
 					c += tmp;
-			} else if (!((String)getLightAtt(Att.GRP, 0)).isEmpty())
-				c += "(" + (String)getLightAtt(Att.GRP, 0) + ")";
-			switch ((Col)getLightAtt(Att.COL, 0)) {
+			} else if (!((String) getLightAtt(Att.GRP, 0)).isEmpty())
+				c += "(" + (String) getLightAtt(Att.GRP, 0) + ")";
+			switch ((Col) getLightAtt(Att.COL, 0)) {
 			case RED:
 				c += " R";
 				break;
@@ -1962,12 +1996,12 @@ public class SeaMark {
 				c += " Vi";
 				break;
 			}
-			tmp = (String)getLightAtt(Att.PER, 0);
+			tmp = (String) getLightAtt(Att.PER, 0);
 			if (!tmp.isEmpty())
 				c += " " + tmp + "s";
 			dlg.panelMain.litLabel.setText(c);
 		}
-		
+
 		paintlock = false;
 	}
 
@@ -1975,7 +2009,8 @@ public class SeaMark {
 
 		if (getObject() != Obj.UNKNOWN) {
 
-			Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C" : (getRegion() == Reg.B ? "B" : "A"));
+			Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C"
+					: (getRegion() == Reg.B ? "B" : "A"));
 
 			for (String str : node.getKeys().keySet()) {
 				if (str.trim().matches("^seamark:\\S+"))
@@ -1983,18 +2018,22 @@ public class SeaMark {
 			}
 
 			if (!getName().isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name",
+						getName()));
 
 			String objStr = ObjSTR.get(object);
 			if (objStr != null) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type",
+						objStr));
 
 				if (getShape() != Shp.FLOAT) {
 					String str = CatSTR.get(getCategory());
 					if (str != null)
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":category", str));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+								+ objStr + ":category", str));
 					if ((getShape() != Shp.BUOY) && (getShape() != Shp.BEACON))
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":shape", ShpSTR.get(getShape())));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+								+ objStr + ":shape", ShpSTR.get(getShape())));
 				}
 
 				if ((getObjColour(0) != Col.UNKNOWN) && getShape() != Shp.PERCH) {
@@ -2002,151 +2041,212 @@ public class SeaMark {
 					for (int i = 1; bodyColour.size() > i; i++) {
 						str += (";" + ColSTR.get(getObjColour(i)));
 					}
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour", str));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+							+ objStr + ":colour", str));
 				}
 
 				if (getObjPattern() != Pat.NONE) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR
-							.get(getObjPattern())));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+							+ objStr + ":colour_pattern", PatSTR.get(getObjPattern())));
 				}
 
-				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH) || (getObject() == Obj.FLTLAT)) {
+				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH)
+						|| (getObject() == Obj.FLTLAT)) {
 					switch (region) {
 					case A:
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-a"));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+								+ objStr + ":system", "iala-a"));
 						break;
 					case B:
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "iala-b"));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+								+ objStr + ":system", "iala-b"));
 						break;
 					case C:
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+								+ objStr + ":system", "other"));
 						break;
 					}
 				}
 				if (!getHeight().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + "height", getHeight()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+							+ objStr + "height", getHeight()));
 				}
 				if (!getElevation().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + "elevation", getElevation()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
+							+ objStr + "elevation", getElevation()));
 				}
 			}
 			if (getTopmark() != Top.NONE) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:shape", TopSTR.get(getTopmark())));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:topmark:shape", TopSTR.get(getTopmark())));
 				if (getTopPattern() != Pat.NONE)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour_pattern", PatSTR
-							.get(getTopPattern())));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:topmark:colour_pattern", PatSTR.get(getTopPattern())));
 				if (getTopColour(0) != Col.UNKNOWN) {
 					String str = ColSTR.get(getTopColour(0));
 					for (int i = 1; topmarkColour.size() > i; i++) {
 						str += (";" + ColSTR.get(getTopColour(i)));
 					}
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:topmark:colour", str));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:topmark:colour", str));
 				}
 			}
-			
+
 			for (int i = 0; i < sectors.size(); i++) {
 				String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
 				if (sectors.get(i)[0] != Col.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", ColSTR.get(sectors.get(i)[0])));
-				if (!((String)sectors.get(i)[1]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":character", (String)sectors.get(i)[1]));
-				if (!((String)sectors.get(i)[2]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":group", (String)sectors.get(i)[2]));
-				if (!((String)sectors.get(i)[3]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sequence", (String)sectors.get(i)[3]));
-				if (!((String)sectors.get(i)[4]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":period", (String)sectors.get(i)[4]));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":colour",
+							ColSTR.get(sectors.get(i)[0])));
+				if (!((String) sectors.get(i)[1]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":character",
+							(String) sectors.get(i)[1]));
+				if (!((String) sectors.get(i)[2]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":group", (String) sectors.get(i)[2]));
+				if (!((String) sectors.get(i)[3]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":sequence",
+							(String) sectors.get(i)[3]));
+				if (!((String) sectors.get(i)[4]).isEmpty())
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(node, "seamark:light" + secStr
+									+ ":period", (String) sectors.get(i)[4]));
 				if (sectors.get(i)[5] != Lit.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":category", LitSTR.get(sectors.get(i)[5])));
-				if (!((String)sectors.get(i)[6]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sector_start", (String)sectors.get(i)[6]));
-				if (!((String)sectors.get(i)[7]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sector_end", (String)sectors.get(i)[7]));
-				if (!((String)sectors.get(i)[8]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":radius", (String)sectors.get(i)[8]));
-				if (!((String)sectors.get(i)[9]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String)sectors.get(i)[9]));
-				if (!((String)sectors.get(i)[10]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String)sectors.get(i)[10]));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":category",
+							LitSTR.get(sectors.get(i)[5])));
+				if (!((String) sectors.get(i)[6]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":sector_start", (String) sectors
+									.get(i)[6]));
+				if (!((String) sectors.get(i)[7]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":sector_end",
+							(String) sectors.get(i)[7]));
+				if (!((String) sectors.get(i)[8]).isEmpty())
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(node, "seamark:light" + secStr
+									+ ":radius", (String) sectors.get(i)[8]));
+				if (!((String) sectors.get(i)[9]).isEmpty())
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(node, "seamark:light" + secStr
+									+ ":height", (String) sectors.get(i)[9]));
+				if (!((String) sectors.get(i)[10]).isEmpty())
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(node, "seamark:light" + secStr
+									+ ":range", (String) sectors.get(i)[10]));
 				if (sectors.get(i)[11] != Vis.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":visibility", VisSTR.get(sectors.get(i)[11])));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":visibility", VisSTR.get(sectors
+									.get(i)[11])));
 				if (sectors.get(i)[12] != Exh.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":exhibition", ExhSTR.get(sectors.get(i)[12])));
-				if (!((String)sectors.get(i)[13]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":orientation", (String)sectors.get(i)[13]));
-				if (!((String)sectors.get(i)[14]).isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String)sectors.get(i)[14]));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":exhibition", ExhSTR.get(sectors
+									.get(i)[12])));
+				if (!((String) sectors.get(i)[13]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":orientation", (String) sectors
+									.get(i)[13]));
+				if (!((String) sectors.get(i)[14]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:light" + secStr + ":multiple",
+							(String) sectors.get(i)[14]));
 			}
-			
+
 			if (getFogSound() != Fog.NONE) {
 				if (getFogSound() == Fog.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal", "yes"));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal", "yes"));
 				else
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:category", FogSTR.get(getFogSound())));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal:category", FogSTR.get(getFogSound())));
 				if (!getFogGroup().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:group", getFogGroup()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal:group", getFogGroup()));
 				}
 				if (!getFogPeriod().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:period", getFogPeriod()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal:period", getFogPeriod()));
 				}
 				if (!getFogSequence().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:sequence", getFogSequence()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal:sequence", getFogSequence()));
 				}
 				if (!getFogRange().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:range", getFogRange()));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:fog_signal:range", getFogRange()));
 				}
 			}
-			
+
 			if (RaType != Rtb.NONE) {
 				if (getRadar() == Rtb.REFLECTOR) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_reflector", "yes"));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:radar_reflector", "yes"));
 				} else {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:category", RtbSTR.get(getRadar())));
+					Main.main.undoRedo.add(new ChangePropertyCommand(node,
+							"seamark:radar_transponder:category", RtbSTR.get(getRadar())));
 					if (!getRaconGroup().isEmpty()) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:group", getRaconGroup()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:group", getRaconGroup()));
 					}
 					if (!getRaconPeriod().isEmpty()) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:period", getRaconPeriod()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:period", getRaconPeriod()));
 					}
 					if (!getRaconSequence().isEmpty()) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sequence", getRaconSequence()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:sequence", getRaconSequence()));
 					}
 					if (!getRaconRange().isEmpty()) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:range", getRaconRange()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:range", getRaconRange()));
 					}
 					if ((!getRaconSector1().isEmpty()) && (!getRaconSector2().isEmpty())) {
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sector_start", getRaconSector1()));
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radar_transponder:sector_end", getRaconSector2()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:sector_start", getRaconSector1()));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node,
+								"seamark:radar_transponder:sector_end", getRaconSector2()));
 					}
 				}
 			}
 
 			if (!getInfo().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:information", getInfo()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:information", getInfo()));
 			}
 			if (!getSource().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:source", getSource()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:source", getSource()));
 			}
 			if (getStatus() != Sts.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:status", StsSTR.get(getStatus())));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:status", StsSTR.get(getStatus())));
 			}
 			if (getConstr() != Cns.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:construction", CnsSTR.get(getConstr())));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:construction", CnsSTR.get(getConstr())));
 			}
 			if (getConsp() != Con.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:conspicuity", ConSTR.get(getConsp())));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:conspicuity", ConSTR.get(getConsp())));
 			}
 			if (getRefl() != Con.UNKNOWN) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reflectivity", ConSTR.get(getRefl())));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:reflectivity", ConSTR.get(getRefl())));
 			}
 			if (!getRef().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:reference", getRef()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:reference", getRef()));
 			}
 			if (!getLightRef().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light:reference", getLightRef()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:light:reference", getLightRef()));
 			}
 			if (!getFixme().isEmpty()) {
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fixme", getFixme()));
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fixme",
+						getFixme()));
 			}
 		}
 	}

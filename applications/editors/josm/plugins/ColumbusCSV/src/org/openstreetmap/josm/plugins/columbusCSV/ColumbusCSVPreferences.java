@@ -40,7 +40,7 @@ public class ColumbusCSVPreferences implements PreferenceSetting, ItemListener {
 	/**
 	 * Disable auto zoom after import.
 	 */
-	public static final String DONT_ZOOM_AFTER_IMPORT = PREFIX + "import.dontZoomAfterImport";
+	public static final String ZOOM_AFTER_IMPORT = PREFIX + "import.dontZoomAfterImport";
 	/** 
 	 * If <tt>true</tt>, all DOP values (hdop, vdop, pdop) are ignored. If the V-900 runs in simple mode,
 	 * this setting has no effect.
@@ -77,7 +77,7 @@ public class ColumbusCSVPreferences implements PreferenceSetting, ItemListener {
 	 */
 	public boolean ok() {
 		Main.pref.put(SHOW_SUMMARY, colCSVShowSummary.isSelected());
-		Main.pref.put(DONT_ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
+		Main.pref.put(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
 		Main.pref.put(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
 		Main.pref.put(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
 		Main.pref.put(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());		
@@ -106,8 +106,8 @@ public class ColumbusCSVPreferences implements PreferenceSetting, ItemListener {
 	 * If <tt>true</tt>, a the bounding box will not be scaled to the imported data.
 	 * @return
 	 */
-	public static boolean dontZoom() {
-		return Main.pref.getBoolean(DONT_ZOOM_AFTER_IMPORT, true);
+	public static boolean zoomAfterImport() {
+		return Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class ColumbusCSVPreferences implements PreferenceSetting, ItemListener {
 
         // Apply settings
         colCSVShowSummary.setSelected(Main.pref.getBoolean(SHOW_SUMMARY, true));
-        colCSVDontZoomAfterImport.setSelected(Main.pref.getBoolean(DONT_ZOOM_AFTER_IMPORT, true));
+        colCSVDontZoomAfterImport.setSelected(Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true));
         colCSVIgnoreVDOP.setSelected(Main.pref.getBoolean(IGNORE_VDOP, false));
         colCSVWarnConversionErrors.setSelected(Main.pref.getBoolean(WARN_CONVERSION_ERRORS, true));
         colCSVWarnMissingAudio.setSelected(Main.pref.getBoolean(WARN_MISSING_AUDIO, true));

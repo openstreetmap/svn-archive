@@ -217,7 +217,7 @@ public class ColumbusCSVReader {
 	 * way point. This requires that the file date of the wav files is kept -
 	 * there is no other way to assign the audio files to way points.
 	 * 
-	 * @param reader
+	 * @param gpx
 	 * @return
 	 */
 	private int searchForLostAudioFiles(GpxData gpx) {

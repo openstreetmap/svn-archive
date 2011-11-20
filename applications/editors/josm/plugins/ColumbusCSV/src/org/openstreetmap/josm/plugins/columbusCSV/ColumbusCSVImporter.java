@@ -45,6 +45,9 @@ public class ColumbusCSVImporter extends FileImporter {
 						+ ")"));
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.io.FileImporter#importData(java.io.File, org.openstreetmap.josm.gui.progress.ProgressMonitor)
+	 */
 	@Override
 	public void importData(File file, ProgressMonitor progressMonitor)
 			throws IOException, IllegalDataException {
@@ -79,7 +82,7 @@ public class ColumbusCSVImporter extends FileImporter {
 				progressMonitor.setTicksCount(3);
 
 				// ... and scale view appropriately - if wished by user
-				if (!ColumbusCSVPreferences.dontZoom()) {
+				if (ColumbusCSVPreferences.zoomAfterImport()) {
 					AutoScaleAction action = new AutoScaleAction("data");
 					action.autoScale();
 				}

@@ -441,26 +441,27 @@ public class SeaMark {
 		ChrMAP.put(EnumSet.of(Chr.QUICK), "Q");
 		ChrMAP.put(EnumSet.of(Chr.VQUICK), "VQ");
 		ChrMAP.put(EnumSet.of(Chr.UQUICK), "UQ");
+		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
 		ChrMAP.put(EnumSet.of(Chr.IQUICK), "IQ");
 		ChrMAP.put(EnumSet.of(Chr.IVQUICK), "IVQ");
 		ChrMAP.put(EnumSet.of(Chr.IUQUICK), "IUQ");
-		ChrMAP.put(EnumSet.of(Chr.ISOPHASED), "Iso");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING), "Oc");
 		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "F.Al.Fl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LFLASH), "Al.LFl");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
-		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
 		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
-		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LFLASH), "FLFl");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
 		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LFLASH), "FlLFl");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LFLASH), "FLFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.LFLASH), "Al.LFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FLASH), "Al.Fl");
 		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LFLASH), "Q+LFl");
 		ChrMAP.put(EnumSet.of(Chr.VQUICK, Chr.LFLASH), "VQ+LFl");
 		ChrMAP.put(EnumSet.of(Chr.UQUICK, Chr.LFLASH), "UQ+LFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING), "Al");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED), "Al.F");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.FIXED, Chr.FLASH), "Al.FFl");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.ISOPHASED), "Al.Iso");
+		ChrMAP.put(EnumSet.of(Chr.ALTERNATING, Chr.OCCULTING), "Al.Oc");
 	}
 
 	public enum Vis {

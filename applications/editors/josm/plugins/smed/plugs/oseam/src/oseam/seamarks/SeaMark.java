@@ -22,8 +22,7 @@ public class SeaMark {
 		A, B, C, R, X
 	}
 
-	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(
-			Reg.class);
+	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(Reg.class);
 	static {
 		RegSTR.put(Reg.A, "iala-a");
 		RegSTR.put(Reg.B, "iala-b");
@@ -53,11 +52,14 @@ public class SeaMark {
 	}
 
 	public enum Obj {
-		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP, LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK, MORFAC, SISTAW, SISTAT
+		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP,
+		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
+		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
+		LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK,
+		MORFAC, SISTAW, SISTAT
 	}
 
-	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(
-			Obj.class);
+	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
 	static {
 		ObjSTR.put(Obj.BCNCAR, "beacon_cardinal");
 		ObjSTR.put(Obj.BCNISD, "beacon_isolated_danger");
@@ -99,8 +101,7 @@ public class SeaMark {
 		BODY, BUOY, BEACON, FLOAT, TOPMARK, LIGHT, MOORING, STATION
 	}
 
-	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(
-			Obj.class);
+	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
 	static {
 		EntMAP.put(Obj.BCNCAR, Ent.BEACON);
 		EntMAP.put(Obj.BCNISD, Ent.BEACON);
@@ -132,8 +133,7 @@ public class SeaMark {
 		NUL, LAT, CAR, SAW, ISD, SPP, LIT, SIS
 	}
 
-	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(
-			Obj.class);
+	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
 	static {
 		GrpMAP.put(Obj.UNKNOWN, Grp.NUL);
 		GrpMAP.put(Obj.BCNCAR, Grp.CAR);
@@ -163,11 +163,18 @@ public class SeaMark {
 	}
 
 	public enum Cat {
-		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST, ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM, SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY, SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC, SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE, SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG, LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
+		NONE, LAM_PORT, LAM_STBD, LAM_PPORT, LAM_PSTBD, CAM_NORTH, CAM_EAST, CAM_SOUTH, CAM_WEST,
+		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
+		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
+		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
+		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
+		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
+		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
+		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG,
+		LIT_DIRF, LIT_LEDG, LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
 	}
 
-	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(
-			Cat.class);
+	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
 	static {
 		CatSTR.put(Cat.LAM_PORT, "port");
 		CatSTR.put(Cat.LAM_STBD, "starboard");
@@ -252,8 +259,7 @@ public class SeaMark {
 		UNKNOWN, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
-	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(
-			Shp.class);
+	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(Shp.class);
 	static {
 		ShpSTR.put(Shp.PILLAR, "pillar");
 		ShpSTR.put(Shp.SPAR, "spar");
@@ -286,8 +292,7 @@ public class SeaMark {
 		UNKNOWN, BLANK, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
 	}
 
-	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(
-			Col.class);
+	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(Col.class);
 	static {
 		ColMAP.put(Col.UNKNOWN, new Color(0xc0c0c0));
 		ColMAP.put(Col.WHITE, Color.WHITE);
@@ -305,8 +310,7 @@ public class SeaMark {
 		ColMAP.put(Col.PINK, Color.PINK);
 	}
 
-	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(
-			Col.class);
+	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);
 	static {
 		ColSTR.put(Col.WHITE, "white");
 		ColSTR.put(Col.RED, "red");
@@ -464,8 +468,7 @@ public class SeaMark {
 		UNKNOWN, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS
 	}
 
-	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(
-			Vis.class);
+	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
 	static {
 		VisSTR.put(Vis.UNKNOWN, "");
 		VisSTR.put(Vis.HIGH, "high");
@@ -482,8 +485,7 @@ public class SeaMark {
 		UNKNOWN, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT, AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
 	}
 
-	public static final EnumMap<Lit, String> LitSTR = new EnumMap<Lit, String>(
-			Lit.class);
+	public static final EnumMap<Lit, String> LitSTR = new EnumMap<Lit, String>(Lit.class);
 	static {
 		LitSTR.put(Lit.UNKNOWN, "");
 		LitSTR.put(Lit.VERT, "vertical");
@@ -510,8 +512,7 @@ public class SeaMark {
 		UNKNOWN, H24, DAY, NIGHT, FOG
 	}
 
-	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(
-			Exh.class);
+	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(Exh.class);
 	static {
 		ExhSTR.put(Exh.UNKNOWN, "");
 		ExhSTR.put(Exh.H24, "24h");
@@ -580,8 +581,7 @@ public class SeaMark {
 		NONE, HORIZ, VERT, DIAG, SQUARE, BORDER
 	}
 
-	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(
-			Pat.class);
+	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
 	static {
 		PatSTR.put(Pat.HORIZ, "horizontal");
 		PatSTR.put(Pat.VERT, "vertical");
@@ -628,8 +628,7 @@ public class SeaMark {
 		NONE, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
-	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(
-			Top.class);
+	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
 	static {
 		TopSTR.put(Top.CAN, "cylinder");
 		TopSTR.put(Top.CONE, "cone, point up");
@@ -662,8 +661,7 @@ public class SeaMark {
 		NONE, REFLECTOR, RACON, RAMARK, LEADING
 	}
 
-	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(
-			Rtb.class);
+	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(Rtb.class);
 	static {
 		RtbSTR.put(Rtb.RACON, "racon");
 		RtbSTR.put(Rtb.RAMARK, "ramark");
@@ -744,8 +742,7 @@ public class SeaMark {
 		NONE, UNKNOWN, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
 	}
 
-	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(
-			Fog.class);
+	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(Fog.class);
 	static {
 		FogSTR.put(Fog.UNKNOWN, "yes");
 		FogSTR.put(Fog.HORN, "horn");
@@ -811,8 +808,7 @@ public class SeaMark {
 		UNKNOWN, PERM, OCC, REC, NIU, INT, RESV, TEMP, PRIV, MAND, DEST, EXT, ILLUM, HIST, PUB, SYNC, WATCH, UNWAT, DOUBT
 	}
 
-	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(
-			Sts.class);
+	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(Sts.class);
 	static {
 		StsSTR.put(Sts.PERM, "permanent");
 		StsSTR.put(Sts.OCC, "occasional");
@@ -848,8 +844,7 @@ public class SeaMark {
 		UNKNOWN, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GRP, PAINT
 	}
 
-	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(
-			Cns.class);
+	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
 	static {
 		CnsSTR.put(Cns.BRICK, "masonry");
 		CnsSTR.put(Cns.CONC, "concreted");
@@ -876,8 +871,7 @@ public class SeaMark {
 		UNKNOWN, CONSP, NCONS, REFL
 	}
 
-	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(
-			Con.class);
+	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(Con.class);
 	static {
 		ConSTR.put(Con.CONSP, "conspicuous");
 		ConSTR.put(Con.NCONS, "not_conspicuous");
@@ -2069,11 +2063,11 @@ public class SeaMark {
 				}
 				if (!getHeight().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
-							+ objStr + "height", getHeight()));
+							+ objStr + ":height", getHeight()));
 				}
 				if (!getElevation().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:"
-							+ objStr + "elevation", getElevation()));
+							+ objStr + ":elevation", getElevation()));
 				}
 			}
 			if (getTopmark() != Top.NONE) {

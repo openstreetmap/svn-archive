@@ -68,6 +68,7 @@ public class PanelHaz extends JPanel {
 				isolButton.setBorderPainted(false);
 			}
 			alTop.actionPerformed(null);
+			alLit.actionPerformed(null);
 			dlg.panelMain.panelMore.syncPanel();
 			dlg.mark.paintSign();
 		}
@@ -99,6 +100,7 @@ public class PanelHaz extends JPanel {
 					button.setBorderPainted(false);
 			}
 			topmarkButton.setVisible(dlg.mark.testValid());
+			lightButton.setVisible(dlg.mark.testValid());
 			dlg.mark.paintSign();
 		}
 	};
@@ -136,6 +138,42 @@ public class PanelHaz extends JPanel {
 			dlg.mark.paintSign();
 		}
 	};
+	public JToggleButton lightButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/DefLitButton.png")));
+	private ActionListener alLit = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (lightButton.isSelected()) {
+				dlg.mark.setLightAtt(Att.COL, 0, Col.WHITE);
+				switch (dlg.mark.getCategory()) {
+				case CAM_NORTH:
+					dlg.mark.setLightAtt(Att.CHR, 0, "Q");
+					dlg.mark.setLightAtt(Att.GRP, 0, "");
+					break;
+				case CAM_SOUTH:
+					dlg.mark.setLightAtt(Att.CHR, 0, "Q+LFl");
+					dlg.mark.setLightAtt(Att.GRP, 0, "6");
+					break;
+				case CAM_EAST:
+					dlg.mark.setLightAtt(Att.CHR, 0, "Q");
+					dlg.mark.setLightAtt(Att.GRP, 0, "3");
+					break;
+				case CAM_WEST:
+					dlg.mark.setLightAtt(Att.CHR, 0, "Q");
+					dlg.mark.setLightAtt(Att.GRP, 0, "9");
+					break;
+				default:
+					dlg.mark.setLightAtt(Att.CHR, 0, "Fl");
+					dlg.mark.setLightAtt(Att.GRP, 0, "2");
+					break;
+				}
+				lightButton.setBorderPainted(true);
+			} else {
+				dlg.mark.clrLight();
+				lightButton.setBorderPainted(false);
+			}
+			dlg.panelMain.panelLit.syncPanel();
+			dlg.mark.paintSign();
+		}
+	};
 
 	public PanelHaz(OSeaMAction dia) {
 		dlg = dia;
@@ -156,9 +194,17 @@ public class PanelHaz extends JPanel {
 		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
 
 		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
+		topmarkButton.setToolTipText(Messages.getString("Topmark"));
 		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		topmarkButton.addActionListener(alTop);
+		topmarkButton.setVisible(false);
 		this.add(topmarkButton);
+		lightButton.setBounds(new Rectangle(165, 0, 34, 32));
+		lightButton.setToolTipText(Messages.getString("Light"));
+		lightButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		lightButton.addActionListener(alLit);
+		lightButton.setVisible(false);
+		this.add(lightButton);
 	}
 
 	public void syncPanel() {
@@ -174,6 +220,10 @@ public class PanelHaz extends JPanel {
 		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
 		topmarkButton.setVisible(dlg.mark.testValid());
+		Boolean lit = (dlg.mark.getLightAtt(Att.COL, 0) != Col.UNKNOWN) && !((String)dlg.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+		lightButton.setBorderPainted(lit);
+		lightButton.setSelected(lit);
+		lightButton.setVisible(dlg.mark.testValid());
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

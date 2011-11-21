@@ -171,16 +171,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 180, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 200, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 180, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 200, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 180, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 200, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 180, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 200, 160));
 		panelLights.setVisible(false);
 		panelMore = new PanelMore(dlg);
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));

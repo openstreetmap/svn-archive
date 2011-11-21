@@ -38,6 +38,7 @@ public class PanelStbd extends JPanel {
 			}
 			if (dlg.mark.testValid()) {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
+				dlg.panelMain.panelChan.lightButton.setVisible(true);
 				if (dlg.mark.getCategory() == Cat.LAM_STBD) {
 					switch (dlg.mark.getRegion()) {
 					case A:
@@ -80,6 +81,7 @@ public class PanelStbd extends JPanel {
 				dlg.panelMain.panelMore.syncPanel();
 			} else {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
+				dlg.panelMain.panelChan.lightButton.setVisible(false);
 			}
 			dlg.mark.paintSign();
 		}

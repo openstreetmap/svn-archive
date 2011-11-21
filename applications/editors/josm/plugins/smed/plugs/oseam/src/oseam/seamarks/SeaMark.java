@@ -1375,8 +1375,16 @@ public class SeaMark {
 					if (ColSTR.get(col).equals(str))
 						setLightAtt(Att.COL, i, col);
 			}
-			if (keys.containsKey("seamark:light" + secStr + ":character"))
-				setLightAtt(Att.CHR, i, keys.get("seamark:light" + secStr + ":character"));
+			if (keys.containsKey("seamark:light" + secStr + ":character")) {
+				String c = keys.get("seamark:light" + secStr + ":character");
+				if (c.contains("(") && c.contains(")")) {
+					int i1 = c.indexOf("(");
+					int i2 = c.indexOf(")");
+					setLightAtt(Att.GRP, i, c.substring((i1+1), i2));
+					c = c.substring(0, i1) + c.substring((i2+1), c.length());
+					}
+				setLightAtt(Att.CHR, i, c);
+			}
 			if (keys.containsKey("seamark:light" + secStr + ":group"))
 				setLightAtt(Att.GRP, i, keys.get("seamark:light" + secStr + ":group"));
 			if (keys.containsKey("seamark:light" + secStr + ":sequence"))

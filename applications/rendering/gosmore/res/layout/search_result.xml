@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView android:id="@+id/result_icon"
+        android:layout_alignParentLeft="true"
+        android:scaleType="center"
+        android:layout_width="48dip"
+        android:layout_height="48dip" />
+
+<!--         android:layout_weight="1.0" 
+        android:layout_width="0dip"
+        android:layout_gravity="left"
+-->
+
+    <TextView android:id="@+id/distance"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical|right"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" />
+
+    <TextView android:id="@+id/result_text"
+        android:layout_toRightOf="@+id/result_icon"
+        android:gravity="center_vertical|left"
+        android:textSize="18sp"
+        android:layout_toLeftOf="@+id/distance"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <!--    <string name="hello">Hello World, Gosmore!</string> -->
+    <string name="app_name">Gosmore</string>
+    <string name="fastest">Fastest Route</string>
+    <string name="summary_fastest">Not the shortest</string>
+    <string name="north2d">Orient Northwards in 2D</string>
+    <string name="summary_north2d">Don\'t use the compass in 2D</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="summary_vehicle">Vehicle / Transport mode</string>
+    <string name="tts">Voice Language</string>
+    <string name="summary_tts">Text to Speech instructions</string>
+    <string name="routing_progress">Calculating Route</string>
+    <string name="cancel">Cancel</string> <!-- Routing and no map dialogs -->
+    <string name="ok">OK</string> <!-- About and no map dialogs -->
+    <string name="about_title">About</string>
+    <string name="about_msg">
+        Copyright (C) 2011 Nic Roets and Gosmore contributors. All rights reserved.\n
+        THIS SOFTWARE IS PROVIDED BY NIC ROETS ``AS IS\'\' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NIC ROETS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\n
+                
+   Some of the icons are copyright (c) 2005-2008, The Android Open Source Project\n
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.\n
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.\n\n
+        
+        Some of the data bundled with or downloaded by this application fall
+        under the following copyright. When the application interprets this data,
+        it does not affects it\'s copyright, only the copyright of the output.\n\n
+        Map data (C) OpenStreetMap contributors CC-BY-SA\n
+        http://creativecommons.org/licenses/by-sa/2.0/\n\n
+        Map styles and icons (C) JOSM and Gosmore contributors under the GNU
+        General Public License version 2 or later\n\n
+        City names and locations in default map (C)
+        Geonames.org contributors CC-BY 3.0\n\n
+    </string>
+    <string name="no_location_title">No location specified</string>
+    <string name="no_location_msg">
+    To find your location tap the location button.\n\n
+    To find a city, tap the search button and enter the first few letters.</string>
+    <string name="first_map_title">Location acquired</string>
+    <string name="first_map_msg">Download the map for your area ?</string>
+    <string name="no_sdcard_title">No SD Card</string>
+    <string name="no_sdcard_msg">The external storage is not mounted.</string>
+</resources>

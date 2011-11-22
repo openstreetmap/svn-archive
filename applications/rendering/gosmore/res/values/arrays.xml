@@ -1,0 +1,38 @@
+<resources>
+<string-array name="vehicle_entries">
+        <item>Motorcar</item>
+        <item>Bicycle</item>
+        <item>Pedestrian</item>
+        <item>Goods Vehicle</item>
+        <item>Heavy Goods Vehicle</item>
+        <item>Horse</item>
+        <item>Motorcycle</item>
+        <item>Bus</item>
+        <item>Moped</item>
+        <item>Mofa</item>
+        <item>Motorboat</item>
+        <item>Boat</item>
+        </string-array>
+        <string-array name="vehicle_values">
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        </string-array>
+        <string-array name="tts_entries">
+        <item>None / Disabled</item>
+        <item>English</item>
+        </string-array>
+        <string-array name="tts_values">
+        <item>0</item>
+        <item>1</item>
+        </string-array>
+</resources>  

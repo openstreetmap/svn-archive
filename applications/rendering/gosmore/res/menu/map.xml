@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/start_route"
+        android:title="Start Route"
+        android:icon="@drawable/ic_menu_play_clip" />
+
+    <item android:id="@+id/end_route"
+        android:title="End Route"
+        android:icon="@drawable/btn_square_overlay_normal" />
+
+    <item android:id="@+id/preferences"
+        android:title="Settings"
+        android:icon="@android:drawable/ic_menu_preferences" />
+    <item android:id="@+id/update"
+        android:title="Update"
+        android:icon="@drawable/stat_sys_download_anim0" />
+    <item android:id="@+id/about"
+        android:title="About"
+        android:icon="@android:drawable/ic_dialog_info" />
+</menu>

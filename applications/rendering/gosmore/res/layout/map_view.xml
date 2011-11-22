@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <!-- Here is where we put the SurfaceView, in a frame so that we can
+         stack other views on top of it. -->
+<!--     <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"> -->
+<RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+        <org.osmu.gosmore.MapView android:id="@+id/mapview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <ImageView android:id="@+id/map_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@android:drawable/ic_menu_search"/>
+                    
+            <ImageView android:id="@+id/map_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@android:drawable/ic_menu_recent_history"/>
+                    
+            <ImageView android:id="@+id/mylocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:src="@android:drawable/ic_menu_mylocation"/>
+        <LinearLayout android:id="@+id/hidecontainer"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true">
+
+            <ImageView android:id="@+id/zoom_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/btn_zoom_down_normal"/>
+                    <!-- android:visibility="gone" -->
+            
+            <ImageView android:id="@+id/zoom_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/btn_zoom_up_normal"/>
+                    
+        </LinearLayout>
+        
+    </RelativeLayout>
+            
+</LinearLayout>

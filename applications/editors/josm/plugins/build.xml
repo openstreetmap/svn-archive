@@ -60,6 +60,7 @@
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="dist" dir="print"/>
         <ant antfile="build.xml" target="dist" dir="proj4j"/>
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="reltoolbox"/>
@@ -148,6 +149,7 @@
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="clean" dir="print"/>
         <ant antfile="build.xml" target="clean" dir="proj4j"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="reltoolbox"/>

@@ -31,7 +31,7 @@
             <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
             <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/Cz:JOSM/Plugins/CzechAddress"/>
-            <attribute name="Plugin-Mainversion" value="4394"/>
+            <attribute name="Plugin-Mainversion" value="4549"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
     </target>

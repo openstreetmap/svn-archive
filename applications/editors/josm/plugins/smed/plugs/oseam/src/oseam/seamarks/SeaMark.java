@@ -1376,14 +1376,14 @@ public class SeaMark {
 						setLightAtt(Att.COL, i, col);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":character")) {
-				String c = keys.get("seamark:light" + secStr + ":character");
-				if (c.contains("(") && c.contains(")")) {
-					int i1 = c.indexOf("(");
-					int i2 = c.indexOf(")");
-					setLightAtt(Att.GRP, i, c.substring((i1+1), i2));
-					c = c.substring(0, i1) + c.substring((i2+1), c.length());
+				str = keys.get("seamark:light" + secStr + ":character");
+				if (str.contains("(") && str.contains(")")) {
+					int i1 = str.indexOf("(");
+					int i2 = str.indexOf(")");
+					setLightAtt(Att.GRP, i, str.substring((i1+1), i2));
+					str = str.substring(0, i1) + str.substring((i2+1), str.length());
 					}
-				setLightAtt(Att.CHR, i, c);
+				setLightAtt(Att.CHR, i, str);
 			}
 			if (keys.containsKey("seamark:light" + secStr + ":group"))
 				setLightAtt(Att.GRP, i, keys.get("seamark:light" + secStr + ":group"));
@@ -1422,7 +1422,8 @@ public class SeaMark {
 			if (keys.containsKey("seamark:light" + secStr + ":orientation"))
 				setLightAtt(Att.ORT, i, keys.get("seamark:light" + secStr + ":orientation"));
 			if (keys.containsKey("seamark:light" + secStr + ":multiple"))
-				setLightAtt(Att.HGT, i, keys.get("seamark:light" + secStr + ":multiple"));
+				setLightAtt(Att.MLT, i, keys.get("seamark:light" + secStr + ":multiple"));
+			
 			if (sectors.size() == i)
 				break;
 		}

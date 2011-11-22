@@ -141,7 +141,6 @@ public class PanelSpec extends JPanel {
 			} else
 				button.setBorderPainted(false);
 		}
-		categoryBox.setSelectedIndex(0);
 		for (Cat cat : categories.keySet()) {
 			int item = categories.get(cat);
 			if (dlg.mark.getCategory() == cat)

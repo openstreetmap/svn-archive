@@ -297,20 +297,19 @@ public class PanelLit extends JPanel {
 		heightBox.setText((String)dlg.mark.getLightAtt(Att.HGT, 0));
 		rangeBox.setText((String)dlg.mark.getLightAtt(Att.RNG, 0));
 		orientationBox.setText((String)dlg.mark.getLightAtt(Att.ORT, 0));
+		orientationBox.setVisible(dlg.mark.getLightAtt(Att.LIT, 0) == Lit.DIR);
 		multipleBox.setText((String)dlg.mark.getLightAtt(Att.MLT, 0));
-		visibilityBox.setSelectedIndex(0);
+		multipleBox.setVisible((dlg.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ));
 		for (Vis vis : visibilities.keySet()) {
 			int item = visibilities.get(vis);
 			if (dlg.mark.getLightAtt(Att.VIS, 0) == vis)
 				visibilityBox.setSelectedIndex(item);
 		}
-		categoryBox.setSelectedIndex(0);
 		for (Lit lit : categories.keySet()) {
 			int item = categories.get(lit);
 			if (dlg.mark.getLightAtt(Att.LIT, 0) == lit)
 				categoryBox.setSelectedIndex(item);
 		}
-		exhibitionBox.setSelectedIndex(0);
 		for (Exh exh : exhibitions.keySet()) {
 			int item = exhibitions.get(exh);
 			if (dlg.mark.getLightAtt(Att.EXH, 0) == exh)

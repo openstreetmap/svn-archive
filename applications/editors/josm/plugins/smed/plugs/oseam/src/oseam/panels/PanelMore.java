@@ -309,25 +309,21 @@ public class PanelMore extends JPanel {
 		heightBox.setText(dlg.mark.getHeight());
 		sourceBox.setText(dlg.mark.getSource());
 		infoBox.setText(dlg.mark.getInfo());
-		statusBox.setSelectedIndex(0);
 		for (Sts sts : statuses.keySet()) {
 			int item = statuses.get(sts);
 			if (dlg.mark.getStatus() == sts)
 				statusBox.setSelectedIndex(item);
 		}
-		constrBox.setSelectedIndex(0);
 		for (Cns cns : constructions.keySet()) {
 			int item = constructions.get(cns);
 			if (dlg.mark.getConstr() == cns)
 				constrBox.setSelectedIndex(item);
 		}
-		conBox.setSelectedIndex(0);
 		for (Con con : conspicuities.keySet()) {
 			int item = conspicuities.get(con);
 			if (dlg.mark.getConsp() == con)
 				conBox.setSelectedIndex(item);
 		}
-		reflBox.setSelectedIndex(0);
 		for (Con con : reflectivities.keySet()) {
 			int item = reflectivities.get(con);
 			if (dlg.mark.getRefl() == con)

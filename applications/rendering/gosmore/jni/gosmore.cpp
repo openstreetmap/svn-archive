@@ -1,11 +1,11 @@
 /* Copyright 2010 Nic Roets as detailed in the README file. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
-   David Dean, Pablo D'Angelo, Dmitry and Adrian Test.
+   David Dean, Pablo D'Angelo, Dmitry and Adrian Batzill.
    Thanks to
    * Sven Geggus, Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
    * Stephan Rossig, Simon Wood, David Dean, Lambertus and many others for testing,
    * OSMF for partial funding. */
-
+// rm -f obj/local/armeabi/objs/gosmore/gosmore.o.d; ../../../../android/android-ndk-r5/ndk-build
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +18,16 @@
 #include <algorithm>
 #include <queue>
 #include <map>
+
+#define LG  //__android_log_print (ANDROID_LOG_WARN, "Gosmore", "%d", __LINE__);
+#ifdef ANDROID_NDK
+#include <android/log.h>
+#include <jni.h>
+#include <GLES/gl.h>
+#include <GLES/glext.h>
+#define NOGTK
+#define LOG //__android_log_print (ANDROID_LOG_WARN, "Gosmore", "%d", __LINE__);
+#endif
 using namespace std;
 #ifndef _WIN32
 #include <sys/mman.h>
@@ -36,7 +46,7 @@ using namespace std;
 #ifdef _WIN32_WCE
 #define NOGTK
 #endif
-#ifdef NOGTK
+#if defined(NOGTK) && defined (_WIN32)
 #include <io.h>
 #include <sys/stat.h>
 #include <windowsx.h>
@@ -56,12 +66,34 @@ using namespace std;
 
 #define OLDOLDOPTIONS \
   o (ModelessDialog,  0, 2)
+
+HINSTANCE hInst;
+static HWND   mWnd, dlgWnd = NULL, hwndEdit, button3D, buttons[3];
 #else
 #include <unistd.h>
 #include <sys/stat.h>
 #include "libgosm.h"
 #define wchar_t char
 #define wsprintf sprintf
+#endif
+#if !defined (HEADLESS) && !defined (NOGTK)
+#ifdef USE_GNOMESOUND
+#include <libgnome/libgnome.h>
+#endif
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
+#endif
+#include "openglespolygon.h"
+#ifdef USE_GEOCLUE // Not used and never worked
+#include <geoclue/geoclue-position.h>
+#endif
+#ifdef USE_GPSD
+#include <gps.h>
 #endif
 
 #define OPTIONS \
@@ -112,32 +144,13 @@ int Display3D = 0; // Not an option but a button for now.
   o (cmduturn, 0, 0) o (cmdround1, 0, 0) o (cmdround2, 0, 0) \
   o (cmdround3, 0, 0) o (cmdround4, 0, 0) o (cmdround5, 0, 0) \
   o (cmdround6, 0, 0) o (cmdround7, 0, 0) o (cmdround8, 0, 0)
-
 char docPrefix[80] = "";
 int GpsIdle=999;
 
-#if !defined (HEADLESS) && !defined (NOGTK)
-#ifdef USE_GNOMESOUND
-#include <libgnome/libgnome.h>
-#endif
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
-#endif
-#ifdef USE_GEOCLUE // Not used and never worked
-#include <geoclue/geoclue-position.h>
-#endif
-#ifdef USE_GPSD
-#include <gps.h>
-#endif
 
 // We emulate just enough of gtk to make it work
-#ifdef NOGTK
+#if defined(NOGTK)
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
-HWND hwndList;
 #define gtk_toggle_button_set_active(x,y) // followGPRr
 struct GtkWidget { 
   struct {
@@ -160,10 +173,9 @@ enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 #define VALIDATE_PEN 1
 #define RESERVED_PENS 2 */
 
-HINSTANCE hInst;
-static HWND   mWnd, dlgWnd = NULL, hwndEdit, button3D, buttons[3];
-
+#ifndef ANDROID_NDK
 #define LOG logprintf ("%d\n", __LINE__);
+#endif
 #else
 #define LOG // Less debug info needed because we have gdb
 #ifndef RES_DIR
@@ -189,6 +201,7 @@ const char *FindResource (const char *fname)
   return strdup (fname);
 }
 #endif
+GtkWidget *draw, *location, *display3D, *followGPSr;
 
 // used for showing logs to a file (with default)
 // changed to more suitable value for WinCE in WinMain
@@ -270,19 +283,19 @@ int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisp
 
 TCHAR currentBbox[80] = TEXT ("");
 
-void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
-{
+int ChangePak (const TCHAR *pakfile, int mlon, int mlat)
+{ // Returns TRUE if pakfile or a bbox was loaded, false if default was loaded or failure
   static int bboxList[][4] = { 
 #include "bboxes.c"
   }, world[] = { -512, -512, 512, 512 }, *bbox = NULL;
-     
+
   if (bbox && bbox[0] <= (mlon >> 22) && bbox[1] <= ((-mlat) >> 22) &&
-              bbox[2] >  (mlon >> 22) && bbox[3] >  ((-mlat) >> 22)) return;
-  GosmFreeRoute ();
+              bbox[2] >  (mlon >> 22) && bbox[3] >  ((-mlat) >> 22)) return 0;
+  LG GosmFreeRoute ();
   memset (gosmSstr, 0, sizeof (gosmSstr));
   shortest = NULL;
         
-  if (!pakfile) {
+  LG if (!pakfile) {
     int best = 0;
     for (size_t j = 0; j < sizeof (bboxList) / sizeof (bboxList[0]); j++) {
       int worst = min (mlon / 8 - (bboxList[j][0] << 19),
@@ -335,13 +348,14 @@ void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
   LOG map = fm == INVALID_HANDLE_VALUE ? NULL :
     MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0);
+  int len = map ? GetFileSize (gmap) : 0;
   LOG Exit = !map || !GosmInit (map, GetFileSize(gmap, NULL));
   LOG if (Exit && gmap != INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
       TEXT (""), MB_APPLMODAL|MB_OK);
   }
 
-  #if 0
+  #if 0 // Old Windows code
   FILE *gmap = _wfopen (/*"./gosmore.pak"*/ , TEXT ("rb"));
 
   if (!gmap) {
@@ -364,42 +378,61 @@ void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
 //  printf ("%s %d %d\n", pakfile, (mlon >> 22) + 512, 512 - (mlat >> 22));
   if (map != (void*) -1) munmap (map, len);
   
-  FILE *gmap = fopen64 (pakfile, "r");
-  if (!gmap && currentBbox == pakfile &&
-             (gmap = fopen64 ("default.pak", "r")) == NULL) {
+  FILE *pakmap = fopen64 (pakfile, "r");
+  FILE *gmap = !pakmap && currentBbox == pakfile
+                  ? fopen64 ("default.pak", "r") : pakmap;
+  if (!gmap && currentBbox == pakfile) {
     gmap = fopen64 (RES_DIR "default.pak", "r");
   }
-  len = gmap && fseek (gmap, 0, SEEK_END) == 0 ? ftell (gmap) : 0;
+  LG len = gmap && fseek (gmap, 0, SEEK_END) == 0 ? ftell (gmap) : 0;
   map = !len ? (void*)-1
      : mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED, fileno (gmap), 0);
-  Exit = map == (void *) -1 || !GosmInit (map, len);
-  if (gmap) fclose (gmap);
+  LG Exit = map == (void *) -1 || !GosmInit (map, len);
+  LG if (gmap) fclose (gmap);
   #endif
   /* // Slightly more portable:
   GMappedFile *gmap = g_mapped_file_new (pakfile, FALSE, NULL);
   Exit = !gmap || !GosmInit (g_mapped_file_get_contents (gmap),
       g_mapped_file_get_length (gmap));
   */
+//  __android_log_print(ANDROID_LOG_WARN, "Gosmore", "re %p %d", bbox, Exit);
   LOG if (Exit) bbox = NULL;
+  LG return pakmap != NULL;
 }
+#ifdef ANDROID_NDK
+extern "C" jint Java_org_osmu_gosmore_MapActivity_changePak (JNIEnv*  env,
+    jobject thiz, jstring js, jint mlon, jint mlat)
+{
+  LG IconSet = 1;
+  DetailLevel = 3;
+  ButtonSize = 4;
+  Background = 1;
+  option= mapMode;
+  ShowCompass = 0;
+  const char *sdcard = env->GetStringUTFChars(js, NULL);
+  chdir (sdcard);
+  LG env->ReleaseStringUTFChars(js, sdcard);
+  if (ChangePak ("gosmore.pak", 0, 0)) return 2;
+  if (Exit && ChangePak (NULL, mlon, mlat)) return 2;
+  if (Exit) strcpy (currentBbox, "default");
+//  __android_log_print(ANDROID_LOG_WARN, "Gosmore", "re %s", currentBbox);
+  return Exit ? 0 : 1;
+}
+
+extern "C" jstring Java_org_osmu_gosmore_Update_currentBbox
+                       (JNIEnv* env, jobject thiz)
+{
+//  __android_log_print(ANDROID_LOG_WARN, "Gosmore", "re %s", currentBbox);
+  currentBbox[16] = '\0'; // Strip the .pak off for Java
+  return env->NewStringUTF (currentBbox);
+}
+
+#endif
 
 #ifndef HEADLESS
 
-GtkWidget *draw, *location, *display3D, *followGPSr;
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
 string highlight, searchStr ("Search");
-
-struct tsItem {
-  string cmd;
-  #ifndef NOGTK
-  GdkPixbuf *pix;
-  #else
-  HICON pix;
-  #endif
-//  tsItem () {}
-};
-
-deque<tsItem> tsList;
 
 inline void SetLocation (int nlon, int nlat)
 {
@@ -674,6 +707,8 @@ void CallRoute (int recalculate, int plon, int plat)
   #endif
 }
 
+
+#ifndef ANDROID_NDK
 void DoFollowThing (gpsNewStruct *gps)
 {
   static int lastTime = -1;
@@ -711,18 +746,60 @@ void DoFollowThing (gpsNewStruct *gps)
   }
   if (!/*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) return;
   SetLocation (Longitude (gps->fix.longitude), Latitude (gps->fix.latitude));
-/*    int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
-      40000000.0 / cos (gps->fix.latitude * (M_PI / 180.0)) *
-      sin (gps->fix.track * (M_PI / 180.0)));
-    int plat = Latitude (gps->fix.latitude + gps->fix.speed * 3600.0 /
-      40000000.0 * cos (gps->fix.track * (M_PI / 180.0))); */
+  __int64 dlon = clon - flon, dlat = clat - flat;
+  flon = clon;
+  flat = clat;
+#else
+
+extern "C" void Java_org_osmu_gosmore_MapRenderer_startRoute (
+  JNIEnv*  env, jobject thiz, jdouble lon, jdouble lat)
+{
+  flon = Longitude (lon);
+  flat = Latitude (lat);
+  GosmFreeRoute ();
+  shortest = NULL;
+}
+
+extern "C" void Java_org_osmu_gosmore_MapRenderer_endRoute (
+  JNIEnv*  env, jobject thiz, jdouble lon, jdouble lat, jboolean fastest,
+  jint vehicle)
+{
+  tlon = Longitude (lon);
+  tlat = Latitude (lat);
+  Vehicle = vehicle;
+  FastestRoute = fastest;
+  Route (TRUE, 0, 0, Vehicle, FastestRoute);
+}
+
+extern "C" jint Java_org_osmu_gosmore_MapRenderer_doRoute (
+  JNIEnv*  env, jobject thiz)
+{
+  if (!RouteLoop()) return routeSuccess ? 999 : -1;
+  // I suspect shortest is never NULL here, but I still guard against it.
+  return (jint)(!shortest ? 0 : ((Sqr (__int64 (shortest->nd->lon - tlon)) +
+    Sqr (__int64 (shortest->nd->lat - tlat))) * 100) /
+    (Sqr (__int64 (flon - tlon)) +
+     Sqr (__int64 (flat - tlat)) + (1<<15)));
+}
+
+extern "C" jstring Java_org_osmu_gosmore_MapRenderer_navigate (
+  JNIEnv*  env, jobject thiz, jdouble lon, jdouble lat, jfloat speed,
+  jfloat bearing)
+{
+  const char *tts = "";
+  flon = Longitude (lon);
+  flat = Latitude (lat);
+  __int64 dlon = Longitude (lon + speed * 3600.0 /
+      40000000.0 / cos (lat * (M_PI / 180.0)) *
+      sin (bearing * (M_PI / 180.0))) - flon;
+  __int64 dlat = Latitude (lat + speed * 3600.0 /
+      40000000.0 * cos (bearing * (M_PI / 180.0))) - flat;
+  // Slightly faster would be dlon=speed*(...); dlat=speed*(...);
+#endif
     // Predict the vector that will be traveled in the next 10seconds
 //    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
 //    printf ("%lf %lf\n", gps->fix.latitude, gps->fix.longitude);
     
-  __int64 dlon = clon - flon, dlat = clat - flat;
-  flon = clon;
-  flat = clat;
   if (routeSuccess) CallRoute (FALSE, dlon, dlat);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
@@ -819,7 +896,20 @@ void DoFollowThing (gpsNewStruct *gps)
     oldCommand = command[0];
     oldDecide = decide[0];
     #define o(cmd,dummy1,dummy2) TEXT (#cmd),
-#ifdef _WIN32_WCE
+#ifdef ANDROID_NDK
+    static const char *cmds[] = {
+    "Turn left.", "Keep left.", "Turn right", "Keep right.",
+    "You have reached your destination.", "Make a U turn if possible.",
+    "At the roundabout, take the first exit.",
+    "At the roundabout, take the second exit.",
+    "At the roundabout, take the third exit.",
+    "At the roundabout, take the fourth exit.",
+    "At the roundabout, take the fifth exit.",
+    "At the roundabout, take the sixth exit.",
+    "At the roundabout, take the seventh exit.",
+    "At the roundabout, take the eighth exit." };
+    tts = cmds[command[0]-cmdturnleftNum];
+#elif defined(_WIN32_WCE)
     static const wchar_t *cmdStr[] = { COMMANDS };
     wchar_t argv0[80];
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
@@ -852,7 +942,52 @@ void DoFollowThing (gpsNewStruct *gps)
     sinAzimuth = -dlon / dist;
   }                                            
   gtk_widget_queue_clear (draw);
+  #ifdef ANDROID_NDK
+  return env->NewStringUTF( tts);
+  #endif
 } // If following the GPSr and it has a fix.
+
+// Regrettably here are a few static variables with very generic names. They
+// are however unique in this file.
+static int cosa, sina, xadj, width = 320, height = 240;
+__int64 yadj;
+#define FAR3D  100000 // 3D view has a limit of roughly 5 km forwards
+#define WIDE3D 100000 // and roughly 5km between top left & top right corner
+#define CAMERA2C 20000 // How far the camera is behind the user (clat/lon)
+#define HEIGHT   12000 // Height of the camera
+#define PIX45     256 // Y value corresponding to 45 degrees down
+#define XFix PIX45
+
+#define myint int
+/* The 3D computations can all be done in signed 32 bits integers,
+   provided overflow bits are simply discarded. The C specification says
+   however that ints that overflow are undefined (as well as any
+   expression that touches them). So if the 3D display looks garbled
+   under a new compiler, try running with #define myint __int64
+*/
+
+#define MUL 64
+#define Depth(lon,lat) \
+           (int)(yadj + (lat) * (myint) cosa - (lon) * (myint) sina)
+#define X1(lon,lat) \
+           (int)(xadj + (lon) * (myint) cosa + (lat) * (myint) sina)
+#define AdjDepth(lon,lat) (Depth (lon, lat) < PIX45 * HEIGHT * MUL / 5000 \
+                      && Depth (lon, lat) > -PIX45 * HEIGHT * MUL / 5000 ? \
+                         PIX45 * HEIGHT * MUL / 5000 : Depth (lon, lat))
+#define Y(lon,lat) (Display3D ? PIX45 * HEIGHT * MUL / AdjDepth (lon, lat) \
+     : yadj + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
+#define Y2(lon,lat) (Display3D ? PIX45 * HEIGHT * MUL * (__int64)65536 / AdjDepth (lon, lat) \
+ : (yadj<<16) + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 16))
+#define X(lon,lat) (Display3D ? width / 2 + \
+((AdjDepth (lon, lat) > 0 ? 1 : -1) * \
+  (X1 (lon, lat) / 32000 - AdjDepth (lon, lat) / XFix) > 0 ? 32000 : \
+(AdjDepth (lon, lat) > 0 ? 1 : -1) * \
+  (X1 (lon, lat) / 32000 + AdjDepth (lon, lat) / XFix) < 0 ? -32000 : \
+X1(lon,lat) / (AdjDepth (lon, lat) / XFix)) \
+: xadj + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
+#define X2(lon,lat) (Display3D ? X(lon,lat)*65536 : \
+   (xadj<<16) + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 16))
+//X2 and Y2 are X and Y but 65536 times larger
 
 #ifndef NOGTK
 #ifdef ROUTE_TEST
@@ -860,13 +995,13 @@ gint RouteTest (GtkWidget * /*widget*/, GdkEventButton *event, void *)
 {
   static int ptime = 0;
   ptime = time (NULL);
-  int w = draw->allocation.width;
+  int w = width;
   int perpixel = zoom / w;
   clon += lrint ((event->x - w / 2) * perpixel);
-  clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
+  clat -= lrint ((event->y - height / 2) * perpixel);
 /*    int plon = clon + lrint ((event->x - w / 2) * perpixel);
     int plat = clat -
-      lrint ((event->y - draw->allocation.height / 2) * perpixel); */
+      lrint ((event->y - height / 2) * perpixel); */
   FollowGPSr = TRUE;
   gpsNewStruct gNew;
   gNew.fix.latitude = LatInverse (clat);
@@ -927,7 +1062,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/
 }*/
 #endif // !ROUTE_TEST
 
-#else // else NOGTK
+#elif defined(_WIN32) // else NOGTK
 #define NEWWAY_MAX_COORD 10
 struct newWaysStruct {
   int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
@@ -1011,6 +1146,7 @@ BOOL CALLBACK DlgSetTags2Proc (HWND hwnd, UINT Msg, WPARAM wParam,
 
 #endif // NOGTK
 
+#ifndef ANDROID_NDK
 int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 {
   if (Display3D) {
@@ -1019,7 +1155,7 @@ int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
                  clat + lrint (cosAzimuth * k));
   }
   else {
-    int w = draw->allocation.width, h = draw->allocation.height;
+    int w = width, h = height;
     int perpixel = zoom / w;
     if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
     if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
@@ -1031,6 +1167,7 @@ int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
+#endif
 
 int objectAddRow = -1;
 #define ADD_HEIGHT 32
@@ -1039,7 +1176,7 @@ void HitButton (int b)
 {
   int returnToMap = b > 0 && option <= FastestRouteNum;
   
-  #ifdef NOGTK
+  #ifdef _WIN32
   if (AddWayOrNode && b == 0) {
     AddWayOrNode = 0;
     option = mapMode;
@@ -1063,7 +1200,7 @@ void HitButton (int b)
     tlat = clat;
     CallRoute (TRUE, 0, 0);
   }
-  #ifdef NOGTK
+  #ifdef _WIN32
   else if (option == DisplayOffNum) {
     if (CeEnableBacklight(FALSE)) {
       gDisplayOff = TRUE;
@@ -1175,7 +1312,7 @@ int UpdateWayPoints (GtkWidget *, GdkEvent *, gpointer *)
     if (firstDrag[0] >= 0) gdk_draw_drawable (draw->window,
       draw->style[0].fg_gc[0], draw->window, 
       0, 0, lrint (event->x) - lastDrag[0], lrint (event->y) - lastDrag[1],
-      draw->allocation.width, draw->allocation.height);
+      width, height);
     lastDrag[0] = lrint (event->x);
     lastDrag[1] = lrint (event->y);
     if (firstDrag[0] < 0) {
@@ -1308,20 +1445,42 @@ DWORD WINAPI UpdateMapThread (LPVOID n)
 }
 #endif
 
-#define CompactOptions ((draw->allocation.width * draw->allocation.height < 400 * 400))
+/* These macros calling macros may result in very long bloated code and
+   inefficient machine code, depending on how well the compiler optimizes.
+*/
+
+#define CompactOptions ((width * height < 400 * 400))
 int ListXY (int cnt, int isY)
 { // Returns either the x or the y for a certain list item
   int max = mapMode; //option == optionMode ? mapNode :
   int w = CompactOptions ? 70 : 105, h = CompactOptions ? 45 : 80;
-  while ((draw->allocation.width/w) * (draw->allocation.height/h - 1) > max) {
+  while ((width/w) * (height/h - 1) > max) {
     w++;
     h++;
   }
-  return isY ? cnt / (draw->allocation.width / w) * h + h / 2 - listYOffset :
-    (cnt % (draw->allocation.width / w)) * w + w / 2;
+  return isY ? cnt / (width / w) * h + h / 2 - listYOffset :
+    (cnt % (width / w)) * w + w / 2;
 }
 
-#ifndef NOGTK
+#ifdef ANDROID_NDK // OPENGL
+typedef jint HDC;
+#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
+	do { int crop[] = { x, y + h, w, -h }; \
+	glEnable(GL_BLEND); \
+	glEnable(GL_TEXTURE_2D); \
+	glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_CROP_RECT_OES, crop); \
+	glDrawTexiOES(dx, height - dy, 0, crop[2], h); \
+	glDisable(GL_TEXTURE_2D); \
+	glDisable(GL_BLEND);\
+	} while (0) // TODO Try to get a glMatrix that match OES coordinates
+#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
+  do { GdkPoint l[2] = { sx, sy, dx, dy }; \
+    glVertexPointer (2, GL_SHORT, 0, l); \
+    glDrawArrays (GL_LINES, 0, 2); } while (0)
+
+static jmethodID drawTeks = 0;
+
+#elif !defined(NOGTK)
 typedef GdkGC *HDC;
 
 static GdkGC *maskGC = NULL, *fg_gc;
@@ -1354,13 +1513,13 @@ PangoLayout  *pl;
 
 void DrawString (int x, int y, const char *optStr)
 {
-  #if PANGO_VERSION
+  #ifdef PANGO_VERSION
   PangoMatrix mat = PANGO_MATRIX_INIT;
   pango_context_set_matrix (pc, &mat);
   pango_layout_set_text (pl, optStr, -1);
   gdk_draw_layout (GDK_DRAWABLE (draw->window),
                      fg_gc /*draw->style->fg_gc[0]*/, x, y, pl);
-  #else
+  #elif defined (_WIN32)
   SelectObject (mygc, sysFont);
   const unsigned char *sStart = (const unsigned char*) optStr;
   UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
@@ -1375,9 +1534,9 @@ void DrawString (int x, int y, const char *optStr)
 void DrawPoI (int dstx, int dsty, int *icon)
 {
   if (icon[2] == 0 || dstx < -icon[2] || dsty < -icon[3] ||
-    dstx > draw->allocation.width + icon[2] ||
+    dstx > width + icon[2] ||
     // GDK need these tests for the Start&EndRoute markers
-    dsty > draw->allocation.height + icon[3]) return;
+    dsty > height + icon[3]) return;
   #ifndef NOGTK
   // for gdk we first need to extract the portion of the mask
   if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
@@ -1410,6 +1569,89 @@ void GeoSearch (const char *key)
   else GosmSearch (clon, clat, key);
 }
 
+
+#if defined (ANDROID_NDK)
+/*extern "C" void Java_org_osmu_gosmore_MapView_setLocation (
+		JNIEnv*  env, jobject thiz, jdouble lon, jdouble lat)
+{
+  LG clon = Longitude (lon);
+  clat = Latitude (lat);
+}*/
+
+#define DisplaySearchResults(); // Never in searchMode, no-op
+extern "C" void Java_org_osmu_gosmore_Search_search (
+		JNIEnv*  env, jobject thiz, jstring jquery)
+{
+	static jmethodID meth = 0;
+	static int started = 0;
+	if (!started) {
+	  started = 1;
+	  jclass cls=env->GetObjectClass(thiz);
+	  //cls =(jclass)( env->NewGlobalRef(jcls) );
+      //cls = env->FindClass(
+	//		  "org/osmu/gosmore/MyClb");
+
+	  meth = env->GetMethodID(cls, "searchResult",
+			  "(IIIIDIILjava/lang/String;DDI)V");
+//	  env->ExceptionClear();
+	  /*  if (method != 0)*/
+//	    env->ExceptionClear();
+	}
+	const char *query = env->GetStringUTFChars(jquery, NULL);
+	GeoSearch (query);
+	LG env->ReleaseStringUTFChars(jquery, query);
+
+#else
+void DisplaySearchResults (void)
+{
+#endif
+	    for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
+	             i++, y += SearchSpacing) {
+	      double dist = sqrt (double (Sqr ((__int64) clon - gosmSway[i]->clon) +
+	          Sqr ((__int64) clat - gosmSway[i]->clat))) * (20000 / 2147483648.0) *
+	        cos (LatInverse (clat) * (M_PI / 180));
+
+	      int x = SearchSpacing + 70;
+	      __int64 lx = X (gosmSway[i]->clon, gosmSway[i]->clat) - width / 2;
+	      __int64 ly = Y (gosmSway[i]->clon, gosmSway[i]->clat) - height / 2;
+	      double norm = lx || ly ? sqrt (double(lx * lx + ly * ly)) / 64 : 1;
+	      int u = lrint (lx / norm), v = lrint (ly / norm);
+	      string s (gosmSstr[i], strcspn (gosmSstr[i], "\n"));
+	      char *name = (char *)(gosmSway[i] + 1) + 1;
+	      if (name != gosmSstr[i]) s += " (" +
+	                     string (name, strcspn (name, "\n")) + ")";
+	      #ifdef ANDROID_NDK
+	      jstring js = env->NewStringUTF (s.c_str ());
+	      int *z = Style (gosmSway[i])->x + 4 * IconSet;
+              env->CallVoidMethod (thiz, meth, z[0], z[1], z[2], z[3],
+                          dist, u, v, js,
+        		  LonInverse (gosmSway[i]->clon),
+        		  LatInverse (gosmSway[i]->clat),
+        		  gosmSway[i]->dlat + gosmSway[i]->dlon + (1 << 15));
+	      #else
+	      DrawPoI (SearchSpacing / 2, y, Style (gosmSway[i])->x + 4 * IconSet);
+
+	      char distance[10]; // Formula inaccurate over long distances hence "Far"
+	      sprintf (distance, dist > 998 ? "Far" : dist > 1 ? "%.0lf km" :
+	        "%.0lf m", dist > 1 ? dist : dist * 1000);
+	      DrawString (SearchSpacing + 33 - 11 * strcspn (distance, " "), y - 10,
+	        distance); // Right adjustment is inaccurate
+	      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
+	        x - u / 8, y - v / 8);
+	      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
+	        x + u / 12 + v / 20, y - u / 20 + v / 12);
+	      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
+	        x + u / 12 - v / 20, y + u / 20 + v / 12);
+
+	      DrawString (SearchSpacing + x, y - 10, s.c_str ());
+
+	      gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
+	        width, y + SearchSpacing / 2);
+	      #endif
+	    }
+}
+
+
 int HandleKeyboard (int event, int ex, int ey)
 { // Some WinCE devices, like the Mio Moov 200 does not have an input method
   // and any call to activate it or set the text on an EDIT or STATIC (label)
@@ -1423,9 +1665,9 @@ int HandleKeyboard (int event, int ex, int ey)
   if (!event) {
     RECT r;
     r.left = 0;
-    r.top = draw->allocation.height - 32 * 3;
-    r.right = draw->allocation.width;
-    r.bottom = draw->allocation.height;
+    r.top = height - 32 * 3;
+    r.right = width;
+    r.bottom = height;
     FillRect (mygc, &r, (HBRUSH) GetStockObject (WHITE_BRUSH)); //brush[KeyboardNum]);
     SelectObject (mygc, GetStockObject (BLACK_PEN));
   }
@@ -1433,8 +1675,8 @@ int HandleKeyboard (int event, int ex, int ey)
   const char *kbLayout[] = { "qwertyuiop", "asdfghjkl", " zxcvbnm,$" };
   for (int i = 0; i < 3; i++) {
     for (int j = 0; kbLayout[i][j] != '\0'; j++) {
-      int hb = draw->allocation.width / strlen (kbLayout[0]) / 2, ys = 16;
-      int x = (2 * j + (i & 1)) * hb, y = draw->allocation.height - (3 - i) * ys * 2;
+      int hb = width / strlen (kbLayout[0]) / 2, ys = 16;
+      int x = (2 * j + (i & 1)) * hb, y = height - (3 - i) * ys * 2;
       if (event && ey >= y && ey < y + ys + ys && ex < x + hb + hb) {
         if (kbLayout[i][j] != '$') searchStr += kbLayout[i][j];
         else if (searchStr.length () > 0) searchStr.erase (searchStr.length () - 1, 1);
@@ -1445,7 +1687,7 @@ int HandleKeyboard (int event, int ex, int ey)
       }
       if (!event) {
         if (j > 0) gdk_draw_line (draw->window, mygc, x, y, x, y + ys + ys);
-        else gdk_draw_line (draw->window, mygc, 0, y, draw->allocation.width, y);
+        else gdk_draw_line (draw->window, mygc, 0, y, width, y);
         string chr = string ("") + kbLayout[i][j];
         if (kbLayout[i][j] == ' ') DrawString (x + hb - 5, y + ys / 2, "[ ]");
         else if (kbLayout[i][j] != '$') DrawString (x + hb, y + ys / 2, chr.c_str ());
@@ -1463,11 +1705,15 @@ int HandleKeyboard (int event, int ex, int ey)
 
 static int lastRelease = 0, oldx = -1, oldy, pressTime = -1;
 
+#if !defined (ANDROID_NDK)
+/*extern "C" int Java_org_osmu_gosmore_MapRenderer_mouseEv (
+		JNIEnv*  env, jobject thiz, jint x, jint y, jint evTime,
+		jint button, jboolean click)*/
 int MouseEv (int x, int y, int evTime, int button, int click)
 {
   // Anything that covers more than 3 pixels in either direction is a drag.
-  gtk_widget_queue_clear (draw); 
-  int w = draw->allocation.width, h = draw->allocation.height;
+  LG gtk_widget_queue_clear (draw); 
+  int w = width, h = height;
   int isDrag = //DebounceDrag ?
         pressTime >= 0 && (lastRelease + 200 > evTime ||
                                 pressTime + 200 < evTime);
@@ -1500,11 +1746,11 @@ int MouseEv (int x, int y, int evTime, int button, int click)
   if (!click || isDrag) return 0;
 
   if (ButtonSize <= 0) ButtonSize = 4;
-  int b = (draw->allocation.height - lrint (y)) / (ButtonSize * 20);
+  int b = (height - lrint (y)) / (ButtonSize * 20);
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
     if (x < w - ButtonSize * 20) {
-      #ifdef NOGTK
+      #ifdef _WIN32
       newWays[newWayCnt].klas = objectAddRow + x / ADD_WIDTH +
                                 y / ADD_HEIGHT * perRow;
       SipShowIM (SIPF_ON);
@@ -1516,7 +1762,7 @@ int MouseEv (int x, int y, int evTime, int button, int click)
       objectAddRow = -1;
     }
     else objectAddRow = y * (restriction_no_right_turn / perRow + 2) /
-                              draw->allocation.height * perRow;
+                              height * perRow;
   }
   else if (x > w - ButtonSize * 20 && b <
       (Layout >
@@ -1524,8 +1770,8 @@ int MouseEv (int x, int y, int evTime, int button, int click)
   else if (option == optionMode) {
     if (1) {
       for (int best = 9999, i = 0; i < mapMode; i++) {
-        int d = lrint (fabs (ListXY (i, FALSE) - x) +
-                       fabs (ListXY (i, TRUE) - y));
+        int d = lrint (fabs (double(ListXY (i, FALSE) - x)) +
+                       fabs (double(ListXY (i, TRUE) - y)));
         if (d < best) {
           best = d;
           option = i;
@@ -1582,7 +1828,7 @@ int MouseEv (int x, int y, int evTime, int button, int click)
         option = mapMode;
       }
       #else
-      #ifndef _WIN32_WCE
+      #if defined (_WIN32) && !defined (_WIN32_WCE)
       else if (option == UpdateMapNum) {
         struct stat s;
         if (currentBbox[0] == '\0') {
@@ -1641,7 +1887,7 @@ int MouseEv (int x, int y, int evTime, int button, int click)
       }
       SetLocation (lon, lat);
 
-      #ifdef NOGTK
+      #ifdef _WIN32
       if (AddWayOrNode && newWays[newWayCnt].cnt < NEWWAY_MAX_COORD) {
         newWays[newWayCnt].coord[newWays[newWayCnt].cnt][0] = clon;
         newWays[newWayCnt].coord[newWays[newWayCnt].cnt++][1] = clat;
@@ -1664,6 +1910,7 @@ int MouseEv (int x, int y, int evTime, int button, int click)
   }
   return FALSE;
 }
+#endif
 
 #if 0 //ifdef CHILDREN
 struct childStruct {
@@ -1673,7 +1920,7 @@ struct childStruct {
 #endif
 #define STATEINFO OPTIONS o (clat, 0, 0) o (clon, 0, 0) \
  o (sinAzimuth, 0, 0) o (cosAzimuth, 0, 0) o (zoom, 0, 0) o (option, 0, 0) \
- o (draw->allocation.width, 0, 0) o (draw->allocation.height, 0, 0)
+ o (width, 0, 0) o (height, 0, 0)
 #define o(x,min,max) sizeof (x) +
 static const size_t stateSize = STATEINFO 0;
 #undef o
@@ -1705,12 +1952,12 @@ void Draw3DLine (int sx, int sy, int dx, int dy)
   if (Display3D) {
     if (sy < 0) {
       if (dy < 0) return;
-      sx = dx + (dx - sx) * (/*clip.height*/ 1024 - dy) / (dy - sy);
-      sy = /*clip.height*/ 1024;
+      sx = dx + (dx - sx) * (/*height*/ 1024 - dy) / (dy - sy);
+      sy = /*height*/ 1024;
     }
     else if (dy < 0) {
-      dx = sx + (sx - dx) * (/*clip.height*/ 1024 - sy) / (sy - dy);
-      dy = /*clip.height*/ 1024;
+      dx = sx + (sx - dx) * (/*height*/ 1024 - sy) / (sy - dy);
+      dy = /*height*/ 1024;
     }
   }
   gdk_draw_line (draw->window, mygc, sx, sy, dx, dy);
@@ -1733,13 +1980,13 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
     bx = nx;
     by = ny;
   }
-  if (y0 < 0 || y0 + ay + by > draw->allocation.height ||
-      x0 + ax < 0 || x0 + bx > draw->allocation.width) return TRUE;
+  if (y0 < 0 || y0 + ay + by > height ||
+      x0 + ax < 0 || x0 + bx > width) return TRUE;
   // Do not place anything offscreen.
   const int shf = 9;
   x0 <<= shf;
   int x1 = x0, d0 = (ax << shf) / (ay + 1), d1 = (bx << shf) / (by + 1);
-  int bpr = (draw->allocation.width + 31) / 32;
+  int bpr = (width + 31) / 32;
   bits += bpr * y0;
   for (int cnt = ay + by; cnt > 0; cnt--) {
     x0 += d0;
@@ -1785,20 +2032,20 @@ void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
     int dx = q->back ().x - q->front ().x, dy = q->back ().y - q->front ().y;
     if (q->size () == 2) { // cumulative can't cope with clipping, so we
                            // only do it when we know detour will be 0
-      for (int i = 0; i < 2; i++) {
-        linePtType *f = !i ? &q->front () : &q->back ();
-        if (f->x < 10 && dx != 0) clip[i] = max (clip[i], 256 * (10 - f->x) / (i ? -dx : dx));
+      LG for (int i = 0; i < 2; i++) {
+        LG linePtType *f = !i ? &q->front () : &q->back ();
+        LG if (f->x < 10 && dx != 0) clip[i] = max (clip[i], 256 * (10 - f->x) / (i ? -dx : dx));
         if (f->y < 10 && dy != 0) clip[i] = max (clip[i], 256 * (10 - f->y) / (i ? -dy : dy));
-        int r2x = f->x - draw->allocation.width + 10;
-        if (r2x > 0 && dx != 0) clip[i] = max (clip[i], 256 * r2x / (i ? dx : -dx));
-        int r2y = f->y - draw->allocation.height + 10;
+        int r2x = f->x - width + 10;
+        LG if (r2x > 0 && dx != 0) clip[i] = max (clip[i], 256 * r2x / (i ? dx : -dx));
+        int r2y = f->y - height + 10;
         if (r2y > 0 && dy != 0) clip[i] = max (clip[i], 256 * r2y / (i ? dy : -dy));
       }
     }
     int dst = isqrt (Sqr (dx) + Sqr (dy)) * (256 - clip[0] - clip[1]) / 256;
     int detour = q->size () == 2 ? 0 : q->back ().cumulative - q->front ().cumulative - dst;
     if (detour <= *best) {
-      if (dst * DetailLevel > len * 14) {
+      LG if (dst * DetailLevel > len * 14) {
         t->x = q->front ().x + dx * clip[0] / 256;
         t->y = q->front ().y + dy * clip[0] / 256;
         t->x2 = q->back ().x - dx * clip[1] / 256;
@@ -1818,14 +2065,167 @@ int WaySizeCmp (ndType **a, ndType **b)
          Way (*b)->dlat * (__int64) Way (*b)->dlon ? 1 : -1;
 }
 
-#ifdef NOGTK
+vector<short> casingCmds;
+#define CASING_MAX 20
+static short casing[10 + CASING_MAX * 2];
+static int casingx, casingy, casingPts = 0;
+void MoveTo (int x, int y)
+{
+#ifdef ANDROID_NDK // OPENGL
+  if (casingPts) {
+    casing[6] = casing[4];
+    casing[7] = casing[5];
+    int i, circ = min ((abs(casing[2] - casing[6]) + abs (casing[3] - casing[7])) / 3, CASING_MAX);
+    for (i = 1; i < circ; i++) {
+      casing[i + i + 6] = casing[6] +
+        (casing[2] - casing[6]) * (1 - cos (i * M_PI / circ))/2 -
+        (casing[3] - casing[7]) * sin (i * M_PI / circ)/2;
+      casing[i + i + 7] = casing[7] +
+        (casing[3] - casing[7]) * (1 - cos (i * M_PI / circ))/2 +
+        (casing[2] - casing[6]) * sin (i * M_PI / circ)/2;
+    }
+    casing[i + i + 6] = casing[2];
+    casing[i + i + 7] = casing[3];
+    glVertexPointer (2, GL_SHORT, 0, casing + 6);
+    casingCmds.push_back (i + 1);
+    casingCmds.push_back (0); // pad
+    casingCmds.insert (casingCmds.end(), casing + 6, casing + 8 + i + i);
+    //if (vol) glDrawArrays (GL_TRIANGLE_FAN, 0, i + 1);
+    glDrawArrays (GL_LINE_STRIP, 0, i + 1);
+  }
+#endif
+  casingx = x;
+  casingy = y;
+  casingPts = 0;
+}
+
+void LineTo (int x, int y, int width)
+{
+#ifdef ANDROID_NDK // OPENGL
+  int d = sqrt (double((x - casingx) * (x - casingx) +
+                       (y - casingy) * (y - casingy))), i;
+  casing[0] = casingx + (Display3D ? (y - casingy) * casingy * width / PIX45
+    : (y - casingy) * width) / (d + d);
+  casing[1] = casingy + (Display3D ? (casingx - x) * casingy * width / PIX45
+    : (casingx - x) * width) / (d + d);
+  casing[6] = casing[0] - (Display3D ? (y - casingy) * casingy * width / PIX45
+    : (y - casingy) * width) / d;
+  casing[7] = casing[1] - (Display3D ? (casingx - x) * casingy * width / PIX45
+    : (casingx - x) * width) / d;
+  if (!casingPts++) {
+    int circ = min ((abs(casing[0] - casing[6]) + abs (casing[1] - casing[7])) / 3, CASING_MAX);
+    for (i = 1; i < circ; i++) {
+      casing[i + i + 6] = casing[6] + 
+        (casing[0] - casing[6]) * (1 - cos (i * M_PI / circ))/2 +
+        (casing[1] - casing[7]) * sin (i * M_PI / circ)/2;
+      casing[i + i + 7] = casing[7] +
+        (casing[1] - casing[7]) * (1 - cos (i * M_PI / circ))/2 -
+        (casing[0] - casing[6]) * sin (i * M_PI / circ)/2;
+    }
+  }
+  else {
+    memcpy (casing + 8, (casing[2] - casingx) * (casingx - x) >
+      (casing[3] - casingy) * (y - casingy) ? casing + 2 : casing + 4, sizeof (casing[2]) * 2);
+    i = 2;
+  }
+  
+  casing[2] = x + (Display3D ? (y - casingy) * y * width / PIX45
+    : (y - casingy) * width) / (d + d);
+  casing[3] = y + (Display3D ? (casingx - x) * y * width / PIX45
+    : (casingx - x) * width) / (d + d);
+  casing[4] = casing[2] - (Display3D ? (y - casingy) * y * width / PIX45
+    : (y - casingy) * width) / d;
+  casing[5] = casing[3] - (Display3D ? (casingx - x) * y * width / PIX45
+    : (casingx - x) * width) / d;
+  glVertexPointer (2, GL_SHORT, 0, casing);
+  casingCmds.push_back (i + 3);
+  casingCmds.push_back (0); // pad
+  casingCmds.insert (casingCmds.end(), casing, casing + i + i + 6);
+  //if (vol) glDrawArrays (GL_TRIANGLE_FAN, 0, i + 3);
+  glDrawArrays (GL_LINE_LOOP, 0, i + 3);  
+#else
+  gdk_draw_line (GDK_DRAWABLE (draw->window), mygc, casingx, casingy, x, y);
+#endif
+  casingx = x;
+  casingy = y;
+}
+
+void FinishCasing ()
+{
+  #ifdef ANDROID_NDK // OPENGL
+  MoveTo (0, 0); // Draw round ending for last line
+  glVertexPointer (2, GL_SHORT, 0, &casingCmds[0] + 2);
+  for (int i = 0; i < casingCmds.size ();
+      i += casingCmds[i] < 0 ? 4 : casingCmds[i] + casingCmds[i] + 2) {
+    #ifdef ANDROID_NDK // OPENGL ES
+    if (casingCmds[i] < 0) glColor4x (casingCmds[i + 1] * 0x101,
+           casingCmds[i + 2] * 0x101, casingCmds[i + 3] * 0x101, 0x10000);
+    #else
+    if (casingCmds[i] < 0) glColor3f (casingCmds[i + 1] / 255.0,
+           casingCmds[i + 2] / 255.0, casingCmds[i + 3] / 255.0);
+    #endif
+    else {
+      glVertexPointer (2, GL_SHORT, 0, &casingCmds[i] + 2);
+      glDrawArrays (GL_TRIANGLE_FAN, 0, casingCmds[i]);
+    }
+  }
+  casingCmds.clear();
+  #endif
+}
+
+inline void SetCasingColor (short r, short g, short b)
+{
+  MoveTo (0, 0); // Complete previous line in previous colour
+  casingCmds.push_back (-1);
+  casingCmds.push_back (r); casingCmds.push_back (g); casingCmds.push_back (b);
+}
+
+#if defined (ANDROID_NDK)
+extern "C" void Java_org_osmu_gosmore_MapRenderer_render (
+		JNIEnv*  env, jobject thiz, jdouble lon, jdouble lat,
+		jint dir, jint _zoom, jboolean threeD, jboolean follow,
+		jint _width, jint _height)
+{
+  static int started = 0, icons /* Not used */;
+  LG width = _width;
+  height = _height;
+  Display3D = threeD;
+  clon = Longitude (lon);
+  clat = Latitude (lat);
+  FollowGPSr = follow;
+  sinAzimuth = sin (dir * (M_PI / 180.0));
+  cosAzimuth = cos (dir * (M_PI / 180.0));
+  zoom = _zoom;
+  if (!started) {
+    started = 1;
+    jclass cls=env->GetObjectClass(thiz);
+    //cls =(jclass)( env->NewGlobalRef(jcls) );
+    //cls = env->FindClass(
+    //		  "org/osmu/gosmore/MyClb");
+
+    LG drawTeks = env->GetMethodID(cls, "drawTeks", "(Ljava/lang/String;IIFF)V");
+    // env->ExceptionClear();
+    /* if (drawTeksod != 0)*/
+    // env->ExceptionClear();
+  }
+  glDisable(GL_BLEND);
+  if (currentBbox[0] != '\0' && hashTable[bucketsMin1] < 500000 &&
+      zoom < 100000000) {
+    int nn = clat > -(1<<24) && clat < (1<<24) &&
+             clon > -(1<<24) && clon < (1<<24);
+    jstring js = env->NewStringUTF (nn ? "No location." : "No map.");
+    env->CallVoidMethod (thiz, drawTeks, js, width / 2, height/3*2,
+      (float)0, (float)1);
+    js = env->NewStringUTF (nn ? "Please search or enable the GPS" :
+      "Please update the map.");
+    env->CallVoidMethod (thiz, drawTeks, js, width / 2, height/3*2 + 30,
+      (float)0, (float)1);
+  }
+#elif defined(NOGTK)
 int DrawExpose (HPEN *pen, HBRUSH *brush)
 {
-  struct {
-    int width, height;
-  } clip;
-/*  clip.width = GetSystemMetrics(SM_CXSCREEN);
-  clip.height = GetSystemMetrics(SM_CYSCREEN); */
+  width = draw->allocation.width;
+  height = draw->allocation.height;
   WCHAR wcTmp[70];
 
   iconsgc = mygc;
@@ -1836,18 +2236,18 @@ int DrawExpose (HPEN *pen, HBRUSH *brush)
     SelectObject (mygc, sysFont);
     //SetBkMode (mygc, TRANSPARENT);
     SelectObject (mygc, GetStockObject (BLACK_PEN));
-    for (int y = 0, i = objectAddRow; y < draw->allocation.height;
+    for (int y = 0, i = objectAddRow; y < height;
               y += ADD_HEIGHT) {
-      //gdk_draw_line (draw->window, mygc, 0, y, draw->allocation.width, y);
+      //gdk_draw_line (draw->window, mygc, 0, y, width, y);
       gdk_draw_line (draw->window, mygc,
-        draw->allocation.width - ButtonSize * 20,
-        draw->allocation.height * i / restriction_no_right_turn,
-        draw->allocation.width,
-        draw->allocation.height * i / restriction_no_right_turn);
+        width - ButtonSize * 20,
+        height * i / restriction_no_right_turn,
+        width,
+        height * i / restriction_no_right_turn);
       RECT klip;
       klip.bottom = y + ADD_HEIGHT;
       klip.top = y;
-      for (int x = 0; x < draw->allocation.width - ButtonSize * 20 -
+      for (int x = 0; x < width - ButtonSize * 20 -
           ADD_WIDTH && i < restriction_no_right_turn; x += ADD_WIDTH, i++) {
         int *icon = style[i].x + 4 * IconSet;
         gdk_draw_drawable (draw->window, mygc, icons, icon[0], icon[1],
@@ -1879,6 +2279,8 @@ gint DrawExpose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2];
   static GdkColor /*routeColour, validateColour,*/ resultArrowColour;
+  height = draw->allocation.height;
+  width = draw->allocation.width;
   if (!mygc || !iconsgc) {
     mygc = gdk_gc_new (draw->window);
     fg_gc = gdk_gc_new (draw->window);
@@ -1930,21 +2332,13 @@ gint DrawExpose (void)
   }
   #endif
   GdkRectangle r =
-    { 0, 0, draw->allocation.width, draw->allocation.height };
+    { 0, 0, width, height };
   gdk_window_begin_paint_rect (draw->window, &r);
 
-//  gdk_gc_set_clip_rectangle (mygc, &clip);
 //  gdk_gc_set_foreground (mygc, &styleColour[0][0]);
 //  gdk_gc_set_line_attributes (mygc,
 //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
     
-//  clip.width = draw->allocation.width - ZOOM_PAD_SIZE;
-//  gdk_gc_set_clip_rectangle (mygc, &clip);
-  
-  GdkRectangle clip;
-  clip.x = 0;
-  clip.y = 0;
-
   PangoMatrix mat = PANGO_MATRIX_INIT;
   pc = gdk_pango_context_get_for_screen (gdk_screen_get_default ());
   pl = pango_layout_new (pc);
@@ -1962,73 +2356,35 @@ gint DrawExpose (void)
     pango_layout_set_attributes (pl, list);
     pango_attr_list_unref (list); */
 #endif // GTK
-  if (option == mapMode) ChangePak (NULL, clon, clat);
+  LG if (option == mapMode) ChangePak (NULL, clon, clat);
   // This call can be almost anywhere, e.g. SetLocation(). Calling it in
   // searchMode with GeoSearch may invalidate some of the results.
 
-  clip.height = draw->allocation.height;
-  clip.width = draw->allocation.width;
-  
   if (ButtonSize <= 0) ButtonSize = 4;
 
   if (zoom < 0 || zoom > 1023456789) zoom = 1023456789;
-  if (zoom / clip.width <= 1) zoom += 4000;
-  int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
-  int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
-  int xadj =
-    clip.width / 2 - ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
-  __int64 yadj =
-    clip.height / 2 - ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
+  if (zoom / width <= 1) zoom += 4000;
 
-  #define FAR3D  100000 // 3D view has a limit of roughly 5 km forwards 
-  #define WIDE3D 100000 // and roughly 5km between top left & top right corner
-  #define CAMERA2C 20000 // How far the camera is behind the user (clat/lon)
-  #define HEIGHT   12000 // Height of the camera
-  #define PIX45     256 // Y value corresponding to 45 degrees down
-  #define XFix PIX45
-  
-  #define MUL 64
-  if (Display3D) {
+  LG cosa = lrint (4294967296.0 * cosAzimuth * width / zoom);
+  sina = lrint (4294967296.0 * sinAzimuth * width / zoom);
+  xadj =
+    width / 2 - ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
+  yadj =
+    height / 2 - ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
+
+  LG if (Display3D) {
     cosa = lrint (cosAzimuth * MUL);
     sina = lrint (sinAzimuth * MUL);
-    
-    #define myint int
-    /* The 3D computations can all be done in signed 32 bits integers,
-       provided overflow bits are simply discarded. The C specification says
-       however that ints that overflow are undefined (as well as any
-       expression that touches them). So if the 3D display looks garbled
-       under a new compiler, try running with #define myint __int64
-    */
-    
+
     yadj = (clon + (int)(sinAzimuth * CAMERA2C)) * (myint) sina -
            (clat - (int)(cosAzimuth * CAMERA2C)) * (myint) cosa;
     xadj = -(clon + (int)(sinAzimuth * CAMERA2C)) * (myint) cosa -
             (clat - (int)(cosAzimuth * CAMERA2C)) * (myint) sina;
   }
-  #define Depth(lon,lat) \
-    (int)(yadj + (lat) * (myint) cosa - (lon) * (myint) sina)
-  #define X1(lon,lat) \
-    (int)(xadj + (lon) * (myint) cosa + (lat) * (myint) sina)
-  #define AdjDepth(lon,lat) (Depth (lon, lat) < PIX45 * HEIGHT * MUL / 5000 \
-    && Depth (lon, lat) > -PIX45 * HEIGHT * MUL / 5000 ? \
-    PIX45 * HEIGHT * MUL / 5000 : Depth (lon, lat))
-  #define Y(lon,lat) (Display3D ? PIX45 * HEIGHT * MUL / AdjDepth (lon, lat) \
-  : yadj + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
-  #define X(lon,lat) (Display3D ? clip.width / 2 + \
-   ((AdjDepth (lon, lat) > 0 ? 1 : -1) * \
-      (X1 (lon, lat) / 32000 - AdjDepth (lon, lat) / XFix) > 0 ? 32000 : \
-    (AdjDepth (lon, lat) > 0 ? 1 : -1) * \
-      (X1 (lon, lat) / 32000 + AdjDepth (lon, lat) / XFix) < 0 ? -32000 : \
-   X1(lon,lat) / (AdjDepth (lon, lat) / XFix)) \
-  : xadj + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
-
-  /* These macros calling macros may result in very long bloated code and
-     inefficient machine code, depending on how well the compiler optimizes.
-  */
 
   if (option == mapMode) {
-//    int perpixel = zoom / clip.width;
-    int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
+//    int perpixel = zoom / width;
+    int *block = (int*) calloc ((width + 31) / 32 * 4, height);
 
     stack<text2Brendered> text2B;
     text2B.push (text2Brendered ()); // Always have a spare one open
@@ -2040,11 +2396,11 @@ gint DrawExpose (void)
       for (int i = 0; i < 2; i++) {
         for (int m = -20; m <= 20; m += 40) {
           text2B.top ().s = m < 0 ? (i ? "N" : "W") : i ? "S" : "E";
-          text2B.top ().x = clip.width - 40 +
+          text2B.top ().x = width - 40 +
             lrint ((i ? -sinAzimuth : cosAzimuth) * m) - 50;
           text2B.top ().x2 = text2B.top ().x + 100;
           text2B.top ().dst = 100;
-          text2B.top ().y2 = text2B.top ().y = clip.height - 40 +
+          text2B.top ().y2 = text2B.top ().y = height - 40 +
             lrint ((i ? cosAzimuth : sinAzimuth) * m);
           text2B.push (text2Brendered ());
         }
@@ -2062,7 +2418,7 @@ gint DrawExpose (void)
     for (int wc = -1; wc <= 1; wc += 2) { // width and
       for (int hc = -1; hc <= 1; hc += 2) { // height coefficients
         int w = !Display3D ? zoom : hc > 0 ? WIDE3D : 0, h = !Display3D
-          ? zoom / clip.width * clip.height : hc > 0 ? FAR3D : CAMERA2C;
+          ? zoom / width * height : hc > 0 ? FAR3D : CAMERA2C;
         int lon = lrint (w * cosAzimuth * wc - h * sinAzimuth * hc);
         int lat = lrint (h * cosAzimuth * hc + w * sinAzimuth * wc);
         lonRadius[0] = min (lonRadius[0], lon);
@@ -2071,16 +2427,16 @@ gint DrawExpose (void)
         latRadius[1] = max (latRadius[1], lat);
       }
     }
-    OsmItr itr (clon + lonRadius[0] - 1000, clat + latRadius[0] - 1000,
+    LG OsmItr itr (clon + lonRadius[0] - 1000, clat + latRadius[0] - 1000,
                 clon + lonRadius[1] + 1000, clat + latRadius[1] + 1000);
     // Widen this a bit so that we render nodes that are just a bit offscreen ?
     while (Next (itr)) {
       ndType *nd = itr.nd[0];
       wayType *w = Way (nd);
 
-      if (Style (w)->scaleMax < zoom / clip.width * 350 / (DetailLevel + 6)
-          && !Display3D && w->dlat < zoom / clip.width * 20 &&
-                           w->dlon < zoom / clip.width * 20) continue;
+      if (Style (w)->scaleMax < zoom / width * 350 / (DetailLevel + 6)
+          && !Display3D && w->dlat < zoom / width * 20 &&
+                           w->dlon < zoom / width * 20) continue;
       // With 3D, the icons are filtered only much later when we know z.
       if (nd->other[0] != 0) {
         nd = itr.nd[0] + itr.nd[0]->other[0];
@@ -2090,45 +2446,52 @@ gint DrawExpose (void)
       } // Only process this way when the Itr gives us the first node, or
       // the first node that's inside the viewing area
       if (nd->other[0] == 0 && nd->other[1] == 0) dlist[11].push (nd);
-      else if (Style (w)->areaColour != -1) area.push_back (nd);
+      else if (Style (w)->areaColour != -1 ||
+        StyleNr(w) == natural_coastline) area.push_back (nd);
+      // I guess polygons that enter the bbox multiple times are drawn
+      // multiple times.
       else dlist[Layer (w) + 5].push (nd);
     }
-    qsort (&area[0], area.size (), sizeof (area[0]),
+    LG qsort (&area[0], area.size (), sizeof (area[0]),
       (int (*)(const void *a, const void *b))WaySizeCmp);
     //for (; !dlist[0].empty (); dlist[0].pop ()) {
     //  ndType *nd = dlist[0].top ();
+    vector<PolygonEdge> coast;
+    vector<FixedPoint*> cpiece;
     for (; !area.empty(); area.pop_back ()) {
       ndType *nd = area.back ();
       wayType *w = Way (nd);
-      while (nd->other[0] != 0) nd += nd->other[0];
-      #if defined (_WIN32_CE) || defined (NOGTK)
+      if (StyleNr(w) != natural_coastline) {
+        while (nd->other[0] != 0) nd += nd->other[0];
+      }
+      #if defined (_WIN32_CE) || defined (_WIN32)
       #define GdkPoint POINT
       #endif
-      vector<GdkPoint> pt;
+      vector<FixedPoint> pt;
       int oldx = 0, oldy = 0, x = 0 /* Shut up gcc*/, y = 0 /*Shut up gcc*/;
       int firstx = INT_MIN, firsty = INT_MIN /* Shut up gcc */;
-      for (; nd->other[1] != 0; nd += nd->other[1]) {
+      for (; ; nd += nd->other[1]) {
         if (nd->lat != INT_MIN) {
-          pt.push_back (GdkPoint ());
-          pt.back ().x = x = X (nd->lon, nd->lat);
-          pt.back ().y = y = Y (nd->lon, nd->lat);
+          pt.push_back (FixedPoint ());
+          pt.back ().x = x = X2 (nd->lon, nd->lat);
+          pt.back ().y = y = Y2 (nd->lon, nd->lat);
           if (Display3D) {
             if (firstx == INT_MIN) {
               firstx = x;
               firsty = y;
             }
             if (y > 0 && oldy < 0) {
-              pt.back ().x = x + (x - oldx) * (1024 - y) / (y - oldy);
-              pt.back ().y = 1024; // Insert modified instance of old point
-              pt.push_back (GdkPoint ());
+              pt.back ().x = x + (x - oldx) * __int64((1<<26) - y) / (y - oldy);
+              pt.back ().y = 1<<26; // Insert modified instance of old point
+              pt.push_back (FixedPoint ());
               pt.back ().x = x; // before current point.
               pt.back ().y = y;
             }
             else if (y < 0) {
               if (oldy < 0) pt.pop_back ();
               else {
-                pt.back ().x = oldx + (oldx - x) * (1024 - oldy) / (oldy - y);
-                pt.back ().y = 1024;
+                pt.back ().x = oldx + (oldx - x) * __int64((1<<26) - oldy) / (oldy - y);
+                pt.back ().y = 1<<26;
               }
             }
             oldx = x;
@@ -2137,67 +2500,119 @@ gint DrawExpose (void)
           //pt[pts].x = X (nd->lon, nd->lat);
           //pt[pts++].y = Y (nd->lon, nd->lat);
         }
+        if (!nd->other[1]) break;
       }
       
       if (Display3D && y < 0 && firsty > 0) {
-        pt.push_back (GdkPoint ());
-        pt.back ().x = firstx + (firstx - x) * (1024 - firsty) / (firsty - y);
-        pt.back ().y = 1024;
+        pt.push_back (FixedPoint ());
+        pt.back ().x = firstx + (firstx - x) * __int64((1<<26) - firsty) / (firsty - y);
+        pt.back ().y = 1<<26;
       }
       if (Display3D && firsty < 0 && y > 0) {
-        pt.push_back (GdkPoint ());
-        pt.back ().x = x + (x - firstx) * (1024 - y) / (y - firsty);
-        pt.back ().y = 1024;
+        pt.push_back (FixedPoint ());
+        pt.back ().x = x + (x - firstx) * __int64((1<<26) - y) / (y - firsty);
+        pt.back ().y = 1<<26;
       }
       if (!pt.empty ()) {
-        #ifdef NOGTK
-        SelectObject (mygc, brush[StyleNr (w)]);
-        SelectObject (mygc, pen[StyleNr (w)]);
-        Polygon (mygc, &pt[0], pt.size ());
+        #if defined(ANDROID_NDK) || !defined(NOGTK)
+        if (StyleNr(w) == natural_coastline) {
+          cpiece.push_back ((FixedPoint*) malloc (pt.size() * sizeof (FixedPoint)));
+          memcpy (cpiece.back(), &pt[0], pt.size() * sizeof (FixedPoint));
+          AddClockwise (coast, cpiece.back(), pt.size());
+        }
+        else {
+          vector<PolygonEdge> pe;
+          AddPolygon (pe, &pt[0], pt.size ());
+          #ifdef ANDROID_NDK
+          #define glSColor(x) glColor4x ((x) >> 8, (x) & 0xffff, \
+                              ((x) << 8)&0xffff, 0x10000)
+          glSColor (Style(w)->areaColour);
+          Fill (pe,FALSE); 
+          #else
+          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
+          Fill (pe, FALSE, draw->window, mygc);
+          #endif
+          /*if (pt.size () < 10) {
+            vector<PolygonEdge> pe2;
+            AddPolygon (pe2, &pt[0], pt.size ());
+            Fill (pe2,draw->window,mygc);
+          }*/
+             /*if (!Fill (pe)) {
+            __android_log_print (ANDROID_LOG_WARN, "Gosmore", "s %d", pt.size());
+            for (int m = 0; m < pt.size (); m++)
+              __android_log_print (ANDROID_LOG_WARN, "Gosmore", "%d %d", pt[m].x, pt[m].y);
+          }*/
+          // TODO: border
+          //glSColor ((Style(w)->areaColour >> 1) & 0xefefef);
+          //glLineWidth(1);
+        #elif defined(NOGTK)
+        if (StyleNr(w) != natural_coastline) {
+          SelectObject (mygc, brush[StyleNr (w)]);
+          SelectObject (mygc, pen[StyleNr (w)]);
+          Polygon (mygc, &pt[0], pt.size ());
         #else
-        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
-        gdk_draw_polygon (draw->window, mygc, TRUE, &pt[0], pt.size ());
-        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
-        gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
-          Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
-          : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-        gdk_draw_polygon (draw->window, mygc, FALSE, &pt[0], pt.size ());
+        if (StyleNr(w) != natural_coastline) {
+          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
+          gdk_draw_polygon (draw->window, mygc, TRUE, &pt[0], pt.size ());
+          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+          gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+            Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+            : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+          gdk_draw_polygon (draw->window, mygc, FALSE, &pt[0], pt.size ());
         #endif
-        // Text placement: The basic idea is here : http://alienryderflex.com/polygon_fill/
-        text2B.top ().dst = strcspn ((char*)(w + 1) + 1, "\n") * 9;
-        text2B.top ().x = -1;
-        for (unsigned i = 0; i < pt.size (); i++) {
-          int iy = (pt[i].y + pt[i < pt.size () - 1 ? i + 1 : 0].y) / 2;
-          // Look for a large horisontal space inside the poly at this y value
-          vector<int> nx;
-          for (unsigned j = 0, k = pt.size () - 1; j < pt.size (); j++) {
-            if ((pt[j].y < iy && pt[k].y >= iy) || (pt[k].y < iy && pt[j].y >= iy)) {
-              nx.push_back (pt[j].x + (pt[k].x - pt[j].x) * (iy - pt[j].y) /
-                (pt[k].y - pt[j].y));
-            }
-            k = j;
+          // Text placement: The basic idea is here : http://alienryderflex.com/polygon_fill/
+          text2B.top ().dst = strcspn ((char*)(w + 1) + 1, "\n") * 9;
+          text2B.top ().x = -1;
+          for (unsigned i = 0; i < pt.size (); i++) {
+            pt[i].x >>= 16;
+            pt[i].y >>= 16;
           }
-          sort (nx.begin (), nx.end ());
-          for (unsigned int j = 0; j < nx.size (); j += 2) {
-            if (nx[j + 1] - nx[j] > text2B.top ().dst) {
-              text2B.top ().x = nx[j];
-              text2B.top ().x2 = nx[j + 1];
-              text2B.top ().y = iy - 5;
-              text2B.top ().dst = nx[j + 1] - nx[j];
+          for (unsigned i = 0; i < pt.size (); i++) {
+            int iy = (pt[i].y + pt[i < pt.size () - 1 ? i + 1 : 0].y) / 2;
+            // Look for a large horisontal space inside the poly at this y value
+            vector<int> nx;
+            for (unsigned j = 0, k = pt.size () - 1; j < pt.size (); j++) {
+              if ((pt[j].y < iy && pt[k].y >= iy) || (pt[k].y < iy && pt[j].y >= iy)) {
+                nx.push_back (pt[j].x + (pt[k].x - pt[j].x) * (iy - pt[j].y) /
+                  (pt[k].y - pt[j].y));
+              }
+              k = j;
+            }
+            sort (nx.begin (), nx.end ());
+            for (unsigned int j = 0; j < nx.size (); j += 2) {
+              if (nx[j + 1] - nx[j] > text2B.top ().dst) {
+                text2B.top ().x = nx[j];
+                text2B.top ().x2 = nx[j + 1];
+                text2B.top ().y = iy - 5;
+                text2B.top ().dst = nx[j + 1] - nx[j];
+              }
             }
           }
-        }
-        if (text2B.top ().x >= 0) {
-          text2B.top ().y2 = text2B.top ().y;
-          text2B.top ().s = (char*)(w + 1) + 1;
-          text2B.push (text2Brendered ());
-        }
+          if (text2B.top ().x >= 0) {
+            text2B.top ().y2 = text2B.top ().y;
+            text2B.top ().s = (char*)(w + 1) + 1;
+            text2B.push (text2Brendered ());
+          }
+        } // If not a coastline
       } // Polygon not empty
     } // For each area
+    #ifdef ANDROID_NDK
+    glColor4x (0x8000, 0x8000, 0x10000, 0x10000);
+    LG Fill (coast, TRUE);
+    for (; cpiece.size () > 0; cpiece.pop_back()) free (cpiece.back());
+    glLineWidth (2);
+    #elif !defined (NOGTK)
+    gdk_gc_set_foreground (mygc, &styleColour[natural_coastline][1]);
+    Fill (coast, TRUE, draw->window,mygc);
+    for (; cpiece.size () > 0; cpiece.pop_back()) free (cpiece.back());
+    #endif
 
-    queue<linePtType> q;
-    for (int l = 0; l < 12; l++) {
-      for (; !dlist[l].empty (); dlist[l].pop ()) {
+    LG queue<linePtType> q;
+    LG for (int l = 0; l < 12; l++) {
+      #ifdef ANDROID_NDK
+      glColor4x (0, 0, 0, 0x10000);
+      #endif
+      LG for (; !dlist[l].empty (); dlist[l].pop ()) {
         ndType *nd = dlist[l].top ();
         wayType *w = Way (nd);
 
@@ -2205,13 +2620,13 @@ gint DrawExpose (void)
         int len = strcspn ((char *)(w + 1) + 1, "\n");
         
 	// single-point node
-        if (nd->other[0] == 0 && nd->other[1] == 0) {
+        LG if (nd->other[0] == 0 && nd->other[1] == 0) {
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
           int *icon = Style (w)->x + 4 * IconSet, wd = icon[2], ht = icon[3];
           if ((!Display3D || y > Style (w)->scaleMax / 400) && !TestOrSet (
                       block, FALSE, x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
             TestOrSet (block, TRUE, x - wd / 2, y - ht / 2, 0, ht, wd, 0);
-            DrawPoI (x, y, Style (w)->x + 4 * IconSet);
+            LG DrawPoI (x, y, Style (w)->x + 4 * IconSet);
             
             #if 0 //def NOGTK
             SelectObject (mygc, sysFont);
@@ -2231,7 +2646,7 @@ gint DrawExpose (void)
             text2B.top ().y2 = text2B.top ().y = y +
                                Style (w)->x[IconSet * 4 + 3] / 2;
             if (Sqr ((__int64) Style (w)->scaleMax / 2 /
-                (zoom / clip.width)) * DetailLevel > len * len * 100 &&
+                (zoom / width)) * DetailLevel > len * len * 100 &&
                 len > 0) best = 0;
           }
         }
@@ -2239,7 +2654,7 @@ gint DrawExpose (void)
         else if (nd->other[1] != 0) {
 	  // perform validation (on non-areas)
 	  bool valid;
-	  if (ValidateMode && Style(w)->areaColour == -1) {
+	  LG if (ValidateMode && Style(w)->areaColour == -1) {
 	    valid = len > 0 && StyleNr (w) != highway_road;
 	    // most ways should have labels and they should not be
 	    // highway=road
@@ -2262,10 +2677,13 @@ gint DrawExpose (void)
           }
 	  // two stages -> validate (if needed) then normal rendering
 	  ndType *orig = nd;
-	  for (int stage = ( valid ? 1 : 0);stage<2;stage++) {
+	  LG for (int stage = ( valid ? 1 : 0);stage<2;stage++) {
 	    nd = orig;
 	    if (stage==0) {
-            #ifndef NOGTK
+            #ifdef ANDROID_NDK
+	    	glColor4x (0x10000, 0x999A, 0x999A, 0x1000);
+	    	glLineWidth(10);
+            #elif !defined(NOGTK)
 	      gdk_gc_set_foreground (mygc,
 	        &styleColour[firstElemStyle + ValidateModeNum][1]); //&validateColour);
 	      gdk_gc_set_line_attributes (mygc, 10,
@@ -2276,7 +2694,12 @@ gint DrawExpose (void)
             #endif
 	    }
 	    else if (stage == 1) {
-              #ifndef NOGTK
+              #ifdef ANDROID_NDK
+	      //glSColor (Style(w)->lineColour);
+              //glLineWidth(Style(w)->lineWidth);
+              SetCasingColor (Style(w)->lineColour >> 16,
+                (Style(w)->lineColour>>8)&0xff, Style(w)->lineColour & 0xff);
+              #elif !defined(NOGTK)
 	      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
 	      gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
 		    Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
@@ -2287,17 +2710,18 @@ gint DrawExpose (void)
 	    }
 	    int oldx = X (nd->lon, nd->lat), oldy = Y (nd->lon, nd->lat);
 	    int cumulative = 0;
-            q.push (linePtType (oldx, oldy, cumulative));
+            LG q.push (linePtType (oldx, oldy, cumulative));
+            MoveTo (oldx, oldy);
 	    do {
 	      ndType *next = nd + nd->other[1];
-	      if (next->lat == INT_MIN) break; // Node excluded from build
-	      int x = X (next->lon, next->lat), x2;
+	      LG if (next->lat == INT_MIN) break; // Node excluded from build
+	      LG int x = X (next->lon, next->lat), x2;
 	      int y = Y (next->lon, next->lat), y2;
 //	      printf ("%6.0lf %6.0lf - %6.0lf %6.0lf - %lf\n", x, y, oldx, oldy,
 //	        AdjDepth (next->lon, next->lat));
-	      if ((x <= clip.width || oldx <= clip.width) &&
+	      if ((x <= width || oldx <= width) &&
 		  (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
-		  (y <= clip.height || oldy <= clip.height)) {
+		  (y <= height || oldy <= height)) {
 //                printf ("%4d %4d - %4d %4d\n", x,y,oldx,oldy);
                 /* If we're doing 3D and oldy is negative, it means the point
                    was behind the camera. Then we must draw an infinitely long
@@ -2313,9 +2737,10 @@ gint DrawExpose (void)
                  /*   if (nx < 32760 && nx > -32760 &&
                       oldx < 32760 && oldx > -32760 &&
                       oldy < 32760 && oldy > -32760) */
-                    oldx = x + (x - oldx) * (clip.height + 10 - y) /
+                    oldx = x + (x - oldx) * (height + 10 - y) /
                       (y - oldy);
-                    oldy = clip.height + 10;
+                    oldy = height + 10;
+                    MoveTo (oldx, oldy);
                   }
                 }
                 else /*if (oldy > 0 which is true)*/ {
@@ -2323,50 +2748,61 @@ gint DrawExpose (void)
                     oldx < 32760 && oldx > -32760 &&
                     oldy < 32760 && oldy > -32760) */
                   x2 = oldx +
-                    (oldx - x) * (clip.height + 10 - oldy) / (oldy - y);
-                  y2 = clip.height + 10;
+                    (oldx - x) * (height + 10 - oldy) / (oldy - y);
+                  y2 = height + 10;
                 }
-                gdk_draw_line (draw->window, mygc, oldx, oldy, x2, y2);
+                #ifdef ANDROID_NDK
+                LineTo (x2, y2, Style(w)->lineWidth *
+                  max (width * 1000 / zoom, 2));
+                #else
+                LG gdk_draw_line (draw->window, mygc, oldx, oldy, x2, y2);
+                #endif
                 // Draw3DLine
-                if (oldx < 0 || oldx >= clip.width ||
-                    oldy < 0 || oldy >= clip.height) {
+                LG if (oldx < 0 || oldx >= width ||
+                    oldy < 0 || oldy >= height) {
                   cumulative += 9999; // Insert a break in the queue
-                  q.push (linePtType (oldx, oldy, cumulative));
+                  LG q.push (linePtType (oldx, oldy, cumulative));
                   // TODO: Interpolate the segment to get a point that is
                   // closer to the screen. The same applies to the other push
                 }
-                cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
-                q.push (linePtType (x2, y2, cumulative));
-                ConsiderText (&q, FALSE, len, &best, &text2B.top ());
+                LG cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
+                LG q.push (linePtType (x2, y2, cumulative));
+                LG ConsiderText (&q, FALSE, len, &best, &text2B.top ());
 	      }
-	      nd = next;
+	      else MoveTo (x, y);
+	      LG nd = next;
 	      oldx = x;
 	      oldy = y;
 	    } while (itr.left <= nd->lon && nd->lon < itr.right &&
 		     itr.top  <= nd->lat && nd->lat < itr.bottom &&
 		     nd->other[1] != 0);
-            ConsiderText (&q, TRUE, len, &best, &text2B.top ());
+            LG ConsiderText (&q, TRUE, len, &best, &text2B.top ());
 	  }
 	} /* If it has one or more segments */
 	  
-        if (best < 30) {
+        LG if (best < 30) {
           text2B.top ().s = (char *)(w + 1) + 1;
           text2B.push (text2Brendered ());
         }
       } /* for each way / icon */
+      FinishCasing();
     } // For each layer
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
 
     // render route
-    routeNodeType *rt;
+    LG routeNodeType *rt;
     if (shortest && (rt = shortest->shortest)) {
       double len;
       int nodeCnt = 1, x = X (rt->nd->lon, rt->nd->lat);
       int y = Y (rt->nd->lon, rt->nd->lat);
       __int64 sumLat = rt->nd->lat;
-      #ifndef NOGTK
+      #ifdef ANDROID_NDK
+      glSColor (style[firstElemStyle + StartRouteNum].lineColour);
+      glLineWidth (6);
+      #define CHARWIDTH 12
+      #elif !defined(NOGTK)
       gdk_gc_set_foreground (mygc,
         &styleColour[firstElemStyle + StartRouteNum][1]); //routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
@@ -2383,8 +2819,8 @@ gint DrawExpose (void)
       for (; rt->shortest; rt = rt->shortest) {
         int nx = X (rt->shortest->nd->lon, rt->shortest->nd->lat);
         int ny = Y (rt->shortest->nd->lon, rt->shortest->nd->lat);
-        if ((nx >= 0 || x >= 0) && (nx < clip.width || x < clip.width) &&
-            (ny >= 0 || y >= 0) && (ny < clip.height || y < clip.height)) {
+        if ((nx >= 0 || x >= 0) && (nx < width || x < width) &&
+            (ny >= 0 || y >= 0) && (ny < height || y < height)) {
           // Gdk looks only at the lower 16 bits ?
           Draw3DLine (x, y, nx, ny);
         }
@@ -2401,32 +2837,38 @@ gint DrawExpose (void)
       char distStr[13];
       sprintf (distStr, "%.3lf km", len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
-      DrawString (clip.width - CHARWIDTH * strlen (distStr), 10, distStr);
+      #ifdef ANDROID_NDK
+      jstring js = env->NewStringUTF (distStr);
+      env->CallVoidMethod (thiz, drawTeks, js, width -
+        CHARWIDTH/2 * strlen (distStr), 40, (float)0, (float)1);
+      #else
+      DrawString (width - CHARWIDTH * strlen (distStr), 10, distStr);
+      #endif
       #if 0 //ndef NOGTK
       gdk_draw_string (draw->window, f, fg_gc, //draw->style->fg_gc[0],
-        clip.width - 7 * strlen (distStr), 10, distStr);
+        width - 7 * strlen (distStr), 10, distStr);
       #else
       #endif
     }
-    DrawPoI (X (flon, flat), Y (flon, flat), IconSet * 4 +
+    LG DrawPoI (X (flon, flat), Y (flon, flat), IconSet * 4 +
       style[firstElemStyle + StartRouteNum].x);
-    DrawPoI (X (tlon, tlat), Y (tlon, tlat), IconSet * 4 +
+    LG DrawPoI (X (tlon, tlat), Y (tlon, tlat), IconSet * 4 +
       style[firstElemStyle + EndRouteNum].x);
     #ifndef NOGTK
-    for (deque<wayPointStruct>::iterator w = wayPoint.begin ();
+    LG for (deque<wayPointStruct>::iterator w = wayPoint.begin ();
          w != wayPoint.end (); w++) {
       DrawPoI (X (w->lon, w->lat), Y (w->lon, w->lat),
         style[firstElemStyle + wayPointIconNum].x);
     }
     
-    for (int i = 1; shortest && ShowActiveRouteNodes && i < routeHeapSize; i++) {
+    LG for (int i = 1; shortest && ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
         X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) - 2,
         Y (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat),
         X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) + 2,
         Y (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat));
     }
-    #else
+    #elif defined (_WIN32)
     for (int j = 0; j <= newWayCnt; j++) {
       int x = X (newWays[j].coord[0][0], newWays[j].coord[0][1]);
       int y = Y (newWays[j].coord[0][0], newWays[j].coord[0][1]);
@@ -2451,8 +2893,10 @@ gint DrawExpose (void)
       }
     }
     #endif
-    for (text2B.pop (); !text2B.empty ();  text2B.pop ()) {
+    LG for (text2B.pop (); !text2B.empty ();  text2B.pop ()) {
+      #ifndef ANDROID_NDK
       if (pressTime != -1) continue; // Don't render text while dragging
+      #endif
       text2Brendered *t = &text2B.top();
       #ifdef PANGO_VERSION
       PangoRectangle rect;
@@ -2461,7 +2905,7 @@ gint DrawExpose (void)
       struct { double xx, xy, yy, yx; } mat;
       #endif
       int x0 = (t->x + t->x2) / 2, y0 = (t->y + t->y2) / 2;
-      mat.yy = mat.xx = fabs (t->x - t->x2) / (double) t->dst;
+      mat.yy = mat.xx = fabs (double (t->x - t->x2)) / (double) t->dst;
       mat.xy = (t->y - t->y2) / (double)(t->x > t->x2 ? -t->dst : t->dst);
       mat.yx = -mat.xy;
 
@@ -2491,7 +2935,13 @@ gint DrawExpose (void)
           lrint (mat.xy * (rect.height)), lrint (mat.xx * (rect.height)),
           lrint (mat.xx * (rect.width + 10)),
           lrint (mat.yx * (rect.width + 10)));
-        #ifndef NOGTK
+        #ifdef ANDROID_NDK
+    	jstring js = env->NewStringUTF (
+    			string (txt, strcspn (txt, "\n")).c_str ());
+    	env->CallVoidMethod (thiz, drawTeks, js, x0, y0,
+    			(float)mat.xy, (float)mat.xx);
+
+        #elif !defined(NOGTK)
         gdk_draw_layout (GDK_DRAWABLE (draw->window),
           fg_gc /*draw->style->fg_gc[0]*/,
           x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
@@ -2518,75 +2968,25 @@ gint DrawExpose (void)
         SelectObject (mygc, oldf);
         DeleteObject (customFont);
         #endif
-        if (zoom / clip.width > 20) break;
+        if (zoom / width > 20) break;
         while (*txt != '\0' && *txt++ != '\n') {}
       }
     }
-    for (deque<tsItem>::iterator i = tsList.begin (); i != tsList.end (); i++) {
-      int x, y, j;
-      const char *p = i->cmd.c_str ();
-      for (j = 0; j < 2; j++) {
-        double coef = atof (p);
-        p += strcspn (p, "whWH;");
-        (j ? y : x) = lrint (*p == ';' ? coef : atoi (p + 1) + 
-          coef * (j ? draw->allocation.height : draw->allocation.width));
-        while (*p != '\0' && *p++ != ';') {}
-      //char *xs = i->cmd.c_str (), *ys = xs + strcspn (xs, ";");
-      }
-      #ifndef NOGTK
-      gdk_draw_pixbuf (GDK_DRAWABLE (draw->window), fg_gc, i->pix, 0, 0, x, y,
-        gdk_pixbuf_get_width (i->pix), gdk_pixbuf_get_height (i->pix), GDK_RGB_DITHER_NONE, 0, 0);
-      #else
-      #endif
-    }
     free (block);
     if (FollowGPSr && command[0] && command[0] == command[1] && command[0] == command[2]) {
-      DrawPoI (draw->allocation.width / 2, draw->allocation.height / 6,
+      DrawPoI (width / 2, height / 6,
         style[firstElemStyle + command[0]].x + 8); // Always square.big
     }
   } // Not in the menu
   else if (option == searchMode) {
-    for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
-             i++, y += SearchSpacing) {
-      DrawPoI (SearchSpacing / 2, y, Style (gosmSway[i])->x + 4 * IconSet);
-      
-      double dist = sqrt (Sqr ((__int64) clon - gosmSway[i]->clon) +
-          Sqr ((__int64) clat - gosmSway[i]->clat)) * (20000 / 2147483648.0) *
-        cos (LatInverse (clat) * (M_PI / 180));
-      char distance[10]; // Formula inaccurate over long distances hence "Far"
-      sprintf (distance, dist > 998 ? "Far" : dist > 1 ? "%.0lf km" :
-        "%.0lf m", dist > 1 ? dist : dist * 1000);
-      DrawString (SearchSpacing + 33 - 11 * strcspn (distance, " "), y - 10,
-        distance); // Right adjustment is inaccurate
-      
-      #ifndef NOGTK
-      gdk_gc_set_foreground (mygc, &resultArrowColour);
-      gdk_gc_set_line_attributes (mygc, 1,
-        GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-      #else
-      SelectObject (mygc, GetStockObject (BLACK_PEN));
-      #endif
-      int x = SearchSpacing + 70;
-      __int64 lx = X (gosmSway[i]->clon, gosmSway[i]->clat) - clip.width / 2;
-      __int64 ly = Y (gosmSway[i]->clon, gosmSway[i]->clat) - clip.height / 2;
-      double norm = lx || ly ? sqrt (lx * lx + ly * ly) / 64 : 1;
-      int u = lrint (lx / norm), v = lrint (ly / norm);
-      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
-        x - u / 8, y - v / 8);
-      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8, 
-        x + u / 12 + v / 20, y - u / 20 + v / 12);
-      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
-        x + u / 12 - v / 20, y + u / 20 + v / 12);
-            
-      string s (gosmSstr[i], strcspn (gosmSstr[i], "\n"));
-      char *name = (char *)(gosmSway[i] + 1) + 1;
-      if (name != gosmSstr[i]) s += " (" +
-                     string (name, strcspn (name, "\n")) + ")";
-      DrawString (SearchSpacing + x, y - 10, s.c_str ());
-
-      gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
-        clip.width, y + SearchSpacing / 2);
-    }
+    #ifndef NOGTK
+    gdk_gc_set_foreground (mygc, &resultArrowColour);
+    gdk_gc_set_line_attributes (mygc, 1,
+       GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+    #elif defined (_WIN32)
+    SelectObject (mygc, GetStockObject (BLACK_PEN));
+    #endif
+	DisplaySearchResults ();
     HandleKeyboard (FALSE, 0, 0);
   }
   else if (option == optionMode) {
@@ -2620,34 +3020,34 @@ gint DrawExpose (void)
     OPTIONS
     #undef o
       0);
-    DrawString (50, draw->allocation.height / 2, optStr);
+    DrawString (50, height / 2, optStr);
   }
   #ifndef NOGTK
   /* Buttons now on the top row 
   gdk_draw_rectangle (draw->window, draw->style->bg_gc[0], TRUE,
-    clip.width - ButtonSize * 20, clip.height - ButtonSize * 60,
-    clip.width, clip.height);
+    width - ButtonSize * 20, height - ButtonSize * 60,
+    width, height);
   for (int i = 0; i < 3; i++) {
     gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
-      clip.width - ButtonSize * 10 - 5, clip.height + (f->ascent - f->descent)
+      width - ButtonSize * 10 - 5, height + (f->ascent - f->descent)
       / 2 - ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
   */
   gdk_window_end_paint (draw->window);
   gdk_flush ();
   #else
-  #ifdef NOGTK
+  #ifdef WIN32
   int i = (Layout > (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0);
   RECT r;
-  r.left = clip.width - ButtonSize * 20;
-  r.top = clip.height - ButtonSize * 20 * i;
-  r.right = clip.width;
-  r.bottom = clip.height;
+  r.left = width - ButtonSize * 20;
+  r.top = height - ButtonSize * 20 * i;
+  r.right = width;
+  r.bottom = height;
   FillRect (mygc, &r, (HBRUSH) GetStockObject(LTGRAY_BRUSH));
   SelectObject (mygc, sysFont);
   //SetBkMode (mygc, TRANSPARENT);
   while (--i >= 0) {
-    ExtTextOut (mygc, clip.width - ButtonSize * 10 - 5, clip.height - 5 -
+    ExtTextOut (mygc, width - ButtonSize * 10 - 5, height - 5 -
         ButtonSize * (20 * i + 10), 0, NULL, i == 0 ? TEXT ("O") :
         i == 1 ? TEXT ("-") : TEXT ("+"), 1, NULL);
   }
@@ -2661,6 +3061,7 @@ gint DrawExpose (void)
       snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS idle %ds %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,GpsIdle,routeSuccess?"Route":"No Route",FollowGPSr?"":"not ");
     DrawString (0, 5, coord);
   }
+  #ifdef _WIN32
   else if (ShowCoordinates == 2) {
     MEMORYSTATUS memStat;
     GlobalMemoryStatus (&memStat);
@@ -2669,16 +3070,15 @@ gint DrawExpose (void)
     //ExtTextOut (mygc, 0, 10, 0, NULL, coord, 9, NULL);
   }
   #endif
+  #endif
   #ifdef CAIRO_VERSION
 //  cairo_destroy (cai);
   #endif
-/*
-  clip.height = draw->allocation.height;
-  gdk_gc_set_clip_rectangle (draw->style->fg_gc[0], &clip);
-  gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
-    clip.width/2, clip.height - f->descent, "gosmore");
-  */
+  #ifdef ANDROID_NDK
+  return;
+  #else
   return FALSE;
+  #endif
 }
 
 #ifndef NOGTK
@@ -2729,6 +3129,7 @@ static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint /*x*/,
   return c->targets ? TRUE : FALSE;
 }
 
+#if 0
 static void ReadTsList (void)
 {
   FILE *fp = fopen ("main.ts", "r");
@@ -2851,6 +3252,7 @@ void SeUpdate (GtkWidget *w, gpointer p)
   if (((intptr_t) p & 0xff) == 5) printf ("%d ", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
   printf ("%p | %4x %4x %4x\n", p, c.red, c.green, c.blue);
 }
+#endif // Obsolete code
 
 #endif // HEADLESS
 
@@ -3060,11 +3462,10 @@ int UserInterface (int argc, char *argv[],
     else {
       if (!routeSuccess) printf ("Jump\n\r");
       styleStruct *firstS = Style (Way (shortest->nd));
-      double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
-          / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
-          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
+      double ups = firstS->invSpeed[Vehicle] / 3.6 
+          * firstS->aveSpeed[Vehicle] / 20000000 * 2147483648.0 / 
+          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180));
       // ups (Units per second) also works as an unsigned int.
-
       double fSegLat = shortest->shortest ?
         shortest->shortest->nd->lat - shortest->nd->lat : 1;
       double fSegLon = shortest->shortest ?
@@ -3072,6 +3473,7 @@ int UserInterface (int argc, char *argv[],
       double fpr = (fSegLat * (flat - shortest->nd->lat) +
                     fSegLon * (flon - shortest->nd->lon)) /
                    (Sqr (fSegLat) + Sqr (fSegLon));
+      fpr = fpr > 1 ? 1 : fpr < 0 ? 0 : fpr; // Clamp to [0,1]
       for (; shortest; shortest = shortest->shortest) {
         wayType *w = Way (shortest->nd);
         char *name = (char*)(w + 1) + 1;
@@ -3097,6 +3499,7 @@ int UserInterface (int argc, char *argv[],
             (double)(tlon - shortest->nd->lon)) /
             (Sqr ((double)(final->lat - shortest->nd->lat)) +
              Sqr ((double)(final->lon - shortest->nd->lon)) + 1);
+          pr = pr > 1 ? 1 : pr < 0 ? 0 : pr; // Clamp to [0,1]
           printf("%lf,%lf,j,(unknown-style),0,fini\n\r",
       LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
       LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));
@@ -3151,7 +3554,6 @@ int UserInterface (int argc, char *argv[],
   gtk_signal_connect (GTK_OBJECT (draw), "scroll_event",
                        (GtkSignalFunc) Scroll, NULL);
 
-#if 0 // New UI editor code                       
   static GtkTargetEntry drawDndTargets[] = {
     { (gchar*) "text/uri-list", 0, 0 },
     { (gchar*) "image/png", 0, 1 /* Will autodetect type on drop */ },
@@ -3160,10 +3562,9 @@ int UserInterface (int argc, char *argv[],
   gtk_drag_dest_set (draw, GTK_DEST_DEFAULT_ALL /* GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT*/, drawDndTargets,
     G_N_ELEMENTS (drawDndTargets), GDK_ACTION_COPY);
                        
-  g_signal_connect (draw, "drag-data-received", G_CALLBACK (DropReceived), NULL);
-  g_signal_connect (draw, "drag-drop", G_CALLBACK (DropOnDraw), NULL);
-  ReadTsList ();
-#endif
+//  g_signal_connect (draw, "drag-data-received", G_CALLBACK (DropReceived), NULL);
+//  g_signal_connect (draw, "drag-drop", G_CALLBACK (DropOnDraw), NULL);
+//  ReadTsList ();
   
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_signal_connect (GTK_OBJECT (window), "focus-in-event",
@@ -3399,7 +3800,7 @@ int main (int argc, char *argv[])
   // close the logfile if it has been opened. No. Rather let libc to it.
   //if (logFP(false)) fclose(logFP(false));
 }
-#else // NOGTK / WIN32 and WINCE Native;
+#elif _WIN32 // NOGTK / WIN32 and WINCE Native;
 //-------------------------- WIN32 and WINCE Native ------------------
 HANDLE port = INVALID_HANDLE_VALUE;
 

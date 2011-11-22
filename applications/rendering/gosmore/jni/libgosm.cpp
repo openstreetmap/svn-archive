@@ -15,6 +15,9 @@
 #include <map>
 #include <assert.h>
 #include <float.h>
+#ifdef ANDROID_NDK
+#include <android/log.h>
+#endif
 using namespace std;
 
 #include "libgosm.h"
@@ -363,8 +366,8 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
       /* Will do later : routeHeap[routeHeapSize].r = n; */
       n->heapIdx = routeHeapSize++;
       n->dir = dir;
-      n->remain = lrint (sqrt (Sqr ((__int64)(nd->lat - rlat)) +
-                               Sqr ((__int64)(nd->lon - rlon))));
+      n->remain = lrint (sqrt (double (Sqr ((__int64)(nd->lat - rlat)) +
+                                       Sqr ((__int64)(nd->lon - rlon)))));
       if (!shortest || n->remain < shortest->remain) shortest = n;
 
       ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
@@ -503,10 +506,23 @@ void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
     // In particular, while gosmore is paused while a page is swapped in, the OS can
     // zero some pages for us.
     int dzero = open ("/dev/zero", O_RDWR);
+    #ifndef ANDROID_NDK
     long long ds = sysconf (_SC_PAGESIZE) * (long long) sysconf (_SC_PHYS_PAGES) /
       (sizeof (*routeHeap) + sizeof (*route) + 40);
+    #else
+    // sysconf(_SC_PHYS_PAGES) returned -3 on my Vodaphone 845
+    FILE *minfo = fopen ("/proc/meminfo", "r");
+    char meml[80];
+    while (fgets (meml, sizeof (meml)-1, minfo) && strncmp (meml,
+      "MemTotal:", 9)) {}
+    long long ds = (strncmp (meml, "MemTotal:", 9) ? 100000 :
+      atoi(meml + 9) - 28000) * (long long) 1000 /
+      (sizeof (*routeHeap) + sizeof (*route) + 40);
+    __android_log_print(ANDROID_LOG_DEBUG, "Gosmore", "re %d %d",
+      int(ds), sizeof (*routeHeap) + sizeof (*route) + 40);
+    #endif
     dhashSize = ds > INT_MAX ? INT_MAX : ds;
-    routeHeapMaxSize = lrint (sqrt (dhashSize)) * 3;
+    routeHeapMaxSize = lrint (sqrt ((double) dhashSize)) * 3;
     routeHeap = (routeHeapType*) malloc (routeHeapMaxSize * sizeof (*routeHeap));
     if (!routeHeap || dzero == -1 ||
         (route = (routeNodeType*) mmap (NULL, dhashSize * sizeof (*route),
@@ -797,7 +813,7 @@ int GosmInit (void *d, long size)
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
-#ifndef _WIN32_WCE
+#if !defined (_WIN32_WCE) && !defined (ANDROID_NDK)
 
 void CalculateInvSpeeds (styleStruct *srec, int styleCnt)
 {
@@ -1326,7 +1342,6 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         // I doubt anyone will have a legal reason to search for a security camera
         
         strcmp (i->first, "note:ja") != 0 &&
-        strcmp (i->first, "ncat") != 0 &&
         
         !(strcmp (i->first, "ref") == 0 && strncmp (i->second, "http://", 7) == 0) &&
         // Abused during the EPA import
@@ -1399,8 +1414,12 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "type") != 0 &&
         /* "type=..." is only allow for boules grounds. We block it because it
         is often misused. */
-         0 != strncmp (i->second, "National-Land Numerical Information ", 36) &&
-         // Import in Japan setting the source as note / note:en / note:ja
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
          strcmp (i->second, "coastline_old") != 0 &&
          strcmp (i->first, "upload_tag") != 0 &&
          strcmp (i->first, "admin_level") != 0 &&
@@ -1505,25 +1524,25 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
 ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
 { // Helper function when a way is copied into lowzoom table.
   if (forward) {
-    nd += nd->other[0];
-    if (nd->other[0]) return nd;
+    nd += nd->other[1];
+    if (nd->other[1]) return nd;
   }
   if (nd->lat == nd[1].lat && nd->lon == nd[1].lon) {
     if ((nd->lat != nd[2].lat || nd->lon != nd[2].lon) &&
         (nd->lat != nd[-1].lat || nd->lon != nd[-1].lon ||
          // If there is a 3rd object there,
-         (nd[-1].other[1] == 0 && nd[-1].other[1] == 0)) &&
+         (nd[-1].other[0] == 0 && nd[-1].other[0] == 0)) &&
         // then it must be a node
-        nd + 1 != ndItr && nd[1].other[forward ? 1 : 0] == 0
+        nd + 1 != ndItr && nd[1].other[!forward ? 1 : 0] == 0
         // Must not loop back to start and must not be T juntion
         && StyleNr (w) == StyleNr ((wayType*)(data + nd[1].wayPtr))) nd++;
   }
   else if (nd->lat == nd[-1].lat && nd->lon == nd[-1].lon &&
            (nd->lat != nd[-2].lat || nd->lon != nd[-2].lon ||
             // If there is a 3rd object there,
-            (nd[-2].other[1] == 0 && nd[-2].other[1] == 0)) &&
+            (nd[-2].other[0] == 0 && nd[-2].other[0] == 0)) &&
             // then it must be a node
-           nd - 1 != ndItr && nd[-1].other[forward ? 1 : 0] == 0
+           nd - 1 != ndItr && nd[-1].other[!forward ? 1 : 0] == 0
            // Must not loop back to start and must not be T juntion
            && StyleNr (w) == StyleNr ((wayType*)(data + nd[-1].wayPtr))) nd--;
   // If nd ends at a point where exactly two ways meet and they have the same
@@ -2156,18 +2175,17 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     // and the lats & lons have been dereferenced previously. So the pairing is
     // simplified a lot.
     ndType *prev = LFollow (ndItr, ndItr, way, 0);
-    if (!ndItr->other[1] && prev->wayPtr >= ndItr->wayPtr) {
+    if (!ndItr->other[0] && prev->wayPtr >= ndItr->wayPtr) {
       int length = 0;
       ndType *end;
-      for (end = ndItr; end->other[0]; end = LFollow (end, ndItr, way, 1)) {
-        length += lrint (sqrt (Sqr ((double)(end->lat - end[end->other[0]].lat)) +
-                               Sqr ((double)(end->lon - end[end->other[0]].lon))));
+      for (end = ndItr; end->other[1]; end = LFollow (end, ndItr, way, 1)) {
+        length += lrint (sqrt (Sqr ((double)(end->lat - end[end->other[1]].lat)) +
+                               Sqr ((double)(end->lon - end[end->other[1]].lon))));
         if (prev != ndItr && end->wayPtr < ndItr->wayPtr) break;
         // If it is circular and we didn't start at the way with the lowest
         // wayPtr, then we abort
       }
       if ((prev == ndItr || prev == end) && (length > 500000 ||
-                  StyleNr(way) == natural_coastline ||
                   (end == ndItr && srec[StyleNr (way)].scaleMax > 100000))) {
         //printf (prev == ndItr ? "%3d Non circular %s\n" : "%3d Circular %s\n",
         //  ndItr - ndBase, (char*)(way+1)+1);

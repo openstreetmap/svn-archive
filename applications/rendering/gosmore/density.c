@@ -24,7 +24,7 @@ char block[S * 2 + 1][98765], *bptr[S * 2 + 1];
 int main (void)
 {
   char fname[30];
-  FILE *html, *gosm = fopen ("bboxes.c", "w"), *sh = fopen ("bboxSplit.sh", "w");
+  FILE *html, *gosm = fopen ("jni/bboxes.c", "w"), *sh = fopen ("bboxSplit.sh", "w");
   memset (cov, 0, sizeof (cov));
   memset (mat, 0, sizeof (mat));
   html= fopen ("density.html", "w");

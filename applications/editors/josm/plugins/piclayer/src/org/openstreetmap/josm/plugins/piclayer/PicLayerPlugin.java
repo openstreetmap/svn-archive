@@ -24,6 +24,8 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenu;
 
@@ -45,22 +47,14 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleYPictureAc
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.ShearPictureAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
+import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
 /**
  * Main Plugin class.
  */
 public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
-
-    // Toolbar buttons
-    static IconToggleButton movePictureButton = null;
-    static IconToggleButton movePointButton = null;
-    static IconToggleButton transformPointButton = null;
-    static IconToggleButton rotatePictureButton = null;
-    static IconToggleButton scalexPictureButton = null;
-    static IconToggleButton scaleyPictureButton = null;
-    static IconToggleButton scalexyPictureButton = null;
-    static IconToggleButton shearPictureButton = null;
+    public static List<PicToggleButton> buttonList = null;
 
     // Plugin menu
     private JMenu menu = null;
@@ -105,37 +99,42 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction(newFrame);
             ShearPictureAction shearPictureAction = new ShearPictureAction(newFrame);
             // Create plugin buttons and add them to the toolbar
-            movePictureButton = new IconToggleButton(movePictureAction);
-            movePointButton = new IconToggleButton(movePointAction);
-            transformPointButton = new IconToggleButton(transformPointAction);
-            rotatePictureButton = new IconToggleButton(rotatePictureAction);
-            scalexyPictureButton = new IconToggleButton(scaleXYPictureAction);
-            scalexPictureButton = new IconToggleButton(scaleXPictureAction);
-            scaleyPictureButton = new IconToggleButton(scaleYPictureAction);
-            shearPictureButton = new IconToggleButton(shearPictureAction);
-            newFrame.addMapMode(movePictureButton);
-            newFrame.addMapMode(movePointButton);
-            newFrame.addMapMode(transformPointButton);
-            newFrame.addMapMode(rotatePictureButton);
-            newFrame.addMapMode(scalexyPictureButton);
-            newFrame.addMapMode(scalexPictureButton);
-            newFrame.addMapMode(scaleyPictureButton);
-            newFrame.addMapMode(shearPictureButton);
-//            newFrame.toolGroup.add(m_movePictureButton);
-//            newFrame.toolGroup.add(m_rotatePictureButton);
-//            newFrame.toolGroup.add(m_scalePictureButton);
-            // Show them by default
+
+            buttonList = new ArrayList<PicToggleButton>(7);
+            buttonList.add(new PicToggleButton(movePictureAction, "Move Picture", "piclayer.actionvisibility.move", true));
+            buttonList.add(new PicToggleButton(movePointAction, "Move Point", "piclayer.actionvisibility.movepoint", true));
+            buttonList.add(new PicToggleButton(transformPointAction, "Transform Point", "piclayer.actionvisibility.transformpoint", true));
+            buttonList.add(new PicToggleButton(rotatePictureAction, "Rotate", "piclayer.actionvisibility.rotate", false));
+            buttonList.add(new PicToggleButton(scaleXYPictureAction, "Scale", "piclayer.actionvisibility.scale", false));
+            buttonList.add(new PicToggleButton(scaleXPictureAction, "Scale X", "piclayer.actionvisibility.scalex", false));
+            buttonList.add(new PicToggleButton(scaleYPictureAction, "Scale Y", "piclayer.actionvisibility.scaley", false));
+            buttonList.add(new PicToggleButton(shearPictureAction, "Shear", "piclayer.actionvisibility.shear", false));
+
+            for(IconToggleButton btn : buttonList) {
+                newFrame.addMapMode(btn);
+            }
 
             if (actionVisibility == null)
                 menu.add(actionVisibility = new ActionVisibilityChangeMenu());
         }
     }
 
-	/**
-     * The toolbar buttons shall be active only when the PicLayer is active.
+    /**
+     * The toolbar buttons shall be active and visible only when the PicLayer is active.
      */
     @Override
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        boolean oldPic = oldLayer instanceof PicLayerAbstract;
+        boolean newPic = newLayer instanceof PicLayerAbstract;
+        // actually that should be not enough - JOSM should hide all buttons that are disabled for current layer!
+        if (oldPic && !newPic || oldLayer == null && !newPic) { // leave picture layer - hide all controls
+            for (PicToggleButton btn : buttonList)
+                btn.setVisible(false);
+        }
+        if (!oldPic && newPic) { // enter picture layer - reset visibility of controls
+            for (PicToggleButton btn : buttonList)
+                btn.readVisible();
+        }
     }
 
     /**

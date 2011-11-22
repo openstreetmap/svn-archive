@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer rewritten - lots changed"/>
+    <property name="commit.message" value="PicLayer - toolbar buttons are hidden when layer is not active"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

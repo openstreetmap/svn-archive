@@ -80,6 +80,7 @@ public class PanelLit extends JPanel {
 	private ActionListener alMultiple = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setLightAtt(Att.MLT, 0, multipleBox.getText());
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel categoryLabel;
@@ -93,21 +94,30 @@ public class PanelLit extends JPanel {
 					dlg.mark.setLightAtt(Att.LIT, 0, lit);
 			}
 			if (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.DIR) {
+				dlg.mark.setLightAtt(Att.MLT, 0, "");
+				multipleBox.setText("");
 				orientationLabel.setVisible(true);
 				orientationBox.setVisible(true);
 				multipleLabel.setVisible(false);
 				multipleBox.setVisible(false);
 			} else if ((dlg.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
+				dlg.mark.setLightAtt(Att.ORT, 0, "");
+				orientationBox.setText("");
 				orientationLabel.setVisible(false);
 				orientationBox.setVisible(false);
 				multipleLabel.setVisible(true);
 				multipleBox.setVisible(true);
 			} else {
+				dlg.mark.setLightAtt(Att.MLT, 0, "");
+				multipleBox.setText("");
+				dlg.mark.setLightAtt(Att.ORT, 0, "");
+				orientationBox.setText("");
 				orientationLabel.setVisible(false);
 				orientationBox.setVisible(false);
 				multipleLabel.setVisible(false);
 				multipleBox.setVisible(false);
 			}
+			dlg.mark.paintSign();
 		}
 	};
 	public JLabel exhibitionLabel;

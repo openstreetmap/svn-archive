@@ -508,7 +508,7 @@ public class SeaMark {
 	}
 
 	public enum Exh {
-		UNKNOWN, H24, DAY, NIGHT, FOG
+		UNKNOWN, H24, DAY, NIGHT, FOG, WARN, STORM
 	}
 
 	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(Exh.class);
@@ -518,6 +518,8 @@ public class SeaMark {
 		ExhSTR.put(Exh.DAY, "day");
 		ExhSTR.put(Exh.NIGHT, "night");
 		ExhSTR.put(Exh.FOG, "fog");
+		ExhSTR.put(Exh.WARN, "warning");
+		ExhSTR.put(Exh.STORM, "storm");
 	}
 
 	public enum Att {
@@ -1970,23 +1972,36 @@ public class SeaMark {
 				c += "(" + (String) getLightAtt(Att.GRP, 0) + ")";
 			switch ((Col) getLightAtt(Att.COL, 0)) {
 			case RED:
-				c += " R";
+				c += ".R";
 				break;
 			case GREEN:
-				c += " G";
+				c += ".G";
 				break;
 			case AMBER:
-				c += " Am";
+				c += ".Am";
 				break;
 			case ORANGE:
-				c += " Or";
+				c += ".Or";
 				break;
 			case BLUE:
-				c += " Bu";
+				c += ".Bu";
 				break;
 			case VIOLET:
-				c += " Vi";
+				c += ".Vi";
 				break;
+			}
+			tmp = (String) getLightAtt(Att.MLT, 0);
+			if (!tmp.isEmpty())
+				c = tmp + c;
+			if (dlg.mark.getLightAtt(Att.LIT, 0) != Lit.UNKNOWN) {
+				switch ((Lit)dlg.mark.getLightAtt(Att.LIT, 0)) {
+				case VERT:
+					c += "(Vert)";
+					break;
+				case HORIZ:
+						c += "(Horiz)";
+						break;
+				}
 			}
 			tmp = (String) getLightAtt(Att.PER, 0);
 			if (!tmp.isEmpty())

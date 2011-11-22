@@ -1,7 +1,9 @@
 #ifndef OPENGLESPOLYGON_H
 #define OPENGLESPOLYGON_H
 #include <vector>
+#ifndef ANDROID_NDK
 #include <gdk/gdk.h> 
+#endif
 
 struct FixedPoint {
   int x, y;

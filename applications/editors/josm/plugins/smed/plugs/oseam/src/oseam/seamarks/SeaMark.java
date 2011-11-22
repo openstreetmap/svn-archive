@@ -170,8 +170,9 @@ public class SeaMark {
 		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
-		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG,
-		LIT_DIRF, LIT_LEDG, LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT
+		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
+		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT,
+		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -243,7 +244,17 @@ public class SeaMark {
 		CatSTR.put(Cat.LMK_TOWR, "tower");
 		CatSTR.put(Cat.LMK_WNDM, "windmotor");
 		CatSTR.put(Cat.LMK_WTRT, "water_tower");
-	}
+		CatSTR.put(Cat.LMK_MAST, "mast");
+		CatSTR.put(Cat.LMK_WNDS, "wind_sock");
+		CatSTR.put(Cat.LMK_CLMN, "column");
+		CatSTR.put(Cat.LMK_OBLK, "obelisk");
+		CatSTR.put(Cat.LMK_STAT, "statue");
+		CatSTR.put(Cat.LMK_CROS, "cross");
+		CatSTR.put(Cat.LMK_DOME, "dome");
+		CatSTR.put(Cat.LMK_SCNR, "radar");
+		CatSTR.put(Cat.LMK_WNDL, "windmill");
+		CatSTR.put(Cat.LMK_SPIR, "spire");
+			 	}
 
 	private Cat category = Cat.NONE;
 

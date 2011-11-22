@@ -291,7 +291,10 @@ class MapView extends GLSurfaceView implements LocationListener {
 	public MapActivity activity;
     // ---- Location Listener methods ----
     public void onLocationChanged(Location location) {
-    	mRenderer.p.lon = location.getLongitude();
+    	mRenderer.lonSum += location.getLongitude();
+    	mRenderer.latSum += location.getLatitude();
+    	mRenderer.latLonCnt++;
+    	
     	mRenderer.p.lat = location.getLatitude();
     	mRenderer.declination =
     		 (int)(new GeomagneticField((float)location.getLatitude(),
@@ -300,7 +303,16 @@ class MapView extends GLSurfaceView implements LocationListener {
     	mRenderer.bearing = location.getBearing();
     	mRenderer.speed = location.getSpeed();
     	mRenderer.doNavigate = true;
-    	requestRender ();
+    	if (Math.abs (mRenderer.p.lon - mRenderer.lonSum / mRenderer.latLonCnt) * 2 +
+    		Math.abs (mRenderer.p.lat - mRenderer.latSum / mRenderer.latLonCnt)
+    		> .000164 / mRenderer.latLonCnt + 0.00004) {
+    		mRenderer.p.lon = mRenderer.lonSum / mRenderer.latLonCnt;
+    		mRenderer.p.lat = mRenderer.latSum / mRenderer.latLonCnt;
+    		mRenderer.latLonCnt = 0;
+    		mRenderer.lonSum = 0;
+    		mRenderer.latSum = 0;
+        	requestRender ();
+    	}
     }
     public void onProviderDisabled(String provider) {}
     public void onProviderEnabled(String provider) {}
@@ -399,12 +411,22 @@ class MapView extends GLSurfaceView implements LocationListener {
         				         e.values[2]*lastAccels[0]-e.values[0]*lastAccels[2],
         				         e.values[0]*lastAccels[1]-e.values[1]*lastAccels[0]};
         		mRenderer.threeD = lastAccels[2]*2 < g; 
-        		mRenderer.p.dir = (int)(180/Math.PI*(lastAccels[2]*2 < g
+        		int d = (int)(180/Math.PI*(lastAccels[2]*2 < g
          				? Math.atan2(east[2],(east[0]*lastAccels[1]-east[1]*lastAccels[0])/g)
           				: -Math.atan2((east[1]*lastAccels[2]-east[2]*lastAccels[1])/g, east[0])))
           				 - mRenderer.declination;
-            	//Log.d("Gosmore", "Azimuth = " + mRenderer.p.dir);
-        		requestRender();
+        		mRenderer.dirSum += mRenderer.dirSum < 90 * mRenderer.dirCnt ?
+        				  (d + 540) % 360 - 180 : mRenderer.dirSum > 270 * mRenderer.dirCnt
+        				  ? (d + 540) % 360 + 180 : (d + 720) % 360; 
+        		mRenderer.dirCnt++;
+        		if (Math.abs(mRenderer.dirSum / mRenderer.dirCnt - mRenderer.p.dir) >
+        		    30 / mRenderer.dirCnt + 10) {
+        			//Log.d("Gosmore", "Azimuth = " + mRenderer.p.dir);
+        			mRenderer.p.dir = mRenderer.dirSum / mRenderer.dirCnt;
+        			mRenderer.dirSum = 0;
+        			mRenderer.dirCnt = 0;
+        			requestRender();
+        		}
         	} 
         	/*float gg = lastAccels[0]*lastAccels[0]+lastAccels[1]*lastAccels[1]+
 				lastAccels[2]*lastAccels[2];
@@ -430,8 +452,10 @@ class MapRenderer implements GLSurfaceView.Renderer {
 	public int mPixelX = 0, mPixelY = 0; // These are only modified by the UI thread
 	public int oldPixelX = 0, oldPixelY = 0;
     public int bitmapWidth, bitmapHeight;
+    public int dirSum = 0, dirCnt = 0, latLonCnt = 0;
     public long zTime = 0;
     public float zExp, speed, bearing;
+    public double latSum = 0, lonSum = 0;
     public Bitmap mBitmap, mIcons; 
     public Paint mClearPaint;
     public Place p; // = Gosmore.s.searchResult

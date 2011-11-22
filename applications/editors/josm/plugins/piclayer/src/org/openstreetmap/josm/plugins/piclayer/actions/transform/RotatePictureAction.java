@@ -18,31 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.actions.transform;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-// TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
-
 /**
- * This class handles the input during scaling the picture.
+ * This class handles the input during rotating the picture.
  */
-public class ScaleXPictureAction extends ScalePictureActionAbstract
-{
-    /*
+@SuppressWarnings("serial")
+public class RotatePictureAction extends GenericPicTransformAction {
+
+    /**
      * Constructor
      */
-    public ScaleXPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
-        // TODO Auto-generated constructor stub
+    public RotatePictureAction(MapFrame frame) {
+        super(tr("PicLayer rotate"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
-    public void doTheScale( double scale ) {
-            m_currentLayer.scalePictureBy( scale, 1.0 );
+	@Override
+	protected void doAction(MouseEvent e) {
+		double factor;
+        if ( ( e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK ) != 0 ) {
+            factor = Main.pref.getDouble("piclayer.rotatefactors.high_precision", 100.0);
         }
+        else {
+            factor = Main.pref.getDouble("piclayer.rotatefactors.low_precision", 10.0 );
+        }            
+        currentLayer.rotatePictureBy( ( e.getY() - prevMousePoint.getY() ) / factor );
+	}
 }

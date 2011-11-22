@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.actions.newlayer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -35,10 +35,12 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromFile;
 
 /**
  * Action responsible for creation of new layers based on image files.
  */
+@SuppressWarnings("serial")
 public class NewLayerFromFileAction extends JosmAction {
 
     String m_lastdirprefname = "piclayer.lastdir";

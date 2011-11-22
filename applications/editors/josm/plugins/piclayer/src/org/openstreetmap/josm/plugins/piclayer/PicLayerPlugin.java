@@ -24,36 +24,47 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.KeyEvent;
+
 import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.Plugin;
-import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.piclayer.actions.newlayer.NewLayerFromClipboardAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.newlayer.NewLayerFromFileAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.MovePictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.RotatePictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleXPictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleXYPictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleYPictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.ShearPictureAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePointAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
 
 /**
  * Main Plugin class.
  */
 public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
-    // Plugin menu
-    private JMenu m_menu = null;
 
     // Toolbar buttons
-    private IconToggleButton m_movePictureButton = null;
-    private IconToggleButton m_rotatePictureButton = null;
-    private IconToggleButton m_scalexPictureButton = null;
-    private IconToggleButton m_scaleyPictureButton = null;
-    private IconToggleButton m_scalexyPictureButton = null;
-    private IconToggleButton m_shearPictureButton = null;
+    static IconToggleButton movePictureButton = null;
+    static IconToggleButton movePointButton = null;
+    static IconToggleButton transformPointButton = null;
+    static IconToggleButton rotatePictureButton = null;
+    static IconToggleButton scalexPictureButton = null;
+    static IconToggleButton scaleyPictureButton = null;
+    static IconToggleButton scalexyPictureButton = null;
+    static IconToggleButton shearPictureButton = null;
 
-    // Menu actions
-    private NewLayerFromFileAction      m_newFromFileAction = null;
-    private NewLayerFromClipboardAction m_newFromClipAction = null;
+    // Plugin menu
+    private JMenu menu = null;
+    private ActionVisibilityChangeMenu actionVisibility;
 
     /**
      * Constructor...
@@ -63,15 +74,14 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
         // Create menu entry
         if ( Main.main.menu != null ) {
-            m_menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_I, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
+            menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_I, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
         }
 
         // Add menu items
-        if ( m_menu != null ) {
-            m_menu.add( m_newFromFileAction = new NewLayerFromFileAction() );
-            m_menu.add( m_newFromClipAction = new NewLayerFromClipboardAction() );
-            m_newFromFileAction.setEnabled( false );
-            m_newFromClipAction.setEnabled( false );
+        if ( menu != null ) {
+            menu.add(new NewLayerFromFileAction());
+            menu.add(new NewLayerFromClipboardAction());
+            menu.setEnabled(false);
         }
 
         // Listen to layers
@@ -81,44 +91,50 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     /**
      * Called when the map is created. Creates the toolbar buttons.
      */
+    @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if(newFrame != null) {
             // Create plugin map modes
             MovePictureAction movePictureAction = new MovePictureAction(newFrame);
+            MovePointAction movePointAction = new MovePointAction(newFrame);
+            TransformPointAction transformPointAction = new TransformPointAction(newFrame);
+
             RotatePictureAction rotatePictureAction = new RotatePictureAction(newFrame);
             ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction(newFrame);
             ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction(newFrame);
             ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction(newFrame);
             ShearPictureAction shearPictureAction = new ShearPictureAction(newFrame);
             // Create plugin buttons and add them to the toolbar
-            m_movePictureButton = new IconToggleButton(movePictureAction);
-            m_rotatePictureButton = new IconToggleButton(rotatePictureAction);
-            m_scalexyPictureButton = new IconToggleButton(scaleXYPictureAction);
-            m_scalexPictureButton = new IconToggleButton(scaleXPictureAction);
-            m_scaleyPictureButton = new IconToggleButton(scaleYPictureAction);
-            m_shearPictureButton = new IconToggleButton(shearPictureAction);
-            newFrame.addMapMode(m_movePictureButton);
-            newFrame.addMapMode(m_rotatePictureButton);
-            newFrame.addMapMode(m_scalexyPictureButton);
-            newFrame.addMapMode(m_scalexPictureButton);
-            newFrame.addMapMode(m_scaleyPictureButton);
-            newFrame.addMapMode(m_shearPictureButton);
+            movePictureButton = new IconToggleButton(movePictureAction);
+            movePointButton = new IconToggleButton(movePointAction);
+            transformPointButton = new IconToggleButton(transformPointAction);
+            rotatePictureButton = new IconToggleButton(rotatePictureAction);
+            scalexyPictureButton = new IconToggleButton(scaleXYPictureAction);
+            scalexPictureButton = new IconToggleButton(scaleXPictureAction);
+            scaleyPictureButton = new IconToggleButton(scaleYPictureAction);
+            shearPictureButton = new IconToggleButton(shearPictureAction);
+            newFrame.addMapMode(movePictureButton);
+            newFrame.addMapMode(movePointButton);
+            newFrame.addMapMode(transformPointButton);
+            newFrame.addMapMode(rotatePictureButton);
+            newFrame.addMapMode(scalexyPictureButton);
+            newFrame.addMapMode(scalexPictureButton);
+            newFrame.addMapMode(scaleyPictureButton);
+            newFrame.addMapMode(shearPictureButton);
 //            newFrame.toolGroup.add(m_movePictureButton);
 //            newFrame.toolGroup.add(m_rotatePictureButton);
 //            newFrame.toolGroup.add(m_scalePictureButton);
             // Show them by default
-            m_movePictureButton.setVisible(true);
-            m_rotatePictureButton.setVisible(true);
-            m_scalexyPictureButton.setVisible(true);
-            m_scalexPictureButton.setVisible(true);
-            m_scaleyPictureButton.setVisible(true);
-            m_shearPictureButton.setVisible(true);
+
+            if (actionVisibility == null)
+                menu.add(actionVisibility = new ActionVisibilityChangeMenu());
         }
     }
 
-    /**
+	/**
      * The toolbar buttons shall be active only when the PicLayer is active.
      */
+    @Override
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
     }
 
@@ -127,17 +143,17 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      * because the picture must be positioned based on the current mapview (so
      * one must exist first). User should not be able to load a picture too early.
      */
+    @Override
     public void layerAdded(Layer arg0) {
-        m_newFromFileAction.setEnabled( true );
-        m_newFromClipAction.setEnabled( true );
+        menu.setEnabled(true);
     }
 
     /**
      * When all layers are gone - the menu is gone too.
      */
+    @Override
     public void layerRemoved(Layer arg0) {
         boolean enable = Main.map.mapView.getAllLayers().size() != 0;
-        m_newFromFileAction.setEnabled( enable );
-        m_newFromClipAction.setEnabled( enable );
+        menu.setEnabled(enable);
     }
 };

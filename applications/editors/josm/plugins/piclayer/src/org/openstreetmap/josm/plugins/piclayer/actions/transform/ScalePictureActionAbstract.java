@@ -18,55 +18,43 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.actions.transform;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Layer displaying a picture copied from the clipboard.
+ * This class handles the input during scaling the picture.
  */
-public class PicLayerFromClipboard extends PicLayerAbstract {
+@SuppressWarnings("serial")
+public abstract class ScalePictureActionAbstract extends GenericPicTransformAction {
 
-    @Override
-    protected Image createImage() throws IOException {
-        // Return item
-        Image image = null;
-        // Access the clipboard
-        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        // Check result
-        if ( t == null ) {
-            throw new IOException(tr("Nothing in clipboard"));
+	/**
+     * Constructor
+     */
+    public ScalePictureActionAbstract (String name, String icon, String tooltip, MapFrame frame) {
+        super(name, icon, tooltip, frame, ImageProvider.getCursor("crosshair", null));
+    }
+
+    protected void doAction(MouseEvent e) {
+        double factor;
+        if ( ( e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK ) != 0 ) {
+            factor = Main.pref.getDouble("piclayer.scalefactors.high_precision", 1.0005);
         }
-
-        // TODO: Why is it so slow?
-        // Try to make it an image data
-        try {
-            if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                image = (Image)t.getTransferData(DataFlavor.imageFlavor);
-            } else {
-                throw new IOException(tr("The clipboard data is not an image"));
-            }
-        } catch (UnsupportedFlavorException e) {
-            throw new IOException( e.getMessage() );
-        }
-
-        return image;
+        else {
+            factor = Main.pref.getDouble("piclayer.scalefactors.low_precision", 1.015);
+        }            
+        doTheScale( Math.pow(factor, prevMousePoint.getY() - e.getY() ) );
     }
 
-    @Override
-    protected String getPicLayerName() {
-        return "Clipboard";
-    }
-
-    @Override
-    protected void lookForCalibration() throws IOException {
-    }
+    /**
+     * Does the actual scaling in the inherited class.
+     */
+     protected abstract void doTheScale( double scale );
 
 }

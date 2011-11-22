@@ -18,32 +18,28 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.List;
 import java.util.Properties;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
@@ -53,6 +49,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
+import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -61,28 +61,26 @@ import org.openstreetmap.josm.tools.Utils;
  * files, copy from clipboard, hack into a spy satellite and download them,
  * anything...)
  */
-public abstract class PicLayerAbstract extends Layer
-{
+public abstract class PicLayerAbstract extends Layer {
     // Counter - just for naming of layers
-    private static int m_counter = 0;
+    private static int imageCounter = 0;
     // This is the main image to be displayed
-    private Image m_image = null;
+    private Image image = null;
+    private static Image pinImage;
     // Initial position of the image in the real world
-    private EastNorth m_initial_position;
+    private EastNorth initialImagePosition;
     // Position of the image in the real world
-    private EastNorth m_position;
-    // Angle of rotation of the image
-    private double m_angle = 0.0;
-    // Scale of the image
-    private double m_scalex = 1.0;
-    private double m_scaley = 1.0;
-    // Shear of the image
-    private double m_shearx = 0.0;
-    private double m_sheary = 0.0;
+    private EastNorth imagePosition;
     // The scale that was set on the map during image creation
-    private double m_initial_scale = 1.0;
+    private double initialImageScale = 1.0;
     // Layer icon
-    private Icon m_layericon = null;
+    private Icon layerIcon = null;
+
+    private PictureTransform transformer;
+
+    public PictureTransform getTransformer() {
+        return transformer;
+    }
 
     // Keys for saving in Properties
     private final String INITIAL_POS_X = "INITIAL_POS_X";
@@ -96,17 +94,29 @@ public abstract class PicLayerAbstract extends Layer
     private final String SHEARX = "SHEARX";
     private final String SHEARY = "SHEARY";
 
+    private final String MATRIXm00 = "M00";
+    private final String MATRIXm01 = "M01";
+    private final String MATRIXm10 = "M10";
+    private final String MATRIXm11 = "M11";
+    private final String MATRIXm02 = "M02";
+    private final String MATRIXm12 = "M12";
+
     /**
      * Constructor
      */
     public PicLayerAbstract() {
-        super("PicLayer #" + m_counter);
+        super("PicLayer #" + imageCounter);
 
         //Increase number
-        m_counter++;
+        imageCounter++;
 
         // Load layer icon
-        m_layericon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(PicLayerAbstract.class.getResource("/images/layericon.png")));
+        layerIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/layericon.png")));
+
+        if (pinImage == null) {
+            // allow system to load the image and use it in future
+            pinImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/arrow.png"))).getImage();
+        }
     }
 
     /**
@@ -115,32 +125,30 @@ public abstract class PicLayerAbstract extends Layer
      */
     public void initialize() throws IOException {
         // First, we initialize the calibration, so that createImage() can rely on it
-        
+
         // If the map does not exist - we're screwed. We should not get into this situation in the first place!
         if ( Main.map != null && Main.map.mapView != null ) {
-            // Geographical position of the image
-            // getCenter() documentation claims it returns a clone, but this is not in line with the code,
-            // which actually returns the same object upon subsequent calls. This messes things up
-            // when we loading several pictures and associated cal's in one go.
-            // So as a workaround, copy the object manually :
-            // TODO: not sure about this code below, probably there is a better way to clone the objects
+
             EastNorth center = Main.map.mapView.getCenter();
-            m_initial_position = new EastNorth(center.east(), center.north());
-            m_position = new EastNorth(center.east(), center.north());
+
+            imagePosition = new EastNorth(center.east(), center.north());
+            initialImagePosition = new EastNorth(imagePosition.east(), imagePosition.north());
             // Initial scale at which the image was loaded
-            m_initial_scale = Main.map.mapView.getDist100Pixel();
+            initialImageScale = Main.map.mapView.getDist100Pixel();
         } else {
             throw new IOException(tr("Could not find the map object."));
         }
 
         // Create image
-        m_image = createImage();
-        if ( m_image == null ) {
+        image = createImage();
+        if ( image == null ) {
             throw new IOException(tr("PicLayer failed to load or import the image."));
         }
         // Load image completely
-        (new ImageIcon(m_image)).getImage();
-        
+        (new ImageIcon(image)).getImage();
+
+        transformer = new PictureTransform();
+
         lookForCalibration();
     }
 
@@ -156,29 +164,24 @@ public abstract class PicLayerAbstract extends Layer
     /**
      * To be overridden by subclasses. Returns the user readable name of the layer.
      */
-    protected abstract String getPicLayerName();
+    public abstract String getPicLayerName();
 
     @Override
-    public Icon getIcon() {
-        return m_layericon;
-    }
+    public Icon getIcon() { return layerIcon; }
 
     @Override
-    public Object getInfoComponent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public Object getInfoComponent() { return null; }
 
     @Override
     public Action[] getMenuEntries() {
         // Main menu
         return new Action[] {
-                new ResetSubmenuAction(),
+                new ResetCalibrationAction(this, transformer),
                 SeparatorLayerAction.INSTANCE,
                 new SavePictureCalibrationAction(this),
                 new LoadPictureCalibrationAction(this),
                 SeparatorLayerAction.INSTANCE,
-                new RenameLayerAction(null,this)
+                new RenameLayerAction(null,this),
         };
     }
 
@@ -189,20 +192,16 @@ public abstract class PicLayerAbstract extends Layer
 
     @Override
     public boolean isMergable(Layer arg0) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public void mergeFrom(Layer arg0) {
-        // TODO Auto-generated method stub
-
-    }
+    public void mergeFrom(Layer arg0) {}
 
     @Override
     public void paint(Graphics2D g2, MapView mv, Bounds bounds) {
 
-        if ( m_image != null) {
+        if ( image != null) {
 
             // Position image at the right graphical place
             EastNorth center = Main.map.mapView.getCenter();
@@ -212,45 +211,61 @@ public abstract class PicLayerAbstract extends Layer
             double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
 
             //     This is now the offset in screen pixels
-            double pic_offset_x = (( m_position.east() - leftop.east() ) * pixel_per_en);
-            double pic_offset_y = (( leftop.north() - m_position.north() ) * pixel_per_en);
+            double pic_offset_x = (( imagePosition.east() - leftop.east() ) * pixel_per_en);
+            double pic_offset_y = (( leftop.north() - imagePosition.north() ) * pixel_per_en);
 
             Graphics2D g = (Graphics2D)g2.create();
             // Move
             g.translate( pic_offset_x, pic_offset_y );
-            // Rotate
-            g.rotate( m_angle * Math.PI / 180.0 );
+
             // Scale
-            double scalex = m_scalex * m_initial_scale * pixel_per_en / getMetersPerEasting(m_position) / 100;
-            double scaley = m_scaley * m_initial_scale * pixel_per_en / getMetersPerNorthing(m_position) / 100;
+            double scalex = initialImageScale * pixel_per_en / getMetersPerEasting(imagePosition) / 100;
+            double scaley = initialImageScale * pixel_per_en / getMetersPerNorthing(imagePosition) / 100;
             g.scale( scalex, scaley );
-            // Shear
-            g.shear(m_shearx, m_sheary);
+
+            g.transform(transformer.getTransform());
 
             // Draw picture
-            g.drawImage( m_image, -m_image.getWidth(null) / 2, -m_image.getHeight(null) / 2, null );
+            g.drawImage( image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null );
 
             // Draw additional rectangle for the active pic layer
             if ( Main.map.mapView.getActiveLayer() == this ) {
                 g.setColor( new Color( 0xFF0000 ) );
                 g.drawRect(
-                    -m_image.getWidth(null) / 2,
-                    -m_image.getHeight(null) / 2,
-                    m_image.getWidth(null),
-                    m_image.getHeight(null)
+                    -image.getWidth(null) / 2,
+                    -image.getHeight(null) / 2,
+                    image.getWidth(null),
+                    image.getHeight(null)
                 );
             }
+            // draw points for selection
+            Graphics2D gPoints = (Graphics2D)g2.create();
+
+            gPoints.translate(pic_offset_x, pic_offset_y);
+
+            gPoints.setColor(Color.RED); // red color for points output
+
+            AffineTransform tr = AffineTransform.getScaleInstance(scalex, scaley);
+            tr.concatenate(transformer.getTransform());
+
+            for (Point2D p : transformer.getOriginPoints()) {
+               Point2D trP = tr.transform(p, null);
+               int x = (int)trP.getX(), y = (int)trP.getY();
+               gPoints.drawOval(x-2, y-2, 5, 5);
+               gPoints.drawImage(pinImage, x, y, null);
+            }
+
         } else {
             // TODO: proper logging
-            System.out.println( "PicLayerAbstract::paint - general drawing error (m_image is null or Graphics not 2D" );
+            System.out.println( "PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D" );
         }
     }
-    
+
     /**
      * Returns the distance in meter, that corresponds to one unit in east north
-     * space. For normal projections, it is about 1 (but usually changing with 
+     * space. For normal projections, it is about 1 (but usually changing with
      * latitude).
-     * For EPSG:4326, it is the distance from one meridian of full degree to the 
+     * For EPSG:4326, it is the distance from one meridian of full degree to the
      * next (a couple of kilometers).
      */
     private double getMetersPerEasting(EastNorth en) {
@@ -258,18 +273,18 @@ public abstract class PicLayerAbstract extends Layer
          * This means, the projection should be able to handle
          * a shift of that size in east north space without
          * going out of bounds.
-         * 
+         *
          * Also, this should get us somewhere in the range of meters,
          * so we get the result at the point 'en' and not some average.
          */
         double naturalScale = Main.getProjection().getDefaultZoomInPPD();
         naturalScale *= 0.01; // make a little smaller
-        
+
         LatLon ll1 = Main.getProjection().eastNorth2latlon(
                 new EastNorth(en.east() - naturalScale, en.north()));
         LatLon ll2 = Main.getProjection().eastNorth2latlon(
                 new EastNorth(en.east() + naturalScale, en.north()));
-        
+
         double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
         return dist;
     }
@@ -278,77 +293,16 @@ public abstract class PicLayerAbstract extends Layer
     private double getMetersPerNorthing(EastNorth en) {
         double naturalScale = Main.getProjection().getDefaultZoomInPPD();
         naturalScale *= 0.01;
-        
+
         LatLon ll1 = Main.getProjection().eastNorth2latlon(
                 new EastNorth(en.east(), en.north()- naturalScale));
         LatLon ll2 = Main.getProjection().eastNorth2latlon(
                 new EastNorth(en.east(), en.north() + naturalScale));
-        
+
         double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
         return dist;
     }
-    
-    /**
-     * Moves the picture. Scaled in EastNorth...
-     */
-    public void movePictureBy( double east, double north ) {
-        m_position = m_position.add( east, north );
-    }
 
-    /**
-     * Scales the picture. scalex and scaley will multiply the current factor
-     */
-    public void scalePictureBy( double scalex, double scaley ) {
-        m_scalex *= scalex;
-        m_scaley *= scaley;
-    }
-
-    /**
-     * Rotates the picture. Scales in angles.
-     */
-    public void rotatePictureBy( double angle ) {
-        m_angle += angle;
-    }
-
-    /**
-     * Shear the picture. shearx and sheary will separately add to the
-     * corresponding current value
-     */
-    public void shearPictureBy( double shearx, double sheary ) {
-        m_shearx += shearx;
-        m_sheary += sheary;
-    }
-
-    /**
-     * Sets the image position to the initial position
-     */
-    public void resetPosition() {
-        m_position = m_initial_position;
-    }
-
-    /**
-     * Sets the image scale to 1.0
-     */
-    public void resetScale() {
-        m_scalex = 1.0;
-        m_scaley = 1.0;
-    }
-
-    /**
-     * Sets the image angle to 0.0
-     */
-    public void resetAngle() {
-        m_angle = 0.0;
-    }
-
-
-    /**
-     * Sets the image to no shear
-     */
-    public void resetShear() {
-        m_shearx = 0.0;
-        m_sheary = 0.0;
-    }
     @Override
     /**
      * Computes the (rough) bounding box.
@@ -356,28 +310,30 @@ public abstract class PicLayerAbstract extends Layer
      * rotation.
      */
     public void visitBoundingBox(BoundingXYVisitor arg0) {
-        if ( m_image == null )
+        if ( image == null )
             return;
         String projcode = Main.getProjection().toCode();
 
         // TODO: bounding box only supported when coordinates are in meters
-        // The reason for that is that this .cal think makes us a hard time. 
-        // The position is stored as a raw data (can be either in degrees or 
-        // in meters, depending on the projection used at creation), but the 
+        // The reason for that is that this .cal think makes us a hard time.
+        // The position is stored as a raw data (can be either in degrees or
+        // in meters, depending on the projection used at creation), but the
         // initial scale is in m/100pix
         // So for now, we support the bounding box only when everything is in meters
         if (projcode.equals("EPSG:4326") )
             return;
-            
-        EastNorth center = m_position;
-        double w = m_image.getWidth(null);
-        double h = m_image.getHeight(null);
+
+        EastNorth center = imagePosition;
+        double w = image.getWidth(null);
+        double h = image.getHeight(null);
         double diag_pix = Math.sqrt(w*w+h*h);
-        
-        // m_initial_scale is a the scale (unit: m/100pix) at creation time
-        double diag_m = (diag_pix/100) * m_initial_scale;
-        
-        double factor = Math.max(m_scalex, m_scaley);
+
+        // initialImageScale is a the scale (unit: m/100pix) at creation time
+        double diag_m = (diag_pix/100) * initialImageScale;
+
+        AffineTransform trans = transformer.getTransform();
+        double factor = Math.max(trans.getScaleX(), trans.getScaleY());
+
         double offset = factor * diag_m / 2.0;
 
         EastNorth topleft = center.add(-offset, -offset);
@@ -392,16 +348,17 @@ public abstract class PicLayerAbstract extends Layer
      */
     public void saveCalibration( Properties props ) {
         // Save
-        props.put(INITIAL_POS_X, "" + m_initial_position.getX());
-        props.put(INITIAL_POS_Y, "" + m_initial_position.getY());
-        props.put(POSITION_X, "" + m_position.getX());
-        props.put(POSITION_Y, "" + m_position.getY());
-        props.put(INITIAL_SCALE, "" + m_initial_scale);
-        props.put(SCALEX, "" + m_scalex);
-        props.put(SCALEY, "" + m_scaley);
-        props.put(ANGLE, "" + m_angle);
-        props.put(SHEARX, "" + m_shearx);
-        props.put(SHEARY, "" + m_sheary);
+        double[] matrix = new double[6];
+        transformer.getTransform().getMatrix(matrix);
+
+        props.put(MATRIXm00, Double.toString(matrix[0]));
+        props.put(MATRIXm01, Double.toString(matrix[1]));
+        props.put(MATRIXm10, Double.toString(matrix[2]));
+        props.put(MATRIXm11, Double.toString(matrix[3]));
+        props.put(MATRIXm02, Double.toString(matrix[4]));
+        props.put(MATRIXm12, Double.toString(matrix[5]));
+        props.put(POSITION_X, Double.toString(imagePosition.getX()));
+        props.put(POSITION_Y, Double.toString(imagePosition.getY()));
     }
 
     /**
@@ -422,8 +379,10 @@ public abstract class PicLayerAbstract extends Layer
      */
     public void loadCalibration( Properties props ) {
         // Load
-            double pos_x = Double.valueOf( props.getProperty(POSITION_X));
-            double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
+
+        AffineTransform transform;
+
+        if (props.containsKey(INITIAL_POS_X)) {// old format
             double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
             double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
             double angle = Double.valueOf( props.getProperty(ANGLE));
@@ -432,18 +391,38 @@ public abstract class PicLayerAbstract extends Layer
             double scale_y = Double.valueOf( props.getProperty(SCALEY));
             double shear_x = Double.valueOf( props.getProperty(SHEARX));
             double shear_y = Double.valueOf( props.getProperty(SHEARY));
-            m_position.setLocation(pos_x, pos_y);
-            m_initial_position.setLocation(pos_x, pos_y);
-            m_angle = angle;
-            m_scalex = scale_x;
-            m_scaley = scale_y;
-            m_shearx = shear_x;
-            m_sheary = shear_y;
-            m_initial_scale = in_scale;
-            // Refresh
-            Main.map.mapView.repaint();
+
+            initialImagePosition.setLocation(in_pos_x, in_pos_y);
+
+            // transform to matrix from these values - need testing
+            transform = AffineTransform.getRotateInstance(angle);
+            transform.scale(scale_x, scale_y);
+            transform.shear(shear_x, shear_y);
+            initialImageScale = in_scale;
+        } else {
+            double pos_x = Double.valueOf( props.getProperty(POSITION_X));
+            double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
+            imagePosition = new EastNorth(pos_x, pos_y);
+            initialImageScale = 1; //in_scale
+
+            // initialize matrix
+            double[] matrix = new double[6];
+            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00));
+            matrix[1] = Double.parseDouble(props.getProperty(MATRIXm01));
+            matrix[2] = Double.parseDouble(props.getProperty(MATRIXm10));
+            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11));
+            matrix[4] = Double.parseDouble(props.getProperty(MATRIXm02));
+            matrix[5] = Double.parseDouble(props.getProperty(MATRIXm12));
+
+            transform = new AffineTransform(matrix);
+        }
+        transformer.resetCalibration();
+        transformer.getTransform().concatenate(transform);
+
+        // Refresh
+        Main.map.mapView.repaint();
     }
-    
+
     public void loadWorldfile(InputStream is) throws IOException {
         BufferedReader br = null;
         try {
@@ -455,48 +434,94 @@ public abstract class PicLayerAbstract extends Layer
                 e[i] = Double.parseDouble(line);
             }
             double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
-            int w = m_image.getWidth(null);
-            int h = m_image.getHeight(null);
-            m_position.setLocation(
-                    dx + w/2*sx + h/2*rx, 
+            int w = image.getWidth(null);
+            int h = image.getHeight(null);
+            imagePosition.setLocation(
+                    dx + w/2*sx + h/2*rx,
                     dy + w/2*ry + h/2*sy
             );
-            m_initial_position.setLocation(m_position);
-            m_angle = 0;
-            m_scalex = 100*sx*getMetersPerEasting(m_position);
-            m_scaley = -100*sy*getMetersPerNorthing(m_position);
-            m_shearx = rx / sx;
-            m_sheary = ry / sy;
-            m_initial_scale = 1;
+            initialImagePosition.setLocation(imagePosition);
+//            m_angle = 0;
+            double scalex = 100*sx*getMetersPerEasting(imagePosition);
+            double scaley = -100*sy*getMetersPerNorthing(imagePosition);
+            double shearx = rx / sx;
+            double sheary = ry / sy;
+
+            transformer.resetCalibration();
+            AffineTransform tr = transformer.getTransform();
+            tr.scale(scalex, scaley);
+            tr.shear(shearx, sheary);
+
+            initialImageScale = 1;
             Main.map.mapView.repaint();
         } finally {
             Utils.close(br);
         }
     }
 
-    private class ResetSubmenuAction extends AbstractAction implements LayerAction {
+    public Point2D transformPoint(Point p) throws NoninvertibleTransformException {
+        // Position image at the right graphical place
 
-        public ResetSubmenuAction() {
-            super(tr("Reset"));
+        EastNorth center = Main.map.mapView.getCenter();
+        EastNorth leftop = Main.map.mapView.getEastNorth( 0, 0 );
+        // Number of pixels for one unit in east north space.
+        // This is the same in x- and y- direction.
+        double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
+
+        //     This is now the offset in screen pixels
+        double pic_offset_x = (( imagePosition.east() - leftop.east() ) * pixel_per_en);
+        double pic_offset_y = (( leftop.north() - imagePosition.north() ) * pixel_per_en); // something bad...
+
+        AffineTransform pointTrans = AffineTransform.getTranslateInstance(pic_offset_x, pic_offset_y);
+
+        double scalex = initialImageScale * pixel_per_en / getMetersPerEasting(imagePosition) / 100;
+        double scaley = initialImageScale * pixel_per_en / getMetersPerNorthing(imagePosition) / 100;
+
+        pointTrans.scale(scalex, scaley); // ok here
+
+        pointTrans.concatenate(transformer.getTransform());
+
+        Point2D result = pointTrans.inverseTransform(p, null);
+        return result;
+    }
+
+    /**
+     * Moves the picture. Scaled in EastNorth...
+     */
+    public void movePictureBy(double x, double y) {
+        imagePosition = imagePosition.add(x, y);
+    }
+
+    public void rotatePictureBy(double angle) {
+        transformer.concatenateTransform(AffineTransform.getRotateInstance(angle));
+    }
+
+    public void scalePictureBy(double scalex, double scaley) {
+        transformer.concatenateTransform(AffineTransform.getScaleInstance(scalex, scaley));
+    }
+
+    public void shearPictureBy(double shx, double shy) {
+        transformer.concatenateTransform(AffineTransform.getShearInstance(shx, shy));
+    }
+
+    public void resetCalibration() {
+        transformer.resetCalibration();
+        imagePosition.setLocation(initialImagePosition);
+    }
+
+    // get image coordinates by mouse coords
+    public Point2D findSelectedPoint(Point point) {
+        if (image == null)
+            return null;
+
+        try {
+            Point2D pressed = transformPoint(point);
+            for (Point2D p : transformer.getOriginPoints())
+                if (p.distance(pressed) <= 4.0) // if user clicked to select some of origin point
+                    return p;
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
         }
-
-        public void actionPerformed(ActionEvent e) {
-        }
-
-        public Component createMenuComponent() {
-            JMenu reset_submenu = new JMenu(this);
-            reset_submenu.add( new ResetPictureAllAction( PicLayerAbstract.this ) );
-            reset_submenu.addSeparator();
-            reset_submenu.add( new ResetPicturePositionAction( PicLayerAbstract.this ) );
-            reset_submenu.add( new ResetPictureAngleAction( PicLayerAbstract.this ) );
-            reset_submenu.add( new ResetPictureScaleAction( PicLayerAbstract.this ) );
-            reset_submenu.add( new ResetPictureShearAction( PicLayerAbstract.this ) );
-            return reset_submenu;
-        }
-
-        public boolean supportLayers(List<Layer> layers) {
-            return layers.size() == 1 && layers.get(0) instanceof PicLayerAbstract;
-        }
-
+        return null;
     }
 }

@@ -17,32 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
+import java.io.File;
 
-// TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
+import javax.swing.filechooser.FileFilter;
 
 /**
- * This class handles the input during scaling the picture.
+ * Filter for the file dialog. Allows only calibration files.
  */
-public class ScaleYPictureAction extends ScalePictureActionAbstract
-{
-    /*
-     * Constructor
-     */
-    public ScaleYPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale Y"), "scale_y", tr("Drag to scale the picture in the Y Axis"), frame);
-        // TODO Auto-generated constructor stub
+public class CalibrationFileFilter extends FileFilter {
+
+    // Extension used by calibration files
+    public static final String EXTENSION = ".cal";
+
+    @Override
+    public boolean accept(File f) {
+        String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
+
+        // TODO: check what is supported by Java :)
+        return ( f.isDirectory()
+            ||  ext3.equals( EXTENSION )
+            );
     }
 
-    public void doTheScale( double scale ) {
-            m_currentLayer.scalePictureBy( 1.0, scale );
-        }
+    @Override
+    public String getDescription() {
+        return tr("Calibration Files")+ " (*" + EXTENSION + ")";
+    }
 }

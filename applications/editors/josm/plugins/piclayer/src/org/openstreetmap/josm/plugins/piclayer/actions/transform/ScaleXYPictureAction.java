@@ -17,34 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-package org.openstreetmap.josm.plugins.piclayer;
+
+package org.openstreetmap.josm.plugins.piclayer.actions.transform;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.io.File;
-
-import javax.swing.filechooser.FileFilter;
+import org.openstreetmap.josm.gui.MapFrame;
 
 /**
- * Filter for the file dialog. Allows only calibration files.
+ * This class handles the input during scaling the picture.
  */
-public class CalibrationFileFilter extends FileFilter {
-
-    // Extension used by calibration files
-    public static final String EXTENSION = ".cal";
-
-    @Override
-    public boolean accept(File f) {
-        String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
-
-        // TODO: check what is supported by Java :)
-        return ( f.isDirectory()
-            ||  ext3.equals( EXTENSION )
-            );
+@SuppressWarnings("serial")
+public class ScaleXYPictureAction extends ScalePictureActionAbstract
+{
+    /*
+     * Constructor
+     */
+    public ScaleXYPictureAction(MapFrame frame) {
+        super(tr("PicLayer scale"), "scale", tr("Drag to scale the picture in the X and Y Axis"), frame);
     }
 
-    @Override
-    public String getDescription() {
-        return tr("Calibration Files")+ " (*" + EXTENSION + ")";
-    }
+    public void doTheScale( double scale ) {
+            currentLayer.scalePictureBy( scale, scale );
+        }
 }

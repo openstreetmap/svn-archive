@@ -18,31 +18,55 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
-
-// TODO: Move/Rotate/Scale/Shear action classes are similar. Do the redesign!
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 /**
- * This class handles the input during scaling the picture.
+ * Layer displaying a picture copied from the clipboard.
  */
-public class ScaleXYPictureAction extends ScalePictureActionAbstract
-{
-    /*
-     * Constructor
-     */
-    public ScaleXYPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale"), "scale", tr("Drag to scale the picture in the X and Y Axis"), frame);
-        // TODO Auto-generated constructor stub
+public class PicLayerFromClipboard extends PicLayerAbstract {
+
+    @Override
+    protected Image createImage() throws IOException {
+        // Return item
+        Image image = null;
+        // Access the clipboard
+        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        // Check result
+        if ( t == null ) {
+            throw new IOException(tr("Nothing in clipboard"));
+        }
+
+        // TODO: Why is it so slow?
+        // Try to make it an image data
+        try {
+            if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+                image = (Image)t.getTransferData(DataFlavor.imageFlavor);
+            } else {
+                throw new IOException(tr("The clipboard data is not an image"));
+            }
+        } catch (UnsupportedFlavorException e) {
+            throw new IOException( e.getMessage() );
+        }
+
+        return image;
     }
 
-    public void doTheScale( double scale ) {
-            m_currentLayer.scalePictureBy( scale, scale );
-        }
+    @Override
+    public String getPicLayerName() {
+        return "Clipboard";
+    }
+
+    @Override
+    protected void lookForCalibration() throws IOException {
+    }
+
 }

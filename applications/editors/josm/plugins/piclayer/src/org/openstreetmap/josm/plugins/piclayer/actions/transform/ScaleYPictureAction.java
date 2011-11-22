@@ -1,5 +1,4 @@
 /***************************************************************************
- *   Copyright (C) 2011 by Patrick "Petschge" Kilian, based on code        *
  *   Copyright (C) 2009 by Tomasz Stelmach                                 *
  *   http://www.stelmach-online.net/                                       *
  *                                                                         *
@@ -19,41 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-package org.openstreetmap.josm.plugins.piclayer;
+package org.openstreetmap.josm.plugins.piclayer.actions.transform;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.ActionEvent;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MapFrame;
 
 /**
- * Action for resetting properties of an image.
- * 
- * TODO Four almost identical classes. Refactoring needed.
+ * This class handles the input during scaling the picture.
  */
-public class ResetPictureShearAction extends JosmAction {
-
-    // Owner layer of the action
-    PicLayerAbstract m_owner = null;
-    
-    /**
+@SuppressWarnings("serial")
+public class ScaleYPictureAction extends ScalePictureActionAbstract
+{
+    /*
      * Constructor
      */
-    public ResetPictureShearAction( PicLayerAbstract owner ) {
-        super(tr("Shear"), null, tr("Resets picture shear"), null, false);
-        // Remember the owner...
-        m_owner = owner;
+    public ScaleYPictureAction(MapFrame frame) {
+        super(tr("PicLayer scale Y"), "scale_y", tr("Drag to scale the picture in the Y Axis"), frame);
     }
-    
-    /**
-     * Action handler
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        // Reset
-        m_owner.resetShear();
-        // Redraw
-        Main.map.mapView.repaint();
+
+    public void doTheScale( double scale ) {
+        currentLayer.scalePictureBy( 1.0, scale );
     }
 }

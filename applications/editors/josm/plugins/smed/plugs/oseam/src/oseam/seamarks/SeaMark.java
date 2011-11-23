@@ -254,7 +254,7 @@ public class SeaMark {
 		CatSTR.put(Cat.LMK_SCNR, "radar");
 		CatSTR.put(Cat.LMK_WNDL, "windmill");
 		CatSTR.put(Cat.LMK_SPIR, "spire");
-			 	}
+	}
 
 	private Cat category = Cat.NONE;
 

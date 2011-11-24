@@ -514,14 +514,19 @@ public abstract class PicLayerAbstract extends Layer {
         if (image == null)
             return null;
 
+        Point2D selected = null;
         try {
             Point2D pressed = transformPoint(point);
+            double mindist = 10;
             for (Point2D p : transformer.getOriginPoints())
-                if (p.distance(pressed) <= 4.0) // if user clicked to select some of origin point
-                    return p;
+                if (p.distance(pressed) < mindist) { // if user clicked to select some of origin point
+                    selected = p;
+                    mindist = p.distance(pressed);
+                }
+            return selected;
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
-        return null;
+        return selected;
     }
 }

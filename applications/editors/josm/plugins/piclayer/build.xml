@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - selection points are enlarged to 10 px"/>
+    <property name="commit.message" value="PicLayer - fixing #7075.2"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

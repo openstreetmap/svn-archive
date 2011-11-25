@@ -359,6 +359,7 @@ public abstract class PicLayerAbstract extends Layer {
         props.put(MATRIXm12, Double.toString(matrix[5]));
         props.put(POSITION_X, Double.toString(imagePosition.getX()));
         props.put(POSITION_Y, Double.toString(imagePosition.getY()));
+        props.put(INITIAL_SCALE, Double.toString(initialImageScale));
     }
 
     /**
@@ -382,7 +383,7 @@ public abstract class PicLayerAbstract extends Layer {
 
         AffineTransform transform;
 
-        if (props.containsKey(INITIAL_POS_X)) {// old format
+        if (props.containsKey(SCALEX)) {// old format
             double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
             double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
             double angle = Double.valueOf( props.getProperty(ANGLE));
@@ -400,10 +401,11 @@ public abstract class PicLayerAbstract extends Layer {
             transform.shear(shear_x, shear_y);
             initialImageScale = in_scale;
         } else {
-            double pos_x = Double.valueOf( props.getProperty(POSITION_X));
-            double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
+            double pos_x = Double.valueOf(props.getProperty(POSITION_X));
+            double pos_y = Double.valueOf(props.getProperty(POSITION_Y));
+
             imagePosition = new EastNorth(pos_x, pos_y);
-            initialImageScale = 1; //in_scale
+            initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE)); //in_scale
 
             // initialize matrix
             double[] matrix = new double[6];

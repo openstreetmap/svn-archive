@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - fixing issues like #6068, #6123, #5002"/>
+    <property name="commit.message" value="PicLayer - added action icons, fixed #7083"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

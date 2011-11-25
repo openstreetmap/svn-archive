@@ -95,7 +95,7 @@ public class NewLayerFromFileAction extends JosmAction {
      * Constructor...
      */
     public NewLayerFromFileAction() {
-        super(tr("New picture layer from file..."), null, null, null, false);
+        super(tr("New picture layer from file..."), "layericon24", null, null, false);
     }
 
     /**

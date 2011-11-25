@@ -70,7 +70,7 @@ public class PanelGeneral extends JPanel {
         tshelterLabel.setText("Schutz");
         qLabel = new JLabel();
         qLabel.setBounds(new Rectangle(50, 205, 85, 20));
-        qLabel.setText("Quarantäne");
+        qLabel.setText("Quarant√§ne");
         tugLabel = new JLabel();
         tugLabel.setBounds(new Rectangle(46, 140, 110, 20));
         tugLabel.setText("Schleppdienst");
@@ -256,7 +256,7 @@ public class PanelGeneral extends JPanel {
 			jCheckBox = new JCheckBox();
 			jCheckBox.setBounds(new Rectangle(5, 117, 110, 20));
 			jCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
-			jCheckBox.setText("verfügbar");
+			jCheckBox.setText("verf√ºgbar");
 		}
 		return jCheckBox;
 	}
@@ -341,7 +341,7 @@ public class PanelGeneral extends JPanel {
 			usualCheckBox = new JCheckBox();
 			usualCheckBox.setBounds(new Rectangle(5, 225, 62, 20));
 			usualCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
-			usualCheckBox.setText("üblich");
+			usualCheckBox.setText("√ºblich");
 		}
 		return usualCheckBox;
 	}

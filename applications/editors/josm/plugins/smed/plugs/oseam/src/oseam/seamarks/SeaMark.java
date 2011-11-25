@@ -1103,7 +1103,7 @@ public class SeaMark {
 	public String validDecimal(String str, float max) {
 		str = validDecimal(str);
 		if (!(str.isEmpty()) && (new Float(str) > max)) {
-			dlg.manager.showVisualMessage(Messages.getString("TooBig"));
+			dlg.manager.showVisualMessage(Messages.getString("TooBig") + " (" + max + ")");
 			return "";
 		} else {
 			dlg.manager.showVisualMessage("");

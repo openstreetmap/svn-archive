@@ -8,6 +8,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
+import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 
 public class SeaMark {
@@ -1090,8 +1091,8 @@ public class SeaMark {
 
 	public String validDecimal(String str) {
 		str = str.trim().replace(',', '.');
-		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
-			dlg.manager.showVisualMessage("Not a valid decimal string");
+		if (!(str.isEmpty()) && !(str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
+			dlg.manager.showVisualMessage(Messages.getString("NotDecimal"));
 			return "";
 		} else {
 			dlg.manager.showVisualMessage("");
@@ -1099,10 +1100,10 @@ public class SeaMark {
 		}
 	}
 
-	public String validDecimal(String str, int max) {
+	public String validDecimal(String str, float max) {
 		str = validDecimal(str);
-		if (!(str.isEmpty()) && (new Integer(str) > max)) {
-			dlg.manager.showVisualMessage("Maximum value exceeded");
+		if (!(str.isEmpty()) && (new Float(str) > max)) {
+			dlg.manager.showVisualMessage(Messages.getString("TooBig"));
 			return "";
 		} else {
 			dlg.manager.showVisualMessage("");

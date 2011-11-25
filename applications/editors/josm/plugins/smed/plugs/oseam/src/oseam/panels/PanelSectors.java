@@ -182,11 +182,13 @@ public class PanelSectors extends JFrame {
 			case 9:
 			case 10:
 			case 11:
-				dlg.mark.setLightAtt(col - 1, row, dlg.mark.validDecimal((String) value));
+				dlg.mark.setLightAtt(col - 1, row, value);
 				break;
 			case 6:
 				if ((Boolean) value == true) {
 					dlg.mark.setLightAtt(Att.LIT, row, Lit.DIR);
+					dlg.mark.setLightAtt(Att.BEG, row, "");
+					dlg.mark.setLightAtt(Att.END, row, "");
 				} else {
 					dlg.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
 					dlg.mark.setLightAtt(Att.ORT, row, "");
@@ -195,10 +197,9 @@ public class PanelSectors extends JFrame {
 			case 7:
 			case 8:
 				if (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
-					dlg.mark.setLightAtt(Att.ORT, row, dlg.mark.validDecimal((String) value));
+					dlg.mark.setLightAtt(Att.ORT, row, value);
 				} else {
-					dlg.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
-					dlg.mark.setLightAtt(col - 1, row, dlg.mark.validDecimal((String) value));
+					dlg.mark.setLightAtt(col - 1, row, value);
 				}
 				break;
 			case 12:

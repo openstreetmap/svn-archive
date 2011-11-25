@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - added action icons, fixed #7083"/>
+    <property name="commit.message" value="PicLayer - changed shortcut to prevent conflict with Imagery menu, #7084"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

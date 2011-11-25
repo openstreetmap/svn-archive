@@ -406,10 +406,10 @@ public abstract class PicLayerAbstract extends Layer {
         } else {
             // initialize matrix
             double[] matrix = new double[6];
-            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00, "0"));
+            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00, "1"));
             matrix[1] = Double.parseDouble(props.getProperty(MATRIXm01, "0"));
             matrix[2] = Double.parseDouble(props.getProperty(MATRIXm10, "0"));
-            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11, "0"));
+            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11, "1"));
             matrix[4] = Double.parseDouble(props.getProperty(MATRIXm02, "0"));
             matrix[5] = Double.parseDouble(props.getProperty(MATRIXm12, "0"));
 

@@ -565,7 +565,22 @@ public class SeaMark {
 		if (sectors.size() == i)
 			addLight(i);
 		if (sectors.size() > i)
-			sectors.get(i)[att] = obj;
+			switch (att) {
+			case 4:
+			case 8:
+			case 9:
+			case 10:
+			case 14:
+				sectors.get(i)[att] = validDecimal((String)obj);
+				break;
+			case 6:
+			case 7:
+			case 13:
+				sectors.get(i)[att] = validDecimal((String)obj, 360);
+				break;
+			default:
+				sectors.get(i)[att] = obj;
+			}
 	}
 
 	public void addLight(int i) {
@@ -1077,6 +1092,17 @@ public class SeaMark {
 		str = str.trim().replace(',', '.');
 		if ((!str.isEmpty()) && (!str.matches("^[+-]??\\d+(\\.\\d+)??$"))) {
 			dlg.manager.showVisualMessage("Not a valid decimal string");
+			return "";
+		} else {
+			dlg.manager.showVisualMessage("");
+			return str;
+		}
+	}
+
+	public String validDecimal(String str, int max) {
+		str = validDecimal(str);
+		if (!(str.isEmpty()) && (new Integer(str) > max)) {
+			dlg.manager.showVisualMessage("Maximum value exceeded");
 			return "";
 		} else {
 			dlg.manager.showVisualMessage("");

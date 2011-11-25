@@ -61,22 +61,34 @@ public class NewLayerFromFileAction extends JosmAction {
             String[] supportedExtensions = ImageIO.getReaderFormatNames();
 
             if ("zip".equalsIgnoreCase(fileExtension)) return true;
-            // Unfortunately, getReaderFormatNames does not always return ALL extensions in 
+            // Unfortunately, getReaderFormatNames does not always return ALL extensions in
             // both lower and upper case, so we can not do a search in the array
             for (String e: supportedExtensions)
-                if ( e.toLowerCase().equals(fileExtension) ) {
+                if ( e.equalsIgnoreCase(fileExtension) ) {
                     return true;
                 }
-                    
+
             return false;
         }
 
 
         @Override
         public String getDescription() {
-            return tr("Supported image files");
+            return tr("Supported image files + *.zip");
         }
 
+    }
+
+    private class AllFilesFilter extends FileFilter {
+        @Override
+        public String getDescription() {
+            return tr("All Files");
+        }
+
+        @Override
+        public boolean accept(File f) {
+            return true;
+        }
     }
 
     /**
@@ -89,13 +101,16 @@ public class NewLayerFromFileAction extends JosmAction {
     /**
      * Action handler
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
 
         // Choose a file
         JFileChooser fc = new JFileChooser(Main.pref.get(m_lastdirprefname));
         fc.setAcceptAllFileFilterUsed( false );
-        fc.setFileFilter( new ImageFileFilter() );
-        fc.setMultiSelectionEnabled(true); 
+        //fc.setFileFilter( new ImageFileFilter() );
+        fc.addChoosableFileFilter(new ImageFileFilter());
+        fc.addChoosableFileFilter(new AllFilesFilter());
+        fc.setMultiSelectionEnabled(true);
         int result = fc.showOpenDialog( Main.parent );
 
         // Create a layer?
@@ -111,7 +126,7 @@ public class NewLayerFromFileAction extends JosmAction {
 
             for(File file : fc.getSelectedFiles() ) {
                 // TODO: we need a progress bar here, it can take quite some time
-                
+
                 // Create layer from file
                 PicLayerFromFile layer = new PicLayerFromFile( file );
                 // Add layer only if successfully initialized
@@ -125,10 +140,10 @@ public class NewLayerFromFileAction extends JosmAction {
                     return;
                 }
                 Main.pref.put(m_lastdirprefname, file.getParent());
-        
+
                 Main.main.addLayer( layer );
                 Main.map.mapView.moveLayer(layer, newLayerPos++);
-                
+
                 if ( fc.getSelectedFiles().length == 1 && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0 ) {
                     // if we are loading a single picture file, zoom on it, so that the user can see something
                     BoundingXYVisitor v = new BoundingXYVisitor();

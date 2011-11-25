@@ -383,19 +383,19 @@ public abstract class PicLayerAbstract extends Layer {
 
         AffineTransform transform;
 
-        double pos_x = Double.valueOf(props.getProperty(POSITION_X));
-        double pos_y = Double.valueOf(props.getProperty(POSITION_Y));
+        double pos_x = Double.valueOf(props.getProperty(POSITION_X, "0"));
+        double pos_y = Double.valueOf(props.getProperty(POSITION_Y, "0"));
 
         imagePosition = new EastNorth(pos_x, pos_y);
-        initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE)); //in_scale
+        initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE, "1")); //in_scale
         if (props.containsKey(SCALEX)) {// old format
-            double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
-            double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
-            double angle = Double.valueOf( props.getProperty(ANGLE));
-            double scale_x = Double.valueOf( props.getProperty(SCALEX));
-            double scale_y = Double.valueOf( props.getProperty(SCALEY));
-            double shear_x = Double.valueOf( props.getProperty(SHEARX));
-            double shear_y = Double.valueOf( props.getProperty(SHEARY));
+            double in_pos_x = Double.valueOf(props.getProperty(INITIAL_POS_X, "0"));
+            double in_pos_y = Double.valueOf(props.getProperty(INITIAL_POS_Y, "0"));
+            double angle = Double.valueOf(props.getProperty(ANGLE, "0"));
+            double scale_x = Double.valueOf(props.getProperty(SCALEX, "1"));
+            double scale_y = Double.valueOf(props.getProperty(SCALEY, "1"));
+            double shear_x = Double.valueOf(props.getProperty(SHEARX, "0"));
+            double shear_y = Double.valueOf(props.getProperty(SHEARY, "0"));
 
             initialImagePosition.setLocation(in_pos_x, in_pos_y);
 
@@ -406,12 +406,12 @@ public abstract class PicLayerAbstract extends Layer {
         } else {
             // initialize matrix
             double[] matrix = new double[6];
-            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00));
-            matrix[1] = Double.parseDouble(props.getProperty(MATRIXm01));
-            matrix[2] = Double.parseDouble(props.getProperty(MATRIXm10));
-            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11));
-            matrix[4] = Double.parseDouble(props.getProperty(MATRIXm02));
-            matrix[5] = Double.parseDouble(props.getProperty(MATRIXm12));
+            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00, "0"));
+            matrix[1] = Double.parseDouble(props.getProperty(MATRIXm01, "0"));
+            matrix[2] = Double.parseDouble(props.getProperty(MATRIXm10, "0"));
+            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11, "0"));
+            matrix[4] = Double.parseDouble(props.getProperty(MATRIXm02, "0"));
+            matrix[5] = Double.parseDouble(props.getProperty(MATRIXm12, "0"));
 
             transform = new AffineTransform(matrix);
         }

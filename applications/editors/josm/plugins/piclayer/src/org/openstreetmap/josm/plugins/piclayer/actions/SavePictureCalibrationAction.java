@@ -37,7 +37,7 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
 /**
  * Action for resetting properties of an image.
- * 
+ *
  * TODO Four almost identical classes. Refactoring needed.
  */
 @SuppressWarnings("serial")
@@ -45,7 +45,7 @@ public class SavePictureCalibrationAction extends JosmAction {
 
     // Owner layer of the action
     PicLayerAbstract m_owner = null;
-    
+
     /**
      * Constructor
      */
@@ -54,10 +54,11 @@ public class SavePictureCalibrationAction extends JosmAction {
         // Remember the owner...
         m_owner = owner;
     }
-    
+
     /**
      * Action handler
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         // Save dialog
         final JFileChooser fc = new JFileChooser();
@@ -74,17 +75,17 @@ public class SavePictureCalibrationAction extends JosmAction {
                 || !path.substring( path.length() - 4 ).equals(CalibrationFileFilter.EXTENSION)) {
                 file = new File( path + CalibrationFileFilter.EXTENSION );
             }
-                        
+
             // Save
             Properties props = new Properties();
             m_owner.saveCalibration(props);
             try {
-                props.store(new FileOutputStream(file), tr("JOSM PicLayer plugin calibration data"));
+                props.store(new FileOutputStream(file), "JOSM PicLayer plugin calibration data");
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(Main.parent , tr("Saving file failed: {0}", e.getMessage()));
             }
-        }   
+        }
     }
 }

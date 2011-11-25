@@ -383,11 +383,15 @@ public abstract class PicLayerAbstract extends Layer {
 
         AffineTransform transform;
 
+        double pos_x = Double.valueOf(props.getProperty(POSITION_X));
+        double pos_y = Double.valueOf(props.getProperty(POSITION_Y));
+
+        imagePosition = new EastNorth(pos_x, pos_y);
+        initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE)); //in_scale
         if (props.containsKey(SCALEX)) {// old format
             double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
             double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
             double angle = Double.valueOf( props.getProperty(ANGLE));
-            double in_scale = Double.valueOf( props.getProperty(INITIAL_SCALE));
             double scale_x = Double.valueOf( props.getProperty(SCALEX));
             double scale_y = Double.valueOf( props.getProperty(SCALEY));
             double shear_x = Double.valueOf( props.getProperty(SHEARX));
@@ -396,17 +400,10 @@ public abstract class PicLayerAbstract extends Layer {
             initialImagePosition.setLocation(in_pos_x, in_pos_y);
 
             // transform to matrix from these values - need testing
-            transform = AffineTransform.getRotateInstance(angle);
+            transform = AffineTransform.getRotateInstance(angle/180*Math.PI);
             transform.scale(scale_x, scale_y);
             transform.shear(shear_x, shear_y);
-            initialImageScale = in_scale;
         } else {
-            double pos_x = Double.valueOf(props.getProperty(POSITION_X));
-            double pos_y = Double.valueOf(props.getProperty(POSITION_Y));
-
-            imagePosition = new EastNorth(pos_x, pos_y);
-            initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE)); //in_scale
-
             // initialize matrix
             double[] matrix = new double[6];
             matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00));

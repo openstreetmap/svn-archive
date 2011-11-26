@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
@@ -147,25 +148,25 @@ public class OsmChangesetContentParser {
             long version = getMandatoryAttributeLong(atts,"version");
             long changesetId = getMandatoryAttributeLong(atts,"changeset");
             boolean visible= getMandatoryAttributeBoolean(atts, "visible");
-            long uid = getAttributeLong(atts, "uid",-1);
-            String user = getAttributeString(atts, "user", tr("<anonymous>"));
             String v = getMandatoryAttributeString(atts, "timestamp");
             Date timestamp = DateUtils.fromString(v);
             HistoryOsmPrimitive primitive = null;
+            // Hack: reverter doesn't need user information, so always use User.getAnonymous()
+            // TODO: Update OsmChangesetContentParser from the core or update core OsmChangesetContentParser to make it usable with reverter
             if (type.equals(OsmPrimitiveType.NODE)) {
                 double lat = getMandatoryAttributeDouble(atts, "lat");
                 double lon = getMandatoryAttributeDouble(atts, "lon");
                 primitive = new HistoryNode(
-                        id,version,visible,user,uid,changesetId,timestamp, new LatLon(lat,lon)
+                        id,version,visible,User.getAnonymous(),changesetId,timestamp, new LatLon(lat,lon)
                 );
 
             } else if (type.equals(OsmPrimitiveType.WAY)) {
                 primitive = new HistoryWay(
-                        id,version,visible,user,uid,changesetId,timestamp
+                        id,version,visible,User.getAnonymous(),changesetId,timestamp
                 );
             }if (type.equals(OsmPrimitiveType.RELATION)) {
                 primitive = new HistoryRelation(
-                        id,version,visible,user,uid,changesetId,timestamp
+                        id,version,visible,User.getAnonymous(),changesetId,timestamp
                 );
             }
             return primitive;

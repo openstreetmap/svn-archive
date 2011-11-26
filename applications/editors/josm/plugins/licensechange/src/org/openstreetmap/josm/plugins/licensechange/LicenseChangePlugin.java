@@ -174,6 +174,8 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
                     "undecided".equals(d) ? User.STATUS_UNDECIDED :
                     "auto".equals(d) ? User.STATUS_AUTO_AGREED :
                     "yes".equals(d) ? User.STATUS_AGREED :
+                    "override".equals(d) ? User.STATUS_AGREED :
+                    "pd".equals(d) ? User.STATUS_AGREED :
                     "no".equals(d) ? User.STATUS_NOT_AGREED :
                     "anonymous".equals(d) ? User.STATUS_ANONYMOUS :
                     User.STATUS_UNKNOWN);

@@ -1,0 +1,16 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<ShortName>
+Amazon.de Suchvorschläge mit OSM-Beteiligung
+</ShortName>
+<Description>
+Amazon.de Suchvorschläge. Einkäufe über diese Suche generieren anteilig Spenden für OpenStreetMap.
+</Description>
+<InputEncoding>
+UTF-8
+</InputEncoding>
+<Image height="16" width="16" type="image/x-icon">
+http://g-ecx.images-amazon.com/images/G/01/Associates/Apps/Search/favicon._V230744766_.ico
+</Image>
+<Url type="text/html" rel="results" template="http://www.amazon.de/s/?ie=UTF-8&amp;tag=opensde-21&amp;link%5Fcode=qs&amp;index=aps&amp;field-keywords={searchTerms}"/>
+<Url type="application/x-suggestions+json" rel="results" template="http://completion.amazon.co.uk/search/complete?method=completion&amp;q={searchTerms}&amp;search-alias=aps&amp;client=amzn-search-suggestions/9fe582406fb5106f343a84083d78795713c12d68&amp;mkt=4"/>
+</OpenSearchDescription>

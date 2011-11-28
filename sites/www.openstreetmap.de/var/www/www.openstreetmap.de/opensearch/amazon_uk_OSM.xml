@@ -1,0 +1,23 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<ShortName>
+Amazon UK with OSM affiliate
+</ShortName>
+<Description>
+Amazon Search Suggestions for United Kingdom with affiliate tag for OpenStreetMap. Using this search will generate some money for the OSM project.
+</Description>
+<InputEncoding>
+UTF-8
+</InputEncoding>
+<Image height="16" width="16" type="image/x-icon">
+http://g-ecx.images-amazon.com/images/G/01/Associates/Apps/Search/favicon._V230744766_.ico
+</Image>
+<Url type="text/html" 
+	rel="results" 
+	template="http://www.amazon.co.uk/s?ie=UTF8&amp;tag=openstreetmap-21&amp;link_code=qs&amp;index=aps&amp;field-keywords={searchTerms}"/>
+<Url type="application/x-suggestions+json" 
+	rel="results" 
+	template="http://completion.amazon.co.uk/search/complete?method=completion&amp;tag=openstreetmap-21&amp;q={searchTerms}&amp;search-alias=aps&amp;client=amzn-search-suggestions/9fe582406fb5106f343a84083d78795713c12d68&amp;mkt=3"/>
+<Url type="application/opensearchdescription+xml" 
+	rel="self" 
+	template="http://d2lo25i6d3q8zm.cloudfront.net/browser-plugins/AmazonSearchSuggestionsOSD.MOZUK.xml"/>
+</OpenSearchDescription>

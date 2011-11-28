@@ -22,6 +22,7 @@ package org.openstreetmap.josm.plugins.piclayer;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -58,7 +59,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
     // Plugin menu
     private JMenu menu = null;
-    private ActionVisibilityChangeMenu actionVisibility;
 
     /**
      * Constructor...
@@ -101,21 +101,18 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             // Create plugin buttons and add them to the toolbar
 
             buttonList = new ArrayList<PicToggleButton>(7);
-            buttonList.add(new PicToggleButton(movePictureAction, "Move Picture", "piclayer.actionvisibility.move", true));
-            buttonList.add(new PicToggleButton(movePointAction, "Move Point", "piclayer.actionvisibility.movepoint", true));
-            buttonList.add(new PicToggleButton(transformPointAction, "Transform Point", "piclayer.actionvisibility.transformpoint", true));
-            buttonList.add(new PicToggleButton(rotatePictureAction, "Rotate", "piclayer.actionvisibility.rotate", false));
-            buttonList.add(new PicToggleButton(scaleXYPictureAction, "Scale", "piclayer.actionvisibility.scale", false));
-            buttonList.add(new PicToggleButton(scaleXPictureAction, "Scale X", "piclayer.actionvisibility.scalex", false));
-            buttonList.add(new PicToggleButton(scaleYPictureAction, "Scale Y", "piclayer.actionvisibility.scaley", false));
-            buttonList.add(new PicToggleButton(shearPictureAction, "Shear", "piclayer.actionvisibility.shear", false));
+            buttonList.add(new PicToggleButton(movePictureAction, tr("Move Picture"), "piclayer.actionvisibility.move", true));
+            buttonList.add(new PicToggleButton(movePointAction, tr("Move Point"), "piclayer.actionvisibility.movepoint", true));
+            buttonList.add(new PicToggleButton(transformPointAction, tr("Transform Point"), "piclayer.actionvisibility.transformpoint", true));
+            buttonList.add(new PicToggleButton(rotatePictureAction, tr("Rotate"), "piclayer.actionvisibility.rotate", false));
+            buttonList.add(new PicToggleButton(scaleXYPictureAction, tr("Scale"), "piclayer.actionvisibility.scale", false));
+            buttonList.add(new PicToggleButton(scaleXPictureAction, tr("Scale X"), "piclayer.actionvisibility.scalex", false));
+            buttonList.add(new PicToggleButton(scaleYPictureAction, tr("Scale Y"), "piclayer.actionvisibility.scaley", false));
+            buttonList.add(new PicToggleButton(shearPictureAction, tr("Shear"), "piclayer.actionvisibility.shear", false));
 
             for(IconToggleButton btn : buttonList) {
                 newFrame.addMapMode(btn);
             }
-
-            if (actionVisibility == null)
-                menu.add(actionVisibility = new ActionVisibilityChangeMenu());
         }
     }
 
@@ -128,8 +125,10 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         boolean newPic = newLayer instanceof PicLayerAbstract;
         // actually that should be not enough - JOSM should hide all buttons that are disabled for current layer!
         if (oldPic && !newPic || oldLayer == null && !newPic) { // leave picture layer - hide all controls
-            for (PicToggleButton btn : buttonList)
+            for (PicToggleButton btn : buttonList) {
+                btn.writeVisible();
                 btn.setVisible(false);
+            }
         }
         if (!oldPic && newPic) { // enter picture layer - reset visibility of controls
             for (PicToggleButton btn : buttonList)

@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - changed shortcut to prevent conflict with Imagery menu, #7084"/>
+    <property name="commit.message" value="PicLayer - removed hiding buttons from PicLayer main menu - this is in core responsibility now"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

@@ -33,5 +33,8 @@ public class PicToggleButton extends IconToggleButton {
     public void readVisible() {
         setVisible(Main.pref.getBoolean(getVisibilityKey(), getDefVisibility()));
     }
+    public void writeVisible() {
+        Main.pref.put(getVisibilityKey(), isVisible());
+    }
 
 }

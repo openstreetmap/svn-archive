@@ -129,6 +129,8 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
                 btn.writeVisible();
                 btn.setVisible(false);
             }
+            if (oldLayer != null)
+                ((PicLayerAbstract)oldLayer).setDrawPoints(false);
         }
         if (!oldPic && newPic) { // enter picture layer - reset visibility of controls
             for (PicToggleButton btn : buttonList)

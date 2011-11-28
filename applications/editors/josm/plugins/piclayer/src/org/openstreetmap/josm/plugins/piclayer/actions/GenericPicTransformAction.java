@@ -53,7 +53,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	    // Start action
 	    if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
 	        currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
-	
+
 	        if ( currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
 	            isDragging = true;
 	            prevMousePoint = new Point(e.getPoint());
@@ -87,6 +87,13 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	public boolean layerIsSupported(Layer l) {
 		return l instanceof PicLayerAbstract;
 	}
-	
-	
+
+	protected void updateDrawPoints(boolean value) {
+	    Layer active = Main.map.mapView.getActiveLayer();
+        if (active instanceof PicLayerAbstract) {
+            ((PicLayerAbstract)active).setDrawPoints(value);
+        }
+        Main.map.mapView.repaint();
+	}
+
 }

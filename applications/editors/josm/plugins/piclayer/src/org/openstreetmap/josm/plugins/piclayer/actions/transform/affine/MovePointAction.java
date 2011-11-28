@@ -31,12 +31,12 @@ public class MovePointAction extends GenericPicTransformAction {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (currentLayer == null)
 			return;
-		
+
 		try {
 			Point2D pressed = currentLayer.transformPoint(e.getPoint());
 			if (selectedPoint == null)
@@ -45,5 +45,17 @@ public class MovePointAction extends GenericPicTransformAction {
 			e1.printStackTrace();
 		}
 		Main.map.mapView.repaint();
+	}
+
+	@Override
+	public void enterMode() {
+	    super.enterMode();
+	    updateDrawPoints(true);
+	}
+
+	@Override
+	public void exitMode() {
+	    super.exitMode();
+	    updateDrawPoints(false);
 	}
 }

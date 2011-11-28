@@ -33,5 +33,15 @@ public class TransformPointAction extends GenericPicTransformAction {
 			e1.printStackTrace();
 		}
 	}
+    @Override
+    public void enterMode() {
+        super.enterMode();
+        updateDrawPoints(true);
+    }
 
+    @Override
+    public void exitMode() {
+        super.exitMode();
+        updateDrawPoints(false);
+    }
 }

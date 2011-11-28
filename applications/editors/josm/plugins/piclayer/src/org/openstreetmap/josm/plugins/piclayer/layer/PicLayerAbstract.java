@@ -76,6 +76,12 @@ public abstract class PicLayerAbstract extends Layer {
     // Layer icon
     private Icon layerIcon = null;
 
+    private boolean drawPoints = true;
+
+    public void setDrawPoints(boolean value) {
+        drawPoints = value;
+    }
+
     private PictureTransform transformer;
 
     public PictureTransform getTransformer() {
@@ -238,23 +244,24 @@ public abstract class PicLayerAbstract extends Layer {
                     image.getHeight(null)
                 );
             }
-            // draw points for selection
-            Graphics2D gPoints = (Graphics2D)g2.create();
+            if (drawPoints ) {
+                // draw points for selection
+                Graphics2D gPoints = (Graphics2D)g2.create();
 
-            gPoints.translate(pic_offset_x, pic_offset_y);
+                gPoints.translate(pic_offset_x, pic_offset_y);
 
-            gPoints.setColor(Color.RED); // red color for points output
+                gPoints.setColor(Color.RED); // red color for points output
 
-            AffineTransform tr = AffineTransform.getScaleInstance(scalex, scaley);
-            tr.concatenate(transformer.getTransform());
+                AffineTransform tr = AffineTransform.getScaleInstance(scalex, scaley);
+                tr.concatenate(transformer.getTransform());
 
-            for (Point2D p : transformer.getOriginPoints()) {
-               Point2D trP = tr.transform(p, null);
-               int x = (int)trP.getX(), y = (int)trP.getY();
-               gPoints.drawOval(x-2, y-2, 5, 5);
-               gPoints.drawImage(pinImage, x, y, null);
+                for (Point2D p : transformer.getOriginPoints()) {
+                   Point2D trP = tr.transform(p, null);
+                   int x = (int)trP.getX(), y = (int)trP.getY();
+                   gPoints.drawOval(x-2, y-2, 5, 5);
+                   gPoints.drawImage(pinImage, x, y, null);
+                }
             }
-
         } else {
             // TODO: proper logging
             System.out.println( "PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D" );

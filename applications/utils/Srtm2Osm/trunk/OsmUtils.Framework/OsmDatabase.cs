@@ -141,6 +141,12 @@ namespace OsmUtils.Framework
                 exportedNode.Visible = node.Visible;
                 exportedNode.Action = FormatOsmObjectAction (node.Action);
 
+                // Do explicity set the Lat- / LonSpecified properties.
+                // Otherwise the lat / lon XML attributes would not get written, if the node has
+                // a latitude or longitude of exactly 0°.
+                exportedNode.LatSpecified = true;
+                exportedNode.LonSpecified = true;
+
                 exportedNode.Tag = new List<tag> ();
                 foreach (OsmTag tag in node.EnumerateTags ())
                     exportedNode.Tag.Add (new tag (tag.Key, tag.Value));

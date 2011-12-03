@@ -127,6 +127,7 @@ namespace Srtm2Osm
 
                                 way.Id = wayId++;
                                 way.Nd = new List<osmWayND> ();
+                                way.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
 
                                 int firstNodeId = 0;
 
@@ -138,6 +139,13 @@ namespace Srtm2Osm
                                     node.Id = nodeId++;
                                     node.Lat = point.Y + corrY;
                                     node.Lon = point.X + corrX;
+                                    node.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+
+                                    // Do explicity set the Lat- / LonSpecified properties.
+                                    // Otherwise the lat / lon XML attributes would not get written, if the node has
+                                    // a latitude or longitude of exactly 0°.
+                                    node.LatSpecified = true;
+                                    node.LonSpecified = true;
 
                                     if (i == 0)
                                         firstNodeId = node.Id;

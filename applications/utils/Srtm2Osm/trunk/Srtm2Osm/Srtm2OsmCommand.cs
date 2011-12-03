@@ -419,6 +419,10 @@ namespace Srtm2Osm
                 }
             }
 
+            // Check if bounds were specified
+            if (bounds == null)
+                throw new ArgumentException ("No bounds specified.");
+
             return startFrom;
         }
 

@@ -3,6 +3,21 @@ Srtm2Osm tool by Igor Brejc
 VERSION HISTORY
 ---------------
 
+1.8 ext
+-------
+- id range starts at 2 billion now, fixes overlapping real ids (User:Michi2)
+(not build with build system)
+
+1.8
+---
+- set download base url with parameter -source (User:Bomm)
+- correct offset of contour lines (60m to SW) with parameter -corrxy. A setting of -corrxy 0.0005 0.0005 appears to give good results. (User:Bomm)
+- improved error handling (User:Bomm)
+
+1.7
+---
+- fixed the downloading mechanism to work with the new SRTM server of NASA (User:Bomm)
+
 1.4
 ---
 - -large option added for covering large areas

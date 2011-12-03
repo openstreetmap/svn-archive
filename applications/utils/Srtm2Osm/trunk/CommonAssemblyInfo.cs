@@ -11,12 +11,12 @@ using System.Reflection;
 //------------------------------------------------------------------------------
 
 [assembly: AssemblyConfigurationAttribute("release")]
-[assembly: AssemblyCompanyAttribute("Igor Brejc")]
+[assembly: AssemblyCompanyAttribute("Igor Brejc and others")]
 [assembly: AssemblyProductAttribute("Srtm2Osm")]
-[assembly: AssemblyCopyrightAttribute("Copyright (C) 2007-2009 Igor Brejc")]
+[assembly: AssemblyCopyrightAttribute("Copyright (C) 2007-2011 Igor Brejc and others")]
 [assembly: AssemblyTrademarkAttribute("")]
 [assembly: AssemblyCultureAttribute("")]
-[assembly: AssemblyFileVersionAttribute("1.8.14.10")]
+[assembly: AssemblyFileVersionAttribute("1.8.2802.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.8")]
 [assembly: AssemblyDelaySignAttribute(false)]
 [assembly: AssemblyKeyNameAttribute("")]

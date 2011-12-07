@@ -34,7 +34,6 @@ public class PanelFog extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel groupLabel;
@@ -42,7 +41,6 @@ public class PanelFog extends JPanel {
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setFogGroup(groupBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel periodLabel;
@@ -50,7 +48,6 @@ public class PanelFog extends JPanel {
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setFogPeriod(periodBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel seqLabel;

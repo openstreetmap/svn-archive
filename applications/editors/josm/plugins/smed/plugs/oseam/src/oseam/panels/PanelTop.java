@@ -44,7 +44,6 @@ public class PanelTop extends JPanel {
 					button.setBorderPainted(false);
 			}
 			mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
-			dlg.mark.paintSign();
 		}
 	};
 

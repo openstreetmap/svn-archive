@@ -30,7 +30,6 @@ public class PanelRadar extends JPanel {
 				}
 			}
 			syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel groupLabel;
@@ -38,7 +37,6 @@ public class PanelRadar extends JPanel {
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setRaconGroup(groupBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel periodLabel;
@@ -46,7 +44,6 @@ public class PanelRadar extends JPanel {
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setRaconPeriod(periodBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel seqLabel;
@@ -54,7 +51,6 @@ public class PanelRadar extends JPanel {
 	private ActionListener alSeq = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setRaconSequence(seqBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel rangeLabel;
@@ -62,7 +58,6 @@ public class PanelRadar extends JPanel {
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			dlg.mark.setRaconRange(rangeBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	public JLabel sector1Label;

@@ -57,7 +57,6 @@ public class PanelCol extends JPanel {
 							}
 							syncPanel();
 						}
-						dlg.mark.paintSign();
 				} else {
 					button.setBorderPainted(false);
 				}
@@ -79,7 +78,6 @@ public class PanelCol extends JPanel {
 					button.setBorderPainted(false);
 				}
 			}
-			dlg.mark.paintSign();
 		}
 	};
 

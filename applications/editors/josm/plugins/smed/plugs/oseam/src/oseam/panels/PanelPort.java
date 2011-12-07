@@ -83,7 +83,6 @@ public class PanelPort extends JPanel {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
 				dlg.panelMain.panelChan.lightButton.setVisible(false);
 			}
-			dlg.mark.paintSign();
 		}
 	};
 

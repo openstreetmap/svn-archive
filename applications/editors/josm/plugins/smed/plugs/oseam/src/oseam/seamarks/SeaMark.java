@@ -1,7 +1,10 @@
 package oseam.seamarks;
 
-import java.awt.*;
 import javax.swing.*;
+
+import java.awt.*;
+import java.awt.geom.Arc2D;
+
 import java.util.*;
 
 import org.openstreetmap.josm.Main;
@@ -11,7 +14,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 
-public class SeaMark {
+public class SeaMark extends JPanel {
 
 	public OSeaMAction dlg = null;
 
@@ -50,6 +53,7 @@ public class SeaMark {
 
 	public void setName(String str) {
 		name = str.trim();
+		repaint();
 	}
 
 	public enum Obj {
@@ -96,6 +100,7 @@ public class SeaMark {
 
 	public void setObject(Obj obj) {
 		object = obj;
+		repaint();
 	}
 
 	public enum Ent {
@@ -265,6 +270,7 @@ public class SeaMark {
 
 	public void setCategory(Cat cat) {
 		category = cat;
+		repaint();
 	}
 
 	public enum Shp {
@@ -298,6 +304,7 @@ public class SeaMark {
 
 	public void setShape(Shp shp) {
 		shape = shp;
+		repaint();
 	}
 
 	public enum Col {
@@ -386,11 +393,13 @@ public class SeaMark {
 	public void setObjColour(Col col) {
 		bodyColour.clear();
 		bodyColour.add(col);
+		repaint();
 	}
 
 	public void setObjColour(int i, Col col) {
 		if (bodyColour.size() > i)
 			bodyColour.set(i, col);
+		repaint();
 	}
 
 	public void addObjColour(int i, Col col) {
@@ -419,11 +428,13 @@ public class SeaMark {
 	public void setTopColour(Col col) {
 		topmarkColour.clear();
 		topmarkColour.add(col);
+		repaint();
 	}
 
 	public void setTopColour(int i, Col col) {
 		if (topmarkColour.size() > i)
 			topmarkColour.set(i, col);
+		repaint();
 	}
 
 	public void addTopColour(int i, Col col) {
@@ -582,6 +593,7 @@ public class SeaMark {
 			default:
 				sectors.get(i)[att] = obj;
 			}
+		repaint();
 	}
 
 	public void addLight(int i) {
@@ -688,6 +700,7 @@ public class SeaMark {
 
 	public void setTopmark(Top top) {
 		topShape = top;
+		repaint();
 	}
 
 	public enum Rtb {
@@ -709,6 +722,7 @@ public class SeaMark {
 
 	public void setRadar(Rtb type) {
 		RaType = type;
+		repaint();
 	}
 
 	private String raconGroup = "";
@@ -719,6 +733,7 @@ public class SeaMark {
 
 	public void setRaconGroup(String grp) {
 		raconGroup = grp;
+		repaint();
 	}
 
 	private String raconSequence = "";
@@ -729,6 +744,7 @@ public class SeaMark {
 
 	public void setRaconSequence(String seq) {
 		raconSequence = seq;
+		repaint();
 	}
 
 	private String raconPeriod = "";
@@ -739,6 +755,7 @@ public class SeaMark {
 
 	public void setRaconPeriod(String per) {
 		raconPeriod = validDecimal(per);
+		repaint();
 	}
 
 	private String raconRange = "";
@@ -749,6 +766,7 @@ public class SeaMark {
 
 	public void setRaconRange(String rng) {
 		raconRange = validDecimal(rng);
+		repaint();
 	}
 
 	private String raconSector1 = "";
@@ -759,6 +777,7 @@ public class SeaMark {
 
 	public void setRaconSector1(String sec) {
 		raconSector1 = validDecimal(sec);
+		repaint();
 	}
 
 	private String raconSector2 = "";
@@ -769,6 +788,7 @@ public class SeaMark {
 
 	public void setRaconSector2(String sec) {
 		raconSector2 = validDecimal(sec);
+		repaint();
 	}
 
 	public enum Fog {
@@ -795,6 +815,7 @@ public class SeaMark {
 
 	public void setFogSound(Fog sound) {
 		fogSound = sound;
+		repaint();
 	}
 
 	private String fogGroup = "";
@@ -805,6 +826,7 @@ public class SeaMark {
 
 	public void setFogGroup(String grp) {
 		fogGroup = grp;
+		repaint();
 	}
 
 	private String fogSequence = "";
@@ -815,6 +837,7 @@ public class SeaMark {
 
 	public void setFogSequence(String seq) {
 		fogSequence = seq;
+		repaint();
 	}
 
 	private String fogRange = "";
@@ -825,6 +848,7 @@ public class SeaMark {
 
 	public void setFogRange(String rng) {
 		fogRange = validDecimal(rng);
+		repaint();
 	}
 
 	private String fogPeriod = "";
@@ -835,6 +859,7 @@ public class SeaMark {
 
 	public void setFogPeriod(String per) {
 		fogPeriod = validDecimal(per);
+		repaint();
 	}
 
 	public enum Sts {
@@ -963,11 +988,11 @@ public class SeaMark {
 
 	public String height = "";
 
-	public String getHeight() {
+	public String getObjectHeight() {
 		return height;
 	}
 
-	public void setHeight(String str) {
+	public void setObjectHeight(String str) {
 		height = validDecimal(str);
 	}
 
@@ -1086,7 +1111,6 @@ public class SeaMark {
 		dlg.panelMain.litButton.setEnabled(false);
 		dlg.panelMain.panelMore.syncPanel();
 		dlg.panelMain.panelMore.setVisible(false);
-		paintSign();
 	}
 
 	public String validDecimal(String str) {
@@ -1111,10 +1135,7 @@ public class SeaMark {
 		}
 	}
 
-	private boolean paintlock = false;
-
 	public void parseMark(Node node) {
-		paintlock = true;
 		dlg.manager.showVisualMessage("");
 		String str = Main.pref.get("smedplugin.IALA");
 		if (str.equals("C"))
@@ -1223,7 +1244,7 @@ public class SeaMark {
 			}
 
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":height")) {
-				setHeight(keys.get("seamark:" + ObjSTR.get(obj) + ":height"));
+				setObjectHeight(keys.get("seamark:" + ObjSTR.get(obj) + ":height"));
 			}
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":elevation")) {
 				setElevation(keys.get("seamark:" + ObjSTR.get(obj) + ":elevation"));
@@ -1531,7 +1552,7 @@ public class SeaMark {
 			setSource(keys.get("seamark:source"));
 		}
 		if (keys.containsKey("seamark:height")) {
-			setHeight(keys.get("seamark:height"));
+			setObjectHeight(keys.get("seamark:height"));
 		}
 		if (keys.containsKey("seamark:elevation")) {
 			setElevation(keys.get("seamark:elevation"));
@@ -1591,26 +1612,14 @@ public class SeaMark {
 
 		dlg.panelMain.syncPanel();
 
-		paintlock = false;
-		paintSign();
 	}
 
-	public void paintSign() {
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
+    Graphics2D g2 = (Graphics2D) g;
 
-		if (paintlock)
-			return;
-
-		dlg.panelMain.shapeIcon.setIcon(null);
-		dlg.panelMain.litLabel.setText("");
-		dlg.panelMain.colLabel.setText("");
-		dlg.panelMain.radarLabel.setText("");
-		dlg.panelMain.fogLabel.setText("");
-		dlg.panelMain.topIcon.setIcon(null);
-		dlg.panelMain.fogIcon.setIcon(null);
-		dlg.panelMain.radarIcon.setIcon(null);
-		dlg.panelMain.lightIcon.setIcon(null);
-
-		String colStr;
+    String colStr;
 		String lblStr;
 		String imgStr = "/images/";
 		if (getShape() != Shp.UNKNOWN) {
@@ -1731,15 +1740,12 @@ public class SeaMark {
 					if (getClass().getResource(imgStr) == null) {
 						System.out.println("Missing image: " + imgStr);
 					} else {
-						dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
-								.getResource(imgStr)));
-						dlg.panelMain.colLabel.setText(lblStr);
+						g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
+						g.drawString(lblStr, 75, 110);
 					}
 				} else {
-					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
+					g.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
 				}
-			} else {
-				dlg.panelMain.shapeIcon.setIcon(null);
 			}
 		} else if (getObject() != Obj.UNKNOWN) {
 			switch (getObject()) {
@@ -1804,10 +1810,8 @@ public class SeaMark {
 				if (getClass().getResource(imgStr) == null) {
 					System.out.println("Missing image: " + imgStr);
 				} else {
-					dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
-			} else {
-				dlg.panelMain.shapeIcon.setIcon(null);
 			}
 		}
 
@@ -1913,86 +1917,40 @@ public class SeaMark {
 					System.out.println("Missing image: " + imgStr);
 					return;
 				} else {
-					dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(imgStr)));
+					g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
 			} else {
-				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass().getResource(colStr)));
-			}
-		} else {
-			dlg.panelMain.topIcon.setIcon(null);
-		}
-
-		if (getFogSound() != Fog.NONE) {
-			dlg.panelMain.fogIcon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
-			String str = "";
-			if (getFogSound() != Fog.UNKNOWN)
-				switch (getFogSound()) {
-				case HORN:
-					str = "Horn";
-					break;
-				case SIREN:
-					str = "Siren";
-					break;
-				case DIA:
-					str = "Dia";
-					break;
-				case BELL:
-					str = "Bell";
-					break;
-				case WHIS:
-					str = "Whis";
-					break;
-				case GONG:
-					str = "Gong";
-					break;
-				case EXPLOS:
-					str = "Explos";
-					break;
-				}
-			if (!getFogGroup().isEmpty())
-				str += ("(" + getFogGroup() + ")");
-			else
-				str += " ";
-			if (!getFogPeriod().isEmpty())
-				str += getFogPeriod() + "s";
-			dlg.panelMain.fogLabel.setText(str);
-		}
-
-		if (RaType != Rtb.NONE) {
-			if (getRadar() == Rtb.REFLECTOR) {
-				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
-			} else {
-				dlg.panelMain.radarIcon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
-				String str = "";
-				if (getRadar() == Rtb.RAMARK)
-					str += "Ramark";
-				else
-					str += "Racon";
-				if (!getRaconGroup().isEmpty())
-					str += ("(" + getRaconGroup() + ")");
-				else
-					str += " ";
-				if (!getRaconPeriod().isEmpty())
-					str += getRaconPeriod() + "s";
-				dlg.panelMain.radarLabel.setText(str);
+				g.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
 			}
 		}
 
+		for (int i = 1; i < sectors.size(); i++) {
+	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	    g2.setPaint(ColMAP.get(getLightAtt(Att.COL, i)));
+	    g2.setStroke(new BasicStroke(6.0f));
+	    if (!((String)getLightAtt(Att.BEG, i)).isEmpty() && !((String)getLightAtt(Att.END, i)).isEmpty()) {
+	    	Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.BEG, i));
+	    	Double da = 270 - Double.parseDouble((String)getLightAtt(Att.END, i)) - a0;
+	    	da -= da > 0 ? 360 : 0; 
+	    	g2.draw(new Arc2D.Double(12, 15, 140, 140, a0, da, Arc2D.OPEN));
+	    }
+		}
+    g2.setPaint(Color.BLACK);
 		if (getLightAtt(Att.COL, 0) != Col.UNKNOWN) {
 			if (sectors.size() == 1) {
 				switch ((Col) getLightAtt(Att.COL, 0)) {
 				case RED:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
+					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")).getImage(), 7, -15, null);
 					break;
 				case GREEN:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")).getImage(), 7, -15, null);
 					break;
 				case WHITE:
 				case YELLOW:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_White_120.png")).getImage(), 7, -15, null);
 					break;
 				default:
-					dlg.panelMain.lightIcon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
 				}
 			}
 			String c = (String) dlg.mark.getLightAtt(Att.CHR, 0);
@@ -2044,10 +2002,65 @@ public class SeaMark {
 			tmp = (String) getLightAtt(Att.PER, 0);
 			if (!tmp.isEmpty())
 				c += " " + tmp + "s";
-			dlg.panelMain.litLabel.setText(c);
+			g.drawString(c, 100, 70);
 		}
 
-		paintlock = false;
+		if (getFogSound() != Fog.NONE) {
+			g.drawImage(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")).getImage(), 7, -15, null);
+			String str = "";
+			if (getFogSound() != Fog.UNKNOWN)
+				switch (getFogSound()) {
+				case HORN:
+					str = "Horn";
+					break;
+				case SIREN:
+					str = "Siren";
+					break;
+				case DIA:
+					str = "Dia";
+					break;
+				case BELL:
+					str = "Bell";
+					break;
+				case WHIS:
+					str = "Whis";
+					break;
+				case GONG:
+					str = "Gong";
+					break;
+				case EXPLOS:
+					str = "Explos";
+					break;
+				}
+			if (!getFogGroup().isEmpty())
+				str += ("(" + getFogGroup() + ")");
+			else
+				str += " ";
+			if (!getFogPeriod().isEmpty())
+				str += getFogPeriod() + "s";
+			g.drawString(str, 0, 70);
+		}
+
+		if (RaType != Rtb.NONE) {
+			if (getRadar() == Rtb.REFLECTOR) {
+				g.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")).getImage(), 7, -15, null);
+			} else {
+				g.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
+				String str = "";
+				if (getRadar() == Rtb.RAMARK)
+					str += "Ramark";
+				else
+					str += "Racon";
+				if (!getRaconGroup().isEmpty())
+					str += ("(" + getRaconGroup() + ")");
+				else
+					str += " ";
+				if (!getRaconPeriod().isEmpty())
+					str += getRaconPeriod() + "s";
+				g.drawString(str, 0, 50);
+			}
+		}
+
 	}
 
 	public void saveSign(Node node) {
@@ -2102,8 +2115,8 @@ public class SeaMark {
 						break;
 					}
 				}
-				if (!getHeight().isEmpty()) {
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":height", getHeight()));
+				if (!getObjectHeight().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":height", getObjectHeight()));
 				}
 				if (!getElevation().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":elevation", getElevation()));

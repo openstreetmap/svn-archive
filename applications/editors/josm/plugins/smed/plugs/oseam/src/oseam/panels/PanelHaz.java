@@ -70,7 +70,6 @@ public class PanelHaz extends JPanel {
 			alTop.actionPerformed(null);
 			alLit.actionPerformed(null);
 			dlg.panelMain.panelMore.syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 	private ButtonGroup shapeButtons = new ButtonGroup();
@@ -101,7 +100,6 @@ public class PanelHaz extends JPanel {
 			}
 			topmarkButton.setVisible(dlg.mark.testValid());
 			lightButton.setVisible(dlg.mark.testValid());
-			dlg.mark.paintSign();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/HazTopButton.png")));
@@ -135,7 +133,6 @@ public class PanelHaz extends JPanel {
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 	public JToggleButton lightButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/DefLitButton.png")));
@@ -171,7 +168,6 @@ public class PanelHaz extends JPanel {
 				lightButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelLit.syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 
@@ -199,7 +195,7 @@ public class PanelHaz extends JPanel {
 		topmarkButton.addActionListener(alTop);
 		topmarkButton.setVisible(false);
 		this.add(topmarkButton);
-		lightButton.setBounds(new Rectangle(165, 0, 34, 32));
+		lightButton.setBounds(new Rectangle(130, 32, 34, 32));
 		lightButton.setToolTipText(Messages.getString("Light"));
 		lightButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		lightButton.addActionListener(alLit);

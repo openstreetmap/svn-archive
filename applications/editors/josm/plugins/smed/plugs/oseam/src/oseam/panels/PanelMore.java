@@ -39,7 +39,7 @@ public class PanelMore extends JPanel {
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setHeight(heightBox.getText());
+			dlg.mark.setObjectHeight(heightBox.getText());
 		}
 	};
 	public JLabel statusLabel;
@@ -306,7 +306,7 @@ public class PanelMore extends JPanel {
 		regionBButton.setBorderPainted(dlg.mark.getRegion() == Reg.B);
 		regionCButton.setBorderPainted(dlg.mark.getRegion() == Reg.C);
 		elevBox.setText(dlg.mark.getElevation());
-		heightBox.setText(dlg.mark.getHeight());
+		heightBox.setText(dlg.mark.getObjectHeight());
 		sourceBox.setText(dlg.mark.getSource());
 		infoBox.setText(dlg.mark.getInfo());
 		for (Sts sts : statuses.keySet()) {

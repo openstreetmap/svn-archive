@@ -64,7 +64,6 @@ public class PanelChr extends JPanel {
 				}
 			}
 			dlg.mark.setLightAtt(Att.CHR, 0, charBox.getText());
-			dlg.mark.paintSign();
 		}
 	};
 	private ActionListener alCharBox = new ActionListener() {
@@ -88,7 +87,6 @@ public class PanelChr extends JPanel {
 					button.setBorderPainted(false);
 				}
 			}
-			dlg.mark.paintSign();
 		}
 	};
 

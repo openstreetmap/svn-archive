@@ -107,7 +107,6 @@ public class PanelChan extends JPanel {
 			alTop.actionPerformed(null);
 			lightButton.setVisible(dlg.mark.testValid());
 			alLit.actionPerformed(null);
-			dlg.mark.paintSign();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
@@ -168,7 +167,6 @@ public class PanelChan extends JPanel {
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 	public JToggleButton lightButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/DefLitButton.png")));
@@ -213,7 +211,6 @@ public class PanelChan extends JPanel {
 				lightButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelLit.syncPanel();
-			dlg.mark.paintSign();
 		}
 	};
 
@@ -244,7 +241,7 @@ public class PanelChan extends JPanel {
 		topmarkButton.addActionListener(alTop);
 		topmarkButton.setVisible(false);
 		this.add(topmarkButton);
-		lightButton.setBounds(new Rectangle(165, 0, 34, 32));
+		lightButton.setBounds(new Rectangle(130, 32, 34, 32));
 		lightButton.setToolTipText(Messages.getString("Light"));
 		lightButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		lightButton.addActionListener(alLit);

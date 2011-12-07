@@ -22,15 +22,6 @@ public class PanelMain extends JPanel {
 	public PanelFog panelFog = null;
 	public PanelRadar panelRadar = null;
 	public PanelLit panelLit = null;
-	public JLabel shapeIcon = null;
-	public JLabel lightIcon = null;
-	public JLabel topIcon = null;
-	public JLabel radarIcon = null;
-	public JLabel radarLabel = null;
-	public JLabel fogIcon = null;
-	public JLabel fogLabel = null;
-	public JLabel colLabel = null;
-	public JLabel litLabel = null;
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
 	private ActionListener alName = new ActionListener() {
@@ -171,16 +162,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 200, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 185, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 200, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 185, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 200, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 185, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 200, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 185, 160));
 		panelLights.setVisible(false);
 		panelMore = new PanelMore(dlg);
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
@@ -197,34 +188,6 @@ public class PanelMain extends JPanel {
 		panelLit = new PanelLit(dlg);
 		panelLit.setBounds(new Rectangle(40, 165, 360, 160));
 		panelLit.setVisible(false);
-
-		shapeIcon = new JLabel();
-		shapeIcon.setBounds(new Rectangle(235, 0, 150, 185));
-		this.add(shapeIcon, null);
-		lightIcon = new JLabel();
-		lightIcon.setBounds(new Rectangle(235, 0, 150, 185));
-		this.add(lightIcon, null);
-		topIcon = new JLabel();
-		topIcon.setBounds(new Rectangle(235, 0, 150, 185));
-		this.add(topIcon, null);
-		radarIcon = new JLabel();
-		radarIcon.setBounds(new Rectangle(235, 0, 150, 185));
-		this.add(radarIcon, null);
-		fogIcon = new JLabel();
-		fogIcon.setBounds(new Rectangle(235, 0, 150, 185));
-		this.add(fogIcon, null);
-		radarLabel = new JLabel("", SwingConstants.CENTER);
-		litLabel = new JLabel("", SwingConstants.CENTER);
-		litLabel.setBounds(new Rectangle(210, 35, 100, 20));
-		this.add(litLabel, null);
-		radarLabel.setBounds(new Rectangle(210, 55, 100, 20));
-		this.add(radarLabel, null);
-		fogLabel = new JLabel("", SwingConstants.CENTER);
-		fogLabel.setBounds(new Rectangle(210, 75, 100, 20));
-		this.add(fogLabel, null);
-		colLabel = new JLabel("", SwingConstants.CENTER);
-		colLabel.setBounds(new Rectangle(235, 100, 150, 20));
-		this.add(colLabel, null);
 
 		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
 		this.add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
@@ -280,7 +243,7 @@ public class PanelMain extends JPanel {
 		saveButton.addActionListener(alSave);
 
 		moreButton = new JButton();
-		moreButton.setBounds(new Rectangle(350, 145, 40, 15));
+		moreButton.setBounds(new Rectangle(190, 145, 40, 15));
 		moreButton.setMargin(new Insets(0, 0, 0, 0));
 		moreButton.setText("v v v");
 		this.add(moreButton, null);
@@ -320,15 +283,6 @@ public class PanelMain extends JPanel {
 		panelFog.setVisible(false);
 		panelRadar.setVisible(false);
 		panelLit.setVisible(false);
-		radarLabel.setText("");
-		fogLabel.setText("");
-		colLabel.setText("");
-		litLabel.setText("");
-		shapeIcon.setIcon(null);
-		lightIcon.setIcon(null);
-		topIcon.setIcon(null);
-		radarIcon.setIcon(null);
-		fogIcon.setIcon(null);
 		nameBox.setEnabled(false);
 		if (dlg.mark != null) {
 			nameBox.setEnabled(true);

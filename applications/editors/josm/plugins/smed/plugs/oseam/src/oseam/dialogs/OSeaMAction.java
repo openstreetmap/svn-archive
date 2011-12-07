@@ -36,6 +36,8 @@ public class OSeaMAction {
 						if (nextNode.compareTo(node) != 0) {
 							node = nextNode;
 							mark = new SeaMark(dlg);
+							mark.setBounds(new Rectangle(235, 0, 165, 160));
+							panelMain.add(mark, 0);
 							mark.parseMark(node);
 						}
 					} else {

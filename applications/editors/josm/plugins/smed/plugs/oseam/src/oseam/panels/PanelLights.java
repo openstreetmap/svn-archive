@@ -26,7 +26,6 @@ public class PanelLights extends JPanel {
 				if (dlg.mark != null && (idx == landCatBox.getSelectedIndex())) {
 					dlg.mark.setCategory(cat);
 					dlg.mark.testValid();
-					dlg.mark.paintSign();
 				}
 			}
 		}
@@ -40,7 +39,6 @@ public class PanelLights extends JPanel {
 				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex())) {
 					dlg.mark.setCategory(cat);
 					dlg.mark.testValid();
-					dlg.mark.paintSign();
 				}
 			}
 		}
@@ -54,7 +52,6 @@ public class PanelLights extends JPanel {
 				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex())) {
 					dlg.mark.setCategory(cat);
 					dlg.mark.testValid();
-					dlg.mark.paintSign();
 				}
 			}
 		}
@@ -110,7 +107,6 @@ public class PanelLights extends JPanel {
 				warningCatBox.setVisible(false);
 			}
 			dlg.mark.testValid();
-			dlg.mark.paintSign();
 		}
 	};
 

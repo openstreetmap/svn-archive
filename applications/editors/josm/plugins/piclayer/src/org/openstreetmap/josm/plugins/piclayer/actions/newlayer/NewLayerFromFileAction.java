@@ -106,10 +106,9 @@ public class NewLayerFromFileAction extends JosmAction {
 
         // Choose a file
         JFileChooser fc = new JFileChooser(Main.pref.get(m_lastdirprefname));
-        fc.setAcceptAllFileFilterUsed( false );
-        //fc.setFileFilter( new ImageFileFilter() );
-        fc.addChoosableFileFilter(new ImageFileFilter());
-        fc.addChoosableFileFilter(new AllFilesFilter());
+        fc.setAcceptAllFileFilterUsed( true );
+        fc.setFileFilter( new ImageFileFilter() );
+
         fc.setMultiSelectionEnabled(true);
         int result = fc.showOpenDialog( Main.parent );
 

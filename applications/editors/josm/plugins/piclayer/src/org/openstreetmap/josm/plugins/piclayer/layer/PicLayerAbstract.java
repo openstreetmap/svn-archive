@@ -367,6 +367,8 @@ public abstract class PicLayerAbstract extends Layer {
         props.put(POSITION_X, Double.toString(imagePosition.getX()));
         props.put(POSITION_Y, Double.toString(imagePosition.getY()));
         props.put(INITIAL_SCALE, Double.toString(initialImageScale));
+
+        transformer.resetModified();
     }
 
     /**
@@ -496,18 +498,38 @@ public abstract class PicLayerAbstract extends Layer {
      */
     public void movePictureBy(double x, double y) {
         imagePosition = imagePosition.add(x, y);
+        transformer.setModified();
     }
 
+
     public void rotatePictureBy(double angle) {
-        transformer.concatenateTransform(AffineTransform.getRotateInstance(angle));
+        try {
+            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
+
+            transformer.concatenateTransformPoint(AffineTransform.getRotateInstance(angle), trans);
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
     }
 
     public void scalePictureBy(double scalex, double scaley) {
-        transformer.concatenateTransform(AffineTransform.getScaleInstance(scalex, scaley));
+        try {
+            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
+
+            transformer.concatenateTransformPoint(AffineTransform.getScaleInstance(scalex, scaley), trans);
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
     }
 
     public void shearPictureBy(double shx, double shy) {
-        transformer.concatenateTransform(AffineTransform.getShearInstance(shx, shy));
+        try {
+            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
+
+            transformer.concatenateTransformPoint(AffineTransform.getShearInstance(shx, shy), trans);
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
     }
 
     public void resetCalibration() {

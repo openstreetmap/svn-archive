@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - now markers are visible only when they are needed - active Layer and transform/add marker mapmode"/>
+    <property name="commit.message" value="PicLayer - 1. now all toolbar operations are done relatively to screen center. 2. If user tries to close layer without saving - confirmation is needed. 3. Other small fixes"/>
     <property name="plugin.main.version" value="4549"/>
     <!--
       ************************************************

@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
@@ -38,6 +40,7 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.newlayer.NewLayerFromClipboardAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.newlayer.NewLayerFromFileAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.MovePictureAction;
@@ -153,6 +156,13 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      */
     @Override
     public void layerRemoved(Layer arg0) {
+        if (arg0 instanceof PicLayerAbstract && ((PicLayerAbstract) arg0).getTransformer().isModified()) {
+            if (JOptionPane.showConfirmDialog(Main.parent, tr("Do you want to save current calibration of layer {0}?",
+                    ((PicLayerAbstract)arg0).getPicLayerName()),
+                    UIManager.getString("OptionPane.titleText"),
+                    JOptionPane.YES_NO_OPTION) == 0)
+                new SavePictureCalibrationAction((PicLayerAbstract) arg0).actionPerformed(null);
+        }
         boolean enable = Main.map.mapView.getAllLayers().size() != 0;
         menu.setEnabled(enable);
     }

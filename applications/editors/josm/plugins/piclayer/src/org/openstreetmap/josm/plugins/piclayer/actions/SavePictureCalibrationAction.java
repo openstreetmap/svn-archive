@@ -62,7 +62,7 @@ public class SavePictureCalibrationAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         // Save dialog
         final JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed( false );
+        fc.setAcceptAllFileFilterUsed( true );
         fc.setFileFilter( new CalibrationFileFilter() );
         fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
         int result = fc.showSaveDialog( Main.parent );

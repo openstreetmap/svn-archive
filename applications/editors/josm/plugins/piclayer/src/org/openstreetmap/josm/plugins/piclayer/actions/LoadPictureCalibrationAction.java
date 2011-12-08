@@ -36,14 +36,14 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
 /**
  * Action to load the calibration file.
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class LoadPictureCalibrationAction extends JosmAction {
 
     // Owner layer of the action
     PicLayerAbstract m_owner = null;
-    
+
     // Persistent FileChooser instance to remember last directory
     JFileChooser m_filechooser = null;
 
@@ -59,17 +59,18 @@ public class LoadPictureCalibrationAction extends JosmAction {
     /**
      * Action handler
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         // Save dialog
         JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed( false );
+        fc.setAcceptAllFileFilterUsed( true );
         fc.setFileFilter( new CalibrationFileFilter() );
         fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
         int result = fc.showOpenDialog(Main.parent );
 
         if ( result == JFileChooser.APPROVE_OPTION ) {
-                    
-            // Load 
+
+            // Load
             try {
                 m_owner.loadCalibration(new FileInputStream(fc.getSelectedFile()));
             } catch (Exception e) {
@@ -79,5 +80,5 @@ public class LoadPictureCalibrationAction extends JosmAction {
             }
         }
     }
-    
+
 }

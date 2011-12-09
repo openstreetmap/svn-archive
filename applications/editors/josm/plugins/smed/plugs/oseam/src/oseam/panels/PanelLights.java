@@ -23,9 +23,9 @@ public class PanelLights extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : landCats.keySet()) {
 				int idx = landCats.get(cat);
-				if (dlg.mark != null && (idx == landCatBox.getSelectedIndex())) {
-					dlg.mark.setCategory(cat);
-					dlg.mark.testValid();
+				if (dlg.node != null && (idx == landCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
 				}
 			}
 		}
@@ -36,9 +36,9 @@ public class PanelLights extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : trafficCats.keySet()) {
 				int idx = trafficCats.get(cat);
-				if (dlg.mark != null && (idx == trafficCatBox.getSelectedIndex())) {
-					dlg.mark.setCategory(cat);
-					dlg.mark.testValid();
+				if (dlg.node != null && (idx == trafficCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
 				}
 			}
 		}
@@ -49,9 +49,9 @@ public class PanelLights extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : warningCats.keySet()) {
 				int idx = warningCats.get(cat);
-				if (dlg.mark != null && (idx == warningCatBox.getSelectedIndex())) {
-					dlg.mark.setCategory(cat);
-					dlg.mark.testValid();
+				if (dlg.node != null && (idx == warningCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
 				}
 			}
 		}
@@ -71,16 +71,16 @@ public class PanelLights extends JPanel {
 			for (Obj obj : objects.keySet()) {
 				JRadioButton button = objects.get(obj);
 				if (button.isSelected()) {
-					dlg.mark.setObject(obj);
+					dlg.panelMain.mark.setObject(obj);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark.getObject() == Obj.LITVES)
-				dlg.mark.setShape(Shp.SUPER);
-			else if (dlg.mark.getObject() == Obj.LITFLT)
-				dlg.mark.setShape(Shp.FLOAT);
-			else dlg.mark.setShape(Shp.UNKNOWN);
+			if (dlg.panelMain.mark.getObject() == Obj.LITVES)
+				dlg.panelMain.mark.setShape(Shp.SUPER);
+			else if (dlg.panelMain.mark.getObject() == Obj.LITFLT)
+				dlg.panelMain.mark.setShape(Shp.FLOAT);
+			else dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 			if (landButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				landCatBox.setVisible(true);
@@ -100,13 +100,13 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				alWarningCatBox.actionPerformed(null);
 			} else {
-				dlg.mark.setCategory(Cat.NONE);
+				dlg.panelMain.mark.setCategory(Cat.NONE);
 				categoryLabel.setVisible(false);
 				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 			}
-			dlg.mark.testValid();
+			dlg.panelMain.mark.testValid();
 		}
 	};
 
@@ -196,34 +196,34 @@ public class PanelLights extends JPanel {
 	}
 
 	public void syncPanel() {
-		if ((dlg.mark.getObject() == Obj.LNDMRK) && (dlg.mark.getCategory() != Cat.NONE)) {
+		if ((dlg.panelMain.mark.getObject() == Obj.LNDMRK) && (dlg.panelMain.mark.getCategory() != Cat.NONE)) {
 			categoryLabel.setVisible(true);
 			landCatBox.setVisible(true);
 			trafficCatBox.setVisible(false);
 			warningCatBox.setVisible(false);
 			for (Cat cat : landCats.keySet()) {
 				int item = landCats.get(cat);
-				if (dlg.mark.getCategory() == cat)
+				if (dlg.panelMain.mark.getCategory() == cat)
 					landCatBox.setSelectedIndex(item);
 			}
-		} else if (dlg.mark.getObject() == Obj.SISTAT) {
+		} else if (dlg.panelMain.mark.getObject() == Obj.SISTAT) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
 				for (Cat cat : trafficCats.keySet()) {
 					int item = trafficCats.get(cat);
-					if (dlg.mark.getCategory() == cat)
+					if (dlg.panelMain.mark.getCategory() == cat)
 						trafficCatBox.setSelectedIndex(item);
 				}
-		} else if (dlg.mark.getObject() == Obj.SISTAW) {
+		} else if (dlg.panelMain.mark.getObject() == Obj.SISTAW) {
 			categoryLabel.setVisible(true);
 			warningCatBox.setVisible(true);
 			landCatBox.setVisible(false);
 			trafficCatBox.setVisible(false);
 			for (Cat cat : warningCats.keySet()) {
 				int item = warningCats.get(cat);
-				if (dlg.mark.getCategory() == cat)
+				if (dlg.panelMain.mark.getCategory() == cat)
 					warningCatBox.setSelectedIndex(item);
 			}
 		} else {
@@ -234,9 +234,9 @@ public class PanelLights extends JPanel {
 		}
 		for (Obj obj : objects.keySet()) {
 			JRadioButton button = objects.get(obj);
-			button.setBorderPainted(dlg.mark.getObject() == obj);
+			button.setBorderPainted(dlg.panelMain.mark.getObject() == obj);
 		}
-		dlg.mark.testValid();
+		dlg.panelMain.mark.testValid();
 	}
 	
 	private void addLCItem(String str, Cat cat) {

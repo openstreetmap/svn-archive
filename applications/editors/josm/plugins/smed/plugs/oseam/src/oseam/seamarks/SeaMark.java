@@ -1111,6 +1111,7 @@ public class SeaMark extends JPanel {
 		dlg.panelMain.litButton.setEnabled(false);
 		dlg.panelMain.panelMore.syncPanel();
 		dlg.panelMain.panelMore.setVisible(false);
+		repaint();
 	}
 
 	public String validDecimal(String str) {
@@ -1617,11 +1618,9 @@ public class SeaMark extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		if (dlg.node == null) return;
+		
     Graphics2D g2 = (Graphics2D) g;
-    
-    if (dlg.mark == null) {
-    	return;
-    }
     
     String colStr;
 		String lblStr;
@@ -1957,7 +1956,7 @@ public class SeaMark extends JPanel {
 					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
 				}
 			}
-			String c = (String) dlg.mark.getLightAtt(Att.CHR, 0);
+			String c = (String) getLightAtt(Att.CHR, 0);
 			String tmp = "";
 			if (c.contains("+")) {
 				int i1 = c.indexOf("+");
@@ -1993,8 +1992,8 @@ public class SeaMark extends JPanel {
 			tmp = (String) getLightAtt(Att.MLT, 0);
 			if (!tmp.isEmpty())
 				c = tmp + c;
-			if (dlg.mark.getLightAtt(Att.LIT, 0) != Lit.UNKNOWN) {
-				switch ((Lit)dlg.mark.getLightAtt(Att.LIT, 0)) {
+			if (getLightAtt(Att.LIT, 0) != Lit.UNKNOWN) {
+				switch ((Lit)getLightAtt(Att.LIT, 0)) {
 				case VERT:
 					c += "(Vert)";
 					break;

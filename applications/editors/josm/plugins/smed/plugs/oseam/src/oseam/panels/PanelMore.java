@@ -18,28 +18,28 @@ public class PanelMore extends JPanel {
 	public JTextField infoBox;
 	private ActionListener alInfo = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setInfo(infoBox.getText());
+			dlg.panelMain.mark.setInfo(infoBox.getText());
 		}
 	};
 	public JLabel sourceLabel;
 	public JTextField sourceBox;
 	private ActionListener alSource = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setSource(sourceBox.getText());
+			dlg.panelMain.mark.setSource(sourceBox.getText());
 		}
 	};
 	public JLabel elevLabel;
 	public JTextField elevBox;
 	private ActionListener alElev = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setElevation(elevBox.getText());
+			dlg.panelMain.mark.setElevation(elevBox.getText());
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setObjectHeight(heightBox.getText());
+			dlg.panelMain.mark.setObjectHeight(heightBox.getText());
 		}
 	};
 	public JLabel statusLabel;
@@ -49,8 +49,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Sts sts : statuses.keySet()) {
 				int idx = statuses.get(sts);
-				if (dlg.mark != null && (idx == statusBox.getSelectedIndex()))
-					dlg.mark.setStatus(sts);
+				if (dlg.panelMain.mark != null && (idx == statusBox.getSelectedIndex()))
+					dlg.panelMain.mark.setStatus(sts);
 			}
 		}
 	};
@@ -61,8 +61,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cns cns : constructions.keySet()) {
 				int idx = constructions.get(cns);
-				if (dlg.mark != null && (idx == constrBox.getSelectedIndex()))
-					dlg.mark.setConstr(cns);
+				if (dlg.panelMain.mark != null && (idx == constrBox.getSelectedIndex()))
+					dlg.panelMain.mark.setConstr(cns);
 			}
 		}
 	};
@@ -73,8 +73,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : conspicuities.keySet()) {
 				int idx = conspicuities.get(con);
-				if (dlg.mark != null && (idx == conBox.getSelectedIndex()))
-					dlg.mark.setConsp(con);
+				if (dlg.panelMain.mark != null && (idx == conBox.getSelectedIndex()))
+					dlg.panelMain.mark.setConsp(con);
 			}
 		}
 	};
@@ -85,8 +85,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : reflectivities.keySet()) {
 				int idx = reflectivities.get(con);
-				if (dlg.mark != null && (idx == reflBox.getSelectedIndex()))
-					dlg.mark.setRefl(con);
+				if (dlg.panelMain.mark != null && (idx == reflBox.getSelectedIndex()))
+					dlg.panelMain.mark.setRefl(con);
 			}
 		}
 	};
@@ -98,27 +98,27 @@ public class PanelMore extends JPanel {
 	private ActionListener alRegion = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (regionAButton.isSelected()) {
-				dlg.mark.setRegion(Reg.A);
-				switch (dlg.mark.getCategory()) {
+				dlg.panelMain.mark.setRegion(Reg.A);
+				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PPORT:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
 					break;
 				case LAM_STBD:
-					dlg.mark.setObjColour(Col.GREEN);
-					dlg.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjColour(Col.GREEN);
+					dlg.panelMain.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PSTBD:
-					dlg.mark.setObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
 					break;
 				}
 				regionAButton.setBorderPainted(true);
@@ -126,27 +126,27 @@ public class PanelMore extends JPanel {
 				regionAButton.setBorderPainted(false);
 			}
 			if (regionBButton.isSelected()) {
-				dlg.mark.setRegion(Reg.B);
-				switch (dlg.mark.getCategory()) {
+				dlg.panelMain.mark.setRegion(Reg.B);
+				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setObjColour(Col.GREEN);
-					dlg.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjColour(Col.GREEN);
+					dlg.panelMain.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PPORT:
-					dlg.mark.setObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
 					break;
 				case LAM_STBD:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.setObjPattern(Pat.NONE);
 					break;
 				case LAM_PSTBD:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
 					break;
 				}
 				regionBButton.setBorderPainted(true);
@@ -154,27 +154,27 @@ public class PanelMore extends JPanel {
 				regionBButton.setBorderPainted(false);
 			}
 			if (regionCButton.isSelected()) {
-				dlg.mark.setRegion(Reg.C);
-				dlg.mark.setObjPattern(Pat.HORIZ);
-				switch (dlg.mark.getCategory()) {
+				dlg.panelMain.mark.setRegion(Reg.C);
+				dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.WHITE);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.WHITE);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.WHITE);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.WHITE);
 					break;
 				case LAM_PPORT:
 				case LAM_PSTBD:
-					dlg.mark.setObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.RED);
-					dlg.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.setObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.RED);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
 					break;
 				case LAM_STBD:
-					dlg.mark.setObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.WHITE);
-					dlg.mark.addObjColour(Col.GREEN);
-					dlg.mark.addObjColour(Col.WHITE);
+					dlg.panelMain.mark.setObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.WHITE);
+					dlg.panelMain.mark.addObjColour(Col.GREEN);
+					dlg.panelMain.mark.addObjColour(Col.WHITE);
 					break;
 				}
 				regionCButton.setBorderPainted(true);
@@ -302,31 +302,31 @@ public class PanelMore extends JPanel {
 
 	public void syncPanel() {
 		panelPat.syncPanel();
-		regionAButton.setBorderPainted(dlg.mark.getRegion() == Reg.A);
-		regionBButton.setBorderPainted(dlg.mark.getRegion() == Reg.B);
-		regionCButton.setBorderPainted(dlg.mark.getRegion() == Reg.C);
-		elevBox.setText(dlg.mark.getElevation());
-		heightBox.setText(dlg.mark.getObjectHeight());
-		sourceBox.setText(dlg.mark.getSource());
-		infoBox.setText(dlg.mark.getInfo());
+		regionAButton.setBorderPainted(dlg.panelMain.mark.getRegion() == Reg.A);
+		regionBButton.setBorderPainted(dlg.panelMain.mark.getRegion() == Reg.B);
+		regionCButton.setBorderPainted(dlg.panelMain.mark.getRegion() == Reg.C);
+		elevBox.setText(dlg.panelMain.mark.getElevation());
+		heightBox.setText(dlg.panelMain.mark.getObjectHeight());
+		sourceBox.setText(dlg.panelMain.mark.getSource());
+		infoBox.setText(dlg.panelMain.mark.getInfo());
 		for (Sts sts : statuses.keySet()) {
 			int item = statuses.get(sts);
-			if (dlg.mark.getStatus() == sts)
+			if (dlg.panelMain.mark.getStatus() == sts)
 				statusBox.setSelectedIndex(item);
 		}
 		for (Cns cns : constructions.keySet()) {
 			int item = constructions.get(cns);
-			if (dlg.mark.getConstr() == cns)
+			if (dlg.panelMain.mark.getConstr() == cns)
 				constrBox.setSelectedIndex(item);
 		}
 		for (Con con : conspicuities.keySet()) {
 			int item = conspicuities.get(con);
-			if (dlg.mark.getConsp() == con)
+			if (dlg.panelMain.mark.getConsp() == con)
 				conBox.setSelectedIndex(item);
 		}
 		for (Con con : reflectivities.keySet()) {
 			int item = reflectivities.get(con);
-			if (dlg.mark.getRefl() == con)
+			if (dlg.panelMain.mark.getRefl() == con)
 				reflBox.setSelectedIndex(item);
 		}
 	}

@@ -63,13 +63,13 @@ public class PanelChr extends JPanel {
 					}
 				}
 			}
-			dlg.mark.setLightAtt(Att.CHR, 0, charBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, charBox.getText());
 		}
 	};
 	private ActionListener alCharBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			String str = charBox.getText();
-			dlg.mark.setLightAtt(Att.CHR, 0, str);
+			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, str);
 			EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
 			for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
 				if (str.equals(SeaMark.ChrMAP.get(map))) {
@@ -119,11 +119,11 @@ public class PanelChr extends JPanel {
 	}
 
 	public void syncPanel() {
-		String str = (String)dlg.mark.getLightAtt(Att.CHR, 0);
+		String str = (String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0);
 		charBox.setText(str);
 		EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
 		for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
-			if (str.equals(SeaMark.ChrMAP.get(map))) {
+			if (dlg.node != null && str.equals(SeaMark.ChrMAP.get(map))) {
 				set = map;
 				break;
 			}

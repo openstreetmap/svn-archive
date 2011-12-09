@@ -125,7 +125,7 @@ public class PanelSectors extends JFrame {
 		}
 
 		public int getRowCount() {
-			return dlg.mark.getSectorCount();
+			return dlg.panelMain.mark.getSectorCount();
 		}
 
 		public boolean isCellEditable(int row, int col) {
@@ -151,21 +151,21 @@ public class PanelSectors extends JFrame {
 				else
 					return row;
 			case 1:
-				return dlg.mark.getLightAtt(Att.COL, row);
+				return dlg.panelMain.mark.getLightAtt(Att.COL, row);
 			case 6:
-				return (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
+				return (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
 			case 7:
 			case 8:
-				if (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR)
-					return dlg.mark.getLightAtt(Att.ORT, row);
+				if (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR)
+					return dlg.panelMain.mark.getLightAtt(Att.ORT, row);
 				else
-					return dlg.mark.getLightAtt(col - 1, row);
+					return dlg.panelMain.mark.getLightAtt(col - 1, row);
 			case 12:
-				return visibilities.get(dlg.mark.getLightAtt(Att.VIS, row));
+				return visibilities.get(dlg.panelMain.mark.getLightAtt(Att.VIS, row));
 			case 13:
-				return exhibitions.get(dlg.mark.getLightAtt(Att.EXH, row));
+				return exhibitions.get(dlg.panelMain.mark.getLightAtt(Att.EXH, row));
 			default:
-				return dlg.mark.getLightAtt(col - 1, row);
+				return dlg.panelMain.mark.getLightAtt(col - 1, row);
 			}
 		}
 
@@ -175,49 +175,49 @@ public class PanelSectors extends JFrame {
 				for (Col colour : colours.keySet()) {
 					ImageIcon img = colours.get(colour);
 					if (img == value)
-						dlg.mark.setLightAtt(Att.COL, row, colour);
+						dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
 				}
 				break;
 			case 5:
 			case 9:
 			case 10:
 			case 11:
-				dlg.mark.setLightAtt(col - 1, row, value);
+				dlg.panelMain.mark.setLightAtt(col - 1, row, value);
 				break;
 			case 6:
 				if ((Boolean) value == true) {
-					dlg.mark.setLightAtt(Att.LIT, row, Lit.DIR);
-					dlg.mark.setLightAtt(Att.BEG, row, "");
-					dlg.mark.setLightAtt(Att.END, row, "");
+					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.DIR);
+					dlg.panelMain.mark.setLightAtt(Att.BEG, row, "");
+					dlg.panelMain.mark.setLightAtt(Att.END, row, "");
 				} else {
-					dlg.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
-					dlg.mark.setLightAtt(Att.ORT, row, "");
+					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
+					dlg.panelMain.mark.setLightAtt(Att.ORT, row, "");
 				}
 				break;
 			case 7:
 			case 8:
-				if (dlg.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
-					dlg.mark.setLightAtt(Att.ORT, row, value);
+				if (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
+					dlg.panelMain.mark.setLightAtt(Att.ORT, row, value);
 				} else {
-					dlg.mark.setLightAtt(col - 1, row, value);
+					dlg.panelMain.mark.setLightAtt(col - 1, row, value);
 				}
 				break;
 			case 12:
 				for (Vis vis : visibilities.keySet()) {
 					String str = visibilities.get(vis);
 					if (str.equals(value))
-						dlg.mark.setLightAtt(Att.VIS, row, vis);
+						dlg.panelMain.mark.setLightAtt(Att.VIS, row, vis);
 				}
 				break;
 			case 13:
 				for (Exh exh : exhibitions.keySet()) {
 					String str = exhibitions.get(exh);
 					if (str.equals(value))
-						dlg.mark.setLightAtt(Att.EXH, row, exh);
+						dlg.panelMain.mark.setLightAtt(Att.EXH, row, exh);
 				}
 				break;
 			default:
-				dlg.mark.setLightAtt(col - 1, row, value);
+				dlg.panelMain.mark.setLightAtt(col - 1, row, value);
 			}
 		}
 	}
@@ -246,7 +246,7 @@ public class PanelSectors extends JFrame {
 	}
 
 	public void addSector(int idx) {
-		dlg.mark.addLight(idx);
+		dlg.panelMain.mark.addLight(idx);
 		table.setSize(860, ((table.getRowCount() * 16) + 18));
 		if (table.getRowCount() > 3) {
 			this.setSize(900, ((table.getRowCount() * 16) + 40));
@@ -256,7 +256,7 @@ public class PanelSectors extends JFrame {
 	}
 
 	public void deleteSector(int idx) {
-		dlg.mark.delLight(idx);
+		dlg.panelMain.mark.delLight(idx);
 		table.setSize(860, ((table.getRowCount() * 16) + 18));
 		if (table.getRowCount() > 3) {
 			this.setSize(900, ((table.getRowCount() * 16) + 40));

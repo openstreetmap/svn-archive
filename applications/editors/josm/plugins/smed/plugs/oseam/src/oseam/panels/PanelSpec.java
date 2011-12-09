@@ -21,8 +21,8 @@ public class PanelSpec extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : categories.keySet()) {
 				int idx = categories.get(cat);
-				if (dlg.mark != null && (idx == categoryBox.getSelectedIndex()))
-					dlg.mark.setCategory(cat);
+				if (dlg.node != null && (idx == categoryBox.getSelectedIndex()))
+					dlg.panelMain.mark.setCategory(cat);
 			}
 		}
 	};
@@ -46,21 +46,21 @@ public class PanelSpec extends JPanel {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
-					dlg.mark.setShape(shp);
-					dlg.mark.setObject(objects.get(shp));
+					dlg.panelMain.mark.setShape(shp);
+					dlg.panelMain.mark.setObject(objects.get(shp));
 					if (button == cairnButton) {
-						dlg.mark.setObjPattern(Pat.NONE);
-						dlg.mark.setObjColour(Col.UNKNOWN);
+						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjColour(Col.UNKNOWN);
 					}
-					if (dlg.mark.getObjColour(0) == Col.UNKNOWN) {
-						dlg.mark.setObjPattern(Pat.NONE);
-						dlg.mark.setObjColour(Col.YELLOW);
+					if (dlg.panelMain.mark.getObjColour(0) == Col.UNKNOWN) {
+						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjColour(Col.YELLOW);
 					}
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			topmarkButton.setVisible(dlg.mark.testValid());
+			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
 			dlg.panelMain.panelMore.syncPanel();
 		}
 	};
@@ -68,14 +68,14 @@ public class PanelSpec extends JPanel {
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				dlg.mark.setTopmark(Top.X_SHAPE);
-				dlg.mark.setTopPattern(Pat.NONE);
-				dlg.mark.setTopColour(Col.YELLOW);
+				dlg.panelMain.mark.setTopmark(Top.X_SHAPE);
+				dlg.panelMain.mark.setTopPattern(Pat.NONE);
+				dlg.panelMain.mark.setTopColour(Col.YELLOW);
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.mark.setTopmark(Top.NONE);
-				dlg.mark.setTopPattern(Pat.NONE);
-				dlg.mark.setTopColour(Col.UNKNOWN);
+				dlg.panelMain.mark.setTopmark(Top.NONE);
+				dlg.panelMain.mark.setTopPattern(Pat.NONE);
+				dlg.panelMain.mark.setTopColour(Col.UNKNOWN);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
@@ -134,19 +134,19 @@ public class PanelSpec extends JPanel {
 	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.mark.getShape() == shp) {
+			if (dlg.panelMain.mark.getShape() == shp) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);
 		}
 		for (Cat cat : categories.keySet()) {
 			int item = categories.get(cat);
-			if (dlg.mark.getCategory() == cat)
+			if (dlg.panelMain.mark.getCategory() == cat)
 				categoryBox.setSelectedIndex(item);
 		}
-		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
-		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
-		topmarkButton.setVisible(dlg.mark.testValid());
+		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
 	}
 
 	private void addCatItem(String str, Cat cat) {

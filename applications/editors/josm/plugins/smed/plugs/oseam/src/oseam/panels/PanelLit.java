@@ -20,21 +20,21 @@ public class PanelLit extends JPanel {
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.GRP, 0, groupBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.GRP, 0, groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.PER, 0, periodBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.PER, 0, periodBox.getText());
 		}
 	};
 	public JLabel sequenceLabel;
 	public JTextField sequenceBox;
 	private ActionListener alSequence = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.SEQ, 0, sequenceBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.SEQ, 0, sequenceBox.getText());
 		}
 	};
 	public JLabel visibilityLabel;
@@ -45,7 +45,7 @@ public class PanelLit extends JPanel {
 			for (Vis vis : visibilities.keySet()) {
 				int idx = visibilities.get(vis);
 				if (idx == visibilityBox.getSelectedIndex())
-					dlg.mark.setLightAtt(Att.VIS, 0, vis);
+					dlg.panelMain.mark.setLightAtt(Att.VIS, 0, vis);
 			}
 		}
 	};
@@ -53,28 +53,28 @@ public class PanelLit extends JPanel {
 	public JTextField heightBox;
 	private ActionListener alHeight = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.HGT, 0, heightBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.HGT, 0, heightBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.RNG, 0, rangeBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.RNG, 0, rangeBox.getText());
 		}
 	};
 	public JLabel orientationLabel;
 	public JTextField orientationBox;
 	private ActionListener alOrientation = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.ORT, 0, orientationBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.ORT, 0, orientationBox.getText());
 		}
 	};
 	public JLabel multipleLabel;
 	public JTextField multipleBox;
 	private ActionListener alMultiple = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setLightAtt(Att.MLT, 0, multipleBox.getText());
+			dlg.panelMain.mark.setLightAtt(Att.MLT, 0, multipleBox.getText());
 		}
 	};
 	public JLabel categoryLabel;
@@ -85,26 +85,26 @@ public class PanelLit extends JPanel {
 			for (Lit lit : categories.keySet()) {
 				int idx = categories.get(lit);
 				if (idx == categoryBox.getSelectedIndex())
-					dlg.mark.setLightAtt(Att.LIT, 0, lit);
+					dlg.panelMain.mark.setLightAtt(Att.LIT, 0, lit);
 			}
-			if (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.DIR) {
-				dlg.mark.setLightAtt(Att.MLT, 0, "");
+			if (dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.DIR) {
+				dlg.panelMain.mark.setLightAtt(Att.MLT, 0, "");
 				multipleBox.setText("");
 				orientationLabel.setVisible(true);
 				orientationBox.setVisible(true);
 				multipleLabel.setVisible(false);
 				multipleBox.setVisible(false);
-			} else if ((dlg.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
-				dlg.mark.setLightAtt(Att.ORT, 0, "");
+			} else if ((dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
+				dlg.panelMain.mark.setLightAtt(Att.ORT, 0, "");
 				orientationBox.setText("");
 				orientationLabel.setVisible(false);
 				orientationBox.setVisible(false);
 				multipleLabel.setVisible(true);
 				multipleBox.setVisible(true);
 			} else {
-				dlg.mark.setLightAtt(Att.MLT, 0, "");
+				dlg.panelMain.mark.setLightAtt(Att.MLT, 0, "");
 				multipleBox.setText("");
-				dlg.mark.setLightAtt(Att.ORT, 0, "");
+				dlg.panelMain.mark.setLightAtt(Att.ORT, 0, "");
 				orientationBox.setText("");
 				orientationLabel.setVisible(false);
 				orientationBox.setVisible(false);
@@ -121,7 +121,7 @@ public class PanelLit extends JPanel {
 			for (Exh exh : exhibitions.keySet()) {
 				int idx = exhibitions.get(exh);
 				if (idx == exhibitionBox.getSelectedIndex())
-					dlg.mark.setLightAtt(Att.EXH, 0, exh);
+					dlg.panelMain.mark.setLightAtt(Att.EXH, 0, exh);
 			}
 		}
 	};
@@ -142,8 +142,8 @@ public class PanelLit extends JPanel {
 					panelSector.setVisible(false);
 					panelSector = null;
 				}
-				while (dlg.mark.getSectorCount() > 1)
-					dlg.mark.delLight(1);
+				while (dlg.panelMain.mark.getSectorCount() > 1)
+					dlg.panelMain.mark.delLight(1);
 			}
 		}
 	};
@@ -294,28 +294,28 @@ public class PanelLit extends JPanel {
 		orientationBox.setVisible(false);
 		multipleLabel.setVisible(false);
 		multipleBox.setVisible(false);
-		groupBox.setText((String)dlg.mark.getLightAtt(Att.GRP, 0));
-		periodBox.setText((String)dlg.mark.getLightAtt(Att.PER, 0));
-		sequenceBox.setText((String)dlg.mark.getLightAtt(Att.SEQ, 0));
-		heightBox.setText((String)dlg.mark.getLightAtt(Att.HGT, 0));
-		rangeBox.setText((String)dlg.mark.getLightAtt(Att.RNG, 0));
-		orientationBox.setText((String)dlg.mark.getLightAtt(Att.ORT, 0));
-		orientationBox.setVisible(dlg.mark.getLightAtt(Att.LIT, 0) == Lit.DIR);
-		multipleBox.setText((String)dlg.mark.getLightAtt(Att.MLT, 0));
-		multipleBox.setVisible((dlg.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ));
+		groupBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.GRP, 0));
+		periodBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.PER, 0));
+		sequenceBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.SEQ, 0));
+		heightBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.HGT, 0));
+		rangeBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.RNG, 0));
+		orientationBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.ORT, 0));
+		orientationBox.setVisible(dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.DIR);
+		multipleBox.setText((String)dlg.panelMain.mark.getLightAtt(Att.MLT, 0));
+		multipleBox.setVisible((dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ));
 		for (Vis vis : visibilities.keySet()) {
 			int item = visibilities.get(vis);
-			if (dlg.mark.getLightAtt(Att.VIS, 0) == vis)
+			if (dlg.panelMain.mark.getLightAtt(Att.VIS, 0) == vis)
 				visibilityBox.setSelectedIndex(item);
 		}
 		for (Lit lit : categories.keySet()) {
 			int item = categories.get(lit);
-			if (dlg.mark.getLightAtt(Att.LIT, 0) == lit)
+			if (dlg.panelMain.mark.getLightAtt(Att.LIT, 0) == lit)
 				categoryBox.setSelectedIndex(item);
 		}
 		for (Exh exh : exhibitions.keySet()) {
 			int item = exhibitions.get(exh);
-			if (dlg.mark.getLightAtt(Att.EXH, 0) == exh)
+			if (dlg.panelMain.mark.getLightAtt(Att.EXH, 0) == exh)
 				exhibitionBox.setSelectedIndex(item);
 		}
 		panelCol.syncPanel();

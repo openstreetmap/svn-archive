@@ -30,12 +30,12 @@ public class PanelPat extends JPanel {
 			for (Pat pat : patterns.keySet()) {
 				JRadioButton button = patterns.get(pat);
 				if (button.isSelected()) {
-					dlg.mark.setPattern(ent, pat);
+					dlg.panelMain.mark.setPattern(ent, pat);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			switch (dlg.mark.getPattern(ent)) {
+			switch (dlg.panelMain.mark.getPattern(ent)) {
 			case NONE:
 				panelCol.trimStack(1);
 				break;
@@ -72,7 +72,7 @@ public class PanelPat extends JPanel {
 	public void syncPanel() {
 		for (Pat pat : patterns.keySet()) {
 			JRadioButton button = patterns.get(pat);
-			if (dlg.mark.getPattern(ent) == pat) {
+			if (dlg.panelMain.mark.getPattern(ent) == pat) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);

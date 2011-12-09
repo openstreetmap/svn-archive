@@ -20,7 +20,6 @@ public class OSeaMAction {
 	public SmedPluginManager manager = null;;
 	public PanelMain panelMain = null;
 
-	public SeaMark mark = null;
 	public Node node = null;
 	private Collection<? extends OsmPrimitive> Selection = null;
 
@@ -35,14 +34,11 @@ public class OSeaMAction {
 					if (Selection.size() == 1) {
 						if (nextNode.compareTo(node) != 0) {
 							node = nextNode;
-							mark = new SeaMark(dlg);
-							mark.setBounds(new Rectangle(235, 0, 165, 160));
-							panelMain.add(mark);
-							mark.parseMark(node);
+							panelMain.mark.parseMark(node);
 						}
 					} else {
 						node = null;
-						mark = null;
+						panelMain.mark.clearSign();
 						panelMain.syncPanel();
 						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
@@ -50,7 +46,7 @@ public class OSeaMAction {
 			}
 			if (nextNode == null) {
 				node = null;
-				mark = null;
+				panelMain.mark.clearSign();
 				panelMain.syncPanel();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
@@ -77,7 +73,6 @@ public class OSeaMAction {
 			panelMain.setLayout(null);
 			panelMain.setSize(new Dimension(400, 360));
 			node = null;
-			mark = null;
 			panelMain.syncPanel();
 		}
 		return panelMain;

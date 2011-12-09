@@ -38,7 +38,7 @@ public class PanelTop extends JPanel {
 			for (Top top : tops.keySet()) {
 				JRadioButton button = tops.get(top);
 				if (button.isSelected()) {
-					dlg.mark.setTopmark(top);
+					dlg.panelMain.mark.setTopmark(top);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -82,7 +82,7 @@ public class PanelTop extends JPanel {
 	public void syncPanel() {
 		for (Top top : tops.keySet()) {
 			JRadioButton button = tops.get(top);
-			if (dlg.mark.getTopmark() == top) {
+			if (dlg.panelMain.mark.getTopmark() == top) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);

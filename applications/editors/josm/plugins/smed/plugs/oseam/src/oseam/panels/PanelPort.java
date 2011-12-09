@@ -30,51 +30,51 @@ public class PanelPort extends JPanel {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
-					dlg.mark.setShape(shp);
-					dlg.mark.setObject(objects.get(shp));
+					dlg.panelMain.mark.setShape(shp);
+					dlg.panelMain.mark.setObject(objects.get(shp));
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark.testValid()) {
+			if (dlg.panelMain.mark.testValid()) {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
 				dlg.panelMain.panelChan.lightButton.setVisible(true);
-				if (dlg.mark.getCategory() == Cat.LAM_PORT) {
-					switch (dlg.mark.getRegion()) {
+				if (dlg.panelMain.mark.getCategory() == Cat.LAM_PORT) {
+					switch (dlg.panelMain.mark.getRegion()) {
 					case A:
-						dlg.mark.setObjPattern(Pat.NONE);
-						dlg.mark.setObjColour(Col.RED);
+						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjColour(Col.RED);
 						break;
 					case B:
-						dlg.mark.setObjPattern(Pat.NONE);
-						dlg.mark.setObjColour(Col.GREEN);
+						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjColour(Col.GREEN);
 						break;
 					case C:
-						dlg.mark.setObjPattern(Pat.HORIZ);
-						dlg.mark.setObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.WHITE);
-						dlg.mark.addObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.WHITE);
+						dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+						dlg.panelMain.mark.setObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.WHITE);
+						dlg.panelMain.mark.addObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.WHITE);
 						break;
 					}
 				} else {
-					dlg.mark.setObjPattern(Pat.HORIZ);
-					switch (dlg.mark.getRegion()) {
+					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					switch (dlg.panelMain.mark.getRegion()) {
 					case A:
-						dlg.mark.setObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.GREEN);
-						dlg.mark.addObjColour(Col.RED);
+						dlg.panelMain.mark.setObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.GREEN);
+						dlg.panelMain.mark.addObjColour(Col.RED);
 						break;
 					case B:
-						dlg.mark.setObjColour(Col.GREEN);
-						dlg.mark.addObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.GREEN);
+						dlg.panelMain.mark.setObjColour(Col.GREEN);
+						dlg.panelMain.mark.addObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.GREEN);
 						break;
 					case C:
-						dlg.mark.setObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.GREEN);
-						dlg.mark.addObjColour(Col.RED);
-						dlg.mark.addObjColour(Col.GREEN);
+						dlg.panelMain.mark.setObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.GREEN);
+						dlg.panelMain.mark.addObjColour(Col.RED);
+						dlg.panelMain.mark.addObjColour(Col.GREEN);
 						break;
 					}
 				}
@@ -103,7 +103,7 @@ public class PanelPort extends JPanel {
 	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.mark.getShape() == shp) {
+			if (dlg.panelMain.mark.getShape() == shp) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);

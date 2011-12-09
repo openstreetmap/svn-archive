@@ -31,14 +31,14 @@ public class PanelChan extends JPanel {
 			dlg.panelMain.saveButton.setEnabled(false);
 			topmarkButton.setVisible(false);
 			lightButton.setVisible(false);
-			Shp shp = dlg.mark.getShape();
+			Shp shp = dlg.panelMain.mark.getShape();
 			if (portButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAM_PORT);
+				dlg.panelMain.mark.setCategory(Cat.LAM_PORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -47,12 +47,12 @@ public class PanelChan extends JPanel {
 				portButton.setBorderPainted(false);
 			}
 			if (prefPortButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAM_PPORT);
+				dlg.panelMain.mark.setCategory(Cat.LAM_PPORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -61,12 +61,12 @@ public class PanelChan extends JPanel {
 				prefPortButton.setBorderPainted(false);
 			}
 			if (stbdButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAM_STBD);
+				dlg.panelMain.mark.setCategory(Cat.LAM_STBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -75,12 +75,12 @@ public class PanelChan extends JPanel {
 				stbdButton.setBorderPainted(false);
 			}
 			if (prefStbdButton.isSelected()) {
-				dlg.mark.setCategory(Cat.LAM_PSTBD);
+				dlg.panelMain.mark.setCategory(Cat.LAM_PSTBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -89,13 +89,13 @@ public class PanelChan extends JPanel {
 				prefStbdButton.setBorderPainted(false);
 			}
 			if (safeWaterButton.isSelected()) {
-				dlg.mark.setCategory(Cat.NONE);
+				dlg.panelMain.mark.setCategory(Cat.NONE);
 				panelSaw.setVisible(true);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).setSelected(true);
 				} else {
 					panelSaw.shapeButtons.clearSelection();
-					dlg.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
 				}
 				panelSaw.alShape.actionPerformed(null);
 				panelSaw.setVisible(true);
@@ -103,9 +103,9 @@ public class PanelChan extends JPanel {
 			} else {
 				safeWaterButton.setBorderPainted(false);
 			}
-			topmarkButton.setVisible(dlg.mark.testValid());
+			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
 			alTop.actionPerformed(null);
-			lightButton.setVisible(dlg.mark.testValid());
+			lightButton.setVisible(dlg.panelMain.mark.testValid());
 			alLit.actionPerformed(null);
 		}
 	};
@@ -113,47 +113,47 @@ public class PanelChan extends JPanel {
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
-					dlg.mark.setTopmark(Top.SPHERE);
-					dlg.mark.setTopPattern(Pat.NONE);
-					dlg.mark.setTopColour(Col.RED);
+				if (SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.SAW) {
+					dlg.panelMain.mark.setTopmark(Top.SPHERE);
+					dlg.panelMain.mark.setTopPattern(Pat.NONE);
+					dlg.panelMain.mark.setTopColour(Col.RED);
 				} else {
-					switch (dlg.mark.getCategory()) {
+					switch (dlg.panelMain.mark.getCategory()) {
 					case LAM_PORT:
 					case LAM_PPORT:
-						dlg.mark.setTopmark(Top.CAN);
-						switch (dlg.mark.getRegion()) {
+						dlg.panelMain.mark.setTopmark(Top.CAN);
+						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
-							dlg.mark.setTopPattern(Pat.NONE);
-							dlg.mark.setTopColour(Col.RED);
+							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case B:
-							dlg.mark.setTopPattern(Pat.NONE);
-							dlg.mark.setTopColour(Col.GREEN);
+							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case C:
-							dlg.mark.setTopPattern(Pat.HORIZ);
-							dlg.mark.setTopColour(Col.RED);
-							dlg.mark.addTopColour(Col.WHITE);
+							dlg.panelMain.mark.setTopPattern(Pat.HORIZ);
+							dlg.panelMain.mark.setTopColour(Col.RED);
+							dlg.panelMain.mark.addTopColour(Col.WHITE);
 							break;
 						}
 						break;
 					case LAM_STBD:
 					case LAM_PSTBD:
-						dlg.mark.setTopmark(Top.CONE);
-						switch (dlg.mark.getRegion()) {
+						dlg.panelMain.mark.setTopmark(Top.CONE);
+						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
-							dlg.mark.setTopPattern(Pat.NONE);
-							dlg.mark.setTopColour(Col.GREEN);
+							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case B:
-							dlg.mark.setTopPattern(Pat.NONE);
-							dlg.mark.setTopColour(Col.RED);
+							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case C:
-							dlg.mark.setTopPattern(Pat.HORIZ);
-							dlg.mark.setTopColour(Col.GREEN);
-							dlg.mark.addTopColour(Col.WHITE);
+							dlg.panelMain.mark.setTopPattern(Pat.HORIZ);
+							dlg.panelMain.mark.setTopColour(Col.GREEN);
+							dlg.panelMain.mark.addTopColour(Col.WHITE);
 							break;
 						}
 						break;
@@ -161,9 +161,9 @@ public class PanelChan extends JPanel {
 				}
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.mark.setTopmark(Top.NONE);
-				dlg.mark.setTopPattern(Pat.NONE);
-				dlg.mark.setTopColour(Col.UNKNOWN);
+				dlg.panelMain.mark.setTopmark(Top.NONE);
+				dlg.panelMain.mark.setTopPattern(Pat.NONE);
+				dlg.panelMain.mark.setTopColour(Col.UNKNOWN);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
@@ -173,33 +173,33 @@ public class PanelChan extends JPanel {
 	private ActionListener alLit = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (lightButton.isSelected()) {
-				if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
-					dlg.mark.setLightAtt(Att.CHR, 0, "LFl");
-					dlg.mark.setLightAtt(Att.COL, 0, Col.WHITE);
+				if (SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.SAW) {
+					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "LFl");
+					dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.WHITE);
 				} else {
-					dlg.mark.setLightAtt(Att.CHR, 0, "Fl");
-					switch (dlg.mark.getCategory()) {
+					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Fl");
+					switch (dlg.panelMain.mark.getCategory()) {
 					case LAM_PORT:
 					case LAM_PPORT:
-						switch (dlg.mark.getRegion()) {
+						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
 						case C:
-							dlg.mark.setLightAtt(Att.COL, 0, Col.RED);
+							dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.RED);
 							break;
 						case B:
-							dlg.mark.setLightAtt(Att.COL, 0, Col.GREEN);
+							dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.GREEN);
 							break;
 						}
 						break;
 					case LAM_STBD:
 					case LAM_PSTBD:
-						switch (dlg.mark.getRegion()) {
+						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
 						case C:
-							dlg.mark.setLightAtt(Att.COL, 0, Col.GREEN);
+							dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.GREEN);
 							break;
 						case B:
-							dlg.mark.setLightAtt(Att.COL, 0, Col.RED);
+							dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.RED);
 							break;
 						}
 						break;
@@ -207,7 +207,7 @@ public class PanelChan extends JPanel {
 				}
 				lightButton.setBorderPainted(true);
 			} else {
-				dlg.mark.clrLight();
+				dlg.panelMain.mark.clrLight();
 				lightButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelLit.syncPanel();
@@ -253,47 +253,47 @@ public class PanelChan extends JPanel {
 		panelPort.setVisible(false);
 		panelStbd.setVisible(false);
 		panelSaw.setVisible(false);
-		if (dlg.mark.getCategory() == Cat.LAM_PORT) {
+		if (dlg.panelMain.mark.getCategory() == Cat.LAM_PORT) {
 			panelPort.setVisible(true);
 			portButton.setBorderPainted(true);
 		} else {
 			portButton.setBorderPainted(false);
 		}
-		if (dlg.mark.getCategory() == Cat.LAM_PPORT) {
+		if (dlg.panelMain.mark.getCategory() == Cat.LAM_PPORT) {
 			panelPort.setVisible(true);
 			prefPortButton.setBorderPainted(true);
 		} else {
 			prefPortButton.setBorderPainted(false);
 		}
-		if (dlg.mark.getCategory() == Cat.LAM_STBD) {
+		if (dlg.panelMain.mark.getCategory() == Cat.LAM_STBD) {
 			panelStbd.setVisible(true);
 			stbdButton.setBorderPainted(true);
 		} else {
 			stbdButton.setBorderPainted(false);
 		}
-		if (dlg.mark.getCategory() == Cat.LAM_PSTBD) {
+		if (dlg.panelMain.mark.getCategory() == Cat.LAM_PSTBD) {
 			panelStbd.setVisible(true);
 			prefStbdButton.setBorderPainted(true);
 		} else {
 			prefStbdButton.setBorderPainted(false);
 		}
-		if (SeaMark.GrpMAP.get(dlg.mark.getObject()) == Grp.SAW) {
+		if (SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.SAW) {
 			panelSaw.setVisible(true);
 			safeWaterButton.setBorderPainted(true);
 		} else {
 			safeWaterButton.setBorderPainted(false);
 		}
-		topmarkButton.setBorderPainted(dlg.mark.getTopmark() != Top.NONE);
-		topmarkButton.setSelected(dlg.mark.getTopmark() != Top.NONE);
-		topmarkButton.setVisible(dlg.mark.testValid());
-		Boolean lit = (dlg.mark.getLightAtt(Att.COL, 0) != Col.UNKNOWN) && !((String)dlg.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
+		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKNOWN) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
 		lightButton.setBorderPainted(lit);
 		lightButton.setSelected(lit);
-		lightButton.setVisible(dlg.mark.testValid());
+		lightButton.setVisible(dlg.panelMain.mark.testValid());
 		panelPort.syncPanel();
 		panelStbd.syncPanel();
 		panelSaw.syncPanel();
-		dlg.mark.testValid();
+		dlg.panelMain.mark.testValid();
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

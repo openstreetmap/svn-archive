@@ -29,7 +29,7 @@ public class PanelFog extends JPanel {
 			for (Fog fog : fogs.keySet()) {
 				JRadioButton button = fogs.get(fog);
 				if (button.isSelected()) {
-					dlg.mark.setFogSound(fog);
+					dlg.panelMain.mark.setFogSound(fog);
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
@@ -40,28 +40,28 @@ public class PanelFog extends JPanel {
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setFogGroup(groupBox.getText());
+			dlg.panelMain.mark.setFogGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setFogPeriod(periodBox.getText());
+			dlg.panelMain.mark.setFogPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
 	private ActionListener alSeq = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setFogSequence(seqBox.getText());
+			dlg.panelMain.mark.setFogSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setFogRange(rangeBox.getText());
+			dlg.panelMain.mark.setFogRange(rangeBox.getText());
 		}
 	};
 
@@ -119,12 +119,12 @@ public class PanelFog extends JPanel {
 	public void syncPanel() {
 		for (Fog fog : fogs.keySet()) {
 			JRadioButton button = fogs.get(fog);
-			button.setBorderPainted(dlg.mark.getFogSound() == fog);
+			button.setBorderPainted(dlg.panelMain.mark.getFogSound() == fog);
 		}
-		groupBox.setText(dlg.mark.getFogGroup());
-		seqBox.setText(dlg.mark.getFogSequence());
-		periodBox.setText(dlg.mark.getFogPeriod());
-		rangeBox.setText(dlg.mark.getFogRange());
+		groupBox.setText(dlg.panelMain.mark.getFogGroup());
+		seqBox.setText(dlg.panelMain.mark.getFogSequence());
+		periodBox.setText(dlg.panelMain.mark.getFogPeriod());
+		rangeBox.setText(dlg.panelMain.mark.getFogRange());
 	}
 
 	private JRadioButton getFogButton(JRadioButton button, int x, int y, int w, int h, String tip, Fog fog) {

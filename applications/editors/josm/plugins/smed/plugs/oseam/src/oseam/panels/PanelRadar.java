@@ -26,7 +26,7 @@ public class PanelRadar extends JPanel {
 			for (Rtb rtb : rads.keySet()) {
 				JRadioButton button = rads.get(rtb);
 				if (button.isSelected()) {
-					dlg.mark.setRadar(rtb);
+					dlg.panelMain.mark.setRadar(rtb);
 				}
 			}
 			syncPanel();
@@ -36,42 +36,42 @@ public class PanelRadar extends JPanel {
 	public JTextField groupBox;
 	private ActionListener alGroup = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconGroup(groupBox.getText());
+			dlg.panelMain.mark.setRaconGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private ActionListener alPeriod = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconPeriod(periodBox.getText());
+			dlg.panelMain.mark.setRaconPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
 	private ActionListener alSeq = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconSequence(seqBox.getText());
+			dlg.panelMain.mark.setRaconSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private ActionListener alRange = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconRange(rangeBox.getText());
+			dlg.panelMain.mark.setRaconRange(rangeBox.getText());
 		}
 	};
 	public JLabel sector1Label;
 	public JTextField sector1Box;
 	private ActionListener alSector1 = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconSector1(sector1Box.getText());
+			dlg.panelMain.mark.setRaconSector1(sector1Box.getText());
 		}
 	};
 	public JLabel sector2Label;
 	public JTextField sector2Box;
 	private ActionListener alSector2 = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.mark.setRaconSector2(sector2Box.getText());
+			dlg.panelMain.mark.setRaconSector2(sector2Box.getText());
 		}
 	};
 	public JLabel sectorsLabel;
@@ -144,7 +144,7 @@ public class PanelRadar extends JPanel {
 	}
 
 	public void syncPanel() {
-		boolean rad = ((dlg.mark.getRadar() != Rtb.NONE) && (dlg.mark.getRadar() != Rtb.REFLECTOR));
+		boolean rad = ((dlg.panelMain.mark.getRadar() != Rtb.NONE) && (dlg.panelMain.mark.getRadar() != Rtb.REFLECTOR));
 		groupLabel.setVisible(rad);
 		groupBox.setVisible(rad);
 		periodLabel.setVisible(rad);
@@ -159,14 +159,14 @@ public class PanelRadar extends JPanel {
 		sector2Box.setVisible(rad);
 		sectorsLabel.setVisible(rad);
 		for (Rtb rtb : rads.keySet()) {
-			rads.get(rtb).setBorderPainted(dlg.mark.getRadar() == rtb);
+			rads.get(rtb).setBorderPainted(dlg.panelMain.mark.getRadar() == rtb);
 		}
-		groupBox.setText(dlg.mark.getRaconGroup());
-		seqBox.setText(dlg.mark.getRaconSequence());
-		periodBox.setText(dlg.mark.getRaconPeriod());
-		rangeBox.setText(dlg.mark.getRaconRange());
-		sector1Box.setText(dlg.mark.getRaconSector1());
-		sector2Box.setText(dlg.mark.getRaconSector2());
+		groupBox.setText(dlg.panelMain.mark.getRaconGroup());
+		seqBox.setText(dlg.panelMain.mark.getRaconSequence());
+		periodBox.setText(dlg.panelMain.mark.getRaconPeriod());
+		rangeBox.setText(dlg.panelMain.mark.getRaconRange());
+		sector1Box.setText(dlg.panelMain.mark.getRaconSector1());
+		sector2Box.setText(dlg.panelMain.mark.getRaconSector2());
 	}
 
 	private JRadioButton getRadButton(JRadioButton button, int x, int y, int w, int h, String tip, Rtb rtb) {

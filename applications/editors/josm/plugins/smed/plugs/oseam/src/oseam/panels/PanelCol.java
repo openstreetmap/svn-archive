@@ -40,20 +40,20 @@ public class PanelCol extends JPanel {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
 						if (ent == Ent.LIGHT) {
-							dlg.mark.setLightAtt(Att.COL, 0, col);
+							dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
 							button.setBorderPainted(true);
 						} else {
 							if (button == delButton) {
-								dlg.mark.subColour(ent, stackIdx);
+								dlg.panelMain.mark.subColour(ent, stackIdx);
 							} else if (button == addButton) {
 								if (stackCol.size() != 0)
 									stackIdx++;
 								if (stackCol.size() == 0)
-									dlg.mark.setColour(ent, col);
+									dlg.panelMain.mark.setColour(ent, col);
 								else
-									dlg.mark.addColour(ent, stackIdx, col);
+									dlg.panelMain.mark.addColour(ent, stackIdx, col);
 							} else {
-								dlg.mark.setColour(ent, stackIdx, col);
+								dlg.panelMain.mark.setColour(ent, stackIdx, col);
 							}
 							syncPanel();
 						}
@@ -121,14 +121,14 @@ public class PanelCol extends JPanel {
 		if (ent == Ent.LIGHT) {
 			for (Col col : colours.keySet()) {
 				JRadioButton button = colours.get(col);
-				if (dlg.mark.getLightAtt(Att.COL, 0) == col) {
+				if (dlg.panelMain.mark.getLightAtt(Att.COL, 0) == col) {
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
 		} else {
 			int idx;
-			for (idx = 0; dlg.mark.getColour(ent, idx) != Col.UNKNOWN; idx++) {
+			for (idx = 0; dlg.panelMain.mark.getColour(ent, idx) != Col.UNKNOWN; idx++) {
 				if (stackCol.size() <= idx) {
 					stackCol.add(idx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 					JRadioButton btnI = stackCol.get(idx);
@@ -154,7 +154,7 @@ public class PanelCol extends JPanel {
 				for (idx = 0; stackCol.size() > idx; idx++) {
 					JRadioButton btnI = stackCol.get(idx);
 					btnI.setBounds(2, (2 + (idx * height)), 30, height);
-					btnI.setBackground(SeaMark.ColMAP.get(dlg.mark.getColour(ent, idx)));
+					btnI.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getColour(ent, idx)));
 					if (stackIdx == idx) {
 						btnI.setBorderPainted(true);
 					} else {

@@ -13,6 +13,7 @@ import oseam.seamarks.SeaMark;
 public class PanelMain extends JPanel {
 
 	private OSeaMAction dlg;
+	public SeaMark mark = null;
 	public PanelChan panelChan = null;
 	public PanelHaz panelHaz = null;
 	public PanelSpec panelSpec = null;
@@ -26,16 +27,13 @@ public class PanelMain extends JPanel {
 	public JTextField nameBox = null;
 	private ActionListener alName = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null)
-				dlg.mark.setName(nameBox.getText());
+			mark.setName(nameBox.getText());
 		}
 	};
 	public JButton saveButton = null;
 	private ActionListener alSave = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (dlg.mark != null) {
-				dlg.mark.saveSign(dlg.node);
-			}
+			mark.saveSign(dlg.node);
 		}
 	};
 	public JButton moreButton = null;
@@ -76,7 +74,7 @@ public class PanelMain extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (chanButton.isSelected()) {
 				chanButton.setBorderPainted(true);
-				dlg.mark.clearSign();
+				mark.clearSign();
 				panelChan.syncPanel();
 				panelChan.setVisible(true);
 			} else {
@@ -85,7 +83,7 @@ public class PanelMain extends JPanel {
 			}
 			if (hazButton.isSelected()) {
 				hazButton.setBorderPainted(true);
-				dlg.mark.clearSign();
+				mark.clearSign();
 				panelHaz.syncPanel();
 				panelHaz.setVisible(true);
 			} else {
@@ -94,7 +92,7 @@ public class PanelMain extends JPanel {
 			}
 			if (specButton.isSelected()) {
 				specButton.setBorderPainted(true);
-				dlg.mark.clearSign();
+				mark.clearSign();
 				panelSpec.syncPanel();
 				panelSpec.setVisible(true);
 			} else {
@@ -103,7 +101,7 @@ public class PanelMain extends JPanel {
 			}
 			if (lightsButton.isSelected()) {
 				lightsButton.setBorderPainted(true);
-				dlg.mark.clearSign();
+				mark.clearSign();
 				panelLights.syncPanel();
 				panelLights.setVisible(true);
 			} else {
@@ -161,6 +159,9 @@ public class PanelMain extends JPanel {
 	public PanelMain(OSeaMAction dia) {
 
 		dlg = dia;
+		mark = new SeaMark(dlg);
+		mark.setBounds(new Rectangle(235, 0, 165, 160));
+		this.add(mark);
 		panelChan = new PanelChan(dlg);
 		panelChan.setBounds(new Rectangle(65, 0, 170, 160));
 		panelChan.setVisible(false);
@@ -193,7 +194,7 @@ public class PanelMain extends JPanel {
 		this.add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
 		this.add(getButton(specButton, 0, 80, 62, 40, "Spec"), null);
 		this.add(getButton(lightsButton, 0, 120, 62, 40, "Lights"), null);
-		this.add(panelChan, null);
+		this.add(panelChan);
 		this.add(panelHaz, null);
 		this.add(panelSpec, null);
 		this.add(panelLights, null);
@@ -284,14 +285,14 @@ public class PanelMain extends JPanel {
 		panelRadar.setVisible(false);
 		panelLit.setVisible(false);
 		nameBox.setEnabled(false);
-		if (dlg.mark != null) {
+		if (mark != null) {
 			nameBox.setEnabled(true);
 			chanButton.setEnabled(true);
 			hazButton.setEnabled(true);
 			specButton.setEnabled(true);
 			lightsButton.setEnabled(true);
-			nameBox.setText(dlg.mark.getName());
-			switch (SeaMark.GrpMAP.get(dlg.mark.getObject())) {
+			nameBox.setText(mark.getName());
+			switch (SeaMark.GrpMAP.get(mark.getObject())) {
 			case LAT:
 			case SAW:
 				chanButton.setBorderPainted(true);

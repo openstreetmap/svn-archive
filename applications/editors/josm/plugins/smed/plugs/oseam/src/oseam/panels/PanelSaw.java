@@ -26,17 +26,17 @@ public class PanelSaw extends JPanel {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
-					dlg.mark.setShape(shp);
-					dlg.mark.setObject(objects.get(shp));
+					dlg.panelMain.mark.setShape(shp);
+					dlg.panelMain.mark.setObject(objects.get(shp));
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.mark.testValid()) {
+			if (dlg.panelMain.mark.testValid()) {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-				dlg.mark.setObjPattern(Pat.VERT);
-				dlg.mark.setObjColour(Col.RED);
-				dlg.mark.addObjColour(Col.WHITE);
+				dlg.panelMain.mark.setObjPattern(Pat.VERT);
+				dlg.panelMain.mark.setObjColour(Col.RED);
+				dlg.panelMain.mark.addObjColour(Col.WHITE);
 			} else {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
 			}
@@ -57,12 +57,12 @@ public class PanelSaw extends JPanel {
 	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.mark.getShape() == shp) {
+			if (dlg.panelMain.mark.getShape() == shp) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);
 		}
-		dlg.mark.testValid();
+		dlg.panelMain.mark.testValid();
 	}
 	
 	private JRadioButton getShapeButton(JRadioButton button, int x, int y, int w, int h, String tip, Shp shp, Obj obj) {

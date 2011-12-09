@@ -42,7 +42,7 @@ public class PanelMain extends JPanel {
 	private ActionListener alMore = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (panelMore.isVisible()) {
-				moreButton.setText("v v v");
+				moreButton.setText(">>");
 				panelMore.setVisible(false);
 				topButton.setEnabled(true);
 				radButton.setEnabled(true);
@@ -50,7 +50,7 @@ public class PanelMain extends JPanel {
 				litButton.setEnabled(true);
 			} else {
 				panelMore.setVisible(true);
-				moreButton.setText("^ ^ ^");
+				moreButton.setText("<<");
 				miscButtons.clearSelection();
 				panelTop.setVisible(false);
 				topButton.setBorderPainted(false);
@@ -120,7 +120,7 @@ public class PanelMain extends JPanel {
 	private ActionListener alMisc = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topButton.isSelected()) {
-				moreButton.setText("v v v");
+				moreButton.setText(">>");
 				panelMore.setVisible(false);
 				topButton.setBorderPainted(true);
 				panelTop.setVisible(true);
@@ -129,7 +129,7 @@ public class PanelMain extends JPanel {
 				panelTop.setVisible(false);
 			}
 			if (fogButton.isSelected()) {
-				moreButton.setText("v v v");
+				moreButton.setText(">>");
 				panelMore.setVisible(false);
 				fogButton.setBorderPainted(true);
 				panelFog.setVisible(true);
@@ -138,7 +138,7 @@ public class PanelMain extends JPanel {
 				panelFog.setVisible(false);
 			}
 			if (radButton.isSelected()) {
-				moreButton.setText("v v v");
+				moreButton.setText(">>");
 				panelMore.setVisible(false);
 				radButton.setBorderPainted(true);
 				panelRadar.setVisible(true);
@@ -147,7 +147,7 @@ public class PanelMain extends JPanel {
 				panelRadar.setVisible(false);
 			}
 			if (litButton.isSelected()) {
-				moreButton.setText("v v v");
+				moreButton.setText(">>");
 				panelMore.setVisible(false);
 				litButton.setBorderPainted(true);
 				panelLit.setVisible(true);
@@ -162,16 +162,16 @@ public class PanelMain extends JPanel {
 
 		dlg = dia;
 		panelChan = new PanelChan(dlg);
-		panelChan.setBounds(new Rectangle(65, 0, 185, 160));
+		panelChan.setBounds(new Rectangle(65, 0, 170, 160));
 		panelChan.setVisible(false);
 		panelHaz = new PanelHaz(dlg);
-		panelHaz.setBounds(new Rectangle(65, 0, 185, 160));
+		panelHaz.setBounds(new Rectangle(65, 0, 170, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec(dlg);
-		panelSpec.setBounds(new Rectangle(65, 0, 185, 160));
+		panelSpec.setBounds(new Rectangle(65, 0, 170, 160));
 		panelSpec.setVisible(false);
 		panelLights = new PanelLights(dlg);
-		panelLights.setBounds(new Rectangle(65, 0, 185, 160));
+		panelLights.setBounds(new Rectangle(65, 0, 170, 160));
 		panelLights.setVisible(false);
 		panelMore = new PanelMore(dlg);
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
@@ -212,10 +212,10 @@ public class PanelMain extends JPanel {
 		specButton.addActionListener(alType);
 		lightsButton.addActionListener(alType);
 
-		this.add(getButton(topButton, 0, 165, 34, 32, "Topmarks"), null);
-		this.add(getButton(fogButton, 0, 205, 34, 32, "FogSignals"), null);
-		this.add(getButton(radButton, 0, 245, 34, 32, "Radar"), null);
-		this.add(getButton(litButton, 0, 285, 34, 32, "Lit"), null);
+		this.add(getButton(topButton, 0, 185, 34, 32, "Topmarks"), null);
+		this.add(getButton(fogButton, 0, 220, 34, 32, "FogSignals"), null);
+		this.add(getButton(radButton, 0, 255, 34, 32, "Radar"), null);
+		this.add(getButton(litButton, 0, 290, 34, 32, "Lit"), null);
 		miscButtons = new ButtonGroup();
 		miscButtons.add(topButton);
 		miscButtons.add(fogButton);
@@ -243,9 +243,9 @@ public class PanelMain extends JPanel {
 		saveButton.addActionListener(alSave);
 
 		moreButton = new JButton();
-		moreButton.setBounds(new Rectangle(190, 145, 40, 15));
+		moreButton.setBounds(new Rectangle(0, 165, 34, 15));
 		moreButton.setMargin(new Insets(0, 0, 0, 0));
-		moreButton.setText("v v v");
+		moreButton.setText(">>");
 		this.add(moreButton, null);
 		moreButton.addActionListener(alMore);
 
@@ -272,7 +272,7 @@ public class PanelMain extends JPanel {
 		litButton.setBorderPainted(false);
 		saveButton.setEnabled(false);
 		moreButton.setVisible(false);
-		moreButton.setText("v v v");
+		moreButton.setText(">>");
 		moreButton.setSelected(false);
 		panelChan.setVisible(false);
 		panelHaz.setVisible(false);

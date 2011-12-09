@@ -37,7 +37,7 @@ public class OSeaMAction {
 							node = nextNode;
 							mark = new SeaMark(dlg);
 							mark.setBounds(new Rectangle(235, 0, 165, 160));
-							panelMain.add(mark, 0);
+							panelMain.add(mark);
 							mark.parseMark(node);
 						}
 					} else {

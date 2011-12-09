@@ -123,12 +123,12 @@ public class PanelLights extends JPanel {
 		this.add(getObjButton(warningButton, 105, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(10, 80, 160, 20));
+		categoryLabel.setBounds(new Rectangle(5, 80, 160, 20));
 		this.add(categoryLabel, null);
 		categoryLabel.setVisible(false);
 
 		landCatBox = new JComboBox();
-		landCatBox.setBounds(new Rectangle(10, 100, 160, 20));
+		landCatBox.setBounds(new Rectangle(5, 100, 160, 20));
 		this.add(landCatBox, null);
 		landCatBox.addActionListener(alLandCatBox);
 		addLCItem("", Cat.NONE);
@@ -155,7 +155,7 @@ public class PanelLights extends JPanel {
 		landCatBox.setVisible(false);
 
 		trafficCatBox = new JComboBox();
-		trafficCatBox.setBounds(new Rectangle(10, 100, 160, 20));
+		trafficCatBox.setBounds(new Rectangle(5, 100, 160, 20));
 		this.add(trafficCatBox, null);
 		trafficCatBox.addActionListener(alTrafficCatBox);
 		addTCItem("", Cat.NONE);

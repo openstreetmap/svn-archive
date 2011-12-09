@@ -1081,7 +1081,7 @@ public class SeaMark extends JPanel {
 			return true;
 		} else {
 			dlg.panelMain.moreButton.setVisible(false);
-			dlg.panelMain.moreButton.setText("v v v");
+			dlg.panelMain.moreButton.setText(">>");
 			dlg.panelMain.topButton.setEnabled(false);
 			dlg.panelMain.fogButton.setEnabled(false);
 			dlg.panelMain.radButton.setEnabled(false);
@@ -1618,7 +1618,11 @@ public class SeaMark extends JPanel {
 		super.paintComponent(g);
 		
     Graphics2D g2 = (Graphics2D) g;
-
+    
+    if (dlg.mark == null) {
+    	return;
+    }
+    
     String colStr;
 		String lblStr;
 		String imgStr = "/images/";
@@ -1740,11 +1744,11 @@ public class SeaMark extends JPanel {
 					if (getClass().getResource(imgStr) == null) {
 						System.out.println("Missing image: " + imgStr);
 					} else {
-						g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
-						g.drawString(lblStr, 75, 110);
+						g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
+						g2.drawString(lblStr, 75, 110);
 					}
 				} else {
-					g.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
 				}
 			}
 		} else if (getObject() != Obj.UNKNOWN) {
@@ -1810,7 +1814,7 @@ public class SeaMark extends JPanel {
 				if (getClass().getResource(imgStr) == null) {
 					System.out.println("Missing image: " + imgStr);
 				} else {
-					g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
 			}
 		}
@@ -1917,10 +1921,10 @@ public class SeaMark extends JPanel {
 					System.out.println("Missing image: " + imgStr);
 					return;
 				} else {
-					g.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
 			} else {
-				g.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
+				g2.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
 			}
 		}
 
@@ -1940,17 +1944,17 @@ public class SeaMark extends JPanel {
 			if (sectors.size() == 1) {
 				switch ((Col) getLightAtt(Att.COL, 0)) {
 				case RED:
-					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")).getImage(), 7, -15, null);
 					break;
 				case GREEN:
-					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")).getImage(), 7, -15, null);
 					break;
 				case WHITE:
 				case YELLOW:
-					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_White_120.png")).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_White_120.png")).getImage(), 7, -15, null);
 					break;
 				default:
-					g.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
+					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
 				}
 			}
 			String c = (String) dlg.mark.getLightAtt(Att.CHR, 0);
@@ -2002,11 +2006,11 @@ public class SeaMark extends JPanel {
 			tmp = (String) getLightAtt(Att.PER, 0);
 			if (!tmp.isEmpty())
 				c += " " + tmp + "s";
-			g.drawString(c, 100, 70);
+			g2.drawString(c, 100, 70);
 		}
 
 		if (getFogSound() != Fog.NONE) {
-			g.drawImage(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")).getImage(), 7, -15, null);
+			g2.drawImage(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")).getImage(), 7, -15, null);
 			String str = "";
 			if (getFogSound() != Fog.UNKNOWN)
 				switch (getFogSound()) {
@@ -2038,14 +2042,14 @@ public class SeaMark extends JPanel {
 				str += " ";
 			if (!getFogPeriod().isEmpty())
 				str += getFogPeriod() + "s";
-			g.drawString(str, 0, 70);
+			g2.drawString(str, 0, 70);
 		}
 
 		if (RaType != Rtb.NONE) {
 			if (getRadar() == Rtb.REFLECTOR) {
-				g.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")).getImage(), 7, -15, null);
+				g2.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")).getImage(), 7, -15, null);
 			} else {
-				g.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
+				g2.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
 				String str = "";
 				if (getRadar() == Rtb.RAMARK)
 					str += "Ramark";
@@ -2057,10 +2061,9 @@ public class SeaMark extends JPanel {
 					str += " ";
 				if (!getRaconPeriod().isEmpty())
 					str += getRaconPeriod() + "s";
-				g.drawString(str, 0, 50);
+				g2.drawString(str, 0, 50);
 			}
 		}
-
 	}
 
 	public void saveSign(Node node) {

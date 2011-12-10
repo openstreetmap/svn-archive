@@ -67,9 +67,9 @@ public class PanelSectors extends JFrame {
 		panel.add(new JScrollPane(table));
 		this.getContentPane().add(panel);
 
-		table.setSize(860, ((table.getRowCount() * 16) + 18));
+		table.setSize(860, ((table.getRowCount() * 16) + 20));
 		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 40));
+			this.setSize(900, ((table.getRowCount() * 16) + 42));
 		}
 		
 		table.setDefaultRenderer(String.class, new CentreRenderer());
@@ -125,7 +125,10 @@ public class PanelSectors extends JFrame {
 		}
 
 		public int getRowCount() {
-			return dlg.panelMain.mark.getSectorCount();
+			if (dlg.panelMain == null)
+				return 1;
+			else
+				return dlg.panelMain.mark.getSectorCount();
 		}
 
 		public boolean isCellEditable(int row, int col) {
@@ -257,9 +260,9 @@ public class PanelSectors extends JFrame {
 
 	public void deleteSector(int idx) {
 		dlg.panelMain.mark.delLight(idx);
-		table.setSize(860, ((table.getRowCount() * 16) + 18));
+		table.setSize(860, ((table.getRowCount() * 16) + 20));
 		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 40));
+			this.setSize(900, ((table.getRowCount() * 16) + 42));
 		} else {
 			this.setSize(900, 100);
 		}

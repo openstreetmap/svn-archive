@@ -39,7 +39,6 @@ public class OSeaMAction {
 					} else {
 						node = null;
 						panelMain.mark.clearSign();
-						panelMain.syncPanel();
 						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
 				}
@@ -47,7 +46,6 @@ public class OSeaMAction {
 			if (nextNode == null) {
 				node = null;
 				panelMain.mark.clearSign();
-				panelMain.syncPanel();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}

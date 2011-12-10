@@ -133,15 +133,9 @@ public class PanelLit extends JPanel {
 			singleButton.setBorderPainted(singleButton.isSelected());
 			sectorButton.setBorderPainted(sectorButton.isSelected());
 			if (sectorButton.isSelected()) {
-				if (panelSector == null) {
-					panelSector = new PanelSectors(dlg);
-				}
 				panelSector.setVisible(true);
 			} else {
-				if (panelSector != null) {
-					panelSector.setVisible(false);
-					panelSector = null;
-				}
+				panelSector.setVisible(false);
 				while (dlg.panelMain.mark.getSectorCount() > 1)
 					dlg.panelMain.mark.delLight(1);
 			}
@@ -157,6 +151,8 @@ public class PanelLit extends JPanel {
 		this.setLayout(null);
 		this.add(panelChr, null);
 		this.add(panelCol, null);
+		panelSector = new PanelSectors(dlg);
+		panelSector.setVisible(false);
 
 		typeButtons = new ButtonGroup();
 		singleButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SingleButton.png")));
@@ -284,12 +280,6 @@ public class PanelLit extends JPanel {
 	}
 
 	public void syncPanel() {
-		if (panelSector != null) {
-			panelSector.setVisible(false);
-			panelSector = null;
-		}
-		singleButton.setBorderPainted(false);
-		sectorButton.setBorderPainted(false);
 		orientationLabel.setVisible(false);
 		orientationBox.setVisible(false);
 		multipleLabel.setVisible(false);
@@ -317,6 +307,17 @@ public class PanelLit extends JPanel {
 			int item = exhibitions.get(exh);
 			if (dlg.panelMain.mark.getLightAtt(Att.EXH, 0) == exh)
 				exhibitionBox.setSelectedIndex(item);
+		}
+		if (dlg.panelMain.mark.isSectored()) {
+			singleButton.setBorderPainted(false);
+			sectorButton.setBorderPainted(true);
+			panelSector.setVisible(true);
+		} else {
+			singleButton.setBorderPainted(true);
+			sectorButton.setBorderPainted(false);
+			panelSector.setVisible(false);
+			while (dlg.panelMain.mark.getSectorCount() > 1)
+				dlg.panelMain.mark.delLight(dlg.panelMain.mark.getSectorCount() - 1);
 		}
 		panelCol.syncPanel();
 		panelChr.syncPanel();

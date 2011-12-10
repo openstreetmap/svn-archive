@@ -20,6 +20,7 @@ public class SeaMark extends JPanel {
 
 	public SeaMark(OSeaMAction dia) {
 		dlg = dia;
+		clrLight();
 	}
 
 	public enum Reg {
@@ -100,6 +101,27 @@ public class SeaMark extends JPanel {
 
 	public void setObject(Obj obj) {
 		object = obj;
+		if (obj == Obj.UNKNOWN) {
+			setCategory(Cat.NONE);
+			setShape(Shp.UNKNOWN);
+			setColour(Ent.BODY, Col.UNKNOWN);
+			setPattern(Ent.BODY, Pat.NONE);
+			setTopmark(Top.NONE);
+			setColour(Ent.TOPMARK, Col.UNKNOWN);
+			setPattern(Ent.TOPMARK, Pat.NONE);
+			setFogSound(Fog.NONE);
+			setRadar(Rtb.NONE);
+			setStatus(Sts.UNKNOWN);
+			setConstr(Cns.UNKNOWN);
+			setConsp(Con.UNKNOWN);
+			setRefl(Con.UNKNOWN);
+			setRef("");
+			setObjectHeight("");
+			setElevation("");
+			setInfo("");
+			setSource("");
+			setFixme("");
+		}
 		repaint();
 	}
 
@@ -558,6 +580,10 @@ public class SeaMark extends JPanel {
 		return sectors.size();
 	}
 
+	public boolean isSectored() {
+		return (sectors.size() > 1);
+	}
+
 	public Object getLightAtt(Att att, int i) {
 		return getLightAtt(att.ordinal(), i);
 	}
@@ -618,7 +644,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public void clrLight() {
-		delLight(0);
+		sectors.clear();
 		addLight();
 	}
 
@@ -722,6 +748,14 @@ public class SeaMark extends JPanel {
 
 	public void setRadar(Rtb type) {
 		RaType = type;
+		if (type == Rtb.NONE) {
+			setRaconGroup("");
+			setRaconSequence("");
+			setRaconPeriod("");
+			setRaconRange("");
+			setRaconSector1("");
+			setRaconSector2("");
+		}
 		repaint();
 	}
 
@@ -815,6 +849,12 @@ public class SeaMark extends JPanel {
 
 	public void setFogSound(Fog sound) {
 		fogSound = sound;
+		if (sound == Fog.NONE) {
+			setFogGroup("");
+			setFogSequence("");
+			setFogPeriod("");
+			setFogRange("");
+		}
 		repaint();
 	}
 
@@ -1093,24 +1133,9 @@ public class SeaMark extends JPanel {
 
 	public void clearSign() {
 		setObject(Obj.UNKNOWN);
-		setCategory(Cat.NONE);
-		setShape(Shp.UNKNOWN);
-		setColour(Ent.BODY, Col.UNKNOWN);
-		setPattern(Ent.BODY, Pat.NONE);
-		setTopmark(Top.NONE);
-		setColour(Ent.TOPMARK, Col.UNKNOWN);
-		setPattern(Ent.TOPMARK, Pat.NONE);
-		setFogSound(Fog.NONE);
-		setRadar(Rtb.NONE);
+		setName("");
 		clrLight();
-		dlg.panelMain.moreButton.setVisible(false);
-		dlg.panelMain.saveButton.setEnabled(false);
-		dlg.panelMain.topButton.setEnabled(false);
-		dlg.panelMain.fogButton.setEnabled(false);
-		dlg.panelMain.radButton.setEnabled(false);
-		dlg.panelMain.litButton.setEnabled(false);
-		dlg.panelMain.panelMore.syncPanel();
-		dlg.panelMain.panelMore.setVisible(false);
+		dlg.panelMain.syncPanel();
 		repaint();
 	}
 

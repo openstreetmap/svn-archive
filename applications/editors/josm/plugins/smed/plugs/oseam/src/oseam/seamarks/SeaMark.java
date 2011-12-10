@@ -1694,6 +1694,13 @@ public class SeaMark extends JPanel {
 			case POST:
 				imgStr += "Stake";
 				break;
+			case PERCH:
+				if (getCategory() == Cat.LAM_PORT) {
+					imgStr += "Perch_Port";
+				} else {
+					imgStr += "Perch_Starboard";
+				}
+				break;
 			}
 			colStr = imgStr;
 			lblStr = "";
@@ -1751,13 +1758,6 @@ public class SeaMark extends JPanel {
 					colStr += "_Pink";
 					lblStr += "Pk";
 					break;
-				}
-			}
-			if (getShape() == Shp.PERCH) {
-				if (getCategory() == Cat.LAM_PORT) {
-					colStr = "/images/Perch_Port";
-				} else {
-					colStr = "/images/Perch_Starboard";
 				}
 			}
 			if (!imgStr.equals("/images/")) {

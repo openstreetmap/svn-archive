@@ -27,7 +27,8 @@ public class OSeaMAction {
 		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 			Node nextNode = null;
 			Selection = newSelection;
-
+			node = null;
+			panelMain.mark.clearSign();
 			for (OsmPrimitive osm : Selection) {
 				if (osm instanceof Node) {
 					nextNode = (Node) osm;
@@ -36,16 +37,10 @@ public class OSeaMAction {
 							node = nextNode;
 							panelMain.mark.parseMark(node);
 						}
-					} else {
-						node = null;
-						panelMain.mark.clearSign();
-						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
 				}
 			}
 			if (nextNode == null) {
-				node = null;
-				panelMain.mark.clearSign();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}

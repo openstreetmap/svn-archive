@@ -646,6 +646,7 @@ public class SeaMark extends JPanel {
 	public void clrLight() {
 		sectors.clear();
 		addLight();
+		setLightRef("");
 	}
 
 	public enum Pat {
@@ -1637,7 +1638,6 @@ public class SeaMark extends JPanel {
 		}
 
 		dlg.panelMain.syncPanel();
-
 	}
 
 	public void paintComponent(Graphics g) {
@@ -2091,7 +2091,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public void saveSign(Node node) {
-
+		
 		if (getObject() != Obj.UNKNOWN) {
 
 			Main.pref.put("smedplugin.IALA", getRegion() == Reg.C ? "C" : (getRegion() == Reg.B ? "B" : "A"));

@@ -228,8 +228,8 @@ sub getcredits
 
 sub doget
 {
-  my ($mech, $page) = @_;
-  for(my $i = 1; $i <= 50; $i++)
+  my ($mech, $page, $arg) = @_;
+  for(my $i = 1; $i <= 5; $i++)
   {
     $mech->timeout(30);
     eval
@@ -240,6 +240,7 @@ sub doget
     print "Try $i: ($code) $@" if $@;
     return $mech if !$@;
     sleep(30+5*$i);
+    last if $arg && $arg eq "no503" and $code == 503;
     $mech = WWW::Mechanize->new("agent" => $agent);
   }
   return $mech;
@@ -280,9 +281,10 @@ sub getstats
         next;
       }
       my $urlcode = URI::Escape::uri_escape($code);
-      $mech = doget($mech, "https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/+filter?person=$urlcode");
+      $mech = doget($mech, "https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/+filter?person=$urlcode", "no503");
       sleep(1);
-      my ($count) = $mech->content() =~ /of[\r\n\t ]+?(\d+)[\r\n\t ]+?result/;
+      my $cont = $mech->content() || "";
+      my ($count) = $cont =~ /of[\r\n\t ]+?(\d+)[\r\n\t ]+?result/;
       if($count && $mech->status == 200)
       {
         $results{$code}{NAME} = $name;

@@ -2,6 +2,7 @@
 # -CDSL would be better than explicit encoding settings
 
 use strict;
+use utf8;
 
 my ($user, $pwd);
 
@@ -20,7 +21,8 @@ my %lang = map {$_ => 1} (
 "sv", "tr", "uk", "zh_CN", "zh_TW"
 );
 
-my $revision = '$Revision$revision =~ s/^.*?(\d+).*$/$1/;
+my $revision = '$Revision$';
+$revision =~ s/^.*?(\d+).*$/$1/;
 my $agent = "JOSM_Launchpad/1.$revision";
 
 my $count = 0;#11;
@@ -227,14 +229,15 @@ sub getcredits
 sub doget
 {
   my ($mech, $page) = @_;
-  print "$page\n";
   for(my $i = 1; $i <= 50; $i++)
   {
+    $mech->timeout(30);
     eval
     {
       $mech->get($page);
     };
-    print "Try $i: $@" if $@;
+    my $code = $mech->status();
+    print "Try $i: ($code) $@" if $@;
     return $mech if !$@;
     sleep(30+5*$i);
     $mech = WWW::Mechanize->new("agent" => $agent);
@@ -265,9 +268,9 @@ sub getstats
 
   for my $lang (sort keys %lang)
   {
-    $mech->get("https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/");
+    doget($mech, "https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/");
     sleep(1);
-    my $cont = utf8::upgrade($mech->content());
+    my $cont = $mech->content();
     while($cont =~ /<a href="https?:\/\/launchpad.net\/~(.*?)" class="sprite person(-inactive)?">(.*?)<\/a>/g)
     {
       my ($code, $inactive, $name) = ($1, $2, $3);

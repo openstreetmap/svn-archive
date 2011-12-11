@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+# -CDSL would be better than explicit encoding settings
 
 use strict;
 
@@ -18,6 +19,9 @@ my %lang = map {$_ => 1} (
 "it", "ja", "nb", "nl", "pl", "pt_BR", "ru", "sk",
 "sv", "tr", "uk", "zh_CN", "zh_TW"
 );
+
+my $revision = '$Revision$revision =~ s/^.*?(\d+).*$/$1/;
+my $agent = "JOSM_Launchpad/1.$revision";
 
 my $count = 0;#11;
 my $cleanall = 0;#1;
@@ -50,6 +54,10 @@ elsif($ARGV[0] eq "upload")
 elsif($ARGV[0] eq "download")
 {
     podownload();
+}
+elsif($ARGV[0] eq "stats")
+{
+    getstats();
 }
 else
 {
@@ -122,7 +130,7 @@ sub dologin
 {
     require WWW::Mechanize;
 
-    my $mech = WWW::Mechanize->new("agent" => "JOSM_Launchpad/1.0");
+    my $mech = WWW::Mechanize->new("agent" => $agent);
 
       #$mech->add_handler("request_send" => sub {
       #  my($request, $ua, $h) = @_;
@@ -214,4 +222,94 @@ sub getcredits
             Term::ReadKey::ReadMode(0);
         }
     }
+}
+
+sub doget
+{
+  my ($mech, $page) = @_;
+  print "$page\n";
+  for(my $i = 1; $i <= 50; $i++)
+  {
+    eval
+    {
+      $mech->get($page);
+    };
+    print "Try $i: $@" if $@;
+    return $mech if !$@;
+    sleep(30+5*$i);
+    $mech = WWW::Mechanize->new("agent" => $agent);
+  }
+  return $mech;
+}
+
+sub getstats
+{
+  my %results;
+  require WWW::Mechanize;
+  require Data::Dumper;
+  require URI::Escape;
+  my $mech = WWW::Mechanize->new("agent" => $agent);
+
+  if(open DFILE,"<:utf8","launchpadtrans.data")
+  {
+    local $/;
+    $/ = undef;
+    my $val = <DFILE>;
+    eval $val;
+    close DFILE;
+  }
+
+  binmode STDOUT, ":utf8";
+
+  open FILE,">:utf8","launchpadtrans.txt" or die "Could not open output file.";
+
+  for my $lang (sort keys %lang)
+  {
+    $mech->get("https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/");
+    sleep(1);
+    my $cont = utf8::upgrade($mech->content());
+    while($cont =~ /<a href="https?:\/\/launchpad.net\/~(.*?)" class="sprite person(-inactive)?">(.*?)<\/a>/g)
+    {
+      my ($code, $inactive, $name) = ($1, $2, $3);
+      if(exists($results{$code}{$lang}))
+      {
+        printf "%-5s - %-30s - Found - %s\n", $lang,$code,$name;
+        next;
+      }
+      my $urlcode = URI::Escape::uri_escape($code);
+      $mech = doget($mech, "https://translations.launchpad.net/josm/trunk/+pots/josm/$lang/+filter?person=$urlcode");
+      sleep(1);
+      my ($count) = $mech->content() =~ /of[\r\n\t ]+?(\d+)[\r\n\t ]+?result/;
+      if($count && $mech->status == 200)
+      {
+        $results{$code}{NAME} = $name;
+        $results{$code}{$lang} = $count;
+        $results{$code}{TOTAL} += $count;
+        if(open DFILE,">:utf8","launchpadtrans.data")
+        {
+          print DFILE Data::Dumper->Dump([\%results],['*results']);
+          close DFILE;
+        }
+        printf "%-5s - %-30s - %5d - %s\n", $lang,$code,$count,$name;
+        
+      }
+      else
+      {
+        printf "%-5s - %-30s - Skip  - %s\n", $lang,$code,$name;
+      }
+    }
+  }
+  for my $code (sort {$results{$b}{TOTAL} <=> $results{$a}{TOTAL}} keys %results)
+  {
+    print FILE "$results{$code}{NAME}:$results{$code}{TOTAL}";
+    printf "%5d - %-50s",$results{$code}{TOTAL}, $results{$code}{NAME};
+    for my $lang (sort keys %{$results{$code}})
+    {
+      next if $lang eq "NAME" or $lang eq "TOTAL";
+      print FILE ";$lang=$results{$code}{$lang}";
+      printf " - %-5s=%5d",$lang, $results{$code}{$lang};
+    }
+    print FILE "\n";
+    print "\n";
+  }
 }

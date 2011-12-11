@@ -56,6 +56,8 @@ public class SeaMark extends JPanel {
 		name = str.trim();
 		repaint();
 	}
+	
+	private String longName = "";
 
 	public enum Obj {
 		UNKNOWN, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP,
@@ -568,11 +570,11 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Att {
-		COL, CHR, GRP, SEQ, PER, LIT, BEG, END, RAD, HGT, RNG, VIS, EXH, ORT, MLT
+		COL, CHR, GRP, SEQ, PER, LIT, BEG, END, RAD, HGT, RNG, VIS, EXH, ORT, MLT, ALT
 	}
 
 	public Object[] sector = { Col.UNKNOWN, "", "", "", "", Lit.UNKNOWN, "", "",
-			"", "", "", Vis.UNKNOWN, Exh.UNKNOWN, "", "" };
+			"", "", "", Vis.UNKNOWN, Exh.UNKNOWN, "", "", Col.UNKNOWN };
 
 	private ArrayList<Object[]> sectors = new ArrayList<Object[]>();
 
@@ -1209,6 +1211,12 @@ public class SeaMark extends JPanel {
 				setName(str);
 			}
 		}
+		
+		
+		if (keys.containsKey("seamark:longname"))
+			longName = keys.get("seamark:longname");
+		else
+			longName = "";
 
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":category")) {
@@ -1459,6 +1467,13 @@ public class SeaMark extends JPanel {
 			String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
 			if (keys.containsKey("seamark:light" + secStr + ":colour")) {
 				str = keys.get("seamark:light" + secStr + ":colour");
+				if (str.contains(";")) {
+					String strs[] = str.split(";");
+					for (Col col : ColSTR.keySet())
+						if (ColSTR.get(col).equals(strs[1]))
+							setLightAtt(Att.ALT, i, col);
+					str = strs[0];
+				}
 				for (Col col : ColSTR.keySet())
 					if (ColSTR.get(col).equals(str))
 						setLightAtt(Att.COL, i, col);
@@ -1964,21 +1979,25 @@ public class SeaMark extends JPanel {
 	    }
 		}
     g2.setPaint(Color.BLACK);
-		if (getLightAtt(Att.COL, 0) != Col.UNKNOWN) {
+		if ((getLightAtt(Att.COL, 0) != Col.UNKNOWN) || !(((String)getLightAtt(Att.CHR, 0)).isEmpty())) {
 			if (sectors.size() == 1) {
-				switch ((Col) getLightAtt(Att.COL, 0)) {
-				case RED:
-					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")).getImage(), 7, -15, null);
-					break;
-				case GREEN:
-					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")).getImage(), 7, -15, null);
-					break;
-				case WHITE:
-				case YELLOW:
-					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_White_120.png")).getImage(), 7, -15, null);
-					break;
-				default:
+				if (((String) getLightAtt(Att.CHR, 0)).contains("Al")) {
 					g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
+				} else {
+					switch ((Col) getLightAtt(Att.COL, 0)) {
+					case RED:
+						g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")).getImage(), 7, -15, null);
+						break;
+					case GREEN:
+						g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")).getImage(), 7, -15, null);
+						break;
+					case WHITE:
+					case YELLOW:
+						g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_White_120.png")).getImage(), 7, -15, null);
+						break;
+					default:
+						g2.drawImage(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")).getImage(), 7, -15, null);
+					}
 				}
 			}
 			String c = (String) getLightAtt(Att.CHR, 0);
@@ -1995,6 +2014,12 @@ public class SeaMark extends JPanel {
 			} else if (!((String) getLightAtt(Att.GRP, 0)).isEmpty())
 				c += "(" + (String) getLightAtt(Att.GRP, 0) + ")";
 			switch ((Col) getLightAtt(Att.COL, 0)) {
+			case WHITE:
+				c += ".W";
+				break;
+			case YELLOW:
+				c += ".Y";
+				break;
 			case RED:
 				c += ".R";
 				break;
@@ -2012,6 +2037,32 @@ public class SeaMark extends JPanel {
 				break;
 			case VIOLET:
 				c += ".Vi";
+				break;
+			}
+			switch ((Col) getLightAtt(Att.ALT, 0)) {
+			case WHITE:
+				c += "W";
+				break;
+			case YELLOW:
+				c += "Y";
+				break;
+			case RED:
+				c += "R";
+				break;
+			case GREEN:
+				c += "G";
+				break;
+			case AMBER:
+				c += "Am";
+				break;
+			case ORANGE:
+				c += "Or";
+				break;
+			case BLUE:
+				c += "Bu";
+				break;
+			case VIOLET:
+				c += "Vi";
 				break;
 			}
 			tmp = (String) getLightAtt(Att.MLT, 0);
@@ -2104,6 +2155,9 @@ public class SeaMark extends JPanel {
 			if (!getName().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
 
+			if (!longName.isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:longname", longName));
+
 			String objStr = ObjSTR.get(object);
 			if (objStr != null) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:type", objStr));
@@ -2165,7 +2219,11 @@ public class SeaMark extends JPanel {
 			for (int i = 0; i < sectors.size(); i++) {
 				String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
 				if (sectors.get(i)[0] != Col.UNKNOWN)
-					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", ColSTR.get(sectors.get(i)[0])));
+					if ((sectors.get(i)[15] != Col.UNKNOWN) && ((String)sectors.get(i)[1]).contains("Al"))
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", (ColSTR.get(sectors.get(i)[0]))
+								+ ";" + ColSTR.get(sectors.get(i)[15])));
+					else
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", ColSTR.get(sectors.get(i)[0])));
 				if (!((String) sectors.get(i)[1]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":character", (String) sectors.get(i)[1]));
 				if (!((String) sectors.get(i)[2]).isEmpty())

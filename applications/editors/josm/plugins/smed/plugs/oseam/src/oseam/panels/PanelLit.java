@@ -321,6 +321,7 @@ public class PanelLit extends JPanel {
 		}
 		panelCol.syncPanel();
 		panelChr.syncPanel();
+		panelSector.syncPanel();
 	}
 
 	private void addCatItem(String str, Lit lit) {

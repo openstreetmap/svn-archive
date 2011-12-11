@@ -40,7 +40,20 @@ public class PanelCol extends JPanel {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
 						if (ent == Ent.LIGHT) {
-							dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
+							if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).contains("Al")) {
+								if (((button == delButton) && (dlg.panelMain.mark.getLightAtt(Att.ALT, 0) == Col.UNKNOWN))
+										|| (dlg.panelMain.mark.getLightAtt(Att.COL, 0) == Col.UNKNOWN)) {
+									dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
+									dlg.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
+								} else {
+									dlg.panelMain.mark.setLightAtt(Att.ALT, 0, col);
+									dlg.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
+								}
+							} else {
+								dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
+								dlg.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
+								dlg.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
+							}
 							button.setBorderPainted(true);
 						} else {
 							if (button == delButton) {

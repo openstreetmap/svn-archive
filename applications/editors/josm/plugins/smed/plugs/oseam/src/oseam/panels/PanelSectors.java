@@ -9,6 +9,7 @@ import javax.swing.table.*;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
+import oseam.seamarks.SeaMark;
 import oseam.seamarks.SeaMark.*;
 
 public class PanelSectors extends JFrame {
@@ -68,9 +69,6 @@ public class PanelSectors extends JFrame {
 		this.getContentPane().add(panel);
 
 		table.setSize(860, ((table.getRowCount() * 16) + 20));
-		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 42));
-		}
 		
 		table.setDefaultRenderer(String.class, new CentreRenderer());
 		table.getColumnModel().getColumn(1).setCellRenderer(new ColourCellRenderer());
@@ -178,7 +176,17 @@ public class PanelSectors extends JFrame {
 				for (Col colour : colours.keySet()) {
 					ImageIcon img = colours.get(colour);
 					if (img == value)
-						dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+//						dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+						if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+							if (((colour == Col.UNKNOWN) && (dlg.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKNOWN))
+									|| (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKNOWN)) {
+								dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+							} else {
+								dlg.panelMain.mark.setLightAtt(Att.ALT, row, colour);
+							}
+						} else {
+							dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+						}
 				}
 				break;
 			case 5:
@@ -232,14 +240,26 @@ public class PanelSectors extends JFrame {
 		}
 	}
 
-	public class ColourCellRenderer extends JLabel implements TableCellRenderer {
+	public class ColourCellRenderer extends JPanel implements TableCellRenderer {
+		private JLabel col1Label;
+		private JLabel col2Label;
 		public ColourCellRenderer() {
 			super();
-			setHorizontalAlignment(SwingConstants.CENTER);
+			setLayout(new BorderLayout(0, 0));
+			col1Label = new JLabel("        ");
+			col1Label.setOpaque(true);
+			add(col1Label, BorderLayout.WEST);
+			col2Label = new JLabel("        ");
+			col2Label.setOpaque(true);
+			add(col2Label, BorderLayout.EAST);
 		}
-		public Component getTableCellRendererComponent(JTable table, Object value,
-				boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-			setIcon(colours.get(value));
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+			if (!((String)dlg.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
+				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
+			} else {
+				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, rowIndex)));
+			}
+			col1Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
 			return this;
 		}
 	}
@@ -251,18 +271,20 @@ public class PanelSectors extends JFrame {
 	public void addSector(int idx) {
 		dlg.panelMain.mark.addLight(idx);
 		table.setSize(860, ((table.getRowCount() * 16) + 18));
-		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 40));
-		} else {
-			this.setSize(900, 100);
-		}
+		syncPanel();
 	}
 
 	public void deleteSector(int idx) {
-		dlg.panelMain.mark.delLight(idx);
-		table.setSize(860, ((table.getRowCount() * 16) + 20));
+		if (idx > 0) {
+			dlg.panelMain.mark.delLight(idx);
+			table.setSize(860, ((table.getRowCount() * 16) + 20));
+			syncPanel();
+		}
+	}
+	
+	public void syncPanel() {
 		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 42));
+			this.setSize(900, ((table.getRowCount() * 16) + 40));
 		} else {
 			this.setSize(900, 100);
 		}

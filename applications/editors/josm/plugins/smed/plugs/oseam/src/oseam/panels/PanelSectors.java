@@ -152,7 +152,15 @@ public class PanelSectors extends JFrame {
 				else
 					return row;
 			case 1:
-				return dlg.panelMain.mark.getLightAtt(Att.COL, row);
+				if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+					if (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKNOWN) {
+						return Col.UNKNOWN;
+					} else {
+						return dlg.panelMain.mark.getLightAtt(Att.ALT, row);
+					}
+				} else {
+					return dlg.panelMain.mark.getLightAtt(Att.COL, row);
+				}
 			case 6:
 				return (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
 			case 7:
@@ -176,7 +184,6 @@ public class PanelSectors extends JFrame {
 				for (Col colour : colours.keySet()) {
 					ImageIcon img = colours.get(colour);
 					if (img == value)
-//						dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
 						if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
 							if (((colour == Col.UNKNOWN) && (dlg.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKNOWN))
 									|| (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKNOWN)) {

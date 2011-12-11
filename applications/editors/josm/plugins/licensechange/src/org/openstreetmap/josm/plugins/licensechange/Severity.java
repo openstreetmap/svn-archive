@@ -12,16 +12,20 @@ import org.openstreetmap.josm.Main;
 public enum Severity {
 
     /** Error messages */
-    DATA_LOSS(tr("Data loss"), "error",                     
+    FIRST(tr("data loss"), "error",                     
         Main.pref.getColor(marktr("license check error"), Color.RED)),
 
     /** Warning messages */
-    POSSIBLE_DATA_LOSS(tr("Possible data loss"), "warning", 
+    NORMAL(tr("possible data loss"), "warning", 
         Main.pref.getColor(marktr("license check warning"), Color.ORANGE)),
 
     /** Other messages */
-    DATA_REDUCTION(tr("Data reduction"), "other",           
-        Main.pref.getColor(marktr("license check notice"), Color.YELLOW));
+    HARMLESS(tr("harmless data loss"), "other",           
+        Main.pref.getColor(marktr("license check notice"), Color.YELLOW)),
+
+    /** Other messages */
+    NONE(tr("no data loss"), "other",           
+        Main.pref.getColor(marktr("license check info"), Color.GRAY));
 
     /** Description of the severity code */
     private final String message;

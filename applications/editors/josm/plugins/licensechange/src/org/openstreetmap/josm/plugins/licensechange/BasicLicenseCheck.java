@@ -4,6 +4,8 @@ package org.openstreetmap.josm.plugins.licensechange;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,49 +26,40 @@ public class BasicLicenseCheck extends Check
 
     @Override public void visit(Node n) 
     {
-        List<User> users = plugin.getUsers(n);
+        HashMap<User,Severity> users = plugin.getUsers(n);
         doCheck(n, users);
     }
     @Override public void visit(Way w) 
     {
-        List<User> users = plugin.getUsers(w);
+        HashMap<User, Severity> users = plugin.getUsers(w);
         doCheck(w, users);
     }
     @Override public void visit(Relation r) 
     {
-        List<User> users = plugin.getUsers(r);
+        HashMap<User, Severity> users = plugin.getUsers(r);
         doCheck(r, users);
     }
 
-    private void doCheck(OsmPrimitive n, List<User> users)
+    private void doCheck(OsmPrimitive n, HashMap<User, Severity> users)
     {
         Severity sev = null;
         if ((users != null) && (n.getUser() != null))
         {
-            int u0 = users.get(0).getRelicensingStatus();
-            String msg = null;
-            if (u0 == User.STATUS_NOT_AGREED || u0 == User.STATUS_ANONYMOUS)
+            for (Entry<User, Severity> e : users.entrySet())
             {
-                sev = Severity.DATA_LOSS;
-                msg = (u0 == User.STATUS_NOT_AGREED) ? tr("Creator has rejected CT") : tr("Creator unknown");
-            }
-            else if (u0 == User.STATUS_UNDECIDED)
-            {
-                sev = Severity.POSSIBLE_DATA_LOSS;
-                msg = tr("Creator has not (yet) accepted CT");
-            }
-            else
-            {
-                for (int i=1; i<users.size(); i++)
+                // larger sev value = less important
+                if ((sev == null) || (sev.compareTo(e.getValue()) > 0)) 
                 {
-                    int ux = users.get(i).getRelicensingStatus();
-                    if (ux == User.STATUS_NOT_AGREED || ux == User.STATUS_ANONYMOUS || ux == User.STATUS_UNDECIDED)
-                    {
-                        sev = Severity.DATA_REDUCTION;
-                        msg = tr("Object modified by user(s) who have rejected, or not agreed to, CT");
-                        break;
-                    }
+                    sev = e.getValue();
                 }
+            }
+            String msg = null;
+            if (sev == Severity.FIRST) {
+                msg = tr("Creator has not agreed to CT");
+            } else if (sev == Severity.NORMAL) {
+                msg = tr("Object modified by user(s) who have rejected, or not agreed to, CT");
+            } else {
+                msg = tr("minor issue");
             }
 
             if (sev != null)

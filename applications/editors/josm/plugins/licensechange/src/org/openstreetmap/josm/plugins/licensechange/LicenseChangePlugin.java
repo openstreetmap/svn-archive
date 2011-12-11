@@ -73,13 +73,13 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
     Map<Layer, List<LicenseProblem>> layerProblems = new HashMap<Layer, List<LicenseProblem>>();
 
     /** Database of users who have edited something. */
-    private final Map<Long, List<User>> nodeUsers = new HashMap<Long, List<User>>();
-    private final Map<Long, List<User>> wayUsers = new HashMap<Long, List<User>>();
-    private final Map<Long, List<User>> relationUsers = new HashMap<Long, List<User>>();
+    private final HashMap<Long, HashMap<User, Severity>> nodeUsers = new HashMap<Long, HashMap<User, Severity>>();
+    private final HashMap<Long, HashMap<User, Severity>> wayUsers = new HashMap<Long, HashMap<User, Severity>>();
+    private final HashMap<Long, HashMap<User, Severity>> relationUsers = new HashMap<Long, HashMap<User, Severity>>();
 
-    public List<User> getUsers(Node n) { return nodeUsers.get(n.getId()); }
-    public List<User> getUsers(Way n) { return wayUsers.get(n.getId()); }
-    public List<User> getUsers(Relation n) { return relationUsers.get(n.getId()); }
+    public HashMap<User, Severity> getUsers(Node n) { return nodeUsers.get(n.getId()); }
+    public HashMap<User, Severity> getUsers(Way n) { return wayUsers.get(n.getId()); }
+    public HashMap<User, Severity> getUsers(Relation n) { return relationUsers.get(n.getId()); }
 
     /**
      * Creates the plugin
@@ -149,7 +149,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
 
     private class QhsParser extends DefaultHandler 
     {
-        List<User> theList = null;
+        HashMap<User, Severity> theMap = null;
 
         @Override
         public void startDocument() throws SAXException {
@@ -159,26 +159,30 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
         {
             if ("node".equals(qName) || "way".equals(qName) || "relation".equals(qName)) 
             {
-                 Map<Long, List<User>> theMap = ("node".equals(qName)) ? nodeUsers : ("way".equals(qName)) ? wayUsers : relationUsers;
+                 HashMap<Long, HashMap<User, Severity>> userMap = ("node".equals(qName)) ? nodeUsers : ("way".equals(qName)) ? wayUsers : relationUsers;
                  // we always overwrite a list that might already exist
-                 theMap.put(Long.decode(atts.getValue("id")), theList = new ArrayList<User>());
+                 userMap.put(Long.decode(atts.getValue("id")), theMap = new HashMap<User, Severity>());
             }
             else if ("user".equals(qName))
             {
                 String v = atts.getValue("version");
                 String i = atts.getValue("id");
                 String d = atts.getValue("decision");
+                String s = atts.getValue("severity");
+
+                if (!"undecided".equals(d) && !"no".equals(d)) return;
+
+                if ("normal".equals(s) && "first".equals(v)) s = "first";
                 User u = User.createOsmUser(Long.parseLong(i), null);
-                if ("first".equals(v)) theList.add(0, u); else theList.add(u);
                 u.setRelicensingStatus(
-                    "undecided".equals(d) ? User.STATUS_UNDECIDED :
-                    "auto".equals(d) ? User.STATUS_AUTO_AGREED :
-                    "yes".equals(d) ? User.STATUS_AGREED :
-                    "override".equals(d) ? User.STATUS_AGREED :
-                    "pd".equals(d) ? User.STATUS_AGREED :
-                    "no".equals(d) ? User.STATUS_NOT_AGREED :
-                    "anonymous".equals(d) ? User.STATUS_ANONYMOUS :
-                    User.STATUS_UNKNOWN);
+                        "undecided".equals(d) ? User.STATUS_UNDECIDED :
+                        "no".equals(d) ? User.STATUS_NOT_AGREED :
+                        User.STATUS_UNKNOWN);
+                theMap.put(u,
+                        "first".equals(s) ? Severity.FIRST :
+                        "normal".equals(s) ? Severity.NORMAL :
+                        "harmless".equals(s) ? Severity.HARMLESS :
+                        Severity.NONE);
             }
         }
     }
@@ -217,7 +221,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
         if (nodesToLoad.length()==0 && waysToLoad.length()==0 && relationsToLoad.length()==0) return;
 
         try {
-            URL qhs = new URL("http://wtfe.gryph.de/api/0.6/userlist");
+            URL qhs = new URL("http://wtfe.gryph.de/api/0.6/problems");
             HttpURLConnection activeConnection = (HttpURLConnection)qhs.openConnection();
             activeConnection.setRequestMethod("POST");
             activeConnection.setDoOutput(true);

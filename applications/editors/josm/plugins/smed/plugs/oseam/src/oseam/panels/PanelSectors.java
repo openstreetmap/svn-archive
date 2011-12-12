@@ -45,20 +45,20 @@ public class PanelSectors extends JFrame {
 	public PanelSectors(OSeaMAction dia) {
 		super(Messages.getString("SectorTable"));
 		dlg = dia;
-		this.setSize(900, 100);
-		this.setVisible(true);
-		this.setAlwaysOnTop(true);
-		this.setLocation(450, 0);
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		this.setLayout(null);
+		setLayout(null);
+		setSize(900, 100);
+		setVisible(true);
+		setAlwaysOnTop(true);
+		setLocation(450, 0);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		minusButton = new JButton(new ImageIcon(getClass().getResource("/images/MinusButton.png")));
 		minusButton.setBounds(0, 0, 32, 34);
 		minusButton.addActionListener(alMinusButton);
-		this.add(minusButton);
+		add(minusButton);
 		plusButton = new JButton(new ImageIcon(getClass().getResource("/images/PlusButton.png")));
 		plusButton.setBounds(0, 34, 32, 34);
 		plusButton.addActionListener(alPlusButton);
-		this.add(plusButton);
+		add(plusButton);
 		panel = new JPanel(new BorderLayout());
 		panel.setBounds(40, 0, 860, 512);
 		model = new SectorTable();
@@ -66,7 +66,7 @@ public class PanelSectors extends JFrame {
 		table.setBounds(0, 0, 860, 34);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		panel.add(new JScrollPane(table));
-		this.getContentPane().add(panel);
+		getContentPane().add(panel);
 
 		table.setSize(860, ((table.getRowCount() * 16) + 20));
 		
@@ -252,13 +252,13 @@ public class PanelSectors extends JFrame {
 		private JLabel col2Label;
 		public ColourCellRenderer() {
 			super();
-			setLayout(new BorderLayout(0, 0));
-			col1Label = new JLabel("        ");
+			setLayout(new GridLayout(1, 2, 0, 0));
+			col1Label = new JLabel();
 			col1Label.setOpaque(true);
-			add(col1Label, BorderLayout.WEST);
-			col2Label = new JLabel("        ");
+			add(col1Label);
+			col2Label = new JLabel();
 			col2Label.setOpaque(true);
-			add(col2Label, BorderLayout.EAST);
+			add(col2Label);
 		}
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 			if (!((String)dlg.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
@@ -291,9 +291,9 @@ public class PanelSectors extends JFrame {
 	
 	public void syncPanel() {
 		if (table.getRowCount() > 3) {
-			this.setSize(900, ((table.getRowCount() * 16) + 40));
+			setSize(900, ((table.getRowCount() * 16) + 40));
 		} else {
-			this.setSize(900, 100);
+			setSize(900, 100);
 		}
 	}
 

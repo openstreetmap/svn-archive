@@ -173,34 +173,34 @@ public class PanelHaz extends JPanel {
 
 	public PanelHaz(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
-		this.add(getCatButton(northButton, 0, 0, 52, 32, "North"), null);
-		this.add(getCatButton(southButton, 0, 32, 52, 32, "South"), null);
-		this.add(getCatButton(eastButton, 0, 64, 52, 32, "East"), null);
-		this.add(getCatButton(westButton, 0, 96, 52, 32, "West"), null);
-		this.add(getCatButton(isolButton, 0, 128, 52, 32, "Isol"), null);
+		setLayout(null);
+		add(getCatButton(northButton, 0, 0, 52, 32, "North"));
+		add(getCatButton(southButton, 0, 32, 52, 32, "South"));
+		add(getCatButton(eastButton, 0, 64, 52, 32, "East"));
+		add(getCatButton(westButton, 0, 96, 52, 32, "West"));
+		add(getCatButton(isolButton, 0, 128, 52, 32, "Isol"));
 
-		this.add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD), null);
-		this.add(getShapeButton(floatButton, 90, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD), null);
-		this.add(getShapeButton(towerButton, 90, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD), null);
+		add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(floatButton, 90, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT));
+		add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD));
+		add(getShapeButton(towerButton, 90, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD));
 
 		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
 		topmarkButton.setToolTipText(Messages.getString("Topmark"));
 		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		topmarkButton.addActionListener(alTop);
 		topmarkButton.setVisible(false);
-		this.add(topmarkButton);
+		add(topmarkButton);
 		lightButton.setBounds(new Rectangle(130, 32, 34, 32));
 		lightButton.setToolTipText(Messages.getString("Light"));
 		lightButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		lightButton.addActionListener(alLit);
 		lightButton.setVisible(false);
-		this.add(lightButton);
+		add(lightButton);
 	}
 
 	public void syncPanel() {

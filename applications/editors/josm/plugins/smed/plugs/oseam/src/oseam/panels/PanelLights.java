@@ -112,24 +112,24 @@ public class PanelLights extends JPanel {
 
 	public PanelLights(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
-		this.add(getObjButton(houseButton, 0, 0, 34, 32, "Lighthouse", Obj.LITHSE), null);
-		this.add(getObjButton(majorButton, 35, 0, 34, 32, "MajorLight", Obj.LITMAJ), null);
-		this.add(getObjButton(minorButton, 70, 0, 34, 32, "MinorLight", Obj.LITMIN), null);
-		this.add(getObjButton(landButton, 105, 0, 34, 32, "Landmark", Obj.LNDMRK), null);
-		this.add(getObjButton(vesselButton, 0, 35, 34, 32, "LightVessel", Obj.LITVES), null);
-		this.add(getObjButton(floatButton, 35, 35, 34, 32, "LightFloat", Obj.LITFLT), null);
-		this.add(getObjButton(trafficButton, 70, 35, 34, 32, "SSTraffic", Obj.SISTAT), null);
-		this.add(getObjButton(warningButton, 105, 35, 34, 32, "SSWarning", Obj.SISTAW), null);
+		setLayout(null);
+		add(getObjButton(houseButton, 0, 0, 34, 32, "Lighthouse", Obj.LITHSE));
+		add(getObjButton(majorButton, 35, 0, 34, 32, "MajorLight", Obj.LITMAJ));
+		add(getObjButton(minorButton, 70, 0, 34, 32, "MinorLight", Obj.LITMIN));
+		add(getObjButton(landButton, 105, 0, 34, 32, "Landmark", Obj.LNDMRK));
+		add(getObjButton(vesselButton, 0, 35, 34, 32, "LightVessel", Obj.LITVES));
+		add(getObjButton(floatButton, 35, 35, 34, 32, "LightFloat", Obj.LITFLT));
+		add(getObjButton(trafficButton, 70, 35, 34, 32, "SSTraffic", Obj.SISTAT));
+		add(getObjButton(warningButton, 105, 35, 34, 32, "SSWarning", Obj.SISTAW));
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(5, 80, 160, 20));
-		this.add(categoryLabel, null);
+		add(categoryLabel);
 		categoryLabel.setVisible(false);
 
 		landCatBox = new JComboBox();
 		landCatBox.setBounds(new Rectangle(5, 100, 160, 20));
-		this.add(landCatBox, null);
+		add(landCatBox);
 		landCatBox.addActionListener(alLandCatBox);
 		addLCItem("", Cat.NONE);
 		addLCItem(Messages.getString("Tower"), Cat.LMK_TOWR);
@@ -156,7 +156,7 @@ public class PanelLights extends JPanel {
 
 		trafficCatBox = new JComboBox();
 		trafficCatBox.setBounds(new Rectangle(5, 100, 160, 20));
-		this.add(trafficCatBox, null);
+		add(trafficCatBox);
 		trafficCatBox.addActionListener(alTrafficCatBox);
 		addTCItem("", Cat.NONE);
 		addTCItem(Messages.getString("Traffic"), Cat.SIS_TRFC);
@@ -173,7 +173,7 @@ public class PanelLights extends JPanel {
 
 		warningCatBox = new JComboBox();
 		warningCatBox.setBounds(new Rectangle(10, 100, 160, 20));
-		this.add(warningCatBox, null);
+		add(warningCatBox);
 		warningCatBox.addActionListener(alWarningCatBox);
 		addWCItem("", Cat.NONE);
 		addWCItem(Messages.getString("Danger"), Cat.SIS_DNGR);

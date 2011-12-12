@@ -73,36 +73,32 @@ public class PanelMain extends JPanel {
 	private ActionListener alType = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (chanButton.isSelected()) {
-				chanButton.setBorderPainted(true);
 				mark.clearSign();
-				panelChan.syncPanel();
+				chanButton.setBorderPainted(true);
 				panelChan.setVisible(true);
 			} else {
 				chanButton.setBorderPainted(false);
 				panelChan.setVisible(false);
 			}
 			if (hazButton.isSelected()) {
-				hazButton.setBorderPainted(true);
 				mark.clearSign();
-				panelHaz.syncPanel();
+				hazButton.setBorderPainted(true);
 				panelHaz.setVisible(true);
 			} else {
 				hazButton.setBorderPainted(false);
 				panelHaz.setVisible(false);
 			}
 			if (specButton.isSelected()) {
-				specButton.setBorderPainted(true);
 				mark.clearSign();
-				panelSpec.syncPanel();
+				specButton.setBorderPainted(true);
 				panelSpec.setVisible(true);
 			} else {
 				specButton.setBorderPainted(false);
 				panelSpec.setVisible(false);
 			}
 			if (lightsButton.isSelected()) {
-				lightsButton.setBorderPainted(true);
 				mark.clearSign();
-				panelLights.syncPanel();
+				lightsButton.setBorderPainted(true);
 				panelLights.setVisible(true);
 			} else {
 				lightsButton.setBorderPainted(false);
@@ -159,9 +155,10 @@ public class PanelMain extends JPanel {
 	public PanelMain(OSeaMAction dia) {
 
 		dlg = dia;
+		setLayout(null);
 		mark = new SeaMark(dlg);
 		mark.setBounds(new Rectangle(235, 0, 165, 160));
-		this.add(mark);
+		add(mark);
 		panelChan = new PanelChan(dlg);
 		panelChan.setBounds(new Rectangle(65, 0, 170, 160));
 		panelChan.setVisible(false);
@@ -190,19 +187,19 @@ public class PanelMain extends JPanel {
 		panelLit.setBounds(new Rectangle(40, 165, 360, 160));
 		panelLit.setVisible(false);
 
-		this.add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
-		this.add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
-		this.add(getButton(specButton, 0, 80, 62, 40, "Spec"), null);
-		this.add(getButton(lightsButton, 0, 120, 62, 40, "Lights"), null);
-		this.add(panelChan);
-		this.add(panelHaz, null);
-		this.add(panelSpec, null);
-		this.add(panelLights, null);
-		this.add(panelMore, null);
-		this.add(panelTop, null);
-		this.add(panelFog, null);
-		this.add(panelRadar, null);
-		this.add(panelLit, null);
+		add(getButton(chanButton, 0, 0, 62, 40, "Chan"), null);
+		add(getButton(hazButton, 0, 40, 62, 40, "Haz"), null);
+		add(getButton(specButton, 0, 80, 62, 40, "Spec"), null);
+		add(getButton(lightsButton, 0, 120, 62, 40, "Lights"), null);
+		add(panelChan);
+		add(panelHaz);
+		add(panelSpec);
+		add(panelLights);
+		add(panelMore);
+		add(panelTop);
+		add(panelFog);
+		add(panelRadar);
+		add(panelLit);
 		typeButtons = new ButtonGroup();
 		typeButtons.add(chanButton);
 		typeButtons.add(hazButton);
@@ -213,10 +210,10 @@ public class PanelMain extends JPanel {
 		specButton.addActionListener(alType);
 		lightsButton.addActionListener(alType);
 
-		this.add(getButton(topButton, 0, 185, 34, 32, "Topmarks"), null);
-		this.add(getButton(fogButton, 0, 220, 34, 32, "FogSignals"), null);
-		this.add(getButton(radButton, 0, 255, 34, 32, "Radar"), null);
-		this.add(getButton(litButton, 0, 290, 34, 32, "Lit"), null);
+		add(getButton(topButton, 0, 185, 34, 32, "Topmarks"));
+		add(getButton(fogButton, 0, 220, 34, 32, "FogSignals"));
+		add(getButton(radButton, 0, 255, 34, 32, "Radar"));
+		add(getButton(litButton, 0, 290, 34, 32, "Lit"));
 		miscButtons = new ButtonGroup();
 		miscButtons.add(topButton);
 		miscButtons.add(fogButton);
@@ -230,24 +227,24 @@ public class PanelMain extends JPanel {
 		nameLabel = new JLabel();
 		nameLabel.setBounds(new Rectangle(5, 329, 60, 20));
 		nameLabel.setText(tr("Name:"));
-		this.add(nameLabel, null);
+		add(nameLabel);
 		nameBox = new JTextField();
 		nameBox.setBounds(new Rectangle(60, 330, 200, 20));
 		nameBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(nameBox, null);
+		add(nameBox);
 		nameBox.addActionListener(alName);
 
 		saveButton = new JButton();
 		saveButton.setBounds(new Rectangle(285, 330, 100, 20));
 		saveButton.setText(tr("Save"));
-		this.add(saveButton, null);
+		add(saveButton);
 		saveButton.addActionListener(alSave);
 
 		moreButton = new JButton();
 		moreButton.setBounds(new Rectangle(0, 165, 34, 15));
 		moreButton.setMargin(new Insets(0, 0, 0, 0));
 		moreButton.setText(">>");
-		this.add(moreButton, null);
+		add(moreButton);
 		moreButton.addActionListener(alMore);
 
 	}

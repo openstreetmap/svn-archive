@@ -67,51 +67,51 @@ public class PanelFog extends JPanel {
 
 	public PanelFog(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
-		this.add(getFogButton(noFogButton, 0, 2, 27, 27, "NoFog", Fog.NONE), null);
-		this.add(getFogButton(yesFogButton, 0, 32, 27, 27, "FogSignal", Fog.UNKNOWN), null);
-		this.add(getFogButton(hornButton, 0, 62, 27, 27, "Horn", Fog.HORN), null);
-		this.add(getFogButton(sirenButton, 0, 92, 27, 27, "Siren", Fog.SIREN), null);
-		this.add(getFogButton(gongButton, 0, 122, 27, 27, "Gong", Fog.SIREN), null);
-		this.add(getFogButton(diaButton, 30, 2, 27, 27, "Diaphone", Fog.DIA), null);
-		this.add(getFogButton(bellButton, 30, 32, 27, 27, "Bell", Fog.BELL), null);
-		this.add(getFogButton(whisButton, 30, 62, 27, 27, "Whistle", Fog.WHIS), null);
-		this.add(getFogButton(explosButton, 30, 92, 27, 27, "Explosion", Fog.EXPLOS), null);
+		setLayout(null);
+		add(getFogButton(noFogButton, 0, 2, 27, 27, "NoFog", Fog.NONE));
+		add(getFogButton(yesFogButton, 0, 32, 27, 27, "FogSignal", Fog.UNKNOWN));
+		add(getFogButton(hornButton, 0, 62, 27, 27, "Horn", Fog.HORN));
+		add(getFogButton(sirenButton, 0, 92, 27, 27, "Siren", Fog.SIREN));
+		add(getFogButton(gongButton, 0, 122, 27, 27, "Gong", Fog.GONG));
+		add(getFogButton(diaButton, 30, 2, 27, 27, "Diaphone", Fog.DIA));
+		add(getFogButton(bellButton, 30, 32, 27, 27, "Bell", Fog.BELL));
+		add(getFogButton(whisButton, 30, 62, 27, 27, "Whistle", Fog.WHIS));
+		add(getFogButton(explosButton, 30, 92, 27, 27, "Explosion", Fog.EXPLOS));
 
 		groupLabel = new JLabel(Messages.getString("Group"), SwingConstants.CENTER);
 		groupLabel.setBounds(new Rectangle(75, 0, 100, 20));
-		this.add(groupLabel, null);
+		add(groupLabel);
 		groupBox = new JTextField();
 		groupBox.setBounds(new Rectangle(100, 20, 50, 20));
 		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(groupBox, null);
+		add(groupBox);
 		groupBox.addActionListener(alGroup);
 
 		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(75, 40, 100, 20));
-		this.add(periodLabel, null);
+		add(periodLabel);
 		periodBox = new JTextField();
 		periodBox.setBounds(new Rectangle(100, 60, 50, 20));
 		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(periodBox, null);
+		add(periodBox);
 		periodBox.addActionListener(alPeriod);
 
 		seqLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
 		seqLabel.setBounds(new Rectangle(75, 80, 100, 20));
-		this.add(seqLabel, null);
+		add(seqLabel);
 		seqBox = new JTextField();
 		seqBox.setBounds(new Rectangle(100, 100, 50, 20));
 		seqBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(seqBox, null);
+		add(seqBox);
 		seqBox.addActionListener(alSeq);
 
 		rangeLabel = new JLabel(Messages.getString("Range"), SwingConstants.CENTER);
 		rangeLabel.setBounds(new Rectangle(75, 120, 100, 20));
-		this.add(rangeLabel, null);
+		add(rangeLabel);
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(100, 140, 50, 20));
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(rangeBox, null);
+		add(rangeBox);
 		rangeBox.addActionListener(alRange);
 
 	}

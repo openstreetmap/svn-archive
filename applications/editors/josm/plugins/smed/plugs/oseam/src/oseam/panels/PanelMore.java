@@ -186,53 +186,53 @@ public class PanelMore extends JPanel {
 
 	public PanelMore(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
+		setLayout(null);
 		panelPat = new PanelPat(dlg, Ent.BODY);
 		panelPat.setBounds(new Rectangle(0, 0, 110, 160));
-		this.add(panelPat, null);
-		this.add(getRegionButton(regionAButton, 110, 0, 34, 30, "RegionA"), null);
-		this.add(getRegionButton(regionBButton, 110, 32, 34, 30, "RegionB"), null);
-		this.add(getRegionButton(regionCButton, 110, 64, 34, 30, "RegionC"), null);
+		add(panelPat);
+		add(getRegionButton(regionAButton, 110, 0, 34, 30, "RegionA"));
+		add(getRegionButton(regionBButton, 110, 32, 34, 30, "RegionB"));
+		add(getRegionButton(regionCButton, 110, 64, 34, 30, "RegionC"));
 
 		elevLabel = new JLabel(Messages.getString("Elevation"), SwingConstants.CENTER);
 		elevLabel.setBounds(new Rectangle(140, 0, 90, 20));
-		this.add(elevLabel, null);
+		add(elevLabel);
 		elevBox = new JTextField();
 		elevBox.setBounds(new Rectangle(160, 20, 50, 20));
 		elevBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(elevBox, null);
+		add(elevBox);
 		elevBox.addActionListener(alElev);
 
 		heightLabel = new JLabel(Messages.getString("Height"), SwingConstants.CENTER);
 		heightLabel.setBounds(new Rectangle(140, 40, 90, 20));
-		this.add(heightLabel, null);
+		add(heightLabel);
 		heightBox = new JTextField();
 		heightBox.setBounds(new Rectangle(160, 60, 50, 20));
 		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(heightBox, null);
+		add(heightBox);
 		heightBox.addActionListener(alHeight);
 
 		sourceLabel = new JLabel(Messages.getString("Source"), SwingConstants.CENTER);
 		sourceLabel.setBounds(new Rectangle(110, 80, 130, 20));
-		this.add(sourceLabel, null);
+		add(sourceLabel);
 		sourceBox = new JTextField();
 		sourceBox.setBounds(new Rectangle(110, 100, 130, 20));
 		sourceBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(sourceBox, null);
+		add(sourceBox);
 		sourceBox.addActionListener(alSource);
 
 		infoLabel = new JLabel(Messages.getString("Information"), SwingConstants.CENTER);
 		infoLabel.setBounds(new Rectangle(110, 120, 130, 20));
-		this.add(infoLabel, null);
+		add(infoLabel);
 		infoBox = new JTextField();
 		infoBox.setBounds(new Rectangle(110, 140, 130, 20));
 		infoBox.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(infoBox, null);
+		add(infoBox);
 		infoBox.addActionListener(alInfo);
 
 		statusLabel = new JLabel(Messages.getString("Status"), SwingConstants.CENTER);
 		statusLabel.setBounds(new Rectangle(250, 0, 100, 20));
-		this.add(statusLabel, null);
+		add(statusLabel);
 		statusBox = new JComboBox();
 		statusBox.setBounds(new Rectangle(250, 20, 100, 20));
 		addStsItem("", Sts.UNKNOWN);
@@ -254,12 +254,12 @@ public class PanelMore extends JPanel {
 		addStsItem(Messages.getString("Watched"), Sts.WATCH);
 		addStsItem(Messages.getString("UnWatched"), Sts.UNWAT);
 		addStsItem(Messages.getString("Doubtful"), Sts.DOUBT);
-		this.add(statusBox, null);
+		add(statusBox);
 		statusBox.addActionListener(alStatus);
 
 		constrLabel = new JLabel(Messages.getString("Construction"), SwingConstants.CENTER);
 		constrLabel.setBounds(new Rectangle(250, 40, 100, 20));
-		this.add(constrLabel, null);
+		add(constrLabel);
 		constrBox = new JComboBox();
 		constrBox.setBounds(new Rectangle(250, 60, 100, 20));
 		addCnsItem("", Cns.UNKNOWN);
@@ -272,30 +272,30 @@ public class PanelMore extends JPanel {
 		addCnsItem(Messages.getString("Metal"), Cns.METAL);
 		addCnsItem(Messages.getString("GRP"), Cns.GRP);
 		addCnsItem(Messages.getString("Painted"), Cns.PAINT);
-		this.add(constrBox, null);
+		add(constrBox);
 		constrBox.addActionListener(alConstr);
 
 		conLabel = new JLabel(Messages.getString("Conspicuity"), SwingConstants.CENTER);
 		conLabel.setBounds(new Rectangle(250, 80, 100, 20));
-		this.add(conLabel, null);
+		add(conLabel);
 		conBox = new JComboBox();
 		conBox.setBounds(new Rectangle(250, 100, 100, 20));
 		addConItem("", Con.UNKNOWN);
 		addConItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addConItem(Messages.getString("NotConspicuous"), Con.NCONS);
-		this.add(conBox, null);
+		add(conBox);
 		conBox.addActionListener(alCon);
 
 		reflLabel = new JLabel(Messages.getString("Reflectivity"), SwingConstants.CENTER);
 		reflLabel.setBounds(new Rectangle(250, 120, 100, 20));
-		this.add(reflLabel, null);
+		add(reflLabel);
 		reflBox = new JComboBox();
 		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
 		addReflItem("", Con.UNKNOWN);
 		addReflItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addReflItem(Messages.getString("NotConspicuous"), Con.NCONS);
 		addReflItem(Messages.getString("Reflector"), Con.REFL);
-		this.add(reflBox, null);
+		add(reflBox);
 		reflBox.addActionListener(alRefl);
 
 	}

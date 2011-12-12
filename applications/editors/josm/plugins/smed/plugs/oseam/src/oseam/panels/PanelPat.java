@@ -56,16 +56,16 @@ public class PanelPat extends JPanel {
 	public PanelPat(OSeaMAction dia, Ent entity) {
 		dlg = dia;
 		ent = entity;
-		this.setLayout(null);
+		setLayout(null);
 		panelCol = new PanelCol(dlg, ent);
 		panelCol.setBounds(new Rectangle(0, 0, 72, 160));
-		this.add(panelCol, null);
-		this.add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NONE), null);
-		this.add(getPatButton(horizButton, 76, 26, 27, 27, "HorizPat", Pat.HORIZ), null);
-		this.add(getPatButton(vertButton, 76, 52, 27, 27, "VertPat", Pat.VERT), null);
-		this.add(getPatButton(diagButton, 76, 78, 27, 27, "DiagPat", Pat.DIAG), null);
-		this.add(getPatButton(squareButton, 76, 104, 27, 27, "SquarePat", Pat.SQUARE), null);
-		this.add(getPatButton(borderButton, 76, 130, 27, 27, "BorderPat", Pat.BORDER), null);
+		add(panelCol);
+		add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NONE));
+		add(getPatButton(horizButton, 76, 26, 27, 27, "HorizPat", Pat.HORIZ));
+		add(getPatButton(vertButton, 76, 52, 27, 27, "VertPat", Pat.VERT));
+		add(getPatButton(diagButton, 76, 78, 27, 27, "DiagPat", Pat.DIAG));
+		add(getPatButton(squareButton, 76, 104, 27, 27, "SquarePat", Pat.SQUARE));
+		add(getPatButton(borderButton, 76, 130, 27, 27, "BorderPat", Pat.BORDER));
 
 	}
 

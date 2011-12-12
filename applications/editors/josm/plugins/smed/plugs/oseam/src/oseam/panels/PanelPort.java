@@ -88,16 +88,16 @@ public class PanelPort extends JPanel {
 
 	public PanelPort(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
-		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT), null);
-		this.add(getShapeButton(canButton, 0, 64, 34, 32, "Can", Shp.CAN, Obj.BOYLAT), null);
-		this.add(getShapeButton(sphereButton, 0, 96, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYLAT), null);
-		this.add(getShapeButton(floatButton, 0, 128, 34, 32, "Float", Shp.FLOAT, Obj.FLTLAT), null);
-		this.add(getShapeButton(beaconButton, 35, 0, 34, 32, "Beacon", Shp.BEACON, Obj.BCNLAT), null);
-		this.add(getShapeButton(towerButton, 35, 32, 34, 32, "TowerB", Shp.TOWER, Obj.BCNLAT), null);
-		this.add(getShapeButton(perchButton, 35, 64, 34, 32, "Perch", Shp.PERCH, Obj.BCNLAT), null);
-		this.add(getShapeButton(stakeButton, 35, 96, 34, 32, "Stake", Shp.STAKE, Obj.BCNLAT), null);
+		setLayout(null);
+		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT));
+		add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT));
+		add(getShapeButton(canButton, 0, 64, 34, 32, "Can", Shp.CAN, Obj.BOYLAT));
+		add(getShapeButton(sphereButton, 0, 96, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYLAT));
+		add(getShapeButton(floatButton, 0, 128, 34, 32, "Float", Shp.FLOAT, Obj.FLTLAT));
+		add(getShapeButton(beaconButton, 35, 0, 34, 32, "Beacon", Shp.BEACON, Obj.BCNLAT));
+		add(getShapeButton(towerButton, 35, 32, 34, 32, "TowerB", Shp.TOWER, Obj.BCNLAT));
+		add(getShapeButton(perchButton, 35, 64, 34, 32, "Perch", Shp.PERCH, Obj.BCNLAT));
+		add(getShapeButton(stakeButton, 35, 96, 34, 32, "Stake", Shp.STAKE, Obj.BCNLAT));
 	}
 
 	public void syncPanel() {

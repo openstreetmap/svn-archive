@@ -84,27 +84,26 @@ public class PanelSpec extends JPanel {
 
 	public PanelSpec(OSeaMAction dia) {
 		dlg = dia;
-
-		this.setLayout(null);
-		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(sparButton, 34, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP), null);
-		this.add(getShapeButton(canButton, 68, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP), null);
-		this.add(getShapeButton(coneButton, 102, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP), null);
-		this.add(getShapeButton(sphereButton, 0, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP), null);
-		this.add(getShapeButton(barrelButton, 34, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP), null);
-		this.add(getShapeButton(superButton, 68, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP), null);
-		this.add(getShapeButton(floatButton, 102, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT), null);
-		this.add(getShapeButton(beaconButton, 0, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP), null);
-		this.add(getShapeButton(towerButton, 34, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNSPP), null);
-		this.add(getShapeButton(stakeButton, 68, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP), null);
-		this.add(getShapeButton(cairnButton, 102, 64, 34, 32, "CairnB", Shp.CAIRN, Obj.BCNSPP), null);
+		setLayout(null);
+		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP));
+		add(getShapeButton(sparButton, 34, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP));
+		add(getShapeButton(canButton, 68, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP));
+		add(getShapeButton(coneButton, 102, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP));
+		add(getShapeButton(sphereButton, 0, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP));
+		add(getShapeButton(barrelButton, 34, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP));
+		add(getShapeButton(superButton, 68, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP));
+		add(getShapeButton(floatButton, 102, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT));
+		add(getShapeButton(beaconButton, 0, 64, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSPP));
+		add(getShapeButton(towerButton, 34, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNSPP));
+		add(getShapeButton(stakeButton, 68, 64, 34, 32, "Stake", Shp.STAKE, Obj.BCNSPP));
+		add(getShapeButton(cairnButton, 102, 64, 34, 32, "CairnB", Shp.CAIRN, Obj.BCNSPP));
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(5, 100, 160, 20));
-		this.add(categoryLabel, null);
+		add(categoryLabel);
 		categoryBox = new JComboBox();
 		categoryBox.setBounds(new Rectangle(5, 120, 160, 20));
-		this.add(categoryBox, null);
+		add(categoryBox);
 		categoryBox.addActionListener(alCategoryBox);
 		addCatItem("", Cat.NONE);
 		addCatItem(Messages.getString("UKPurpose"), Cat.SPM_UNKN);
@@ -128,7 +127,7 @@ public class PanelSpec extends JPanel {
 		topmarkButton.setBounds(new Rectangle(136, 0, 34, 32));
 		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		topmarkButton.addActionListener(alTop);
-		this.add(topmarkButton);
+		add(topmarkButton);
 	}
 
 	public void syncPanel() {

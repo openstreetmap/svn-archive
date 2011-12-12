@@ -46,12 +46,12 @@ public class PanelSaw extends JPanel {
 
 	public PanelSaw(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
-		this.add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSAW), null);
-		this.add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSAW), null);
-		this.add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW), null);
-		this.add(getShapeButton(floatButton, 0, 96, 34, 32, "Float", Shp.FLOAT, Obj.FLTSAW), null);
-		this.add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSAW), null);
+		setLayout(null);
+		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSAW));
+		add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSAW));
+		add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW));
+		add(getShapeButton(floatButton, 0, 96, 34, 32, "Float", Shp.FLOAT, Obj.FLTSAW));
+		add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSAW));
 	}
 
 	public void syncPanel() {

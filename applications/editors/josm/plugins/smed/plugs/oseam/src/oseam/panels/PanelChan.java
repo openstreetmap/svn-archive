@@ -216,6 +216,7 @@ public class PanelChan extends JPanel {
 
 	public PanelChan(OSeaMAction dia) {
 		dlg = dia;
+		setLayout(null);
 		panelPort = new PanelPort(dlg);
 		panelPort.setBounds(new Rectangle(55, 0, 70, 160));
 		panelPort.setVisible(false);
@@ -225,28 +226,27 @@ public class PanelChan extends JPanel {
 		panelSaw = new PanelSaw(dlg);
 		panelSaw.setBounds(new Rectangle(55, 0, 70, 160));
 		panelSaw.setVisible(false);
-		this.setLayout(null);
-		this.add(panelPort, null);
-		this.add(panelStbd, null);
-		this.add(panelSaw, null);
-		this.add(getCatButton(portButton, 0, 0, 52, 32, "Port"), null);
-		this.add(getCatButton(stbdButton, 0, 32, 52, 32, "Stbd"), null);
-		this.add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPort"), null);
-		this.add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbd"), null);
-		this.add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWater"), null);
+		add(panelPort);
+		add(panelStbd);
+		add(panelSaw);
+		add(getCatButton(portButton, 0, 0, 52, 32, "Port"));
+		add(getCatButton(stbdButton, 0, 32, 52, 32, "Stbd"));
+		add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPort"));
+		add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbd"));
+		add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWater"));
 
 		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
 		topmarkButton.setToolTipText(Messages.getString("Topmark"));
 		topmarkButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		topmarkButton.addActionListener(alTop);
 		topmarkButton.setVisible(false);
-		this.add(topmarkButton);
+		add(topmarkButton);
 		lightButton.setBounds(new Rectangle(130, 32, 34, 32));
 		lightButton.setToolTipText(Messages.getString("Light"));
 		lightButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		lightButton.addActionListener(alLit);
 		lightButton.setVisible(false);
-		this.add(lightButton);
+		add(lightButton);
 	}
 
 	public void syncPanel() {

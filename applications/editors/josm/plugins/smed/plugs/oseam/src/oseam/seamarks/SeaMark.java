@@ -1969,13 +1969,22 @@ public class SeaMark extends JPanel {
 
 		for (int i = 1; i < sectors.size(); i++) {
 	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	    g2.setPaint(ColMAP.get(getLightAtt(Att.COL, i)));
 	    g2.setStroke(new BasicStroke(6.0f));
 	    if (!((String)getLightAtt(Att.BEG, i)).isEmpty() && !((String)getLightAtt(Att.END, i)).isEmpty()) {
-	    	Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.BEG, i));
-	    	Double da = 270 - Double.parseDouble((String)getLightAtt(Att.END, i)) - a0;
-	    	da -= da > 0 ? 360 : 0; 
-	    	g2.draw(new Arc2D.Double(12, 15, 140, 140, a0, da, Arc2D.OPEN));
+				if (getLightAtt(Att.COL, i) != Col.UNKNOWN) {
+					g2.setPaint(ColMAP.get(getLightAtt(Att.COL, i)));
+					Double a0 = 270 - Double.parseDouble((String) getLightAtt(Att.BEG, i));
+					Double da = 270 - Double.parseDouble((String) getLightAtt(Att.END, i)) - a0;
+					da -= da > 0 ? 360 : 0;
+					g2.draw(new Arc2D.Double(12, 15, 140, 140, a0, da, Arc2D.OPEN));
+				}
+				if (getLightAtt(Att.ALT, i) != Col.UNKNOWN) {
+					g2.setPaint(ColMAP.get(getLightAtt(Att.ALT, i)));
+					Double a0 = 270 - Double.parseDouble((String) getLightAtt(Att.BEG, i));
+					Double da = 270 - Double.parseDouble((String) getLightAtt(Att.END, i)) - a0;
+					da -= da > 0 ? 360 : 0;
+					g2.draw(new Arc2D.Double(17, 20, 130, 130, a0, da, Arc2D.OPEN));
+				}
 	    }
 		}
     g2.setPaint(Color.BLACK);

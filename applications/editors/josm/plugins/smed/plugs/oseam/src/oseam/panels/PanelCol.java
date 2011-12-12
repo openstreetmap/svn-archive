@@ -97,29 +97,29 @@ public class PanelCol extends JPanel {
 	public PanelCol(OSeaMAction dia, Ent entity) {
 		dlg = dia;
 		ent = entity;
-		this.setLayout(null);
-		this.add(getColButton(delButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN), null);
-		this.add(getColButton(whiteButton, 0, 16, 34, 16, Messages.getString("White"), Col.WHITE), null);
-		this.add(getColButton(redButton, 0, 32, 34, 16, Messages.getString("Red"), Col.RED), null);
-		this.add(getColButton(orangeButton, 0, 48, 34, 16, Messages.getString("Orange"), Col.ORANGE), null);
-		this.add(getColButton(amberButton, 0, 64, 34, 16, Messages.getString("Amber"), Col.AMBER), null);
-		this.add(getColButton(yellowButton, 0, 80, 34, 16, Messages.getString("Yellow"), Col.YELLOW), null);
-		this.add(getColButton(greenButton, 0, 96, 34, 16, Messages.getString("Green"), Col.GREEN), null);
-		this.add(getColButton(blueButton, 0, 112, 34, 16, Messages.getString("Blue"), Col.BLUE), null);
-		this.add(getColButton(violetButton, 0, 128, 34, 16, Messages.getString("Violet"), Col.VIOLET), null);
+		setLayout(null);
+		add(getColButton(delButton, 0, 0, 34, 16, Messages.getString("RemColour"), Col.UNKNOWN));
+		add(getColButton(whiteButton, 0, 16, 34, 16, Messages.getString("White"), Col.WHITE));
+		add(getColButton(redButton, 0, 32, 34, 16, Messages.getString("Red"), Col.RED));
+		add(getColButton(orangeButton, 0, 48, 34, 16, Messages.getString("Orange"), Col.ORANGE));
+		add(getColButton(amberButton, 0, 64, 34, 16, Messages.getString("Amber"), Col.AMBER));
+		add(getColButton(yellowButton, 0, 80, 34, 16, Messages.getString("Yellow"), Col.YELLOW));
+		add(getColButton(greenButton, 0, 96, 34, 16, Messages.getString("Green"), Col.GREEN));
+		add(getColButton(blueButton, 0, 112, 34, 16, Messages.getString("Blue"), Col.BLUE));
+		add(getColButton(violetButton, 0, 128, 34, 16, Messages.getString("Violet"), Col.VIOLET));
 		if (ent != Ent.LIGHT) {
-			this.add(getColButton(addButton, 0, 144, 34, 16, Messages.getString("AddColour"), Col.BLANK), null);
-			this.add(getColButton(blackButton, 37, 0, 34, 16, Messages.getString("Black"), Col.BLACK), null);
-			this.add(getColButton(greyButton, 37, 16, 34, 16, Messages.getString("Grey"), Col.GREY), null);
-			this.add(getColButton(brownButton, 37, 32, 34, 16, Messages.getString("Brown"), Col.BROWN), null);
-			this.add(getColButton(magentaButton, 37, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA), null);
-			this.add(getColButton(pinkButton, 37, 64, 34, 16, Messages.getString("Pink"), Col.PINK), null);
+			add(getColButton(addButton, 0, 144, 34, 16, Messages.getString("AddColour"), Col.BLANK));
+			add(getColButton(blackButton, 37, 0, 34, 16, Messages.getString("Black"), Col.BLACK));
+			add(getColButton(greyButton, 37, 16, 34, 16, Messages.getString("Grey"), Col.GREY));
+			add(getColButton(brownButton, 37, 32, 34, 16, Messages.getString("Brown"), Col.BROWN));
+			add(getColButton(magentaButton, 37, 48, 34, 16, Messages.getString("Magenta"), Col.MAGENTA));
+			add(getColButton(pinkButton, 37, 64, 34, 16, Messages.getString("Pink"), Col.PINK));
 
 			stack = new JPanel();
 			stack.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 			stack.setBounds(38, 87, 34, 64);
 			stack.setLayout(null);
-			this.add(stack);
+			add(stack);
 		}
 	}
 

@@ -49,27 +49,27 @@ public class PanelTop extends JPanel {
 
 	public PanelTop(OSeaMAction dia) {
 		dlg = dia;
-		this.setLayout(null);
+		setLayout(null);
 		panelPat = new PanelPat(dlg, Ent.TOPMARK);
 		panelPat.setBounds(new Rectangle(160, 0, 110, 160));
-		this.add(panelPat, null);
-		this.add(getTopButton(noTopButton, 0, 5, 27, 27, "NoTop", Top.NONE), null);
-		this.add(getTopButton(canTopButton, 30, 5, 27, 27, "CanTop", Top.CAN), null);
-		this.add(getTopButton(coneTopButton, 60, 5, 27, 27, "ConeTop", Top.CONE), null);
-		this.add(getTopButton(sphereTopButton, 90, 5, 27, 27, "SphereTop", Top.SPHERE), null);
-		this.add(getTopButton(XTopButton, 120, 5, 27, 27, "XTop", Top.X_SHAPE), null);
-		this.add(getTopButton(northTopButton, 0, 35, 27, 27, "NorthTop", Top.NORTH), null);
-		this.add(getTopButton(southTopButton, 30, 35, 27, 27, "SouthTop", Top.SOUTH), null);
-		this.add(getTopButton(eastTopButton, 60, 35, 27, 27, "EastTop", Top.EAST), null);
-		this.add(getTopButton(westTopButton, 90, 35, 27, 27, "WestTop", Top.WEST), null);
-		this.add(getTopButton(spheres2TopButton, 120, 35, 27, 27, "Spheres2Top", Top.SPHERES2), null);
-		this.add(getTopButton(boardDayButton, 0, 65, 27, 27, "BoardDay", Top.BOARD), null);
-		this.add(getTopButton(diamondDayButton, 30, 65, 27, 27, "DiamondDay", Top.DIAMOND), null);
-		this.add(getTopButton(triangleDayButton, 60, 65, 27, 27, "TriangleDay", Top.TRIANGLE), null);
-		this.add(getTopButton(triangleInvDayButton, 90, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV), null);
-		this.add(getTopButton(squareDayButton, 120, 65, 27, 27, "SquareDay", Top.SQUARE), null);
-		this.add(getTopButton(circleDayButton, 120, 95, 27, 27, "CircleDay", Top.CIRCLE), null);
-		this.add(getMoorButton(mooringTopButton, 0, 95, 27, 27, "MooringTop"), null);
+		add(panelPat);
+		add(getTopButton(noTopButton, 0, 5, 27, 27, "NoTop", Top.NONE));
+		add(getTopButton(canTopButton, 30, 5, 27, 27, "CanTop", Top.CAN));
+		add(getTopButton(coneTopButton, 60, 5, 27, 27, "ConeTop", Top.CONE));
+		add(getTopButton(sphereTopButton, 90, 5, 27, 27, "SphereTop", Top.SPHERE));
+		add(getTopButton(XTopButton, 120, 5, 27, 27, "XTop", Top.X_SHAPE));
+		add(getTopButton(northTopButton, 0, 35, 27, 27, "NorthTop", Top.NORTH));
+		add(getTopButton(southTopButton, 30, 35, 27, 27, "SouthTop", Top.SOUTH));
+		add(getTopButton(eastTopButton, 60, 35, 27, 27, "EastTop", Top.EAST));
+		add(getTopButton(westTopButton, 90, 35, 27, 27, "WestTop", Top.WEST));
+		add(getTopButton(spheres2TopButton, 120, 35, 27, 27, "Spheres2Top", Top.SPHERES2));
+		add(getTopButton(boardDayButton, 0, 65, 27, 27, "BoardDay", Top.BOARD));
+		add(getTopButton(diamondDayButton, 30, 65, 27, 27, "DiamondDay", Top.DIAMOND));
+		add(getTopButton(triangleDayButton, 60, 65, 27, 27, "TriangleDay", Top.TRIANGLE));
+		add(getTopButton(triangleInvDayButton, 90, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV));
+		add(getTopButton(squareDayButton, 120, 65, 27, 27, "SquareDay", Top.SQUARE));
+		add(getTopButton(circleDayButton, 120, 95, 27, 27, "CircleDay", Top.CIRCLE));
+		add(getMoorButton(mooringTopButton, 0, 95, 27, 27, "MooringTop"));
 	}
 
 	public void enableAll(boolean state) {

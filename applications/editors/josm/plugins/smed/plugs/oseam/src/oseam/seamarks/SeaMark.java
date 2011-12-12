@@ -421,7 +421,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public void setObjColour(int i, Col col) {
-		if (bodyColour.size() > i)
+		if (i < bodyColour.size())
 			bodyColour.set(i, col);
 		repaint();
 	}

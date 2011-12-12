@@ -278,18 +278,28 @@ public class PanelSectors extends JFrame {
 	public void addSector(int idx) {
 		dlg.panelMain.mark.addLight(idx);
 		table.setSize(860, ((table.getRowCount() * 16) + 18));
-		syncPanel();
+		if (table.getRowCount() > 3) {
+			setSize(900, ((table.getRowCount() * 16) + 40));
+		} else {
+			setSize(900, 100);
+		}
 	}
 
 	public void deleteSector(int idx) {
 		if (idx > 0) {
 			dlg.panelMain.mark.delLight(idx);
 			table.setSize(860, ((table.getRowCount() * 16) + 20));
-			syncPanel();
+			if (table.getRowCount() > 3) {
+				setSize(900, ((table.getRowCount() * 16) + 40));
+			} else {
+				setSize(900, 100);
+			}
 		}
 	}
 	
 	public void syncPanel() {
+		table.updateUI();
+		table.setSize(860, ((table.getRowCount() * 16) + 18));
 		if (table.getRowCount() > 3) {
 			setSize(900, ((table.getRowCount() * 16) + 40));
 		} else {

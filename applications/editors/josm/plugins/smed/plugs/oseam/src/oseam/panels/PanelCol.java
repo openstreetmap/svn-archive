@@ -158,8 +158,10 @@ public class PanelCol extends JPanel {
 				stack.remove(btnI);
 				stackCol.remove(idx);
 			}
-			if ((stackIdx >= stackCol.size()) && (stackIdx != 0))
+			if ((stackIdx >= stackCol.size()) && (stackIdx > 0))
 				stackIdx = stackCol.size() - 1;
+			if (stackIdx < 0)
+				stackIdx = 0;
 			if (stackCol.size() == 0) {
 				stack.repaint();
 			} else {

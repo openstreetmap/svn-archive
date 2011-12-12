@@ -76,10 +76,10 @@ public abstract class PicLayerAbstract extends Layer {
     // Layer icon
     private Icon layerIcon = null;
 
-    private boolean drawPoints = true;
+    private boolean drawMarkers = true;
 
     public void setDrawPoints(boolean value) {
-        drawPoints = value;
+        drawMarkers = value;
     }
 
     private PictureTransform transformer;
@@ -121,7 +121,7 @@ public abstract class PicLayerAbstract extends Layer {
 
         if (pinImage == null) {
             // allow system to load the image and use it in future
-            pinImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/arrow.png"))).getImage();
+            pinImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/marker.png"))).getImage();
         }
     }
 
@@ -244,8 +244,8 @@ public abstract class PicLayerAbstract extends Layer {
                     image.getHeight(null)
                 );
             }
-            if (drawPoints ) {
-                // draw points for selection
+            if (drawMarkers ) {
+                // draw markers for selection
                 Graphics2D gPoints = (Graphics2D)g2.create();
 
                 gPoints.translate(pic_offset_x, pic_offset_y);
@@ -258,8 +258,8 @@ public abstract class PicLayerAbstract extends Layer {
                 for (Point2D p : transformer.getOriginPoints()) {
                    Point2D trP = tr.transform(p, null);
                    int x = (int)trP.getX(), y = (int)trP.getY();
-                   gPoints.drawOval(x-2, y-2, 5, 5);
-                   gPoints.drawImage(pinImage, x, y, null);
+                   //gPoints.drawOval(x-2, y-2, 5, 5);
+                   gPoints.drawImage(pinImage, x-15, y-15, null);
                 }
             }
         } else {

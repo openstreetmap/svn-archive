@@ -36,7 +36,7 @@ public class PanelPat extends JPanel {
 					button.setBorderPainted(false);
 			}
 			switch (dlg.panelMain.mark.getPattern(ent)) {
-			case NONE:
+			case NOPAT:
 				panelCol.trimStack(1);
 				break;
 			case HORIZ:
@@ -47,6 +47,7 @@ public class PanelPat extends JPanel {
 				panelCol.trimStack(4);
 				break;
 			case BORDER:
+			case CROSS:
 				panelCol.trimStack(2);
 				break;
 			}
@@ -60,7 +61,7 @@ public class PanelPat extends JPanel {
 		panelCol = new PanelCol(dlg, ent);
 		panelCol.setBounds(new Rectangle(0, 0, 72, 160));
 		add(panelCol);
-		add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NONE));
+		add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NOPAT));
 		add(getPatButton(horizButton, 76, 26, 27, 27, "HorizPat", Pat.HORIZ));
 		add(getPatButton(vertButton, 76, 52, 27, 27, "VertPat", Pat.VERT));
 		add(getPatButton(diagButton, 76, 78, 27, 27, "DiagPat", Pat.DIAG));

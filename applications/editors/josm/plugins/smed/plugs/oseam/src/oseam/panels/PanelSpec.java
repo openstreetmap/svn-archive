@@ -49,11 +49,11 @@ public class PanelSpec extends JPanel {
 					dlg.panelMain.mark.setShape(shp);
 					dlg.panelMain.mark.setObject(objects.get(shp));
 					if (button == cairnButton) {
-						dlg.panelMain.mark.setObjPattern(Pat.NONE);
-						dlg.panelMain.mark.setObjColour(Col.UNKNOWN);
+						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
+						dlg.panelMain.mark.setObjColour(Col.UNKCOL);
 					}
-					if (dlg.panelMain.mark.getObjColour(0) == Col.UNKNOWN) {
-						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+					if (dlg.panelMain.mark.getObjColour(0) == Col.UNKCOL) {
+						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 						dlg.panelMain.mark.setObjColour(Col.YELLOW);
 					}
 					button.setBorderPainted(true);
@@ -69,13 +69,13 @@ public class PanelSpec extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
 				dlg.panelMain.mark.setTopmark(Top.X_SHAPE);
-				dlg.panelMain.mark.setTopPattern(Pat.NONE);
+				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 				dlg.panelMain.mark.setTopColour(Col.YELLOW);
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setTopmark(Top.NONE);
-				dlg.panelMain.mark.setTopPattern(Pat.NONE);
-				dlg.panelMain.mark.setTopColour(Col.UNKNOWN);
+				dlg.panelMain.mark.setTopmark(Top.NOTOP);
+				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
+				dlg.panelMain.mark.setTopColour(Col.UNKCOL);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
@@ -88,8 +88,8 @@ public class PanelSpec extends JPanel {
 		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSPP));
 		add(getShapeButton(sparButton, 34, 0, 34, 32, "Spar", Shp.SPAR, Obj.BOYSPP));
 		add(getShapeButton(canButton, 68, 0, 34, 32, "Can", Shp.CAN, Obj.BOYSPP));
-		add(getShapeButton(coneButton, 102, 0, 34, 32, "Cone", Shp.CONE, Obj.BOYSPP));
-		add(getShapeButton(sphereButton, 0, 32, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSPP));
+		add(getShapeButton(coneButton, 102, 0, 34, 32, "Cone", Shp.CONI, Obj.BOYSPP));
+		add(getShapeButton(sphereButton, 0, 32, 34, 32, "Sphere", Shp.SPHERI, Obj.BOYSPP));
 		add(getShapeButton(barrelButton, 34, 32, 34, 32, "Barrel", Shp.BARREL, Obj.BOYSPP));
 		add(getShapeButton(superButton, 68, 32, 34, 32, "Super", Shp.SUPER, Obj.BOYSPP));
 		add(getShapeButton(floatButton, 102, 32, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT));
@@ -105,7 +105,7 @@ public class PanelSpec extends JPanel {
 		categoryBox.setBounds(new Rectangle(5, 120, 160, 20));
 		add(categoryBox);
 		categoryBox.addActionListener(alCategoryBox);
-		addCatItem("", Cat.NONE);
+		addCatItem("", Cat.NOCAT);
 		addCatItem(Messages.getString("UKPurpose"), Cat.SPM_UNKN);
 		addCatItem(Messages.getString("Warning"), Cat.SPM_WARN);
 		addCatItem(Messages.getString("ChanSeparation"), Cat.SPM_CHBF);
@@ -143,8 +143,8 @@ public class PanelSpec extends JPanel {
 			if (dlg.panelMain.mark.getCategory() == cat)
 				categoryBox.setSelectedIndex(item);
 		}
-		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NONE);
-		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
+		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
 	}
 

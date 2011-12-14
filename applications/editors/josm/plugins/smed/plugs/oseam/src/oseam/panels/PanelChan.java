@@ -38,7 +38,7 @@ public class PanelChan extends JPanel {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -52,7 +52,7 @@ public class PanelChan extends JPanel {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -66,7 +66,7 @@ public class PanelChan extends JPanel {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -80,7 +80,7 @@ public class PanelChan extends JPanel {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -89,13 +89,13 @@ public class PanelChan extends JPanel {
 				prefStbdButton.setBorderPainted(false);
 			}
 			if (safeWaterButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.NONE);
+				dlg.panelMain.mark.setCategory(Cat.NOCAT);
 				panelSaw.setVisible(true);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).setSelected(true);
 				} else {
 					panelSaw.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelSaw.alShape.actionPerformed(null);
 				panelSaw.setVisible(true);
@@ -115,7 +115,7 @@ public class PanelChan extends JPanel {
 			if (topmarkButton.isSelected()) {
 				if (SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.SAW) {
 					dlg.panelMain.mark.setTopmark(Top.SPHERE);
-					dlg.panelMain.mark.setTopPattern(Pat.NONE);
+					dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 					dlg.panelMain.mark.setTopColour(Col.RED);
 				} else {
 					switch (dlg.panelMain.mark.getCategory()) {
@@ -124,11 +124,11 @@ public class PanelChan extends JPanel {
 						dlg.panelMain.mark.setTopmark(Top.CAN);
 						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
-							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case B:
-							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case C:
@@ -143,11 +143,11 @@ public class PanelChan extends JPanel {
 						dlg.panelMain.mark.setTopmark(Top.CONE);
 						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
-							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case B:
-							dlg.panelMain.mark.setTopPattern(Pat.NONE);
+							dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case C:
@@ -161,9 +161,9 @@ public class PanelChan extends JPanel {
 				}
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setTopmark(Top.NONE);
-				dlg.panelMain.mark.setTopPattern(Pat.NONE);
-				dlg.panelMain.mark.setTopColour(Col.UNKNOWN);
+				dlg.panelMain.mark.setTopmark(Top.NOTOP);
+				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
+				dlg.panelMain.mark.setTopColour(Col.UNKCOL);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
@@ -283,10 +283,10 @@ public class PanelChan extends JPanel {
 		} else {
 			safeWaterButton.setBorderPainted(false);
 		}
-		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NONE);
-		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
+		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKNOWN) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
 		lightButton.setBorderPainted(lit);
 		lightButton.setSelected(lit);
 		lightButton.setVisible(dlg.panelMain.mark.testValid());

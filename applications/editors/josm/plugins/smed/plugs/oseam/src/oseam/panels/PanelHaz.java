@@ -59,7 +59,7 @@ public class PanelHaz extends JPanel {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.NONE);
+				dlg.panelMain.mark.setCategory(Cat.NOCAT);
 				dlg.panelMain.mark.setObjColour(Col.BLACK);
 				dlg.panelMain.mark.addObjColour(Col.RED);
 				dlg.panelMain.mark.addObjColour(Col.BLACK);
@@ -106,7 +106,7 @@ public class PanelHaz extends JPanel {
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				dlg.panelMain.mark.setTopPattern(Pat.NONE);
+				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
 				dlg.panelMain.mark.setTopColour(Col.BLACK);
 				switch (dlg.panelMain.mark.getCategory()) {
 				case CAM_NORTH:
@@ -127,9 +127,9 @@ public class PanelHaz extends JPanel {
 				}
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setTopmark(Top.NONE);
-				dlg.panelMain.mark.setTopPattern(Pat.NONE);
-				dlg.panelMain.mark.setTopColour(Col.UNKNOWN);
+				dlg.panelMain.mark.setTopmark(Top.NOTOP);
+				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
+				dlg.panelMain.mark.setTopColour(Col.UNKCOL);
 				topmarkButton.setBorderPainted(false);
 			}
 			dlg.panelMain.panelTop.syncPanel();
@@ -183,8 +183,8 @@ public class PanelHaz extends JPanel {
 		add(getShapeButton(pillarButton, 55, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYCAR, Obj.BOYISD));
 		add(getShapeButton(sparButton, 55, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYCAR, Obj.BOYISD));
 		add(getShapeButton(canButton, 55, 64, 34, 32, "Can", Shp.CAN, Obj.BOYCAR, Obj.BOYISD));
-		add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONE, Obj.BOYCAR, Obj.BOYISD));
-		add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(coneButton, 55, 96, 34, 32, "Cone", Shp.CONI, Obj.BOYCAR, Obj.BOYISD));
+		add(getShapeButton(sphereButton, 55, 128, 34, 32, "Sphere", Shp.SPHERI, Obj.BOYCAR, Obj.BOYISD));
 		add(getShapeButton(floatButton, 90, 0, 34, 32, "Float", Shp.FLOAT, Obj.LITFLT, Obj.LITFLT));
 		add(getShapeButton(beaconButton, 90, 32, 34, 32, "Beacon", Shp.BEACON, Obj.BCNCAR, Obj.BCNISD));
 		add(getShapeButton(towerButton, 90, 64, 34, 32, "TowerB", Shp.TOWER, Obj.BCNCAR, Obj.BCNISD));
@@ -213,10 +213,10 @@ public class PanelHaz extends JPanel {
 			JRadioButton button = shapes.get(shp);
 			button.setBorderPainted(dlg.panelMain.mark.getShape() == shp);
 		}
-		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NONE);
-		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NONE);
+		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
+		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKNOWN) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
 		lightButton.setBorderPainted(lit);
 		lightButton.setSelected(lit);
 		lightButton.setVisible(dlg.panelMain.mark.testValid());

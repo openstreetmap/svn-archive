@@ -42,11 +42,11 @@ public class PanelPort extends JPanel {
 				if (dlg.panelMain.mark.getCategory() == Cat.LAM_PORT) {
 					switch (dlg.panelMain.mark.getRegion()) {
 					case A:
-						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 						dlg.panelMain.mark.setObjColour(Col.RED);
 						break;
 					case B:
-						dlg.panelMain.mark.setObjPattern(Pat.NONE);
+						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 						dlg.panelMain.mark.setObjColour(Col.GREEN);
 						break;
 					case C:
@@ -92,7 +92,7 @@ public class PanelPort extends JPanel {
 		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYLAT));
 		add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYLAT));
 		add(getShapeButton(canButton, 0, 64, 34, 32, "Can", Shp.CAN, Obj.BOYLAT));
-		add(getShapeButton(sphereButton, 0, 96, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYLAT));
+		add(getShapeButton(sphereButton, 0, 96, 34, 32, "Sphere", Shp.SPHERI, Obj.BOYLAT));
 		add(getShapeButton(floatButton, 0, 128, 34, 32, "Float", Shp.FLOAT, Obj.FLTLAT));
 		add(getShapeButton(beaconButton, 35, 0, 34, 32, "Beacon", Shp.BEACON, Obj.BCNLAT));
 		add(getShapeButton(towerButton, 35, 32, 34, 32, "TowerB", Shp.TOWER, Obj.BCNLAT));

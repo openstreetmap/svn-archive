@@ -49,7 +49,7 @@ public class PanelSaw extends JPanel {
 		setLayout(null);
 		add(getShapeButton(pillarButton, 0, 0, 34, 32, "Pillar", Shp.PILLAR, Obj.BOYSAW));
 		add(getShapeButton(sparButton, 0, 32, 34, 32, "Spar", Shp.SPAR, Obj.BOYSAW));
-		add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERE, Obj.BOYSAW));
+		add(getShapeButton(sphereButton, 0, 64, 34, 32, "Sphere", Shp.SPHERI, Obj.BOYSAW));
 		add(getShapeButton(floatButton, 0, 96, 34, 32, "Float", Shp.FLOAT, Obj.FLTSAW));
 		add(getShapeButton(beaconButton, 0, 128, 34, 32, "Beacon", Shp.BEACON, Obj.BCNSAW));
 	}

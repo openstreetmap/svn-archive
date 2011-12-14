@@ -211,7 +211,7 @@ public class PanelLit extends JPanel {
 		categoryBox = new JComboBox();
 		categoryBox.setBounds(new Rectangle(185, 20, 165, 20));
 		add(categoryBox);
-		addCatItem("", Lit.UNKNOWN);
+		addCatItem("", Lit.UNKLIT);
 		addCatItem(Messages.getString("VertDisp"), Lit.VERT);
 		addCatItem(Messages.getString("HorizDisp"), Lit.HORIZ);
 		addCatItem(Messages.getString("Directional"), Lit.DIR);
@@ -237,7 +237,7 @@ public class PanelLit extends JPanel {
 		visibilityBox = new JComboBox();
 		visibilityBox.setBounds(new Rectangle(185, 60, 165, 20));
 		add(visibilityBox);
-		addVisibItem("", Vis.UNKNOWN);
+		addVisibItem("", Vis.UNKVIS);
 		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
 		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
 		addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
@@ -249,7 +249,7 @@ public class PanelLit extends JPanel {
 		exhibitionBox = new JComboBox();
 		exhibitionBox.setBounds(new Rectangle(280, 100, 70, 20));
 		add(exhibitionBox);
-		addExhibItem("", Exh.UNKNOWN);
+		addExhibItem("", Exh.UNKEXH);
 		addExhibItem(Messages.getString("24h"), Exh.H24);
 		addExhibItem(Messages.getString("Day"), Exh.DAY);
 		addExhibItem(Messages.getString("Night"), Exh.NIGHT);

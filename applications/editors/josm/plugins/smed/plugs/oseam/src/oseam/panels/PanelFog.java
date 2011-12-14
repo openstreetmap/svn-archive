@@ -68,8 +68,8 @@ public class PanelFog extends JPanel {
 	public PanelFog(OSeaMAction dia) {
 		dlg = dia;
 		setLayout(null);
-		add(getFogButton(noFogButton, 0, 2, 27, 27, "NoFog", Fog.NONE));
-		add(getFogButton(yesFogButton, 0, 32, 27, 27, "FogSignal", Fog.UNKNOWN));
+		add(getFogButton(noFogButton, 0, 2, 27, 27, "NoFog", Fog.NOFOG));
+		add(getFogButton(yesFogButton, 0, 32, 27, 27, "FogSignal", Fog.FOGSIG));
 		add(getFogButton(hornButton, 0, 62, 27, 27, "Horn", Fog.HORN));
 		add(getFogButton(sirenButton, 0, 92, 27, 27, "Siren", Fog.SIREN));
 		add(getFogButton(gongButton, 0, 122, 27, 27, "Gong", Fog.GONG));

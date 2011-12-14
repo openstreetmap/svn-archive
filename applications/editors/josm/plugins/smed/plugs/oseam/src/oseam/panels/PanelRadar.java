@@ -79,7 +79,7 @@ public class PanelRadar extends JPanel {
 	public PanelRadar(OSeaMAction dia) {
 		dlg = dia;
 		setLayout(null);
-		add(getRadButton(noRadButton, 0, 3, 27, 27, "NoRadar", Rtb.NONE));
+		add(getRadButton(noRadButton, 0, 3, 27, 27, "NoRadar", Rtb.NORTB));
 		add(getRadButton(reflButton, 0, 33, 27, 27, "RadarReflector", Rtb.REFLECTOR));
 		add(getRadButton(ramarkButton, 0, 63, 27, 27, "Ramark", Rtb.RAMARK));
 		add(getRadButton(raconButton, 0, 93, 27, 27, "Racon", Rtb.RACON));
@@ -144,7 +144,7 @@ public class PanelRadar extends JPanel {
 	}
 
 	public void syncPanel() {
-		boolean rad = ((dlg.panelMain.mark.getRadar() != Rtb.NONE) && (dlg.panelMain.mark.getRadar() != Rtb.REFLECTOR));
+		boolean rad = ((dlg.panelMain.mark.getRadar() != Rtb.NORTB) && (dlg.panelMain.mark.getRadar() != Rtb.REFLECTOR));
 		groupLabel.setVisible(rad);
 		groupBox.setVisible(rad);
 		periodLabel.setVisible(rad);

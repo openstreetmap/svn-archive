@@ -80,7 +80,7 @@ public class PanelLights extends JPanel {
 				dlg.panelMain.mark.setShape(Shp.SUPER);
 			else if (dlg.panelMain.mark.getObject() == Obj.LITFLT)
 				dlg.panelMain.mark.setShape(Shp.FLOAT);
-			else dlg.panelMain.mark.setShape(Shp.UNKNOWN);
+			else dlg.panelMain.mark.setShape(Shp.UNKSHP);
 			if (landButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				landCatBox.setVisible(true);
@@ -100,7 +100,7 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(false);
 				alWarningCatBox.actionPerformed(null);
 			} else {
-				dlg.panelMain.mark.setCategory(Cat.NONE);
+				dlg.panelMain.mark.setCategory(Cat.NOCAT);
 				categoryLabel.setVisible(false);
 				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
@@ -131,7 +131,7 @@ public class PanelLights extends JPanel {
 		landCatBox.setBounds(new Rectangle(5, 100, 160, 20));
 		add(landCatBox);
 		landCatBox.addActionListener(alLandCatBox);
-		addLCItem("", Cat.NONE);
+		addLCItem("", Cat.NOCAT);
 		addLCItem(Messages.getString("Tower"), Cat.LMK_TOWR);
 		addLCItem(Messages.getString("WaterTower"), Cat.LMK_WTRT);
 		addLCItem(Messages.getString("Chimney"), Cat.LMK_CHMY);
@@ -158,7 +158,7 @@ public class PanelLights extends JPanel {
 		trafficCatBox.setBounds(new Rectangle(5, 100, 160, 20));
 		add(trafficCatBox);
 		trafficCatBox.addActionListener(alTrafficCatBox);
-		addTCItem("", Cat.NONE);
+		addTCItem("", Cat.NOCAT);
 		addTCItem(Messages.getString("Traffic"), Cat.SIS_TRFC);
 		addTCItem(Messages.getString("PortControl"), Cat.SIS_PTCL);
 		addTCItem(Messages.getString("PortEntry"), Cat.SIS_PTED);
@@ -175,7 +175,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setBounds(new Rectangle(10, 100, 160, 20));
 		add(warningCatBox);
 		warningCatBox.addActionListener(alWarningCatBox);
-		addWCItem("", Cat.NONE);
+		addWCItem("", Cat.NOCAT);
 		addWCItem(Messages.getString("Danger"), Cat.SIS_DNGR);
 		addWCItem(Messages.getString("Storm"), Cat.SIS_STRM);
 		addWCItem(Messages.getString("Weather"), Cat.SIS_WTHR);
@@ -196,7 +196,7 @@ public class PanelLights extends JPanel {
 	}
 
 	public void syncPanel() {
-		if ((dlg.panelMain.mark.getObject() == Obj.LNDMRK) && (dlg.panelMain.mark.getCategory() != Cat.NONE)) {
+		if ((dlg.panelMain.mark.getObject() == Obj.LNDMRK) && (dlg.panelMain.mark.getCategory() != Cat.NOCAT)) {
 			categoryLabel.setVisible(true);
 			landCatBox.setVisible(true);
 			trafficCatBox.setVisible(false);

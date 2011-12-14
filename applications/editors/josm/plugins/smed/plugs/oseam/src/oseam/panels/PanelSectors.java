@@ -75,7 +75,7 @@ public class PanelSectors extends JFrame {
 
 		TableColumn colColumn = table.getColumnModel().getColumn(1);
 		colourBox = new JComboBox();
-		addColItem(new ImageIcon(getClass().getResource("/images/DelButton.png")), Col.UNKNOWN);
+		addColItem(new ImageIcon(getClass().getResource("/images/DelButton.png")), Col.UNKCOL);
 		addColItem(new ImageIcon(getClass().getResource("/images/WhiteButton.png")), Col.WHITE);
 		addColItem(new ImageIcon(getClass().getResource("/images/RedButton.png")), Col.RED);
 		addColItem(new ImageIcon(getClass().getResource("/images/GreenButton.png")), Col.GREEN);
@@ -88,7 +88,7 @@ public class PanelSectors extends JFrame {
 		
 		TableColumn visColumn = table.getColumnModel().getColumn(12);
 		visibilityBox = new JComboBox();
-		addVisibItem("", Vis.UNKNOWN);
+		addVisibItem("", Vis.UNKVIS);
 		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
 		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
 		addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
@@ -96,7 +96,7 @@ public class PanelSectors extends JFrame {
 		
 		TableColumn exhColumn = table.getColumnModel().getColumn(13);
 		exhibitionBox = new JComboBox();
-		addExhibItem("", Exh.UNKNOWN);
+		addExhibItem("", Exh.UNKEXH);
 		addExhibItem(Messages.getString("24h"), Exh.H24);
 		addExhibItem(Messages.getString("Day"), Exh.DAY);
 		addExhibItem(Messages.getString("Night"), Exh.NIGHT);
@@ -153,8 +153,8 @@ public class PanelSectors extends JFrame {
 					return row;
 			case 1:
 				if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
-					if (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKNOWN) {
-						return Col.UNKNOWN;
+					if (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL) {
+						return Col.UNKCOL;
 					} else {
 						return dlg.panelMain.mark.getLightAtt(Att.ALT, row);
 					}
@@ -185,8 +185,8 @@ public class PanelSectors extends JFrame {
 					ImageIcon img = colours.get(colour);
 					if (img == value)
 						if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
-							if (((colour == Col.UNKNOWN) && (dlg.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKNOWN))
-									|| (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKNOWN)) {
+							if (((colour == Col.UNKCOL) && (dlg.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKCOL))
+									|| (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL)) {
 								dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
 							} else {
 								dlg.panelMain.mark.setLightAtt(Att.ALT, row, colour);
@@ -208,7 +208,7 @@ public class PanelSectors extends JFrame {
 					dlg.panelMain.mark.setLightAtt(Att.BEG, row, "");
 					dlg.panelMain.mark.setLightAtt(Att.END, row, "");
 				} else {
-					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.UNKNOWN);
+					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.UNKLIT);
 					dlg.panelMain.mark.setLightAtt(Att.ORT, row, "");
 				}
 				break;

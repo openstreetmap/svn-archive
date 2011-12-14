@@ -102,7 +102,7 @@ public class PanelMore extends JPanel {
 				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
 					dlg.panelMain.mark.setObjColour(Col.RED);
-					dlg.panelMain.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 					break;
 				case LAM_PPORT:
 					dlg.panelMain.mark.setObjColour(Col.RED);
@@ -112,7 +112,7 @@ public class PanelMore extends JPanel {
 					break;
 				case LAM_STBD:
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
-					dlg.panelMain.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 					break;
 				case LAM_PSTBD:
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
@@ -130,7 +130,7 @@ public class PanelMore extends JPanel {
 				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
-					dlg.panelMain.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 					break;
 				case LAM_PPORT:
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
@@ -140,7 +140,7 @@ public class PanelMore extends JPanel {
 					break;
 				case LAM_STBD:
 					dlg.panelMain.mark.setObjColour(Col.RED);
-					dlg.panelMain.mark.setObjPattern(Pat.NONE);
+					dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
 					break;
 				case LAM_PSTBD:
 					dlg.panelMain.mark.setObjColour(Col.RED);
@@ -235,7 +235,7 @@ public class PanelMore extends JPanel {
 		add(statusLabel);
 		statusBox = new JComboBox();
 		statusBox.setBounds(new Rectangle(250, 20, 100, 20));
-		addStsItem("", Sts.UNKNOWN);
+		addStsItem("", Sts.UNKSTS);
 		addStsItem(Messages.getString("Permanent"), Sts.PERM);
 		addStsItem(Messages.getString("Occasional"), Sts.OCC);
 		addStsItem(Messages.getString("Recommended"), Sts.REC);
@@ -262,7 +262,7 @@ public class PanelMore extends JPanel {
 		add(constrLabel);
 		constrBox = new JComboBox();
 		constrBox.setBounds(new Rectangle(250, 60, 100, 20));
-		addCnsItem("", Cns.UNKNOWN);
+		addCnsItem("", Cns.UNKCNS);
 		addCnsItem(Messages.getString("Masonry"), Cns.BRICK);
 		addCnsItem(Messages.getString("Concreted"), Cns.CONC);
 		addCnsItem(Messages.getString("Boulders"), Cns.BOULD);
@@ -280,7 +280,7 @@ public class PanelMore extends JPanel {
 		add(conLabel);
 		conBox = new JComboBox();
 		conBox.setBounds(new Rectangle(250, 100, 100, 20));
-		addConItem("", Con.UNKNOWN);
+		addConItem("", Con.UNKCON);
 		addConItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addConItem(Messages.getString("NotConspicuous"), Con.NCONS);
 		add(conBox);
@@ -291,7 +291,7 @@ public class PanelMore extends JPanel {
 		add(reflLabel);
 		reflBox = new JComboBox();
 		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
-		addReflItem("", Con.UNKNOWN);
+		addReflItem("", Con.UNKCON);
 		addReflItem(Messages.getString("Conspicuous"), Con.CONSP);
 		addReflItem(Messages.getString("NotConspicuous"), Con.NCONS);
 		addReflItem(Messages.getString("Reflector"), Con.REFL);

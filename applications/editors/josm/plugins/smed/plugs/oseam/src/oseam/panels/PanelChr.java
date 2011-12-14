@@ -69,7 +69,7 @@ public class PanelChr extends JPanel {
 			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, str);
 			if (!str.contains("Al")) {
 				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
-				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKNOWN);
+				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
 			} else {
 				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, 0)));
 			}
@@ -98,7 +98,7 @@ public class PanelChr extends JPanel {
 			}
 			if (!str.contains("Al")) {
 				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
-				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKNOWN);
+				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
 			} else {
 				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, 0)));
 			}
@@ -108,7 +108,7 @@ public class PanelChr extends JPanel {
 	public PanelChr(OSeaMAction dia) {
 		dlg = dia;
 		setLayout(null);
-		add(getChrButton(noneButton, 0, 0, 44, 16, Messages.getString("NoChar"), Chr.UNKNOWN));
+		add(getChrButton(noneButton, 0, 0, 44, 16, Messages.getString("NoChar"), Chr.UNKCHR));
 		add(getChrButton(fixedButton, 0, 16, 44, 16, Messages.getString("FChar"), Chr.FIXED));
 		add(getChrButton(flashButton, 0, 32, 44, 16, Messages.getString("FlChar"), Chr.FLASH));
 		add(getChrButton(longFlashButton, 0, 48, 44, 16, Messages.getString("LFlChar"), Chr.LFLASH));

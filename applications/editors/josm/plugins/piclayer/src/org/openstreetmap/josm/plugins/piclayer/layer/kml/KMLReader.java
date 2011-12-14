@@ -82,7 +82,7 @@ class KMLHandler extends DefaultHandler {
             overlay.setSouth(Double.valueOf(value.trim()));
         } else if (inLatLonBox && "west".equals(localName)) {
             overlay.setWest(Double.valueOf(value.trim()));
-        } else if (inLatLonBox && "rotate".equals(localName)) {
+        } else if (inLatLonBox && "rotation".equals(localName)) {
             overlay.setRotate(Double.valueOf(value.trim()));
         } else if (inLatLonBox && "LatLonBox".equals(localName)) {
             inLatLonBox = false;

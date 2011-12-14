@@ -64,15 +64,21 @@ import org.openstreetmap.josm.tools.Utils;
 public abstract class PicLayerAbstract extends Layer {
     // Counter - just for naming of layers
     private static int imageCounter = 0;
+
     // This is the main image to be displayed
-    private Image image = null;
-    private static Image pinImage;
+    protected Image image = null;
+    // Tiles of pin images
+    private static Image pinTiledImage;
+
     // Initial position of the image in the real world
-    private EastNorth initialImagePosition;
+    protected EastNorth initialImagePosition;
+
     // Position of the image in the real world
-    private EastNorth imagePosition;
+    protected EastNorth imagePosition;
+
     // The scale that was set on the map during image creation
-    private double initialImageScale = 1.0;
+    protected double initialImageScale = 1.0;
+
     // Layer icon
     private Icon layerIcon = null;
 
@@ -82,30 +88,39 @@ public abstract class PicLayerAbstract extends Layer {
         drawMarkers = value;
     }
 
-    private PictureTransform transformer;
+    protected PictureTransform transformer;
 
     public PictureTransform getTransformer() {
         return transformer;
     }
 
-    // Keys for saving in Properties
-    private final String INITIAL_POS_X = "INITIAL_POS_X";
-    private final String INITIAL_POS_Y = "INITIAL_POS_y";
-    private final String POSITION_X = "POSITION_X";
-    private final String POSITION_Y = "POSITION_Y";
-    private final String ANGLE = "ANGLE";
-    private final String INITIAL_SCALE = "INITIAL_SCALE";
-    private final String SCALEX = "SCALEX";
-    private final String SCALEY = "SCALEY";
-    private final String SHEARX = "SHEARX";
-    private final String SHEARY = "SHEARY";
+    // Keys for loading from old/new Properties
+    private static final String INITIAL_POS_X = "INITIAL_POS_X";
+    private static final String INITIAL_POS_Y = "INITIAL_POS_y";
+    private static final String POSITION_X = "POSITION_X";
+    private static final String POSITION_Y = "POSITION_Y";
+    private static final String ANGLE = "ANGLE";
+    private static final String INITIAL_SCALE = "INITIAL_SCALE";
+    private static final String SCALEX = "SCALEX";
+    private static final String SCALEY = "SCALEY";
+    private static final String SHEARX = "SHEARX";
+    private static final String SHEARY = "SHEARY";
+    // new properties
+    private static final String MATRIXm00 = "M00";
+    private static final String MATRIXm01 = "M01";
+    private static final String MATRIXm10 = "M10";
+    private static final String MATRIXm11 = "M11";
+    private static final String MATRIXm02 = "M02";
+    private static final String MATRIXm12 = "M12";
 
-    private final String MATRIXm00 = "M00";
-    private final String MATRIXm01 = "M01";
-    private final String MATRIXm10 = "M10";
-    private final String MATRIXm11 = "M11";
-    private final String MATRIXm02 = "M02";
-    private final String MATRIXm12 = "M12";
+    // pin images properties - tile anchors, width and offset
+    // TODO: load these from properties file in images folder...
+    private static final int pinAnchorX = 31;
+    private static final int pinAnchorY = 31;
+    private static final int[] pinTileOffsetX = {74, 0, 74, 0};
+    private static final int[] pinTileOffsetY = {0, 74, 74, 0};
+    private static final int pinWidth = 64;
+    private static final int pinHeight = 64;
 
     /**
      * Constructor
@@ -119,9 +134,9 @@ public abstract class PicLayerAbstract extends Layer {
         // Load layer icon
         layerIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/layericon.png")));
 
-        if (pinImage == null) {
+        if (pinTiledImage == null) {
             // allow system to load the image and use it in future
-            pinImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/marker.png"))).getImage();
+            pinTiledImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/v6_64.png"))).getImage();
         }
     }
 
@@ -255,11 +270,13 @@ public abstract class PicLayerAbstract extends Layer {
                 AffineTransform tr = AffineTransform.getScaleInstance(scalex, scaley);
                 tr.concatenate(transformer.getTransform());
 
-                for (Point2D p : transformer.getOriginPoints()) {
-                   Point2D trP = tr.transform(p, null);
+                for (int i = 0; i < transformer.getOriginPoints().size(); i++) {
+                   Point2D trP = tr.transform(transformer.getOriginPoints().get(i), null);
                    int x = (int)trP.getX(), y = (int)trP.getY();
-                   //gPoints.drawOval(x-2, y-2, 5, 5);
-                   gPoints.drawImage(pinImage, x-15, y-15, null);
+
+                   int dstx = x-pinAnchorX;
+                   int dsty = y-pinAnchorY;
+                   gPoints.drawImage(pinTiledImage, dstx, dsty, dstx+pinWidth, dsty+pinHeight, pinTileOffsetX[i], pinTileOffsetY[i], pinTileOffsetX[i]+pinWidth, pinTileOffsetY[i]+pinHeight, null);
                 }
             }
         } else {
@@ -275,7 +292,7 @@ public abstract class PicLayerAbstract extends Layer {
      * For EPSG:4326, it is the distance from one meridian of full degree to the
      * next (a couple of kilometers).
      */
-    private double getMetersPerEasting(EastNorth en) {
+    protected double getMetersPerEasting(EastNorth en) {
         /* Natural scale in east/north units per pixel.
          * This means, the projection should be able to handle
          * a shift of that size in east north space without

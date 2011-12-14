@@ -381,6 +381,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
+IfFileExists "$APPDATA\JOSM\preferences" settings_exists
 IfFileExists "$APPDATA\JOSM\preferences.xml" settings_exists
 FileOpen $R0 "$APPDATA\JOSM\preferences.xml" w
 FileWrite $R0 "<?xml version='1.0' encoding='UTF-8'?><preferences xmlns='http://josm.openstreetmap.de/preferences-1.0' version='4660'><list key='plugins'><entry value='openstreetbugs'/><entry value='turnrestrictions'/></list></preferences>"

@@ -6,9 +6,6 @@
 ; If you get an error here, please update to at least NSIS 2.07!
 SetCompressor /SOLID lzma
 
-; work with JAVA ini strings
-!include "INIStrNS.nsh"
-
 !define DEST "josm"
 
 ; Used to refresh the display of file association
@@ -298,9 +295,6 @@ IfFileExists preferences dont_overwrite_bookmarks
 File "bookmarks"
 dont_overwrite_bookmarks:
 
-; write reasonable defaults for some preferences
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-
 SectionEnd
 
 
@@ -387,7 +381,10 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsturnrestrictions"
+FileOpen $R0 "$APPDATA\JOSM\preferences.xml" w
+FileWrite $R0 "<?xml version='1.0' encoding='UTF-8'?><preferences xmlns='http://josm.openstreetmap.de/preferences-1.0' version='4660'><list key='plugins'><entry value='openstreetbugs'/><entry value='turnrestrictions'/></list></preferences>"
+FileClose $R0
+
 SectionEnd
 
 

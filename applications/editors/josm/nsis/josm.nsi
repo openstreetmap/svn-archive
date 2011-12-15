@@ -290,11 +290,6 @@ File "josm-tested.jar"
 SetShellVarContext current
 SetOutPath "$APPDATA\JOSM"
 
-; don't overwrite existing bookmarks
-IfFileExists preferences dont_overwrite_bookmarks
-File "bookmarks"
-dont_overwrite_bookmarks:
-
 SectionEnd
 
 
@@ -462,6 +457,7 @@ RMDir "$APPDATA\JOSM\plugins"
 
 Delete "$APPDATA\JOSM\motd.html"
 Delete "$APPDATA\JOSM\preferences"
+Delete "$APPDATA\JOSM\preferences.xml"
 Delete "$APPDATA\JOSM\bookmarks"
 RMDir "$APPDATA\JOSM"
 SectionEnd

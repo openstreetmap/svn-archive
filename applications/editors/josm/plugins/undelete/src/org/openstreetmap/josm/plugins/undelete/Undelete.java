@@ -218,11 +218,11 @@ public class Undelete extends Plugin {
                       primitive=new Relation();
                       hPrimitive1=h.getLatest();
                       hPrimitive2=h.getByVersion(h.getNumVersions()-1);
-                      
+
                       Relation rel = new Relation(id, (int) hPrimitive1.getVersion());
-                      
+
                       HistoryRelation hRel = (HistoryRelation) hPrimitive2;
-                      
+
                       List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
                       for (org.openstreetmap.josm.data.osm.history.RelationMember m : hRel.getMembers()) {
                         OsmPrimitive p = datas.getPrimitiveById(m.getPrimitiveId(), m.getPrimitiveType());
@@ -236,13 +236,13 @@ public class Undelete extends Plugin {
                         }
                         members.add(new RelationMember(m.getRole(), p));
                       }
-                      
+
                       rel.setMembers(members);
-                      
+
                       primitive=rel;
                   }
 
-                  User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());
+                  User user = hPrimitive1.getUser();
 
                   primitive.setUser(user);
 

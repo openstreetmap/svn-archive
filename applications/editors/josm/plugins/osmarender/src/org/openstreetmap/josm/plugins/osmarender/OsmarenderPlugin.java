@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.io.OsmWriter;
+import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.GBC;
@@ -62,7 +63,7 @@ public class OsmarenderPlugin extends Plugin {
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {
                 // write to plugin dir
-                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, "0.6");
+                OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, "0.6");
                 w.header();
 
                 // Write nodes, make list of ways and relations

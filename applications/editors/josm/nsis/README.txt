@@ -27,7 +27,6 @@ The installer will currently add:
 - josm file associations to .osm and .gpx files
 - some assorted plugins (more to follow?)
 - default preferences to the current user profile (if not already existing)
-- default bookmarks to the current user profile (if not already existing)
 
 When the installed josm.exe is executed, it should ask the user to download 
 JAVA runtime if it's not already installed. However, I've not tested this. 

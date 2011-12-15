@@ -5563,7 +5563,7 @@
 			<svg:path fill="#808000" d="M 130.88767,176.08104 C 130.88765,182.52632 125.67129,187.75578 119.22602,187.77195 C 112.78075,187.78813 107.53821,182.58491 107.50585,176.1397 C 107.47349,169.6945 112.66352,164.4389 119.10862,164.39035 C 125.55373,164.3418 130.82234,169.51862 130.88708,175.96358"/>
 		</svg:pattern>
 		
-		<svg:pattern id="cemetery-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+		<svg:pattern id="cemetery-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.5)">
 			<svg:rect fill="#bde3cb" width="10" height="10" x="0" y="0"/>
 			<svg:path fill="#b0b0b0" stroke-width="0.1" d="M 1.48,0.13 C 2.12,0.13 2.63,0.64 2.63,1.28 L 2.63,4.27 L 0.33,4.27 L 0.33,1.28 C 0.33,0.64 0.85,0.13 1.48,0.13 z "/>
 			<svg:path fill="#b0b0b0" stroke-width="0.1" d="M 6.64,5.78 C 7.27,5.78 7.79,6.29 7.79,6.92 L 7.79,9.91 L 5.49,9.91 L 5.49,6.92 C 5.49,6.29 6.00,5.78 6.64,5.78 z "/>

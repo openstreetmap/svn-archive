@@ -62,6 +62,7 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.OsmWriter;
+import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -498,7 +499,7 @@ public class CommandLine extends Plugin {
 				PrintWriter printWriter = null;
 				try { printWriter = new PrintWriter(new OutputStreamWriter(outputStream, "utf-8")); }
 				catch (Exception e) {e.printStackTrace();}
-				final OsmWriter osmWriter = new OsmWriter(printWriter, true, null);
+				final OsmWriter osmWriter = OsmWriterFactory.createOsmWriter(printWriter, true, null);
 				Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
 				Collection<OsmPrimitive> pObjects;
 				osmWriter.header();

@@ -81,6 +81,7 @@ XPStyle on
   ;; will be).
 
   !insertmacro MUI_LANGUAGE "English"
+  !insertmacro MUI_LANGUAGE "French"
   !insertmacro MUI_LANGUAGE "German"
 
 ;--------------------------------
@@ -91,6 +92,7 @@ XPStyle on
   !include "langmacros.nsh"
   
   !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "ENGLISH" "locale\english.nsh"
+  !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "FRENCH" "locale\french.nsh"
   !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "GERMAN" "locale\german.nsh"
 
 ; Uninstall stuff
@@ -331,7 +333,7 @@ SectionGroupEnd	; "Plugins"
 Section $(JOSM_SEC_STARTMENU) SecStartMenu
 ;-------------------------------------------
 SectionIn 1 2
-; To qoute "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
+; To quote "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
 ; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
 CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
 SectionEnd
@@ -436,7 +438,7 @@ Delete "$QUICKLAUNCH\josm.lnk"
 
 RMDir "$INSTDIR"
 
-SectionEnd ; "Uinstall"
+SectionEnd ; "Uninstall"
 
 Section /o "un.$(un.JOSM_SEC_PERSONAL_SETTINGS)" un.SecPersonalSettings
 ;-------------------------------------------

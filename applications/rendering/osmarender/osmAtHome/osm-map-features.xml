@@ -126,7 +126,7 @@
 			<rule e="way|area" k="landuse" v="commercial">
 		<area class="landuse-commercial" />
 		</rule>
-		<rule e="way|area" k="natural" v="water|pond|lake">
+		<rule e="way|area" k="natural" v="water|pond|lake|bay">
 			<area class='natural-water' /> 
 		</rule>
 		<rule e="way|area" k="landuse" v="reservoir">

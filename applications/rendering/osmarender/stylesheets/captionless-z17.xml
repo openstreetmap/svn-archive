@@ -313,7 +313,7 @@
 		<rule e="way" k="waterway" v="dock">
 			<area class="natural-water"/>
 		</rule>
-		<rule e="way" k="natural" v="water|pond|lake">
+		<rule e="way" k="natural" v="water|pond|lake|bay">
 			<area class="natural-water"/>
 		</rule>
 		<rule e="way" k="natural" v="marsh|wetland">

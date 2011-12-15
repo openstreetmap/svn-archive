@@ -47,7 +47,7 @@
             <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
                 <area class='area-green'/>
             </rule>
-            <rule e="way" k="natural" v="water|pond|lake">
+            <rule e="way" k="natural" v="water|pond|lake|bay">
                 <area class='area-lake' />
             </rule>
         </layer>

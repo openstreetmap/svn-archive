@@ -28,7 +28,7 @@ OutFile "${DEST}-setup-${VERSION}.exe"
 
 XPStyle on
 
-
+Var /GLOBAL plugins
 
 ; ============================================================================
 ; Modern UI
@@ -294,7 +294,6 @@ SetOutPath "$APPDATA\JOSM"
 
 SectionEnd
 
-
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
 Section $(JOSM_SEC_OPENSTREETBUGS_PLUGIN) SecOpenStreetBugsPlugin
@@ -303,6 +302,7 @@ SectionIn 1 2
 SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\openstreetbugs.jar"
+StrCpy $plugins "$plugins<entry value='openstreetbugs'/>"
 SectionEnd
 
 Section $(JOSM_SEC_TURNRESTRICTIONS_PLUGIN) SecTurnrestrictionsPlugin
@@ -311,6 +311,7 @@ SectionIn 1 2
 SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\turnrestrictions.jar"
+StrCpy $plugins "$plugins<entry value='turnrestrictions'/>"
 SectionEnd
 
 Section $(JOSM_SEC_WMS) SecWMS
@@ -381,7 +382,7 @@ SetShellVarContext current
 IfFileExists "$APPDATA\JOSM\preferences" settings_exists
 IfFileExists "$APPDATA\JOSM\preferences.xml" settings_exists
 FileOpen $R0 "$APPDATA\JOSM\preferences.xml" w
-FileWrite $R0 "<?xml version='1.0' encoding='UTF-8'?><preferences xmlns='http://josm.openstreetmap.de/preferences-1.0' version='4660'><list key='plugins'><entry value='openstreetbugs'/><entry value='turnrestrictions'/></list></preferences>"
+FileWrite $R0 "<?xml version='1.0' encoding='UTF-8'?><preferences xmlns='http://josm.openstreetmap.de/preferences-1.0' version='4660'><list key='plugins'>$plugins</list></preferences>"
 FileClose $R0
 settings_exists:
 

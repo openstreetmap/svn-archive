@@ -27,9 +27,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.print.*;
 
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -39,7 +38,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * The PrintAction controls basic printing of the MapView
  * and takes care of reasonable temporary adjustments to the preferences.
  */
-public class PrintAction extends JosmAction {
+public class PrintAction extends JosmAction implements Runnable {
     
     /**
      * Create a new PrintAction.
@@ -55,40 +54,24 @@ public class PrintAction extends JosmAction {
     }
 
     /**
-     * Trigger the printing process.
+     * Trigger the printing dialog.
      * 
      * @param e not used.
      */
     public void actionPerformed(ActionEvent e) {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(new PrintableMapView());
-        if (job.printDialog()) {
-            try {
-                PrintPlugin.adjustPrefs();
-                job.print();
-            }
-            catch (PrinterAbortException ex) {
-                String msg = ex.getLocalizedMessage();
-                if (msg.length() == 0) {
-                    msg = tr("Printing has been cancelled.");
-                }
-                JOptionPane.showMessageDialog(Main.main.parent, msg,
-                  tr("Printing stopped"),
-                  JOptionPane.WARNING_MESSAGE);
-            }
-            catch (PrinterException ex) {
-                String msg = ex.getLocalizedMessage();
-                if (msg.length() == 0) {
-                    msg = tr("Printing has failed.");
-                }
-                JOptionPane.showMessageDialog(Main.main.parent, msg,
-                  tr("Printing stopped"),
-                  JOptionPane.ERROR_MESSAGE);
-            }
-            finally {
-                PrintPlugin.restorePrefs();
-            }
-        }
+        // Allow the JOSM GUI to be redrawn before modifying preferences
+        SwingUtilities.invokeLater(this);
     }
     
+    /**
+     * Open the printing dialog
+     * 
+     * This will temporarily modify the mappaint preferences.
+     */
+    public void run () {
+        PrintPlugin.adjustPrefs();
+        PrintDialog window = new PrintDialog(Main.main.parent);
+        window.setVisible(true);
+        PrintPlugin.restorePrefs();
+    }
 }

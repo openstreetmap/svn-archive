@@ -26,6 +26,7 @@ package org.openstreetmap.josm.plugins.print;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -55,11 +56,6 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * 
  */
 public class PrintableMapView extends MapView implements Printable {
-    
-    /** 
-     * Indicates that the instance has been initialized 
-     */
-    protected boolean initialized;
     
     /**
      * The factor for scaling the printing graphics to the desired
@@ -92,7 +88,6 @@ public class PrintableMapView extends MapView implements Printable {
         }
         
         mapView = Main.main.map.mapView;
-        initialized = false;
     }
 
     /**
@@ -107,8 +102,32 @@ public class PrintableMapView extends MapView implements Printable {
         double widthZoomFactor  = g2dFactor * mapView.getWidth()  / pageFormat.getImageableWidth();
         double heightZoomFactor = g2dFactor * mapView.getHeight() / pageFormat.getImageableHeight();
         setSize((int)(pageFormat.getImageableWidth()/g2dFactor),(int)(pageFormat.getImageableHeight()/g2dFactor));
-        zoomTo(mapView.getRealBounds());
     }
+    
+    /**
+     * Resizes this component. 
+     */
+    @Override
+    public void setSize(int width, int height) {
+        Dimension dim = getSize();
+        if (dim.width != width || dim.height != height) {
+            super.setSize(width, height);
+            zoomTo(mapView.getRealBounds());
+        }
+    }
+            
+    /**
+     * Resizes this component. 
+     */
+    @Override
+    public void setSize(Dimension newSize) {
+        Dimension dim = getSize();
+        if (dim.width != newSize.width || dim.height != newSize.height) {
+            super.setSize(newSize);
+            zoomTo(mapView.getRealBounds());
+        }
+    }
+            
 
     /**
      * Render a page for the printer
@@ -128,13 +147,10 @@ public class PrintableMapView extends MapView implements Printable {
     public int print(Graphics g, PageFormat pageFormat, int page) throws
                                                     PrinterException {
         if (page > 0) { /* stop after first page */
-            initialized = false;
             return NO_SUCH_PAGE;
         }
-        else if (! initialized) {
-            initialize(pageFormat);
-            initialized = true;
-        }
+
+        initialize(pageFormat);
 
         Graphics2D g2d = (Graphics2D)g;
         g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
@@ -323,6 +339,7 @@ public class PrintableMapView extends MapView implements Printable {
         Collections.sort(
             layers,
             new Comparator<Layer>() {
+                @Override
                 public int compare(Layer l2, Layer l1) { // l1 and l2 swapped!
                     if (l1 instanceof OsmDataLayer && l2 instanceof OsmDataLayer) {
                         if (l1 == getActiveLayer()) return -1;

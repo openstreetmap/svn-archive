@@ -23,6 +23,8 @@
 
 package org.openstreetmap.josm.plugins.print;
 
+import java.awt.Toolkit;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
@@ -46,7 +48,7 @@ public class PrintPlugin extends Plugin {
     /**
      * The default resolution
      */
-    public static final int DEF_RESOLUTION_DPI = 200;
+    public static final int DEF_RESOLUTION_DPI = 100;
 
     /**
      * The default attribution text
@@ -85,6 +87,8 @@ public class PrintPlugin extends Plugin {
           "print.resolution.dpi", Integer.toString(DEF_RESOLUTION_DPI));
         Main.pref.putDefault(
           "print.attribution", DEF_ATTRIBUTION);
+        Main.pref.putDefault(
+          "print.preview.enabled", new Boolean(false).toString());
 
         restorePrefs(); // Recover after crash if neccesseary
     }
@@ -182,6 +186,7 @@ public class PrintPlugin extends Plugin {
             restorePref("mappaint.node.unselected-size");
             restorePref("mappaint.node.virtual-size");
             Main.pref.put("print.saved-prefs", false);
+            //Main.main.map.mapView.repaint();
         }
     }
     

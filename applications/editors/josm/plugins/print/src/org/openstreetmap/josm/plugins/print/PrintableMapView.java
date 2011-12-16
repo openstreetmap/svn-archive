@@ -25,6 +25,7 @@ package org.openstreetmap.josm.plugins.print;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -184,7 +185,11 @@ public class PrintableMapView extends MapView implements Printable {
                      * but many Layer implementations heavily depend on Main.map.mapView. */
                     Main.map.mapView = this;
                 }
+                if (l.getOpacity() < 1) {
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)l.getOpacity()));
+                }
                 l.paint(g2d, this, box);
+                g2d.setPaintMode();
             }
             finally {
                 Main.map.mapView = mapView;

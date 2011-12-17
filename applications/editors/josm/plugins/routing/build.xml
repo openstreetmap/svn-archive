@@ -25,8 +25,8 @@
 **
 -->
 <project name="routing" default="dist" basedir=".">
-    <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="commit.message" value="fixed NPE at startup"/>
+    <property name="plugin.main.version" value="4666"/>
     <!-- Define some properties -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>

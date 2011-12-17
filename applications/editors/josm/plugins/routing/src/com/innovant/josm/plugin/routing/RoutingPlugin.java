@@ -197,9 +197,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
             newFrame.addMapMode(addRouteNodeButton);
             newFrame.addMapMode(removeRouteNodeButton);
             newFrame.addMapMode(moveRouteNodeButton);
-            newFrame.toolGroup.add(addRouteNodeButton);
-            newFrame.toolGroup.add(removeRouteNodeButton);
-            newFrame.toolGroup.add(moveRouteNodeButton);
+//            newFrame.toolGroup.add(addRouteNodeButton);
+//            newFrame.toolGroup.add(removeRouteNodeButton);
+//            newFrame.toolGroup.add(moveRouteNodeButton);
             // Hide them by default
             addRouteNodeButton.setVisible(false);
             removeRouteNodeButton.setVisible(false);
@@ -215,7 +215,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
      * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
      */
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-    	   	
+                if (addRouteNodeButton==null) return;
     	   	if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
     	   		addRouteNodeButton.setVisible(true);
     		    removeRouteNodeButton.setVisible(true);

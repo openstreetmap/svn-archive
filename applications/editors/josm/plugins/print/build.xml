@@ -29,7 +29,7 @@
 -->
 <project name="print" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Prints more types of layers correctly now, tested with PicLayer"/>
+    <property name="commit.message" value="Added a print settings and preview dialog."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4549"/>
     <!-- should not be necessary to change the following properties -->

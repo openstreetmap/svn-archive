@@ -24,20 +24,29 @@ MA 02110-1301, USA.
 PREFERENCES
 ===========
 
-print.attribution: 
+print.attribution (string): 
 The attribution text which will be printed on the page.
-Default: "Map data (c) OpenStreetMap contributors, CC-BY-SA"
+Default: OSM Map data (c) OpenStreetMap contributors, CC-BY-SA
 
-print.resolution.dpi:
+print.resolution.dpi (integer):
 The resolution in dpi which will be used for printing. 
 While a typical screen may have ~100 dpi, most printers offer a much 
 higher resolution. With a higher print resolution, lines will be finer,
 but icons and text will be smaller and might become unreadable.
-Default: "200"
+Default: 100
 
+print.preview.enabled (boolean):
+If true, the map will be rendered as a preview in the print dialog.
+If false, the preview only indicates the page area which will be filled 
+by the map.
+Default: false
+
+print.saved-prefs...:
+Not really user preferences, but a mechanism to reliable backup and 
+restore mappaint preferences which are temporary modified for printing.
 
 KNOWN LIMITATIONS
 =================
 
  * No option to select a more usual scale
- * No GUI for preferences
+ 

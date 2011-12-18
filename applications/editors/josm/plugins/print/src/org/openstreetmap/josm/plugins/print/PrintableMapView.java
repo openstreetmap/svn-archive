@@ -223,7 +223,6 @@ public class PrintableMapView extends MapView implements Printable {
     public void paintMap(Graphics2D g2d, PageFormat pageFormat) {
         AffineTransform at = g2d.getTransform();
         g2d.scale(g2dFactor, g2dFactor);
-System.err.println(" used: "+g2dFactor);
         
         Bounds box = getRealBounds();
         List<Layer> visibleLayers = getVisibleLayersInZOrder();

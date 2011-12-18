@@ -59,6 +59,11 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 public class PrintableMapView extends MapView implements Printable {
     
     /**
+     * A fixed map scale if greater than zero.
+     */
+    protected int fixedMapScale = 0;
+    
+    /**
      * The factor for scaling the printing graphics to the desired
      * resolution
      */
@@ -92,6 +97,40 @@ public class PrintableMapView extends MapView implements Printable {
     }
 
     /**
+     * Set a fixed map scale 1 : "scale"
+     * 
+     * @param scale the fixed map scale
+     */
+    public void setFixedMapScale(int scale) {
+        this.fixedMapScale = scale;
+        rezoomToFixedScale();
+    }
+
+    /**
+     * Unset the fixed map scale
+     * 
+     * The map scaling will be chosen automatically such that the
+     * main windows map view fits on the page format.
+     */
+    public void unsetFixedMapScale() {
+        setFixedMapScale(0);
+        rezoomToFixedScale();
+    }
+
+    /** 
+     * Get the map scale that will be used for rendering
+     */     
+    public int getMapScale() {
+        if (fixedMapScale > 0 || g2dFactor == 0.0) {
+            return fixedMapScale;
+        }
+
+        double dist100px = getDist100Pixel() / g2dFactor;
+        int mapScale = (int) (dist100px * 72.0 / 2.54);
+        return mapScale;
+    }
+
+    /**
      * Initialize the PrintableMapView for a particular combination of
      * main MapView, PageFormat and target resolution
      * 
@@ -100,8 +139,6 @@ public class PrintableMapView extends MapView implements Printable {
     public void initialize(PageFormat pageFormat) {
         int resolution = Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
         g2dFactor = 72.0/resolution;
-        double widthZoomFactor  = g2dFactor * mapView.getWidth()  / pageFormat.getImageableWidth();
-        double heightZoomFactor = g2dFactor * mapView.getHeight() / pageFormat.getImageableHeight();
         setSize((int)(pageFormat.getImageableWidth()/g2dFactor),(int)(pageFormat.getImageableHeight()/g2dFactor));
     }
     
@@ -114,6 +151,7 @@ public class PrintableMapView extends MapView implements Printable {
         if (dim.width != width || dim.height != height) {
             super.setSize(width, height);
             zoomTo(mapView.getRealBounds());
+            rezoomToFixedScale();
         }
     }
             
@@ -126,9 +164,21 @@ public class PrintableMapView extends MapView implements Printable {
         if (dim.width != newSize.width || dim.height != newSize.height) {
             super.setSize(newSize);
             zoomTo(mapView.getRealBounds());
+            rezoomToFixedScale();
         }
     }
-            
+
+    /**
+     * Adjust the zoom as necessary to establish the fixed scale.
+     */
+    protected void rezoomToFixedScale() {
+        if (fixedMapScale > 0) {
+            double dist100px = getDist100Pixel() / g2dFactor;
+            double mapScale = dist100px * 72.0 / 2.54;
+            double mapFactor = fixedMapScale / mapScale;
+            zoomToFactor(mapFactor);
+        }
+    }
 
     /**
      * Render a page for the printer
@@ -173,6 +223,7 @@ public class PrintableMapView extends MapView implements Printable {
     public void paintMap(Graphics2D g2d, PageFormat pageFormat) {
         AffineTransform at = g2d.getTransform();
         g2d.scale(g2dFactor, g2dFactor);
+System.err.println(" used: "+g2dFactor);
         
         Bounds box = getRealBounds();
         List<Layer> visibleLayers = getVisibleLayersInZOrder();
@@ -270,8 +321,8 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.drawString(rightLabel, xRight, yLabel);
         
         /* lexical scale */
-        int mapScale = (int) (dist100px * 72.0 / 2.54);
-        String lexicalScale = tr("Scale 1 : {0}", mapScale);
+        int mapScale = getMapScale();
+        String lexicalScale = tr("Scale") + " 1 : " + mapScale;
 
         Font scaleFront = new Font("Arial", Font.BOLD, FONT_SIZE);
         g2d.setFont(scaleFront);

@@ -91,9 +91,19 @@ public class PrintDialog extends JDialog implements ActionListener {
     protected SpinnerNumberModel resolutionModel;
     
     /**
+     * The map scale
+     */
+    protected SpinnerNumberModel scaleModel;
+    
+    /**
      * The page preview
      */
     protected PrintPreview printPreview;
+    
+    /**
+     * The map view for preview an printing
+     */
+    protected PrintableMapView mapView;
     
     /**
      * The printer job
@@ -112,8 +122,10 @@ public class PrintDialog extends JDialog implements ActionListener {
      */
     public PrintDialog(Component parent) {
         super(JOptionPane.getFrameForComponent(parent), tr("Print the Map"), ModalityType.DOCUMENT_MODAL);
+        mapView = new PrintableMapView();
         job = PrinterJob.getPrinterJob();
         job.setJobName("JOSM Map");
+        job.setPrintable(mapView);
         build();
         updateFields();
         pack();
@@ -164,28 +176,28 @@ public class PrintDialog extends JDialog implements ActionListener {
         JLabel caption;
         
         int row = 0;
-        caption = new JLabel(tr("Printer:"));
+        caption = new JLabel(tr("Printer")+":");
         add(caption, std.grid(2, row));
         printerField = new JTextField();
         printerField.setEditable(false);
         add(printerField, std.grid(3, row));
 
         row++;
-        caption = new JLabel(tr("Paper:"));
+        caption = new JLabel(tr("Media")+":");
         add(caption, std.grid(2, row));
         paperField = new JTextField();
         paperField.setEditable(false);
         add(paperField, std.grid(3, row));
 
         row++;
-        caption = new JLabel(tr("Orientation:"));
+        caption = new JLabel(tr("Orientation")+":");
         add(caption, std.grid(2, row));
         orientationField = new JTextField();
         orientationField.setEditable(false);
         add(orientationField, std.grid(3, row));
 
         row++;
-        JButton printerButton = new JButton(tr("Printer settings..."));
+        JButton printerButton = new JButton(tr("Printer settings")+"...");
         printerButton.setActionCommand("printer-dialog");
         printerButton.addActionListener(this);
         add(printerButton, twocolumns.grid(2, row));
@@ -194,7 +206,33 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(GBC.glue(5,10), GBC.std(1,row).fill(GBC.VERTICAL));
         
         row++;
-        caption = new JLabel(tr("Resolution (dpi):"));
+        caption = new JLabel(tr("Scale")+":   1 : ");
+        add(caption, std.grid(2, row));
+        int mapScale = (int)Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
+        mapView.setFixedMapScale(mapScale);
+        scaleModel = new SpinnerNumberModel(mapScale, 500, 5000000, 500);
+        final JSpinner scaleField = new JSpinner(scaleModel);
+        scaleField.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        try {
+                            scaleField.commitEdit();
+                            Main.pref.put("print.map-scale",scaleModel.getNumber().toString());
+                            mapView.setFixedMapScale(scaleModel.getNumber().intValue());
+                            printPreview.repaint();
+                        }
+                        catch (ParseException pe) {
+                            ; // NOP
+                        }
+                    }
+                });
+            }
+        });
+        add(scaleField, std.grid(3, row));
+
+        row++;
+        caption = new JLabel(tr("Resolution")+":   (dpi)");
         add(caption, std.grid(2, row));
         resolutionModel = new SpinnerNumberModel(
           (int)Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
@@ -217,9 +255,9 @@ public class PrintDialog extends JDialog implements ActionListener {
             }
         });
         add(resolutionField, std.grid(3, row));
-
+        
         row++;
-        caption = new JLabel(tr("Attribution:"));
+        caption = new JLabel(tr("Attribution")+":");
         add(caption, std.grid(2, row));
 
         row++;
@@ -279,7 +317,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         
         printPreview = new PrintPreview();
         if (previewCheckBox.isSelected()) {
-            printPreview.setPrintable(new PrintableMapView());
+            printPreview.setPrintable(mapView);
         }
         JScrollPane previewPane = new JScrollPane(printPreview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         previewPane.setPreferredSize(Main.main != null ? Main.main.map.mapView.getSize() : new Dimension(210,297));
@@ -354,7 +392,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         else if (cmd.equals("toggle-preview")) {
             Main.pref.put("print.preview.enabled", previewCheckBox.isSelected());
             if (previewCheckBox.isSelected() == true) {
-                printPreview.setPrintable(new PrintableMapView());
+                printPreview.setPrintable(mapView);
             }
             else {
                 printPreview.setPrintable(null);
@@ -374,7 +412,6 @@ public class PrintDialog extends JDialog implements ActionListener {
         }
         else if (cmd.equals("print")) {
             try {
-                job.setPrintable(new PrintableMapView());
                 job.print(attrs);
             }
             catch (PrinterAbortException ex) {

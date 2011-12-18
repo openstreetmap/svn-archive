@@ -46,6 +46,11 @@ public class PrintPlugin extends Plugin {
     private JMenuItem printMenu;
 
     /**
+     * The default map scale
+     */
+    public static final int DEF_MAP_SCALE = 25000;
+
+    /**
      * The default resolution
      */
     public static final int DEF_RESOLUTION_DPI = 100;
@@ -83,6 +88,8 @@ public class PrintPlugin extends Plugin {
         fileMenu.insertSeparator(pos);
 
         /* Make this plugin's preferences known */
+        Main.pref.putDefault(
+          "print.map-scale", Integer.toString(DEF_MAP_SCALE));
         Main.pref.putDefault(
           "print.resolution.dpi", Integer.toString(DEF_RESOLUTION_DPI));
         Main.pref.putDefault(

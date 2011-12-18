@@ -24,6 +24,10 @@ MA 02110-1301, USA.
 PREFERENCES
 ===========
 
+print.map-scale (integer):
+The map scale x as in 1:x.
+Default: 25.000
+
 print.attribution (string): 
 The attribution text which will be printed on the page.
 Default: OSM Map data (c) OpenStreetMap contributors, CC-BY-SA
@@ -44,9 +48,3 @@ Default: false
 print.saved-prefs...:
 Not really user preferences, but a mechanism to reliable backup and 
 restore mappaint preferences which are temporary modified for printing.
-
-KNOWN LIMITATIONS
-=================
-
- * No option to select a more usual scale
- 

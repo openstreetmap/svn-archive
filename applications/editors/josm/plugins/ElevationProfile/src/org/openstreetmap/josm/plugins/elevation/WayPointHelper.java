@@ -34,7 +34,6 @@ public class WayPointHelper {
 	private static String IMPERIAL_SYSTEM_COUNTRIES[] = {
 		"en_US", 	/* USA */
 		"en_CA",	/* Canada */
-		"en_GB",	/* Great Britain */
 		"en_AU",	/* Australia */
 		"en_NZ",	/* New Zealand */
 //		"de_DE",	/* for testing only */

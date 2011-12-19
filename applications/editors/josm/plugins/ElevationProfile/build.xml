@@ -23,6 +23,7 @@
 <project name="ElevationProfile" default="dist" basedir=".">
     <!--
       ************************************************
+      ** Common properties (paths and names)
       ** should not be necessary to change the following properties
      -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>

@@ -194,16 +194,12 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
             addRouteNodeButton = new IconToggleButton(addRouteNodeAction);
             removeRouteNodeButton = new IconToggleButton(removeRouteNodeAction);
             moveRouteNodeButton = new IconToggleButton(moveRouteNodeAction);
+            addRouteNodeButton.setAutoHideDisabledButton(true);
+            removeRouteNodeButton.setAutoHideDisabledButton(true);
+            moveRouteNodeButton.setAutoHideDisabledButton(true);
             newFrame.addMapMode(addRouteNodeButton);
             newFrame.addMapMode(removeRouteNodeButton);
             newFrame.addMapMode(moveRouteNodeButton);
-//            newFrame.toolGroup.add(addRouteNodeButton);
-//            newFrame.toolGroup.add(removeRouteNodeButton);
-//            newFrame.toolGroup.add(moveRouteNodeButton);
-            // Hide them by default
-            addRouteNodeButton.setVisible(false);
-            removeRouteNodeButton.setVisible(false);
-            moveRouteNodeButton.setVisible(false);
             // Enable menu
             menu.enableStartItem();
             newFrame.addToggleDialog(routingDialog);
@@ -215,18 +211,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
      * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
      */
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-                if (addRouteNodeButton==null) return;
     	   	if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
-    	   		addRouteNodeButton.setVisible(true);
-    		    removeRouteNodeButton.setVisible(true);
-    		    moveRouteNodeButton.setVisible(true);
     		    menu.enableRestOfItems();    		
     		    routingDialog.showDialog();
     		    routingDialog.refresh();
     	   	}else{											/*   hide Routing toolbar and dialog window  */
-    	   		addRouteNodeButton.setVisible(false);
-    		    removeRouteNodeButton.setVisible(false);
-    		    moveRouteNodeButton.setVisible(false);
     		    menu.disableRestOfItems();
     		    routingDialog.hideDialog();
     	   	}
@@ -239,9 +228,6 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
     public void layerAdded(Layer newLayer) {
         // Add button(s) to the tool bar when the routing layer is added
         if (newLayer instanceof RoutingLayer) {
-            addRouteNodeButton.setVisible(true);
-            removeRouteNodeButton.setVisible(true);
-            moveRouteNodeButton.setVisible(true);
             menu.enableRestOfItems();
             // Set layer on top and select layer, also refresh toggleDialog to reflect selection
             Main.map.mapView.moveLayer(newLayer, 0);

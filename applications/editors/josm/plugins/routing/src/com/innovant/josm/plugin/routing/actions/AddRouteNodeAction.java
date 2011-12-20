@@ -38,6 +38,8 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+import org.openstreetmap.josm.gui.layer.Layer;
+
 import com.innovant.josm.plugin.routing.RoutingLayer;
 import com.innovant.josm.plugin.routing.RoutingPlugin;
 import com.innovant.josm.plugin.routing.gui.RoutingDialog;
@@ -104,5 +106,7 @@ public class AddRouteNodeAction extends MapMode {
         }
         Main.map.repaint();
     }
-
+    @Override public boolean layerIsSupported(Layer l) {
+        return l instanceof RoutingLayer;
+    }
 }

@@ -27,6 +27,6 @@ public class RevertChangesetHandler extends RequestHandler {
 
     @Override
     public String getPermissionMessage() {
-        return tr("Remote Control has been asked to a revert changeset.");
+        return tr("Remote Control has been asked to revert a changeset.");
     }
 }

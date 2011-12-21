@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
@@ -104,19 +105,25 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             // Create plugin buttons and add them to the toolbar
 
             buttonList = new ArrayList<IconToggleButton>(7);
-            buttonList.add(new IconToggleButton(movePictureAction));
-            buttonList.add(new IconToggleButton(movePointAction));
-            buttonList.add(new IconToggleButton(transformPointAction));
-            buttonList.add(new IconToggleButton(rotatePictureAction));
-            buttonList.add(new IconToggleButton(scaleXYPictureAction));
-            buttonList.add(new IconToggleButton(scaleXPictureAction));
-            buttonList.add(new IconToggleButton(scaleYPictureAction));
-            buttonList.add(new IconToggleButton(shearPictureAction));
+            buttonList.add(picLayerActionButtonFactory(movePictureAction));
+            buttonList.add(picLayerActionButtonFactory(movePointAction));
+            buttonList.add(picLayerActionButtonFactory(transformPointAction));
+            buttonList.add(picLayerActionButtonFactory(rotatePictureAction));
+            buttonList.add(picLayerActionButtonFactory(scaleXYPictureAction));
+            buttonList.add(picLayerActionButtonFactory(scaleXPictureAction));
+            buttonList.add(picLayerActionButtonFactory(scaleYPictureAction));
+            buttonList.add(picLayerActionButtonFactory(shearPictureAction));
 
             for(IconToggleButton btn : buttonList) {
                 newFrame.addMapMode(btn);
             }
         }
+    }
+    
+    private IconToggleButton picLayerActionButtonFactory(MapMode action) {
+    	IconToggleButton button = new IconToggleButton(action);
+    	button.setAutoHideDisabledButton(true);
+    	return button;
     }
 
     /**

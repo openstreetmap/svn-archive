@@ -15,13 +15,12 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.pbf.io;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.io.OsmImporter;
@@ -37,18 +36,16 @@ public class PbfImporter extends OsmImporter implements PbfConstants {
     public PbfImporter() {
         super(FILE_FILTER);
     }
-
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.io.OsmImporter#importData(java.io.InputStream, java.io.File)
-     */
-    @Override
-    protected void importData(InputStream in, File associatedFile) throws IllegalDataException {
-        final DataSet dataSet = PbfReader.parseDataSet(in, NullProgressMonitor.INSTANCE);
-        final OsmDataLayer layer = new OsmDataLayer(dataSet, associatedFile.getName(), associatedFile);
-        addDataLayer(dataSet, layer, associatedFile.getPath());
-    }
     
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.io.OsmImporter#parseDataSet(java.io.InputStream, org.openstreetmap.josm.gui.progress.ProgressMonitor)
+	 */
+	@Override
+	protected DataSet parseDataSet(InputStream in, ProgressMonitor progressMonitor) throws IllegalDataException {
+		return PbfReader.parseDataSet(in, progressMonitor);
+	}
+
 	protected DataSet parseDataSet(final String source) throws IOException, SAXException, IllegalDataException {
-        return PbfReader.parseDataSet(new MirroredInputStream(source), NullProgressMonitor.INSTANCE);
+        return parseDataSet(new MirroredInputStream(source), NullProgressMonitor.INSTANCE);
 	}
 }

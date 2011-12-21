@@ -21,8 +21,8 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - changed marker icon to make it more visible; #5451; #7124 - first stage"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="commit.message" value="PicLayer - fix of #7171"/>
+    <property name="plugin.main.version" value="4669"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

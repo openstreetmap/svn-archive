@@ -29,7 +29,7 @@
 -->
 <project name="alignways" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="fix shortcut conflict with UtilsPlugin2"/>
+    <property name="commit.message" value="added layerIsSupported to main mapmode"/>
     <!--
         enter the *lowest* JOSM version this plugin is currently compatible
         with

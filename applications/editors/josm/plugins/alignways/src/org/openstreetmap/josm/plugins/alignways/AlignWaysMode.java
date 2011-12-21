@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -27,7 +29,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
-    private static final long serialVersionUID = -1090955708412011141L;
+	private static final long serialVersionUID = -1090955708412011141L;
     private final AlignWaysState noneSelected;
     private final AlignWaysState referenceSelected;
     private final AlignWaysState aligneeSelected;
@@ -182,4 +184,9 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
         Main.pref.put("alignways.showtips", !atd.isChkBoxSelected());
 
     }
+
+    @Override
+	public boolean layerIsSupported(Layer l) {
+		return l instanceof OsmDataLayer;
+	}
 }

@@ -2543,7 +2543,7 @@
 			
 			
 		</style>
-		<svg:pattern id="nature-reserve-pattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="scale(12.2072)">
+		<svg:pattern id="nature-reserve-pattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="scale(18.3108)">
 			<svg:path fill="none" stroke="#c7f1a3" stroke-width="0.1" d="
 		M0.2,0.1 L1.8,0.9 M2.2,0.9 L3.8,0.1   M4.2,0.1 L5.8,0.9 M6.2,0.9 L7.8,0.1   M8.2,0.1 L9.8,0.9 M10.2,0.9 L11.8,0.1
 		M0.2,1.9 L1.8,1.1 M2.2,1.1 L3.8,1.9   M4.2,1.9 L5.8,1.1 M6.2,1.1 L7.8,1.9   M8.2,1.9 L9.8,1.1 M10.2,1.1 L11.8,1.9

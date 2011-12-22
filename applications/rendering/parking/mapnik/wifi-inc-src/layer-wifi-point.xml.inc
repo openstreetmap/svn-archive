@@ -39,18 +39,22 @@
     <Datasource>
       <Parameter name="table">
       (select way,(tags->'amenity') as "amenity",(tags->'name') as "name",(tags->'vending') as "vending",(tags->'fee') as "fee",
-        CASE LOWER(tags->'wifi')
-        WHEN 'yes' THEN 'unknown'
-        WHEN 'no' THEN 'none'
-        WHEN 'fee' THEN 'fee'
-        WHEN 'pay' THEN 'fee'
-        WHEN 'paid' THEN 'fee'
-        WHEN 'customers' THEN 'customers'
+        CASE /* wifi-internetaccess= */ LOWER(SUBSTRING(COALESCE(tags->'wifi','--'),1,2) || SUBSTRING(COALESCE(tags->'internet_access','--'),1,2))
+        WHEN 'ye--' THEN 'unknown'
+        WHEN 'no--' THEN 'none'
+        WHEN 'fe--' THEN 'fee'
+        WHEN 'pa--' THEN 'fee'
+        WHEN 'fr--' THEN 'free'
+        WHEN 'cu--' THEN 'customers'
+        WHEN '--wl' THEN 'unknown' /* wlan */
+        WHEN '--no' THEN 'none'
+        WHEN '--wi' THEN 'none' /* wired */
+        WHEN '--te' THEN 'none' /* terminal */
 	    ELSE 'unknown'
         END AS "cond"
        from &prefix;_point
        where 
-          (tags ? 'wifi')
+          (tags ? 'wifi') OR (tags ? 'internet_access')
       ) as points
       </Parameter>
       &datasource-settings;

@@ -22,7 +22,7 @@
 
     <source name="Common">
         <rule>
-            <condition k="website" />
+            <condition k="(contact:)?website" />
             <link name="View website" href="%v%" />
         </rule>
         <rule>
@@ -30,11 +30,7 @@
             <link name="View URL" href="%v%" />
         </rule>
         <rule>
-            <condition k="email" v="[^@]+@[^@]+" />
-            <link name="Send Email" href="mailto:%v%" />
-        </rule>
-        <rule>
-            <condition k="contact:email"  v="[^@]+@[^@]+" />
+            <condition k="(contact:)?email" v="[^@]+@[^@]+" />
             <link name="Send Email" href="mailto:%v%" />
         </rule>
     </source>

@@ -67,7 +67,7 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
 """
 
 def strip_doctype(f):
-    p = subprocess.Popen(['sed','-i','2,10 d',f]) # -i means 'in place'
+    p = subprocess.Popen(['sed','-i','2,9 d',f]) # -i means 'in place'
     p.wait()
 
 def create_wifi_icons(source_symbols_dir,dest_symbols_dir):

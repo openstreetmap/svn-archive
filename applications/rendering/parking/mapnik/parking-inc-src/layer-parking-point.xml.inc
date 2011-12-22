@@ -48,7 +48,7 @@
     <StyleName>parking-points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,(tags->'amenity') as "amenity",(tags->'name') as "name",(tags->'vending') as "vending",(tags->'fee') as "fee",
+      (select way,amenity,name,(tags->'vending') as "vending",(tags->'fee') as "fee",
         CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(tags->'access','-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
         WHEN '--t' THEN 'ticket'
         WHEN 'y--' THEN 'ticket'
@@ -83,7 +83,7 @@
         END AS "cond"
        from &prefix;_point
        where 
-          (tags ? 'amenity') AND (tags->'amenity') in ('vending_machine','parking')
+          amenity in ('vending_machine','parking')
       ) as points
       </Parameter>
       &datasource-settings;

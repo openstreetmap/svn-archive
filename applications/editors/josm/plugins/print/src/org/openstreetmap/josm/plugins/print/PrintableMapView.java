@@ -26,14 +26,18 @@ package org.openstreetmap.josm.plugins.print;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.print.*;
@@ -302,12 +306,9 @@ public class PrintableMapView extends MapView implements Printable {
         int w  = (int)(distScale * 100.0);  // length of the bar
         int ws = (int)(distScale * 20.0);   // length of a segment
         
-        /* white background & shadow */
+        /* white background */
         g2d.setColor(Color.WHITE);
         g2d.fillRect(xLeft-1, yBar-1, w+2, h+2);
-        g2d.setFont(labelFont.deriveFont(AffineTransform.getTranslateInstance(0.5,0.4)));
-        g2d.drawString("0", 0, yLabel);
-        g2d.drawString(rightLabel, xRight, yLabel);
         
         /* black foreground */
         g2d.setColor(Color.BLACK);
@@ -316,8 +317,8 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.fillRect(xLeft+(int)(distScale * 40.0), yBar, ws, h);
         g2d.fillRect(xLeft+w-ws, yBar, ws, h);
         g2d.setFont(labelFont);
-        g2d.drawString("0", 0, yLabel);
-        g2d.drawString(rightLabel, xRight, yLabel);
+        paintText(g2d, "0", 0, yLabel);
+        paintText(g2d, rightLabel, xRight, yLabel);
         
         /* lexical scale */
         int mapScale = getMapScale();
@@ -327,12 +328,7 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.setFont(scaleFront);
         bound = g2d.getFontMetrics().getStringBounds(lexicalScale, g2d);
         int xLexical = Math.max(0, xLeft + (w - (int)bound.getWidth()) / 2);
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(scaleFront.deriveFont(AffineTransform.getTranslateInstance(0.5,0.4)));
-        g2d.drawString(lexicalScale, xLexical, yLexical);
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(scaleFront);
-        g2d.drawString(lexicalScale, xLexical, yLexical);
+        paintText(g2d, lexicalScale, xLexical, yLexical);
     }
     
     /** 
@@ -343,19 +339,47 @@ public class PrintableMapView extends MapView implements Printable {
      */
     public void paintMapAttribution(Graphics2D g2d, PageFormat pageFormat) {
         String text = Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION);
-        if (text == null || text.length() > 0) {
+        if (text != null && text.length() > 0) {
+            text += " ";
+
             Font attributionFont = new Font("Arial", Font.PLAIN, FONT_SIZE * 8 / 10);
             g2d.setFont(attributionFont);
             Rectangle2D bound = g2d.getFontMetrics().getStringBounds(text, g2d);
             int x = (int)((pageFormat.getImageableWidth() - bound.getWidth()));
             int y = FONT_SIZE * 3 / 2;
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(attributionFont.deriveFont(AffineTransform.getTranslateInstance(0.5,0.4)));
-            g2d.drawString(text, x, y);
-            g2d.setColor(Color.BLACK);
-            g2d.setFont(attributionFont);
-            g2d.drawString(text, x, y);
+            paintText(g2d, text, x, y);
         }
+    }
+    
+    /**
+     * Paint a text.
+     * 
+     * This method will not only draw the letters but also a background 
+     * which improves redability.
+     * 
+     * @param g2d the graphics context to use for painting
+     * @param text the text to be drawn
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
+    
+    public void paintText(Graphics2D g2d, String text, int x, int y) {
+            AffineTransform ax = g2d.getTransform();
+            g2d.translate(x,y);
+
+            FontRenderContext frc = g2d.getFontRenderContext();
+            GlyphVector gv = g2d.getFont().createGlyphVector(frc, text);
+            Shape textOutline = gv.getOutline();
+
+            g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            g2d.setColor(Color.WHITE);
+            g2d.draw(textOutline);
+            
+            g2d.setStroke(new BasicStroke());
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(text, 0, 0);
+
+            g2d.setTransform(ax);
     }
 
     /**

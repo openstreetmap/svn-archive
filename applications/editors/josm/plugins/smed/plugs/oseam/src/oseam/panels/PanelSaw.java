@@ -34,7 +34,7 @@ public class PanelSaw extends JPanel {
 			}
 			if (dlg.panelMain.mark.testValid()) {
 				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-				dlg.panelMain.mark.setObjPattern(Pat.VERT);
+				dlg.panelMain.mark.setObjPattern(Pat.VSTRP);
 				dlg.panelMain.mark.setObjColour(Col.RED);
 				dlg.panelMain.mark.addObjColour(Col.WHITE);
 			} else {

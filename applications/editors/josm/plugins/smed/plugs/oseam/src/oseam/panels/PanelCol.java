@@ -72,7 +72,7 @@ public class PanelCol extends JPanel {
 									if (stackCol.size() < 2)
 										dlg.panelMain.mark.addColour(ent, stackIdx, col);
 									break;
-								case SQUARE:
+								case SQUARED:
 									if (stackCol.size() < 4)
 										dlg.panelMain.mark.addColour(ent, stackIdx, col);
 									break;

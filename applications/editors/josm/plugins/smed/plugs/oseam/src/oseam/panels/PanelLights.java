@@ -141,7 +141,6 @@ public class PanelLights extends JPanel {
 		addLCItem(Messages.getString("Flagstaff"), Cat.LMK_FLGS);
 		addLCItem(Messages.getString("FlareStack"), Cat.LMK_FLRS);
 		addLCItem(Messages.getString("Monument"), Cat.LMK_MNMT);
-		addLCItem(Messages.getString("RadioMast"), Cat.LMK_RADM);
 		addLCItem(Messages.getString("WindMotor"), Cat.LMK_WNDM);
 		addLCItem(Messages.getString("WindSock"), Cat.LMK_WNDS);
 		addLCItem(Messages.getString("Obelisk"), Cat.LMK_OBLK);

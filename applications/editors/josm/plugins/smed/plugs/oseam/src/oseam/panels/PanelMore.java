@@ -108,7 +108,7 @@ public class PanelMore extends JPanel {
 					dlg.panelMain.mark.setObjColour(Col.RED);
 					dlg.panelMain.mark.addObjColour(Col.GREEN);
 					dlg.panelMain.mark.addObjColour(Col.RED);
-					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 					break;
 				case LAM_STBD:
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
@@ -118,7 +118,7 @@ public class PanelMore extends JPanel {
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
 					dlg.panelMain.mark.addObjColour(Col.RED);
 					dlg.panelMain.mark.addObjColour(Col.GREEN);
-					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 					break;
 				}
 				regionAButton.setBorderPainted(true);
@@ -136,7 +136,7 @@ public class PanelMore extends JPanel {
 					dlg.panelMain.mark.setObjColour(Col.GREEN);
 					dlg.panelMain.mark.addObjColour(Col.RED);
 					dlg.panelMain.mark.addObjColour(Col.GREEN);
-					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 					break;
 				case LAM_STBD:
 					dlg.panelMain.mark.setObjColour(Col.RED);
@@ -146,7 +146,7 @@ public class PanelMore extends JPanel {
 					dlg.panelMain.mark.setObjColour(Col.RED);
 					dlg.panelMain.mark.addObjColour(Col.GREEN);
 					dlg.panelMain.mark.addObjColour(Col.RED);
-					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 					break;
 				}
 				regionBButton.setBorderPainted(true);
@@ -155,7 +155,7 @@ public class PanelMore extends JPanel {
 			}
 			if (regionCButton.isSelected()) {
 				dlg.panelMain.mark.setRegion(Reg.C);
-				dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+				dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
 					dlg.panelMain.mark.setObjColour(Col.RED);

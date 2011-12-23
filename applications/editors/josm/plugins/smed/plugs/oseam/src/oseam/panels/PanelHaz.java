@@ -23,7 +23,7 @@ public class PanelHaz extends JPanel {
 	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/IsolButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+			dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 			if (northButton.isSelected()) {
 				dlg.panelMain.mark.setCategory(Cat.CAM_NORTH);
 				dlg.panelMain.mark.setObjColour(Col.BLACK);

@@ -132,7 +132,7 @@ public class PanelChan extends JPanel {
 							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case C:
-							dlg.panelMain.mark.setTopPattern(Pat.HORIZ);
+							dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
 							dlg.panelMain.mark.setTopColour(Col.RED);
 							dlg.panelMain.mark.addTopColour(Col.WHITE);
 							break;
@@ -151,7 +151,7 @@ public class PanelChan extends JPanel {
 							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case C:
-							dlg.panelMain.mark.setTopPattern(Pat.HORIZ);
+							dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
 							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							dlg.panelMain.mark.addTopColour(Col.WHITE);
 							break;

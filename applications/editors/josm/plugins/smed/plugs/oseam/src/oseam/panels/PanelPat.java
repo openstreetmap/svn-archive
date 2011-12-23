@@ -39,11 +39,11 @@ public class PanelPat extends JPanel {
 			case NOPAT:
 				panelCol.trimStack(1);
 				break;
-			case HORIZ:
-			case VERT:
+			case HSTRP:
+			case VSTRP:
 			case DIAG:
 				break;
-			case SQUARE:
+			case SQUARED:
 				panelCol.trimStack(4);
 				break;
 			case BORDER:
@@ -62,10 +62,10 @@ public class PanelPat extends JPanel {
 		panelCol.setBounds(new Rectangle(0, 0, 72, 160));
 		add(panelCol);
 		add(getPatButton(noneButton, 76, 0, 27, 27, "NoPat", Pat.NOPAT));
-		add(getPatButton(horizButton, 76, 26, 27, 27, "HorizPat", Pat.HORIZ));
-		add(getPatButton(vertButton, 76, 52, 27, 27, "VertPat", Pat.VERT));
+		add(getPatButton(horizButton, 76, 26, 27, 27, "HorizPat", Pat.HSTRP));
+		add(getPatButton(vertButton, 76, 52, 27, 27, "VertPat", Pat.VSTRP));
 		add(getPatButton(diagButton, 76, 78, 27, 27, "DiagPat", Pat.DIAG));
-		add(getPatButton(squareButton, 76, 104, 27, 27, "SquarePat", Pat.SQUARE));
+		add(getPatButton(squareButton, 76, 104, 27, 27, "SquarePat", Pat.SQUARED));
 		add(getPatButton(borderButton, 76, 130, 27, 27, "BorderPat", Pat.BORDER));
 
 	}

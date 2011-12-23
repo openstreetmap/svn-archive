@@ -50,7 +50,7 @@ public class PanelPort extends JPanel {
 						dlg.panelMain.mark.setObjColour(Col.GREEN);
 						break;
 					case C:
-						dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+						dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 						dlg.panelMain.mark.setObjColour(Col.RED);
 						dlg.panelMain.mark.addObjColour(Col.WHITE);
 						dlg.panelMain.mark.addObjColour(Col.RED);
@@ -58,7 +58,7 @@ public class PanelPort extends JPanel {
 						break;
 					}
 				} else {
-					dlg.panelMain.mark.setObjPattern(Pat.HORIZ);
+					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
 					switch (dlg.panelMain.mark.getRegion()) {
 					case A:
 						dlg.panelMain.mark.setObjColour(Col.RED);

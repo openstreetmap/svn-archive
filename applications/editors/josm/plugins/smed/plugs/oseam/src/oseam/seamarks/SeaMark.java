@@ -201,7 +201,7 @@ public class SeaMark extends JPanel {
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
 		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
-		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_RADM, LMK_TOWR, LMK_WNDM, LMK_WTRT,
+		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT,
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR
 	}
 
@@ -270,7 +270,6 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.LMK_FLGS, "flagstaff");
 		CatSTR.put(Cat.LMK_FLRS, "flare_stack");
 		CatSTR.put(Cat.LMK_MNMT, "monument");
-		CatSTR.put(Cat.LMK_RADM, "radio_mast");
 		CatSTR.put(Cat.LMK_TOWR, "tower");
 		CatSTR.put(Cat.LMK_WNDM, "windmotor");
 		CatSTR.put(Cat.LMK_WTRT, "water_tower");
@@ -501,8 +500,9 @@ public class SeaMark extends JPanel {
 		ChrMAP.put(EnumSet.of(Chr.MORSE), "Mo");
 		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.FLASH), "FFl");
 		ChrMAP.put(EnumSet.of(Chr.FLASH, Chr.LFLASH), "FlLFl");
-		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
+		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.OCCULTING), "FOc");
 		ChrMAP.put(EnumSet.of(Chr.FIXED, Chr.LFLASH), "FLFl");
+		ChrMAP.put(EnumSet.of(Chr.OCCULTING, Chr.FLASH), "OcFl");
 		ChrMAP.put(EnumSet.of(Chr.QUICK, Chr.LFLASH), "Q+LFl");
 		ChrMAP.put(EnumSet.of(Chr.VQUICK, Chr.LFLASH), "VQ+LFl");
 		ChrMAP.put(EnumSet.of(Chr.UQUICK, Chr.LFLASH), "UQ+LFl");
@@ -634,6 +634,15 @@ public class SeaMark extends JPanel {
 		}
 	}
 
+	public void nulLight(int i) {
+		if (sectors.size() >= i) {
+			if (sectors.size() == 0)
+				sectors.add(sector.clone());
+			else
+				sectors.add(i, sector.clone());
+		}
+	}
+
 	public void addLight() {
 		if (sectors.size() == 0)
 			sectors.add(sector.clone());
@@ -653,15 +662,15 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Pat {
-		NOPAT, HORIZ, VERT, DIAG, SQUARE, BORDER, CROSS
+		NOPAT, HSTRP, VSTRP, DIAG, SQUARED, BORDER, CROSS
 	}
 
 	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
 	static {
-		PatSTR.put(Pat.HORIZ, "horizontal");
-		PatSTR.put(Pat.VERT, "vertical");
+		PatSTR.put(Pat.HSTRP, "horizontal");
+		PatSTR.put(Pat.VSTRP, "vertical");
 		PatSTR.put(Pat.DIAG, "diagonal");
-		PatSTR.put(Pat.SQUARE, "squared");
+		PatSTR.put(Pat.SQUARED, "squared");
 		PatSTR.put(Pat.BORDER, "border");
 		PatSTR.put(Pat.CROSS, "cross");
 	}
@@ -1467,6 +1476,7 @@ public class SeaMark extends JPanel {
 		for (int i = 0; i < 30; i++) {
 			String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
 			if (keys.containsKey("seamark:light" + secStr + ":colour")) {
+				nulLight(i);
 				str = keys.get("seamark:light" + secStr + ":colour");
 				if (str.contains(";")) {
 					String strs[] = str.split(";");
@@ -1591,8 +1601,20 @@ public class SeaMark extends JPanel {
 		if (keys.containsKey("seamark:information")) {
 			setInfo(keys.get("seamark:information"));
 		}
+		if (keys.containsKey("seamark:light:information")) {
+			setInfo(getInfo() + keys.get("seamark:light:information"));
+		}
+		if (keys.containsKey("seamark:" + ObjSTR.get(getObject()) + "information")) {
+			setInfo(getInfo() + keys.get("seamark:" + ObjSTR.get(getObject()) + "information"));
+		}
 		if (keys.containsKey("seamark:source")) {
 			setSource(keys.get("seamark:source"));
+		}
+		if (keys.containsKey("seamark:light:source")) {
+			setSource(getSource() + keys.get("seamark:light:source"));
+		}
+		if (keys.containsKey("seamark:" + ObjSTR.get(getObject()) + "source")) {
+			setSource(getSource() + keys.get("seamark:" + ObjSTR.get(getObject()) + "source"));
 		}
 		if (keys.containsKey("seamark:height")) {
 			setObjectHeight(keys.get("seamark:height"));
@@ -1813,7 +1835,7 @@ public class SeaMark extends JPanel {
 				case LMK_MNMT:
 					imgStr += "Monument";
 					break;
-				case LMK_RADM:
+				case LMK_MAST:
 					imgStr += "RadioMast";
 					break;
 				case LMK_TOWR:

@@ -171,43 +171,48 @@ public class PrintDialog extends JDialog implements ActionListener {
         setLayout(new GridBagLayout());
         final GBC std = GBC.std().insets(0,5,5,0);
         std.fill = GBC.HORIZONTAL;
-        final GBC twocolumns  = GBC.std().insets(0,5,5,0).span(2).fill(GBC.HORIZONTAL);
+        final GBC twoColumns   = GBC.std().insets(0,5,5,0).span(2);
+        twoColumns.fill = GBC.HORIZONTAL;
+        final GBC threeColumns = GBC.std().insets(0,5,5,0).span(3);
+        threeColumns.fill = GBC.HORIZONTAL;
         
         JLabel caption;
         
         int row = 0;
         caption = new JLabel(tr("Printer")+":");
-        add(caption, std.grid(2, row));
+        add(caption, twoColumns.grid(2, row));
         printerField = new JTextField();
         printerField.setEditable(false);
-        add(printerField, std.grid(3, row));
+        add(printerField, std.grid(GBC.RELATIVE, row));
 
         row++;
         caption = new JLabel(tr("Media")+":");
-        add(caption, std.grid(2, row));
+        add(caption, twoColumns.grid(2, row));
         paperField = new JTextField();
         paperField.setEditable(false);
-        add(paperField, std.grid(3, row));
+        add(paperField, std.grid(GBC.RELATIVE, row));
 
         row++;
         caption = new JLabel(tr("Orientation")+":");
-        add(caption, std.grid(2, row));
+        add(caption, twoColumns.grid(2, row));
         orientationField = new JTextField();
         orientationField.setEditable(false);
-        add(orientationField, std.grid(3, row));
+        add(orientationField, std.grid(GBC.RELATIVE, row));
 
         row++;
         JButton printerButton = new JButton(tr("Printer settings")+"...");
         printerButton.setActionCommand("printer-dialog");
         printerButton.addActionListener(this);
-        add(printerButton, twocolumns.grid(2, row));
+        add(printerButton, threeColumns.grid(2, row));
 
         row++;
         add(GBC.glue(5,10), GBC.std(1,row).fill(GBC.VERTICAL));
         
         row++;
-        caption = new JLabel(tr("Scale")+":   1 : ");
+        caption = new JLabel(tr("Scale")+":");
         add(caption, std.grid(2, row));
+        caption = new JLabel(" 1 :");
+        add(caption, std.grid(GBC.RELATIVE, row));
         int mapScale = (int)Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
         mapView.setFixedMapScale(mapScale);
         scaleModel = new SpinnerNumberModel(mapScale, 500, 5000000, 500);
@@ -229,11 +234,13 @@ public class PrintDialog extends JDialog implements ActionListener {
                 });
             }
         });
-        add(scaleField, std.grid(3, row));
+        add(scaleField, std.grid(GBC.RELATIVE, row));
 
         row++;
-        caption = new JLabel(tr("Resolution")+":   (dpi)");
+        caption = new JLabel(tr("Resolution")+":");
         add(caption, std.grid(2, row));
+        caption = new JLabel("ppi");
+        add(caption, std.grid(GBC.RELATIVE, row));
         resolutionModel = new SpinnerNumberModel(
           (int)Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
           30, 1200, 10 );
@@ -254,20 +261,22 @@ public class PrintDialog extends JDialog implements ActionListener {
                 });
             }
         });
-        add(resolutionField, std.grid(3, row));
+        add(resolutionField, std.grid(GBC.RELATIVE, row));
         
         row++;
-        caption = new JLabel(tr("Attribution")+":");
-        add(caption, std.grid(2, row));
+        caption = new JLabel(tr("Map information")+":");
+        add(caption, threeColumns.grid(2, row));
 
         row++;
-        final JTextField attributionField = new JTextField();
-        attributionField.setText(Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION));
-        attributionField.getDocument().addDocumentListener(new DocumentListener() {
+        final javax.swing.JTextArea attributionText = new javax.swing.JTextArea(Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION));
+        attributionText.setRows(10);
+        attributionText.setLineWrap(true);
+        attributionText.setWrapStyleWord(true);
+        attributionText.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        Main.pref.put("print.attribution", attributionField.getText());
+                        Main.pref.put("print.attribution", attributionText.getText());
                         printPreview.repaint();
                     }
                 });
@@ -279,7 +288,8 @@ public class PrintDialog extends JDialog implements ActionListener {
                 ; // NOP
             }
         });
-        add(attributionField, twocolumns.grid(2, row));
+        JScrollPane attributionPane = new JScrollPane(attributionText);
+        add(attributionPane, GBC.std().insets(0,5,5,0).span(3).fill(GBC.BOTH).weight(0.0,1.0).grid(2, row));
 
         row++;
         add(GBC.glue(5,10), GBC.std(1,row).fill(GBC.VERTICAL));
@@ -289,31 +299,31 @@ public class PrintDialog extends JDialog implements ActionListener {
         previewCheckBox.setSelected(Main.pref.getBoolean("print.preview.enabled",false));
         previewCheckBox.setActionCommand("toggle-preview");
         previewCheckBox.addActionListener(this);
-        add(previewCheckBox, twocolumns.grid(2, row));
+        add(previewCheckBox, threeColumns.grid(2, row));
 
         row++;
         JButton zoomInButton = new JButton(tr("Zoom In"));
         zoomInButton.setActionCommand("zoom-in");
         zoomInButton.addActionListener(this);
-        add(zoomInButton, twocolumns.grid(2, row));
+        add(zoomInButton, threeColumns.grid(2, row));
 
         row++;
         JButton zoomOutButton = new JButton(tr("Zoom Out"));
         zoomOutButton.setActionCommand("zoom-out");
         zoomOutButton.addActionListener(this);
-        add(zoomOutButton, twocolumns.grid(2, row));
+        add(zoomOutButton, threeColumns.grid(2, row));
         
         row++;
         JButton zoomToPageButton = new JButton(tr("Zoom To Page"));
         zoomToPageButton.setActionCommand("zoom-to-page");
         zoomToPageButton.addActionListener(this);
-        add(zoomToPageButton, twocolumns.grid(2, row));
+        add(zoomToPageButton, threeColumns.grid(2, row));
         
         row++;
         JButton zoomToActualSize = new JButton(tr("Zoom To Actual Size"));
         zoomToActualSize.setActionCommand("zoom-to-actual-size");
         zoomToActualSize.addActionListener(this);
-        add(zoomToActualSize, twocolumns.grid(2, row));
+        add(zoomToActualSize, threeColumns.grid(2, row));
         
         printPreview = new PrintPreview();
         if (previewCheckBox.isSelected()) {

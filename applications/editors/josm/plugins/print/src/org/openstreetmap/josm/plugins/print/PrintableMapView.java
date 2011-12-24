@@ -339,15 +339,29 @@ public class PrintableMapView extends MapView implements Printable {
      */
     public void paintMapAttribution(Graphics2D g2d, PageFormat pageFormat) {
         String text = Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION);
-        if (text != null && text.length() > 0) {
-            text += " ";
+        
+        if (text == null) {
+            return;
+        }
+            
+        Font attributionFont = new Font("Arial", Font.PLAIN, FONT_SIZE * 8 / 10);
+        g2d.setFont(attributionFont);
 
-            Font attributionFont = new Font("Arial", Font.PLAIN, FONT_SIZE * 8 / 10);
-            g2d.setFont(attributionFont);
-            Rectangle2D bound = g2d.getFontMetrics().getStringBounds(text, g2d);
-            int x = (int)((pageFormat.getImageableWidth() - bound.getWidth()));
-            int y = FONT_SIZE * 3 / 2;
-            paintText(g2d, text, x, y);
+        text += "\n";
+        int y = FONT_SIZE * 3 / 2;
+        int from = 0;
+        int to = text.indexOf("\n", from);
+        while (to >= from) {
+            String line = text.substring(from, to);
+
+            Rectangle2D bound = g2d.getFontMetrics().getStringBounds(line, g2d);
+            int x = (int)((pageFormat.getImageableWidth() - bound.getWidth()) - FONT_SIZE/2);
+            
+            paintText(g2d, line, x, y);
+
+            y   += FONT_SIZE * 5 / 4;
+            from = to + 1;
+            to   = text.indexOf("\n", from);
         }
     }
     

@@ -104,9 +104,8 @@ public class PanelChan extends JPanel {
 				safeWaterButton.setBorderPainted(false);
 			}
 			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-			alTop.actionPerformed(null);
 			lightButton.setVisible(dlg.panelMain.mark.testValid());
-			alLit.actionPerformed(null);
+			dlg.panelMain.panelMore.syncPanel();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));

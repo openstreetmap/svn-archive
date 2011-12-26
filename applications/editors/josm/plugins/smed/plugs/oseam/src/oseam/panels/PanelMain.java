@@ -73,32 +73,32 @@ public class PanelMain extends JPanel {
 	private ActionListener alType = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (chanButton.isSelected()) {
-				mark.clearSign();
 				chanButton.setBorderPainted(true);
+				panelChan.syncPanel();
 				panelChan.setVisible(true);
 			} else {
 				chanButton.setBorderPainted(false);
 				panelChan.setVisible(false);
 			}
 			if (hazButton.isSelected()) {
-				mark.clearSign();
 				hazButton.setBorderPainted(true);
+				panelHaz.syncPanel();
 				panelHaz.setVisible(true);
 			} else {
 				hazButton.setBorderPainted(false);
 				panelHaz.setVisible(false);
 			}
 			if (specButton.isSelected()) {
-				mark.clearSign();
 				specButton.setBorderPainted(true);
+				panelSpec.syncPanel();
 				panelSpec.setVisible(true);
 			} else {
 				specButton.setBorderPainted(false);
 				panelSpec.setVisible(false);
 			}
 			if (lightsButton.isSelected()) {
-				mark.clearSign();
 				lightsButton.setBorderPainted(true);
+				panelLights.syncPanel();
 				panelLights.setVisible(true);
 			} else {
 				lightsButton.setBorderPainted(false);

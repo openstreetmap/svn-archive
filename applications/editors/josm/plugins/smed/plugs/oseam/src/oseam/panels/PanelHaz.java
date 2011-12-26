@@ -67,8 +67,8 @@ public class PanelHaz extends JPanel {
 			} else {
 				isolButton.setBorderPainted(false);
 			}
-			alTop.actionPerformed(null);
-			alLit.actionPerformed(null);
+			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
+			lightButton.setVisible(dlg.panelMain.mark.testValid());
 			dlg.panelMain.panelMore.syncPanel();
 		}
 	};

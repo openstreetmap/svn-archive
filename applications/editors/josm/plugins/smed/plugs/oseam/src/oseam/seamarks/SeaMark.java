@@ -635,11 +635,10 @@ public class SeaMark extends JPanel {
 	}
 
 	public void nulLight(int i) {
-		if (sectors.size() >= i) {
-			if (sectors.size() == 0)
-				sectors.add(sector.clone());
-			else
-				sectors.add(i, sector.clone());
+		if (i == 0) {
+			clrLight();
+		} else {
+			sectors.add(i, sector.clone());
 		}
 	}
 
@@ -653,12 +652,14 @@ public class SeaMark extends JPanel {
 	public void delLight(int i) {
 		if (sectors.size() > i)
 			sectors.remove(i);
+		repaint();
 	}
 
 	public void clrLight() {
 		sectors.clear();
 		addLight();
 		setLightRef("");
+		repaint();
 	}
 
 	public enum Pat {
@@ -1507,6 +1508,10 @@ public class SeaMark extends JPanel {
 				setLightAtt(Att.PER, i, keys.get("seamark:light" + secStr + ":period"));
 			if (keys.containsKey("seamark:light" + secStr + ":category")) {
 				str = keys.get("seamark:light" + secStr + ":category");
+				if (str.equals("vert"))
+					str = "vertical";
+				if (str.equals("horiz"))
+					str = "horizontal";
 				for (Lit lit : LitSTR.keySet())
 					if (LitSTR.get(lit).equals(str))
 						setLightAtt(Att.LIT, i, lit);

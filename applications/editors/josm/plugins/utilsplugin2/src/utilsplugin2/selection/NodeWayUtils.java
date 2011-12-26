@@ -267,8 +267,80 @@ public final class NodeWayUtils {
                     JOptionPane.WARNING_MESSAGE);
             }
     }
-
     
+    static boolean addAreaBoundary(Way firstWay, Set<Way> newWays, boolean goingLeft) {
+        Way w=firstWay;
+        Node curNode = w.lastNode();
+        Node prevNode = w.getNode(w.getNodes().size()-2);
+        Set<Way> newestWays = new HashSet<Way>();
+        while(true) {
+
+            Node nextNode, endNode, otherEnd, preLast;
+            Way nextWay;
+
+            EastNorth en;
+            double startHeading,bestAngle;
+
+            en = curNode.getEastNorth();
+            startHeading = prevNode.getEastNorth().heading( en );
+
+            bestAngle = goingLeft ? -1e5 : 1e5 ;
+            otherEnd=null; nextWay=null;
+            
+            for (OsmPrimitive ref : curNode.getReferrers()) {
+                if (ref instanceof Way && ref!=w && ref.isSelectable()) {
+                    //
+                    Way w2 = (Way) ref;
+                    //  -----[prevNode]-(curNode)-[nextNode]------[preLast]-(endNode)
+                    //          w           |              w2
+                    if (w2.getNodesCount()<2 || w2.isClosed()) continue;
+
+
+                    if (curNode == w2.firstNode()) {
+                        nextNode = w2.getNode(1);
+                        preLast = w2.getNode(w2.getNodesCount()-2);
+                        endNode = w2.lastNode();
+                    } // forward direction
+                    else if (curNode == w2.lastNode()) {
+                        nextNode = w2.getNode(w2.getNodesCount()-2);
+                        preLast = w2.getNode(1);
+                        endNode = w2.firstNode();
+                    } // backward direction
+                        else continue; // we came to some way middle node
+
+                    double angle = startHeading -Math.PI - en.heading(nextNode.getEastNorth());
+                    while (angle<0) angle+=2*Math.PI;
+                    
+                    if (angle < bestAngle ^ goingLeft) {
+                        bestAngle = angle;
+                        otherEnd = endNode;
+                        prevNode = preLast;
+                        nextWay = w2;
+                    }
+                }
+            }
+            if (firstWay == nextWay ) {
+                //we came to starting way, but not not the right end 
+                if (otherEnd==firstWay.firstNode()) return false;
+                newWays.addAll(newestWays);
+                return true; // correct loop found 
+            }
+            if (newestWays.contains(nextWay)) {
+                // P - like loop found
+                return false;
+            }
+            if (nextWay != null) { 
+                newestWays.add(nextWay);
+                curNode = otherEnd;
+                w = nextWay;
+                // next way found, continuing
+            } else {
+                // no closed loop found
+                return false;
+            } 
+        }
+    }
+
     static void addAllInsideMultipolygon(DataSet data, Relation rel, Set<Way> newWays, Set<Node> newNodes) {
         if (!rel.isMultipolygon()) return;
         BBox box = rel.getBBox();

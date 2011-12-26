@@ -34,7 +34,6 @@ public class SelectAllInsideAction extends JosmAction {
 
     public void actionPerformed(ActionEvent e) {
         long t=System.currentTimeMillis();
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
 

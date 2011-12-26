@@ -42,6 +42,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem selModifiedNodes;
     JMenuItem selModifiedWays;
     JMenuItem selectHighway;
+    JMenuItem selectAreaBoundary;
     
     JMenuItem selectURL;
     
@@ -78,6 +79,7 @@ public class UtilsPlugin2 extends Plugin {
         selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
         undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
         selectHighway = MainMenu.add(selectionMenu, new SelectHighwayAction());
+        selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
         
         selectURL = MainMenu.add(toolsMenu, new ChooseURLAction());
         

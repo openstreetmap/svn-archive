@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * class. A guessed field does not modify the corresponding property of {@link OSMAddress} itself, but
  * adds the guessed value to a shadowed field by calling {@link OSMAddress#setGuessedValue(String, String)}.
  */
-public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor {
+public class GuessAddressRunnable extends PleaseWaitRunnable {
 	private List<OSMAddress> addressesToGuess;
 	private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
 	private double minDist;
@@ -114,56 +114,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 		// this event is fired only once, then we disconnect all listeners
 		finishListeners.clear();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
-	 */
-	@Override
-	public void visit(Node n) {
-		if (n == null) return;
-		if (curAddressNode == null) return;
-
-		// If the coordinates are null, we are screwed anyway
-		LatLon ll = curAddressNode.getCoor();
-		if (ll == null) return;
-
-		double dist = ll.greatCircleDistance(n.getCoor());
-
-		if (dist < minDist) {
-			minDist = dist;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Way)
-	 */
-	@Override
-	public void visit(Way w) {
-		// skip non-streets and streets without name
-		if (!TagUtils.hasHighwayTag(w)) return;
-		if (!TagUtils.hasNameTag(w)) return;
-
-		for (Node node : w.getNodes()) {
-			visit(node);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Relation)
-	 */
-	@Override
-	public void visit(Relation e) {
-		// nothing to do yet
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Changeset)
-	 */
-	@Override
-	public void visit(Changeset cs) {
-		// nothing to do yet
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#cancel()
 	 */
@@ -186,6 +137,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 	@Override
 	protected void realRun() throws SAXException, IOException,
 			OsmTransferException {
+		
 		if (Main.main.getCurrentDataSet() == null || addressesToGuess == null) return;
 
 		isRunning = true;
@@ -275,7 +227,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
 
 				if (dist < minDist && dist < getMaxDistance()) {
-					//System.out.println(String.format("New guess %s: %4.2f m", TagUtils.getNameValue(w), dist));
+					System.out.println(String.format("New guess %s: %4.2f m", TagUtils.getNameValue(w), dist));
 					minDist = dist;
 					currentValue = TagUtils.getNameValue(w);
 					aNode.setGuessedValue(getTag(), currentValue, w);

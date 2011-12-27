@@ -56,13 +56,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AssignAddressToStreetAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ConvertAllToRelationAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ConvertToRelationAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 @SuppressWarnings("serial")
@@ -78,24 +72,16 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	private JTable unresolvedTable;
 	private JTable streetTable;
 
-	/* Actions */
-	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
-	private ApplyAllGuessesAction applyAllGuessesAction = new ApplyAllGuessesAction();
-	private GuessAddressDataAction guessAddressAction = new GuessAddressDataAction();
-	private SelectAddressesInMapAction selectAddressesInMapAction = new SelectAddressesInMapAction();
-	private RemoveAddressTagsAction removeAddressTagsAction = new RemoveAddressTagsAction();
-	private ConvertToRelationAction convertToRelationAction = new ConvertToRelationAction();
-	private ConvertAllToRelationAction convertAllToRelationAction = new ConvertAllToRelationAction();
-
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
-		resolveAction,
-		guessAddressAction,
-		applyAllGuessesAction,
-		selectAddressesInMapAction,
-		removeAddressTagsAction,
-		convertToRelationAction,
-		convertAllToRelationAction
+		AddressActions.getResolveAction(),
+		AddressActions.getGuessAddressAction(),
+		AddressActions.getApplyGuessesAction(),
+		AddressActions.getSelectAction(),
+		AddressActions.getRemoveTagsAction(),
+		AddressActions.getConvertToRelationAction(),
+		AddressActions.getConvertAllToRelationAction()
 	};
+	
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
 	private JMapViewer mapViewer;
@@ -156,7 +142,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			unresolvedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			unresolvedTable.getSelectionModel().addListSelectionListener(this);
 			unresolvedTable.getSelectionModel().addListSelectionListener(new IncompleteAddressListener());
-			unresolvedTable.addMouseListener(applyAllGuessesAction);
+			unresolvedTable.addMouseListener(AddressActions.getApplyGuessesAction());
 
 			JTableHeader header = unresolvedTable.getTableHeader();
 			header.addMouseListener(uaModel.new ColumnListener(unresolvedTable));
@@ -177,20 +163,20 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 
 			try {
 				JPanel unresolvedButtons = new JPanel(new GridLayout(2,5, 5, 5));
-				SideButton assign = new SideButton(resolveAction);
+				SideButton assign = new SideButton(AddressActions.getResolveAction());
 				unresolvedButtons.add(assign);
 
-				SideButton guess = new SideButton(guessAddressAction);
+				SideButton guess = new SideButton(AddressActions.getGuessAddressAction());
 				unresolvedButtons.add(guess);
-				SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);
+				SideButton applyAllGuesses = new SideButton(AddressActions.getApplyGuessesAction());
 				unresolvedButtons.add(applyAllGuesses);
 
-				SideButton removeAddressTags = new SideButton(removeAddressTagsAction);
+				SideButton removeAddressTags = new SideButton(AddressActions.getRemoveTagsAction());
 				unresolvedButtons.add(removeAddressTags);
 
 				unresolvedButtons.add(new JPanel());
 
-				SideButton selectInMap = new SideButton(selectAddressesInMapAction);
+				SideButton selectInMap = new SideButton(AddressActions.getSelectAction());
 				unresolvedButtons.add(selectInMap);
 				headerPanel2.setMinimumSize(new Dimension(100, 70));
 

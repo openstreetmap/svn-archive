@@ -14,12 +14,13 @@
 package org.openstreetmap.josm.plugins.fixAddresses;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -727,7 +728,7 @@ public class OSMAddress extends OSMEntityBase {
 
 		AddressSolution s = new AddressSolution(
 						tr("Remove all address tags"),
-						new RemoveAddressTagsAction(),
+						AddressActions.getRemoveTagsAction(),
 						SolutionType.Remove);
 		problem.addSolution(s);
 	}

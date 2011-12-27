@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
@@ -28,13 +29,13 @@ import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListener;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
@@ -42,10 +43,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OsmUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 
 @SuppressWarnings("serial")
 public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener, ListSelectionListener, IAddressEditContainerListener {
@@ -53,18 +51,13 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 
 	private AddressEditContainer container;
 
-	// Create action objects
-	private SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
-	private GuessAddressDataAction guessDataAction = new GuessAddressDataAction();
-	private ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
-	private RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
 
 	// Array containing the available actions
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
-			selectAction,
-			guessDataAction,
-			applyGuessesAction,
-			removeTagsAction
+			AddressActions.getSelectAction(),
+			AddressActions.getGuessAddressAction(),
+			AddressActions.getApplyGuessesAction(),
+			AddressActions.getRemoveTagsAction(),
 	};
 
 
@@ -214,10 +207,12 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void containerChanged(AddressEditContainer container) {
-		if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
-			setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
-		} else {
-			setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));
+		if (SwingUtilities.isEventDispatchThread()) {
+			if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
+				setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
+			} else {
+				setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));
+			}
 		}
 	}
 
@@ -226,6 +221,8 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	 */
 	@Override
 	public void entityChanged(IOSMEntity node) {
-		container.invalidate();
+		if (SwingUtilities.isEventDispatchThread()) {
+			container.invalidate();
+		}
 	}
 }

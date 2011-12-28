@@ -348,14 +348,14 @@ int ChangePak (const TCHAR *pakfile, int mlon, int mlat)
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
   LOG map = fm == INVALID_HANDLE_VALUE ? NULL :
     MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0);
-  int len = map ? GetFileSize (gmap) : 0;
+  int len = map ? GetFileSize (gmap, NULL) : 0;
   LOG Exit = !map || !GosmInit (map, GetFileSize(gmap, NULL));
   LOG if (Exit && gmap != INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
       TEXT (""), MB_APPLMODAL|MB_OK);
   }
 
-  #if 0 // Old Windows code
+  #ifdef _WIN32
   FILE *gmap = _wfopen (/*"./gosmore.pak"*/ , TEXT ("rb"));
 
   if (!gmap) {

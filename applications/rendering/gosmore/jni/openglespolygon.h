@@ -1,7 +1,7 @@
 #ifndef OPENGLESPOLYGON_H
 #define OPENGLESPOLYGON_H
 #include <vector>
-#ifndef ANDROID_NDK
+#if !defined(ANDROID_NDK) && !defined(NOGTK)
 #include <gdk/gdk.h> 
 #endif
 
@@ -27,7 +27,7 @@ struct PolygonEdge {
   int level;
 };
 
-#ifdef ANDROID_NDK
+#if defined(ANDROID_NDK) || defined(NOGTK)
 struct GdkPoint {
   short x, y;
 };

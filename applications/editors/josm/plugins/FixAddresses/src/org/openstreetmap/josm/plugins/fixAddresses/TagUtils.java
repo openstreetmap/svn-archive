@@ -1954,8 +1954,6 @@ public final class TagUtils {
 		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
 	}
 
-
-
 	/**
 	 * Checks if "addr:state" tag is required.
 	 *

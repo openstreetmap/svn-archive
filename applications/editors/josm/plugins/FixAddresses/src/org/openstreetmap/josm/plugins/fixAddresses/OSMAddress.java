@@ -66,15 +66,20 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public boolean isComplete() {
 		boolean isComplete =    hasCity() &&
-								hasHouseNumber() &&
-								(hasPostalCode() &&
-								PostalCodeChecker.hasValidPostalCode(this)) &&
+								hasHouseNumber() &&								
 								hasCity() &&
 								hasStreetName();
 
 		// Check, if "addr:state" is required (US and AU)
 		if (TagUtils.isStateRequired()) {
 			isComplete = isComplete && hasState();
+		}
+		
+		// Check, if user checked "ignore post code"
+		if (!FixAddressesPlugin.getPreferences().isIgnorePostCode()) {
+			isComplete = isComplete  && 
+					hasPostalCode() &&
+					PostalCodeChecker.hasValidPostalCode(this);
 		}
 
 		return isComplete;

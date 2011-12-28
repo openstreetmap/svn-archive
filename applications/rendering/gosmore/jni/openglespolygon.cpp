@@ -1,4 +1,5 @@
 /* Copyright (C) 2011 Nic Roets as detailed in the README file. */
+#ifndef HEADLESS
 #include <assert.h>
 #include <string.h>
 #include <malloc.h>
@@ -526,3 +527,4 @@ void Fill (vector<PolygonEdge> &d,int isSea, GdkWindow *w, GdkGC *gc)
   }
   //free (heap);
 }
+#endif

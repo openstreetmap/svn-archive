@@ -201,7 +201,9 @@ const char *FindResource (const char *fname)
   return strdup (fname);
 }
 #endif
+#ifndef HEADLESS
 GtkWidget *draw, *location, *display3D, *followGPSr;
+#endif
 
 // used for showing logs to a file (with default)
 // changed to more suitable value for WinCE in WinMain

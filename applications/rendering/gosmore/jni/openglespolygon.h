@@ -1,4 +1,4 @@
-#ifndef OPENGLESPOLYGON_H
+#if !defined(OPENGLESPOLYGON_H) && !defined(HEADLESS)
 #define OPENGLESPOLYGON_H
 #include <vector>
 #if !defined(ANDROID_NDK) && !defined(NOGTK)

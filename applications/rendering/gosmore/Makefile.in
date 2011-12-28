@@ -53,20 +53,20 @@ all: gosmore$(EXE)
 
 gosmore:	jni/gosmore.cpp jni/libgosm.cpp jni/libgosm.h jni/bboxes.c \
 		jni/openglespolygon.h jni/openglespolygon.cpp
-		g++ -DCHILDREN=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
+		g++ -DCHILDREN=16 ${CFLAGS} ${WARNFLAGS} \
                   jni/gosmore.cpp jni/libgosm.cpp jni/openglespolygon.h \
-                  jni/openglespolygon.cpp -o gosmore ${EXTRA}
+                  jni/openglespolygon.cpp -o gosmore ${EXTRA} ${XMLFLAGS}
 
 gosmore16:	jni/gosmore.cpp jni/libgosm.cpp jni/libgosm.h
 		g++ -DGOSMZ=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
                   jni/gosmore.cpp jni/libgosm.cpp -o gosmore16 ${EXTRA}
 
-$(ARCH)gosmore.exe:	jni/gosmore.cpp jni/libgosm.cpp gosmore.rsc resource.h \
-                    jni/libgosm.h ceglue.h ceglue.c bboxes.c
+$(ARCH)gosmore.exe:	jni/gosmore.cpp jni/libgosm.cpp gosmore.rsc jni/resource.h \
+                    jni/libgosm.h jni/ceglue.h jni/ceglue.c bboxes.c
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c jni/gosmore.cpp
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c jni/libgosm.cpp
-		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
-		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
+		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c jni/ConvertUTF.c
+		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c jni/ceglue.c
 		${ARCH}g++ -static ${EXTRAL} \
 		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(W32LIBS)  -o $@
 
@@ -83,7 +83,7 @@ extract:	extract.c
 		${CC} ${CFLAGS} ${XMLFLAGS} extract.c -o extract
 
 jni/bboxes.c:	density.c density.txt
-		gcc -lm density.c -o density
+		gcc density.c -lm -o density
 		./density <density.txt >density.sh
 # wget http://www.openstreetmap.org/api/0.6/changeset/1707270/download -O \
 #   countries.osm

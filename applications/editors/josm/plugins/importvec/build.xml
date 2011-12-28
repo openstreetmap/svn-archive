@@ -100,7 +100,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.importvec.ImportVecPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Import vector graphics (SVG)"/>
-                <attribute name="Plugin-Icon" value=""/>
+                <!-- <attribute name="Plugin-Icon" value=""/> -->
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportVec"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

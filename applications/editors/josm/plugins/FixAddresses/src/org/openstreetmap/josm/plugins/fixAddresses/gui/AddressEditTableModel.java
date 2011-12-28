@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.util.Comparator;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -43,7 +44,17 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 
 	@Override
 	public void containerChanged(AddressEditContainer container) {
-		fireTableDataChanged(); // update model
+		if (SwingUtilities.isEventDispatchThread()) {
+			fireTableDataChanged(); // update model
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					fireTableDataChanged(); // update model					
+				}
+			});
+		}
 	}
 
 	@Override

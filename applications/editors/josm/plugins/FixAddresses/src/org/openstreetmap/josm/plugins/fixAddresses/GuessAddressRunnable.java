@@ -21,13 +21,8 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
@@ -42,11 +37,17 @@ import org.xml.sax.SAXException;
 public class GuessAddressRunnable extends PleaseWaitRunnable {
 	private List<OSMAddress> addressesToGuess;
 	private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
-	private double minDist;
-	private OSMAddress curAddressNode;
 	private boolean isRunning = false;
 	private boolean canceled;
 
+	private GuessedValueHandler[] wayGuessers = new GuessedValueHandler[]{new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG)}; 
+	private GuessedValueHandler[] nodeGuessers = new GuessedValueHandler[]{
+			new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, 500.0),
+			new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, 5000.0),
+			new GuessedValueHandler(TagUtils.ADDR_STATE_TAG, 5000.0),
+			new GuessedValueHandler(TagUtils.ADDR_COUNTRY_TAG, 5000.0),
+			new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, 2000.0)
+	};
 
 	/**
 	 * Instantiates a new guess address runnable.
@@ -109,12 +110,12 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 	 */
 	protected void fireFinished() {
 		for (IProgressMonitorFinishedListener l : finishListeners) {
-			l.finished();
+			l.finished();			
 		}
 		// this event is fired only once, then we disconnect all listeners
 		finishListeners.clear();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#cancel()
 	 */
@@ -136,8 +137,8 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 	 */
 	@Override
 	protected void realRun() throws SAXException, IOException,
-			OsmTransferException {
-		
+	OsmTransferException {
+
 		if (Main.main.getCurrentDataSet() == null || addressesToGuess == null) return;
 
 		isRunning = true;
@@ -149,23 +150,8 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 		try {
 			progressMonitor.setTicksCount(addressesToGuess.size());
 
-
-
 			List<OSMAddress> shadowCopy = new ArrayList<OSMAddress>(addressesToGuess);
 			for (OSMAddress aNode : shadowCopy) {
-				minDist = Double.MAX_VALUE;
-				curAddressNode = aNode;
-
-				// setup guessing handlers for address tags
-				GuessedValueHandler[] guessers = new GuessedValueHandler[]{
-						new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG, aNode),
-						new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, aNode, 500.0),
-						new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, aNode, 5000.0),
-						new GuessedValueHandler(TagUtils.ADDR_STATE_TAG, aNode, 5000.0),
-						new GuessedValueHandler(TagUtils.ADDR_COUNTRY_TAG, aNode, 5000.0),
-						new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, aNode, 2000.0)
-				};
-
 				if (!aNode.needsGuess()) { // nothing to do
 					progressMonitor.worked(1);
 					continue;
@@ -175,22 +161,47 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 				if (canceled) {
 					break;
 				}
+
 				// Update progress monitor
 				progressMonitor.subTask(tr("Guess values for ") + aNode);
 
-				// visit osm data
-				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().allPrimitives()) {
-					if (canceled) {
-						break;
-					}
+				// Run way-related guessers
+				for (int i = 0; i < wayGuessers.length; i++) {
+					GuessedValueHandler guesser = wayGuessers[i];
+					
+					guesser.setAddressNode(aNode);
 
-					// guess values
-					for (int i = 0; i < guessers.length; i++) {
-						osmPrimitive.visit(guessers[i]);
-
-						if (guessers[i].currentValue == null && i == 0) {
-							//System.err.println("Guess #" + i + " failed for " + aNode);
+					// visit osm data
+					for (Way way : Main.main.getCurrentDataSet().getWays()) {
+						if (canceled) {
+							break;
 						}
+						way.visit(guesser);						
+					}
+					
+					String guessedVal = guesser.getCurrentValue();
+					if (guessedVal != null) {
+						aNode.setGuessedValue(guesser.getTag(), guessedVal, guesser.getSourceNode());
+					}
+				}
+				
+				// Run node-related guessers
+				for (int i = 0; i < nodeGuessers.length; i++) {
+					GuessedValueHandler guesser = nodeGuessers[i];
+					
+					guesser.setAddressNode(aNode);
+
+					// visit osm data
+					for (Node node : Main.main.getCurrentDataSet().getNodes()) {
+						if (canceled) {
+							break;
+						}
+						node.visit(guesser);						
+					}
+					
+					String guessedVal = guesser.getCurrentValue();
+					if (guessedVal != null) {
+						aNode.setGuessedValue(guesser.getTag(), guessedVal, guesser.getSourceNode());
 					}
 				}
 
@@ -203,7 +214,11 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 		}
 	}
 
+	// TODO: Put in separate file
 	private class GuessStreetValueHandler extends GuessedValueHandler {
+		public GuessStreetValueHandler(String tag) {
+			this(tag, null);
+		}
 
 		public GuessStreetValueHandler(String tag, OSMAddress aNode) {
 			super(tag, aNode, 200.0);
@@ -224,15 +239,19 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 		public void visit(Way w) {
 			if (TagUtils.isStreetSupportingHousenumbers(w)) {
 				OSMAddress aNode = getAddressNode();
-				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
-
-				if (dist < minDist && dist < getMaxDistance()) {
-					System.out.println(String.format("New guess %s: %4.2f m", TagUtils.getNameValue(w), dist));
-					minDist = dist;
-					currentValue = TagUtils.getNameValue(w);
-					aNode.setGuessedValue(getTag(), currentValue, w);
-				} else {
-					//System.out.println(String.format("Skipped %s: %4.2f m", TagUtils.getNameValue(w), dist));
+				String newVal = TagUtils.getNameValue(w);
+				
+				if (newVal != null) {
+					double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
+					
+					if (dist < minDist && dist < getMaxDistance()) {
+						minDist = dist;
+						currentValue = newVal;
+						srcNode = w;
+						//aNode.setGuessedValue(getTag(), currentValue, w);
+					} else {
+						//System.out.println(String.format("Skipped %s: %4.2f m", TagUtils.getNameValue(w), dist));
+					}
 				}
 			}
 		}

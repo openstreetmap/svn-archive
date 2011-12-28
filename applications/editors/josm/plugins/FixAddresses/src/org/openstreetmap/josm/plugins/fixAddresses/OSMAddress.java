@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -547,6 +546,7 @@ public class OSMAddress extends OSMEntityBase {
 	 *
 	 * @param tag the tag to set the guess for
 	 * @param value the value of the guessed tag.
+	 * @param osm the (optional) object which was used for the guess 
 	 */
 	public void setGuessedValue(String tag, String value, OsmPrimitive osm) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
@@ -712,7 +712,7 @@ public class OSMAddress extends OSMEntityBase {
 	private void addGuessValueSolution(AddressProblem p, String tag) {
 		AddressSolution s = new AddressSolution(
 				String.format("%s '%s'", tr("Assign to"), getGuessedValue(tag)),
-				new ApplyAllGuessesAction(tag),
+				AddressActions.getApplyGuessesAction(),
 				SolutionType.Change);
 
 		p.addSolution(s);

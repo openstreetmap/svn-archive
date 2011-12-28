@@ -15,6 +15,7 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
@@ -36,7 +37,27 @@ public class GuessedValueHandler implements Visitor {
 	protected String currentValue;
 	private OSMAddress aNode;
 	private double maxDist = DEFAULT_MAX_DIST;
+	protected OsmPrimitive srcNode;
 
+	/**
+	 * Instantiates a new guessed value handler without node and default maximum distance.
+	 *
+	 * @param tag the tag to find the guessed value for.
+	 */
+	public GuessedValueHandler(String tag) {
+		this(tag, null, DEFAULT_MAX_DIST);
+	}
+	
+	/**
+	 * Instantiates a new guessed value handler without node.
+	 *
+	 * @param tag the tag to find the guessed value for.
+	 * @param maxDist the maximum distance for a node/way to be considered as guessed value.
+	 */
+	public GuessedValueHandler(String tag, double maxDist) {
+		this(tag, null, maxDist);
+	}
+	
 	/**
 	 * Instantiates a new guessed value handler.
 	 *
@@ -62,18 +83,13 @@ public class GuessedValueHandler implements Visitor {
 			throw new RuntimeException("Tag must not be empty or null!");
 		}
 
-		if (aNode == null) {
-			throw new RuntimeException("Address node must not be null!");
-		}
-
 		if (maxDist < 1.0) { // clip value
 			maxDist = 1.0;
 		}
+		
 		this.tag = tag;
-
-		minDist = Double.MAX_VALUE;
-		this.aNode = aNode;
 		this.maxDist = maxDist;
+		setAddressNode(aNode);		
 	}
 
 	/**
@@ -83,6 +99,19 @@ public class GuessedValueHandler implements Visitor {
 	 */
 	protected OSMAddress getAddressNode() {
 		return aNode;
+	}
+	
+
+	/**
+	 * Sets the address node to make the guess for.
+	 * @param aNode
+	 */
+	public void setAddressNode(OSMAddress aNode) {		
+		this.aNode = aNode;
+		// reset search results
+		minDist = Double.MAX_VALUE;
+		srcNode = null;
+		currentValue = null;		
 	}
 
 	/**
@@ -119,8 +148,17 @@ public class GuessedValueHandler implements Visitor {
 	 *
 	 * @return the currentValue
 	 */
-	protected String getCurrentValue() {
+	public String getCurrentValue() {
 		return currentValue;
+	}
+	
+	
+	/**
+	 * Gets the node/way which has been selected for the guess.
+	 * @return The source node or null; if no appropriate source primitive has been found
+	 */
+	public OsmPrimitive getSourceNode() {
+		return srcNode;
 	}
 
 	/**
@@ -137,12 +175,14 @@ public class GuessedValueHandler implements Visitor {
 	 */
 	@Override
 	public void visit(Node n) {
+		assert aNode != null;
+		
 		if (n.hasKey(tag)) {
 			double dist = n.getCoor().greatCircleDistance(aNode.getCoor());
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
 				currentValue = n.get(tag);
-				aNode.setGuessedValue(tag, currentValue, n);
+				srcNode = n;
 			}
 		}
 	}
@@ -152,12 +192,14 @@ public class GuessedValueHandler implements Visitor {
 	 */
 	@Override
 	public void visit(Way w) {
+		assert aNode != null;
+		
 		if (w.hasKey(tag)) {
 			double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
 				currentValue = w.get(tag);
-				aNode.setGuessedValue(tag, currentValue, w);
+				srcNode = w;
 			}
 		}
 	}

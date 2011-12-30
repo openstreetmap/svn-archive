@@ -15,10 +15,8 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
+import java.util.LinkedList;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -47,182 +45,165 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 
 @SuppressWarnings("serial")
 public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener, ListSelectionListener, IAddressEditContainerListener {
-	private static final String FIXED_DIALOG_TITLE = tr("Incomplete Addresses");
+    private static final String FIXED_DIALOG_TITLE = tr("Incomplete Addresses");
 
-	private AddressEditContainer container;
+    private AddressEditContainer container;
 
+    // Array containing the available actions
+    private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
+            AddressActions.getSelectAction(),
+            AddressActions.getGuessAddressAction(),
+            AddressActions.getApplyGuessesAction(),
+            AddressActions.getRemoveTagsAction(),
+    };
 
-	// Array containing the available actions
-	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
-			AddressActions.getSelectAction(),
-			AddressActions.getGuessAddressAction(),
-			AddressActions.getApplyGuessesAction(),
-			AddressActions.getRemoveTagsAction(),
-	};
+    private JTable incompleteAddr;
 
+    /**
+     * Instantiates a new "incomplete addresses" dialog.
+     *
+     */
+    public IncompleteAddressesDialog() {
+        super(FIXED_DIALOG_TITLE, "incompleteaddress_24", tr("Show incomplete addresses"), null, 150);
 
-	private JTable incompleteAddr;
+        this.container = new AddressEditContainer();
+        container.addChangedListener(this);
+        // Table containing address entities
+        IncompleteAddressesTableModel model = new IncompleteAddressesTableModel(container);
+        incompleteAddr = new JTable(model);
+        JTableHeader header = incompleteAddr.getTableHeader();
+        header.addMouseListener(model.new ColumnListener(incompleteAddr));
+        incompleteAddr.getSelectionModel().addListSelectionListener(this);
 
-	/**
-	 * Instantiates a new "incomplete addresses" dialog.
-	 *
-	 */
-	public IncompleteAddressesDialog() {
-		super(FIXED_DIALOG_TITLE, "incompleteaddress_24", tr("Show incomplete addresses"), null, 150);
+        LinkedList<SideButton> buttons = new LinkedList<SideButton>();
+        // Link actions with address container
+        for (AbstractAddressEditAction action : actions) {
+            buttons.add(new SideButton(action));
+            action.setContainer(container);
+        }
+        createLayout(incompleteAddr, true, buttons);
+     }
 
-		this.container = new AddressEditContainer();
-		container.addChangedListener(this);
-		// Top-level panel
-		JPanel p = new JPanel(new BorderLayout());
-		// Table containing address entities
-		IncompleteAddressesTableModel model = new IncompleteAddressesTableModel(container);
-		incompleteAddr = new JTable(model);
-		JTableHeader header = incompleteAddr.getTableHeader();
-		header.addMouseListener(model.new ColumnListener(incompleteAddr));
-		incompleteAddr.getSelectionModel().addListSelectionListener(this);
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#hideNotify()
+     */
+    @Override
+    public void hideNotify() {
+        super.hideNotify();
+        DatasetEventManager.getInstance().removeDatasetListener(this);
+    }
 
-		// Scroll pane hosting the table
-		JScrollPane sp = new JScrollPane(incompleteAddr);
-		p.add(sp, BorderLayout.CENTER);
-		this.add(p);
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#showNotify()
+     */
+    @Override
+    public void showNotify() {
+        super.showNotify();
+        DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IN_EDT_CONSOLIDATED);
+    }
 
-		// Button panel containing the commands
-		JPanel buttonPanel = getButtonPanel(actions.length);
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#dataChanged(org.openstreetmap.josm.data.osm.event.DataChangedEvent)
+     */
+    @Override
+    public void dataChanged(DataChangedEvent event) {
+        container.invalidate();
+    }
 
-		// Populate panel with actions
-		for (int i = 0; i < actions.length; i++) {
-			SideButton sb = new SideButton(actions[i]);
-			buttonPanel.add(sb);
-		}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#nodeMoved(org.openstreetmap.josm.data.osm.event.NodeMovedEvent)
+     */
+    @Override
+    public void nodeMoved(NodeMovedEvent event) {
 
-		this.add(buttonPanel, BorderLayout.SOUTH);
+    }
 
-		// Link actions with address container
-		for (AbstractAddressEditAction action : actions) {
-			action.setContainer(container);
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#otherDatasetChange(org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent)
+     */
+    @Override
+    public void otherDatasetChange(AbstractDatasetChangedEvent event) {
+        // TODO Auto-generated method stub
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#hideNotify()
-	 */
-	@Override
-	public void hideNotify() {
-		super.hideNotify();
-		DatasetEventManager.getInstance().removeDatasetListener(this);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#showNotify()
-	 */
-	@Override
-	public void showNotify() {
-		super.showNotify();
-		DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IN_EDT_CONSOLIDATED);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#dataChanged(org.openstreetmap.josm.data.osm.event.DataChangedEvent)
-	 */
-	@Override
-	public void dataChanged(DataChangedEvent event) {
-		container.invalidate();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#nodeMoved(org.openstreetmap.josm.data.osm.event.NodeMovedEvent)
-	 */
-	@Override
-	public void nodeMoved(NodeMovedEvent event) {
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#otherDatasetChange(org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent)
-	 */
-	@Override
-	public void otherDatasetChange(AbstractDatasetChangedEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
-	 */
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
+     */
         @Override
-	public void primitivesAdded(PrimitivesAddedEvent event) {
-		container.invalidate();
+    public void primitivesAdded(PrimitivesAddedEvent event) {
+        container.invalidate();
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
-	 */
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
+     */
         @Override
-	public void primitivesRemoved(PrimitivesRemovedEvent event) {
-		container.invalidate();
-	}
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {
+        container.invalidate();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#relationMembersChanged(org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent)
-	 */
-	@Override
-	public void relationMembersChanged(RelationMembersChangedEvent event) {
-		container.invalidate();
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#relationMembersChanged(org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent)
+     */
+    @Override
+    public void relationMembersChanged(RelationMembersChangedEvent event) {
+        container.invalidate();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#tagsChanged(org.openstreetmap.josm.data.osm.event.TagsChangedEvent)
-	 */
-	@Override
-	public void tagsChanged(TagsChangedEvent event) {
-		container.invalidate();
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#tagsChanged(org.openstreetmap.josm.data.osm.event.TagsChangedEvent)
+     */
+    @Override
+    public void tagsChanged(TagsChangedEvent event) {
+        container.invalidate();
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#wayNodesChanged(org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent)
-	 */
-	@Override
-	public void wayNodesChanged(WayNodesChangedEvent event) {
-		container.invalidate();
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#wayNodesChanged(org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent)
+     */
+    @Override
+    public void wayNodesChanged(WayNodesChangedEvent event) {
+        container.invalidate();
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		AddressEditSelectionEvent event = new AddressEditSelectionEvent(e, null, null, incompleteAddr, container);
+    /* (non-Javadoc)
+     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        AddressEditSelectionEvent event = new AddressEditSelectionEvent(e, null, null, incompleteAddr, container);
 
-		for (AbstractAddressEditAction action : actions) {
-			action.setEvent(event);
-		}
+        for (AbstractAddressEditAction action : actions) {
+            action.setEvent(event);
+        }
 
-		OsmUtils.zoomAddresses(event.getSelectedIncompleteAddresses());
-	}
+        OsmUtils.zoomAddresses(event.getSelectedIncompleteAddresses());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
-	 */
-	@Override
-	public void containerChanged(AddressEditContainer container) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
-				setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
-			} else {
-				setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+     */
+    @Override
+    public void containerChanged(AddressEditContainer container) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
+                setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
+            } else {
+                setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));
+            }
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
-	 */
-	@Override
-	public void entityChanged(IOSMEntity node) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			container.invalidate();
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
+     */
+    @Override
+    public void entityChanged(IOSMEntity node) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            container.invalidate();
+        }
+    }
 }

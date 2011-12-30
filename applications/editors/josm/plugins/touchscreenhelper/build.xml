@@ -72,6 +72,7 @@
                 <attribute name="Plugin-Class" value="touchscreenhelper.TouchScreenHelperPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides helper buttons to allow working with single button mouse (stylus). Currently adds only one button to slip the map."/>
+                <attribute name="Plugin-Icon" value="images/mapmode/browse.png"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

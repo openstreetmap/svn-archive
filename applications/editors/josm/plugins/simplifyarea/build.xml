@@ -100,8 +100,8 @@
                 <attribute name="Plugin-Class" value="sk.zdila.josm.plugin.simplify.SimplifyAreaPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Simplify area by removing nodes on very obtuse angles. This can be constrained by maximum removed area size. Also average nearby nodes."/>
-                <!--<attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>-->
+                <attribute name="Plugin-Icon" value="images/preferences/simplifyArea.png"/>
+                <!--<attribute name="Plugin-Link" value="..."/>-->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

@@ -111,6 +111,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="(This Plugin is currently work in progress!!!) Links and syncs a georeferenced video against a GPS track, to use it for identify visible objects."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/VideoMapping"/>
+                <attribute name="Plugin-Icon" value="images/videomapping.png"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

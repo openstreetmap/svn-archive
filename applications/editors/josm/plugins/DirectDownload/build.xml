@@ -100,10 +100,8 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.directdownload.DirectDownload"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Download your GPX tracks from openstreetmap.org"/>
-                <!--
-                <attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
--->
+                <attribute name="Plugin-Icon" value="images/DownloadAction.png"/>
+<!--            <attribute name="Plugin-Link" value="..."/> -->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

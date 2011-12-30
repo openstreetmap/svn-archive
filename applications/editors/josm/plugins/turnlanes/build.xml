@@ -100,8 +100,8 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.turnlanes.TurnLanesPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides a straightforward GUI for adding, editing and deleting turn lanes."/>
-                <!--<attribute name="Plugin-Icon" value="..." />-->
-                <!--<attribute name="Plugin-Link" value="..." />-->
+                <attribute name="Plugin-Icon" value="images/dialogs/turnlanes.png" />
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Relations/Proposed/turn_lanes#Plugin" />
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

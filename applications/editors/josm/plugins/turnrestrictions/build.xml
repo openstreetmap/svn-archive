@@ -102,7 +102,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="The turnrestrictions plugin allows to enter maintain information about turn restrictions in the OpenStreetMap database."/>
                 <attribute name="Plugin-Icon" value="images/preferences/turnrestrictions.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/turnrestrictions"/>
+                <attribute name="Plugin-Link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/TurnRestrictions"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

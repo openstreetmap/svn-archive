@@ -128,7 +128,11 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         parser.map("action", SurveyorActionDescription.class);
 
         SurveyorComponent surveyorComponent = null;
-        parser.start(in);
+        try {
+            parser.start(in);
+        } catch(SAXException e) {
+            e.printStackTrace();
+        }
         List<SurveyorActionDescription> actions = new ArrayList<SurveyorActionDescription>();
         while(parser.hasNext()) {
             Object object = parser.next();

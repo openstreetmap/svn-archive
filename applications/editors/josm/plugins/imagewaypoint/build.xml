@@ -61,7 +61,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Another plugin to match images to the waypoints in a GPX file. A match is made when the ''name'', ''cmt'' or ''desc'' attribute of a waypoint tag matches the filename of an image."/>
                 <attribute name="Plugin-Early" value="false"/>
-                <attribute name="Plugin-Icon" value="images/dialogs/imagewaypoint-open.png"/>
+                <attribute name="Plugin-Icon" value="images/dialogs/imagewaypoint.png"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

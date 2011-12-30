@@ -304,7 +304,7 @@ public class AlignWaysCmdKeepLength extends Command {
                     + " or put the pivot on their common node.\n");
             break;
         case ALGN_INV_OUTSIDE_WORLD:
-            statMsg = tr("Aligning would result nodes 'outside the world'.\n"
+            statMsg = tr("Aligning would result nodes ''outside the world''.\n"
                     + "Alignment not possible.\n");
             break;
         default:

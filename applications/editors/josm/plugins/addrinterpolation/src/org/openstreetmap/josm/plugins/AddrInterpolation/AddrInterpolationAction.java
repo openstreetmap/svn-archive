@@ -27,7 +27,7 @@ SelectionChangedListener {
                         KeyEvent.VK_A, Shortcut.GROUP_MENU,
                         InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), false);
         setEnabled(false);
-        DataSet.selListeners.add(this);
+        DataSet.addSelectionListener(this);
     }
 
     public void actionPerformed(ActionEvent e) {

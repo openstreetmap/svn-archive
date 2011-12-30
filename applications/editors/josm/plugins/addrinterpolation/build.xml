@@ -61,7 +61,7 @@
     **********************************************************
     -->
     <target name="dist" depends="compile,revision">
-        <echo message="creating ${plugin.jar.name} ... "/>
+        <echo message="creating ${plugin.jar} ... "/>
         <copy todir="${plugin.build.dir}/resources">
             <fileset dir="resources"/>
         </copy>

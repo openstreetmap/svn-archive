@@ -103,7 +103,7 @@
             -->
             <manifest>
                 <attribute name="Author" value="Attila Szász"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.alignways.AlignWaysPlugin"/>
+                <attribute name="Plugin-Class" value="com.tilusnet.josm.plugins.alignways.AlignWaysPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Makes a pair of selected way segments parallel by rotating one of them around a chosen pivot."/>
                 <attribute name="Plugin-Icon" value="images/alignways.png"/>

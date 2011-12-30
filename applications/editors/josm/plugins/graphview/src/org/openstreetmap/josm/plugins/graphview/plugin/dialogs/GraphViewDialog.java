@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -21,12 +22,13 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader;
 import org.openstreetmap.josm.plugins.graphview.core.visualisation.ColorScheme;
 import org.openstreetmap.josm.plugins.graphview.core.visualisation.EndNodeColorScheme;
@@ -151,23 +153,16 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             selectionPanel.add(colorSchemeComboBox);
         }
 
-        this.add(BorderLayout.CENTER, selectionPanel);
-
-
-        JPanel buttonPanel = new JPanel();
-        JButton showLayerButton = new JButton(tr("Create/update graph"));
-        showLayerButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                plugin.createGraphViewLayer();
-            }
-        });
-        buttonPanel.add(showLayerButton);
-
-        this.add(BorderLayout.SOUTH, buttonPanel);
+        createLayout(selectionPanel, true, Arrays.asList(new SideButton[] {
+            new SideButton(new AbstractAction(tr("Create/update graph")) {
+                public void actionPerformed(ActionEvent e) {
+                    plugin.createGraphViewLayer();
+                }
+            })
+        }));
 
         updateSelections();
         this.preferences.addObserver(this);
-
     }
 
     private final ActionListener rulesetActionListener = new ActionListener() {

@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -23,7 +24,6 @@ import java.util.Set;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -92,17 +92,13 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
         tree.addMouseListener(new ClickWatch());
         tree.addTreeSelectionListener(new SelectionWatch());
 
-        add(new JScrollPane(tree), BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
-
         selectButton = new SideButton(marktr("Select"), "select", "LicenseChange",
                 tr("Set the selected elements on the map to the selected items in the list above."), this);
         selectButton.setEnabled(false);
-        buttonPanel.add(selectButton);
-        buttonPanel.add(new SideButton(plugin.checkAction), "refresh");
-        add(buttonPanel, BorderLayout.SOUTH);
 
+        createLayout(tree, true, Arrays.asList(new SideButton[] {
+            selectButton, new SideButton(plugin.checkAction)
+        }));
     }
 
     @Override

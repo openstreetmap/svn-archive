@@ -46,6 +46,7 @@ import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsManager;
+import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.PlatformHookOsx;
 import org.openstreetmap.josm.tools.PlatformHookUnixoid;
@@ -353,7 +354,7 @@ public class InitializationWizard extends JDialog {
             String server_password = Main.pref.get("osm-server.password", null);
             if (server_username != null || server_password != null) {
                 try {
-                    cm.store(RequestorType.SERVER, new PasswordAuthentication(string(server_username), toCharArray(server_password)));
+                    cm.store(RequestorType.SERVER, OsmApi.getOsmApi().getHost(), new PasswordAuthentication(string(server_username), toCharArray(server_password)));
                     if (rbClear.isSelected()) {
                         Main.pref.put("osm-server.username", null);
                         Main.pref.put("osm-server.password", null);
@@ -365,9 +366,10 @@ public class InitializationWizard extends JDialog {
             
             String proxy_username = Main.pref.get(ProxyPreferencesPanel.PROXY_USER, null);
             String proxy_password = Main.pref.get(ProxyPreferencesPanel.PROXY_PASS, null);
+            String proxy_host = Main.pref.get(ProxyPreferencesPanel.PROXY_HTTP_HOST, null);
             if (proxy_username != null || proxy_password != null) {
                 try {
-                    cm.store(RequestorType.PROXY, new PasswordAuthentication(string(proxy_username), toCharArray(proxy_password)));
+                    cm.store(RequestorType.PROXY, proxy_host, new PasswordAuthentication(string(proxy_username), toCharArray(proxy_password)));
                     if (rbClear.isSelected()) {
                         Main.pref.put(ProxyPreferencesPanel.PROXY_USER, null);
                         Main.pref.put(ProxyPreferencesPanel.PROXY_PASS, null);

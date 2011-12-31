@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.oauth.OAuthToken;
 import org.openstreetmap.josm.gui.preferences.server.OsmApiUrlInputPanel;
 import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
+import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.auth.AbstractCredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.tools.Utils;
@@ -94,7 +95,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     }
     
     @Override
-    public PasswordAuthentication lookup(RequestorType rt) throws CredentialsAgentException {
+    public PasswordAuthentication lookup(RequestorType rt, String host) throws CredentialsAgentException {
         PasswordAuthentication cache = credentialsCache.get(rt);
         if (cache != null) 
             return cache;
@@ -103,8 +104,13 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         PasswordAuthentication auth;
         switch(rt) {
             case SERVER:
-                user = stringNotNull(getProvider().read(getServerDescriptor()+".username"));
-                password = getProvider().read(getServerDescriptor()+".password");
+                if(OsmApi.getOsmApi().getHost().equals(host)) {
+                    user = stringNotNull(getProvider().read(getServerDescriptor()+".username"));
+                    password = getProvider().read(getServerDescriptor()+".password");
+                } else {
+                    user = stringNotNull(getProvider().read(host+".username"));
+                    password = getProvider().read(host+".password");
+                }
                 auth = new PasswordAuthentication(user, password == null ? new char[0] : password);
                 break;
             case PROXY:
@@ -119,7 +125,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     }
 
     @Override
-    public void store(RequestorType rt, PasswordAuthentication credentials) throws CredentialsAgentException {
+    public void store(RequestorType rt, String host, PasswordAuthentication credentials) throws CredentialsAgentException {
         char[] username, password;
         if (credentials == null) {
             username = null;
@@ -135,9 +141,15 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         String prefix, usernameDescription, passwordDescription;
         switch(rt) {
             case SERVER:
-                prefix = getServerDescriptor();
-                usernameDescription = tr("JOSM/OSM API/Username");
-                passwordDescription = tr("JOSM/OSM API/Password");
+                if(OsmApi.getOsmApi().getHost().equals(host)) {
+                    prefix = getServerDescriptor();
+                    usernameDescription = tr("JOSM/OSM API/Username");
+                    passwordDescription = tr("JOSM/OSM API/Password");
+                } else {
+                    prefix = host;
+                    usernameDescription = tr("{0}/Username", host);
+                    passwordDescription = tr("{0}/Password", host);
+                }
                 break;
             case PROXY:
                 prefix = getProxyDescriptor();

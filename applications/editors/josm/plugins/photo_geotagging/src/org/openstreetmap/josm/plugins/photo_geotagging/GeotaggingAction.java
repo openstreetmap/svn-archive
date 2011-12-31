@@ -301,7 +301,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                         JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
                         l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
                         int override = new ExtendedDialog(
-                                ((PleaseWaitProgressMonitor) progressMonitor).getDialog(),
+                                Main.parent,
                                 tr("Override old backup files?"),
                                 new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
                             .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})

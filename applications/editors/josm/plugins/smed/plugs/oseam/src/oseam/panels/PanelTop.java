@@ -26,7 +26,7 @@ public class PanelTop extends JPanel {
 	public JRadioButton westTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WestTopButton.png")));
 	public JRadioButton spheres2TopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/Spheres2TopButton.png")));
 	public JRadioButton boardDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BoardDayButton.png")));
-	public JRadioButton diamondDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DiamondDayButton.png")));
+	public JRadioButton rhombusDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DiamondDayButton.png")));
 	public JRadioButton triangleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleDayButton.png")));
 	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
@@ -64,7 +64,7 @@ public class PanelTop extends JPanel {
 		add(getTopButton(westTopButton, 90, 35, 27, 27, "WestTop", Top.WEST));
 		add(getTopButton(spheres2TopButton, 120, 35, 27, 27, "Spheres2Top", Top.SPHERES2));
 		add(getTopButton(boardDayButton, 0, 65, 27, 27, "BoardDay", Top.BOARD));
-		add(getTopButton(diamondDayButton, 30, 65, 27, 27, "DiamondDay", Top.DIAMOND));
+		add(getTopButton(rhombusDayButton, 30, 65, 27, 27, "DiamondDay", Top.RHOMBUS));
 		add(getTopButton(triangleDayButton, 60, 65, 27, 27, "TriangleDay", Top.TRIANGLE));
 		add(getTopButton(triangleInvDayButton, 90, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV));
 		add(getTopButton(squareDayButton, 120, 65, 27, 27, "SquareDay", Top.SQUARE));

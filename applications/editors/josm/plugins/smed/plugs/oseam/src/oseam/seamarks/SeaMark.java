@@ -711,7 +711,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Top {
-		NOTOP, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, DIAMOND, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
+		NOTOP, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, RHOMBUS, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
 	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
@@ -726,7 +726,7 @@ public class SeaMark extends JPanel {
 		TopSTR.put(Top.WEST, "2 cones point together");
 		TopSTR.put(Top.SPHERES2, "2 spheres");
 		TopSTR.put(Top.BOARD, "board");
-		TopSTR.put(Top.DIAMOND, "diamond");
+		TopSTR.put(Top.RHOMBUS, "rhombus");
 		TopSTR.put(Top.CIRCLE, "circle");
 		TopSTR.put(Top.TRIANGLE, "triangle, point up");
 		TopSTR.put(Top.TRIANGLE_INV, "triangle, point down");
@@ -2001,16 +2001,29 @@ public class SeaMark extends JPanel {
 	    if (!((String)getLightAtt(Att.BEG, i)).isEmpty() && !((String)getLightAtt(Att.END, i)).isEmpty()) {
 				if (getLightAtt(Att.COL, i) != Col.UNKCOL) {
 					g2.setPaint(ColMAP.get(getLightAtt(Att.COL, i)));
-					Double a0 = 270 - Double.parseDouble((String) getLightAtt(Att.BEG, i));
-					Double da = 270 - Double.parseDouble((String) getLightAtt(Att.END, i)) - a0;
+					Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.BEG, i));
+					Double da = 270 - Double.parseDouble((String)getLightAtt(Att.END, i)) - a0;
 					da -= da > 0 ? 360 : 0;
 					g2.draw(new Arc2D.Double(12, 15, 140, 140, a0, da, Arc2D.OPEN));
 				}
 				if (getLightAtt(Att.ALT, i) != Col.UNKCOL) {
 					g2.setPaint(ColMAP.get(getLightAtt(Att.ALT, i)));
-					Double a0 = 270 - Double.parseDouble((String) getLightAtt(Att.BEG, i));
-					Double da = 270 - Double.parseDouble((String) getLightAtt(Att.END, i)) - a0;
+					Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.BEG, i));
+					Double da = 270 - Double.parseDouble((String)getLightAtt(Att.END, i)) - a0;
 					da -= da > 0 ? 360 : 0;
+					g2.draw(new Arc2D.Double(17, 20, 130, 130, a0, da, Arc2D.OPEN));
+				}
+	    } else if ((getLightAtt(Att.LIT, i) == Lit.DIR) && !((String)getLightAtt(Att.ORT, i)).isEmpty()) {
+				if (getLightAtt(Att.COL, i) != Col.UNKCOL) {
+					g2.setPaint(ColMAP.get(getLightAtt(Att.COL, i)));
+					Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.ORT, i)) + 2.0;
+					Double da = -4.0;
+					g2.draw(new Arc2D.Double(12, 15, 140, 140, a0, da, Arc2D.OPEN));
+				}
+				if (getLightAtt(Att.ALT, i) != Col.UNKCOL) {
+					g2.setPaint(ColMAP.get(getLightAtt(Att.ALT, i)));
+					Double a0 = 270 - Double.parseDouble((String)getLightAtt(Att.ORT, i)) + 2.0;
+					Double da = -4.0;
 					g2.draw(new Arc2D.Double(17, 20, 130, 130, a0, da, Arc2D.OPEN));
 				}
 	    }

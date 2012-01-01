@@ -1,2 +1,0 @@
-for i in ../../../../openseamap/renderer/osmarender/styleshheets/SeaMapSymbols/*.svg; do \
-inkscape $i -d 45 -e `echo $i | sed -e 'sX^../../../../openseamap/renderer/osmarender/styleshheets/SeaMapSymbolsXimagesX' -e 's/.svg$/.png/'`; done

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/Programme/osm/josm-tested.jar"/>
-	<classpathentry kind="lib" path="D:/Dokumente und Einstellungen/Werner/Eigene Dateien/apache-log4j-1.2.15/log4j-1.2.15.jar"/>
-	<classpathentry kind="output" path="build"/>
-</classpath>

@@ -68,7 +68,7 @@ public class PanelSectors extends JFrame {
 		panel.add(new JScrollPane(table));
 		getContentPane().add(panel);
 
-		table.setSize(860, ((table.getRowCount() * 16) + 20));
+		table.setSize(860, ((table.getRowCount() * 16) + 24));
 		
 		table.setDefaultRenderer(String.class, new CentreRenderer());
 		table.getColumnModel().getColumn(1).setCellRenderer(new ColourCellRenderer());
@@ -277,9 +277,9 @@ public class PanelSectors extends JFrame {
 
 	public void addSector(int idx) {
 		dlg.panelMain.mark.addLight(idx);
-		table.setSize(860, ((table.getRowCount() * 16) + 18));
+		table.setSize(860, ((table.getRowCount() * 16) + 24));
 		if (table.getRowCount() > 3) {
-			setSize(900, ((table.getRowCount() * 16) + 40));
+			setSize(900, ((table.getRowCount() * 16) + 44));
 		} else {
 			setSize(900, 100);
 		}
@@ -288,9 +288,9 @@ public class PanelSectors extends JFrame {
 	public void deleteSector(int idx) {
 		if (idx > 0) {
 			dlg.panelMain.mark.delLight(idx);
-			table.setSize(860, ((table.getRowCount() * 16) + 20));
+			table.setSize(860, ((table.getRowCount() * 16) + 24));
 			if (table.getRowCount() > 3) {
-				setSize(900, ((table.getRowCount() * 16) + 40));
+				setSize(900, ((table.getRowCount() * 16) + 44));
 			} else {
 				setSize(900, 100);
 			}
@@ -299,9 +299,9 @@ public class PanelSectors extends JFrame {
 	
 	public void syncPanel() {
 		table.updateUI();
-		table.setSize(860, ((table.getRowCount() * 16) + 18));
+		table.setSize(860, ((table.getRowCount() * 16) + 24));
 		if (table.getRowCount() > 3) {
-			setSize(900, ((table.getRowCount() * 16) + 40));
+			setSize(900, ((table.getRowCount() * 16) + 44));
 		} else {
 			setSize(900, 100);
 		}

@@ -1,2 +1,0 @@
-Private-Package: smed_bfw.internal
-Service-Component: smed_bfw.internal.MangerImpl

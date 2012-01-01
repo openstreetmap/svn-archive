@@ -56,7 +56,7 @@ public class Smed extends Plugin{
         int len;
 
         try {
-            JarFile file = new JarFile(pluginDirName  + "/smed.jar");
+            JarFile file = new JarFile(pluginDirName  + "/SeaMapEditor.jar");
             FileOutputStream fos = new FileOutputStream(pluginDirName + "/splug/smed_ifc.jar");
             JarOutputStream jos = new JarOutputStream(fos);
             BufferedOutputStream oos = new BufferedOutputStream( jos);

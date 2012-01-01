@@ -70,13 +70,11 @@
         <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
-        <ant antfile="build.xml" target="dist" dir="smed_fw"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tag2link"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
-        <ant antfile="build.xml" target="dist" dir="toms"/>
         <ant antfile="build.xml" target="dist" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="dist" dir="tracer"/>
         <ant antfile="build.xml" target="dist" dir="turnlanes"/>
@@ -160,13 +158,11 @@
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
         <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->
-        <ant antfile="build.xml" target="clean" dir="smed_fw"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tag2link"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>
-        <ant antfile="build.xml" target="clean" dir="toms"/>
         <ant antfile="build.xml" target="clean" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="clean" dir="tracer"/>
         <ant antfile="build.xml" target="clean" dir="turnlanes"/>

@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -146,7 +147,7 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
     public void activate(boolean activeMode) {
 
         if (activeMode == true) {
-        	// we're in alignways mode 
+            // we're in alignways mode
             activateInfoPanel.setVisible(false);
             modesPanel.setVisible(true);
             this.setPreferredSize(new Dimension(0, 200));
@@ -155,7 +156,7 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
             dlgPane.add(modesPanel);
             dlgPane.validate();
         } else {
-        	// we're not in alignways mode 
+            // we're not in alignways mode
             activateInfoPanel.setVisible(true);
             modesPanel.setVisible(false);
             this.setPreferredSize(new Dimension(0, 70));
@@ -165,6 +166,10 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
             dlgPane.validate();
         }
 
+    }
+
+    public JCheckBoxMenuItem getWindowMenuItem() {
+        return windowMenuItem;
     }
 
 

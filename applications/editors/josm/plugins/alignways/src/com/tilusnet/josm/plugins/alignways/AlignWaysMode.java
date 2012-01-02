@@ -6,8 +6,6 @@ package com.tilusnet.josm.plugins.alignways;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -16,7 +14,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -90,7 +87,7 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
         AlignWaysPlugin.getAwDialog().activate(false);
         IconToggleButton optBtn = AlignWaysPlugin.getOptBtn();
         if (optBtn.isSelected()) {
-            // The option panel is switched off
+            // The option panel will be switched off
             optBtn.doClick();
         }
 
@@ -196,8 +193,8 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
         AlignWaysTipsPanel atp = new AlignWaysTipsPanel();
         Object[] okButton = {tr("I''m ready!")};
-        JOptionPane tipPane = new JOptionPane(atp, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, 
-				 						      null, okButton, okButton[0]);
+        JOptionPane tipPane = new JOptionPane(atp, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
+                null, okButton, okButton[0]);
         tipPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
         JDialog tipDialog = tipPane.createDialog(Main.parent, tr("AlignWays Tips"));
         tipDialog.setIconImage(new ImageIcon(getClass().getResource("/images/alignways.png")).getImage());

@@ -38,6 +38,8 @@ public class AlignWaysPlugin extends Plugin {
         awAction = new AlignWaysAction();
         alignWaysMenuItem = MainMenu.add(Main.main.menu.toolsMenu, awAction);
         awDialog = new AlignWaysDialog(awMode);
+        // Prevent user clicking on the Windows menu entry while panel is meaningless
+        awDialog.getWindowMenuItem().setEnabled(false);
     }
 
     @Override
@@ -47,6 +49,8 @@ public class AlignWaysPlugin extends Plugin {
         }
         if (Main.map != null) {
             Main.map.addMapMode(btn);
+            // Re-enable menu item in Windows menu
+            awDialog.getWindowMenuItem().setEnabled(true);
         }
     }
 

@@ -26,6 +26,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
@@ -69,7 +70,8 @@ public class Undelete extends Plugin {
         KeyEvent.VK_U, Shortcut.GROUP_EDIT, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK), true);
       }
 
-      public void actionPerformed(ActionEvent e) {
+      @Override
+	public void actionPerformed(ActionEvent e) {
         JCheckBox layer = new JCheckBox(tr("Separate Layer"));
         layer.setToolTipText(tr("Select if the data should be added into a new layer"));
         layer.setSelected(Main.pref.getBoolean("undelete.newlayer"));
@@ -119,7 +121,7 @@ public class Undelete extends Plugin {
         Main.pref.put("undelete.newlayer", layer.isSelected());
         Main.pref.put("undelete.osmid", Long.toString(tfId.getOsmId()));
         List<Long> ids=new ArrayList<Long>();
-        ids.add((long)tfId.getOsmId());
+        ids.add(tfId.getOsmId());
         undelete(layer.isSelected(), cbType.getType(), ids, 0);
       }
     }
@@ -148,7 +150,8 @@ public class Undelete extends Plugin {
         Main.worker.execute(task);
 
         Runnable r = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
               List<Node> nodes=new ArrayList<Node>();
               for (long id: ids)
               {
@@ -224,13 +227,13 @@ public class Undelete extends Plugin {
                       HistoryRelation hRel = (HistoryRelation) hPrimitive2;
 
                       List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
-                      for (org.openstreetmap.josm.data.osm.history.RelationMember m : hRel.getMembers()) {
-                        OsmPrimitive p = datas.getPrimitiveById(m.getPrimitiveId(), m.getPrimitiveType());
+                      for (RelationMemberData m : hRel.getMembers()) {
+                        OsmPrimitive p = datas.getPrimitiveById(m.getMemberId(), m.getMemberType());
                         if (p == null) {
-                            switch (m.getPrimitiveType()) {
-                            case NODE: p = new Node(m.getPrimitiveId()); break;
-                            case WAY: p = new Way(m.getPrimitiveId()); break;
-                            case RELATION: p = new Relation(m.getPrimitiveId()); break;
+                            switch (m.getMemberType()) {
+                            case NODE: p = new Node(m.getMemberId()); break;
+                            case WAY: p = new Way(m.getMemberId()); break;
+                            case RELATION: p = new Relation(m.getMemberId()); break;
                             }
                             datas.addPrimitive(p);
                         }

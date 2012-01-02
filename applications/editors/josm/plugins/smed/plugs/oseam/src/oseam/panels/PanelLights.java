@@ -56,6 +56,19 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
+	public JComboBox platformCatBox;
+	public EnumMap<Cat, Integer> platformCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alPlatformCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : platformCats.keySet()) {
+				int idx = platformCats.get(cat);
+				if (dlg.node != null && (idx == platformCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
+				}
+			}
+		}
+	};
 	private ButtonGroup objButtons = new ButtonGroup();
 	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
@@ -65,6 +78,7 @@ public class PanelLights extends JPanel {
 	public JRadioButton landButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LandmarkButton.png")));
 	public JRadioButton trafficButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TrafficButton.png")));
 	public JRadioButton warningButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WarningButton.png")));
+	public JRadioButton platformButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PlatformButton.png")));
 	public EnumMap<Obj, JRadioButton> objects = new EnumMap<Obj, JRadioButton>(Obj.class);
 	private ActionListener alObj = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -86,25 +100,36 @@ public class PanelLights extends JPanel {
 				landCatBox.setVisible(true);
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				platformCatBox.setVisible(false);
 				alLandCatBox.actionPerformed(null);
 			} else if (trafficButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				platformCatBox.setVisible(false);
 				alTrafficCatBox.actionPerformed(null);
 			} else if (warningButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				warningCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
+				platformCatBox.setVisible(false);
 				alWarningCatBox.actionPerformed(null);
+			} else if (platformButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				platformCatBox.setVisible(true);
+				warningCatBox.setVisible(false);
+				landCatBox.setVisible(false);
+				trafficCatBox.setVisible(false);
+				alPlatformCatBox.actionPerformed(null);
 			} else {
 				dlg.panelMain.mark.setCategory(Cat.NOCAT);
 				categoryLabel.setVisible(false);
 				landCatBox.setVisible(false);
 				trafficCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				platformCatBox.setVisible(false);
 			}
 			dlg.panelMain.mark.testValid();
 		}
@@ -114,13 +139,14 @@ public class PanelLights extends JPanel {
 		dlg = dia;
 		setLayout(null);
 		add(getObjButton(houseButton, 0, 0, 34, 32, "Lighthouse", Obj.LITHSE));
-		add(getObjButton(majorButton, 35, 0, 34, 32, "MajorLight", Obj.LITMAJ));
-		add(getObjButton(minorButton, 70, 0, 34, 32, "MinorLight", Obj.LITMIN));
-		add(getObjButton(landButton, 105, 0, 34, 32, "Landmark", Obj.LNDMRK));
+		add(getObjButton(majorButton, 34, 0, 34, 32, "MajorLight", Obj.LITMAJ));
+		add(getObjButton(minorButton, 68, 0, 34, 32, "MinorLight", Obj.LITMIN));
+		add(getObjButton(landButton, 102, 0, 34, 32, "Landmark", Obj.LNDMRK));
+		add(getObjButton(platformButton, 136, 0, 34, 32, "Platform", Obj.OFSPLF));
 		add(getObjButton(vesselButton, 0, 35, 34, 32, "LightVessel", Obj.LITVES));
-		add(getObjButton(floatButton, 35, 35, 34, 32, "LightFloat", Obj.LITFLT));
-		add(getObjButton(trafficButton, 70, 35, 34, 32, "SSTraffic", Obj.SISTAT));
-		add(getObjButton(warningButton, 105, 35, 34, 32, "SSWarning", Obj.SISTAW));
+		add(getObjButton(floatButton, 34, 35, 34, 32, "LightFloat", Obj.LITFLT));
+		add(getObjButton(trafficButton, 68, 35, 34, 32, "SSTraffic", Obj.SISTAT));
+		add(getObjButton(warningButton, 102, 35, 34, 32, "SSWarning", Obj.SISTAW));
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(5, 80, 160, 20));
@@ -192,6 +218,22 @@ public class PanelLights extends JPanel {
 		addWCItem(Messages.getString("Military"), Cat.SIS_MILY);
 		warningCatBox.setVisible(false);
 
+		platformCatBox = new JComboBox();
+		platformCatBox.setBounds(new Rectangle(10, 100, 160, 20));
+		add(platformCatBox);
+		platformCatBox.addActionListener(alPlatformCatBox);
+		addPLItem("", Cat.NOCAT);
+		addPLItem(Messages.getString("Oil"), Cat.OFP_OIL);
+		addPLItem(Messages.getString("Production"), Cat.OFP_PRD);
+		addPLItem(Messages.getString("Observation"), Cat.OFP_OBS);
+		addPLItem(Messages.getString("ALP"), Cat.OFP_ALP);
+		addPLItem(Messages.getString("SALM"), Cat.OFP_SALM);
+		addPLItem(Messages.getString("MooringTower"), Cat.OFP_MOR);
+		addPLItem(Messages.getString("ArtificialIsland"), Cat.OFP_ISL);
+		addPLItem(Messages.getString("FPSO"), Cat.OFP_FPSO);
+		addPLItem(Messages.getString("Accommodation"), Cat.OFP_ACC);
+		addPLItem(Messages.getString("NCCB"), Cat.OFP_NCCB);
+		platformCatBox.setVisible(false);
 	}
 
 	public void syncPanel() {
@@ -200,6 +242,7 @@ public class PanelLights extends JPanel {
 			landCatBox.setVisible(true);
 			trafficCatBox.setVisible(false);
 			warningCatBox.setVisible(false);
+			platformCatBox.setVisible(false);
 			for (Cat cat : landCats.keySet()) {
 				int item = landCats.get(cat);
 				if (dlg.panelMain.mark.getCategory() == cat)
@@ -210,6 +253,7 @@ public class PanelLights extends JPanel {
 				trafficCatBox.setVisible(true);
 				landCatBox.setVisible(false);
 				warningCatBox.setVisible(false);
+				platformCatBox.setVisible(false);
 				for (Cat cat : trafficCats.keySet()) {
 					int item = trafficCats.get(cat);
 					if (dlg.panelMain.mark.getCategory() == cat)
@@ -220,16 +264,29 @@ public class PanelLights extends JPanel {
 			warningCatBox.setVisible(true);
 			landCatBox.setVisible(false);
 			trafficCatBox.setVisible(false);
+			platformCatBox.setVisible(false);
 			for (Cat cat : warningCats.keySet()) {
 				int item = warningCats.get(cat);
 				if (dlg.panelMain.mark.getCategory() == cat)
 					warningCatBox.setSelectedIndex(item);
+			}
+		} else if (dlg.panelMain.mark.getObject() == Obj.OFSPLF) {
+			categoryLabel.setVisible(true);
+			platformCatBox.setVisible(true);
+			landCatBox.setVisible(false);
+			warningCatBox.setVisible(false);
+			trafficCatBox.setVisible(false);
+			for (Cat cat : platformCats.keySet()) {
+				int item = platformCats.get(cat);
+				if (dlg.panelMain.mark.getCategory() == cat)
+					platformCatBox.setSelectedIndex(item);
 			}
 		} else {
 			categoryLabel.setVisible(false);
 			landCatBox.setVisible(false);
 			trafficCatBox.setVisible(false);
 			warningCatBox.setVisible(false);
+			platformCatBox.setVisible(false);
 		}
 		for (Obj obj : objects.keySet()) {
 			JRadioButton button = objects.get(obj);
@@ -251,6 +308,11 @@ public class PanelLights extends JPanel {
 	private void addWCItem(String str, Cat cat) {
 		warningCats.put(cat, warningCatBox.getItemCount());
 		warningCatBox.addItem(str);
+	}
+
+	private void addPLItem(String str, Cat cat) {
+		platformCats.put(cat, platformCatBox.getItemCount());
+		platformCatBox.addItem(str);
 	}
 
 	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip, Obj obj) {

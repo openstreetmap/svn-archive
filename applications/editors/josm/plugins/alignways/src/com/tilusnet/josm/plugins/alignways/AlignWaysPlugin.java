@@ -46,7 +46,11 @@ public class AlignWaysPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if(newFrame != null) {
             optBtn = newFrame.addToggleDialog(AlignWaysPlugin.getAwDialog());
+        } else {
+            // Disable menu item in Windows menu
+            awDialog.getWindowMenuItem().setEnabled(false);
         }
+
         if (Main.map != null) {
             Main.map.addMapMode(btn);
             // Re-enable menu item in Windows menu

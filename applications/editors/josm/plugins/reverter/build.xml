@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Update reverter for 4602"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4602"/>
+    <property name="plugin.main.version" value="4734"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -148,10 +148,10 @@
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
     <!--
-    ************************** Publishing the plugin *********************************** 
+    ************************** Publishing the plugin ***********************************
     -->
     <!--
-        ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+        ** extracts the JOSM release for the JOSM version in ../core and saves it in the
         ** property ${coreversion.info.entry.revision}
         **
         -->
@@ -197,17 +197,17 @@
         </exec>
     </target>
     <!--
-        ** commits the plugin.jar 
+        ** commits the plugin.jar
         -->
     <target name="commit-dist">
         <echo>
     ***** Properties of published ${plugin.jar} *****
-    Commit message    : '${commit.message}'                 
+    Commit message    : '${commit.message}'
     Plugin-Mainversion: ${plugin.main.version}
     JOSM build version: ${coreversion.info.entry.revision}
     Plugin-Version    : ${version.entry.commit.revision}
-    ***** / Properties of published ${plugin.jar} *****                 
-                        
+    ***** / Properties of published ${plugin.jar} *****
+
     Now commiting ${plugin.jar} ...
     </echo>
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">

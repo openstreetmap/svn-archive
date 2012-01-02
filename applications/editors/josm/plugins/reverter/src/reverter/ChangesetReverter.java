@@ -21,22 +21,22 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
-import org.openstreetmap.josm.data.osm.history.RelationMember;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 
 import reverter.corehacks.ChangesetDataSet;
-import reverter.corehacks.OsmServerChangesetReader;
 import reverter.corehacks.ChangesetDataSet.ChangesetDataSetEntry;
 import reverter.corehacks.ChangesetDataSet.ChangesetModificationType;
+import reverter.corehacks.OsmServerChangesetReader;
 
 /**
  * Fetches and stores data for reverting of specific changeset.
@@ -252,15 +252,15 @@ public class ChangesetReverter {
         case RELATION:
             List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers =
                 ((Relation)current).getMembers();
-            List<RelationMember> historyMembers = ((HistoryRelation)history).getMembers();
+            List<RelationMemberData> historyMembers = ((HistoryRelation)history).getMembers();
             if (currentMembers.size() != historyMembers.size()) return false;
             for (int i = 0; i < currentMembers.size(); i++) {
                 org.openstreetmap.josm.data.osm.RelationMember currentMember =
                     currentMembers.get(i);
-                RelationMember historyMember = historyMembers.get(i);
+                RelationMemberData historyMember = historyMembers.get(i);
                 if (!currentMember.getRole().equals(historyMember.getRole())) return false;
                 if (!currentMember.getMember().getPrimitiveId().equals(new SimplePrimitiveId(
-                        historyMember.getPrimitiveId(),historyMember.getPrimitiveType()))) return false;
+                        historyMember.getMemberId(),historyMember.getMemberType()))) return false;
             }
             return true;
         default: throw new AssertionError();

@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
@@ -204,7 +205,7 @@ public class OsmChangesetContentParser {
                 throwException(tr("Illegal value for mandatory attribute ''{0}'' of type OsmPrimitiveType. Got ''{1}''.", "type", v));
             }
             String role = getMandatoryAttributeString(atts, "role");
-            org.openstreetmap.josm.data.osm.history.RelationMember member = new org.openstreetmap.josm.data.osm.history.RelationMember(role, type,ref);
+            RelationMemberData member = new RelationMemberData(role, type,ref);
             ((HistoryRelation)currentPrimitive).addMember(member);
         }
 

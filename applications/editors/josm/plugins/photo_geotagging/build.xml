@@ -26,7 +26,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="fixed josm bug 5800 - 'Override old backup files?' message window can't get focus"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="4762"/>
 
     <!--
     **********************************************************

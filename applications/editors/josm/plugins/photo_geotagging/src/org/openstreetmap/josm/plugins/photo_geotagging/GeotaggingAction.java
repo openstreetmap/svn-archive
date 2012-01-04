@@ -37,7 +37,6 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
-import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -45,7 +44,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * The action to ask the user for confirmation and then do the tagging.
  */
 class GeotaggingAction extends AbstractAction implements LayerAction {
-    
+
     final static boolean debug = false;
     final static String KEEP_BACKUP = "plugins.photo_geotagging.keep_backup";
     final static String CHANGE_MTIME = "plugins.photo_geotagging.change-mtime";
@@ -57,7 +56,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         super(tr("Write coordinates to image header"), ImageProvider.get("geotagging"));
     }
 
-    public void actionPerformed(ActionEvent arg0) {
+    @Override
+	public void actionPerformed(ActionEvent arg0) {
 
         GeoImageLayer layer = getLayer();
 
@@ -111,7 +111,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         settingsPanel.add(mTimeMode, GBC.eol().insets(3,3,3,3));
 
         setMTime.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 if (setMTime.isSelected()) {
                     mTimeMode.setEnabled(true);
                 } else {
@@ -227,7 +228,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     ioe.printStackTrace();
                     // need this so the dialogs don't block
                     SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             JOptionPane.showMessageDialog(Main.parent, ioe.getMessage(), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         }
                     });
@@ -275,9 +277,9 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         private void chooseFilesNoBackup(File file) throws IOException {
             File fileTmp;
             //fileTmp = File.createTempFile("img", ".jpg", file.getParentFile());
-            // on win32, file.renameTo(fileTmp) does not work when the destination file exists 
+            // on win32, file.renameTo(fileTmp) does not work when the destination file exists
             // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593
-            // so we cannot use createTempFile(), which would create that "existing destination file" 
+            // so we cannot use createTempFile(), which would create that "existing destination file"
             // instead, let's use new File(), which doesn't actually create a file
             // for getting a unique file name, we use UUID.randomUUID()
             fileTmp = new File(file.getParentFile(), "img" + UUID.randomUUID() + ".jpg");
@@ -297,11 +299,12 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                 return;
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
                         l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
                         int override = new ExtendedDialog(
-                                Main.parent,
+                                progressMonitor.getWindowParent(),
                                 tr("Override old backup files?"),
                                 new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
                             .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
@@ -374,13 +377,15 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         return false;
     }
 
-    public Component createMenuComponent() {
+    @Override
+	public Component createMenuComponent() {
         JMenuItem geotaggingItem = new JMenuItem(this);
         geotaggingItem.setEnabled(enabled(getLayer()));
         return geotaggingItem;
     }
 
-    public boolean supportLayers(List<Layer> layers) {
+    @Override
+	public boolean supportLayers(List<Layer> layers) {
         return layers.size() == 1 && layers.get(0) instanceof GeoImageLayer;
     }
 }

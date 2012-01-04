@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,7 +162,9 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
             {
                  HashMap<Long, HashMap<User, Severity>> userMap = ("node".equals(qName)) ? nodeUsers : ("way".equals(qName)) ? wayUsers : relationUsers;
                  // we always overwrite a list that might already exist
-                 userMap.put(Long.decode(atts.getValue("id")), theMap = new HashMap<User, Severity>());
+                 Long id = Long.decode(atts.getValue("id"));
+                 theMap = userMap.get(id);
+                 if (theMap == null) userMap.put(id, theMap = new HashMap<User, Severity>());
             }
             else if ("user".equals(qName))
             {
@@ -196,20 +199,32 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
         Visitor v = new Visitor() {
             public void visit(Node n) {
                 if (!nodeUsers.containsKey(n.getId())) {
-                    nodesToLoad.append(",");
-                    nodesToLoad.append(n.getId());
+                    if ("clean".equals(n.get("odbl"))) {
+                        nodeUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
+                    } else {
+                        nodesToLoad.append(",");
+                        nodesToLoad.append(n.getId());
+                    }
                 }
             }
             public void visit(Way n) {
                 if (!wayUsers.containsKey(n.getId())) {
-                    waysToLoad.append(",");
-                    waysToLoad.append(n.getId());
+                    if ("clean".equals(n.get("odbl"))) {
+                        wayUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
+                    } else {
+                        waysToLoad.append(",");
+                        waysToLoad.append(n.getId());
+                    }
                 }
             }
             public void visit(Relation n) {
                 if (!relationUsers.containsKey(n.getId())) {
-                    relationsToLoad.append(",");
-                    relationsToLoad.append(n.getId());
+                    if ("clean".equals(n.get("odbl"))) {
+                        relationUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
+                    } else {
+                        relationsToLoad.append(",");
+                        relationsToLoad.append(n.getId());
+                    }
                 }
             }
             public void visit(Changeset c) {};

@@ -11,6 +11,10 @@ import org.openstreetmap.josm.Main;
 /** The error severity */
 public enum Severity {
 
+    /** clean override */ 
+    CLEAN(tr("overridden with odbl=clean"), "clean",           
+        Main.pref.getColor(marktr("license check info"), Color.GREEN)),
+
     /** Error messages */
     FIRST(tr("data loss"), "error",                     
         Main.pref.getColor(marktr("license check error"), Color.RED)),

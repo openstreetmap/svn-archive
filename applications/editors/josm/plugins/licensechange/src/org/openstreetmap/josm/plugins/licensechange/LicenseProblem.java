@@ -14,7 +14,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 import org.openstreetmap.josm.gui.MapView;
 
@@ -125,8 +124,6 @@ public class LicenseProblem
         for (Object o : highlighted) {
             if (o instanceof OsmPrimitive)
                 v.visit((OsmPrimitive) o);
-            else if (o instanceof WaySegment)
-                v.visit((WaySegment) o);
             else if (o instanceof List<?>) {
                 v.visit((List<Node>)o);
             }
@@ -168,12 +165,12 @@ public class LicenseProblem
             Point p = mv.getPoint(n);
             g.setColor(color);
             if (selected) {
-                g.fillOval(p.x - 5, p.y - 5, 10, 10);
+                g.fillOval(p.x - 6, p.y - 6, 12, 12);
             } else
-                g.drawOval(p.x - 5, p.y - 5, 10, 10);
+                g.drawOval(p.x - 6, p.y - 6, 12, 12);
         }
 
-        public void drawSegment(Point p1, Point p2, Color color) {
+        public void drawSegment(Point p1, Point p2, boolean linecapStart, boolean linecapEnd, Color color) {
             g.setColor(color);
 
             double t = Math.atan2(p2.x - p1.x, p2.y - p1.y);
@@ -181,20 +178,20 @@ public class LicenseProblem
             double sinT = Math.sin(t);
             int deg = (int) Math.toDegrees(t);
             if (selected) {
-                int[] x = new int[] { (int) (p1.x + 5 * cosT), (int) (p2.x + 5 * cosT), (int) (p2.x - 5 * cosT),
-                        (int) (p1.x - 5 * cosT) };
-                int[] y = new int[] { (int) (p1.y - 5 * sinT), (int) (p2.y - 5 * sinT), (int) (p2.y + 5 * sinT),
-                        (int) (p1.y + 5 * sinT) };
+                int[] x = new int[] { (int) (p1.x + 4 * cosT), (int) (p2.x + 4 * cosT), (int) (p2.x - 4 * cosT),
+                        (int) (p1.x - 4 * cosT) };
+                int[] y = new int[] { (int) (p1.y - 4 * sinT), (int) (p2.y - 4 * sinT), (int) (p2.y + 4 * sinT),
+                        (int) (p1.y + 4 * sinT) };
                 g.fillPolygon(x, y, 4);
-                g.fillArc(p1.x - 5, p1.y - 5, 10, 10, deg, 180);
-                g.fillArc(p2.x - 5, p2.y - 5, 10, 10, deg, -180);
+                if (linecapStart) g.fillArc(p1.x - 4, p1.y - 4, 8, 8, deg, 180);
+                if (linecapEnd) g.fillArc(p2.x - 4, p2.y - 4, 8, 8, deg, -180);
             } else {
-                g.drawLine((int) (p1.x + 5 * cosT), (int) (p1.y - 5 * sinT), (int) (p2.x + 5 * cosT),
-                        (int) (p2.y - 5 * sinT));
-                g.drawLine((int) (p1.x - 5 * cosT), (int) (p1.y + 5 * sinT), (int) (p2.x - 5 * cosT),
-                        (int) (p2.y + 5 * sinT));
-                g.drawArc(p1.x - 5, p1.y - 5, 10, 10, deg, 180);
-                g.drawArc(p2.x - 5, p2.y - 5, 10, 10, deg, -180);
+                g.drawLine((int) (p1.x + 4 * cosT), (int) (p1.y - 4 * sinT), (int) (p2.x + 4 * cosT),
+                        (int) (p2.y - 4 * sinT));
+                g.drawLine((int) (p1.x - 4 * cosT), (int) (p1.y + 4 * sinT), (int) (p2.x - 4 * cosT),
+                        (int) (p2.y + 4 * sinT));
+                if (linecapStart) g.drawArc(p1.x - 4, p1.y - 4, 8, 8, deg, 180);
+                if (linecapEnd) g.drawArc(p2.x - 4, p2.y - 4, 8, 8, deg, -180);
             }
         }
 
@@ -204,8 +201,8 @@ public class LicenseProblem
          * @param s The segment
          * @param color The color
          */
-        public void drawSegment(Node n1, Node n2, Color color) {
-            drawSegment(mv.getPoint(n1), mv.getPoint(n2), color);
+        public void drawSegment(Node n1, Node n2, boolean linecapStart, boolean linecapEnd, Color color) {
+            drawSegment(mv.getPoint(n1), mv.getPoint(n2), linecapStart, linecapEnd, color);
         }
 
         /**
@@ -221,15 +218,6 @@ public class LicenseProblem
 
         public void visit(Way w) {
             visit(w.getNodes());
-        }
-
-        public void visit(WaySegment ws) {
-            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.getNodesCount())
-                return;
-            Node a = ws.way.getNodes().get(ws.lowerIndex), b = ws.way.getNodes().get(ws.lowerIndex + 1);
-            if (isSegmentVisible(a, b)) {
-                drawSegment(a, b, severity.getColor());
-            }
         }
 
         public void visit(Relation r) {
@@ -268,17 +256,27 @@ public class LicenseProblem
         }
 
         public void visit(List<Node> nodes) {
-            Node lastN = null;
+            Node[] window = new Node[4];
+            int index = 1;
+            window[0] = null;
             for (Node n : nodes) {
-                if (lastN == null) {
-                    lastN = n;
+                if (index == 1)
+                {
+                    window[1] = n;
+                    index = 2;
                     continue;
                 }
-                if (n.isDrawable() && isSegmentVisible(lastN, n)) {
-                    drawSegment(lastN, n, severity.getColor());
+                window[index++] = n;
+                if (index==4)
+                {
+                    drawSegment(window[1], window[2], window[0] == null, !isSegmentVisible(window[2], window[3]), severity.getColor());
+                    window[0] = window[1];
+                    window[1] = window[2];
+                    window[2] = window[3];
+                    index = 3;
                 }
-                lastN = n;
             }
+            if (window[1] != null && window[2] != null) drawSegment(window[1], window[2], window[0] == null, true, severity.getColor());
         }
     }
 

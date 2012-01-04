@@ -40,7 +40,7 @@ public class RotatePictureAction extends GenericPicTransformAction {
      * Constructor
      */
     public RotatePictureAction(MapFrame frame) {
-        super(tr("PicLayer rotate"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer rotate"), tr("Rotated"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
 	@Override
@@ -51,7 +51,7 @@ public class RotatePictureAction extends GenericPicTransformAction {
         }
         else {
             factor = Main.pref.getDouble("piclayer.rotatefactors.low_precision", 10.0 );
-        }            
+        }
         currentLayer.rotatePictureBy( ( e.getY() - prevMousePoint.getY() ) / factor );
 	}
 }

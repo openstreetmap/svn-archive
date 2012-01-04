@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -16,7 +15,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class MovePointAction extends GenericPicTransformAction {
 
 	public MovePointAction(MapFrame frame) {
-        super(tr("PicLayer Move point"), "movepoint", tr("Drag or create point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer Move point"), tr("Point added/moved"), "movepoint", tr("Drag or create point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
 	}
 
 	@Override
@@ -41,10 +40,11 @@ public class MovePointAction extends GenericPicTransformAction {
 			Point2D pressed = currentLayer.transformPoint(e.getPoint());
 			if (selectedPoint == null)
 				currentLayer.getTransformer().addOriginPoint(pressed);
+
+			currentCommand.addIfChanged();
 		} catch (NoninvertibleTransformException e1) {
 			e1.printStackTrace();
 		}
-		Main.map.mapView.repaint();
 	}
 
 	@Override

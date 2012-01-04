@@ -34,9 +34,10 @@ public class ScaleXPictureAction extends ScalePictureActionAbstract
      * Constructor
      */
     public ScaleXPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
+        super(tr("PicLayer scale X"), tr("Scaled by X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
     }
 
+    @Override
     public void doTheScale( double scale ) {
             currentLayer.scalePictureBy( scale, 1.0 );
         }

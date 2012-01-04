@@ -574,4 +574,8 @@ public abstract class PicLayerAbstract extends Layer {
         }
         return selected;
     }
+
+    public void saveTransformCommand() {
+
+    }
 }

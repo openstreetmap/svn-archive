@@ -12,6 +12,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.piclayer.command.TransformCommand;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -23,15 +24,19 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	protected Point2D selectedPoint = null;
 	protected EastNorth prevEastNorth = null;
 	protected Point2D prevMousePoint = null;
+	protected TransformCommand currentCommand = null;
+	private String actionName;
 
-	public GenericPicTransformAction(String name, String iconName,
+	public GenericPicTransformAction(String name, String actionName, String iconName,
 			String tooltip, Shortcut shortcut, MapFrame mapFrame, Cursor cursor) {
 		super(name, iconName, tooltip, shortcut, mapFrame, cursor);
+		this.actionName = actionName;
 	}
 
-	public GenericPicTransformAction(String name, String iconName,
+	public GenericPicTransformAction(String name, String actionName, String iconName,
 			String tooltip, MapFrame mapFrame, Cursor cursor) {
 		super(name, iconName, tooltip, mapFrame, cursor);
+        this.actionName = actionName;
 	}
 
 	@Override
@@ -60,6 +65,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	            prevEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
 	            // try to find and fill selected point if possible
 	            selectedPoint = currentLayer.findSelectedPoint(e.getPoint());
+	            currentCommand = new TransformCommand(currentLayer, actionName);
 	        }
 	    }
 	}
@@ -81,6 +87,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	public void mouseReleased(MouseEvent e) {
 	    // End action
 	    isDragging = false;
+	    currentCommand.addIfChanged();
 	}
 
 	@Override

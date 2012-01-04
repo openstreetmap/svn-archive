@@ -11,33 +11,17 @@ public class PictureTransform {
 	private boolean modified = false;
 
 	private List<Point2D> originPoints;
-	private List<Point2D> desiredPoints;
 
 	public PictureTransform() {
 		cachedTransform = new AffineTransform();
 		originPoints = new ArrayList<Point2D>(3);
-		desiredPoints = new ArrayList<Point2D>(3);
 	}
 
 	public AffineTransform getTransform() {
 		return cachedTransform;
 	}
 
-	public List<? extends Point2D> getOriginPoints() {
-		return originPoints;
-	}
-
-	public List<? extends Point2D> getDesiredPoints() {
-		return desiredPoints;
-	}
-
-	public void addDesiredPoint(Point2D picturePoint) {
-		if (desiredPoints.size() < 3)
-			desiredPoints.add(picturePoint);
-		trySolve();
-	}
-
-	private AffineTransform solveEquation() throws NoSolutionException {
+	private AffineTransform solveEquation(List<Point2D> desiredPoints) throws NoSolutionException {
 		Matrix3D X = new Matrix3D(originPoints);
 		Matrix3D Y = new Matrix3D(desiredPoints);
 		Matrix3D result = Y.multiply(X.inverse());
@@ -48,26 +32,12 @@ public class PictureTransform {
 	public void addOriginPoint(Point2D originPoint) {
 		if (originPoints.size() < 3)
 			originPoints.add(originPoint);
-		trySolve();
 	}
 
 	public void resetCalibration() {
 		originPoints.clear();
-		desiredPoints.clear();
 		modified = false;
 		cachedTransform = new AffineTransform();
-	}
-
-	private void trySolve() {
-		if (desiredPoints.size() == 3 && originPoints.size() == 3) {
-			try {
-				cachedTransform.concatenate(solveEquation());
-				modified = true;
-				desiredPoints.clear();
-			} catch (NoSolutionException e) {
-				System.err.println(e.getMessage());
-			}
-		}
 	}
 
 	/**
@@ -85,7 +55,7 @@ public class PictureTransform {
 		if (originPoint == null)
 			return;
 
-		desiredPoints.clear();
+		List<Point2D> desiredPoints = new ArrayList<Point2D>(3);
 
 		for (Point2D origin : originPoints) {
 			if (origin.equals(originPoint))
@@ -93,8 +63,20 @@ public class PictureTransform {
 			else
 				desiredPoints.add(origin);
 		}
-		trySolve();
+		trySolve(desiredPoints);
 	}
+
+    private void trySolve(List<Point2D> desiredPoints) {
+        if (desiredPoints.size() == 3 && originPoints.size() == 3) {
+            try {
+                cachedTransform.concatenate(solveEquation(desiredPoints));
+                modified = true;
+                desiredPoints.clear();
+            } catch (NoSolutionException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 
 	public void replaceOriginPoint(Point2D originPoint, Point2D newOriginPoint) {
 		if (originPoint == null || newOriginPoint == null)
@@ -133,5 +115,17 @@ public class PictureTransform {
 
     public void resetModified() {
         modified = false;
+    }
+
+    public void setTransform(AffineTransform newTransform) {
+        cachedTransform = new AffineTransform(newTransform);
+    }
+
+    public List<Point2D> getOriginPoints() {
+        return originPoints;
+    }
+
+    public void setOriginPoints(List<Point2D> list) {
+        this.originPoints = new ArrayList<Point2D>(list);
     }
 }

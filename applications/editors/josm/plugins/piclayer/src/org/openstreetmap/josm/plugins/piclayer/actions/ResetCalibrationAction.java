@@ -4,8 +4,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.plugins.piclayer.command.TransformCommand;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 
@@ -17,10 +17,11 @@ public class ResetCalibrationAction extends JosmAction {
 		super(tr("Reset Calibration"), null, tr("Reset calibration"), null, false);
 		this.layer = layer;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+	    TransformCommand currentCommand = new TransformCommand(layer, tr("Calibration reset"));
 		layer.resetCalibration();
-		Main.map.mapView.repaint();
+		currentCommand.addIfChanged();
 	}
 }

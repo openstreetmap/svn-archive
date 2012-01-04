@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class TransformPointAction extends GenericPicTransformAction {
 
 	public TransformPointAction(MapFrame frame) {
-		super(tr("PicLayer Transform point"), "transformpoint", tr("Transform point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
+		super(tr("PicLayer Transform point"), tr("Point transformed"), "transformpoint", tr("Transform point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
 	}
 
 	@Override
@@ -29,6 +29,8 @@ public class TransformPointAction extends GenericPicTransformAction {
 			    else
 			        currentLayer.getTransformer().updatePair(selectedPoint, pressed);
 			}
+
+			currentCommand.addIfChanged();
 		} catch (NoninvertibleTransformException e1) {
 			e1.printStackTrace();
 		}

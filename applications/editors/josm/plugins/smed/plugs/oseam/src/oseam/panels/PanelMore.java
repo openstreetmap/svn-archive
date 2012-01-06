@@ -181,6 +181,7 @@ public class PanelMore extends JPanel {
 			} else {
 				regionCButton.setBorderPainted(false);
 			}
+			panelPat.syncPanel();
 		}
 	};
 

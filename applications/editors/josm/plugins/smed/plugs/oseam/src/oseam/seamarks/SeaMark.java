@@ -1431,10 +1431,10 @@ public class SeaMark extends JPanel {
 						if (getObjColour(3) == Col.GREEN)
 							setRegion(Reg.C);
 						else
-							setRegion(Reg.A);
+							setRegion(Reg.B);
 					}
 					if (getObjColour(0) == Col.GREEN)
-						setRegion(Reg.B);
+						setRegion(Reg.A);
 					break;
 				case LAM_STBD:
 					if (getObjColour(0) == Col.GREEN) {
@@ -1448,12 +1448,12 @@ public class SeaMark extends JPanel {
 					break;
 				case LAM_PSTBD:
 					if (getObjColour(0) == Col.GREEN)
-						setRegion(Reg.A);
+						setRegion(Reg.B);
 					if (getObjColour(0) == Col.RED) {
 						if (getObjColour(3) == Col.GREEN)
 							setRegion(Reg.C);
 						else
-							setRegion(Reg.B);
+							setRegion(Reg.A);
 					}
 					break;
 				}

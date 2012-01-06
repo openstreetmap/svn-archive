@@ -19,8 +19,8 @@ public class PanelChan extends JPanel {
 	public ButtonGroup catButtons = new ButtonGroup();
 	public JRadioButton portButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PortButton.png")));
 	public JRadioButton stbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StbdButton.png")));
-	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
 	public JRadioButton prefStbdButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefStbdButton.png")));
+	public JRadioButton prefPortButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PrefPortButton.png")));
 	public JRadioButton safeWaterButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SafeWaterButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -46,20 +46,6 @@ public class PanelChan extends JPanel {
 			} else {
 				portButton.setBorderPainted(false);
 			}
-			if (prefPortButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.LAM_PPORT);
-				if (panelPort.shapes.containsKey(shp)) {
-					panelPort.shapes.get(shp).setSelected(true);
-				} else {
-					panelPort.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
-				}
-				panelPort.alShape.actionPerformed(null);
-				panelPort.setVisible(true);
-				prefPortButton.setBorderPainted(true);
-			} else {
-				prefPortButton.setBorderPainted(false);
-			}
 			if (stbdButton.isSelected()) {
 				dlg.panelMain.mark.setCategory(Cat.LAM_STBD);
 				if (panelStbd.shapes.containsKey(shp)) {
@@ -76,6 +62,20 @@ public class PanelChan extends JPanel {
 			}
 			if (prefStbdButton.isSelected()) {
 				dlg.panelMain.mark.setCategory(Cat.LAM_PSTBD);
+				if (panelPort.shapes.containsKey(shp)) {
+					panelPort.shapes.get(shp).setSelected(true);
+				} else {
+					panelPort.shapeButtons.clearSelection();
+					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+				}
+				panelPort.alShape.actionPerformed(null);
+				panelPort.setVisible(true);
+				prefStbdButton.setBorderPainted(true);
+			} else {
+				prefStbdButton.setBorderPainted(false);
+			}
+			if (prefPortButton.isSelected()) {
+				dlg.panelMain.mark.setCategory(Cat.LAM_PPORT);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
@@ -84,9 +84,9 @@ public class PanelChan extends JPanel {
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
-				prefStbdButton.setBorderPainted(true);
+				prefPortButton.setBorderPainted(true);
 			} else {
-				prefStbdButton.setBorderPainted(false);
+				prefPortButton.setBorderPainted(false);
 			}
 			if (safeWaterButton.isSelected()) {
 				dlg.panelMain.mark.setCategory(Cat.NOCAT);
@@ -230,8 +230,8 @@ public class PanelChan extends JPanel {
 		add(panelSaw);
 		add(getCatButton(portButton, 0, 0, 52, 32, "Port"));
 		add(getCatButton(stbdButton, 0, 32, 52, 32, "Stbd"));
-		add(getCatButton(prefPortButton, 0, 64, 52, 32, "PrefPort"));
-		add(getCatButton(prefStbdButton, 0, 96, 52, 32, "PrefStbd"));
+		add(getCatButton(prefStbdButton, 0, 64, 52, 32, "PrefStbd"));
+		add(getCatButton(prefPortButton, 0, 96, 52, 32, "PrefPort"));
 		add(getCatButton(safeWaterButton, 0, 128, 52, 32, "SafeWater"));
 
 		topmarkButton.setBounds(new Rectangle(130, 0, 34, 32));
@@ -259,7 +259,7 @@ public class PanelChan extends JPanel {
 			portButton.setBorderPainted(false);
 		}
 		if (dlg.panelMain.mark.getCategory() == Cat.LAM_PPORT) {
-			panelPort.setVisible(true);
+			panelStbd.setVisible(true);
 			prefPortButton.setBorderPainted(true);
 		} else {
 			prefPortButton.setBorderPainted(false);
@@ -271,7 +271,7 @@ public class PanelChan extends JPanel {
 			stbdButton.setBorderPainted(false);
 		}
 		if (dlg.panelMain.mark.getCategory() == Cat.LAM_PSTBD) {
-			panelStbd.setVisible(true);
+			panelPort.setVisible(true);
 			prefStbdButton.setBorderPainted(true);
 		} else {
 			prefStbdButton.setBorderPainted(false);

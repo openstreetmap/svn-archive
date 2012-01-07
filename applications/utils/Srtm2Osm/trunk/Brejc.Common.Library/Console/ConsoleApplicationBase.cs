@@ -65,7 +65,7 @@ namespace Brejc.Common.Console
                 System.Console.Error.WriteLine("An error occurred while accessing the network:");
                 System.Console.Error.WriteLine("{0} ({1})", ex.Message, ex.Status);
                 if (ex.Response != null)
-                    System.Console.Error.WriteLine("URL: {0}", ex.Response.ResponseUri);
+                    System.Console.Error.WriteLine("URI: {0}", ex.Response.ResponseUri);
 
                 Environment.Exit(2);
             }

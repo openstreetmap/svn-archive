@@ -74,7 +74,7 @@ namespace Brejc.DemLibrary
                 string url = srtmSource + region + "/";
 
                 WebRequest request = WebRequest.Create(new System.Uri(url));
-                WebResponse response = (HttpWebResponse) request.GetResponse();
+                WebResponse response = request.GetResponse();
                 // Get the stream containing content returned by the server.
                 Stream dataStream = response.GetResponseStream();
                 // Open the stream using a StreamReader for easy access.

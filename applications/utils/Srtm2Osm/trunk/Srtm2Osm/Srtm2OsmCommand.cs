@@ -281,6 +281,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SrtmSource, "source", 1));
 
             startFrom = options.ParseArgs (args, startFrom);
+            System.Globalization.CultureInfo invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
 
             foreach (ConsoleApplicationOption option in options.UsedOptions)
             {
@@ -288,27 +289,43 @@ namespace Srtm2Osm
                 {
                     case Srtm2OsmCommandOption.CorrectionXY:
                         {
-                            corrX = Double.Parse(option.Parameters[0],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            corrY = Double.Parse(option.Parameters[1],
-                                System.Globalization.CultureInfo.InvariantCulture);
+                            corrX = Double.Parse (option.Parameters[0], invariantCulture);
+                            corrY = Double.Parse (option.Parameters[1], invariantCulture);
                             continue;
                         }
 
                     case Srtm2OsmCommandOption.SrtmSource:
-                        srtmSource= option.Parameters[0];
-                        continue;
+                        {
+                            Uri uri;
+
+                            try
+                            {
+                                uri = new Uri (option.Parameters[0]);
+                            }
+                            catch (UriFormatException)
+                            {
+                                throw new ArgumentException ("The source URL is not valid.");
+                            }
+
+                            // Check if the prefix is supported. Unfortunately I couldn't find a method to check which
+                            // prefixes are registered without calling WebRequest.Create(), which I didn't want here.
+                            if (uri.Scheme != "http" && uri.Scheme != "https" && uri.Scheme != "ftp")
+                            {
+                                string error = String.Format(invariantCulture, "The source's scheme ('{0}') is not supported.", uri.Scheme);
+                                throw new ArgumentException(error);
+                            }
+
+                            srtmSource = uri.AbsoluteUri;
+
+                            continue;
+                        }
 
                     case Srtm2OsmCommandOption.Bounds1:
                         {
-                            double minLat = Double.Parse (option.Parameters[0],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double minLng = Double.Parse (option.Parameters[1],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double maxLat = Double.Parse (option.Parameters[2],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double maxLng = Double.Parse (option.Parameters[3],
-                                System.Globalization.CultureInfo.InvariantCulture);
+                            double minLat = Double.Parse (option.Parameters[0], invariantCulture);
+                            double minLng = Double.Parse (option.Parameters[1], invariantCulture);
+                            double maxLat = Double.Parse (option.Parameters[2], invariantCulture);
+                            double maxLng = Double.Parse (option.Parameters[3], invariantCulture);
 
                             if (minLat == maxLat)
                                 throw new ArgumentException ("Minimum and maximum latitude should not have the same value.");
@@ -342,12 +359,9 @@ namespace Srtm2Osm
 
                     case Srtm2OsmCommandOption.Bounds2:
                         {
-                            double lat = Double.Parse (option.Parameters[0],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double lng = Double.Parse (option.Parameters[1],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double boxSizeInKilometers = Double.Parse (option.Parameters[2],
-                                System.Globalization.CultureInfo.InvariantCulture);
+                            double lat = Double.Parse (option.Parameters[0], invariantCulture);
+                            double lng = Double.Parse (option.Parameters[1], invariantCulture);
+                            double boxSizeInKilometers = Double.Parse (option.Parameters[2], invariantCulture);
 
                             bounds = CalculateBounds (lat, lng, boxSizeInKilometers);
                             continue;
@@ -365,12 +379,9 @@ namespace Srtm2Osm
                                 || queryParameters["zoom"] == null)
                                 throw new ArgumentException ("Invalid slippymap URL.");
 
-                            double lat = Double.Parse (queryParameters ["lat"],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            double lng = Double.Parse (queryParameters ["lon"],
-                                System.Globalization.CultureInfo.InvariantCulture);
-                            int zoomLevel = Int32.Parse (queryParameters["zoom"],
-                                System.Globalization.CultureInfo.InvariantCulture);
+                            double lat = Double.Parse (queryParameters ["lat"], invariantCulture);
+                            double lng = Double.Parse (queryParameters ["lon"], invariantCulture);
+                            int zoomLevel = Int32.Parse (queryParameters["zoom"], invariantCulture);
 
                             if (zoomLevel < 2 || zoomLevel >= zoomLevels.Length)
                                 throw new ArgumentException ("Zoom level is out of range.");
@@ -399,8 +410,7 @@ namespace Srtm2Osm
                         continue;
 
                     case Srtm2OsmCommandOption.ElevationStep:
-                        elevationStep = int.Parse (option.Parameters [0],
-                            System.Globalization.CultureInfo.InvariantCulture);
+                        elevationStep = int.Parse (option.Parameters [0], invariantCulture);
 
                         if (elevationStep <= 0)
                             throw new ArgumentException ("Elevation step should be a positive integer value.");
@@ -408,10 +418,8 @@ namespace Srtm2Osm
                         continue;
 
                     case Srtm2OsmCommandOption.Categories:
-                        majorFactor = double.Parse (option.Parameters[0],
-                            System.Globalization.CultureInfo.InvariantCulture);
-                        mediumFactor = double.Parse (option.Parameters[1],
-                            System.Globalization.CultureInfo.InvariantCulture);
+                        majorFactor = double.Parse (option.Parameters[0], invariantCulture);
+                        mediumFactor = double.Parse (option.Parameters[1], invariantCulture);
 
                         contourMarker = new MkgmapContourMarker (majorFactor, mediumFactor);
 

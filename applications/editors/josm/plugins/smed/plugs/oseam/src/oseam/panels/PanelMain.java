@@ -311,7 +311,6 @@ public class PanelMain extends JPanel {
 			case SIS:
 			case PLF:
 				lightsButton.setBorderPainted(true);
-				topButton.setEnabled(false);
 				panelLights.setVisible(true);
 				panelLights.syncPanel();
 				break;

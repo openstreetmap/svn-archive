@@ -64,7 +64,7 @@ public class SeaMark extends JPanel {
 		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
 		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
 		LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK,
-		MORFAC, SISTAW, SISTAT, OFSPLF
+		MORFAC, BOYINB, SISTAW, SISTAT, OFSPLF
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -91,6 +91,7 @@ public class SeaMark extends JPanel {
 		ObjSTR.put(Obj.LNDMRK, "landmark");
 		ObjSTR.put(Obj.LITHSE, "landmark");
 		ObjSTR.put(Obj.MORFAC, "mooring");
+		ObjSTR.put(Obj.BOYINB, "buoy_installation");
 		ObjSTR.put(Obj.OFSPLF, "platform");
 		ObjSTR.put(Obj.SISTAW, "signal_station_warning");
 		ObjSTR.put(Obj.SISTAT, "signal_station_traffic");
@@ -156,6 +157,7 @@ public class SeaMark extends JPanel {
 		EntMAP.put(Obj.LITHSE, Ent.LIGHT);
 		EntMAP.put(Obj.LNDMRK, Ent.LIGHT);
 		EntMAP.put(Obj.MORFAC, Ent.MOORING);
+		EntMAP.put(Obj.BOYINB, Ent.MOORING);
 		EntMAP.put(Obj.OFSPLF, Ent.PLATFORM);
 		EntMAP.put(Obj.SISTAW, Ent.STATION);
 		EntMAP.put(Obj.SISTAT, Ent.STATION);
@@ -190,6 +192,7 @@ public class SeaMark extends JPanel {
 		GrpMAP.put(Obj.LITHSE, Grp.LGT);
 		GrpMAP.put(Obj.LNDMRK, Grp.LGT);
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
+		GrpMAP.put(Obj.BOYINB, Grp.SPP);
 		GrpMAP.put(Obj.OFSPLF, Grp.PLF);
 		GrpMAP.put(Obj.SISTAW, Grp.SIS);
 		GrpMAP.put(Obj.SISTAT, Grp.SIS);
@@ -200,7 +203,7 @@ public class SeaMark extends JPanel {
 		ACH_URST, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SPLN, ACH_SCAN, ACH_SCMO, ACH_T24H, ACH_TLIM,
 		SPM_UNKN, SPM_WARN, SPM_CHBF, SPM_YCHT, SPM_CABL, SPM_OFAL, SPM_ODAS, SPM_RECN, SPM_MOOR, SPM_LNBY,
 		SPM_LDNG, SPM_NOTC, SPM_TSS, SPM_FOUL, SPM_DIVE, SPM_FRRY, SPM_ANCH,
-		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_BUOY,
+		MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_POST, MOR_CHWR, MOR_ROPE, MOR_AUTO, MOR_BUOY, INB_CALM, INB_SBM,
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
 		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
@@ -242,7 +245,11 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.MOR_WALL, "wall");
 		CatSTR.put(Cat.MOR_POST, "post");
 		CatSTR.put(Cat.MOR_CHWR, "chain");
+		CatSTR.put(Cat.MOR_ROPE, "shore_rope");
+		CatSTR.put(Cat.MOR_AUTO, "automatic");
 		CatSTR.put(Cat.MOR_BUOY, "buoy");
+		CatSTR.put(Cat.INB_CALM, "calm");
+		CatSTR.put(Cat.INB_SBM, "sbm");
 		CatSTR.put(Cat.SIS_PTCL, "control");
 		CatSTR.put(Cat.SIS_PTED, "entry");
 		CatSTR.put(Cat.SIS_IPT, "IPT");
@@ -1142,9 +1149,7 @@ public class SeaMark extends JPanel {
 		if (tmp) {
 			dlg.panelMain.moreButton.setVisible(true);
 			dlg.panelMain.saveButton.setEnabled(true);
-			Ent ent = EntMAP.get(getObject());
-			dlg.panelMain.topButton.setEnabled((ent == Ent.BUOY)
-					|| (ent == Ent.BEACON) || (ent == Ent.LFLOAT));
+			dlg.panelMain.topButton.setEnabled(true);
 			dlg.panelMain.fogButton.setEnabled(true);
 			dlg.panelMain.radButton.setEnabled(true);
 			dlg.panelMain.litButton.setEnabled(true);

@@ -3,9 +3,20 @@ Srtm2Osm tool by Igor Brejc
 VERSION HISTORY
 ---------------
 
+1.9
+---
+- improved error handling on incomplete SRTM cell files.
+- check if the download of a SRTM cell was complete.
+- fixed exception on malformed URIs when using the -source option.
+- improved error handling on network errors.
+- fixed possible Exception on network errors.
+- fixed missing "timestamp" XML attribute on exports which were made with the -large option.
+- fixed missing "lon" / "lat" XML attribute when nodes were at 0° longitude or latitude.
+- do not crash when no bounds were specified by the user.
+
 1.8 ext
 -------
-- id range starts at 2 billion now, fixes overlapping real ids (User:Michi2)
+- node ID range starts at 2 billion now, this fixes overlapping with real OSM node ID's (User:Michi2)
 (not build with build system)
 
 1.8

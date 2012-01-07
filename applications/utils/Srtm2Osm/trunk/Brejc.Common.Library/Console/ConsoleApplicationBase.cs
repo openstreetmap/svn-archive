@@ -62,14 +62,17 @@ namespace Brejc.Common.Console
             catch (System.Net.WebException ex)
             {
                 System.Console.Error.WriteLine();
-                System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
-                System.Console.Error.WriteLine("while accessing: {0}", ex.Response.ResponseUri);
+                System.Console.Error.WriteLine("An error occurred while accessing the network:");
+                System.Console.Error.WriteLine("{0} ({1})", ex.Message, ex.Status);
+                if (ex.Response != null)
+                    System.Console.Error.WriteLine("URL: {0}", ex.Response.ResponseUri);
+
                 Environment.Exit(2);
             }
             catch (Exception ex)
             {
                 System.Console.Error.WriteLine();
-                System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
+                System.Console.Error.WriteLine("ERROR: {0}", ex);
                 Environment.Exit(2);
             }
         }

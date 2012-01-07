@@ -694,8 +694,8 @@ print "Generating OSM XML..."
 print "Generating nodes."
 
 #w = XMLWriter(sys.stdout)
-w = XMLWriter(open(options.outputFile, 'w'))
-
+w = XMLWriter(open(options.outputFile, 'w'),encoding='UTF-8')
+w.declaration()
 w.start("osm", version='0.6', generator='ogr2osm')
 
 # First, the nodes
@@ -703,7 +703,7 @@ for (nodeID, (x, y)) in nodeCoords.items():
     w.start("node", visible="true", id=str(nodeID), lat=str(y), lon=str(x))
     for (tagKey, tagValue) in nodeTags[nodeID].items():
         if tagValue:
-            w.element("tag", k=tagKey, v=tagValue)
+            w.element("tag", k=tagKey.decode("utf-8"), v=tagValue.decode("utf-8"))
     w.end("node")
     if showProgress:
         sys.stdout.write('.')
@@ -738,7 +738,7 @@ for (lineID, lineSegment) in lineSegments.items():
 
         for (tagKey, tagValue) in lineTags[lineID].items():
             if tagValue:
-                w.element("tag", k=tagKey, v=tagValue)
+                w.element("tag", k=tagKey.decode("utf-8"), v=tagValue.decode("utf-8"))
 
         w.end('way')
         pass
@@ -758,7 +758,7 @@ for (lineID, lineSegment) in lineSegments.items():
             w.element('member', type='way', ref=str(segmentID), role='')
         for (tagKey, tagValue) in lineTags[lineID].items():
             if tagValue:
-                w.element("tag", k=tagKey, v=tagValue)
+                w.element("tag", k=tagKey.decode("utf-8"), v=tagValue.decode("utf-8"))
         w.end('relation')
 
 print
@@ -780,7 +780,7 @@ for (areaID, areaRing) in areaRings.items():
 
         for (tagKey, tagValue) in areaTags[areaID].items():
             if tagValue:
-                w.element("tag", k=tagKey, v=tagValue)
+                w.element("tag", k=tagKey.decode("utf-8"), v=tagValue.decode("utf-8"))
 
         w.end('way')
         if showProgress:
@@ -814,7 +814,7 @@ for (areaID, areaRing) in areaRings.items():
 
         for (tagKey, tagValue) in areaTags[areaID].items():
             if tagValue:
-                w.element("tag", k=tagKey, v=tagValue)
+                w.element("tag", k=tagKey.decode("utf-8"), v=tagValue.decode("utf-8"))
         w.end('relation')
         if showProgress:
             sys.stdout.write(str(segmentsUsed) + " ")

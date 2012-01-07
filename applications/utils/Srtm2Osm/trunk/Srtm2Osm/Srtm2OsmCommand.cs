@@ -312,7 +312,7 @@ namespace Srtm2Osm
                             if (uri.Scheme != "http" && uri.Scheme != "https" && uri.Scheme != "ftp")
                             {
                                 string error = String.Format(invariantCulture, "The source's scheme ('{0}') is not supported.", uri.Scheme);
-                                throw new ArgumentException(error);
+                                throw new ArgumentException (error);
                             }
 
                             srtmSource = uri.AbsoluteUri;

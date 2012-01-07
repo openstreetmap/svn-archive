@@ -128,9 +128,17 @@ namespace Brejc.DemLibrary
                         {
                             fileStream.Write(buffer, 0, bytesRead);
                         }
+                        long receivedLength = fileStream.Length;                        
                         fileStream.Close();
                         dataStream.Close();
                         response.Close();
+
+                        // Check if the download is complete.
+                        if (response.ContentLength != -1 && response.ContentLength > receivedLength)
+                        {
+                            File.Delete(localFilename);
+                            throw new WebException ("Download incomplete (content length mismatch).", null, WebExceptionStatus.ReceiveFailure, response);
+                        }
 
                         // unzip it and delete the zip file
                         FastZip zip = new FastZip();

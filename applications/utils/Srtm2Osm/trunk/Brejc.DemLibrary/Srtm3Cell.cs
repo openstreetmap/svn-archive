@@ -61,7 +61,7 @@ namespace Brejc.DemLibrary
             Srtm3Cell cell = new Srtm3Cell (cellLon, cellLat);
 
             if (load)
-                cell.LoadFromFile (fileName);
+                cell.LoadFromFile (new FileInfo (fileName));
 
             return cell;
         }
@@ -84,9 +84,13 @@ namespace Brejc.DemLibrary
             return key;
         }
 
-        public void LoadFromFile (string filePath)
+        public void LoadFromFile (FileInfo file)
         {
-            using (Stream stream = File.Open (filePath, FileMode.Open, FileAccess.Read))
+            // SRTM3 cells are always 2884802 bytes long.
+            if (file.Length != 2884802)
+                throw new ArgumentException ("Invalid file size.", "file");
+            
+            using (Stream stream = file.OpenRead())
             {
                 BinaryReader reader = new BinaryReader (stream);
 
@@ -97,7 +101,7 @@ namespace Brejc.DemLibrary
         public void LoadFromCache (string cacheDir)
         {
             string filePath = Path.Combine (cacheDir, CellFileName);
-            LoadFromFile (filePath);
+            LoadFromFile (new FileInfo(filePath));
         }
 
         [SuppressMessage ("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "localLon*2")]

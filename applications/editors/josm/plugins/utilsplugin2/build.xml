@@ -29,7 +29,7 @@
 -->
 <project name="utilsplugin2" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: OpenCustomURL refactoring"/>
+    <property name="commit.message" value="Utilsplugin2: OpenCustomURL moved to Shift-H (for some keyboard layouts)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4549"/>
     <!--

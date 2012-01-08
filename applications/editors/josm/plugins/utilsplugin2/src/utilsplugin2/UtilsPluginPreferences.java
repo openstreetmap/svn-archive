@@ -57,11 +57,11 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
         
         // FIXME: get rid of hardcoded URLS
         List<String> items = (List<String>) Main.pref.getCollection("utilsplugin2.urlHistory");
-        if (items==null) {
-            items = resetURLList();
-            fillRows(items);
-        }
         String addr = Main.pref.get("utilsplugin2.customurl", defaultURL);
+        table=new JTable(new DefaultTableModel(null,new String[]{"Title","URL"}));
+        if (addr==null || items==null || items.isEmpty()) {
+            items = resetURLList();
+        }
         //System.out.println("pref:"+addr);
         
         resetButton = new JButton(tr("Reset"));
@@ -85,7 +85,6 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
             }
         });
         
-        table=new JTable(new DefaultTableModel(null,new String[]{"Title","URL"}));
         fillRows(items);
         
         HtmlPanel help = new HtmlPanel(tr("Please edit custom URLs and select one row to use with the tool<br/>"
@@ -168,11 +167,14 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
             items.add("http://latlon.org/buildings?zoom=17&lat={#lat}&lon={#lon}&layers=B");
             items.add("AMDMi3 Russian streets");
             items.add("http://addresses.amdmi3.ru/?zoom=11&lat={#lat}&lon={#lon}&layers=B00");
+            items.add("Mapki - More  History with CT");
+            items.add("http://osm.mapki.com/history/{#type}.php?id={#id}");
             items.add("Element history [demo, =Ctrl-Shift-H]");
             items.add("http://www.openstreetmap.org/browse/{#type}/{#id}/history");
             items.add("Browse element [demo, =Ctrl-Shift-I]");
             items.add("http://www.openstreetmap.org/browse/{#type}/{#id}");
         Main.pref.putCollection("utilsplugin2.urlHistory",items);
+        Main.pref.put("utilsplugin2.customurl",items.get(4));
         return items;
     }
     

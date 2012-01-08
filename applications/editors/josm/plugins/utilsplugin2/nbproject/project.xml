@@ -11,16 +11,19 @@
             <properties/>
             <folders>
                 <source-folder>
+                    <label>utilsplugin2</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
                     <label>src</label>
                     <type>java</type>
                     <location>src</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
-                <source-folder>
-                    <label>utilsplugin2</label>
-                    <location>.</location>
-                    <encoding>UTF-8</encoding>
-                </source-folder>
+                <build-file>
+                    <location>../../dist/utilsplugin2.jar</location>
+                </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -64,6 +67,7 @@
                     <ide-action name="debug"/>
                 </context-menu>
             </view>
+            <subprojects/>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>

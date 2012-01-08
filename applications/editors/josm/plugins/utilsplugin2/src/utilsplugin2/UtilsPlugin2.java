@@ -1,6 +1,10 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package utilsplugin2;
 
+import utilsplugin2.customurl.ChooseURLAction;
+import utilsplugin2.customurl.OpenPageAction;
+import utilsplugin2.customurl.UtilsPluginPreferences;
+
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;

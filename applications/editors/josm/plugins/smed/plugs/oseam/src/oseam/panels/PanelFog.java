@@ -38,29 +38,29 @@ public class PanelFog extends JPanel {
 	};
 	public JLabel groupLabel;
 	public JTextField groupBox;
-	private ActionListener alGroup = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flGroup = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setFogGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
-	private ActionListener alPeriod = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flPeriod = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setFogPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
-	private ActionListener alSeq = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSeq = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setFogSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
-	private ActionListener alRange = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flRange = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setFogRange(rangeBox.getText());
 		}
 	};
@@ -85,7 +85,7 @@ public class PanelFog extends JPanel {
 		groupBox.setBounds(new Rectangle(100, 20, 50, 20));
 		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(groupBox);
-		groupBox.addActionListener(alGroup);
+		groupBox.addFocusListener(flGroup);
 
 		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(75, 40, 100, 20));
@@ -94,7 +94,7 @@ public class PanelFog extends JPanel {
 		periodBox.setBounds(new Rectangle(100, 60, 50, 20));
 		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(periodBox);
-		periodBox.addActionListener(alPeriod);
+		periodBox.addFocusListener(flPeriod);
 
 		seqLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
 		seqLabel.setBounds(new Rectangle(75, 80, 100, 20));
@@ -103,7 +103,7 @@ public class PanelFog extends JPanel {
 		seqBox.setBounds(new Rectangle(100, 100, 50, 20));
 		seqBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(seqBox);
-		seqBox.addActionListener(alSeq);
+		seqBox.addFocusListener(flSeq);
 
 		rangeLabel = new JLabel(Messages.getString("Range"), SwingConstants.CENTER);
 		rangeLabel.setBounds(new Rectangle(75, 120, 100, 20));
@@ -112,7 +112,7 @@ public class PanelFog extends JPanel {
 		rangeBox.setBounds(new Rectangle(100, 140, 50, 20));
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(rangeBox);
-		rangeBox.addActionListener(alRange);
+		rangeBox.addFocusListener(flRange);
 
 	}
 

@@ -75,8 +75,9 @@ public class PanelChr extends JPanel {
 			}
 		}
 	};
-	private ActionListener alCharBox = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flCharBox = new FocusListener() {
+		public void focusGained(java.awt.event.FocusEvent e) {}
+			public void focusLost(java.awt.event.FocusEvent e) {
 			String str = charBox.getText();
 			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, str);
 			EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
@@ -135,7 +136,7 @@ public class PanelChr extends JPanel {
 		charBox.setBounds(new Rectangle(20, 135, 50, 20));
 		charBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(charBox);
-		charBox.addActionListener(alCharBox);
+		charBox.addFocusListener(flCharBox);
 	}
 
 	public void syncPanel() {

@@ -25,9 +25,11 @@ public class PanelMain extends JPanel {
 	public PanelLit panelLit = null;
 	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
-	private ActionListener alName = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flName = new FocusListener() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			mark.setName(nameBox.getText());
+		}
+		public void focusGained(java.awt.event.FocusEvent e) {
 		}
 	};
 	public JButton saveButton = null;
@@ -232,7 +234,7 @@ public class PanelMain extends JPanel {
 		nameBox.setBounds(new Rectangle(60, 330, 200, 20));
 		nameBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(nameBox);
-		nameBox.addActionListener(alName);
+		nameBox.addFocusListener(flName);
 
 		saveButton = new JButton();
 		saveButton.setBounds(new Rectangle(285, 330, 100, 20));

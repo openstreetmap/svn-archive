@@ -34,43 +34,43 @@ public class PanelRadar extends JPanel {
 	};
 	public JLabel groupLabel;
 	public JTextField groupBox;
-	private ActionListener alGroup = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flGroup = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
-	private ActionListener alPeriod = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flPeriod = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
-	private ActionListener alSeq = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSeq = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
-	private ActionListener alRange = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flRange = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconRange(rangeBox.getText());
 		}
 	};
 	public JLabel sector1Label;
 	public JTextField sector1Box;
-	private ActionListener alSector1 = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSector1 = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconSector1(sector1Box.getText());
 		}
 	};
 	public JLabel sector2Label;
 	public JTextField sector2Box;
-	private ActionListener alSector2 = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSector2 = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setRaconSector2(sector2Box.getText());
 		}
 	};
@@ -92,7 +92,7 @@ public class PanelRadar extends JPanel {
 		groupBox.setBounds(new Rectangle(55, 20, 50, 20));
 		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(groupBox);
-		groupBox.addActionListener(alGroup);
+		groupBox.addFocusListener(flGroup);
 
 		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(130, 0, 100, 20));
@@ -101,7 +101,7 @@ public class PanelRadar extends JPanel {
 		periodBox.setBounds(new Rectangle(155, 20, 50, 20));
 		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(periodBox);
-		periodBox.addActionListener(alPeriod);
+		periodBox.addFocusListener(flPeriod);
 
 		seqLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
 		seqLabel.setBounds(new Rectangle(30, 40, 100, 20));
@@ -110,7 +110,7 @@ public class PanelRadar extends JPanel {
 		seqBox.setBounds(new Rectangle(55, 60, 50, 20));
 		seqBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(seqBox);
-		seqBox.addActionListener(alSeq);
+		seqBox.addFocusListener(flSeq);
 
 		rangeLabel = new JLabel(Messages.getString("Range"), SwingConstants.CENTER);
 		rangeLabel.setBounds(new Rectangle(130, 40, 100, 20));
@@ -118,7 +118,7 @@ public class PanelRadar extends JPanel {
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(155, 60, 50, 20));
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
-		rangeBox.addActionListener(alRange);
+		rangeBox.addFocusListener(flRange);
 		
 		sectorsLabel = new JLabel(Messages.getString("VisibleSector"), SwingConstants.CENTER);
 		sectorsLabel.setBounds(new Rectangle(75, 85, 100, 20));
@@ -131,7 +131,7 @@ public class PanelRadar extends JPanel {
 		sector1Box.setBounds(new Rectangle(55, 120, 50, 20));
 		sector1Box.setHorizontalAlignment(SwingConstants.CENTER);
 		add(sector1Box);
-		sector1Box.addActionListener(alSector1);
+		sector1Box.addFocusListener(flSector1);
 
 		sector2Label = new JLabel(Messages.getString("End"), SwingConstants.CENTER);
 		sector2Label.setBounds(new Rectangle(130, 100, 100, 20));
@@ -140,7 +140,7 @@ public class PanelRadar extends JPanel {
 		sector2Box.setBounds(new Rectangle(155, 120, 50, 20));
 		sector2Box.setHorizontalAlignment(SwingConstants.CENTER);
 		add(sector2Box);
-		sector2Box.addActionListener(alSector2);
+		sector2Box.addFocusListener(flSector2);
 	}
 
 	public void syncPanel() {

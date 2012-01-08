@@ -1135,10 +1135,11 @@ public class SeaMark extends JPanel {
 		case LITFLT:
 		case LITVES:
 		case LITHSE:
-		case MORFAC:
 		case SISTAW:
 		case SISTAT:
 		case OFSPLF:
+		case MORFAC:
+		case BOYINB:
 			tmp = true;
 			break;
 		case LNDMRK:
@@ -1826,10 +1827,10 @@ public class SeaMark extends JPanel {
 			if (!imgStr.equals("/images/")) {
 				colStr += ".png";
 				if (getClass().getResource(colStr) == null) {
-					System.out.println("Missing image: " + colStr);
+					System.out.println("Missing image1: " + colStr);
 					imgStr += ".png";
 					if (getClass().getResource(imgStr) == null) {
-						System.out.println("Missing image: " + imgStr);
+						System.out.println("Missing image2: " + imgStr);
 					} else {
 						g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 						g2.drawString(lblStr, 75, 110);
@@ -1898,11 +1899,30 @@ public class SeaMark extends JPanel {
 			case OFSPLF:
 				imgStr += "Platform";
 				break;
+			case MORFAC:
+				switch (getCategory()) {
+				case MOR_DLPN:
+					imgStr += "Dolphin";
+					break;
+				case MOR_DDPN:
+					imgStr += "DeviationDolphin";
+					break;
+				case MOR_POST:
+					imgStr += "Post";
+					break;
+				case MOR_BUOY:
+					imgStr += "Sphere";
+					break;
+				}
+				break;
+			case BOYINB:
+				imgStr += "Super";
+				break;
 			}
 			if (!imgStr.equals("/images/")) {
 				imgStr += ".png";
 				if (getClass().getResource(imgStr) == null) {
-					System.out.println("Missing image: " + imgStr);
+					System.out.println("Missing image3: " + imgStr);
 				} else {
 					g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
@@ -2005,16 +2025,50 @@ public class SeaMark extends JPanel {
 			}
 			colStr += ".png";
 			if (getClass().getResource(colStr) == null) {
-				System.out.println("Missing image: " + colStr);
+				System.out.println("Missing image4: " + colStr);
 				imgStr += ".png";
 				if (getClass().getResource(imgStr) == null) {
-					System.out.println("Missing image: " + imgStr);
+					System.out.println("Missing image5: " + imgStr);
 					return;
 				} else {
 					g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
 				}
 			} else {
 				g2.drawImage(new ImageIcon(getClass().getResource(colStr)).getImage(), 7, -15, null);
+			}
+		} else {
+			if ((getObject() == Obj.BOYINB) || ((getObject() == Obj.MORFAC) && (getCategory() == Cat.MOR_BUOY))) {
+				imgStr = "/images/Top_Mooring";
+				switch (getShape()) {
+				case CAN:
+				case CONI:
+				case SPHERI:
+				case BARREL:
+					imgStr += "_Buoy_Small";
+					break;
+				case PILLAR:
+				case SPAR:
+					imgStr += "_Buoy";
+					break;
+				case FLOAT:
+				case SUPER:
+					imgStr += "_Float";
+					break;
+				default:
+					if (getObject() == Obj.MORFAC) {
+						imgStr += "_Buoy_Small";
+					} else {
+						imgStr += "_Float";
+					}
+					break;
+				}
+				imgStr += ".png";
+				if (getClass().getResource(imgStr) == null) {
+					System.out.println("Missing image6: " + imgStr);
+					return;
+				} else {
+					g2.drawImage(new ImageIcon(getClass().getResource(imgStr)).getImage(), 7, -15, null);
+				}
 			}
 		}
 

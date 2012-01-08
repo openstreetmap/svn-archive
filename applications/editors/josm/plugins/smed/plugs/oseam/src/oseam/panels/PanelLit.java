@@ -18,22 +18,22 @@ public class PanelLit extends JPanel {
 	public PanelChr panelChr;
 	public JLabel groupLabel;
 	public JTextField groupBox;
-	private ActionListener alGroup = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flGroup = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.GRP, 0, groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
-	private ActionListener alPeriod = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flPeriod = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.PER, 0, periodBox.getText());
 		}
 	};
 	public JLabel sequenceLabel;
 	public JTextField sequenceBox;
-	private ActionListener alSequence = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSequence = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.SEQ, 0, sequenceBox.getText());
 		}
 	};
@@ -51,29 +51,29 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
-	private ActionListener alHeight = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flHeight = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.HGT, 0, heightBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
-	private ActionListener alRange = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flRange = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.RNG, 0, rangeBox.getText());
 		}
 	};
 	public JLabel orientationLabel;
 	public JTextField orientationBox;
-	private ActionListener alOrientation = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flOrientation = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.ORT, 0, orientationBox.getText());
 		}
 	};
 	public JLabel multipleLabel;
 	public JTextField multipleBox;
-	private ActionListener alMultiple = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flMultiple = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setLightAtt(Att.MLT, 0, multipleBox.getText());
 		}
 	};
@@ -167,7 +167,7 @@ public class PanelLit extends JPanel {
 		groupBox.setBounds(new Rectangle(135, 20, 40, 20));
 		groupBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(groupBox);
-		groupBox.addActionListener(alGroup);
+		groupBox.addFocusListener(flGroup);
 
 		periodLabel = new JLabel(Messages.getString("Period"), SwingConstants.CENTER);
 		periodLabel.setBounds(new Rectangle(123, 40, 65, 20));
@@ -176,7 +176,7 @@ public class PanelLit extends JPanel {
 		periodBox.setBounds(new Rectangle(135, 60, 40, 20));
 		periodBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(periodBox);
-		periodBox.addActionListener(alPeriod);
+		periodBox.addFocusListener(flPeriod);
 
 		heightLabel = new JLabel(Messages.getString("Height"), SwingConstants.CENTER);
 		heightLabel.setBounds(new Rectangle(123, 80, 65, 20));
@@ -185,7 +185,7 @@ public class PanelLit extends JPanel {
 		heightBox.setBounds(new Rectangle(135, 100, 40, 20));
 		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(heightBox);
-		heightBox.addActionListener(alHeight);
+		heightBox.addFocusListener(flHeight);
 
 		rangeLabel = new JLabel(Messages.getString("Range"), SwingConstants.CENTER);
 		rangeLabel.setBounds(new Rectangle(123, 120, 65, 20));
@@ -194,7 +194,7 @@ public class PanelLit extends JPanel {
 		rangeBox.setBounds(new Rectangle(135, 140, 40, 20));
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(rangeBox);
-		rangeBox.addActionListener(alRange);
+		rangeBox.addFocusListener(flRange);
 
 		sequenceLabel = new JLabel(Messages.getString("Sequence"), SwingConstants.CENTER);
 		sequenceLabel.setBounds(new Rectangle(188, 120, 80, 20));
@@ -203,7 +203,7 @@ public class PanelLit extends JPanel {
 		sequenceBox.setBounds(new Rectangle(183, 140, 90, 20));
 		sequenceBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(sequenceBox);
-		sequenceBox.addActionListener(alSequence);
+		sequenceBox.addFocusListener(flSequence);
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(185, 0, 165, 20));
@@ -265,7 +265,7 @@ public class PanelLit extends JPanel {
 		orientationBox.setHorizontalAlignment(SwingConstants.CENTER);
 		orientationBox.setVisible(false);
 		add(orientationBox);
-		orientationBox.addActionListener(alOrientation);
+		orientationBox.addFocusListener(flOrientation);
 
 		multipleLabel = new JLabel(Messages.getString("Multiplicity"), SwingConstants.CENTER);
 		multipleLabel.setBounds(new Rectangle(188, 80, 80, 20));
@@ -276,7 +276,7 @@ public class PanelLit extends JPanel {
 		multipleBox.setHorizontalAlignment(SwingConstants.CENTER);
 		multipleBox.setVisible(false);
 		add(multipleBox);
-		multipleBox.addActionListener(alMultiple);
+		multipleBox.addFocusListener(flMultiple);
 	}
 
 	public void syncPanel() {

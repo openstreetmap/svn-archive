@@ -16,29 +16,29 @@ public class PanelMore extends JPanel {
 	private OSeaMAction dlg;
 	public JLabel infoLabel;
 	public JTextField infoBox;
-	private ActionListener alInfo = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flInfo = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setInfo(infoBox.getText());
 		}
 	};
 	public JLabel sourceLabel;
 	public JTextField sourceBox;
-	private ActionListener alSource = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flSource = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setSource(sourceBox.getText());
 		}
 	};
 	public JLabel elevLabel;
 	public JTextField elevBox;
-	private ActionListener alElev = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flElev = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setElevation(elevBox.getText());
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
-	private ActionListener alHeight = new ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent e) {
+	private FocusListener flHeight = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
 			dlg.panelMain.mark.setObjectHeight(heightBox.getText());
 		}
 	};
@@ -202,7 +202,7 @@ public class PanelMore extends JPanel {
 		elevBox.setBounds(new Rectangle(160, 20, 50, 20));
 		elevBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(elevBox);
-		elevBox.addActionListener(alElev);
+		elevBox.addFocusListener(flElev);
 
 		heightLabel = new JLabel(Messages.getString("Height"), SwingConstants.CENTER);
 		heightLabel.setBounds(new Rectangle(140, 40, 90, 20));
@@ -211,7 +211,7 @@ public class PanelMore extends JPanel {
 		heightBox.setBounds(new Rectangle(160, 60, 50, 20));
 		heightBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(heightBox);
-		heightBox.addActionListener(alHeight);
+		heightBox.addFocusListener(flHeight);
 
 		sourceLabel = new JLabel(Messages.getString("Source"), SwingConstants.CENTER);
 		sourceLabel.setBounds(new Rectangle(110, 80, 130, 20));
@@ -220,7 +220,7 @@ public class PanelMore extends JPanel {
 		sourceBox.setBounds(new Rectangle(110, 100, 130, 20));
 		sourceBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(sourceBox);
-		sourceBox.addActionListener(alSource);
+		sourceBox.addFocusListener(flSource);
 
 		infoLabel = new JLabel(Messages.getString("Information"), SwingConstants.CENTER);
 		infoLabel.setBounds(new Rectangle(110, 120, 130, 20));
@@ -229,7 +229,7 @@ public class PanelMore extends JPanel {
 		infoBox.setBounds(new Rectangle(110, 140, 130, 20));
 		infoBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(infoBox);
-		infoBox.addActionListener(alInfo);
+		infoBox.addFocusListener(flInfo);
 
 		statusLabel = new JLabel(Messages.getString("Status"), SwingConstants.CENTER);
 		statusLabel.setBounds(new Rectangle(250, 0, 100, 20));

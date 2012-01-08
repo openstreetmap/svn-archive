@@ -31,7 +31,6 @@ public class PanelTop extends JPanel {
 	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
 	public JRadioButton circleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CircleDayButton.png")));
-	public JRadioButton mooringTopButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MooringTopButton.png")));
 	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -43,7 +42,6 @@ public class PanelTop extends JPanel {
 				} else
 					button.setBorderPainted(false);
 			}
-			mooringTopButton.setBorderPainted(mooringTopButton.isSelected());
 		}
 	};
 
@@ -69,14 +67,12 @@ public class PanelTop extends JPanel {
 		add(getTopButton(triangleInvDayButton, 90, 65, 27, 27, "TriangleInvDay", Top.TRIANGLE_INV));
 		add(getTopButton(squareDayButton, 120, 65, 27, 27, "SquareDay", Top.SQUARE));
 		add(getTopButton(circleDayButton, 120, 95, 27, 27, "CircleDay", Top.CIRCLE));
-		add(getMoorButton(mooringTopButton, 0, 95, 27, 27, "MooringTop"));
 	}
 
 	public void enableAll(boolean state) {
 		for (JRadioButton button : tops.values()) {
 			button.setEnabled(state);
 		}
-		mooringTopButton.setEnabled(state);
 	}
 
 	public void syncPanel() {
@@ -97,15 +93,6 @@ public class PanelTop extends JPanel {
 		button.addActionListener(alTop);
 		topButtons.add(button);
 		tops.put(top, button);
-		return button;
-	}
-
-	private JRadioButton getMoorButton(JRadioButton button, int x, int y, int w, int h, String tip) {
-		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLoweredBevelBorder());
-		button.setToolTipText(Messages.getString(tip));
-		button.addActionListener(alTop);
-		topButtons.add(button);
 		return button;
 	}
 

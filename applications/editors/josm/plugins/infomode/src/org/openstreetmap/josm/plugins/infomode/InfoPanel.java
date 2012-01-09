@@ -36,8 +36,8 @@ class InfoPanel extends JPanel {
     private JLabel label4=new JLabel();
     private JLabel label5=new JLabel();
     private JLabel label6=new JLabel();
-    private JButton but1 = new JButton(tr("Hide this"));
-    private JButton but2 = new JButton(tr("Hide this&older"));
+    private JButton but1 = new JButton(tr("Delete this"));
+    private JButton but2 = new JButton(tr("Delete this&older"));
     
     public InfoPanel() {
         super(new GridBagLayout());
@@ -100,8 +100,12 @@ class InfoPanel extends JPanel {
     void setData(WayPoint wp, GpxTrack trk, double vel, Collection<GpxTrack> tracks) {
         this.tracks=tracks;
         this.trk=trk;
-        if (wp.time==0.0)  label1.setText(tr("No timestamp"));
-        else label1.setText(df.format(wp.getTime()));
+        if (wp.time==0.0) { label1.setText(tr("No timestamp"));
+            but2.setVisible(false);
+        } else {
+            label1.setText(df.format(wp.getTime()));
+            but2.setVisible(true);
+        }
         if (vel>0) label2.setText(String.format("%.1f "+tr("km/h"), vel));
               else label2.setText(null);
         String s = (String) trk.getAttributes().get("name");

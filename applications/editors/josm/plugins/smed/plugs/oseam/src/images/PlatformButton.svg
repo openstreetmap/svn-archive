@@ -26186,8 +26186,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627416"
-     inkscape:cx="1.8124961"
+     inkscape:zoom="3.9999998"
+     inkscape:cx="-5.6784167"
      inkscape:cy="15.194363"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -26215,7 +26215,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -26238,29 +26238,31 @@
        id="g2415"
        transform="translate(-125.22893,1000.408)" />
     <g
-       style="display:inline"
-       id="g7823"
-       transform="matrix(0.2,0,0,0.2,-14,996.3622)">
+       id="g12177"
+       transform="matrix(0.2,0,0,0.2,12.8,829.08976)">
       <g
-         inkscape:label="Platform"
-         id="layer9">
-        <rect
-           y="152"
-           x="102"
-           height="96"
-           width="96"
-           id="rect3584"
-           style="fill:none;stroke:#000000;stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-        <path
-           transform="matrix(0.6222222,0,0,0.57931037,56.555558,83.517238)"
-           d="m 155,201.07143 c 0,2.86004 -2.15862,5.17857 -4.82143,5.17857 -2.6628,0 -4.82143,-2.31853 -4.82143,-5.17857 0,-2.86005 2.15863,-5.17857 4.82143,-5.17857 2.66281,0 4.82143,2.31852 4.82143,5.17857 z"
-           sodipodi:ry="5.1785712"
-           sodipodi:rx="4.8214288"
-           sodipodi:cy="201.07143"
-           sodipodi:cx="150.17857"
-           id="path4354"
-           style="fill:#000000;fill-opacity:1;stroke:none"
-           sodipodi:type="arc" />
+         transform="translate(-134,836.3622)"
+         id="g7823"
+         style="display:inline">
+        <g
+           id="layer9"
+           inkscape:label="Platform">
+          <path
+             inkscape:connector-curvature="0"
+             d="m 100,150 0,2 0,96 0,2 2,0 96,0 2,0 0,-2 0,-96 0,-2 -2,0 -96,0 -2,0 z m 4,4 92,0 0,92 -92,0 0,-92 z"
+             style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+             id="path12181" />
+          <path
+             sodipodi:type="arc"
+             style="fill:#000000;fill-opacity:1;stroke:none"
+             id="path4354"
+             sodipodi:cx="150.17857"
+             sodipodi:cy="201.07143"
+             sodipodi:rx="4.8214288"
+             sodipodi:ry="5.1785712"
+             d="m 155,201.07143 c 0,2.86004 -2.15862,5.17857 -4.82143,5.17857 -2.6628,0 -4.82143,-2.31853 -4.82143,-5.17857 0,-2.86005 2.15863,-5.17857 4.82143,-5.17857 2.66281,0 4.82143,2.31852 4.82143,5.17857 z"
+             transform="matrix(0.6222222,0,0,0.57931037,56.555558,83.517238)" />
+        </g>
       </g>
     </g>
   </g>

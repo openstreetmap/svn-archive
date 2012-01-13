@@ -137,10 +137,10 @@ public class PanelSpec extends JPanel {
 		add(getShapeButton(cairnButton, 102, 64, 34, 32, "CairnB", Shp.CAIRN, Obj.BCNSPP));
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(5, 100, 160, 20));
+		categoryLabel.setBounds(new Rectangle(5, 110, 160, 20));
 		add(categoryLabel);
 		categoryBox = new JComboBox();
-		categoryBox.setBounds(new Rectangle(5, 120, 160, 20));
+		categoryBox.setBounds(new Rectangle(5, 130, 160, 20));
 		add(categoryBox);
 		categoryBox.setVisible(true);
 		categoryBox.addActionListener(alCategoryBox);
@@ -163,7 +163,7 @@ public class PanelSpec extends JPanel {
 		addCatItem(Messages.getString("FerryCross"), Cat.SPM_FRRY);
 		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
 		mooringBox = new JComboBox();
-		mooringBox.setBounds(new Rectangle(5, 120, 160, 20));
+		mooringBox.setBounds(new Rectangle(5, 130, 160, 20));
 		add(mooringBox);
 		mooringBox.setVisible(false);
 		mooringBox.addActionListener(alMooringBox);
@@ -186,11 +186,11 @@ public class PanelSpec extends JPanel {
 		topmarkButton.addActionListener(alTop);
 		add(topmarkButton);
 
-//		mooringButton.setBounds(new Rectangle(136, 64, 34, 32));
-//		mooringButton.setToolTipText(Messages.getString("Mooring"));
-//		mooringButton.setBorder(BorderFactory.createLoweredBevelBorder());
-//		mooringButton.addActionListener(alMooring);
-//		add(mooringButton);
+		mooringButton.setBounds(new Rectangle(136, 64, 34, 32));
+		mooringButton.setToolTipText(Messages.getString("Mooring"));
+		mooringButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		mooringButton.addActionListener(alMooring);
+		add(mooringButton);
 	}
 
 	public void syncPanel() {

@@ -64,7 +64,8 @@ public class SeaMark extends JPanel {
 		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
 		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
 		LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK,
-		MORFAC, BOYINB, SISTAW, SISTAT, OFSPLF
+		MORFAC, BOYINB, SISTAW, SISTAT, OFSPLF,
+		CGUSTA, PILBOP, RSCSTA, RDOSTA, RADSTA
 	}
 
 	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
@@ -95,6 +96,11 @@ public class SeaMark extends JPanel {
 		ObjSTR.put(Obj.OFSPLF, "platform");
 		ObjSTR.put(Obj.SISTAW, "signal_station_warning");
 		ObjSTR.put(Obj.SISTAT, "signal_station_traffic");
+		ObjSTR.put(Obj.CGUSTA, "coastguard_station");
+		ObjSTR.put(Obj.PILBOP, "pilot_boarding");
+		ObjSTR.put(Obj.RSCSTA, "rescue_station");
+		ObjSTR.put(Obj.RDOSTA, "radio_station");
+		ObjSTR.put(Obj.RADSTA, "radar_station");
 	}
 
 	private Obj object = Obj.UNKOBJ;
@@ -130,7 +136,8 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Ent {
-		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM
+		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM,
+		COASTGUARD, PILOT
 	}
 
 	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
@@ -161,10 +168,12 @@ public class SeaMark extends JPanel {
 		EntMAP.put(Obj.OFSPLF, Ent.PLATFORM);
 		EntMAP.put(Obj.SISTAW, Ent.STATION);
 		EntMAP.put(Obj.SISTAT, Ent.STATION);
+		EntMAP.put(Obj.CGUSTA, Ent.COASTGUARD);
+		EntMAP.put(Obj.PILBOP, Ent.PILOT);
 	}
 
 	public enum Grp {
-		NUL, LAT, CAR, SAW, ISD, SPP, LGT, SIS, PLF
+		NUL, LAT, CAR, SAW, ISD, SPP, LGT, SIS, PLF, CGS, PLT
 	}
 
 	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
@@ -196,6 +205,8 @@ public class SeaMark extends JPanel {
 		GrpMAP.put(Obj.OFSPLF, Grp.PLF);
 		GrpMAP.put(Obj.SISTAW, Grp.SIS);
 		GrpMAP.put(Obj.SISTAT, Grp.SIS);
+		GrpMAP.put(Obj.CGUSTA, Grp.CGS);
+		GrpMAP.put(Obj.PILBOP, Grp.PLT);
 	}
 
 	public enum Cat {
@@ -209,7 +220,8 @@ public class SeaMark extends JPanel {
 		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
 		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT,
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR,
-		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB
+		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
+		PIL_VESS, PIL_HELI, PIL_SHORE
 	}
 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -304,6 +316,9 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.OFP_FPSO, "fpso");
 		CatSTR.put(Cat.OFP_ACC, "accommodation");
 		CatSTR.put(Cat.OFP_NCCB, "nccb");
+		CatSTR.put(Cat.PIL_VESS, "cruising_vessel");
+		CatSTR.put(Cat.PIL_HELI, "helicopter");
+		CatSTR.put(Cat.PIL_SHORE, "from_shore");
 	}
 
 	private Cat category = Cat.NOCAT;
@@ -1140,7 +1155,8 @@ public class SeaMark extends JPanel {
 		case OFSPLF:
 		case MORFAC:
 		case BOYINB:
-			tmp = true;
+		case PILBOP:
+ 			tmp = true;
 			break;
 		case LNDMRK:
 			if (getCategory() != Cat.NOCAT)
@@ -1897,7 +1913,10 @@ public class SeaMark extends JPanel {
 				imgStr += "Signal_Station";
 				break;
 			case OFSPLF:
-				imgStr += "Platform";
+				if (getCategory() == Cat.OFP_FPSO)
+					imgStr += "Storage";
+				else
+					imgStr += "Platform";
 				break;
 			case MORFAC:
 				switch (getCategory()) {
@@ -1917,6 +1936,12 @@ public class SeaMark extends JPanel {
 				break;
 			case BOYINB:
 				imgStr += "Super";
+				break;
+			case CGUSTA:
+				imgStr += "Signal_Station";
+				break;
+			case PILBOP:
+				imgStr += "Pilot";
 				break;
 			}
 			if (!imgStr.equals("/images/")) {

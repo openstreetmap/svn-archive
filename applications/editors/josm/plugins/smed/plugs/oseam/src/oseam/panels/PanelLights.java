@@ -132,6 +132,7 @@ public class PanelLights extends JPanel {
 			warningCatBox.setVisible(false);
 			platformCatBox.setVisible(false);
 			pilotCatBox.setVisible(false);
+			rescueCatBox.setVisible(false);
 			dlg.panelMain.mark.setCategory(Cat.NOCAT);
 			if (landButton.isSelected()) {
 				categoryLabel.setVisible(true);
@@ -153,6 +154,10 @@ public class PanelLights extends JPanel {
 				categoryLabel.setVisible(true);
 				pilotCatBox.setVisible(true);
 				alPilotCatBox.actionPerformed(null);
+			} else if (rescueButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				rescueCatBox.setVisible(true);
+				alRescueCatBox.actionPerformed(null);
 			}
 			dlg.panelMain.mark.testValid();
 		}
@@ -272,6 +277,14 @@ public class PanelLights extends JPanel {
 		addPTItem(Messages.getString("Helicopter"), Cat.PIL_HELI);
 		addPTItem(Messages.getString("FromShore"), Cat.PIL_SHORE);
 		pilotCatBox.setVisible(false);
+
+		rescueCatBox = new JComboBox();
+		rescueCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		add(rescueCatBox);
+		rescueCatBox.addActionListener(alRescueCatBox);
+		addRSItem("", Cat.NOCAT);
+		addRSItem(Messages.getString("Lifeboat"), Cat.RSC_LFB);
+		rescueCatBox.setVisible(false);
 	}
 
 	public void syncPanel() {
@@ -281,6 +294,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setVisible(false);
 		platformCatBox.setVisible(false);
 		pilotCatBox.setVisible(false);
+		rescueCatBox.setVisible(false);
 		if ((dlg.panelMain.mark.getObject() == Obj.LNDMRK) && (dlg.panelMain.mark.getCategory() != Cat.NOCAT)) {
 			categoryLabel.setVisible(true);
 			landCatBox.setVisible(true);
@@ -321,7 +335,14 @@ public class PanelLights extends JPanel {
 				if (dlg.panelMain.mark.getCategory() == cat)
 					pilotCatBox.setSelectedIndex(item);
 			}
-		} else {
+		} else if (dlg.panelMain.mark.getObject() == Obj.RSCSTA) {
+			categoryLabel.setVisible(true);
+			rescueCatBox.setVisible(true);
+			for (Cat cat : rescueCats.keySet()) {
+				int item = rescueCats.get(cat);
+				if (dlg.panelMain.mark.getCategory() == cat)
+					rescueCatBox.setSelectedIndex(item);
+			}
 		}
 		for (Obj obj : objects.keySet()) {
 			JRadioButton button = objects.get(obj);
@@ -353,6 +374,11 @@ public class PanelLights extends JPanel {
 	private void addPTItem(String str, Cat cat) {
 		pilotCats.put(cat, pilotCatBox.getItemCount());
 		pilotCatBox.addItem(str);
+	}
+
+	private void addRSItem(String str, Cat cat) {
+		rescueCats.put(cat, rescueCatBox.getItemCount());
+		rescueCatBox.addItem(str);
 	}
 
 	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip, Obj obj) {

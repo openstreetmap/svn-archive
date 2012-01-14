@@ -136,8 +136,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Ent {
-		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM,
-		COASTGUARD, PILOT
+		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM
 	}
 
 	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
@@ -168,12 +167,13 @@ public class SeaMark extends JPanel {
 		EntMAP.put(Obj.OFSPLF, Ent.PLATFORM);
 		EntMAP.put(Obj.SISTAW, Ent.STATION);
 		EntMAP.put(Obj.SISTAT, Ent.STATION);
-		EntMAP.put(Obj.CGUSTA, Ent.COASTGUARD);
-		EntMAP.put(Obj.PILBOP, Ent.PILOT);
+		EntMAP.put(Obj.CGUSTA, Ent.STATION);
+		EntMAP.put(Obj.PILBOP, Ent.STATION);
+		EntMAP.put(Obj.RSCSTA, Ent.STATION);
 	}
 
 	public enum Grp {
-		NUL, LAT, CAR, SAW, ISD, SPP, LGT, SIS, PLF, CGS, PLT
+		NUL, LAT, CAR, SAW, ISD, SPP, LGT, STN, PLF
 	}
 
 	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
@@ -203,10 +203,11 @@ public class SeaMark extends JPanel {
 		GrpMAP.put(Obj.MORFAC, Grp.SPP);
 		GrpMAP.put(Obj.BOYINB, Grp.SPP);
 		GrpMAP.put(Obj.OFSPLF, Grp.PLF);
-		GrpMAP.put(Obj.SISTAW, Grp.SIS);
-		GrpMAP.put(Obj.SISTAT, Grp.SIS);
-		GrpMAP.put(Obj.CGUSTA, Grp.CGS);
-		GrpMAP.put(Obj.PILBOP, Grp.PLT);
+		GrpMAP.put(Obj.SISTAW, Grp.STN);
+		GrpMAP.put(Obj.SISTAT, Grp.STN);
+		GrpMAP.put(Obj.CGUSTA, Grp.STN);
+		GrpMAP.put(Obj.PILBOP, Grp.STN);
+		GrpMAP.put(Obj.RSCSTA, Grp.STN);
 	}
 
 	public enum Cat {
@@ -221,9 +222,9 @@ public class SeaMark extends JPanel {
 		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT,
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR,
 		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
-		PIL_VESS, PIL_HELI, PIL_SHORE
+		PIL_VESS, PIL_HELI, PIL_SHORE, RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG
 	}
-
+		 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
 	static {
 		CatSTR.put(Cat.LAM_PORT, "port");
@@ -319,6 +320,16 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.PIL_VESS, "cruising_vessel");
 		CatSTR.put(Cat.PIL_HELI, "helicopter");
 		CatSTR.put(Cat.PIL_SHORE, "from_shore");
+		CatSTR.put(Cat.RSC_LFB, "lifeboat");
+		CatSTR.put(Cat.RSC_RKT, "rocket");
+		CatSTR.put(Cat.RSC_RSW, "refuge_shipwrecked");
+		CatSTR.put(Cat.RSC_RIT, "refuge_intertidal");
+		CatSTR.put(Cat.RSC_MLB, "lifeboat_moored");
+		CatSTR.put(Cat.RSC_RAD, "radio");
+		CatSTR.put(Cat.RSC_FAE, "firstaid");
+		CatSTR.put(Cat.RSC_SPL, "seaplane");
+		CatSTR.put(Cat.RSC_AIR, "aircraft");
+		CatSTR.put(Cat.RSC_TUG, "tug");
 	}
 
 	private Cat category = Cat.NOCAT;
@@ -1156,6 +1167,7 @@ public class SeaMark extends JPanel {
 		case MORFAC:
 		case BOYINB:
 		case PILBOP:
+		case RSCSTA:
  			tmp = true;
 			break;
 		case LNDMRK:
@@ -1942,6 +1954,9 @@ public class SeaMark extends JPanel {
 				break;
 			case PILBOP:
 				imgStr += "Pilot";
+				break;
+			case RSCSTA:
+				imgStr += "Rescue";
 				break;
 			}
 			if (!imgStr.equals("/images/")) {

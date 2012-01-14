@@ -310,10 +310,8 @@ public class PanelMain extends JPanel {
 				panelSpec.syncPanel();
 				break;
 			case LGT:
-			case SIS:
+			case STN:
 			case PLF:
-			case CGS:
-			case PLT:
 				lightsButton.setBorderPainted(true);
 				panelLights.setVisible(true);
 				panelLights.syncPanel();

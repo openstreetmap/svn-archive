@@ -95,10 +95,19 @@
 	
 	function updateMapKey(force) {
 		var html = document.getElementById('information').innerHTML;
+		var layer = map.baseLayer.keyname;
+		
 		if (force || html.startsWith("Legende")) {
-			var layer = map.baseLayer.keyname;
-			var zoom = map.getZoom();
-			var html = 'Legende:<br><div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
+			var html = 'Legende:<br>';
+			if(layer != undefined){
+				var layer = map.baseLayer.keyname;
+				var zoom = map.getZoom();
+				html += '<div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
+				document.getElementById('information').innerHTML = html;
+			}
+			else{
+				html += '<br>Leider keine Legende verfügbar ...';
+			}
 			document.getElementById('information').innerHTML = html;
 			openSlide('slider');
 		}

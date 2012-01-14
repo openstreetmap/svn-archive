@@ -128,6 +128,7 @@ public class SeaMark extends JPanel {
 			setRef("");
 			setObjectHeight("");
 			setElevation("");
+			setChannel("");
 			setInfo("");
 			setSource("");
 			setFixme("");
@@ -170,6 +171,8 @@ public class SeaMark extends JPanel {
 		EntMAP.put(Obj.CGUSTA, Ent.STATION);
 		EntMAP.put(Obj.PILBOP, Ent.STATION);
 		EntMAP.put(Obj.RSCSTA, Ent.STATION);
+		EntMAP.put(Obj.RDOSTA, Ent.STATION);
+		EntMAP.put(Obj.RADSTA, Ent.STATION);
 	}
 
 	public enum Grp {
@@ -208,6 +211,8 @@ public class SeaMark extends JPanel {
 		GrpMAP.put(Obj.CGUSTA, Grp.STN);
 		GrpMAP.put(Obj.PILBOP, Grp.STN);
 		GrpMAP.put(Obj.RSCSTA, Grp.STN);
+		GrpMAP.put(Obj.RDOSTA, Grp.STN);
+		GrpMAP.put(Obj.RADSTA, Grp.STN);
 	}
 
 	public enum Cat {
@@ -222,7 +227,9 @@ public class SeaMark extends JPanel {
 		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT,
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR,
 		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
-		PIL_VESS, PIL_HELI, PIL_SHORE, RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG
+		RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG,
+		ROS_BNO, ROS_BND, ROS_BNR, ROS_BNC, ROS_RDF, ROS_QTG, ROS_AER, ROS_DCA, ROS_LRN, ROS_DGPS, ROS_TRN, ROS_OMA,
+		ROS_SDS, ROS_CKA, ROS_PUB, ROS_COM, ROS_FAX, ROS_TIM, RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE
 	}
 		 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -330,6 +337,26 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.RSC_SPL, "seaplane");
 		CatSTR.put(Cat.RSC_AIR, "aircraft");
 		CatSTR.put(Cat.RSC_TUG, "tug");
+		CatSTR.put(Cat.RAS_SRV, "surveillance");
+		CatSTR.put(Cat.RAS_CST, "coast");
+		CatSTR.put(Cat.ROS_BNO, "beacon_circular");
+		CatSTR.put(Cat.ROS_BND, "beacon_directional");
+		CatSTR.put(Cat.ROS_BNR, "beacon_rotating");
+		CatSTR.put(Cat.ROS_BNC, "beacon_consol");
+		CatSTR.put(Cat.ROS_RDF, "direction_finding");
+		CatSTR.put(Cat.ROS_QTG, "qtg_service");
+		CatSTR.put(Cat.ROS_AER, "beacon_aero");
+		CatSTR.put(Cat.ROS_DCA, "decca");
+		CatSTR.put(Cat.ROS_LRN, "loran");
+		CatSTR.put(Cat.ROS_DGPS, "dgps");
+		CatSTR.put(Cat.ROS_TRN, "toran");
+		CatSTR.put(Cat.ROS_OMA, "omega");
+		CatSTR.put(Cat.ROS_SDS, "syledis");
+		CatSTR.put(Cat.ROS_CKA, "chiaka");
+		CatSTR.put(Cat.ROS_PUB, "public_communication");
+		CatSTR.put(Cat.ROS_COM, "comercial_broadcast");
+		CatSTR.put(Cat.ROS_FAX, "facsimile");
+		CatSTR.put(Cat.ROS_TIM, "time_signal");
 	}
 
 	private Cat category = Cat.NOCAT;
@@ -1098,6 +1125,17 @@ public class SeaMark extends JPanel {
 		height = validDecimal(str);
 	}
 
+	private String channel = "";
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String per) {
+		channel = validDecimal(per);
+		repaint();
+	}
+
 	public String ref = "";
 
 	public String getRef() {
@@ -1168,6 +1206,8 @@ public class SeaMark extends JPanel {
 		case BOYINB:
 		case PILBOP:
 		case RSCSTA:
+		case RDOSTA:
+		case RADSTA:
  			tmp = true;
 			break;
 		case LNDMRK:
@@ -1343,6 +1383,9 @@ public class SeaMark extends JPanel {
 			}
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":elevation")) {
 				setElevation(keys.get("seamark:" + ObjSTR.get(obj) + ":elevation"));
+			}
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":channel")) {
+				setChannel(keys.get("seamark:" + ObjSTR.get(obj) + ":channel"));
 			}
 		}
 
@@ -1958,6 +2001,11 @@ public class SeaMark extends JPanel {
 			case RSCSTA:
 				imgStr += "Rescue";
 				break;
+			case RDOSTA:
+			case RADSTA:
+				imgStr += "Signal_Station";
+				g2.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
+				break;
 			}
 			if (!imgStr.equals("/images/")) {
 				imgStr += ".png";
@@ -2368,6 +2416,9 @@ public class SeaMark extends JPanel {
 				}
 				if (!getElevation().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":elevation", getElevation()));
+				}
+				if (!getChannel().isEmpty()) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":channel", getChannel()));
 				}
 			}
 			if (getTopmark() != Top.NOTOP) {

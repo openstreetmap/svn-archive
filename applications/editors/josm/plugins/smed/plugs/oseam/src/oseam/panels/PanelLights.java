@@ -95,6 +95,32 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
+	public JComboBox radioCatBox;
+	public EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alRadioCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : radioCats.keySet()) {
+				int idx = radioCats.get(cat);
+				if (dlg.node != null && (idx == radioCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
+				}
+			}
+		}
+	};
+	public JComboBox radarCatBox;
+	public EnumMap<Cat, Integer> radarCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alRadarCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : radarCats.keySet()) {
+				int idx = radarCats.get(cat);
+				if (dlg.node != null && (idx == radarCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
+				}
+			}
+		}
+	};
 	private ButtonGroup objButtons = new ButtonGroup();
 	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
@@ -133,6 +159,10 @@ public class PanelLights extends JPanel {
 			platformCatBox.setVisible(false);
 			pilotCatBox.setVisible(false);
 			rescueCatBox.setVisible(false);
+			radioCatBox.setVisible(false);
+			radarCatBox.setVisible(false);
+			chLabel.setVisible(false);
+			chBox.setVisible(false);
 			dlg.panelMain.mark.setCategory(Cat.NOCAT);
 			if (landButton.isSelected()) {
 				categoryLabel.setVisible(true);
@@ -141,10 +171,14 @@ public class PanelLights extends JPanel {
 			} else if (trafficButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				trafficCatBox.setVisible(true);
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
 				alTrafficCatBox.actionPerformed(null);
 			} else if (warningButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				warningCatBox.setVisible(true);
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
 				alWarningCatBox.actionPerformed(null);
 			} else if (platformButton.isSelected()) {
 				categoryLabel.setVisible(true);
@@ -153,13 +187,34 @@ public class PanelLights extends JPanel {
 			} else if (pilotButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				pilotCatBox.setVisible(true);
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
 				alPilotCatBox.actionPerformed(null);
 			} else if (rescueButton.isSelected()) {
 				categoryLabel.setVisible(true);
 				rescueCatBox.setVisible(true);
 				alRescueCatBox.actionPerformed(null);
+			} else if (radioButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				radioCatBox.setVisible(true);
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
+				alRadioCatBox.actionPerformed(null);
+			} else if (radarButton.isSelected()) {
+				categoryLabel.setVisible(true);
+				radarCatBox.setVisible(true);
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
+				alRadarCatBox.actionPerformed(null);
 			}
 			dlg.panelMain.mark.testValid();
+		}
+	};
+	public JLabel chLabel;
+	public JTextField chBox;
+	private FocusListener flCh = new FocusAdapter() {
+		public void focusLost(java.awt.event.FocusEvent e) {
+			dlg.panelMain.mark.setChannel(chBox.getText());
 		}
 	};
 
@@ -284,7 +339,59 @@ public class PanelLights extends JPanel {
 		rescueCatBox.addActionListener(alRescueCatBox);
 		addRSItem("", Cat.NOCAT);
 		addRSItem(Messages.getString("Lifeboat"), Cat.RSC_LFB);
+		addRSItem(Messages.getString("Rocket"), Cat.RSC_RKT);
+		addRSItem(Messages.getString("ShipwreckedRefuge"), Cat.RSC_RSW);
+		addRSItem(Messages.getString("IntertidalRefuge"), Cat.RSC_RIT);
+		addRSItem(Messages.getString("MooredLifeboat"), Cat.RSC_MLB);
+		addRSItem(Messages.getString("Radio"), Cat.RSC_RAD);
+		addRSItem(Messages.getString("FirstAid"), Cat.RSC_FAE);
+		addRSItem(Messages.getString("Seaplane"), Cat.RSC_SPL);
+		addRSItem(Messages.getString("Aircraft"), Cat.RSC_AIR);
+		addRSItem(Messages.getString("Tug"), Cat.RSC_TUG);
 		rescueCatBox.setVisible(false);
+
+		radioCatBox = new JComboBox();
+		radioCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		add(radioCatBox);
+		radioCatBox.addActionListener(alRadioCatBox);
+		addROItem("", Cat.NOCAT);
+		addROItem(Messages.getString("CircularBeacon"), Cat.ROS_BNO);
+		addROItem(Messages.getString("DirectionalBeacon"), Cat.ROS_BND);
+		addROItem(Messages.getString("RotatingBeacon"), Cat.ROS_BNR);
+		addROItem(Messages.getString("ConsolBeacon"), Cat.ROS_BNC);
+		addROItem(Messages.getString("DirectionFinding"), Cat.ROS_RDF);
+		addROItem(Messages.getString("QTGService"), Cat.ROS_QTG);
+		addROItem(Messages.getString("AeronaticalBeacon"), Cat.ROS_AER);
+		addROItem(Messages.getString("Decca"), Cat.ROS_DCA);
+		addROItem(Messages.getString("LoranC"), Cat.ROS_LRN);
+		addROItem(Messages.getString("DGPS"), Cat.ROS_DGPS);
+		addROItem(Messages.getString("Toran"), Cat.ROS_TRN);
+		addROItem(Messages.getString("Omega"), Cat.ROS_OMA);
+		addROItem(Messages.getString("Syledis"), Cat.ROS_SDS);
+		addROItem(Messages.getString("Chiaka"), Cat.ROS_CKA);
+		addROItem(Messages.getString("PublicCommunication"), Cat.ROS_PUB);
+		addROItem(Messages.getString("CommercialBroadcast"), Cat.ROS_COM);
+		addROItem(Messages.getString("Facsimile"), Cat.ROS_FAX);
+		addROItem(Messages.getString("TimeSignal"), Cat.ROS_TIM);
+		radioCatBox.setVisible(false);
+
+		radarCatBox = new JComboBox();
+		radarCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		add(radarCatBox);
+		radarCatBox.addActionListener(alRadarCatBox);
+		addRAItem("", Cat.NOCAT);
+		addRAItem(Messages.getString("Surveillance"), Cat.RAS_SRV);
+		addRAItem(Messages.getString("CoastRadar"), Cat.RAS_CST);
+		radarCatBox.setVisible(false);
+
+		chLabel = new JLabel("Ch:", SwingConstants.CENTER);
+		chLabel.setBounds(new Rectangle(140, 34, 30, 15));
+		add(chLabel);
+		chBox = new JTextField();
+		chBox.setBounds(new Rectangle(140, 48, 30, 20));
+		chBox.setHorizontalAlignment(SwingConstants.CENTER);
+		add(chBox);
+		chBox.addFocusListener(flCh);
 	}
 
 	public void syncPanel() {
@@ -295,6 +402,11 @@ public class PanelLights extends JPanel {
 		platformCatBox.setVisible(false);
 		pilotCatBox.setVisible(false);
 		rescueCatBox.setVisible(false);
+		radioCatBox.setVisible(false);
+		radarCatBox.setVisible(false);
+		chLabel.setVisible(false);
+		chBox.setVisible(false);
+		chBox.setText(dlg.panelMain.mark.getChannel());
 		if ((dlg.panelMain.mark.getObject() == Obj.LNDMRK) && (dlg.panelMain.mark.getCategory() != Cat.NOCAT)) {
 			categoryLabel.setVisible(true);
 			landCatBox.setVisible(true);
@@ -311,6 +423,8 @@ public class PanelLights extends JPanel {
 					if (dlg.panelMain.mark.getCategory() == cat)
 						trafficCatBox.setSelectedIndex(item);
 				}
+				chLabel.setVisible(true);
+				chBox.setVisible(true);
 		} else if (dlg.panelMain.mark.getObject() == Obj.SISTAW) {
 			categoryLabel.setVisible(true);
 			warningCatBox.setVisible(true);
@@ -319,6 +433,8 @@ public class PanelLights extends JPanel {
 				if (dlg.panelMain.mark.getCategory() == cat)
 					warningCatBox.setSelectedIndex(item);
 			}
+			chLabel.setVisible(true);
+			chBox.setVisible(true);
 		} else if (dlg.panelMain.mark.getObject() == Obj.OFSPLF) {
 			categoryLabel.setVisible(true);
 			platformCatBox.setVisible(true);
@@ -335,6 +451,8 @@ public class PanelLights extends JPanel {
 				if (dlg.panelMain.mark.getCategory() == cat)
 					pilotCatBox.setSelectedIndex(item);
 			}
+			chLabel.setVisible(true);
+			chBox.setVisible(true);
 		} else if (dlg.panelMain.mark.getObject() == Obj.RSCSTA) {
 			categoryLabel.setVisible(true);
 			rescueCatBox.setVisible(true);
@@ -343,6 +461,26 @@ public class PanelLights extends JPanel {
 				if (dlg.panelMain.mark.getCategory() == cat)
 					rescueCatBox.setSelectedIndex(item);
 			}
+		} else if (dlg.panelMain.mark.getObject() == Obj.RDOSTA) {
+			categoryLabel.setVisible(true);
+			radioCatBox.setVisible(true);
+			for (Cat cat : radioCats.keySet()) {
+				int item = radioCats.get(cat);
+				if (dlg.panelMain.mark.getCategory() == cat)
+					radioCatBox.setSelectedIndex(item);
+			}
+			chLabel.setVisible(true);
+			chBox.setVisible(true);
+		} else if (dlg.panelMain.mark.getObject() == Obj.RADSTA) {
+			categoryLabel.setVisible(true);
+			radarCatBox.setVisible(true);
+			for (Cat cat : radarCats.keySet()) {
+				int item = radarCats.get(cat);
+				if (dlg.panelMain.mark.getCategory() == cat)
+					radarCatBox.setSelectedIndex(item);
+			}
+			chLabel.setVisible(true);
+			chBox.setVisible(true);
 		}
 		for (Obj obj : objects.keySet()) {
 			JRadioButton button = objects.get(obj);
@@ -379,6 +517,16 @@ public class PanelLights extends JPanel {
 	private void addRSItem(String str, Cat cat) {
 		rescueCats.put(cat, rescueCatBox.getItemCount());
 		rescueCatBox.addItem(str);
+	}
+
+	private void addROItem(String str, Cat cat) {
+		radioCats.put(cat, radioCatBox.getItemCount());
+		radioCatBox.addItem(str);
+	}
+
+	private void addRAItem(String str, Cat cat) {
+		radarCats.put(cat, radarCatBox.getItemCount());
+		radarCatBox.addItem(str);
 	}
 
 	private JRadioButton getObjButton(JRadioButton button, int x, int y, int w, int h, String tip, Obj obj) {

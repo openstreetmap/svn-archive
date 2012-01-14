@@ -72,12 +72,12 @@ function init(){
        new OpenLayers.Layer.XYZ("OSM deutscher Stil", [
                "http://a.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
                "http://b.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
-               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],{attribution: 'Tile server sponsored by STRATO / <b>Europe only</b> / <a href="./germanstyle.html">About style</a>'}),
+               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],{attribution: 'Tile server sponsored by STRATO / <b>Europe only</b> / <a href="./germanstyle.html">About style</a>', keyname: 'mapnikde'}),
         new OpenLayers.Layer.OSM.CycleMap("Radfahrkarte (CycleMap)", {attribution:""}),
         new OpenLayers.Layer.OSM("&Ouml;pnv-Karte", 
 			"http://tile.memomaps.de/tilegen/${z}/${x}/${y}.png", 
 			{numZoomLevels: 19,displayInLayerSwitcher:true,buffer:0,attribution:""}),
-        new OpenLayers.Layer.OSM.Mapnik("OSM Standard (Mapnik)", {attribution:""}),
+        new OpenLayers.Layer.OSM.Mapnik("OSM Standard (Mapnik)", {attribution:"", keyname: 'mapnik'}),
         new OpenLayers.Layer.OSM.Osmarender("Osmarender/Tiles@Home", {attribution:""})
     ]);
     
@@ -112,6 +112,7 @@ function init(){
     //Register Events for MapEdit and ReportBug Links
     map.events.register('move', null, mapMoved);
     mapMoved();
+    map.events.register('zoomend', null, function() { updateMapKey(false); } );
     
    	//To fix language issues
     //document.getElementsByClassName('baseLbl')[0].innerHTML = "Grundkarte";

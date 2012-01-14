@@ -129,6 +129,24 @@ div.mnav ul li {
 	font-size: 10px;
 }
 
+#legend {
+	position: absolute;
+	left: 30px;
+	bottom: 20px;
+	font-size: 10px;
+	zoom:20%;
+}
+
+#mapkey_area iframe {
+	width: 295px;
+	height: 350px;
+    border: none;
+    background-color: #ffffff;
+    border: 0;
+    z-index: 20002;
+    zoom:20%;
+}
+
 #wrapper {
 	position: absolute;
 	top: 70px;
@@ -145,8 +163,8 @@ div.mnav ul li {
 #slider {
 	padding: 5px;
 	margin: 5px;
+	width: 320px;
 	height: 95% !important; /* Important Regel für moderne Browser */
-	width: 220px;
 	background-color: #FFFFFF;
 	position: absolute;
 	z-index: 1010;

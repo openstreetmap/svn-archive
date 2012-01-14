@@ -94,15 +94,16 @@
 	}
 	
 	function updateMapKey(force) {
-	    if (force || jQuery('#mapkey_area iframe').size() > 0) {
-	        var layer = map.baseLayer.keyname;
-	        var zoom = map.getZoom();
-	
-	        var mapkey = jQuery('#mapkey_area');
-	        mapkey.html('<iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/>');
-	    }
+		var html = document.getElementById('information').innerHTML;
+		if (force || html.startsWith("Legende")) {
+			var layer = map.baseLayer.keyname;
+			var zoom = map.getZoom();
+			var html = 'Legende:<br><div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
+			document.getElementById('information').innerHTML = html;
+			openSlide('slider');
+		}
 	}
-	
+
 	function mapMoved() {
 	    var lonlat = map.getCenter().clone();
 	    lonlat.transform(projmerc, proj4326);

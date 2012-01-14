@@ -29,7 +29,7 @@
 //======================
 // OBJECTS
 var timerlen = 5;
-var slideAniLen = 250;
+var slideAniLen = 240;
 
 var timerID = new Array();
 var startTime = new Array();
@@ -113,11 +113,11 @@ function endSlide(objname){
 		document.getElementById('panzoombar').style.display = "";
     }
     else{
-    	document.getElementById('panzoombar').style.left="240px";
+    	document.getElementById('panzoombar').style.left="340px";
     	document.getElementById('panzoombar').style.display = "";
     }
    	obj[objname].style.width = endWidth[objname] + "px";
-   	
+
    	delete(moving[objname]);
    	delete(timerID[objname]);
    	delete(startTime[objname]);

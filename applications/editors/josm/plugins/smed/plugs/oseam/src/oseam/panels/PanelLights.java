@@ -82,6 +82,19 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
+	public JComboBox rescueCatBox;
+	public EnumMap<Cat, Integer> rescueCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alRescueCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : rescueCats.keySet()) {
+				int idx = rescueCats.get(cat);
+				if (dlg.node != null && (idx == rescueCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
+				}
+			}
+		}
+	};
 	private ButtonGroup objButtons = new ButtonGroup();
 	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
@@ -157,7 +170,7 @@ public class PanelLights extends JPanel {
 		add(getObjButton(floatButton, 34, 35, 34, 32, "LightFloat", Obj.LITFLT));
 		add(getObjButton(trafficButton, 68, 35, 34, 32, "SSTraffic", Obj.SISTAT));
 		add(getObjButton(warningButton, 102, 35, 34, 32, "SSWarning", Obj.SISTAW));
-		add(getObjButton(coastguardButton, 0, 70, 34, 32, "Coastguard", Obj.CGUSTA));
+		add(getObjButton(coastguardButton, 0, 70, 34, 32, "CoastguardStation", Obj.CGUSTA));
 		add(getObjButton(pilotButton, 34, 70, 34, 32, "PilotBoarding", Obj.PILBOP));
 		add(getObjButton(rescueButton, 68, 70, 34, 32, "RescueStation", Obj.RSCSTA));
 		add(getObjButton(radioButton, 102, 70, 34, 32, "RadioStation", Obj.RDOSTA));

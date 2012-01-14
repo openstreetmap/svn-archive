@@ -36,6 +36,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem undoSelection;
     JMenuItem extractPoint;
     JMenuItem wiki;
+    JMenuItem latlon;
     
     JMenuItem replaceGeometry;
     JMenuItem tagBuffer;
@@ -68,6 +69,7 @@ public class UtilsPlugin2 extends Plugin {
         extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
         symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
         wiki = MainMenu.add(toolsMenu, new OpenPageAction());
+        latlon = MainMenu.add(toolsMenu, new LatLonAction());
 
         JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());

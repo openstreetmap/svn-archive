@@ -134,7 +134,6 @@ div.mnav ul li {
 	left: 30px;
 	bottom: 20px;
 	font-size: 10px;
-	zoom:20%;
 }
 
 #mapkey_area iframe {
@@ -144,7 +143,6 @@ div.mnav ul li {
     background-color: #ffffff;
     border: 0;
     z-index: 20002;
-    zoom:20%;
 }
 
 #wrapper {

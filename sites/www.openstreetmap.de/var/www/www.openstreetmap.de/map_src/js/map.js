@@ -74,7 +74,7 @@ function init(){
                "http://b.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
                "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],{attribution: 'Tile server sponsored by STRATO / <b>Europe only</b> / <a href="./germanstyle.html">About style</a>'}),
         new OpenLayers.Layer.OSM.CycleMap("Radfahrkarte (CycleMap)", {attribution:""}),
-        new OpenLayers.Layer.OSM("&Ouml;pnv-Karte", 
+        new OpenLayers.Layer.OSM("&Ouml;PNV-Karte", 
 			"http://tile.memomaps.de/tilegen/${z}/${x}/${y}.png", 
 			{numZoomLevels: 19,displayInLayerSwitcher:true,buffer:0,attribution:""}),
         new OpenLayers.Layer.OSM.Mapnik("OSM Standard (Mapnik)", {attribution:"", keyname: 'mapnik'}),

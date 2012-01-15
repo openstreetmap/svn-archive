@@ -67,7 +67,7 @@ public class FactoryDialog extends ToggleDialog
         LayoutManager originalManager = getLayout();
         initComponents();
         setLayout(originalManager);
-        add(mainPanel);
+        createLayout(mainPanel, false, null);
 
         // Register to all messages
         CzechAddressPlugin.addStatusListener(this);

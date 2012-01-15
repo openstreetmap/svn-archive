@@ -171,7 +171,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
 
-        add(rcPanel, BorderLayout.CENTER);
+        createLayout(rcPanel, false, null);
     }
 
     private static final Color CHOSEN_RELATION_COLOR = new Color(255, 255, 128);

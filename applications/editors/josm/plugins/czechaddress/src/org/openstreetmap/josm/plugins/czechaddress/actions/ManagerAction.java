@@ -22,7 +22,7 @@ public class ManagerAction extends JosmAction {
               Shortcut.registerShortcut("address:assignaddress",
                         "Adresy: Přiřadit adresy",
                         KeyEvent.VK_P, Shortcut.GROUP_DIRECT, Shortcut.SHIFT_DEFAULT),
-              true);
+              true, "czechaddress/manager", true);
     }
 
     public void actionPerformed(ActionEvent e) {

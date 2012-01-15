@@ -351,24 +351,16 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 		geomTree.setAlignmentX(LEFT_ALIGNMENT);
 		dataPanel.add(geomTree);
 
-		add(new JScrollPane(dataPanel), BorderLayout.CENTER);
-
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
-
 		checkButton = new SideButton(marktr("Check"), "checksignatures", "TrustOSM",
 				tr("Check all available signatures for selected object."), this);
-		buttonPanel.add(checkButton);
-
 		signButton = new SideButton(marktr("Sign"), "sign", "TrustOSM",
 				tr("Digital sign selected Tags, if you believe they are correct."), this);
-		buttonPanel.add(signButton);
-
 		showButton = new SideButton(marktr("Show"), "showsig", "TrustOSM",
 				tr("Show all available signatures for selected attribute."), this);
-		buttonPanel.add(showButton);
 
-
-		add(buttonPanel, BorderLayout.SOUTH);
+		createLayout(dataPanel, true, Arrays.asList(new SideButton[] {
+			checkButton, signButton, showButton
+		}));
 		DataSet.addSelectionListener(this);
 	}
 

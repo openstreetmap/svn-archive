@@ -37,8 +37,11 @@ public class PanelSpec extends JPanel {
 					dlg.panelMain.mark.setCategory(cat);
 					if ((cat == Cat.INB_CALM) || (cat == Cat.INB_SBM)) {
 						dlg.panelMain.mark.setObject(Obj.BOYINB);
+						dlg.panelMain.mark.setShape(Shp.UNKSHP);
 					} else {
 						dlg.panelMain.mark.setObject(Obj.MORFAC);
+						if (cat != Cat.MOR_BUOY)
+							dlg.panelMain.mark.setShape(Shp.UNKSHP);
 					}
 				}
 			}
@@ -62,27 +65,29 @@ public class PanelSpec extends JPanel {
 	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
 	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			for (Shp shp : shapes.keySet()) {
-				JRadioButton button = shapes.get(shp);
-				if (button.isSelected()) {
-					dlg.panelMain.mark.setShape(shp);
-					if (SeaMark.EntMAP.get(dlg.panelMain.mark.getObject()) != Ent.MOORING) {
-						dlg.panelMain.mark.setObject(objects.get(shp));
-						if (dlg.panelMain.mark.getObjColour(0) == Col.UNKCOL) {
-							dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-							dlg.panelMain.mark.setObjColour(Col.YELLOW);
+			if ((dlg.panelMain.mark.getObject() != Obj.MORFAC) || (dlg.panelMain.mark.getCategory() == Cat.MOR_BUOY)) {
+				for (Shp shp : shapes.keySet()) {
+					JRadioButton button = shapes.get(shp);
+					if (button.isSelected()) {
+						dlg.panelMain.mark.setShape(shp);
+						if (SeaMark.EntMAP.get(dlg.panelMain.mark.getObject()) != Ent.MOORING) {
+							dlg.panelMain.mark.setObject(objects.get(shp));
+							if (dlg.panelMain.mark.getObjColour(0) == Col.UNKCOL) {
+								dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
+								dlg.panelMain.mark.setObjColour(Col.YELLOW);
+							}
+							if (button == cairnButton) {
+								dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
+								dlg.panelMain.mark.setObjColour(Col.UNKCOL);
+							}
+							topmarkButton.setVisible(dlg.panelMain.mark.testValid());
 						}
-						if (button == cairnButton) {
-							dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-							dlg.panelMain.mark.setObjColour(Col.UNKCOL);
-						}
-						topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-					}
-					button.setBorderPainted(true);
-				} else
-					button.setBorderPainted(false);
+						button.setBorderPainted(true);
+					} else
+						button.setBorderPainted(false);
+				}
+				dlg.panelMain.panelMore.syncPanel();
 			}
-			dlg.panelMain.panelMore.syncPanel();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/SpecTopButton.png")));
@@ -109,14 +114,28 @@ public class PanelSpec extends JPanel {
 			dlg.panelMain.mark.setCategory(Cat.NOCAT);
 			dlg.panelMain.mark.setTopmark(Top.NOTOP);
 			if (mooringButton.isSelected()) {
+				dlg.panelMain.mark.setObject(Obj.MORFAC);
 				categoryBox.setVisible(false);
 				mooringBox.setVisible(true);
+				pillarButton.setEnabled(false);
+				sparButton.setEnabled(false);
+				beaconButton.setEnabled(false);
+				towerButton.setEnabled(false);
+				stakeButton.setEnabled(false);
+				cairnButton.setEnabled(false);
 				mooringButton.setBorderPainted(true);
 			} else {
 				mooringBox.setVisible(false);
 				categoryBox.setVisible(true);
+				pillarButton.setEnabled(true);
+				sparButton.setEnabled(true);
+				beaconButton.setEnabled(true);
+				towerButton.setEnabled(true);
+				stakeButton.setEnabled(true);
+				cairnButton.setEnabled(true);
 				mooringButton.setBorderPainted(false);
 			}
+			syncPanel();
 		}
 	};
 
@@ -198,6 +217,12 @@ public class PanelSpec extends JPanel {
 			mooringButton.setBorderPainted(true);
 			categoryBox.setVisible(false);
 			mooringBox.setVisible(true);
+			pillarButton.setEnabled(false);
+			sparButton.setEnabled(false);
+			beaconButton.setEnabled(false);
+			towerButton.setEnabled(false);
+			stakeButton.setEnabled(false);
+			cairnButton.setEnabled(false);
 			topmarkButton.setVisible(false);
 			for (Cat cat : moorings.keySet()) {
 				int item = moorings.get(cat);
@@ -208,6 +233,12 @@ public class PanelSpec extends JPanel {
 			mooringButton.setBorderPainted(false);
 			mooringBox.setVisible(false);
 			categoryBox.setVisible(true);
+			pillarButton.setEnabled(true);
+			sparButton.setEnabled(true);
+			beaconButton.setEnabled(true);
+			towerButton.setEnabled(true);
+			stakeButton.setEnabled(true);
+			cairnButton.setEnabled(true);
 			topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 			topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 			topmarkButton.setVisible(dlg.panelMain.mark.testValid());

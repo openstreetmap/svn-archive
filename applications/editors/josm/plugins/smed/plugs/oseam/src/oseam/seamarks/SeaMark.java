@@ -119,19 +119,6 @@ public class SeaMark extends JPanel {
 			setTopmark(Top.NOTOP);
 			setColour(Ent.TOPMARK, Col.UNKCOL);
 			setPattern(Ent.TOPMARK, Pat.NOPAT);
-			setFogSound(Fog.NOFOG);
-			setRadar(Rtb.NORTB);
-			setStatus(Sts.UNKSTS);
-			setConstr(Cns.UNKCNS);
-			setConsp(Con.UNKCON);
-			setRefl(Con.UNKCON);
-			setRef("");
-			setObjectHeight("");
-			setElevation("");
-			setChannel("");
-			setInfo("");
-			setSource("");
-			setFixme("");
 		}
 		repaint();
 	}
@@ -1235,10 +1222,23 @@ public class SeaMark extends JPanel {
 		}
 	}
 
-	public void clearSign() {
-		setObject(Obj.UNKOBJ);
+	public void clrMark() {
 		setName("");
+		setObject(Obj.UNKOBJ);
 		clrLight();
+		setFogSound(Fog.NOFOG);
+		setRadar(Rtb.NORTB);
+		setStatus(Sts.UNKSTS);
+		setConstr(Cns.UNKCNS);
+		setConsp(Con.UNKCON);
+		setRefl(Con.UNKCON);
+		setRef("");
+		setObjectHeight("");
+		setElevation("");
+		setChannel("");
+		setInfo("");
+		setSource("");
+		setFixme("");
 		dlg.panelMain.syncPanel();
 		repaint();
 	}
@@ -1281,7 +1281,7 @@ public class SeaMark extends JPanel {
 		if (keys.containsKey("seamark:type"))
 			str = keys.get("seamark:type");
 
-		setObject(Obj.UNKOBJ);
+		clrMark();
 		for (Obj obj : ObjSTR.keySet()) {
 			if (ObjSTR.get(obj).equals(str)) {
 				setObject(obj);
@@ -2133,10 +2133,6 @@ public class SeaMark extends JPanel {
 				case SPHERI:
 				case BARREL:
 					imgStr += "_Buoy_Small";
-					break;
-				case PILLAR:
-				case SPAR:
-					imgStr += "_Buoy";
 					break;
 				case FLOAT:
 				case SUPER:

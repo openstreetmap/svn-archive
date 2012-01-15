@@ -38,14 +38,14 @@ public class OSeaMAction {
 						}
 					} else {
 						node = null;
-						panelMain.mark.clearSign();
+						panelMain.mark.clrMark();
 						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
 				}
 			}
 			if (nextNode == null) {
 				node = null;
-				panelMain.mark.clearSign();
+				panelMain.mark.clrMark();
 				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}

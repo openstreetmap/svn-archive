@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.JLabel;
@@ -67,12 +68,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
         KeyEvent.VK_M, Shortcut.GROUP_LAYER), 150);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1,2));
-
         resetButton = new SideButton(marktr("Reset"), "select", "Measurement",
                 tr("Reset current measurement results and delete measurement path."), this);
-        buttonPanel.add(resetButton);
-        add(buttonPanel, BorderLayout.SOUTH);
 
         JPanel valuePanel = new JPanel(new GridLayout(0,2));
 
@@ -98,9 +95,12 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         segAngleLabel = new JLabel("- \u00b0");
         valuePanel.add(segAngleLabel);
 
-        add(valuePanel, BorderLayout.CENTER);
-
         this.setPreferredSize(new Dimension(0, 92));
+
+        createLayout(valuePanel, false, Arrays.asList(new SideButton[] {
+            resetButton
+        }));
+
         final MeasurementDialog dlg = this;
 
         DataSet.addSelectionListener(new SelectionChangedListener() {

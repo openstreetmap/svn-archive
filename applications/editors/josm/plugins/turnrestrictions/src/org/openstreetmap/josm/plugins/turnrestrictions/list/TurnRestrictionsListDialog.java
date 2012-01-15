@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -93,48 +94,31 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
     }
 
     /**
-     * Builds the panel with the checkbox for switching between the two
-     * list views
-     * 
-     * @return the panel
+     * Builds the UI
      */
-    protected JPanel buildInSelectionOnlyTogglePanel(){
+    protected void build() {
         JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
         pnl.setBorder(null);
         pnl.add(cbInSelectionOnly = new JCheckBox(tr("Only participating in selection")));
         cbInSelectionOnly.setToolTipText(tr(
            "<html>Select to display turn restrictions related to object in the current selection only.<br>"
          + "Deselect to display all turn restrictions in the current data set.</html>"));
-        return pnl;
-    }
-    
-    /**
-     * Builds the panel with the action buttons 
-     * 
-     * @return the panel 
-     */
-    protected JPanel buildCommandPanel() {
-        JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-        pnl.setBorder(null);
-        pnl.add(new SideButton(actNew = new NewAction(), false /* don't show the name */));
-        pnl.add(new SideButton(actEdit = new EditAction(), false /* don't show the name */));
-        pnl.add(new SideButton(actDelete = new DeleteAction(), false /* don't show the name */));
-        
-        actSelectSelectedTurnRestrictions = new SelectSelectedTurnRestrictions();
-        actZoomTo = new ZoomToAction();
-        return pnl;
-    }
-    
-    /**
-     * Builds the UI
-     */
-    protected void build() {
+
         pnlContent = new JPanel(new BorderLayout(0,0));
         pnlContent.setBorder(null);
-        pnlContent.add(buildInSelectionOnlyTogglePanel(),  BorderLayout.NORTH);
-        pnlContent.add(buildCommandPanel(), BorderLayout.SOUTH);
-        
-        add(pnlContent, BorderLayout.CENTER);
+        pnlContent.add(pnl,  BorderLayout.NORTH);
+
+        actNew = new NewAction();
+        actEdit = new EditAction();
+        actDelete = new DeleteAction();
+        actSelectSelectedTurnRestrictions = new SelectSelectedTurnRestrictions();
+        actZoomTo = new ZoomToAction();
+
+        createLayout(pnlContent, false, Arrays.asList(new SideButton[] {
+            new SideButton(actNew, false /* don't show the name */),
+            new SideButton(actEdit, false /* don't show the name */),
+            new SideButton(actDelete, false /* don't show the name */)
+        }));
         
         // create the two list views 
         pnlTurnRestrictionsInDataSet = new TurnRestrictionsInDatasetView();

@@ -59,7 +59,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
         panel.add(speedLabel = new JLabel());
         panel.add(new JLabel(tr("Course")));
         panel.add(courseLabel = new JLabel());
-        add(new JScrollPane(panel), BorderLayout.CENTER);
+        createLayout(panel, true, null);
     }
 
     /* (non-Javadoc)

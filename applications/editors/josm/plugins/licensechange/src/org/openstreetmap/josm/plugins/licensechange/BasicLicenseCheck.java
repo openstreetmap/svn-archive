@@ -43,7 +43,7 @@ public class BasicLicenseCheck extends Check
     private void doCheck(OsmPrimitive n, HashMap<User, Severity> users)
     {
         Severity sev = null;
-        if ((users != null) && (n.getUser() != null))
+        if (users != null)
         {
             for (Entry<User, Severity> e : users.entrySet())
             {

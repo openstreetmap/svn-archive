@@ -138,11 +138,16 @@ div.mnav ul li {
 
 #mapkey_area iframe {
 	width: 295px;
-	height: 350px;
+	height: 95%;
     border: none;
     background-color: #ffffff;
     border: 0;
     z-index: 20002;
+    overflow: auto;
+}
+
+#mapkey_area {
+	height: 90%;
 }
 
 #wrapper {

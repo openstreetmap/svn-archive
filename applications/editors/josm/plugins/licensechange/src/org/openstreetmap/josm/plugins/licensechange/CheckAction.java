@@ -86,22 +86,22 @@ public class CheckAction extends JosmAction
     class CheckTask extends PleaseWaitRunnable 
     {
         private Check licenseCheck;
-        private Collection<OsmPrimitive> validatedPrimitives;
-        private Collection<OsmPrimitive> formerValidatedPrimitives;
+        private Collection<OsmPrimitive> checkedPrimitives;
+        private Collection<OsmPrimitive> formerCheckedPrimitives;
         private boolean canceled;
         private List<LicenseProblem> problems;
 
         /**
          *
-         * @param validatedPrimitives the collection of primitives to validate.
-         * @param formerValidatedPrimitives the last collection of primitives being validates. May be null.
+         * @param checkedPrimitives the collection of primitives to validate.
+         * @param formerCheckedPrimitives the last collection of primitives being validates. May be null.
          */
-        public CheckTask(Collection<OsmPrimitive> validatedPrimitives, Collection<OsmPrimitive> formerValidatedPrimitives) 
+        public CheckTask(Collection<OsmPrimitive> checkedPrimitives, Collection<OsmPrimitive> formerCheckedPrimitives) 
         {
             super(tr("Loading"), false /*don't ignore exceptions */);
 
-            this.validatedPrimitives  = validatedPrimitives;
-            this.formerValidatedPrimitives = formerValidatedPrimitives;
+            this.checkedPrimitives  = checkedPrimitives;
+            this.formerCheckedPrimitives = formerCheckedPrimitives;
             this.licenseCheck = new BasicLicenseCheck(plugin);
         }
 
@@ -140,13 +140,13 @@ public class CheckAction extends JosmAction
                 OsmTransferException 
         {
             getProgressMonitor().indeterminateSubTask(tr("Loading from Quick History Service..."));
-            plugin.loadDataFromQuickHistoryService(validatedPrimitives);
+            plugin.loadDataFromQuickHistoryService(checkedPrimitives);
             problems = new ArrayList<LicenseProblem>(200);
             int testCounter = 0;
             getProgressMonitor().indeterminateSubTask(tr("Analyzing..."));
-            //licenseCheck.startCheck(getProgressMonitor().createSubTaskMonitor(validatedPrimitives.size(), false));
+            //licenseCheck.startCheck(getProgressMonitor().createSubTaskMonitor(checkedPrimitives.size(), false));
             licenseCheck.startCheck(getProgressMonitor());
-            licenseCheck.visit(validatedPrimitives);
+            licenseCheck.visit(checkedPrimitives);
             licenseCheck.endCheck();
             problems.addAll(licenseCheck.getProblems());
         }

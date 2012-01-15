@@ -173,7 +173,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
                 String d = atts.getValue("decision");
                 String s = atts.getValue("severity");
 
-                if (!"undecided".equals(d) && !"no".equals(d)) return;
+                if (!"undecided".equals(d) && !"no".equals(d) && !"anonymous".equals(d)) return;
 
                 if ("normal".equals(s) && "first".equals(v)) s = "first";
                 User u = User.createOsmUser(Long.parseLong(i), null);

@@ -106,7 +106,7 @@
 				document.getElementById('information').innerHTML = html;
 			}
 			else{
-				html += '<br>Leider keine Legende verfügbar ...';
+				html += '<br>Leider keine Legende verfügbar …';
 			}
 			document.getElementById('information').innerHTML = html;
 			openSlide('slider');

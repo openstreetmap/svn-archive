@@ -51,12 +51,12 @@ class osmsync_metavera(osmsync):
             osmnode['lon']                  = pod['longitude']
             osmnode['tag']['amenity']       = 'car_sharing'
             osmnode['tag']['operator']      = 'PhillyCarShare'
-            osmnode['tag']['capacity']      = str(commas - 1)
+            osmnode['tag']['capacity']      = str(commas)
             osmnode['tag']['name']          = xml.sax.saxutils.escape(pod['descr'].strip())
            #osmnode['tag']['website']       = pod['url'].strip()
            #osmnode['tag']['description']   = pod['addr'] .strip()+ " with " + ccs_pod['vstring'].strip()
             osmnode['tag']['source']        = 'osmsync:PhillyCarShare'
-            osmnode['tag']['source:pkey']   = 'pcs:' + pkey
+            osmnode['tag']['source:pkey']   = pkey
 
             if float(osmnode['lat']) <  39 or float(osmnode['lat']) >  41 or \
                float(osmnode['lon']) > -74 or float(osmnode['lon']) < -76:

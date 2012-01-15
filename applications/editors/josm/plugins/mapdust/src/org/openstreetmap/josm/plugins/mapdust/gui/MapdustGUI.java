@@ -312,7 +312,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             tabbedPane.add(actionPanel);
             mainPanel.add(tabbedPane, BorderLayout.CENTER);
         }
-        add(mainPanel, BorderLayout.CENTER);
+        createLayout(mainPanel, false, null);
     }
 
 

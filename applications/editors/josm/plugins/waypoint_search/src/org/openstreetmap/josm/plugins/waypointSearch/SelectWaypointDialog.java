@@ -57,7 +57,7 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
         panel.add(label,BorderLayout.SOUTH);
         
         //add panel to JOSM gui
-        add(panel,BorderLayout.CENTER);
+        createLayout(panel, false, null);
     }
 
     

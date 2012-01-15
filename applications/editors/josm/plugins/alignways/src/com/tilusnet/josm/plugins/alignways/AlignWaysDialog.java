@@ -107,18 +107,13 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
                 );
         modesPanel.add(infoText);
 
-
-
         // Start inactivated - JOSM cannot start directly in awMode
         activate(false);
 
-        // It looks like I don't have other choice for placement than this;
-        // ToggleDialog already defines its layout as BoxLayout
-        add(dlgPane, BorderLayout.CENTER);
+        createLayout(dlgPane, false, null);
 
         // Select length preserved mode by default
         btnKeepLength.doClick();
-
     }
 
     @Override

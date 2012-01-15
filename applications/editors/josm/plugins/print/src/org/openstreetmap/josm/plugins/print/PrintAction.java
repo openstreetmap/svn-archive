@@ -50,7 +50,7 @@ public class PrintAction extends JosmAction implements Runnable {
           tr("File: {0}", tr("Print...")), 
           KeyEvent.VK_P, 
           Shortcut.GROUP_MENU), 
-        true);
+        true, "print/print", true);
     }
 
     /**

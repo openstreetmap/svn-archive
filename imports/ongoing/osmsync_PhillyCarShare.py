@@ -62,7 +62,7 @@ class osmsync_metavera(osmsync):
                float(osmnode['lon']) > -74 or float(osmnode['lon']) < -76:
                 if self.options.debug or self.options.verbose:
                         sys.stderr.write('Skipping out of area pod #' + pkey + '\n')
-                        pprint(osmnode)
+                        #pprint(osmnode)
                         continue
 
             sourcenodes[pkey] = osmnode

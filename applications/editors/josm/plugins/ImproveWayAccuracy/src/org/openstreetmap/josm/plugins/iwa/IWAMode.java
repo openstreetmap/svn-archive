@@ -25,8 +25,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -35,6 +37,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
@@ -79,13 +82,13 @@ public class IWAMode extends MapMode implements MapViewPaintable,
     final private Cursor cursorSelectHover;
     final private Cursor cursorImprove;
     final private Cursor cursorImproveAdd;
+    final private Cursor cursorImproveDelete;
     final private Cursor cursorImproveAddLock;
     final private Cursor cursorImproveLock;
 
     private boolean shift = false;
     private boolean ctrl = false;
-    private boolean oldShift = false;
-    private boolean oldCtrl = false;
+    private boolean alt = false;
 
     private final Color guideColor;
     private final BasicStroke selectTargetWayStroke;
@@ -107,7 +110,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
         cursorSelect = ImageProvider.getCursor("normal", "mode");
         cursorSelectHover = ImageProvider.getCursor("hand", "mode");
         cursorImprove = ImageProvider.getCursor("crosshair", null);
-        cursorImproveAdd = ImageProvider.getCursor("crosshair", "add_node");
+        cursorImproveAdd = ImageProvider.getCursor("crosshair", "addnode");
+        cursorImproveDelete = ImageProvider.getCursor("crosshair", "delete_node");
         cursorImproveAddLock = ImageProvider.getCursor("crosshair",
                 "add_node_lock");
         cursorImproveLock = ImageProvider.getCursor("crosshair", "lock");
@@ -354,7 +358,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
                 return;
             }
 
-            if (ctrl && candidateSegment != null) {
+            if (ctrl && !alt && candidateSegment != null) {
                 // Adding a new node to the highlighted segment
                 // Important: If there are other ways containing the same
                 // segment, a node must added to all of that ways.
@@ -412,6 +416,40 @@ public class IWAMode extends MapMode implements MapViewPaintable,
 
                 Main.main.undoRedo.add(new SequenceCommand(text, virtualCmds));
 
+            } else if(alt && ctrl && candidateNode != null) { 
+            	
+            	//check to see if node has interesting keys
+            	Iterator<String> keyIterator = candidateNode.getKeys().keySet().iterator();
+            	boolean hasTags = false;
+            	while(keyIterator.hasNext()) {
+            		String key = keyIterator.next();
+            		if(!OsmPrimitive.isUninterestingKey(key)) {
+            			hasTags = true;
+            			break;
+            		}
+            	}
+            	
+            	//check to see if node is in use by more than one object
+            	List<OsmPrimitive> referrers = candidateNode.getReferrers();
+            	List<Way> ways = OsmPrimitive.getFilteredList(referrers, Way.class);
+            	if(referrers.size() != 1 || ways.size() != 1) {
+            		JOptionPane.showMessageDialog(Main.parent,
+                            tr("Cannot delete node that is referenced by multiple objects"),
+                            tr("Error"), JOptionPane.ERROR_MESSAGE);
+            	}
+            	else if(hasTags) {
+            		JOptionPane.showMessageDialog(Main.parent,
+                            tr("Cannot delete node that has tags"),
+                            tr("Error"), JOptionPane.ERROR_MESSAGE);
+            	}
+            	else {
+            		List<Node> nodeList = new ArrayList<Node>();
+            		nodeList.add(candidateNode);
+            		Command deleteCmd = DeleteCommand.delete(getEditLayer(), nodeList, true);
+            		Main.main.undoRedo.add(deleteCmd);
+            	}
+            	
+            	
             } else if (candidateNode != null) {
                 // Moving the highlighted node
                 EastNorth nodeEN = candidateNode.getEastNorth();
@@ -449,10 +487,9 @@ public class IWAMode extends MapMode implements MapViewPaintable,
      */
     @Override
     protected void updateKeyModifiers(InputEvent e) {
-        oldCtrl = ctrl;
-        oldShift = shift;
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
+        alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
     }
 
     /**
@@ -468,10 +505,21 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             mv.setNewCursor(targetWay == null ? cursorSelect
                     : cursorSelectHover, this);
         } else if (state == State.improving) {
-            mv.setNewCursor(ctrl ? (shift || dragging ? cursorImproveAddLock
-                    : cursorImproveAdd)
-                    : (shift || dragging ? cursorImproveLock : cursorImprove),
-                    this);
+        	if(alt && ctrl) {
+        		mv.setNewCursor(cursorImproveDelete, this);
+        	} else if(shift || dragging) {
+        		if(ctrl) {
+        			mv.setNewCursor(cursorImproveAddLock, this);
+        		} else {
+        			mv.setNewCursor(cursorImproveLock, this);
+        		}
+        	}
+        	else if(ctrl && !alt){
+        		mv.setNewCursor(cursorImproveAdd, this);
+        	}
+        	else {
+        		mv.setNewCursor(cursorImprove, this);
+        	}
         }
     }
 
@@ -481,7 +529,6 @@ public class IWAMode extends MapMode implements MapViewPaintable,
      */
     public void updateCursorDependentObjectsIfNeeded() {
         if (state == State.improving && (shift || dragging)
-                && (ctrl == oldCtrl)
                 && !(candidateNode == null && candidateSegment == null))
             return;
 
@@ -494,7 +541,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
         if (state == State.selecting) {
             targetWay = IWATargetWayHelper.findWay(mv, mousePos);
         } else if (state == State.improving) {
-            if (ctrl) {
+            if (ctrl && !alt) {
                 candidateSegment = IWATargetWayHelper.findCandidateSegment(mv,
                         targetWay, mousePos);
                 candidateNode = null;

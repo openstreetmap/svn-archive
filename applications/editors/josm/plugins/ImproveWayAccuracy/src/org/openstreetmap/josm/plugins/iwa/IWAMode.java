@@ -94,6 +94,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
     private final BasicStroke selectTargetWayStroke;
     private final BasicStroke moveNodeStroke;
     private final BasicStroke addNodeStroke;
+    private final BasicStroke deleteNodeStroke;
 
     private boolean selectionChangedBlocked = false;
 
@@ -123,6 +124,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
         moveNodeStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
         addNodeStroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER);
+        deleteNodeStroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER);
     }
 
@@ -192,10 +195,12 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             else
                 return tr("Select a way that you want to make more accurate.");
         } else {
-            if (!ctrl)
-                return tr("Click to move the highlighted node. Hold Ctrl to add new nodes.");
+            if (ctrl)
+                return tr("Click to add a new node. Release Ctrl to move existing nodes or hold Alt to delete.");
+            else if (alt)
+                return tr("Click to delete the highlighted node. Release Alt to move existing nodes or hold Ctrl to add new nodes.");
             else
-                return tr("Click to add a new node. Release Ctrl to move existing nodes.");
+                return tr("Click to move the highlighted node. Hold Ctrl to add new nodes, or Alt to delete.");
         }
     }
 
@@ -254,11 +259,11 @@ public class IWAMode extends MapMode implements MapViewPaintable,
 
             // Finding endpoints
             Point p1 = null, p2 = null;
-            if (candidateSegment != null) {
+            if (ctrl && candidateSegment != null) {
                 g.setStroke(addNodeStroke);
                 p1 = mv.getPoint(candidateSegment.getFirstNode());
                 p2 = mv.getPoint(candidateSegment.getSecondNode());
-            } else if (candidateNode != null) {
+            } else if (!alt && !ctrl && candidateNode != null) {
                 g.setStroke(moveNodeStroke);
                 List<Pair<Node, Node>> wpps = targetWay.getNodePairs(false);
                 for (Pair<Node, Node> wpp : wpps) {
@@ -269,10 +274,31 @@ public class IWAMode extends MapMode implements MapViewPaintable,
                     if (p1 != null && p2 != null)
                         break;
                 }
+            } else if (alt && !ctrl && candidateNode != null) {
+                g.setStroke(deleteNodeStroke);
+                List<Node> nodes = targetWay.getNodes();
+                int index = nodes.indexOf(candidateNode);
+                
+                // Only draw line if node is not first and/or last
+                if (index != 0 && index != (nodes.size() - 1)) {
+                    p1 = mv.getPoint(nodes.get(index - 1));
+                    p2 = mv.getPoint(nodes.get(index + 1));
             }
+                // TODO: indicate what part that will be deleted? (for end nodes)
+            }
+            
 
             // Drawing preview lines
             GeneralPath b = new GeneralPath();
+            if (alt && !ctrl) {
+                // In delete mode
+                if (p1 != null && p2 != null) {
+                    b.moveTo(p1.x, p1.y);
+                    b.lineTo(p2.x, p2.y);
+                }
+            }
+            else {
+                // In add or move mode
             if (p1 != null) {
                 b.moveTo(mousePos.x, mousePos.y);
                 b.lineTo(p1.x, p1.y);
@@ -280,6 +306,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             if (p2 != null) {
                 b.moveTo(mousePos.x, mousePos.y);
                 b.lineTo(p2.x, p2.y);
+            }
             }
             g.draw(b);
 
@@ -416,7 +443,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
 
                 Main.main.undoRedo.add(new SequenceCommand(text, virtualCmds));
 
-            } else if(alt && ctrl && candidateNode != null) { 
+            } else if(alt && !ctrl && candidateNode != null) { 
+            	// Deleting the highlighted node
             	
             	//check to see if node has interesting keys
             	Iterator<String> keyIterator = candidateNode.getKeys().keySet().iterator();
@@ -489,7 +517,8 @@ public class IWAMode extends MapMode implements MapViewPaintable,
     protected void updateKeyModifiers(InputEvent e) {
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-        alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
+        // accept either Alt key (including AltGr)
+        alt = ((e.getModifiers() & (ActionEvent.ALT_MASK|InputEvent.ALT_GRAPH_MASK)) != 0);
     }
 
     /**
@@ -505,7 +534,7 @@ public class IWAMode extends MapMode implements MapViewPaintable,
             mv.setNewCursor(targetWay == null ? cursorSelect
                     : cursorSelectHover, this);
         } else if (state == State.improving) {
-        	if(alt && ctrl) {
+        	if(alt && !ctrl) {
         		mv.setNewCursor(cursorImproveDelete, this);
         	} else if(shift || dragging) {
         		if(ctrl) {

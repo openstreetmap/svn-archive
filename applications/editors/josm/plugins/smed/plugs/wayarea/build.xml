@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="OSeaM" default="dist" basedir=".">
+<project name="WayArea" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="some new features in internationalising"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->

@@ -38,14 +38,14 @@ public class WayAreaAction {
 					} else {
 						node = null;
 //						panelMain.mark.clrMark();
-						manager.showVisualMessage(Messages.getString("OneNode"));
+//						manager.showVisualMessage(Messages.getString("OneNode"));
 					}
 				}
 			}
 			if (nextNode == null) {
 				node = null;
 //				panelMain.mark.clrMark();
-				manager.showVisualMessage(Messages.getString("SelectNode"));
+//				manager.showVisualMessage(Messages.getString("SelectNode"));
 			}
 		}
 	};

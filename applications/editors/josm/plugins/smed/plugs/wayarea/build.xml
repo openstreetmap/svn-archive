@@ -82,8 +82,8 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-        <copy todir="${plugin.build.dir}/oseam/msg">
-            <fileset dir="${plugin.src.dir}/oseam/msg"/>
+        <copy todir="${plugin.build.dir}/wayarea/msg">
+            <fileset dir="${plugin.src.dir}/wayarea/msg"/>
         </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
@@ -109,8 +109,8 @@
                 <attribute name="Author" value="Werner, Malcolm"/>
                 <attribute name="Plugin-Class" value="toms.Toms"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Create and edit seamarks for OpenSeaMap"/>
-                <attribute name="Plugin-Icon" value="images/Smp.png"/>
+                <attribute name="Plugin-Description" value="Create and edit ways and areas for OpenSeaMap"/>
+                <attribute name="Plugin-Icon" value="images/wayarea.png"/>
                 <attribute name="Plugin-Link" value="http://openseamap.org/"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

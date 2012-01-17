@@ -90,12 +90,12 @@ public class SmedAbout implements SmedPluggable {
             aboutCopyright = new JLabel();
             aboutCopyright.setBounds(new Rectangle(125, 0, 245, 55));
             aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009/10/11<BR><center>by" +
-            				"<BR>Werner KÃ¶nig & Malcolm Herring</BODY></HTML>");
+            				"<BR>Werner Kšnig & Malcolm Herring</BODY></HTML>");
 
             aboutAuthors = new JLabel();
             aboutAuthors.setBounds(new Rectangle(30, 50
             		, 340, 30));
-            aboutAuthors.setText("Authors: Werner KÃ¶nig and Malcolm Herring");
+            aboutAuthors.setText("Authors: Werner Kšnig and Malcolm Herring");
 
             aboutVersion = new JLabel();
             aboutVersion.setBounds(new Rectangle(30, 65, 340, 30));
@@ -116,6 +116,7 @@ public class SmedAbout implements SmedPluggable {
         	aboutPlugins = new JLabel();
             aboutPlugins.setBounds(new Rectangle(58, 135, 303, 60));
             aboutPlugins.setText("<HTML><BODY>SeaMark Editor" +
+            		"<BR>Way & Area Editor" +
             		"<BR>Harbour Editor" +
             		"<BR>About - this tab</BODY></HTML>");
             

@@ -12,6 +12,12 @@ import wayarea.dialogs.WayAreaAction;
 public class PanelMain extends JPanel {
 
 	private WayAreaAction dlg;
+//	public PanelF panelF = null;
+//	public PanelJ panelJ = null;
+//	public PanelK panelK = null;
+//	public PanelL panelL = null;
+//	public PanelM panelM = null;
+//	public PanelN panelN = null;
 	public JButton saveButton = null;
 	private ActionListener alSave = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -86,13 +92,13 @@ public class PanelMain extends JPanel {
 	}
 
 	public void syncPanel() {
-		typeButtons.clearSelection();
-		fButton.setBorderPainted(false);
-		jButton.setEnabled(false);
-		kButton.setBorderPainted(false);
-		lButton.setEnabled(false);
-		mButton.setBorderPainted(false);
-		nButton.setEnabled(false);
+//		typeButtons.clearSelection();
+//		fButton.setBorderPainted(false);
+//		jButton.setEnabled(false);
+//		kButton.setBorderPainted(false);
+//		lButton.setEnabled(false);
+//		mButton.setBorderPainted(false);
+//		nButton.setEnabled(false);
 	}
 
 	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String tip) {

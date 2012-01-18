@@ -35,11 +35,11 @@ def copy_files(src,dest,files):
         else:
             shutil.copy2(os.path.join(src,f),os.path.join(dest,f))
 
-def copy_settings_files(settings_dir,target_inc_dir):
+def copy_settings_files(settings_dir,target_inc_dir,target_server):
     copy_files(settings_dir,target_inc_dir,[
-        ("datasource-settings.xml.inc.toolserver","datasource-settings.xml.inc"),
-        ("fontset-settings.xml.inc.toolserver","fontset-settings.xml.inc"),
-        ("settings.xml.inc.toolserver","settings.xml.inc")]
+        ("datasource-settings.xml.inc.{srv}".format(srv=target_server),"datasource-settings.xml.inc"),
+        ("fontset-settings.xml.inc.{srv}".format(srv=target_server),"fontset-settings.xml.inc"),
+        ("settings.xml.inc.{srv}".format(srv=target_server),"settings.xml.inc")]
     )
 
 def main(options):
@@ -49,7 +49,7 @@ def main(options):
     settings_dir = options['settingsdir']
     temp_dir = options['tempdir']
     deploy_dir = options['deploydir']
-
+    target_server = options['targetserver']
     # (0) clean temp and deploy dirs
     shutil.rmtree(temp_dir,ignore_errors=True)
     shutil.rmtree(deploy_dir,ignore_errors=True)
@@ -57,7 +57,7 @@ def main(options):
     # (1) copy the mapnik to temp and patch with local settings.
     patched_mapnik_dir = os.path.join(temp_dir,"mapnik")
     shutil.copytree(original_mapnik_dir,patched_mapnik_dir)
-    copy_settings_files(settings_dir,os.path.join(patched_mapnik_dir,"inc"))
+    copy_settings_files(settings_dir,os.path.join(patched_mapnik_dir,"inc"),target_server)
 
     # (2) create the bw styles
     mapnik_to_bw.main({'sourcedir':patched_mapnik_dir, 'sourcefile':'osm.xml', 'destdir':deploy_dir})
@@ -111,6 +111,7 @@ if __name__ == '__main__':
     parser.add_option("-s", "--settingsdir", dest="settingsdir", help="path to the mapnik settings directory", default="./mapnik-patch")
     parser.add_option("-t", "--tempdir", dest="tempdir", help="path to the temporary directory", default="/tmp/kays-styles-mapnik")
     parser.add_option("-d", "--deploydir", dest="deploydir", help="path to the deploy directory, further dirs are created within. default is '/tmp'", default="/tmp")
+    parser.add_option("-v", "--targetserver", dest="targetserver", help="target server for deployment. default is 'toolserver'", default="toolserver")
     (options, args) = parser.parse_args()
     print options
     main(options.__dict__)

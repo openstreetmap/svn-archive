@@ -63,9 +63,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JRadioButton crosspiece4 = new JRadioButton(tr("100 m"));
 
     private JRadioButton grabRes1 = new JRadioButton(tr("high"));
-
     private JRadioButton grabRes2 = new JRadioButton(tr("medium"));
-
     private JRadioButton grabRes3 = new JRadioButton(tr("low"));
 
     private JCheckBox layerLS3 = new JCheckBox(tr("water"));
@@ -151,17 +149,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         JLabel jLabelRes = new JLabel(tr("Image resolution:"));
         cadastrewms.add(jLabelRes, GBC.std().insets(0, 5, 10, 0));
         ButtonGroup bgResolution = new ButtonGroup();
-        ActionListener resActionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-              AbstractButton button = (AbstractButton) actionEvent.getSource();
-              grabMultiplier4Size.setEnabled(button == grabMultiplier4);
-            }
-          };
-        grabRes1.addActionListener( resActionListener);
         grabRes1.setToolTipText(tr("High resolution (1000x800)"));
-        grabRes2.addActionListener( resActionListener);
         grabRes2.setToolTipText(tr("Medium resolution (800x600)"));
-        grabRes3.addActionListener( resActionListener);
         grabRes3.setToolTipText(tr("Low resolution (600x400)"));
         bgResolution.add(grabRes1);
         bgResolution.add(grabRes2);

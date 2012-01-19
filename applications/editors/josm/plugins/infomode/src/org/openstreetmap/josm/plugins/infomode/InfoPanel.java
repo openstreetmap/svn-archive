@@ -54,7 +54,10 @@ class InfoPanel extends JPanel {
         // lightweight hyperlink
         label6.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) { OpenBrowser.displayUrl(label6.getText());  }
+            public void mouseClicked(MouseEvent e) { 
+                String s = label6.getText();
+                OpenBrowser.displayUrl( s.substring(9, s.length()-11) ); 
+            }
             public void mousePressed(MouseEvent e) { }
             public void mouseReleased(MouseEvent e) { }
             public void mouseEntered(MouseEvent e) { }
@@ -119,7 +122,7 @@ class InfoPanel extends JPanel {
         s1=s1+"L="+(int)trk.length();
         label5.setText(s1);
         if (trk.getAttributes().containsKey("url")) {
-           label6.setText(trk.getAttributes().get("url").toString());
+           label6.setText(String.format("<html><u>%s</u></html>", trk.getAttributes().get("url").toString()));
         } else label6.setText(null);
     }
     

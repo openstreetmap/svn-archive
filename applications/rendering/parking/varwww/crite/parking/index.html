@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head profile="http://www.w3.org/2005/10/profile">
-    <title>Crite Parking Map</title>
-    <meta name="description" content="Parking map using OpenStreetMap data." />
+    <title>Crite Wifi Map</title>
+    <meta name="description" content="Wifi map using OpenStreetMap data." />
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta http-equiv="content-script-type" content="text/javascript" />
     <meta http-equiv="content-style-type" content="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var map;
       var showPopupOnHover = false;
-      text = new Array("Parking Map info and legend","Parking Map info and legend");
+      text = new Array("Wifi Map info and legend","Wifi Map info and legend");
 
       // avoid pink tiles
       OpenLayers.IMAGE_RELOAD_ATTEMPTS = 4;
@@ -60,8 +60,8 @@
               maxResolution: 156543.0339,
               maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
             });
-        var parkingbw = new OpenLayers.Layer.TMS("Parking Map",
-            "http://tile.crite.net/parking/",
+        var wifibw = new OpenLayers.Layer.TMS("Wifi Map",
+            "http://tile.crite.net/wifi/",
             {
               type: 'png', getURL: osm_getTileURL,
               displayOutsideMaxExtent: true, isBaseLayer: true,
@@ -73,7 +73,7 @@
         var cycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map");
         var osma  = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-        var parkingtrans = new OpenLayers.Layer.TMS("Parking",
+        var parkingtrans = new OpenLayers.Layer.TMS("Wifi",
             "http://tile.crite.net/parktrans/",
             {
               type: 'png', getURL: osm_getTileURL,
@@ -81,14 +81,14 @@
               transparent: true, opacity: 0.8, "visibility": false 
             }
             );
-        var parkingicons = new OpenLayers.Layer.Text("Parking Icons",
+        var parkingicons = new OpenLayers.Layer.Text("Wifi Icons",
             {
-              location:"./parkingicons.txt",
+              location:"./wifiicons.txt",
               projection: map.displayProjection
             }
             );
 
-        map.addLayers([parkingbw, osm, cycle, osma/*, hikebike*/]);
+        map.addLayers([wifibw, osm, cycle, osma/*, hikebike*/]);
         map.addLayers([parkingtrans, parkingicons]);
 
         // Würzburg zoom=16&lat=49.79201&lon=9.94524
@@ -120,7 +120,7 @@
   </head>
   <body onload="init()">
     <div class="noprint" id="descriptionToggle" onclick="toggleInfo()">Parking Map info and legend</div>
-    <div class="hide" id="description">Parking Map. Render style by Kay Drangmeister. (<a href="http://wiki.openstreetmap.org/wiki/Proposed_features/parking:lane">Description</a>)<br/>
+    <div class="hide" id="description">Parking Map. Render style by Kay Drangmeister. (<a href="http://wiki.openstreetmap.org/wiki/wifi">Description</a>)<br/>
       <img title="Legend" src="legend.png" id="legend" alt="Legend / map key" /><br/>
       Please use the layers menu to show/hide additional information. 
     </div>

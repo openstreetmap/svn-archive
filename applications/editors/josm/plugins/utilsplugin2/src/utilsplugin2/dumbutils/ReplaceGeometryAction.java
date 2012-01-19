@@ -17,7 +17,7 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
- * Replaces already existing way with the other, fresh created. Select both ways and push the button.
+ * Replaces already existing object (id>0) with a new object (id<0).
  *
  * @author Zverik
  */
@@ -26,36 +26,116 @@ public class ReplaceGeometryAction extends JosmAction {
     private static final double MAX_NODE_REPLACEMENT_DISTANCE = 3e-4;
 
     public ReplaceGeometryAction() {
-        super(TITLE, "dumbutils/replacegeometry", tr("Replace geometry of selected way with a new one"),
+        super(TITLE, "dumbutils/replacegeometry", tr("Replace geometry of selected object with a new one"),
                 Shortcut.registerShortcut("tools:replacegeometry", tr("Tool: {0}", TITLE), KeyEvent.VK_G,
                 Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT), true);
     }
 
     @Override
-    public void actionPerformed( ActionEvent e ) {
-        if( getCurrentDataSet() == null ) return;
+    public void actionPerformed(ActionEvent e) {
+        if (getCurrentDataSet() == null) {
+            return;
+        }
+
         // There must be two ways selected: one with id > 0 and one new.
-        List<Way> selection = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
-        if( selection.size() != 2 ) {
+        List<OsmPrimitive> selection = new ArrayList(getCurrentDataSet().getSelected());
+        if (selection.size() != 2) {
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("This tool replaces geometry of one way with another, and requires two ways to be selected."),
+                    tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+
+        OsmPrimitive firstObject = selection.get(0);
+        OsmPrimitive secondObject = selection.get(1);
+
+        if (firstObject instanceof Way && secondObject instanceof Way) {
+            replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
+        } else if (firstObject instanceof Node && secondObject instanceof Way) {
+            replaceNodeWithWay((Node) firstObject, (Way) secondObject);
+        } else if (secondObject instanceof Node && firstObject instanceof Way) {
+            replaceNodeWithWay((Node) secondObject, (Way) firstObject);
+        } else {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("This tool can only replace a node with a way, or a way with a way."),
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+    }
+    
+    public void replaceNodeWithWay(Node node, Way way) {
+        if (!node.getReferrers().isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Node has referrers, cannot replace with way."), TITLE, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        Node nodeToReplace = null;
+        // see if we need to replace a node in the replacement way
+        if (!node.isNew()) {
+            // Prepare a list of nodes that are not used anywhere except in the way
+            Collection<Node> nodePool = getUnimportantNodes(way);
+            nodeToReplace = findNearestNode(node, nodePool);
+        }
+        
+        List<Command> commands = new ArrayList<Command>();
+        AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) node.getKeys();
+        
+        // replace sacrificial node in way with node that is being upgraded
+        if (nodeToReplace != null) {
+            List<Node> wayNodes = way.getNodes();
+            int idx = wayNodes.indexOf(nodeToReplace);
+            wayNodes.set(idx, node);
+            if (idx == 0) {
+                // node is at start/end of way
+                wayNodes.set(wayNodes.size() - 1, node);
+            }
+            commands.add(new ChangeNodesCommand(way, wayNodes));
+            commands.add(new MoveCommand(node, nodeToReplace.getCoor()));
+            commands.add(new DeleteCommand(nodeToReplace));
+            
+            // delete tags from node
+            if (!nodeTags.isEmpty()) {
+                AbstractMap<String, String> nodeTagsToDelete = new HashMap<String, String>();
+                for (String key : nodeTags.keySet()) {
+                    nodeTagsToDelete.put(key, null);
+                }
+                commands.add(new ChangePropertyCommand(Arrays.asList(node), nodeTagsToDelete));
+            }
+        } else {
+            // no node to replace, so just delete the original node
+            commands.add(new DeleteCommand(node));
+        }
+
+        // Copy tags from node
+        // TODO: use merge tag conflict dialog instead
+        commands.add(new ChangePropertyCommand(Arrays.asList(way), nodeTags));
+        
+        getCurrentDataSet().setSelected(way);
+        
+        Main.main.undoRedo.add(new SequenceCommand(
+                tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
+                commands));
+    }
+    
+    public void replaceWayWithWay(List<Way> selection) {
+        boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
-	boolean overrideNewCheck = false;
-	if( selection.get(1-idxNew).isNew() ) {
-	    // if both are new, select the one with all the DB nodes
-	    boolean areNewNodes = false;
-	    for( Node n : selection.get(0).getNodes() )
-		if( n.isNew() )
-		    areNewNodes = true;
-	    idxNew = areNewNodes ? 0 : 1;
-	    overrideNewCheck = true;
-	    for( Node n : selection.get(1-idxNew).getNodes() )
-		if( n.isNew() )
-		    overrideNewCheck = false;
-	}
+
+        if( selection.get(1-idxNew).isNew() ) {
+            // if both are new, select the one with all the DB nodes
+            boolean areNewNodes = false;
+            for (Node n : selection.get(0).getNodes()) {
+                if (n.isNew()) {
+                    areNewNodes = true;
+                }
+            }
+            idxNew = areNewNodes ? 0 : 1;
+            overrideNewCheck = true;
+            for (Node n : selection.get(1 - idxNew).getNodes()) {
+                if (n.isNew()) {
+                    overrideNewCheck = false;
+                }
+            }
+        }
         Way geometry = selection.get(idxNew);
         Way way = selection.get(1 - idxNew);
         if( !overrideNewCheck && (way.isNew() || !geometry.isNew()) ) {
@@ -66,14 +146,7 @@ public class ReplaceGeometryAction extends JosmAction {
         }
 
         // Prepare a list of nodes that are not used anywhere except in the way
-        Set<Node> nodePool = new HashSet<Node>();
-        Area a = getCurrentDataSet().getDataSourceArea();
-        for( Node node : way.getNodes() ) {
-            List<OsmPrimitive> referrers = node.getReferrers();
-            if( !node.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
-                    && (node.isNewOrUndeleted() || a == null || a.contains(node.getCoor())) )
-                nodePool.add(node);
-        }
+        Collection<Node> nodePool = getUnimportantNodes(way);
 
         // And the same for geometry, list nodes that can be freely deleted
         Set<Node> geometryPool = new HashSet<Node>();
@@ -133,6 +206,24 @@ public class ReplaceGeometryAction extends JosmAction {
                 commands));
     }
 
+    /**
+     * Create a list of nodes that are not used anywhere except in the way.
+     * @param way
+     * @return 
+     */
+    public Collection<Node> getUnimportantNodes(Way way) {
+        Set<Node> nodePool = new HashSet<Node>();
+        Area a = getCurrentDataSet().getDataSourceArea();
+        for (Node n : way.getNodes()) {
+            List<OsmPrimitive> referrers = n.getReferrers();
+            if (!n.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
+                    && (n.isNewOrUndeleted() || a == null || a.contains(n.getCoor()))) {
+                nodePool.add(n);
+            }
+        }
+        return nodePool;
+    }
+    
     /**
      * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.
      * @return null if there is no such node.

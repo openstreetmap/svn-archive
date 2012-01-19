@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -39,7 +41,16 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
                 tr("Adjust the position of the selected imagery layer"), mapFrame,
                 ImageProvider.getCursor("normal", "move"));
     }
-
+    
+    private List<? extends Layer> getVisibleLayers() {
+        List<? extends Layer> all = new ArrayList<Layer>(Main.map.mapView.getLayersOfType(ImageryLayer.class));
+        Iterator<? extends Layer> it = all.iterator();
+        while (it.hasNext()) {
+            if (!it.next().isVisible()) it.remove();
+        }
+        return all;
+    }
+    
     @Override public void enterMode() {
         super.enterMode();
         if (!hasImageryLayersToAdjust()) {
@@ -50,7 +61,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         if (layers.size() == 1) {
             adjustingLayer = layers.get(0);
         } else {
-            adjustingLayer = (ImageryLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(ImageryLayer.class));
+            adjustingLayer = (ImageryLayer)askAdjustLayer(getVisibleLayers());
         }
         if (adjustingLayer == null)
             return;

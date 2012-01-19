@@ -2,34 +2,34 @@
     <!-- wifi points: ticket vending machines -->
     <Rule>
       <Filter>[amenity] = 'vending_machine' and [vending]='wifi_tickets'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi-vending.png" />
     </Rule>
 
     <!-- wifi nodes -->
     <Rule>
       <Filter>[cond]='none'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_none.png" />
     </Rule>
     <Rule>
       <Filter>[cond]='fee'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_fee.png" />
     </Rule>
     <Rule>
       <Filter>[cond]='customers'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_cust.png" />
     </Rule>
     <Rule>
       <Filter>[cond]='free'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_free.png" />
     </Rule>
     <Rule>
       <Filter>[cond]='unknown'</Filter>
-      &maxscale_zoom16;
+      &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_unkn.png" />
     </Rule>
 </Style>

@@ -38,7 +38,7 @@
     <StyleName>wifi-points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,(tags->'amenity') as "amenity",(tags->'name') as "name",(tags->'vending') as "vending",(tags->'fee') as "fee",
+      (select way,amenity,name,(tags->'vending') as "vending",(tags->'fee') as "fee",
         CASE /* wifi-internetaccess= */ LOWER(SUBSTRING(COALESCE(tags->'wifi','--'),1,2) || SUBSTRING(COALESCE(tags->'internet_access','--'),1,2))
         WHEN 'ye--' THEN 'unknown'
         WHEN 'no--' THEN 'none'

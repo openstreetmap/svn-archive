@@ -102,7 +102,7 @@
     <StyleName>wifi-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,(tags->'amenity') AS "amenity",(tags->'tourism') AS "tourism",(tags->'name') AS "name",(tags->'fee') AS "fee",(tags->'access') AS "access",(tags->'parking:condition:area') AS "parking:condition:area",
+      (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",
         CASE LOWER(tags->'wifi')
         WHEN 'yes' THEN 'unknown'
         WHEN 'no' THEN 'none'

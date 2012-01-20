@@ -31,12 +31,17 @@ public class AlignWaysPlugin extends Plugin {
 
     public AlignWaysPlugin(PluginInformation info) {
         super(info);
+        
+        // Construct the AlignWays mode toggle button
         awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
         btn = new IconToggleButton(awMode);
         btn.setVisible(true);
+        
+        // Add the action entries to the Tools Menu
         Main.main.menu.toolsMenu.addSeparator();
         awAction = new AlignWaysAction();
         alignWaysMenuItem = MainMenu.add(Main.main.menu.toolsMenu, awAction);
+        
         awDialog = new AlignWaysDialog(awMode);
         // Prevent user clicking on the Windows menu entry while panel is meaningless
         awDialog.getWindowMenuItem().setEnabled(false);

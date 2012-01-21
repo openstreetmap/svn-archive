@@ -219,13 +219,13 @@ def dom_convert_to_grey(document):
         bw=rgb_to_css(color_to_bw(parse_color(col)))
         #print "converted {typ} from {a} to {bw}." .format(typ='TS-fill',a=col,bw=bw)
         el.setAttribute("fill",bw)
-        #<TextSymbolizer halo_fill="#fed7a5"/> (optional)
-        col = el.getAttribute("halo_fill")
+        #<TextSymbolizer halo-fill="#fed7a5"/> (optional)
+        col = el.getAttribute("halo-fill")
         assert(col!=None)
         if col!='':
             bw=rgb_to_css(color_to_bw(parse_color(col)))
-            #print "converted {typ} from {a} to {bw}." .format(typ='TS-halo_fill',a=col,bw=bw)
-            el.setAttribute("halo_fill",bw)
+            #print "converted {typ} from {a} to {bw}." .format(typ='TS-halo-fill',a=col,bw=bw)
+            el.setAttribute("halo-fill",bw)
 
 
 def dom_strip_style_and_layer(document,stylename,layername):

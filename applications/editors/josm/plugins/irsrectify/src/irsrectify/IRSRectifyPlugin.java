@@ -25,7 +25,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class IRSRectifyPlugin extends Plugin {
     static private int newLayerNameCounter = 0;
-    static private String ONE_LINE_TO_RULE = "Update IRS adjustment layer";
 
     private MapFrame frame;
 
@@ -42,8 +41,8 @@ public class IRSRectifyPlugin extends Plugin {
     public class IRSRectifyAction extends JosmAction {
 
         public IRSRectifyAction() {
-            super(tr(ONE_LINE_TO_RULE), "irsrectify.png", tr(ONE_LINE_TO_RULE),
-                    Shortcut.registerShortcut("menu:irsrectify", tr(ONE_LINE_TO_RULE), KeyEvent.VK_I, Shortcut.GROUP_LAYER), false);
+            super(tr("Update IRS adjustment layer"), "irsrectify.png", tr("Update IRS adjustment layer"),
+                    Shortcut.registerShortcut("menu:irsrectify", tr("Update IRS adjustment layer"), KeyEvent.VK_I, Shortcut.GROUP_LAYER), false);
         }
 
         public void actionPerformed(ActionEvent e) {

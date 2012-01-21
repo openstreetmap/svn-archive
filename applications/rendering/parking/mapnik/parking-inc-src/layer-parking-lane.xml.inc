@@ -603,7 +603,7 @@
 
 
 <!-- parkinglayers -->
-<Layer name="parkinglane-left" srs="&osm2pgsql_projection;" status="1" clear_label_cache="0">
+<Layer name="parkinglane-left" srs="&osm2pgsql_projection;" status="1" clear-label-cache="0">
     <StyleName>parkinglane-left-diagonal</StyleName>
     <StyleName>parkinglane-left-perpendicular</StyleName>
     <StyleName>parkinglane-left-parallel</StyleName>
@@ -627,7 +627,7 @@
     </Datasource>
 </Layer>
 
-<Layer name="parkinglane-right" srs="&osm2pgsql_projection;" status="1" clear_label_cache="0">
+<Layer name="parkinglane-right" srs="&osm2pgsql_projection;" status="1" clear-label-cache="0">
     <StyleName>parkinglane-right-diagonal</StyleName>
     <StyleName>parkinglane-right-perpendicular</StyleName>
     <StyleName>parkinglane-right-parallel</StyleName>

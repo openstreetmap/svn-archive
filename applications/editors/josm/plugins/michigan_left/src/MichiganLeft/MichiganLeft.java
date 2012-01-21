@@ -47,10 +47,10 @@ public class MichiganLeft extends Plugin {
 
     public MichiganLeftAction() {
       super(tr("Michigan Left"), "michigan_left",
-          tr("Adds no left turn for sets of 4 or 5 ways."), Shortcut
-              .registerShortcut("tools:michigan_left", tr("Tool: {0}",
-                  tr("Michigan Left")), KeyEvent.VK_M, Shortcut.GROUP_EDIT,
-                  KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
+          tr("Adds no left turn for sets of 4 or 5 ways."),
+          Shortcut.registerShortcut("tools:michigan_left", tr("Tool: {0}",
+          tr("Michigan Left")), KeyEvent.VK_M, Shortcut.GROUP_EDIT,
+          KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
     }
 
     public void actionPerformed(ActionEvent e) {

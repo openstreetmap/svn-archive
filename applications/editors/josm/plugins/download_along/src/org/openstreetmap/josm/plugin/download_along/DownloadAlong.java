@@ -53,10 +53,10 @@ public class DownloadAlong extends Plugin {
 
     public DownloadAlongAction() {
       super(tr("Download along..."), "download_along",
-          tr("Download OSM data along the selected ways."), Shortcut
-              .registerShortcut("tools:download_along", tr("Tool: {0}",
-                  tr("Download Along")), KeyEvent.VK_D, Shortcut.GROUP_EDIT,
-                  KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
+          tr("Download OSM data along the selected ways."),
+          Shortcut.registerShortcut("tools:download_along", tr("Tool: {0}",
+          tr("Download Along")), KeyEvent.VK_D, Shortcut.GROUP_EDIT,
+          KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
     }
 
     public void actionPerformed(ActionEvent e) {

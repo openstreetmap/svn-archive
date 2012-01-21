@@ -36,28 +36,28 @@
       &maxscale_zoom14;
       &minscale_zoom14;
       <Filter>[railway]='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#66f" dy="-8" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#66f" dy="-8" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       &maxscale_zoom15;
       <Filter>[railway] ='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#66f" dy="-10" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#66f" dy="-10" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       &maxscale_zoom14;
       &minscale_zoom14;
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#66f" dy="-8" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#66f" dy="-8" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       &maxscale_zoom15;
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#66f" dy="-10" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#66f" dy="-10" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       &maxscale_zoom15;
       <Filter>[railway]='station' and [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="grey" dy="-9" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="grey" dy="-9" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 

@@ -71,17 +71,17 @@
     <Rule> 
       <Filter>[way_area] &gt;= 10000000</Filter>
       &maxscale_zoom10;
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] &gt;= 5000000 and [way_area] &lt; 10000000</Filter>
       &maxscale_zoom11;
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] &lt; 5000000</Filter>
       &maxscale_zoom12;
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#99f" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="water_lines">
@@ -338,7 +338,7 @@
         <CssParameter name="stroke-linejoin">round</CssParameter>
         <CssParameter name="stroke-linecap">round</CssParameter>
       </LineSymbolizer>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#6699cc" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#6699cc" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[waterway]='derelict_canal' or ([waterway]='canal' and [disused]='yes')</Filter>

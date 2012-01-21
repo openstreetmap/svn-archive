@@ -668,40 +668,40 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[way_area] >= 150000</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] >= 80000 and [way_area] &lt; 150000</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] >= 20000 and [way_area] &lt; 80000</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] &lt; 20000</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="highway-junctions">
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>200000</MinScaleDenominator>
-      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#797979" halo_radius="1" wrap_width="12" min_distance="2"/>
+      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#797979" halo_radius="1" wrap-width="12" min_distance="2"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
-      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#797979" halo_radius="1" wrap_width="12" min_distance="2"/>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#797979" halo_radius="1" wrap_width="2" dy="-8" min_distance="2" wrap_character=";"/>
+      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#797979" halo_radius="1" wrap-width="12" min_distance="2"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#797979" halo_radius="1" wrap-width="2" dy="-8" min_distance="2" wrap_character=";"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="12" fill="#797979" halo_radius="1" wrap_width="12" min_distance="2"/>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="11" fill="#797979" halo_radius="1" wrap_width="2" dy="-10" min_distance="2" wrap_character=";"/>
+      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="12" fill="#797979" halo_radius="1" wrap-width="12" min_distance="2"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="11" fill="#797979" halo_radius="1" wrap-width="2" dy="-10" min_distance="2" wrap_character=";"/>
     </Rule>
 </Style>
 <Style name="text">
@@ -709,52 +709,52 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <Filter>[place] = 'island'</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="9" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="9" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='pub' or [amenity]='restaurant' or [amenity]='cafe' or [amenity]='fast_food' or [amenity]='biergarten'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="9" halo_radius="1" wrap_width="34"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="9" halo_radius="1" wrap-width="34"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='bar'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="11" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="11" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='cinema' or [amenity]='library' or [amenity]='theatre'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="12" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="10" fill="#4b4b4b" dy="12" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='parking' and ([access] = 'public' or not [access] &lt;> '')</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="9" halo_radius="1" wrap_width="34"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="9" halo_radius="1" wrap-width="34"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='parking' and ([access] &lt;> '' and not [access] = 'public')</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#aeaeae" dy="9" halo_radius="1" wrap_width="34"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#aeaeae" dy="9" halo_radius="1" wrap-width="34"/>
     </Rule>
      <Rule>
       <Filter>[amenity] = 'police'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="10" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="10" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'fire_station'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="9" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="9" halo_radius="1" wrap-width="30"/>
     </Rule>
      <Rule>
       <Filter>[amenity] = 'place_of_worship'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" dy="11" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#060606" dy="11" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'wood'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="2" wrap_width="10"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="2" wrap-width="10"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'peak'</Filter>
@@ -789,32 +789,32 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[natural] = 'cave_entrance'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#484848" dy="9" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#484848" dy="9" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[historic] = 'memorial'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#484848" dy="12" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#484848" dy="12" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'water' or [natural] = 'lake' or [landuse] = 'reservoir' or [landuse] = 'basin'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#929292" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#929292" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>([leisure] &lt;> '' or [landuse] &lt;> '') and [point] = 'yes'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="2" wrap_width="10"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="2" wrap-width="10"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'bay'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#929292" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#929292" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'spring'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#929292" dy="10" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#929292" dy="10" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'alpine_hut' or [amenity]='shelter'</Filter>
@@ -829,134 +829,134 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[amenity] = 'bank'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" dy="9" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" dy="9" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'hotel' or [tourism]='hostel'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="11" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="11" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'embassy'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="8" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="8" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[tourism]='guest_house' or [tourism]='bed_and_breakfast'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#606060" dy="9" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#606060" dy="9" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'fuel' or [amenity]='bus_station'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="9" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="9" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'camp_site'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="15" halo_radius="1" wrap_width="70"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="15" halo_radius="1" wrap-width="70"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'caravan_site'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="19" halo_radius="1" wrap_width="70"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#606060" dy="19" halo_radius="1" wrap-width="70"/>
     </Rule>
     <Rule>
       <Filter>[waterway] = 'lock'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="10" halo_radius="1" wrap_width="70"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#606060" dy="10" halo_radius="1" wrap-width="70"/>
     </Rule>
     <Rule>
       <Filter>[leisure] = 'marina'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#212121" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#212121" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[leisure] = 'marina'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#212121" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#212121" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'theme_park'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#4b4b4b" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#4b4b4b" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'theme_park'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" halo_radius="1" wrap_width="30"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" halo_radius="1" wrap-width="30"/>
     </Rule>
     <Rule>
       <Filter>[tourism]='museum'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="10" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="10" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[amenity]='prison'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="16" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#4b4b4b" dy="16" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[tourism] = 'attraction'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#202020" halo_radius="2" wrap_width="10"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#202020" halo_radius="2" wrap-width="10"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'university'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#060606" halo_radius="1" wrap_width="16"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#060606" halo_radius="1" wrap-width="16"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'school' or [amenity] = 'college'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#060606" halo_radius="1" wrap_width="14"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#060606" halo_radius="1" wrap-width="14"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'kindergarten'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#060606" halo_radius="1" wrap_width="14"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#060606" halo_radius="1" wrap-width="14"/>
     </Rule>
     <Rule>
       <Filter>[man_made] = 'lighthouse'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#060606" dy="16" halo_radius="2" wrap_width="12"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#060606" dy="16" halo_radius="2" wrap-width="12"/>
     </Rule>
     <Rule>
       <Filter>[man_made] = 'windmill'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#4b4b4b" dy="12" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#4b4b4b" dy="12" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'hospital'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#494949" dy="10" halo_radius="2" wrap_width="24"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#494949" dy="10" halo_radius="2" wrap-width="24"/>
     </Rule>
     <Rule>
       <Filter>[amenity] = 'pharmacy'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#494949" dy="9" halo_radius="1" wrap_width="12"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#494949" dy="9" halo_radius="1" wrap-width="12"/>
     </Rule>
     <Rule>
       <Filter>[shop]='bakery' or [shop]='clothes' or [shop]='fashion' or [shop]='convenience' or [shop]='doityourself' or [shop]='hairdresser' or [shop]='butcher' or [shop]='car' or [shop]='car_repair' or [shop]='bicycle'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#595959" dy="9" halo_radius="1" wrap_width="12"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#595959" dy="9" halo_radius="1" wrap-width="12"/>
     </Rule>
     <Rule>
       <Filter>[shop]='supermarket' or [shop]='department_store'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#595959" dy="9" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#595959" dy="9" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[military] = 'danger_area'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#d1d1d1" halo_radius="1" wrap_width="10"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#d1d1d1" halo_radius="1" wrap-width="10"/>
     </Rule>
     <Rule>
       <Filter>[aeroway] = 'gate'</Filter>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="ref" fontset_name="book-fonts" size="10" fill="#848484" halo_radius="1" wrap_width="10"/>
+      <TextSymbolizer name="ref" fontset_name="book-fonts" size="10" fill="#848484" halo_radius="1" wrap-width="10"/>
     </Rule>
 </Style>
 <Style name="tunnels-casing">
@@ -6455,12 +6455,12 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <MaxScaleDenominator>3000000</MaxScaleDenominator>
       <MinScaleDenominator>750000</MinScaleDenominator>
-        <TextSymbolizer name="name" fontset_name="bold-fonts" size="8" dy="-8" fill="#b8b8b8" halo_radius="1" wrap_width="14"/>
+        <TextSymbolizer name="name" fontset_name="bold-fonts" size="8" dy="-8" fill="#b8b8b8" halo_radius="1" wrap-width="14"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>200000</MinScaleDenominator>
-        <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#b8b8b8" halo_radius="1" wrap_width="14"/>
+        <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#b8b8b8" halo_radius="1" wrap-width="14"/>
     </Rule>
 </Style>
 <Style name="theme_park">
@@ -6715,17 +6715,17 @@ Note: feel free to leave password, host, port, or use blank
     <Rule> 
       <Filter>[way_area] >= 10000000</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] >= 5000000 and [way_area] &lt; 10000000</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[way_area] &lt; 5000000</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#a6a6a6" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="water_lines">
@@ -6982,7 +6982,7 @@ Note: feel free to leave password, host, port, or use blank
         <CssParameter name="stroke-linejoin">round</CssParameter>
         <CssParameter name="stroke-linecap">round</CssParameter>
       </LineSymbolizer>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#929292" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#929292" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[waterway]='derelict_canal' or ([waterway]='canal' and [disused]='yes')</Filter>
@@ -8443,7 +8443,7 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'continent'</Filter>
       <MaxScaleDenominator>500000000</MaxScaleDenominator>
       <MinScaleDenominator>100000000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="country">
@@ -8451,13 +8451,13 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'country'</Filter>
       <MaxScaleDenominator>200000000</MaxScaleDenominator>
       <MinScaleDenominator>50000000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'country'</Filter>
       <MaxScaleDenominator>50000000</MaxScaleDenominator>
       <MinScaleDenominator>6500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="state">
@@ -8465,41 +8465,41 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'state'</Filter>
       <MaxScaleDenominator>50000000</MaxScaleDenominator>
       <MinScaleDenominator>25000000</MinScaleDenominator>
-      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="ref" fontset_name="oblique-fonts" size="9" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'state'</Filter>
       <MaxScaleDenominator>25000000</MaxScaleDenominator>
       <MinScaleDenominator>6500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="9" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="9" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'state'</Filter>
       <MaxScaleDenominator>6500000</MaxScaleDenominator>
       <MinScaleDenominator>1500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="11" fill="#7e7e7e" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="11" fill="#7e7e7e" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="capital">
      <Rule>
       <MaxScaleDenominator>25000000</MaxScaleDenominator>
       <MinScaleDenominator>12500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500000</MaxScaleDenominator>
       <MinScaleDenominator>1500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>1500000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="city">
@@ -8507,19 +8507,19 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'city' or [place]='metropolis'</Filter>
       <MaxScaleDenominator>12500000</MaxScaleDenominator>
       <MinScaleDenominator>1500000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'city' or [place]='metropolis'</Filter>
       <MaxScaleDenominator>1500000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'city' or [place]='metropolis'</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#000000" dy="0" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#000000" dy="0" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="town">
@@ -8527,18 +8527,18 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'town' or [place]='large_town' or [place]='small_town'</Filter>
       <MaxScaleDenominator>1500000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'town' or [place]='large_town' or [place]='small_town'</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" wrap-width="20"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'town' or [place]='large_town' or [place]='small_town'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#777777" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="14" fill="#777777" halo_radius="1" wrap-width="20"/>
     </Rule>
 </Style>
 <Style name="suburb">
@@ -8546,12 +8546,12 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'suburb'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'suburb'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="13" fill="#777777" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="13" fill="#777777" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="village">
@@ -8559,12 +8559,12 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'village' or [place]='large_village'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'village' or [place]='large_village'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="12" fill="#777777" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="12" fill="#777777" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="hamlet">
@@ -8572,12 +8572,12 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[place] = 'hamlet' or [place] = 'locality' or [place] = 'isolated_dwelling'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <Filter>[place] = 'hamlet' or [place] = 'locality' or [place] = 'isolated_dwelling'</Filter>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#777777" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="11" fill="#777777" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 
@@ -8738,28 +8738,28 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <Filter>[railway]='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#797979" dy="-8" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#797979" dy="-8" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[railway] ='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#797979" dy="-10" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#797979" dy="-10" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#797979" dy="-8" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#797979" dy="-8" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#797979" dy="-10" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="11" fill="#797979" dy="-10" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[railway]='station' and [disused]='yes'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#808080" dy="-9" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#808080" dy="-9" halo_radius="1" wrap-width="0"/>
     </Rule>
 </Style>
 
@@ -8831,26 +8831,26 @@ Note: feel free to leave password, host, port, or use blank
       <MinScaleDenominator>400000</MinScaleDenominator>
       <Filter>[aeroway]='airport'</Filter>
       <PointSymbolizer file="symbols/airport.p.16.png"/>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
       <Filter>[aeroway]='airport'</Filter>
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#909090" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="#909090" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
       <Filter>[aeroway]='aerodrome'</Filter>
       <PointSymbolizer file="symbols/aerodrome.p.16.png"/>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
       <Filter>[aeroway]='aerodrome'</Filter>
-      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#909090" halo_radius="1" wrap_width="0"/>
+      <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#909090" halo_radius="1" wrap-width="0"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
@@ -9786,13 +9786,13 @@ Note: feel free to leave password, host, port, or use blank
 <Style name="way_numbers">
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444444" dy="0" wrap_width="0"/>
+      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444444" dy="0" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="node_numbers">
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
-      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444444" dy="0" wrap_width="0"/>
+      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444444" dy="0" wrap-width="0"/>
     </Rule>
 </Style>
 

@@ -11,13 +11,13 @@
 <Style name="way_numbers">
     <Rule>
       &maxscale_zoom17;
-      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444" dy="0" wrap_width="0"/>
+      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444" dy="0" wrap-width="0"/>
     </Rule>
 </Style>
 <Style name="node_numbers">
     <Rule>
       &maxscale_zoom17;
-      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444" dy="0" wrap_width="0"/>
+      <TextSymbolizer name="addr:housenumber" fontset_name="book-fonts" size="9" fill="#444" dy="0" wrap-width="0"/>
     </Rule>
 </Style>
 

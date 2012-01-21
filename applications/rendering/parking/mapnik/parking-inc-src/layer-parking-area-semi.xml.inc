@@ -16,7 +16,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[parking:condition:area] = 'ticket'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png" type="png" width="16" height="16">
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png">
         <CssParameter name="fill-opacity">&pa_stroke_opacity_semi;</CssParameter>
       </PolygonPatternSymbolizer>
     </Rule>
@@ -38,7 +38,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[amenity] = 'parking' and [fee]='yes'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png"/>
     </Rule>
 
     <!-- parking area: free (new) -->
@@ -58,7 +58,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[parking:condition:area] = 'free'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png"/>
     </Rule>
 
     <!-- parking area: free (old) -->
@@ -78,7 +78,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[amenity] = 'parking' and [fee]='no'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png"/>
     </Rule>
 
     <!-- parking area: customers -->
@@ -98,7 +98,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[parking:condition:area]='customers'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png"/>
     </Rule>
 
     <!-- parking area: residents -->
@@ -118,7 +118,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[amenity] = 'parking' and [parking:condition:area]='residents'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png"/>
     </Rule>
 
     <!-- parking area: private -->
@@ -138,7 +138,7 @@
     <Rule>
       &maxscale_zoom16;
       <Filter>[amenity] = 'parking' and [parking:condition:area]='private'</Filter>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png"/>
     </Rule>
 
     <Rule>
@@ -157,7 +157,7 @@
     <Rule>
       &maxscale_zoom16;
       <ElseFilter/>
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png"/>
     </Rule>
 </Style>
 

@@ -18,7 +18,7 @@
     <Rule>
       <Filter>[cond] = 'ticket'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png"/>
     </Rule>
 
     <!-- parking area: disc -->
@@ -39,7 +39,7 @@
     <Rule>
       <Filter>[cond]='disc'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_disc.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_disc.png"/>
     </Rule>
 
     <!-- parking area: customers -->
@@ -60,7 +60,7 @@
     <Rule>
       <Filter>[cond]='customers'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png"/>
     </Rule>
 
     <!-- parking area: residents -->
@@ -81,7 +81,7 @@
     <Rule>
       <Filter>[cond]='residents'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png"/>
     </Rule>
 
     <!-- parking area: private -->
@@ -102,7 +102,7 @@
     <Rule>
       <Filter>[cond]='private'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png"/>
     </Rule>
 
     <!-- parking area: free -->
@@ -123,7 +123,7 @@
     <Rule>
       <Filter>[cond] = 'free'</Filter>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png"/>
     </Rule>
 
     <Rule>
@@ -143,7 +143,7 @@
     <Rule>
       <ElseFilter/>
       &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png" type="png" width="16" height="16"/>
+      <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png"/>
     </Rule>
 </Style>
 

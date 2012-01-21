@@ -41,7 +41,8 @@ public class SplitObjectAction extends JosmAction {
      */
     public SplitObjectAction() {
         super(tr("Split Object"), "splitobject", tr("Split an object at the selected nodes."),
-                Shortcut.registerShortcut("tools:splitobject", tr("Tool: {0}", "Split Object"),  KeyEvent.VK_P,  Shortcut.SHIFT_DEFAULT)
+                Shortcut.registerShortcut("tools:splitobject", tr("Tool: {0}", "Split Object"),
+                KeyEvent.VK_P,  Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
                 , true);
         putValue("help", ht("/Action/SplitObject"));
     }

@@ -133,7 +133,6 @@ public class UtilsPluginPreferences  implements PreferenceSetting {
     public boolean ok() {
         String addr=combo1.getText();
         List<String> lst = readItemsFromTable();
-        System.out.println(lst);
         URLList.updateURLList(lst);
        
         return false;

@@ -23,8 +23,8 @@ public class TagSourceAction extends JosmAction {
 
     public TagSourceAction() {
         super(TITLE, "dumbutils/sourcetag", tr("Add remembered source tag"),
-                Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", TITLE), KeyEvent.VK_S,
-                Shortcut.GROUP_MENU, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
+                Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", TITLE), KeyEvent.VK_S, Shortcut.GROUP_MENU, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK)
+                , true);
         source = Main.pref.get("sourcetag.value");
     }
 

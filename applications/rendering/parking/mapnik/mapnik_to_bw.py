@@ -203,12 +203,12 @@ def dom_convert_to_grey(document):
     #<Map bgcolor="---" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" minimum_version="0.7.1">
     els = document.getElementsByTagName("Map")
     for el in els:
-        col = el.getAttribute("bgcolor")
+        col = el.getAttribute("background-color")
         assert(col!='')
         assert(col!=None)
         bw=rgb_to_css(color_to_bw(parse_color(col)))
         #print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
-        el.setAttribute("bgcolor",bw)
+        el.setAttribute("background-color",bw)
 
     #<TextSymbolizer ... fill="#6699cc"/>
     els = document.getElementsByTagName("TextSymbolizer")

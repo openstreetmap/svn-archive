@@ -1,0 +1,22 @@
+#Tue Oct 04 00:25:27 CEST 2011
+eclipse.preferences.version=1
+encoding//mapnik/generate_parking_layer_xml.py=utf-8
+encoding//mapnik/generate_wifi_layer_xml.py=utf-8
+encoding//mapnik/mapnik_to_bw.py=utf-8
+encoding//mapnik/setup_target_style.py=utf-8
+encoding//osray/osray.py=utf-8
+encoding//osray/osray_buildings.py=utf-8
+encoding//osray/osray_db.py=utf-8
+encoding//osray/osray_furniture.py=utf-8
+encoding//osray/osray_geom.py=utf-8
+encoding//osray/osray_ground.py=utf-8
+encoding//osray/osray_mapcss.py=utf-8
+encoding//osray/osray_network.py=utf-8
+encoding//osray/osray_server.py=utf-8
+encoding//osray/osray_streets.py=utf-8
+encoding//parkingicons/osm_parking_icons.py=utf-8
+encoding//parkingicons/osm_parking_icons_hstore.py=utf-8
+encoding//parkingicons/osm_parking_icons_trunk.py=utf-8
+encoding//parkingicons/testlists.py=utf-8
+encoding//shellscripts/osm-update-db.py=utf-8
+encoding//varwww/tc/index.html=UTF-8

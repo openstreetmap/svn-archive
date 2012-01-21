@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+%entities;
+<!ENTITY % layer-wifi-entities SYSTEM "inc/layer-wifi-entities.xml.inc">
+%layer-wifi-entities;
+<!ENTITY layer-wifi-area SYSTEM "inc/layer-wifi-area.xml.inc">
+<!ENTITY layer-wifi-point SYSTEM "inc/layer-wifi-point.xml.inc">
+]>
+
+<!-- This stylesheet uses features only available in mapnik builds with
+     libxml2 as the XML parser. Furthermore, there are other features
+     that necessitate an upgrade to at least mapnik 0.6.1 -->
+<Map srs="&srs900913;" minimum_version="0.6.1">
+&fontset-settings;
+
+&layer-wifi-area;
+&layer-wifi-point;
+
+</Map>

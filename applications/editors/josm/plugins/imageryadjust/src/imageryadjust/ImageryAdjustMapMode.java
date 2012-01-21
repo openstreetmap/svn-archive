@@ -68,7 +68,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         if (!adjustingLayer.isVisible()) {
             adjustingLayer.setVisible(true);
         }
-        Main.map.mapView.addMouseListener(this);
+       Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
     }
 
@@ -145,6 +145,8 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
      * @return  the selected layer; null, if no layer was selected
      */
     protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
+        if (adjustableLayers.size()==0) return null;
+        if (adjustableLayers.size()==1) return adjustableLayers.get(0);
         JComboBox layerList = new JComboBox();
         layerList.setRenderer(new LayerListCellRenderer());
         layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));

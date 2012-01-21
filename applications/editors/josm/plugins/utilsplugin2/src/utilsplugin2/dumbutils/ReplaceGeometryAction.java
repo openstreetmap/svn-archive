@@ -69,36 +69,40 @@ public class ReplaceGeometryAction extends JosmAction {
             return;
         }
         Node nodeToReplace = null;
-        // see if we need to replace a node in the replacement way
+        // see if we need to replace a node in the replacement way to preserve connection in history
         if (!node.isNew()) {
             // Prepare a list of nodes that are not used anywhere except in the way
             Collection<Node> nodePool = getUnimportantNodes(way);
             nodeToReplace = findNearestNode(node, nodePool);
+
+            if (nodeToReplace == null && !nodePool.isEmpty()) {
+                // findNearestNode failed, just pick the first unimportant node
+                nodeToReplace = nodePool.iterator().next();
+            }
         }
-        
+
         List<Command> commands = new ArrayList<Command>();
         AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) node.getKeys();
-        
+
         // replace sacrificial node in way with node that is being upgraded
         if (nodeToReplace != null) {
             List<Node> wayNodes = way.getNodes();
             int idx = wayNodes.indexOf(nodeToReplace);
             wayNodes.set(idx, node);
-            if (idx == 0) {
+            if (idx == 0 && way.isClosed()) {
                 // node is at start/end of way
                 wayNodes.set(wayNodes.size() - 1, node);
             }
             commands.add(new ChangeNodesCommand(way, wayNodes));
             commands.add(new MoveCommand(node, nodeToReplace.getCoor()));
             commands.add(new DeleteCommand(nodeToReplace));
-            
+
             // delete tags from node
             if (!nodeTags.isEmpty()) {
-                AbstractMap<String, String> nodeTagsToDelete = new HashMap<String, String>();
                 for (String key : nodeTags.keySet()) {
-                    nodeTagsToDelete.put(key, null);
+                    commands.add(new ChangePropertyCommand(node, key, null));
                 }
-                commands.add(new ChangePropertyCommand(Arrays.asList(node), nodeTagsToDelete));
+
             }
         } else {
             // no node to replace, so just delete the original node
@@ -107,10 +111,12 @@ public class ReplaceGeometryAction extends JosmAction {
 
         // Copy tags from node
         // TODO: use merge tag conflict dialog instead
-        commands.add(new ChangePropertyCommand(Arrays.asList(way), nodeTags));
-        
+        for (String key : nodeTags.keySet()) {
+            commands.add(new ChangePropertyCommand(way, key, nodeTags.get(key)));
+        }
+
         getCurrentDataSet().setSelected(way);
-        
+
         Main.main.undoRedo.add(new SequenceCommand(
                 tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
@@ -208,10 +214,11 @@ public class ReplaceGeometryAction extends JosmAction {
 
     /**
      * Create a list of nodes that are not used anywhere except in the way.
+     *
      * @param way
      * @return 
      */
-    public Collection<Node> getUnimportantNodes(Way way) {
+    protected Collection<Node> getUnimportantNodes(Way way) {
         Set<Node> nodePool = new HashSet<Node>();
         Area a = getCurrentDataSet().getDataSourceArea();
         for (Node n : way.getNodes()) {

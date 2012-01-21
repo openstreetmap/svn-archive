@@ -277,7 +277,7 @@ altes select mit tags->amenity:
       <Filter>[amenity] = 'parking'</Filter>
       &maxscale_zoom14;
       &minscale_zoom18;
-      <TextSymbolizer name="parkname" fontset_name="book-fonts" size="8" fill="#101010" dy="0" halo_radius="1" wrap_width="20"/>
+      <TextSymbolizer name="parkname" fontset-name="book-fonts" size="8" fill="#101010" dy="0" halo_radius="1" wrap_width="20"/>
     </Rule>
 </Style>
 

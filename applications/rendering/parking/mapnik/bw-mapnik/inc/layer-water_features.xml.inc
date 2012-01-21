@@ -11,7 +11,7 @@
     </Rule>
     <Rule>
       &maxscale_zoom15;
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#222" halo_radius="1"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#222" halo-radius="1"/>
     </Rule>
 </Style>
 <Style name="marinas-area">

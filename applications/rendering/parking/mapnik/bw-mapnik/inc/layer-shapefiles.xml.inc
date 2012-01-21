@@ -13,7 +13,7 @@
       &maxscale_zoom3;
       &minscale_zoom4;
      <Filter>[SCALERANK]=1</Filter>
-     <TextSymbolizer name="NAMEASCII" fontset_name="book-fonts" size="8" dy="2" fill="grey" halo_radius="1" />
+     <TextSymbolizer name="NAMEASCII" fontset_name="book-fonts" size="8" dy="2" fill="grey" halo-radius="1" />
     </Rule>
 </Style>
 <Style name="world">

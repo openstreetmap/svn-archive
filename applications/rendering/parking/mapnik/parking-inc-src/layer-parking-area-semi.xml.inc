@@ -3,37 +3,21 @@
     <Rule>
       <Filter>[parking:condition:area] = 'ticket'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_fee;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_fee_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_fee;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_fee_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
       <Filter>[parking:condition:area] = 'ticket'</Filter>
       <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png">
-        <CssParameter name="fill-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </PolygonPatternSymbolizer>
     </Rule>
 
     <!-- parking area: fee (old) -->
     <Rule>
       <Filter>[amenity] = 'parking' and [fee]='yes'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_fee;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_fee_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_fee;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_fee_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -45,15 +29,8 @@
     <Rule>
       <Filter>[parking:condition:area] = 'free'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_free;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_free_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_free;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_free_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -65,15 +42,8 @@
     <Rule>
       <Filter>[amenity] = 'parking' and [fee]='no'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_free;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_free_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_free;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_free_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -85,15 +55,8 @@
     <Rule>
       <Filter>[parking:condition:area]='customers'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_customers;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_customers;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_customers_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -105,15 +68,8 @@
     <Rule>
       <Filter>[amenity] = 'parking' and [parking:condition:area]='residents'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_residents;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_residents_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_residents;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_residents_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -125,15 +81,8 @@
     <Rule>
       <Filter>[amenity] = 'parking' and [parking:condition:area]='private'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_private;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_private_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_private;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_private_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -144,15 +93,8 @@
     <Rule>
       <ElseFilter/>
       &maxscale_zoom10;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_unknown;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity_semi;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_unknown_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity_semi;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_unknown;" fill-opacity="&pa_fill_opacity_semi;"/>
+      <LineSymbolizer stroke="&pa_unknown_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity_semi;"/>
     </Rule>
     <Rule>
       &maxscale_zoom16;

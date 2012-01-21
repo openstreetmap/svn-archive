@@ -24,47 +24,6 @@ forbidden_colors = {
     'fire': 'f81f1f'
     }
 
-
-"""
-def dom_convert_to_grey(document):
-    els = document.getElementsByTagName("CssParameter")
-    #print "els=",els
-    for el in els:
-        at = el.getAttribute("name")
-        if at=="stroke" or at=="fill":
-            col=el.firstChild.nodeValue
-            bw=rgb_to_css(color_to_bw(parse_color(col)))
-            print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
-            el.firstChild.nodeValue=bw
-
-    #<Map bgcolor="---" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" minimum_version="0.7.1">
-    els = document.getElementsByTagName("Map")
-    for el in els:
-        col = el.getAttribute("bgcolor")
-        assert(col!='')
-        assert(col!=None)
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
-        el.setAttribute("bgcolor",bw)
-
-    #<TextSymbolizer ... fill="#6699cc"/>
-    els = document.getElementsByTagName("TextSymbolizer")
-    for el in els:
-        col = el.getAttribute("fill")
-        assert(col!='')
-        assert(col!=None)
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        print "converted {typ} from {a} to {bw}." .format(typ='TS-fill',a=col,bw=bw)
-        el.setAttribute("fill",bw)
-        #<TextSymbolizer halo_fill="#fed7a5"/> (optional)
-        col = el.getAttribute("halo_fill")
-        assert(col!=None)
-        if col!='':
-            bw=rgb_to_css(color_to_bw(parse_color(col)))
-            print "converted {typ} from {a} to {bw}." .format(typ='TS-halo_fill',a=col,bw=bw)
-            el.setAttribute("halo_fill",bw)
-"""
-
 def dom_strip_style_and_layer(document,stylename,layername):
     removeElements=[]
     # remove <Style name="points"> and <Layer name="amenity-points">

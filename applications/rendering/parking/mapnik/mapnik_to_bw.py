@@ -189,7 +189,19 @@ def rgb_to_css(rgb):
     r,g,b=rgb
     return "#{r:02x}{g:02x}{b:02x}".format(r=int(r*255.0),g=int(g*255.0),b=int(b*255.0))
 
+def element_convert_attibute_to_grey(document,elementName,attributeName):
+    els = document.getElementsByTagName(elementName)
+    for el in els:
+        col = el.getAttribute(attributeName)
+        assert(col!='')
+        assert(col!=None)
+        bw=rgb_to_css(color_to_bw(parse_color(col)))
+        #print "converted {ele}:{att} from {a} to {bw}." .format(ele=elementName,att=attributeName,a=col,bw=bw)
+        el.setAttribute(attributeName,bw)
+
 def dom_convert_to_grey(document):
+    element_convert_attibute_to_grey(document,"Map","background-color")
+    """ vorher: CssParameter fuer die Farben bei LineSymbolizer und PolygonSymbolizer
     els = document.getElementsByTagName("CssParameter")
     #print "els=",els
     for el in els:
@@ -199,16 +211,9 @@ def dom_convert_to_grey(document):
             bw=rgb_to_css(color_to_bw(parse_color(col)))
             #print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
             el.firstChild.nodeValue=bw
-
-    #<Map bgcolor="---" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" minimum_version="0.7.1">
-    els = document.getElementsByTagName("Map")
-    for el in els:
-        col = el.getAttribute("background-color")
-        assert(col!='')
-        assert(col!=None)
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        #print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
-        el.setAttribute("background-color",bw)
+    """
+    element_convert_attibute_to_grey(document,"LineSymbolizer","stroke")
+    element_convert_attibute_to_grey(document,"PolygonSymbolizer","fill")
 
     #<TextSymbolizer ... fill="#6699cc"/>
     els = document.getElementsByTagName("TextSymbolizer")

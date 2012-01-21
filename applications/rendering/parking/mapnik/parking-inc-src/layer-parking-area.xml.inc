@@ -5,15 +5,8 @@
       <Filter>[cond] = 'ticket'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_fee;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_fee_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_fee;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_fee_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond] = 'ticket'</Filter>
@@ -26,15 +19,8 @@
       <Filter>[cond]='disc'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_customers;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_disc;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_disc_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond]='disc'</Filter>
@@ -47,15 +33,8 @@
       <Filter>[cond]='customers'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_customers;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_customers_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_customers;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_customers_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond]='customers'</Filter>
@@ -68,15 +47,8 @@
       <Filter>[cond]='residents'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_residents;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_residents_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_residents;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_residents_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond]='residents'</Filter>
@@ -89,15 +61,8 @@
       <Filter>[cond]='private'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_private;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_private_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_private;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_private_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond]='private'</Filter>
@@ -110,15 +75,8 @@
       <Filter>[cond] = 'free'</Filter>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_free;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_free_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_free;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_free_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <Filter>[cond] = 'free'</Filter>
@@ -130,15 +88,8 @@
       <ElseFilter/>
       &maxscale_zoom10;
       &minscale_zoom15;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">&pa_unknown;</CssParameter>
-        <CssParameter name="fill-opacity">&pa_fill_opacity;</CssParameter>
-      </PolygonSymbolizer>
-      <LineSymbolizer>
-        <CssParameter name="stroke">&pa_unknown_stroke;</CssParameter>
-        <CssParameter name="stroke-width">&pa_stroke_width;</CssParameter>
-        <CssParameter name="stroke-opacity">&pa_stroke_opacity;</CssParameter>
-      </LineSymbolizer>
+      <PolygonSymbolizer fill="&pa_unknown;" fill-opacity="&pa_fill_opacity;"/>
+      <LineSymbolizer stroke="&pa_unknown_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
       <ElseFilter/>

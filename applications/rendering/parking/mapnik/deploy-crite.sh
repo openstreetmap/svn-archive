@@ -3,7 +3,7 @@
 MAPNIKSRC=../../mapnik
 PARKINGSRC=.
 TARGETSRV=crite
-DESTDIR=/tmp/deploy-neu-$TARGETSRV
+DESTDIR=/home/osm/styles-deploy
 TMPDIR=/tmp/tmp-kay-mapnik
 
 python setup_target_style.py -m $MAPNIKSRC -t $TMPDIR -d $DESTDIR -v $TARGETSRV

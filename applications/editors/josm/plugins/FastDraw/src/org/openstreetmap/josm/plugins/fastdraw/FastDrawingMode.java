@@ -91,10 +91,9 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private boolean deltaChanged;
 
     FastDrawingMode(MapFrame mapFrame) {
-        super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), Shortcut.registerShortcut(
-                "mapmode/building",
-                tr("Mode: {0}", tr("Fast drawing mode")),
-                KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), 
+		Shortcut.registerShortcut("mapmode/building", tr("Mode: {0}", tr("Fast drawing mode")), KeyEvent.VK_T, Shortcut.GROUP_EDIT)
+		,mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         line=new DrawnPolyLine();
         cursorDraw = ImageProvider.getCursor("crosshair", null);
         cursorCtrl = ImageProvider.getCursor("crosshair", "fixed");

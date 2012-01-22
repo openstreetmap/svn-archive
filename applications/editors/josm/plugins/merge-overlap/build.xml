@@ -29,9 +29,9 @@
 -->
 <project name="merge-overlap" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="preset maintenance (${ant.project.name})"/>
+    <property name="commit.message" value="MergeOverlap: help shortcut parser, rebuild"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="4847"/>
 
     <import file="../build-common.xml"/>
 

@@ -14,11 +14,9 @@ public class AddEGpxLayerAction extends JosmAction {
 
     public AddEGpxLayerAction() {
         super(tr("Add EGPX layer"),null,tr("Add EGPX layer"),
-                Shortcut.registerShortcut("tool:egpx",
-                        tr("Tool: {0}", tr("Add EGPX layer")),
-                        KeyEvent.VK_G, Shortcut.GROUP_EDIT,
-                        Shortcut.SHIFT_DEFAULT),
-                true);
+                Shortcut.registerShortcut("tool:egpx", tr("Tool: {0}", tr("Add EGPX layer")),
+                        KeyEvent.VK_G, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
+		, true);
     }
 
     @Override

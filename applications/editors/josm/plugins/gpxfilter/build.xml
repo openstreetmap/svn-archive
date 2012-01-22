@@ -29,9 +29,9 @@
 -->
 <project name="gpxfilter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
+    <property name="commit.message" value="GPXFilter: help shortcut parser, rebuild"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="4847"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

@@ -31,12 +31,12 @@
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
+        <ant antfile="build.xml" target="dist" dir="HouseNumberTaggingTool"/>
         <ant antfile="build.xml" target="dist" dir="imageryadjust"/>
         <ant antfile="build.xml" target="dist" dir="imagery-xml-bounds"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
-        <ant antfile="build.xml" target="dist" dir="ImproveWayAccuracy"/>
         <ant antfile="build.xml" target="dist" dir="infomode"/>
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
         <ant antfile="build.xml" target="dist" dir="junctionchecking"/>
@@ -45,6 +45,7 @@
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
+        <ant antfile="build.xml" target="dist" dir="merge-overlap"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
         <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="namemanager"/>
@@ -71,6 +72,7 @@
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
+        <ant antfile="build.xml" target="dist" dir="surveyor2"/>
         <ant antfile="build.xml" target="dist" dir="tag2link"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
@@ -90,7 +92,6 @@
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="rgisopen"/>
-        <ant antfile="build.xml" target="dist" dir="smed_bfw"/>
         <ant antfile="build.xml" target="dist" dir="trustosm"/>
     </target>
     <target name="clean">
@@ -117,12 +118,12 @@
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
+        <ant antfile="build.xml" target="clean" dir="HouseNumberTaggingTool"/>
         <ant antfile="build.xml" target="clean" dir="imageryadjust"/>
         <ant antfile="build.xml" target="clean" dir="imagery-xml-bounds"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>
-        <ant antfile="build.xml" target="clean" dir="ImproveWayAccuracy"/>
         <ant antfile="build.xml" target="clean" dir="infomode"/>
         <ant antfile="build.xml" target="clean" dir="irsrectify"/>
         <ant antfile="build.xml" target="clean" dir="junctionchecking"/>
@@ -131,6 +132,7 @@
         <ant antfile="build.xml" target="clean" dir="livegps"/>
         <ant antfile="build.xml" target="clean" dir="mapdust"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>
+        <ant antfile="build.xml" target="clean" dir="merge-overlap"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="namemanager"/>
@@ -157,8 +159,8 @@
         <ant antfile="build.xml" target="clean" dir="routing"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
-        <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
+        <ant antfile="build.xml" target="clean" dir="surveyor2"/>
         <ant antfile="build.xml" target="clean" dir="tag2link"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>

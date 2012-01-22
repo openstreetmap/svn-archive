@@ -129,7 +129,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
         if (mousePos != null) {
 			if (!Main.isDisplayingMapView())
 				return;
-			nearestPrimitive = Main.map.mapView.getNearest(mousePos, OsmPrimitive.isUsablePredicate); // Deprecated
+			nearestPrimitive = Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive.isUsablePredicate, false);
 			if (nearestPrimitive != null) {
 				setCursor(cursorActive);
 			}

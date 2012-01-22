@@ -29,12 +29,12 @@
 -->
 <project name="alignways" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="added layerIsSupported to main mapmode"/>
+    <property name="commit.message" value="AlignWays: help shortcut parser"/>
     <!--
         enter the *lowest* JOSM version this plugin is currently compatible
         with
     -->
-    <property name="plugin.main.version" value="4394"/>
+    <property name="plugin.main.version" value="4847"/>
     <!--
         ************************************************ ** should not be
         necessary to change the following properties

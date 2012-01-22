@@ -74,8 +74,12 @@ public class AlignWaysGeomLine {
         this(line.coef_a, line.coef_b, line.coef_c);
     }
 
-    /**
-     * Returns the intersection point the line with another line.
+    public AlignWaysGeomLine(AlignWaysGeomPoint awPt1, AlignWaysGeomPoint awPt2) {
+    	this(awPt1.getX(), awPt1.getY(), awPt2.getX(), awPt2.getY());
+	}
+
+	/**
+     * Returns the intersection point of the line with another line.
      * If the lines are parallel or overlap, returns null.
      * Use getIntersectionStatus() to determine the case.
      * @param other_line The other line.
@@ -178,5 +182,25 @@ public class AlignWaysGeomLine {
         else
             return false;
     }
+
+	public boolean isPointOnLine(AlignWaysGeomPoint awPt) {
+		// Method:
+		// 1. create a new line from awPt and one point of 'this'
+		// 2. check getIntersectionStatus of the two lines
+		// 3. if status is LINES_OVERLAP, the point os one the line, otherwise not
+		
+		// Need an arbitrary point on this line; let it be (x, y)
+		Double x = 0.0;
+		Double y = getYonLine(x);
+		if (y.isNaN()) y = 0.0;
+		
+		AlignWaysGeomLine line2 = new AlignWaysGeomLine(awPt, new AlignWaysGeomPoint(x, y));
+		getIntersection(line2);
+		if (getIntersectionStatus() == IntersectionStatus.LINES_OVERLAP)
+			return true;
+		else
+			return false;
+		
+	}
 
 }

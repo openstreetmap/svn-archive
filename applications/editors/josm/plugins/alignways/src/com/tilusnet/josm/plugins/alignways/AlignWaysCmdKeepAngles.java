@@ -33,53 +33,138 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         super();
 
         // Now the calculatedNodes reflect the coordinates that we'd have
-        // without preserving the angles.
+        // without preserving the angles, i.e. preserving the length.
 
         Map<Node,EastNorth> calcNodesKeepLength = calculatedNodes;
 
+        // Now we'll proceed with the hypothetical recalculation of the endpoint coordinates
+        // following the rule of preserving angles instead. The new nodes will be stored in nodeArr[].
+        
         Node[] nodeArr = algnSeg.getSegmentEndPoints().toArray(new Node[2]);
 
         EastNorth enCalc1 = calcNodesKeepLength.get(nodeArr[0]);
         EastNorth enCalc2 = calcNodesKeepLength.get(nodeArr[1]);
         AlignWaysGeomLine lineKeepLength = new AlignWaysGeomLine(enCalc1.getX(), enCalc1.getY(), enCalc2.getX(), enCalc2.getY());
 
-        recalculateNodes(lineKeepLength, nodeArr[0]);
-        recalculateNodes(lineKeepLength, nodeArr[1]);
+        recalculateNodesAndValidate(lineKeepLength, nodeArr[0]);
+        recalculateNodesAndValidate(lineKeepLength, nodeArr[1]);
 
     }
 
 
-    void recalculateNodes(AlignWaysGeomLine alignedLineKeepLength, Node endpoint) {
+    void recalculateNodesAndValidate(AlignWaysGeomLine alignedLineKeepLength, Node endpoint) {
 
+        if (endpoint.getEastNorth().equals(pivot)) {
+        	// endpoint is pivot: the coordinates won't change
+        	return;
+        }
+        
         ArrayList<WaySegment> alws = algnSeg.getAdjacentWaySegments(endpoint);
-        if (alws.size() == 1) {
+        if (alws.size() <= 2) {
             // We need the intersection point of
-            //  - the freely rotated alignee as calculated in calcNodesFreeAngle
+            //  - the alignee following the keep length rule
             //  - the adjacent way segment
+        	
+        	EastNorth enAdjOther1 = getNonEqualEN(alws.get(0), endpoint);
+        	EastNorth enAdjOther2 = null;
 
-            EastNorth enAdj1 = alws.get(0).getFirstNode().getEastNorth();
-            EastNorth enAdj2 = alws.get(0).getSecondNode().getEastNorth();
+            if (alws.size() == 2) {
+            	enAdjOther2 = getNonEqualEN(alws.get(1), endpoint);
+            	
+            	// In order have a chance to align, (enAdjOther1, enAdjOther2 and endpoint) must be collinear
+            	ArrayList<EastNorth> enAdjPts = new ArrayList<EastNorth>(3);
+            	enAdjPts.add(enAdjOther1);
+            	enAdjPts.add(endpoint.getEastNorth());
+            	enAdjPts.add(enAdjOther2);
+            	if (!isEnSetCollinear(enAdjPts)) {
+            		// Not collinear, no point to proceed
+                    alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
+                    return;
+            	}
+            	
+            }
 
-            // Update the calculated node for aligning while keeping angles
-            AlignWaysGeomPoint isectPnt = alignedLineKeepLength.getIntersection(new AlignWaysGeomLine(enAdj1.getX(), enAdj1.getY(), enAdj2.getX(), enAdj2.getY()));
+            // Update the calculated node for angle preserving alignment
+            AlignWaysGeomPoint isectPnt = alignedLineKeepLength.getIntersection(new AlignWaysGeomLine(enAdjOther1.getX(), enAdjOther1.getY(), 
+            																						  endpoint.getEastNorth().getX(), endpoint.getEastNorth().getY()));
+            EastNorth enIsectPt = null;
             // If the intersection is null, the adjacent and the alignee are parallel already:
             // there's no need to update this node
             if (isectPnt != null) {
-                calculatedNodes.put(endpoint, new EastNorth(isectPnt.getX(), isectPnt.getY()));
+            	enIsectPt = new EastNorth(isectPnt.getX(), isectPnt.getY());       	
+                calculatedNodes.put(endpoint, enIsectPt);
             } else if (alignedLineKeepLength.getIntersectionStatus() == IntersectionStatus.LINES_PARALLEL) {
                 alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
             }
-        } else {
-            if (!endpoint.getEastNorth().equals(pivot)) {
-                // Report non-pivot endpoints only
-                alignableStatKeepAngles = AlignableStatus.ALGN_INV_TOOMANY_CONNECTED_WS;
+            
+            // For the case of two adjacent segments with collinear points, the new endpoint may  
+            // not fall between enAdjOther1 and enAdjOther2; in this case one of them is redundant 
+            // and should be deleted from OSM
+            if (alws.size() == 2 && enIsectPt != null) {
+            	int middlePtIdx = AlignWaysGeomPoint.getMiddleOf3(
+            			new AlignWaysGeomPoint(enIsectPt), 
+            			new AlignWaysGeomPoint(enAdjOther1), 
+            			new AlignWaysGeomPoint(enAdjOther2));
+            	if (middlePtIdx != 0) {
+            		EastNorth middlePt = null;
+            		switch(middlePtIdx) {
+            			case 1:
+            				middlePt = enIsectPt;
+            				break;
+            			case 2:
+            				middlePt = enAdjOther1;
+            				break;
+            			case 3:
+            				middlePt = enAdjOther2;
+            				break;
+            		}
+	            	if (middlePt != null) {
+	            		double eps = 1E-6;
+	                	if (!middlePt.equalsEpsilon(enIsectPt, eps)) {
+	                		// Intersection point didn't fall between the two adjacent points; something must go 
+	                		if (middlePt.equalsEpsilon(enAdjOther1, eps)) {
+	                			// TODO Delete enAdjOther1
+	                			if (true);
+	                			// Main.map.
+	                		} else
+	                			// TODO Delete enAdjOther2
+	                			if (true);
+	                	}
+	            	}
+            	}
             }
+            
+        } else {
+        	// angle preserving alignment not possible
+            alignableStatKeepAngles = AlignableStatus.ALGN_INV_TOOMANY_CONNECTED_WS;
         }
 
     }
 
 
-    /**
+    private boolean isEnSetCollinear(ArrayList<EastNorth> enAdjPts) {
+    	ArrayList<AlignWaysGeomPoint> awAdjPts = new ArrayList<AlignWaysGeomPoint>();
+    	
+    	for (EastNorth en : enAdjPts) {
+    		AlignWaysGeomPoint pt = new AlignWaysGeomPoint(en.getX(), en.getY());
+    		awAdjPts.add(pt);
+    	}
+    	
+		return AlignWaysGeomPoint.isSetCollinear(awAdjPts);
+	}
+
+
+	private EastNorth getNonEqualEN(WaySegment waySegment, Node endpoint) {
+    	if (waySegment.getFirstNode().equals(endpoint)) {
+    		return waySegment.getSecondNode().getEastNorth();
+    	} else if (waySegment.getSecondNode().equals(endpoint)) {
+    		return waySegment.getFirstNode().getEastNorth();
+    	} else
+    		return null;
+	}
+
+
+	/**
      * Reports invalid alignable statuses on screen in dialog boxes.
      * 
      * @param stat The invalid status to report
@@ -139,18 +224,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         if (status != AlignableStatus.ALGN_VALID)
             return status;
 
-        // Check the remainder of the potential problems: -
-        // Check for the number of segments connecting to the alignee endpoints
-        for (Node nA : displaceableNodes) {
-            if (nA.getEastNorth().equals(pivot)) {
-                // Pivots set to endpoints are exempt from this check
-                continue;
-            } else {
-                // This node should not connect to more than one other way segment
-                if (isReferredByNOtherWaySegments(nA, 2))
-                    return AlignableStatus.ALGN_INV_TOOMANY_CONNECTED_WS;
-            }
-        }
+        // Check the remainder of the potential problems: N/A
 
         // In all other cases alignment is possible
         return AlignableStatus.ALGN_VALID;

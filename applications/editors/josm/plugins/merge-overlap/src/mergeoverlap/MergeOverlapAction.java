@@ -53,7 +53,7 @@ public class MergeOverlapAction extends JosmAction {
 	public MergeOverlapAction() {
 		super(tr("Merge overlap", null), "merge_overlap", tr(
 				"Merge overlap of ways.", null), 
-				Shortcut.registerShortcut("tools:mergeoverlap",tr("Tool: {0}", tr("Merge overlap", null)), KeyEvent.VK_O,
+				Shortcut.registerShortcut("tools:mergeoverlap",tr("Tool: {0}", tr("Merge overlap")), KeyEvent.VK_O,
 				Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
 				, true);
 	}

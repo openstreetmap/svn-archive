@@ -25,13 +25,9 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
                 tr("Edit tags"),
                 null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
                 tr("Launches the tag editor dialog"),
-                Shortcut.registerShortcut(
-                        "edit:launchtageditor",
-                        tr("Launches the tag editor dialog"),
-                        KeyEvent.VK_T,
-                        Shortcut.GROUP_EDIT),
-                        true
-        );
+                Shortcut.registerShortcut("edit:launchtageditor", tr("Launches the tag editor dialog"),
+                        KeyEvent.VK_T,Shortcut.GROUP_EDIT)
+		,true);
 
         DataSet.addSelectionListener(this);
         setEnabled(false);

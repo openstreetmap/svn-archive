@@ -25,8 +25,8 @@
 **
 -->
 <project name="tageditor" default="dist" basedir=".">
-    <property name="commit.message" value="Updating to JOSM 3210"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="commit.message" value="Tageditor:  help shortcut parser, rebuild"/>
+    <property name="plugin.main.version" value="4847"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

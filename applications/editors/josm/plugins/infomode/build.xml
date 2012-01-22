@@ -29,7 +29,7 @@
 -->
 <project name="InfoMode" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="InfoMode : underline link"/>
+    <property name="commit.message" value="InfoMode : for shortcurt parser"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4667"/>
     <!-- should not be necessary to change the following properties -->

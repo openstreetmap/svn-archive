@@ -9,11 +9,11 @@ import pxdom
 #import colorsys
 
 condition_colors = {
-    'free': '7fff00',
-    'cust': 'b68529',
-    'none': '3f2920',
-    'fee':  '67a1eb',
-    'unkn': 'bc73e2' # purple:'bc73e2' ; bluegreen:'6fc58a' 
+    'free': '04c900',
+    'cust': 'c17223',
+    'none': '634e45',
+    'fee':  '037afe',
+    'unkn': 'a649b7'
     }
 
 def dom_strip_style_and_layer(document,stylename,layername):
@@ -79,7 +79,7 @@ def create_wifi_area_icons(source_symbols_dir,dest_symbols_dir):
 
 
 def create_wifi_point_icons(source_symbols_dir,dest_symbols_dir):
-    tempf = "/tmp/2347856893476512873465.png"
+#    tempf = "/tmp/2347856893476512873465.png"
 #    stampf = os.path.join(source_symbols_dir,"wifi_node_stamp.png")
     # for now there's only the wifi-vending icon
     copy_files(source_symbols_dir,dest_symbols_dir,['wifi-vending.png'])
@@ -89,8 +89,8 @@ def create_wifi_point_icons(source_symbols_dir,dest_symbols_dir):
         sf = os.path.join(source_symbols_dir,'wifi-source.png')
         df = os.path.join(dest_symbols_dir,'wifi_node_{cond}.png'.format(cond=condition))
         colorize_icon(sf,df,condition_colors.get(condition))
- #       p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
-  #      print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+#       p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
+#      print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
     #    p.wait()
 
 def copy_files(src,dest,files):

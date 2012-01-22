@@ -1,13 +1,13 @@
-<!ENTITY wa_free "#7fff00">
-<!ENTITY wa_free_stroke "#1f9f00">
-<!ENTITY wa_fee "#67a1eb">
-<!ENTITY wa_fee_stroke "#3974dd">
-<!ENTITY wa_customers "#b68529">
-<!ENTITY wa_customers_stroke "#56250a">
-<!ENTITY wa_none "#3f2920">
-<!ENTITY wa_none_stroke "#0f0a08">
-<!ENTITY wa_unknown "#bc73e2">
-<!ENTITY wa_unknown_stroke "#31203a">
+<!ENTITY wa_free "#04c900">
+<!ENTITY wa_free_stroke "#026600">
+<!ENTITY wa_fee "#037afe">
+<!ENTITY wa_fee_stroke "#023d80">
+<!ENTITY wa_customers "#c17223">
+<!ENTITY wa_customers_stroke "#623a12">
+<!ENTITY wa_none "#634e45">
+<!ENTITY wa_none_stroke "#332824">
+<!ENTITY wa_unknown "#a649b7">
+<!ENTITY wa_unknown_stroke "#52245b">
 
 <!ENTITY wa_stroke_width "0.8">
 

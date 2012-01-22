@@ -91,10 +91,10 @@
         map.addLayers([wifibw, osm, cycle, osma/*, hikebike*/]);
         map.addLayers([parkingtrans, parkingicons]);
 
-        // Würzburg zoom=16&lat=49.79201&lon=9.94524
-        var lon = 9.94524;
-        var lat =  49.79201;
-        var zoom = 17;
+        //München lat=48.12568&lon=11.5668&zoom=13
+        var lon = 11.5668;
+        var lat =  48.12568;
+        var zoom = 13;
         var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
 
         if (!map.getCenter())

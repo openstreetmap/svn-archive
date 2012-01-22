@@ -29,9 +29,9 @@
 -->
 <project name="utilsplugin2" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: removed debugging output and make shortcuts easier to find"/>
+    <property name="commit.message" value="Utilsplugin2: help shortcut parser"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4667"/>
+    <property name="plugin.main.version" value="4847"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

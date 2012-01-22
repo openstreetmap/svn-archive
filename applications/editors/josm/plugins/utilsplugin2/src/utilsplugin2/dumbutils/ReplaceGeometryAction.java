@@ -27,7 +27,7 @@ public class ReplaceGeometryAction extends JosmAction {
 
     public ReplaceGeometryAction() {
         super(TITLE, "dumbutils/replacegeometry", tr("Replace geometry of selected object with a new one"),
-                Shortcut.registerShortcut("tools:replacegeometry", tr("Tool: {0}", TITLE), KeyEvent.VK_G, Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT)
+                Shortcut.registerShortcut("tools:replacegeometry", tr("Tool: {0}", tr("Replace Geometry")), KeyEvent.VK_G, Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT)
                 , true);
     }
 

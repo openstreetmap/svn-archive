@@ -29,9 +29,9 @@
 -->
 <project name="reverter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Update reverter for 4602"/>
+    <property name="commit.message" value="Reverter: moved menu to Alt-Y (conflicts), recompile"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4734"/>
+    <property name="plugin.main.version" value="4855"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

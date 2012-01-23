@@ -18,7 +18,7 @@ public class ReverterPlugin extends Plugin {
     static boolean reverterUsed = false;
     public ReverterPlugin(PluginInformation info) {
         super(info);
-        JMenu historyMenu = Main.main.menu.addMenu(marktr("History"), KeyEvent.VK_S,
+        JMenu historyMenu = Main.main.menu.addMenu(marktr("History"), KeyEvent.VK_Y,
                 Main.main.menu.defaultMenuPos,ht("/Plugin/Reverter"));
         //MainMenu.add(historyMenu, new ObjectsHistoryAction());
         MainMenu.add(historyMenu, new RevertChangesetAction());

@@ -100,7 +100,7 @@
                 <attribute name="Author" value="Ilya Zverev"/>
                 <attribute name="Plugin-Class" value="surveyor2.SurveyorPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="The surveyor's toolbox."/>
+                <attribute name="Plugin-Description" value="The surveyor''s toolbox."/>
                 <attribute name="ru_Plugin-Description" value="Модуль для полевого картографирования."/>
                 <attribute name="Plugin-Icon" value="images/surveyor2.png"/>
                 <!--attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Relation_Toolbox"/-->

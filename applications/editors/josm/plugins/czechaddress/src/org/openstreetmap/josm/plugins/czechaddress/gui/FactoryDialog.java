@@ -57,9 +57,7 @@ public class FactoryDialog extends ToggleDialog
         super( "Továrna na adresy",
                "envelope-scrollbar.png",
                "Umožňuje rychlé vytváření adresních bodů „jedním kliknutím.“",
-                Shortcut.registerShortcut(
-                    "subwindow:addressfactory",
-                    "Přepnout: Továrna na adresy",
+                Shortcut.registerShortcut("subwindow:addressfactory",tr("Přepnout: Továrna na adresy"),
                     KeyEvent.VK_T, Shortcut.GROUP_LAYER),
                 200);
 

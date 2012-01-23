@@ -65,11 +65,14 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             //  - the alignee following the keep length rule
             //  - the adjacent way segment
         	
-        	EastNorth enAdjOther1 = getNonEqualEN(alws.get(0), endpoint);
+        	Node adjOther1 = getNonEqualNode(alws.get(0), endpoint);
+        	EastNorth enAdjOther1 = adjOther1.getEastNorth();
+        	Node adjOther2 = null;
         	EastNorth enAdjOther2 = null;
 
             if (alws.size() == 2) {
-            	enAdjOther2 = getNonEqualEN(alws.get(1), endpoint);
+            	adjOther2 = getNonEqualNode(alws.get(1), endpoint);
+            	enAdjOther2 = adjOther2.getEastNorth();
             	
             	// In order have a chance to align, (enAdjOther1, enAdjOther2 and endpoint) must be collinear
             	ArrayList<EastNorth> enAdjPts = new ArrayList<EastNorth>(3);
@@ -97,6 +100,8 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                 alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
             }
             
+            // TODO - THIS APPROACH IS FAULTY!
+            // 
             // For the case of two adjacent segments with collinear points, the new endpoint may  
             // not fall between enAdjOther1 and enAdjOther2; in this case one of them is redundant 
             // and should be deleted from OSM
@@ -123,12 +128,12 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 	                	if (!middlePt.equalsEpsilon(enIsectPt, eps)) {
 	                		// Intersection point didn't fall between the two adjacent points; something must go 
 	                		if (middlePt.equalsEpsilon(enAdjOther1, eps)) {
-	                			// TODO Delete enAdjOther1
-	                			if (true);
-	                			// Main.map.
+	                			// Delete adjOther1
+	                			// adjOther1.setDeleted(true);
 	                		} else
-	                			// TODO Delete enAdjOther2
 	                			if (true);
+	                			// Delete adjOther2
+	                			// adjOther2.setDeleted(true);
 	                	}
 	            	}
             	}
@@ -154,11 +159,11 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 	}
 
 
-	private EastNorth getNonEqualEN(WaySegment waySegment, Node endpoint) {
+	private Node getNonEqualNode(WaySegment waySegment, Node endpoint) {
     	if (waySegment.getFirstNode().equals(endpoint)) {
-    		return waySegment.getSecondNode().getEastNorth();
+    		return waySegment.getSecondNode();
     	} else if (waySegment.getSecondNode().equals(endpoint)) {
-    		return waySegment.getFirstNode().getEastNorth();
+    		return waySegment.getFirstNode();
     	} else
     		return null;
 	}

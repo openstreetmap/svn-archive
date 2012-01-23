@@ -96,7 +96,7 @@
                 <attribute name="Author" value="Oliver Raupach"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.housenumbertool.HouseNumberTaggingToolPlugin"/>
                 <attribute name="Plugin-Date" value="2012-01-19"/>
-                <attribute name="Plugin-Description" value="Simple tool to tag house numbers. Select house and press 'Y'."/>
+                <attribute name="Plugin-Description" value="Simple tool to tag house numbers. Select house and press «Y»."/>
                 <attribute name="Plugin-Mainversion" value="4667"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<attribute name="Plugin-Icon" value="images/home-icon32.png"/>

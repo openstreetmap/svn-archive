@@ -17,10 +17,10 @@ public class PdfImportAction extends JosmAction {
 
 	public PdfImportAction() {
 		super(tr("Import PDF file"), "pdf_import",
-				tr("Import PDF file."), Shortcut.registerShortcut(
-						"tools:pdfimport", tr("Tool: {0}",
-								tr("Import PDF file")), KeyEvent.VK_P,
-								Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+		    tr("Import PDF file."), 
+		    Shortcut.registerShortcut("tools:pdfimport", tr("Tool: {0}",tr("Import PDF file")),
+		    KeyEvent.VK_P,Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
+		    , true);
 	}
 
 	/**

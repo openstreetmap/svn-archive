@@ -1,9 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import java.util.Set;
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedListModel;
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedComboBoxModel;
-import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.LayoutManager;
@@ -13,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -23,11 +23,14 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.MapUtils;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
+import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithHouses;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedComboBoxModel;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedListModel;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.ReasonerListener;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -80,7 +83,8 @@ public class FactoryDialog extends ToggleDialog
         houseList.setCellRenderer(new HouseListRenderer());
     }
 
-    public void pluginStatusChanged(int message) {
+    @Override
+	public void pluginStatusChanged(int message) {
 
         if (message == MESSAGE_DATABASE_LOADED) {
             relocateButton.setEnabled(true);
@@ -194,7 +198,8 @@ public class FactoryDialog extends ToggleDialog
     }
 
     public boolean selectionListenerActivated = true;
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    @Override
+	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 
         if (!selectionListenerActivated) return;
         if (newSelection.size() != 1) return;
@@ -259,14 +264,17 @@ public class FactoryDialog extends ToggleDialog
 
         houseList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { " " };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            @Override
+			public int getSize() { return strings.length; }
+            @Override
+			public Object getElementAt(int i) { return strings[i]; }
         });
         houseList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         houseList.setEnabled(false);
         houseList.setFocusable(false);
         houseList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            @Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
                 houseListClicked(evt);
             }
         });
@@ -279,7 +287,8 @@ public class FactoryDialog extends ToggleDialog
         relocateButton.setText("Inicializovat");
         relocateButton.setEnabled(false);
         relocateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 relocateButtonActionPerformed(evt);
             }
         });
@@ -341,11 +350,14 @@ public class FactoryDialog extends ToggleDialog
     private javax.swing.JComboBox streetComboBox;
     // End of variables declaration//GEN-END:variables
 
-    public void elementChanged(AddressElement elem) {
+    @Override
+	public void elementChanged(AddressElement elem) {
         houseModel.notifyAllListeners();
     }
-    public void primitiveChanged(OsmPrimitive prim) {}
-    public void resonerReseted() {}
+    @Override
+	public void primitiveChanged(OsmPrimitive prim) {}
+    @Override
+	public void resonerReseted() {}
 
 //==============================================================================
 
@@ -426,9 +438,12 @@ public class FactoryDialog extends ToggleDialog
             Reasoner.getInstance().addListener(this);
         }
 
-        public void resonerReseted() { houses.clear(); }
-        public void primitiveChanged(OsmPrimitive prim) {}
-        public void elementChanged(AddressElement elem) {
+        @Override
+		public void resonerReseted() { houses.clear(); }
+        @Override
+		public void primitiveChanged(OsmPrimitive prim) {}
+        @Override
+		public void elementChanged(AddressElement elem) {
             if (!(elem instanceof House)) return;
             House house = (House) elem;
             int index = Collections.binarySearch(houses, house);
@@ -459,7 +474,8 @@ public class FactoryDialog extends ToggleDialog
             metaElem.add(new FreeStreetProvider());
         }
 
-        public int getSize() {
+        @Override
+		public int getSize() {
             if (parent == null) return 0;
             return parent.getStreets().size() + metaElem.size();
         }
@@ -475,7 +491,8 @@ public class FactoryDialog extends ToggleDialog
             notifyAllListeners();
         }
 
-        public Object getElementAt(int index) {
+        @Override
+		public Object getElementAt(int index) {
             if (parent == null) return null;
 
             if (index < metaElem.size())
@@ -489,13 +506,15 @@ public class FactoryDialog extends ToggleDialog
             return null;
         }
 
-        public void setSelectedItem(Object anItem) {
+        @Override
+		public void setSelectedItem(Object anItem) {
             assert anItem instanceof ElementWithHouses;
             selected = (ElementWithHouses) anItem;
             houseModel.notifyAllListeners();
         }
 
-        public Object getSelectedItem() {
+        @Override
+		public Object getSelectedItem() {
             return selected;
         }
     }
@@ -509,7 +528,8 @@ public class FactoryDialog extends ToggleDialog
             Reasoner.getInstance().addListener(this);
         }
 
-        public int getSize() {
+        @Override
+		public int getSize() {
             if (streetComboBox.getSelectedItem() == null) return 0;
             ElementWithHouses selected
                     = (ElementWithHouses) streetComboBox.getSelectedItem();
@@ -527,16 +547,20 @@ public class FactoryDialog extends ToggleDialog
             return selected.getHouses().get(index);
         }
 
-        public Object getElementAt(int index) {
+        @Override
+		public Object getElementAt(int index) {
             return getHouseAt(index);
         }
 
-        public void primitiveChanged(OsmPrimitive prim) {}
-        public void elementChanged(AddressElement elem) {
+        @Override
+		public void primitiveChanged(OsmPrimitive prim) {}
+        @Override
+		public void elementChanged(AddressElement elem) {
             notifyAllListeners();
         }
 
-        public void resonerReseted() {
+        @Override
+		public void resonerReseted() {
             notifyAllListeners();
         }
     }

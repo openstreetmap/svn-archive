@@ -211,12 +211,18 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 
 	private void initChangeStream() {
 		try {
+			HttpURLConnection conn = (HttpURLConnection) new URL("http://planet.openstreetmap.org/minute-replicate/state.txt").openConnection();
+			conn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r27603");
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(25000);
+			int respCode = conn.getResponseCode();
+			if (respCode != 200) {
+				System.out.println("Failed to retrieve state file");
+				return;
+			}
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(
-							new BufferedInputStream(
-									new URL(
-											"http://planet.openstreetmap.org/minute-replicate/state.txt")
-											.openStream())));
+							new BufferedInputStream(conn.getInputStream())));
 			br.readLine();
 			String seqNumStr = br.readLine();
 			seqNum = Integer.parseInt(seqNumStr.substring(seqNumStr
@@ -264,7 +270,12 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 						+ myFormat.format(seqNum % 1000) + ".osc.gz";
 				HttpURLConnection diffURLConn = (HttpURLConnection) new URL(url)
 						.openConnection();
+				diffURLConn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r27603");
+				//Need to set no-cache control header, as we will otherwise likely get a negative hit,
+				//as the first time we test it will be a 404 response, as that is how we probe if the next
+				//minutely diff is available.
 				diffURLConn.setRequestProperty("Cache-Control", "no-cache");
+				
 				BufferedInputStream bis = new BufferedInputStream(
 						new GZIPInputStream(diffURLConn.getInputStream()));
 				ChangesetParser cp = new ChangesetParser(bis, bboxll, bboxur);

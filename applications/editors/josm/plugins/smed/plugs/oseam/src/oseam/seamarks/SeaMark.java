@@ -257,9 +257,9 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.MOR_BUOY, "buoy");
 		CatSTR.put(Cat.INB_CALM, "calm");
 		CatSTR.put(Cat.INB_SBM, "sbm");
-		CatSTR.put(Cat.SIS_PTCL, "control");
-		CatSTR.put(Cat.SIS_PTED, "entry");
-		CatSTR.put(Cat.SIS_IPT, "IPT");
+		CatSTR.put(Cat.SIS_PTCL, "port_control");
+		CatSTR.put(Cat.SIS_PTED, "port_entry");
+		CatSTR.put(Cat.SIS_IPT, "ipt");
 		CatSTR.put(Cat.SIS_BRTH, "berthing");
 		CatSTR.put(Cat.SIS_DOCK, "dock");
 		CatSTR.put(Cat.SIS_LOCK, "lock");

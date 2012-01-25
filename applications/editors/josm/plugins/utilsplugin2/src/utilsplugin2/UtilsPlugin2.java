@@ -11,6 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import utilsplugin2.selection.*;
 import utilsplugin2.dumbutils.*;
+import utilsplugin2.curves.*;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -50,6 +51,8 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem selectAreaBoundary;
     
     JMenuItem selectURL;
+
+    JMenuItem drawArc;
     
     public UtilsPlugin2(PluginInformation info) {
         super(info);
@@ -88,7 +91,7 @@ public class UtilsPlugin2 extends Plugin {
         selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
         
         selectURL = MainMenu.add(toolsMenu, new ChooseURLAction());
-        
+	drawArc = MainMenu.add(toolsMenu, new CurveAction());
 
     }
 
@@ -121,7 +124,10 @@ public class UtilsPlugin2 extends Plugin {
         undoSelection.setEnabled(enabled);
         selectURL.setEnabled(enabled);
         allInside.setEnabled(enabled);
+
+        drawArc.setEnabled(enabled);
     }
+    
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return new UtilsPluginPreferences();

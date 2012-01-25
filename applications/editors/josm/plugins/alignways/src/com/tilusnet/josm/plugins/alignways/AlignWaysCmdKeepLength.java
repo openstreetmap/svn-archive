@@ -37,7 +37,8 @@ public class AlignWaysCmdKeepLength extends Command {
         ALGN_INV_CONNECTED_UNSHARED_PIVOT,
         ALGN_INV_OUTSIDE_WORLD,
         ALGN_INV_TOOMANY_CONNECTED_WS,      // for AlignWaysCmdKeepAngles
-        ALGN_INV_ANGLE_PRESERVING_CONFLICT  // for AlignWaysCmdKeepAngles
+        ALGN_INV_ANGLE_PRESERVING_CONFLICT, // for AlignWaysCmdKeepAngles
+        ALGN_INV_XPOINT_FALLSOUT            // for AlignWaysCmdKeepAngles
     }
     final AlignWaysAlgnSegment algnSeg;
 

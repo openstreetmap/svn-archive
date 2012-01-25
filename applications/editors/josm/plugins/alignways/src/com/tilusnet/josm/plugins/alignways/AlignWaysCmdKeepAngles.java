@@ -94,17 +94,18 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             // If the intersection is null, the adjacent and the alignee are parallel already:
             // there's no need to update this node
             if (isectPnt != null) {
-            	enIsectPt = new EastNorth(isectPnt.getX(), isectPnt.getY());       	
-                calculatedNodes.put(endpoint, enIsectPt);
+            	enIsectPt = new EastNorth(isectPnt.getX(), isectPnt.getY());
+            	// Don't "record" it yet as it may not be valid
             } else if (alignedLineKeepLength.getIntersectionStatus() == IntersectionStatus.LINES_PARALLEL) {
                 alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
+                return;
             }
             
-            // TODO - THIS APPROACH IS FAULTY!
-            // 
             // For the case of two adjacent segments with collinear points, the new endpoint may  
-            // not fall between enAdjOther1 and enAdjOther2; in this case one of them is redundant 
-            // and should be deleted from OSM
+            // not fall between enAdjOther1 and enAdjOther2; 
+            // this scenario is not allowed for the time being as placing the new intersection point on the line 
+            // triggers complications.
+            // TODO - find a solution
             if (alws.size() == 2 && enIsectPt != null) {
             	int middlePtIdx = AlignWaysGeomPoint.getMiddleOf3(
             			new AlignWaysGeomPoint(enIsectPt), 
@@ -126,7 +127,11 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 	            	if (middlePt != null) {
 	            		double eps = 1E-6;
 	                	if (!middlePt.equalsEpsilon(enIsectPt, eps)) {
-	                		// Intersection point didn't fall between the two adjacent points; something must go 
+	                		// Intersection point didn't fall between the two adjacent points; not allowed
+	                        alignableStatKeepAngles = AlignableStatus.ALGN_INV_XPOINT_FALLSOUT;
+	                        return;
+	                		
+	                        /*
 	                		if (middlePt.equalsEpsilon(enAdjOther1, eps)) {
 	                			// Delete adjOther1
 	                			// adjOther1.setDeleted(true);
@@ -134,10 +139,17 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 	                			if (true);
 	                			// Delete adjOther2
 	                			// adjOther2.setDeleted(true);
+                			 */
 	                	}
 	            	}
             	}
             }
+            
+            if (isectPnt != null) {
+                // Angle preserving alignment passed all verification tests: record it.
+            	calculatedNodes.put(endpoint, enIsectPt);
+            }
+            
             
         } else {
         	// angle preserving alignment not possible
@@ -194,6 +206,10 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         case ALGN_INV_ANGLE_PRESERVING_CONFLICT:
             statMsg = tr("The alignment is not possible with maintaining the angles of the joint segments.\n"
                     + "Either choose the ''keep length'' aligning method or select other segments.\n");
+            break;
+        case ALGN_INV_XPOINT_FALLSOUT:
+            statMsg = tr("An intersection point would fall outside its adjacent nodes.\n"
+                    + "This is an unsupported scenario.\n");
             break;
         default:
             statMsg = tr("Undocumented problem occured.\n");

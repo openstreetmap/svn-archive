@@ -99,11 +99,13 @@
 		
 		if (force || html.startsWith("Legende")) {
 			var html = 'Legende:<br>';
-			if(layer != undefined){
-				var layer = map.baseLayer.keyname;
-				var zoom = map.getZoom();
+
+			var zoom = map.getZoom();			
+			if(layer == 'oepnvde'){
+				html += '<div id="mapkey_area"><iframe src="http://www.oepnv.memomaps.de/map_key/_z' + zoom + '.html"/></div>';
+			}
+			else if(layer != undefined){
 				html += '<div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
-				document.getElementById('information').innerHTML = html;
 			}
 			else{
 				html += '<br>Leider keine Legende verfügbar …';

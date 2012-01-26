@@ -87,7 +87,8 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	public void mouseReleased(MouseEvent e) {
 	    // End action
 	    isDragging = false;
-	    currentCommand.addIfChanged();
+	    if (currentCommand != null)
+	        currentCommand.addIfChanged();
 	}
 
 	@Override

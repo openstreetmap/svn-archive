@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - now all actions are shown in history and user can undo/redo changes"/>
+    <property name="commit.message" value="PicLayer - fix #7319"/>
     <property name="plugin.main.version" value="4669"/>
     <!--
       ************************************************

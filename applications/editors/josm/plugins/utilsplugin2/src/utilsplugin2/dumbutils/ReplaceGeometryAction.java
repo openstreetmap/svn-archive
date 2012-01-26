@@ -9,12 +9,15 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationToChildReference;
+import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -80,6 +83,14 @@ public class ReplaceGeometryAction extends JosmAction {
         List<Command> commands = new ArrayList<Command>();
         AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) node.getKeys();
 
+        // merge tags
+        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(node, way);
+        if (tagResolutionCommands == null) {
+            // user canceled tag merge dialog
+            return;
+        }
+        commands.addAll(tagResolutionCommands);
+        
         // replace sacrificial node in way with node that is being upgraded
         if (nodeToReplace != null) {
             List<Node> wayNodes = way.getNodes();
@@ -103,12 +114,6 @@ public class ReplaceGeometryAction extends JosmAction {
         } else {
             // no node to replace, so just delete the original node
             commands.add(new DeleteCommand(node));
-        }
-
-        // Copy tags from node
-        // TODO: use merge tag conflict dialog instead
-        for (String key : nodeTags.keySet()) {
-            commands.add(new ChangePropertyCommand(way, key, nodeTags.get(key)));
         }
 
         getCurrentDataSet().setSelected(way);
@@ -163,6 +168,16 @@ public class ReplaceGeometryAction extends JosmAction {
             return;
         }
 
+        List<Command> commands = new ArrayList<Command>();
+                
+        // merge tags
+        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(geometry, way);
+        if (tagResolutionCommands == null) {
+            // user canceled tag merge dialog
+            return;
+        }
+        commands.addAll(tagResolutionCommands);
+        
         // Prepare a list of nodes that are not used anywhere except in the way
         Collection<Node> nodePool = getUnimportantNodes(way);
 
@@ -198,16 +213,11 @@ public class ReplaceGeometryAction extends JosmAction {
                 geometryNodes.set(i, nodeAssoc.get(geometryNodes.get(i)));
 
         // Now do the replacement
-        List<Command> commands = new ArrayList<Command>();
         commands.add(new ChangeNodesCommand(way, geometryNodes));
 
         // Move old nodes to new positions
         for( Node node : nodeAssoc.keySet() )
             commands.add(new MoveCommand(nodeAssoc.get(node), node.getCoor()));
-
-        // Copy tags from temporary way (source etc.)
-        for( String key : geometry.keySet() )
-            commands.add(new ChangePropertyCommand(way, key, geometry.get(key)));
 
         // Remove geometry way from selection
         getCurrentDataSet().clearSelection(geometry);
@@ -294,6 +304,45 @@ public class ReplaceGeometryAction extends JosmAction {
 
         return true;
     }
+    
+     /**
+     * Merge tags from source to target object, showing resolution dialog if
+     * needed.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    public List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) {
+        Collection<OsmPrimitive> primitives = Arrays.asList(source, target);
+        
+        Set<RelationToChildReference> relationToNodeReferences = RelationToChildReference.getRelationToChildReferences(primitives);
+
+        // build the tag collection
+        TagCollection tags = TagCollection.unionOfAllPrimitives(primitives);
+        TagConflictResolutionUtil.combineTigerTags(tags);
+        TagConflictResolutionUtil.normalizeTagCollectionBeforeEditing(tags, primitives);
+        TagCollection tagsToEdit = new TagCollection(tags);
+        TagConflictResolutionUtil.completeTagCollectionForEditing(tagsToEdit);
+
+        // launch a conflict resolution dialog, if necessary
+        CombinePrimitiveResolverDialog dialog = CombinePrimitiveResolverDialog.getInstance();
+        dialog.getTagConflictResolverModel().populate(tagsToEdit, tags.getKeysWithMultipleValues());
+        dialog.getRelationMemberConflictResolverModel().populate(relationToNodeReferences);
+        dialog.setTargetPrimitive(target);
+        dialog.prepareDefaultDecisions();
+
+        // conflict resolution is necessary if there are conflicts in the merged tags
+        // or if at least one of the merged nodes is referred to by a relation
+        if (!tags.isApplicableToPrimitive() || relationToNodeReferences.size() > 1) {
+            dialog.setVisible(true);
+            if (dialog.isCanceled()) {
+                return null;
+            }
+        }
+        return dialog.buildResolutionCommands();
+    }
+
     
     /**
      * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.

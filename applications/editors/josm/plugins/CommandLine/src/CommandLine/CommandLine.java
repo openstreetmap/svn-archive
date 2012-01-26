@@ -79,6 +79,8 @@ public class CommandLine extends Plugin {
 	protected MapFrame currentMapFrame;
 	protected MapMode previousMode;
 
+	static final String pluginDir = Main.pref.getPluginsDirectory().getAbsolutePath() + "/CommandLine/";
+
 	public CommandLine(PluginInformation info) {
 		super(info);
 		commandSymbol = ": ";

@@ -39,8 +39,8 @@ public class CommandAction extends JosmAction {
 		super(tr(parentCommand.name), "blankmenu", tr(parentCommand.name), null, false, false);
 		if (!parentCommand.icon.equals("")) {
 			try {
-				putValue(Action.SMALL_ICON, ImageProvider.get("/../plugins/CommandLine/", parentCommand.icon));
-				putValue(Action.LARGE_ICON_KEY, ImageProvider.get("/../plugins/CommandLine/", parentCommand.icon));
+				putValue(Action.SMALL_ICON, ImageProvider.get(parentPlugin.pluginDir, parentCommand.icon));
+				putValue(Action.LARGE_ICON_KEY, ImageProvider.get(parentPlugin.pluginDir, parentCommand.icon));
 			}
 			catch (NullPointerException e) {
 				putValue(Action.SMALL_ICON, ImageProvider.get("blankmenu"));

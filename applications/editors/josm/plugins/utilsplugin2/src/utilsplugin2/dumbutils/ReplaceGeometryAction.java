@@ -1,20 +1,22 @@
 package utilsplugin2.dumbutils;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Area;
-import org.openstreetmap.josm.data.osm.Node;
-import java.util.*;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.Main;
-import javax.swing.JOptionPane;
-import org.openstreetmap.josm.data.osm.Way;
-import java.awt.event.KeyEvent;
-import org.openstreetmap.josm.tools.Shortcut;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
+import java.awt.geom.Point2D;
+import java.util.*;
+import javax.swing.JOptionPane;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.command.*;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Replaces already existing object (id>0) with a new object (id<0).
@@ -23,7 +25,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class ReplaceGeometryAction extends JosmAction {
     private static final String TITLE = tr("Replace Geometry");
-    private static final double MAX_NODE_REPLACEMENT_DISTANCE = 3e-4;
 
     public ReplaceGeometryAction() {
         super(TITLE, "dumbutils/replacegeometry", tr("Replace geometry of selected object with a new one"),
@@ -38,7 +39,7 @@ public class ReplaceGeometryAction extends JosmAction {
         }
 
         // There must be two ways selected: one with id > 0 and one new.
-        List<OsmPrimitive> selection = new ArrayList(getCurrentDataSet().getSelected());
+        List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
         if (selection.size() != 2) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected."),
@@ -74,11 +75,6 @@ public class ReplaceGeometryAction extends JosmAction {
             // Prepare a list of nodes that are not used anywhere except in the way
             Collection<Node> nodePool = getUnimportantNodes(way);
             nodeToReplace = findNearestNode(node, nodePool);
-
-            if (nodeToReplace == null && !nodePool.isEmpty()) {
-                // findNearestNode failed, just pick the first unimportant node
-                nodeToReplace = nodePool.iterator().next();
-            }
         }
 
         List<Command> commands = new ArrayList<Command>();
@@ -123,9 +119,9 @@ public class ReplaceGeometryAction extends JosmAction {
     }
     
     public void replaceWayWithWay(List<Way> selection) {
+        // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
-
         if( selection.get(1-idxNew).isNew() ) {
             // if both are new, select the one with all the DB nodes
             boolean areNewNodes = false;
@@ -144,9 +140,25 @@ public class ReplaceGeometryAction extends JosmAction {
         }
         Way geometry = selection.get(idxNew);
         Way way = selection.get(1 - idxNew);
+        
         if( !overrideNewCheck && (way.isNew() || !geometry.isNew()) ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select one way that exists in the database and one new way with correct geometry."),
+                    TITLE, JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Area a = getCurrentDataSet().getDataSourceArea();
+        if (!isInArea(way, a) || !isInArea(geometry, a)) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("The ways must be entirely within the downloaded area."),
+                    TITLE, JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (hasImportantNode(way)) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("The way to be replaced cannot have any nodes with properties or relation memberships."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -159,7 +171,8 @@ public class ReplaceGeometryAction extends JosmAction {
         for( Node node : geometry.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( node.isNew() && !node.isDeleted() && referrers.size() == 1
-                    && referrers.get(0).equals(geometry) && !way.containsNode(node) )
+                    && referrers.get(0).equals(geometry) && !way.containsNode(node)
+                    && !hasInterestingKey(node))
                 geometryPool.add(node);
         }
 
@@ -220,15 +233,66 @@ public class ReplaceGeometryAction extends JosmAction {
      */
     protected Collection<Node> getUnimportantNodes(Way way) {
         Set<Node> nodePool = new HashSet<Node>();
-        Area a = getCurrentDataSet().getDataSourceArea();
         for (Node n : way.getNodes()) {
             List<OsmPrimitive> referrers = n.getReferrers();
             if (!n.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
-                    && (n.isNewOrUndeleted() || a == null || a.contains(n.getCoor()))) {
+                    && !hasInterestingKey(n)) {
                 nodePool.add(n);
             }
         }
         return nodePool;
+    }
+    
+    /**
+     * Checks if a way has at least one important node (e.g. interesting tag,
+     * role membership), and thus cannot be safely modified.
+     * 
+     * @param way
+     * @return 
+     */
+    protected boolean hasImportantNode(Way way) {
+        for (Node n : way.getNodes()) {
+            //TODO: if way is connected to other ways, warn or disallow?
+            for (OsmPrimitive o : n.getReferrers()) {
+                if (o instanceof Relation) {
+                    return true;
+                }
+            }
+            if (hasInterestingKey(n)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected boolean hasInterestingKey(OsmPrimitive object) {
+        for (String key : object.getKeys().keySet()) {
+            if (!OsmPrimitive.isUninterestingKey(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected static boolean isInArea(Node node, Area area) {
+        if (node.isNewOrUndeleted() || area == null || area.contains(node.getCoor())) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected static boolean isInArea(Way way, Area area) {
+        if (area == null) {
+            return true;
+        }
+
+        for (Node n : way.getNodes()) {
+            if (!isInArea(n, area)) {
+                return false;
+            }
+        }
+
+        return true;
     }
     
     /**
@@ -240,8 +304,10 @@ public class ReplaceGeometryAction extends JosmAction {
             return node;
         
         Node nearest = null;
-        double distance = MAX_NODE_REPLACEMENT_DISTANCE;
+        // TODO: use meters instead of degrees, but do it fast
+        double distance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
         Point2D coor = node.getCoor();
+
         for( Node n : nodes ) {
             double d = n.getCoor().distance(coor);
             if( d < distance ) {

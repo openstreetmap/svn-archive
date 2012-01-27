@@ -111,7 +111,7 @@
 				html += '<div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
 			}
 			else{
-				html += '<br>Leider keine Legende verfügbar …';
+				html += '<br>Leider keine Legende für diesen Kartenstil verfügbar …';
 			}
 			document.getElementById('information').innerHTML = html;
 			openSlide('slider');

@@ -33,22 +33,28 @@ public class PanelMain extends JPanel {
 		tabs = new JTabbedPane(JTabbedPane.LEFT);
 		
 		JPanel panelF = new PanelF();
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelF, "Ports");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabF.png")),
+				panelF, Messages.getString("Ports"));
 
 		JPanel panelJ = new PanelJ();
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelJ, "Seabed");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabJ.png")),
+				panelJ, Messages.getString("Seabed"));
 
 		JPanel panelK = new PanelK();
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelK, "Obstructions");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabK.png")),
+				panelK, Messages.getString("Obstructions"));
 
 		JPanel panelL = new PanelL();;
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelL, "Offshore Installations");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabL.png")),
+				panelL, Messages.getString("OffshoreInstallations"));
 
 		JPanel panelM = new PanelM();
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelM, "Tracks & Routes");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabM.png")),
+				panelM, Messages.getString("TracksRoutes"));
 
 		JPanel panelN = new PanelN();;
-		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/ports.png")), panelN, "Areas & Limits");
+		tabs.addTab(null, new ImageIcon(getClass().getResource("/images/tabN.png")),
+				panelN, Messages.getString("AreasLimits"));
 		
 		tabs.setBounds(new Rectangle(0, 0, 400, 325));
 		add(tabs);

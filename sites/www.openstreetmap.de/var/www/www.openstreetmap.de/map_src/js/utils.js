@@ -100,8 +100,11 @@
 		if (force || html.startsWith("Legende")) {
 			var html = 'Legende:<br>';
 
-			var zoom = map.getZoom();			
-			if(layer == 'oepnvde'){
+			var zoom = map.getZoom();
+			if(layer == 'cycle'){
+				html += '<div id="mapkey_area"><iframe src="legende/opencyclemap.html"/></div>';
+			}
+			else if(layer == 'oepnvde'){
 				html += '<div id="mapkey_area"><iframe src="http://www.oepnv.memomaps.de/map_key/_z' + zoom + '.html"/></div>';
 			}
 			else if(layer != undefined){

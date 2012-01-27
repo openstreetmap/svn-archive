@@ -12,6 +12,7 @@ import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.RelationToChildReference;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
@@ -55,28 +56,61 @@ public class ReplaceGeometryAction extends JosmAction {
 
         if (firstObject instanceof Way && secondObject instanceof Way) {
             replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
-        } else if (firstObject instanceof Node && secondObject instanceof Way) {
-            replaceNodeWithWay((Node) firstObject, (Way) secondObject);
-        } else if (secondObject instanceof Node && firstObject instanceof Way) {
-            replaceNodeWithWay((Node) secondObject, (Way) firstObject);
+        } else if (firstObject instanceof Node && secondObject instanceof Node) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("To replace a node with a node, use the node merge tool."),
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } else if (firstObject instanceof Node) {
+            replaceNode((Node) firstObject, secondObject);
+        } else if (secondObject instanceof Node) {
+            replaceNode((Node) secondObject, firstObject);
         } else {
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("This tool can only replace a node with a way, or a way with a way."),
+                    tr("This tool can only replace a node with a way, a node with a multipolygon, or a way with a way."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
     }
-    
-    public void replaceNodeWithWay(Node node, Way way) {
+
+    /**
+     * Replace or upgrade a node to a way or multipolygon
+     *
+     * @param node
+     * @param target
+     */
+    public void replaceNode(Node node, OsmPrimitive target) {
         if (!node.getReferrers().isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Node has referrers, cannot replace with way."), TITLE, JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s) or relation(s), cannot replace."),
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+
+        if (target instanceof Relation && !((Relation) target).isMultipolygon()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Relation is not a multipolygon, cannot be used as a replacement."),
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         Node nodeToReplace = null;
         // see if we need to replace a node in the replacement way to preserve connection in history
         if (!node.isNew()) {
-            // Prepare a list of nodes that are not used anywhere except in the way
-            Collection<Node> nodePool = getUnimportantNodes(way);
+            // Prepare a list of nodes that are not important
+            Collection<Node> nodePool = new HashSet<Node>();
+            if (target instanceof Way) {
+                nodePool.addAll(getUnimportantNodes((Way) target));
+            } else if (target instanceof Relation) {
+                for (RelationMember member : ((Relation) target).getMembers()) {
+                    if ((member.getRole().equals("outer") || member.getRole().equals("inner"))
+                            && member.isWay()) {
+                        // TODO: could consider more nodes, such as nodes that are members of other ways,
+                        // just need to replace occurences in all referrers
+                        nodePool.addAll(getUnimportantNodes(member.getWay()));
+                    }
+                }
+            } else {
+                assert false;
+            }
             nodeToReplace = findNearestNode(node, nodePool);
         }
 
@@ -84,23 +118,25 @@ public class ReplaceGeometryAction extends JosmAction {
         AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) node.getKeys();
 
         // merge tags
-        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(node, way);
+        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(node, target);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
             return;
         }
         commands.addAll(tagResolutionCommands);
-        
+
         // replace sacrificial node in way with node that is being upgraded
         if (nodeToReplace != null) {
-            List<Node> wayNodes = way.getNodes();
+            // node should only have one parent, a way
+            Way parentWay = (Way) nodeToReplace.getReferrers().get(0);
+            List<Node> wayNodes = parentWay.getNodes();
             int idx = wayNodes.indexOf(nodeToReplace);
             wayNodes.set(idx, node);
-            if (idx == 0 && way.isClosed()) {
+            if (idx == 0 && parentWay.isClosed()) {
                 // node is at start/end of way
                 wayNodes.set(wayNodes.size() - 1, node);
             }
-            commands.add(new ChangeNodesCommand(way, wayNodes));
+            commands.add(new ChangeNodesCommand(parentWay, wayNodes));
             commands.add(new MoveCommand(node, nodeToReplace.getCoor()));
             commands.add(new DeleteCommand(nodeToReplace));
 
@@ -116,10 +152,10 @@ public class ReplaceGeometryAction extends JosmAction {
             commands.add(new DeleteCommand(node));
         }
 
-        getCurrentDataSet().setSelected(way);
+        getCurrentDataSet().setSelected(target);
 
         Main.main.undoRedo.add(new SequenceCommand(
-                tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
+                tr("Replace geometry for node {0}", node.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
     }
     

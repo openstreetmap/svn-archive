@@ -51,8 +51,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class MergeOverlapAction extends JosmAction {
 
 	public MergeOverlapAction() {
-		super(tr("Merge overlap", null), "merge_overlap", tr(
-				"Merge overlap of ways.", null), 
+		super(tr("Merge overlap"), "merge_overlap",
+				tr("Merge overlap of ways."), 
 				Shortcut.registerShortcut("tools:mergeoverlap",tr("Tool: {0}", tr("Merge overlap")), KeyEvent.VK_O,
 				Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
 				, true);
@@ -240,7 +240,7 @@ public class MergeOverlapAction extends JosmAction {
 
 		// Commit
 		Main.main.undoRedo.add(new SequenceCommand(
-				tr("Merge Overlap (combine)", null), cmds));
+				tr("Merge Overlap (combine)"), cmds));
 		getCurrentDataSet().setSelected(sel);
 		Main.map.repaint();
 
@@ -476,18 +476,18 @@ public class MergeOverlapAction extends JosmAction {
 			JOptionPane
 					.showMessageDialog(
 							Main.parent,
-							tr("<html>A role based relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>", null),
-							tr("Warning", null), JOptionPane.WARNING_MESSAGE);
+							tr("<html>A role based relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>"),
+							tr("Warning"), JOptionPane.WARNING_MESSAGE);
 		} else if (warnme) {
 			JOptionPane
 					.showMessageDialog(
 							Main.parent,
-							tr("<html>A relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>", null),
-							tr("Warning", null), JOptionPane.WARNING_MESSAGE);
+							tr("<html>A relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>"),
+							tr("Warning"), JOptionPane.WARNING_MESSAGE);
 		}
 
 		return new SplitWayResult(
-				new SequenceCommand("Split way", commandList), null,
+				new SequenceCommand(tr("Split way"), commandList), null,
 				changedWay, newWays);
 	}
 

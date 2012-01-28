@@ -9,10 +9,8 @@
 <!ENTITY layer-parking-point SYSTEM "inc/layer-parking-point.xml.inc">
 ]>
 
-<!-- This stylesheet uses features only available in mapnik builds with
-     libxml2 as the XML parser. Furthermore, there are other features
-     that necessitate an upgrade to at least mapnik 0.6.1 -->
-<Map srs="&srs900913;" minimum_version="0.6.1">
+<!-- This stylesheet requires at least mapnik 2.0.0 -->
+<Map srs="&srs900913;" minimum-version="2.0.0">
 &fontset-settings;
 
 &layer-parking-area;

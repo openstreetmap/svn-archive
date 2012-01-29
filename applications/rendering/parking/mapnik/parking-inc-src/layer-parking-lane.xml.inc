@@ -560,7 +560,7 @@
         <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-cust.png"/>
     </Rule>
-    <!-- right parking lane: residents --> -->
+    <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom15;
         &minscale_zoom16;
@@ -630,6 +630,70 @@
                 COALESCE(tags->'parking:condition:right',tags->'parking:condition:both') as "parking:condition:right"
                 from &prefix;_line
                 where (tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')
+        ) as roads
+        </Parameter>
+        &datasource-settings;
+    </Datasource>
+</Layer>
+
+
+<!-- maxstay layer -->
+
+<Style name="parkinglane-maxstay-right">
+    <!-- right parking lane: free -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='free'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: disc -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='disc'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: ticket -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='ticket'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: customers -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='customers'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: residents -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='residents'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: private -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='private'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+    <!-- right parking lane: unknown -->
+    <Rule>
+        &maxscale_zoom15;
+        <Filter>[parking:condition:right]='unknown'</Filter>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" placement="line" dy="3" wrap-width="35" allow-overlap="1">'MS:'+[maxstay]</TextSymbolizer>
+    </Rule>
+</Style>
+
+<Layer name="parkinglane-maxstay-right" srs="&osm2pgsql_projection;" status="1" clear-label-cache="0">
+    <StyleName>parkinglane-maxstay-right</StyleName>
+    <Datasource>
+        <Parameter name="table">
+        (select way,
+                COALESCE(tags->'parking:lane:right',tags->'parking:lane:both') as "parking:lane:right",
+                COALESCE(tags->'parking:condition:right',tags->'parking:condition:both') as "parking:condition:right",
+                COALESCE(tags->'parking:condition:right:maxstay',tags->'parking:condition:both:maxstay') as "maxstay"
+                from &prefix;_line
+                where ((tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')) and (tags ? 'parking:condition:right:maxstay')
         ) as roads
         </Parameter>
         &datasource-settings;

@@ -1,3 +1,4 @@
+<!-- no parking -->
 <Style name="parkinglane-left-no">
     <!-- left parking lane: no_parking -->
     <Rule>
@@ -75,6 +76,7 @@
     </Rule>
 </Style>
 
+<!-- parallel parking -->
 <Style name="parkinglane-left-parallel">
     <!-- left parking lane: free -->
     <Rule>
@@ -248,6 +250,7 @@
     </Rule>
 </Style>
 
+<!-- diagonal parking -->
 <Style name="parkinglane-left-diagonal">
     <!-- left parking lane: free -->
     <Rule>
@@ -421,13 +424,7 @@
     </Rule>
 </Style>
 
-
-
-
-
-
-
-
+<!-- perpendicular parking -->
 <Style name="parkinglane-left-perpendicular">
     <!-- left parking lane: free -->
     <Rule>
@@ -602,7 +599,7 @@
 </Style>
 
 
-<!-- parkinglayers -->
+<!-- parking layers -->
 <Layer name="parkinglane-left" srs="&osm2pgsql_projection;" status="1" clear-label-cache="0">
     <StyleName>parkinglane-left-diagonal</StyleName>
     <StyleName>parkinglane-left-perpendicular</StyleName>
@@ -610,12 +607,6 @@
     <StyleName>parkinglane-left-no</StyleName>
     <Datasource>
         <Parameter name="table">
-<!--
-        (select way,(tags->'parking:lane:left') as "parking:lane:left",COALESCE(tags->'parking:condition:left',tags->'parking:condition:both') as "parking:condition:left"
-          from &prefix;_line
-          where (tags ? 'parking:lane:left') AND (tags->'parking:lane:left') in ('diagonal','orthogonal','perpendicular','inline','parallel','no_parking','no_stopping','fire_lane')
-        ) as roads
--->
         (select way,
                 COALESCE(tags->'parking:lane:left',tags->'parking:lane:both') as "parking:lane:left",
                 COALESCE(tags->'parking:condition:left',tags->'parking:condition:both') as "parking:condition:left"
@@ -634,12 +625,6 @@
     <StyleName>parkinglane-right-no</StyleName>
     <Datasource>
         <Parameter name="table">
-<!--
-        (select way,(tags->'parking:lane:right') as "parking:lane:right",(tags->'parking:condition:right') as "parking:condition:right"
-          from &prefix;_line
-          where (tags ? 'parking:lane:right') AND (tags->'parking:lane:right') in ('diagonal','orthogonal','perpendicular','inline','parallel','no_parking','no_stopping','fire_lane')
-        ) as roads
--->
         (select way,
                 COALESCE(tags->'parking:lane:right',tags->'parking:lane:both') as "parking:lane:right",
                 COALESCE(tags->'parking:condition:right',tags->'parking:condition:both') as "parking:condition:right"
@@ -650,5 +635,3 @@
         &datasource-settings;
     </Datasource>
 </Layer>
-
-

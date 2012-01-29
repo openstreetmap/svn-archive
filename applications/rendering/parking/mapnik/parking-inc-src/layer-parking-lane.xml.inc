@@ -644,43 +644,43 @@
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='free'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: disc -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='disc'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: ticket -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='ticket'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='customers'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='residents'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: private -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='private'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: unknown -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='unknown'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="15" placement="line" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
     </Rule>
 </Style>
 
@@ -705,43 +705,43 @@
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='free'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: disc -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='disc'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: ticket -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='ticket'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='customers'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: residents -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='residents'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: private -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='private'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: unknown -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='unknown'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="-15" placement="line" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
     </Rule>
 </Style>
 

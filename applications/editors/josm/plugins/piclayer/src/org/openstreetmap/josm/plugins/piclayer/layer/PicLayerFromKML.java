@@ -56,9 +56,10 @@ public class PicLayerFromKML extends PicLayerAbstract {
         EastNorth en2 = Main.getProjection().latlon2eastNorth(coord2);
 
 
-        imagePosition.setLocation((en1.getX()+en2.getX())/2, (en1.getY()+en2.getY())/2);
+        EastNorth imagePosition = new EastNorth((en1.getX()+en2.getX())/2, (en1.getY()+en2.getY())/2);
+        transformer.setImagePosition(imagePosition);
+
         initialImageScale = 100*getMetersPerEasting(imagePosition);
-        initialImagePosition.setLocation(imagePosition);
 
         AffineTransform transform = AffineTransform.getScaleInstance((en1.getX()-en2.getX())/w, (en1.getY()-en2.getY())/h);
         transform.rotate(cal.getRotate()/180.0*Math.PI);

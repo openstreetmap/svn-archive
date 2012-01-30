@@ -51,6 +51,7 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleXYPictureA
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.ScaleYPictureAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.ShearPictureAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePointAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.RemovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
@@ -96,6 +97,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             MovePictureAction movePictureAction = new MovePictureAction(newFrame);
             MovePointAction movePointAction = new MovePointAction(newFrame);
             TransformPointAction transformPointAction = new TransformPointAction(newFrame);
+            RemovePointAction removePointAction = new RemovePointAction(newFrame);
 
             RotatePictureAction rotatePictureAction = new RotatePictureAction(newFrame);
             ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction(newFrame);
@@ -108,6 +110,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             buttonList.add(picLayerActionButtonFactory(movePictureAction));
             buttonList.add(picLayerActionButtonFactory(movePointAction));
             buttonList.add(picLayerActionButtonFactory(transformPointAction));
+            buttonList.add(picLayerActionButtonFactory(removePointAction));
             buttonList.add(picLayerActionButtonFactory(rotatePictureAction));
             buttonList.add(picLayerActionButtonFactory(scaleXYPictureAction));
             buttonList.add(picLayerActionButtonFactory(scaleXPictureAction));
@@ -119,7 +122,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             }
         }
     }
-    
+
     private IconToggleButton picLayerActionButtonFactory(MapMode action) {
     	IconToggleButton button = new IconToggleButton(action);
     	button.setAutoHideDisabledButton(true);
@@ -133,10 +136,11 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
         boolean oldPic = oldLayer instanceof PicLayerAbstract;
         boolean newPic = newLayer instanceof PicLayerAbstract;
-        // actually that should be not enough - JOSM should hide all buttons that are disabled for current layer!
-        if (oldPic) { // leave picture layer            if (oldLayer != null)
+
+        if (oldPic) {
             ((PicLayerAbstract)oldLayer).setDrawPoints(false);
         }
+
         if (newPic) {
         	((PicLayerAbstract)newLayer).setDrawPoints(true);
         }

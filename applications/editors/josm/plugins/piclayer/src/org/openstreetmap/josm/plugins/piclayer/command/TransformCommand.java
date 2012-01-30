@@ -49,12 +49,14 @@ public class TransformCommand extends Command {
     private void placeTransform(PictureTransform transform) {
         layer.getTransformer().setTransform(transform.getTransform());
         layer.getTransformer().setOriginPoints(transform.getOriginPoints());
+        layer.getTransformer().setImagePosition(transform.getImagePosition());
     }
 
     private PictureTransform extractTransform() {
         PictureTransform transform = new PictureTransform();
         transform.setOriginPoints(layer.getTransformer().getOriginPoints());
         transform.setTransform(layer.getTransformer().getTransform());
+        transform.setImagePosition(layer.getTransformer().getImagePosition());
         return transform;
     }
 
@@ -77,7 +79,8 @@ public class TransformCommand extends Command {
         afterTransform = extractTransform();
 
         boolean changed = !(beforeTransform.getTransform().equals(afterTransform.getTransform())) ||
-            !(beforeTransform.getOriginPoints().equals(afterTransform.getOriginPoints()));
+            !(beforeTransform.getOriginPoints().equals(afterTransform.getOriginPoints())) ||
+            !(beforeTransform.getImagePosition().equals(afterTransform.getImagePosition()));
         if (changed && !alreadyAdded) {
             Main.main.undoRedo.add(this);
             alreadyAdded = true;

@@ -71,10 +71,10 @@ public abstract class PicLayerAbstract extends Layer {
     private static Image pinTiledImage;
 
     // Initial position of the image in the real world
-    protected EastNorth initialImagePosition;
+//    protected EastNorth initialImagePosition;
 
     // Position of the image in the real world
-    protected EastNorth imagePosition;
+    //protected EastNorth imagePosition;
 
     // The scale that was set on the map during image creation
     protected double initialImageScale = 1.0;
@@ -95,8 +95,6 @@ public abstract class PicLayerAbstract extends Layer {
     }
 
     // Keys for loading from old/new Properties
-    private static final String INITIAL_POS_X = "INITIAL_POS_X";
-    private static final String INITIAL_POS_Y = "INITIAL_POS_y";
     private static final String POSITION_X = "POSITION_X";
     private static final String POSITION_Y = "POSITION_Y";
     private static final String ANGLE = "ANGLE";
@@ -147,13 +145,16 @@ public abstract class PicLayerAbstract extends Layer {
     public void initialize() throws IOException {
         // First, we initialize the calibration, so that createImage() can rely on it
 
+        transformer = new PictureTransform();
+
         // If the map does not exist - we're screwed. We should not get into this situation in the first place!
         if ( Main.map != null && Main.map.mapView != null ) {
 
             EastNorth center = Main.map.mapView.getCenter();
 
-            imagePosition = new EastNorth(center.east(), center.north());
-            initialImagePosition = new EastNorth(imagePosition.east(), imagePosition.north());
+//            imagePosition = new EastNorth(center.east(), center.north());
+            transformer.setImagePosition(new EastNorth(center.east(), center.north()));
+//            initialImagePosition = new EastNorth(imagePosition.east(), imagePosition.north());
             // Initial scale at which the image was loaded
             initialImageScale = Main.map.mapView.getDist100Pixel();
         } else {
@@ -167,8 +168,6 @@ public abstract class PicLayerAbstract extends Layer {
         }
         // Load image completely
         (new ImageIcon(image)).getImage();
-
-        transformer = new PictureTransform();
 
         lookForCalibration();
     }
@@ -232,6 +231,7 @@ public abstract class PicLayerAbstract extends Layer {
             double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
 
             //     This is now the offset in screen pixels
+            EastNorth imagePosition = transformer.getImagePosition();
             double pic_offset_x = (( imagePosition.east() - leftop.east() ) * pixel_per_en);
             double pic_offset_y = (( leftop.north() - imagePosition.north() ) * pixel_per_en);
 
@@ -347,7 +347,7 @@ public abstract class PicLayerAbstract extends Layer {
         if (projcode.equals("EPSG:4326") )
             return;
 
-        EastNorth center = imagePosition;
+        EastNorth center = transformer.getImagePosition();
         double w = image.getWidth(null);
         double h = image.getHeight(null);
         double diag_pix = Math.sqrt(w*w+h*h);
@@ -381,8 +381,8 @@ public abstract class PicLayerAbstract extends Layer {
         props.put(MATRIXm11, Double.toString(matrix[3]));
         props.put(MATRIXm02, Double.toString(matrix[4]));
         props.put(MATRIXm12, Double.toString(matrix[5]));
-        props.put(POSITION_X, Double.toString(imagePosition.getX()));
-        props.put(POSITION_Y, Double.toString(imagePosition.getY()));
+        props.put(POSITION_X, Double.toString(transformer.getImagePosition().getX()));
+        props.put(POSITION_Y, Double.toString(transformer.getImagePosition().getY()));
         props.put(INITIAL_SCALE, Double.toString(initialImageScale));
 
         transformer.resetModified();
@@ -412,18 +412,18 @@ public abstract class PicLayerAbstract extends Layer {
         double pos_x = Double.valueOf(props.getProperty(POSITION_X, "0"));
         double pos_y = Double.valueOf(props.getProperty(POSITION_Y, "0"));
 
-        imagePosition = new EastNorth(pos_x, pos_y);
+        EastNorth imagePosition = new EastNorth(pos_x, pos_y);
+        transformer.setImagePosition(imagePosition);
+
         initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE, "1")); //in_scale
         if (props.containsKey(SCALEX)) {// old format
-            double in_pos_x = Double.valueOf(props.getProperty(INITIAL_POS_X, "0"));
-            double in_pos_y = Double.valueOf(props.getProperty(INITIAL_POS_Y, "0"));
+            //double in_pos_x = Double.valueOf(props.getProperty(INITIAL_POS_X, "0"));
+            //double in_pos_y = Double.valueOf(props.getProperty(INITIAL_POS_Y, "0"));
             double angle = Double.valueOf(props.getProperty(ANGLE, "0"));
             double scale_x = Double.valueOf(props.getProperty(SCALEX, "1"));
             double scale_y = Double.valueOf(props.getProperty(SCALEY, "1"));
             double shear_x = Double.valueOf(props.getProperty(SHEARX, "0"));
             double shear_y = Double.valueOf(props.getProperty(SHEARY, "0"));
-
-            initialImagePosition.setLocation(in_pos_x, in_pos_y);
 
             // transform to matrix from these values - need testing
             transform = AffineTransform.getRotateInstance(angle/180*Math.PI);
@@ -461,17 +461,18 @@ public abstract class PicLayerAbstract extends Layer {
             double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
             int w = image.getWidth(null);
             int h = image.getHeight(null);
-            imagePosition.setLocation(
+            EastNorth imagePosition = new EastNorth(
                     dx + w/2*sx + h/2*rx,
                     dy + w/2*ry + h/2*sy
             );
-            initialImagePosition.setLocation(imagePosition);
+//            initialImagePosition.setLocation(imagePosition);
 //            m_angle = 0;
             double scalex = 100*sx*getMetersPerEasting(imagePosition);
             double scaley = -100*sy*getMetersPerNorthing(imagePosition);
             double shearx = rx / sx;
             double sheary = ry / sy;
 
+            transformer.setImagePosition(imagePosition);
             transformer.resetCalibration();
             AffineTransform tr = transformer.getTransform();
             tr.scale(scalex, scaley);
@@ -493,14 +494,15 @@ public abstract class PicLayerAbstract extends Layer {
         // This is the same in x- and y- direction.
         double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
 
+        EastNorth imageCenter = transformer.getImagePosition();
         //     This is now the offset in screen pixels
-        double pic_offset_x = (( imagePosition.east() - leftop.east() ) * pixel_per_en);
-        double pic_offset_y = (( leftop.north() - imagePosition.north() ) * pixel_per_en); // something bad...
+        double pic_offset_x = (( imageCenter.east() - leftop.east() ) * pixel_per_en);
+        double pic_offset_y = (( leftop.north() - imageCenter.north() ) * pixel_per_en); // something bad...
 
         AffineTransform pointTrans = AffineTransform.getTranslateInstance(pic_offset_x, pic_offset_y);
 
-        double scalex = initialImageScale * pixel_per_en / getMetersPerEasting(imagePosition) / 100;
-        double scaley = initialImageScale * pixel_per_en / getMetersPerNorthing(imagePosition) / 100;
+        double scalex = initialImageScale * pixel_per_en / getMetersPerEasting(imageCenter) / 100;
+        double scaley = initialImageScale * pixel_per_en / getMetersPerNorthing(imageCenter) / 100;
 
         pointTrans.scale(scalex, scaley); // ok here
 
@@ -514,8 +516,7 @@ public abstract class PicLayerAbstract extends Layer {
      * Moves the picture. Scaled in EastNorth...
      */
     public void movePictureBy(double x, double y) {
-        imagePosition = imagePosition.add(x, y);
-        transformer.setModified();
+        transformer.setImagePosition(transformer.getImagePosition().add(x, y));
     }
 
 
@@ -551,7 +552,6 @@ public abstract class PicLayerAbstract extends Layer {
 
     public void resetCalibration() {
         transformer.resetCalibration();
-        imagePosition.setLocation(initialImagePosition);
     }
 
     // get image coordinates by mouse coords
@@ -573,9 +573,5 @@ public abstract class PicLayerAbstract extends Layer {
             e.printStackTrace();
         }
         return selected;
-    }
-
-    public void saveTransformCommand() {
-
     }
 }

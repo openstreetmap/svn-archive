@@ -21,7 +21,7 @@
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - fix #7319"/>
+    <property name="commit.message" value="PicLayer - added possibility to edit transformation with 1 or 2 points (move or rect transformation)"/>
     <property name="plugin.main.version" value="4669"/>
     <!--
       ************************************************

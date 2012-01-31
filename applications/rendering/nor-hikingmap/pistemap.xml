@@ -14,7 +14,7 @@
 <!ENTITY waterline-color "#006594"><!-- stream, shoreline -->
 <!ENTITY naturearea-color "#007D33">
 <!ENTITY trail-color "#DDD"><!-- path, track, footway, cycleway -->
-<!ENTITY nordic-color "#F90025"><!-- piste:type=nordic, route=ski -->
+<!ENTITY nordic-color "#F90025"><!-- piste:type=nordic -->
 <!ENTITY sled-color "#CDABDE"><!-- piste:type=sled -->
 <!ENTITY wintertrail-color "#444"><!-- piste:type=hike -->
 
@@ -28,7 +28,7 @@
 
 <Style name="skiing">
   <Rule>
-    <Filter>[piste:grooming]='backcountry' or [route]='ski'</Filter>
+    <Filter>[piste:grooming]='backcountry'</Filter>
     &maxscale_zoom13;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
@@ -307,11 +307,10 @@
     <StyleName>skiing</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,"piste:type","piste:grooming","piste:difficulty",route,lit
+      (select way,"piste:type","piste:grooming","piste:difficulty",lit
        from &prefix;_line
        where "piste:type" in ('nordic','downhill','hike','sled','sleigh')
           or "piste:grooming" is not null
-          or route='ski'
       ) as skiing
       </Parameter>
       &datasource-settings;

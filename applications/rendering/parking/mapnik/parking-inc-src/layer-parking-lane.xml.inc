@@ -609,7 +609,7 @@
         <Parameter name="table">
         (select way,
                 COALESCE(tags->'parking:lane:left',tags->'parking:lane:both') as "parking:lane:left",
-                COALESCE(tags->'parking:condition:left',tags->'parking:condition:both') as "parking:condition:left"
+                COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown') as "parking:condition:left"
                 from &prefix;_line
                 where (tags ? 'parking:lane:left') or (tags ? 'parking:lane:both')
         ) as roads
@@ -627,7 +627,7 @@
         <Parameter name="table">
         (select way,
                 COALESCE(tags->'parking:lane:right',tags->'parking:lane:both') as "parking:lane:right",
-                COALESCE(tags->'parking:condition:right',tags->'parking:condition:both') as "parking:condition:right"
+                COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown') as "parking:condition:right"
                 from &prefix;_line
                 where (tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')
         ) as roads

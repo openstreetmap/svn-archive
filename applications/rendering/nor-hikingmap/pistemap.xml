@@ -33,7 +33,7 @@
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
-      <CssParameter name="stroke-dasharray">6,8</CssParameter>
+      <CssParameter name="stroke-dasharray">2,5</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>
@@ -42,7 +42,7 @@
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
-      <CssParameter name="stroke-dasharray">20,3</CssParameter>
+      <CssParameter name="stroke-dasharray">22,8</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>

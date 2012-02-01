@@ -34,12 +34,10 @@ public abstract class AbstractNameIconProvider implements INameIconProvider {
     }
     
     public Icon getIcon() {
-        if (icon == null) {
+        if (icon == null && getIconName() != null) {
             Collection<String> s = Main.pref.getCollection("taggingpreset.icon.sources", null);
-            icon = ImageProvider.getIfAvailable(s, "presets", null, getIconName(), zipIconArchive);
-            if (icon == null) return null;
-            Image i = icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
-            icon = new ImageIcon(i);
+            icon = new ImageProvider(getIconName()).setDirs(s).setId("presets").setArchive(zipIconArchive).setOptional(true)
+            .setMaxWidth(16).setMaxHeight(16).get();
         }
         return icon;
     }

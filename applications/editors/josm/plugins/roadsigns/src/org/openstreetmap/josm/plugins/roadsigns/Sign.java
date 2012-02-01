@@ -81,7 +81,7 @@ public class Sign {
 
     public ImageIcon getIcon() {
         if (icon == null) {
-            icon = ImageProvider.getIfAvailable(RoadSignsPlugin.iconDirs, "plugin.sign."+id, null, iconURL, null);
+            icon = new ImageProvider(iconURL).setDirs(RoadSignsPlugin.iconDirs).setId("plugin.sign."+id).setOptional(true).get();
         }
         return icon;
     }

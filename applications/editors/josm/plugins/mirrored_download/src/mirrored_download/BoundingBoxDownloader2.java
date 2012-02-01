@@ -25,7 +25,7 @@ public class BoundingBoxDownloader2 extends BoundingBoxDownloader {
     protected InputStream getInputStream(String urlStr, ProgressMonitor progressMonitor) throws OsmTransferException  {
         try {
             OsmApi.getOsmApi().initialize(progressMonitor);
-            urlStr = "http://overpass-api.de/api/xapi?" + urlStr;
+            urlStr = MirroredDownloadPlugin.getDownloadUrl() + urlStr;
             return getInputStreamRaw(urlStr, progressMonitor);
         } finally {
             progressMonitor.invalidate();

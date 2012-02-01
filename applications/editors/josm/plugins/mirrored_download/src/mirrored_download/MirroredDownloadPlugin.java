@@ -41,6 +41,7 @@ public class MirroredDownloadPlugin extends Plugin {
 
     jMenu.addSeparator();
     jMenu.add(new JMenuItem(new DownloadAction2()));
+    jMenu.add(new JMenuItem(new UrlSelectionAction()));
     setEnabledAll(true);
   }
 
@@ -51,5 +52,14 @@ public class MirroredDownloadPlugin extends Plugin {
 
       if(item != null) item.setEnabled(isEnabled);
     }
+  }
+
+  private static String downloadUrl = "http://overpass.osm.rambler.ru/cgi/xapi?";//"http://overpass-api.de/api/xapi?";
+
+  public static String getDownloadUrl() {
+    return downloadUrl;
+  }
+  public static void setDownloadUrl(String downloadUrl_) {
+    downloadUrl = downloadUrl_;
   }
 }

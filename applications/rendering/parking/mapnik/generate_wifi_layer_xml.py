@@ -77,21 +77,18 @@ def create_wifi_icons(source_symbols_dir,dest_symbols_dir):
 def create_wifi_area_icons(source_symbols_dir,dest_symbols_dir):
     return
 
-
 def create_wifi_point_icons(source_symbols_dir,dest_symbols_dir):
-#    tempf = "/tmp/2347856893476512873465.png"
-#    stampf = os.path.join(source_symbols_dir,"wifi_node_stamp.png")
-    # for now there's only the wifi-vending icon
     copy_files(source_symbols_dir,dest_symbols_dir,['wifi-vending.png'])
     # wifi nodes
     for condition in condition_colors.keys():
-        # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,'wifi-source.png')
         df = os.path.join(dest_symbols_dir,'wifi_node_{cond}.png'.format(cond=condition))
         colorize_icon(sf,df,condition_colors.get(condition))
-#       p = subprocess.Popen(['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
-#      print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
-    #    p.wait()
+    # wifi_6 nodes (lower zoom)
+    for condition in condition_colors.keys():
+        sf = os.path.join(source_symbols_dir,'wifi-6-source.png')
+        df = os.path.join(dest_symbols_dir,'wifi_node_6_{cond}.png'.format(cond=condition))
+        colorize_icon(sf,df,condition_colors.get(condition))
 
 def copy_files(src,dest,files):
     for f in files:

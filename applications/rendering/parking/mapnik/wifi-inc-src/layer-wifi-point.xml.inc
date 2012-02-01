@@ -32,6 +32,37 @@
       &maxscale_zoom13;
       <PointSymbolizer file="&symbols;/wifi_node_unkn.png" />
     </Rule>
+
+    <Rule>
+      <Filter>[cond]='none'</Filter>
+      &maxscale_zoom4;
+      &minscale_zoom12;
+      <PointSymbolizer file="&symbols;/wifi_node_6_none.png" />
+    </Rule>
+    <Rule>
+      <Filter>[cond]='fee'</Filter>
+      &maxscale_zoom4;
+      &minscale_zoom12;
+      <PointSymbolizer file="&symbols;/wifi_node_6_fee.png" />
+    </Rule>
+    <Rule>
+      <Filter>[cond]='customers'</Filter>
+      &maxscale_zoom4;
+      &minscale_zoom12;
+      <PointSymbolizer file="&symbols;/wifi_node_6_cust.png" />
+    </Rule>
+    <Rule>
+      <Filter>[cond]='free'</Filter>
+      &maxscale_zoom4;
+      &minscale_zoom12;
+      <PointSymbolizer file="&symbols;/wifi_node_6_free.png" />
+    </Rule>
+    <Rule>
+      <Filter>[cond]='unknown'</Filter>
+      &maxscale_zoom4;
+      &minscale_zoom12;
+      <PointSymbolizer file="&symbols;/wifi_node_6_unkn.png" />
+    </Rule>
 </Style>
 
 <Layer name="wifi-points" status="on" srs="&osm2pgsql_projection;">

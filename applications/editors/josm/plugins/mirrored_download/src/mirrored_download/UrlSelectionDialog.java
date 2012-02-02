@@ -68,10 +68,10 @@ public class UrlSelectionDialog
   private JTabbedPane tabbedPane = null;
   private JComboBox cbSelectUrl = null;
 
-  public UrlSelectionDialog(UrlSelectionAction controller) {
+  public UrlSelectionDialog() {
 
     Frame frame = JOptionPane.getFrameForComponent(Main.parent);
-    jDialog = new JDialog(frame, tr("Create Stops from GPX"), false);
+    jDialog = new JDialog(frame, tr("Select OSM mirror URL"), false);
     tabbedPane = new JTabbedPane();
     JPanel tabSettings = new JPanel();
     tabbedPane.addTab(tr("Settings"), tabSettings);
@@ -127,5 +127,15 @@ public class UrlSelectionDialog
 
   public void setVisible(boolean visible) {
     jDialog.setVisible(visible);
+  }
+
+  private static UrlSelectionDialog singleton = null;
+
+  public static UrlSelectionDialog getInstance() {
+
+    if (singleton == null)
+      singleton = new UrlSelectionDialog();
+
+    return singleton;
   }
 }

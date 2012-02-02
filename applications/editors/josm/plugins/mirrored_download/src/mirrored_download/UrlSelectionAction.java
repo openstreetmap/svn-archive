@@ -29,7 +29,7 @@ public class UrlSelectionAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        UrlSelectionDialog dialog = new UrlSelectionDialog(this);
+        UrlSelectionDialog dialog = UrlSelectionDialog.getInstance();
         dialog.setVisible(true);
     }
 }

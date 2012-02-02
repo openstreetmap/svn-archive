@@ -249,7 +249,9 @@ def dom_strip_style_and_layer(document,stylename,layername):
         parent = el.parentNode
         parent.removeChild(el)
 
-def dom_strip_rule_from_style(document,stylename,filter):
+def dom_strip_rules_from_style(document,stylename,filters):
+#    print '    filter val = "'+filter+'"'
+    filterSet = set(filters)
     removeElements=[]
     # find the style
     thestyle = None
@@ -260,25 +262,82 @@ def dom_strip_rule_from_style(document,stylename,filter):
             break
     assert(thestyle != None)
     # find the rule where the filter matches
-    filterFound=False
-    rules = thestyle.getChildNodes()
+    print thestyle
+    rules = thestyle.childNodes
     for rule in rules:
-        ruleElements = rule.getChildNodes()
+        print "new rule"
+        ruleElements = rule.childNodes
         for re in ruleElements:
-            print "ruleelement "+re.nodeName
+            print "  ruleelement "+re.nodeName
             if re.nodeName=="Filter":
-                if re.firstChild.nodeValue==filter:
+                filterValue=re.firstChild.nodeValue
+                print '    filter val = "'+filterValue+'"'
+                if filterValue in filterSet:
                     removeElements.append(rule)
-                    filterFound=True
-                    break
-    if (~filterFound):
-        print 'Filter "{f}" not found'.format(f=filter)
+                    filterSet.remove(filterValue)
+    if (len(filterSet)!=0): # not all filters have been found
+        for filter in filterSet:
+            print 'Filter "{f}" not found'.format(f=filter)
     for el in removeElements:
         parent = el.parentNode
         parent.removeChild(el)
     
 def dom_strip_POIs(document):
-    dom_strip_rule_from_style(document,"text","[shop]='bakery' or [shop]='clothes' or [shop]='fashion' or [shop]='convenience' or [shop]='doityourself' or [shop]='hairdresser' or [shop]='butcher' or [shop]='car' or [shop]='car_repair' or [shop]='bicycle' or [shop]='florist'")
+    removeTexts=[
+                 "[amenity]='pub' or [amenity]='restaurant' or [amenity]='cafe' or [amenity]='fast_food' or [amenity]='biergarten'",
+                 "[amenity]='bar'",
+                 "[amenity]='library' or [amenity]='theatre' or [amenity]='courthouse'",
+                 "[amenity]='cinema'",
+                 "[amenity]='parking' and ([access] = 'public' or not [access] != '')",
+                 "[amenity]='parking' and ([access] != '' and not [access] = 'public')",
+                 "[amenity] = 'police'",
+                 "[amenity] = 'fire_station'",
+#                 "[amenity] = 'place_of_worship'",
+#                 "[natural] = 'wood'",
+#                 "[natural] = 'peak'",
+#                 "[natural] = 'peak' and not [name] != ''",
+#                 "[natural] = 'peak' and [name] != ''",
+#                 "[natural] = 'volcano'",
+#                 "[natural] = 'volcano' and not [name] != ''",
+#                 "[natural] = 'volcano' and [name] != ''",
+#                 "[natural] = 'cave_entrance'",
+                 "[historic] = 'memorial' or [historic]='archaeological_site'",
+#                 "[natural] = 'water' or [natural] = 'lake' or [landuse] = 'reservoir' or [landuse] = 'basin'",
+                 "([leisure] != '' or [landuse] != '') and [point] = 'yes'",
+                 "[natural] = 'bay'",
+                 "[natural] = 'spring'",
+                 "[tourism] = 'alpine_hut'",
+                 "[tourism] = 'alpine_hut'",
+                 "[amenity]='shelter'",
+                 "[amenity] = 'bank'",
+                 "[tourism] = 'hotel' or [tourism]='hostel' or [tourism]='chalet'",
+                 "[amenity] = 'embassy'",
+                 "[tourism]='guest_house'",
+                 "[tourism]='bed_and_breakfast'",
+                 "[amenity] = 'fuel' or [amenity]='bus_station'",
+                 "[tourism] = 'camp_site'",
+                 "[tourism] = 'caravan_site'",
+                 "[waterway] = 'lock'",
+                 "[leisure] = 'marina'",
+                 "[leisure] = 'marina'",
+                 "[tourism] = 'theme_park'",
+                 "[tourism] = 'theme_park'",
+                 "[tourism]='museum'",
+                 "[amenity]='prison'",
+                 "[tourism] = 'attraction'",
+                 "[amenity] = 'university'",
+                 "[amenity] = 'school' or [amenity] = 'college'",
+                 "[amenity] = 'kindergarten'",
+                 "[man_made] = 'lighthouse'",
+                 "[man_made] = 'windmill'",
+                 "[amenity] = 'hospital'",
+                 "[amenity] = 'pharmacy'",
+                 "[shop]='bakery' or [shop]='clothes' or [shop]='fashion' or [shop]='convenience' or [shop]='doityourself' or [shop]='hairdresser' or [shop]='butcher' or [shop]='car' or [shop]='car_repair' or [shop]='bicycle' or [shop]='florist'",
+                 "[shop]='supermarket' or [shop]='department_store'",
+                 "[military] = 'danger_area'",
+                 "[aeroway] = 'gate'"
+                 ]
+    dom_strip_rules_from_style(document,"text",removeTexts)
 
 def dom_strip_icons(document):
     dom_strip_style_and_layer(document,"points","amenity-points")

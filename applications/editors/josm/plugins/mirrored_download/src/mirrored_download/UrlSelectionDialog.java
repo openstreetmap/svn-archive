@@ -96,7 +96,7 @@ public class UrlSelectionDialog
     contentPane.add(label);
 
     cbSelectUrl = new JComboBox();
-    cbSelectUrl.setEditable(false);
+    cbSelectUrl.setEditable(true);
 
     cbSelectUrl.addItem("http://overpass.osm.rambler.ru/cgi/xapi?");
     cbSelectUrl.addItem("http://overpass-api.de/api/xapi?");

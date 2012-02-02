@@ -27,7 +27,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class DownloadAction2 extends JosmAction {
     public DownloadAction2() {
-        super(tr("Download from OSM mirror..."), "download", tr("Download map data from the OSM server."),
+        super(tr("Download from OSM mirror..."), null, tr("Download map data from the OSM server."),
                 Shortcut.registerShortcut("mirror:download", tr("File: {0}", tr("Download from OSM mirror...")), KeyEvent.VK_D, Shortcut.GROUPS_ALT1+Shortcut.GROUP_HOTKEY), true);
         putValue("help", ht("/Action/MirroredDownload"));
     }

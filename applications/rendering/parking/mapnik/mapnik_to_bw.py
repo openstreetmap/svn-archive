@@ -249,8 +249,40 @@ def dom_strip_style_and_layer(document,stylename,layername):
         parent = el.parentNode
         parent.removeChild(el)
 
+def dom_strip_rule_from_style(document,stylename,filter):
+    removeElements=[]
+    # find the style
+    thestyle = None
+    els = document.getElementsByTagName("Style")
+    for el in els:
+        if el.getAttribute("name")==stylename:
+            thestyle = el
+            break
+    assert(thestyle != None)
+    # find the rule where the filter matches
+    filterFound=False
+    rules = thestyle.getChildNodes()
+    for rule in rules:
+        ruleElements = rule.getChildNodes()
+        for re in ruleElements:
+            print "ruleelement "+re.nodeName
+            if re.nodeName=="Filter":
+                if re.firstChild.nodeValue==filter:
+                    removeElements.append(rule)
+                    filterFound=True
+                    break
+    if (~filterFound):
+        print 'Filter "{f}" not found'.format(f=filter)
+    for el in removeElements:
+        parent = el.parentNode
+        parent.removeChild(el)
+    
+def dom_strip_POIs(document):
+    dom_strip_rule_from_style(document,"text","[shop]='bakery' or [shop]='clothes' or [shop]='fashion' or [shop]='convenience' or [shop]='doityourself' or [shop]='hairdresser' or [shop]='butcher' or [shop]='car' or [shop]='car_repair' or [shop]='bicycle' or [shop]='florist'")
+
 def dom_strip_icons(document):
     dom_strip_style_and_layer(document,"points","amenity-points")
+    dom_strip_POIs(document)
     dom_strip_style_and_layer(document,"power_line","power_line")
     dom_strip_style_and_layer(document,"power_minorline","power_minorline")
     dom_strip_style_and_layer(document,"power_towers","power_towers")

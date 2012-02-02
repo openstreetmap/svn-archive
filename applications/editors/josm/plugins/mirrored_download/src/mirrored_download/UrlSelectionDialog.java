@@ -9,13 +9,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Format;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
@@ -59,6 +63,8 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.io.GpxReader;
+import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.tools.Utils;
 
 import org.xml.sax.SAXException;
 
@@ -69,7 +75,6 @@ public class UrlSelectionDialog
   private JComboBox cbSelectUrl = null;
 
   public UrlSelectionDialog() {
-
     Frame frame = JOptionPane.getFrameForComponent(Main.parent);
     jDialog = new JDialog(frame, tr("Select OSM mirror URL"), false);
     tabbedPane = new JTabbedPane();
@@ -98,8 +103,9 @@ public class UrlSelectionDialog
     cbSelectUrl = new JComboBox();
     cbSelectUrl.setEditable(true);
 
-    cbSelectUrl.addItem("http://overpass.osm.rambler.ru/cgi/xapi?");
-    cbSelectUrl.addItem("http://overpass-api.de/api/xapi?");
+    for (String url: getURLs()) {
+      cbSelectUrl.addItem(url);
+    }
 
     cbSelectUrl.setActionCommand("selectURL");
     cbSelectUrl.addActionListener(new UrlChangedAction());
@@ -115,6 +121,31 @@ public class UrlSelectionDialog
 
     jDialog.pack();
     jDialog.setLocationRelativeTo(frame);
+  }
+
+  private Collection<String> getURLs() {
+    // List can be edited at http://josm.openstreetmap.de/wiki/MirroredDownloadInfo
+    String src = Main.pref.get("plugin.mirrored_download.url-src", "http://josm.openstreetmap.de/mirrored_download_info");
+    Collection<String> urls = new ArrayList<String>();
+    InputStream in = null;
+    try {
+      in = new MirroredInputStream(src, 24*60*60);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        line = line.trim();
+        if (!line.equals("")) {
+          urls.add(line);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    Utils.close(in);
+    for (String url : Main.pref.getCollection("plugin.mirrored_download.custom-urls")) {
+      urls.add(url);
+    }
+    return urls;
   }
 
   public class UrlChangedAction implements ActionListener {

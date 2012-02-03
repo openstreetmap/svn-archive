@@ -197,9 +197,9 @@ public class ReplaceGeometryAction extends JosmAction {
             return;
         }
         
-        if (hasImportantNode(way)) {
+        if (hasImportantNode(geometry, way)) {
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("The way to be replaced cannot have any nodes with properties or relation memberships."),
+                    tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -296,8 +296,12 @@ public class ReplaceGeometryAction extends JosmAction {
      * @param way
      * @return 
      */
-    protected boolean hasImportantNode(Way way) {
+    protected boolean hasImportantNode(Way geometry, Way way) {
         for (Node n : way.getNodes()) {
+            // if original and replacement way share a node, it's safe to replace
+            if (geometry.containsNode(n)) {
+                continue;
+            }
             //TODO: if way is connected to other ways, warn or disallow?
             for (OsmPrimitive o : n.getReferrers()) {
                 if (o instanceof Relation) {

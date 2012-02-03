@@ -10,27 +10,27 @@
     <Rule>
       <Filter>[cond]='none'</Filter>
       &maxscale_zoom13;
-      <PointSymbolizer file="&symbols;/wifi_node_none.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_none.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='fee'</Filter>
       &maxscale_zoom13;
-      <PointSymbolizer file="&symbols;/wifi_node_fee.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_fee.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='customers'</Filter>
       &maxscale_zoom13;
-      <PointSymbolizer file="&symbols;/wifi_node_cust.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_cust.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='free'</Filter>
       &maxscale_zoom13;
-      <PointSymbolizer file="&symbols;/wifi_node_free.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_free.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='unknown'</Filter>
       &maxscale_zoom13;
-      <PointSymbolizer file="&symbols;/wifi_node_unkn.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_unkn.png" allow-overlap="yes" />
     </Rule>
 
 	<!--
@@ -38,32 +38,32 @@
       <Filter>[cond]='none'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_none.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_none.png" allow-overlap="yes" />
     </Rule>
     -->
     <Rule>
       <Filter>[cond]='fee'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_fee.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_fee.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='customers'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_cust.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_cust.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='free'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_free.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_free.png" allow-overlap="yes" />
     </Rule>
     <Rule>
       <Filter>[cond]='unknown'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_unkn.png" allow_overlap="yes" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_unkn.png" allow-overlap="yes" />
     </Rule>
 </Style>
 

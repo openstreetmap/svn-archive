@@ -33,35 +33,37 @@
       <PointSymbolizer file="&symbols;/wifi_node_unkn.png" />
     </Rule>
 
+	<!--
     <Rule>
       <Filter>[cond]='none'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_none.png" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_none.png" ignore-placement="true" />
     </Rule>
+    -->
     <Rule>
       <Filter>[cond]='fee'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_fee.png" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_fee.png" ignore-placement="true" />
     </Rule>
     <Rule>
       <Filter>[cond]='customers'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_cust.png" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_cust.png" ignore-placement="true" />
     </Rule>
     <Rule>
       <Filter>[cond]='free'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_free.png" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_free.png" ignore-placement="true" />
     </Rule>
     <Rule>
       <Filter>[cond]='unknown'</Filter>
       &maxscale_zoom4;
       &minscale_zoom12;
-      <PointSymbolizer file="&symbols;/wifi_node_6_unkn.png" />
+      <PointSymbolizer file="&symbols;/wifi_node_6_unkn.png" ignore-placement="true" />
     </Rule>
 </Style>
 

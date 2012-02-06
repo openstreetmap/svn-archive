@@ -80,8 +80,8 @@ public class ReplaceGeometryAction extends JosmAction {
      * @param target
      */
     public void replaceNode(Node node, OsmPrimitive target) {
-        if (!node.getReferrers().isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s) or relation(s), cannot replace."),
+        if (!OsmPrimitive.getFilteredList(node.getReferrers(), Way.class).isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }

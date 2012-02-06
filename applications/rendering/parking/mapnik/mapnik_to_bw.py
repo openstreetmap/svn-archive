@@ -374,7 +374,7 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
 def strip_doctype(f):
     p = subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
     p.wait()
-    p = subprocess.Popen(['sed','-i','s/\<Map .*\>/\<Map background-color="#c9c9c9" srs="+init=epsg;3857" minimum-version="2.0.0" buffer_size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709"\>/',f]) # -i means 'in place'
+    p = subprocess.Popen(['sed','-i','s/\\<Map .*\\>/\\<Map background-color="#c9c9c9" srs="+init=epsg;3857" minimum-version="2.0.0" buffer_size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709"\\>/',f]) # -i means 'in place'
     p.wait()
 
 def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):

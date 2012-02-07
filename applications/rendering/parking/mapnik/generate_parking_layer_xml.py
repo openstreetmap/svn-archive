@@ -238,10 +238,12 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     plrdi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-diagonal'))
     pllor = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-perpendicular'))
     plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-perpendicular'))
+    pllma = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-marked'))
+    plrma = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-marked'))
     pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
     plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
-    things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pll,plr]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
+    things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pllma,plrma,pll,plr]
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
     # handle the parking points / nodes
     parking_points_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-points'))
@@ -249,7 +251,7 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
     parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
     things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
+    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
     output= dest_parking_style_document.implementation.createLSOutput() 
     output.systemId= dest_parking_style_file

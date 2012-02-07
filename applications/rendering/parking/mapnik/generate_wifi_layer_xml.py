@@ -182,13 +182,13 @@ def merge_bw_noicons_and_wifitrans_style(bwnoicons_style_file,wifitrans_style_fi
     #add a second wifi area layer on top of the wifi-aisle roads.
     wifi_area_top_layer = dest_wifi_style_document.adoptNode(wifi_dom_cut_layer(wifitrans_style_document,'wifi-area-top'))
     things=[wifi_area_top_layer]
-    wifi_dom_insert_things_before_layer(dest_wifi_style_document,things,'direction_pre_bridges')
+    wifi_dom_insert_things_before_layer(dest_wifi_style_document,things,'admin-01234')
 
     # handle the wifi points / nodes
     wifi_points_style = dest_wifi_style_document.adoptNode(wifi_dom_cut_style(wifitrans_style_document,'wifi-points'))
     wifi_points_layer = dest_wifi_style_document.adoptNode(wifi_dom_cut_layer(wifitrans_style_document,'wifi-points'))
     things=[wifi_points_style,wifi_points_layer]
-    wifi_dom_insert_things_before_layer(dest_wifi_style_document,things,'direction_pre_bridges')
+    wifi_dom_insert_things_before_layer(dest_wifi_style_document,things,'admin-01234')
 
     output= dest_wifi_style_document.implementation.createLSOutput() 
     output.systemId= dest_wifi_style_file

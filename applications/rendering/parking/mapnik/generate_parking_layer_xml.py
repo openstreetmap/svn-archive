@@ -24,30 +24,6 @@ forbidden_colors = {
     'fire': 'f81f1f'
     }
 
-def dom_strip_style_and_layer(document,stylename,layername):
-    removeElements=[]
-    # remove <Style name="points"> and <Layer name="amenity-points">
-    els = document.getElementsByTagName("Style")
-    for el in els:
-        if el.getAttribute("name")==stylename:
-            removeElements.append(el)
-    els = document.getElementsByTagName("Layer")
-    for el in els:
-        if el.getAttribute("name")==layername:
-            removeElements.append(el)
-    print "removing the following elements:"
-    print removeElements
-    for el in removeElements:
-        parent = el.parentNode
-        parent.removeChild(el)
-
-def dom_strip_icons(document):
-    dom_strip_style_and_layer(document,"points","amenity-points")
-    dom_strip_style_and_layer(document,"power_line","power_line")
-    dom_strip_style_and_layer(document,"power_minorline","power_minorline")
-    dom_strip_style_and_layer(document,"power_towers","power_towers")
-    dom_strip_style_and_layer(document,"power_poles","power_poles")
-
 def transmogrify_file(sf,dfgrey,dfnoicons):
     dom= pxdom.getDOMImplementation('') 
     parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None)
@@ -64,16 +40,6 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     serialiser= document.implementation.createLSSerializer() 
     serialiser.write(document, output)
 
-"""
-    dom_strip_icons(document)
-    
-    output= document.implementation.createLSOutput() 
-    output.systemId= dfnoicons
-    output.encoding= 'utf-8' 
-    serialiser= document.implementation.createLSSerializer() 
-    serialiser.write(document, output)
-"""
-
 def strip_doctype(f):
     p = subprocess.Popen(['sed','-i','2,10 d',f]) # -i means 'in place'
     p.wait()
@@ -87,6 +53,7 @@ def create_parking_lane_icons(source_symbols_dir,dest_symbols_dir):
     # first create mirror images (from left to right)
     image_files = os.listdir(source_symbols_dir)
     image_files = [f for f in image_files if f.startswith('park-l') and f.endswith('png')]
+    print image_files
     for f in image_files:
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(source_symbols_dir,f) # this is changed so that we write in the source dir

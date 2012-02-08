@@ -103,6 +103,10 @@ public class UrlSelectionDialog
     cbSelectUrl = new JComboBox();
     cbSelectUrl.setEditable(true);
 
+    String preferredUrl = Main.pref.get("plugin.mirrored_download.preferred-url");
+    if (preferredUrl != null && !"".equals(preferredUrl))
+      cbSelectUrl.addItem(preferredUrl);
+
     for (String url: getURLs()) {
       cbSelectUrl.addItem(url);
     }
@@ -152,6 +156,8 @@ public class UrlSelectionDialog
 
     public void actionPerformed(ActionEvent e) {
       MirroredDownloadPlugin.setDownloadUrl(cbSelectUrl.getSelectedItem().toString());
+      Main.pref.put("plugin.mirrored_download.preferred-url",
+          cbSelectUrl.getSelectedItem().toString());
     }
 
   }

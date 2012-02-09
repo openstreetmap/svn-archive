@@ -98,7 +98,7 @@ def main(options):
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(wifi_dir,"symbols"))
     shutil.copytree(os.path.join(original_wifi_dir,"wifi-symbols-src"),os.path.join(wifi_dir,"wifi-symbols-src"))
 
-    generate_wifi_layer_xml.main_wifitrans({'sourcedir':wifi_dir, 'sourcefile':'osm-wifi-src.xml', 'destdir':deploy_dir, 'stylename':'wifitrans'})
+    generate_wifi_layer_xml.main_wifitrans({'sourcedir':wifi_dir, 'sourcefile':'osm-wifitrans-src.xml', 'destdir':deploy_dir, 'stylename':'wifitrans'})
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(os.path.join(deploy_dir,"wifi"),"symbols"))
     generate_wifi_layer_xml.main_wifi({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':wifi_dir, 'sourcepfile':'osm-wifi-src.xml', 'destdir':deploy_dir, 'stylename':'wifi'})
 

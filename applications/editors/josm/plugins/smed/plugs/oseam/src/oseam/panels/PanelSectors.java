@@ -47,7 +47,6 @@ public class PanelSectors extends JFrame {
 		dlg = dia;
 		setLayout(null);
 		setSize(900, 100);
-		setVisible(true);
 		setAlwaysOnTop(true);
 		setLocation(450, 0);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

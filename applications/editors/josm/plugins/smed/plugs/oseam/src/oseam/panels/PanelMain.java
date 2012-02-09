@@ -120,6 +120,7 @@ public class PanelMain extends JPanel {
 				panelMore.setVisible(false);
 				topButton.setBorderPainted(true);
 				panelTop.setVisible(true);
+				panelTop.syncPanel();
 			} else {
 				topButton.setBorderPainted(false);
 				panelTop.setVisible(false);
@@ -129,6 +130,7 @@ public class PanelMain extends JPanel {
 				panelMore.setVisible(false);
 				fogButton.setBorderPainted(true);
 				panelFog.setVisible(true);
+				panelFog.syncPanel();
 			} else {
 				fogButton.setBorderPainted(false);
 				panelFog.setVisible(false);
@@ -138,6 +140,7 @@ public class PanelMain extends JPanel {
 				panelMore.setVisible(false);
 				radButton.setBorderPainted(true);
 				panelRadar.setVisible(true);
+				panelRadar.syncPanel();
 			} else {
 				radButton.setBorderPainted(false);
 				panelRadar.setVisible(false);
@@ -147,6 +150,7 @@ public class PanelMain extends JPanel {
 				panelMore.setVisible(false);
 				litButton.setBorderPainted(true);
 				panelLit.setVisible(true);
+				panelLit.syncPanel();
 			} else {
 				litButton.setBorderPainted(false);
 				panelLit.setVisible(false);

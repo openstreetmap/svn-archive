@@ -311,7 +311,7 @@ public class PanelLit extends JPanel {
 		if (dlg.panelMain.mark.isSectored()) {
 			singleButton.setBorderPainted(false);
 			sectorButton.setBorderPainted(true);
-			panelSector.setVisible(true);
+			if (isVisible()) panelSector.setVisible(true);
 		} else {
 			singleButton.setBorderPainted(true);
 			sectorButton.setBorderPainted(false);

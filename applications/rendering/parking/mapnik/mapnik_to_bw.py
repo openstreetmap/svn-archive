@@ -348,8 +348,8 @@ def dom_strip_icons(document):
     dom_strip_style_and_layer(document,"power_poles","power_poles")
 
 def dom_adjust_map_element(document):
-    # in (e.g.) <Map background-color="#b5d0d0" srs="&srs900913;" minimum-version="2.0.0"> <!ENTITY srs900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
-    # out <Map background-color="#c9c9c9" srs="+init=epsg;3857" minimum-version="2.0.0" buffer-size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709">
+    # in (e.g.) <Map background-color=... srs="&srs900913;" minimum-version="2.0.0"> <!ENTITY srs900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    # out <Map background-color=... srs="+init=epsg;3857" minimum-version="2.0.0" buffer-size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709">
     map = document.getElementsByTagName("Map")[0]
     srs = map.getAttribute("srs")
     print('old map srs="{srs}"'.format(srs=srs))
@@ -387,9 +387,6 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
 def strip_doctype(f):
     p = subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
     p.wait()
-    ### FIXME: the following line does not respect the prior attributes but rather sets its own. It should only set srs, buffer_size and maximum-extent.
-    #p = subprocess.Popen(['sed','-i','s/[<]Map .*[>]/\<Map background-color="#c9c9c9" srs="+init=epsg;3857" minimum-version="2.0.0" buffer-size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709"\>/',f]) # -i means 'in place'
-    #p.wait()
 
 def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):
     image_files = os.listdir(source_symbols_dir)

@@ -37,6 +37,7 @@
       ** should not be necessary to change the following properties
      -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="utilsplugin2" location="../../dist/utilsplugin2.jar"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -60,6 +61,10 @@
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+            <classpath>
+                <pathelement path="${josm}"/>
+                <pathelement location="${utilsplugin2}"/>
+            </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
@@ -99,11 +104,12 @@
                 <attribute name="Author" value="Josh Doe &lt;josh@joshdoe.com&gt;"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.conflation.ConflationPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Tool for conflation (merging) data"/>
+                <attribute name="Plugin-Description" value="Tool for conflating (merging) data"/>
                 <attribute name="Plugin-Icon" value="images/conflation.png"/>
+                <attribute name="Plugin-Requires" value="utilsplugin2"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Conflation"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="0.0.1"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
     </target>

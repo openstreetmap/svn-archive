@@ -9,11 +9,7 @@
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.awt.Component;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -29,7 +25,6 @@ import javax.swing.table.TableCellRenderer;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.conflict.ConflictCollection;
 import org.openstreetmap.josm.data.conflict.IConflictListener;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -38,9 +33,10 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.conflict.pair.ConflictResolver;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+
+import org.openstreetmap.josm.plugins.conflation.ConflationUtils.*;
 
 /**
  *
@@ -49,23 +45,20 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 public class ConflationOptionsPanel extends javax.swing.JPanel implements IConflictListener {
     ConflationOptionsDialog dlg = null;
     ConflationLayer conflationLayer = null;
-    DataSet myDataSet = null;
-    DataSet theirDataSet = null;
-    ArrayList<OsmPrimitive> mySelection = null;
+    DataSet targetDataSet = null;
+    DataSet sourceDataSet = null;
+    ArrayList<OsmPrimitive> targetSelection = null;
     ArrayList<OsmPrimitive> theirSelection = null;
-    OsmDataLayer myLayer = null;
+    OsmDataLayer targetLayer = null;
     OsmDataLayer theirLayer = null;
-    ConflictCollection conflicts = null;
-    ConflictResolver conflictResolver;
-    OsmPrimitive[][] pairs;
-    int[][] assignment;
     MatchTableModel tableModel;
+    List<ConflationCandidate> candidates = null;
 
     /** Creates new form ConflationPanel */
     public ConflationOptionsPanel(ConflationOptionsDialog dlg, List<OsmDataLayer> layers) {
         initComponents();
 
-        // add selection handler, to change ConflictResolver contents and center/zoom view
+        // add selection handler, to center/zoom view
         resultsTable.getSelectionModel().addListSelectionListener(
                 new MatchListSelectionHandler());
         resultsTable.getColumnModel().getSelectionModel().addListSelectionListener(
@@ -75,20 +68,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         ColorTableCellRenderer cr = new ColorTableCellRenderer("Tags");
         resultsTable.getColumnModel().getColumn(4).setCellRenderer(cr);
 
-        // replace dummy panel with conflictResolver
-        conflictResolver = new ConflictResolver();
-        for (int i = 0; i < resultsPanel.getComponentCount(); i++) {
-            if (resultsPanel.getComponent(i) == tagMergerPlaceholderPanel) {
-                resultsPanel.add(conflictResolver, i);
-                resultsPanel.remove(tagMergerPlaceholderPanel);
-                break;
-            }
-        }
-        resultsPanel.validate();
-
         this.dlg = dlg;
-
-        conflicts = new ConflictCollection();
 
         // set layer names to comboboxes
 //        if (layers != null && layers.size() > 0) {
@@ -143,21 +123,20 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         jScrollPane1 = new javax.swing.JScrollPane();
         resultsTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        useMyTagsButton = new javax.swing.JButton();
+        replaceGeometryButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         useTheirTagsButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        tagMergerPlaceholderPanel = new javax.swing.JPanel();
         resolveButton = new javax.swing.JButton();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        refSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("My Set"));
+        refSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Target Selection"));
 
         freezeMySetButton.setText("Freeze Selection");
         freezeMySetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                freezeMySetButtonActionPerformed(evt);
+                freezeTargetSelectionActionPerformed(evt);
             }
         });
 
@@ -193,7 +172,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(refSetPanelLayout.createSequentialGroup()
                         .addComponent(freezeMySetButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
                         .addComponent(restoreMySetButton))
                     .addGroup(refSetPanelLayout.createSequentialGroup()
                         .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,12 +214,12 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        nonRefSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Their Set"));
+        nonRefSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source Selection"));
 
         freezeTheirSelectionButton.setText("Freeze Selection");
         freezeTheirSelectionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                freezeTheirSelectionButtonActionPerformed(evt);
+                freezeSourceSelectionActionPerformed(evt);
             }
         });
 
@@ -276,7 +255,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nonRefSetPanelLayout.createSequentialGroup()
                         .addComponent(freezeTheirSelectionButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
                         .addComponent(restoreTheirSetButton))
                     .addGroup(nonRefSetPanelLayout.createSequentialGroup()
                         .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,14 +381,16 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         criteriaTabPanel.setLayout(criteriaTabPanelLayout);
         criteriaTabPanelLayout.setHorizontalGroup(
             criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
-                .addContainerGap(578, Short.MAX_VALUE)
-                .addComponent(criteriaTabConflateButton)
-                .addContainerGap())
             .addGroup(criteriaTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(292, Short.MAX_VALUE))
+                .addGroup(criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
+                        .addGap(0, 568, Short.MAX_VALUE)
+                        .addComponent(criteriaTabConflateButton))
+                    .addGroup(criteriaTabPanelLayout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 282, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         criteriaTabPanelLayout.setVerticalGroup(
             criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -443,10 +424,10 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        useMyTagsButton.setText("My Tags");
-        useMyTagsButton.addActionListener(new java.awt.event.ActionListener() {
+        replaceGeometryButton.setText("Replace Geometry");
+        replaceGeometryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                useMyTagsButtonActionPerformed(evt);
+                replaceGeometryButtonActionPerformed(evt);
             }
         });
 
@@ -465,12 +446,12 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addContainerGap()
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(useMyTagsButton)
+                .addComponent(replaceGeometryButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(useTheirTagsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(300, Short.MAX_VALUE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,28 +459,13 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(useMyTagsButton)
+                    .addComponent(replaceGeometryButton)
                     .addComponent(useTheirTagsButton)
                     .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         resultsPanel.add(jPanel1);
-
-        tagMergerPlaceholderPanel.setPreferredSize(new java.awt.Dimension(661, 250));
-
-        javax.swing.GroupLayout tagMergerPlaceholderPanelLayout = new javax.swing.GroupLayout(tagMergerPlaceholderPanel);
-        tagMergerPlaceholderPanel.setLayout(tagMergerPlaceholderPanelLayout);
-        tagMergerPlaceholderPanelLayout.setHorizontalGroup(
-            tagMergerPlaceholderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 661, Short.MAX_VALUE)
-        );
-        tagMergerPlaceholderPanelLayout.setVerticalGroup(
-            tagMergerPlaceholderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-
-        resultsPanel.add(tagMergerPlaceholderPanel);
 
         resolveButton.setText("Resolve");
         resolveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -522,7 +488,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     private void criteriaTabConflateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criteriaTabConflateButtonActionPerformed
 
         // some initialization
-        int n = mySelection.size();
+        int n = targetSelection.size();
         int m = theirSelection.size();
         int maxLen = Math.max(n, m);
         double cost[][] = new double[maxLen][maxLen];
@@ -530,35 +496,33 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         // calculate cost matrix
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                cost[i][j] = calcCost(mySelection.get(i), theirSelection.get(j));
+                cost[i][j] = calcCost(targetSelection.get(i), theirSelection.get(j));
             }
         }
 
         // perform assignment using Hungarian algorithm
-        assignment = new int[maxLen][2];
-        assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
-
-        // create array of primitives based on indices from assignment
-        pairs = new OsmPrimitive[maxLen][2];
+        int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
+        OsmPrimitive target, source;
+        candidates = new LinkedList<ConflationCandidate>();
         for (int i = 0; i < maxLen; i++) {
             if (assignment[i][0] < n)
-                pairs[i][0] = mySelection.get(assignment[i][0]);
+                target = targetSelection.get(assignment[i][0]);
             else
-                pairs[i][0] = null;
+                target = null;
             if (assignment[i][1] < m)
-                pairs[i][1] = theirSelection.get(assignment[i][1]);
+                source = theirSelection.get(assignment[i][1]);
             else
-                pairs[i][1] = null;
+                source = null;
 
-            if (pairs[i][0] != null && pairs[i][1] != null) {
+            if (target != null && source != null) {
                 // TODO: do something!
-                conflicts.add(pairs[i][0], pairs[i][1]);
+                candidates.add(new ConflationCandidate(source, target));
             }
         }
 
         // add conflation layer
         try {
-            conflationLayer = new ConflationLayer(myLayer.data, conflicts);
+            conflationLayer = new ConflationLayer(targetLayer.data, candidates);
             Main.main.addLayer(conflationLayer);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(Main.parent, ex.toString(),
@@ -567,7 +531,6 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         tableModel = new MatchTableModel();
         resultsTable.setModel(tableModel);
 
-        conflictResolver.populate(conflicts.get(0));
         // print list of matched pairsalong with distance
         // upon selection of one pair, highlight them and draw arrow
     }//GEN-LAST:event_criteriaTabConflateButtonActionPerformed
@@ -578,31 +541,31 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     }//GEN-LAST:event_objectTabNextButtonActionPerformed
 
     private void restoreMySetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreMySetButtonActionPerformed
-        if (myLayer != null && myDataSet != null && mySelection != null && !mySelection.isEmpty()) {
-            Main.map.mapView.setActiveLayer(myLayer);
-            myLayer.setVisible(true);
-            myDataSet.setSelected(mySelection);
+        if (targetLayer != null && targetDataSet != null && targetSelection != null && !targetSelection.isEmpty()) {
+            Main.map.mapView.setActiveLayer(targetLayer);
+            targetLayer.setVisible(true);
+            targetDataSet.setSelected(targetSelection);
         }
     }//GEN-LAST:event_restoreMySetButtonActionPerformed
 
     private void restoreTheirSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreTheirSetButtonActionPerformed
-        if (theirLayer != null && theirDataSet != null && theirSelection != null && !theirSelection.isEmpty()) {
+        if (theirLayer != null && sourceDataSet != null && theirSelection != null && !theirSelection.isEmpty()) {
             Main.map.mapView.setActiveLayer(theirLayer);
             theirLayer.setVisible(true);
-            theirDataSet.setSelected(theirSelection);
+            sourceDataSet.setSelected(theirSelection);
         }
     }//GEN-LAST:event_restoreTheirSetButtonActionPerformed
 
-    private void freezeMySetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeMySetButtonActionPerformed
-        myDataSet = Main.main.getCurrentDataSet();
-        myLayer = Main.main.getEditLayer();
-        if (myDataSet == null || myLayer == null) {
+    private void freezeTargetSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeTargetSelectionActionPerformed
+        targetDataSet = Main.main.getCurrentDataSet();
+        targetLayer = Main.main.getEditLayer();
+        if (targetDataSet == null || targetLayer == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
                     tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        mySelection = new ArrayList<OsmPrimitive>(myDataSet.getSelected());
-        if (mySelection.isEmpty()) {
+        targetSelection = new ArrayList<OsmPrimitive>(targetDataSet.getSelected());
+        if (targetSelection.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
                     tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -611,7 +574,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         int numNodes = 0;
         int numWays = 0;
         int numRelations = 0;
-        for (OsmPrimitive p: mySelection) {
+        for (OsmPrimitive p: targetSelection) {
             switch(p.getType()) {
             case NODE: numNodes++; break;
             case WAY: numWays++; break;
@@ -619,21 +582,21 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
             }
         }
 
-        myLayerLabel.setText(myLayer.getName());
+        myLayerLabel.setText(targetLayer.getName());
         myNodeCountLabel.setText(Integer.toString(numNodes));
         myWayCountLabel.setText(Integer.toString(numWays));
         myRelationCountLabel.setText(Integer.toString(numRelations));
-    }//GEN-LAST:event_freezeMySetButtonActionPerformed
+    }//GEN-LAST:event_freezeTargetSelectionActionPerformed
 
-    private void freezeTheirSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeTheirSelectionButtonActionPerformed
-        theirDataSet = Main.main.getCurrentDataSet();
+    private void freezeSourceSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeSourceSelectionActionPerformed
+        sourceDataSet = Main.main.getCurrentDataSet();
         theirLayer = Main.main.getEditLayer();
-        if (theirDataSet == null || theirLayer == null) {
+        if (sourceDataSet == null || theirLayer == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
                     tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        theirSelection = new ArrayList<OsmPrimitive>(theirDataSet.getSelected());
+        theirSelection = new ArrayList<OsmPrimitive>(sourceDataSet.getSelected());
         if (theirSelection.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
                     tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
@@ -643,7 +606,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         int numNodes = 0;
         int numWays = 0;
         int numRelations = 0;
-        for (OsmPrimitive p: mySelection) {
+        for (OsmPrimitive p: theirSelection) {
             switch(p.getType()) {
             case NODE: numNodes++; break;
             case WAY: numWays++; break;
@@ -655,25 +618,20 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         theirNodeCountLabel.setText(Integer.toString(numNodes));
         theirWayCountLabel.setText(Integer.toString(numWays));
         theirRelationCountLabel.setText(Integer.toString(numRelations));
-    }//GEN-LAST:event_freezeTheirSelectionButtonActionPerformed
-
-    private void useMyTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useMyTagsButtonActionPerformed
-        int[] rows = resultsTable.getSelectedRows();
-    }//GEN-LAST:event_useMyTagsButtonActionPerformed
+    }//GEN-LAST:event_freezeSourceSelectionActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void resolveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resolveButtonActionPerformed
-        if (!conflictResolver.isResolvedCompletely()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Unresolved differences remain, please fix remaining differences."),
-                    tr("Conflict not resolved completely"), JOptionPane.ERROR_MESSAGE);
-                    return;
-        }
-        Command cmd = conflictResolver.buildResolveCommand();
-        Main.main.undoRedo.add(cmd);
+        // FIXME: perform replace geometry
+        //Main.main.undoRedo.add(cmd);
     }//GEN-LAST:event_resolveButtonActionPerformed
+
+    private void replaceGeometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceGeometryButtonActionPerformed
+        
+    }//GEN-LAST:event_replaceGeometryButtonActionPerformed
 
     static public class LayerListCellRenderer extends DefaultListCellRenderer {
         @Override
@@ -724,7 +682,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         }
 
         public int getRowCount() {
-            return conflicts.size();
+            return candidates.size();
         }
 
         @Override
@@ -734,13 +692,13 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         public Object getValueAt(int row, int col) {
             if (col == 0)
-                return conflicts.get(row).getMy();
+                return candidates.get(row).getSource();
             if (col == 1)
-                return conflicts.get(row).getTheir();
+                return candidates.get(row).getTarget();
             if (col == 4) {
                 HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-                set.add(conflicts.get(row).getMy());
-                set.add(conflicts.get(row).getTheir());
+                set.add(candidates.get(row).getSource());
+                set.add(candidates.get(row).getTarget());
                 TagCollection tags = TagCollection.unionOfAllPrimitives(set);
                 Set<String> keys = tags.getKeysWithMultipleValues();
                 if (keys.isEmpty())
@@ -803,12 +761,15 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
             // only one item selected, show tags and zoom/center map
             if (!lsm.isSelectionEmpty() && firstIndex == lastIndex) {
-                Conflict<?> c = conflicts.get(firstIndex);
-                conflictResolver.populate(c);
+                ConflationCandidate c = candidates.get(firstIndex);
+                
+                conflationLayer.setSelectedCandidate(c);
+                
+                targetDataSet.setSelected(Arrays.asList(c.getTarget(), c.getSource()));
                 
                 ArrayList<OsmPrimitive> sel = new ArrayList<OsmPrimitive>();
-                sel.add(c.getMy());
-                sel.add(c.getTheir());
+                sel.add(c.getSource());
+                sel.add(c.getTarget());
 
                 BoundingXYVisitor box = new BoundingXYVisitor();
                 box.computeBoundingBox(sel);
@@ -834,6 +795,27 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     public void onConflictsRemoved(ConflictCollection conflicts) {
         System.err.println("1 conflict has been resolved.");
         refreshView();
+    }
+    
+    public class ConflationCandidate {
+        protected OsmPrimitive source;
+        protected OsmPrimitive target;
+        
+        public ConflationCandidate(OsmPrimitive source, OsmPrimitive target) {
+            if (source == null || target == null) {
+                throw new IllegalArgumentException("Invalid source or target");
+            }
+            this.source = source;
+            this.target = target;
+        }
+        
+        public OsmPrimitive getSource() {
+            return source;
+        }
+        
+        public OsmPrimitive getTarget() {
+            return target;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -864,18 +846,17 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     private javax.swing.JButton objectTabNextButton;
     private javax.swing.JPanel objectTabPanel;
     private javax.swing.JPanel refSetPanel;
+    private javax.swing.JButton replaceGeometryButton;
     private javax.swing.JButton resolveButton;
     private javax.swing.JButton restoreMySetButton;
     private javax.swing.JButton restoreTheirSetButton;
     private javax.swing.JPanel resultsPanel;
     private javax.swing.JTabbedPane resultsTabPanel;
     private javax.swing.JTable resultsTable;
-    private javax.swing.JPanel tagMergerPlaceholderPanel;
     private javax.swing.JLabel theirLayerLabel;
     private javax.swing.JLabel theirNodeCountLabel;
     private javax.swing.JLabel theirRelationCountLabel;
     private javax.swing.JLabel theirWayCountLabel;
-    private javax.swing.JButton useMyTagsButton;
     private javax.swing.JButton useTheirTagsButton;
     // End of variables declaration//GEN-END:variables
 

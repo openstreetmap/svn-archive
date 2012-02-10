@@ -11,12 +11,13 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 
 
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.conflict.Conflict;
-import org.openstreetmap.josm.data.conflict.ConflictCollection;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -26,7 +27,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.SeparatorLayerAction;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.conflation.ConflationOptionsPanel.ConflationCandidate;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -34,15 +35,14 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  * @author Josh Doe <josh@joshdoe.com>
  */
-public class ConflationLayer extends OsmDataLayer implements LayerChangeListener {
-    // TODO: this really shouldn't be OsmDataLayer, but easy to use conflict dialog
-
-    ConflictCollection conflicts;
-
-    public ConflationLayer(DataSet ds, ConflictCollection conflicts) {
-        super(ds, tr("Conflation symbols"), null);
+public class ConflationLayer extends Layer implements LayerChangeListener {
+    protected List<ConflationCandidate> candidates;
+    protected ConflationCandidate selectedCandidate = null;
+    
+    public ConflationLayer(DataSet ds, List<ConflationCandidate> candidates) {
+        super(tr("Conflation"));
         MapView.addLayerChangeListener(this);
-        this.conflicts = conflicts;
+        this.candidates = candidates;
     }
 
     /**
@@ -53,22 +53,25 @@ public class ConflationLayer extends OsmDataLayer implements LayerChangeListener
     public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
         Graphics2D g2 = g;
         BasicStroke line = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-        g2.setColor(Color.blue);
         g2.setStroke(line);
-
-        GeneralPath path = new GeneralPath();
 
         final double PHI = Math.toRadians(20);
         final double cosPHI = Math.cos(PHI);
         final double sinPHI = Math.sin(PHI);
-
-        for (Conflict c : conflicts) {
-            OsmPrimitive p = c.getMy();
-            OsmPrimitive q = c.getTheir();
-            if (p != null && q != null) {
+        for (Iterator<ConflationCandidate> it = this.candidates.iterator(); it.hasNext();) {
+            ConflationCandidate candidate = it.next();
+            if (candidate.equals(selectedCandidate)) {
+                g2.setColor(Color.blue);
+            } else {
+                g2.setColor(Color.cyan);
+            }
+            OsmPrimitive src = candidate.getSource();
+            OsmPrimitive tgt = candidate.getTarget();
+            if (src != null && tgt != null) {
+                GeneralPath path = new GeneralPath();
                 // we have a pair, so draw line between them, FIXME: not good to use getCenter() from here, move to utils?
-                Point p1 = mv.getPoint(ConflationOptionsPanel.getCenter(p));
-                Point p2 = mv.getPoint(ConflationOptionsPanel.getCenter(q));
+                Point p1 = mv.getPoint(ConflationOptionsPanel.getCenter(src));
+                Point p2 = mv.getPoint(ConflationOptionsPanel.getCenter(tgt));
                 path.moveTo(p1.x, p1.y);
                 path.lineTo(p2.x, p2.y);
                 //logger.info(String.format("Line %d,%d to %d,%d", p1.x, p1.y, p2.x, p2.y));
@@ -87,12 +90,11 @@ public class ConflationLayer extends OsmDataLayer implements LayerChangeListener
                         path.lineTo(p2.x + cosPHI * sx + sinPHI * sy, p2.y - sinPHI * sx + cosPHI * sy);
                     }
                 }
+                g2.draw(path);
             }
-            // TODO: handle other than just Node->Node cases
-            // TODO: draw color coded circle around unmatched nodes
         }
 
-        g2.draw(path);
+        
     }
 
     
@@ -119,14 +121,14 @@ public class ConflationLayer extends OsmDataLayer implements LayerChangeListener
 
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
-        //TODO: handle Way/Relation types
-        for (Conflict c : conflicts) {
-            OsmPrimitive my = c.getMy();
-            OsmPrimitive their = c.getTheir();
-            if (my != null && my instanceof Node)
-                v.visit((Node)my);
-            if (their != null && their instanceof Node)
-                v.visit((Node)their);
+        for (Iterator<ConflationCandidate> it = this.candidates.iterator(); it.hasNext();) {
+            ConflationCandidate candidate = it.next();
+            OsmPrimitive src = candidate.getSource();
+            OsmPrimitive tgt = candidate.getTarget();
+            if (src != null && src instanceof Node)
+                v.visit((Node)src);
+            if (tgt != null && tgt instanceof Node)
+                v.visit((Node)tgt);
         }
     }
 
@@ -163,7 +165,11 @@ public class ConflationLayer extends OsmDataLayer implements LayerChangeListener
      *
      * @return the set of conflicts currently managed in this layer
      */
-    public ConflictCollection getConflicts() {
-        return conflicts;
+    public List<ConflationCandidate> getCandidates() {
+        return this.candidates;
+    }
+    
+    public void setSelectedCandidate(ConflationCandidate c) {
+        selectedCandidate = c;
     }
 }

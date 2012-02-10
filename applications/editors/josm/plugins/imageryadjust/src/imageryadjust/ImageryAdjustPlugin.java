@@ -1,5 +1,6 @@
 package imageryadjust;
 
+import javax.swing.Action;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -13,7 +14,8 @@ public class ImageryAdjustPlugin extends Plugin {
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (newFrame == null) return;
+        if (oldFrame == null && newFrame != null) {
         newFrame.addMapMode(new IconToggleButton(new ImageryAdjustMapMode(newFrame)));
+        }
     }
 }

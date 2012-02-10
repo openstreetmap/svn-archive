@@ -29,7 +29,7 @@
 -->
 <project name="imageryadjust" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="ImageryAdjust: adjust single visible layer"/>
+    <property name="commit.message" value="ImageryAdjust: Adjust while holding Y"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4667"/>
     <!--

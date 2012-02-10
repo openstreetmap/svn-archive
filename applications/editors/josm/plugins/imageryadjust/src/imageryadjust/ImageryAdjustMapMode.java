@@ -1,25 +1,14 @@
 package imageryadjust;
 
+import java.awt.*;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.GridBagLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.awt.event.*;
 import java.util.List;
+import java.util.*;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.Timer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -30,16 +19,26 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 
-public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener{
+
+public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener, AWTEventListener, MapFrame.MapModeChangeListener{
     boolean mouseDown;
     EastNorth prevEastNorth;
     private ImageryLayer adjustingLayer;
+    private MapMode oldMapMode;
 
+    private final TreeSet<Integer> set = new TreeSet<Integer>();
+    private Timer timer;
+    private KeyEvent releaseEvent;
+    
     public ImageryAdjustMapMode(MapFrame mapFrame) {
         super(tr("Adjust imagery"), "adjustimg",
-                tr("Adjust the position of the selected imagery layer"), mapFrame,
+                tr("Adjust the position of the selected imagery layer"), 
+                Shortcut.registerShortcut("imageryadjust:adjustmode", tr("imageryadjust"), KeyEvent.VK_Y, Shortcut.GROUP_EDIT),
+                mapFrame,
                 ImageProvider.getCursor("normal", "move"));
+        MapFrame.addMapModeChangeListener(this);
     }
     
     private List<? extends Layer> getVisibleLayers() {
@@ -50,6 +49,13 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         }
         return all;
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
+    }
+    
+    
     
     @Override public void enterMode() {
         super.enterMode();
@@ -70,6 +76,24 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         }
        Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
+        timer = new Timer(0, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                 timer.stop();
+                 if (set.remove(releaseEvent.getKeyCode())) {
+                  doKeyReleaseEvent(releaseEvent);
+                 }
+            }
+
+        });
+        
+        try {
+            Toolkit.getDefaultToolkit().addAWTEventListener(this,
+                    AWTEvent.KEY_EVENT_MASK);
+        } catch (SecurityException ex) {
+        }
+        
+        
     }
 
     @Override public void exitMode() {
@@ -77,6 +101,10 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         adjustingLayer = null;
+        try {
+            Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+        } catch (SecurityException ex) {
+        }
     }
 
     @Override public void mousePressed(MouseEvent e) {
@@ -106,10 +134,51 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         Main.map.mapView.setCursor(Cursor.getDefaultCursor());
         prevEastNorth = null;
     }
+    
+    private void doKeyEvent(KeyEvent keyEvent) {
+    }
+
+    private void doKeyReleaseEvent(KeyEvent releaseEvent) {
+        if (releaseEvent.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
+            if (oldMapMode!=null && !(oldMapMode instanceof ImageryAdjustMapMode))
+            Main.map.selectMapMode(oldMapMode);
+        }
+    }
 
     @Override public boolean layerIsSupported(Layer l) {
-        return hasImageryLayersToAdjust();
+        //return hasImageryLayersToAdjust();
+        return true;        
     }
+
+    @Override
+    public void eventDispatched(AWTEvent event) {
+        if (event instanceof KeyEvent) {
+        KeyEvent e=(KeyEvent) event;
+        
+        if (event.getID() == KeyEvent.KEY_PRESSED) {
+             if (timer.isRunning()) {
+                  timer.stop();
+                } else {
+                  if (set.add((e.getKeyCode()))) doKeyEvent((KeyEvent) event);
+                }
+        }
+        if (event.getID() == KeyEvent.KEY_RELEASED) {
+            if (timer.isRunning()) {
+              timer.stop();
+               if (set.remove(e.getKeyCode())) doKeyReleaseEvent(e);
+            } else {
+              releaseEvent = e;
+              timer.restart();
+            }
+        }
+        }
+    }
+
+    @Override
+    public void mapModeChange(MapMode oldMapMode, MapMode newMapMode) {
+        this.oldMapMode = oldMapMode;
+    }
+
 
     /**
      * the list cell renderer used to render layer list entries
@@ -193,11 +262,14 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     protected boolean hasImageryLayersToAdjust() {
         if (Main.map == null) return false;
         if (Main.map.mapView == null) return false;
-        return ! Main.map.mapView.getLayersOfType(ImageryLayer.class).isEmpty();
+        boolean b = ! Main.map.mapView.getLayersOfType(ImageryLayer.class).isEmpty();
+        return b;
     }
 
     @Override
     protected void updateEnabledState() {
+        
         setEnabled(hasImageryLayersToAdjust());
+        //setEnabled(hasImageryLayersToAdjust());
     }
 }

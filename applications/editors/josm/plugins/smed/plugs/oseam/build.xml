@@ -12,20 +12,6 @@
 **
 **    > ant  dist
 **
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
 -->
 <project name="OSeaM" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
@@ -74,7 +60,7 @@
     ** dist - creates the plugin jar
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision">
+    <target name="dist" depends="compile">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="${plugin.src.dir}/images"/>
@@ -116,23 +102,6 @@
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
-    </target>
-    <!--
-    **********************************************************
-    ** revision - extracts the current revision number for the
-    **    file build.number and stores it in the XML property
-    **    version.*
-    **********************************************************
-    -->
-    <target name="revision">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="."/>
-        </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
     </target>
     <!--
     **********************************************************

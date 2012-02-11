@@ -126,9 +126,7 @@
             <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <!--
         <delete file="REVISION"/>
-        -->
     </target>
     <!--
     **********************************************************

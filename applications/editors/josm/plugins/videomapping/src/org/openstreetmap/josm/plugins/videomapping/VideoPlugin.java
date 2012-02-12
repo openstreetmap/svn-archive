@@ -1,5 +1,9 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
 import java.awt.BorderLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -44,9 +48,6 @@ import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 import com.sun.jna.LastErrorException;
 import com.sun.jna.NativeLibrary;
 
-import static org.openstreetmap.josm.tools.I18n.*;
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-
   /**
  * @author Matthias Meiﬂer (digi_c at arcor dot de)
  * @ released under GPL
@@ -83,7 +84,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 	}
 
 	private void createMenusAndShortCuts() {
-		VMenu = Main.main.menu.addMenu(" Video", KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
+		VMenu = Main.main.menu.addMenu(marktr("Video"), KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
 		VMenu.setEnabled(false);
 		VAdd= new JosmAction(tr("Import Video"),"videomapping",tr("Sync a video against this GPS track"),null,false) {
             public void actionPerformed(ActionEvent arg0) {                 

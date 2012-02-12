@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.conflation;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
@@ -38,7 +39,7 @@ public class ConflationPlugin extends Plugin {
         }
 
         try {
-            JMenu conflationMenu = Main.main.menu.addMenu(tr("Conflation"), KeyEvent.VK_R,
+            JMenu conflationMenu = Main.main.menu.addMenu(marktr("Conflation"), KeyEvent.VK_R,
                     Main.main.menu.defaultMenuPos, ht("/Plugin/Conflation"));
             MainMenu.add(conflationMenu, new ConflationAction());
 

@@ -53,23 +53,26 @@ public class ReplaceGeometryAction extends JosmAction {
 
         OsmPrimitive firstObject = selection.get(0);
         OsmPrimitive secondObject = selection.get(1);
-
+        
+        try {
+            replace(firstObject, secondObject);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
+        }
+         
+    }
+    public void replace(OsmPrimitive firstObject, OsmPrimitive secondObject) {
         if (firstObject instanceof Way && secondObject instanceof Way) {
             replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
         } else if (firstObject instanceof Node && secondObject instanceof Node) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("To replace a node with a node, use the node merge tool."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return;
+            throw new IllegalArgumentException(tr("To replace a node with a node, use the node merge tool."));
         } else if (firstObject instanceof Node) {
             replaceNode((Node) firstObject, secondObject);
         } else if (secondObject instanceof Node) {
             replaceNode((Node) secondObject, firstObject);
         } else {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("This tool can only replace a node with a way, a node with a multipolygon, or a way with a way."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return;
+            throw new IllegalArgumentException(tr("This tool can only replace a node with a way, a node with a multipolygon, or a way with a way."));
         }
     }
 

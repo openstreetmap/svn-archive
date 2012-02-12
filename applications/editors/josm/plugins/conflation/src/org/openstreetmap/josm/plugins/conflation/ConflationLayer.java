@@ -172,4 +172,8 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
     public void setSelectedCandidate(ConflationCandidate c) {
         selectedCandidate = c;
     }
+    
+    public ConflationCandidate getSelectedCandidate() {
+        return selectedCandidate;
+    }
 }

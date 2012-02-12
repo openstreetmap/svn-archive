@@ -32,25 +32,27 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagCollection;
+import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-import org.openstreetmap.josm.plugins.conflation.ConflationUtils.*;
+import utilsplugin2.dumbutils.ReplaceGeometryAction;
 
 /**
  *
  * @author Josh
  */
-public class ConflationOptionsPanel extends javax.swing.JPanel implements IConflictListener {
+public class ConflationOptionsPanel extends javax.swing.JPanel implements DataSetListener {
     ConflationOptionsDialog dlg = null;
     ConflationLayer conflationLayer = null;
     DataSet targetDataSet = null;
     DataSet sourceDataSet = null;
     ArrayList<OsmPrimitive> targetSelection = null;
-    ArrayList<OsmPrimitive> theirSelection = null;
+    ArrayList<OsmPrimitive> sourceSelection = null;
     OsmDataLayer targetLayer = null;
-    OsmDataLayer theirLayer = null;
+    OsmDataLayer sourceLayer = null;
     MatchTableModel tableModel;
     List<ConflationCandidate> candidates = null;
 
@@ -65,8 +67,9 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 new MatchListSelectionHandler());
 
         // FIXME: doesn't work right now
-        ColorTableCellRenderer cr = new ColorTableCellRenderer("Tags");
-        resultsTable.getColumnModel().getColumn(4).setCellRenderer(cr);
+        resultsTable.getColumnModel().getColumn(0).setCellRenderer(new OsmPrimitivRenderer());
+        resultsTable.getColumnModel().getColumn(1).setCellRenderer(new OsmPrimitivRenderer());
+        resultsTable.getColumnModel().getColumn(4).setCellRenderer(new ColorTableCellRenderer("Tags"));
 
         this.dlg = dlg;
 
@@ -93,32 +96,34 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         objectTabPanel = new javax.swing.JPanel();
         refSetPanel = new javax.swing.JPanel();
         freezeMySetButton = new javax.swing.JButton();
-        restoreMySetButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        myLayerLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        myNodeCountLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        myWayCountLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         myRelationCountLabel = new javax.swing.JLabel();
-        myWayCountLabel = new javax.swing.JLabel();
-        myNodeCountLabel = new javax.swing.JLabel();
-        myLayerLabel = new javax.swing.JLabel();
+        restoreMySetButton = new javax.swing.JButton();
         nonRefSetPanel = new javax.swing.JPanel();
         freezeTheirSelectionButton = new javax.swing.JButton();
-        restoreTheirSetButton = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        theirNodeCountLabel = new javax.swing.JLabel();
         theirLayerLabel = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        theirNodeCountLabel = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         theirWayCountLabel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         theirRelationCountLabel = new javax.swing.JLabel();
+        restoreTheirSetButton = new javax.swing.JButton();
         objectTabCancelButton = new javax.swing.JButton();
         objectTabNextButton = new javax.swing.JButton();
         criteriaTabPanel = new javax.swing.JPanel();
-        criteriaTabConflateButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
+        criteriaTabConflateButton = new javax.swing.JButton();
         resultsPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         resultsTable = new javax.swing.JTable();
@@ -131,7 +136,10 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
+        objectTabPanel.setLayout(new javax.swing.BoxLayout(objectTabPanel, javax.swing.BoxLayout.PAGE_AXIS));
+
         refSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Target Selection"));
+        refSetPanel.setLayout(new javax.swing.BoxLayout(refSetPanel, javax.swing.BoxLayout.LINE_AXIS));
 
         freezeMySetButton.setText("Freeze Selection");
         freezeMySetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +147,35 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 freezeTargetSelectionActionPerformed(evt);
             }
         });
+        refSetPanel.add(freezeMySetButton);
+
+        jPanel3.setLayout(new java.awt.GridLayout(0, 2, 2, 0));
+
+        jLabel2.setText("Layer");
+        jPanel3.add(jLabel2);
+
+        myLayerLabel.setText("(invalid)");
+        jPanel3.add(myLayerLabel);
+
+        jLabel1.setText("Nodes");
+        jPanel3.add(jLabel1);
+
+        myNodeCountLabel.setText("0");
+        jPanel3.add(myNodeCountLabel);
+
+        jLabel3.setText("Ways");
+        jPanel3.add(jLabel3);
+
+        myWayCountLabel.setText("0");
+        jPanel3.add(myWayCountLabel);
+
+        jLabel4.setText("Relations");
+        jPanel3.add(jLabel4);
+
+        myRelationCountLabel.setText("0");
+        jPanel3.add(myRelationCountLabel);
+
+        refSetPanel.add(jPanel3);
 
         restoreMySetButton.setText("Restore Selection");
         restoreMySetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -146,75 +183,12 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 restoreMySetButtonActionPerformed(evt);
             }
         });
+        refSetPanel.add(restoreMySetButton);
 
-        jLabel1.setText("Nodes");
-
-        jLabel2.setText("Layer");
-
-        jLabel3.setText("Ways");
-
-        jLabel4.setText("Relations");
-
-        myRelationCountLabel.setText("0");
-
-        myWayCountLabel.setText("0");
-
-        myNodeCountLabel.setText("0");
-
-        myLayerLabel.setText("(invalid)");
-
-        javax.swing.GroupLayout refSetPanelLayout = new javax.swing.GroupLayout(refSetPanel);
-        refSetPanel.setLayout(refSetPanelLayout);
-        refSetPanelLayout.setHorizontalGroup(
-            refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(refSetPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(refSetPanelLayout.createSequentialGroup()
-                        .addComponent(freezeMySetButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
-                        .addComponent(restoreMySetButton))
-                    .addGroup(refSetPanelLayout.createSequentialGroup()
-                        .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(myLayerLabel)
-                            .addComponent(myNodeCountLabel)
-                            .addComponent(myWayCountLabel)
-                            .addComponent(myRelationCountLabel))))
-                .addContainerGap())
-        );
-        refSetPanelLayout.setVerticalGroup(
-            refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(refSetPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(freezeMySetButton)
-                    .addComponent(restoreMySetButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(myLayerLabel))
-                .addGap(11, 11, 11)
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(myNodeCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(myWayCountLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(refSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(myRelationCountLabel))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
+        objectTabPanel.add(refSetPanel);
 
         nonRefSetPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source Selection"));
+        nonRefSetPanel.setLayout(new javax.swing.BoxLayout(nonRefSetPanel, javax.swing.BoxLayout.LINE_AXIS));
 
         freezeTheirSelectionButton.setText("Freeze Selection");
         freezeTheirSelectionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -222,6 +196,35 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 freezeSourceSelectionActionPerformed(evt);
             }
         });
+        nonRefSetPanel.add(freezeTheirSelectionButton);
+
+        jPanel4.setLayout(new java.awt.GridLayout(0, 2, 2, 0));
+
+        jLabel6.setText("Layer");
+        jPanel4.add(jLabel6);
+
+        theirLayerLabel.setText("(invalid)");
+        jPanel4.add(theirLayerLabel);
+
+        jLabel7.setText("Nodes");
+        jPanel4.add(jLabel7);
+
+        theirNodeCountLabel.setText("0");
+        jPanel4.add(theirNodeCountLabel);
+
+        jLabel9.setText("Ways");
+        jPanel4.add(jLabel9);
+
+        theirWayCountLabel.setText("0");
+        jPanel4.add(theirWayCountLabel);
+
+        jLabel5.setText("Relations");
+        jPanel4.add(jLabel5);
+
+        theirRelationCountLabel.setText("0");
+        jPanel4.add(theirRelationCountLabel);
+
+        nonRefSetPanel.add(jPanel4);
 
         restoreTheirSetButton.setText("Restore Selection");
         restoreTheirSetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -229,73 +232,9 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 restoreTheirSetButtonActionPerformed(evt);
             }
         });
+        nonRefSetPanel.add(restoreTheirSetButton);
 
-        jLabel5.setText("Relations");
-
-        jLabel6.setText("Layer");
-
-        jLabel7.setText("Nodes");
-
-        jLabel9.setText("Ways");
-
-        theirNodeCountLabel.setText("0");
-
-        theirLayerLabel.setText("(invalid)");
-
-        theirWayCountLabel.setText("0");
-
-        theirRelationCountLabel.setText("0");
-
-        javax.swing.GroupLayout nonRefSetPanelLayout = new javax.swing.GroupLayout(nonRefSetPanel);
-        nonRefSetPanel.setLayout(nonRefSetPanelLayout);
-        nonRefSetPanelLayout.setHorizontalGroup(
-            nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(nonRefSetPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nonRefSetPanelLayout.createSequentialGroup()
-                        .addComponent(freezeTheirSelectionButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
-                        .addComponent(restoreTheirSetButton))
-                    .addGroup(nonRefSetPanelLayout.createSequentialGroup()
-                        .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(theirLayerLabel)
-                            .addComponent(theirNodeCountLabel)
-                            .addComponent(theirWayCountLabel)
-                            .addComponent(theirRelationCountLabel))))
-                .addContainerGap())
-        );
-        nonRefSetPanelLayout.setVerticalGroup(
-            nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(nonRefSetPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(freezeTheirSelectionButton)
-                    .addComponent(restoreTheirSetButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(theirLayerLabel))
-                .addGap(11, 11, 11)
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(theirNodeCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(theirWayCountLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(nonRefSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(theirRelationCountLabel))
-                .addContainerGap(32, Short.MAX_VALUE))
-        );
+        objectTabPanel.add(nonRefSetPanel);
 
         objectTabCancelButton.setText("Cancel");
         objectTabCancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -303,6 +242,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 objectTabCancelButtonActionPerformed(evt);
             }
         });
+        objectTabPanel.add(objectTabCancelButton);
 
         objectTabNextButton.setMnemonic('N');
         objectTabNextButton.setText("Next");
@@ -311,49 +251,17 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 objectTabNextButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout objectTabPanelLayout = new javax.swing.GroupLayout(objectTabPanel);
-        objectTabPanel.setLayout(objectTabPanelLayout);
-        objectTabPanelLayout.setHorizontalGroup(
-            objectTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(objectTabPanelLayout.createSequentialGroup()
-                .addGroup(objectTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nonRefSetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(refSetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, objectTabPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(objectTabCancelButton)
-                        .addGap(81, 81, 81)
-                        .addComponent(objectTabNextButton)))
-                .addContainerGap())
-        );
-        objectTabPanelLayout.setVerticalGroup(
-            objectTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(objectTabPanelLayout.createSequentialGroup()
-                .addComponent(refSetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nonRefSetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(objectTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(objectTabNextButton)
-                    .addComponent(objectTabCancelButton))
-                .addGap(55, 55, 55))
-        );
+        objectTabPanel.add(objectTabNextButton);
 
         resultsTabPanel.addTab("Object selection", objectTabPanel);
 
-        criteriaTabConflateButton.setMnemonic('f');
-        criteriaTabConflateButton.setText("Conflate");
-        criteriaTabConflateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                criteriaTabConflateButtonActionPerformed(evt);
-            }
-        });
+        criteriaTabPanel.setLayout(new javax.swing.BoxLayout(criteriaTabPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jCheckBox1.setSelected(true);
         jCheckBox1.setText("Distance");
+        jCheckBox1.setEnabled(false);
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
@@ -367,40 +275,26 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBox1)
-                .addContainerGap(282, Short.MAX_VALUE))
+                .addContainerGap(350, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBox1)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap(195, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout criteriaTabPanelLayout = new javax.swing.GroupLayout(criteriaTabPanel);
-        criteriaTabPanel.setLayout(criteriaTabPanelLayout);
-        criteriaTabPanelLayout.setHorizontalGroup(
-            criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(criteriaTabPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
-                        .addGap(0, 568, Short.MAX_VALUE)
-                        .addComponent(criteriaTabConflateButton))
-                    .addGroup(criteriaTabPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 282, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        criteriaTabPanelLayout.setVerticalGroup(
-            criteriaTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, criteriaTabPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addComponent(criteriaTabConflateButton)
-                .addContainerGap())
-        );
+        criteriaTabPanel.add(jPanel2);
+
+        criteriaTabConflateButton.setMnemonic('f');
+        criteriaTabConflateButton.setText("Conflate");
+        criteriaTabConflateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                criteriaTabConflateButtonActionPerformed(evt);
+            }
+        });
+        criteriaTabPanel.add(criteriaTabConflateButton);
 
         resultsTabPanel.addTab("Matching criteria", criteriaTabPanel);
 
@@ -433,7 +327,12 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         jLabel8.setText("Resolve using:");
 
-        useTheirTagsButton.setText("Their Tags");
+        useTheirTagsButton.setText("Merge tags");
+        useTheirTagsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useTheirTagsButtonActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Not a match");
         jButton1.setEnabled(false);
@@ -451,7 +350,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 .addComponent(useTheirTagsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,14 +388,14 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         // some initialization
         int n = targetSelection.size();
-        int m = theirSelection.size();
+        int m = sourceSelection.size();
         int maxLen = Math.max(n, m);
         double cost[][] = new double[maxLen][maxLen];
 
         // calculate cost matrix
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                cost[i][j] = calcCost(targetSelection.get(i), theirSelection.get(j));
+                cost[i][j] = calcCost(targetSelection.get(i), sourceSelection.get(j));
             }
         }
 
@@ -505,18 +404,20 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         OsmPrimitive target, source;
         candidates = new LinkedList<ConflationCandidate>();
         for (int i = 0; i < maxLen; i++) {
-            if (assignment[i][0] < n)
-                target = targetSelection.get(assignment[i][0]);
+            int tgtIdx = assignment[i][0];
+            int srcIdx = assignment[i][1];
+            if (tgtIdx < n)
+                target = targetSelection.get(tgtIdx);
             else
                 target = null;
-            if (assignment[i][1] < m)
-                source = theirSelection.get(assignment[i][1]);
+            if (srcIdx < m)
+                source = sourceSelection.get(srcIdx);
             else
                 source = null;
 
             if (target != null && source != null) {
                 // TODO: do something!
-                candidates.add(new ConflationCandidate(source, target));
+                candidates.add(new ConflationCandidate(source, target, cost[tgtIdx][srcIdx]));
             }
         }
 
@@ -533,6 +434,9 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
 
         // print list of matched pairsalong with distance
         // upon selection of one pair, highlight them and draw arrow
+        
+        if (resultsPanel != null)
+            resultsTabPanel.setSelectedComponent(resultsPanel);
     }//GEN-LAST:event_criteriaTabConflateButtonActionPerformed
 
     private void objectTabNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectTabNextButtonActionPerformed
@@ -549,15 +453,19 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     }//GEN-LAST:event_restoreMySetButtonActionPerformed
 
     private void restoreTheirSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreTheirSetButtonActionPerformed
-        if (theirLayer != null && sourceDataSet != null && theirSelection != null && !theirSelection.isEmpty()) {
-            Main.map.mapView.setActiveLayer(theirLayer);
-            theirLayer.setVisible(true);
-            sourceDataSet.setSelected(theirSelection);
+        if (sourceLayer != null && sourceDataSet != null && sourceSelection != null && !sourceSelection.isEmpty()) {
+            Main.map.mapView.setActiveLayer(sourceLayer);
+            sourceLayer.setVisible(true);
+            sourceDataSet.setSelected(sourceSelection);
         }
     }//GEN-LAST:event_restoreTheirSetButtonActionPerformed
 
     private void freezeTargetSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeTargetSelectionActionPerformed
+        if (targetDataSet != null && targetDataSet == Main.main.getCurrentDataSet()) {
+            targetDataSet.removeDataSetListener(this);
+        }
         targetDataSet = Main.main.getCurrentDataSet();
+        targetDataSet.addDataSetListener(this);
         targetLayer = Main.main.getEditLayer();
         if (targetDataSet == null || targetLayer == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
@@ -589,15 +497,19 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     }//GEN-LAST:event_freezeTargetSelectionActionPerformed
 
     private void freezeSourceSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freezeSourceSelectionActionPerformed
+        if (sourceDataSet != null && sourceDataSet == Main.main.getCurrentDataSet()) {
+            sourceDataSet.removeDataSetListener(this);
+        }
         sourceDataSet = Main.main.getCurrentDataSet();
-        theirLayer = Main.main.getEditLayer();
-        if (sourceDataSet == null || theirLayer == null) {
+        sourceDataSet.addDataSetListener(this);
+        sourceLayer = Main.main.getEditLayer();
+        if (sourceDataSet == null || sourceLayer == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
                     tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        theirSelection = new ArrayList<OsmPrimitive>(sourceDataSet.getSelected());
-        if (theirSelection.isEmpty()) {
+        sourceSelection = new ArrayList<OsmPrimitive>(sourceDataSet.getSelected());
+        if (sourceSelection.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
                     tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -606,7 +518,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         int numNodes = 0;
         int numWays = 0;
         int numRelations = 0;
-        for (OsmPrimitive p: theirSelection) {
+        for (OsmPrimitive p: sourceSelection) {
             switch(p.getType()) {
             case NODE: numNodes++; break;
             case WAY: numWays++; break;
@@ -614,7 +526,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
             }
         }
 
-        theirLayerLabel.setText(theirLayer.getName());
+        theirLayerLabel.setText(sourceLayer.getName());
         theirNodeCountLabel.setText(Integer.toString(numNodes));
         theirWayCountLabel.setText(Integer.toString(numWays));
         theirRelationCountLabel.setText(Integer.toString(numRelations));
@@ -630,8 +542,14 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     }//GEN-LAST:event_resolveButtonActionPerformed
 
     private void replaceGeometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceGeometryButtonActionPerformed
-        
+        ReplaceGeometryAction rg = new ReplaceGeometryAction();
+        ConflationCandidate c = conflationLayer.getSelectedCandidate();
+        rg.replace(c.getSource(), c.getTarget());
     }//GEN-LAST:event_replaceGeometryButtonActionPerformed
+
+    private void useTheirTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useTheirTagsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_useTheirTagsButtonActionPerformed
 
     static public class LayerListCellRenderer extends DefaultListCellRenderer {
         @Override
@@ -658,13 +576,13 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
      * simple cost consisting of the Euclidean distance is used
      * now, later we can also use dissimilarity between tags.
      *
-     * @param   refPrim      the reference <code>OsmPrimitive</code>.
-     * @param   nonRefPrim   the non-reference <code>OsmPrimitive</code>.
+     * @param   source      the reference <code>OsmPrimitive</code>.
+     * @param   target   the non-reference <code>OsmPrimitive</code>.
      */
-    public double calcCost(OsmPrimitive refPrim, OsmPrimitive nonRefPrim) {
+    public double calcCost(OsmPrimitive source, OsmPrimitive target) {
         double dist;
         try {
-            dist = getCenter(refPrim).distance(getCenter(nonRefPrim));
+            dist = getCenter(source).distance(getCenter(target));
         } catch (Exception e) {
             dist = 1000; // FIXME: what number to use?
         }
@@ -691,14 +609,19 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         }
 
         public Object getValueAt(int row, int col) {
+            ConflationCandidate c = candidates.get(row);
             if (col == 0)
-                return candidates.get(row).getSource();
-            if (col == 1)
-                return candidates.get(row).getTarget();
+                return c.getSource();
+            else if (col == 1)
+                return c.getTarget();
+            else if (col == 2)
+                return c.getDistance();
+            else if (col == 3)
+                return c.getCost();
             if (col == 4) {
                 HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-                set.add(candidates.get(row).getSource());
-                set.add(candidates.get(row).getTarget());
+                set.add(c.getSource());
+                set.add(c.getTarget());
                 TagCollection tags = TagCollection.unionOfAllPrimitives(set);
                 Set<String> keys = tags.getKeysWithMultipleValues();
                 if (keys.isEmpty())
@@ -760,7 +683,7 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
                 return;
 
             // only one item selected, show tags and zoom/center map
-            if (!lsm.isSelectionEmpty() && firstIndex == lastIndex) {
+            if (!lsm.isSelectionEmpty() && firstIndex == lastIndex && firstIndex < candidates.size()) {
                 ConflationCandidate c = candidates.get(firstIndex);
                 
                 conflationLayer.setSelectedCandidate(c);
@@ -788,25 +711,57 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         tableModel.fireTableDataChanged();
     }
 
-    public void onConflictsAdded(ConflictCollection conflicts) {
-        refreshView();
+    @Override
+    public void primitivesAdded(PrimitivesAddedEvent event) {
     }
 
-    public void onConflictsRemoved(ConflictCollection conflicts) {
-        System.err.println("1 conflict has been resolved.");
+    @Override
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {
+        List<? extends OsmPrimitive> prims = event.getPrimitives();
+        for (OsmPrimitive p : prims) {
+            for (ConflationCandidate c : candidates) {
+                if (c.getSource().equals(p) || c.getTarget().equals(p)) {
+                    candidates.remove(c);
+                    break;
+                }
+            }
+        }
         refreshView();
     }
     
+    @Override
+    public void tagsChanged(TagsChangedEvent event) {}
+    
+    @Override
+    public void nodeMoved(NodeMovedEvent event) {}
+        
+    @Override
+    public void wayNodesChanged(WayNodesChangedEvent event) {}
+
+    @Override
+    public void relationMembersChanged(RelationMembersChangedEvent event) {}
+
+    @Override
+    public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
+
+    @Override
+    public void dataChanged(DataChangedEvent event) {}
+
     public class ConflationCandidate {
         protected OsmPrimitive source;
         protected OsmPrimitive target;
+        protected double cost;
+        protected double distance;
         
-        public ConflationCandidate(OsmPrimitive source, OsmPrimitive target) {
+        public ConflationCandidate(OsmPrimitive source, OsmPrimitive target, double cost) {
             if (source == null || target == null) {
                 throw new IllegalArgumentException("Invalid source or target");
             }
             this.source = source;
             this.target = target;
+            this.cost = cost;
+            // TODO: use distance calculated in cost function, and make sure it's in meters?
+            this.distance = getCenter(source).distance(getCenter(target));
         }
         
         public OsmPrimitive getSource() {
@@ -815,6 +770,14 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
         
         public OsmPrimitive getTarget() {
             return target;
+        }
+
+        private Object getCost() {
+            return cost;
+        }
+
+        private Object getDistance() {
+            return distance;
         }
     }
 
@@ -836,6 +799,8 @@ public class ConflationOptionsPanel extends javax.swing.JPanel implements IConfl
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel myLayerLabel;
     private javax.swing.JLabel myNodeCountLabel;

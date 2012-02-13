@@ -35,7 +35,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     public ImageryAdjustMapMode(MapFrame mapFrame) {
         super(tr("Adjust imagery"), "adjustimg",
                 tr("Adjust the position of the selected imagery layer"), 
-                Shortcut.registerShortcut("imageryadjust:adjustmode", tr("imageryadjust"), KeyEvent.VK_Y, Shortcut.GROUP_EDIT),
+                Shortcut.registerShortcut("imageryadjust:adjustmode", tr("Mode: {0}", tr("Adjust imagery")), KeyEvent.VK_Y, Shortcut.GROUP_EDIT),
                 mapFrame,
                 ImageProvider.getCursor("normal", "move"));
         MapFrame.addMapModeChangeListener(this);

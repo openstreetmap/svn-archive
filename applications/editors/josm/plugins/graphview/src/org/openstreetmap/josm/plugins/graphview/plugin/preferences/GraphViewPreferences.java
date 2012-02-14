@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.AXLELOAD;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.HEIGHT;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.LENGTH;
@@ -233,10 +235,6 @@ public class GraphViewPreferences extends Observable {
 
         currentColorScheme = new PreferencesColorScheme(this);
 
-        nodeColor = Color.WHITE;
-        segmentColor = Color.WHITE;
-        arrowheadFillColor = Color.BLACK;
-
         separateDirections = false;
 
     }
@@ -261,9 +259,9 @@ public class GraphViewPreferences extends Observable {
             Main.pref.put("graphview.rulesetResource", currentInternalRuleset.toString());
         }
 
-        Main.pref.put("graphview.defaultNodeColor", createColorString(nodeColor));
-        Main.pref.put("graphview.defaultSegmentColor", createColorString(segmentColor));
-        Main.pref.put("graphview.defaultArrowheadCoreColor", createColorString(arrowheadFillColor));
+        Main.pref.putColor(marktr("graphview default node"), Color.WHITE);
+        Main.pref.putColor(marktr("graphview default segment"), Color.WHITE);
+        Main.pref.putColor(marktr("graphview arrowhead core"), Color.BLACK);
 
         Main.pref.put("graphview.separateDirections", separateDirections);
 
@@ -273,12 +271,12 @@ public class GraphViewPreferences extends Observable {
 
     private void readPreferences() {
 
-        if (Main.pref.hasKey("graphview.parameterBookmarks")) {
+        if (!Main.pref.get("graphview.parameterBookmarks").isEmpty()) {
             String bookmarksString = Main.pref.get("graphview.parameterBookmarks");
             parameterBookmarks = parseAccessParameterBookmarksString(bookmarksString);
         }
 
-        if (Main.pref.hasKey("graphview.activeBookmark")) {
+        if (!Main.pref.get("graphview.activeBookmark").isEmpty()) {
             currentParameterBookmarkName = Main.pref.get("graphview.activeBookmark");
         }
         if (!parameterBookmarks.containsKey(currentParameterBookmarkName)) {
@@ -288,16 +286,16 @@ public class GraphViewPreferences extends Observable {
 
         useInternalRulesets = Main.pref.getBoolean("graphview.useInternalRulesets", true);
 
-        if (Main.pref.hasKey("graphview.rulesetFolder")) {
+        if (!Main.pref.get("graphview.rulesetFolder").isEmpty()) {
             String dirString = Main.pref.get("graphview.rulesetFolder");
             rulesetFolder = new File(dirString);
         }
-        if (Main.pref.hasKey("graphview.rulesetFile")) {
+        if (!Main.pref.get("graphview.rulesetFile").isEmpty()) {
             String fileString = Main.pref.get("graphview.rulesetFile");
             currentRulesetFile = new File(fileString);
         }
 
-        if (Main.pref.hasKey("graphview.rulesetResource")) {
+        if (!Main.pref.get("graphview.rulesetResource").isEmpty()) {
             String rulesetString = Main.pref.get("graphview.rulesetResource");
             //get the enum value for the string
             //(InternalRuleset.valueOf cannot be used because it cannot handle invalid strings well)
@@ -309,25 +307,9 @@ public class GraphViewPreferences extends Observable {
             }
         }
 
-        if (Main.pref.hasKey("graphview.defaultNodeColor")) {
-            Color color = parseColorString(Main.pref.get("graphview.defaultNodeColor"));
-            if (color != null) {
-                nodeColor = color;
-            }
-        }
-        if (Main.pref.hasKey("graphview.defaultSegmentColor")) {
-            Color color = parseColorString(Main.pref.get("graphview.defaultSegmentColor"));
-            if (color != null) {
-                segmentColor = color;
-            }
-        }
-        if (Main.pref.hasKey("graphview.defaultArrowheadCoreColor")) {
-            Color color = parseColorString(Main.pref.get("graphview.defaultArrowheadCoreColor"));
-            if (color != null) {
-            	arrowheadFillColor = color;
-            }
-        }
-
+        nodeColor = Main.pref.getColor(marktr("graphview default node"), Color.WHITE);
+        segmentColor = Main.pref.getColor(marktr("graphview default segment"), Color.WHITE);
+        arrowheadFillColor = Main.pref.getColor(marktr("graphview arrowhead core"), Color.BLACK);
         separateDirections = Main.pref.getBoolean("graphview.separateDirections", false);
 
         arrowheadPlacement = Main.pref.getDouble("graphview.arrowheadPlacement", 1.0);
@@ -502,24 +484,4 @@ public class GraphViewPreferences extends Observable {
 
         }
     }
-
-    private static final Pattern COLOR_PATTERN =
-        Pattern.compile("^(\\d{1,3}),\\s*(\\d{1,3}),\\s*(\\d{1,3})$");
-
-    private String createColorString(Color color) {
-        return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
-    }
-
-    private Color parseColorString(String string) {
-        Matcher matcher = COLOR_PATTERN.matcher(string);
-        if (!matcher.matches()) {
-            return null;
-        } else {
-            int r = Integer.parseInt(matcher.group(1));
-            int g = Integer.parseInt(matcher.group(2));
-            int b = Integer.parseInt(matcher.group(3));
-            return new Color(r, g, b);
-        }
-    }
-
 }

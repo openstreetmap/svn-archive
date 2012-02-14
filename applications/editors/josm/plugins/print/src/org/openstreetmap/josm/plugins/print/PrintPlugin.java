@@ -124,7 +124,7 @@ public class PrintPlugin extends Plugin {
      * Changes will be undone by restorePrefs().
      */
     public static void adjustPrefs() {
-        if (! Main.pref.getBoolean("print.saved-prefs", false)) {
+        if (!Main.pref.getBoolean("print.saved-prefs", false)) {
             Main.pref.put("print.saved-prefs", true);
             adjustPref("draw.data.downloaded_area", false);
             adjustPref("mappaint.node.connection-size", 0);
@@ -144,7 +144,7 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new int value
      */
     protected static void adjustPref(String key, int value) {
-        if (Main.pref.hasKey(key)) {
+        if (!Main.pref.get(key).isEmpty()) {
             Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
         }
         Main.pref.putInteger(key, value);
@@ -159,7 +159,7 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new boolean value
      */
     protected static void adjustPref(String key, boolean value) {
-        if (Main.pref.hasKey(key)) {
+        if (!Main.pref.get(key).isEmpty()) {
             Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
         }
         Main.pref.put(key, value);
@@ -174,7 +174,7 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new String value
      */
     protected static void adjustPref(String key, String value) {
-        if (Main.pref.hasKey(key)) {
+        if (!Main.pref.get(key).isEmpty()) {
             Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
         }
         Main.pref.put(key, value);

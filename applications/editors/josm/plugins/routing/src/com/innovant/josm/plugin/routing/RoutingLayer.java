@@ -27,6 +27,8 @@
 
 package com.innovant.josm.plugin.routing;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -58,7 +60,6 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-import com.innovant.josm.jrt.core.PreferencesKeys;
 import com.innovant.josm.jrt.osm.OsmEdge;
 
 
@@ -68,6 +69,20 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  * @author Jose Vidal
  */
 public class RoutingLayer extends Layer {
+
+    public enum PreferencesKeys {
+        KEY_ACTIVE_ROUTE_COLOR (marktr("routing active route")),
+        KEY_INACTIVE_ROUTE_COLOR (marktr("routing inactive route")),
+        KEY_ROUTE_WIDTH ("routing.route.width"),
+        KEY_ROUTE_SELECT ("routing.route.select");
+
+        public final String key;
+        PreferencesKeys (String key) {
+            this.key=key;
+        }
+
+        public String getKey() {return key;};
+    }
 
     /**
      * Logger
@@ -239,23 +254,12 @@ public class RoutingLayer extends Layer {
 
         // Get path stroke color from preferences
         // Color is different for active and inactive layers
-        String colorString;
+        Color color;
         if (isActiveLayer) {
-            if (Main.pref.hasKey(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key))
-                    colorString = Main.pref.get(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key);
-            else {
-                colorString = ColorHelper.color2html(Color.RED);
-                Main.pref.put(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, colorString);
-            }
+            color = Main.pref.getColor(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, Color.RED);
         } else {
-            if (Main.pref.hasKey(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key))
-                colorString = Main.pref.get(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key);
-            else {
-                colorString = ColorHelper.color2html(Color.decode("#dd2222"));
-                Main.pref.put(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, colorString);
-            }
+            color = Main.pref.getColor(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, Color.decode("#dd2222"));
         }
-        Color color = ColorHelper.html2color(colorString);
 
         // Get path stroke width from preferences
         String widthString = Main.pref.get(PreferencesKeys.KEY_ROUTE_WIDTH.key);

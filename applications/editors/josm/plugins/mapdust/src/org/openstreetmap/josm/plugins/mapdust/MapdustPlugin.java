@@ -124,7 +124,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     private void initializePlugin() {
         /* create MapDust GUI */
         Shortcut shortcut = Shortcut.registerShortcut("MapDust", tr("Toggle: {0}", tr("Open MapDust")),
-                KeyEvent.VK_0, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT);
+                KeyEvent.VK_0, Shortcut.GROUP_LAYER+Shortcut.GROUPS_ALT1);
         String name = "MapDust bug reports";
         String tooltip = "Activates the MapDust bug reporter plugin";
         mapdustGUI = new MapdustGUI(tr(name), "mapdust_icon.png", tr(tooltip),

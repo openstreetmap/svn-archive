@@ -84,7 +84,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 	}
 
 	private void createMenusAndShortCuts() {
-		VMenu = Main.main.menu.addMenu(marktr("Video"), KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
+		VMenu = Main.main.menu.addMenu(marktr("Video"), KeyEvent.VK_D, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
 		VMenu.setEnabled(false);
 		VAdd= new JosmAction(tr("Import Video"),"videomapping",tr("Sync a video against this GPS track"),null,false) {
             public void actionPerformed(ActionEvent arg0) {                 

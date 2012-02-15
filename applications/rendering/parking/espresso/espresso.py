@@ -33,11 +33,11 @@ if __name__ == '__main__':
     FW = "FROM planet_point WHERE"
 
     pc_disc_maxstay = []
-    curs.execute("SELECT osm_id,"+latlon+",(tags->'espresso') as \"espresso\" "+FW+" (tags @> 'espresso=>yes')")
+    curs.execute("SELECT osm_id,"+latlon+",(tags->'espresso') as \"espresso\",amenity,name "+FW+" (tags @> 'espresso=>yes')")
     pc_disc_maxstay += curs.fetchall()
 
     for pc_dm in pc_disc_maxstay:
-        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','Espresso:<br>'+pc_dm[3],'espressoicons/espresso16.png','16,16','-8,-8'])
+        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+pc_dm[4]+'<br>name: '+pc_dm[5],'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()
     sys.exit(0)

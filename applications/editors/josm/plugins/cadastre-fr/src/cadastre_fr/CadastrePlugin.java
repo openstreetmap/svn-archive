@@ -261,33 +261,16 @@ public class CadastrePlugin extends Plugin {
         }
         refreshLayersURL();
 
-        // overwrite F11 shortcut used from the beginning by this plugin and recently used
-        // for full-screen switch in JOSM core
-        int i = 0;
-        String p = Main.pref.get("shortcut.shortcut."+i, null);
-        boolean alreadyRedefined = false;
-        while (p != null) {
-            String[] s = p.split(";");
-            alreadyRedefined = alreadyRedefined || s[0].equals("menu:view:fullscreen");
-            i++;
-            p = Main.pref.get("shortcut.shortcut."+i, null);
+        /* TODO: remove in july 2012 */
+        if(!Main.pref.getBoolean("cadastregrab.shortcut.warn", false))
+        {
+            Main.pref.put("cadastregrab.shortcut.warn", true);
+            JOptionPane.showMessageDialog(Main.parent,
+                tr("Plugin cadastre-fr used the key shortcut F11 for grabbing,\n"+
+                "which is now allocated for full-screen switch.\n"+
+                "The new grabbing key is F10, but you can change the key\nin" +
+                "the shortcut settings if you want."));
         }
-        if (!alreadyRedefined) {
-            int reply = JOptionPane.showConfirmDialog(null,
-                    tr("Plugin cadastre-fr used traditionally the key shortcut F11 for grabbing,\n"+
-                    "which is currently allocated for full-screen switch by default.\n"+
-                    "Would you like to restore F11 for grab action?"),
-                    tr("Restore grab shortcut F11"),
-                    JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.OK_OPTION) {
-                System.out.println("redefine fullscreen shortcut F11 to shift+F11");
-                Main.pref.put("shortcut.shortcut."+i, "menu:view:fullscreen;Toggle Full Screen view;122;5;122;64;false;true");
-                JOptionPane.showMessageDialog(Main.parent,tr("JOSM is stopped for the change to take effect."));
-                System.exit(0);
-            }
-        } else
-            System.out.println("Shortcut F11 already redefined; do not change.");
-
         refreshMenu();
     }
 

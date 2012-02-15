@@ -73,7 +73,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
         // Create menu entry
         if ( Main.main.menu != null ) {
-            menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_Y, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
+            menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_L, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
         }
 
         // Add menu items

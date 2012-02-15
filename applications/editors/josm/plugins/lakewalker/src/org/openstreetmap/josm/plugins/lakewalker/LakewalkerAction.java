@@ -51,7 +51,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     public LakewalkerAction(String name) {
         super(name, "lakewalker-sml", tr("Lake Walker."),
         Shortcut.registerShortcut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
-        KeyEvent.VK_L, Shortcut.GROUP_DIRECT2+Shortcut.GROUPS_ALT2), true);
+        KeyEvent.VK_L, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
         this.name = name;
         setEnabled(true);
     }

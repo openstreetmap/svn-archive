@@ -60,7 +60,7 @@ public class ChooseURLAction extends JosmAction {
             if (vals[i].equals(addr)) idxToSelect=i; 
         }
         final JLabel label1=new JLabel(tr("Please select one of custom URLs (configured in Preferences)"));
-        final JList<String> list1=new JList<String>(names);
+        final JList list1=new JList(names);
         final JTextField editField=new JTextField();
         final JCheckBox check1=new JCheckBox(tr("Ask every time"));
         

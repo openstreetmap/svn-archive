@@ -25,8 +25,8 @@ public class SplitOnIntersectionsAction extends JosmAction {
 
     public SplitOnIntersectionsAction() {
         super(TITLE, "dumbutils/splitonintersections", tr("Split adjacent ways on T-intersections"),
-                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", tr("Split adjacent ways")), KeyEvent.VK_P, Shortcut.GROUP_MENU, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK| KeyEvent.SHIFT_DOWN_MASK)
-                , true);
+                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", tr("Split adjacent ways")),
+                KeyEvent.VK_P, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
     }
 
     public void actionPerformed( ActionEvent e ) {

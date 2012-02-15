@@ -35,7 +35,7 @@ public class SelectBoundaryAction extends JosmAction {
     public SelectBoundaryAction() {
         super(tr("Area boundary [testing]"), "selboundary", tr("Select relation or all ways that forms area boundary"),
                 Shortcut.registerShortcut("tools:selboundary", tr("Tool: {0}","Area boundary [testing]"),
-                KeyEvent.VK_SLASH, Shortcut.GROUP_EDIT ,Shortcut.SHIFT_DEFAULT), true);
+                KeyEvent.VK_SLASH, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
         putValue("help", ht("/Action/SelectAreaBoundary"));
     }
 
@@ -90,7 +90,6 @@ public class SelectBoundaryAction extends JosmAction {
         }
         if (selectedRelation!=null) {
             int idx = rels.indexOf(selectedRelation); 
-            System.out.println("idx="+idx);
             // selectedRelation has number idx in active relation list
             if (idx>=0) {
                // select next relation

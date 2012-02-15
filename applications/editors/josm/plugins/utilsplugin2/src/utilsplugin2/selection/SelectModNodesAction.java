@@ -27,7 +27,7 @@ public class SelectModNodesAction extends JosmAction {
         super(tr("Select last modified nodes"), "selmodnodes",
                 tr("Select last modified nodes"),
                 Shortcut.registerShortcut("tools:selmodnodes", tr("Tool: {0}","Select last modified nodes"),
-                KeyEvent.VK_Z,  Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT ), true);
+                KeyEvent.VK_Z, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
         putValue("help", ht("/Action/SelectLastModifiedNodes"));
     }
 

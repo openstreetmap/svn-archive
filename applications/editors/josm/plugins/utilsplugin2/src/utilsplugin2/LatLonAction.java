@@ -30,8 +30,7 @@ public final class LatLonAction extends JosmAction {
 
     public LatLonAction() {
         super(tr("Lat Lon tool"), "latlon", tr("Create geometry by entering lat lon coordinates for it."),
-                Shortcut.registerShortcut("latlon", tr("Edit: {0}", tr("Lat Lon tool")), KeyEvent.VK_L, Shortcut.GROUP_HOTKEY,
-                        Shortcut.SHIFT_DEFAULT), true);
+                Shortcut.registerShortcut("latlon", tr("Edit: {0}", tr("Lat Lon tool")), KeyEvent.VK_L, Shortcut.GROUP_DIRECT3), true);
         putValue("help", ht("/Action/AddNode"));
     }
 

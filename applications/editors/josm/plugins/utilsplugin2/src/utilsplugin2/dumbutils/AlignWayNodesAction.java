@@ -22,7 +22,7 @@ public class AlignWayNodesAction extends JosmAction {
 
     public AlignWayNodesAction() {
         super(TITLE, "dumbutils/alignwaynodes", tr("Align nodes in a way"),
-                Shortcut.registerShortcut("tools:alignwaynodes", tr("Tool: {0}", tr("Align Way Nodes")), KeyEvent.VK_L, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
+                Shortcut.registerShortcut("tools:alignwaynodes", tr("Tool: {0}", tr("Align Way Nodes")), KeyEvent.VK_L, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT)
                 , true);
     }
 

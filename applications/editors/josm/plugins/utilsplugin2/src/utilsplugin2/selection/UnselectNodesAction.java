@@ -23,7 +23,7 @@ public class UnselectNodesAction extends JosmAction {
         super(tr("Unselect nodes"), "unsnodes",
                 tr("Removes all nodes from selection"),
                 Shortcut.registerShortcut("tools:unsnodes", tr("Tool: {0}","Unselect nodes"),
-                KeyEvent.VK_U, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+                KeyEvent.VK_U, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
         putValue("help", ht("/Action/UnselectNodes"));
     }
 

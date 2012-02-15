@@ -29,9 +29,9 @@
 -->
 <project name="utilsplugin2" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: moved SplitObject to ctrl-P"/>
+    <property name="commit.message" value="Utilsplugin2: fixing shortcut deprecation"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4847"/>
+    <property name="plugin.main.version" value="4937"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

@@ -23,7 +23,7 @@ public class TagBufferAction extends JosmAction {
 
     public TagBufferAction() {
         super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
-                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")), KeyEvent.VK_R, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT)
+                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")), KeyEvent.VK_R, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT)
 		, true);
     }
 

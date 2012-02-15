@@ -33,7 +33,7 @@ public class ExtractPointAction extends JosmAction {
         super(tr("Extract node"), "extnode",
                 tr("Extracts node from a way"),
                 Shortcut.registerShortcut("tools:extnode", tr("Tool: {0}","Extract node"),
-                KeyEvent.VK_J, Shortcut.GROUP_EDIT, KeyEvent.ALT_DOWN_MASK  ), true);
+                KeyEvent.VK_J, Shortcut.GROUP_DIRECT2  ), true);
         putValue("help", ht("/Action/ExtractNode"));
     }
 

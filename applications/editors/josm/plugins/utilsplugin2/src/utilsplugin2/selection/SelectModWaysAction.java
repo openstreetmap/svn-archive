@@ -1,10 +1,6 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin and Martin Ždila
 package utilsplugin2.selection;
 
-import org.openstreetmap.josm.command.Command;
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
@@ -12,8 +8,12 @@ import java.util.HashSet;
 import java.util.Set;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.*;
-
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -27,7 +27,7 @@ public class SelectModWaysAction extends JosmAction {
         super(tr("Select last modified ways"), "selmodways",
                 tr("Select last modified ways"),
                 Shortcut.registerShortcut("tools:selmodways", tr("Tool: {0}","Select last modified ways"),
-                KeyEvent.VK_Z,  Shortcut.GROUP_EDIT, KeyEvent.ALT_MASK ), true);
+                KeyEvent.VK_Z,  Shortcut.GROUP_DIRECT2), true);
         putValue("help", ht("/Action/SelectLastModifiedWays"));
     }
 

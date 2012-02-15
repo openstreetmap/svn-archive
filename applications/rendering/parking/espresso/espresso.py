@@ -18,7 +18,7 @@ if __name__ == '__main__':
         DSN = sys.argv[1]
         openlayertextfilename = sys.argv[2]
     else:
-        print "usage: {cmd} <db connection string> <output filename>".format(cmd=sys.argv[1])
+        print "usage: {cmd} <db connection string> <output filename>".format(cmd=sys.argv[0])
         exit(0);
 
     print "Opening connection using dns:", DSN
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     openlayertextfile = csv.writer(open(openlayertextfilename, 'w'), delimiter='\t',quotechar='"', quoting=csv.QUOTE_MINIMAL)
     openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize','iconOffset'])
 
-    latlon= "ST_Y(ST_Transform(node,4326)),ST_X(ST_Transform(node,4326))"
-    FW = "FROM planet_node WHERE"
+    latlon= "ST_Y(ST_Transform(way,4326)),ST_X(ST_Transform(way,4326))"
+    FW = "FROM planet_point WHERE"
 
     pc_disc_maxstay = []
     curs.execute("SELECT osm_id,"+latlon+",(tags->'espresso') as \"espresso\" "+FW+" (tags @> 'espresso=>yes')")

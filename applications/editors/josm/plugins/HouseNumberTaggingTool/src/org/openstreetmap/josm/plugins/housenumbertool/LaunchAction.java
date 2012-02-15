@@ -26,7 +26,7 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
       super("HouseNumberTaggingTool", 
             "home-icon32", 
             "Launches the HouseNumberTaggingTool dialog", 
-            Shortcut.registerShortcut("edit:housenumbertaggingtool", "HouseNumberTaggingTool", KeyEvent.VK_Y, Shortcut.GROUP_EDIT),
+            Shortcut.registerShortcut("edit:housenumbertaggingtool", "HouseNumberTaggingTool", KeyEvent.VK_K, Shortcut.GROUP_EDIT),
             true);
 
       this.pluginDir = pluginDir;

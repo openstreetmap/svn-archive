@@ -37,7 +37,13 @@ if __name__ == '__main__':
     pc_disc_maxstay += curs.fetchall()
 
     for pc_dm in pc_disc_maxstay:
-        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+pc_dm[4]+'<br>name: '+pc_dm[5],'espressoicons/espresso16.png','16,16','-8,-8'])
+        amenity = pc_dm[4]
+        if amenity==None:
+            amenity='?'
+        name = pc_dm[5]
+        if name==None:
+            name='?'
+        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+amenity+'<br>name: '+name+'<br>ID: '+pc_dm[0],'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()
     sys.exit(0)

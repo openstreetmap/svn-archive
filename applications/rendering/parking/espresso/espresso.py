@@ -36,6 +36,7 @@ if __name__ == '__main__':
     curs.execute("SELECT osm_id,"+latlon+",(tags->'espresso') as \"espresso\",amenity,name "+FW+" (tags @> 'espresso=>yes')")
     pc_disc_maxstay += curs.fetchall()
 
+    amenities={'shop':'Shop','cafe':'Cafè','restaurant':'Restaurant'}
     for pc_dm in pc_disc_maxstay:
         amenity = pc_dm[4]
         if amenity==None:

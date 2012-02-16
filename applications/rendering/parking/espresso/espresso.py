@@ -43,7 +43,8 @@ if __name__ == '__main__':
         name = pc_dm[5]
         if name==None:
             name='?'
-        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+amenity+'<br>name: '+name+'<br>ID: '+pc_dm[0],'espressoicons/espresso16.png','16,16','-8,-8'])
+        id = ''+pc_dm[0]
+        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+amenity+'<br>name: '+name+'<br>ID: '+id,'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()
     sys.exit(0)

@@ -47,7 +47,7 @@ public class JunctionCheckDialog extends ToggleDialog implements ActionListener,
 	public JunctionCheckDialog(JunctionCheckerPlugin junctionCheckerGuiPlugin) {
 		super(tr("JunctionChecking"), "junctionchecker", tr("Open the junctionchecking window."),
 				Shortcut.registerShortcut("subwindow:junctionchecker", tr("Toggle: {0}", tr("junctions")),
-						KeyEvent.VK_B, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
+						KeyEvent.VK_J, Shortcut.GROUP_LAYER+Shortcut.GROUPS_ALT1), 150);
 		plugin = junctionCheckerGuiPlugin;
 		//das Digraph Create Panel
 		JPanel digraphPanel = new JPanel(new GridLayout(1, 2));

@@ -43,7 +43,7 @@ if __name__ == '__main__':
         name = pc_dm[5]
         if name==None:
             name='?'
-        id = ''+pc_dm[0]
+        id = str(pc_dm[0])
         openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+amenity+'<br>name: '+name+'<br>ID: '+id,'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()

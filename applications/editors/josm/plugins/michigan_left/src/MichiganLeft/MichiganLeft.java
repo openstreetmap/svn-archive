@@ -49,8 +49,8 @@ public class MichiganLeft extends Plugin {
       super(tr("Michigan Left"), "michigan_left",
           tr("Adds no left turn for sets of 4 or 5 ways."),
           Shortcut.registerShortcut("tools:michigan_left", tr("Tool: {0}",
-          tr("Michigan Left")), KeyEvent.VK_M, Shortcut.GROUP_EDIT,
-          KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK), true);
+          tr("Michigan Left")), KeyEvent.VK_N, Shortcut.GROUP_EDIT
+          +Shortcut.GROUPS_ALT2), true);
     }
 
     public void actionPerformed(ActionEvent e) {

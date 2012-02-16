@@ -40,13 +40,13 @@ if __name__ == '__main__':
     for pc_dm in pc_disc_maxstay:
         amenity = pc_dm[4]
         if amenity==None:
-            amenity='?'
-        amenity = amenities.get(amenity,'"'+amenity+'"')
+            amenity='no amenity'
+        amenity = amenities.get(amenity,'&lt;'+amenity+'&gt;')
         name = pc_dm[5]
         if name==None:
-            name='<no name>'
+            name='&lt;no name&gt;'
         id = str(pc_dm[0])
-        description_html='{am} <a href="http://www.openstreetmap.org/browse/node/{id}">{name}</a>'.format(am=amenity,name=name,id=id)
+        description_html="{am} <a href='http://www.openstreetmap.org/browse/node/{id}'>{name}</a>".format(am=amenity,name=name,id=id)
         openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso',description_html,'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()

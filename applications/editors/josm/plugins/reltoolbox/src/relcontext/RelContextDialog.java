@@ -100,7 +100,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         roleBox.setVisible(false);
-        final Action enterRoleAction = new EnterRoleAction(); // just for the shorcut
+        final Action enterRoleAction = new EnterRoleAction(); // just for the shortcut
 
         // [±][X] relation U [AZ][Down][Edit]
         chosenRelationPanel = new JPanel(new GridBagLayout());

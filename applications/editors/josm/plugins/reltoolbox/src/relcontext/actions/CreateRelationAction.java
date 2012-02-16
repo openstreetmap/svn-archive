@@ -38,7 +38,7 @@ public class CreateRelationAction extends JosmAction {
     public CreateRelationAction( ChosenRelation chRel ) {
         super(tr("New"), "data/relation", tr("Create a relation from selected objects"),
                 Shortcut.registerShortcut("reltoolbox:create", tr("Relation Toolbox: {0}", tr("Create a new relation")),
-                KeyEvent.VK_C, Shortcut.GROUP_HOTKEY, Shortcut.SHIFT_DEFAULT), true);
+                KeyEvent.VK_N, Shortcut.GROUP_HOTKEY+Shortcut.GROUPS_ALT2), true);
         this.chRel = chRel;
         updateEnabledState();
     }

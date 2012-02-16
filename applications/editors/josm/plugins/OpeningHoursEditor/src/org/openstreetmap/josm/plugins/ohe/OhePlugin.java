@@ -87,7 +87,7 @@ public class OhePlugin extends Plugin {
             super(tr("Edit opening hours"), "opening_hours.png",
                     tr("Edit time-tag of selected element in a graphical interface"), Shortcut.registerShortcut(
                             "tools:opening_hourseditor", tr("Tool: {0}", tr("Edit opening hours")), KeyEvent.VK_O,
-                            Shortcut.GROUP_DIRECT2+Shortcut.GROUPS_ALT1), false);
+                            Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), false);
         }
 
         @Override

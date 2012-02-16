@@ -44,7 +44,7 @@ public class WaySelectorPlugin extends Plugin {
             super(tr("Way Select"),
                   "way-select",
                   tr("Select non-branching sequences of ways"),
-                  Shortcut.registerShortcut("wayselector:wayselect", tr("Way Select"), KeyEvent.VK_W, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT),
+                  Shortcut.registerShortcut("wayselector:wayselect", tr("Way Select"), KeyEvent.VK_W, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1),
                   true);
         }
 

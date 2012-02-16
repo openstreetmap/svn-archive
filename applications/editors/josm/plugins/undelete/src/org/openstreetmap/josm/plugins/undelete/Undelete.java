@@ -67,7 +67,7 @@ public class Undelete extends Plugin {
         private static final long serialVersionUID = 1L;
         public UndeleteAction() {
         super(tr("Undelete object..."), "undelete", tr("Undelete object by id"), Shortcut.registerShortcut("tools:undelete", tr("File: {0}", tr("Undelete object...")),
-        KeyEvent.VK_U, Shortcut.GROUP_EDIT, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK), true);
+        KeyEvent.VK_U, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT2), true);
       }
 
       @Override

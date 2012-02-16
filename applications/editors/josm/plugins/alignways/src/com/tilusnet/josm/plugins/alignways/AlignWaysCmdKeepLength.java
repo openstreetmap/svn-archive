@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import javax.swing.JLabel;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -188,9 +188,13 @@ public class AlignWaysCmdKeepLength extends Command {
     }
 
     @Override
-    public JLabel getDescription() {
-        return new JLabel(tr("Align way segment"), ImageProvider.get("",
-                "alignways"), SwingConstants.HORIZONTAL);
+    public String getDescriptionText() {
+        return tr("Align way segment");
+    }
+
+    @Override
+    public Icon getDescriptionIcon() {
+        return ImageProvider.get("alignways");
     }
 
     /*

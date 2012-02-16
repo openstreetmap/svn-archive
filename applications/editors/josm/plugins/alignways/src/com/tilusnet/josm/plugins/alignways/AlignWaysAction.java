@@ -32,7 +32,7 @@ public class AlignWaysAction extends JosmAction {
                 tr("Makes a pair of selected way segments parallel by rotating one of them "
                         + "around a chosen pivot."), 
 				Shortcut.registerShortcut("tools:alignways", tr("Tool: {0}", tr("Align Ways")),
-                                KeyEvent.VK_SPACE, Shortcut.GROUP_DIRECT, Shortcut.SHIFT_DEFAULT)
+                                KeyEvent.VK_SPACE, Shortcut.GROUP_DIRECT+Shortcut.GROUPS_ALT1)
 				, true);
         setEnabled(false);
     }

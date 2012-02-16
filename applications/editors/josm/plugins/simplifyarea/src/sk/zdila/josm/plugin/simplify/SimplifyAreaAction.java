@@ -46,7 +46,7 @@ public class SimplifyAreaAction extends JosmAction {
 
     public SimplifyAreaAction() {
         super(tr("Simplify Area"), "simplify", tr("Delete unnecessary nodes from an area."),
-                Shortcut.registerShortcut("tools:simplifyArea", tr("Tool: {0}", tr("Simplify Area")), KeyEvent.VK_F, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+                Shortcut.registerShortcut("tools:simplifyArea", tr("Tool: {0}", tr("Simplify Area")), KeyEvent.VK_F, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1), true);
     }
 
 

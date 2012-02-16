@@ -19,9 +19,7 @@ public class ManagerAction extends JosmAction {
         super("Upravit databázi",
               null,//"envelope-closed-big.png",
               "Upravit jména elemntů dle mapy",
-              Shortcut.registerShortcut("address:assignaddress",
-                        "Adresy: Přiřadit adresy",
-                        KeyEvent.VK_P, Shortcut.GROUP_DIRECT, Shortcut.SHIFT_DEFAULT),
+              null,
               true, "czechaddress/manager", true);
     }
 

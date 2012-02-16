@@ -42,7 +42,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
               tr("Splits an area by an untagged way."),
               Shortcut.registerShortcut("tools:splitarea",
                     tr("Tool: {0}", tr("Split area")),
-                    KeyEvent.VK_S, Shortcut.GROUP_MENU),
+                    KeyEvent.VK_W, Shortcut.GROUP_DIRECT2+Shortcut.GROUPS_ALT1),
               true);
     }
 

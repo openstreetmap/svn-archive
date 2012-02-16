@@ -13,8 +13,9 @@ public class BuildingSizeAction extends JosmAction {
 
     public BuildingSizeAction() {
         super(tr("Set buildings size"), "mapmode/building", tr("Set buildings size"),
-                Shortcut.registerShortcut("edit:buildingsdialog", tr("Edit: {0}", tr("Set buildings size")), KeyEvent.VK_B, Shortcut.GROUP_EDIT, KeyEvent.CTRL_DOWN_MASK)
-		,true);
+                Shortcut.registerShortcut("edit:buildingsdialog", tr("Edit: {0}", tr("Set buildings size")),
+                KeyEvent.VK_B, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1),
+                true);
     }
 
     public void actionPerformed(ActionEvent arg0) {

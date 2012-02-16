@@ -1,8 +1,7 @@
 package reverter;
 
 import java.util.Collection;
-
-import javax.swing.JLabel;
+import javax.swing.Icon;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -17,8 +16,14 @@ public class RevertChangesetCommand extends SequenceCommand {
         ReverterPlugin.reverterUsed = true;
     }
 
-    @Override public JLabel getDescription() {
-        return new JLabel(name, ImageProvider.get("revert-changeset"), JLabel.HORIZONTAL);
+    @Override
+    public String getDescriptionText() {
+        return name;
+    }
+
+    @Override
+    public Icon getDescriptionIcon() {
+        return ImageProvider.get("revert-changeset");
     }
 
 }

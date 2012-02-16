@@ -18,7 +18,7 @@ public class RevertChangesetAction extends JosmAction {
         super(tr("Revert changeset"),"revert-changeset",tr("Revert changeset"),
             Shortcut.registerShortcut("tool:revert",
                 tr("Tool: {0}", tr("Revert changeset")),
-                KeyEvent.VK_T, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT),
+                KeyEvent.VK_T, Shortcut.GROUP_DIRECT3),
                 true);
     }
 

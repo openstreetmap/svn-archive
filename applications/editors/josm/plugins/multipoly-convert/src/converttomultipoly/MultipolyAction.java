@@ -36,9 +36,10 @@ public class MultipolyAction extends JosmAction {
 
     public MultipolyAction() {
         super(tr("Convert to multipolygon"), "multipoly_convert",
-                tr("Convert to multipolygon."), 
-			Shortcut.registerShortcut("tools:multipolyconv", tr("Tool: {0}",tr("Convert to multipolygon")), KeyEvent.VK_M,
-                        Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+            tr("Convert to multipolygon."),
+                Shortcut.registerShortcut("tools:multipolyconv", tr("Tool: {0}",
+                    tr("Convert to multipolygon")), KeyEvent.VK_M,
+                    Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
     }
 
     /**

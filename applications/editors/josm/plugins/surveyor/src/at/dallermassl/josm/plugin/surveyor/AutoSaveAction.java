@@ -37,7 +37,7 @@ public class AutoSaveAction extends JosmAction {
     public AutoSaveAction() {
         super(tr("AutoSave LiveData"), "autosave.png", tr("Save captured data to file every minute."),
         Shortcut.registerShortcut("surveyor:autosave", tr("Tool: {0}", tr("AutoSave LiveData")),
-        KeyEvent.VK_S, Shortcut.GROUP_DIRECT2+Shortcut.GROUPS_ALT1), true);
+        KeyEvent.VK_S, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
     }
 
     /* (non-Javadoc)

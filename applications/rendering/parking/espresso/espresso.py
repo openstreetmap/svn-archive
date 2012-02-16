@@ -40,11 +40,16 @@ if __name__ == '__main__':
         amenity = pc_dm[4]
         if amenity==None:
             amenity='?'
+        if amenities.hasKey(amenity):
+            amenity = amenities[amenity]
+        else:
+            amenity = '"'+amenity+'"'
         name = pc_dm[5]
         if name==None:
-            name='?'
+            name='<no name>'
         id = str(pc_dm[0])
-        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso','amenity: '+amenity+'<br>name: '+name+'<br>ID: '+id,'espressoicons/espresso16.png','16,16','-8,-8'])
+        description_html='{am} <a href="http://www.openstreetmap.org/browse/node/{id}">{name}</a>'.format(am=amenity,name=name,id=id)
+        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso',description_html,'espressoicons/espresso16.png','16,16','-8,-8'])
 
     conn.rollback()
     sys.exit(0)

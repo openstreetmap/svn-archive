@@ -41,10 +41,7 @@ if __name__ == '__main__':
         amenity = pc_dm[4]
         if amenity==None:
             amenity='?'
-        if amenities.hasKey(amenity):
-            amenity = amenities[amenity]
-        else:
-            amenity = '"'+amenity+'"'
+        amenity = amenities.get(amenity,'"'+amenity+'"')
         name = pc_dm[5]
         if name==None:
             name='<no name>'

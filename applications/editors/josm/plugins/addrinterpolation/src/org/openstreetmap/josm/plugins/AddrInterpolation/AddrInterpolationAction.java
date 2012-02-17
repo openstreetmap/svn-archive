@@ -24,8 +24,7 @@ SelectionChangedListener {
     public AddrInterpolationAction(){
         super(tr("Address Interpolation"), "AddrInterpolation", tr("Handy Address Interpolation Functions"),
                 Shortcut.registerShortcut("tools:AddressInterpolation", tr("Tool: {0}", tr("Address Interpolation")),
-                        KeyEvent.VK_A, Shortcut.GROUP_MENU,
-                        InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), false);
+                        KeyEvent.VK_Z, Shortcut.GROUP_MENU+Shortcut.GROUPS_ALT2), false);
         setEnabled(false);
         DataSet.addSelectionListener(this);
     }

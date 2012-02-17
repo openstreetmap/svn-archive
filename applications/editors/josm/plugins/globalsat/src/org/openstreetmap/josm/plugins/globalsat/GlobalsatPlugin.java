@@ -107,7 +107,7 @@ public class GlobalsatPlugin extends Plugin {
             super(tr("Globalsat Import"), "globalsatImport",
             tr("Import Data from Globalsat Datalogger DG100 into GPX layer."),
             Shortcut.registerShortcut("menu:globalsatimport", tr("Menu: {0}", tr("Globalsat Import")),
-            KeyEvent.VK_I, Shortcut.GROUP_MENU), false);
+            KeyEvent.VK_G, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), false);
         }
         public void actionPerformed(ActionEvent e){
             GlobalsatImportDialog dialog = new GlobalsatImportDialog();

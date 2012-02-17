@@ -22,7 +22,7 @@
 -->
 <project name="FixAddresses" default="dist" basedir=".">
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Bugfix #7169: Added option to ignore post codes."/>
+	<property name="commit.message" value="fix shortcut conflict, moved fiX to Shift-X"/>
 	
     <!--
       ************************************************

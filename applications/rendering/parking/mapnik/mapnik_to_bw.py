@@ -349,11 +349,11 @@ def dom_strip_icons(document):
 
 def dom_adjust_map_element(document):
     # in (e.g.) <Map background-color=... srs="&srs900913;" minimum-version="2.0.0"> <!ENTITY srs900913 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
-    # out <Map background-color=... srs="+init=epsg;3857" minimum-version="2.0.0" buffer-size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709">
+    # out <Map background-color=... srs="+init=epsg:3857" minimum-version="2.0.0" buffer-size="512" maximum-extent="-20037508.342789244,-20037508.342780735,20037508.342789244,20037508.342780709">
     map = document.getElementsByTagName("Map")[0]
     srs = map.getAttribute("srs")
     print('old map srs="{srs}"'.format(srs=srs))
-    srs = "+init=epsg;3857"
+    srs = "+init=epsg:3857"
     print('new map srs="{srs}"'.format(srs=srs))
     map.setAttribute("srs",srs)
     map.setAttribute("buffer-size","512")

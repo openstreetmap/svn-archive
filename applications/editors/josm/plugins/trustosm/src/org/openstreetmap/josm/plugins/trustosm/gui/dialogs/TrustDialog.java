@@ -17,6 +17,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.GeneralPath;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -185,7 +186,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 	public TrustDialog() {
 		super(tr("Object signatures"), "trustosm", tr("Open object signing window."),
 				Shortcut.registerShortcut("subwindow:trustosm", tr("Toggle: {0}", tr("Object signatures")),
-						KeyEvent.VK_T, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
+						KeyEvent.VK_T, Shortcut.GROUPS_ALT2+Shortcut.GROUP_DIRECT2), 150);
 
 		Main.map.mapView.addTemporaryLayer(this);
 

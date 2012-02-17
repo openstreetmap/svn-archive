@@ -42,7 +42,7 @@ public class IRSRectifyPlugin extends Plugin {
 
         public IRSRectifyAction() {
             super(tr("Update IRS adjustment layer"), "irsrectify.png", tr("Update IRS adjustment layer"),
-                    Shortcut.registerShortcut("menu:irsrectify", tr("Update IRS adjustment layer"), KeyEvent.VK_I, Shortcut.GROUP_LAYER), false);
+                    Shortcut.registerShortcut("menu:irsrectify", tr("Update IRS adjustment layer"), KeyEvent.VK_MULTIPLY, Shortcut.GROUP_DIRECT), false);
         }
 
         public void actionPerformed(ActionEvent e) {

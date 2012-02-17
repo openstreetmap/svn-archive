@@ -17,7 +17,7 @@ public class RestartJosmAction extends JosmAction {
         super(tr("Restart JOSM"), null, tr("Restart JOSM"),
                 Shortcut.registerShortcut("file:restart",
                 tr("File: {0}", tr("Restart JOSM")),
-                KeyEvent.VK_R, Shortcut.GROUP_MENU),
+                KeyEvent.VK_J, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1),
                 false);
         putValue("toolbar", "action/restart");
         Main.toolbar.register(this);

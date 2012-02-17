@@ -27,7 +27,7 @@ public class TaggingPresetTesterAction extends JosmAction {
         tr("Open the tagging preset test tool for previewing tagging preset dialogs."),
         Shortcut.registerShortcut("tools:taggingresettester",
         tr("Tool: {0}", tr("Tagging Preset Tester")),
-        KeyEvent.VK_A, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+        KeyEvent.VK_T, Shortcut.GROUPS_ALT1+Shortcut.GROUP_DIRECT3), true);
         Main.main.menu.helpMenu.addSeparator();
         MainMenu.add(Main.main.menu.helpMenu, this);
     }

@@ -285,12 +285,12 @@ public class RoutePatternAction extends JosmAction {
       throw new UnsupportedOperationException();
     }
 
-    public void addRow(Node node, String role) {
-      insertRow(-1, node, role);
+    public void addRow(Node node, String role, double distance) {
+      insertRow(-1, node, role, distance);
     }
 
-    public void insertRow(int insPos, Node node, String role) {
-      String[] buf = { "", "", "" };
+    public void insertRow(int insPos, Node node, String role, double distance) {
+      String[] buf = { "", "", "", "" };
       String curName = node.get("name");
       if (curName != null)
       {
@@ -306,6 +306,8 @@ public class RoutePatternAction extends JosmAction {
         buf[1] = curRef;
       }
       buf[STOPLIST_ROLE_COLUMN] = role;
+      buf[3] = Double.toString(((double)(int)(distance*40000/360.0*100))/100);
+
       if (insPos == -1)
       {
         nodes.addElement(node);
@@ -339,8 +341,12 @@ public class RoutePatternAction extends JosmAction {
     public double aLat, aLon;
     public double length;
     public double d1, d2, o1, o2;
+    public double distance;
 
-    public SegmentMetric(double fromLat, double fromLon, double toLat, double toLon) {
+    public SegmentMetric(double fromLat, double fromLon, double toLat, double toLon,
+                         double distance) {
+      this.distance = distance;
+
       aLat = fromLat;
       aLon = fromLon;
 
@@ -414,6 +420,7 @@ public class RoutePatternAction extends JosmAction {
   private static JCheckBox cbLeft = null;
   private static JTextField tfSuggestStopsLimit = null;
   private static Relation currentRoute = null;
+  private static Vector< SegmentMetric > segmentMetrics = null;
   private static Vector< RelationMember > markedWays = new Vector< RelationMember >();
   private static Vector< RelationMember > markedNodes = new Vector< RelationMember >();
 
@@ -862,6 +869,7 @@ public class RoutePatternAction extends JosmAction {
       stoplistData.addColumn(tr("Name/Id"));
       stoplistData.addColumn(tr("Ref"));
       stoplistData.addColumn(tr("Role"));
+      stoplistData.addColumn(tr("km"));
       stoplistTable.setModel(stoplistData);
       /*JScrollPane*/ tableSP = new JScrollPane(stoplistTable);
       /*JComboBox*/ comboBox = new JComboBox();
@@ -1285,6 +1293,7 @@ public class RoutePatternAction extends JosmAction {
       }
 
       itineraryData.cleanupGaps();
+      segmentMetrics = fillSegmentMetrics();
       rebuildWays();
     }
     else if ("routePattern.itineraryDelete".equals(event.getActionCommand()))
@@ -1299,6 +1308,7 @@ public class RoutePatternAction extends JosmAction {
       }
 
       itineraryData.cleanupGaps();
+      segmentMetrics = fillSegmentMetrics();
       rebuildWays();
     }
     else if ("routePattern.itinerarySort".equals(event.getActionCommand()))
@@ -1376,6 +1386,7 @@ public class RoutePatternAction extends JosmAction {
       }
 
       itineraryData.cleanupGaps();
+      segmentMetrics = fillSegmentMetrics();
       rebuildWays();
     }
     else if ("routePattern.itineraryReflect".equals(event.getActionCommand()))
@@ -1443,6 +1454,7 @@ public class RoutePatternAction extends JosmAction {
         itineraryTable.addRowSelectionInterval(startPos, insPos-1);
 
       itineraryData.cleanupGaps();
+      segmentMetrics = fillSegmentMetrics();
       rebuildWays();
     }
     else if ("routePattern.stoplistFind".equals(event.getActionCommand()))
@@ -1528,7 +1540,12 @@ public class RoutePatternAction extends JosmAction {
         RelationMember curMember = relIter.next();
         if ((curMember.isNode()) && (mainDataSet.isSelected(curMember.getNode())))
         {
-          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole());
+          StopReference sr = detectMinDistance
+              (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+          if (sr.index % 2 == 0)
+            offset += sr.pos;
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
           if (insPos >= 0)
             ++insPos;
 
@@ -1544,7 +1561,12 @@ public class RoutePatternAction extends JosmAction {
         Node curMember = nodeIter.next();
         if (!(addedNodes.contains(curMember)))
         {
-          stoplistData.insertRow(insPos, curMember, "");
+          StopReference sr = detectMinDistance
+              (curMember, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+          if (sr.index % 2 == 0)
+            offset += sr.pos;
+          stoplistData.insertRow(insPos, curMember, "", offset);
           if (insPos >= 0)
             ++insPos;
         }
@@ -1579,42 +1601,6 @@ public class RoutePatternAction extends JosmAction {
     {
       // Prepare Segments: The segments of all usable ways are arranged in a linear
       // list such that a coor can directly be checked concerning position and offset
-      Vector<SegmentMetric> segmentMetrics = new Vector<SegmentMetric>();
-      for (int i = 0; i < itineraryData.getRowCount(); ++i)
-      {
-        if (itineraryData.ways.elementAt(i) != null)
-        {
-          Way way = itineraryData.ways.elementAt(i);
-          if (!(way.isIncomplete()))
-          {
-            if ("backward".equals((String)(itineraryData.getValueAt(i, 1))))
-            {
-              for (int j = way.getNodesCount()-2; j >= 0; --j)
-              {
-            SegmentMetric sm = new SegmentMetric
-                (way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon(),
-                way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon());
-            segmentMetrics.add(sm);
-              }
-            }
-            else
-            {
-              for (int j = 0; j < way.getNodesCount()-1; ++j)
-              {
-            SegmentMetric sm = new SegmentMetric
-                (way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon(),
-                way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon());
-            segmentMetrics.add(sm);
-              }
-            }
-          }
-        }
-        else
-        {
-          segmentMetrics.add(null);
-        }
-      }
-
       Vector< StopReference > srm = new Vector< StopReference >();
       int insPos = stoplistTable.getSelectedRow();
       if (stoplistTable.getSelectedRowCount() > 0)
@@ -1685,7 +1671,12 @@ public class RoutePatternAction extends JosmAction {
 
       for (int i = 0; i < srm.size(); ++i)
       {
-        stoplistData.insertRow(insPos, srm.elementAt(i).node, srm.elementAt(i).role);
+        StopReference sr = detectMinDistance
+            (srm.elementAt(i).node, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+        if (sr.index % 2 == 0)
+          offset += sr.pos;
+        stoplistData.insertRow(insPos, srm.elementAt(i).node, srm.elementAt(i).role, offset);
         if (insPos >= 0)
           ++insPos;
       }
@@ -1694,7 +1685,8 @@ public class RoutePatternAction extends JosmAction {
     }
     else if ("routePattern.stoplistReflect".equals(event.getActionCommand()))
     {
-      Vector<RelationMember> itemsToReflect = new Vector<RelationMember>();
+      Vector< RelationMember > itemsToReflect = new Vector< RelationMember >();
+      Vector< Double > distancesToReflect = new Vector< Double >();
       int insPos = stoplistTable.getSelectedRow();
 
       if (stoplistTable.getSelectedRowCount() > 0)
@@ -1705,7 +1697,7 @@ public class RoutePatternAction extends JosmAction {
           {
             String role = (String)(stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN));
             RelationMember markedNode = new RelationMember
-            (role, stoplistData.nodes.elementAt(i));
+                (role, stoplistData.nodes.elementAt(i));
             itemsToReflect.addElement(markedNode);
 
             stoplistData.nodes.removeElementAt(i);
@@ -1733,7 +1725,12 @@ public class RoutePatternAction extends JosmAction {
         RelationMember curMember = relIter.next();
         if (curMember.isNode())
         {
-          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole());
+          StopReference sr = detectMinDistance
+              (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+          if (sr.index % 2 == 0)
+            offset += sr.pos;
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
           if (insPos >= 0)
             ++insPos;
         }
@@ -1747,42 +1744,6 @@ public class RoutePatternAction extends JosmAction {
     {
       // Prepare Segments: The segments of all usable ways are arranged in a linear
       // list such that a coor can directly be checked concerning position and offset
-      Vector<SegmentMetric> segmentMetrics = new Vector<SegmentMetric>();
-      for (int i = 0; i < itineraryData.getRowCount(); ++i)
-      {
-        if (itineraryData.ways.elementAt(i) != null)
-        {
-          Way way = itineraryData.ways.elementAt(i);
-          if (!(way.isIncomplete()))
-          {
-            if ("backward".equals((String)(itineraryData.getValueAt(i, 1))))
-            {
-              for (int j = way.getNodesCount()-2; j >= 0; --j)
-              {
-            SegmentMetric sm = new SegmentMetric
-                (way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon(),
-                way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon());
-            segmentMetrics.add(sm);
-              }
-            }
-            else
-            {
-              for (int j = 0; j < way.getNodesCount()-1; ++j)
-              {
-            SegmentMetric sm = new SegmentMetric
-                (way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon(),
-                way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon());
-            segmentMetrics.add(sm);
-              }
-            }
-          }
-        }
-        else
-        {
-          segmentMetrics.add(null);
-        }
-      }
-
       Vector< StopReference > srm = new Vector< StopReference >();
       // Determine for each member its position on the itinerary: position means here the
       // point on the itinerary that has minimal distance to the coor
@@ -1847,16 +1808,17 @@ public class RoutePatternAction extends JosmAction {
         tr("No data found"), JOptionPane.ERROR_MESSAGE);
       }
 
-      /*for (int i = 0; i < stoplistData.getRowCount(); ++i)
-      {
-      }*/
-
       Collections.sort(srm);
 
       stoplistData.clear();
       for (int i = 0; i < srm.size(); ++i)
       {
-        stoplistData.addRow(srm.elementAt(i).node, srm.elementAt(i).role);
+        StopReference sr = detectMinDistance
+            (srm.elementAt(i).node, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+        if (sr.index % 2 == 0)
+          offset += sr.pos;
+        stoplistData.addRow(srm.elementAt(i).node, srm.elementAt(i).role, offset);
       }
 
       rebuildNodes();
@@ -2141,6 +2103,7 @@ public class RoutePatternAction extends JosmAction {
       }
     }
     itineraryData.cleanupGaps();
+    segmentMetrics = fillSegmentMetrics();
   }
 
   private void fillStoplistTable
@@ -2150,16 +2113,70 @@ public class RoutePatternAction extends JosmAction {
       RelationMember curMember = relIter.next();
       if (curMember.isNode())
       {
-    stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole());
-    if (insPos >= 0)
-      ++insPos;
+        StopReference sr = detectMinDistance
+            (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
+        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+        System.out.print(sr.index);
+        System.out.print(" ");
+        System.out.print(offset);
+        System.out.print(" ");
+        System.out.println(sr.pos);
+        if (sr.index % 2 == 0)
+          offset += sr.pos;
+        stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
+        if (insPos >= 0)
+          ++insPos;
       }
     }
+  }
+
+  private Vector< SegmentMetric > fillSegmentMetrics()
+  {
+    Vector< SegmentMetric > segmentMetrics = new Vector< SegmentMetric >();
+    double distance = 0;
+    for (int i = 0; i < itineraryData.getRowCount(); ++i)
+    {
+      if (itineraryData.ways.elementAt(i) != null)
+      {
+        Way way = itineraryData.ways.elementAt(i);
+        if (!(way.isIncomplete()))
+        {
+          if ("backward".equals((String)(itineraryData.getValueAt(i, 1))))
+          {
+            for (int j = way.getNodesCount()-2; j >= 0; --j)
+            {
+              SegmentMetric sm = new SegmentMetric
+                  (way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon(),
+                  way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon(), distance);
+              segmentMetrics.add(sm);
+              distance += sm.length;
+            }
+          }
+          else
+          {
+            for (int j = 0; j < way.getNodesCount()-1; ++j)
+            {
+              SegmentMetric sm = new SegmentMetric
+                  (way.getNode(j).getCoor().lat(), way.getNode(j).getCoor().lon(),
+                  way.getNode(j+1).getCoor().lat(), way.getNode(j+1).getCoor().lon(), distance);
+              segmentMetrics.add(sm);
+              distance += sm.length;
+            }
+          }
+        }
+      }
+      else
+        segmentMetrics.add(null);
+    }
+    return segmentMetrics;
   }
 
   private StopReference detectMinDistance
       (Node node, Vector< SegmentMetric > segmentMetrics,
        boolean rhsPossible, boolean lhsPossible) {
+    if (node == null)
+      return null;
+
     int minIndex = -1;
     double position = -1.0;
     double distance = 180.0;

@@ -44,7 +44,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
     public LiveGpsDialog(final MapFrame mapFrame) {
         super(tr("Live GPS"), "livegps", tr("Show GPS data."),
         Shortcut.registerShortcut("subwindow:livegps", tr("Toggle: {0}", tr("Live GPS")),
-        KeyEvent.VK_G, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 100);
+        KeyEvent.VK_G, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), 100);
         panel = new JPanel();
         panel.setLayout(new GridLayout(6,2));
         panel.add(new JLabel(tr("Status")));

@@ -33,10 +33,11 @@ if __name__ == '__main__':
     FW = "FROM planet_point WHERE"
 
     pc_disc_maxstay = []
-    curs.execute("SELECT osm_id,"+latlon+",(tags->'espresso') as \"espresso\",amenity,name "+FW+" (tags @> 'espresso=>yes')")
+    curs.execute("SELECT osm_id,"+latlon+",(tags->'drink:espresso') as \"espresso\",amenity,name "+FW+" (tags ? 'drink:espresso')")
     pc_disc_maxstay += curs.fetchall()
 
     amenities={'shop':'Shop','cafe':'Cafè','restaurant':'Restaurant'}
+    espressotypes={'yes':'yes','served':'yes','retail':'no','no':'no'}
     for pc_dm in pc_disc_maxstay:
         amenity = pc_dm[4]
         if amenity==None:
@@ -47,7 +48,8 @@ if __name__ == '__main__':
             name='&lt;no name&gt;'
         id = str(pc_dm[0])
         description_html="{am} <a href='http://www.openstreetmap.org/browse/node/{id}'>{name}</a>".format(am=amenity,name=name,id=id)
-        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso',description_html,'espressoicons/espresso16.png','16,16','-8,-8'])
+        icon = 'espressoicons/espresso_'+espressotypes.get(pc_dm[3],'unkn')+'_16.png'
+        openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Espresso',description_html,icon,'16,16','-8,-8'])
 
     conn.rollback()
     sys.exit(0)

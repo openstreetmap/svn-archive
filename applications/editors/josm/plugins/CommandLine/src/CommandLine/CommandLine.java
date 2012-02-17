@@ -187,7 +187,7 @@ public class CommandLine extends Plugin {
 		};
 
 		if ( Main.main.menu != null ) {
-			commandMenu = Main.main.menu.addMenu(marktr("Commands") , KeyEvent.VK_C, Main.main.menu.defaultMenuPos, ht("/Plugin/CommandLine"));
+			commandMenu = Main.main.menu.addMenu(marktr("Commands") , KeyEvent.VK_M, Main.main.menu.defaultMenuPos, ht("/Plugin/CommandLine"));
 			MainMenu.add(Main.main.menu.toolsMenu, new CommandLineAction(this));
 		}
 		loadCommands();

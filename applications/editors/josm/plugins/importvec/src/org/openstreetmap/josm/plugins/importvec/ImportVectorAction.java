@@ -44,7 +44,7 @@ public class ImportVectorAction extends JosmAction {
 
     public ImportVectorAction() {
         super(tr("Import..."), "open", tr("Import vector graphics."),
-                Shortcut.registerShortcut("system:import", tr("File: {0}", tr("Import...")), KeyEvent.VK_I, Shortcut.GROUP_MENU), false);
+                Shortcut.registerShortcut("system:import", tr("File: {0}", tr("Import...")), KeyEvent.VK_I, Shortcut.GROUP_DIRECT+Shortcut.GROUPS_ALT1), false);
         // Avoid to override "open" toolbar function
         putValue("toolbar", "importvec");
         Main.toolbar.register(this);

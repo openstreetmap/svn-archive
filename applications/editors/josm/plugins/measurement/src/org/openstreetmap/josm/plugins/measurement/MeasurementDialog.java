@@ -66,7 +66,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
     {
         super(tr("Measured values"), "measure", tr("Open the measurement window."),
         Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
-        KeyEvent.VK_M, Shortcut.GROUP_LAYER), 150);
+        KeyEvent.VK_U, Shortcut.GROUP_DIRECT3), 150);
 
         resetButton = new SideButton(marktr("Reset"), "select", "Measurement",
                 tr("Reset current measurement results and delete measurement path."), this);

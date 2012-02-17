@@ -20,9 +20,7 @@ class ExtToolAction extends MapMode {
     protected ExtTool tool;
 
     public ExtToolAction(ExtTool tool) {
-        super(tr(tool.name), "empty", tool.description,
-                Shortcut.registerShortcut(tr("exttool:{0}", tool.name), tr("External Tool: {0}", tool.name),
-                        KeyEvent.VK_K, Shortcut.GROUP_NONE, KeyEvent.CTRL_DOWN_MASK),
+        super(tr(tool.name), "empty", tool.description, null
                 null,
                 ImageProvider.getCursor("crosshair", null));
         this.tool = tool;

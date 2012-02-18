@@ -33,6 +33,8 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -141,23 +143,41 @@ public class OsmarenderPlugin extends Plugin {
     }
 
     @Override public PreferenceSetting getPreferenceSetting() {
-        return new PreferenceSetting(){
-            private JTextField firefox = new JTextField(10);
-            public void addGui(PreferenceTabbedPane gui) {
-                final JPanel panel = new JPanel(new GridBagLayout());
-                panel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        return new OsmarenderPreferenceSetting();
+    }
 
-                panel.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
-                panel.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
-                panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
-                firefox.setText(Main.pref.get("osmarender.firefox"));
-                gui.mapcontent.addTab(tr("Osmarender"), panel);
-            }
-            public boolean ok() {
-                Main.pref.put("osmarender.firefox", firefox.getText());
-                return false;
-            }
-        };
+    private class OsmarenderPreferenceSetting implements SubPreferenceSetting {
+
+        private JTextField firefox = new JTextField(10);
+
+        @Override
+        public void addGui(PreferenceTabbedPane gui) {
+            final JPanel panel = new JPanel(new GridBagLayout());
+            panel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+
+            panel.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
+            panel.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+            panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
+            firefox.setText(Main.pref.get("osmarender.firefox"));
+            gui.getMapPreference().mapcontent.addTab(tr("Osmarender"), panel);
+        }
+
+        @Override
+        public boolean ok() {
+            Main.pref.put("osmarender.firefox", firefox.getText());
+            return false;
+        }
+
+        @Override
+        public boolean isExpert() {
+            return false;
+        }
+
+        @Override
+        public TabPreferenceSetting getTabPreferenceSetting(final PreferenceTabbedPane gui) {
+            return gui.getMapPreference();
+        }
+
     }
 
     private void writeGenerated(Bounds b) throws IOException {

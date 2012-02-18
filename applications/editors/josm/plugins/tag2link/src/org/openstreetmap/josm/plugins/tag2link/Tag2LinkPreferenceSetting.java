@@ -15,10 +15,16 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link;
 
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
-public class Tag2LinkPreferenceSetting implements PreferenceSetting, Tag2LinkConstants {
+public class Tag2LinkPreferenceSetting extends DefaultTabPreferenceSetting implements Tag2LinkConstants {
+
+    public Tag2LinkPreferenceSetting() {
+        super(ICON_48, tr("Tag2Link Preferences"), tr("Tag2Link Preferences"));
+    }
 
     @Override
     public void addGui(PreferenceTabbedPane gui) {

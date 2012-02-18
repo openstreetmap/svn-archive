@@ -54,13 +54,13 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 import com.innovant.josm.jrt.osm.OsmWayTypes;
 
-public class RoutingPreferenceDialog implements PreferenceSetting {
+public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
 
     /**
      * Logger
@@ -74,14 +74,13 @@ public class RoutingPreferenceDialog implements PreferenceSetting {
      * Constructor
      */
     public RoutingPreferenceDialog() {
-        super();
+        super("routing", tr("Routing Plugin Preferences"), tr("Configure routing preferences."));
         readPreferences();
     }
 
     public void addGui(final PreferenceTabbedPane gui) {
 
-        JPanel principal = gui.createPreferenceTab("routing",
-                tr("Routing Plugin Preferences"), tr("Configure routing preferences."));
+        JPanel principal = gui.createPreferenceTab(this);
 
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());

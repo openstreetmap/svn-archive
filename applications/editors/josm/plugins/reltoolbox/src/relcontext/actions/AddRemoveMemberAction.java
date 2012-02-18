@@ -33,7 +33,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
     public AddRemoveMemberAction( ChosenRelation rel ) {
         super(null, "relcontext/addremove", tr("Add/remove members from the chosen relation"),
                 Shortcut.registerShortcut("reltoolbox:addremove", tr("Relation Toolbox: {0}", tr("Add/remove members from the chosen relation")),
-                KeyEvent.VK_EQUALS, Shortcut.GROUP_EDIT), true);
+                KeyEvent.VK_EQUALS, Shortcut.DIRECT), true);
         this.rel = rel;
         rel.addChosenRelationListener(this);
         updateEnabledState();

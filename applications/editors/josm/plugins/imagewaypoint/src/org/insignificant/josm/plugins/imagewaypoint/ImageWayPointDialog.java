@@ -188,7 +188,7 @@ public final class ImageWayPointDialog {
         "imagewaypoint",
         tr("Display non-geotagged photos"),
         Shortcut.registerShortcut("subwindow:imagewaypoint", tr("Toggle: {0}", tr("WayPoint Image")),
-        KeyEvent.VK_Y, Shortcut.GROUP_LAYER+Shortcut.GROUPS_ALT1),
+        KeyEvent.VK_Y, Shortcut.ALT_SHIFT),
         200);
 
     this.previousAction = new PreviousAction(this);

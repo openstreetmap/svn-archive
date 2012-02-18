@@ -26,7 +26,7 @@ public class RelationEditMode extends MapMode {
 
     public RelationEditMode(MapFrame mapFrame) {
         super(tr("Edit relation"), "node/autonode", tr("Edit relations"),
-                Shortcut.registerShortcut("mapmode:editRelation", tr("Mode: {0}", tr("Edit relation")), KeyEvent.VK_H, Shortcut.GROUP_EDIT),
+                Shortcut.registerShortcut("mapmode:editRelation", tr("Mode: {0}", tr("Edit relation")), KeyEvent.VK_H, Shortcut.DIRECT),
                 mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 

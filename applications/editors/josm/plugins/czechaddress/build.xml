@@ -32,7 +32,7 @@
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
             <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/CS:JOSM/Plugins/CzechAddress"/>
             <attribute name="Plugin-Icon" value="images/preferences/czech_flag.png"/>
-            <attribute name="Plugin-Mainversion" value="4928"/>
+            <attribute name="Plugin-Mainversion" value="4980"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
     </target>

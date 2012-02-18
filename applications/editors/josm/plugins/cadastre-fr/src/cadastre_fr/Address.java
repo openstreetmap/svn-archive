@@ -94,7 +94,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     public Address(MapFrame mapFrame) {
         super(tr("Add address"), "buildings", 
                 tr("Helping tool for tag address"),
-                Shortcut.registerShortcut("mapmode:buildings", tr("Mode: {0}", tr("Buildings")), KeyEvent.VK_E, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1),
+                Shortcut.registerShortcut("mapmode:buildings", tr("Mode: {0}", tr("Buildings")), KeyEvent.VK_E, Shortcut.ALT_CTRL_SHIFT),
                 mapFrame, getCursor());
     }
 

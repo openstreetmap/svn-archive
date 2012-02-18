@@ -28,7 +28,7 @@ public class FindRelationAction extends JosmAction {
     public FindRelationAction( ChosenRelation chRel ) {
         super("Find", "relcontext/find", tr("Find a relation"),
                 Shortcut.registerShortcut("reltoolbox:find", tr("Relation Toolbox: {0}", tr("Find a relation")),
-                KeyEvent.VK_F, Shortcut.GROUP_HOTKEY+Shortcut.GROUPS_ALT2), true);
+                KeyEvent.VK_F, Shortcut.ALT_CTRL), true);
         this.chRel = chRel;
     }
 

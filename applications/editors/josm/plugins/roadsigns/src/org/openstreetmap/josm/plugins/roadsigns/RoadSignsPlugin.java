@@ -51,7 +51,7 @@ public class RoadSignsPlugin extends Plugin {
     private static class RoadSignAction extends JosmAction {
         public RoadSignAction() {
             super(tr("Roadsign tagging"), "pref/roadsigns-small", tr("Add tags by clicking on road signs"),
-                    Shortcut.registerShortcut("plugin:roadsigns:dialog", tr("Roadsigns plugin: open dialog"), KeyEvent.VK_R, Shortcut.GROUP_LAYER), false);
+                    Shortcut.registerShortcut("plugin:roadsigns:dialog", tr("Roadsigns plugin: open dialog"), KeyEvent.VK_R, Shortcut.ALT), false);
         }
 
         public void actionPerformed(ActionEvent e) {

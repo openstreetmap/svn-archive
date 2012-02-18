@@ -27,7 +27,7 @@ public class GroupManipulatorAction extends JosmAction {
               "Přiřadit adresy v celé stáhnuté oblasti",
               Shortcut.registerShortcut("address:assignaddress",
                         "Adresy: Přiřadit adresy",
-                        KeyEvent.VK_P, Shortcut.GROUP_DIRECT, Shortcut.SHIFT_DEFAULT),
+                        KeyEvent.VK_P, Shortcut.SHIFT),
               true);
     }
 

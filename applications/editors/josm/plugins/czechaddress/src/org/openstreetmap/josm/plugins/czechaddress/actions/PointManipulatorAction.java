@@ -29,7 +29,7 @@ public class PointManipulatorAction extends JosmAction {
               "Vytvoří nebo upraví adresní bod z čísla popisného.",
                 Shortcut.registerShortcut("tools:newaddress",
                         "Adresy: Vytvořit/upravit adres",
-                        KeyEvent.VK_W, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1),
+                        KeyEvent.VK_W, Shortcut.ALT_CTRL_SHIFT),
                 true);
     }
 

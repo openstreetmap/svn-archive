@@ -28,7 +28,7 @@ public class SelectAllInsideAction extends JosmAction {
     public SelectAllInsideAction() {
         super(tr("All inside [testing]"), "selinside", tr("Select all inside selected polygons"),
                 Shortcut.registerShortcut("tools:selinside", tr("Tool: {0}","All inside"),
-                KeyEvent.VK_I, Shortcut.GROUPS_ALT1+Shortcut.GROUP_DIRECT2), true);
+                KeyEvent.VK_I, Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/SelectAllInside"));
     }
 

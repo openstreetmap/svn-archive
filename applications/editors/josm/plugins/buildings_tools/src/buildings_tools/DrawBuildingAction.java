@@ -66,7 +66,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         super(tr("Draw buildings"), "building", tr("Draw buildings"),
                 Shortcut.registerShortcut("mapmode:buildings",
                         tr("Mode: {0}", tr("Draw buildings")),
-                        KeyEvent.VK_B, Shortcut.GROUP_EDIT),
+                        KeyEvent.VK_B, Shortcut.DIRECT),
                 mapFrame, getCursor());
 
         cursorCrosshair = getCursor();

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  * @author Pieren <pieren3@gmail.com>
  */
-public class CadastrePreferenceSetting implements PreferenceSetting {
+public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     static final int TRANS_MIN = 1;
     static final int TRANS_MAX = 10;
@@ -90,14 +90,19 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     static final int DEFAULT_CROSSPIECES = 0;
 
-    public void addGui(final PreferenceTabbedPane gui) {
-
-        String description = tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
+    public CadastrePreferenceSetting() {
+        super("cadastrewms.gif", I18n.tr("French cadastre WMS"),
+            tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
                 + "Please read the Terms and Conditions of Use here (in French): <br>"
                 + "<a href=\"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html\"> "
                 + "http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html</a> <BR>"
-                + "before any upload of data created by this plugin.");
-        JPanel cadastrewmsMast = gui.createPreferenceTab("cadastrewms.gif", I18n.tr("French cadastre WMS"), description);
+                + "before any upload of data created by this plugin.")
+        );
+    }
+
+
+    public void addGui(final PreferenceTabbedPane gui) {
+        JPanel cadastrewmsMast = gui.createPreferenceTab(this);
 
         JPanel cadastrewms = new JPanel(new GridBagLayout());
         cadastrewms.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));

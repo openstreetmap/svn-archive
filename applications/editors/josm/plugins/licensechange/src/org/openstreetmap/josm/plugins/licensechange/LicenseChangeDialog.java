@@ -75,7 +75,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     {
         super(tr("Relicensing problems"), "licensechange", tr("Open the relicensing window."),
                 Shortcut.registerShortcut("subwindow:licensechange", tr("Toggle: {0}", tr("Relicensing problems")),
-                        KeyEvent.VK_L, Shortcut.GROUP_DIRECT2+Shortcut.GROUPS_ALT2), 150);
+                        KeyEvent.VK_L, Shortcut.ALT_CTRL), 150);
 
         this.plugin = plugin;
         popupMenu = new JPopupMenu();

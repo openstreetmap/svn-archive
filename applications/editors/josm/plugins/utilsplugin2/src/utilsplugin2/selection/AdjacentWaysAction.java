@@ -25,7 +25,7 @@ public class AdjacentWaysAction extends JosmAction {
         super(tr("Adjacent ways"), "adjways",
                 tr("Adjacent ways will be selected. Nodes will be deselected."),
                 Shortcut.registerShortcut("tools:adjways", tr("Tool: {0}","Adjacent ways"),
-                KeyEvent.VK_E, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
+                KeyEvent.VK_E, Shortcut.SHIFT), true);
         putValue("help", ht("/Action/AdjacentWays"));
     }
 

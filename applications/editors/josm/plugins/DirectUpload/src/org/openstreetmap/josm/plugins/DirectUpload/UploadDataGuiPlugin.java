@@ -36,7 +36,7 @@ public class UploadDataGuiPlugin extends Plugin {
         public UploadAction(){
             super(tr("Upload Traces"), "UploadAction", tr("Uploads traces to openstreetmap.org"),
                 Shortcut.registerShortcut("tools:uploadtraces", tr("Tool: {0}", tr("Upload Traces")),
-                KeyEvent.VK_G, Shortcut.GROUP_MENU), false);
+                KeyEvent.VK_G, Shortcut.CTRL), false);
         }
         
         public void actionPerformed(ActionEvent e) {

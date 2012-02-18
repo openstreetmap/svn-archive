@@ -37,7 +37,7 @@ public class CheckAction extends JosmAction
     public CheckAction(LicenseChangePlugin plugin) 
     {
         super(tr("License Check"), "licensechange", tr("Performs the license check"),
-        Shortcut.registerShortcut("tools:licensechange", tr("Tool: {0}", tr("License Check")), KeyEvent.VK_C, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
+        Shortcut.registerShortcut("tools:licensechange", tr("Tool: {0}", tr("License Check")), KeyEvent.VK_C, Shortcut.ALT_CTRL_SHIFT), true);
         this.plugin = plugin;
     }
 

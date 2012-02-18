@@ -42,7 +42,7 @@ public class UnGlueRelationAction extends JosmAction {
      */
     public UnGlueRelationAction() {
         super(tr("UnGlue Relation"), "ungluerelations", tr("Duplicate nodes, ways and relations that are used by multiple relations."),
-              Shortcut.registerShortcut("tools:ungluerelation", tr("Tool: {0}", tr("UnGlue Relations")), KeyEvent.VK_G, Shortcut.GROUPS_ALT1+Shortcut.GROUP_DIRECT2 ), true);
+              Shortcut.registerShortcut("tools:ungluerelation", tr("Tool: {0}", tr("UnGlue Relations")), KeyEvent.VK_G, Shortcut.ALT_SHIFT ), true);
         putValue("help", ht("/Action/UnGlueRelation"));
     }
 

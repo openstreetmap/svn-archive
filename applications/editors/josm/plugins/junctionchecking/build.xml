@@ -26,7 +26,7 @@
 -->
 <project name="junctionchecking" default="dist" basedir=".">
     <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
-    <property name="plugin.main.version" value="4928"/>
+    <property name="plugin.main.version" value="4980"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.src.dir" value="src"/>

@@ -28,7 +28,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class AddIntersectionsAction extends JosmAction {
     public AddIntersectionsAction() {
         super(tr("Add nodes at intersections"), "addintersect", tr("Add missing nodes at intersections of selected ways."),
-                Shortcut.registerShortcut("tools:addintersect", tr("Tool: {0}", tr("Add nodes at intersections")), KeyEvent.VK_N, Shortcut.GROUPS_ALT1+Shortcut.GROUP_DIRECT3), true);
+                Shortcut.registerShortcut("tools:addintersect", tr("Tool: {0}", tr("Add nodes at intersections")), KeyEvent.VK_N, Shortcut.ALT_CTRL_SHIFT), true);
         putValue("help", ht("/Action/AddIntersections"));
     }
 

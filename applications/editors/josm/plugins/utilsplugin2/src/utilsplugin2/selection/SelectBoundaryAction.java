@@ -35,7 +35,7 @@ public class SelectBoundaryAction extends JosmAction {
     public SelectBoundaryAction() {
         super(tr("Area boundary [testing]"), "selboundary", tr("Select relation or all ways that forms area boundary"),
                 Shortcut.registerShortcut("tools:selboundary", tr("Tool: {0}","Area boundary [testing]"),
-                KeyEvent.VK_SLASH, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
+                KeyEvent.VK_SLASH, Shortcut.SHIFT), true);
         putValue("help", ht("/Action/SelectAreaBoundary"));
     }
 

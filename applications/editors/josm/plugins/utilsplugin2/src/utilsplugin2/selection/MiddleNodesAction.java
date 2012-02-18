@@ -26,7 +26,7 @@ public class MiddleNodesAction extends JosmAction {
     public MiddleNodesAction() {
         super(tr("Middle nodes"), "midnodes", tr("Select middle nodes"),
                 Shortcut.registerShortcut("tools:midnodes", tr("Tool: {0}","Middle nodes"),
-                KeyEvent.VK_E,  Shortcut.GROUPS_ALT1+Shortcut.GROUP_DIRECT2), true);
+                KeyEvent.VK_E,  Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/MiddleNodes"));
     }
 

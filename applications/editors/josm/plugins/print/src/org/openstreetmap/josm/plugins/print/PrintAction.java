@@ -46,7 +46,7 @@ public class PrintAction extends JosmAction implements Runnable {
     public PrintAction() {
         super(tr("Print..."), null, tr("Print the map"), 
         Shortcut.registerShortcut("print:print", tr("File: {0}", tr("Print...")), 
-	KeyEvent.VK_P, Shortcut.GROUP_MENU),
+	KeyEvent.VK_P, Shortcut.CTRL),
         true, "print/print", true);
     }
 

@@ -35,7 +35,7 @@ public final class OpenPageAction extends JosmAction {
         super(tr("Open custom URL"), "openurl",
                 tr("Opens specified URL browser"),
                 Shortcut.registerShortcut("tools:openurl", tr("Tool: {0}", tr("Open custom URL")),
-                KeyEvent.VK_H, Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
+                KeyEvent.VK_H, Shortcut.SHIFT), true);
         putValue("help", ht("/Action/OpenPage"));
     }
 

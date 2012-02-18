@@ -30,7 +30,7 @@ public class CurveAction extends JosmAction {
     public CurveAction() {
         super(tr("Circle arc"), "circlearc", tr("Create a circle arc"),
                 Shortcut.registerShortcut("tools:createcurve", tr("Tool: {0}", tr("Create a circle arc")), KeyEvent.VK_C,
-                        Shortcut.GROUPS_ALT1+Shortcut.GROUP_EDIT), true);
+                        Shortcut.SHIFT), true);
         putValue("help", ht("/Action/CreateCircleArc"));
         updatePreferences();
     }

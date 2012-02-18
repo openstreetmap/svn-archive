@@ -58,7 +58,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
     InfoMode(MapFrame mapFrame) {
         super(tr("InfoMode"), "infomode.png", tr("GPX info mode"), 
-		Shortcut.registerShortcut("mapmode:infomode", tr("Mode: {0}", tr("GPX info mode")), KeyEvent.VK_BACK_SLASH, Shortcut.GROUP_EDIT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		Shortcut.registerShortcut("mapmode:infomode", tr("Mode: {0}", tr("GPX info mode")), KeyEvent.VK_BACK_SLASH, Shortcut.DIRECT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         infoPanel=new InfoPanel();
         
     }

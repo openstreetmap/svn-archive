@@ -40,7 +40,7 @@ public class CommandLineAction extends JosmAction {
 	
 	public CommandLineAction(CommandLine parentPlugin) {
 		super(tr("Command line"), "blankmenu", tr("Set input focus to the command line."),
-		Shortcut.registerShortcut("edit:simplifyArea", tr("Tool: {0}", tr("Command line")), KeyEvent.VK_ENTER, Shortcut.GROUP_DIRECT), true);
+		Shortcut.registerShortcut("edit:simplifyArea", tr("Tool: {0}", tr("Command line")), KeyEvent.VK_ENTER, Shortcut.DIRECT), true);
 		this.parentPlugin = parentPlugin;
 	}
 

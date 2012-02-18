@@ -70,7 +70,7 @@ public final class TerracerAction extends JosmAction {
                 tr("Creates individual buildings from a long building."),
                 Shortcut.registerShortcut("tools:Terracer", tr("Tool: {0}",
                         tr("Terrace a building")), KeyEvent.VK_T,
-                        Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1), true);
+                        Shortcut.SHIFT), true);
     }
 
     /**

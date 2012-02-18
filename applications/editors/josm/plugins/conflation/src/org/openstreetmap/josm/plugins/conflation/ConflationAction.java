@@ -20,7 +20,7 @@ public class ConflationAction extends JosmAction {
     public ConflationAction() {
         super(tr("Conflation"), "conflation", tr("Conflation tool for merging data"),
                 Shortcut.registerShortcut("tool:conflation", tr("Tool: {0}", tr("Conflation")),
-                KeyEvent.VK_A, Shortcut.GROUP_MENU+Shortcut.GROUPS_ALT1), true);
+                KeyEvent.VK_A, Shortcut.CTRL_SHIFT), true);
         //setEnabled(false);
         //DataSet.selListeners.add(this);
 

@@ -24,7 +24,7 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
     public IntersectedWaysRecursiveAction() {
         super(tr("All intersecting ways"), "intwayall", tr("Select all intersecting ways"),
                 Shortcut.registerShortcut("tools:intwayall", tr("Tool: {0}","All intersecting ways"),
-                KeyEvent.VK_MULTIPLY, Shortcut.GROUP_MENU), true);
+                KeyEvent.VK_MULTIPLY, Shortcut.CTRL), true);
         putValue("help", ht("/Action/SelectAllIntersectingWays"));
 
     }

@@ -2,7 +2,7 @@
 <project name="mapdust" default="dist" basedir=".">
     <!-- properties -->
     <property name="commit.message" value="MapDust bug reporter plugin"/>
-    <property name="plugin.main.version" value="4928"/>
+    <property name="plugin.main.version" value="4980"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.build.dir" value="build/classes"/>
     <property name="apidoc.dir" value="build/doc"/>

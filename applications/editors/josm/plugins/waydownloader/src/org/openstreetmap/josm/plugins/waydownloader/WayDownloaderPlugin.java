@@ -56,7 +56,7 @@ public class WayDownloaderPlugin extends Plugin {
             super( tr("Way Download") ,
                     "way-download",
                     tr("Download map data on the end of selected way"),
-                    Shortcut.registerShortcut("waydownloader:waydownload", tr("Way Download"), KeyEvent.VK_W, Shortcut.GROUP_MENU+Shortcut.GROUPS_ALT1),
+                    Shortcut.registerShortcut("waydownloader:waydownload", tr("Way Download"), KeyEvent.VK_W, Shortcut.CTRL_SHIFT),
                     true);
         }
 

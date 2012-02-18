@@ -26,7 +26,7 @@ public class ConflictResolveAction extends JosmAction {
                   "objektů mapy k objektům v databázi.",
               Shortcut.registerShortcut("address:resolveconflict",
                         "Adresy: Zobrazit konflikty",
-                        KeyEvent.VK_R, Shortcut.GROUP_NONE, Shortcut.SHIFT_DEFAULT),
+                        KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
               true);
     }
 

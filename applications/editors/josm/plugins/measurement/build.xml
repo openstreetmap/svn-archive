@@ -26,7 +26,7 @@
 -->
 <project name="measurement" default="dist" basedir=".">
     <property name="commit.message" value="recompile dure to core change"/>
-    <property name="plugin.main.version" value="4928"/>
+    <property name="plugin.main.version" value="4980"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>

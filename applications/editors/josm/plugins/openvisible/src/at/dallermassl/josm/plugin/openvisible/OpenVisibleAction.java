@@ -48,7 +48,7 @@ public class OpenVisibleAction extends JosmAction {
         super(tr("Open Visible..."), "openvisible",
         tr("Open only files that are visible in current view."),
         Shortcut.registerShortcut("tools:openvisible", tr("Menu: {0}", tr("Open Visible...")),
-        KeyEvent.VK_I, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1), true);
+        KeyEvent.VK_I, Shortcut.ALT_CTRL_SHIFT), true);
     }
 
     /* (non-Javadoc)

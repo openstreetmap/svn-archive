@@ -32,9 +32,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
 
     public CreateGridOfWaysAction() {
         super(tr("Create grid of ways"), "creategridofways", tr("Forms a grid of ways in base to two existing that have various nodes and one in common"), Shortcut.registerShortcut("tools:CreateGridOfWays", tr("Tool: {0}", tr("Create grid of ways")),
-        KeyEvent.VK_G, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1), true);
-/* en mis otras pruebas esto terminaba : Shortcut.GROUP_EDIT), true);
-/* le puse tecla G de shortcut pero parece que esta usado por tools:unglue , buscar otro */
+        KeyEvent.VK_G, Shortcut.SHIFT), true);
     }
 
     /**

@@ -41,7 +41,7 @@ class TracerAction extends MapMode implements MouseListener {
     protected TracerServer server = new TracerServer();
 
     public TracerAction(MapFrame mapFrame) {
-        super(tr("Tracer"), "tracer-sml", tr("Tracer."), Shortcut.registerShortcut("tools:tracer", tr("Tool: {0}", tr("Tracer")), KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, getCursor());
+        super(tr("Tracer"), "tracer-sml", tr("Tracer."), Shortcut.registerShortcut("tools:tracer", tr("Tool: {0}", tr("Tracer")), KeyEvent.VK_T, Shortcut.DIRECT), mapFrame, getCursor());
     }
 
     @Override

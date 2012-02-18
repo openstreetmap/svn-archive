@@ -25,7 +25,7 @@ public class MenuActionGrab extends JosmAction {
     public MenuActionGrab() {
         super(tr(name), "cadastre_small", tr("Download Image from French Cadastre WMS"),
                 Shortcut.registerShortcut("cadastre:grab", tr("Cadastre: {0}", tr("Download Image from French Cadastre WMS")),
-                KeyEvent.VK_F10, Shortcut.GROUP_DIRECT), false);
+                KeyEvent.VK_F10, Shortcut.DIRECT), false);
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -44,7 +44,7 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
         super(tr(name), "alignways.png", tr(desc),
                 Shortcut.registerShortcut("mapmode:alignways",
                         tr("Mode: {0}", tr("Align Ways")),
-                        KeyEvent.VK_N, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT1),
+                        KeyEvent.VK_N, Shortcut.SHIFT),
                         mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         noneSelected = new AlignWaysSelNoneState();
         referenceSelected = new AlignWaysSelRefState();

@@ -16,7 +16,7 @@ public class ExportSigsAction extends DiskAccessAction {
 
 	public ExportSigsAction() {
 		super(tr("Export sigs..."), "exportsigs", tr("Export all signatures to XML file."),
-				Shortcut.registerShortcut("file:exportsigs", tr("Export sigs to XML..."), KeyEvent.VK_X, Shortcut.GROUPS_ALT2+Shortcut.GROUP_MENU));
+				Shortcut.registerShortcut("file:exportsigs", tr("Export sigs to XML..."), KeyEvent.VK_X, Shortcut.ALT_CTRL));
 	}
 
 	public ExportSigsAction(String name, String iconName, String tooltip, Shortcut shortcut) {

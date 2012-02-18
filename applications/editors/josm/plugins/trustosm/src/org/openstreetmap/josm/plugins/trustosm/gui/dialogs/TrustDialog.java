@@ -186,7 +186,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 	public TrustDialog() {
 		super(tr("Object signatures"), "trustosm", tr("Open object signing window."),
 				Shortcut.registerShortcut("subwindow:trustosm", tr("Toggle: {0}", tr("Object signatures")),
-						KeyEvent.VK_T, Shortcut.GROUPS_ALT2+Shortcut.GROUP_DIRECT2), 150);
+						KeyEvent.VK_T, Shortcut.ALT_CTRL), 150);
 
 		Main.map.mapView.addTemporaryLayer(this);
 

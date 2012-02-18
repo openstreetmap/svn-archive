@@ -39,7 +39,7 @@ public class FactoryAction extends MapMode {
               "Vytváří adresní body jedním kliknutím",
               Shortcut.registerShortcut( "mapmode:clickaddress",
                   "Sputit továrnu na adresy",
-                  KeyEvent.VK_K, Shortcut.GROUP_EDIT+Shortcut.GROUPS_ALT2),
+                  KeyEvent.VK_K, Shortcut.ALT_SHIFT),
               frame,
               ImageProvider.getCursor("crosshair", "envelope-star-small"));
     }

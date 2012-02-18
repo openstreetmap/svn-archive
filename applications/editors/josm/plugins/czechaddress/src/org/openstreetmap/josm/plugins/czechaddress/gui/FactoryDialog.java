@@ -61,7 +61,7 @@ public class FactoryDialog extends ToggleDialog
                "envelope-scrollbar.png",
                "Umožňuje rychlé vytváření adresních bodů „jedním kliknutím.“",
                 Shortcut.registerShortcut("subwindow:addressfactory","Přepnout: Továrna na adresy",
-                    KeyEvent.VK_T, Shortcut.GROUP_LAYER),
+                    KeyEvent.VK_T, Shortcut.ALT),
                 200);
 
         // Hack the ToggleDialog to allow using NetBeans form editor

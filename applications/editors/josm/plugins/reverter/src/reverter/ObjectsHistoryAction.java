@@ -15,7 +15,7 @@ public class ObjectsHistoryAction extends JosmAction {
         super(tr("Objects history"),null,tr("History reverter"),
             Shortcut.registerShortcut("tool:history",
                 "Tool: Display objects history dialog",
-                KeyEvent.VK_H, Shortcut.GROUP_DIRECT3+Shortcut.GROUPS_ALT1),
+                KeyEvent.VK_H, Shortcut.ALT_CTRL_SHIFT),
                 true);
         setEnabled(false);
     }

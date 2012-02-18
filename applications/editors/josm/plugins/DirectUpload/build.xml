@@ -26,7 +26,7 @@
 -->
 <project name="DirectUpload" default="dist" basedir=".">
     <property name="commit.message" value="applied JOSM Ticket 4498 (patch by ax) - oauth support for gpx upload (I accidentally committed parts of the path in [24236])"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="4980"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>

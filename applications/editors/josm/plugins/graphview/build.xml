@@ -26,7 +26,7 @@
 -->
 <project name="graphview" default="dist" basedir=".">
     <property name="commit.message" value="option to change graph colors; closes ticket 5523 in JOSM Trac"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="4968"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.src.dir" value="src"/>

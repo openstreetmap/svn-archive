@@ -27,13 +27,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.ColorPreference;
+import org.openstreetmap.josm.gui.preferences.display.ColorPreference;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.tools.GBC;
 
-public class ColorSchemePreference implements PreferenceSetting {
+public class ColorSchemePreference implements SubPreferenceSetting {
     private static final String PREF_KEY_SCHEMES_PREFIX = "colorschemes.";
     private static final String PREF_KEY_SCHEMES_NAMES = PREF_KEY_SCHEMES_PREFIX + "names";
     public static final String PREF_KEY_COLOR_PREFIX = "color.";
@@ -52,6 +54,7 @@ public class ColorSchemePreference implements PreferenceSetting {
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#addGui(org.openstreetmap.josm.gui.preferences.PreferenceDialog)
      */
+    @Override
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -124,7 +127,12 @@ public class ColorSchemePreference implements PreferenceSetting {
 
         JScrollPane scrollpane = new JScrollPane(panel);
         scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
-        gui.displaycontent.addTab(tr("Color Schemes"), scrollpane);
+        gui.getDisplayPreference().displaycontent.addTab(tr("Color Schemes"), scrollpane);
+    }
+
+    @Override
+    public TabPreferenceSetting getTabPreferenceSetting(final PreferenceTabbedPane gui) {
+        return gui.getDisplayPreference();
     }
 
     /**
@@ -140,8 +148,14 @@ public class ColorSchemePreference implements PreferenceSetting {
             Main.pref.put(PREF_KEY_SCHEMES_NAMES, null);
     }
 
+    @Override
     public boolean ok() {
         return false;// nothing to do
+    }
+
+    @Override
+    public boolean isExpert() {
+        return false;
     }
 
     /**

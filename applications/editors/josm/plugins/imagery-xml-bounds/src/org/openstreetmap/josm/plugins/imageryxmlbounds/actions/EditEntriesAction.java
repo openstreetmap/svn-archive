@@ -29,7 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
-import org.openstreetmap.josm.gui.preferences.ImageryPreference.ImageryProvidersPanel.ImageryDefaultLayerTableModel;
+import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryProvidersPanel.ImageryDefaultLayerTableModel;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.data.XmlBoundsConverter;
@@ -38,12 +38,12 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.data.XmlBoundsConverter;
 public class EditEntriesAction extends JosmAction implements XmlBoundsConstants, ListSelectionListener {
 
 	protected static final String ACTION_NAME = tr("Edit");
-	
+
 	private final JTable defaultTable;
 	private final ImageryDefaultLayerTableModel defaultModel;
-	
+
 	private final List<ImageryInfo> entries;
-	
+
 	public EditEntriesAction(JTable defaultTable, ImageryDefaultLayerTableModel defaultModel) {
         putValue(SHORT_DESCRIPTION, tr("edit bounds for selected defaults"));
         putValue(NAME, ACTION_NAME);
@@ -58,7 +58,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
         this.entries = new ArrayList<ImageryInfo>();
     	setEnabled(false);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final XmlBoundsLayer layer = new XmlBoundsLayer(
@@ -82,7 +82,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
 		if (!e.getValueIsAdjusting()) {
 			entries.clear();
 			for (int row : defaultTable.getSelectedRows()) {
-				ImageryInfo info = defaultModel.getRow(row); 
+				ImageryInfo info = defaultModel.getRow(row);
 				if (info != null && info.getBounds() != null) {
 					entries.add(info);
 				}

@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 
-public class LakewalkerPreferences implements PreferenceSetting {
+public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
     public static final String[] DIRECTIONS = new String[]
     {marktr("east"), marktr("northeast"), marktr("north"), marktr("northwest"),
     marktr("west"), marktr("southwest"), marktr("south"), marktr("southeast")};
@@ -67,6 +67,10 @@ public class LakewalkerPreferences implements PreferenceSetting {
     protected StringConfigurer sourceConfig = new StringConfigurer();
     protected JLabel sourceLabel = new JLabel(tr("Source text"));
 
+    public LakewalkerPreferences() {
+        super("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), tr("A plugin to trace water bodies on Landsat imagery."));
+    }
+
     public void addGui(PreferenceTabbedPane gui) {
         maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
         maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
@@ -84,7 +88,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
         sourceConfig.setToolTipText(tr("Data source text. Default is Landsat."));
 
         String description = tr("A plugin to trace water bodies on Landsat imagery.");
-        JPanel prefPanel = gui.createPreferenceTab("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), description);
+        JPanel prefPanel = gui.createPreferenceTab(this);
         buildPreferences(prefPanel);
 
         maxSegsConfig.setValue(Main.pref.getInteger(PREF_MAX_SEG, 500));

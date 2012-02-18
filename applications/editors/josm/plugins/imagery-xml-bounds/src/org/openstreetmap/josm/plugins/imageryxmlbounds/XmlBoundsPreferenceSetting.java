@@ -17,34 +17,39 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
 import javax.swing.JButton;
 
-import org.openstreetmap.josm.gui.preferences.ImageryPreference;
-import org.openstreetmap.josm.gui.preferences.ImageryPreference.ImageryProvidersPanel;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference;
+import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryProvidersPanel;
+import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.EditEntriesAction;
 
 /**
- * 
+ *
  * @author Don-vip
  *
  */
-public class XmlBoundsPreferenceSetting implements PreferenceSetting {
+public class XmlBoundsPreferenceSetting implements SubPreferenceSetting {
 
-	@Override
-	public void addGui(PreferenceTabbedPane gui) {
-		for (PreferenceSetting ps : gui.getSettings()) {
-			if (ps instanceof ImageryPreference) {
-				ImageryProvidersPanel ipp = ((ImageryPreference) ps).getProvidersPanel();
-				EditEntriesAction action = new EditEntriesAction(ipp.defaultTable, ipp.defaultModel);
-				ipp.middleToolbar.add(new JButton(action));
-				// TODO
-				break;
-			}
-		}
-	}
+    @Override
+    public void addGui(PreferenceTabbedPane gui) {
+        ImageryProvidersPanel ipp = gui.getImageryPreference().getProvidersPanel();
+        EditEntriesAction action = new EditEntriesAction(ipp.defaultTable, ipp.defaultModel);
+        ipp.middleToolbar.add(new JButton(action));
+    }
 
-	@Override
-	public boolean ok() {
-		return false;
-	}
+    @Override
+    public boolean ok() {
+        return false;
+    }
+
+    @Override
+    public boolean isExpert() {
+        return false;
+    }
+
+    public TabPreferenceSetting getTabPreferenceSetting(final PreferenceTabbedPane gui) {
+        return gui.getImageryPreference();
+    }
+
 }

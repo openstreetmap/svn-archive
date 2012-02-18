@@ -4,13 +4,15 @@ package org.openstreetmap.josm.plugins.czechaddress;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 /**
  *
  * @author radek
  */
-public class Preferences extends javax.swing.JPanel implements PreferenceSetting {
+public class Preferences extends DefaultTabPreferenceSetting {
+
+    public JPanel thisPanel;
 
     public int optimize;
 
@@ -37,6 +39,10 @@ public class Preferences extends javax.swing.JPanel implements PreferenceSetting
 
     /** Creates new form Preferences */
     private Preferences() {
+        super("czech_flag",
+                "Nastavení CzechAddressPlugin",
+                "Nastavení pluginu pro úpravu a zadávání adres na území ČR.");
+        thisPanel = new JPanel();
         initComponents();
         addBuildingTag = Main.pref.getBoolean(KEY_BUILDINGTAG,    buildingCheckBox.isSelected());
         addNewTag      = Main.pref.getBoolean(KEY_ADDNEWTAG,      addNewTagCheckBox.isSelected());
@@ -72,7 +78,7 @@ public class Preferences extends javax.swing.JPanel implements PreferenceSetting
         optimizeComboBox = new javax.swing.JComboBox();
         buildingCheckBox = new javax.swing.JCheckBox();
 
-        setLayout(new java.awt.GridLayout(1, 0));
+        thisPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         addNewTagCheckBox.setText("Novým primitivám přidávat tag:");
         addNewTagCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -152,7 +158,7 @@ public class Preferences extends javax.swing.JPanel implements PreferenceSetting
                 .addContainerGap(155, Short.MAX_VALUE))
         );
 
-        add(mainPanel);
+        thisPanel.add(mainPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void addNewTagChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_addNewTagChanged
@@ -173,9 +179,7 @@ public class Preferences extends javax.swing.JPanel implements PreferenceSetting
     }//GEN-LAST:event_buildingCheckBoxActionPerformed
 
     public void addGui(PreferenceTabbedPane gui) {
-        JPanel p = gui.createPreferenceTab("czech_flag",
-                "Nastavení CzechAddressPlugin",
-                "Nastavení pluginu pro úpravu a zadávání adres na území ČR.");
+        JPanel p = gui.createPreferenceTab(this);
         p.add(mainPanel);
         reloadSettings();
     }

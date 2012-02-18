@@ -35,7 +35,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.graphview.plugin.dialogs.AccessParameterDialog.BookmarkAction;
 import org.openstreetmap.josm.plugins.graphview.plugin.layer.GraphViewLayer;
@@ -44,7 +44,7 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPref
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.PreferenceAccessParameters;
 import org.openstreetmap.josm.tools.GBC;
 
-public class GraphViewPreferenceEditor implements PreferenceSetting {
+public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
 
     private File rulesetFolder;
     private Map<String, PreferenceAccessParameters> parameterBookmarks;
@@ -70,12 +70,16 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     private JSlider arrowheadPlacementSlider;
     private JPanel arrowPreviewPanel;
 
+    public GraphViewPreferenceEditor() {
+        super("graphview", tr("Graphview"),
+                tr("Settings for the Graphview plugin that visualizes routing graphs."));
+    }
+
     public void addGui(PreferenceTabbedPane gui) {
 
         readPreferences();
 
-        preferencePanel = gui.createPreferenceTab("graphview", tr("Graphview"),
-        tr("Settings for the Graphview plugin that visualizes routing graphs."));
+        preferencePanel = gui.createPreferenceTab(this);
 
         JPanel mainPanel = createMainPanel();
 

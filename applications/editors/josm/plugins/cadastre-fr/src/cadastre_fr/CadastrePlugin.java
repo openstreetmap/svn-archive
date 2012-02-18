@@ -268,8 +268,8 @@ public class CadastrePlugin extends Plugin {
             JOptionPane.showMessageDialog(Main.parent,
                 tr("Plugin cadastre-fr used the key shortcut F11 for grabbing,\n"+
                 "which is now allocated for full-screen switch.\n"+
-                "The new grabbing key is F10, but you can change the key\nin" +
-                "the shortcut settings if you want."));
+                "The new grabbing key is F10, but you can change the key\n" +
+                "in the shortcut settings if you want."));
         }
         refreshMenu();
     }

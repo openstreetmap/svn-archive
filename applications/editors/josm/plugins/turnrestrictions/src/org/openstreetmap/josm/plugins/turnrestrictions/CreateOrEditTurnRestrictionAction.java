@@ -44,7 +44,7 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
             tr("Create/Edit turn restriction..."),
             null,
             tr("Create or edit a turn restriction."),
-            Shortcut.registerShortcut("tools:extnode", tr("Tool: {0}","Extract node"),
+            Shortcut.registerShortcut("tools:turnrestriction", tr("Tool: {0}","Create or edit a turn restriction."),
                 KeyEvent.VK_2, Shortcut.ALT_SHIFT),
             false
         );

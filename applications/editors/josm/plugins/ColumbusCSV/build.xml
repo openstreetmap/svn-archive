@@ -92,7 +92,7 @@
                 <attribute name="Plugin-Description" value="Imports proprietary CSV files of the Columbus/Visiontac V-900 GPS logger into a GPX layer."/>
                 <attribute name="de_Plugin-Description" value="Importiert die CSV-Dateien des Columbus/Visiontac V-900 GPS Loggers in GPX-Daten."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ColumbusCSV"/>
-                <attribute name="Plugin-Mainversion" value="4595"/>
+                <attribute name="Plugin-Mainversion" value="4980"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Icon" value="images/colcsvicon.png"/>
             </manifest>

@@ -141,7 +141,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         
         datasetAdapter = new DataSetListenerAdapter(this);
         plugin = this; // Assign reference to the plugin class
-        DOMConfigurator.configure("log4j.xml");
+	if (new java.io.File("log4j.xml").exists()) {
+            DOMConfigurator.configure("log4j.xml");
+        } else {
+            System.err.println("Routing plugin warning: log4j configuration not found"); 
+        }
         logger.debug("Loading routing plugin...");
         preferenceSettings=new RoutingPreferenceDialog();
         // Create side dialog

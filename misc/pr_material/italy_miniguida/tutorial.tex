@@ -50,13 +50,13 @@
 \rhead{Minitutorial Italiano di \osm}
 %opening
 \title{\begin{Large}Introduzione a \osm\end{Large}}
-\date{\small{Versione Ottobre 2010}}
+\date{\small{Versione Marzo 2012}}
 \author{Luca Delucchi, Maurizio Napolitano, Alessio Zanol}
 \begin{document}
 
 \maketitle
 \begin{center}
-\includegraphics{Openstreetmap.png}
+\includegraphics{osm_logo_new.png}
 \end{center}
 \begin{center}
 	\begin{large}
@@ -70,7 +70,7 @@
 \section{Cos'è \osm}
 \osm è un progetto mondiale per la raccolta collaborativa di dati geografici da cui si possono derivare innumerevoli lavori e servizi. I risultati più evidenti sono le mappe online che però rappresentano solo la punta dell'iceberg di quel che si può ottenere da questi dati.
 
-La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \pro{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita con la \pro{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
+La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \pro{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita, data dovrebbe essere Aprile 2012, con la \pro{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
 
 L'altra caratteristica molto importante è che tutti possono contribuire arricchendo o correggendo i dati e, come i progetti simili (\pro{Wikipedia} e mondo del software libero ad esempio) \textbf{la comunità è l'elemento fondamentale} perché oltre a essere quella che inserisce i dati e arrichisce il progetto, ne controlla anche la qualità.
 \section{Cosa non è \osm}
@@ -80,6 +80,15 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
 
 \section{Perché \osm}
 \osm come abbiamo detto è un progetto che vuole creare una banca dati geografica libera, uno dei punti di forza è la possibilità di utilizzarla per le più svariate necessità e su  dispositivi differenti. \textbf{I dati sono disponibili in moltissimi formati}, possono essere caricati su GPS, navigatori o cellulari per sapere sempre la vostra posizione o per calcolare il percorso più breve per raggiungere una certa località; potete utilizzarli sul vostro sito per segnalare dove si trova la vostra azienda o per mostrare le vostre immagini georiferite; potete stampare mappe cartacee a diverse scale e con diversi stili; possono essere usati come base di videogiochi; esistono in diversi formati vettoriali per essere analizzati con software GIS; per ultimo, ma forse uno dei motivi più importanti, anche se è quello per il quale si spera non debbano mai essere utilizzate, per salvare vite...
+\subsection{Humanitarian OpenStreetMap Team}
+L'\pro{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
+
+La prima volta che \osm è stato utilizzato per queste finalità è avvenuto alla ripresa delle ostilità tra Israele e Palestina nel 2009, la comunità si è autofinanziata per acquistare le ortofoto recenti della Striscia di Gaza in modo tale da poter digitalizzare i dati.
+
+Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccorritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
+
+Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.
+Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
 
 \section{La struttura del database \osm}
 \subsection{Elementi}
@@ -255,7 +264,9 @@ Sulla mappa in homepage (detta slippy map) le modifiche non appariranno istantan
 È da sottolineare che le tracce, pur non entrando direttamente nel data-base principale di \osm, è possibile caricarle sul sito tramite la pagina \url{http://www.openstreetmap.org/traces}, al fine di renderle pubbliche e disponibili a chiunque le voglia ricalcare o controllare; inoltre, passando più volte nella stessa ``strada'', avremo delle tracce sempre un po' diverse, avendone tante si può avere una precisione maggiore facendo passare la nostra way nella linea mediana di tutte le tracce.
 \subsection{Ho un cellulare con \gps integrato o collegabile ad un'antenna \gps}
 Il continuo sviluppo tecnologico ha portato alla costruzione di cellulari sempre più complessi e performanti; molti modelli delle ultime generazioni hanno un ricevitore \gps incorporato, questa situazione ha fatto si che venissero sviluppati programmi per contribuire al progetto e per visua-lizzare/utilizzare i dati di \osm. Esistono software per la maggiorparte dei sistemi operativi (Linux, Android, Symbian, Windows CE) utilizzati sui cellulari. Nella sezione software vengono presentati alcuni dei più utilizzati.
-Per esempio per Android vi è la possibilità di utilizzare diversi applicativi. Vespucci è un editor di \osm completo mentre Geopaparazzi e OSMand permettono l'inserimento di soli punti. 
+
+Per esempio per Android vi è la possibilità di utilizzare diversi applicativi. Vespucci è un editor di \osm completo mentre Geopaparazzi e OSMand permettono l'inserimento di soli punti. Per tutti i cellulari che supportano applicazioni java si consiglia invece GpsMid.
+
 
 \subsection{Infine...}
 Molto altro ci sarebbe da dire, inizia pure a lavorare con cautela e \textbf{per qualsiasi dubbio, domanda in mailing list o sul canale irc. Prima di chiedere controlla che qualcuno non abbia già avuto il tuo stesso problema consultando gli archivi della mailing list}.
@@ -284,15 +295,7 @@ I \textbf{mapping party sono eventi legati al progetto}, durante i quali un cert
 Solitamente i mapping party si tengono nel corso del weekend per cercare di far affluire più persone possibili; ricordo tra gli altri, il Mapping Party di Arezzo, il primo ufficiale in Italia, quello di Pompei, con scopi archeologici all'interno dei resti romani della nota località napoletana, M(')appare Portofino, per la sentieristica del Parco naturale regionale di Portofino, Dolomiti Mapping Party e il Graian Alps Mapping Party; anche questi ultimi due avevano un tema specifico: la montagna; il primo tra il gruppo del Brenta e il secondo, effettuato grazie al supporto del Parco Nazionale del Gran Paradiso, nella valle dell'Orco in Piemonte.
 
 Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \pro{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Nel 2011 si è tenuto il terzo evento nazionale su \osm denominato OSMit: la prima edizione si è tenuta a Trento, la seconda a Genova e l'ultima a Padova.
-\section{Humanitarian OpenStreetMap Team}
-L'\pro{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
 
-La prima volta che \osm è stato utilizzato per queste finalità è avvenuto alla ripresa delle ostilità tra Israele e Palestina nel 2009, la comunità si è autofinanziata per acquistare le ortofoto recenti della Striscia di Gaza in modo tale da poter digitalizzare i dati.
-
-Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccorritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
-
-Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.
-Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
 \section{Informazioni utili}
 \textbf{\url{http://wiki.openstreetmap.org/wiki/WikiProject_Italy} è il portale principale della comunità italiana}, per vedere il lavoro a livello nazionale e contattare gli altri utenti della penisola. È molto utile contribuire sul wiki attraverso \textbf{traduzioni} di pagine già esistenti in altre lingue, che servono sempre sia ai nuovi arrivati che a quelli che non conoscono al meglio la lingua inglese (la più usata sul wiki insieme al tedesco), sia alla \textbf{creazione e al mantenimento delle pagine} in italiano oltre a quelle della vostra regione, provincia o comune.
 
@@ -308,7 +311,7 @@ Esistono anche alcune mailing list regionali, attualmente sono presenti: \href{h
 
 Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; ci puoi trovare anche nella chat (canale irc) di \pro{GFOSS.it}, la principale associazione che supporta OSM in Italia, l'indirizzo è \#gfoss @ irc.eu.freenode.net. Ci suò accedere anche via web tramite \url{webchat.freenode.net}  canale \#gfoss
 
-Esistono inoltre molti strumenti internazionali per svariate notizie su \osm \url{http://wiki.openstreetmap.org/wiki/Mailing_list}
+Esistono inoltre molte altre mailing list internazionali che trattano particolari aspetti di \osm: dalle diverse nazionalità alle informazioni riguardo lo sviluppo, applicativi, routing, aspetti legali ecc ecc \url{http://wiki.openstreetmap.org/wiki/Mailing_list}
 
 %\section{Hardware}
 %DA AGGIUNGERE QUALCOSA SULL'HARDWARE CHE SUPPORTA OSM
@@ -322,15 +325,6 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \soft{Potlach}: editor online dal sito principale di \osm, molto comodo per la possibilità di avere le foto aeree di Yahoo come sfondo
 
 \soft{Merkaator}: altro editor per \osm
-
-\subsection{Qualità}
-Di seguito sono riportati solo alcuni degli strumenti, per avere una visione completa dei programmi per mantenere alta la qualità dei dati in \osm controllate questa pagina \url{http://wiki.openstreetmap.org/wiki/IT:Quality_Assurance}
-
-\soft{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare errori
-
-\soft{QualityStreetMap}: permette di segnalare le zone completamente mappate attraverso griglie per diversi tag, copre tutta Europa
-
-\soft{Keep Right}: segnala diverse tipologie di errore
 
 \subsection{Analisi}
 \soft{Osmosis}: programma per gestire i dati di \osm
@@ -403,6 +397,7 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 \soft{GpsMid}: carica mappe vettoriali di \osm e permette di creare POI e tracce
 
 \section{Link}
+I siti che visualizzano i dati di \osm sono ormai moltissimi; potete trovare una lista per lo più completa a questo indirizzo \url{http://wiki.openstreetmap.org/wiki/Maps}
 \subsection{Visualizzazione}
 \subsubsection{Generali}
 \url{http://www.openstreetmap.org}: è il portale ufficiale di OSM. Da qui potrai consultare le mappe dimostrative “ufficiali” cliccando sul + in alto a destra sulla mappa:
@@ -427,6 +422,10 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.skidea.com}: è un portale che visualizza gli impianti di sport invernali e permette di scarica una mappa formato Garmin per i più grandi comprensori sciistici
 
+\url{http://wheelmap.org}: è il portale per le persone con disabilità motorie. Realizzato da una ONLUS tedesca permette di ottenere ed inserire informazioni sull'accessibilità dei locali
+
+\url{http://openqueermap.info/}: evidenzia i locali dedicati a gay/lesbiche/transgender 
+
 \url{http://whitewater.quaker.eu.org/}: mappa tematica per l'attività sportiva lungo i fiumi
 
 \url{http://www.openseamap.org}: mappa tematica che visualizza gli elementi utili alla navigazione
@@ -446,12 +445,30 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 \url{http://oobrien.com/oom/?layers=B00FFTF}: OpenOrienteeringMap, mappa libera per l'orienteering
 
 \href{http://www.netzwolf.info/kartografie/osm/time_domain/map_opening}{mappa degli orari}: visualizza gli orari di apertura e chiusura dei negozi, bar, edifici pubblici ecc.; questa mappa utilizza il tag \href{http://wiki.openstreetmap.org/wiki/Opening_hours}{opening\_hours}
+
+\subsection{Qualità}
+Di seguito sono riportati solo alcuni degli strumenti, per avere una visione completa dei programmi per mantenere alta la qualità dei dati in \osm controllate questa pagina \url{http://wiki.openstreetmap.org/wiki/IT:Quality_Assurance}
+
+\href{http://openstreetbugs.schokokeks.org/}{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare errori
+
+\url{http://www.mapdust.com/}: un portale simile al precedente
+
+\href{http://tools.geofabrik.de/osmi/}{OSM Inspector}: segnala diverse tipologie di possibili errori
+
+\href{http://matt.dev.openstreetmap.org/dupe_nodes/}{Duplicate nodes map}: segnala i nodi duplicati
+
+\href{http://osmqa2.qualitystreetmap.org/}{QualityStreetMap}: permette di segnalare le zone completamente mappate attraverso griglie per diversi tag, copre tutta Europa
+
+\href{http://keepright.ipax.at/}{Keep Right}: segnala diverse tipologie di errore
+
 \subsection{Routing}
 \url{http://www.yournavigation.org}: si tratta di un navigatore che permette di trovare il percorso migliore che unisce due punti. È possibile scegliere il più breve, il più veloce o l'utilizzo a piedi o in bicicletta. I percorsi trovati per la bici daranno priorità alle piste ciclabili
 
 \url{http://www.openrouteservice.org}: il servizio principale proposto è un navigatore simile a quello sopra descritto. In Germania, basandosi sul servizio strade è capace di calcolare in tempo reale il percorso migliore in base al traffico od eventuali incidenti. Il sito fornisce inoltre servizi più specifici come ad esempio il tempo di accessibilità: dato un punto sulla mappa verrà evidenziata l'area raggiungibile entro un determinato tempo dal punto considerato
 
 \url{http://map.project-osrm.org/}: routing web basato sul motore \soft{Open Source Routing Machine}
+
+\url{http://routingdemo.geofabrik.de/}: utilizza anch'esso \soft{Open Source Routing Machine}
 
 \url{http://nominatim.openstreetmap.org/}: è il servizio di geocoding di \osm
 
@@ -476,6 +493,8 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 \url{http://switch2osm.org/}: è un sito internet che mostra come e perchè utilizzare \osm nel vostro sito iternet da quello casalingo a quello di una grandissima impresa
 
 \url{http://toolserver.org/~ti/distance-o-meter/}: strumento molto interessante che permette di visualizzare la copertura di diversi elementi puntuali attraverso buffer
+
+\url{http://www.lenz-online.de/cgi-bin/osmpoi/osmpoi.pl}: visualizza moltissime tipologie di punti raccogliendo le informazioni dal database di \osm
 
 \url{http://planet.openstreetmap.org/}: potete trovare il database completo di \osm
 

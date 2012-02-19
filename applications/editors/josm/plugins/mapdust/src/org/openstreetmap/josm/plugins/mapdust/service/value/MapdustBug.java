@@ -59,7 +59,7 @@ public class MapdustBug {
     private Status status;
 
     /** The type of the object */
-    private Type type;
+    private BugType type;
 
     /** The relevance of the object */
     private MapdustRelevance relevance;
@@ -104,7 +104,7 @@ public class MapdustBug {
      * @param description The description of the bug
      * @param nickname The nickname of the user who created the bug
      */
-    public MapdustBug(LatLon latLon, Type type, String description,
+    public MapdustBug(LatLon latLon, BugType type, String description,
             String nickname) {
         this.latLon = latLon;
         this.type = type;
@@ -135,7 +135,7 @@ public class MapdustBug {
      * @param comments The array of comments
      */
     public MapdustBug(Long id, LatLon latLon, Address address,
-            Date dateCreated, Date dateUpdated, Status status, Type type,
+            Date dateCreated, Date dateUpdated, Status status, BugType type,
             MapdustRelevance relevance, String description,
             boolean isDefaultDescription, String nickname, String skoUid,
             String extUid, String source, String kmlUrl,
@@ -254,7 +254,7 @@ public class MapdustBug {
      *
      * @return the type
      */
-    public Type getType() {
+    public BugType getType() {
         return type;
     }
 
@@ -263,7 +263,7 @@ public class MapdustBug {
      *
      * @param type the type to set
      */
-    public void setType(Type type) {
+    public void setType(BugType type) {
         this.type = type;
     }
 

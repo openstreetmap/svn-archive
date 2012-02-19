@@ -279,8 +279,7 @@ public class ChangeBugStatusDialog extends AbstractDialog {
      *
      * @return the type
      */
-    public String getType() {
-        return this.type;
-    }
+// caused compile error
+//    public String getType() {        return this.type;    }
 
 }

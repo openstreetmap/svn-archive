@@ -30,11 +30,11 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.model;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 
 
 /**
- * The combo box model for the bug <code>Type</code>s.
+ * The combo box model for the bug <code>BugType</code>s.
  *
  * @author Bea
  * @version $Revision$
@@ -45,23 +45,23 @@ public class TypesListModel extends AbstractListModel implements ComboBoxModel {
     private static final long serialVersionUID = 4005728061902494996L;
 
     /** The array of types */
-    private final Type[] types;
+    private final BugType[] types;
 
     /** The selected type */
-    private Type selection = null;
+    private BugType selection = null;
 
     /**
      * Builds a <code>TypesListModel</code> object
      */
     public TypesListModel() {
-        this.types = Type.getTypes();
+        this.types = BugType.getTypes();
     }
 
     /**
-     * Returns the <code>Type</code> from the given position.
+     * Returns the <code>BugType</code> from the given position.
      *
      * @param index The position of the element
-     * @return <code>Type</code> from the given position
+     * @return <code>BugType</code> from the given position
      */
     @Override
     public Object getElementAt(int index) {
@@ -79,7 +79,7 @@ public class TypesListModel extends AbstractListModel implements ComboBoxModel {
     }
 
     /**
-     * Returns the selected <code>Type</code> object.
+     * Returns the selected <code>BugType</code> object.
      *
      * @return selected item
      */
@@ -89,12 +89,12 @@ public class TypesListModel extends AbstractListModel implements ComboBoxModel {
     }
 
     /**
-     * Sets the selected <code>Type</code> object.
+     * Sets the selected <code>BugType</code> object.
      *
      * @param anItem The selected item
      */
     @Override
     public void setSelectedItem(Object anItem) {
-        selection = (Type) anItem;
+        selection = (BugType) anItem;
     }
 }

@@ -41,7 +41,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
-import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 
 
 /**
@@ -84,7 +84,7 @@ public class MapdustConverter {
                 Status status = Status.getStatus(bugProperties.getStatus());
                 bug.setStatus(status);
                 /* sets the type */
-                Type type = Type.getType(bugProperties.getType());
+                BugType type = BugType.getType(bugProperties.getType());
                 bug.setType(type);
                 /* sets the relevance */
                 MapdustRelevance relevance =
@@ -176,7 +176,7 @@ public class MapdustConverter {
                 Status status = Status.getStatus(bugProperties.getStatus());
                 bug.setStatus(status);
                 /* sets the type */
-                Type type = Type.getType(bugProperties.getType());
+                BugType type = BugType.getType(bugProperties.getType());
                 bug.setType(type);
                 /* sets the relevance */
                 MapdustRelevance relevance =

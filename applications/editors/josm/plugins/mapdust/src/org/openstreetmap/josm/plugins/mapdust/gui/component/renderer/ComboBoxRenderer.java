@@ -35,7 +35,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
@@ -64,8 +64,8 @@ public class ComboBoxRenderer implements ListCellRenderer {
             int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) defaultRenderer.getListCellRendererComponent(
                 list, value, index, isSelected, cellHasFocus);
-        if (value instanceof Type) {
-            Type type = (Type) value;
+        if (value instanceof BugType) {
+            BugType type = (BugType) value;
             String iconPath = "bugs/normal/open_" + type.getKey() + ".png";
             String text = type.getValue();
             ImageIcon icon = ImageProvider.get(iconPath);

@@ -49,7 +49,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandler;
 import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandlerException;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
-import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 
 
 /**
@@ -103,7 +103,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
             CreateBugDialog createDialog = (CreateBugDialog) getDialog();
-            Type type = (Type) (createDialog).getCbbType().getSelectedItem();
+            BugType type = (BugType) (createDialog).getCbbType().getSelectedItem();
             String nickname = createDialog.getTxtNickname().getText();
             String commentText = createDialog.getTxtDescription().getText();
             /* validates the input */

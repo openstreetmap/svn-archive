@@ -54,7 +54,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustRelevanceValue;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
-import org.openstreetmap.josm.plugins.mapdust.service.value.Type;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
@@ -65,6 +65,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  */
 public class FilterBugDialog extends AbstractDialog {
+    org.openstreetmap.josm.plugins.mapdust.service.value.BugType ttt=org.openstreetmap.josm.plugins.mapdust.service.value.BugType.WRONG_TURN;
 
     /** The serial version UID */
     private static final long serialVersionUID = -3333642616656969760L;
@@ -281,41 +282,41 @@ public class FilterBugDialog extends AbstractDialog {
         filterTypes = new FilterCheckBox[8];
 
         /* wrong_turn type */
-        filterTypes[0] = new FilterCheckBox(Type.WRONG_TURN.getKey(),
+        filterTypes[0] = new FilterCheckBox(BugType.WRONG_TURN.getKey(),
                 new Rectangle(110, 90, 20, 25), "dialogs/wrong_turn.png",
-                Type.WRONG_TURN.getValue(), new Rectangle(130, 90, 120, 25));
+                BugType.WRONG_TURN.getValue(), new Rectangle(130, 90, 120, 25));
         /* bad_routing type */
-        filterTypes[1] = new FilterCheckBox(Type.WRONG_ROUNDABOUT.getKey(),
+        filterTypes[1] = new FilterCheckBox(BugType.WRONG_ROUNDABOUT.getKey(),
                 new Rectangle(270, 90, 20, 25), "dialogs/wrong_roundabout.png",
-                Type.WRONG_ROUNDABOUT.getValue(), new Rectangle(290, 90, 180,
+                BugType.WRONG_ROUNDABOUT.getValue(), new Rectangle(290, 90, 180,
                         25));
         /* oneway_road type */
-        filterTypes[2] =  new FilterCheckBox(Type.MISSING_STREET.getKey(),
+        filterTypes[2] =  new FilterCheckBox(BugType.MISSING_STREET.getKey(),
                 new Rectangle(110, 125, 20, 25), "dialogs/missing_street.png",
-                Type.MISSING_STREET.getValue(), new Rectangle(130, 125, 150,
+                BugType.MISSING_STREET.getValue(), new Rectangle(130, 125, 150,
                         25));
         /* blocked_street type */
-        filterTypes[3] = new FilterCheckBox(Type.BLOCKED_STREET.getKey(),
+        filterTypes[3] = new FilterCheckBox(BugType.BLOCKED_STREET.getKey(),
                 new Rectangle(270, 125, 20, 25), "dialogs/blocked_street.png",
-                Type.BLOCKED_STREET.getValue(), new Rectangle(290, 125, 180,
+                BugType.BLOCKED_STREET.getValue(), new Rectangle(290, 125, 180,
                         25));
         /* missing_street type */
-        filterTypes[4] = new FilterCheckBox(Type.BAD_ROUTING.getKey(),
+        filterTypes[4] = new FilterCheckBox(BugType.BAD_ROUTING.getKey(),
                 new Rectangle(110, 160, 20, 25), "dialogs/bad_routing.png",
-                Type.BAD_ROUTING.getValue(), new Rectangle(130, 160, 150, 25));
+                BugType.BAD_ROUTING.getValue(), new Rectangle(130, 160, 150, 25));
         /* wrong_roundabout type */
-        filterTypes[5] = new FilterCheckBox(Type.MISSING_SPEEDLIMIT.getKey(),
+        filterTypes[5] = new FilterCheckBox(BugType.MISSING_SPEEDLIMIT.getKey(),
                 new Rectangle(270, 160, 20, 25), "dialogs/missing_speedlimit.png",
-                Type.MISSING_SPEEDLIMIT.getValue(), new Rectangle(290, 160,
+                BugType.MISSING_SPEEDLIMIT.getValue(), new Rectangle(290, 160,
                         180, 25));
         /* missing_speedlimit type */
-        filterTypes[6] = new FilterCheckBox(Type.OTHER.getKey(),
+        filterTypes[6] = new FilterCheckBox(BugType.OTHER.getKey(),
                 new Rectangle(110, 195, 20, 25), "dialogs/other.png",
-                Type.OTHER.getValue(), new Rectangle(130, 195, 150, 25));
+                BugType.OTHER.getValue(), new Rectangle(130, 195, 150, 25));
         /* other type */
-        filterTypes[7] = new FilterCheckBox(Type.ONEWAY_ROAD.getKey(),
+        filterTypes[7] = new FilterCheckBox(BugType.ONEWAY_ROAD.getKey(),
                 new Rectangle(270, 195, 20, 25), "dialogs/oneway_road.png",
-                Type.ONEWAY_ROAD.getValue(), new Rectangle(290, 195, 180, 25));
+                BugType.ONEWAY_ROAD.getValue(), new Rectangle(290, 195, 180, 25));
 
         if (prevFilter != null && prevFilter.getTypes() != null) {
             for (FilterCheckBox filter : filterTypes) {

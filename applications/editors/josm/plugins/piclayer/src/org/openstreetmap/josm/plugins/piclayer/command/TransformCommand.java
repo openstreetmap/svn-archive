@@ -4,7 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
 
-import javax.swing.JLabel;
+import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -66,11 +66,13 @@ public class TransformCommand extends Command {
     }
 
     @Override
-    public JLabel getDescription() {
-        return new JLabel(
-                tr("PicLayer: {0}", actionName),
-                ImageProvider.get("layericon.png"),
-                JLabel.HORIZONTAL);
+    public Icon getDescriptionIcon() {
+        return ImageProvider.get("layericon");
+    }
+
+    @Override
+    public String getDescriptionText() {
+        return tr("PicLayer: {0}", actionName);
     }
 
     private boolean alreadyAdded = false;

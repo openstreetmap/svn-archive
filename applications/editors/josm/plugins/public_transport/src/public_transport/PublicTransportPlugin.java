@@ -35,7 +35,7 @@ public class PublicTransportPlugin extends Plugin {
     MainMenu menu = Main.main.menu;
 
     if (jMenu == null)
-      jMenu = menu.addMenu(marktr("Public Transport"), KeyEvent.VK_P, menu.defaultMenuPos, "help");
+      jMenu = menu.addMenu(marktr("Public Transport"), KeyEvent.VK_COMMA, menu.defaultMenuPos, "help");
     else
       jMenu.removeAll();
 

@@ -27,31 +27,8 @@ public class MirroredDownloadPlugin extends Plugin {
   public MirroredDownloadPlugin(PluginInformation info)
   {
     super(info);
-    refreshMenu();
-  }
-
-  public static void refreshMenu()
-  {
-    MainMenu menu = Main.main.menu;
-
-    if (jMenu == null)
-      jMenu = menu.addMenu(marktr("Mirrored Download"), KeyEvent.VK_P, menu.defaultMenuPos, "help");
-    else
-      jMenu.removeAll();
-
-    jMenu.addSeparator();
-    jMenu.add(new JMenuItem(new DownloadAction2()));
-    jMenu.add(new JMenuItem(new UrlSelectionAction()));
-    setEnabledAll(true);
-  }
-
-  private static void setEnabledAll(boolean isEnabled)
-  {
-    for(int i=0; i < jMenu.getItemCount(); i++) {
-      JMenuItem item = jMenu.getItem(i);
-
-      if(item != null) item.setEnabled(isEnabled);
-    }
+    MainMenu.add(Main.main.menu.fileMenu, new DownloadAction2());
+    MainMenu.add(Main.main.menu.fileMenu, new UrlSelectionAction());
   }
 
   private static String downloadUrl = "http://overpass.osm.rambler.ru/cgi/xapi?";//"http://overpass-api.de/api/xapi?";
@@ -59,6 +36,7 @@ public class MirroredDownloadPlugin extends Plugin {
   public static String getDownloadUrl() {
     return downloadUrl;
   }
+
   public static void setDownloadUrl(String downloadUrl_) {
     downloadUrl = downloadUrl_;
   }

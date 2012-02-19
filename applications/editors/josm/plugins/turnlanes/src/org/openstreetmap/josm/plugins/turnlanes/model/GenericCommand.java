@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.JLabel;
-
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.AbstractPrimitive;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -63,8 +61,8 @@ public class GenericCommand extends Command {
             Collection<OsmPrimitive> added) {}
     
     @Override
-    public JLabel getDescription() {
-        return new JLabel(description, null, JLabel.HORIZONTAL);
+    public JLabel getDescriptionText() {
+        return description;
     }
     
     @Override

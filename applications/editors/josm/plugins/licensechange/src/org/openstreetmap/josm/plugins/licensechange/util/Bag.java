@@ -26,7 +26,7 @@ public class Bag<K,V> extends HashMap<K, List<V>>
      * @param key The key to obtain the elements
      * @return the list of elements with the same key
      */
-    public List<V> get(K key)
+    public List<V> get(Object key)
     {
         return super.get(key);
     }

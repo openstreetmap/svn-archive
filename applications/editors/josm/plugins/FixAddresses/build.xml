@@ -22,8 +22,9 @@
 -->
 <project name="FixAddresses" default="dist" basedir=".">
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="fix shortcut conflict, moved fiX to Shift-X"/>
+	<property name="commit.message" value="fix compile error (core changes)"/>
 	
+    <property name="plugin.main.version" value="4991"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

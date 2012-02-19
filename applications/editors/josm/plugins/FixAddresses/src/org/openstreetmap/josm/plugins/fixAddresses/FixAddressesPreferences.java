@@ -117,4 +117,10 @@ public class FixAddressesPreferences implements PreferenceSetting {
 		cbIgnorePostCode.setSelected(ignorePostCode);
 	}
 
+        @Override
+        public boolean isExpert() {
+            return false;
+        }
+
+
 }

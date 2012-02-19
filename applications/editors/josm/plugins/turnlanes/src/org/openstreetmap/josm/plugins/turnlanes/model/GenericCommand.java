@@ -61,7 +61,7 @@ public class GenericCommand extends Command {
             Collection<OsmPrimitive> added) {}
     
     @Override
-    public JLabel getDescriptionText() {
+    public String getDescriptionText() {
         return description;
     }
     

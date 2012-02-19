@@ -169,7 +169,6 @@ Inoltre ricorda che per ciascun elemento è possibile assegnare più di un tag i
   \midrule
    \key{highway} & \val{unclassified} \\
    \key{name} & \val{Via Roma} \\
-   \key{vehicle} & \val{no} \\
    \key{foot} & \val{yes} \\
    \key{bicycle} & \val{no} \\
    \key{oneway} & \val{yes} \\
@@ -222,7 +221,7 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
  \includegraphics[width=0.7\columnwidth]{potlatch.png}
  \caption{\textit{L'interfaccia di \soft{Potlatch}}}
 \end{wrapfloat}
-Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaator}). 
+Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale e anche quelle di Bing (queste in alcune zone hanno una risoluzione migliore ma bisogna stare attenti perchè è probabile che sia uno spostamento delle immagini rispetto la reale posizione degli elemnti), distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaator}). 
 
 Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}.
 
@@ -256,6 +255,7 @@ Sulla mappa in homepage (detta slippy map) le modifiche non appariranno istantan
 È da sottolineare che le tracce, pur non entrando direttamente nel data-base principale di \osm, è possibile caricarle sul sito tramite la pagina \url{http://www.openstreetmap.org/traces}, al fine di renderle pubbliche e disponibili a chiunque le voglia ricalcare o controllare; inoltre, passando più volte nella stessa ``strada'', avremo delle tracce sempre un po' diverse, avendone tante si può avere una precisione maggiore facendo passare la nostra way nella linea mediana di tutte le tracce.
 \subsection{Ho un cellulare con \gps integrato o collegabile ad un'antenna \gps}
 Il continuo sviluppo tecnologico ha portato alla costruzione di cellulari sempre più complessi e performanti; molti modelli delle ultime generazioni hanno un ricevitore \gps incorporato, questa situazione ha fatto si che venissero sviluppati programmi per contribuire al progetto e per visua-lizzare/utilizzare i dati di \osm. Esistono software per la maggiorparte dei sistemi operativi (Linux, Android, Symbian, Windows CE) utilizzati sui cellulari. Nella sezione software vengono presentati alcuni dei più utilizzati.
+Per esempio per Android vi è la possibilità di utilizzare diversi applicativi. Vespucci è un editor di \osm completo mentre Geopaparazzi e OSMand permettono l'inserimento di soli punti. 
 
 \subsection{Infine...}
 Molto altro ci sarebbe da dire, inizia pure a lavorare con cautela e \textbf{per qualsiasi dubbio, domanda in mailing list o sul canale irc. Prima di chiedere controlla che qualcuno non abbia già avuto il tuo stesso problema consultando gli archivi della mailing list}.
@@ -283,7 +283,7 @@ I \textbf{mapping party sono eventi legati al progetto}, durante i quali un cert
 
 Solitamente i mapping party si tengono nel corso del weekend per cercare di far affluire più persone possibili; ricordo tra gli altri, il Mapping Party di Arezzo, il primo ufficiale in Italia, quello di Pompei, con scopi archeologici all'interno dei resti romani della nota località napoletana, M(')appare Portofino, per la sentieristica del Parco naturale regionale di Portofino, Dolomiti Mapping Party e il Graian Alps Mapping Party; anche questi ultimi due avevano un tema specifico: la montagna; il primo tra il gruppo del Brenta e il secondo, effettuato grazie al supporto del Parco Nazionale del Gran Paradiso, nella valle dell'Orco in Piemonte.
 
-Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \pro{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Da due anni si tiene un evento nazionale su \osm denominato OSMit: la prima edizione si è tenuta a Trento, la seconda a Genova.
+Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \pro{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Nel 2011 si è tenuto il terzo evento nazionale su \osm denominato OSMit: la prima edizione si è tenuta a Trento, la seconda a Genova e l'ultima a Padova.
 \section{Humanitarian OpenStreetMap Team}
 L'\pro{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
 
@@ -304,9 +304,14 @@ Se hai dubbi o domande consulta le risposte alle domande frequenti \url{http://w
 \section{Contatti}
 \textbf{Il principale riferimento nazionale è la mailing list italiana:\newline \url{http://lists.openstreetmap.org/listinfo/talk-it}}
 
+Esistono anche alcune mailing list regionali, attualmente sono presenti: \href{http://lists.openstreetmap.org/listinfo/talk-it-fvg}{Friuli Venezia Giulia}, \href{http://lists.openstreetmap.org/listinfo/talk-it-lazio}{Lazio}, \href{http://lists.openstreetmap.org/listinfo/talk-it-liguria}{Liguria}, \href{http://lists.openstreetmap.org/listinfo/talk-it-piemonte}{Piemonte}, \href{http://lists.openstreetmap.org/listinfo/talk-it-trentino}{Trentino}, \href{http://liste.remixtj.net/listinfo/osmveneto}{Veneto}. Inoltre è presente una mailing list dedicata agli aspetti legati alla \href{http://lists.openstreetmap.org/listinfo/talk-it-bici}{bicicletta}
+
 Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; ci puoi trovare anche nella chat (canale irc) di \pro{GFOSS.it}, la principale associazione che supporta OSM in Italia, l'indirizzo è \#gfoss @ irc.eu.freenode.net. Ci suò accedere anche via web tramite \url{webchat.freenode.net}  canale \#gfoss
 
 Esistono inoltre molti strumenti internazionali per svariate notizie su \osm \url{http://wiki.openstreetmap.org/wiki/Mailing_list}
+
+%\section{Hardware}
+%DA AGGIUNGERE QUALCOSA SULL'HARDWARE CHE SUPPORTA OSM
 
 \section{Software}
 Di seguito verranno segnalati software, con diverse finalità, che hanno la possibilità di interfacciarsi con \osm.
@@ -338,6 +343,9 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 
 \soft{Spatialite}: estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing 
 
+\soft{Open Source Routing Machine}: motore di analisi delle reti sviluppato per \osm
+
+
 \subsection{Rendering}
 
 \soft{Mapnik}: software per la rappresentazione di dati geografici, può creare singole immagini o tile per la pubblicazione sul web
@@ -358,6 +366,8 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 
 \soft{OSM3D}: visualizzatore 3D per i dati \osm
 
+\soft{Gosmore}: visualizzatore 2D e 3D per i dati \osm, inoltre permette di effettuare routing
+
 \subsection{GPS}
 
 \soft{Qlandkarte}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
@@ -370,6 +380,12 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 \subsubsection{Android}
 
 \soft{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
+
+\soft{Osmdroid}: un visualizzatore ma non solo, una libreria da utilizzare sul proprio software di mappe per aver la possibilità di scegliere tra diverse tipologie di mappe
+
+\soft{Geopaparazzi}: software per effettuare campionamenti; ha la possibilità di caricare punti nel database di \osm attraverso semplici form 
+
+\soft{OSMand}: visualizzatore di mappe anche offline in formato vettoriale, può caricare punti
 
 \soft{OSMtracker}: editor con possibilità di mappe offline (esiste una versione anche per Windows Mobile)
 
@@ -388,11 +404,15 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 
 \section{Link}
 \subsection{Visualizzazione}
+\subsubsection{Generali}
 \url{http://www.openstreetmap.org}: è il portale ufficiale di OSM. Da qui potrai consultare le mappe dimostrative “ufficiali” cliccando sul + in alto a destra sulla mappa:
 Mapnik e Osmarender sono mappe generiche che mostrano molte caratteristiche mappate,
-Cyclemap è invece una mappa tematica pensata per i ciclisti. Evidenzia le piste ciclabili nazionali, regio-nali e locali (ove mappate logicamente), le fontanelle di acqua potabile, i negozi di bici, le curve di livello e una colorazione pensata per mettere in risalto i rilievi
+Cyclemap è invece una mappa tematica pensata per i ciclisti.
 
-\url{http://www.opencyclemap.org}: è il sito ufficiale della mappa sopra descritta
+\url{http://www.openstreetbrowser.org}: permette di visualizzare innumerevoli informazioni inserite in \osm, altrimenti nascoste o vi-sibili soltanto mediante un rendering ad hoc. Ne sono un esempio l'evidenziamento dinamico dei percorsi dei mezzi pubblici con le relative fermate, ma anche strutture turistiche, storiche, sportive
+
+\subsubsection{Tematiche}
+\url{http://www.opencyclemap.org}: la mappa dedicata al cicloturismo, evidenzia le piste ciclabili nazionali, regionali e locali (ove mappate logicamente), le fontanelle di acqua potabile, i negozi, i meccanici e i parcheggi per le biciclette, ha uno sfondo pensato a mettere in risalto l'altimetri attraverso rilievi e curve di livello
 
 Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 \begin{itemize}
@@ -405,6 +425,8 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.openpistemap.org}: è una mappa tematica pensata per gli amanti degli sport invernali, vengono renderizzati gli impianti di risalita, le piste a seconda della scala di difficoltà e le isolinee
 
+\url{http://www.skidea.com}: è un portale che visualizza gli impianti di sport invernali e permette di scarica una mappa formato Garmin per i più grandi comprensori sciistici
+
 \url{http://whitewater.quaker.eu.org/}: mappa tematica per l'attività sportiva lungo i fiumi
 
 \url{http://www.openseamap.org}: mappa tematica che visualizza gli elementi utili alla navigazione
@@ -413,25 +435,31 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://openbusmap.org/}: altro visualizzatore di trasporti pubblici
 
+\url{http://parking.openstreetmap.de/}: mappa tematica dedicata ai parcheggi
+
 \url{http://toolserver.org/~stephankn/cuisine/}: è una mappa tema-tica dedicata alle diverse tipologie di ristoranti
 
-\url{http://toolserver.org/~ti/distance-o-meter/}: strumento molto interessante che permette di visualizzare la copertura di diversi elementi puntuali attraverso buffer
-
-\url{http://www.openstreetbrowser.org}: permette di visualizzare innumerevoli informazioni inserite in \osm, altrimenti nascoste o vi-sibili soltanto mediante un rendering ad hoc. Ne sono un esempio l'evidenziamento dinamico dei percorsi dei mezzi pubblici con le relative fermate, ma anche strutture turistiche, storiche, sportive
-
-\url{http://www.yournavigation.org}: si tratta di un navigatore che permette di trovare il percorso migliore che unisce due punti. È possibile scegliere il più breve, il più veloce o l'utilizzo a piedi o in bicicletta. I percorsi trovati per la bici daranno priorità alle piste ciclabili
-
-\url{http://www.openrouteservice.org}: il servizio principale proposto è un navigatore simile a quello sopra descritto. In Germania, basandosi sul servizio strade è capace di calcolare in tempo reale il percorso migliore in base al traffico od eventuali incidenti. Il sito fornisce inoltre servizi più specifici come ad esempio il tempo di accessibilità: dato un punto sulla mappa verrà evidenziata l'area raggiungibile entro un determinato tempo dal punto considerato
+\url{http://toolserver.org/~kolossos/openlayers/kml-on-ol.php}: visualizza le informazioni di Wikipedia su \osm
 
 \url{http://www.openaddresses.org/}: visualizza e permette di inserire indirizzi di civici
 
 \url{http://oobrien.com/oom/?layers=B00FFTF}: OpenOrienteeringMap, mappa libera per l'orienteering
 
-\url{http://tagwatch.stoecker.eu/}: informazioni sull'utilizzo dei tag
+\href{http://www.netzwolf.info/kartografie/osm/time_domain/map_opening}{mappa degli orari}: visualizza gli orari di apertura e chiusura dei negozi, bar, edifici pubblici ecc.; questa mappa utilizza il tag \href{http://wiki.openstreetmap.org/wiki/Opening_hours}{opening\_hours}
+\subsection{Routing}
+\url{http://www.yournavigation.org}: si tratta di un navigatore che permette di trovare il percorso migliore che unisce due punti. È possibile scegliere il più breve, il più veloce o l'utilizzo a piedi o in bicicletta. I percorsi trovati per la bici daranno priorità alle piste ciclabili
 
-\url{http://taginfo.openstreetmap.de/}: come sopra
+\url{http://www.openrouteservice.org}: il servizio principale proposto è un navigatore simile a quello sopra descritto. In Germania, basandosi sul servizio strade è capace di calcolare in tempo reale il percorso migliore in base al traffico od eventuali incidenti. Il sito fornisce inoltre servizi più specifici come ad esempio il tempo di accessibilità: dato un punto sulla mappa verrà evidenziata l'area raggiungibile entro un determinato tempo dal punto considerato
+
+\url{http://map.project-osrm.org/}: routing web basato sul motore \soft{Open Source Routing Machine}
+
+\url{http://nominatim.openstreetmap.org/}: è il servizio di geocoding di \osm
+
+\href{http://nroets.dev.openstreetmap.org/demo/index.html?lat=42.8&lon=12.45&zoom=6&layers=B000FTFTT}{routing sperimentale osm}: è il routing sperimentale per la pagina iniziale del progetto.
 
 \subsection{Servizi}
+
+\url{http://open.mapquest.it/}: portale che utilizza i dati di \osm per rendering, routing e interrogazione dati; paragonabile a GoogleMaps ma con dati liberi. Inoltre vengono formiti diversi servizi ed API (\url{http://developer.mapquest.com}) basati sui dati \osm
 
 \url{http://www.itoworld.com}: è un'azienda che fornisce un utile servizio per verificare l'attività di mappatura in una determinata zona: scoprire  e contattare gli utenti che ci lavorano, vedere le modifiche nel tempo. Necessita di registrazione gratuita
 
@@ -444,6 +472,22 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 \url{http://download.gfoss.it/osm/}: distribuisce i file italiani di \osm in diversi formati: backup del file italiano e file .osm diviso per regioni, .img per Garmin e formato per \soft{Navit}
 
 \url{http://www.gfoss.it/osm/stat/}: statistiche e stradario diviso per limiti amministrativi
+
+\url{http://switch2osm.org/}: è un sito internet che mostra come e perchè utilizzare \osm nel vostro sito iternet da quello casalingo a quello di una grandissima impresa
+
+\url{http://toolserver.org/~ti/distance-o-meter/}: strumento molto interessante che permette di visualizzare la copertura di diversi elementi puntuali attraverso buffer
+
+\url{http://planet.openstreetmap.org/}: potete trovare il database completo di \osm
+
+\url{http://hdyc.neis-one.org/}: visualizza alcune informazioni su un utente selezionato
+
+\url{http://wdye.osm-tools.org/}: visualizza su mappa statica o dinamica dove avete effettuato più editing
+
+\url{http://yosmhm.neis-one.org/}: visualizza una Heat Map che rappresenta dove un utente ha maggiormente editato
+
+\url{http://tagwatch.stoecker.eu/}: informazioni sull'utilizzo dei tag
+
+\url{http://taginfo.openstreetmap.de/}: come sopra
 
 \vfill
 \begin{center}\begin{small}\textbf{

@@ -34,7 +34,6 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
     private JRadioButton rbSetB;
     private ButtonGroup bgIconSet;
     private JCheckBox cbShowViaListInBasicEditor;
-    private ShortcutPreferencePanel pnlShortcutPreference;
     
     protected JPanel buildShowViaListInBasicEditorPanel() {
         JPanel pnl = new JPanel(new GridBagLayout());
@@ -160,7 +159,6 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
         gc.gridy++;
         add(new JSeparator(), gc);
         gc.gridy++;
-        add(pnlShortcutPreference = new ShortcutPreferencePanel(), gc);
         
         // filler - just grab remaining space
         gc.gridy++;
@@ -183,7 +181,6 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
      */
     public void initFromPreferences(Preferences prefs){
         String set = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
-        set = set.trim().toLowerCase();
         if (! set.equals("set-a") && ! set.equals("set-b")) {
             System.out.println(tr("Warning: the preference with key ''{0}'' has an unsupported value ''{1}''. Assuming the default value ''set-a''.", PreferenceKeys.ROAD_SIGNS, set));
             set = "set-a";
@@ -196,8 +193,6 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
         
         boolean b = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
         cbShowViaListInBasicEditor.setSelected(b);
-        
-        pnlShortcutPreference.initFromPreferences(prefs);
     }
     
     /**
@@ -206,24 +201,8 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
      * @param prefs the preferences 
      */
     public void saveToPreferences(Preferences prefs){
-        String set = null;
-        if (rbSetA.isSelected()){
-            set = "set-a";
-        } else {
-            set = "set-b";
-        }
-        String oldSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");      
-        if (!set.equals(oldSet)){
-            prefs.put(PreferenceKeys.ROAD_SIGNS, set);
-        }
-        
-        boolean newValue = cbShowViaListInBasicEditor.isSelected();
-        boolean oldValue = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
-        if (newValue != oldValue){
-            prefs.put(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, newValue);
-        }       
-        
-        pnlShortcutPreference.saveToPreferences(prefs);
+        prefs.put(PreferenceKeys.ROAD_SIGNS, rbSetA.isSelected() ? "set-a" : "set-b");
+        prefs.put(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, cbShowViaListInBasicEditor.isSelected());
     }
     
     public PreferencesPanel() {

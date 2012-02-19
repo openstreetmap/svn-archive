@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class WaypointsDetachCommand extends Command
 {
@@ -74,8 +73,8 @@ public class WaypointsDetachCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Detach waypoints"));
+    return tr("Public Transport: Detach waypoints");
   }
 };

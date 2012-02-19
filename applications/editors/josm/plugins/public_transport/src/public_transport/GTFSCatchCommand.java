@@ -10,7 +10,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class GTFSCatchCommand extends Command
 {
@@ -107,8 +106,8 @@ public class GTFSCatchCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Catch GTFS stops"));
+    return tr("Public Transport: Catch GTFS stops");
   }
 };

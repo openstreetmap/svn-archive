@@ -10,7 +10,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 
 public class SettingsStoptypeCommand extends Command
 {
@@ -85,9 +84,9 @@ public class SettingsStoptypeCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Change stop type"));
+    return tr("Public Transport: Change stop type");
   }
 
 };

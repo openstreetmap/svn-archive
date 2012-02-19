@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class WaypointsEnableCommand extends Command
 {
@@ -79,8 +78,8 @@ public class WaypointsEnableCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Enable waypoints"));
+    return tr("Public Transport: Enable waypoints");
   }
 };

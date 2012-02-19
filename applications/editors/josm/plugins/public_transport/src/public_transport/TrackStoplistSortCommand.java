@@ -92,9 +92,9 @@ public class TrackStoplistSortCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: sort track stop list"));
+    return tr("Public Transport: sort track stop list");
   }
 
   private class NodeSortEntry implements Comparable< NodeSortEntry >

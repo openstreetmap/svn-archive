@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 
 public class TrackStoplistRelocateCommand extends Command
 {
@@ -87,8 +86,8 @@ public class TrackStoplistRelocateCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Relocate nodes in track stoplist"));
+    return tr("Public Transport: Relocate nodes in track stoplist");
   }
 };

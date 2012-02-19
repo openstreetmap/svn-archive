@@ -10,7 +10,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class GTFSJoinCommand extends Command
 {
@@ -105,8 +104,8 @@ public class GTFSJoinCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Join GTFS stops"));
+    return tr("Public Transport: Join GTFS stops");
   }
 };

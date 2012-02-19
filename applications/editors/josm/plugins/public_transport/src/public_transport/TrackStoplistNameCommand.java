@@ -10,7 +10,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class TrackStoplistNameCommand extends Command
 {
@@ -96,8 +95,8 @@ public class TrackStoplistNameCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Edit track stop list"));
+    return tr("Public Transport: Edit track stop list");
   }
 };

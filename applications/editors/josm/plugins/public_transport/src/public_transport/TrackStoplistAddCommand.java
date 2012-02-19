@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class TrackStoplistAddCommand extends Command
 {
@@ -42,8 +41,8 @@ public class TrackStoplistAddCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Add track stop"));
+    return tr("Public Transport: Add track stop");
   }
 };

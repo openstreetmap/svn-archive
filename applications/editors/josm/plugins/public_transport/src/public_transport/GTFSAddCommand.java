@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class GTFSAddCommand extends Command
 {
@@ -84,8 +83,8 @@ public class GTFSAddCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Enable GTFSStops"));
+    return tr("Public Transport: Enable GTFSStops");
   }
 };

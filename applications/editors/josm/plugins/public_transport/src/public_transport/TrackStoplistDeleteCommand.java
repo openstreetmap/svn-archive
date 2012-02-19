@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class TrackStoplistDeleteCommand extends Command
 {
@@ -95,8 +94,8 @@ public class TrackStoplistDeleteCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Delete track stop"));
+    return tr("Public Transport: Delete track stop");
   }
 };

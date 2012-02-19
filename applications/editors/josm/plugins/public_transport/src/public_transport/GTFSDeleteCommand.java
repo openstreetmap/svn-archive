@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class GTFSDeleteCommand extends Command
 {
@@ -88,8 +87,8 @@ public class GTFSDeleteCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Disable GTFS"));
+    return tr("Public Transport: Disable GTFS");
   }
 };

@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JLabel;
 
 public class WaypointsNameCommand extends Command
 {
@@ -73,8 +72,8 @@ public class WaypointsNameCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Edit waypoint name"));
+    return tr("Public Transport: Edit waypoint name");
   }
 };

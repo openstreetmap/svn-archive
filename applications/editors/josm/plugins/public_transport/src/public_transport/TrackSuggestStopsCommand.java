@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -201,9 +200,9 @@ public class TrackSuggestStopsCommand extends Command
   {
   }
 
-  @Override public JLabel getDescription()
+  @Override public String getDescriptionText()
   {
-    return new JLabel(tr("Public Transport: Suggest stops"));
+    return tr("Public Transport: Suggest stops");
   }
 
   private class NodeSortEntry implements Comparable< NodeSortEntry >

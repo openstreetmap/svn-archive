@@ -33,7 +33,8 @@ public class ToolsInformation {
             }
             rdr.close();
         } catch (Exception e) {
-            e.printStackTrace();
+	    System.err.println("Ext_Tools warning: can not load file "+filename);
+//            e.printStackTrace();
         }
     }
 
@@ -45,7 +46,8 @@ public class ToolsInformation {
                 w.write(tool.serialize());
             w.close();
         } catch (Exception e) {
-            e.printStackTrace();
+	    System.err.println("Ext_Tools warning: can not save file "+filename);
+//            e.printStackTrace();
         }
     }
 

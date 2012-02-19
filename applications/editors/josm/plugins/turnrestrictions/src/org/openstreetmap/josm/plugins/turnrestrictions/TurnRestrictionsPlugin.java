@@ -26,7 +26,7 @@ public class TurnRestrictionsPlugin extends Plugin{
             TurnRestrictionsListDialog dialog  = new TurnRestrictionsListDialog();
             // add the dialog
             newFrame.addToggleDialog(dialog);
-            CreateOrEditTurnRestrictionAction.install();
+            CreateOrEditTurnRestrictionAction.getInstance();
         }
     }
 

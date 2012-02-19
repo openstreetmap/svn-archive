@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
+import org.openstreetmap.josm.gui.preferences.map.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;

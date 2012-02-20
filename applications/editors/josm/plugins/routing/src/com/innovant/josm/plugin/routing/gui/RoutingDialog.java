@@ -67,7 +67,7 @@ public class RoutingDialog extends ToggleDialog {
 
     public RoutingDialog() {
         super(tr("Routing"), "routing", tr("Open a list of routing nodes"),
-                Shortcut.registerShortcut("subwindow:relations", tr("Toggle: {0}", tr("Routing")), KeyEvent.VK_R, Shortcut.ALT_CTRL_SHIFT), 150);
+                Shortcut.registerShortcut("subwindow:routing", tr("Toggle: {0}", tr("Routing")), KeyEvent.VK_R, Shortcut.ALT_CTRL_SHIFT), 150);
         model = new DefaultListModel();
         createLayout(getJScrollPane(), false, null);
     }

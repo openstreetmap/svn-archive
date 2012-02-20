@@ -24,7 +24,8 @@ public class UrlSelectionAction extends JosmAction {
 
     public UrlSelectionAction() {
         super(tr("Select URL..."), null, tr("Select URL to download from."),
-                Shortcut.registerShortcut("file:selecturl", tr("File: {0}", tr("Select URL...")), KeyEvent.VK_D, Shortcut.CTRL_SHIFT), true);
+                Shortcut.registerShortcut("file:selecturl", tr("File: {0}", tr("Select URL...")), KeyEvent.VK_D, Shortcut.CTRL_SHIFT),
+                true, "mirroreddownload/urlselection", true);
         putValue("help", ht("/Action/SelectUrl"));
     }
 

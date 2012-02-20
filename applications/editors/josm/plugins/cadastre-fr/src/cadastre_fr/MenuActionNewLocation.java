@@ -51,7 +51,7 @@ public class MenuActionNewLocation extends JosmAction {
     };
 
     public MenuActionNewLocation() {
-        super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false);
+        super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false, "cadastrefr/newlocation", true);
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -36,7 +36,7 @@ public class CommandAction extends JosmAction {
 	private CommandLine parentPlugin;
 	private Command parentCommand;
 	public CommandAction(Command parentCommand, CommandLine parentPlugin) {
-		super(tr(parentCommand.name), "blankmenu", tr(parentCommand.name), null, false, false);
+		super(tr(parentCommand.name), "blankmenu", tr(parentCommand.name), null, true, parentCommand.name, true);
 		if (!parentCommand.icon.equals("")) {
 			try {
 				putValue(Action.SMALL_ICON, ImageProvider.get(parentPlugin.pluginDir, parentCommand.icon));
@@ -47,9 +47,6 @@ public class CommandAction extends JosmAction {
 				putValue(Action.LARGE_ICON_KEY, ImageProvider.get("blankmenu"));
 			}
 		}
-		putValue("toolbar", parentCommand.name);
-		Main.toolbar.register(this);
-		installAdapters();
 
 		this.parentCommand = parentCommand;
 		this.parentPlugin = parentPlugin;

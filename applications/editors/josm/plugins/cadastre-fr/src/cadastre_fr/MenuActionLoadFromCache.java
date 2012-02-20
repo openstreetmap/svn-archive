@@ -22,7 +22,7 @@ public class MenuActionLoadFromCache extends JosmAction {
     public static String name = marktr("Load layer from cache");
 
     public MenuActionLoadFromCache() {
-        super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false);
+        super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false, "cadastrefr/loadfromcache", true);
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -53,7 +53,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private int initialClickDelay;
 
     public MenuActionGrabPlanImage() {
-        super(tr(name), "cadastre_small", tr("Grab non-georeferenced image"), null, false);
+        super(tr(name), "cadastre_small", tr("Grab non-georeferenced image"), null, false, "cadastrefr/grabplanimage", true);
     }
 
     public void actionCompleted() {

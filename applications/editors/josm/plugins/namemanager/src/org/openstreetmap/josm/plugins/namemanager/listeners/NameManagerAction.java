@@ -36,7 +36,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
      * Constructor.
      */
     public NameManagerAction() {
-        super(tr(NAME_MANAGER), NAME_MANAGER_MENU, tr(ATTRIBUTE_DISTRICTS), null, true);
+        super(tr(NAME_MANAGER), NAME_MANAGER_MENU, tr(ATTRIBUTE_DISTRICTS), null, true, "namemanager", true);
         DataSet.addSelectionListener(this);
         setEnabled(false);
     }

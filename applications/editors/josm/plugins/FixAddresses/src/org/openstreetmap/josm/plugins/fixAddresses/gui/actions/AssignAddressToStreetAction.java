@@ -33,7 +33,8 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 	 */
 	public AssignAddressToStreetAction() {
 		super(tr("Assign address to street"), "assignstreet_24",
-				tr("Assign the selected address(es) to the selected street."));
+			tr("Assign the selected address(es) to the selected street."),
+			"fixaddresses/assignaddresstostreet");
 	}
 
 	/**

@@ -30,7 +30,8 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 
 	public ConvertToRelationAction() {
 		super(tr("Convert to relation."), "convert2rel_24",
-				tr("Create relation between street and related addresses."));
+			tr("Create relation between street and related addresses."),
+			"fixaddresses/converttorelation");
 	}
 
 	/**
@@ -40,8 +41,8 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	 * @param iconName the icon name
 	 * @param tooltip the tool tip to show on hover
 	 */
-	public ConvertToRelationAction(String name, String iconName, String tooltip) {
-		super(name, iconName, tooltip);
+	public ConvertToRelationAction(String name, String iconName, String tooltip, String toolbar) {
+		super(name, iconName, tooltip, toolbar);
 	}
 
 	/* (non-Javadoc)

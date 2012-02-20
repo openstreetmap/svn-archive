@@ -51,8 +51,8 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 * @param name
 	 * @param icon
 	 */
-	public AbstractAddressEditAction(String name, String iconName, String tooltip) {
-		super(name, iconName, tooltip, null, true);
+	public AbstractAddressEditAction(String name, String iconName, String tooltip, String toolbar) {
+		super(name, iconName, tooltip, null, true, toolbar, true);
 
 		setEnabled(false);
 	}
@@ -61,7 +61,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 * @param name
 	 */
 	public AbstractAddressEditAction(String name) {
-		this(name, null, "");
+		this(name, null, "", null);
 	}
 
 	/**

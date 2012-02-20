@@ -52,7 +52,8 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	 * Instantiates a new "select addresses in map" action.
 	 */
 	public SelectAddressesInMapAction() {
-		super(tr("Select"), "selectall", tr("Marks selected addresses in the map"));
+		super(tr("Select"), "selectall", tr("Marks selected addresses in the map"),
+			"fixaddresses/selectaddressesinmap");
 	}
 
 	/* (non-Javadoc)

@@ -8,7 +8,7 @@ import org.osgeo.proj4j.datum.Ellipsoid;
 import org.osgeo.proj4j.proj.*;
 
 /**
- * Records predefined values for various library classes
+ * Supplies predefined values for various library classes
  * such as {@link Ellipsoid}, {@link Datum}, and {@link Projection}. 
  * 
  * @author Martin Davis
@@ -175,7 +175,7 @@ public class Registry {
     register( "kav5", KavraiskyVProjection.class, "Kavraisky V" );
 //    register( "kav7", Projection.class, "Kavraisky VII" );
 //    register( "labrd", Projection.class, "Laborde" );
-//    register( "laea", Projection.class, "Lambert Azimuthal Equal Area" );
+    register( "laea", LambertAzimuthalEqualAreaProjection.class, "Lambert Azimuthal Equal Area" );
     register( "lagrng", LagrangeProjection.class, "Lagrange" );
     register( "larr", LarriveeProjection.class, "Larrivee" );
     register( "lask", LaskowskiProjection.class, "Laskowski" );
@@ -225,7 +225,7 @@ public class Registry {
     register( "robin", RobinsonProjection.class, "Robinson" );
     register( "rpoly", RectangularPolyconicProjection.class, "Rectangular Polyconic" );
     register( "sinu", SinusoidalProjection.class, "Sinusoidal (Sanson-Flamsteed)" );
-//    register( "somerc", Projection.class, "Swiss. Obl. Mercator" );
+    register( "somerc", SwissObliqueMercatorProjection.class, "Swiss Oblique Mercator" );
     register( "stere", StereographicAzimuthalProjection.class, "Stereographic" );
     register( "sterea", ObliqueStereographicAlternativeProjection.class, "Oblique Stereographic Alternative" );
     register( "tcc", TranverseCentralCylindricalProjection.class, "Transverse Central Cylindrical" );

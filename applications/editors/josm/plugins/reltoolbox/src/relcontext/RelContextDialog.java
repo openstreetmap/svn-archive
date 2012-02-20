@@ -542,9 +542,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private class EnterRoleAction extends JosmAction implements ChosenRelationListener {
 
         public EnterRoleAction() {
-            super("…", null, tr("Enter role for selected members"),
+            super(tr("Change role"), null, tr("Enter role for selected members"),
                     Shortcut.registerShortcut("reltoolbox:changerole", tr("Relation Toolbox: {0}", tr("Enter role for selected members")),
-                    KeyEvent.VK_R, Shortcut.ALT_CTRL), true);
+                    KeyEvent.VK_R, Shortcut.ALT_CTRL), true, "relcontext/enterrole", true);
             chosenRelation.addChosenRelationListener(this);
             updateEnabledState();
         }

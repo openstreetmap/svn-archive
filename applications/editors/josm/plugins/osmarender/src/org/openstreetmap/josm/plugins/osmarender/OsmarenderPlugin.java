@@ -46,7 +46,7 @@ public class OsmarenderPlugin extends Plugin {
     private class Action extends JosmAction {
 
         public Action() {
-            super(tr("Osmarender"), null, tr("Osmarender"), null, true);
+            super(tr("Osmarender"), null, tr("Osmarender"), null, true, "osmarender", true);
         }
 
         public void actionPerformed(ActionEvent e) {

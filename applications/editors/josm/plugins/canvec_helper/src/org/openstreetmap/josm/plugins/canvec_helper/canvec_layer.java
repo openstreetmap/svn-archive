@@ -7,10 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Point;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -22,8 +24,10 @@ import java.util.zip.ZipException;
 
 // most of the layout was copied from the openstreetbugs plugin to get things started
 public class canvec_layer extends Layer implements MouseListener {
+	private Icon layerIcon = null;
 	canvec_helper plugin_self;
 	private ArrayList<CanVecTile> tiles = new ArrayList<CanVecTile>();
+
 	public canvec_layer(String name,canvec_helper self){
 		super(name);
 		plugin_self = self;
@@ -32,6 +36,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			CanVecTile tile = new CanVecTile(i,"",0,"",plugin_self);
 			if (tile.isValid()) tiles.add(tile);
 		}
+		layerIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/layericon.png")));
 	}
 	public Action[] getMenuEntries() {
 		return new Action[]{
@@ -51,9 +56,7 @@ public class canvec_layer extends Layer implements MouseListener {
 		return false;
 	}
 	public void mergeFrom(Layer from) {}
-	public Icon getIcon() {
-		return null; // FIXME
-	}
+	public Icon getIcon() { return layerIcon; }
 	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 		long start = System.currentTimeMillis();
 		System.out.println("painting the area covered by "+bounds.toString());

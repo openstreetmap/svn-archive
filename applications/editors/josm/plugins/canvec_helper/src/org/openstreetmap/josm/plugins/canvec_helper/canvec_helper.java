@@ -9,16 +9,13 @@ public class canvec_helper extends Plugin {
 	public canvec_helper(PluginInformation info) {
 		super(info);
 		System.out.println("in constructor");
+		Main.main.menu.imageryMenu.add(new CanvecHelperAction(this));
 	}
 	public void mapFrameInitialized(MapFrame old, MapFrame new1) {
 		System.out.println("mapFrame made!");
 		updateLayer();
 	}
 	private synchronized void updateLayer() {
-		if(layer == null) {
-			layer = new canvec_layer("canvec tile helper",this);
-			Main.main.addLayer(layer);
-		}
 	}
 	private canvec_layer layer;
 }

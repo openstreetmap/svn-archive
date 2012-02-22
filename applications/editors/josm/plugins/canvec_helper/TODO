@@ -1,0 +1,4 @@
+currently, it downloads .zip's in the main thread when you zoom in enough
+this is a waste of bandwidth and causes the ui to hang
+i need to rewrite it to use http://ftp2.cits.rncan.gc.ca/osm/pub/ZippedOsm.txt
+

@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import java.awt.Point;
@@ -27,6 +29,9 @@ public class CanVecTile {
 	
 	private ArrayList<CanVecTile> sub_tiles = new ArrayList<CanVecTile>();
 	private boolean sub_tiles_made = false;
+
+	private ArrayList<String> index;
+	private int depth;
 	
 	int corda,cordc;
 	private boolean valid = false;
@@ -42,12 +47,13 @@ public class CanVecTile {
 		int a,c;
 		a = Integer.parseInt(parta);
 		c = Integer.parseInt(partc);
-		real_init(a,partb,c,partd,self);
+		real_init(a,partb,c,partd,self,new ArrayList<String>());
 	}
-	public CanVecTile(int a,String b,int c,String d,canvec_helper self) {
-		real_init(a,b,c,d,self);
+	public CanVecTile(int a,String b,int c,String d,canvec_helper self,ArrayList<String> index) {
+		real_init(a,b,c,d,self,index);
 	}
-	public void real_init(int a,String b,int c,String d,canvec_helper self) {
+	public void real_init(int a,String b,int c,String d,canvec_helper self, ArrayList<String> index) {
+		this.index = index;
 		plugin_self = self;
 		corda = a;
 		cordb = b;
@@ -71,6 +77,7 @@ public class CanVecTile {
 				// each is 4x8 degrees, broken into a 4x4 grid
 				lat_span = 4;
 				lon_span = 8;
+				depth = 1;
 			} else {
 				return;
 			}
@@ -91,6 +98,7 @@ public class CanVecTile {
 		if (grid2 != 0) {
 			lat_span = lat_span / 4;
 			lon_span = lon_span / 4;
+			depth = 2;
 		}
 
 		int rows3[] = { 0, 0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3 };
@@ -101,9 +109,11 @@ public class CanVecTile {
 		if (c != 0) {
 			lat_span = lat_span / 4;
 			lon_span = lon_span / 4;
+			depth = 3;
 		}
 		
 		if (cordd != "") {
+			depth = 4;
 			System.out.println("cordd: "+cordd);
 			String foo[] = cordd.split("\\.");
 			for (int i = 0; i < foo.length; i++) {
@@ -141,11 +151,14 @@ public class CanVecTile {
 		else if (cordd == "") this.tileid = String.format("%03d%s%02d",corda,cordb,cordc);
 		else this.tileid = String.format("%03d%s%02d%s",corda,cordb,cordc,cordd);
 		valid = true;
-		System.out.println(this.tileid);
+		debug("creating tileid: "+this.tileid);
 	}
 	public boolean isValid() { return valid; }
 	public String getTileId() {
 		return this.tileid;
+	}
+	private void debug(String line) {
+		System.out.println(depth + "_" + tileid + ": " + line);
 	}
 	public boolean isVisible(Bounds view) {
 		return view.intersects(bounds);
@@ -219,14 +232,37 @@ public class CanVecTile {
 		if (sub_tiles_made) return;
 		switch (layer) {
 		case 1:
-			for (int i = 1; i < 17; i++) {
-				char temp[] = { (char) (64 + i) };
-				sub_tiles.add(new CanVecTile(corda,new String(temp),0,"",plugin_self));
+			ArrayList<String> buffer = new ArrayList<String>();
+			Pattern p = Pattern.compile("\\d\\d\\d([A-Z])(.*)");
+			String last_cell = "";
+//			for (int i = 1; i < 17; i++) {
+			for (int i = 0; i < index.size(); i++) {
+				debug(index.get(i));
+				Matcher m = p.matcher(index.get(i));
+				m.matches();
+
+				String cell = m.group(1);
+				debug("a " + cell + last_cell);
+				if (cell.equals(last_cell)) {
+					buffer.add(m.group(0));
+				} else if (last_cell == "") {
+				} else {
+				//char temp[] = { (char) (64 + i) };
+					debug("b "+corda+" "+last_cell);
+					debug(buffer.toString());
+					sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
+					buffer = new ArrayList<String>();
+					buffer.add(m.group(0));
+				}
+				last_cell = cell;
 			}
+			debug("c "+corda+" "+last_cell);
+			debug(buffer.toString());
+			sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
 			break;
 		case 2:
 			for (int i = 1; i < 17; i++) {
-				sub_tiles.add(new CanVecTile(corda,cordb,i,"",plugin_self));
+				sub_tiles.add(new CanVecTile(corda,cordb,i,"",plugin_self,new ArrayList<String>())); // FIXME
 			}
 			break;
 		}
@@ -235,14 +271,14 @@ public class CanVecTile {
 	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 		boolean show_sub_tiles = false;
 		if (!isVisible(bounds)) return;
-		if ((cordb != "") && (cordc > 0) && (cordd == "") && (bounds.getArea() < 0.5)) { // 022B01
+		if ((depth == 3) && (bounds.getArea() < 0.5)) { // 022B01
 			downloadSelf();
-			System.out.println(sub_tile_ids.toString());
+			debug(sub_tile_ids.toString());
 			show_sub_tiles = true;
-		} else if ((cordc == 0) && (bounds.getArea() < 20)) { // its a layer2 tile
+		} else if ((depth == 2) && (bounds.getArea() < 20)) { // its a layer2 tile
 			make_sub_tiles(2);
 			show_sub_tiles = true;
-		} else if ((cordb == "") && (bounds.getArea() < 40)) { // its a layer1 tile and zoom too small
+		} else if ((depth == 1) && (bounds.getArea() < 40)) { // its a layer1 tile and zoom too small
 			// draw layer2 tiles for self
 			make_sub_tiles(1);
 			show_sub_tiles = true;

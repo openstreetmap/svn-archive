@@ -151,6 +151,7 @@ public class CanVecTile {
 		else if (cordd == "") this.tileid = String.format("%03d%s%02d",corda,cordb,cordc);
 		else this.tileid = String.format("%03d%s%02d%s",corda,cordb,cordc,cordd);
 		valid = true;
+		debug(index.toString());
 		debug("creating tileid: "+this.tileid);
 	}
 	public boolean isValid() { return valid; }
@@ -229,41 +230,55 @@ public class CanVecTile {
 		}
 	}
 	private void make_sub_tiles(int layer) {
+		ArrayList<String> buffer = new ArrayList<String>();
+		Pattern p;
 		if (sub_tiles_made) return;
 		switch (layer) {
 		case 1:
-			ArrayList<String> buffer = new ArrayList<String>();
-			Pattern p = Pattern.compile("\\d\\d\\d([A-Z])(.*)");
+			p = Pattern.compile("\\d\\d\\d([A-Z]).*");
 			String last_cell = "";
-//			for (int i = 1; i < 17; i++) {
 			for (int i = 0; i < index.size(); i++) {
-				debug(index.get(i));
 				Matcher m = p.matcher(index.get(i));
 				m.matches();
 
 				String cell = m.group(1);
-				debug("a " + cell + last_cell);
 				if (cell.equals(last_cell)) {
 					buffer.add(m.group(0));
 				} else if (last_cell == "") {
+					buffer.add(m.group(0));
 				} else {
-				//char temp[] = { (char) (64 + i) };
-					debug("b "+corda+" "+last_cell);
-					debug(buffer.toString());
 					sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
 					buffer = new ArrayList<String>();
 					buffer.add(m.group(0));
 				}
 				last_cell = cell;
 			}
-			debug("c "+corda+" "+last_cell);
-			debug(buffer.toString());
 			sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
 			break;
 		case 2:
-			for (int i = 1; i < 17; i++) {
-				sub_tiles.add(new CanVecTile(corda,cordb,i,"",plugin_self,new ArrayList<String>())); // FIXME
+			debug("making layer2 tiles, index: "+index.toString());
+			p = Pattern.compile("\\d\\d\\d[A-Z](\\d\\d).*");
+			int last_cell2 = -1;
+			for (int i = 0; i < index.size(); i++) {
+				debug(index.get(i));
+				Matcher m = p.matcher(index.get(i));
+				m.matches();
+
+				int cell = Integer.parseInt(m.group(1));
+				if (cell == last_cell2) {
+					buffer.add(m.group(0));
+				} else if (last_cell2 == -1) {
+					buffer.add(m.group(0));
+				} else {
+					debug(buffer.toString());
+					debug(""+last_cell2);
+					sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",plugin_self,buffer));
+					buffer = new ArrayList<String>();
+					buffer.add(m.group(0));
+				}
+				last_cell2 = cell;
 			}
+			if (last_cell2 != -1) sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",plugin_self,buffer));
 			break;
 		}
 		sub_tiles_made = true;

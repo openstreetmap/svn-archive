@@ -157,7 +157,6 @@
         <ant antfile="build.xml" target="clean" dir="reltoolbox"/>
         <ant antfile="build.xml" target="clean" dir="restart"/>
         <ant antfile="build.xml" target="clean" dir="reverter"/>
-        <ant antfile="build.xml" target="clean" dir="rgisopen"/>
         <ant antfile="build.xml" target="clean" dir="roadsigns"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>

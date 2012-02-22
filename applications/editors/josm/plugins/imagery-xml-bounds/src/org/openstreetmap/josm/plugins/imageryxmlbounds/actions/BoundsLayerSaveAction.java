@@ -15,24 +15,32 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.imageryxmlbounds.actions;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import org.openstreetmap.josm.actions.SaveAction;
+import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerSaveAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 
 /**
- * 
+ *
  * @author Don-vip
  *
  */
 @SuppressWarnings("serial")
 public class BoundsLayerSaveAction extends LayerSaveAction {
 
-	public static class SaveBoundsAction extends SaveAction {
-		
+	public static class SaveBoundsAction extends SaveActionBase {
+
+		public SaveBoundsAction() {
+	        super(tr("Save"), "save", tr("Save the current data."), null);
+	        putValue("help", ht("/Action/Save"));
+		}
+
 		@Override public File getFile(Layer layer) {
 	        File f = layer.getAssociatedFile();
 	        if (f != null && ! f.exists()) {
@@ -43,12 +51,13 @@ public class BoundsLayerSaveAction extends LayerSaveAction {
 	}
 
 	protected XmlBoundsLayer layer;
-	
+
 	public BoundsLayerSaveAction(XmlBoundsLayer layer) {
 		super(layer);
 	}
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         new SaveBoundsAction().doSave(layer);
     }
 }

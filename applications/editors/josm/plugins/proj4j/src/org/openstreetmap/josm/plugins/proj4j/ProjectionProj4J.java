@@ -208,7 +208,7 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
     @Override
     public String toString() {
         // TODO: include description in string
-        return tr("Proj4J: " + crsCode);
+        return tr("Proj4J: {0} selected", crsCode);
     }
 
     @Override

@@ -29,9 +29,9 @@
 -->
 <project name="reltoolbox" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="RelToolbox"/>
+    <property name="commit.message" value="RelToolbox: fix redifinition warnings"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5018"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -242,4 +242,10 @@
     </target>
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
+    <target name="runjosm" depends="install">
+        <java jar="${josm}" fork="true">
+            <arg line="e:/test.osm"/>
+        </java>
+    </target>
+    
 </project>

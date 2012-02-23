@@ -1,5 +1,6 @@
 package relcontext;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -16,6 +17,7 @@ public class RelContextPlugin extends Plugin {
     @Override
     public void mapFrameInitialized( MapFrame oldFrame, MapFrame newFrame ) {
         if( oldFrame == null && newFrame != null ) {
+//            if (dialog!=null) dialog.destroy();
             dialog = new RelContextDialog();
             newFrame.addToggleDialog(dialog);
         }

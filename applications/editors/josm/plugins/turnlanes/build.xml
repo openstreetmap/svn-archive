@@ -29,9 +29,9 @@
 -->
 <project name="turnlanes" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
+    <property name="commit.message" value="fix toolbar warnings - toolbar still does not work"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5018"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

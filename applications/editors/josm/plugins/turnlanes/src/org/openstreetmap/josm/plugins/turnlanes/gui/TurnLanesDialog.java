@@ -46,8 +46,9 @@ public class TurnLanesDialog extends ToggleDialog {
         public EditAction() {
             super(tr("Edit"), "dialogs/edit", tr("Edit turn relations and lane lengths for selected node."), null,
                     false);
-            putValue("toolbar", "turnlanes/edit");
-            Main.toolbar.register(this);
+            //putValue("toolbar", "turnlanes/edit");            Main.toolbar.register(this);
+	    // did not work in 5018
+
         }
         
         @Override
@@ -66,8 +67,8 @@ public class TurnLanesDialog extends ToggleDialog {
         public ValidateAction() {
             super(tr("Validate"), "dialogs/validator", tr("Validate turn- and lane-length-relations for consistency."),
                     null, false);
-            putValue("toolbar", "turnlanes/validate");
-            Main.toolbar.register(this);
+            // putValue("toolbar", "turnlanes/validate");            Main.toolbar.register(this);
+	    // did not work in 5018
         }
         
         @Override

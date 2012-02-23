@@ -30,7 +30,7 @@ public class CreateMultipolygonAction extends JosmAction {
     public CreateMultipolygonAction( ChosenRelation chRel ) {
 	super("Multi", "data/multipolygon", tr("Create a multipolygon from selected objects"),
 		Shortcut.registerShortcut("reltoolbox:multipolygon", tr("Relation Toolbox: {0}", tr("Create multipolygon")),
-		KeyEvent.VK_B, Shortcut.CTRL), true);
+		KeyEvent.VK_B, Shortcut.CTRL), false);
 	this.chRel = chRel;
 	updateEnabledState();
     }

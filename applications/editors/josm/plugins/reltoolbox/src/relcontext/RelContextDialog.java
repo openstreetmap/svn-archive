@@ -57,7 +57,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class RelContextDialog extends ToggleDialog implements EditLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
 
     public final static String PREF_PREFIX = "reltoolbox";
-
+    
     private final DefaultTableModel relationsData;
     private ChosenRelation chosenRelation;
     private JPanel chosenRelationPanel;
@@ -65,6 +65,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private MultipolygonSettingsPopup multiPopupMenu;
     private RoleComboBoxModel roleBoxModel;
     private SortAndFixAction sortAndFixAction;
+    // actions saved for unregistering on dialog destroying
+    private final EnterRoleAction enterRoleAction;
+    private final FindRelationAction findRelationAction;
+    private final CreateMultipolygonAction createMultipolygonAction;
+    private final CreateRelationAction createRelationAction;
+    private final AddRemoveMemberAction addRemoveMemberAction;
 
     public RelContextDialog() {
         super(tr("Relation Toolbox"), PREF_PREFIX, tr("Open relation/multipolygon editor panel"), null, 150, true);
@@ -100,11 +106,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         roleBox.setVisible(false);
-        final Action enterRoleAction = new EnterRoleAction(); // just for the shortcut
+        enterRoleAction = new EnterRoleAction(); // just for the shortcut
 
         // [±][X] relation U [AZ][Down][Edit]
         chosenRelationPanel = new JPanel(new GridBagLayout());
-        chosenRelationPanel.add(new JButton(new AddRemoveMemberAction(chosenRelation)), GBC.std());
+        addRemoveMemberAction = new AddRemoveMemberAction(chosenRelation);
+        chosenRelationPanel.add(new JButton(addRemoveMemberAction), GBC.std());
         chosenRelationPanel.add(sizeButton(new JButton(new ClearChosenRelationAction(chosenRelation)), 32, 0), GBC.std());
         final ChosenRelationComponent chosenRelationComponent = new ChosenRelationComponent(chosenRelation);
         chosenRelationComponent.addMouseListener(relationMouseAdapter);
@@ -146,12 +153,15 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         // [+][Multi] [X]Adm [X]Tags [X]1
         JPanel bottomLine = new JPanel(new GridBagLayout());
-        bottomLine.add(new JButton(new CreateRelationAction(chosenRelation)), GBC.std());
-        final JButton multipolygonButton = new JButton(new CreateMultipolygonAction(chosenRelation));
+        createRelationAction = new CreateRelationAction(chosenRelation);
+        bottomLine.add(new JButton(createRelationAction), GBC.std());
+        createMultipolygonAction = new CreateMultipolygonAction(chosenRelation);
+        final JButton multipolygonButton = new JButton(createMultipolygonAction);
         bottomLine.add(multipolygonButton, GBC.std());
 //        bottomLine.add(sizeButton(new JButton(new MultipolygonSettingsAction()), 16, 0), GBC.std().fill(GBC.VERTICAL));
         bottomLine.add(Box.createHorizontalGlue(), GBC.std().fill());
-        bottomLine.add(new JButton(new FindRelationAction(chosenRelation)), GBC.eol());
+        findRelationAction = new FindRelationAction(chosenRelation);
+        bottomLine.add(new JButton(findRelationAction), GBC.eol());
         rcPanel.add(sizeButton(bottomLine, 0, 24), BorderLayout.SOUTH);
 
         multipolygonButton.addMouseListener(new MouseAdapter() {
@@ -350,6 +360,16 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         updateSelection();
     }
 
+    @Override
+    public void destroy() {
+        enterRoleAction.destroy();
+        findRelationAction.destroy();
+        createMultipolygonAction.destroy();
+        createRelationAction.destroy();
+        addRemoveMemberAction.destroy();
+        super.destroy();
+    }
+    
     private static final String POSSIBLE_ROLES_FILE = "relcontext/possible_roles.txt";
     private static final Map<String, List<String>> possibleRoles = loadRoles();
 
@@ -544,7 +564,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public EnterRoleAction() {
             super(tr("Change role"), null, tr("Enter role for selected members"),
                     Shortcut.registerShortcut("reltoolbox:changerole", tr("Relation Toolbox: {0}", tr("Enter role for selected members")),
-                    KeyEvent.VK_R, Shortcut.ALT_CTRL), true, "relcontext/enterrole", true);
+                    KeyEvent.VK_R, Shortcut.ALT_CTRL), false, "relcontext/enterrole", true);
             chosenRelation.addChosenRelationListener(this);
             updateEnabledState();
         }
@@ -560,8 +580,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
             setEnabled(newRelation != null);
         }
-    }
-
+        }
+        
     private class RoleComboBoxModel extends AbstractListModel implements ComboBoxModel {
         private List<String> roles = new ArrayList<String>();
         private int selectedIndex = -1;

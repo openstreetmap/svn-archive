@@ -5,17 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeSet;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -48,7 +40,8 @@ public class WaySelectorPlugin extends Plugin {
                   true);
         }
 
-        public void actionPerformed(ActionEvent ev) {
+        @Override
+		public void actionPerformed(ActionEvent ev) {
         DataSet ds = Main.main.getCurrentDataSet();
         WaySelection ws = new WaySelection(ds.getSelectedWays());
         ws.extend(ds);

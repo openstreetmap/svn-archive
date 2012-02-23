@@ -12,7 +12,6 @@ public class canvec_helper extends Plugin {
 		Main.main.menu.imageryMenu.add(new CanvecHelperAction(this));
 	}
 	public void mapFrameInitialized(MapFrame old, MapFrame new1) {
-		System.out.println("mapFrame made!");
 		updateLayer();
 	}
 	private synchronized void updateLayer() {

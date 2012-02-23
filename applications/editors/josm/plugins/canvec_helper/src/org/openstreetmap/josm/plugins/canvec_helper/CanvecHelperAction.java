@@ -1,7 +1,6 @@
 package org.openstreetmap.josm.plugins.canvec_helper;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.Main;
 
 public class CanvecHelperAction extends JosmAction {

@@ -2,7 +2,9 @@ package org.openstreetmap.josm.plugins.canvec_helper;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.gui.layer.Layer;
+import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Point;
@@ -12,9 +14,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -26,10 +31,12 @@ import java.util.ArrayList;
 import java.util.zip.ZipException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.List;
 
 // most of the layout was copied from the openstreetbugs plugin to get things started
 public class canvec_layer extends Layer implements MouseListener {
 	private Icon layerIcon = null;
+	private int max_zoom = 3;
 	canvec_helper plugin_self;
 	private ArrayList<CanVecTile> tiles = new ArrayList<CanVecTile>();
 
@@ -79,7 +86,29 @@ public class canvec_layer extends Layer implements MouseListener {
 			LayerListDialog.getInstance().createShowHideLayerAction(),
 			LayerListDialog.getInstance().createDeleteLayerAction(),
 			SeparatorLayerAction.INSTANCE,
-			new LayerListPopup.InfoAction(this)};
+			new LayerListPopup.InfoAction(this),
+			new MaxZoomAction(this)};
+	}
+	public class MaxZoomAction extends AbstractAction implements LayerAction {
+		private canvec_layer parent;
+		public MaxZoomAction(canvec_layer parent) {
+			this.parent = parent;
+		}
+		public void actionPerformed(ActionEvent e) {}
+		public boolean supportLayers(List<Layer> layers) {
+			return false;
+		}
+		public Component createMenuComponent() {
+			JMenu max_zoom = new JMenu("max zoom");
+			max_zoom.add(new JMenuItem(new SetMaxZoom(parent,1)));
+			max_zoom.add(new JMenuItem(new SetMaxZoom(parent,2)));
+			max_zoom.add(new JMenuItem(new SetMaxZoom(parent,3)));
+			max_zoom.add(new JMenuItem(new SetMaxZoom(parent,4)));
+			return max_zoom;
+		}
+	}
+	public void setMaxZoom(int max_zoom) {
+		this.max_zoom = max_zoom;
 	}
 	public Object getInfoComponent() {
 		return getToolTipText();
@@ -100,7 +129,7 @@ public class canvec_layer extends Layer implements MouseListener {
 		g.setColor(Color.red);
 		for (int i = 0; i < tiles.size(); i++) {
 			CanVecTile tile = tiles.get(i);
-			tile.paint(g,mv,bounds);
+			tile.paint(g,mv,bounds,max_zoom);
 		}
 		long end = System.currentTimeMillis();
 		//System.out.println((end-start)+"ms spent");

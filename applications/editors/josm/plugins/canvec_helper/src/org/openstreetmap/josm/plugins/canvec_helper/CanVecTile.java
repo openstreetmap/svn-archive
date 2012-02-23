@@ -151,8 +151,8 @@ public class CanVecTile {
 		else if (cordd == "") this.tileid = String.format("%03d%s%02d",corda,cordb,cordc);
 		else this.tileid = String.format("%03d%s%02d%s",corda,cordb,cordc,cordd);
 		valid = true;
-		debug(index.toString());
-		debug("creating tileid: "+this.tileid);
+		//debug(index.toString());
+		//debug("creating tileid: "+this.tileid);
 	}
 	public boolean isValid() { return valid; }
 	public String getTileId() {
@@ -256,11 +256,9 @@ public class CanVecTile {
 			sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
 			break;
 		case 2:
-			debug("making layer2 tiles, index: "+index.toString());
 			p = Pattern.compile("\\d\\d\\d[A-Z](\\d\\d).*");
 			int last_cell2 = -1;
 			for (int i = 0; i < index.size(); i++) {
-				debug(index.get(i));
 				Matcher m = p.matcher(index.get(i));
 				m.matches();
 
@@ -270,8 +268,6 @@ public class CanVecTile {
 				} else if (last_cell2 == -1) {
 					buffer.add(m.group(0));
 				} else {
-					debug(buffer.toString());
-					debug(""+last_cell2);
 					sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",plugin_self,buffer));
 					buffer = new ArrayList<String>();
 					buffer.add(m.group(0));
@@ -283,12 +279,11 @@ public class CanVecTile {
 		}
 		sub_tiles_made = true;
 	}
-	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
+	public void paint(Graphics2D g, MapView mv, Bounds bounds, int max_zoom) {
 		boolean show_sub_tiles = false;
 		if (!isVisible(bounds)) return;
 		if ((depth == 3) && (bounds.getArea() < 0.5)) { // 022B01
-			downloadSelf();
-			debug(sub_tile_ids.toString());
+			if (max_zoom == 4) downloadSelf();
 			show_sub_tiles = true;
 		} else if ((depth == 2) && (bounds.getArea() < 20)) { // its a layer2 tile
 			make_sub_tiles(2);
@@ -297,6 +292,12 @@ public class CanVecTile {
 			// draw layer2 tiles for self
 			make_sub_tiles(1);
 			show_sub_tiles = true;
+		}
+		if (show_sub_tiles && (depth < max_zoom)) {
+			for (int i = 0; i < sub_tiles.size(); i++) {
+				CanVecTile tile = sub_tiles.get(i);
+				tile.paint(g,mv,bounds,max_zoom);
+			}
 		} else {
 			Point corners[] = getCorners(mv);
 			int xs[] = { corners[0].x, corners[1].x, corners[2].x, corners[3].x };
@@ -304,12 +305,6 @@ public class CanVecTile {
 			Polygon shape = new Polygon(xs,ys,4);
 			g.draw(shape);
 			g.drawString(getTileId(),corners[0].x,corners[0].y);
-		}
-		if (show_sub_tiles) {
-			for (int i = 0; i < sub_tiles.size(); i++) {
-				CanVecTile tile = sub_tiles.get(i);
-				tile.paint(g,mv,bounds);
-			}
 		}
 	}
 }

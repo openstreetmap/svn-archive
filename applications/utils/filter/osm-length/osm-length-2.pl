@@ -33,7 +33,7 @@ my $lastnode;
 
 while(<>) 
 {
-    if (/^\s*<node.*\sid=["'](\d+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
+    if (/^\s*<node.*\sid=["']([0-9-]+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
     {
         $nodes->{$1}=[$2,$3];
     }
@@ -56,7 +56,7 @@ while(<>)
         }
         $lastnode = $nodes->{$1};
     }
-    elsif ((/^\s*<\/way/) && defined($hw))
+    elsif ((/^\s*<\/way/))
     {
         printf "   <d length='%f'/>\n", $waylen;
         $waysum->{$hw} += $waylen;

@@ -62,15 +62,15 @@ public class ReplaceGeometryAction extends JosmAction {
         }
          
     }
-    public void replace(OsmPrimitive firstObject, OsmPrimitive secondObject) {
+    public boolean replace(OsmPrimitive firstObject, OsmPrimitive secondObject) {
         if (firstObject instanceof Way && secondObject instanceof Way) {
-            replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
+            return replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
         } else if (firstObject instanceof Node && secondObject instanceof Node) {
             throw new IllegalArgumentException(tr("To replace a node with a node, use the node merge tool."));
         } else if (firstObject instanceof Node) {
-            replaceNode((Node) firstObject, secondObject);
+            return replaceNode((Node) firstObject, secondObject);
         } else if (secondObject instanceof Node) {
-            replaceNode((Node) secondObject, firstObject);
+            return replaceNode((Node) secondObject, firstObject);
         } else {
             throw new IllegalArgumentException(tr("This tool can only replace a node with a way, a node with a multipolygon, or a way with a way."));
         }
@@ -82,17 +82,17 @@ public class ReplaceGeometryAction extends JosmAction {
      * @param node
      * @param target
      */
-    public void replaceNode(Node node, OsmPrimitive target) {
+    public boolean replaceNode(Node node, OsmPrimitive target) {
         if (!OsmPrimitive.getFilteredList(node.getReferrers(), Way.class).isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return;
+            return false;
         }
 
         if (target instanceof Relation && !((Relation) target).isMultipolygon()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Relation is not a multipolygon, cannot be used as a replacement."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return;
+            return false;
         }
 
         Node nodeToReplace = null;
@@ -124,7 +124,7 @@ public class ReplaceGeometryAction extends JosmAction {
         Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(node, target);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
-            return;
+            return false;
         }
         commands.addAll(tagResolutionCommands);
 
@@ -160,9 +160,10 @@ public class ReplaceGeometryAction extends JosmAction {
         Main.main.undoRedo.add(new SequenceCommand(
                 tr("Replace geometry for node {0}", node.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
+        return true;
     }
     
-    public void replaceWayWithWay(List<Way> selection) {
+    public boolean replaceWayWithWay(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
@@ -189,7 +190,7 @@ public class ReplaceGeometryAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select one way that exists in the database and one new way with correct geometry."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
 
         Area a = getCurrentDataSet().getDataSourceArea();
@@ -197,14 +198,14 @@ public class ReplaceGeometryAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("The ways must be entirely within the downloaded area."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
         
         if (hasImportantNode(geometry, way)) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
-            return;
+            return false;
         }
 
         List<Command> commands = new ArrayList<Command>();
@@ -213,7 +214,7 @@ public class ReplaceGeometryAction extends JosmAction {
         Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(geometry, way);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
-            return;
+            return false;
         }
         commands.addAll(tagResolutionCommands);
         
@@ -272,6 +273,7 @@ public class ReplaceGeometryAction extends JosmAction {
         Main.main.undoRedo.add(new SequenceCommand(
                 tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
+        return true;
     }
 
     /**

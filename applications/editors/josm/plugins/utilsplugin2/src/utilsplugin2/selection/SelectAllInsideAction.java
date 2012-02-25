@@ -14,10 +14,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -31,32 +28,14 @@ public class SelectAllInsideAction extends JosmAction {
                 KeyEvent.VK_I, Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/SelectAllInside"));
     }
-
+    
+    @Override
     public void actionPerformed(ActionEvent e) {
         long t=System.currentTimeMillis();
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
-        Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
-
-        for (Relation r: selectedRels) {
-            if (!r.isMultipolygon()) selectedRels.remove(r);
-        }
-
-        Set<Way> newWays = new HashSet<Way>();
-        Set<Node> newNodes = new HashSet<Node>();
-        // select ways attached to already selected ways
-        if (!selectedWays.isEmpty()) {
-            for (Way w: selectedWays) {
-                NodeWayUtils.addAllInsideWay(getCurrentDataSet(),w,newWays,newNodes);
-            }
-        }
-        if (!selectedRels.isEmpty()) {
-            for (Relation r: selectedRels) {
-                NodeWayUtils.addAllInsideMultipolygon(getCurrentDataSet(),r,newWays,newNodes);
-            }
-        }
-        if (!newWays.isEmpty() || !newNodes.isEmpty()) {
-            getCurrentDataSet().addSelected(newWays);
-            getCurrentDataSet().addSelected(newNodes);
+        Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(getCurrentDataSet().getSelected(), getCurrentDataSet());
+        
+        if (!insideSelected.isEmpty()) {
+            getCurrentDataSet().addSelected(insideSelected);
         } else{
         JOptionPane.showMessageDialog(Main.parent,
                tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"),

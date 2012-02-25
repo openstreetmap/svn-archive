@@ -147,7 +147,7 @@ public final class NodeWayUtils {
      * @param initWays ways to check intersections
      * @param newWays set to place the ways we found
      */
-    static int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
+    public static int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
         int count=0;
         for (Way w : initWays){
             count+=addWaysIntersectingWay(allWays, w, newWays);
@@ -171,7 +171,7 @@ public final class NodeWayUtils {
         return newNodes.size()-s;
     }
 
-    static void addWaysIntersectingWaysRecursively
+    public static void addWaysIntersectingWaysRecursively
             (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays)
     {
             Set<Way> foundWays = new HashSet<Way>();
@@ -457,5 +457,39 @@ public final class NodeWayUtils {
        // System.out.printf("Intersected intercount %d %s\n",interCount, point.toString());
         if (interCount%2 == 1) return 1; else return 0;
     }
+    
+    public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(selected, Way.class);
+        Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(selected, Relation.class);
+
+        for (Iterator<Relation> it = selectedRels.iterator(); it.hasNext();) {
+            Relation r = it.next();
+            if (!r.isMultipolygon()) {
+                it.remove();
+            }
+        }
+
+        Set<Way> newWays = new HashSet<Way>();
+        Set<Node> newNodes = new HashSet<Node>();
+        // select ways attached to already selected ways
+        if (!selectedWays.isEmpty()) {
+            for (Way w: selectedWays) {
+                addAllInsideWay(dataset,w,newWays,newNodes);
+            }
+        }
+        if (!selectedRels.isEmpty()) {
+            for (Relation r: selectedRels) {
+                addAllInsideMultipolygon(dataset,r,newWays,newNodes);
+            }
+        }
+        
+        Set<OsmPrimitive> insideSelection = new HashSet<OsmPrimitive>();
+        if (!newWays.isEmpty() || !newNodes.isEmpty()) {
+            insideSelection.addAll(newWays);
+            insideSelection.addAll(newNodes);
+        }
+        return insideSelection;
+    }
+
 
 }

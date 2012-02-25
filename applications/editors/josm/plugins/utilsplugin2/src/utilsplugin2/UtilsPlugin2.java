@@ -7,6 +7,10 @@ import utilsplugin2.customurl.UtilsPluginPreferences;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import utilsplugin2.selection.*;
@@ -14,6 +18,15 @@ import utilsplugin2.dumbutils.*;
 import utilsplugin2.curves.*;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.search.PushbackTokenizer;
+import org.openstreetmap.josm.actions.search.SearchCompiler;
+import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
+import org.openstreetmap.josm.actions.search.SearchCompiler.ParseError;
+import org.openstreetmap.josm.actions.search.SearchCompiler.UnaryMatch;
+import org.openstreetmap.josm.actions.search.SearchCompiler.UnaryMatchFactory;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -93,6 +106,8 @@ public class UtilsPlugin2 extends Plugin {
         selectURL = MainMenu.add(toolsMenu, new ChooseURLAction());
 	drawArc = MainMenu.add(toolsMenu, new CurveAction());
 
+        // register search operators
+        SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
     }
 
     @Override
@@ -132,5 +147,102 @@ public class UtilsPlugin2 extends Plugin {
     public PreferenceSetting getPreferenceSetting() {
         return new UtilsPluginPreferences();
     }
+    
+    public static class UtilsUnaryMatchFactory implements UnaryMatchFactory {
+        private static Collection<String> keywords = Arrays.asList("inside",
+                "intersecting", "allintersecting");
+        
+        @Override
+        public UnaryMatch get(String keyword, Match matchOperand, PushbackTokenizer tokenizer) throws ParseError {
+            if ("inside".equals(keyword))
+                return new InsideMatch(matchOperand);
+            else if ("intersecting".equals(keyword))
+                return new IntersectingMatch(matchOperand, false);
+            else if ("allintersecting".equals(keyword))
+                return new IntersectingMatch(matchOperand, true);
+            return null;
+        }
 
+        @Override
+        public Collection<String> getKeywords() {
+            return keywords;
+        }
+    }
+
+    /**
+     * Matches all objects contained within the match expression.
+     */
+    public static class InsideMatch extends UnaryMatch {
+        private Collection<OsmPrimitive> inside = null;
+        
+        public InsideMatch(Match match) {
+            super(match);
+            init();
+        }
+        
+        /**
+         * Find all objects inside areas which match the expression
+         */
+        private void init() {
+            Collection<OsmPrimitive> matchedAreas = new HashSet<OsmPrimitive>();
+
+            // find all ways that match the expression
+            Collection<Way> ways = Main.main.getCurrentDataSet().getWays();
+            for (Way way : ways) {
+                if (match.match(way))
+                    matchedAreas.add(way);
+            }
+            
+            // find all relations that match the expression
+            Collection<Relation> rels = Main.main.getCurrentDataSet().getRelations();
+            for (Relation rel : rels) {
+                if (match.match(rel))
+                    matchedAreas.add(rel);
+            }
+            
+            inside = NodeWayUtils.selectAllInside(matchedAreas, Main.main.getCurrentDataSet());
+        }
+
+        @Override
+        public boolean match(OsmPrimitive osm) {
+            return inside.contains(osm);
+        }
+    }
+    
+    public static class IntersectingMatch extends UnaryMatch {
+        private Collection<Way> intersecting = null;
+        
+        public IntersectingMatch(Match match, boolean all) {
+            super(match);
+            init(all);
+        }   
+        
+        /**
+         * Find (all) ways intersecting ways which match the expression.
+         */
+        private void init(boolean all) {
+            Collection<Way> matchedWays = new HashSet<Way>();
+            
+            // find all ways that match the expression
+            Collection<Way> allWays = Main.main.getCurrentDataSet().getWays();
+            for (Way way : allWays) {
+                if (match.match(way))
+                    matchedWays.add(way);
+            }
+            
+            Set<Way> newWays = new HashSet<Way>();
+            if (all)
+                NodeWayUtils.addWaysIntersectingWaysRecursively(allWays, matchedWays, newWays);
+            else
+                NodeWayUtils.addWaysIntersectingWays(allWays, matchedWays, newWays);
+            intersecting = newWays;
+        }
+        
+        @Override
+        public boolean match(OsmPrimitive osm) {
+            if (osm instanceof Way)
+                return intersecting.contains((Way)osm);
+            return false;
+        }
+    }
 }

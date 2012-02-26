@@ -35,7 +35,7 @@ public class SmedTabAction extends JosmAction {
 	private static String editor = tr("SeaMap Editor");
 
 	public SmedTabAction() {
-//        super( editor, "Smed",editor, Shortcut.registerShortcut("tools:Seamaps", tr("Tool: {0}", tr("SeaMap Editor")), KeyEvent.VK_K, Shortcut.SHIFT), true);  //$NON-NLS-1$ //$NON-NLS-2$
+        super( editor, "Smed",editor, Shortcut.registerShortcut("tools:Seamaps", tr("Tool: {0}", tr("SeaMap Editor")), KeyEvent.VK_K, Shortcut.SHIFT_DEFAULT), true);  //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

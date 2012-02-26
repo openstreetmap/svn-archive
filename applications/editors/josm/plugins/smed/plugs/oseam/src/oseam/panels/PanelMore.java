@@ -271,7 +271,7 @@ public class PanelMore extends JPanel {
 		addCnsItem(Messages.getString("Unsurfaced"), Cns.USURF);
 		addCnsItem(Messages.getString("Wooden"), Cns.WOOD);
 		addCnsItem(Messages.getString("Metal"), Cns.METAL);
-		addCnsItem(Messages.getString("GRP"), Cns.GRP);
+		addCnsItem(Messages.getString("GRP"), Cns.GLAS);
 		addCnsItem(Messages.getString("Painted"), Cns.PAINT);
 		add(constrBox);
 		constrBox.addActionListener(alConstr);

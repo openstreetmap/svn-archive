@@ -119,8 +119,8 @@ public class PanelChan extends JPanel {
 				} else {
 					switch (dlg.panelMain.mark.getCategory()) {
 					case LAM_PORT:
-					case LAM_PPORT:
-						dlg.panelMain.mark.setTopmark(Top.CAN);
+					case LAM_PSTBD:
+						dlg.panelMain.mark.setTopmark(Top.CYL);
 						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
 							dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
@@ -131,14 +131,19 @@ public class PanelChan extends JPanel {
 							dlg.panelMain.mark.setTopColour(Col.GREEN);
 							break;
 						case C:
-							dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
-							dlg.panelMain.mark.setTopColour(Col.RED);
-							dlg.panelMain.mark.addTopColour(Col.WHITE);
+							if (dlg.panelMain.mark.getCategory() == Cat.LAM_PORT) {
+								dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
+								dlg.panelMain.mark.setTopColour(Col.RED);
+								dlg.panelMain.mark.addTopColour(Col.WHITE);
+							} else {
+								dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
+								dlg.panelMain.mark.setTopColour(Col.RED);
+							}
 							break;
 						}
 						break;
 					case LAM_STBD:
-					case LAM_PSTBD:
+					case LAM_PPORT:
 						dlg.panelMain.mark.setTopmark(Top.CONE);
 						switch (dlg.panelMain.mark.getRegion()) {
 						case A:
@@ -150,9 +155,14 @@ public class PanelChan extends JPanel {
 							dlg.panelMain.mark.setTopColour(Col.RED);
 							break;
 						case C:
-							dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
-							dlg.panelMain.mark.setTopColour(Col.GREEN);
-							dlg.panelMain.mark.addTopColour(Col.WHITE);
+							if (dlg.panelMain.mark.getCategory() == Cat.LAM_STBD) {
+								dlg.panelMain.mark.setTopPattern(Pat.HSTRP);
+								dlg.panelMain.mark.setTopColour(Col.GREEN);
+								dlg.panelMain.mark.addTopColour(Col.WHITE);
+							} else {
+								dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
+								dlg.panelMain.mark.setTopColour(Col.GREEN);
+							}
 							break;
 						}
 						break;

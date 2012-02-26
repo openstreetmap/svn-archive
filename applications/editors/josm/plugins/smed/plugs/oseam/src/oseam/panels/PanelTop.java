@@ -52,7 +52,7 @@ public class PanelTop extends JPanel {
 		panelPat.setBounds(new Rectangle(160, 0, 110, 160));
 		add(panelPat);
 		add(getTopButton(noTopButton, 0, 5, 27, 27, "NoTop", Top.NOTOP));
-		add(getTopButton(canTopButton, 30, 5, 27, 27, "CanTop", Top.CAN));
+		add(getTopButton(canTopButton, 30, 5, 27, 27, "CanTop", Top.CYL));
 		add(getTopButton(coneTopButton, 60, 5, 27, 27, "ConeTop", Top.CONE));
 		add(getTopButton(sphereTopButton, 90, 5, 27, 27, "SphereTop", Top.SPHERE));
 		add(getTopButton(XTopButton, 120, 5, 27, 27, "XTop", Top.X_SHAPE));

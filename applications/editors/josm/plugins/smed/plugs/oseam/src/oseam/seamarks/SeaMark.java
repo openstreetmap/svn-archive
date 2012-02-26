@@ -772,12 +772,12 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Top {
-		NOTOP, CAN, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, RHOMBUS, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
+		NOTOP, CYL, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, RHOMBUS, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
 	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
 	static {
-		TopSTR.put(Top.CAN, "cylinder");
+		TopSTR.put(Top.CYL, "cylinder");
 		TopSTR.put(Top.CONE, "cone, point up");
 		TopSTR.put(Top.SPHERE, "sphere");
 		TopSTR.put(Top.X_SHAPE, "x-shape");
@@ -1015,7 +1015,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Cns {
-		UNKCNS, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GRP, PAINT
+		UNKCNS, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GLAS, PAINT
 	}
 
 	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
@@ -1027,7 +1027,7 @@ public class SeaMark extends JPanel {
 		CnsSTR.put(Cns.USURF, "unsurfaced");
 		CnsSTR.put(Cns.WOOD, "wooden");
 		CnsSTR.put(Cns.METAL, "metal");
-		CnsSTR.put(Cns.GRP, "grp");
+		CnsSTR.put(Cns.GLAS, "grp");
 		CnsSTR.put(Cns.PAINT, "painted");
 	}
 
@@ -2020,7 +2020,7 @@ public class SeaMark extends JPanel {
 		if (getTopmark() != Top.NOTOP) {
 			imgStr = "/images/Top_";
 			switch (getTopmark()) {
-			case CAN:
+			case CYL:
 				imgStr += "Can";
 				break;
 			case CONE:

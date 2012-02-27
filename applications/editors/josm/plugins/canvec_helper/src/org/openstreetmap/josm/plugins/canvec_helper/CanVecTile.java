@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.canvec_helper;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -23,7 +22,8 @@ import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
 public class CanVecTile {
-	canvec_helper plugin_self;
+	canvec_layer layer;
+	public boolean can_download = false;
 	private ArrayList<String> sub_tile_ids = new ArrayList<String>();
 	private boolean zip_scanned = false;
 	
@@ -37,8 +37,8 @@ public class CanVecTile {
 	private boolean valid = false;
 	String cordb,cordd;
 	private Bounds bounds;
-	private String tileid;
-	public CanVecTile(String tileid,canvec_helper self) {
+	public String tileid;
+	public CanVecTile(String tileid,canvec_layer layer) {
 		String parta,partb,partc,partd;
 		parta = tileid.substring(0,3);
 		partb = tileid.substring(3, 4);
@@ -47,14 +47,14 @@ public class CanVecTile {
 		int a,c;
 		a = Integer.parseInt(parta);
 		c = Integer.parseInt(partc);
-		real_init(a,partb,c,partd,self,new ArrayList<String>());
+		real_init(a,partb,c,partd,layer,new ArrayList<String>());
 	}
-	public CanVecTile(int a,String b,int c,String d,canvec_helper self,ArrayList<String> index) {
-		real_init(a,b,c,d,self,index);
+	public CanVecTile(int a,String b,int c,String d,canvec_layer layer,ArrayList<String> index) {
+		real_init(a,b,c,d,layer,index);
 	}
-	public void real_init(int a,String b,int c,String d,canvec_helper self, ArrayList<String> index) {
+	public void real_init(int a,String b,int c,String d,canvec_layer layer, ArrayList<String> index) {
 		this.index = index;
-		plugin_self = self;
+		this.layer = layer;
 		corda = a;
 		cordb = b;
 		cordc = c;
@@ -180,7 +180,7 @@ public class CanVecTile {
 		return String.format("http://ftp2.cits.rncan.gc.ca/osm/pub/%1$03d/%2$s/%1$03d%2$s%3$02d.zip",corda,cordb,cordc);
 	}
 	private ZipFile open_zip() throws IOException {
-		File download_path = new File(plugin_self.getPluginDir() + File.separator);
+		File download_path = new File(layer.plugin_self.getPluginDir() + File.separator);
 		download_path.mkdir();
 		MirroredInputStream tile_zip;
 		tile_zip = new MirroredInputStream(getDownloadUrl(),download_path.toString());
@@ -200,22 +200,22 @@ public class CanVecTile {
 			ZipEntry entry = entries.nextElement();
 			sub_tile_ids.add(entry.getName());
 			zip_scanned = true;
-			CanVecTile final_tile = new CanVecTile(entry.getName(),plugin_self);
+			CanVecTile final_tile = new CanVecTile(entry.getName(),layer);
 			if (final_tile.isValid()) sub_tiles.add(final_tile);
 		}
 	}
-	private void load_raw_osm() {
+	public void load_raw_osm() {
 		ZipFile zipFile;
 		try {
 			zipFile = open_zip();
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
-				System.out.println(entry.getName());
-				if (false) {
+				if (tileid.equals(entry.getName())) {
+					debug("found myself!");
 					InputStream rawtile = zipFile.getInputStream(entry);
 					OsmImporter importer = new OsmImporter();
-					System.out.println("loading raw osm");
+					debug("loading raw osm");
 					OsmImporterData temp = importer.loadLayer(rawtile, null, entry.getName(), null);
 					Main.worker.submit(temp.getPostLayerTask());
 					Main.main.addLayer(temp.getLayer());
@@ -247,13 +247,13 @@ public class CanVecTile {
 				} else if (last_cell == "") {
 					buffer.add(m.group(0));
 				} else {
-					sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
+					sub_tiles.add(new CanVecTile(corda,last_cell,0,"",this.layer,buffer));
 					buffer = new ArrayList<String>();
 					buffer.add(m.group(0));
 				}
 				last_cell = cell;
 			}
-			sub_tiles.add(new CanVecTile(corda,last_cell,0,"",plugin_self,buffer));
+			sub_tiles.add(new CanVecTile(corda,last_cell,0,"",this.layer,buffer));
 			break;
 		case 2:
 			p = Pattern.compile("\\d\\d\\d[A-Z](\\d\\d).*");
@@ -268,13 +268,13 @@ public class CanVecTile {
 				} else if (last_cell2 == -1) {
 					buffer.add(m.group(0));
 				} else {
-					sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",plugin_self,buffer));
+					sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",this.layer,buffer));
 					buffer = new ArrayList<String>();
 					buffer.add(m.group(0));
 				}
 				last_cell2 = cell;
 			}
-			if (last_cell2 != -1) sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",plugin_self,buffer));
+			if (last_cell2 != -1) sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",this.layer,buffer));
 			break;
 		}
 		sub_tiles_made = true;
@@ -282,9 +282,18 @@ public class CanVecTile {
 	public void paint(Graphics2D g, MapView mv, Bounds bounds, int max_zoom) {
 		boolean show_sub_tiles = false;
 		if (!isVisible(bounds)) return;
+		if (depth == 4) {
+			layer.openable.add(this);
+		}
 		if ((depth == 3) && (bounds.getArea() < 0.5)) { // 022B01
-			if (max_zoom == 4) downloadSelf();
-			show_sub_tiles = true;
+			if (zip_scanned) {
+				show_sub_tiles = true;
+			} else if (can_download) {
+				downloadSelf();
+				show_sub_tiles = true;
+			} else {
+				layer.downloadable.add(this);
+			}
 		} else if ((depth == 2) && (bounds.getArea() < 20)) { // its a layer2 tile
 			make_sub_tiles(2);
 			show_sub_tiles = true;

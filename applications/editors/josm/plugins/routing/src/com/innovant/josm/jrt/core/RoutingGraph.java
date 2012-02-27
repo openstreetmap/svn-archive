@@ -184,6 +184,7 @@ public class RoutingGraph {
            */
             
   				String oneway_val = way.get("oneway");   /*   get (oneway=?) tag for this way.   */
+  				String junction_val = way.get("junction");   /*   get (junction=?) tag for this way.   */
             
   				from = nodes.get(0);                   /*   1st node A  */
   				graph.addVertex(from);                 /*   add vertex A */
@@ -197,16 +198,20 @@ public class RoutingGraph {
   						
   				    
   				    //this is where we link the vertices
-  						if (oneway_val == null || oneway_val == "false" || oneway_val == "no" || oneway_val == "0") {
-  						//Case 1 (bi-way): oneway=false OR oneway=unset OR oneway=0 OR oneway=no
+  						if (oneway_val == null && junction_val == "roundabout") {
+  			            //Case (roundabout): oneway=implicit yes
+  			  			  addEdgeNormalOneway(way, from, to);
+  						
+  						} else if (oneway_val == null || oneway_val == "false" || oneway_val == "no" || oneway_val == "0") {
+  						//Case (bi-way): oneway=false OR oneway=unset OR oneway=0 OR oneway=no
   						  addEdgeBidirectional(way, from, to);
   						  
   						} else if (oneway_val == "-1") {
-  						//Case 2 (oneway reverse): oneway=-1
+  						//Case (oneway reverse): oneway=-1
   						  addEdgeReverseOneway(way, from, to);
   						
   						} else if (oneway_val == "1" || oneway_val == "yes" || oneway_val == "true") {
-              //Case 3 (oneway normal): oneway=yes OR 1 OR true
+  						//Case (oneway normal): oneway=yes OR 1 OR true
   						  addEdgeNormalOneway(way, from, to);				
                 		
   						}

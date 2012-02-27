@@ -25,7 +25,7 @@
 **
 -->
 <project name="routing" default="dist" basedir=".">
-    <property name="commit.message" value="fixed NPE at startup"/>
+    <property name="commit.message" value="added one-way support in roundabouts"/>
     <property name="plugin.main.version" value="4980"/>
     <!-- Define some properties -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>

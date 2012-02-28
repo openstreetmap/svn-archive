@@ -724,7 +724,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Pat {
-		NOPAT, HSTRP, VSTRP, DIAG, SQUARED, BORDER, CROSS
+		NOPAT, HSTRP, VSTRP, DIAG, SQUARED, BORDER, CROSS, SALTIRE
 	}
 
 	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
@@ -735,6 +735,7 @@ public class SeaMark extends JPanel {
 		PatSTR.put(Pat.SQUARED, "squared");
 		PatSTR.put(Pat.BORDER, "border");
 		PatSTR.put(Pat.CROSS, "cross");
+		PatSTR.put(Pat.SALTIRE, "saltire");
 	}
 
 	public Pat getPattern(Ent ent) {

@@ -118,6 +118,7 @@ public class PanelRadar extends JPanel {
 		rangeBox = new JTextField();
 		rangeBox.setBounds(new Rectangle(155, 60, 50, 20));
 		rangeBox.setHorizontalAlignment(SwingConstants.CENTER);
+		add(rangeBox);
 		rangeBox.addFocusListener(flRange);
 		
 		sectorsLabel = new JLabel(Messages.getString("VisibleSector"), SwingConstants.CENTER);

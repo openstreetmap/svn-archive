@@ -3,16 +3,15 @@ package org.openstreetmap.josm.plugins.measurement;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -23,6 +22,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.help.HelpUtil;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -30,8 +31,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog implements ActionListener
-{
+public class MeasurementDialog extends ToggleDialog {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -68,8 +68,19 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
         KeyEvent.VK_U, Shortcut.CTRL_SHIFT), 150);
 
-        resetButton = new SideButton(marktr("Reset"), "select", "Measurement",
-                tr("Reset current measurement results and delete measurement path."), this);
+        resetButton = new SideButton(new AbstractAction() {
+        	{
+        		putValue(NAME, marktr("Reset"));
+        		putValue(SMALL_ICON,ImageProvider.get("dialogs", "select"));
+        		putValue(SHORT_DESCRIPTION, tr("Reset current measurement results and delete measurement path."));
+        		putValue("help", HelpUtil.ht("/Dialog/Measurement#Reset"));
+        	}
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+            	resetValues();
+            }
+        });
 
         JPanel valuePanel = new JPanel(new GridLayout(0,2));
 
@@ -146,15 +157,6 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                 dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
             }
         });
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        String actionCommand = e.getActionCommand();
-        if( actionCommand.equals("Reset")){
-            resetValues();
-        }
     }
 
     /**

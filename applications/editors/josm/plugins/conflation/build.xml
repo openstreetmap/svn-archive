@@ -105,7 +105,7 @@
                 <attribute name="Author" value="Josh Doe &lt;josh@joshdoe.com&gt;"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.conflation.ConflationPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Tool for conflating (merging) data"/>
+                <attribute name="Plugin-Description" value="(Warning: Experimental!) Tool for conflating (merging) data"/>
                 <attribute name="Plugin-Icon" value="images/conflation.png"/>
                 <attribute name="Plugin-Requires" value="utilsplugin2"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Conflation"/>

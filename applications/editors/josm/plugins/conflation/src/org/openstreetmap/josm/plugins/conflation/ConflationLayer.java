@@ -3,31 +3,25 @@ package org.openstreetmap.josm.plugins.conflation;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import javax.swing.Action;
-import javax.swing.Icon;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import javax.swing.Action;
+import javax.swing.Icon;
 import org.openstreetmap.josm.actions.RenameLayerAction;
-
-
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.SeparatorLayerAction;
-import org.openstreetmap.josm.plugins.conflation.ConflationOptionsPanel.ConflationCandidate;
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -36,10 +30,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Josh Doe <josh@joshdoe.com>
  */
 public class ConflationLayer extends Layer implements LayerChangeListener {
-    protected List<ConflationCandidate> candidates;
+    protected ConflationCandidateList candidates;
     protected ConflationCandidate selectedCandidate = null;
     
-    public ConflationLayer(DataSet ds, List<ConflationCandidate> candidates) {
+    public ConflationLayer(DataSet ds, ConflationCandidateList candidates) {
         super(tr("Conflation"));
         MapView.addLayerChangeListener(this);
         this.candidates = candidates;
@@ -65,13 +59,13 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
             } else {
                 g2.setColor(Color.cyan);
             }
-            OsmPrimitive src = candidate.getSource();
-            OsmPrimitive tgt = candidate.getTarget();
+            OsmPrimitive src = candidate.getSourcePrimitive();
+            OsmPrimitive tgt = candidate.getTargetPrimitive();
             if (src != null && tgt != null) {
                 GeneralPath path = new GeneralPath();
                 // we have a pair, so draw line between them, FIXME: not good to use getCenter() from here, move to utils?
-                Point p1 = mv.getPoint(ConflationOptionsPanel.getCenter(src));
-                Point p2 = mv.getPoint(ConflationOptionsPanel.getCenter(tgt));
+                Point p1 = mv.getPoint(ConflationUtils.getCenter(src));
+                Point p2 = mv.getPoint(ConflationUtils.getCenter(tgt));
                 path.moveTo(p1.x, p1.y);
                 path.lineTo(p2.x, p2.y);
                 //logger.info(String.format("Line %d,%d to %d,%d", p1.x, p1.y, p2.x, p2.y));
@@ -123,8 +117,8 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
     public void visitBoundingBox(BoundingXYVisitor v) {
         for (Iterator<ConflationCandidate> it = this.candidates.iterator(); it.hasNext();) {
             ConflationCandidate candidate = it.next();
-            OsmPrimitive src = candidate.getSource();
-            OsmPrimitive tgt = candidate.getTarget();
+            OsmPrimitive src = candidate.getSourcePrimitive();
+            OsmPrimitive tgt = candidate.getTargetPrimitive();
             if (src != null && src instanceof Node)
                 v.visit((Node)src);
             if (tgt != null && tgt instanceof Node)
@@ -165,7 +159,7 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
      *
      * @return the set of conflicts currently managed in this layer
      */
-    public List<ConflationCandidate> getCandidates() {
+    public ConflationCandidateList getCandidates() {
         return this.candidates;
     }
     

@@ -4,29 +4,21 @@ package org.openstreetmap.josm.plugins.licensechange;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -34,26 +26,22 @@ import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
-import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.xml.sax.SAXException;
 
 /**
  * A small tool dialog for displaying the current problems. The selection manager
  * respects clicks into the selection list. Ctrl-click will remove entries from
  * the list while single click will make the clicked entry the only selection.
  */
-public class LicenseChangeDialog extends ToggleDialog implements ActionListener {
+public class LicenseChangeDialog extends ToggleDialog {
     private LicenseChangePlugin plugin;
 
     /** The display tree */
@@ -71,7 +59,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     /**
      * Constructor
      */
-    public LicenseChangeDialog(LicenseChangePlugin plugin) 
+    public LicenseChangeDialog(LicenseChangePlugin plugin)
     {
         super(tr("Relicensing problems"), "licensechange", tr("Open the relicensing window."),
                 Shortcut.registerShortcut("subwindow:licensechange", tr("Toggle: {0}", tr("Relicensing problems")),
@@ -82,7 +70,8 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
 
         JMenuItem zoomTo = new JMenuItem(tr("Zoom to problem"));
         zoomTo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 zoomToProblem();
             }
         });
@@ -92,8 +81,18 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
         tree.addMouseListener(new ClickWatch());
         tree.addTreeSelectionListener(new SelectionWatch());
 
-        selectButton = new SideButton(marktr("Select"), "select", "LicenseChange",
-                tr("Set the selected elements on the map to the selected items in the list above."), this);
+        selectButton = new SideButton(new AbstractAction() {
+        	{
+        		putValue(NAME, marktr("Select"));
+        		putValue(SHORT_DESCRIPTION, tr("Set the selected elements on the map to the selected items in the list above."));
+        		putValue(SMALL_ICON, ImageProvider.get("dialogs", "select"));
+        		putValue("help", "Dialog/LicenseChange/select");
+        	}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setSelectedItems();
+			}
+        });
         selectButton.setEnabled(false);
 
         createLayout(tree, true, Arrays.asList(new SideButton[] {
@@ -102,7 +101,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     }
 
     @Override
-    public void showNotify() 
+    public void showNotify()
     {
         DataSet ds = Main.main.getCurrentDataSet();
         if (ds != null) {
@@ -111,7 +110,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     }
 
     @Override
-    public void setVisible(boolean v) 
+    public void setVisible(boolean v)
     {
         if (tree != null)
             tree.setVisible(v);
@@ -120,7 +119,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     }
 
     @SuppressWarnings("unchecked")
-    private void showPopupMenu(MouseEvent e) 
+    private void showPopupMenu(MouseEvent e)
     {
         if (!e.isPopupTrigger())
             return;
@@ -135,7 +134,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
         popupMenu.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private void zoomToProblem() 
+    private void zoomToProblem()
     {
         if (popupMenuError == null)
             return;
@@ -151,7 +150,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
      * Sets the selection of the map to the current selected items.
      */
     @SuppressWarnings("unchecked")
-    private void setSelectedItems() 
+    private void setSelectedItems()
     {
         if (tree == null)
             return;
@@ -176,13 +175,6 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
         }
 
         Main.main.getCurrentDataSet().setSelected(sel);
-    }
-
-    public void actionPerformed(ActionEvent e) 
-    {
-        String actionCommand = e.getActionCommand();
-        if (actionCommand.equals("Select"))
-            setSelectedItems();
     }
 
     /**
@@ -229,7 +221,7 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     /**
      * Watches for clicks.
      */
-    public class ClickWatch extends MouseAdapter 
+    public class ClickWatch extends MouseAdapter
     {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -263,9 +255,10 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
     /**
      * Watches for tree selection.
      */
-    public class SelectionWatch implements TreeSelectionListener 
+    public class SelectionWatch implements TreeSelectionListener
     {
-        public void valueChanged(TreeSelectionEvent e) {
+        @Override
+		public void valueChanged(TreeSelectionEvent e) {
             selectButton.setEnabled(false);
 
             if (e.getSource() instanceof JScrollPane) {
@@ -278,9 +271,10 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
         }
     }
 
-    public static class LicenseChangeBoundingXYVisitor extends BoundingXYVisitor implements LicenseChangeVisitor 
+    public static class LicenseChangeBoundingXYVisitor extends BoundingXYVisitor implements LicenseChangeVisitor
     {
-        public void visit(OsmPrimitive p) {
+        @Override
+		public void visit(OsmPrimitive p) {
             if (p.isUsable()) {
                 p.visit(this);
             }
@@ -293,14 +287,15 @@ public class LicenseChangeDialog extends ToggleDialog implements ActionListener 
             visit(ws.way.getNodes().get(ws.lowerIndex + 1));
         }
 
-        public void visit(List<Node> nodes) {
+        @Override
+		public void visit(List<Node> nodes) {
             for (Node n: nodes) {
                 visit(n);
             }
         }
     }
 
-    public void updateSelection(Collection<? extends OsmPrimitive> newSelection) 
+    public void updateSelection(Collection<? extends OsmPrimitive> newSelection)
     {
         if (newSelection.isEmpty())
             tree.setFilter(null);

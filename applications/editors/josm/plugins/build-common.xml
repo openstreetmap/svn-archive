@@ -136,12 +136,12 @@
     <target name="commit-dist">
         <echo>
     ***** Properties of published ${plugin.jar} *****
-    Commit message    : '${commit.message}'                 
+    Commit message    : '${commit.message}'
     Plugin-Mainversion: ${plugin.main.version}
     JOSM build version: ${coreversion.info.entry.revision}
     Plugin-Version    : ${version.entry.commit.revision}
-    ***** / Properties of published ${plugin.jar} *****                 
-                        
+    ***** / Properties of published ${plugin.jar} *****
+
     Now commiting ${plugin.jar} ...
     </echo>
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">

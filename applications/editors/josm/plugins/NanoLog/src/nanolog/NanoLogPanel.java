@@ -18,11 +18,11 @@ public class NanoLogPanel extends ToggleDialog {
         super(tr("NanoLog"), "nanolog", tr("Open NanoLog panel"), null, 150, true);
         
         listModel = new LogListModel();
-        logPanel = new JList<String>(listModel);
+        logPanel = new JList(listModel);
         createLayout(logPanel, true, null);
     }
     
-    private class LogListModel extends AbstractListModel<String> {
+    private class LogListModel extends AbstractListModel {
 
         public int getSize() {
             return 0;

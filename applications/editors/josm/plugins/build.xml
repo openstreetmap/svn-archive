@@ -13,6 +13,7 @@
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
+        <ant antfile="build.xml" target="dist" dir="conflation"/>
         <ant antfile="build.xml" target="dist" dir="canvec_helper"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="CommandLine"/>
@@ -51,6 +52,7 @@
         <ant antfile="build.xml" target="dist" dir="mirrored_download"/>
         <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="namemanager"/>
+        <ant antfile="build.xml" target="dist" dir="NanoLog"/>
         <ant antfile="build.xml" target="dist" dir="native-password-manager"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
@@ -93,7 +95,6 @@
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
     </target>
     <target name="build_defect" depends="compile">
-        <ant antfile="build.xml" target="dist" dir="rgisopen"/>
         <ant antfile="build.xml" target="dist" dir="trustosm"/>
     </target>
     <target name="clean">
@@ -105,6 +106,7 @@
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="clean" dir="CommandLine"/>
+        <ant antfile="build.xml" target="clean" dir="conflation"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
         <ant antfile="build.xml" target="clean" dir="dataimport"/>
@@ -140,6 +142,7 @@
         <ant antfile="build.xml" target="clean" dir="mirrored_download"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="namemanager"/>
+        <ant antfile="build.xml" target="clean" dir="NanoLog"/>
         <ant antfile="build.xml" target="clean" dir="native-password-manager"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>

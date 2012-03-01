@@ -30,7 +30,6 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
-    <property name="utilsplugin2" location="${plugin.dist.dir}/utilsplugin2.jar"/>
 
     <!--
     **********************************************************
@@ -38,6 +37,9 @@
     **********************************************************
     -->
     <import file="../build-common.xml"/>
+
+    <!-- Needs to be used after import, otherwise ${plugin.dist.dir} is not defined -->
+    <property name="utilsplugin2" location="${plugin.dist.dir}/utilsplugin2.jar"/>   
 
     <!--
     **********************************************************

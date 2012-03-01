@@ -13,7 +13,8 @@
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
-        <ant antfile="build.xml" target="dist" dir="conflation"/>
+        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>	
+	<ant antfile="build.xml" target="dist" dir="conflation"/> <!-- Depends on utilsplugin2 -->
         <ant antfile="build.xml" target="dist" dir="canvec_helper"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="CommandLine"/>
@@ -86,7 +87,6 @@
         <ant antfile="build.xml" target="dist" dir="turnlanes"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
-        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>
         <ant antfile="build.xml" target="dist" dir="videomapping"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>

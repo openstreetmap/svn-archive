@@ -3,14 +3,13 @@ package org.openstreetmap.josm.plugins.JunctionChecker;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -24,12 +23,13 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * @author  joerg
  */
-public class JunctionCheckDialog extends ToggleDialog implements ActionListener, SelectionChangedListener{
+public class JunctionCheckDialog extends ToggleDialog implements SelectionChangedListener{
 
 	private final JunctionCheckerPlugin plugin;
 	/** Serializable ID */
@@ -87,13 +87,44 @@ public class JunctionCheckDialog extends ToggleDialog implements ActionListener,
 		centerPanel.add(jcPanel);
 
 		// ButtonPanel
-		createDigraphButton = new SideButton(marktr("Create"), "digraphcreation", tr ("start the channel digraph creation"),
-				tr("create the channel digraph"), this);
-		checkJunctionButton = new SideButton(marktr("Check "), "junctioncheck", tr("check a marked subset if it is a junction"),
-				tr("check the subust for junction properties"), this);
+		createDigraphButton = new SideButton(new AbstractAction() {
+			{
+				putValue(NAME, marktr("Create"));
+				putValue(SHORT_DESCRIPTION, tr("create the channel digraph"));
+				putValue(SMALL_ICON, ImageProvider.get("dialogs", "digraphcreation"));
+			}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					DigraphCreationTask dct = new DigraphCreationTask(plugin, digraphsealcb.isSelected(), sccCB.isSelected());
+					Main.worker.submit(dct);
+					setActivateJunctionCheckOrSearch(true);
+			}
+		});
+		checkJunctionButton = new SideButton(new AbstractAction() {
+			{
+				putValue(NAME, marktr("Check "));
+				putValue(SHORT_DESCRIPTION, tr("check the subust for junction properties"));
+				putValue(SMALL_ICON, ImageProvider.get("dialogs", "junctioncheck"));
+			}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
+				pjc.prepareJunctionCheck();
+			}
+		});
 		checkJunctionButton.setEnabled(false);
-		searchJunctionButton = new SideButton(marktr("Search "), "junctionsearch", tr ("search for junctions into a subset of channels"),
-				tr("search for junctions in the channel subset"), this);
+		searchJunctionButton = new SideButton(new AbstractAction() {
+			{
+				putValue(NAME, marktr("Search "));
+				putValue(SHORT_DESCRIPTION, tr("search for junctions in the channel subset"));
+				putValue(SMALL_ICON, ImageProvider.get("dialogs", "junctionsearch"));
+			}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
+				pjc.prepareJunctionSearch();
+			}
+		});
 		searchJunctionButton.setEnabled(false);
 
 		createLayout(centerPanel, false, Arrays.asList(new SideButton[] {
@@ -101,24 +132,6 @@ public class JunctionCheckDialog extends ToggleDialog implements ActionListener,
 		}));
 	}
 
-
-	public void actionPerformed(ActionEvent e) {
-		String actionCommand = e.getActionCommand();
-		if (actionCommand.equals("Create")) {
-			DigraphCreationTask dct = new DigraphCreationTask(plugin, digraphsealcb.isSelected(), sccCB.isSelected());
-			Main.worker.submit(dct);
-			setActivateJunctionCheckOrSearch(true);
-		}
-		else if (actionCommand.equals("Check ")) {
-			PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
-			pjc.prepareJunctionCheck();
-
-		}
-		else if (actionCommand.equals("Search ")) {
-			PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
-			pjc.prepareJunctionSearch();
-		}
-	}
 
 	/**
 	 * (de)aktiviert Buttons zum JunctionCheck oder Suche
@@ -142,6 +155,7 @@ public class JunctionCheckDialog extends ToggleDialog implements ActionListener,
 		sccCB.setEnabled(activate);
 	}
 
+	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 
 	}

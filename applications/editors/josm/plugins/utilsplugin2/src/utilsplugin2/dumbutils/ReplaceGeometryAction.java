@@ -84,6 +84,29 @@ public class ReplaceGeometryAction extends JosmAction {
             throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
     }
+    
+    /**
+     * Replace subjectObject geometry with referenceObject geometry and merge tags
+     * and relation memberships.
+     * 
+     * @param subjectObject
+     * @param referenceSubject
+     * @return 
+     */
+    public boolean replace(OsmPrimitive subjectObject, OsmPrimitive referenceSubject) {
+        if (subjectObject instanceof Node && referenceSubject instanceof Node) {
+            return replaceNode((Node) subjectObject, (Node) referenceSubject);
+        } else if (subjectObject instanceof Way && referenceSubject instanceof Way) {
+            return replaceWay((Way) subjectObject, (Way) referenceSubject);
+        } else if (subjectObject instanceof Node) {
+            return upgradeNode((Node) subjectObject, referenceSubject);
+        } else if (referenceSubject instanceof Node) {
+            // TODO: fix this illogical reversal?
+            return upgradeNode((Node) referenceSubject, subjectObject);
+        } else {
+            throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
+        }
+    }
 
     /**
      * Replace a new or uploaded node with a new node
@@ -241,10 +264,10 @@ public class ReplaceGeometryAction extends JosmAction {
                     TITLE, JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        return replaceWayWithWay(subjectWay, referenceWay);
+        return replaceWay(subjectWay, referenceWay);
     }
     
-    public static boolean replaceWayWithWay(Way subjectWay, Way referenceWay) {
+    public static boolean replaceWay(Way subjectWay, Way referenceWay) {
 
         Area a = getCurrentDataSet().getDataSourceArea();
         if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {

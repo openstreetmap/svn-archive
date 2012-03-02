@@ -59,13 +59,13 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
             } else {
                 g2.setColor(Color.cyan);
             }
-            OsmPrimitive src = candidate.getSourcePrimitive();
-            OsmPrimitive tgt = candidate.getTargetPrimitive();
-            if (src != null && tgt != null) {
+            OsmPrimitive reference = candidate.getReferenceObject();
+            OsmPrimitive subject = candidate.getSubjectObject();
+            if (reference != null && subject != null) {
                 GeneralPath path = new GeneralPath();
                 // we have a pair, so draw line between them, FIXME: not good to use getCenter() from here, move to utils?
-                Point p1 = mv.getPoint(ConflationUtils.getCenter(src));
-                Point p2 = mv.getPoint(ConflationUtils.getCenter(tgt));
+                Point p1 = mv.getPoint(ConflationUtils.getCenter(reference));
+                Point p2 = mv.getPoint(ConflationUtils.getCenter(subject));
                 path.moveTo(p1.x, p1.y);
                 path.lineTo(p2.x, p2.y);
                 //logger.info(String.format("Line %d,%d to %d,%d", p1.x, p1.y, p2.x, p2.y));
@@ -117,12 +117,12 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
     public void visitBoundingBox(BoundingXYVisitor v) {
         for (Iterator<ConflationCandidate> it = this.candidates.iterator(); it.hasNext();) {
             ConflationCandidate candidate = it.next();
-            OsmPrimitive src = candidate.getSourcePrimitive();
-            OsmPrimitive tgt = candidate.getTargetPrimitive();
-            if (src != null && src instanceof Node)
-                v.visit((Node)src);
-            if (tgt != null && tgt instanceof Node)
-                v.visit((Node)tgt);
+            OsmPrimitive reference = candidate.getReferenceObject();
+            OsmPrimitive subject = candidate.getSubjectObject();
+            if (reference != null && reference instanceof Node)
+                v.visit((Node)reference);
+            if (subject != null && subject instanceof Node)
+                v.visit((Node)subject);
         }
     }
 

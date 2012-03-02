@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.awt.BorderLayout;
@@ -131,19 +127,19 @@ public class ConflationToggleDialog extends ToggleDialog
             // only one item selected, show tags and zoom/center map
             if (!lsm.isSelectionEmpty() && firstIndex == lastIndex && firstIndex < candidates.size()) {
                 ConflationCandidate c = candidates.get(firstIndex);
-                OsmPrimitive src = c.getSourcePrimitive();
-                OsmPrimitive tgt = c.getTargetPrimitive();
+                OsmPrimitive reference = c.getReferenceObject();
+                OsmPrimitive subject = c.getSubjectObject();
 
                 conflationLayer.setSelectedCandidate(c);
 
-                src.getDataSet().clearSelection();
-                tgt.getDataSet().clearSelection();
-                src.getDataSet().addSelected(src);
-                tgt.getDataSet().addSelected(tgt);
+                reference.getDataSet().clearSelection();
+                subject.getDataSet().clearSelection();
+                reference.getDataSet().addSelected(reference);
+                subject.getDataSet().addSelected(subject);
 
                 // zoom/center on pair
                 BoundingXYVisitor box = new BoundingXYVisitor();
-                box.computeBoundingBox(Arrays.asList(src, tgt));
+                box.computeBoundingBox(Arrays.asList(reference, subject));
                 if (box.getBounds() == null) {
                     return;
                 }
@@ -211,7 +207,7 @@ public class ConflationToggleDialog extends ToggleDialog
         public void actionPerformed(ActionEvent e) {
             ReplaceGeometryAction rg = new ReplaceGeometryAction();
             ConflationCandidate c = conflationLayer.getSelectedCandidate();
-            if (rg.replace(c.getSourcePrimitive(), c.getTargetPrimitive())) {
+            if (rg.replace(c.getReferenceObject(), c.getSubjectObject())) {
                 candidates.remove(c);
             }
         }
@@ -221,25 +217,24 @@ public class ConflationToggleDialog extends ToggleDialog
 
         private JPanel costsPanel;
         private JCheckBox distanceCheckBox;
-        private JButton freezeSourceButton;
-        private JButton freezeTargetButton;
+        private JButton freezeReferenceButton;
+        private JButton freezeSubjectButton;
         private JPanel jPanel3;
         private JPanel jPanel5;
-        private JButton restoreSourceButton;
-        private JButton restoreTargetButton;
-        private JLabel sourceLayerLabel;
-        private JPanel sourcePanel;
-        private JLabel sourceSelectionLabel;
-        private JLabel targetLayerLabel;
-        private JPanel targetPanel;
-        private JLabel targetSelectionLabel;
-        ArrayList<OsmPrimitive> tgtSelection = null;
-        ArrayList<OsmPrimitive> srcSelection = null;
-        OsmDataLayer srcLayer;
-        DataSet tgtDataSet;
-        OsmDataLayer tgtLayer;
-        DataSet srcDataSet;
-        private boolean canceled = false;
+        private JButton restoreReferenceButton;
+        private JButton restoreSubjectButton;
+        private JLabel referenceLayerLabel;
+        private JPanel referencePanel;
+        private JLabel referenceSelectionLabel;
+        private JLabel subjectLayerLabel;
+        private JPanel subjectPanel;
+        private JLabel subjectSelectionLabel;
+        ArrayList<OsmPrimitive> subjectSelection = null;
+        ArrayList<OsmPrimitive> referenceSelection = null;
+        OsmDataLayer referenceLayer;
+        DataSet subjectDataSet;
+        OsmDataLayer subjectLayer;
+        DataSet referenceDataSet;
 
         public ConflationOptionsDialog() {
             super(Main.parent,
@@ -250,70 +245,70 @@ public class ConflationToggleDialog extends ToggleDialog
         }
 
         private void initComponents() {
-            sourcePanel = new JPanel();
-            sourceLayerLabel = new JLabel();
-            sourceSelectionLabel = new JLabel();
+            referencePanel = new JPanel();
+            referenceLayerLabel = new JLabel();
+            referenceSelectionLabel = new JLabel();
             jPanel3 = new JPanel();
-            restoreSourceButton = new JButton(new RestoreSourceAction());
-            freezeSourceButton = new JButton(new FreezeSourceAction());
-            targetPanel = new JPanel();
-            targetLayerLabel = new JLabel();
-            targetSelectionLabel = new JLabel();
+            restoreReferenceButton = new JButton(new RestoreReferenceAction());
+            freezeReferenceButton = new JButton(new FreezeReferenceAction());
+            subjectPanel = new JPanel();
+            subjectLayerLabel = new JLabel();
+            subjectSelectionLabel = new JLabel();
             jPanel5 = new JPanel();
-            restoreTargetButton = new JButton(new RestoreTargetAction());
-            freezeTargetButton = new JButton(new FreezeTargetAction());
+            restoreSubjectButton = new JButton(new RestoreSubjectAction());
+            freezeSubjectButton = new JButton(new FreezeSubjectAction());
             costsPanel = new JPanel();
             distanceCheckBox = new JCheckBox();
 
             JPanel pnl = new JPanel();
             pnl.setLayout(new BoxLayout(pnl, BoxLayout.PAGE_AXIS));
 
-            sourcePanel.setBorder(BorderFactory.createTitledBorder("Source"));
-            sourcePanel.setLayout(new BoxLayout(sourcePanel, BoxLayout.PAGE_AXIS));
+            referencePanel.setBorder(BorderFactory.createTitledBorder(tr("Reference")));
+            referencePanel.setLayout(new BoxLayout(referencePanel, BoxLayout.PAGE_AXIS));
 
-            sourceLayerLabel.setText("layer");
-            sourcePanel.add(sourceLayerLabel);
+            referenceLayerLabel.setText("(none)");
+            referencePanel.add(referenceLayerLabel);
 
-            sourceSelectionLabel.setText("Rel.:0 / Ways:0 / Nodes: 0");
-            sourcePanel.add(sourceSelectionLabel);
+            referenceSelectionLabel.setText("Rel.:0 / Ways:0 / Nodes: 0");
+            referencePanel.add(referenceSelectionLabel);
 
             jPanel3.setLayout(new BoxLayout(jPanel3, BoxLayout.LINE_AXIS));
 
-            restoreSourceButton.setText("Restore");
-            jPanel3.add(restoreSourceButton);
+            restoreReferenceButton.setText(tr("Restore"));
+            jPanel3.add(restoreReferenceButton);
 
-            jPanel3.add(freezeSourceButton);
+            jPanel3.add(freezeReferenceButton);
 
-            sourcePanel.add(jPanel3);
+            referencePanel.add(jPanel3);
 
-            pnl.add(sourcePanel);
+            pnl.add(referencePanel);
 
-            targetPanel.setBorder(BorderFactory.createTitledBorder("Target"));
-            targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.PAGE_AXIS));
+            subjectPanel.setBorder(BorderFactory.createTitledBorder(tr("Subject")));
+            subjectPanel.setLayout(new BoxLayout(subjectPanel, BoxLayout.PAGE_AXIS));
 
-            targetLayerLabel.setText("layer");
-            targetPanel.add(targetLayerLabel);
+            subjectLayerLabel.setText("(none)");
+            subjectPanel.add(subjectLayerLabel);
 
-            targetSelectionLabel.setText("Rel.:0 / Ways:0 / Nodes: 0");
-            targetPanel.add(targetSelectionLabel);
+            subjectSelectionLabel.setText("Rel.:0 / Ways:0 / Nodes: 0");
+            subjectPanel.add(subjectSelectionLabel);
 
             jPanel5.setLayout(new BoxLayout(jPanel5, BoxLayout.LINE_AXIS));
 
-            restoreTargetButton.setText("Restore");
-            jPanel5.add(restoreTargetButton);
+            restoreSubjectButton.setText(tr("Restore"));
+            jPanel5.add(restoreSubjectButton);
 
-            freezeTargetButton.setText("Freeze");
-            jPanel5.add(freezeTargetButton);
+            freezeSubjectButton.setText(tr("Freeze"));
+            jPanel5.add(freezeSubjectButton);
 
-            targetPanel.add(jPanel5);
+            subjectPanel.add(jPanel5);
 
-            pnl.add(targetPanel);
+            pnl.add(subjectPanel);
 
-            costsPanel.setBorder(BorderFactory.createTitledBorder("Costs"));
+            costsPanel.setBorder(BorderFactory.createTitledBorder(tr("Costs")));
             costsPanel.setLayout(new BoxLayout(costsPanel, BoxLayout.LINE_AXIS));
 
             distanceCheckBox.setSelected(true);
-            distanceCheckBox.setText("Distance");
+            distanceCheckBox.setText(tr("Distance"));
             distanceCheckBox.setEnabled(false);
             costsPanel.add(distanceCheckBox);
 
@@ -327,54 +322,54 @@ public class ConflationToggleDialog extends ToggleDialog
         protected void buttonAction(int buttonIndex, ActionEvent evt) {
             super.buttonAction(buttonIndex, evt);
             if (buttonIndex == 0) {
-                criteriaTabConflateButtonActionPerformed();
+                performConflation();
             }
         }
 
-        private void criteriaTabConflateButtonActionPerformed() {
+        private void performConflation() {
 
             // some initialization
-            int n = tgtSelection.size();
-            int m = srcSelection.size();
+            int n = subjectSelection.size();
+            int m = referenceSelection.size();
             int maxLen = Math.max(n, m);
             double cost[][] = new double[maxLen][maxLen];
 
             // calculate cost matrix
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    cost[i][j] = ConflationUtils.calcCost(tgtSelection.get(i), srcSelection.get(j));
+                    cost[i][j] = ConflationUtils.calcCost(subjectSelection.get(i), referenceSelection.get(j));
                 }
             }
 
             // perform assignment using Hungarian algorithm
             int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
-            OsmPrimitive tgt, src;
+            OsmPrimitive subObject, refObject;
             candidates.clear();
             for (int i = 0; i < maxLen; i++) {
-                int tgtIdx = assignment[i][0];
-                int srcIdx = assignment[i][1];
-                if (tgtIdx < n) {
-                    tgt = tgtSelection.get(tgtIdx);
+                int subIdx = assignment[i][0];
+                int refIdx = assignment[i][1];
+                if (subIdx < n) {
+                    subObject = subjectSelection.get(subIdx);
                 } else {
-                    tgt = null;
+                    subObject = null;
                 }
-                if (srcIdx < m) {
-                    src = srcSelection.get(srcIdx);
+                if (refIdx < m) {
+                    refObject = referenceSelection.get(refIdx);
                 } else {
-                    src = null;
+                    refObject = null;
                 }
 
-                if (tgt != null && src != null) {
+                if (subObject != null && refObject != null) {
                     // TODO: do something!
-                    if (!(candidates.hasCandidate(src, tgt) || candidates.hasCandidate(tgt, src))) {
-                        candidates.add(new ConflationCandidate(src, srcLayer, tgt, tgtLayer, cost[tgtIdx][srcIdx]));
+                    if (!(candidates.hasCandidate(refObject, subObject) || candidates.hasCandidate(subObject, refObject))) {
+                        candidates.add(new ConflationCandidate(refObject, referenceLayer, subObject, subjectLayer, cost[subIdx][refIdx]));
                     }
                 }
             }
 
             // add conflation layer
             try {
-                conflationLayer = new ConflationLayer(tgtLayer.data, candidates);
+                conflationLayer = new ConflationLayer(subjectLayer.data, candidates);
                 Main.main.addLayer(conflationLayer);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(Main.parent, ex.toString(),
@@ -389,59 +384,59 @@ public class ConflationToggleDialog extends ToggleDialog
 //            }
         }
 
-        class RestoreTargetAction extends JosmAction {
+        class RestoreSubjectAction extends JosmAction {
 
-            public RestoreTargetAction() {
-                super(tr("Restore"), null, tr("Restore target selection"), null, false);
+            public RestoreSubjectAction() {
+                super(tr("Restore"), null, tr("Restore subject selection"), null, false);
             }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (tgtLayer != null && tgtDataSet != null && tgtSelection != null && !tgtSelection.isEmpty()) {
-                    Main.map.mapView.setActiveLayer(tgtLayer);
-                    tgtLayer.setVisible(true);
-                    tgtDataSet.setSelected(tgtSelection);
+                if (subjectLayer != null && subjectDataSet != null && subjectSelection != null && !subjectSelection.isEmpty()) {
+                    Main.map.mapView.setActiveLayer(subjectLayer);
+                    subjectLayer.setVisible(true);
+                    subjectDataSet.setSelected(subjectSelection);
                 }
             }
         }
 
-        class RestoreSourceAction extends JosmAction {
+        class RestoreReferenceAction extends JosmAction {
 
-            public RestoreSourceAction() {
-                super(tr("Restore"), null, tr("Restore source selection"), null, false);
+            public RestoreReferenceAction() {
+                super(tr("Restore"), null, tr("Restore reference selection"), null, false);
             }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (srcLayer != null && srcDataSet != null && srcSelection != null && !srcSelection.isEmpty()) {
-                    Main.map.mapView.setActiveLayer(srcLayer);
-                    srcLayer.setVisible(true);
-                    srcDataSet.setSelected(srcSelection);
+                if (referenceLayer != null && referenceDataSet != null && referenceSelection != null && !referenceSelection.isEmpty()) {
+                    Main.map.mapView.setActiveLayer(referenceLayer);
+                    referenceLayer.setVisible(true);
+                    referenceDataSet.setSelected(referenceSelection);
                 }
             }
         }
 
-        class FreezeTargetAction extends JosmAction {
+        class FreezeSubjectAction extends JosmAction {
 
-            public FreezeTargetAction() {
-                super(tr("Freeze"), null, tr("Freeze target selection"), null, false);
+            public FreezeSubjectAction() {
+                super(tr("Freeze"), null, tr("Freeze subject selection"), null, false);
             }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (tgtDataSet != null && tgtDataSet == Main.main.getCurrentDataSet()) {
-//                targetDataSet.removeDataSetListener(this); FIXME:
+                if (subjectDataSet != null && subjectDataSet == Main.main.getCurrentDataSet()) {
+//                subjectDataSet.removeDataSetListener(this); FIXME:
                 }
-                tgtDataSet = Main.main.getCurrentDataSet();
-//            targetDataSet.addDataSetListener(tableModel); FIXME:
-                tgtLayer = Main.main.getEditLayer();
-                if (tgtDataSet == null || tgtLayer == null) {
+                subjectDataSet = Main.main.getCurrentDataSet();
+//            subjectDataSet.addDataSetListener(tableModel); FIXME:
+                subjectLayer = Main.main.getEditLayer();
+                if (subjectDataSet == null || subjectLayer == null) {
                     JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
                             tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                tgtSelection = new ArrayList<OsmPrimitive>(tgtDataSet.getSelected());
-                if (tgtSelection.isEmpty()) {
+                subjectSelection = new ArrayList<OsmPrimitive>(subjectDataSet.getSelected());
+                if (subjectSelection.isEmpty()) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
                             tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
                     return;
@@ -450,7 +445,7 @@ public class ConflationToggleDialog extends ToggleDialog
                 int numNodes = 0;
                 int numWays = 0;
                 int numRelations = 0;
-                for (OsmPrimitive p : tgtSelection) {
+                for (OsmPrimitive p : subjectSelection) {
                     switch (p.getType()) {
                         case NODE:
                             numNodes++;
@@ -465,32 +460,32 @@ public class ConflationToggleDialog extends ToggleDialog
                 }
 
                 // FIXME: translate correctly
-                targetLayerLabel.setText(tgtLayer.getName());
-                targetSelectionLabel.setText(String.format("Rel.: %d / Ways: %d / Nodes: %d", numRelations, numWays, numNodes));
+                subjectLayerLabel.setText(subjectLayer.getName());
+                subjectSelectionLabel.setText(String.format("Rel.: %d / Ways: %d / Nodes: %d", numRelations, numWays, numNodes));
             }
         }
 
-        class FreezeSourceAction extends JosmAction {
+        class FreezeReferenceAction extends JosmAction {
 
-            public FreezeSourceAction() {
-                super(tr("Freeze"), null, tr("Freeze target selection"), null, false);
+            public FreezeReferenceAction() {
+                super(tr("Freeze"), null, tr("Freeze subject selection"), null, false);
             }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (srcDataSet != null && srcDataSet == Main.main.getCurrentDataSet()) {
-//                sourceDataSet.removeDataSetListener(this); FIXME:
+                if (referenceDataSet != null && referenceDataSet == Main.main.getCurrentDataSet()) {
+//                referenceDataSet.removeDataSetListener(this); FIXME:
                 }
-                srcDataSet = Main.main.getCurrentDataSet();
-//            sourceDataSet.addDataSetListener(this); FIXME:
-                srcLayer = Main.main.getEditLayer();
-                if (srcDataSet == null || srcLayer == null) {
+                referenceDataSet = Main.main.getCurrentDataSet();
+//            referenceDataSet.addDataSetListener(this); FIXME:
+                referenceLayer = Main.main.getEditLayer();
+                if (referenceDataSet == null || referenceLayer == null) {
                     JOptionPane.showMessageDialog(Main.parent, tr("No valid OSM data layer present."),
                             tr("Error freezing selection"), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                srcSelection = new ArrayList<OsmPrimitive>(srcDataSet.getSelected());
-                if (srcSelection.isEmpty()) {
+                referenceSelection = new ArrayList<OsmPrimitive>(referenceDataSet.getSelected());
+                if (referenceSelection.isEmpty()) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Nothing is selected, please try again."),
                             tr("Empty selection"), JOptionPane.ERROR_MESSAGE);
                     return;
@@ -499,7 +494,7 @@ public class ConflationToggleDialog extends ToggleDialog
                 int numNodes = 0;
                 int numWays = 0;
                 int numRelations = 0;
-                for (OsmPrimitive p : srcSelection) {
+                for (OsmPrimitive p : referenceSelection) {
                     switch (p.getType()) {
                         case NODE:
                             numNodes++;
@@ -514,8 +509,8 @@ public class ConflationToggleDialog extends ToggleDialog
                 }
 
                 // FIXME: translate correctly
-                sourceLayerLabel.setText(srcLayer.getName());
-                sourceSelectionLabel.setText(String.format("Rel.: %d / Ways: %d / Nodes: %d", numRelations, numWays, numNodes));
+                referenceLayerLabel.setText(referenceLayer.getName());
+                referenceSelectionLabel.setText(String.format("Rel.: %d / Ways: %d / Nodes: %d", numRelations, numWays, numNodes));
             }
         }
     }
@@ -529,7 +524,7 @@ public class ConflationToggleDialog extends ToggleDialog
         List<? extends OsmPrimitive> prims = event.getPrimitives();
         for (OsmPrimitive p : prims) {
             for (ConflationCandidate c : candidates) {
-                if (c.getSourcePrimitive().equals(p) || c.getTargetPrimitive().equals(p)) {
+                if (c.getReferenceObject().equals(p) || c.getSubjectObject().equals(p)) {
                     candidates.remove(c);
                     break;
                 }

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * This class represents a potential match, i.e. a pair of primitives and
@@ -12,41 +13,41 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  */
 public class ConflationCandidate {
 
-    OsmPrimitive sourcePrimitive;
-    OsmDataLayer sourceLayer;
-    OsmPrimitive targetPrimitive;
-    OsmDataLayer targetLayer;
+    OsmPrimitive referenceObject;
+    OsmDataLayer referenceLayer;
+    OsmPrimitive subjectObject;
+    OsmDataLayer subjectLayer;
     double cost;
     double distance;
 
-    public ConflationCandidate(OsmPrimitive source, OsmDataLayer sourceLayer,
-            OsmPrimitive target, OsmDataLayer targetLayer, double cost) {
-        if (source == null || target == null) {
-            throw new IllegalArgumentException("Invalid source or target");
+    public ConflationCandidate(OsmPrimitive referenceObject, OsmDataLayer referenceLayer,
+            OsmPrimitive subjectObject, OsmDataLayer subjectLayer, double cost) {
+        if (referenceObject == null || subjectObject == null) {
+            throw new IllegalArgumentException(tr("Invalid reference or subject"));
         }
-        this.sourcePrimitive = source;
-        this.sourceLayer = sourceLayer;
-        this.targetPrimitive = target;
-        this.targetLayer = targetLayer;
+        this.referenceObject = referenceObject;
+        this.referenceLayer = referenceLayer;
+        this.subjectObject = subjectObject;
+        this.subjectLayer = subjectLayer;
         this.cost = cost;
         // TODO: use distance calculated in cost function, and make sure it's in meters?
-        this.distance = ConflationUtils.getCenter(source).distance(ConflationUtils.getCenter(target));
+        this.distance = ConflationUtils.getCenter(referenceObject).distance(ConflationUtils.getCenter(subjectObject));
     }
 
-    public OsmPrimitive getSourcePrimitive() {
-        return sourcePrimitive;
+    public OsmPrimitive getReferenceObject() {
+        return referenceObject;
     }
     
-    public OsmDataLayer getSourceLayer() {
-        return sourceLayer;
+    public OsmDataLayer getReferenceLayer() {
+        return referenceLayer;
     }
     
-    public OsmDataLayer getTargetLayer() {
-        return targetLayer;
+    public OsmDataLayer getSubjectLayer() {
+        return subjectLayer;
     }
 
-    public OsmPrimitive getTargetPrimitive() {
-        return targetPrimitive;
+    public OsmPrimitive getSubjectObject() {
+        return subjectObject;
     }
 
     public Object getCost() {

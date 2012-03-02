@@ -4,7 +4,6 @@
  */
 package org.openstreetmap.josm.plugins.conflation;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,33 +23,33 @@ public class ConflationCandidateList implements Iterable<ConflationCandidate> {
     }
 
     public boolean hasCandidate(ConflationCandidate c) {
-        return hasCandidateForSource(c.getSourcePrimitive());
+        return hasCandidateForReference(c.getReferenceObject());
     }
 
-    public boolean hasCandidate(OsmPrimitive src, OsmPrimitive tgt) {
-        return hasCandidateForSource(src) || hasCandidateForTarget(tgt);
+    public boolean hasCandidate(OsmPrimitive referenceObject, OsmPrimitive subjectObject) {
+        return hasCandidateForReference(referenceObject) || hasCandidateForSubject(subjectObject);
     }
 
-    public boolean hasCandidateForSource(OsmPrimitive src) {
-        return getCandidateBySource(src) != null;
+    public boolean hasCandidateForReference(OsmPrimitive referenceObject) {
+        return getCandidateByReference(referenceObject) != null;
     }
 
-    public boolean hasCandidateForTarget(OsmPrimitive tgt) {
-        return getCandidateByTarget(tgt) != null;
+    public boolean hasCandidateForSubject(OsmPrimitive subjectObject) {
+        return getCandidateBySubject(subjectObject) != null;
     }
 
-    public ConflationCandidate getCandidateBySource(OsmPrimitive src) {
+    public ConflationCandidate getCandidateByReference(OsmPrimitive referenceObject) {
         for (ConflationCandidate c : candidates) {
-            if (c.getSourcePrimitive() == src) {
+            if (c.getReferenceObject() == referenceObject) {
                 return c;
             }
         }
         return null;
     }
 
-    public ConflationCandidate getCandidateByTarget(OsmPrimitive tgt) {
+    public ConflationCandidate getCandidateBySubject(OsmPrimitive subjectObject) {
         for (ConflationCandidate c : candidates) {
-            if (c.getTargetPrimitive() == tgt) {
+            if (c.getSubjectObject() == subjectObject) {
                 return c;
             }
         }

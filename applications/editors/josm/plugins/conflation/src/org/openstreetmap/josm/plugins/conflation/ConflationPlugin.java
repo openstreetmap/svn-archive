@@ -25,8 +25,9 @@ public class ConflationPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
             if (dialog == null) {
-                Shortcut shortcut = Shortcut.registerShortcut("Conflation", tr("Toggle: {0}", tr("Open Conflation")),
-                        KeyEvent.VK_0, Shortcut.ALT_SHIFT);
+//                Shortcut shortcut = null; Shortcut.registerShortcut("Conflation", tr("Toggle: {0}", tr("Open Conflation")),
+//                        KeyEvent.VK_0, Shortcut.ALT_SHIFT);
+                Shortcut shortcut = null;
                 String name = "Conflation";
                 String tooltip = "Activates the conflation plugin";
                 dialog = new ConflationToggleDialog(tr(name), "conflation.png", tr(tooltip),

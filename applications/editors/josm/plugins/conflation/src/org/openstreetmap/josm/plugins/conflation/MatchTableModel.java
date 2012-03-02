@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.util.HashSet;
@@ -9,6 +5,7 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagCollection;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Model for the conflation results table.
@@ -16,7 +13,7 @@ import org.openstreetmap.josm.data.osm.TagCollection;
 class MatchTableModel extends AbstractTableModel implements ConflationListChangedListener {
 
     private ConflationCandidateList candidates = null;
-    private final static String[] columnNames = {"Mine", "Theirs", "Distance (m)", "Cost", "Tags"};
+    private final static String[] columnNames = {tr("Reference"), tr("Subject"), "Distance (m)", "Cost", "Tags"};
 
     @Override
     public int getColumnCount() {
@@ -41,9 +38,9 @@ class MatchTableModel extends AbstractTableModel implements ConflationListChange
         
         ConflationCandidate c = candidates.get(row);
         if (col == 0) {
-            return c.getSourcePrimitive();
+            return c.getReferenceObject();
         } else if (col == 1) {
-            return c.getTargetPrimitive();
+            return c.getSubjectObject();
         } else if (col == 2) {
             return c.getDistance();
         } else if (col == 3) {
@@ -51,8 +48,8 @@ class MatchTableModel extends AbstractTableModel implements ConflationListChange
         }
         if (col == 4) {
             HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-            set.add(c.getSourcePrimitive());
-            set.add(c.getTargetPrimitive());
+            set.add(c.getReferenceObject());
+            set.add(c.getSubjectObject());
             TagCollection tags = TagCollection.unionOfAllPrimitives(set);
             Set<String> keys = tags.getKeysWithMultipleValues();
             if (keys.isEmpty()) {

@@ -79,17 +79,17 @@ public class ReplaceGeometryAction extends JosmAction {
     /**
      * Replace or upgrade a node to a way or multipolygon
      *
-     * @param node
-     * @param target
+     * @param subjectNode node to be replaced
+     * @param referenceObject object with greater spatial quality
      */
-    public boolean replaceNode(Node node, OsmPrimitive target) {
-        if (!OsmPrimitive.getFilteredList(node.getReferrers(), Way.class).isEmpty()) {
+    public boolean replaceNode(Node subjectNode, OsmPrimitive referenceObject) {
+        if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
 
-        if (target instanceof Relation && !((Relation) target).isMultipolygon()) {
+        if (referenceObject instanceof Relation && !((Relation) referenceObject).isMultipolygon()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Relation is not a multipolygon, cannot be used as a replacement."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
             return false;
@@ -97,13 +97,13 @@ public class ReplaceGeometryAction extends JosmAction {
 
         Node nodeToReplace = null;
         // see if we need to replace a node in the replacement way to preserve connection in history
-        if (!node.isNew()) {
+        if (!subjectNode.isNew()) {
             // Prepare a list of nodes that are not important
             Collection<Node> nodePool = new HashSet<Node>();
-            if (target instanceof Way) {
-                nodePool.addAll(getUnimportantNodes((Way) target));
-            } else if (target instanceof Relation) {
-                for (RelationMember member : ((Relation) target).getMembers()) {
+            if (referenceObject instanceof Way) {
+                nodePool.addAll(getUnimportantNodes((Way) referenceObject));
+            } else if (referenceObject instanceof Relation) {
+                for (RelationMember member : ((Relation) referenceObject).getMembers()) {
                     if ((member.getRole().equals("outer") || member.getRole().equals("inner"))
                             && member.isWay()) {
                         // TODO: could consider more nodes, such as nodes that are members of other ways,
@@ -114,14 +114,14 @@ public class ReplaceGeometryAction extends JosmAction {
             } else {
                 assert false;
             }
-            nodeToReplace = findNearestNode(node, nodePool);
+            nodeToReplace = findNearestNode(subjectNode, nodePool);
         }
 
         List<Command> commands = new ArrayList<Command>();
-        AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) node.getKeys();
+        AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) subjectNode.getKeys();
 
         // merge tags
-        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(node, target);
+        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(subjectNode, referenceObject);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
             return false;
@@ -134,31 +134,31 @@ public class ReplaceGeometryAction extends JosmAction {
             Way parentWay = (Way) nodeToReplace.getReferrers().get(0);
             List<Node> wayNodes = parentWay.getNodes();
             int idx = wayNodes.indexOf(nodeToReplace);
-            wayNodes.set(idx, node);
+            wayNodes.set(idx, subjectNode);
             if (idx == 0 && parentWay.isClosed()) {
                 // node is at start/end of way
-                wayNodes.set(wayNodes.size() - 1, node);
+                wayNodes.set(wayNodes.size() - 1, subjectNode);
             }
             commands.add(new ChangeNodesCommand(parentWay, wayNodes));
-            commands.add(new MoveCommand(node, nodeToReplace.getCoor()));
+            commands.add(new MoveCommand(subjectNode, nodeToReplace.getCoor()));
             commands.add(new DeleteCommand(nodeToReplace));
 
             // delete tags from node
             if (!nodeTags.isEmpty()) {
                 for (String key : nodeTags.keySet()) {
-                    commands.add(new ChangePropertyCommand(node, key, null));
+                    commands.add(new ChangePropertyCommand(subjectNode, key, null));
                 }
 
             }
         } else {
             // no node to replace, so just delete the original node
-            commands.add(new DeleteCommand(node));
+            commands.add(new DeleteCommand(subjectNode));
         }
 
-        getCurrentDataSet().setSelected(target);
+        getCurrentDataSet().setSelected(referenceObject);
 
         Main.main.undoRedo.add(new SequenceCommand(
-                tr("Replace geometry for node {0}", node.getDisplayName(DefaultNameFormatter.getInstance())),
+                tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
         return true;
     }
@@ -183,25 +183,29 @@ public class ReplaceGeometryAction extends JosmAction {
                 }
             }
         }
-        Way geometry = selection.get(idxNew);
-        Way way = selection.get(1 - idxNew);
+        Way referenceWay = selection.get(idxNew);
+        Way subjectWay = selection.get(1 - idxNew);
         
-        if( !overrideNewCheck && (way.isNew() || !geometry.isNew()) ) {
+        if( !overrideNewCheck && (subjectWay.isNew() || !referenceWay.isNew()) ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select one way that exists in the database and one new way with correct geometry."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        return replaceWayWithWay(subjectWay, referenceWay);
+    }
+    
+    public static boolean replaceWayWithWay(Way subjectWay, Way referenceWay) {
 
         Area a = getCurrentDataSet().getDataSourceArea();
-        if (!isInArea(way, a) || !isInArea(geometry, a)) {
+        if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("The ways must be entirely within the downloaded area."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
             return false;
         }
         
-        if (hasImportantNode(geometry, way)) {
+        if (hasImportantNode(referenceWay, subjectWay)) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."),
                     TITLE, JOptionPane.WARNING_MESSAGE);
@@ -211,7 +215,7 @@ public class ReplaceGeometryAction extends JosmAction {
         List<Command> commands = new ArrayList<Command>();
                 
         // merge tags
-        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(geometry, way);
+        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(referenceWay, subjectWay);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
             return false;
@@ -219,14 +223,14 @@ public class ReplaceGeometryAction extends JosmAction {
         commands.addAll(tagResolutionCommands);
         
         // Prepare a list of nodes that are not used anywhere except in the way
-        Collection<Node> nodePool = getUnimportantNodes(way);
+        Collection<Node> nodePool = getUnimportantNodes(subjectWay);
 
         // And the same for geometry, list nodes that can be freely deleted
         Set<Node> geometryPool = new HashSet<Node>();
-        for( Node node : geometry.getNodes() ) {
+        for( Node node : referenceWay.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( node.isNew() && !node.isDeleted() && referrers.size() == 1
-                    && referrers.get(0).equals(geometry) && !way.containsNode(node)
+                    && referrers.get(0).equals(referenceWay) && !subjectWay.containsNode(node)
                     && !hasInterestingKey(node))
                 geometryPool.add(node);
         }
@@ -247,23 +251,23 @@ public class ReplaceGeometryAction extends JosmAction {
                 nodePool.add(n);
 
         // And prepare a list of nodes with all the replacements
-        List<Node> geometryNodes = geometry.getNodes();
+        List<Node> geometryNodes = referenceWay.getNodes();
         for( int i = 0; i < geometryNodes.size(); i++ )
             if( nodeAssoc.containsKey(geometryNodes.get(i)) )
                 geometryNodes.set(i, nodeAssoc.get(geometryNodes.get(i)));
 
         // Now do the replacement
-        commands.add(new ChangeNodesCommand(way, geometryNodes));
+        commands.add(new ChangeNodesCommand(subjectWay, geometryNodes));
 
         // Move old nodes to new positions
         for( Node node : nodeAssoc.keySet() )
             commands.add(new MoveCommand(nodeAssoc.get(node), node.getCoor()));
 
         // Remove geometry way from selection
-        getCurrentDataSet().clearSelection(geometry);
+        getCurrentDataSet().clearSelection(referenceWay);
 
         // And delete old geometry way
-        commands.add(new DeleteCommand(geometry));
+        commands.add(new DeleteCommand(referenceWay));
 
         // Delete nodes that are not used anymore
         if( !nodePool.isEmpty() )
@@ -271,7 +275,7 @@ public class ReplaceGeometryAction extends JosmAction {
 
         // Two items in undo stack: change original way and delete geometry way
         Main.main.undoRedo.add(new SequenceCommand(
-                tr("Replace geometry for way {0}", way.getDisplayName(DefaultNameFormatter.getInstance())),
+                tr("Replace geometry for way {0}", subjectWay.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands));
         return true;
     }
@@ -282,7 +286,7 @@ public class ReplaceGeometryAction extends JosmAction {
      * @param way
      * @return 
      */
-    protected Collection<Node> getUnimportantNodes(Way way) {
+    protected static Collection<Node> getUnimportantNodes(Way way) {
         Set<Node> nodePool = new HashSet<Node>();
         for (Node n : way.getNodes()) {
             List<OsmPrimitive> referrers = n.getReferrers();
@@ -301,7 +305,7 @@ public class ReplaceGeometryAction extends JosmAction {
      * @param way
      * @return 
      */
-    protected boolean hasImportantNode(Way geometry, Way way) {
+    protected static boolean hasImportantNode(Way geometry, Way way) {
         for (Node n : way.getNodes()) {
             // if original and replacement way share a node, it's safe to replace
             if (geometry.containsNode(n)) {
@@ -320,7 +324,7 @@ public class ReplaceGeometryAction extends JosmAction {
         return false;
     }
     
-    protected boolean hasInterestingKey(OsmPrimitive object) {
+    protected static boolean hasInterestingKey(OsmPrimitive object) {
         for (String key : object.getKeys().keySet()) {
             if (!OsmPrimitive.isUninterestingKey(key)) {
                 return true;
@@ -354,11 +358,11 @@ public class ReplaceGeometryAction extends JosmAction {
      * Merge tags from source to target object, showing resolution dialog if
      * needed.
      *
-     * @param source
-     * @param target
+     * @param source object tags are merged from
+     * @param target object tags are merged to
      * @return
      */
-    public List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) {
+    protected static List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) {
         Collection<OsmPrimitive> primitives = Arrays.asList(source, target);
         
         Set<RelationToChildReference> relationToNodeReferences = RelationToChildReference.getRelationToChildReferences(primitives);
@@ -393,7 +397,7 @@ public class ReplaceGeometryAction extends JosmAction {
      * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.
      * @return null if there is no such node.
      */
-    private Node findNearestNode( Node node, Collection<Node> nodes ) {
+    protected static Node findNearestNode( Node node, Collection<Node> nodes ) {
         if( nodes.contains(node) )
             return node;
         

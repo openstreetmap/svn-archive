@@ -37,6 +37,9 @@ function waypointAdd() {
 	var wypt_li = waypointCreateDOM(wp);
 	$("#route_via > li.waypoint:last-child").before(wypt_li);
 
+	// Enable delete buttons once we have more than two waypoints
+	updateWaypointDeleteButtons();
+
 	// By inserting new elements we may have moved the map
 	myFirstMap.updateSize();
 }
@@ -88,6 +91,8 @@ function waypointCreateDOM(waypoint) {
 	del_button.attr("title", "Remove " + waypointName + " from the map");
 	del_button.bind("click", function() { elementClick(this); });
 	del_button.attr("value", "");
+	del_button.attr("disabled", "disabled");
+	del_button.css("visibility", "hidden");
 	del_button.addClass("via_del_image");
 
 	var via_image = $(document.createElement("img"));
@@ -109,9 +114,6 @@ function waypointCreateDOM(waypoint) {
 	wypt_li.append(via_image);
 	wypt_li.append(via_message);
 
-	var disable_delete = $("#route_via li").length < 2;
-	$("#route_via input[name='via_del_image']").attr("disabled", disable_delete ? "disabled" : "");
-	
 	return wypt_li;
 }
 
@@ -135,11 +137,20 @@ function waypointRemove(waypointnr) {
 	waypointRenumberUI();
 
 	// Ensure there are always at least two waypoints (start and end)
-	var disable_delete = $("#route_via li").length <= 2;
-	$("#route_via input[name='via_del_image']").attr("disabled", disable_delete ? "disabled" : "");
+	updateWaypointDeleteButtons();
 
 	// Redraw map
 	myFirstMap.updateSize();
+}
+
+function updateWaypointDeleteButtons() {
+	// Enable the remove buttons based on the number of waypoints
+	var disable_delete = $("#route_via li").length <= 2;
+        if (disable_delete) {
+                $("#route_via input[name='via_del_image']").attr("disabled", "disabled").css("visibility", "hidden");
+        } else {
+                $("#route_via input[name='via_del_image']").removeAttr("disabled").css("visibility", "visible");
+        }
 }
 
 function waypointReorderCallback(event, ui) {

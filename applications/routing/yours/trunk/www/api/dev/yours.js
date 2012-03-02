@@ -8,7 +8,7 @@ if (document.location.pathname.charAt(document.location.pathname.length-1) == "/
 	var apiUrl = document.location.protocol + "//" + document.location.hostname + document.location.pathname + "/api/dev/";
 }
 var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
-var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
+var nominatimUrl = "http://nominatim.openstreetmap.org/";
 var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";
 
 /*
@@ -219,7 +219,7 @@ Yours.NominatimLookup = function(lookupMethod, value, wp, map, callback) {
 	switch (lookupMethod) {
 	case Yours.lookupMethod.nameToCoord:
 		parameters = "q=" + Url.encode(value) + "&format=xml";
-		$.get(nominatimUrl + "search/&"+ parameters, {}, 
+		$.get(nominatimUrl + "search/?"+ parameters, {}, 
 			function(xml) {
 				var result = Yours.Nominatim(xml, wp, map);
 				if (result == 'OK') {
@@ -236,7 +236,7 @@ Yours.NominatimLookup = function(lookupMethod, value, wp, map, callback) {
 			point = wp.lonlat.clone();
 			newPoint = point.transform(map.projection, map.displayProjection);
 			parameters = "lon=" + newPoint.lon + "&lat=" + newPoint.lat;
-			$.get(nominatimUrl + "reverse/&" + parameters, {}, 
+			$.get(nominatimUrl + "reverse/?" + parameters, {}, 
 				function(xml) {
 					var result = Yours.Nominatim(xml, wp, map);
 					if (result == 'OK') {
@@ -914,7 +914,7 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 		}
 		this.Segments = [];
 		
-		// Determine the numer of segments.
+		// Determine the number of segments.
 		this.callback(Yours.status.starting, "");
 		var numsegs = this.Waypoints.length - 1;
 		this.rendering = numsegs;

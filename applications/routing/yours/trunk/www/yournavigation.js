@@ -236,7 +236,7 @@ function init() {
 		wrapDateLine: true
 	});
 
-	myFirstMap.addLayers([layerMapnik, layerCycle, layerWandelRoutes]);
+	myFirstMap.addLayers([layerMapnik, layerCycle]);
 	
 	/* Initialize a Route object from the YourNavigation API */
 	myFirstRoute = new Yours.Route(myFirstMap, myRouteCallback, updateWaypointCallback);

@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -55,34 +56,82 @@ public class ReplaceGeometryAction extends JosmAction {
         OsmPrimitive secondObject = selection.get(1);
         
         try {
-            replace(firstObject, secondObject);
+            replaceWithNew(firstObject, secondObject);
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(Main.parent,
                     ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
         }
          
     }
-    public boolean replace(OsmPrimitive firstObject, OsmPrimitive secondObject) {
-        if (firstObject instanceof Way && secondObject instanceof Way) {
-            return replaceWayWithWay(Arrays.asList((Way) firstObject, (Way) secondObject));
-        } else if (firstObject instanceof Node && secondObject instanceof Node) {
-            throw new IllegalArgumentException(tr("To replace a node with a node, use the node merge tool."));
+    
+    /**
+     * Replace new or uploaded object with new object
+     * 
+     * @param firstObject
+     * @param secondObject
+     * @return 
+     */
+    public boolean replaceWithNew(OsmPrimitive firstObject, OsmPrimitive secondObject) {
+        if (firstObject instanceof Node && secondObject instanceof Node) {
+            return replaceNodeWithNew((Node) firstObject, (Node) secondObject);
+        } else if (firstObject instanceof Way && secondObject instanceof Way) {
+            return replaceWayWithNew(Arrays.asList((Way) firstObject, (Way) secondObject));
         } else if (firstObject instanceof Node) {
-            return replaceNode((Node) firstObject, secondObject);
+            return upgradeNode((Node) firstObject, secondObject);
         } else if (secondObject instanceof Node) {
-            return replaceNode((Node) secondObject, firstObject);
+            return upgradeNode((Node) secondObject, firstObject);
         } else {
-            throw new IllegalArgumentException(tr("This tool can only replace a node with a way, a node with a multipolygon, or a way with a way."));
+            throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
     }
 
     /**
-     * Replace or upgrade a node to a way or multipolygon
+     * Replace a new or uploaded node with a new node
+     * @param firstNode
+     * @param secondNode
+     * @return 
+     */
+    public boolean replaceNodeWithNew(Node firstNode, Node secondNode) {
+        if (firstNode.isNew() && !secondNode.isNew())
+            return replaceNode(secondNode, firstNode);
+        else if (!firstNode.isNew() && secondNode.isNew())
+            return replaceNode(firstNode, secondNode);
+        else
+            // both nodes are new OR uploaded, act like MergeNodes, moving first
+            // node to second
+            return replaceNode(firstNode, secondNode);
+    }
+    
+    /**
+     * Replace a node with another node (similar to MergeNodesAction)
+     *
+     * @param subjectNode
+     * @param referenceNode
+     * @return
+     */
+    public boolean replaceNode(Node subjectNode, Node referenceNode) {
+        if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
+                    TITLE, JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        // FIXME: handle different layers
+        List<Command> commands = new ArrayList<Command>();
+        commands.add(MergeNodesAction.mergeNodes(Main.main.getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode));
+
+        Main.main.undoRedo.add(new SequenceCommand(
+                tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
+                commands));
+        return true;
+    }
+    
+    /**
+     * Upgrade a node to a way or multipolygon
      *
      * @param subjectNode node to be replaced
      * @param referenceObject object with greater spatial quality
      */
-    public boolean replaceNode(Node subjectNode, OsmPrimitive referenceObject) {
+    public boolean upgradeNode(Node subjectNode, OsmPrimitive referenceObject) {
         if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
                     TITLE, JOptionPane.INFORMATION_MESSAGE);
@@ -163,7 +212,7 @@ public class ReplaceGeometryAction extends JosmAction {
         return true;
     }
     
-    public boolean replaceWayWithWay(List<Way> selection) {
+    public boolean replaceWayWithNew(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;

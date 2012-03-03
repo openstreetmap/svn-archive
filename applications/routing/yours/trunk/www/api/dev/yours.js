@@ -774,6 +774,12 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 				break;
 			case "selected":
 				wp = this.Selected;
+				// Move selection to next waypoint if that one has no position yet
+				if (this.Waypoints[this.Selected.position + 1] != undefined && this.Waypoints[this.Selected.position + 1].lonlat == undefined) {
+					this.selectWaypoint(this.Selected.position + 1);
+				} else {
+					this.selectWaypoint();
+				}
 				break;
 			default:
 				wp = this.Waypoints[id];

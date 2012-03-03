@@ -21,12 +21,12 @@
 **    set the properties commit.message and plugin.main.version
 ** and run
 **    > ant  publish
-** 
+**
 **
 -->
 <project name="editgpx" default="dist" basedir=".">
     <property name="commit.message" value="Changed constructor signature of plugin main class"/>
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="5035"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>

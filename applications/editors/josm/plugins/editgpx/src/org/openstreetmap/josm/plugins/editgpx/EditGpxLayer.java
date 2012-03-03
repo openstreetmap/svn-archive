@@ -144,11 +144,15 @@ public class EditGpxLayer extends Layer {
         public ConvertToGpxLayerAction() {
             super(tr("Convert to GPX layer"), ImageProvider.get("converttogpx"));
         }
+        @Override
         public void actionPerformed(ActionEvent e) {
+            if (Main.map.mapMode instanceof EditGpxMode) {
+                if (!Main.map.selectSelectTool(false)) {
+                    Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
+                }
+            }
             Main.main.addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);
-            if(Main.map.mapMode instanceof EditGpxMode)
-                Main.map.selectSelectTool(false);
         }
     }
 
@@ -157,11 +161,15 @@ public class EditGpxLayer extends Layer {
         public ConvertToAnonTimeGpxLayerAction() {
             super(tr("Convert to GPX layer with anonymised time"), ImageProvider.get("converttogpx"));
         }
+        @Override
         public void actionPerformed(ActionEvent e) {
+            if (Main.map.mapMode instanceof EditGpxMode) {
+                if (!Main.map.selectSelectTool(false)) {
+                    Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
+                }
+            }
             Main.main.addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);
-            if(Main.map.mapMode instanceof EditGpxMode)
-                Main.map.selectSelectTool(false);
         }
     }
 }

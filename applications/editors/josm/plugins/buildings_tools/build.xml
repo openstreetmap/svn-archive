@@ -31,7 +31,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="BuildingTools: shortcut changes - binary"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5035"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

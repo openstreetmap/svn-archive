@@ -49,14 +49,15 @@
     **********************************************************
     -->
     <target name="revision">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+        <exec append="false" outputproperty="svn.revision.output" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
+        <xmlproperty prefix="version" keepRoot="false" collapseAttributes="true">
+	  <propertyresource name="svn.revision.output"/>
+	</xmlproperty>
     </target>
     <!--
     **********************************************************

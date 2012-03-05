@@ -5,7 +5,7 @@ import sys,os,shutil
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 #import colorsys
-import mapnik_to_bw,generate_parking_layer_xml,generate_wifi_layer_xml
+import mapnik_to_bw,generate_parking_layer_xml,generate_wifi_layer_xml,generate_approach_layer_xml
 
 def add_license_files(dirname):
     f = open(os.path.join(dirname,"CONTACT"), 'w')
@@ -46,6 +46,7 @@ def main(options):
     original_mapnik_dir = options['mapnikdir']
     original_parking_dir = options['parkingdir']
     original_wifi_dir = options['wifidir']
+    original_approach_dir = options['approachdir']
     settings_dir = options['settingsdir']
     temp_dir = options['tempdir']
     deploy_dir = options['deploydir']
@@ -102,12 +103,28 @@ def main(options):
     shutil.copytree(os.path.join(os.path.join(deploy_dir,"bw-noicons"),"symbols"),os.path.join(os.path.join(deploy_dir,"wifi"),"symbols"))
     generate_wifi_layer_xml.main_wifi({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':wifi_dir, 'sourcepfile':'osm-wifi-src.xml', 'destdir':deploy_dir, 'stylename':'wifi'})
 
+    # (5) create the approach styles
+    approach_dir = os.path.join(temp_dir,"approach")
+    approach_inc_dir = os.path.join(approach_dir,"inc")
+    os.makedirs(approach_dir)
+    shutil.copy2(os.path.join(original_approach_dir,"osm-approach-src.xml"),os.path.join(approach_dir,"osm-approach-src.xml"))
+    # prepare the approach/inc dir: copy mapnik/inc, then patch with files from approach-inc-src
+    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),approach_inc_dir)
+    original_approach_inc_dir = os.path.join(original_approach_dir,"approach-inc-src")    # copy the approach-specific inc files
+    copy_files(original_approach_inc_dir,approach_inc_dir,["layer-approach-entities.xml.inc","layer-approach-area.xml.inc","layer-approach-point.xml.inc"])
+    # prepare the approach/symbols dir
+    shutil.copytree(os.path.join(original_approach_dir,"approach-symbols-src"),os.path.join(approach_dir,"approach-symbols-src"))
+
+    generate_approach_layer_xml.main_approach({'sourcepdir':approach_dir, 'sourcepfile':'osm-approach-src.xml', 'destdir':deploy_dir, 'stylename':'approach'})
+
+
 
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-m", "--mapnikdir", dest="mapnikdir", help="path to the mapnik directory", default="./mapnik")
     parser.add_option("-p", "--parkingdir", dest="parkingdir", help="path to the parking source directory", default=".")
     parser.add_option("-w", "--wifidir", dest="wifidir", help="path to the wifi source directory", default=".")
+    parser.add_option("-a", "--approachdir", dest="approachdir", help="path to the approach source directory", default=".")
     parser.add_option("-s", "--settingsdir", dest="settingsdir", help="path to the mapnik settings directory", default="./mapnik-patch")
     parser.add_option("-t", "--tempdir", dest="tempdir", help="path to the temporary directory", default="/tmp/kays-styles-mapnik")
     parser.add_option("-d", "--deploydir", dest="deploydir", help="path to the deploy directory, further dirs are created within. default is '/tmp'", default="/tmp")

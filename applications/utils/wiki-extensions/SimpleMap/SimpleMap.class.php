@@ -42,7 +42,7 @@ class SimpleMap {
 
 	# The callback function for converting the input text to HTML output
 	function parse( $input, $argv ) {
-		global $wgScriptPath, $wgMapOfServiceUrl;
+		global $wgScriptPath, $wgStaticMapLiteServiceUrl;
 
 		wfLoadExtensionMessages( 'SimpleMap' );
 		
@@ -172,7 +172,7 @@ class SimpleMap {
 			$output .= "<img src=\"";
 			//$output .= $wgMapOfServiceUrl . "lat=".$lat."&long=".$lon."&z=".$zoom."&w=".$width."&h=".$height."&format=".$format;
 			
-			$output .= $wgStaticMapLiteServiceUrl . "center=".$lat.",lon=".$lon."&zoom=".$zoom."&size=".$width."x".$height."&maptype=mapnik";
+			$output .= $wgStaticMapLiteServiceUrl . "center=".$lat.",".$lon."&zoom=".$zoom."&size=".$width."x".$height."&maptype=mapnik";
 			
 			$output .= "\" width=\"". $width."\" height=\"".$height."\" border=\"0\">";
 			$output .= "</a>";

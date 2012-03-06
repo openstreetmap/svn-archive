@@ -1,36 +1,53 @@
 
 # Additional import rules for osm2pgsql
 # Append these to a recent checkout of
-# http://svn.openstreetmap.org/applications/utils/export/osm2pgsql/default.style
+# http://svn.osm.org/applications/utils/export/osm2pgsql/default.style
 
-# Related to hiking
+# Hiking and skiing
 #
 node,way   hiking             text    linear
 way        trailblazed        text    linear
 way        marked_trail       text    linear
 way        trail_visibility   text    linear  # indistinct=yes
-way        mtb:scale          text    linear
+node,way   mtb:scale          text    linear
 way        sac_scale          text    linear
 node,way   information        text    linear
 node       board_type         text    linear
+node       checkpoint         text    linear
+node       checkpoint:type    text    linear
 node       fireplace          text    linear
+node,way   ford               text    linear
 node,way   ski                text    linear
 node,way   piste:type         text    linear
 way        piste:grooming     text    linear
 way        piste:difficulty   text    linear
-node,way   piste:oneway       text    linear
+way        piste:trailblazed  text    linear
+way        piste:oneway       text    linear
+way        oneway:ski         text    linear
 node,way   piste:lit          text    linear
 node,way   lit                text    linear
+way        snowplowing        text    linear
 node,way   abandoned          text    linear
 node,way   network            text    linear
 node,way   affiliation        text    linear
 
-# Additional POI properties
+# Biking, public transport and urban
 #
 node,way   type               text    linear  # sport=shooting
+node,way   footway            text    linear
+way        cycleway           text    linear
+way        cycleway:left      text    linear
+way        cycleway:right     text    linear
+way        cycleway:both      text    linear
+way        oneway:bicycle     text    linear
+node,way   aerialway:bicycle  text    linear
+way        busway             text    linear
+way        segregated         text    linear
 node       atm                text    linear
+node       cuisine            text    linear
 
 # Quality assurance and survey planning
 #
 node,way   fixme              text    linear
 node       noexit             text    linear
+node,way   source             text    linear

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="org/odftoolkit/odfdom/JarManifest.java|org/odftoolkit/simple/JarManifest.java|org/odftoolkit/simple/|org/jopendocument/dom/spreadsheet/SheetTest.java|org/jopendocument/dom/ChildCreatorTest.java|org/jopendocument/dom/ODSingleXMLDocumentTest.java|org/jopendocument/dom/OOXMLTest.java|org/jopendocument/dom/template/|org/jopendocument/sample/|org/jopendocument/util/cache/ICacheTest.java|org/jopendocument/panel/|org/jopendocument/tools/|org/jopendocument/print/|org/jopendocument/renderer/|org/jopendocument/util/BenchmarkUtilities.java|org/jopendocument/util/ImageUtilities.java|org/jopendocument/util/PrintUtilities.java|org/odftoolkit/odfdom/|org/jopendocument/util/CompareUtils.java|org/jopendocument/util/DummyGraphics2D.java|org/jopendocument/util/DummyFontMetrics.java|org/jopendocument/dom/spreadsheet/CalcNode.java|org/jopendocument/io/StyleTableProperties.java|org/jopendocument/util/ReflectUtils.java|org/jopendocument/util/cache/CacheWatcher.java|org/jopendocument/util/cache/CacheWatcherFactory.java|org/jopendocument/util/cache/ICache.java|org/jopendocument/util/cache/|org/jopendocument/util/cc/ExnTransformer.java|org/jopendocument/model/chart/ChartChart.java|org/jopendocument/model/ConfigConfigItem.java|org/jopendocument/dom/text/Heading.java|org/odftoolkit/" kind="src" path="includes"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="modules/be.bruxelles/src"/>
+	<classpathentry kind="src" path="modules/be.datagovbe/src"/>
+	<classpathentry kind="src" path="modules/fr.cg41/src"/>
+	<classpathentry kind="src" path="modules/fr.datagouvfr/src"/>
+	<classpathentry kind="src" path="modules/fr.datagouvfr/resources"/>
+	<classpathentry kind="src" path="modules/fr.paris/src"/>
+	<classpathentry kind="src" path="modules/fr.sncf/src"/>
+	<classpathentry kind="src" path="modules/fr.toulouse/src"/>
+	<classpathentry kind="src" path="util"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

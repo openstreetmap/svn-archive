@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+** This is a template build file for a module of the JOSM opendata plugin.
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant dist
+**
+** To install the generated module locally (in you default opendata modules directory) run
+**
+**    > ant install
+**
+** The generated module jar is not automatically available in JOSMs opendata plugin configuration
+** dialog. You have to check it in first.
+**
+** Use the ant target 'publish' to check in the module and make it available to other
+** JOSM users:
+**    set the property commit.message
+** and run
+**    > ant publish
+**
+-->
+<project name="be.bruxelles" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- should not be necessary to change the following properties -->
+    <property name="josm" location="../../../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir" value="../../../../dist"/>
+    <property name="opendata" location="${plugin.dist.dir}/opendata.jar"/>
+    <property name="module.build.dir" value="build"/>
+    <property name="module.src.dir" value="src"/>
+    <property name="ant.build.javac.source" value="1.6"/>
+    <property name="ant.build.javac.target" value="1.6"/>
+    <!-- this is the directory where the module jar is copied to -->
+    <property name="module.dist.dir" value="../../dist"/>
+    <property name="module.jar" value="${module.dist.dir}/${ant.project.name}.jar"/>
+	<!-- conditions -->
+    <condition property="resources.exist">
+        <available file="resources" type="dir" />
+    </condition>
+    <condition property="images.exist">
+        <available file="images" type="dir" />
+    </condition>
+    <!--
+    **********************************************************
+    ** init - initializes the build
+    **********************************************************
+    -->
+    <target name="init">
+        <mkdir dir="${module.build.dir}"/>
+        <mkdir dir="${module.build.dir}/META-INF"/>
+    </target>
+    <!--
+    **********************************************************
+    ** compile - compiles the source tree
+    **********************************************************
+    -->
+    <target name="compile" depends="init">
+        <echo message="compiling sources for ${module.jar} ... "/>
+        <javac srcdir="${module.src.dir}" debug="true" destdir="${module.build.dir}" includeAntRuntime="false">
+            <classpath>
+                <pathelement location="${josm}"/>
+                <pathelement location="${opendata}"/>
+            </classpath>
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+    <!--
+    **********************************************************
+    ** copy-resources - copies resources dir to build dir
+    **********************************************************
+    -->
+    <target name="copy-resources" if="resources.exist">
+        <copy todir="${module.build.dir}">
+            <fileset dir="resources" />
+        </copy>
+    </target>
+    <!--
+    **********************************************************
+    ** copy-images - copies images dir to build dir
+    **********************************************************
+    -->
+    <target name="copy-images" if="images.exist">
+        <copy todir="${module.build.dir}/images">
+            <fileset dir="images" />
+        </copy>
+    </target>
+    <!--
+    **********************************************************
+    ** dist - creates the module jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision,copy-resources, copy-images">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${module.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="gpl-3.0.txt"/>
+            </fileset>
+        </copy>
+        <jar destfile="${module.jar}" basedir="${module.build.dir}">
+            <!--
+            ************************************************
+            ** configure these properties. Most of them will
+            ** be copied to the module manifest file.
+            **
+            ************************************************
+            -->
+            <manifest>
+                <attribute name="Author" value="Don-vip"/>
+                <attribute name="Module-Class" value="org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.BruxellesModule"/>
+                <attribute name="Module-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Module-Description" value="Bruxelles"/>
+                <attribute name="Module-Icon" value="images/data.be.bruxelles_24.png"/>
+                <!--<attribute name="Module-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData/Bruxelles"/>-->
+                <attribute name="Module-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <!--
+    **********************************************************
+    ** revision - extracts the current revision number for the
+    **    file build.number and stores it in the XML property
+    **    version.*
+    **********************************************************
+    -->
+    <target name="revision">
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
+    </target>
+    <!--
+    **********************************************************
+    ** clean - clean up the build environment
+    **********************************************************
+    -->
+    <target name="clean">
+        <delete dir="${module.build.dir}"/>
+        <delete file="${module.jar}"/>
+    </target>
+    <!--
+    **********************************************************
+    ** install - install the module in your local JOSM installation
+    **********************************************************
+    -->
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${module.jar}" todir="${josm.plugins.dir}/opendata/modules" overwrite="yes"/>
+    </target>
+    <!--
+    ************************** Publishing the module *********************************** 
+    -->
+    <!-- commits the source tree for this module -->
+    <target name="commit-current">
+        <echo>Commiting the module source with message '${commit.message}' ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="commit"/>
+            <arg value="-m '${commit.message}'"/>
+            <arg value="."/>
+        </exec>
+    </target>
+    <!-- updates (svn up) the source tree for this module -->
+    <target name="update-current">
+        <echo>Updating module source ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="up"/>
+            <arg value="."/>
+        </exec>
+        <echo>Updating ${module.jar} ...</echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="up"/>
+            <arg value="../dist/${module.jar}"/>
+        </exec>
+    </target>
+    <!-- commits the module.jar -->
+    <target name="commit-dist">
+        <echo>
+    ***** Properties of published ${module.jar} *****
+    Commit message    : '${commit.message}'                    
+    Module-Version    : ${version.entry.commit.revision}
+    ***** / Properties of published ${module.jar} *****                    
+                        
+    Now commiting ${module.jar} ...
+    </echo>
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="-m '${commit.message}'"/>
+            <arg value="commit"/>
+            <arg value="${module.jar}"/>
+        </exec>
+    </target>
+    <!-- make sure svn is present as a command line tool -->
+    <target name="ensure-svn-present">
+        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
+            <env key="LANG" value="C"/>
+            <arg value="--version"/>
+        </exec>
+        <fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
+            <!-- return code not set at all? Most likely svn isn't installed -->
+            <condition>
+                <not>
+                    <isset property="svn.exit.code"/>
+                </not>
+            </condition>
+        </fail>
+        <fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
+            <!-- error code from SVN? Most likely svn is not what we are looking on this system -->
+            <condition>
+                <isfailure code="${svn.exit.code}"/>
+            </condition>
+        </fail>
+    </target>
+    <target name="publish" depends="ensure-svn-present,commit-current,update-current,clean,dist,commit-dist">
+    </target>
+</project>

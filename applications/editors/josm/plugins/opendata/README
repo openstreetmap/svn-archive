@@ -1,0 +1,30 @@
+README 
+======
+
+Readme for JOSM Open Data plugin
+
+    * Author: Don-vip
+    * License: GPL v3 (see gpl-3.0.txt) and others (see below for details)
+
+-------------------------------- DOCUMENTATION --------------------------------
+
+See http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData
+
+----------------------------------- LICENSE -----------------------------------
+
+The source code of this plugin is composed of the following folders, with distinct licenses:
+
+- src: main source code (GPL v3)
+
+- includes: several COTS, heavily truncated to fit only the plugin needs and reduce the JAR size:
+    - org/apache: three Apache COTS (Apache License 2.0, see LICENSE-2.0.txt)
+        - commons/collections: Apache Commons Collections 3.2.1 (used by jOpenDocument)
+        - commons/lang3: Apache Commons Lang 3.1 (stuff related to WordUtils, used by the plugin itself)
+        - poi: Apache POI 3.7 (Excel format support without styles, formulas and writing capabilities, used by the plugin itself)
+    - org/jopendocument: jOpenDocument 1.2 (ODS support without styles and writing capabilities, used by the plugin itself) (GPL v3, see gpl-3.0.txt)
+    - org/jdom: JDOM 1.1.2-hotfix1 (used by jOpenDocument & GeoTools) (custom license, see JDOM_LICENSE.txt)
+    - org/geotools, org/opengis: GeoTools 2.7.4 (ESRI Shapefile support, used by the plugin itself) (LGPL v2.1, see lgpl-2.1.txt)
+    - com/vividsolutions/jts: JTS 1.12 (used by GeoTools, http://sourceforge.net/projects/jts-topo-suite/) (LGPL v2.1, see lgpl-2.1.txt)
+    - javax/measure: JSR-275 1.0-beta2 (used by GeoTools)
+    - javax/vecmath: Vecmath 1.5.2 (used by GeoTools, http://java.net/projects/vecmath) (GPL v2, see gpl-2.0.txt)
+    

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="josm-opendata-modules" default="dist" basedir=".">
+	<macrodef name="run_target">
+        <attribute name="target" />
+		<sequential>
+            <ant antfile="build.xml" target="@{target}" dir="be.bruxelles"/>
+			<ant antfile="build.xml" target="@{target}" dir="be.datagovbe"/>
+	        <ant antfile="build.xml" target="@{target}" dir="fr.cg41"/>
+	        <ant antfile="build.xml" target="@{target}" dir="fr.datagouvfr"/>
+	        <ant antfile="build.xml" target="@{target}" dir="fr.paris"/>
+	        <ant antfile="build.xml" target="@{target}" dir="fr.sncf"/>
+	        <ant antfile="build.xml" target="@{target}" dir="fr.toulouse"/>
+		</sequential>
+	</macrodef>
+    <target name="dist">
+        <mkdir dir="../dist"/>
+    	<run_target target="dist"/>
+    	<antcall target="list" />
+    </target>
+    <target name="clean">
+        <run_target target="clean"/>
+    </target>
+    <target name="install" depends="dist">
+        <run_target target="install"/>
+    </target>
+	<target name="list">
+		<mkdir dir="build"/>
+		<javac srcdir="../util" destdir="build" includes="opendata/**" includeantruntime="false" />
+		<java classpath="build" classname="opendata.ModuleListGenerator">
+			<arg line="../"/>
+		</java>
+		<delete dir="build" />
+	</target>
+</project>

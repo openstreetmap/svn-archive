@@ -1,0 +1,61 @@
+<body>
+<p> Provides support for programatic unit handling.</p>
+<h3> Standart/NonStandard Units</h3>
+     Standard units and prefixes are provided by the 
+     {@link javax.measure.unit.SI SI} class (Système International d'Unités) and
+     about 50 non-standard units are available through the 
+     {@link javax.measure.unit.NonSI NonSI} class.
+
+<h3>Usage examples:</h3>
+[code]    
+import javax.measure.Scalar;
+import javax.measure.Measure;
+import javax.measure.unit.*;
+import javax.measure.quantity.*;
+import static javax.measure.unit.SI.*;
+import static javax.measure.unit.NonSI.*;
+import static javax.measure.unit.Dimension.*;
+public class Main { 
+    public void main(String[] args) { 
+
+        // Conversion between units.
+        System.out.println(KILO(METRE).getConverterTo(MILE).convert(10));
+            
+        // Retrieval of the system unit (identifies the measurement type).    
+        System.out.println(REVOLUTION.divide(MINUTE).getSystemUnit());
+        
+        // Dimension checking (allows/disallows conversions)    
+        System.out.println(ELECTRON_VOLT.isCompatible(WATT.times(HOUR)));
+
+        // Retrieval of the unit dimension (depends upon the current model).
+        System.out.println(ELECTRON_VOLT.getDimension());
+    }
+}
+
+> 6.2137119223733395
+> rad/s
+> true
+> [L]²·[M]/[T]²
+[/code]
+       
+<h3>Unit Parameterization</h3>
+
+    Units are parameterized (&lt;Q extends {@link javax.measure.quantity.Quantity Quantity}>) to
+    enforce compile-time checks of units/measures consistency, for example:[code]
+
+    Unit<Duration> MINUTE = SECONDS.times(60); // Ok.
+    Unit<Duration> MINUTE = METRE.times(60); // Compile error.
+    
+    Unit<Pressure> HECTOPASCAL = HECTO(PASCAL); // Ok.
+    Unit<Pressure> HECTOPASCAL = HECTO(NEWTON); // Compile error.
+    
+    Measurable<Duration> duration = Measure.valueOf(2, MINUTE); // Ok.
+    Measurable<Duration> duration = Measure.valueOf(2, CELSIUS); // Compile error.
+    
+    long milliseconds = duration.longValue(MILLI(SECOND)); // Ok.
+    long milliseconds = duration.longValue(POUND); // Compile error.
+    [/code]</p>
+   
+<h3>UML Diagram</h3>
+        <IMG alt="UML Diagram" src="doc-files/unit.png">
+</body>

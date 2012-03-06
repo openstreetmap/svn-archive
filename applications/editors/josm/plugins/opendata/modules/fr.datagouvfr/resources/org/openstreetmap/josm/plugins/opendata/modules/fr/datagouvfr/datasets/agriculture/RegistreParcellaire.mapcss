@@ -1,0 +1,86 @@
+area[code:FR:RPG=0] {
+}
+area[code:FR:RPG=1] {
+  fill-color: #FFFF90;
+}
+area[code:FR:RPG=2] {
+  fill-color: #00FF00;
+}
+area[code:FR:RPG=3] {
+  fill-color: #F0FF70;
+}
+area[code:FR:RPG=4] {
+  fill-color: #DAEB00;
+}
+area[code:FR:RPG=5] {
+  fill-color: #FFECB0;
+}
+area[code:FR:RPG=6] {
+  fill-color: #FFFF00;
+}
+area[code:FR:RPG=7] {
+  fill-color: #FFC000;
+}
+area[code:FR:RPG=8] {
+  fill-color: #F0B400;
+}
+area[code:FR:RPG=9] {
+  fill-color: #C09000;
+}
+area[code:FR:RPG=10] {
+  fill-color: #604800;
+}
+area[code:FR:RPG=11] {
+  fill-color: #F0F0F0;
+}
+area[code:FR:RPG=12] {
+  fill-color: #B0B0B0;
+}
+area[code:FR:RPG=13] {
+  fill-color: #D0D0D0;
+}
+area[code:FR:RPG=14] {
+  fill-color: #90B5FF;
+}
+area[code:FR:RPG=15] {
+  fill-color: #FFA080;
+}
+area[code:FR:RPG=16] {
+  fill-color: #9FC75D;
+}
+area[code:FR:RPG=17] {
+  fill-color: #B5E66B;
+}
+area[code:FR:RPG=18] {
+  fill-color: #C0FF60;
+}
+area[code:FR:RPG=19] {
+  fill-color: #E0FFB0;
+}
+area[code:FR:RPG=20] {
+  fill-color: #FF0000;
+}
+area[code:FR:RPG=21] {
+  fill-color: #E000E0;
+}
+area[code:FR:RPG=22] {
+  fill-color: #008000;
+}
+area[code:FR:RPG=23] {
+  fill-color: #A2A200;
+}
+area[code:FR:RPG=24] {
+  fill-color: #008080;
+}
+area[code:FR:RPG=25] {
+  fill-color: #FFA0D0;
+}
+area[code:FR:RPG=26] {
+  fill-color: #0000FF;
+}
+area[code:FR:RPG=27] {
+  fill-color: #00B058;
+}
+area[code:FR:RPG=28] {
+  fill-color: #800080;
+}

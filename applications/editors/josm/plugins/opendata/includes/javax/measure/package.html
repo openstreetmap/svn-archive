@@ -1,0 +1,77 @@
+<body>
+<p> Provides strongly typed measurements to enforce compile-time
+    check of parameters consistency and avoid interface errors.</p>
+
+<p> Let's take the following example:[code]
+        class Person {
+            void setWeight(double weight);
+        }[/code]
+    Should the weight be in pound, kilogram ??<br>
+    Using measures there is no room for error:[code]
+        class Person {
+            void setWeight(Measurable<Mass> weight);
+        }[/code]
+    Not only the interface is cleaner (the weight has to be of mass type); 
+    but also there is no confusion on the measurement unit:[code]
+        double weightInKg = weight.doubleValue(KILOGRAM);
+        double weightInLb = weight.doubleValue(POUND);[/code]
+    Measurable work hand-in-hand with units (also parameterized).
+    For example, the following would result in compile-time error:[code]
+        double weightInLiter = weight.doubleValue(LITER); // Compile error, Unit<Mass> required.
+        [/code]</p>
+
+<p> Users may create their own {@link javax.measure.Measurable
+    Measurable} implementation:[code]
+
+         public class Period implements Measurable<Duration> {
+              long nanoseconds;
+              ...
+         }
+ 
+         public class Distance implements Measurable<Length> {
+              double meters;
+              ...
+         }
+                  
+         public class Velocity3D implements Measurable<Velocity> {
+              double x, y, z; // In meters.
+              ...
+         }
+                 
+
+[/code]</p>
+
+<p> Users may also combine a definite amount (scalar, vector, collection, etc.) 
+    to a unit and make it a {@link javax.measure.Measure Measure} (and  
+    a {@link javax.measure.Measurable Measurable} instance). For example:
+    [code]
+           
+         // Scalar measurement (numerical).     
+         person.setWeight(Measure.valueOf(180.0, POUND)); // Measure<Double, Mass>
+         timer.setPeriod(Measure.valueOf(20, MILLI(SECOND)); // Measure<Integer, Duration>
+         circuit.setCurrent(Measure.valueOf(Complex.valueOf(2, -3), AMPERE); // (2 - 3i) A
+         bottle.setPression(Measure.valueOf(Rational.valueOf(20, 100), ATMOSPHERE)); // (20/100) Atm
+
+         // Vector measurement.
+         abstract class MeasureVector<E, Q extends Quantity> extends Measure<E[], Q> {
+             ... // doubleValue(Unit) returns vector norm.
+         }
+         MeasureVector<Double, Velocity> v = MeasureVector.valueOf(METRE_PER_SECOND, 1.0, 2.0, 3.0);
+         plane.setVelocity(v);
+
+         // Statistical measurement.
+         class Average<Q extends Quantity> extends Measure<double[], Q>{
+             ... // doubleValue(Unit) returns average value.
+         }
+         sea.setTemperature(Average.valueOf(new double[] { 33.4, 44.55, 32.33} , CELCIUS));
+         
+         // Measurement with uncertainty (and additional operations).
+         public class Amount<Q extends Quantity> extends Measurable<Q>  {
+              public Amount(double value, double error, Unit<Q> unit) { ... }
+              public Amount<Q> plus(Amount<Q> that) {...}
+              public Amount<?> times(Amount<?> that) {...} 
+              ... // doubleValue(Unit) returns estimated value.
+         }  
+    [/code]</p>
+    
+</body>

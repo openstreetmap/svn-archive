@@ -29,7 +29,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public final class NodeWayUtils {
 
-    static final int maxLevel = Main.pref.getInteger("selection.maxrecursion", 5);
+    static final int maxLevel = Main.pref.getInteger("selection.maxrecursion", 15);
     static final int maxWays = Main.pref.getInteger("selection.maxfoundways", 2000);
     static final int maxWays1 = Main.pref.getInteger("selection.maxfoundways.intersection", 500);
 
@@ -72,9 +72,11 @@ public final class NodeWayUtils {
     static int addWaysConnectedToWay(Way w, Set<Way> ways) {
          int s = ways.size();
         List<Node> nodes = w.getNodes();
+        boolean flag = ways.contains(w);
         for (Node n: nodes) {
             ways.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
         }
+        if (!flag) ways.remove(w);
         return ways.size() - s;
     }
 
@@ -154,8 +156,14 @@ public final class NodeWayUtils {
         }
         return count;
     }
+    
+    public static void addWaysConnectedToWays(Collection<Way> ways, Set<Way> newWays) {
+        for (Way w : ways){
+            NodeWayUtils.addWaysConnectedToWay(w, newWays);
+        }
+    }
 
-    static int addWaysConnectedToNodes(Set<Node> selectedNodes, Set<Way> newWays) {
+    public static int addWaysConnectedToNodes(Set<Node> selectedNodes, Set<Way> newWays) {
         int s = newWays.size();
         for (Node node: selectedNodes) {
             addWaysConnectedToNode(node, newWays);
@@ -163,7 +171,7 @@ public final class NodeWayUtils {
         return newWays.size() - s;
     }
 
-    static int addNodesConnectedToWays(Set<Way> initWays, Set<Node> newNodes) {
+    public static int addNodesConnectedToWays(Set<Way> initWays, Set<Node> newNodes) {
         int s = newNodes.size();
         for (Way w: initWays) {
                 newNodes.addAll(w.getNodes());
@@ -201,7 +209,7 @@ public final class NodeWayUtils {
             return;
     }
 
- static void addWaysConnectedToWaysRecursively
+    public static void addWaysConnectedToWaysRecursively
             (Collection<Way> initWays, Set<Way> newWays)
     {
             //long t = System.currentTimeMillis();
@@ -490,6 +498,7 @@ public final class NodeWayUtils {
         }
         return insideSelection;
     }
+
 
 
 }

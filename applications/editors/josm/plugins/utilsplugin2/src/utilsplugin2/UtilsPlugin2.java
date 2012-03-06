@@ -1,6 +1,7 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package utilsplugin2;
 
+import org.openstreetmap.josm.data.osm.Node;
 import utilsplugin2.customurl.ChooseURLAction;
 import utilsplugin2.customurl.OpenPageAction;
 import utilsplugin2.customurl.UtilsPluginPreferences;
@@ -150,12 +151,16 @@ public class UtilsPlugin2 extends Plugin {
     
     public static class UtilsUnaryMatchFactory implements UnaryMatchFactory {
         private static Collection<String> keywords = Arrays.asList("inside",
-                "intersecting", "allintersecting");
+                "intersecting", "allintersecting", "adjacent", "connected");
         
         @Override
         public UnaryMatch get(String keyword, Match matchOperand, PushbackTokenizer tokenizer) throws ParseError {
             if ("inside".equals(keyword))
                 return new InsideMatch(matchOperand);
+            else if ("adjacent".equals(keyword))
+                return new ConnectedMatch(matchOperand, false);
+            else if ("connected".equals(keyword))
+                return new ConnectedMatch(matchOperand, true);
             else if ("intersecting".equals(keyword))
                 return new IntersectingMatch(matchOperand, false);
             else if ("allintersecting".equals(keyword))
@@ -177,13 +182,14 @@ public class UtilsPlugin2 extends Plugin {
         
         public InsideMatch(Match match) {
             super(match);
-            init();
+            //init();
         }
         
         /**
          * Find all objects inside areas which match the expression
          */
         private void init() {
+            if (inside==null) init(); // lazy initialization
             Collection<OsmPrimitive> matchedAreas = new HashSet<OsmPrimitive>();
 
             // find all ways that match the expression
@@ -211,10 +217,12 @@ public class UtilsPlugin2 extends Plugin {
     
     public static class IntersectingMatch extends UnaryMatch {
         private Collection<Way> intersecting = null;
+        boolean all;
         
         public IntersectingMatch(Match match, boolean all) {
             super(match);
-            init(all);
+            this.all=all;
+            //init(all);
         }   
         
         /**
@@ -240,9 +248,61 @@ public class UtilsPlugin2 extends Plugin {
         
         @Override
         public boolean match(OsmPrimitive osm) {
+            if (intersecting==null) init(all); // lazy initialization
             if (osm instanceof Way)
                 return intersecting.contains((Way)osm);
             return false;
         }
     }
+    
+    public static class ConnectedMatch extends UnaryMatch {
+        private Collection<Way> connected = null;
+        boolean all;
+        
+        public ConnectedMatch(Match match, boolean all) {
+            super(match);
+            this.all=all;
+        }   
+        
+        /**
+         * Find (all) ways intersecting ways which match the expression.
+         */
+        private void init(boolean all) {
+            Collection<Way> matchedWays = new HashSet<Way>();
+            Set<Node> matchedNodes = new HashSet<Node>();
+            
+            // find all ways that match the expression
+            Collection<Way> allWays = Main.main.getCurrentDataSet().getWays();
+            for (Way way : allWays) {
+                if (match.match(way))
+                    matchedWays.add(way);
+            }
+            
+            // find all nodes that match the expression
+            Collection<Node> allNodes = Main.main.getCurrentDataSet().getNodes();
+            for (Node node: allNodes) {
+                if (match.match(node))
+                    matchedNodes.add(node);
+            }
+            
+            Set<Way> newWays = new HashSet<Way>();
+            if (all) {
+                NodeWayUtils.addWaysConnectedToNodes(matchedNodes, newWays);
+                NodeWayUtils.addWaysConnectedToWaysRecursively(matchedWays, newWays);
+            } else {
+                NodeWayUtils.addWaysConnectedToNodes(matchedNodes, newWays);
+                NodeWayUtils.addWaysConnectedToWays(matchedWays, newWays);
+            }
+            connected = newWays;
+        }
+        
+        @Override
+        public boolean match(OsmPrimitive osm) {
+            if (connected==null) init(all); // lazy initialization
+            if (osm instanceof Way)
+                return connected.contains((Way)osm);
+            return false;
+        }
+    }   
+    
 }

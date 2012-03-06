@@ -37,10 +37,8 @@ public class AdjacentWaysAction extends JosmAction {
 
         // select ways attached to already selected ways
         Set<Way> newWays = new HashSet<Way>();
+        NodeWayUtils.addWaysConnectedToWays(selectedWays, newWays);
         newWays.addAll(selectedWays);
-        for (Way w : selectedWays){
-            NodeWayUtils.addWaysConnectedToWay(w, newWays);
-        }
 
         // selecting ways attached to selected nodes
         if(!selectedNodes.isEmpty()) {

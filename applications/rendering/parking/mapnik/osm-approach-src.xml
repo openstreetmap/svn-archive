@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+%entities;
+]>
+<Map background-color="#ffffffff" srs="&srs900913;" minimum-version="2.0.0">
+  &fontset-settings;
+
+<Style name="roads-text-name">
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'primary'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <TextSymbolizer size="8" fill="black" placement="line" fontset-name="book-fonts" halo-radius="0">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <TextSymbolizer size="8" fill="black" placement="line" fontset-name="book-fonts" halo-radius="1" halo-fill="#fed7a5">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'primary'</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom14;
+      <TextSymbolizer size="9" fill="black" placement="line" fontset-name="book-fonts" halo-radius="0">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'primary'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <TextSymbolizer size="10" fill="black" placement="line" fontset-name="book-fonts" halo-radius="0">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary'</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom14;
+      <TextSymbolizer size="9" fill="black" placement="line" fontset-name="book-fonts" halo-radius="1" halo-fill="#fed7a5">[name]</TextSymbolizer>
+    </Rule><Rule>
+      <Filter>[highway] = 'secondary'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <TextSymbolizer size="10" fill="black" placement="line" fontset-name="book-fonts" halo-radius="1" halo-fill="#fed7a5">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'tertiary'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom16;
+      <TextSymbolizer size="9" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'tertiary'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <TextSymbolizer size="11" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom13;
+      &minscale_zoom15;
+      <Filter>[highway] = 'proposed' or [highway]='construction'</Filter>
+      <TextSymbolizer size="9" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom16;
+      &minscale_zoom18;
+      <Filter>[highway] = 'proposed' or [highway]='construction'</Filter>
+      <TextSymbolizer size="11" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unclassified' or [highway] = 'residential'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom15;
+      <TextSymbolizer size="8" fill="#000" spacing="300" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unclassified' or [highway] = 'residential'</Filter>
+      &maxscale_zoom16;
+      &minscale_zoom16;
+      <TextSymbolizer size="9" fill="#000" spacing="300" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unclassified' or [highway] = 'residential'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <TextSymbolizer size="11" fill="#000" spacing="400" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <ElseFilter/>
+      &maxscale_zoom15;
+      &minscale_zoom16;
+      <TextSymbolizer size="9" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <ElseFilter/>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <TextSymbolizer size="11" fill="#000" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+</Style>
+
+<Style name="roads">
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      &maxscale_zoom5;
+      &minscale_zoom6;
+      <LineSymbolizer stroke="#809bc0" stroke-width="0.5"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      &maxscale_zoom7;
+      &minscale_zoom8;
+      <LineSymbolizer stroke="#809bc0" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom9;
+      <LineSymbolizer stroke="#809bc0" stroke-width="1.4"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom10;
+      <LineSymbolizer stroke="#809bc0" stroke-width="2"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#809bc0" stroke-width="2.5"/>
+    </Rule>
+    <!-- TRUNK -->
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      &maxscale_zoom5;
+      &minscale_zoom6;
+      <LineSymbolizer stroke="#a9dba9" stroke-width="0.4"/>
+    </Rule>
+   <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      &maxscale_zoom7;
+      &minscale_zoom8;
+      <LineSymbolizer stroke="#97d397" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom10;
+      <LineSymbolizer stroke="#97d397" stroke-width="2"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#97d397" stroke-width="2.5"/>
+    </Rule>
+   <!-- PRIMARY-->
+   <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      &maxscale_zoom7;
+      &minscale_zoom8;
+      <LineSymbolizer stroke="#ec989a" stroke-width="0.5"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom9;
+      <LineSymbolizer stroke="#ec989a" stroke-width="1.2"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom10;
+      <LineSymbolizer stroke="#ec989a" stroke-width="2"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#ec989a" stroke-width="2.5"/>
+    </Rule>
+    <!-- SECONDARY -->
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom10;
+      <LineSymbolizer stroke="#fecc8b" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#fecc8b" stroke-width="2"/>
+    </Rule>
+    <!-- RAIL -->
+    <Rule>
+      &maxscale_zoom6;
+      &minscale_zoom8;
+      <Filter>[railway] = 'rail'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="0.6"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom9;
+      &minscale_zoom9;
+      <Filter>[railway] = 'rail' and not [tunnel]='yes'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom9;
+      &minscale_zoom9;
+      <Filter>[railway] = 'rail' and [tunnel]='yes'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="1" stroke-dasharray="5,2"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom8;
+      &minscale_zoom9;
+      <Filter>[railway] = 'tram' or [railway] = 'light_rail' or [railway] = 'narrow_gauge' or [railway]='funicular'</Filter>
+      <LineSymbolizer stroke="#ccc" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom10;
+      &minscale_zoom12;
+      <Filter>[railway] = 'rail' and not [tunnel]='yes'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="2"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom10;
+      &minscale_zoom12;
+      <Filter>[railway] = 'rail' and [tunnel]='yes'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="2" stroke-dasharray="5,2"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom10;
+      &minscale_zoom12;
+      <Filter>[railway] = 'tram' or [railway] = 'light_rail' or [railway] = 'narrow_gauge' or [railway]='funicular'</Filter>
+      <LineSymbolizer stroke="#aaa" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <Filter>[railway] = 'preserved'</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke="#aaa" stroke-width="1.5"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom13;
+      &minscale_zoom18;
+      <Filter>[railway] = 'preserved'</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke="#999999" stroke-width="3"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="1" stroke-dasharray="0,1,8,1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <Filter>[railway] = 'INT-preserved-ssy'</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke="#aaa" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom13;
+      &minscale_zoom18;
+      <Filter>[railway] = 'INT-preserved-ssy'</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke="#999999" stroke-width="2"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="0.8" stroke-dasharray="0,1,8,1"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom14;
+      &minscale_zoom18;
+      <Filter>[railway]='monorail'</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-opacity="0.4"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#777" stroke-width="3.0" stroke-dasharray="2,3" stroke-linecap="round"/>
+    </Rule>
+</Style>
+
+<!--  &layer-shapefiles; -->
+<Style name="necountries">
+    <Rule>
+      &maxscale_zoom1;
+      &minscale_zoom3;
+      <LineSymbolizer stroke="grey" stroke-width="0.5"/>
+    </Rule>
+</Style>
+<Style name="nepopulated">
+    <Rule>
+      &maxscale_zoom3;
+      &minscale_zoom4;
+     <Filter>[SCALERANK]=1</Filter>
+     <TextSymbolizer size="8" dy="2" fill="grey" fontset-name="book-fonts" halo-radius="1">[NAMEASCII]</TextSymbolizer>
+    </Rule>
+</Style>
+<Style name="world">
+    <Rule>
+      &maxscale_zoom0;
+      &minscale_zoom9;
+      <PolygonSymbolizer fill="#f2efe9"/>
+    </Rule>
+</Style>
+<Style name="coast-poly">
+    <Rule>
+      &maxscale_zoom10;
+      <PolygonSymbolizer fill="#f2efe9"/>
+    </Rule>
+</Style>
+  <!-- BUILTUP VMAP0 -->
+<Style name="builtup">
+    <Rule>
+      &maxscale_zoom8;
+      &minscale_zoom10;
+      <PolygonSymbolizer fill="#ddd"/>
+    </Rule>
+</Style>
+<Layer name="world" status="on" srs="&srs900913;">
+    <StyleName>world</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/shoreline_300</Parameter>
+    </Datasource>
+</Layer>
+<Layer name="coast-poly" status="on" srs="&srs900913;">
+    <StyleName>coast-poly</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/processed_p</Parameter>
+    </Datasource>
+</Layer>
+<Layer name="builtup" status="on" srs="&srsmercator;">
+    <StyleName>builtup</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/builtup_area</Parameter>
+    </Datasource>
+</Layer>
+<Layer name="necountries" status="on" srs="&srs4326;">
+    <StyleName>necountries</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/110m_admin_0_boundary_lines_land.shp</Parameter>
+    </Datasource>
+</Layer>
+<Layer name="nepopulated" status="on" srs="&srs4326;">
+    <StyleName>nepopulated</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/ne_10m_populated_places.shp</Parameter>
+      <Parameter name="encoding">latin1</Parameter>
+    </Datasource>
+</Layer>
+
+<!--  &layer-water; -->
+<Style name="water_areas">
+    <Rule>
+      <Filter>[natural] = 'glacier'</Filter>
+      &maxscale_zoom6;
+      &minscale_zoom7;
+      <LineSymbolizer stroke="#9cf" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <PolygonPatternSymbolizer file="&symbols;/glacier.png" />
+    </Rule>
+    <Rule>
+      <Filter>[natural] = 'glacier'</Filter>
+      &maxscale_zoom8;
+      <LineSymbolizer stroke="#9cf" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <PolygonPatternSymbolizer file="&symbols;/glacier2.png" />
+    </Rule>
+    <Rule>
+      <Filter>[waterway] = 'dock' or [waterway] = 'mill_pond' or [waterway]='canal'</Filter>
+      &maxscale_zoom9;
+      <PolygonSymbolizer gamma=".75" fill="#b5d0d0"/>
+    </Rule>
+    <Rule>
+      <Filter>[landuse] = 'basin'</Filter>
+      &maxscale_zoom7;
+      <PolygonSymbolizer gamma=".75" fill="#b5d0d0"/>
+    </Rule>
+    <Rule>
+      <Filter>[natural] = 'lake' or [natural] = 'water' or [landuse] = 'reservoir' or [waterway] = 'riverbank' or [landuse] = 'water' or [natural]='bay'</Filter>
+      &maxscale_zoom6;
+      <PolygonSymbolizer gamma=".75" fill="#b5d0d0"/>
+    </Rule>
+    <Rule>
+      <Filter>[natural] = 'mud'</Filter>
+      &maxscale_zoom13;
+      <PolygonPatternSymbolizer file="&symbols;/mud.png" />
+    </Rule>
+    <Rule>
+      <Filter>[natural] = 'land'</Filter>
+      &maxscale_zoom10;
+      <PolygonSymbolizer fill="#f2efe9"/>
+    </Rule>
+</Style>
+<Style name="water-areas-overlay">
+    <Rule>
+      &maxscale_zoom13;
+      <Filter>[natural] = 'marsh' or [natural] = 'wetland'</Filter>
+      <PolygonPatternSymbolizer file="&symbols;/marsh.png" />
+    </Rule>
+</Style>
+<Style name="glaciers-text">
+    <Rule> 
+      <Filter>[way_area] &gt;= 10000000</Filter>
+      &maxscale_zoom10;
+      <TextSymbolizer size="9" fill="#99f" fontset-name="book-fonts" halo-radius="1" wrap-width="20">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[way_area] &gt;= 5000000 and [way_area] &lt; 10000000</Filter>
+      &maxscale_zoom11;
+      <TextSymbolizer size="9" fill="#99f" fontset-name="book-fonts" halo-radius="1" wrap-width="20">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[way_area] &lt; 5000000</Filter>
+      &maxscale_zoom12;
+      <TextSymbolizer size="9" fill="#99f" fontset-name="book-fonts" halo-radius="1" wrap-width="20">[name]</TextSymbolizer>
+    </Rule>
+</Style>
+
+<Style name="water-lines-casing">
+    <Rule>
+      <Filter>[waterway]='stream' or [waterway]='ditch' or [waterway]='drain'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom14;
+      <LineSymbolizer stroke="white" stroke-width="1.5"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='stream'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="white" stroke-width="2.5"/>
+    </Rule>
+</Style>
+
+<Style name="water-lines-low-zoom">
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom8;
+      &minscale_zoom8;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="0.7"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom9;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="1.2"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="1.6"/>
+    </Rule>
+</Style>
+
+<Style name="water_lines">
+    <Rule>
+      <Filter>[waterway]='weir'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='wadi'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom15;
+      <LineSymbolizer stroke-linejoin="round" stroke-dasharray="4,4" stroke="#b5d0d0" stroke-width="1" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='wadi'</Filter>
+      &maxscale_zoom16;
+      <LineSymbolizer stroke-linejoin="round" stroke-dasharray="4,4" stroke="#b5d0d0" stroke-width="2" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="2" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="3" stroke-linecap="round"/>
+      <TextSymbolizer size="9" fill="#6699cc" placement="line" spacing="400" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom14;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="5" stroke-linecap="round"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" spacing="400" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule><Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom16;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="6" stroke-linecap="round"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" spacing="400" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom17;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="10" stroke-linecap="round"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" spacing="400" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river'</Filter>
+      &maxscale_zoom18;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="12" stroke-linecap="round"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" spacing="400" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and not [disused]='yes'</Filter>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="3" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and not [disused]='yes'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="4" stroke-linecap="round"/>
+      <TextSymbolizer size="8" fill="#6699cc" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='stream' or [waterway]='ditch' or [waterway]='drain'</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom14;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom14;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="6" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="4"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" minimum-distance="200" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule><Rule>
+      <Filter>[waterway]='river' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom16;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="7" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="4"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" minimum-distance="200" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom17;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="11" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="7"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" minimum-distance="200" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='river' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="13" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="9"/>
+      <TextSymbolizer size="10" fill="#6699cc" placement="line" minimum-distance="200" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom16;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="7" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="3"/>
+      <TextSymbolizer size="9" fill="#6699cc" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and not ([tunnel] = 'yes' or [disused]='yes')</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom16;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="7" stroke-linecap="round"/>
+      <TextSymbolizer size="9" fill="#6699cc" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and [tunnel] = 'yes'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="11" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="white" stroke-width="7"/>
+      <TextSymbolizer size="9" fill="#6699cc" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and not ([tunnel] = 'yes' or [disused]='yes' or [lock]='yes')</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="11" stroke-linecap="round"/>
+      <TextSymbolizer size="9" fill="#6699cc" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='canal' and not ([tunnel] = 'yes' or [disused]='yes') and [lock]='yes'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke="#b5d0d0" stroke-width="7" stroke-linecap="round"/>
+      <TextSymbolizer size="9" fill="#6699cc" fontset-name="book-fonts" halo-radius="1" wrap-width="20">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='derelict_canal' or ([waterway]='canal' and [disused]='yes')</Filter>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <LineSymbolizer stroke-linejoin="round" stroke-opacity="0.5" stroke="#b5e4d0" stroke-linecap="round" stroke-dasharray="4,4" stroke-width="1.5"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='derelict_canal' or ([waterway]='canal' and [disused]='yes')</Filter>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <LineSymbolizer stroke-linejoin="round" stroke-opacity="0.5" stroke="#b5e4d0" stroke-linecap="round" stroke-dasharray="4,6" stroke-width="2.5"/>
+      <TextSymbolizer size="9" fill="#80d1ae" spacing="600" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='derelict_canal' or ([waterway]='canal' and [disused]='yes')</Filter>
+      &maxscale_zoom14;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke-opacity="0.5" stroke="#b5e4d0" stroke-linecap="round" stroke-dasharray="4,8" stroke-width="4.5"/>
+      <TextSymbolizer size="10" fill="#80d1ae" spacing="600" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='stream' and [tunnel]='yes'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="2.4" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="#f3f7f7" stroke-width="1.2"/>
+    </Rule>
+    <Rule>
+      <Filter>[waterway]='stream' and not [tunnel]='yes'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="2"/>
+      <TextSymbolizer size="8" fill="#6699cc" spacing="600" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([waterway]='drain' or [waterway]='ditch') and [tunnel]='yes'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="2" stroke-dasharray="4,2"/>
+      <LineSymbolizer stroke="#f3f7f7" stroke-width="1"/>
+    </Rule>
+    <Rule>
+      <Filter>([waterway]='drain' or [waterway]='ditch') and not [tunnel]='yes'</Filter>
+      &maxscale_zoom15;
+      &minscale_zoom18;
+      <LineSymbolizer stroke="#b5d0d0" stroke-width="1"/>
+      <TextSymbolizer size="8" fill="#6699cc" spacing="600" placement="line" fontset-name="book-fonts" halo-radius="1">[name]</TextSymbolizer>
+    </Rule>
+</Style>
+
+<Layer name="water-lines-casing" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>water-lines-casing</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,waterway
+      from &prefix;_line
+      where waterway in ('stream','drain','ditch')
+        and (tunnel is null or tunnel != 'yes')
+      ) as water_lines</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+<Layer name="water_areas" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>water_areas</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,"natural",waterway,landuse,name
+      from &prefix;_polygon
+      where (waterway in ('dock','mill_pond','riverbank','canal')
+         or landuse in ('reservoir','water','basin')
+         or "natural" in ('lake','water','land','glacier','mud','bay'))
+         and building is null
+      order by z_order,way_area desc
+      ) as water_areas</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+<!-- Make sure overlay styles are always rendered on top of solid areas. -->
+<Layer name="water-areas-overlay" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>water-areas-overlay</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,"natural"
+      from &prefix;_polygon
+      where "natural" in ('marsh','wetland') and building is null
+      order by z_order,way_area desc
+      ) as water_areas</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+<Layer name="glaciers-text" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>glaciers-text</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,name,way_area
+      from &prefix;_polygon
+      where "natural"='glacier' and building is null
+      order by way_area desc
+      ) as glaciers</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
+<Layer name="water-lines-low-zoom" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>water-lines-low-zoom</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,waterway
+      from &prefix;_line
+      where waterway='river'
+      ) as water_lines</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
+<Layer name="water_lines" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>water_lines</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,waterway,disused,lock,name,
+      case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel
+      from &prefix;_line
+      where waterway in ('weir','river','canal','derelict_canal','stream','drain','ditch','wadi')
+        and (bridge is null or bridge not in ('yes','true','1','aqueduct'))
+      order by z_order
+      ) as water_lines</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
+<!-- &layer-water_features; -->
+<!-- weggelassen -->
+
+<Layer name="roads" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>roads</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,highway,
+       case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,
+       case when railway='preserved' and service in ('spur','siding','yard') then 'INT-preserved-ssy'::text else railway end as railway
+       from &prefix;_roads
+       where highway is not null
+          or (railway is not null and railway!='preserved' and (service is null or service not in ('spur','siding','yard')))
+          or railway='preserved'
+       order by z_order
+      ) as roads
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+</Map>
+
+<Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
+     <StyleName>roads-text-name</StyleName>
+     <Datasource>
+      <Parameter name="table">
+      (select way,highway,name
+       from &prefix;_line
+       where waterway IS NULL
+         and leisure IS NULL
+         and landuse IS NULL
+         and name is not null
+      ) as roads
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>

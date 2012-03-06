@@ -208,9 +208,9 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
      *
      * @return the list of modules waiting for update or download
      */
-    /*public List<ModuleInformation> getModulesScheduledForUpdateOrDownload() {
+    public List<ModuleInformation> getModulesScheduledForUpdateOrDownload() {
         return model != null ? model.getModulesScheduledForUpdateOrDownload() : null;
-    }*/
+    }
 
     public boolean ok() {
         if (! modulePreferencesActivated)

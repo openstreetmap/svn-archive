@@ -189,7 +189,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
      *
      * @return the list of modules waiting for update or download
      */
-    /*public List<ModuleInformation> getModulesScheduledForUpdateOrDownload() {
+    public List<ModuleInformation> getModulesScheduledForUpdateOrDownload() {
         List<ModuleInformation> ret = new ArrayList<ModuleInformation>();
         for (String module: pendingDownloads) {
             ModuleInformation pi = getModuleInformation(module);
@@ -199,7 +199,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
             ret.add(pi);
         }
         return ret;
-    }*/
+    }
 
     /**
      * Sets whether the module is selected or not.

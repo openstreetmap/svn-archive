@@ -26,17 +26,21 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleDownloadTask;
+import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.tools.GBC;
 
 public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements OdConstants {
@@ -141,11 +145,81 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
     
     @Override
     public boolean ok() {
-    	modulePref.ok();
+    	boolean result = modulePref.ok();
    		//Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
    		Main.pref.put(PREF_OAPI, oapi.getText());
    		Main.pref.put(PREF_XAPI, xapi.getText());
    		Main.pref.put(PREF_RAWDATA, rawData.isSelected());
-        return false;
+        
+        // create a task for downloading modules if the user has activated, yet not downloaded,
+        // new modules
+        //
+        final List<ModuleInformation> toDownload = modulePref.getModulesScheduledForUpdateOrDownload();
+        final ModuleDownloadTask task;
+        if (toDownload != null && ! toDownload.isEmpty()) {
+            task = new ModuleDownloadTask(masterPanel, toDownload, tr("Download modules"));
+        } else {
+        	task = null;
+        }
+        
+        // this is the task which will run *after* the modules are downloaded
+        //
+        final Runnable continuation = new Runnable() {
+            public void run() {
+                boolean requiresRestart = false;
+                if (task != null && !task.isCanceled()) {
+                    if (!task.getDownloadedModules().isEmpty()) {
+                        requiresRestart = true;
+                    }
+                }
+
+                // build the messages. We only display one message, including the status
+                // information from the module download task and - if necessary - a hint
+                // to restart JOSM
+                //
+                StringBuilder sb = new StringBuilder();
+                sb.append("<html>");
+                if (task != null && !task.isCanceled()) {
+                    sb.append(ModulePreference.buildDownloadSummary(task));
+                }
+                if (requiresRestart) {
+                    sb.append(tr("You have to restart JOSM for some settings to take effect."));
+                }
+                sb.append("</html>");
+
+                // display the message, if necessary
+                //
+                if ((task != null && !task.isCanceled()) || requiresRestart) {
+                    JOptionPane.showMessageDialog(
+                            Main.parent,
+                            sb.toString(),
+                            tr("Warning"),
+                            JOptionPane.WARNING_MESSAGE
+                            );
+                }
+                Main.parent.repaint();
+            }
+        };
+
+        if (task != null) {
+            // if we have to launch a module download task we do it asynchronously, followed
+            // by the remaining "save preferences" activites run on the Swing EDT.
+            //
+            Main.worker.submit(task);
+            Main.worker.submit(
+                    new Runnable() {
+                        public void run() {
+                            SwingUtilities.invokeLater(continuation);
+                        }
+                    }
+                    );
+        } else {
+            // no need for asynchronous activities. Simply run the remaining "save preference"
+            // activities on this thread (we are already on the Swing EDT
+            //
+            continuation.run();
+        }
+
+        return task == null ? result : false;
     }
 }

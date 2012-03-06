@@ -1,7 +1,7 @@
 package iodb;
 
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.User;
+import java.util.Map;
+import org.openstreetmap.josm.data.osm.*;
 
 /**
  *
@@ -17,7 +17,7 @@ public class CalibrationObject extends ImageryOffsetBase {
     }
 
     public CalibrationObject(OsmPrimitive object) {
-        this(object, -1);
+        this(object, getLastUserId(object));
     }
 
     public long getLastUserId() {
@@ -27,4 +27,17 @@ public class CalibrationObject extends ImageryOffsetBase {
     public OsmPrimitive getObject() {
         return object;
     }
+    
+    private static long getLastUserId( OsmPrimitive object ) {
+        return object.getUser() == null ? -1 : object.getUser().getId(); // todo?
+    }
+
+    @Override
+    public void putServerParams( Map<String, String> map ) {
+        super.putServerParams(map);
+        map.put("object", object instanceof Node ? "node" : "way");
+        map.put("id", String.valueOf(object.getId()));
+        map.put("lastuser", String.valueOf(lastUserId));
+    }
+    
 }

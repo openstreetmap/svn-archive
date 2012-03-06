@@ -1,5 +1,7 @@
 package iodb;
 
+import java.util.Map;
+import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -18,7 +20,7 @@ public class ImageryOffset extends ImageryOffsetBase {
         this.minZoom = 0;
         this.maxZoom = 30;
     }
-
+    
     public void setMaxZoom(int maxZoom) {
         this.maxZoom = maxZoom;
     }
@@ -41,5 +43,17 @@ public class ImageryOffset extends ImageryOffsetBase {
 
     public int getMinZoom() {
         return minZoom;
+    }
+
+    @Override
+    public void putServerParams( Map<String, String> map ) {
+        super.putServerParams(map);
+        map.put("imagery", imagery);
+        map.put("imlat", imageryPos.latToString(CoordinateFormat.DECIMAL_DEGREES));
+        map.put("imlon", imageryPos.lonToString(CoordinateFormat.DECIMAL_DEGREES));
+        if( minZoom > 0 )
+            map.put("minzoom", String.valueOf(minZoom));
+        if( maxZoom < 30 )
+            map.put("maxzoom", String.valueOf(maxZoom));
     }
 }

@@ -1,6 +1,8 @@
 package iodb;
 
 import java.util.Date;
+import java.util.Map;
+import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -49,5 +51,12 @@ public class ImageryOffsetBase {
 
     public LatLon getPosition() {
         return position;
+    }
+    
+    public void putServerParams( Map<String, String> map ) {
+        map.put("lat", position.latToString(CoordinateFormat.DECIMAL_DEGREES));
+        map.put("lon", position.lonToString(CoordinateFormat.DECIMAL_DEGREES));
+        map.put("author", author);
+        map.put("description", description);
     }
 }

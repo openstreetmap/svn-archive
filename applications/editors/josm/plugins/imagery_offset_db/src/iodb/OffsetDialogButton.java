@@ -8,9 +8,16 @@ import javax.swing.JButton;
  * @author zverik
  */
 public class OffsetDialogButton extends JButton {
+    
+    private ImageryOffsetBase offset;
 
     public OffsetDialogButton( ImageryOffsetBase offset ) {
         super(offset.getDescription() + " (" + offset.getPosition().lat() + ", " + offset.getPosition().lon() + ")");
+        this.offset = offset;
+    }
+
+    public ImageryOffsetBase getOffset() {
+        return offset;
     }
     
 }

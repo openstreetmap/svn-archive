@@ -13,9 +13,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * 
  * @author zverik
  */
-public class OffsetDialog extends JDialog {
+public class OffsetDialog extends JDialog implements ActionListener {
     private List<ImageryOffsetBase> offsets;
-    private int selectedOffset;
+    private ImageryOffsetBase selectedOffset;
 
     public OffsetDialog( List<ImageryOffsetBase> offsets ) {
         super(JOptionPane.getFrameForComponent(Main.parent), tr("Imagery Offset"), ModalityType.DOCUMENT_MODAL);
@@ -26,15 +26,12 @@ public class OffsetDialog extends JDialog {
     private void prepareDialog() {
         JPanel buttonPanel = new JPanel(new GridLayout(offsets.size() + 1, 1));
         for( ImageryOffsetBase offset : offsets ) {
-            buttonPanel.add(new OffsetDialogButton(offset));
+            OffsetDialogButton button = new OffsetDialogButton(offset);
+            button.addActionListener(this);
+            buttonPanel.add(button);
         }
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                selectedOffset = -1;
-                OffsetDialog.this.setVisible(false);
-            }
-        });
+        cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton); // todo: proper button
         setContentPane(buttonPanel);
         pack();
@@ -42,9 +39,17 @@ public class OffsetDialog extends JDialog {
     }
     
     public ImageryOffsetBase showDialog() {
-        selectedOffset = -1;
+        selectedOffset = null;
         prepareDialog();
         setVisible(true);
-        return selectedOffset < 0 ? null : offsets.get(selectedOffset);
+        return selectedOffset;
+    }
+
+    public void actionPerformed( ActionEvent e ) {
+        if( e.getSource() instanceof OffsetDialogButton ) {
+            selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
+        } else
+            selectedOffset = null;
+        setVisible(false);
     }
 }

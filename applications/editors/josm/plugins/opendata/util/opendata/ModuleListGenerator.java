@@ -19,7 +19,7 @@ public class ModuleListGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final String url = "http://josm-toulouse-data.googlecode.com/svn/trunk/dist/";
+		final String url = "http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/";
 		String baseDir = "";
 		if (args.length > 0) {
 			baseDir = args[0];

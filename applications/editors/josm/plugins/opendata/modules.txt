@@ -1,4 +1,4 @@
-be.bruxelles.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/be.bruxelles.jar
+be.bruxelles.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/be.bruxelles.jar
 	Module-Icon: images/data.be.bruxelles_24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -8,7 +8,7 @@ be.bruxelles.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/be.brux
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.BruxellesModule
-be.datagovbe.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/be.datagovbe.jar
+be.datagovbe.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/be.datagovbe.jar
 	Module-Icon: images/be24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -18,7 +18,7 @@ be.datagovbe.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/be.data
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.be.datagovbe.DataGovBeModule
-fr.cg41.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.cg41.jar
+fr.cg41.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/fr.cg41.jar
 	Module-Icon: images/data.fr.cg41_24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -28,7 +28,7 @@ fr.cg41.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.cg41.jar
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.cg41.Cg41Module
-fr.datagouvfr.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.datagouvfr.jar
+fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/fr.datagouvfr.jar
 	Module-Icon: images/fr24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -39,7 +39,7 @@ fr.datagouvfr.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.dat
 	Module-Link: http://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrModule
-fr.paris.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.paris.jar
+fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/fr.paris.jar
 	Module-Icon: images/data.fr.paris_24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -49,7 +49,7 @@ fr.paris.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.paris.ja
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
-fr.sncf.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.sncf.jar
+fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/fr.sncf.jar
 	Module-Icon: images/data.fr.sncf_24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2
@@ -59,7 +59,7 @@ fr.sncf.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.sncf.jar
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-06T12:04:47.226986Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.SncfModule
-fr.toulouse.jar;http://josm-toulouse-data.googlecode.com/svn/trunk/dist/fr.toulouse.jar
+fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/fr.toulouse.jar
 	Module-Icon: images/data.fr.toulouse_24.png
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.2

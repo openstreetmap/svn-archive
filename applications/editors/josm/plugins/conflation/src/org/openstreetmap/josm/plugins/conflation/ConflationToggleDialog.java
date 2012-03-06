@@ -31,7 +31,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.GBC;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
-import utilsplugin2.dumbutils.ReplaceGeometryAction;
+import utilsplugin2.dumbutils.ReplaceGeometryUtils;
 
 public class ConflationToggleDialog extends ToggleDialog
         implements EditLayerChangeListener, SelectionChangedListener, DataSetListener,
@@ -205,9 +205,8 @@ public class ConflationToggleDialog extends ToggleDialog
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            ReplaceGeometryAction rg = new ReplaceGeometryAction();
             ConflationCandidate c = conflationLayer.getSelectedCandidate();
-            if (rg.replace(c.getReferenceObject(), c.getSubjectObject())) {
+            if (ReplaceGeometryUtils.replace(c.getReferenceObject(), c.getSubjectObject())) {
                 candidates.remove(c);
             }
         }

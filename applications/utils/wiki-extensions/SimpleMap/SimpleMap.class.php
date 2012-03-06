@@ -170,7 +170,10 @@ class SimpleMap {
 			$output  = "";
 			$output .= "<a href=\"http://www.openstreetmap.org/?lat=".$lat."&lon=".$lon."&zoom=".$zoom."\" title=\"See this map on OpenStreetMap.org\">";
 			$output .= "<img src=\"";
-			$output .= $wgMapOfServiceUrl . "lat=".$lat."&long=".$lon."&z=".$zoom."&w=".$width."&h=".$height."&format=".$format;
+			//$output .= $wgMapOfServiceUrl . "lat=".$lat."&long=".$lon."&z=".$zoom."&w=".$width."&h=".$height."&format=".$format;
+			
+			$output .= $wgStaticMapLiteServiceUrl . "center=".$lat.",lon=".$lon."&zoom=".$zoom."&size=".$width."x".$height."&maptype=mapnik";
+			
 			$output .= "\" width=\"". $width."\" height=\"".$height."\" border=\"0\">";
 			$output .= "</a>";
 			

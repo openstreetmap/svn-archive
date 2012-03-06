@@ -52,14 +52,16 @@ if( defined( 'MEDIAWIKI' ) ) {
 	$wgExtensionMessagesFiles['SimpleMap'] = dirname( __FILE__ ) . "/SimpleMap.i18n.php";
 	
 	function wfsimplemap() {
-		global $wgParser, $wgMapOfServiceUrl;
+		global $wgParser, $wgStaticMapLiteServiceUrl;
 		# register the extension with the WikiText parser
 		# the first parameter is the name of the new tag.
 		# In this case it defines the tag <map> ... </map>
 		# the second parameter is the callback function for
 		# processing the text between the tags
 		$wgParser->setHook( 'map', array( 'SimpleMap', 'parse' ) );
-		$wgMapOfServiceUrl = "http://osm-tah-cache.firefishy.com/~ojw/MapOf/?";
+		
+		//$wgMapOfServiceUrl = "http://osm-tah-cache.firefishy.com/~ojw/MapOf/?";
+	        $wgStaticMapLiteServiceUrl = "http://staticmap.openstreetmap.de/staticmap.php?";
 	}
 
 }

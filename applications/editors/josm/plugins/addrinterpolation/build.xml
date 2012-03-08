@@ -22,7 +22,7 @@
 -->
 <project name="AddrInterpolation" default="dist" basedir=".">
     <property name="commit.message" value="Impoved Icon"/>
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5053"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

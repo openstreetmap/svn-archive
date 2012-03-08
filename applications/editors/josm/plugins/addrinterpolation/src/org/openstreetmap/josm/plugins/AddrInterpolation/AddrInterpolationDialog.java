@@ -311,7 +311,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         }
 
         editControlsPane.add(new UrlLabel("http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddrInterpolation",
-                tr("More information about this feature")), c);
+                tr("More information about this feature"),2), c);
 
 
         c.gridx = 0;

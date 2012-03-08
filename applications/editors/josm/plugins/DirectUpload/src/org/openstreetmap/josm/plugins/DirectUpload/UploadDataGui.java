@@ -131,7 +131,7 @@ public class UploadDataGui extends ExtendedDialog {
             visibilityCombo.addItem(v.description);
         }
         visibilityCombo.setSelectedItem(visibility.valueOf(Main.pref.get("directupload.visibility.last-used", visibility.PRIVATE.name())).description);
-        UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"));
+        UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"), 2);
 
         // description
         JLabel descriptionLabel = new JLabel(tr("Description"));
@@ -167,7 +167,7 @@ public class UploadDataGui extends ExtendedDialog {
         p.add(descriptionField, GBC.eol().fill(GBC.HORIZONTAL));
 
         p.add(visibilityLabel, GBC.std().insets(0,10,0,0));
-        p.add(visiUrl, GBC.eol().insets(0,10,0,0));
+        p.add(visiUrl, GBC.eol().insets(5,10,0,0));
         p.add(visibilityCombo, GBC.eol());
 
         return p;

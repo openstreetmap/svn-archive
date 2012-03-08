@@ -337,7 +337,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \soft{Spatialite} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing
 
-\soft{Open Source Routing Machine} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: motore di analisi delle reti sviluppato per \osm
+\soft{Open Source Routing Machine} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: motore di analisi delle reti sviluppato per \osmx
 
 
 \subsection{Rendering}
@@ -354,28 +354,28 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \soft{OpenLayers}: client WebGIS che permette di visualizzare in modo molto semplice le tile di \osm
 
-\soft{Marble} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg} \includegraphics{./maemo-logo.png}: visualizzatore di dati geografici su modello Google Earth 
+\soft{Marble} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}  \includegraphics{./maemo-logo.png}: visualizzatore di dati geografici su modello Google Earth 
 
 \soft{OSM3D}: visualizzatore 3D per i dati \osm
 
 \subsection{Routing}
-\soft{Gosmore}\includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./android-logo.jpg}  \includegraphics{./maemo-logo.png}: visualizzatore 2D e 3D per i dati \osm, inoltre permette di effettuare routing (Linux, Android, Windows, Maemo, Wince)
+\soft{Gosmore}: visualizzatore 2D e 3D per i dati \osm, inoltre permette di effettuare routing (Linux, Android, Windows, Maemo, Wince)
 
-\soft{Navit} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./android-logo.jpg} \includegraphics{./maemo-logo.png} \includegraphics{./openmoko-logo.jpg}: software per il routing con i dati di \osm
+\soft{Navit}: software per il routing con i dati di \osm (Linux, Windows, IPhone; Android, Openmoko, Nokia N800, Zaurus)
 
-\soft{PgRouting} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: estensione di PostGIS per effettuare calcoli di routing; e-siste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
+\soft{PgRouting}: estensione di PostGIS per effettuare calcoli di routing; e-siste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
 
 \subsection{GPS}
 
-\soft{Qlandkarte} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
+\soft{Qlandkarte}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
 
-\soft{MkGmap} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: trasforma i dati in formato .osm in formato .img per Garmin
+\soft{MkGmap}: trasforma i dati in formato .osm in formato .img per Garmin
 
-\soft{GroundTruth} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg}: simile al precedente
+\soft{Groudtruth}: simile al precedente
 
 \subsection{Cellulari}
-\subsubsection{Android} 
-\includegraphics{./android-logo.jpg} \url{http://wiki.openstreetmap.org/wiki/Android}
+\subsubsection{Android}
+\url{http://wiki.openstreetmap.org/wiki/Android}
 
 \soft{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
 
@@ -388,21 +388,14 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \soft{OSMtracker}: editor con possibilità di mappe offline (esiste una versione anche per Windows Mobile)
 
 \soft{Mapdroyd}: visualizzatore di mappe offline
-
-\soft{Triposo}: guide di città con dati osm vettoriali precaricati
-
-\soft{GPS Status}: per controllare il segnale dei satelliti GPS
-
 \subsubsection{IPhone/IPad}
-\includegraphics{./iphone-logo.jpg} \url{http://wiki.openstreetmap.org/wiki/Iphone}
+\url{http://wiki.openstreetmap.org/wiki/Iphone}
 
 \soft{Mapzen Poi Collector}: editor solamente puntuale
 
 \soft{OSMTrack}: registratore di tracce
-
-\soft{Navmii}: software per la navigazione basato su mappe di \osm
-\subsubsection{N900/Maemo} 
-\includegraphics{./maemo-logo.png} \url{http://wiki.openstreetmap.org/wiki/Maemo}
+\subsubsection{N900/Maemo}
+\url{http://wiki.openstreetmap.org/wiki/Maemo}
 
 \soft{osm2go}: editor molto buono che interagisce - runtime - con il server di \osm
 

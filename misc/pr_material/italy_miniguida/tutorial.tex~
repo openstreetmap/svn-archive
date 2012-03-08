@@ -374,8 +374,8 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \soft{GroundTruth} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg}: simile al precedente
 
 \subsection{Cellulari}
-\subsubsection{Android} 
-\includegraphics{./android-logo.jpg} \url{http://wiki.openstreetmap.org/wiki/Android}
+\subsubsection{Android} \includegraphics{./android-logo.jpg}
+\url{http://wiki.openstreetmap.org/wiki/Android}
 
 \soft{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
 
@@ -393,16 +393,16 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \soft{GPS Status}: per controllare il segnale dei satelliti GPS
 
-\subsubsection{IPhone/IPad}
-\includegraphics{./iphone-logo.jpg} \url{http://wiki.openstreetmap.org/wiki/Iphone}
+\subsubsection{IPhone/IPad} \includegraphics{./iphone-logo.jpg}
+\url{http://wiki.openstreetmap.org/wiki/Iphone}
 
 \soft{Mapzen Poi Collector}: editor solamente puntuale
 
 \soft{OSMTrack}: registratore di tracce
 
 \soft{Navmii}: software per la navigazione basato su mappe di \osm
-\subsubsection{N900/Maemo} 
-\includegraphics{./maemo-logo.png} \url{http://wiki.openstreetmap.org/wiki/Maemo}
+\subsubsection{N900/Maemo  \includegraphics{./maemo-logo.png}}
+\url{http://wiki.openstreetmap.org/wiki/Maemo}
 
 \soft{osm2go}: editor molto buono che interagisce - runtime - con il server di \osm
 

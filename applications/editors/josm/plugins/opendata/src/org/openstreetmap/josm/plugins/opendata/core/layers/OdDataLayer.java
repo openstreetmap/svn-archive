@@ -64,7 +64,7 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 	}
 	
     @Override public Icon getBaseIcon() {
-    	return new ImageProvider(handler != null ? handler.getDataLayerIconName() : ICON_CORE_16).get(ModuleHandler.getResourceClassLoaders());
+    	return new ImageProvider(handler != null ? handler.getDataLayerIconName() : ICON_CORE_16).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
     }
 
     public void addOsmLayer(OdOsmDataLayer layer) {

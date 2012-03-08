@@ -156,8 +156,8 @@ public class ModuleInformation implements OdConstants {
         this.attr.putAll(other.attr);
     }
     
-    private static final ImageIcon extractIcon(String iconPath, File jarFile, boolean warn) {
-    	return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).get(warn);
+    private static final ImageIcon extractIcon(String iconPath, File jarFile, boolean suppressWarnings) {
+    	return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).setSuppressWarnings(suppressWarnings).get();
     }
 
     private void scanManifest(Manifest manifest) {
@@ -192,7 +192,7 @@ public class ModuleInformation implements OdConstants {
         iconPath = attr.getValue("Module-Icon");
         if (iconPath != null && file != null) {
             // extract icon from the module jar file
-            icon = extractIcon(iconPath, file, false);
+            icon = extractIcon(iconPath, file, true);
             // if not found, extract icon from the plugin jar file
             if (icon == null) {
             	icon = extractIcon(iconPath, OdPlugin.getInstance().getPluginInformation().file, true);

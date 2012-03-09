@@ -28,4 +28,9 @@ public interface FrenchConstants extends OdConstants {
 	 * Icon
 	 */
 	public static final String ICON_FR_24 = "fr24.png";
+	
+	/**
+	 * NEPTUNE XML Schema
+	 */
+	public static final String NEPTUNE_XSD = "/neptune/neptune.xsd";
 }

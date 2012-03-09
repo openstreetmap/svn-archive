@@ -43,10 +43,10 @@ public abstract class AbstractImporter extends OsmImporter implements OdConstant
         super(filter);
     }
     
-    protected final AbstractDataSetHandler findDataSetHandler(String fileName) {
+    protected final AbstractDataSetHandler findDataSetHandler(File file) {
     	for (Module module : ModuleHandler.moduleList) {
 			for (AbstractDataSetHandler dsh : module.getHandlers()) {
-				if (dsh.acceptsFilename(fileName)) {
+				if (dsh.acceptsFile(file)) {
 					return dsh;
 				}
 			}
@@ -62,7 +62,7 @@ public abstract class AbstractImporter extends OsmImporter implements OdConstant
 			throws IOException, IllegalDataException {
 		if (file != null) {
 			this.file = file;
-			this.handler = findDataSetHandler(file.getName());
+			this.handler = findDataSetHandler(file);
 		}
 		super.importData(file, progressMonitor);
 	}

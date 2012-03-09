@@ -294,4 +294,13 @@
     </target>
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
+    
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+          <classpath>
+            <fileset dir="C:\Windows\SysWOW64\jaxb-ri-20120218\lib" includes="*.jar" />
+          </classpath>
+    </taskdef>
+    <target name="xjc_neptune">
+        <xjc schema="resources/neptune/neptune.xsd" destdir="includes" package="neptune" target="2.1" />
+    </target>
 </project>

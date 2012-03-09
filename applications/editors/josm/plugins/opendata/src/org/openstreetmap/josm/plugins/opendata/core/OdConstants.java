@@ -97,6 +97,7 @@ public interface OdConstants {
     public static final String MAPCSS_EXT = "mapcss";
     public static final String ZIP_EXT = "zip";
     public static final String JAR_EXT = "jar";
+    public static final String XML_EXT = "xml";
     
     /**
      * Protocols
@@ -114,6 +115,7 @@ public interface OdConstants {
     public static final ExtensionFileFilter MIF_TAB_FILE_FILTER = new ExtensionFileFilter(MIF_EXT+","+TAB_EXT, MIF_EXT, tr("MapInfo files") + " (*."+MIF_EXT+",*."+TAB_EXT+")");
     public static final ExtensionFileFilter KML_KMZ_FILE_FILTER = new ExtensionFileFilter(KML_EXT+","+KMZ_EXT, KMZ_EXT, tr("KML/KMZ files") + " (*."+KML_EXT+",*."+KMZ_EXT+")");
     public static final ExtensionFileFilter ZIP_FILE_FILTER = new ExtensionFileFilter(ZIP_EXT, ZIP_EXT, tr("Zip Files") + " (*."+ZIP_EXT+")");
+    public static final ExtensionFileFilter XML_FILE_FILTER = new ExtensionFileFilter(XML_EXT, XML_EXT, tr("OpenData XML files") + " (*."+XML_EXT+")");
     
     /**
      * Coordinates fields

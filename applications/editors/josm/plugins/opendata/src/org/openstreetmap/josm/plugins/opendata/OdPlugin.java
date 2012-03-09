@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.OdDialog;
 import org.openstreetmap.josm.plugins.opendata.core.gui.OdPreferenceSetting;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
+import org.openstreetmap.josm.plugins.opendata.core.io.XmlImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlKmzImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifTabImporter;
@@ -54,9 +55,10 @@ public final class OdPlugin extends Plugin implements OdConstants {
 		for (AbstractImporter importer : Arrays.asList(new AbstractImporter[]{
 				new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
 				new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), // Geographic file formats
-				new ZipImporter() // Archive containing any of the others
+				new ZipImporter(), // Archive containing any of the others
+				new XmlImporter() // Generic importer for XML files (currently used for Neptune files)
 		})) {
-			ExtensionFileFilter.importers.add(importer);
+			ExtensionFileFilter.importers.add(0, importer);
 		}
         // Load modules
         loadModules();

@@ -57,7 +57,13 @@ import org.openstreetmap.josm.plugins.opendata.core.util.NamesFrUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public abstract class AbstractDataSetHandler implements OdConstants {
+	
 	public abstract boolean acceptsFilename(String filename);
+	
+	public boolean acceptsFile(File file) {
+		return acceptsFilename(file.getName());
+	}
+	
 	public abstract void updateDataSet(DataSet ds);
 
 	public void checkDataSetSource(DataSet ds) {

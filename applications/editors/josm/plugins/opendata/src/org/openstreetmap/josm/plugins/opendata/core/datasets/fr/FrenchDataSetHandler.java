@@ -17,12 +17,21 @@ package org.openstreetmap.josm.plugins.opendata.core.datasets.fr;
 
 import static org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesProjectionPatterns.lambertCC9Zones;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
@@ -37,6 +46,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.UTM;
 import org.openstreetmap.josm.data.projection.UTM.Hemisphere;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
+import org.xml.sax.SAXException;
 
 public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implements FrenchConstants {
 
@@ -271,5 +281,31 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 		} else {
 			return super.findMathTransform(sourceCRS, targetCRS, lenient);
 		}
+	}
+	
+	protected URL getNeptuneSchema() {
+		return FrenchDataSetHandler.class.getResource(NEPTUNE_XSD);
+	}
+
+	protected final boolean acceptsXmlNeptuneFile(File file) {
+		
+		Source xmlFile = new StreamSource(file);
+		
+		try {
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = schemaFactory.newSchema(getNeptuneSchema());
+			Validator validator = schema.newValidator();
+			validator.validate(xmlFile);
+			System.out.println(xmlFile.getSystemId() + " is valid");
+			return true;
+		} catch (SAXException e) {
+			System.out.println(xmlFile.getSystemId() + " is NOT valid");
+			System.out.println("Reason: " + e.getLocalizedMessage());
+		} catch (IOException e) {
+			System.out.println(xmlFile.getSystemId() + " is NOT valid");
+			System.out.println("Reason: " + e.getLocalizedMessage());
+		}
+		
+		return false;
 	}
 }

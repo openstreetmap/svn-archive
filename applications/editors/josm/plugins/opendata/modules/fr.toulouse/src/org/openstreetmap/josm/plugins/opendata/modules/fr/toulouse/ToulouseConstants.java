@@ -39,4 +39,9 @@ public interface ToulouseConstants extends FrenchConstants {
 	 */
 	public static final String ICON_CROIX_16 = "data.fr.toulouse_16.png";
 	public static final String ICON_CROIX_24 = "data.fr.toulouse_24.png";
+
+	/**
+	 * NEPTUNE XML Schema modified to accept Tisséo files
+	 */
+	public static final String TOULOUSE_NEPTUNE_XSD = "/neptune_toulouse/neptune.xsd";
 }

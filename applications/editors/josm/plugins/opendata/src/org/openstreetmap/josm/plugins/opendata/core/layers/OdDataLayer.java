@@ -37,8 +37,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.actions.OpenLinkAction;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.OsmDownloader;
-import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
-import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, LayerChangeListener {
 
@@ -64,7 +63,7 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 	}
 	
     @Override public Icon getBaseIcon() {
-    	return new ImageProvider(handler != null ? handler.getDataLayerIconName() : ICON_CORE_16).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
+    	return OdUtils.getImageIcon(handler != null ? handler.getDataLayerIconName() : ICON_CORE_16);
     }
 
     public void addOsmLayer(OdOsmDataLayer layer) {
@@ -154,6 +153,14 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 		if (this.handler.getNationalPortalURL() != null) { 
 			result.add(new OpenLinkAction(this.handler.getNationalPortalURL(), this.handler.getNationalPortalIconName(), 
 					tr("View National Portal page"), tr("Launch browser to the national portal page of the selected data set")));
+		}
+		if (this.handler.getLicenseURL() != null) {
+			if (this.handler.getLicenseURL().getProtocol().startsWith("http")) {
+				result.add(new OpenLinkAction(this.handler.getLicenseURL(), ICON_AGREEMENT_24, 
+						tr("View License"), tr("Launch browser to the license page of the selected data set")));
+			} else {
+				// TODO: view embedded licenses
+			}
 		}
 		return result.toArray(new Action[0]);
 	}

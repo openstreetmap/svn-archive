@@ -21,8 +21,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import javax.swing.Action;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 @SuppressWarnings("serial")
@@ -31,7 +34,8 @@ public class OpenLinkAction extends JosmAction implements OdConstants {
     private URL url;
     
     public OpenLinkAction(URL url, String icon24Name, String title, String description) {
-        super(title, icon24Name, description, null, false);
+        super(title, null, description, null, false);
+        putValue(Action.SMALL_ICON, OdUtils.getImageIcon(icon24Name));
         this.url = url;
     }
 

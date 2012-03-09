@@ -18,9 +18,13 @@ package org.openstreetmap.josm.plugins.opendata.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 public abstract class OdUtils {
 	
@@ -48,5 +52,9 @@ public abstract class OdUtils {
 			}
 		}
 		return result.toArray(new String[0]);
+	}
+	
+	public static final ImageIcon getImageIcon(String iconName) {
+		return new ImageProvider(iconName).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
 	}
 }

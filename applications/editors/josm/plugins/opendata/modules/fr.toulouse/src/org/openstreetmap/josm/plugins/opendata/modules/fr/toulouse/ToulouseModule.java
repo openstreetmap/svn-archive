@@ -46,7 +46,6 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.tran
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.PMRHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.PistesCyclablesHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ReseauTisseoHandler;
-import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.TisseoHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.TramwayStationHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.VeloToulouseHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.Zone30Handler;
@@ -95,6 +94,5 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(new PetiteEnfanceEtJeunesseBalmaHandler());
         handlers.add(new EquipementCulturelBalmaHandler());
         handlers.add(new InstallationSportiveBalmaHandler());
-        handlers.add(new TisseoHandler());
     }
 }

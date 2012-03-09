@@ -15,7 +15,11 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
 
+import java.io.File;
+import java.net.URL;
+
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
 public class ReseauTisseoHandler extends ToulouseDataSetHandler {
@@ -26,12 +30,38 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-");
+		return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-") || filename.toLowerCase().endsWith(XML_EXT);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#acceptsFile(java.io.File)
+	 */
+	@Override
+	public boolean acceptsFile(File file) {
+		return acceptsFilename(file.getName()) && (file.getName().toLowerCase().endsWith(ZIP_EXT) || acceptsXmlNeptuneFile(file));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler#getNeptuneSchema()
+	 */
+	@Override
+	protected URL getNeptuneSchema() {
+		return ReseauTisseoHandler.class.getResource(TOULOUSE_NEPTUNE_XSD);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler#getSource()
+	 */
+	@Override
+	public String getSource() {
+		return SOURCE_TISSEO;
 	}
 
 	@Override
 	public void updateDataSet(DataSet ds) {
-		// TODO Auto-generated method stub
-		
+		for (OsmPrimitive p : ds.allPrimitives()) {
+			p.put("operator", "Tisséo");
+			p.put("network", "fr_tisseo");
+		}
 	}
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
@@ -33,6 +34,8 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifReader;
@@ -52,14 +55,14 @@ public class ZipReader extends AbstractReader implements OdConstants {
         this.handler = handler;
     }
 
-	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
+	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
 		return new ZipReader(new ZipInputStream(in), handler).parseDoc(instance);
 	}
 	
 	private static final File createTempDir() throws IOException {
 	    final File temp = File.createTempFile("josm_opendata_temp_", Long.toString(System.nanoTime()));
 
-	    if(!temp.delete()) {
+	    if (!temp.delete()) {
 	        throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
 	    }
 
@@ -77,7 +80,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 		dir.delete();
 	}
 
-	private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError  {
+	private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
 		
 	    final File temp = createTempDir();
 	    final List<File> candidates = new ArrayList<File>();
@@ -86,6 +89,9 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			ZipEntry entry;
 			while ((entry = zis.getNextEntry()) != null) {
 				File file = new File(temp + File.separator + entry.getName());
+			    if (file.exists() && !file.delete()) {
+			        throw new IOException("Could not delete temp file: " + file.getAbsolutePath());
+			    }
 				if (!file.createNewFile()) {
 					throw new IOException("Could not create temp file: " + file.getAbsolutePath());
 				}
@@ -97,7 +103,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 				}
 				fos.close();
 				for (String ext : new String[] {
-						CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT
+						CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, XML_EXT
 				}) {
 					if (entry.getName().toLowerCase().endsWith("."+ext)) {
 						candidates.add(file);
@@ -138,6 +144,15 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					from = MifReader.parseDataSet(in, file, handler, instance);
 				} else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
 					from = TabReader.parseDataSet(in, file, handler, instance);
+				} else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
+					if (handler instanceof FrenchDataSetHandler && ((FrenchDataSetHandler)handler).acceptsXmlNeptuneFile(file)) {
+						from = NeptuneReader.parseDataSet(in, handler, instance);
+					} else {
+						System.err.println("Unsupported XML file: "+file.getName());
+					}
+					
+				} else {
+					System.err.println("Unsupported file extension: "+file.getName());
 				}
 				if (from != null) {
 					ds.mergeFrom(from);

@@ -53,7 +53,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
 	 */
 	@Override
 	public String getSource() {
-		return SOURCE;
+		return SOURCE_GRAND_TOULOUSE;
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +83,19 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
+	 */
+	@Override
+	public URL getLicenseURL() {
+		try {
+			return new URL(getLocalPortalURL().toString()+"/license");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fr.opendata.datasets.AbstractDataSetHandler#getWikiURL()
 	 */

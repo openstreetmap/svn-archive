@@ -287,7 +287,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 		return FrenchDataSetHandler.class.getResource(NEPTUNE_XSD);
 	}
 
-	protected final boolean acceptsXmlNeptuneFile(File file) {
+	public final boolean acceptsXmlNeptuneFile(File file) {
 		
 		Source xmlFile = new StreamSource(file);
 		

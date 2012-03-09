@@ -20,9 +20,10 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 public interface ToulouseConstants extends FrenchConstants {
 	
 	/**
-	 * Source
+	 * Sources
 	 */
-	public static final String SOURCE = "GrandToulouse";
+	public static final String SOURCE_GRAND_TOULOUSE = "GrandToulouse";
+	public static final String SOURCE_TISSEO = "Tisséo SMTC";
 	
 	/**
 	 * Wiki

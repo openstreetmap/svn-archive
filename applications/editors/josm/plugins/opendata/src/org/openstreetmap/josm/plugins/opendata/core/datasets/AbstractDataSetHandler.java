@@ -172,6 +172,8 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	public abstract URL getLocalPortalURL();
 	public abstract URL getNationalPortalURL();
 
+	public URL getLicenseURL() {return null;}
+
 	public final Collection<String> getOsmXapiRequests(Bounds bounds) {
 		return getOsmXapiRequests(
 				LatLon.roundToOsmPrecisionStrict(bounds.getMin().lon())+","+

@@ -106,10 +106,19 @@
     </target>
     <!--
     **********************************************************
+    ** compile_naptune - compiles Neptune classes
+    **********************************************************
+    -->
+    <target name="compile_neptune" depends="init">
+        <echo message="compiling Neptune ... "/>
+        <javac srcdir="includes/neptune" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
+    </target>
+    <!--
+    **********************************************************
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_geotools">
+    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_geotools, compile_neptune">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
         <javac srcdir="src/org/openstreetmap" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
             <classpath>

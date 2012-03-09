@@ -15,10 +15,28 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io;
 
+import java.io.InputStream;
+
+import javax.xml.bind.JAXBException;
+
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
+
 public class XmlImporter extends AbstractImporter {
 
 	public XmlImporter() {
 		super(XML_FILE_FILTER);
 	}
-
+	
+	@Override
+	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+			throws IllegalDataException {
+		try {
+			// TODO: check it is a neptune file
+			return NeptuneReader.parseDataSet(in, handler, instance);
+		} catch (JAXBException e) {
+			throw new IllegalDataException(e);
+		}
+	}
 }

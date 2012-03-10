@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.conflation;
 
+import utilsplugin2.dumbutils.HungarianAlgorithm;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -205,7 +206,13 @@ public class ConflationToggleDialog extends ToggleDialog
         }
         @Override
         public void actionPerformed(ActionEvent e) {
+            //FIXME: should layer listen for selection change?
             ConflationCandidate c = conflationLayer.getSelectedCandidate();
+            if (c.getReferenceLayer() != c.getSubjectLayer()) {
+                JOptionPane.showMessageDialog(Main.parent, tr("Conflation between layers isn't supported yet."),
+                        tr("Cannot conflate between layes"), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (ReplaceGeometryUtils.replace(c.getReferenceObject(), c.getSubjectObject())) {
                 candidates.remove(c);
             }
@@ -330,8 +337,7 @@ public class ConflationToggleDialog extends ToggleDialog
             // some initialization
             int n = subjectSelection.size();
             int m = referenceSelection.size();
-            int maxLen = Math.max(n, m);
-            double cost[][] = new double[maxLen][maxLen];
+            double cost[][] = new double[n][m];
 
             // calculate cost matrix
             for (int i = 0; i < n; i++) {
@@ -344,7 +350,7 @@ public class ConflationToggleDialog extends ToggleDialog
             int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
             OsmPrimitive subObject, refObject;
             candidates.clear();
-            for (int i = 0; i < maxLen; i++) {
+            for (int i = 0; i < n; i++) {
                 int subIdx = assignment[i][0];
                 int refIdx = assignment[i][1];
                 if (subIdx < n) {

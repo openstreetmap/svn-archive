@@ -255,26 +255,49 @@ public final class ReplaceGeometryUtils {
         commands.addAll(tagResolutionCommands);
         
         // Prepare a list of nodes that are not used anywhere except in the way
-        Collection<Node> nodePool = getUnimportantNodes(subjectWay);
+        List<Node> nodePool = getUnimportantNodes(subjectWay);
 
         // And the same for geometry, list nodes that can be freely deleted
-        Set<Node> geometryPool = new HashSet<Node>();
+        List<Node> geometryPool = new LinkedList<Node>();
         for( Node node : referenceWay.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( node.isNew() && !node.isDeleted() && referrers.size() == 1
                     && referrers.get(0).equals(referenceWay) && !subjectWay.containsNode(node)
-                    && !hasInterestingKey(node))
+                    && !hasInterestingKey(node) && !geometryPool.contains(node))
                 geometryPool.add(node);
         }
 
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
+        // Assign node moves with least overall distance moved
         Map<Node, Node> nodeAssoc = new HashMap<Node, Node>();
-        for( Node n : geometryPool ) {
-            Node nearest = findNearestNode(n, nodePool);
-            if( nearest != null ) {
-                nodeAssoc.put(n, nearest);
-                nodePool.remove(nearest);
+        if (geometryPool.size() > 0 && nodePool.size() > 0) {
+            int gLen = geometryPool.size();
+            int nLen = nodePool.size();
+            double cost[][] = new double[nLen][gLen];
+
+            double maxDistance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
+            for (int i = 0; i < nLen; i++) {
+                for (int j = 0; j < gLen; j++) {
+                    double d = nodePool.get(i).getCoor().distance(geometryPool.get(j).getCoor());
+                    if (d > maxDistance)
+                        cost[i][j] = Double.MAX_VALUE;
+                    else
+                        cost[i][j] = d;
+                }
             }
+            int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
+            for (int i = 0; i < nLen; i++) {
+                int nIdx = assignment[i][0];
+                int gIdx = assignment[i][1];
+                if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
+                    nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
+                }
+            }
+        }
+        
+        // node will be moved, remove from pool
+        for (Node n : nodeAssoc.values()) {
+            nodePool.remove(n);
         }
 
         // Now that we have replacement list, move all unused new nodes to nodePool (and delete them afterwards)
@@ -318,12 +341,12 @@ public final class ReplaceGeometryUtils {
      * @param way
      * @return 
      */
-    protected static Collection<Node> getUnimportantNodes(Way way) {
-        Set<Node> nodePool = new HashSet<Node>();
+    protected static List<Node> getUnimportantNodes(Way way) {
+        List<Node> nodePool = new LinkedList<Node>();
         for (Node n : way.getNodes()) {
             List<OsmPrimitive> referrers = n.getReferrers();
             if (!n.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)
-                    && !hasInterestingKey(n)) {
+                    && !hasInterestingKey(n) && !nodePool.contains(n)) {
                 nodePool.add(n);
             }
         }

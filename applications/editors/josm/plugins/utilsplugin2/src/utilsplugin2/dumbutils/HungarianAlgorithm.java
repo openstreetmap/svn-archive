@@ -36,7 +36,7 @@
  * 
  */
 
-package org.openstreetmap.josm.plugins.conflation;
+package utilsplugin2.dumbutils;
 
 import static java.lang.Math.*;
 import java.util.*;

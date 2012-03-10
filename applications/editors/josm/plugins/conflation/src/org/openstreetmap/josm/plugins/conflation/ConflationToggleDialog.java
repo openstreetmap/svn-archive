@@ -1,10 +1,7 @@
 package org.openstreetmap.josm.plugins.conflation;
 
-import utilsplugin2.dumbutils.HungarianAlgorithm;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -29,10 +26,10 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.HungarianAlgorithm;
+import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryUtils;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
-import utilsplugin2.dumbutils.ReplaceGeometryUtils;
 
 public class ConflationToggleDialog extends ToggleDialog
         implements EditLayerChangeListener, SelectionChangedListener, DataSetListener,

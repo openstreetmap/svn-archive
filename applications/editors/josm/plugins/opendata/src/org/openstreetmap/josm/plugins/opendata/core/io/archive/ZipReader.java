@@ -32,9 +32,9 @@ import javax.xml.stream.XMLStreamException;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
@@ -145,7 +145,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 				} else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
 					from = TabReader.parseDataSet(in, file, handler, instance);
 				} else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
-					if (handler instanceof FrenchDataSetHandler && ((FrenchDataSetHandler)handler).acceptsXmlNeptuneFile(file)) {
+					if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
 						from = NeptuneReader.parseDataSet(in, handler, instance);
 					} else {
 						System.err.println("Unsupported XML file: "+file.getName());

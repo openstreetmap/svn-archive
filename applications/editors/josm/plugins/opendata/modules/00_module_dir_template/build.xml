@@ -73,11 +73,11 @@
     ** copy-resources - copies resources dir to build dir
     **********************************************************
     -->
-	<target name="copy-resources" if="resources.exist">
+    <target name="copy-resources" if="resources.exist">
         <copy todir="${module.build.dir}">
             <fileset dir="resources" />
         </copy>
-	</target>
+    </target>
     <!--
     **********************************************************
     ** copy-images - copies images dir to build dir

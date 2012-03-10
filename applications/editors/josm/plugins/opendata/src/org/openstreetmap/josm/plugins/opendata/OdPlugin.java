@@ -44,6 +44,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
 
 	private static OdPlugin instance;
 	
+	public final XmlImporter xmlImporter;
+	
 	public OdPlugin(PluginInformation info) { // NO_UCD
 		super(info);
 		if (instance == null) {
@@ -56,7 +58,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
 				new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
 				new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), // Geographic file formats
 				new ZipImporter(), // Archive containing any of the others
-				new XmlImporter() // Generic importer for XML files (currently used for Neptune files)
+				xmlImporter = new XmlImporter() // Generic importer for XML files (currently used for Neptune files)
 		})) {
 			ExtensionFileFilter.importers.add(0, importer);
 		}

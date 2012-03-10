@@ -20,12 +20,16 @@ import java.net.URL;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
 public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 
+	private static final URL neptuneSchemaUrl = ReseauTisseoHandler.class.getResource(TOULOUSE_NEPTUNE_XSD);
+	
 	public ReseauTisseoHandler() {
 		super(14022, "network=fr_tisseo");
+		NeptuneReader.registerSchema(neptuneSchemaUrl);
 	}
 
 	@Override
@@ -38,15 +42,7 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 	 */
 	@Override
 	public boolean acceptsFile(File file) {
-		return acceptsFilename(file.getName()) && (file.getName().toLowerCase().endsWith(ZIP_EXT) || acceptsXmlNeptuneFile(file));
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler#getNeptuneSchema()
-	 */
-	@Override
-	protected URL getNeptuneSchema() {
-		return ReseauTisseoHandler.class.getResource(TOULOUSE_NEPTUNE_XSD);
+		return acceptsFilename(file.getName()) && (file.getName().toLowerCase().endsWith(ZIP_EXT) || NeptuneReader.acceptsXmlNeptuneFile(file, neptuneSchemaUrl));
 	}
 
 	/* (non-Javadoc)

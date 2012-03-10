@@ -15,7 +15,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 
@@ -29,11 +31,25 @@ public class XmlImporter extends AbstractImporter {
 		super(XML_FILE_FILTER);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.io.FileImporter#acceptFile(java.io.File)
+	 */
+	@Override
+	public boolean acceptFile(File pathname) {
+		if (super.acceptFile(pathname)) {
+			for (URL schemaURL : NeptuneReader.getSchemas()) {
+				if (NeptuneReader.acceptsXmlNeptuneFile(pathname, schemaURL)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
 			throws IllegalDataException {
 		try {
-			// TODO: check it is a neptune file
 			return NeptuneReader.parseDataSet(in, handler, instance);
 		} catch (JAXBException e) {
 			throw new IllegalDataException(e);

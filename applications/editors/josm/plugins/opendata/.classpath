@@ -11,6 +11,7 @@
 	<classpathentry kind="src" path="modules/fr.paris/src"/>
 	<classpathentry kind="src" path="modules/fr.sncf/src"/>
 	<classpathentry kind="src" path="modules/fr.toulouse/src"/>
+	<classpathentry kind="src" path="modules/fr.toulouse/resources"/>
 	<classpathentry kind="src" path="util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>

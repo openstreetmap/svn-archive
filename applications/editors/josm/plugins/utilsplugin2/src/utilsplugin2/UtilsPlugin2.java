@@ -182,14 +182,12 @@ public class UtilsPlugin2 extends Plugin {
         
         public InsideMatch(Match match) {
             super(match);
-            //init();
         }
         
         /**
          * Find all objects inside areas which match the expression
          */
         private void init() {
-            if (inside==null) init(); // lazy initialization
             Collection<OsmPrimitive> matchedAreas = new HashSet<OsmPrimitive>();
 
             // find all ways that match the expression
@@ -211,6 +209,9 @@ public class UtilsPlugin2 extends Plugin {
 
         @Override
         public boolean match(OsmPrimitive osm) {
+            if (inside == null)
+                init(); // lazy initialization
+
             return inside.contains(osm);
         }
     }

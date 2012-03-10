@@ -122,8 +122,8 @@ public interface OdConstants {
     /**
      * Coordinates fields
      */
-    public static final String X_STRING = "X|LON|LONGI|LONGITUDE";
-    public static final String Y_STRING = "Y|LAT|LATI|LATITUDE";
+    public static final String X_STRING = "X|LON|LONGI|LONGITUDE|EASTING";
+    public static final String Y_STRING = "Y|LAT|LATI|LATITUDE|NORTHING";
     
     // The list of all ProjectionPatterns (filled at each constrcutor call)
     public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<ProjectionPatterns>();

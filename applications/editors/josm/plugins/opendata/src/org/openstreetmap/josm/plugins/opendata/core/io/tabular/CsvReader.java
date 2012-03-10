@@ -33,15 +33,33 @@ public class CsvReader extends SpreadSheetReader {
 	
 	private BufferedReader reader;
 	private String line;
-	
+
 	public CsvReader(AbstractDataSetHandler handler) {
+		this(handler, ";");
+	}
+
+	public CsvReader(AbstractDataSetHandler handler, String defaultSep) {
 		super(handler);
 		this.charset = handler != null && handler.getCsvCharset() != null ? handler.getCsvCharset() : Charset.forName(UTF8);
-		this.sep = handler != null && handler.getCsvSeparator() != null ? handler.getCsvSeparator() : ";";
+		this.sep = handler != null && handler.getCsvSeparator() != null ? handler.getCsvSeparator() : defaultSep;
 	}
 	
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		return new CsvReader(handler).parse(in, instance);
+		CsvReader csvReader = new CsvReader(handler);
+		try {
+			return csvReader.parse(in, instance);
+		} catch (IllegalArgumentException e) {
+			if (handler == null) {
+				// If default sep has been used, try comma
+				System.out.println(e.getMessage());
+				CsvReader newReader = new CsvReader(handler, ",");
+				newReader.initResources(in, instance);
+				newReader.line = csvReader.line;
+				return newReader.doParse(newReader.splitLine(), instance);
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	@Override
@@ -54,6 +72,10 @@ public class CsvReader extends SpreadSheetReader {
 	@Override
 	protected String[] readLine(ProgressMonitor progressMonitor) throws IOException {
 		line = reader.readLine();
+		return splitLine();
+	}
+	
+	private final String[] splitLine() {
 		if (line != null) {
 			return OdUtils.stripQuotes(line.split(sep), sep);
 		} else {

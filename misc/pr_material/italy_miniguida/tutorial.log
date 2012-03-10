@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.3.7)  8 MAR 2012 01:26
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.3.7)  10 MAR 2012 01:08
 entering extended mode
  %&-line parsing enabled.
 **tutorial.tex
@@ -417,13 +417,64 @@ Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
 Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
 t (HO)
 ))
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\unhbox' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\voidb@x' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\<let>-command' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\unhbox' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\voidb@x' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\setbox' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@tempboxa' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\hbox' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\global' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\mathchardef' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\spacefactor' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\accent' on input line 2864.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\spacefactor' on input line 2864.
+
 Package hyperref Info: Option `colorlinks' set `true' on input line 2864.
 Package hyperref Info: Hyper figures OFF on input line 2975.
 Package hyperref Info: Link nesting OFF on input line 2980.
 Package hyperref Info: Hyper index ON on input line 2983.
 Package hyperref Info: Plain pages OFF on input line 2990.
 Package hyperref Info: Backreferencing OFF on input line 2995.
-
 Implicit mode ON; LaTeX internals redefined
 Package hyperref Info: Bookmarks ON on input line 3191.
 (/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
@@ -580,131 +631,129 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 58.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 58.
- <osm_logo_new.png, id=171, 205.568pt x 205.568pt>
+
+Overfull \hbox (27.62321pt too wide) in paragraph at lines 58--58
+ [][] 
+ []
+
+<osm_logo_new.png, id=175, 205.568pt x 205.568pt>
 File: osm_logo_new.png Graphic file (type png)
+ <use osm_logo_new.png>
+[1
 
-<use osm_logo_new.png> [1
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./osm_logo_new.png>]
+[2] <mapkibera.jpg, id=192, 803.0pt x 534.99875pt>
+File: mapkibera.jpg Graphic file (type jpg)
+ <use mapkibera.jpg>
+Underfull \hbox (badness 1721) in paragraph at lines 93--95
+\OT1/cmr/m/n/12 re-al-iz-za-to un qual-cosa
+ []
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./osm_logo_new.png>] [2]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 97.
+[3 <./mapkibera.jpg>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 102.
+
  (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 97.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 102.
 
-<./Mf_node.png, id=189, 16.06pt x 16.06pt>
+<./Mf_node.png, id=202, 16.06pt x 16.06pt>
 File: ./Mf_node.png Graphic file (type png)
  <use ./Mf_node.png>
-<./Mf_way.png, id=190, 16.06pt x 16.06pt>
+<./Mf_way.png, id=203, 16.06pt x 16.06pt>
 File: ./Mf_way.png Graphic file (type png)
  <use ./Mf_way.png>
-<./Mf_area.png, id=191, 16.06pt x 16.06pt>
+<./Mf_area.png, id=204, 16.06pt x 16.06pt>
 File: ./Mf_area.png Graphic file (type png)
- <use ./Mf_area.png> [3 <./Mf_node.png> <./Mf_way.png>] <./Mf_relation.png, id=
-200, 16.06pt x 16.06pt>
+ <use ./Mf_area.png>
+<./Mf_relation.png, id=205, 16.06pt x 16.06pt>
 File: ./Mf_relation.png Graphic file (type png)
-
-<use ./Mf_relation.png>
+ <use ./Mf_relation.png>
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 105.
+(Font)              <12> on input line 110.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 105.
+(Font)              <8> on input line 110.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 105.
- [4 <./Mf_area.png> <./Mf_relation.png>]
-Underfull \hbox (badness 5260) in paragraph at lines 199--200
+(Font)              <6> on input line 110.
+ [4 <./Mf_node.png> <./Mf_way.png> <./Mf_area.png> <./Mf_relation.png>] [5]
+Underfull \hbox (badness 5260) in paragraph at lines 204--205
 []\OT1/cmr/m/n/12 serve per in-serire el-e-men-ti per mis-urare e
  []
 
-[5] [6] <potlatch.png, id=223, 616.55344pt x 335.75438pt>
+[6] <potlatch.png, id=231, 616.55344pt x 335.75438pt>
 File: potlatch.png Graphic file (type png)
  <use potlatch.png>
-Underfull \hbox (badness 1946) in paragraph at lines 233--234
+Underfull \hbox (badness 1946) in paragraph at lines 238--239
 \OT1/cmr/m/n/12 che se non hai il
  []
 
 
-Underfull \hbox (badness 2351) in paragraph at lines 233--234
+Underfull \hbox (badness 2351) in paragraph at lines 238--239
 \OT1/cmr/m/n/12 non sono pre-sen-ti,
  []
 
 
-Overfull \hbox (7.96068pt too wide) in paragraph at lines 233--234
+Overfull \hbox (7.96068pt too wide) in paragraph at lines 238--239
 \OT1/cmr/m/n/12 in-ter-esse (ne-gozi, pun-
  []
 
 
-Overfull \hbox (7.24263pt too wide) in paragraph at lines 233--234
+Overfull \hbox (7.24263pt too wide) in paragraph at lines 238--239
 \OT1/cmr/m/n/12 servizi...), cor-reggen-
  []
 
-
-Overfull \hbox (0.2803pt too wide) in paragraph at lines 235--236
+[7 <./potlatch.png (PNG copy)>]
+Overfull \hbox (0.2803pt too wide) in paragraph at lines 240--241
 []\OT1/cmr/m/n/12 Se non hai un GPS potresti pren-dere in con-sid-er-azione \OT
 1/cmtt/m/n/12 Walking Papers\OT1/cmr/m/n/12 ,
  []
 
-[7 <./potlatch.png (PNG copy)>]
-<Josm-screenshot.png, id=231, 1141.26375pt x 890.32625pt>
+<Josm-screenshot.png, id=240, 1141.26375pt x 890.32625pt>
 File: Josm-screenshot.png Graphic file (type png)
 
-<use Josm-screenshot.png>
-Underfull \hbox (badness 2435) in paragraph at lines 246--247
-[][]\OT1/cmr/m/n/12 Il nos-tro per-cor-so in-
+<use Josm-screenshot.png> [8]
+Underfull \hbox (badness 2790) in paragraph at lines 257--258
+\OT1/cmr/m/n/12 l'inizio del-la reg-is-trazione
  []
 
-
-Underfull \hbox (badness 2837) in paragraph at lines 246--247
-\OT1/cmr/m/n/12 izia su una stra-da fore-
- []
-
-
-Underfull \hbox (badness 5847) in paragraph at lines 246--247
-\OT1/cmr/m/n/12 per etichet-tar-la cor-ret-ta-
- []
-
-[8 <./Josm-screenshot.png (PNG copy)>] [9] [10]
-<Osmit2010.JPG, id=246, 1730.465pt x 1200.485pt>
+[9 <./Josm-screenshot.png (PNG copy)>]
+<noc.png, id=251, 345.67699pt x 310.84807pt>
+File: noc.png Graphic file (type png)
+ <use noc.png> [10 <./noc.png>]
+<Osmit2010.JPG, id=257, 1730.465pt x 1200.485pt>
 File: Osmit2010.JPG Graphic file (type jpg)
  <use Osmit2010.JPG>
-Underfull \hbox (badness 2189) in paragraph at lines 295--296
+Underfull \hbox (badness 2189) in paragraph at lines 306--307
 [][]\OT1/cmr/m/n/12 I \OT1/cmr/bx/n/12 map-ping par-ty sono
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 295--296
+Underfull \hbox (badness 1072) in paragraph at lines 306--307
 \OT1/cmr/m/n/12 pletare, in-com-in-cia a pub-bli-
  []
 
 
-Underfull \hbox (badness 1337) in paragraph at lines 295--296
+Underfull \hbox (badness 1337) in paragraph at lines 306--307
 \OT1/cmr/m/n/12 zioni e me-dia per dif-fondere
  []
 
+[11 <./Osmit2010.JPG>]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 302.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 313.
 
-Overfull \hbox (4.7568pt too wide) in paragraph at lines 302--303
+Overfull \hbox (4.7568pt too wide) in paragraph at lines 313--314
 [][][]$\OT1/cmtt/m/n/12 http : / / wiki . openstreetmap . org / wiki / WikiProj
 ect _ Italy$[][] \OT1/cmr/bx/n/12 ^^Re il por-
  []
 
-[11 <./Osmit2010.JPG>] <./linux-logo.jpg, id=269, 18.7902pt x 23.3673pt>
-File: ./linux-logo.jpg Graphic file (type jpg)
-
-<use ./linux-logo.jpg> <./windows-logo.jpg, id=270, 26.499pt x 23.3673pt>
-File: ./windows-logo.jpg Graphic file (type jpg)
-
-<use ./windows-logo.jpg> <./mac-logo.jpg, id=271, 21.9219pt x 23.3673pt>
-File: ./mac-logo.jpg Graphic file (type jpg)
-
-<use ./mac-logo.jpg> [12 <./linux-logo.jpg> <./windows-logo.jpg> <./mac-logo.jp
-g>]
+[12] <./linux-logo.jpg, id=285, 18.7902pt x 23.3673pt>
 File: ./linux-logo.jpg Graphic file (type jpg)
  <use ./linux-logo.jpg>
+<./windows-logo.jpg, id=286, 26.499pt x 23.3673pt>
 File: ./windows-logo.jpg Graphic file (type jpg)
  <use ./windows-logo.jpg>
+<./mac-logo.jpg, id=287, 21.9219pt x 23.3673pt>
 File: ./mac-logo.jpg Graphic file (type jpg)
  <use ./mac-logo.jpg>
 File: ./linux-logo.jpg Graphic file (type jpg)
@@ -721,7 +770,14 @@ File: ./windows-logo.jpg Graphic file (type jpg)
  <use ./windows-logo.jpg>
 File: ./mac-logo.jpg Graphic file (type jpg)
  <use ./mac-logo.jpg>
-<./android-logo.jpg, id=279, 20.4765pt x 23.3673pt>
+File: ./linux-logo.jpg Graphic file (type jpg)
+
+<use ./linux-logo.jpg>
+File: ./windows-logo.jpg Graphic file (type jpg)
+ <use ./windows-logo.jpg>
+File: ./mac-logo.jpg Graphic file (type jpg)
+ <use ./mac-logo.jpg>
+<./android-logo.jpg, id=288, 20.4765pt x 23.3673pt>
 File: ./android-logo.jpg Graphic file (type jpg)
  <use ./android-logo.jpg>
 File: ./linux-logo.jpg Graphic file (type jpg)
@@ -751,7 +807,8 @@ File: ./linux-logo.jpg Graphic file (type jpg)
 File: ./windows-logo.jpg Graphic file (type jpg)
  <use ./windows-logo.jpg>
 File: ./mac-logo.jpg Graphic file (type jpg)
- <use ./mac-logo.jpg>
+ <use ./mac-logo.jpg> [13 <./linux-logo.jpg> <./windows-logo.jpg> <./mac-logo.j
+pg> <./android-logo.jpg>]
 File: ./linux-logo.jpg Graphic file (type jpg)
 
 <use ./linux-logo.jpg>
@@ -780,7 +837,7 @@ File: ./windows-logo.jpg Graphic file (type jpg)
  <use ./windows-logo.jpg>
 File: ./mac-logo.jpg Graphic file (type jpg)
  <use ./mac-logo.jpg>
-<./maemo-logo.png, id=280, 24.09pt x 24.09pt>
+<./maemo-logo.png, id=298, 24.09pt x 24.09pt>
 File: ./maemo-logo.png Graphic file (type png)
  <use ./maemo-logo.png>
 File: ./linux-logo.jpg Graphic file (type jpg)
@@ -792,115 +849,107 @@ File: ./android-logo.jpg Graphic file (type jpg)
  <use ./android-logo.jpg>
 File: ./maemo-logo.png Graphic file (type png)
 
-<use ./maemo-logo.png> [13 <./android-logo.jpg> <./maemo-logo.png>]
+<use ./maemo-logo.png>
+File: ./linux-logo.jpg Graphic file (type jpg)
+ <use ./linux-logo.jpg>
+File: ./windows-logo.jpg Graphic file (type jpg)
+ <use ./windows-logo.jpg>
+File: ./android-logo.jpg Graphic file (type jpg)
+
+<use ./android-logo.jpg>
+File: ./maemo-logo.png Graphic file (type png)
+ <use ./maemo-logo.png>
+<./openmoko-logo.jpg, id=299, 27.9444pt x 23.3673pt>
+File: ./openmoko-logo.jpg Graphic file (type jpg)
+ <use ./openmoko-logo.jpg>
 File: ./linux-logo.jpg Graphic file (type jpg)
 
 <use ./linux-logo.jpg>
 File: ./windows-logo.jpg Graphic file (type jpg)
  <use ./windows-logo.jpg>
+File: ./mac-logo.jpg Graphic file (type jpg)
+ <use ./mac-logo.jpg>
+File: ./linux-logo.jpg Graphic file (type jpg)
+
+<use ./linux-logo.jpg>
+File: ./windows-logo.jpg Graphic file (type jpg)
+ <use ./windows-logo.jpg>
+File: ./mac-logo.jpg Graphic file (type jpg)
+ <use ./mac-logo.jpg>
+File: ./linux-logo.jpg Graphic file (type jpg)
+
+<use ./linux-logo.jpg>
+File: ./windows-logo.jpg Graphic file (type jpg)
+ <use ./windows-logo.jpg>
+File: ./mac-logo.jpg Graphic file (type jpg)
+ <use ./mac-logo.jpg>
+File: ./linux-logo.jpg Graphic file (type jpg)
+
+<use ./linux-logo.jpg>
+File: ./windows-logo.jpg Graphic file (type jpg)
+ <use ./windows-logo.jpg> [14 <./maemo-logo.png> <./openmoko-logo.jpg>]
 File: ./android-logo.jpg Graphic file (type jpg)
  <use ./android-logo.jpg>
-File: ./maemo-logo.png Graphic file (type png)
-
-<use ./maemo-logo.png> <./openmoko-logo.jpg, id=287, 27.9444pt x 23.3673pt>
-File: ./openmoko-logo.jpg Graphic file (type jpg)
-
-<use ./openmoko-logo.jpg>
-File: ./linux-logo.jpg Graphic file (type jpg)
- <use ./linux-logo.jpg>
-File: ./windows-logo.jpg Graphic file (type jpg)
- <use ./windows-logo.jpg>
-File: ./mac-logo.jpg Graphic file (type jpg)
-
-<use ./mac-logo.jpg>
-File: ./linux-logo.jpg Graphic file (type jpg)
- <use ./linux-logo.jpg>
-File: ./windows-logo.jpg Graphic file (type jpg)
- <use ./windows-logo.jpg>
-File: ./mac-logo.jpg Graphic file (type jpg)
-
-<use ./mac-logo.jpg>
-File: ./linux-logo.jpg Graphic file (type jpg)
- <use ./linux-logo.jpg>
-File: ./windows-logo.jpg Graphic file (type jpg)
- <use ./windows-logo.jpg>
-File: ./mac-logo.jpg Graphic file (type jpg)
-
-<use ./mac-logo.jpg>
-File: ./linux-logo.jpg Graphic file (type jpg)
- <use ./linux-logo.jpg>
-File: ./windows-logo.jpg Graphic file (type jpg)
- <use ./windows-logo.jpg>
-File: ./android-logo.jpg Graphic file (type jpg)
-
-<use ./android-logo.jpg> [14 <./openmoko-logo.jpg>]
-<./iphone-logo.jpg, id=293, 19.0311pt x 23.3673pt>
+<./iphone-logo.jpg, id=306, 19.0311pt x 23.3673pt>
 File: ./iphone-logo.jpg Graphic file (type jpg)
  <use ./iphone-logo.jpg>
 File: ./maemo-logo.png Graphic file (type png)
 
-<use ./maemo-logo.png> [15 <./iphone-logo.jpg>]
-Overfull \hbox (64.7011pt too wide) in paragraph at lines 451--452
-[][][]$\OT1/cmtt/m/n/12 http : / / openqueermap . info/$[][]\OT1/cmr/m/n/12 : e
-v-i-den-zia i lo-cali ded-i-cati a gay/lesbiche/transgender 
- []
-
-
-Overfull \hbox (4.37326pt too wide) in paragraph at lines 453--454
+<use ./maemo-logo.png> [15 <./iphone-logo.jpg>] [16]
+Overfull \hbox (4.37326pt too wide) in paragraph at lines 464--465
 [][][]$\OT1/cmtt/m/n/12 http : / / toolserver . org / []kolossos / openlayers /
  kml-[]on-[]ol . php$[][]\OT1/cmr/m/n/12 : vi-
  []
 
 
-Overfull \hbox (26.85196pt too wide) in paragraph at lines 461--462
+Overfull \hbox (4.33136pt too wide) in paragraph at lines 472--473
 [][][]$\OT1/cmtt/m/n/12 http : / / parking . openstreetmap . de/$[][]\OT1/cmr/m
-/n/12 : map-pa tem-at-i-ca ded-i-ca-ta ai parcheg-
+/n/12 : map-pa tem-at-i-ca ded-i-ca-ta ai par-
  []
 
-[16] [17]
-Overfull \hbox (1.96875pt too wide) in paragraph at lines 504--505
+[17]
+Overfull \hbox (1.96875pt too wide) in paragraph at lines 515--516
 [][][]$\OT1/cmtt/m/n/12 http : / / osmstats . hanskalabs . net$[][]\OT1/cmr/m/n
 /12 : por-tale sulle statis-tiche degli uten-
  []
 
 
-Overfull \hbox (9.30457pt too wide) in paragraph at lines 510--511
+Overfull \hbox (9.30457pt too wide) in paragraph at lines 521--522
 [][][]$\OT1/cmtt/m/n/12 http : / / open . mapquest . it/$[][]\OT1/cmr/m/n/12 : 
 por-tale che uti-liz-za i dati di \OT1/cmr/m/it/12 Open-StreetMap
  []
 
 [18]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 542.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 553.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 542.
- <ccbysa.png, id=372, 89.33376pt x 31.11626pt>
+(Font)              <10.95> on input line 553.
+ <ccbysa.png, id=385, 89.33376pt x 31.11626pt>
 File: ccbysa.png Graphic file (type png)
  <use ccbysa.png> [19 <./ccbysa.png>] (./tutorial.aux) ) 
 Here is how much of TeX's memory you used:
- 5910 strings out of 495061
- 84521 string characters out of 1182622
- 169041 words of memory out of 3000000
- 8896 multiletter control sequences out of 15000+50000
- 12896 words of font info for 45 fonts, out of 3000000 for 9000
+ 5922 strings out of 495061
+ 84679 string characters out of 1182622
+ 168096 words of memory out of 3000000
+ 8904 multiletter control sequences out of 15000+50000
+ 12549 words of font info for 44 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,9n,43p,1216b,400s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,9n,43p,1216b,402s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/share/texmf-texli
 ve/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/public/
 amsfonts/cm/cmbxti10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
 cm/cmitt10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.p
 fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/sha
-re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-tex
-live/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texmf-texlive/fonts/
-type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texmf-texlive/fonts/type1/pub
-lic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
-s/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12
-.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/
-share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on tutorial.pdf (19 pages, 2503994 bytes).
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmti12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt1
+0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on tutorial.pdf (19 pages, 2595074 bytes).
 PDF statistics:
- 441 PDF objects out of 1000 (max. 8388607)
- 65 named destinations out of 1000 (max. 500000)
- 417 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 452 PDF objects out of 1000 (max. 8388607)
+ 67 named destinations out of 1000 (max. 500000)
+ 435 words of extra memory for PDF output out of 10000 (max. 10000000)
 

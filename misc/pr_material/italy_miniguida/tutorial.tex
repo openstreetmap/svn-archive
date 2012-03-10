@@ -31,7 +31,7 @@
 
 
 \definecolor{UrlColor}{rgb}{0,0.35,0}
-\usepackage[pdftitle={Introduzione ad OpenStreetMap},pdfauthor={Luca Delucchi, Maurizio Napolitano, Alessio Zanol},colorlinks=true,citecolor=UrlColor,urlcolor=UrlColor,filecolor=UrlColor,linkcolor=UrlColor]{hyperref}
+\usepackage[pdftitle={Introduzione ad OpenStreetMap},pdfauthor={realizzato da Luca Delucchi, Maurizio Napolitano, Alessio Zanol, con il contributo della comunità italiana di OpenStreetMap},colorlinks=true,citecolor=UrlColor,urlcolor=UrlColor,filecolor=UrlColor,linkcolor=UrlColor]{hyperref}
 %comando per scrivere openstreetmap
 \newcommand{\osm}{\emph{OpenStreetMap}\xspace}
 \newcommand{\gps}{GPS\xspace}
@@ -49,9 +49,9 @@
 
 \rhead{Minitutorial Italiano di \osm}
 %opening
-\title{\begin{Large}Introduzione a \osm\end{Large}}
+\title{\begin{Large}\textbf{Introduzione a \osm}\end{Large}}
 \date{\small{Versione Marzo 2012}}
-\author{Luca Delucchi, Maurizio Napolitano, Alessio Zanol}
+\author{realizzato da Luca Delucchi, Maurizio Napolitano, Alessio Zanol \\ \\ con il contributo della Comunità italiana di OpenStreetMap}
 \begin{document}
 
 \maketitle
@@ -87,8 +87,13 @@ La prima volta che \osm è stato utilizzato per queste finalità è avvenuto all
 
 Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccorritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
 
-Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.
-Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
+\begin{wrapfloat}{figure}{R}{0pt}
+ \includegraphics[width=0.65\columnwidth]{mapkibera.jpg}
+ \caption{\textit{Mappatori nella zona di \href{http://www.openstreetmap.org/?lat=-1.31133&lon=36.7878&zoom=15&layers=B000FTF}{Kibera} a Nairobi. Li Mikel Maron sta realizzando un progetto chiamato \href{http://mapkibera.org/}{mapkibera}}}
+\end{wrapfloat}Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.\newline
+Questa zona per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
+
+\subsection{Utilizzo professionale}
 
 \section{La struttura del database \osm}
 \subsection{Elementi}
@@ -122,11 +127,11 @@ Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari e
       & \val{steps} & scala \\
       & \val{bus\_stop} & fermata dell'autobus \\
       & \val{stop} & segnale stop \\
-      & \val{traffic\_signal} & semaforo \\
+      & \val{traffic\_signals} & semaforo \\
   \bottomrule
  \end{tabular}
 \end{center}
-I tag non rappresentano solo un elemento, ma possono essere usati per più elementi: per esempio \key{highway} è prevalentemente associato alle linee ma, come potete vedere sopra, vi sono alcuni casi in cui è utilizzato con i nodi \key{highway}=\val{bus\_stop} o \key{highway}=\val{traffic\_signal}.
+I tag non rappresentano solo un elemento, ma possono essere usati per più elementi: per esempio \key{highway} è prevalentemente associato alle linee ma, come potete vedere sopra, vi sono alcuni casi in cui è utilizzato con i nodi \key{highway}=\val{bus\_stop} o \key{highway}=\val{traffic\_signals}.
 
 I tag usati sono tantissimi e continuano ad aumentare e migliorare, permettendo di mappare qualsiasi elemento possa essere rappresentato da una coppia di coordinate geografiche. Una vasta lista è disponibile al link  \url{http://wiki.openstreetmap.org/wiki/Map_Features}. Inoltre è possibile controllare, discutere e votare i nuovi tag proposti in questa pagina \url{http://wiki.openstreetmap.org/wiki/Proposed_features}.
 
@@ -230,7 +235,7 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
  \includegraphics[width=0.7\columnwidth]{potlatch.png}
  \caption{\textit{L'interfaccia di \soft{Potlatch}}}
 \end{wrapfloat}
-Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale e anche quelle di Bing (queste in alcune zone hanno una risoluzione migliore ma bisogna stare attenti perchè è probabile che sia uno spostamento delle immagini rispetto la reale posizione degli elemnti), distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaator}). 
+Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale e anche quelle di Bing (queste in alcune zone hanno una risoluzione migliore ma bisogna stare attenti perchè è probabile che ci sia uno spostamento delle immagini rispetto alla reale posizione degli elementi), distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaartor}). 
 
 Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}.
 
@@ -249,7 +254,7 @@ Sempre mediante i waypoint, è utile appuntare informazioni interessanti come il
 
 È da precisare che il nome che si assegna ai waypoint non è fondamentale, ma serve come promemoria personale, infatti nemmeno i waypoint entrano a far parte del database di OSM, ma serviranno esclusivamente da appunti in fase di editing. Adottate quindi lo stile che più trovate utile, completo e comodo per appuntare quel che trovate.
 
-Un altro metodo utilizzato è quello di sfruttare le potenzialità di un regi-stratore digitale e \soft{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il re-gistratore in concomitanza dell'inizio della regi-strazione della traccia \gps e lasciarlo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
+Un altro metodo utilizzato è quello di sfruttare le potenzialità di un registratore digitale e \soft{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il registratore in concomitanza dell'inizio della registrazione della traccia \gps e lasciarlo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
 
 È molto utile anche la macchina fotografica, impostando l'ora del GPS nella macchina è possibile poi georiferire le immagini prodotte e avere un ulteriore strumento a supporto della vostra mappatura. Se avete un data-logger con il quale non potete vedere l'ora esatta fate una foto ad un orologio, alla partenza o al ritorno, questa vi servirà per aggiustare l'orario e georiferire correttamente le immagini
 
@@ -263,7 +268,7 @@ Sulla mappa in homepage (detta slippy map) le modifiche non appariranno istantan
 
 È da sottolineare che le tracce, pur non entrando direttamente nel data-base principale di \osm, è possibile caricarle sul sito tramite la pagina \url{http://www.openstreetmap.org/traces}, al fine di renderle pubbliche e disponibili a chiunque le voglia ricalcare o controllare; inoltre, passando più volte nella stessa ``strada'', avremo delle tracce sempre un po' diverse, avendone tante si può avere una precisione maggiore facendo passare la nostra way nella linea mediana di tutte le tracce.
 \subsection{Ho un cellulare con \gps integrato o collegabile ad un'antenna \gps}
-Il continuo sviluppo tecnologico ha portato alla costruzione di cellulari sempre più complessi e performanti; molti modelli delle ultime generazioni hanno un ricevitore \gps incorporato, questa situazione ha fatto si che venissero sviluppati programmi per contribuire al progetto e per visua-lizzare/utilizzare i dati di \osm. Esistono software per la maggiorparte dei sistemi operativi (Linux, Android, Symbian, IPhone Windows CE) utilizzati sui cellulari. Nella sezione software vengono presentati alcuni dei più utilizzati.
+Il continuo sviluppo tecnologico ha portato alla costruzione di cellulari sempre più complessi e performanti; molti modelli delle ultime generazioni hanno un ricevitore \gps incorporato, questa situazione ha fatto si che venissero sviluppati programmi per contribuire al progetto e utilizzare in svariati modi i dati di \osm. Esistono software per la maggiorparte dei sistemi operativi (Linux, Android, Symbian, IPhone Windows CE) utilizzati sui cellulari. Nella sezione software vengono presentati alcuni dei più utilizzati.
 
 Per esempio per Android vi è la possibilità di utilizzare diversi applicativi. Vespucci è un editor di \osm completo mentre Geopaparazzi e OSMand permettono l'inserimento di soli punti. \newline
 Per tutti i cellulari che supportano applicazioni java si consiglia invece GpsMid.\newline
@@ -271,9 +276,15 @@ Il miglior software è Mapzen Poi Collector, sviluppato da CloudMade, una delle 
 
 
 \subsection{Infine...}
-Molto altro ci sarebbe da dire, inizia pure a lavorare con cautela e \textbf{per qualsiasi dubbio, domanda in mailing list o sul canale irc. Prima di chiedere controlla che qualcuno non abbia già avuto il tuo stesso problema consultando gli archivi della mailing list}.
-
+\begin{wrapfloat}{figure}{L}{0pt}
+ \includegraphics[width=0.2\columnwidth]{noc.png}
+%  \caption{\textit{L'interfaccia di JOSM}}
+\end{wrapfloat}
 \textbf{MOLTO IMPORTANTE: non copiare mai da altre mappe se non sei sicuro di poterlo fare. Né Google né le carte topografiche hanno una licenza che ne permette la copia}.
+
+Molto altro ci sarebbe da dire, inizia pure a lavorare con cautela e \textbf{per qualsiasi dubbio, chiedi in mailing list o sul canale irc. \newline
+Prima di domandare controlla che qualcuno non abbia già avuto il tuo stesso problema consultando gli archivi della mailing list}.
+
 
 \section{Donazione tracce}
 Se hai delle tracce \gps da te registrate e non hai voglia o tempo di imparare a importarle, puoi aiutare \osm già da subito "donandole".
@@ -335,7 +346,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \soft{PostgreSQL/PostGIS} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: database relazionale che con la sua estensione spaziale PostGIS può contenere i dati di \osm caricati utilizzando il software osm2pgsql
 
-\soft{Spatialite} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing
+\soft{Spatialite} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: estensione spaziale del database Sqlite; attraverso il modulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing
 
 \soft{Open Source Routing Machine} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: motore di analisi delle reti sviluppato per \osm
 
@@ -367,7 +378,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \subsection{GPS}
 
-\soft{Qlandkarte} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
+\soft{Qlandkarte} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette di caricare come sfondo le mappe di \osm
 
 \soft{MkGmap} \includegraphics{./linux-logo.jpg} \includegraphics{./windows-logo.jpg} \includegraphics{./mac-logo.jpg}: trasforma i dati in formato .osm in formato .img per Garmin
 
@@ -415,13 +426,13 @@ I siti che visualizzano i dati di \osm sono ormai moltissimi; potete trovare una
 \subsection{Visualizzazione}
 \subsubsection{Generali}
 \url{http://www.openstreetmap.org}: è il portale ufficiale di OSM. Da qui potrai consultare le mappe dimostrative “ufficiali” cliccando sul + in alto a destra sulla mappa:
-Mapnik e Osmarender sono mappe generiche che mostrano molte caratteristiche mappate,
-Cyclemap è invece una mappa tematica pensata per i ciclisti.
+Standard e MapQuest Open sono mappe generiche che mostrano molte caratteristiche mappate (ma non tutte), Open Cycle Map è invece una mappa tematica pensata per i ciclisti e Mappa dei trasporti mette in evidenza le linee di trasporto
+pubblico e le fermate.
 
 \url{http://www.openstreetbrowser.org}: permette di visualizzare innumerevoli informazioni inserite in \osm, altrimenti nascoste o vi-sibili soltanto mediante un rendering ad hoc. Ne sono un esempio l'evidenziamento dinamico dei percorsi dei mezzi pubblici con le relative fermate, ma anche strutture turistiche, storiche, sportive
 
 \subsubsection{Sport}
-\url{http://www.opencyclemap.org}: la mappa dedicata al cicloturismo, evidenzia le piste ciclabili nazionali, regionali e locali (ove mappate logicamente), le fontanelle di acqua potabile, i negozi, i meccanici e i parcheggi per le biciclette, ha uno sfondo pensato a mettere in risalto l'altimetri attraverso rilievi e curve di livello
+\url{http://www.opencyclemap.org}: la mappa dedicata al cicloturismo, evidenzia le piste ciclabili nazionali, regionali e locali (ove mappate logicamente), le fontanelle di acqua potabile, i negozi, i meccanici e i parcheggi per le biciclette, ha uno sfondo pensato a mettere in risalto l'altimetria attraverso rilievi e curve di livello
 
 Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 \begin{itemize}
@@ -434,7 +445,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.openpistemap.org}: è una mappa tematica pensata per gli amanti degli sport invernali, vengono renderizzati gli impianti di risalita, le piste a seconda della scala di difficoltà e le isolinee
 
-\url{http://www.skidea.com}: è un portale che visualizza gli impianti di sport invernali e permette di scarica una mappa formato Garmin per i più grandi comprensori sciistici
+\url{http://www.skidea.com}: è un portale che visualizza gli impianti di sport invernali e permette di scaricare una mappa formato Garmin per i più grandi comprensori sciistici
 
 \url{http://whitewater.quaker.eu.org/}: mappa tematica per l'attività sportiva lungo i fiumi
 
@@ -446,9 +457,9 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://wheelmap.org}: è il portale per le persone con disabilità motorie. Realizzato da una ONLUS tedesca permette di ottenere ed inserire informazioni sull'accessibilità dei locali
 
-\url{http://toolserver.org/~stephankn/cuisine/}: è una mappa tematica dedicata alle diverse tipologie di ristoranti
+\url{http://toolserver.org/~stephankn/cuisine/}: è una mappa tema-tica dedicata alle diverse tipologie di ristoranti
 
-\url{http://openqueermap.info/}: evidenzia i locali dedicati a gay/lesbiche/transgender 
+\url{http://openqueermap.info/}: evidenzia i locali dedicati a gay, lesbiche e transgender 
 
 \url{http://toolserver.org/~kolossos/openlayers/kml-on-ol.php}: visualizza le informazioni di Wikipedia su \osm
 
@@ -458,7 +469,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://openbusmap.org/}: altro visualizzatore di trasporti pubblici
 
-\url{http://parking.openstreetmap.de/}: mappa tematica dedicata ai parcheggi
+\url{http://parking.openstreetmap.de/}: mappa tematica dedicata ai par-cheggi
 
 \subsubsection{POI}
 

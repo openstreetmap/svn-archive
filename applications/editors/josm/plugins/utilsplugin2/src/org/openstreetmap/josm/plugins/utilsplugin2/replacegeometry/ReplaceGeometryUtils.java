@@ -263,37 +263,50 @@ public final class ReplaceGeometryUtils {
                 geometryPool.add(node);
         }
 
+        boolean useHungarian = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", false);
+        
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
         Map<Node, Node> nodeAssoc = new HashMap<Node, Node>();
         if (geometryPool.size() > 0 && nodePool.size() > 0) {
-            int gLen = geometryPool.size();
-            int nLen = nodePool.size();
-            double cost[][] = new double[nLen][gLen];
+            if (useHungarian) {  // use robust, but slower assignment
+                int gLen = geometryPool.size();
+                int nLen = nodePool.size();
+                double cost[][] = new double[nLen][gLen];
 
-            double maxDistance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
-            for (int i = 0; i < nLen; i++) {
-                for (int j = 0; j < gLen; j++) {
-                    double d = nodePool.get(i).getCoor().distance(geometryPool.get(j).getCoor());
-                    if (d > maxDistance)
-                        cost[i][j] = Double.MAX_VALUE;
-                    else
-                        cost[i][j] = d;
+                double maxDistance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
+                for (int i = 0; i < nLen; i++) {
+                    for (int j = 0; j < gLen; j++) {
+                        double d = nodePool.get(i).getCoor().distance(geometryPool.get(j).getCoor());
+                        if (d > maxDistance) {
+                            cost[i][j] = Double.MAX_VALUE;
+                        } else {
+                            cost[i][j] = d;
+                        }
+                    }
                 }
-            }
-            int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
-            for (int i = 0; i < nLen; i++) {
-                int nIdx = assignment[i][0];
-                int gIdx = assignment[i][1];
-                if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
-                    nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
+                int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
+                for (int i = 0; i < nLen; i++) {
+                    int nIdx = assignment[i][0];
+                    int gIdx = assignment[i][1];
+                    if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
+                        nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
+                    }
                 }
+                // node will be moved, remove from pool
+                for (Node n : nodeAssoc.values()) {
+                    nodePool.remove(n);
+                }
+            } else { // use simple, faster, but less robust assignment method
+                for (Node n : geometryPool) {
+                    Node nearest = findNearestNode(n, nodePool);
+                    if (nearest != null) {
+                        nodeAssoc.put(n, nearest);
+                        nodePool.remove(nearest);
+                    }
+                }
+
             }
-        }
-        
-        // node will be moved, remove from pool
-        for (Node n : nodeAssoc.values()) {
-            nodePool.remove(n);
         }
 
         // Now that we have replacement list, move all unused new nodes to nodePool (and delete them afterwards)

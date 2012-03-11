@@ -23,6 +23,8 @@ public class TramwayStationHandler extends ToulouseDataSetHandler {
 
 	public TramwayStationHandler() {
 		super(12611, "tram=yes");
+		setName("Stations de tramway");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override

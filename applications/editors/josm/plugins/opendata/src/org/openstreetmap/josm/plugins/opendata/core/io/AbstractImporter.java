@@ -17,10 +17,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -29,6 +26,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
@@ -72,15 +70,7 @@ public abstract class AbstractImporter extends OsmImporter implements OdConstant
 	 */
 	@Override
 	protected OsmDataLayer createLayer(DataSet dataSet, File associatedFile, String layerName) {
-		if (handler != null) {
-			handler.setAssociatedFile(associatedFile);
-			handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(associatedFile.lastModified())));
-			if (!Main.pref.getBoolean(PREF_RAWDATA)) {
-				handler.updateDataSet(dataSet);
-			}
-			handler.checkDataSetSource(dataSet);
-			handler.checkNames(dataSet);
-		}
+		DataSetUpdater.updateDataSet(dataSet, handler, associatedFile);
 		return new OdDataLayer(dataSet, layerName, associatedFile, handler);
 	}
 }

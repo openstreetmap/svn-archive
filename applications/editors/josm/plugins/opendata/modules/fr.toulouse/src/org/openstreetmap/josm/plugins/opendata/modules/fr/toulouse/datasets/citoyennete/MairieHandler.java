@@ -23,6 +23,7 @@ public class MairieHandler extends ToulouseDataSetHandler {
 
 	public MairieHandler() {
 		this(12554, "Mairies");
+		setCategory(CAT_CITOYENNETE);
 	}
 	
 	protected MairieHandler(int portalId, String wikiPage) {

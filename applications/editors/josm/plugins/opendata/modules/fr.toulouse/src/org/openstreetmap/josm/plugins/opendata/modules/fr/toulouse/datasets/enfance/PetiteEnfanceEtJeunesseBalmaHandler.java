@@ -24,6 +24,7 @@ public class PetiteEnfanceEtJeunesseBalmaHandler extends ToulouseDataSetHandler 
 	public PetiteEnfanceEtJeunesseBalmaHandler() {
 		super(14001);
 		setWikiPage("Petite enfance et jeunesse");
+		setCategory(CAT_ENFANCE);
 	}
 
 	@Override

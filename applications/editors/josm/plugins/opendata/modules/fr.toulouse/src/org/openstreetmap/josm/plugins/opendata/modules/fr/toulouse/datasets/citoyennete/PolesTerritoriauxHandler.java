@@ -23,6 +23,8 @@ public class PolesTerritoriauxHandler extends ToulouseDataSetHandler {
 
 	public PolesTerritoriauxHandler() {
 		super(12568);
+		setName("Pôles territoriaux ");
+		setCategory(CAT_CITOYENNETE);
 	}
 
 	@Override

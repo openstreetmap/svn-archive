@@ -40,6 +40,7 @@ public class PistesCyclablesHandler extends ToulouseDataSetHandler {
 	
 	public PistesCyclablesHandler() {
 		this("Nom_voie");
+		setCategory(CAT_TRANSPORT);
 	}
 	
 	public PistesCyclablesHandler(String streetField) {

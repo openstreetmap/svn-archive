@@ -22,6 +22,8 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public interface Module {
 
+	public String getDisplayedName();
+
 	public List<AbstractDataSetHandler> getHandlers();
 	
 	public SourceProvider getMapPaintStyleSourceProvider();

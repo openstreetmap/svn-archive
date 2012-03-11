@@ -23,6 +23,8 @@ public class Parcelles1680Handler extends ToulouseDataSetHandler {
 
 	public Parcelles1680Handler() {
 		super(12514);
+		setName("Parcellaire de 1680");
+		setCategory(CAT_PATRIMOINE);
 	}
 
 	@Override

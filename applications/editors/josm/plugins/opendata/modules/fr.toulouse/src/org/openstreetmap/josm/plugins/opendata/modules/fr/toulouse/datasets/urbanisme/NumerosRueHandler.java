@@ -30,6 +30,7 @@ public class NumerosRueHandler extends ToulouseDataSetHandler {
 	public NumerosRueHandler() {
 		super(12673, "addr:housenumber");
 		setWikiPage("Numéros de rue");
+		setCategory(CAT_URBANISME);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class BibliothequesHandler extends ToulouseDataSetHandler {
 	public BibliothequesHandler() {
 		super(12402, "amenity=library");
 		setWikiPage("Médiathèques, bibliothèques et bibliobus");
+		setCategory(CAT_CULTURE);
 	}
 
 	@Override

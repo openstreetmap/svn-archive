@@ -25,6 +25,7 @@ public class VeloToulouseHandler extends ToulouseDataSetHandler {
 	public VeloToulouseHandler() {
 		super(12546, "amenity=bicycle_rental");
 		setWikiPage("Vélô Toulouse");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override

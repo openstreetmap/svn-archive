@@ -24,6 +24,7 @@ public class EcoleBalmaHandler extends ToulouseDataSetHandler {
 	public EcoleBalmaHandler() {
 		super(13993, "amenity=school");
 		setWikiPage("Écoles");
+		setCategory(CAT_ENFANCE);
 	}
 
 	@Override

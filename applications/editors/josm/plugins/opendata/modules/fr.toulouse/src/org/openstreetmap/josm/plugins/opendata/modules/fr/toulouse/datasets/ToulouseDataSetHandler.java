@@ -97,6 +97,19 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
 	}
 
 	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURL()
+	 */
+	@Override
+	public URL getDataURL() {
+		try {
+			return new URL(getLocalPortalURL().toString()+"/resource/document");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.fr.opendata.datasets.AbstractDataSetHandler#getWikiURL()
 	 */
 	@Override
@@ -112,6 +125,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
 	}
 	
 	protected final void setWikiPage(String wikiPage) {
-		this.wikiPage = wikiPage;
+		this.wikiPage = wikiPage.replace(" ", "_");
+		setName(wikiPage.replace("_", " "));
 	}
 }

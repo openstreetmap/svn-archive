@@ -370,11 +370,25 @@ public class ShpReader extends AbstractReader implements OdConstants {
 		}
 	}
 	
+	private Node getNode(Point p, String key) {
+		Node n = nodes.get(key);
+		if (n == null && handler != null && handler.checkShpNodeProximity()) {
+			LatLon ll = new LatLon(p.getY(), p.getX());
+			for (Node node : nodes.values()) {
+				if (node.getCoor().equalsEpsilon(ll)) {
+					return node;
+				}
+			}
+		}
+		return n;
+	}
+	
 	private Node createOrGetNode(Point p) throws MismatchedDimensionException, TransformException {
 		if (transform != null) {
 			Point p2 = (Point) JTS.transform(p, transform);
 			String key = p2.getX()+"/"+p2.getY();
-			Node n = nodes.get(key);
+			//String key = LatLon.roundToOsmPrecisionStrict(p2.getX())+"/"+LatLon.roundToOsmPrecisionStrict(p2.getY());
+			Node n = getNode(p2, key);
 			if (n == null) {
 				nodes.put(key, n = new Node(new LatLon(p2.getY(), p2.getX())));
 				result.addPrimitive(n);

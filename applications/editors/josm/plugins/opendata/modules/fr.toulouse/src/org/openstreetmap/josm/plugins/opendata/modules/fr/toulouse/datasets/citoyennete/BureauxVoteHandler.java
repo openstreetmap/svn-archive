@@ -24,6 +24,7 @@ public class BureauxVoteHandler extends ToulouseDataSetHandler {
 	public BureauxVoteHandler() {
 		super(12550, "polling_station");
 		setWikiPage("Bureaux de vote 2012");
+		setCategory(CAT_CITOYENNETE);
 	}
 
 	@Override

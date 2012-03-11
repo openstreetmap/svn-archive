@@ -52,6 +52,7 @@ import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Paramet
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters1SP;
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters2SP;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
+import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.util.NamesFrUtils;
 import org.openstreetmap.josm.tools.Pair;
@@ -91,6 +92,8 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		}
 	}
 
+	private String name;
+	private DataSetCategory category;
 	private String sourceDate;
 	private File associatedFile;
 
@@ -169,10 +172,23 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	
 	public URL getWikiURL() {return null;}
 	
-	public abstract URL getLocalPortalURL();
-	public abstract URL getNationalPortalURL();
+	public URL getLocalPortalURL() {return null;}
+	
+	public URL getNationalPortalURL() {return null;}
 
 	public URL getLicenseURL() {return null;}
+
+	public URL getDataURL() {return null;}
+	
+	public AbstractReader getReaderForUrl(String url) {return null;}
+
+	public final DataSetCategory getCategory() {
+		return category;
+	}
+
+	public final void setCategory(DataSetCategory category) {
+		this.category = category;
+	}
 
 	public final Collection<String> getOsmXapiRequests(Bounds bounds) {
 		return getOsmXapiRequests(
@@ -339,27 +355,26 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		p.put(osmKey, osmValue);
 	}
 
-	/**
-	 * @return the source
-	 */
 	public String getSource() {
 		return null;
 	}
 		
-	/**
-	 * @return the sourceDate
-	 */
 	public final String getSourceDate() {
 		return sourceDate;
 	}
 	
-	/**
-	 * @param sourceDate the sourceDate to set
-	 */
 	public final void setSourceDate(String sourceDate) {
 		this.sourceDate = sourceDate;
 	}
+
+	public final String getName() {
+		return name;
+	}
 	
+	public final void setName(String name) {
+		this.name = name;
+	}
+
 	public String getLocalPortalIconName() {
 		return ICON_CORE_24;
 	}
@@ -501,5 +516,9 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 			}
 		}
 		return null;
+	}
+
+	public boolean checkShpNodeProximity() {
+		return false;
 	}
 }

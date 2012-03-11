@@ -24,6 +24,7 @@ public class EcoleElementaireHandler extends ToulouseDataSetHandler {
 	public EcoleElementaireHandler() {
 		super(12474, "amenity=school");
 		setWikiPage("Écoles élémentaires publiques");
+		setCategory(CAT_ENFANCE);
 		for (String forbidden : new String[]{"maternelle","primaire","collège","lycée","secondaire"}) {
 			addForbiddenTag("school:FR="+forbidden);
 		}

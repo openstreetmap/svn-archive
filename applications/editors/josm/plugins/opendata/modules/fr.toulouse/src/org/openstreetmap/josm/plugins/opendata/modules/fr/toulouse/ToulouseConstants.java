@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse;
 
+import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetCategory;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 
 public interface ToulouseConstants extends FrenchConstants {
@@ -45,4 +46,18 @@ public interface ToulouseConstants extends FrenchConstants {
 	 * NEPTUNE XML Schema modified to accept Tisséo files
 	 */
 	public static final String TOULOUSE_NEPTUNE_XSD = "/neptune_toulouse/neptune.xsd";
+	
+	/**
+	 * Categories: TODO: icons
+	 */
+	public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "");
+	public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "");
+	public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "");
+	public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "");
+	public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "");
+	public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "");
+	public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "");
+	public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "");
+	public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "");
+	public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "");
 }

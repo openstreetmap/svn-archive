@@ -23,6 +23,7 @@ public class MairieAnnexeHandler extends MairieHandler {
 	
 	public MairieAnnexeHandler() {
 		super(12560, "Mairies annexes");
+		setCategory(CAT_CITOYENNETE);
 	}
 
 	@Override

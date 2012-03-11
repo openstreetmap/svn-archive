@@ -15,17 +15,31 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataAction;
+import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataTask;
+import org.openstreetmap.josm.plugins.opendata.core.actions.OpenPreferencesActions;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetCategory;
 import org.openstreetmap.josm.plugins.opendata.core.gui.OdDialog;
 import org.openstreetmap.josm.plugins.opendata.core.gui.OdPreferenceSetting;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
@@ -37,6 +51,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsImporter;
+import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 
@@ -45,6 +60,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	private static OdPlugin instance;
 	
 	public final XmlImporter xmlImporter;
+	
+	private final JMenu menu;
 	
 	public OdPlugin(PluginInformation info) { // NO_UCD
 		super(info);
@@ -64,10 +81,51 @@ public final class OdPlugin extends Plugin implements OdConstants {
 		}
         // Load modules
         loadModules();
+        // Add menu
+        menu = Main.main.menu.addMenu(marktr("Open Data"), KeyEvent.VK_O, Main.main.menu.defaultMenuPos, ht("/Plugin/OpenData"));
+        buildMenu();
+        // Add download task
+        Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);
 	}
 	
 	public static final OdPlugin getInstance() {
 		return instance;
+	}
+	
+	private void buildMenu() {
+        for (Module module : ModuleHandler.moduleList) {
+        	Map<DataSetCategory, JMenu> catMenus = new HashMap<DataSetCategory, JMenu>();
+        	JMenu moduleMenu = null;
+        	for (AbstractDataSetHandler handler: module.getHandlers()) {
+        		if (handler.getDataURL() != null) {
+        			if (moduleMenu == null) {
+        				String moduleName = module.getDisplayedName();
+        				if (moduleName == null || moduleName.isEmpty()) {
+        					moduleName = module.getModuleInformation().getName();
+        				}
+        				moduleMenu = new JMenu(moduleName);
+        				moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
+        			}
+        			DataSetCategory cat = handler.getCategory();
+        			JMenu endMenu = null;
+        			if (cat != null) {
+        				if ((endMenu = catMenus.get(cat)) == null) {
+        					catMenus.put(cat, endMenu = new JMenu(cat.getName()));
+        					moduleMenu.add(endMenu);
+        				}
+        			}
+        			if (endMenu == null) {
+        				endMenu = moduleMenu;
+        			}
+        			endMenu.add(new DownloadDataAction(handler));
+        		}
+        	}
+        	if (moduleMenu != null) {
+        		menu.add(moduleMenu);
+        	}
+        }
+        menu.addSeparator();
+        MainMenu.add(menu, new OpenPreferencesActions());
 	}
 
 	/* (non-Javadoc)

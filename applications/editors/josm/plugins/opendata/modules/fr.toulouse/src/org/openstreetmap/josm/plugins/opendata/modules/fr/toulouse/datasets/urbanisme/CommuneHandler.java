@@ -23,6 +23,8 @@ public class CommuneHandler extends ToulouseDataSetHandler {
 
 	public CommuneHandler() {
 		super(12582, "admin_level=8");
+		setName("Communes");
+		setCategory(CAT_URBANISME);
 	}
 
 	@Override

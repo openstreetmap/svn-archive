@@ -16,6 +16,7 @@
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -30,6 +31,8 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 	public ReseauTisseoHandler() {
 		super(14022, "network=fr_tisseo");
 		NeptuneReader.registerSchema(neptuneSchemaUrl);
+		setName("Réseau Tisséo (Métro, Bus, Tram)");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override
@@ -51,6 +54,19 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 	@Override
 	public String getSource() {
 		return SOURCE_TISSEO;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler#getWikiURL()
+	 */
+	@Override
+	public URL getWikiURL() {
+		try {
+			return new URL("http://wiki.openstreetmap.org/wiki/Toulouse/Transports_en_commun#Réseau_Tisséo");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override

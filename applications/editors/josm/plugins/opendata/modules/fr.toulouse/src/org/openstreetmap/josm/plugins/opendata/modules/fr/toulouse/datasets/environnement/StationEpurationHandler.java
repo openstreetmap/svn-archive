@@ -24,6 +24,7 @@ public class StationEpurationHandler extends ToulouseDataSetHandler {
 	public StationEpurationHandler() {
 		super(12500, "man_made=wastewater_plant");
 		setWikiPage("Stations d'épuration");
+		setCategory(CAT_ENVIRONNEMENT);
 	}
 
 	@Override

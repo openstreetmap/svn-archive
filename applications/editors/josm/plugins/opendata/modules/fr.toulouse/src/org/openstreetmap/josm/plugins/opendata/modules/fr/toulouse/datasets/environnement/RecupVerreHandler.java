@@ -24,6 +24,7 @@ public class RecupVerreHandler extends ToulouseDataSetHandler {
 	public RecupVerreHandler() {
 		super(12496, "amenity=recycling");
 		setWikiPage("Récup' Verre");
+		setCategory(CAT_ENVIRONNEMENT);
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class EquipementsHandler extends SncfDataSetHandler {
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsXlsFilename(filename, "gare_20......");
+		return acceptsCsvXlsFilename(filename, "gare_20......");
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class EquipementsHandler extends SncfDataSetHandler {
 	 */
 	@Override
 	public LatLon getSpreadSheetCoor(EastNorth en, String[] fields) {
-		// Lambert II coordinates offset by 2000000 (see http://fr.wikipedia.org/wiki/Projection_conique_conforme_de_Lambert#Projections_officielles_en_France_m.C3.A9tropolitaine)
+		// Lambert II coordinates offset by 2000000 (see http://fr.wikipedia.org/wiki/Projection_conique_conforme_de_Lambert#Projections_officielles_en_France_métropolitaine)
 		return super.getSpreadSheetCoor(new EastNorth(en.getX(), en.getY()-2000000), fields);
 	}
 }

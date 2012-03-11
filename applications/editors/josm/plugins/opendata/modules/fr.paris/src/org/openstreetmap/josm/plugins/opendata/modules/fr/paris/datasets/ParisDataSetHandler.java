@@ -25,34 +25,33 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisConstants;
 public abstract class ParisDataSetHandler extends FrenchDataSetHandler implements ParisConstants {
 	
 	private int documentId;
-	private int portletId;
+	private static final int portletId = 106; // FIXME
 	
-	public ParisDataSetHandler(int documentId, int portletId) {
-		init(documentId, portletId);
+	public ParisDataSetHandler(int documentId) {
+		init(documentId);
 	}
 	
-	public ParisDataSetHandler(int documentId, int portletId, String relevantTag) {
+	public ParisDataSetHandler(int documentId, String relevantTag) {
 		super(relevantTag);
-		init(documentId, portletId);
+		init(documentId);
 	}
 	
-	public ParisDataSetHandler(int documentId, int portletId, boolean relevantUnion, String ... relevantTags) {
+	public ParisDataSetHandler(int documentId, boolean relevantUnion, String ... relevantTags) {
 		super(relevantUnion, relevantTags);
-		init(documentId, portletId);
+		init(documentId);
 	}
 
-	public ParisDataSetHandler(int documentId, int portletId, String ... relevantTags) {
-		this(documentId, portletId, false, relevantTags);
+	public ParisDataSetHandler(int documentId, String ... relevantTags) {
+		this(documentId, false, relevantTags);
 	}
 
-	public ParisDataSetHandler(int documentId, int portletId, boolean relevantUnion, Tag ... relevantTags) {
+	public ParisDataSetHandler(int documentId, boolean relevantUnion, Tag ... relevantTags) {
 		super(relevantUnion, relevantTags);
-		init(documentId, portletId);
+		init(documentId);
 	}
 
-	private final void init(int documentId, int portletId) {
+	private final void init(int documentId) {
 		this.documentId = documentId;
-		this.portletId = portletId;
 	}
 
 	/* (non-Javadoc)
@@ -74,7 +73,24 @@ public abstract class ParisDataSetHandler extends FrenchDataSetHandler implement
 	public final URL getLocalPortalURL() {
 		try {
 			if (documentId > 0) {
-				return new URL(PORTAL + "document_id="+documentId + "&portlet_id="+portletId);
+				return new URL(PORTAL + "jsp/site/Portal.jsp?document_id="+documentId + "&portlet_id="+portletId);
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected abstract String getDirectLink();
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURL()
+	 */
+	@Override
+	public URL getDataURL() {
+		try {
+			if (documentId > 0) {
+				return new URL(PORTAL + "rating/download/?id_resource="+documentId + "&type_resource=document&url="+getDirectLink());
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -24,6 +24,7 @@ public class TheatreHandler extends ToulouseDataSetHandler {
 	public TheatreHandler() {
 		super(12448, "amenity=theatre");
 		setWikiPage("Théâtres");
+		setCategory(CAT_CULTURE);
 	}
 
 	@Override

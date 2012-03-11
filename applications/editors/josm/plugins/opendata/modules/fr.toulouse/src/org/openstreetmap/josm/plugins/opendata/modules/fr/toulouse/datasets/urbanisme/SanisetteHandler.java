@@ -24,6 +24,7 @@ public class SanisetteHandler extends ToulouseDataSetHandler {
 	public SanisetteHandler() {
 		super(12584, "amenity=toilets");
 		setWikiPage("Sanisettes");
+		setCategory(CAT_URBANISME);
 	}
 
 	@Override

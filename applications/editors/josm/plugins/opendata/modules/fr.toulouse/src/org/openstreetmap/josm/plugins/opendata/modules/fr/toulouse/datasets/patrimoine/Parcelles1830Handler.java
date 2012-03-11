@@ -23,6 +23,8 @@ public class Parcelles1830Handler extends ToulouseDataSetHandler {
 
 	public Parcelles1830Handler() {
 		super(12534);
+		setName("Parcellaire de 1830");
+		setCategory(CAT_PATRIMOINE);
 	}
 
 	@Override

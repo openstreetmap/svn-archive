@@ -24,6 +24,7 @@ public class LudothequeHandler extends ToulouseDataSetHandler {
 	public LudothequeHandler() {
 		super(12420, "amenity=toy_library");
 		setWikiPage("Ludothèques");
+		setCategory(CAT_CULTURE);
 	}
 	
 	@Override

@@ -13,30 +13,31 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.enfance;
+package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
+import javax.swing.ImageIcon;
 
-public class CrechesHandler extends ToulouseDataSetHandler {
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
-	public CrechesHandler() {
-		super(12462, "amenity=kindergarten");
-		setWikiPage("Crèches");
-		setCategory(CAT_ENFANCE);
+public class DataSetCategory {
+
+	private final String name;
+	private final ImageIcon icon;
+	
+	public DataSetCategory(String name, ImageIcon icon) {
+		this.name = name;
+		this.icon = icon;
+	}
+	
+	public DataSetCategory(String name, String iconName) {
+		this(name, iconName != null && !iconName.isEmpty() ? OdUtils.getImageIcon(iconName) : null);
 	}
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Creches");
+	public final String getName() {
+		return name;
 	}
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.put("amenity", "kindergarten");
-			replace(n, "NOM", "name");
-		}
+	public final ImageIcon getIcon() {
+		return icon;
 	}
 }

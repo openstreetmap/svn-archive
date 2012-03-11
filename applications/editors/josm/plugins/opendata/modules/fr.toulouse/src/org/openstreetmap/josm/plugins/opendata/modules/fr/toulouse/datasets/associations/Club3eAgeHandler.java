@@ -24,6 +24,7 @@ public class Club3eAgeHandler extends ToulouseDataSetHandler {
 	public Club3eAgeHandler() {
 		super(12587, "leisure=club", "club=elderly");
 		setWikiPage("Clubs du 3ème âge");
+		setCategory(CAT_ASSOCIATIONS);
 	}
 	
 	@Override

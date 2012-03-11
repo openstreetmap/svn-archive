@@ -57,6 +57,14 @@ public abstract class AbstractModule implements Module, OdConstants {
 	}
 
 	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.modules.Module#getDisplayedName()
+	 */
+	@Override
+	public String getDisplayedName() {
+		return info.name;
+	}
+
+	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.opendata.core.modules.Module#getMapPaintStyleSourceProvider()
 	 */
 	@Override

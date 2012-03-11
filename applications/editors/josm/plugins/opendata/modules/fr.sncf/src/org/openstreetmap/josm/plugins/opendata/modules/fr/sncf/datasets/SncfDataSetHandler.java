@@ -81,4 +81,17 @@ public abstract class SncfDataSetHandler extends FrenchDataSetHandler implements
 		}
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
+	 */
+	@Override
+	public URL getLicenseURL() {
+		try {
+			return new URL("http://test.data-sncf.com/licence");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

@@ -24,6 +24,7 @@ public class PMRHandler extends ToulouseDataSetHandler {
 	public PMRHandler() {
 		super(12538, "amenity=parking_space");
 		setWikiPage("PMR");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override

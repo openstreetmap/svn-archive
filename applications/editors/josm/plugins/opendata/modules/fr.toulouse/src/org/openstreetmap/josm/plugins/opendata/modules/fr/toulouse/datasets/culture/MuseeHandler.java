@@ -25,6 +25,7 @@ public class MuseeHandler extends ToulouseDataSetHandler {
 	public MuseeHandler() {
 		super(12426, "tourism=museum");
 		setWikiPage("Musées");
+		setCategory(CAT_CULTURE);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class RecupEmballageHandler extends ToulouseDataSetHandler {
 	public RecupEmballageHandler() {
 		super(12494, "amenity=recycling");
 		setWikiPage("Récup' Emballage");
+		setCategory(CAT_ENVIRONNEMENT);
 	}
 
 	@Override

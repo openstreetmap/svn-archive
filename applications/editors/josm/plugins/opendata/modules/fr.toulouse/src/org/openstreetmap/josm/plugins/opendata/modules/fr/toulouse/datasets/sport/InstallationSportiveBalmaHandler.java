@@ -24,6 +24,7 @@ public class InstallationSportiveBalmaHandler extends ToulouseDataSetHandler {
 	public InstallationSportiveBalmaHandler() {
 		super(14010);
 		setWikiPage("Installations sportives");
+		setCategory(CAT_SPORT);
 	}
 
 	@Override

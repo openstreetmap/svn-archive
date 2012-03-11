@@ -13,24 +13,29 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.paris;
+package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface ParisConstants extends OdConstants {
-		
-	/**
-	 * Source
-	 */
-	public static final String SOURCE = "opendataparis";
-	
-	/**
-	 * Portal
-	 */
-	public static final String PORTAL = "http://opendata.paris.fr/opendata/";
+public abstract class DataSetUpdater implements OdConstants {
 
-	/**
-	 * Icons
-	 */
-	public static final String ICON_PARIS_24 = "data.fr.paris_24.png";
+	public static final void updateDataSet(DataSet dataSet, AbstractDataSetHandler handler, File associatedFile) {
+		if (dataSet != null && handler != null) {
+			if (associatedFile != null) {
+				handler.setAssociatedFile(associatedFile);
+				handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(associatedFile.lastModified())));
+			}
+			if (!Main.pref.getBoolean(PREF_RAWDATA)) {
+				handler.updateDataSet(dataSet);
+			}
+			handler.checkDataSetSource(dataSet);
+			handler.checkNames(dataSet);
+		}
+	}
 }

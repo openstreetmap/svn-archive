@@ -49,14 +49,20 @@ public class ZipReader extends AbstractReader implements OdConstants {
 
 	private final ZipInputStream zis;
 	private final AbstractDataSetHandler handler;
+	
+	private File file;
     
-    public ZipReader(ZipInputStream zis, AbstractDataSetHandler handler) {
-        this.zis = zis;
+    public ZipReader(InputStream in, AbstractDataSetHandler handler) {
+        this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
         this.handler = handler;
     }
 
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
-		return new ZipReader(new ZipInputStream(in), handler).parseDoc(instance);
+		return new ZipReader(in, handler).parseDoc(instance);
+	}
+	
+	public final File getReadFile() {
+		return file;
 	}
 	
 	private static final File createTempDir() throws IOException {
@@ -80,7 +86,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 		dir.delete();
 	}
 
-	private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
+	public DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
 		
 	    final File temp = createTempDir();
 	    final List<File> candidates = new ArrayList<File>();
@@ -90,30 +96,38 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			while ((entry = zis.getNextEntry()) != null) {
 				File file = new File(temp + File.separator + entry.getName());
 			    if (file.exists() && !file.delete()) {
-			        throw new IOException("Could not delete temp file: " + file.getAbsolutePath());
+			        throw new IOException("Could not delete temp file/dir: " + file.getAbsolutePath());
 			    }
-				if (!file.createNewFile()) {
-					throw new IOException("Could not create temp file: " + file.getAbsolutePath());
-				}
-				FileOutputStream fos = new FileOutputStream(file);
-				byte[] buffer = new byte[8192];
-				int count = 0;
-				while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
-					fos.write(buffer, 0, count);
-				}
-				fos.close();
-				for (String ext : new String[] {
-						CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, XML_EXT
-				}) {
-					if (entry.getName().toLowerCase().endsWith("."+ext)) {
-						candidates.add(file);
-						System.out.println(entry.getName());
-						break;
+			    if (!entry.isDirectory()) {
+			    	if (!file.createNewFile()) { 
+			    		throw new IOException("Could not create temp file: " + file.getAbsolutePath());
+			    	}
+					FileOutputStream fos = new FileOutputStream(file);
+					byte[] buffer = new byte[8192];
+					int count = 0;
+					while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
+						fos.write(buffer, 0, count);
 					}
+					fos.close();
+					long time = entry.getTime();
+					if (time > -1) {
+						file.setLastModified(time);
+					}
+					for (String ext : new String[] {
+							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, XML_EXT
+					}) {
+						if (entry.getName().toLowerCase().endsWith("."+ext)) {
+							candidates.add(file);
+							System.out.println(entry.getName());
+							break;
+						}
+					}
+				} else if (!file.mkdir()) {
+					throw new IOException("Could not create temp dir: " + file.getAbsolutePath());
 				}
 			}
 			
-			File file = null;
+			file = null;
 			
 			if (candidates.size() > 1) {
 				CandidateChooser dialog = (CandidateChooser) new CandidateChooser(instance.getWindowParent(), candidates).showDialog();
@@ -158,7 +172,8 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					ds.mergeFrom(from);
 				}
 			}
-			
+	    } catch (IllegalArgumentException e) {
+	    	System.err.println(e.getMessage());
 	    } finally {
 	    	deleteDir(temp);
 	    }

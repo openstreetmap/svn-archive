@@ -24,6 +24,7 @@ public class Zone30Handler extends VoirieHandler {
 	public Zone30Handler() {
 		super(12548, "Street", "maxspeed=30");
 		setWikiPage("Zones 30");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class EquipementCulturelBalmaHandler extends ToulouseDataSetHandler {
 	public EquipementCulturelBalmaHandler() {
 		super(13997);
 		setWikiPage("Équipements Culturels");
+		setCategory(CAT_CULTURE);
 	}
 
 	@Override

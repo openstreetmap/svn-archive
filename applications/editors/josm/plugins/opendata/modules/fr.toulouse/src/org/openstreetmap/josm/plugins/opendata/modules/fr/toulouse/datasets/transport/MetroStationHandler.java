@@ -23,6 +23,8 @@ public class MetroStationHandler extends ToulouseDataSetHandler {
 
 	public MetroStationHandler() {
 		super(12542, "subway=yes");
+		setName("Stations de métro");
+		setCategory(CAT_TRANSPORT);
 	}
 
 	@Override

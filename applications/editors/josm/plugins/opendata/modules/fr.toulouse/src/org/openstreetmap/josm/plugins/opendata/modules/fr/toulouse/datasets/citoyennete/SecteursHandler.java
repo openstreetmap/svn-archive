@@ -24,6 +24,7 @@ public class SecteursHandler extends ToulouseDataSetHandler {
 	public SecteursHandler() {
 		super(12580, "admin_level=10");
 		setWikiPage("Secteurs de proximité");
+		setCategory(CAT_CITOYENNETE);
 	}
 
 	@Override

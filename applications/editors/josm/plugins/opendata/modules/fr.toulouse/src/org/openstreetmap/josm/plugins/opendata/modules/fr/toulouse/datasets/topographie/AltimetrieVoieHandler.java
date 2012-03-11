@@ -23,6 +23,8 @@ public class AltimetrieVoieHandler extends ToulouseDataSetHandler  {
 	
 	public AltimetrieVoieHandler() {
 		super(12660, "ele");
+		setName("Altimétrie des voies");
+		setCategory(CAT_TOPOGRAPHIE);
 	}
 
 	@Override

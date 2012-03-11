@@ -20,6 +20,12 @@ public class ConflationSettings {
     private DataSet subjectDataSet;
     private OsmDataLayer subjectLayer;
     private DataSet referenceDataSet;
+    
+    public double distanceWeight;
+    public double distanceCutoff;
+    public String keyString;
+    public double stringWeight;
+    public double stringCutoff;
 
     /**
      * @return the subjectSelection

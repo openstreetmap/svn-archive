@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.awt.Component;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -9,15 +10,14 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.GBC;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Dialog for selecting objects and configuring conflation settings
  */
 public class SettingsDialog extends ExtendedDialog {
-
-    private JPanel costsPanel;
-    private JCheckBox distanceCheckBox;
+    
     private JButton freezeReferenceButton;
     private JButton freezeSubjectButton;
     private JPanel jPanel3;
@@ -30,6 +30,14 @@ public class SettingsDialog extends ExtendedDialog {
     private JLabel subjectLayerLabel;
     private JPanel subjectPanel;
     private JLabel subjectSelectionLabel;
+    JCheckBox distanceCheckBox;
+    JSpinner distanceWeightSpinner;
+    JSpinner distanceCutoffSpinner;
+    JCheckBox stringCheckBox;
+    JSpinner stringWeightSpinner;
+    JSpinner stringCutoffSpinner;
+    JTextField stringTextField;
+    
     ArrayList<OsmPrimitive> subjectSelection = null;
     ArrayList<OsmPrimitive> referenceSelection = null;
     OsmDataLayer referenceLayer;
@@ -40,7 +48,7 @@ public class SettingsDialog extends ExtendedDialog {
     public SettingsDialog() {
         super(Main.parent,
                 tr("Configure conflation settings"),
-                new String[]{tr("Conflate"), tr("Cancel")},
+                new String[]{tr("OK"), tr("Cancel")},
                 false);
         initComponents();
     }
@@ -61,8 +69,6 @@ public class SettingsDialog extends ExtendedDialog {
         jPanel5 = new JPanel();
         restoreSubjectButton = new JButton(new RestoreSubjectAction());
         freezeSubjectButton = new JButton(new FreezeSubjectAction());
-        costsPanel = new JPanel();
-        distanceCheckBox = new JCheckBox();
         JPanel pnl = new JPanel();
         pnl.setLayout(new BoxLayout(pnl, BoxLayout.PAGE_AXIS));
         referencePanel.setBorder(BorderFactory.createTitledBorder(tr("Reference")));
@@ -90,12 +96,35 @@ public class SettingsDialog extends ExtendedDialog {
         jPanel5.add(freezeSubjectButton);
         subjectPanel.add(jPanel5);
         pnl.add(subjectPanel);
+        
+        JPanel costsPanel = new JPanel();
         costsPanel.setBorder(BorderFactory.createTitledBorder(tr("Costs")));
-        costsPanel.setLayout(new BoxLayout(costsPanel, BoxLayout.LINE_AXIS));
+        costsPanel.setLayout(new GridBagLayout());
+        
+        costsPanel.add(GBC.glue(1, 1), GBC.std());
+        costsPanel.add(new JLabel(tr("Weight")), GBC.std());
+        costsPanel.add(new JLabel(tr("Cutoff")), GBC.eol());
+        
+        distanceCheckBox = new JCheckBox();
         distanceCheckBox.setSelected(true);
         distanceCheckBox.setText(tr("Distance"));
-        distanceCheckBox.setEnabled(false);
-        costsPanel.add(distanceCheckBox);
+        costsPanel.add(distanceCheckBox, GBC.std());
+        distanceWeightSpinner = new JSpinner(new SpinnerNumberModel(1.0, null, null, 1.0));
+        costsPanel.add(distanceWeightSpinner, GBC.std());
+        distanceCutoffSpinner = new JSpinner(new SpinnerNumberModel(100.0, null, null, 1.0));
+        costsPanel.add(distanceCutoffSpinner, GBC.eol());
+        
+        stringCheckBox = new JCheckBox();
+        stringCheckBox.setSelected(false);
+        stringCheckBox.setText(tr("String"));
+        costsPanel.add(stringCheckBox, GBC.std());
+        stringWeightSpinner = new JSpinner(new SpinnerNumberModel(10.0, null, null, 1.0));
+        costsPanel.add(stringWeightSpinner, GBC.std());
+        stringCutoffSpinner = new JSpinner(new SpinnerNumberModel(100.0, null, null, 1.0));
+        costsPanel.add(stringCutoffSpinner, GBC.eol());
+        stringTextField = new JTextField("name", 14);
+        costsPanel.add(stringTextField, GBC.std());
+        
         pnl.add(costsPanel);
         setContent(pnl);
         setupDialog();
@@ -119,6 +148,20 @@ public class SettingsDialog extends ExtendedDialog {
         settings.setSubjectDataSet(subjectDataSet);
         settings.setSubjectLayer(subjectLayer);
         settings.setSubjectSelection(subjectSelection);
+        
+        settings.distanceCutoff = (Double)distanceCutoffSpinner.getValue();
+        if (distanceCheckBox.isSelected())
+            settings.distanceWeight = (Double)distanceWeightSpinner.getValue();
+        else
+            settings.distanceWeight = 0;
+        settings.stringCutoff = (Double)stringCutoffSpinner.getValue();
+        if (stringCheckBox.isSelected())
+            settings.stringWeight = (Double)stringWeightSpinner.getValue();
+        else
+            settings.stringWeight = 0;
+            
+        settings.keyString = stringTextField.getText();
+        
         return settings;
     }
 

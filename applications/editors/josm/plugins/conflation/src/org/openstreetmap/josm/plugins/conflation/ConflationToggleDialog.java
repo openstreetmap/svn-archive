@@ -273,7 +273,7 @@ public class ConflationToggleDialog extends ToggleDialog
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 cost[i][j] = ConflationUtils.calcCost(
-                        settings.getSubjectSelection().get(i), settings.getReferenceSelection().get(j));
+                        settings.getSubjectSelection().get(i), settings.getReferenceSelection().get(j), settings);
             }
         }
         // perform assignment using Hungarian algorithm

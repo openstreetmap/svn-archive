@@ -33,10 +33,14 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
     protected ConflationCandidateList candidates;
     protected ConflationCandidate selectedCandidate = null;
     
-    public ConflationLayer(DataSet ds, ConflationCandidateList candidates) {
+    public ConflationLayer(ConflationCandidateList candidates) {
         super(tr("Conflation"));
         MapView.addLayerChangeListener(this);
         this.candidates = candidates;
+    }
+    
+    public ConflationLayer() {
+        this(null);
     }
 
     /**
@@ -142,14 +146,17 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
                     new LayerListPopup.InfoAction(this)};
     }
 
+    @Override
     public void activeLayerChange(Layer layer, Layer layer1) {
         //TODO: possibly change arrow styling depending on active layer?
     }
 
+    @Override
     public void layerAdded(Layer layer) {
         // shouldn't have to do anything here
     }
 
+    @Override
     public void layerRemoved(Layer layer) {
         //TODO: if ref or non-ref layer removed, remove arrows
     }
@@ -161,6 +168,11 @@ public class ConflationLayer extends Layer implements LayerChangeListener {
      */
     public ConflationCandidateList getCandidates() {
         return this.candidates;
+    }
+    
+    public void setCandidates(ConflationCandidateList candidates) {
+        this.candidates = candidates;
+        // TODO: does repaint automatically occur?
     }
     
     public void setSelectedCandidate(ConflationCandidate c) {

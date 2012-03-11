@@ -46,8 +46,8 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
       }
       
       TagDialog dialog = new TagDialog(pluginDir, selection);
-      dialog.setVisible(true);
-      
+      dialog.showDialog();
+
    }
 
    public void actionPerformed(ActionEvent e)

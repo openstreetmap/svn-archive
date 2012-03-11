@@ -58,7 +58,7 @@ public class ColumbusCSVImporter extends FileImporter {
 			progressMonitor = NullProgressMonitor.INSTANCE;
 		}
 
-		progressMonitor.beginTask(String.format("Importing CSV file %s...",
+		progressMonitor.beginTask(String.format(tr("Importing CSV file '%s'..."),
 				file.getName(), 4));
 		progressMonitor.setTicksCount(1);
 
@@ -89,19 +89,22 @@ public class ColumbusCSVImporter extends FileImporter {
 				progressMonitor.setTicksCount(4);
 
 				if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
-					MarkerLayer ml = new MarkerLayer(gpxData, tr(
-							"Markers from {0}", file.getName()), file, gpxLayer);
+					MarkerLayer ml = new MarkerLayer(gpxData, String.format(tr("Markers from %s"), file.getName()), file, gpxLayer);
 					if (ml.data.size() > 0) {
 						Main.main.addLayer(ml);
+					} else {
+						System.err.println("Warning: File contains no markers.");
 					}
-					
-					/* WORKAROUND (Bugfix: #6912): Set marker offset to 0.0 to avoid message "This is after the end of the recording" */ 
+					/* WORKAROUND (Bugfix: #6912): Set marker offset to 0.0 to avoid message "This is after the end of the recording"  
 					for (Marker marker : ml.data) {
 						marker.offset = 0.0;						
-					}
+					}*/
+				} else {
+					System.err.println("Warning: Option 'marker.makeautomarkers' is not set; audio marker layer is not created.");
 				}
 			} catch (Exception e) {
 				// catch and forward exception
+				e.printStackTrace(System.err);
 				throw new IllegalDataException(e);
 			} finally { // take care of monitor...
 				progressMonitor.finishTask();

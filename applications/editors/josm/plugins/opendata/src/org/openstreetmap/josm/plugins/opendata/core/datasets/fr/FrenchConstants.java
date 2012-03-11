@@ -22,7 +22,7 @@ public interface FrenchConstants extends OdConstants {
 	/**
 	 * Portal
 	 */
-	public static final String FRENCH_PORTAL = "http://www.data.gouv.fr/donnees/view/";
+	public static final String FRENCH_PORTAL = "http://www.data.gouv.fr/";
 	
 	/**
 	 * Icon

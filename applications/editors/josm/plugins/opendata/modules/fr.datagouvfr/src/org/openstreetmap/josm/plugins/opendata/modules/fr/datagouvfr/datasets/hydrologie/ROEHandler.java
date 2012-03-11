@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.hydrologie;
 
+import java.net.MalformedURLException;
+
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
@@ -23,6 +25,12 @@ public class ROEHandler extends DataGouvDataSetHandler {
 
 	public ROEHandler() {
 		super("référentiel-des-obstacles-à-l'écoulement-30381987");
+		setName("Référentiel des Obstacles à l’Écoulement");
+		try {
+			setDataURL("http://www.eaufrance.fr/docs/ROE/donnee_obstacles_ecoulement_v3.zip");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

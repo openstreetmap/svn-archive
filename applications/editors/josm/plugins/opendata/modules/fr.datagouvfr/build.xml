@@ -59,7 +59,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for ${module.jar} ... "/>
-        <javac srcdir="${module.src.dir}" debug="true" destdir="${module.build.dir}" includeAntRuntime="false">
+        <javac srcdir="${module.src.dir}" debug="true" destdir="${module.build.dir}" includeAntRuntime="false" encoding="UTF-8" >
             <classpath>
                 <pathelement location="${josm}"/>
                 <pathelement location="${opendata}"/>

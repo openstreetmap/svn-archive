@@ -95,6 +95,10 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			ZipEntry entry;
 			while ((entry = zis.getNextEntry()) != null) {
 				File file = new File(temp + File.separator + entry.getName());
+		    	File parent = file.getParentFile();
+		    	if (parent != null && !parent.exists()) {
+		    		parent.mkdirs();
+		    	}
 			    if (file.exists() && !file.delete()) {
 			        throw new IOException("Could not delete temp file/dir: " + file.getAbsolutePath());
 			    }

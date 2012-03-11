@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.openstreetmap.josm.data.projection.Projection;
@@ -64,5 +65,26 @@ public abstract class DataGouvDataSetHandler extends FrenchDataSetHandler implem
 	@Override
 	public URL getLocalPortalURL() {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
+	 */
+	@Override
+	public URL getLicenseURL() {
+		try {
+			return new URL(FRENCH_PORTAL+"Licence-Ouverte-Open-Licence");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected final void setDataGouvFrUrl(String suffix) {
+		try {
+			setDataURL(FRENCH_PORTAL+"var/download/"+suffix);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 }

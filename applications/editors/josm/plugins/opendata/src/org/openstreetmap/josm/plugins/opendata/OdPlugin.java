@@ -18,19 +18,23 @@ package org.openstreetmap.josm.plugins.opendata;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MenuScroller;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -54,6 +58,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsImporter;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.tools.Pair;
 
 public final class OdPlugin extends Plugin implements OdConstants {
 
@@ -92,19 +97,25 @@ public final class OdPlugin extends Plugin implements OdConstants {
 		return instance;
 	}
 	
+	private JMenu getModuleMenu(Module module) {
+		String moduleName = module.getDisplayedName();
+		if (moduleName == null || moduleName.isEmpty()) {
+			moduleName = module.getModuleInformation().getName();
+		}
+		JMenu moduleMenu = new JMenu(moduleName);
+		moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
+		return moduleMenu;
+	}
+	
 	private void buildMenu() {
+        int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         for (Module module : ModuleHandler.moduleList) {
         	Map<DataSetCategory, JMenu> catMenus = new HashMap<DataSetCategory, JMenu>();
         	JMenu moduleMenu = null;
         	for (AbstractDataSetHandler handler: module.getHandlers()) {
-        		if (handler.getDataURL() != null) {
+        		if (handler.getDataURL() != null || (handler.getDataURLs() != null && !handler.getDataURLs().isEmpty())) {
         			if (moduleMenu == null) {
-        				String moduleName = module.getDisplayedName();
-        				if (moduleName == null || moduleName.isEmpty()) {
-        					moduleName = module.getModuleInformation().getName();
-        				}
-        				moduleMenu = new JMenu(moduleName);
-        				moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
+        				moduleMenu = getModuleMenu(module);
         			}
         			DataSetCategory cat = handler.getCategory();
         			JMenu endMenu = null;
@@ -117,15 +128,35 @@ public final class OdPlugin extends Plugin implements OdConstants {
         			if (endMenu == null) {
         				endMenu = moduleMenu;
         			}
-        			endMenu.add(new DownloadDataAction(handler));
+        			String handlerName = handler.getName();
+        			if (handlerName == null || handlerName.isEmpty()) {
+        				handlerName = handler.getClass().getName();
+        			}
+        			if (handler.getDataURL() != null) {
+        				endMenu.add(new DownloadDataAction(handlerName, handler.getDataURL()));
+        			} else if (handler.getDataURLs() != null) {
+        				JMenu handlerMenu = new JMenu(handlerName);
+        				JMenuItem item = null;
+        				for (Pair<String, URL> pair : handler.getDataURLs()) {
+        					if (pair != null && pair.a != null && pair.b != null) {
+        						item = handlerMenu.add(new DownloadDataAction(pair.a, pair.b));
+        					}
+        				}
+        				if (item != null) {
+        					MenuScroller.setScrollerFor(handlerMenu, (screenHeight / item.getPreferredSize().height)-3);
+        					endMenu.add(handlerMenu);
+        				}
+        			}
         		}
         	}
         	if (moduleMenu != null) {
+        		//MenuScroller.setScrollerFor(moduleMenu, screenHeight / moduleMenu.getItem(0).getPreferredSize().height);
         		menu.add(moduleMenu);
         	}
         }
         menu.addSeparator();
-        MainMenu.add(menu, new OpenPreferencesActions());
+        /*JMenuItem itemIcon =*/ MainMenu.add(menu, new OpenPreferencesActions());
+        //MenuScroller.setScrollerFor(menu, screenHeight / itemIcon.getPreferredSize().height);
 	}
 
 	/* (non-Javadoc)

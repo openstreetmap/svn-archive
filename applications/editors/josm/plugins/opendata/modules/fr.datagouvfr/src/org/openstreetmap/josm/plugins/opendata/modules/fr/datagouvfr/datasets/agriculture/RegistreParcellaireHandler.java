@@ -15,10 +15,17 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.agriculture;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDepartment;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
+import org.openstreetmap.josm.tools.Pair;
 
 public class RegistreParcellaireHandler extends DataGouvDataSetHandler {
 	
@@ -54,6 +61,7 @@ public class RegistreParcellaireHandler extends DataGouvDataSetHandler {
 	
 	public RegistreParcellaireHandler() {
 		super();
+		setName("Registre Parcellaire Graphique");
 	}
 
 	@Override
@@ -122,5 +130,25 @@ public class RegistreParcellaireHandler extends DataGouvDataSetHandler {
 				}
 			}
 		}
+	}
+
+	private Pair<String, URL> getRpgURL(String number, String name) throws MalformedURLException {
+		return new Pair<String, URL>(number+" - "+name, new URL("http://www.data.gouv.fr/var/download/ign/RPG_2010_"+number+".ZIP"));
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURLs()
+	 */
+	@Override
+	public List<Pair<String, URL>> getDataURLs() {
+		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		try {
+			for (FrenchDepartment dpt : FrenchDepartment.allDepartments) {
+				result.add(getRpgURL(dpt.getCode(), dpt.getName()));
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

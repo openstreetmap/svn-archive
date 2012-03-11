@@ -18,12 +18,15 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.c
 import java.nio.charset.Charset;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 
 public class BibliothequesHandler extends DataGouvDataSetHandler {
 
 	public BibliothequesHandler() {
 		super("Adresses-des-bibliothèques-municipales-30382179", lambert93);
+		setName("Bibliothèques municipales");
+		setDataGouvFrUrl("lieux de lecture_geoloc.txt");
 	}
 
 	@Override
@@ -33,8 +36,9 @@ public class BibliothequesHandler extends DataGouvDataSetHandler {
 
 	@Override
 	public void updateDataSet(DataSet ds) {
-		// TODO Auto-generated method stub
-		
+		for (Node n : ds.getNodes()) {
+			n.put("amenity", "library");
+		}
 	}
 
 	/* (non-Javadoc)

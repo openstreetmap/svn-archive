@@ -62,6 +62,10 @@ public class ProjectionPatterns implements OdConstants {
 	}
 
 	public static final Pattern getCoordinatePattern(String coor, String proj) {
-    	return Pattern.compile("(?:.*(?:"+coor+").*(?:"+proj+").*)|(?:.*("+proj+").*(?:"+coor+").*)", Pattern.CASE_INSENSITIVE);
+		if (proj != null && !proj.isEmpty()) {
+			return Pattern.compile("(?:.*(?:"+coor+").*(?:"+proj+").*)|(?:.*("+proj+").*(?:"+coor+").*)", Pattern.CASE_INSENSITIVE);
+		} else {
+			return Pattern.compile(coor, Pattern.CASE_INSENSITIVE);
+		}
     }
 }

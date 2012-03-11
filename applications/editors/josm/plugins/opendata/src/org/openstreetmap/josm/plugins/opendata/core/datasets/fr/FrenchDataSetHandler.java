@@ -97,7 +97,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 	public URL getNationalPortalURL() {
 		try {
 			if (nationalPortalPath != null && !nationalPortalPath.isEmpty()) {
-				return new URL(FRENCH_PORTAL + nationalPortalPath);
+				return new URL(FRENCH_PORTAL + "donnees/view/" + nationalPortalPath);
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -29,8 +29,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class OpenPreferencesActions extends JosmAction implements OdConstants {
 	
     public OpenPreferencesActions() {
+    	super(false);
         putValue(NAME, tr("Preferences"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", ICON_CORE_24));
+		putValue("toolbar", "opendata_open_preferences");
     }
     
 	@Override

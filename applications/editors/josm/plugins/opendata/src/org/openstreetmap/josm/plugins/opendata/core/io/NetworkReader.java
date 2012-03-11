@@ -19,12 +19,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
@@ -37,13 +40,14 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
-public class NetworkReader extends OsmServerReader {
+public class NetworkReader extends OsmServerReader implements OdConstants {
 
 	private final String url;
 	private final AbstractDataSetHandler handler;
 	private Class<? extends AbstractReader> readerClass;
 
 	private File file;
+	private String filename;
 	
     public NetworkReader(String url, AbstractDataSetHandler handler, Class<? extends AbstractReader> readerClass) {
         CheckParameterUtil.ensureParameterNotNull(url, "url");
@@ -57,6 +61,64 @@ public class NetworkReader extends OsmServerReader {
 		return file;
 	}
 
+	public final String getReadFileName() {
+		return filename;
+	}
+
+	private Class<? extends AbstractReader> findReaderByAttachment() {
+		String cdisp = this.activeConnection.getHeaderField("Content-disposition");
+		if (cdisp != null) {
+			Matcher m = Pattern.compile("attachment; filename=(.*)").matcher(cdisp);
+			if (m.matches()) {
+				filename = m.group(1);
+				return findReaderByExtension(filename.toLowerCase());
+			}
+		}
+		return null;
+	}
+
+	private Class<? extends AbstractReader> findReaderByContentType() {
+    	String contentType = this.activeConnection.getContentType();
+    	if (contentType.startsWith("application/zip")) {
+    		return ZipReader.class;
+    	} else if (contentType.startsWith("application/vnd.ms-excel")) {
+    		return XlsReader.class;
+    	} else if (contentType.startsWith("application/octet-stream")) {
+        	//return OdsReader.class;//FIXME, can be anything
+    	} else if (contentType.startsWith("text/plain")) {//TODO: extract charset
+    		return CsvReader.class;
+    	} else if (contentType.startsWith("tdyn/html")) {
+        	//return CsvReader.class;//FIXME, can also be .tar.gz
+    	} else {
+    		System.err.println("Unsupported content type: "+contentType);
+    	}
+    	return null;
+	}
+
+	private Class<? extends AbstractReader> findReaderByExtension(String filename) {
+    	if (filename.endsWith("."+XLS_EXT)) {
+    		return XlsReader.class;
+    	} else if (filename.endsWith("."+CSV_EXT)) {
+    		return CsvReader.class;
+    	} else if (filename.endsWith("."+ODS_EXT)) {
+    		return OdsReader.class;
+    	} else if (filename.endsWith("."+KML_EXT)) {
+    		return KmlReader.class;
+    	} else if (filename.endsWith("."+KMZ_EXT)) {
+    		return KmzReader.class;
+    	} else if (filename.endsWith("."+MIF_EXT)) {
+    		return MifReader.class;
+    	} else if (filename.endsWith("."+SHP_EXT)) {
+    		return ShpReader.class;
+    	} else if (filename.endsWith("."+TAB_EXT)) {
+    		return TabReader.class;
+    	} else if (filename.endsWith("."+ZIP_EXT)) {
+    		return ZipReader.class;
+    	} else {
+    		return null;
+    	}
+	}
+
 	@Override
 	public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
         InputStream in = null;
@@ -68,12 +130,19 @@ public class NetworkReader extends OsmServerReader {
             progressMonitor.subTask(tr("Downloading data..."));
             ProgressMonitor instance = progressMonitor.createSubTaskMonitor(1, false);
             if (readerClass == null) {
-            	String contentType = this.activeConnection.getContentType();
-            	if (contentType.startsWith("application/zip")) {
-            		readerClass = ZipReader.class;
-            	} else {
-            		throw new IllegalArgumentException("Unsupported content type: "+contentType);
+            	readerClass = findReaderByAttachment();
+            }
+            if (readerClass == null) {
+            	readerClass = findReaderByContentType();
+            }
+            if (readerClass == null) {
+            	readerClass = findReaderByExtension(url.toLowerCase());
+            	if (readerClass != null) {
+            		filename = url.substring(url.lastIndexOf('/'));
             	}
+            }
+            if (readerClass == null) {
+           		throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
             }
             if (readerClass.equals(ZipReader.class)) {
             	ZipReader zipReader = new ZipReader(in, handler);

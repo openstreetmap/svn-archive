@@ -55,7 +55,7 @@ public class DownloadDataTask extends DownloadOsmTask {
 	public boolean acceptsUrl(String url) {
 		for (Module module : ModuleHandler.moduleList) {
 			for (AbstractDataSetHandler handler : module.getHandlers()) {
-				if (handler != null && handler.getDataURL() != null && url.equals(handler.getDataURL().toString())) {
+				if (handler.acceptsUrl(url)) {
 					this.handler = handler;
 					return true;
 				}
@@ -76,8 +76,15 @@ public class DownloadDataTask extends DownloadOsmTask {
 		@Override
 		protected OsmDataLayer createNewLayer(String layerName) {
             File associatedFile = ((NetworkReader)reader).getReadFile();
+            String filename = ((NetworkReader)reader).getReadFileName();
             if (layerName == null || layerName.isEmpty()) {
-                layerName = associatedFile == null ? OsmDataLayer.createNewName() : associatedFile.getName();
+            	if (associatedFile != null) {
+            		layerName = associatedFile.getName();
+            	} else if (filename != null && !filename.isEmpty()) {
+            		layerName = filename;
+            	} else {
+            		layerName = OsmDataLayer.createNewName();
+            	}
             }
     		DataSetUpdater.updateDataSet(dataSet, handler, associatedFile);
     		return new OdDataLayer(dataSet, layerName, associatedFile, handler);

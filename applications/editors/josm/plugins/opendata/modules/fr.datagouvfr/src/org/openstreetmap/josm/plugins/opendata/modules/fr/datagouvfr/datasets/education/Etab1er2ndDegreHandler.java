@@ -27,11 +27,13 @@ public class Etab1er2ndDegreHandler extends DataGouvDataSetHandler {
 
 	public Etab1er2ndDegreHandler() {
 		super("Géolocalisation-des-établissements-d'enseignement-du-premier-degré-et-du-second-degré-du-ministère-d-30378093");
+		setName("Établissements d'enseignement du premier degré et du second degré");
+		setDataGouvFrUrl("MENJVA_etab_geoloc.csv");
 	}
 	
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsCsvFilename(filename, "MENJVA_etab_geoloc.csv-fr");
+		return acceptsCsvFilename(filename, "MENJVA_etab_geoloc(\\.csv-fr)?");
 	}
 
 	@Override

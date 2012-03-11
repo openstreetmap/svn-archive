@@ -15,13 +15,20 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
+import org.openstreetmap.josm.tools.Pair;
 
 public class AssainissementHandler extends DataGouvDataSetHandler {
 
 	public AssainissementHandler() {
 		super("assainissement-collectif-30381843");
+		setName("Assainissement collectif");
 	}
 
 	@Override
@@ -40,5 +47,21 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
 	@Override
 	public int getSheetNumber() {
 		return 1;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURLs()
+	 */
+	@Override
+	public List<Pair<String, URL>> getDataURLs() {
+		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		try {
+			result.add(new Pair<String, URL>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
+			// FIXME problem with 2010 file (blank cells ?)
+			//result.add(new Pair<String, URL>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

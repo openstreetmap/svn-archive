@@ -16,6 +16,7 @@
 package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	private DataSetCategory category;
 	private String sourceDate;
 	private File associatedFile;
+	private URL dataURL;
 
 	public AbstractDataSetHandler() {
 	}
@@ -178,8 +180,18 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 
 	public URL getLicenseURL() {return null;}
 
-	public URL getDataURL() {return null;}
+	public URL getDataURL() {return dataURL;}
 	
+	public final void setDataURL(String url) throws MalformedURLException {
+		this.dataURL = new URL(url);
+	}
+	
+	public final void setDataURL(URL url) {
+		this.dataURL = url;
+	}
+
+	public List<Pair<String,URL>> getDataURLs() {return null;}
+
 	public AbstractReader getReaderForUrl(String url) {return null;}
 
 	public final DataSetCategory getCategory() {
@@ -519,6 +531,20 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 
 	public boolean checkShpNodeProximity() {
+		return false;
+	}
+	
+	public boolean acceptsUrl(String url) {
+		if (getDataURL() != null && url.equals(getDataURL().toString())) {
+			return true;
+		}
+		if (getDataURLs() != null) {
+			for (Pair<String, URL> pair : getDataURLs()) {
+				if (pair.b != null && url.equals(pair.b.toString())) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 }

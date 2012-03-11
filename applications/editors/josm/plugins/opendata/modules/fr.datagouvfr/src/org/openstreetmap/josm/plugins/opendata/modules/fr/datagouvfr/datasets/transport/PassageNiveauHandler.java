@@ -25,11 +25,13 @@ public class PassageNiveauHandler extends DataGouvDataSetHandler {
 
 	public PassageNiveauHandler() {
 		super("Passages-à-niveau-30383135");
+		setName("Passages à niveau");
+		setDataGouvFrUrl("passage_a_niveau.csv");
 	}
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsCsvFilename(filename, "passage_a_niveau.csv-fr");
+		return acceptsCsvFilename(filename, "passage_a_niveau(\\.csv-fr)?");
 	}
 
 	@Override

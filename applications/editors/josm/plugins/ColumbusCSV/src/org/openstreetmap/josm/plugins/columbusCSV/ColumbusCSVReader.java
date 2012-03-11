@@ -453,7 +453,6 @@ public class ColumbusCSVReader {
 		String[] fileNameVariants = new String[] {voxFile, voxFile.toLowerCase(), voxFile.toUpperCase()};
 		
 		for (int i = 0; i < fileNameVariants.length; i++) {
-			System.out.println("Probing "+ fileNameVariants[i]);
 			File file = new File(fileDir + File.separator + fileNameVariants[i]);
 			if (file.exists()) {
 				return file;

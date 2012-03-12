@@ -106,6 +106,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			    	if (!file.createNewFile()) { 
 			    		throw new IOException("Could not create temp file: " + file.getAbsolutePath());
 			    	}
+			    	// Write temp file
 					FileOutputStream fos = new FileOutputStream(file);
 					byte[] buffer = new byte[8192];
 					int count = 0;
@@ -113,10 +114,16 @@ public class ZipReader extends AbstractReader implements OdConstants {
 						fos.write(buffer, 0, count);
 					}
 					fos.close();
+					// Allow handler to perform specific treatments (for example, fix invalid .prj files)
+					if (handler != null) {
+						handler.notifyTempFileWritten(file);
+					}
+					// Set last modification date
 					long time = entry.getTime();
 					if (time > -1) {
 						file.setLastModified(time);
 					}
+					// Test file name to see if it may contain useful data
 					for (String ext : new String[] {
 							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT
 					}) {

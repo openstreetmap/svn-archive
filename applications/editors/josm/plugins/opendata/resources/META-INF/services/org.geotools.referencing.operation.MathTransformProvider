@@ -27,7 +27,7 @@ org.geotools.referencing.operation.projection.TransverseMercator$Provider_SouthO
 org.geotools.referencing.operation.projection.LambertConformal1SP$Provider
 org.geotools.referencing.operation.projection.LambertConformal2SP$Provider
 org.geotools.referencing.operation.projection.LambertConformalBelgium$Provider
-#org.geotools.referencing.operation.projection.LambertAzimuthalEqualArea$Provider
+org.geotools.referencing.operation.projection.LambertAzimuthalEqualArea$Provider
 #org.geotools.referencing.operation.projection.Orthographic$Provider
 #org.geotools.referencing.operation.projection.Stereographic$Provider
 #org.geotools.referencing.operation.projection.ObliqueStereographic$Provider

@@ -35,6 +35,7 @@ import org.opengis.parameter.ParameterDescriptor;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.crs.GeographicCRS;
 import org.opengis.referencing.datum.GeodeticDatum;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.Main;
@@ -473,7 +474,9 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 	
 	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException {
-		if (sourceCRS instanceof AbstractDerivedCRS && sourceCRS.getName().getCode().equalsIgnoreCase("Lambert_Conformal_Conic")) {
+		if (sourceCRS instanceof GeographicCRS && sourceCRS.getName().getCode().equalsIgnoreCase("GCS_ETRS_1989")) {
+			return CRS.findMathTransform(CRS.decode("EPSG:4258"), targetCRS, lenient);
+		} else if (sourceCRS instanceof AbstractDerivedCRS && sourceCRS.getName().getCode().equalsIgnoreCase("Lambert_Conformal_Conic")) {
 			List<MathTransform> result = new ArrayList<MathTransform>();
 			AbstractDerivedCRS crs = (AbstractDerivedCRS) sourceCRS;
 			MathTransform transform = crs.getConversionFromBase().getMathTransform();
@@ -556,5 +559,9 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	
 	public boolean skipXsdValidationInZipReading() {
 		return setSkipXsdValidationInZipReading;
+	}
+
+	public void notifyTempFileWritten(File file) {
+		// Do nothing, let handler overload this method if they need it
 	}
 }

@@ -687,6 +687,13 @@ public abstract class MapProjection extends AbstractMathTransform
     }
 
     /**
+     * Default version of {@link #checkTransform(double,double,Point2D,double)}.
+     */
+    static boolean checkTransform(final double x, final double y, final Point2D expected) {
+        return checkTransform(x, y, expected, EPSILON);
+    }
+
+    /**
      * Checks if inverse transform using spherical formulas produces the same result
      * than ellipsoidal formulas. This method is invoked during assertions only.
      * <p>
@@ -706,6 +713,13 @@ public abstract class MapProjection extends AbstractMathTransform
             compare("longitude", expected.getX(), longitude, tolerance);
         }
         return tolerance < Double.POSITIVE_INFINITY;
+    }
+
+    /**
+     * Default version of {@link #checkInverseTransform(double,double,Point2D,double)}.
+     */
+    static boolean checkInverseTransform(double longitude, double latitude, Point2D expected) {
+        return checkInverseTransform(longitude, latitude, expected, EPSILON);
     }
 
     /**

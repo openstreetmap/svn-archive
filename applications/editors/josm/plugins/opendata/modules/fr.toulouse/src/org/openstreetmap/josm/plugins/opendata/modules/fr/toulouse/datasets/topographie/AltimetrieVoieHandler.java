@@ -35,8 +35,8 @@ public class AltimetrieVoieHandler extends ToulouseDataSetHandler  {
 	@Override
 	public void updateDataSet(DataSet ds) {
 		for (Node n : ds.getNodes()) {
-			//replace(n, "name", "ele");
-			n.put("ele", n.get("name")); // name conserve pour voir la hauteur directement (hack, FIXME)
+			replace(n, "Altimetrie", "ele");
+			n.put("name", n.get("ele")); // name pour voir la hauteur directement (hack, FIXME)
 		}
 	}
 }

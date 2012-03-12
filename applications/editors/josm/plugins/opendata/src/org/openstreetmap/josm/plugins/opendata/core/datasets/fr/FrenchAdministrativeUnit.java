@@ -15,11 +15,11 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.fr;
 
-public final class FrenchDepartment {
+public abstract class FrenchAdministrativeUnit {
 	private final String code; 
 	private final String name;
 	
-	private FrenchDepartment(String code, String name) {
+	private FrenchAdministrativeUnit(String code, String name) {
 		this.code = code;
 		this.name = name;
 	}
@@ -30,6 +30,18 @@ public final class FrenchDepartment {
 
 	public final String getName() {
 		return name;
+	}
+	
+	public static final class FrenchDepartment extends FrenchAdministrativeUnit {
+		private FrenchDepartment(String code, String name) {
+			super(code, name);
+		}
+	}
+	
+	public static final class FrenchRegion extends FrenchAdministrativeUnit {
+		private FrenchRegion(String code, String name) {
+			super(code, name);
+		}
 	}
 
 	public static final FrenchDepartment[] allDepartments = new FrenchDepartment[] {
@@ -134,5 +146,35 @@ public final class FrenchDepartment {
 		new FrenchDepartment("973", "Guyane"),
 		new FrenchDepartment("974", "La Réunion"),
 		new FrenchDepartment("976", "Mayotte"),
+	};
+
+	public static final FrenchRegion[] allRegions = new FrenchRegion[] {
+		new FrenchRegion("42", "Alsace"),
+		new FrenchRegion("72", "Aquitaine"),
+		new FrenchRegion("83", "Auvergne"),
+		new FrenchRegion("25", "Basse-Normandie"),
+		new FrenchRegion("26", "Bourgogne"),
+		new FrenchRegion("53", "Bretagne"),
+		new FrenchRegion("24", "Centre"),
+		new FrenchRegion("21", "Champagne-Ardenne"),
+		new FrenchRegion("94", "Corse"),
+		new FrenchRegion("43", "Franche-Comté"),
+		new FrenchRegion("23", "Haute-Normandie"),
+		new FrenchRegion("11", "Île-de-France"),
+		new FrenchRegion("91", "Languedoc-Roussillon"),
+		new FrenchRegion("74", "Limousin"),
+		new FrenchRegion("41", "Lorraine"),
+		new FrenchRegion("73", "Midi-Pyrénées"),
+		new FrenchRegion("31", "Nord-Pas-de-Calais"),
+		new FrenchRegion("52", "Pays de la Loire"),
+		new FrenchRegion("22", "Picardie"),
+		new FrenchRegion("54", "Poitou-Charentes"),
+		new FrenchRegion("93", "Provence-Alpes-Côte d'Azur"),
+		new FrenchRegion("82", "Rhône-Alpes"),
+		new FrenchRegion("01", "Guadeloupe"),
+		new FrenchRegion("02", "Martinique"),
+		new FrenchRegion("03", "Guyane"),
+		new FrenchRegion("04", "La Réunion"),
+		new FrenchRegion("05", "Mayotte")
 	};
 }

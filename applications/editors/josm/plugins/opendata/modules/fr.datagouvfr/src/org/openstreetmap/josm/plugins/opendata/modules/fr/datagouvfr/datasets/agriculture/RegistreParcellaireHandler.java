@@ -23,7 +23,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDepartment;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchAdministrativeUnit;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -143,7 +143,7 @@ public class RegistreParcellaireHandler extends DataGouvDataSetHandler {
 	public List<Pair<String, URL>> getDataURLs() {
 		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
 		try {
-			for (FrenchDepartment dpt : FrenchDepartment.allDepartments) {
+			for (FrenchAdministrativeUnit dpt : FrenchAdministrativeUnit.allDepartments) {
 				result.add(getRpgURL(dpt.getCode(), dpt.getName()));
 			}
 		} catch (MalformedURLException e) {

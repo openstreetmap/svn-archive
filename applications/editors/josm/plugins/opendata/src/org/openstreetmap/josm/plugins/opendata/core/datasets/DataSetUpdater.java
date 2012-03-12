@@ -29,7 +29,10 @@ public abstract class DataSetUpdater implements OdConstants {
 		if (dataSet != null && handler != null) {
 			if (associatedFile != null) {
 				handler.setAssociatedFile(associatedFile);
-				handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(associatedFile.lastModified())));
+				long lastmodified = associatedFile.lastModified();
+				if (lastmodified > 0) {
+					handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lastmodified)));
+				}
 			}
 			if (!Main.pref.getBoolean(PREF_RAWDATA)) {
 				handler.updateDataSet(dataSet);

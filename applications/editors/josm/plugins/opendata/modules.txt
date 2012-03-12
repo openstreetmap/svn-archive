@@ -34,10 +34,10 @@ fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins
 	Ant-Version: Apache Ant 1.8.2
 	Module-Description: data.gouv.fr
 	Manifest-Version: 1.0
-	Module-Version: 28050
+	Module-Version: 28055
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Link: http://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr
-	Module-Date: 2012-03-11T20:59:38.076103Z
+	Module-Date: 2012-03-12T22:46:51.775101Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrModule
 fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.paris.jar
 	Module-Icon: images/data.fr.paris_24.png
@@ -65,8 +65,8 @@ fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/o
 	Ant-Version: Apache Ant 1.8.2
 	Module-Description: Toulouse
 	Manifest-Version: 1.0
-	Module-Version: 28044
+	Module-Version: 28054
 	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
 	Module-Link: http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData
-	Module-Date: 2012-03-11T16:50:51.667305Z
+	Module-Date: 2012-03-12T21:03:36.168715Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModule

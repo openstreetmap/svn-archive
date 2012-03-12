@@ -24,7 +24,7 @@ public class EtabAEFEHandler extends DataGouvDataSetHandler {
 	public EtabAEFEHandler() {
 		super("Géolocalisation-des-établissements-du-réseau-d'enseignement-de-l'AEFE-30382449", wgs84);
 		setName("Établissements du réseau d'enseignement de l'AEFE");
-		setDataGouvFrUrl("ETALAB_MAEE_Extraction_LDAP_geoloc_AEFE_2011-10-13.csv");
+		setDownloadFileName("ETALAB_MAEE_Extraction_LDAP_geoloc_AEFE_2011-10-13.csv");
 	}
 
 	@Override

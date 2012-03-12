@@ -118,13 +118,19 @@ public class ZipReader extends AbstractReader implements OdConstants {
 						file.setLastModified(time);
 					}
 					for (String ext : new String[] {
-							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, XML_EXT
+							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT
 					}) {
 						if (entry.getName().toLowerCase().endsWith("."+ext)) {
 							candidates.add(file);
 							System.out.println(entry.getName());
 							break;
 						}
+					}
+					// Special treatment for XML files (check supported XSD), unless handler explicitely skip it
+					if (XML_FILE_FILTER.accept(file) && ((handler != null && handler.skipXsdValidationInZipReading()) 
+							|| OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
+						candidates.add(file);
+						System.out.println(entry.getName());
 					}
 				} else if (!file.mkdir()) {
 					throw new IOException("Could not create temp dir: " + file.getAbsolutePath());

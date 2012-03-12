@@ -26,7 +26,7 @@ public class EtabSupHandler extends DataGouvDataSetHandler {
 	public EtabSupHandler() {
 		super("Etablissements-d'enseignement-supérieur-30382046", wgs84);
 		setName("Établissements d'enseignement supérieur");
-		setDataGouvFrUrl("livraison ETALAB 28 11 2011.xls");
+		setDownloadFileName("livraison ETALAB 28 11 2011.xls");
 	}
 
 	@Override

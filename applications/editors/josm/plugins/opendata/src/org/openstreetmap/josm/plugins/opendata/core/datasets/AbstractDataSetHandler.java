@@ -547,4 +547,14 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		}
 		return false;
 	}
+
+	private boolean setSkipXsdValidationInZipReading = false;
+	
+	public final void setSkipXsdValidationInZipReading(boolean skip) {
+		setSkipXsdValidationInZipReading = skip;
+	}
+	
+	public boolean skipXsdValidationInZipReading() {
+		return setSkipXsdValidationInZipReading;
+	}
 }

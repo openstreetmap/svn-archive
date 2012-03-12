@@ -80,9 +80,9 @@ public abstract class DataGouvDataSetHandler extends FrenchDataSetHandler implem
 		return null;
 	}
 	
-	protected final void setDataGouvFrUrl(String suffix) {
+	protected final void setDownloadFileName(String filename) {
 		try {
-			setDataURL(FRENCH_PORTAL+"var/download/"+suffix);
+			setDataURL(FRENCH_PORTAL+"var/download/"+filename);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

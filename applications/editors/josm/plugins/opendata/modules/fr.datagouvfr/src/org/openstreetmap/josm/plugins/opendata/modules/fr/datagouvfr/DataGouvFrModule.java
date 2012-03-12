@@ -23,8 +23,10 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.cu
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.diplomatie.EtabAEFEHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.AssainissementHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.ForetsPubliquesHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.ReservesBiologiquesHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education.Etab1er2ndDegreHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education.EtabSupHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.hydrologie.EauxDeSurfaceHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.hydrologie.ROEHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.transport.PassageNiveauHandler;
 
@@ -42,5 +44,7 @@ public class DataGouvFrModule extends AbstractModule {
         handlers.add(new PassageNiveauHandler());
         handlers.add(new ROEHandler());
         handlers.add(new ForetsPubliquesHandler());
+        handlers.add(new ReservesBiologiquesHandler());
+        handlers.add(new EauxDeSurfaceHandler());
     }
 }

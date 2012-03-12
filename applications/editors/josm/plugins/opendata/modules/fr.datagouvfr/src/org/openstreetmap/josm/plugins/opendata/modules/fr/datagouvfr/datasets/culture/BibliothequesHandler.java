@@ -26,7 +26,7 @@ public class BibliothequesHandler extends DataGouvDataSetHandler {
 	public BibliothequesHandler() {
 		super("Adresses-des-bibliothèques-municipales-30382179", lambert93);
 		setName("Bibliothèques municipales");
-		setDataGouvFrUrl("lieux de lecture_geoloc.txt");
+		setDownloadFileName("lieux de lecture_geoloc.txt");
 	}
 
 	@Override

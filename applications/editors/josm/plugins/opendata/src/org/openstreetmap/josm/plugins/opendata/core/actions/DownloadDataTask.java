@@ -17,6 +17,7 @@ package org.openstreetmap.josm.plugins.opendata.core.actions;
 
 import java.io.File;
 import java.util.concurrent.Future;
+import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
@@ -24,6 +25,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
 import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
@@ -31,7 +33,7 @@ import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 
-public class DownloadDataTask extends DownloadOsmTask {
+public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 
 	private AbstractDataSetHandler handler;
 	
@@ -53,12 +55,18 @@ public class DownloadDataTask extends DownloadOsmTask {
 
 	@Override
 	public boolean acceptsUrl(String url) {
+		this.handler = null;
 		for (Module module : ModuleHandler.moduleList) {
 			for (AbstractDataSetHandler handler : module.getHandlers()) {
 				if (handler.acceptsUrl(url)) {
 					this.handler = handler;
 					return true;
 				}
+			}
+		}
+		for (String ext : new String[]{ZIP_EXT, CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT}) {
+			if (Pattern.compile(".*\\."+ext, Pattern.CASE_INSENSITIVE).matcher(url).matches()) {
+				return true;
 			}
 		}
 		return false;

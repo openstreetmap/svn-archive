@@ -115,7 +115,7 @@ def main(options):
     # prepare the approach/symbols dir
     shutil.copytree(os.path.join(original_approach_dir,"approach-symbols-src"),os.path.join(approach_dir,"approach-symbols-src"))
 
-    generate_approach_layer_xml.main_approach({'sourcepdir':approach_dir, 'sourcepfile':'osm-approach-src.xml', 'destdir':deploy_dir, 'stylename':'approach'})
+    generate_approach_layer_xml.main_approach({'sourcedir':approach_dir, 'sourcefile':'osm-approach-src.xml', 'destdir':deploy_dir, 'stylename':'approach'})
 
 
 

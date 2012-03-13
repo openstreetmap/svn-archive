@@ -740,7 +740,6 @@
       &datasource-settings;
     </Datasource>
 </Layer>
-</Map>
 
 <Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
      <StyleName>roads-text-name</StyleName>
@@ -757,3 +756,4 @@
       &datasource-settings;
     </Datasource>
 </Layer>
+</Map>

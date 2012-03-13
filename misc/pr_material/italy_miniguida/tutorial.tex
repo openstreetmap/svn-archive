@@ -28,7 +28,10 @@
 \usepackage{xspace}
 %per il layout della pagine
 \usepackage{fancyhdr}
-
+%per la tabella dei contenuti
+% \usepackage[toc]{multitoc}
+% \renewcommand*{\multicolumntoc}{2}
+\usepackage[titles]{tocloft}
 
 \definecolor{UrlColor}{rgb}{0,0.35,0}
 \usepackage[pdftitle={Introduzione ad OpenStreetMap},pdfauthor={realizzato da Luca Delucchi, Maurizio Napolitano, Alessio Zanol, con il contributo della comunità italiana di OpenStreetMap},colorlinks=true,citecolor=UrlColor,urlcolor=UrlColor,filecolor=UrlColor,linkcolor=UrlColor]{hyperref}
@@ -51,18 +54,18 @@
 %opening
 \title{\begin{Large}\textbf{Introduzione a \osm}\end{Large}}
 \date{\small{Versione Marzo 2012}}
-\author{realizzato da Luca Delucchi, Maurizio Napolitano, Alessio Zanol \\ \\ con il contributo della Comunità italiana di OpenStreetMap}
+\author{realizzato da \textit{Luca Delucchi}, \textit{Maurizio Napolitano}, \textit{Alessio Zanol} \\ con il contributo della \textit{Comunità italiana di OpenStreetMap}}
 \begin{document}
 
 \maketitle
 \begin{center}
 \includegraphics{osm_logo_new.png}
 \end{center}
-\begin{center}
-	\begin{large}
-	\textbf{Comunità Italiana di OpenStreetMap}
-	\end{large}
-\end{center}
+% \setlength{\cftbeforechapskip}{2em}
+\setlength{\cftbeforesecskip}{0.1em}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{0}
+\tableofcontents
 \newpage
 % \tableofcontents
 % \newpage
@@ -70,7 +73,7 @@
 \section{Cos'è \osm}
 \osm è un progetto mondiale per la raccolta collaborativa di dati geografici da cui si possono derivare innumerevoli lavori e servizi. I risultati più evidenti sono le mappe online che però rappresentano solo la punta dell'iceberg di quel che si può ottenere da questi dati.
 
-La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \pro{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita, data dovrebbe essere Aprile 2012, con la \pro{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
+La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \pro{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita, la data dovrebbe essere il 1 Aprile 2012, con la \pro{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
 
 L'altra caratteristica molto importante è che tutti possono contribuire arricchendo o correggendo i dati e, come i progetti simili (\pro{Wikipedia} e mondo del software libero ad esempio) \textbf{la comunità è l'elemento fondamentale} perché oltre a essere quella che inserisce i dati e arrichisce il progetto, ne controlla anche la qualità.
 \section{Cosa non è \osm}
@@ -96,13 +99,13 @@ Questa zona per i grandi vendor di dati geografici non esiste ma in realtà cont
 \subsection{Utilizzo professionale}
 Perché passare ad \osm? 
 
-I motivi che dovrebberò indurvi ad utilizzare \osm, invece di un altro provider di mappe o dati geografici, sono molti. I più importanti riguardano soprattutto la qualità dei dati e il loro continuo aggiornamento, \osm ha attualmente più di 500000 utenti che possono controllare e migliorare il dato. È bene sapere che i dati che troverete non sono uniformi in tutte le parti del globo, potrete trovare zone completamente mappate (con i civici, le panchine e qualsiasi altro elemento) ma anche altre località sprovviste anche delle strade principali. Altro fattore importante è il costo pari a zero per ottenere i dati che sono gratuitamente scaricabili da internet; se questa soluzione vi farà risparmiare molti soldi sarebbe corretto utilizzare una parte di questo risparmio per \href{http://donate.openstreetmap.org/}{supportare economicamente \osm} e le applicazioni utilizzate attraverso \href{http://www.gfoss.it/drupal/donazioni}{donazioni}.
+I motivi che dovrebbero indurvi ad utilizzare \osm, invece di un altro provider di mappe o dati geografici, sono molti. I più importanti riguardano soprattutto la qualità dei dati e il loro continuo aggiornamento, \osm ha attualmente più di 500000 utenti che possono controllare e migliorare il dato. È bene sapere che i dati che troverete non sono uniformi in tutte le parti del globo, potrete trovare zone completamente mappate (con i civici, le panchine e qualsiasi altro elemento) ma anche altre località sprovviste anche delle strade principali. Altro fattore importante è il costo pari a zero per ottenere i dati che sono gratuitamente scaricabili da internet; se questa soluzione vi farà risparmiare molti soldi sarebbe corretto utilizzare una parte di questo risparmio per \href{http://donate.openstreetmap.org/}{supportare economicamente \osm} e le applicazioni utilizzate attraverso \href{http://www.gfoss.it/drupal/donazioni}{donazioni}.
 
-Se avete una mappa web sul vostro sito e volete passare a \osm dovrete cambiare le API e le immagini (tiles) utilizzate per la visualizzazione della vostra mappa. Per quanto riguarda le API le più utilizzate sono due: \href{http://openlayers.org}{OpenLayers} (più potente e sviluppata da più tempo) e \href{http://leaflet.cloudmade.com/}{Leaflet} (più leggera e semplice da imparare). Invece per quanto riguarda le sorgenti delle mappe avrete a disposizione una più lunga lista di server (\url{http://switch2osm.org/providers/}) a cui collegarsi.\newline Le API esistono anche per piattaforme mobile: Route-Me (iOS) and osmdroid (Android). Queste permettono di inserire le mappe di \osm all'interno della vostra applicazione che ha bisogno di una mappa.
+Se avete una mappa web sul vostro sito e volete passare a \osm dovrete cambiare le API e le immagini (tiles) utilizzate per la visualizzazione della vostra mappa. Per quanto riguarda le API le più utilizzate sono due: \soft{\href{http://openlayers.org}{OpenLayers}} (più potente e sviluppata da più tempo) e \soft{\href{http://leaflet.cloudmade.com/}{Leaflet}} (più leggera e semplice da imparare). Invece per quanto riguarda le sorgenti delle mappe avrete a disposizione una più lunga lista di server (\url{http://switch2osm.org/providers/}) a cui collegarsi.\newline Le API esistono anche per piattaforme mobile:  \soft{osmdroid} (Android) e \soft{Route-Me} (iOS) . Queste permettono di inserire le mappe di \osm all'interno della vostra applicazione.
 
-Il primo passo di avvicinamento ad \osm (l'utilizzo di tiles distribuite da terzi) è relativamente semplice, un po' più complesso è invece se volete prendere completamente possesso dei dati che state utilizzando realizzando voi stessi il server per la distribuzione delle immagini. Anche qui avrete a disposizione più di una scelta per renderizzare le tiles, il software utilizzato dall'interfaccia principale di \osm è Mapnik (quello che permette soluzioni più complesse anche se forse è più difficile da imparare), altre buone soluzioni possono essere Maperitive, MapServer o GeoServer.
+Il primo passo di avvicinamento ad \osm (l'utilizzo di tiles distribuite da terzi) è relativamente semplice, un po' più complesso è invece se volete prendere completamente possesso dei dati che state utilizzando realizzando voi stessi il server per la distribuzione delle immagini. Anche qui avrete a disposizione più di una scelta per renderizzare le tiles, il software utilizzato dall'interfaccia principale di \osm è \soft{Mapnik} (quello che permette soluzioni più complesse anche se forse è più difficile da imparare), altre buone soluzioni possono essere \soft{Maperitive}, \soft{MapServer} o \soft{GeoServer}.
 
-Inoltre il fatto di poter scaricare i dati grezzi, caratteristica esclusiva di \osm, vi aprirà una via infinita di utilizzi, dal routing all'utilizzo dei dati come base di videogiochi passando per svariate tipologie di analisi.
+Inoltre il fatto di poter scaricare i dati grezzi, caratteristica esclusiva di \osm, vi aprirà una via infinita di utilizzi, dal routing alla mappa per videogiochi passando per svariate tipologie di analisi.
 
 Molte aziende, alcune leader del loro settore, stanno già utilizzando \osm in ambiente professionale sia a livello nazionale che internazionale, perchè non provare?!
 
@@ -202,12 +205,13 @@ Inoltre ricorda che per ciascun elemento è possibile assegnare più di un tag i
 \end{center}
 
 \subsection{Relation}
-Per quanto riguarda le relation, attualmente sono solo sei quelle ufficiali, anche se molte altre sono state proposte e già utilizzate, tipo quelle per i numeri civici. Di seguito vedremo le ufficiali e poi approfondiremo le route, che è una tra le più importanti e usate.
+Le relation servono per mettere in relazione più elementi singoli, diverse vie oppure vie e punti. Esistono svariate tipologie di relation, di seguito ve ne mostreremo alcune (per la lista completa \url{http://wiki.openstreetmap.org/wiki/Types_of_relation}) e poi approfondiremo le route, che è una tra le più importanti e usate.
 \begin{center}
  \begin{tabular}{c p{9cm}}
   \toprule
    \textbf{tipo} & \textbf{descrizione} \\
   \midrule
+   \key{associatedStreet} & serve per mettere in relazione le vie con i numeri civici \\
    \key{multipolygon} & serve per creare poligoni complessi che si compongono di più di una way (per esempio un'area con un buco come un lago con un'isola in mezzo) \\
    \key{restriction}	& serve per vietare le svolte \\
    \key{boundary}	& serve per raggruppare aree e creare enclavi ed exclavi \\
@@ -238,7 +242,7 @@ Per creare una route bisogna quindi aggiungere i tag e poi selezionare quali ele
 \section{Come posso contribuire}
 Per prima cosa dovrai iscriverti attraverso l'homepage \url{http://www.openstreetmap.org/}; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
 
-Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di Yahoo spesso solo spostate dai dati reali inoltre si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usa-to e completo è senza dubbio \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
+Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di Bing spesso solo spostate dai dati reali inoltre si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usa-to e completo è senza dubbio \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
 
 Un'altra cosa molto importante, quando si inizia a tracciare le strade, in particolare con l'editor online, è verificare che le varie strade che si incrociano, non in caso di ponti, siano tra loro interconnesse da un nodo comune. Nell'editor online è possibile assicurarsi di ciò quando, sovrapponendo la linea che si sta tracciando alla strada a cui si vuole congiungere, i nodi di questa si evidenziano di blu.
 \subsection{Non ho il \gps}
@@ -246,7 +250,7 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
  \includegraphics[width=0.7\columnwidth]{potlatch.png}
  \caption{\textit{L'interfaccia di \soft{Potlatch}}}
 \end{wrapfloat}
-Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale e anche quelle di Bing (queste in alcune zone hanno una risoluzione migliore ma bisogna stare attenti perchè è probabile che ci sia uno spostamento delle immagini rispetto alla reale posizione degli elementi), distribuite tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaartor}). 
+Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove sono mancanti, inserendo punti di interesse quali elementi turistici, negozi, fontane, servizi ecc. oppure correggendo eventuali errori. Per molte zone si hanno le foto aeree di Bing in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribuite tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaartor}). 
 
 Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}.
 
@@ -283,7 +287,7 @@ Il continuo sviluppo tecnologico ha portato alla costruzione di cellulari sempre
 
 Per esempio per Android vi è la possibilità di utilizzare diversi applicativi. Vespucci è un editor di \osm completo mentre Geopaparazzi e OSMand permettono l'inserimento di soli punti. \newline
 Per tutti i cellulari che supportano applicazioni java si consiglia invece GpsMid.\newline
-Il miglior software è Mapzen Poi Collector, sviluppato da CloudMade, una delle prime aziende nate intorno a \osm.
+Su IPhone/IPad il miglior software è Mapzen Poi Collector, sviluppato da CloudMade, una delle prime aziende nate intorno a \osm.
 
 
 \subsection{Infine...}
@@ -321,7 +325,7 @@ Solitamente i mapping party si tengono nel corso del weekend per cercare di far 
 Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \pro{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Nel 2011 si è tenuto il terzo evento nazionale su \osm denominato OSMit: la prima edizione si è tenuta a Trento, la seconda a Genova e l'ultima a Padova.
 
 \section{Informazioni utili}
-\textbf{\url{http://wiki.openstreetmap.org/wiki/WikiProject_Italy} è il portale principale della comunità italiana}, per vedere il lavoro a livello nazionale e contattare gli altri utenti della penisola. È molto utile contribuire sul wiki attraverso \textbf{traduzioni} di pagine già esistenti in altre lingue, che servono sempre sia ai nuovi arrivati che a quelli che non conoscono al meglio la lingua inglese (la più usata sul wiki insieme al tedesco), sia alla \textbf{creazione e al mantenimento delle pagine} in italiano oltre a quelle della vostra regione, provincia o comune.
+\textbf{\url{http://wiki.openstreetmap.org/wiki/WikiProject_Italy}, il portale principale della comunità italiana}, per vedere il lavoro a livello nazionale e contattare gli altri utenti della penisola. È molto utile contribuire sul wiki attraverso \textbf{traduzioni} di pagine già esistenti in altre lingue, che servono sempre sia ai nuovi arrivati che a quelli che non conoscono al meglio la lingua inglese (la più usata sul wiki insieme al tedesco), sia alla \textbf{creazione e al mantenimento delle pagine} in italiano oltre a quelle della vostra regione, provincia o comune.
 
 Esiste anche un sito in italiano che in questo momento è in fase di sviluppo \url{http://www.openstreetmap.it}; attualmente l'unica parte attiva è il blog \url{blog.openstreetmap.it}.
 
@@ -401,7 +405,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 
 \soft{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
 
-\soft{Osmdroid}: un visualizzatore ma non solo, una libreria da utilizzare sul proprio software di mappe per aver la possibilità di scegliere tra diverse tipologie di mappe
+\soft{Osmdroid}: un visualizzatore ma non solo, una libreria da utilizzare sul proprio software per aver la possibilità di scegliere tra diverse tipologie di mappe
 
 \soft{Geopaparazzi}: software per effettuare campionamenti; ha la possibilità di caricare punti nel database di \osm attraverso semplici form 
 
@@ -423,6 +427,8 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \soft{OSMTrack}: registratore di tracce
 
 \soft{Navmii}: software per la navigazione basato su mappe di \osm
+
+\soft{Route-Me}: una libreria da utilizzare sul proprio software per aver la possibilità di scegliere tra diverse tipologie di mappe
 \subsubsection{N900/Maemo} 
 \includegraphics{./maemo-logo.png} \url{http://wiki.openstreetmap.org/wiki/Maemo}
 

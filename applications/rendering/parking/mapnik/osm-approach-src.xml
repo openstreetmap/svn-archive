@@ -3,7 +3,7 @@
 <!ENTITY % entities SYSTEM "inc/entities.xml.inc">
 %entities;
 ]>
-<Map background-color="#fefefe" srs="&srs900913;" minimum-version="2.0.0">
+<Map background-color="#fefefe" srs="+init=epsg:3857" minimum-version="2.0.0">
   &fontset-settings;
 
 <Style name="roads-text-name">

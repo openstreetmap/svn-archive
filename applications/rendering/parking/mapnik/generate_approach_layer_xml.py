@@ -6,16 +6,6 @@ from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
 
-#import colorsys
-
-condition_colors = {
-    'free': '04c900',
-    'cust': 'c17223',
-    'none': '634e45',
-    'fee':  '037afe',
-    'unkn': 'a649b7'
-    }
-
 def transmogrify_file(sf,df):
     dom= pxdom.getDOMImplementation('') 
     parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None)
@@ -45,17 +35,7 @@ def create_approach_area_icons(source_symbols_dir,dest_symbols_dir):
     return
 
 def create_approach_point_icons(source_symbols_dir,dest_symbols_dir):
-    copy_files(source_symbols_dir,dest_symbols_dir,['approach-vending.png'])
-    # approach nodes
-    for condition in condition_colors.keys():
-        sf = os.path.join(source_symbols_dir,'approach-source.png')
-        df = os.path.join(dest_symbols_dir,'approach_node_{cond}.png'.format(cond=condition))
-        colorize_icon(sf,df,condition_colors.get(condition))
-    # approach_6 nodes (lower zoom)
-    for condition in condition_colors.keys():
-        sf = os.path.join(source_symbols_dir,'approach-6-source.png')
-        df = os.path.join(dest_symbols_dir,'approach_node_6_{cond}.png'.format(cond=condition))
-        colorize_icon(sf,df,condition_colors.get(condition))
+    copy_files(source_symbols_dir,dest_symbols_dir,['approach-target.png'])
 
 def copy_files(src,dest,files):
     for f in files:

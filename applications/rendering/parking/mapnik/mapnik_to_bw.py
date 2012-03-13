@@ -341,6 +341,7 @@ def dom_strip_POIs(document):
 
 def dom_strip_icons(document):
     dom_strip_style_and_layer(document,"points","amenity-points")
+    dom_strip_style_and_layer(document,"points","amenity-points-poly")
     dom_strip_POIs(document)
     dom_strip_style_and_layer(document,"power_line","power_line")
     dom_strip_style_and_layer(document,"power_minorline","power_minorline")

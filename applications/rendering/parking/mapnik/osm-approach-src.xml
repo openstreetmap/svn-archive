@@ -2,6 +2,10 @@
 <!DOCTYPE Map [
 <!ENTITY % entities SYSTEM "inc/entities.xml.inc">
 %entities;
+<!ENTITY % layer-approach-entities SYSTEM "inc/layer-approach-entities.xml.inc">
+%layer-approach-entities;
+<!ENTITY layer-approach-area SYSTEM "inc/layer-approach-area.xml.inc">
+<!ENTITY layer-approach-point SYSTEM "inc/layer-approach-point.xml.inc">
 ]>
 <Map background-color="&approach_background;" srs="+init=epsg:3857" minimum-version="2.0.0">
   &fontset-settings;

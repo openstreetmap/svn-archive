@@ -1,8 +1,8 @@
 <?php
 $maxAttempts = 5;
-$maxInstances = 3;
-$www_dir = '/home/lambertus/public_html/yours';
-$yours_dir = '/home/lambertus/yours';
+$maxInstances = 6;
+$www_dir = '/home/pnorman/osm/routing/www';
+$yours_dir = '/home/pnorman/osm/routing/gosmore';
 $ulimit = 30;
 
 $output = "";
@@ -290,26 +290,7 @@ function getDistance($latitudeFrom, $longitudeFrom,
 
 function getProcesses()
 {
-	$nProcesses = 0;
-	
-	exec("ps ax | grep gosmore", $ps, $return_var);
-
-	foreach ($ps as $row => $process)
-	{
-		$properties = array();
-		$properties = split(" ", $process);
-		
-		foreach ($properties as $item => $property)
-		{
-			//echo "property ".$item." = ".$property."\n";
-			if (strcmp(trim($property), $yours_dir."/gosmore") == 0)
-			{
-				$nProcesses++;
-				break;
-			}
-		}
-	}
-	return $nProcesses;
+	return exec('ps ax | grep "nice '.$yours_dir.'/[g]osmore" | wc -l');
 }
 
 function asKML($elements, $distance) {

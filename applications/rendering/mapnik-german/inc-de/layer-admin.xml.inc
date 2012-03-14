@@ -3,42 +3,23 @@
    <Rule>
       <Filter>[admin_level]='2'</Filter>
       &maxscale_zoom10;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#838c86</CssParameter>
-        <CssParameter name="stroke-width">7</CssParameter>
-        <CssParameter name="stroke-opacity">0.1</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#838c86" stroke-width="7" stroke-opacity="0.1"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='3'</Filter>
       &maxscale_zoom10;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#838c86</CssParameter>
-        <CssParameter name="stroke-width">6</CssParameter>
-        <CssParameter name="stroke-dasharray">4,2</CssParameter>
-        <CssParameter name="stroke-opacity">0.1</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#838c86" stroke-width="6" stroke-dasharray="4,2" stroke-opacity="0.1"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='4'</Filter>
       &maxscale_zoom8;
       &minscale_zoom10;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#838c86</CssParameter>
-        <CssParameter name="stroke-width">2</CssParameter>
-        <CssParameter name="stroke-dasharray">4,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#838c86" stroke-width="2" stroke-dasharray="4,3" stroke-opacity="0.2"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='4'</Filter>
       &maxscale_zoom11;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#838c86</CssParameter>
-        <CssParameter name="stroke-width">3</CssParameter>
-        <CssParameter name="stroke-dasharray">4,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#838c86" stroke-width="3" stroke-dasharray="4,3" stroke-opacity="0.2"/>
     </Rule>
 </Style>
 <Style name="admin-01234">
@@ -46,141 +27,76 @@
       <Filter>[admin_level]='2' or [admin_level]='3'</Filter>
       &maxscale_zoom4;
       &minscale_zoom6;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #50705a -->
-        <CssParameter name="stroke">#50705a</CssParameter>
-        <CssParameter name="stroke-width">0.6</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#50705a" stroke-width="0.6" stroke-opacity="0.2"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='2' or [admin_level]='3'</Filter>
       &maxscale_zoom7;
       &minscale_zoom9;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #3d6f4c -->
-        <CssParameter name="stroke">#3d6f4c</CssParameter>
-        <CssParameter name="stroke-width">2</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#3d6f4c" stroke-width="2" stroke-opacity="0.2"/>
     </Rule>
    <Rule>
       <Filter>[admin_level]='2'</Filter>
       &maxscale_zoom10;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">6</CssParameter>
-        <CssParameter name="stroke-opacity">0.1</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#328c4e" stroke-width="6" stroke-opacity="0.1"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='3'</Filter>
       &maxscale_zoom10;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">5</CssParameter>
-        <CssParameter name="stroke-dasharray">4,2</CssParameter>
-        <CssParameter name="stroke-opacity">0.1</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#328c4e" stroke-width="5" stroke-dasharray="4,2" stroke-opacity="0.1"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='4'</Filter>
       &maxscale_zoom4;
       &minscale_zoom6;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">0.6</CssParameter>
-        <CssParameter name="stroke-dasharray">4,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#328c4e" stroke-width="0.6" stroke-dasharray="4,3" stroke-opacity="0.2"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='4'</Filter>
       &maxscale_zoom7;
       &minscale_zoom10;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">1</CssParameter>
-        <CssParameter name="stroke-dasharray">4,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#328c4e" stroke-width="1" stroke-dasharray="4,3" stroke-opacity="0.2"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='4'</Filter>
       &maxscale_zoom11;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">3</CssParameter>
-        <CssParameter name="stroke-dasharray">4,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+      <LineSymbolizer stroke="#328c4e" stroke-width="3" stroke-dasharray="4,3" stroke-opacity="0.2"/>
     </Rule>
 </Style>
 <Style name="admin-5678">
     <Rule>
       <Filter>[admin_level]='5'</Filter>
       &maxscale_zoom11;
-      &minscale_zoom12;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">2</CssParameter>
-        <CssParameter name="stroke-dasharray">6,3,2,3,2,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.3</CssParameter>
-      </LineSymbolizer>
+	  <!-- &minscale_zoom12; -->
+      <LineSymbolizer stroke="#328c4e" stroke-width="2" stroke-dasharray="6,3,2,3,2,3" stroke-opacity="0.3"/>
     </Rule>
     <Rule>
       <Filter>[admin_level]='6'</Filter>
       &maxscale_zoom11;
-      &minscale_zoom12;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">2</CssParameter>
-        <CssParameter name="stroke-dasharray">6,3,2,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.3</CssParameter>
-      </LineSymbolizer>
+	  <!-- &minscale_zoom12; -->
+      <LineSymbolizer stroke="#328c4e" stroke-width="2" stroke-dasharray="6,3,2,3" stroke-opacity="0.3"/>
     </Rule>
-<!--    <Rule>
+    <Rule>
       <Filter>[admin_level]='8' or [admin_level]='7'</Filter>
       &maxscale_zoom12;
-      &minscale_zoom12;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">1.5</CssParameter>
-        <CssParameter name="stroke-dasharray">5,2</CssParameter>
-        <CssParameter name="stroke-opacity">0.3</CssParameter>
-      </LineSymbolizer>
-    </Rule> -->
-</Style>
-<Style name="admin-other">
-<!--    <Rule>
-      <Filter>[admin_level]='10' or [admin_level]='9'</Filter>
-      &maxscale_zoom13;
-      <LineSymbolizer>
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">2</CssParameter>
-        <CssParameter name="stroke-dasharray">2,3</CssParameter>
-        <CssParameter name="stroke-opacity">0.3</CssParameter>
-      </LineSymbolizer>
-    </Rule>   -->
-   <Rule>
-      <Filter>not [admin_level] &lt;&gt;''</Filter>
-      &maxscale_zoom9;
-      &minscale_zoom11;
-      <LineSymbolizer>
-<!-- German Style: set stroke from purple to #328c4e -->
-        <CssParameter name="stroke">#328c4e</CssParameter>
-        <CssParameter name="stroke-width">1</CssParameter>
-        <CssParameter name="stroke-opacity">0.2</CssParameter>
-      </LineSymbolizer>
+	  &minscale_zoom12;
+      <LineSymbolizer stroke="#328c4e" stroke-width="1.5" stroke-dasharray="5,2" stroke-opacity="0.3"/>
     </Rule>
 </Style>
+<Style name="admin-other">
+    <Rule>
+      <Filter>[admin_level]='10' or [admin_level]='9'</Filter>
+      &maxscale_zoom13;
+      <LineSymbolizer stroke="#328c4e" stroke-width="2" stroke-dasharray="2,3" stroke-opacity="0.3"/>
+    </Rule>
+   <Rule>
+      <Filter>not [admin_level] != ''</Filter>
+      &maxscale_zoom9;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#328c4e" stroke-width="1" stroke-opacity="0.2"/>
+    </Rule>
+</Style>
+
 <Layer name="admin-01234" status="on" srs="&osm2pgsql_projection;">
     <StyleName>admin-01234</StyleName>
     <StyleName>admin-01234-casing</StyleName>

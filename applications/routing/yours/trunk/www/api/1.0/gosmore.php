@@ -153,7 +153,7 @@ default:
 	break;
 }
 $dir = $yours_dir.$gosmore;
-$command = $query." nice ./gosmore ".$pak." ".$style;
+$command = $query." nice ".$yours_dir."/gosmore ".$pak." ".$style;
 
 $fh = fopen($www_dir.'/commands.log', 'a+');
 if ($fh) {
@@ -302,7 +302,7 @@ function getProcesses()
 		foreach ($properties as $item => $property)
 		{
 			//echo "property ".$item." = ".$property."\n";
-			if (strcmp(trim($property), "./gosmore") == 0)
+			if (strcmp(trim($property), $yours_dir."/gosmore") == 0)
 			{
 				$nProcesses++;
 				break;

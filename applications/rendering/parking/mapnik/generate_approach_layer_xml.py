@@ -24,7 +24,7 @@ def transmogrify_file(sf,df):
 
 
 def strip_doctype(f):
-    p = subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
+    p = subprocess.Popen(['sed','-i','2,9 d',f]) # -i means 'in place'
     p.wait()
 
 def create_approach_icons(source_symbols_dir,dest_symbols_dir):

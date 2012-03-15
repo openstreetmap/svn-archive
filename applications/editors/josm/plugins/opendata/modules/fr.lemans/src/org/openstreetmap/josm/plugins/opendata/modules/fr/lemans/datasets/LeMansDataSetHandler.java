@@ -29,7 +29,6 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 	
 	private String uuid;
 	
-	private String csvUuid;
 	private String kmzUuid;
 	private String shpUuid;
 	
@@ -60,9 +59,8 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 	private final void init(String uuid) {
 		this.uuid = uuid;
 	}
-	
-	protected final void setCsvKmzShpUuid(String csvUuid, String kmzUuid, String shpUuid) {
-		this.csvUuid = csvUuid;
+		
+	protected final void setKmzShpUuid(String kmzUuid, String shpUuid) {
 		this.kmzUuid = kmzUuid;
 		this.shpUuid = shpUuid;
 	}
@@ -106,7 +104,6 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 	public List<Pair<String, URL>> getDataURLs() {
 		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
 		try {
-			//if (csvUuid != null && !csvUuid.isEmpty()) result.add(new Pair<String, URL>("CSV", new URL(PORTAL + "download.do?uuid=" + csvUuid)));
 			if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<String, URL>("KMZ", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
 			if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<String, URL>("SHP", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
 		} catch (MalformedURLException e) {

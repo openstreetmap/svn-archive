@@ -7,6 +7,7 @@
 			<ant antfile="build.xml" target="@{target}" dir="be.datagovbe"/>
 	        <ant antfile="build.xml" target="@{target}" dir="fr.cg41"/>
 	        <ant antfile="build.xml" target="@{target}" dir="fr.datagouvfr"/>
+            <ant antfile="build.xml" target="@{target}" dir="fr.lemans"/>
 	        <ant antfile="build.xml" target="@{target}" dir="fr.paris"/>
 	        <ant antfile="build.xml" target="@{target}" dir="fr.sncf"/>
 	        <ant antfile="build.xml" target="@{target}" dir="fr.toulouse"/>

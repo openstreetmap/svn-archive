@@ -153,6 +153,10 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		return acceptsFilename(filename, expected, KMZ_EXT);
 	}
 
+	protected final boolean acceptsKmzShpFilename(String filename, String ... expected) {
+		return acceptsFilename(filename, expected, KMZ_EXT, SHP_EXT);
+	}
+
 	protected final boolean acceptsKmzTabFilename(String filename, String ... expected) {
 		return acceptsFilename(filename, expected, KMZ_EXT, TAB_EXT);
 	}
@@ -168,11 +172,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	protected final boolean acceptsCsvKmzTabFilename(String filename, String ... expected) {
 		return acceptsFilename(filename, expected, CSV_EXT, KMZ_EXT, TAB_EXT);
 	}
-	
-	protected final boolean acceptsCsvKmzShpFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, CSV_EXT, KMZ_EXT, SHP_EXT);
-	}
-	
+		
 	protected final boolean acceptsCsvXlsFilename(String filename, String ... expected) {
 		return acceptsFilename(filename, expected, CSV_EXT, XLS_EXT);
 	}

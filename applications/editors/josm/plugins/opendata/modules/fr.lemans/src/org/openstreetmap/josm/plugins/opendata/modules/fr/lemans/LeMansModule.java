@@ -18,6 +18,11 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.lemans;
 import org.openstreetmap.josm.plugins.opendata.core.modules.AbstractModule;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.CantonsSartheHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.CirconscriptionsLegislativesHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.CodesPostauxHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.CommunesHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.ConseilsQuartiersHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.PointsApportVolontaireHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.ServicesCommunautairesMunicipauxHandler;
 
 public class LeMansModule extends AbstractModule {
@@ -26,5 +31,10 @@ public class LeMansModule extends AbstractModule {
 		super(info);
 		handlers.add(new ServicesCommunautairesMunicipauxHandler());
 		handlers.add(new CantonsSartheHandler());
+		handlers.add(new CommunesHandler());
+		handlers.add(new CodesPostauxHandler());
+		handlers.add(new CirconscriptionsLegislativesHandler());
+		handlers.add(new ConseilsQuartiersHandler());
+		handlers.add(new PointsApportVolontaireHandler());
     }
 }

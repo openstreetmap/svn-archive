@@ -23,12 +23,12 @@ public class ServicesCommunautairesMunicipauxHandler extends LeMansDataSetHandle
 	public ServicesCommunautairesMunicipauxHandler() {
 		super("F7F65F15-550EA533-37695DD8-F7A74F05");
 		setName("Services communautaires et municipaux");
-		setCsvKmzShpUuid("66C8C51F-550EA533-7E7BB44A-B9216F89", "66C925DA-550EA533-7E7BB44A-BCF0B629", "66C972AD-550EA533-7E7BB44A-E842FFAD");
+		setKmzShpUuid("66C925DA-550EA533-7E7BB44A-BCF0B629", "66C972AD-550EA533-7E7BB44A-E842FFAD");
 	}
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzShpFilename(filename, "SERVICES_VDM_LMM") || acceptsZipFilename(filename, "Les services de le Mans Métropole et de la Ville du Mans .*");
+		return acceptsKmzShpFilename(filename, "SERVICES_VDM_LMM") || acceptsZipFilename(filename, "Les services de le Mans Métropole et de la Ville du Mans .*");
 	}
 
 	@Override

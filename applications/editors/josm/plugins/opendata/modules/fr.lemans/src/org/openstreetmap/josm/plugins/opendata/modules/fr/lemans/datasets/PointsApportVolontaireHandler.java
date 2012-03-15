@@ -16,25 +16,22 @@
 package org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
 
-public class CantonsSartheHandler extends LeMansDataSetHandler {
+public class PointsApportVolontaireHandler extends LeMansDataSetHandler {
 
-	public CantonsSartheHandler() {
-		super("F7D936DF-550EA533-37695DD8-29CFF55B");
-		setName("Cantons de la Sarthe");
-		setKmzShpUuid("62DFCA8F-550EA533-7E7BB44A-7D1AA2D4", "62E017CA-550EA533-7E7BB44A-23772121");
+	public PointsApportVolontaireHandler() {
+		super("F8213494-550EA533-37695DD8-28F0B08D");
+		setName("Points d'apport volontaire");
+		setKmzShpUuid("66972849-550EA533-7E7BB44A-7AB7F366", "66977265-550EA533-7E7BB44A-1859F0AC");
 	}
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsKmzShpFilename(filename, "CANTONS_72") || acceptsZipFilename(filename, "Les cantons de la Sarthe .*");
+		return acceptsKmzShpFilename(filename, "Points d'Apports Volontaires") || acceptsZipFilename(filename, "Les points dapport volontaire .*");
 	}
 
 	@Override
 	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			replace(n, "NOM", "name");
-		}
+		// TODO
 	}
 }

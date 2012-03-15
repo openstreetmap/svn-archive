@@ -39,6 +39,7 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 
@@ -358,7 +359,7 @@ public class ModuleInformation implements OdConstants {
 
     public ImageIcon getScaledIcon() {
         if (icon == null)
-            return null;
+            return OdUtils.getImageIcon(ICON_EMPTY_24);
         return new ImageIcon(icon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
     }
 }

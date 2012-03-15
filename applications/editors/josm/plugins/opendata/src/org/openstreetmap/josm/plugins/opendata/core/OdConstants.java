@@ -84,6 +84,7 @@ public interface OdConstants {
 	public static final String ICON_OSM_24 = "osm24.png";
 
 	public static final String ICON_AGREEMENT_24 = "agreement24.png";
+	public static final String ICON_EMPTY_24 = "empty24.png";
 
     /**
      * File extensions.

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -58,6 +59,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsImporter;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public final class OdPlugin extends Plugin implements OdConstants {

@@ -2964,6 +2964,54 @@
      </Rule>    
 </Style>
 <Style name="roads-casing">							
+     <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+    &maxscale_zoom8;
+    &minscale_zoom8;
+      <LineSymbolizer stroke="#dc1400" stroke-width="2.2"/>
+     </Rule>
+     <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+    &maxscale_zoom9;
+    &minscale_zoom9;
+      <LineSymbolizer stroke="#dc1400" stroke-width="3.5"/>
+     </Rule>
+     <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+    &maxscale_zoom10;
+    &minscale_zoom10;
+      <LineSymbolizer stroke="#dc1400" stroke-width="4.2"/>
+     </Rule>
+     <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+    &maxscale_zoom11;
+    &minscale_zoom11;
+      <LineSymbolizer stroke="#dc1400" stroke-width="3.7"/>
+     </Rule>
+     <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#477147" stroke-width="2.5"/>
+	 </Rule>
+     <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#8d4346" stroke-width="2.5"/>
+	 </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      &maxscale_zoom10;
+      &minscale_zoom10;
+      <LineSymbolizer stroke="#ffd71e" stroke-width="2.0"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      &maxscale_zoom11;
+      &minscale_zoom11;
+      <LineSymbolizer stroke="#f3a034" stroke-width="2.5"/>
+    </Rule>
     <Rule>
       &maxscale_zoom10;
       &minscale_zoom12;
@@ -2976,31 +3024,31 @@
       <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
       &maxscale_zoom5;
       &minscale_zoom6;
-      <LineSymbolizer stroke="#dc1400" stroke-width="0.5"/>
+      <LineSymbolizer stroke="#ffc982" stroke-width="0.5"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
       &maxscale_zoom7;
       &minscale_zoom8;
-      <LineSymbolizer stroke="#dc1400" stroke-width="0.7"/>
+      <LineSymbolizer stroke="#ffc982" stroke-width="0.7"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
       &maxscale_zoom9;
       &minscale_zoom9;
-      <LineSymbolizer stroke="#dc1400" stroke-width="0.8"/>
+      <LineSymbolizer stroke="#ffc982" stroke-width="0.8"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
       &maxscale_zoom10;
       &minscale_zoom10;
-      <LineSymbolizer stroke="#dc1400" stroke-width="2"/>
+      <LineSymbolizer stroke="#ffc982" stroke-width="2"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
       &maxscale_zoom11;
       &minscale_zoom11;
-      <LineSymbolizer stroke="#dc1400" stroke-width="1.5"/>
+      <LineSymbolizer stroke="#ffc982" stroke-width="1.5"/>
     </Rule>
     <!-- TRUNK -->
     <Rule>
@@ -3651,8 +3699,8 @@
 &layer-ferry-routes;
 &layer-aerialways;
 <Layer name="roads" status="on" srs="&osm2pgsql_projection;">
-    <StyleName>roads</StyleName>
     <StyleName>roads-casing</StyleName>
+    <StyleName>roads</StyleName>
     <Datasource>
       <Parameter name="table">
       (select way,highway,

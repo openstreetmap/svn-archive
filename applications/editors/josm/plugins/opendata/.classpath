@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="modules/fr.cg41/src"/>
 	<classpathentry kind="src" path="modules/fr.datagouvfr/src"/>
 	<classpathentry kind="src" path="modules/fr.datagouvfr/resources"/>
+	<classpathentry kind="src" path="modules/fr.lemans/src"/>
 	<classpathentry kind="src" path="modules/fr.paris/src"/>
 	<classpathentry kind="src" path="modules/fr.sncf/src"/>
 	<classpathentry kind="src" path="modules/fr.toulouse/src"/>

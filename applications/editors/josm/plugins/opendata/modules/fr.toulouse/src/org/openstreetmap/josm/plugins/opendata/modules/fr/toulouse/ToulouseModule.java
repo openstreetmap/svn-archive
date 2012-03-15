@@ -41,6 +41,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.patr
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.patrimoine.Parcelles1830Handler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.sport.InstallationSportiveBalmaHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.topographie.AltimetrieVoieHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ChantiersLineairesHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ChantiersPonctuelsHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.HorodateurHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.MetroStationHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.PMRHandler;
@@ -94,5 +96,7 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(new PetiteEnfanceEtJeunesseBalmaHandler());
         handlers.add(new EquipementCulturelBalmaHandler());
         handlers.add(new InstallationSportiveBalmaHandler());
+        handlers.add(new ChantiersPonctuelsHandler());
+        handlers.add(new ChantiersLineairesHandler());
     }
 }

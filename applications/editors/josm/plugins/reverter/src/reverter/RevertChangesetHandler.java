@@ -3,6 +3,7 @@ package reverter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.io.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.io.remotecontrol.handler.RequestHandler;
 
 public class RevertChangesetHandler extends RequestHandler {
@@ -23,6 +24,16 @@ public class RevertChangesetHandler extends RequestHandler {
             throw new RequestHandlerErrorException();
         }
 
+    }
+
+    @Override
+    public String[] getMandatoryParams() {
+        return new String[] {"id"};
+    }
+
+    @Override
+    public PermissionPrefWithDefault getPermissionPref() {
+        return null;
     }
 
     @Override

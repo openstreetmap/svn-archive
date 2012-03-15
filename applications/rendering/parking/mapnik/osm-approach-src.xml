@@ -7,7 +7,7 @@
 <!ENTITY layer-approach-area SYSTEM "inc/layer-approach-area.xml.inc">
 <!ENTITY layer-approach-point SYSTEM "inc/layer-approach-point.xml.inc">
 ]>
-<Map background-color="&approach_background;" srs="+init=epsg:3857" minimum-version="2.0.0">
+<Map background-color="&approach_water;" srs="+init=epsg:3857" minimum-version="2.0.0">
   &fontset-settings;
 
 <Style name="roads-text-name">

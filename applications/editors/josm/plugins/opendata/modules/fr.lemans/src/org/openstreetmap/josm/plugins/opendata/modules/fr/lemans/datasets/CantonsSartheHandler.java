@@ -18,17 +18,17 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 
-public class ServicesCommunautairesMunicipauxHandler extends LeMansDataSetHandler {
+public class CantonsSartheHandler extends LeMansDataSetHandler {
 
-	public ServicesCommunautairesMunicipauxHandler() {
-		super("F7F65F15-550EA533-37695DD8-F7A74F05");
-		setName("Services communautaires et municipaux");
-		setCsvKmzShpUuid("66C8C51F-550EA533-7E7BB44A-B9216F89", "66C925DA-550EA533-7E7BB44A-BCF0B629", "66C972AD-550EA533-7E7BB44A-E842FFAD");
+	public CantonsSartheHandler() {
+		super("F7D936DF-550EA533-37695DD8-29CFF55B");
+		setName("Cantons de la Sarthe");
+		setCsvKmzShpUuid("62DF4EEF-550EA533-7E7BB44A-45C66201", "62DFCA8F-550EA533-7E7BB44A-7D1AA2D4", "62E017CA-550EA533-7E7BB44A-23772121");
 	}
 
 	@Override
 	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzShpFilename(filename, "SERVICES_VDM_LMM") || acceptsZipFilename(filename, "Les services de le Mans Métropole et de la Ville du Mans .*");
+		return acceptsCsvKmzShpFilename(filename, "CANTONS_72") || acceptsZipFilename(filename, "Les cantons de la Sarthe .*");
 	}
 
 	@Override

@@ -68,7 +68,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	private Class<? extends AbstractReader> findReaderByAttachment() {
 		String cdisp = this.activeConnection.getHeaderField("Content-disposition");
 		if (cdisp != null) {
-			Matcher m = Pattern.compile("attachment; filename=(.*)").matcher(cdisp);
+			Matcher m = Pattern.compile("attachment;.?filename=(.*)").matcher(cdisp);
 			if (m.matches()) {
 				filename = m.group(1);
 				return findReaderByExtension(filename.toLowerCase());
@@ -96,6 +96,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	}
 
 	private Class<? extends AbstractReader> findReaderByExtension(String filename) {
+		filename = filename.replace("\"", "");
     	if (filename.endsWith("."+XLS_EXT)) {
     		return XlsReader.class;
     	} else if (filename.endsWith("."+CSV_EXT)) {

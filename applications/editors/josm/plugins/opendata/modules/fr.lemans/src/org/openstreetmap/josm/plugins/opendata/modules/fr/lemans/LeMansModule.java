@@ -17,6 +17,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.lemans;
 
 import org.openstreetmap.josm.plugins.opendata.core.modules.AbstractModule;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.CantonsSartheHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.ServicesCommunautairesMunicipauxHandler;
 
 public class LeMansModule extends AbstractModule {
@@ -24,5 +25,6 @@ public class LeMansModule extends AbstractModule {
 	public LeMansModule(ModuleInformation info) {
 		super(info);
 		handlers.add(new ServicesCommunautairesMunicipauxHandler());
+		handlers.add(new CantonsSartheHandler());
     }
 }

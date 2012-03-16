@@ -1137,10 +1137,6 @@
 
     <!-- nop and debug from here -->
     <Rule>
-      <Filter>[power] = 'line'</Filter>
-    </Rule>
-    
-    <Rule>
       <ElseFilter/>
       &maxscale_zoom15;
       &minscale_zoom16;
@@ -1162,6 +1158,7 @@
        where waterway IS NULL
          and leisure IS NULL
          and landuse IS NULL
+         and power IS NULL
          and name is not null
       ) as roads
       </Parameter>

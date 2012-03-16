@@ -1134,6 +1134,12 @@
       &minscale_zoom18;
       <TextSymbolizer size="11" fill="&approach_road_text;" spacing="400" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
     </Rule>
+
+    <!-- nop and debug from here -->
+    <Rule>
+      <Filter>[power] = 'line'</Filter>
+    </Rule>
+    
     <Rule>
       <ElseFilter/>
       &maxscale_zoom15;

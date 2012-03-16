@@ -982,7 +982,7 @@
       <Filter>[highway] = 'service' and not [service]='INT-minor'</Filter>
       &maxscale_zoom17;
       &minscale_zoom18;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="8" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_debug;" stroke-width="8" stroke-linecap="round"/>
    </Rule>
 
 <!-- disable minor service ways
@@ -1151,13 +1151,13 @@
       <ElseFilter/>
       &maxscale_zoom15;
       &minscale_zoom16;
-      <TextSymbolizer size="19" fill="&approach_road_text;" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
+      <TextSymbolizer size="19" fill="&approach_road_text_debug;" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
     </Rule>
     <Rule>
       <ElseFilter/>
       &maxscale_zoom17;
       &minscale_zoom18;
-      <TextSymbolizer size="21" fill="&approach_road_text;" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
+      <TextSymbolizer size="21" fill="&approach_road_text_debug;" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
     </Rule>
 </Style>
 <Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">

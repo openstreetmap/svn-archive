@@ -958,6 +958,7 @@
       &minscale_zoom18;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="13" stroke-linecap="round"/>
     </Rule>
+<!-- service erst ab z17
     <Rule>
       <Filter>[highway] = 'service' and not [service]='INT-minor'</Filter>
       &maxscale_zoom13;
@@ -976,12 +977,22 @@
       &minscale_zoom18;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="6" stroke-linecap="round"/>
    </Rule>
+-->
+   <Rule>
+      <Filter>[highway] = 'service' and not [service]='INT-minor'</Filter>
+      &maxscale_zoom17;
+      &minscale_zoom18;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="8" stroke-linecap="round"/>
+   </Rule>
+
+<!-- disable minor service ways
    <Rule>
       <Filter>[highway] = 'service' and [service]='INT-minor'</Filter>
       &maxscale_zoom16;
       &minscale_zoom18;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="3" stroke-linecap="round"/>
    </Rule>
+-->
    <Rule>
       <Filter>[highway] = 'pedestrian'</Filter>
       &maxscale_zoom13;

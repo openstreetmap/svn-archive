@@ -1159,6 +1159,7 @@
          and leisure IS NULL
          and landuse IS NULL
          and power IS NULL
+         and not (highway='track' and tracktype in ('grade2','grade3','grade4','grade5'))
          and name is not null
       ) as roads
       </Parameter>

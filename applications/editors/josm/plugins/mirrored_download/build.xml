@@ -85,7 +85,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Simplifies download from different read-only APIs."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/mirrored_download"/>
-                <attribute name="Plugin-Mainversion" value="5089"/>
+                <attribute name="Plugin-Mainversion" value="5097"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package mirrored_download;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;

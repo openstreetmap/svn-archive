@@ -17,11 +17,10 @@ package org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.datasets;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.be.BelgianDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.BruxellesConstants;
 
 public abstract class BruxellesDataSetHandler extends BelgianDataSetHandler implements BruxellesConstants {
@@ -69,10 +68,7 @@ public abstract class BruxellesDataSetHandler extends BelgianDataSetHandler impl
 	@Override
 	public URL getLocalPortalURL() {
 		String basePortal = null;
-		String lang = Main.pref.get("language");
-		if (lang == null || lang.isEmpty()) {
-			lang = Locale.getDefault().toString();
-		}
+		String lang = OdUtils.getJosmLanguage();
 			
 		if (lang.startsWith("fr")) {
 			basePortal = PORTAL_FR;

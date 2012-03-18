@@ -15,27 +15,35 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.actions;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
+import org.openstreetmap.josm.plugins.opendata.core.gui.AskLicenseAgreementDialog;
 import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
+import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 
 public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 
 	private AbstractDataSetHandler handler;
+	
+	//private static final PdfEditorKit pdfEditorKit = new PdfEditorKit();
 	
 	@Override
 	public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
@@ -44,13 +52,13 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 
 	@Override
 	public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
-		Class<? extends AbstractReader> readerClass = null; // TODO
-        downloadTask = new InternDownloadTasK(newLayer, new NetworkReader(url, handler, readerClass), progressMonitor);
+        downloadTask = new InternalDownloadTasK(newLayer, new NetworkReader(url, handler), progressMonitor);
         currentBounds = null;
-        // Extract .osm filename from URL to set the new layer name
-        //Matcher matcher = Pattern.compile("http://.*/(.*\\.osm)").matcher(url);
-        //newLayerName = matcher.matches() ? matcher.group(1) : null;
-        return Main.worker.submit(downloadTask);
+        if (handler == null || !handler.hasLicenseToBeAccepted() || askLicenseAgreement(handler.getLicense())) {
+        	return Main.worker.submit(downloadTask);
+        } else {
+        	return null;
+        }
 	}
 
 	@Override
@@ -72,9 +80,9 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 		return false;
 	}
 	
-	protected class InternDownloadTasK extends DownloadTask {
+	protected class InternalDownloadTasK extends DownloadTask {
 
-		public InternDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
+		public InternalDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
 			super(newLayer, reader, progressMonitor);
 		}
 
@@ -98,4 +106,20 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
     		return new OdDataLayer(dataSet, layerName, associatedFile, handler);
 		}
 	}
+	
+    /**
+     * returns true if the user accepts the license, false if they refuse
+     */
+    protected final boolean askLicenseAgreement(License license) {
+    	if (license == null || (license.getURL() == null && license.getSummaryURL() == null)) {
+    		return true;
+    	}
+    	try {
+	        return new AskLicenseAgreementDialog(license).showDialog().getValue() == 1;
+	        
+		} catch (IOException e) {
+            JOptionPane.showMessageDialog(Main.parent, tr("License URL not available: {0}", license.toString()));
+            return false;
+		}
+    }
 }

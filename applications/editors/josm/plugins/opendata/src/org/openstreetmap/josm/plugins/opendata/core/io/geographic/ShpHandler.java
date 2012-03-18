@@ -13,18 +13,21 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
+public interface ShpHandler {
 
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
-	}
+	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException;
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
-	}
+	public void setPreferMultipolygonToSimpleWay(boolean prefer);
+
+	public boolean preferMultipolygonToSimpleWay();
+
+	public void setCheckNodeProximity(boolean check);
+	
+	public boolean checkNodeProximity();
 }

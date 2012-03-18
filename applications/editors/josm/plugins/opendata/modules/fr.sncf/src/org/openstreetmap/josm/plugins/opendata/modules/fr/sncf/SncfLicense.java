@@ -13,18 +13,19 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.modules.fr.sncf;
 
+import java.net.MalformedURLException;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
+import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
-	}
+public class SncfLicense extends License {
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
+	public SncfLicense() {
+		try {
+			setURL("http://test.data-sncf.com/licence", "fr");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 }

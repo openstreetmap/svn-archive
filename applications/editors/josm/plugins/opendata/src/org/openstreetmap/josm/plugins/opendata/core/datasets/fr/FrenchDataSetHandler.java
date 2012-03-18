@@ -20,14 +20,9 @@ import static org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesPro
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.geotools.referencing.CRS;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -37,6 +32,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.UTM;
 import org.openstreetmap.josm.data.projection.UTM.Hemisphere;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 
 public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implements FrenchConstants {
 
@@ -65,23 +61,56 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 		utm38, // Mayotte
 		utm40, // Reunion
 	};
+	
+	protected class InternalCsvHandler extends DefaultCsvHandler {
+		/*@Override
+		public List<Projection> getSpreadSheetProjections() {
+			if (singleProjection != null) {
+				return Arrays.asList(new Projection[]{singleProjection});
+			} else {
+				return Arrays.asList(projections);
+			}
+		}*/
+		
+		@Override
+		public LatLon getCoor(EastNorth en, String[] fields) {
+			if (singleProjection != null) {
+				return singleProjection.eastNorth2latlon(en);
+			} else {
+				return super.getCoor(en, fields);
+			}
+		}
+
+		@Override
+		public boolean handlesProjection() {
+			return singleProjection != null;
+		}
+	}
 
 	public FrenchDataSetHandler() {
-		
+		init();
 	}
 
 	public FrenchDataSetHandler(String relevantTag) {
 		super(relevantTag);
+		init();
 	}
 
 	public FrenchDataSetHandler(boolean relevantUnion, String[] relevantTags) {
 		super(relevantUnion, relevantTags);
+		init();
 	}
 
 	public FrenchDataSetHandler(boolean relevantUnion, Tag[] relevantTags) {
 		super(relevantUnion, relevantTags);
+		init();
 	}
 	
+	private void init() {
+		setShpHandler(new FrenchShpHandler());
+		setCsvHandler(new InternalCsvHandler());
+	}
+
 	protected final void setNationalPortalPath(String nationalPortalPath) {
 		this.nationalPortalPath = nationalPortalPath;
 	}
@@ -119,38 +148,6 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 	@Override
 	public String getNationalPortalIconName() {
 		return ICON_FR_24;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#handlesCsvProjection()
-	 */
-	@Override
-	public boolean handlesSpreadSheetProjection() {
-		return singleProjection != null ? true : super.handlesSpreadSheetProjection();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvProjections()
-	 */
-	@Override
-	public List<Projection> getSpreadSheetProjections() {
-		if (singleProjection != null) {
-			return Arrays.asList(new Projection[]{singleProjection});
-		} else {
-			return Arrays.asList(projections);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvCoor(org.openstreetmap.josm.data.coor.EastNorth, java.lang.String[])
-	 */
-	@Override
-	public LatLon getSpreadSheetCoor(EastNorth en, String[] fields) {
-		if (singleProjection != null) {
-			return singleProjection.eastNorth2latlon(en);
-		} else {
-			return super.getSpreadSheetCoor(en, fields);
-		}
 	}
 	
 	protected static final LatLon getLatLonByDptCode(EastNorth en, String dpt, boolean useCC9) {
@@ -256,20 +253,5 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 			}
 		}
 		return "";
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#findMathTransform(org.opengis.referencing.crs.CoordinateReferenceSystem, org.opengis.referencing.crs.CoordinateReferenceSystem, boolean)
-	 */
-	@Override
-	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient)
-			throws FactoryException {
-		if (sourceCRS.getName().getCode().equalsIgnoreCase("RGM04")) {
-			return CRS.findMathTransform(CRS.decode("EPSG:4471"), targetCRS, lenient);
-		} else if (sourceCRS.getName().getCode().equalsIgnoreCase("RGFG95_UTM_Zone_22N")) {
-			return CRS.findMathTransform(CRS.decode("EPSG:2972"), targetCRS, lenient);
-		} else {
-			return super.findMathTransform(sourceCRS, targetCRS, lenient);
-		}
 	}
 }

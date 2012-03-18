@@ -16,10 +16,10 @@
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrConstants;
 
 public abstract class DataGouvDataSetHandler extends FrenchDataSetHandler implements DataGouvFrConstants {
@@ -49,6 +49,7 @@ public abstract class DataGouvDataSetHandler extends FrenchDataSetHandler implem
 	private void init(String portalPath, Projection singleProjection) {
 		setNationalPortalPath(portalPath);
 		setSingleProjection(singleProjection);
+		setLicense(License.LOOL);
 	}
 
 	/* (non-Javadoc)
@@ -57,27 +58,6 @@ public abstract class DataGouvDataSetHandler extends FrenchDataSetHandler implem
 	@Override
 	public String getSource() {
 		return SOURCE_DATAGOUVFR;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalURL()
-	 */
-	@Override
-	public URL getLocalPortalURL() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
-	 */
-	@Override
-	public URL getLicenseURL() {
-		try {
-			return new URL(FRENCH_PORTAL+"Licence-Ouverte-Open-Licence");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	protected final void setDownloadFileName(String filename) {

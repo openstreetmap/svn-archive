@@ -29,6 +29,7 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
 	public AssainissementHandler() {
 		super("assainissement-collectif-30381843");
 		setName("Assainissement collectif");
+		getSpreadSheetHandler().setSheetNumber(1);
 	}
 
 	@Override
@@ -39,14 +40,6 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
 	@Override
 	public void updateDataSet(DataSet ds) {
 		// TODO Auto-generated method stub
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getSheetNumber()
-	 */
-	@Override
-	public int getSheetNumber() {
-		return 1;
 	}
 
 	/* (non-Javadoc)

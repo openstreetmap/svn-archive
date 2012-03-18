@@ -13,18 +13,38 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
+public class DefaultSpreadSheetHandler implements SpreadSheetHandler {
 
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
+	private int sheetNumber = -1;
+	private boolean handlesProjection = false;
+	
+	@Override
+	public int getSheetNumber() {
+		return sheetNumber;
 	}
 
 	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
+	public void setSheetNumber(int n) {
+		sheetNumber = n;
+	}
+	
+	@Override
+	public boolean handlesProjection() {
+		return handlesProjection;
+	}
+
+	@Override
+	public void setHandlesProjection(boolean handle) {
+		handlesProjection = handle;
+	}
+
+	@Override
+	public LatLon getCoor(EastNorth en, String[] fields) {
+		return null;
 	}
 }

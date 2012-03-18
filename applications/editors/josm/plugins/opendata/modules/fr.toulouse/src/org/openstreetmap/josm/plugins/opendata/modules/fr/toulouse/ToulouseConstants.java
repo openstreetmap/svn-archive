@@ -34,7 +34,7 @@ public interface ToulouseConstants extends FrenchConstants {
 	/**
 	 * Portal
 	 */
-	public static final String PORTAL = "http://data.grandtoulouse.fr/les-donnees/-/opendata/card/";
+	public static final String PORTAL = "http://data.grandtoulouse.fr";
 
 	/**
 	 * Icons

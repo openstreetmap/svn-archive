@@ -18,44 +18,27 @@ package org.openstreetmap.josm.plugins.opendata.core.datasets;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.AbstractDerivedCRS;
-import org.geotools.referencing.datum.DefaultEllipsoid;
-import org.geotools.referencing.operation.projection.LambertConformal;
-import org.geotools.referencing.operation.projection.LambertConformal1SP;
-import org.geotools.referencing.operation.projection.LambertConformal2SP;
-import org.geotools.referencing.operation.projection.MapProjection.AbstractProvider;
-import org.opengis.parameter.ParameterDescriptor;
-import org.opengis.parameter.ParameterValueGroup;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.crs.GeographicCRS;
-import org.opengis.referencing.datum.GeodeticDatum;
-import org.opengis.referencing.operation.MathTransform;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.projection.AbstractProjection;
-import org.openstreetmap.josm.data.projection.Ellipsoid;
-import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.Projections;
-import org.openstreetmap.josm.data.projection.proj.LambertConformalConic;
-import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters;
-import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters1SP;
-import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters2SP;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultZipHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultShpHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.util.NamesFrUtils;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -98,9 +81,11 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	private DataSetCategory category;
 	private String sourceDate;
 	private File associatedFile;
-	private URL dataURL;
 
 	public AbstractDataSetHandler() {
+		setShpHandler(new DefaultShpHandler());
+		setZipHandler(new DefaultZipHandler());
+		setCsvHandler(new DefaultCsvHandler());
 	}
 	
 	private final boolean acceptsFilename(String filename, String[] expected, String ... extensions ) {
@@ -177,27 +162,86 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		return acceptsFilename(filename, expected, CSV_EXT, XLS_EXT);
 	}
 	
-	public URL getWikiURL() {return null;}
+	// -------------------- License --------------------
 	
-	public URL getLocalPortalURL() {return null;}
+	private License license;
 	
-	public URL getNationalPortalURL() {return null;}
-
-	public URL getLicenseURL() {return null;}
-
-	public URL getDataURL() {return dataURL;}
-	
-	public final void setDataURL(String url) throws MalformedURLException {
-		this.dataURL = new URL(url);
+	public License getLicense() {
+		return license;
 	}
+
+	public final void setLicense(License license) {
+		this.license = license;
+	}
+
+	// --------------------- URLs ---------------------
 	
-	public final void setDataURL(URL url) {
-		this.dataURL = url;
+	private URL dataURL;
+	private URL wikiURL;
+	private URL localPortalURL;
+	private URL nationalPortalURL;
+	
+	public URL getDataURL() {
+		return dataURL;
+	}
+
+	public final void setDataURL(URL dataURL) {
+		this.dataURL = dataURL;
+	}
+
+	public final void setDataURL(String dataURL) throws MalformedURLException {
+		setDataURL(new URL(dataURL));
+	}
+
+	public URL getWikiURL() {
+		return wikiURL;
+	}
+
+	public final void setWikiURL(URL wikiURL) {
+		this.wikiURL = wikiURL;
+	}
+
+	public final void setWikiURL(String wikiURL) throws MalformedURLException {
+		setWikiURL(new URL(wikiURL));
+	}
+
+	public URL getLocalPortalURL() {
+		return localPortalURL;
+	}
+
+	public final void setLocalPortalURL(URL localPortalURL) {
+		this.localPortalURL = localPortalURL;
+	}
+
+	public final void setLocalPortalURL(String localPortalURL) throws MalformedURLException {
+		setLocalPortalURL(new URL(localPortalURL));
+	}
+
+	public URL getNationalPortalURL() {
+		return nationalPortalURL;
+	}
+
+	public final void setNationalPortalURL(URL nationalPortalURL) {
+		this.nationalPortalURL = nationalPortalURL;
+	}
+
+	public final void setNationalPortalURL(String nationalPortalURL) throws MalformedURLException {
+		setNationalPortalURL(new URL(nationalPortalURL));
 	}
 
 	public List<Pair<String,URL>> getDataURLs() {return null;}
 
 	public AbstractReader getReaderForUrl(String url) {return null;}
+	
+	private boolean hasLicenseToBeAccepted = true;
+
+	public final boolean hasLicenseToBeAccepted() {
+		return hasLicenseToBeAccepted;
+	}
+
+	public final void setHasLicenseToBeAccepted(boolean hasLicenseToBeAccepted) {
+		this.hasLicenseToBeAccepted = hasLicenseToBeAccepted;
+	}
 
 	public final DataSetCategory getCategory() {
 		return category;
@@ -225,81 +269,8 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 				"n=\""+LatLon.roundToOsmPrecisionStrict(bounds.getMax().lat())+"\"");
 	}
 
-	public enum OaQueryType {
-		NODE ("node"),
-		WAY ("way"),
-		RELATION ("relation");
-		@Override
-		public String toString() { return this.value; }
-		private OaQueryType(final String value) { this.value = value; }
-		private final String value;
-	}
-
-	public enum OaRecurseType {
-		RELATION_RELATION ("relation-relation"),
-		RELATION_BACKWARDS ("relation-backwards"),
-		RELATION_WAY ("relation-way"),
-		RELATION_NODE ("relation-node"),
-		WAY_NODE ("way-node"),
-		WAY_RELATION ("way-relation"),
-		NODE_RELATION ("node-relation"),
-		NODE_WAY ("node-way");
-		@Override
-		public String toString() { return this.value; }
-		private OaRecurseType(final String value) { this.value = value; }
-		private final String value;
-	}
 
 	protected String getOverpassApiRequest(String bbox) {return null;}
-	
-	protected final String oaUnion(String ... queries) {
-		String result = "<union>\n";
-		for (String query : queries) {
-			if (query != null) {
-				result += query + "\n";
-			}
-		}
-		result += "</union>";
-		return result;
-	}
-	
-	protected final String oaQuery(String bbox, OaQueryType type, String ... conditions) {
-		String result = "<query type=\""+type+"\" >\n";
-		if (bbox != null) {
-			result += "<bbox-query "+bbox+"/>\n";
-		}
-		for (String condition : conditions) {
-			if (condition != null) {
-				result += condition + "\n";
-			}
-		}
-		result += "</query>";
-		return result;
-	}
-
-	protected final String oaRecurse(OaRecurseType type, String into) {
-		return "<recurse type=\""+type+"\" into=\""+into+"\"/>\n";
-	}
-
-	protected final String oaRecurse(OaRecurseType ... types) {
-		String result = "";
-		for (OaRecurseType type : types) {
-			result += "<recurse type=\""+type+"\"/>\n";
-		}
-		return result;
-	}
-	
-	protected final String oaPrint() {
-		return "<print mode=\"meta\"/>";
-	}
-	
-	protected final String oaHasKey(String key) {
-		return oaHasKey(key, null);
-	}
-
-	protected final String oaHasKey(String key, String value) {
-		return "<has-kv k=\""+key+"\" "+(value != null && !value.isEmpty() ? "v=\""+value+"\"" : "")+" />";
-	}
 
 	public boolean equals(IPrimitive p1, IPrimitive p2) {return false;}
 	
@@ -404,30 +375,6 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		return ICON_CORE_16;
 	}
 	
-	public boolean handlesSpreadSheetProjection() {
-		return false;
-	}
-	
-	public List<Projection> getSpreadSheetProjections() {
-		return null;
-	}
-
-	public LatLon getSpreadSheetCoor(EastNorth en, String[] fields) {
-		return null;
-	}
-	
-	public Charset getCsvCharset() {
-		return null;
-	}
-	
-	public String getCsvSeparator() {
-		return null;
-	}
-	
-	public int getSheetNumber() {
-		return -1;
-	}
-	
 	public ExtendedSourceEntry getMapPaintStyle() {
 		return null;
 	}
@@ -445,100 +392,13 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 				this.getClass().getPackage().getName().replace(".", "/")+"/"+
 				fileNameWithoutExtension+"."+MAPCSS_EXT);
 	}
-	
-	public boolean preferMultipolygonToSimpleWay() {
-		return false;
-	}
-	
+		
 	public final void setAssociatedFile(File associatedFile) {
 		this.associatedFile = associatedFile;
 	}
 
 	public final File getAssociatedFile() {
 		return this.associatedFile;
-	}
-	
-	private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>> 
-		ellipsoids = new ArrayList<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>>();
-	static {
-		ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.GRS80, Ellipsoid.GRS80));
-		ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.WGS84, Ellipsoid.WGS84));
-	}
-	
-	private static final Double get(ParameterValueGroup values, ParameterDescriptor desc) {
-		return (Double) values.parameter(desc.getName().getCode()).getValue();
-	}
-	
-	private static final boolean equals(Double a, Double b) {
-		boolean res = Math.abs(a - b) <= Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE);
-		if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
-			System.out.println("Comparing "+a+" and "+b+" -> "+res);
-		}
-		return res; 
-	}
-	
-	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException {
-		if (sourceCRS instanceof GeographicCRS && sourceCRS.getName().getCode().equalsIgnoreCase("GCS_ETRS_1989")) {
-			return CRS.findMathTransform(CRS.decode("EPSG:4258"), targetCRS, lenient);
-		} else if (sourceCRS instanceof AbstractDerivedCRS && sourceCRS.getName().getCode().equalsIgnoreCase("Lambert_Conformal_Conic")) {
-			List<MathTransform> result = new ArrayList<MathTransform>();
-			AbstractDerivedCRS crs = (AbstractDerivedCRS) sourceCRS;
-			MathTransform transform = crs.getConversionFromBase().getMathTransform();
-			if (transform instanceof LambertConformal && crs.getDatum() instanceof GeodeticDatum) {
-				LambertConformal lambert = (LambertConformal) transform;
-				GeodeticDatum geo = (GeodeticDatum) crs.getDatum();
-				for (Projection p : Projections.getProjections()) {
-					if (p instanceof AbstractProjection) {
-						AbstractProjection ap = (AbstractProjection) p;
-						if (ap.getProj() instanceof LambertConformalConic) {
-							for (Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid> pair : ellipsoids) {
-								if (pair.a.equals(geo.getEllipsoid()) && pair.b.equals(ap.getEllipsoid())) {
-									boolean ok = true;
-									ParameterValueGroup values = lambert.getParameterValues();
-									Parameters params = ((LambertConformalConic) ap.getProj()).getParameters();
-									
-									ok = ok ? equals(get(values, AbstractProvider.LATITUDE_OF_ORIGIN), params.latitudeOrigin) : ok;
-									ok = ok ? equals(get(values, AbstractProvider.CENTRAL_MERIDIAN), ap.getCentralMeridian()) : ok;
-									ok = ok ? equals(get(values, AbstractProvider.SCALE_FACTOR), ap.getScaleFactor()) : ok;
-									ok = ok ? equals(get(values, AbstractProvider.FALSE_EASTING), ap.getFalseEasting()) : ok;
-									ok = ok ? equals(get(values, AbstractProvider.FALSE_NORTHING), ap.getFalseNorthing()) : ok;
-									
-									if (lambert instanceof LambertConformal2SP && params instanceof Parameters2SP) {
-										Parameters2SP param = (Parameters2SP) params;
-										ok = ok ? equals(Math.min(get(values, AbstractProvider.STANDARD_PARALLEL_1),get(values, AbstractProvider.STANDARD_PARALLEL_2)), 
-														 Math.min(param.standardParallel1, param.standardParallel2)) : ok;
-										ok = ok ? equals(Math.max(get(values, AbstractProvider.STANDARD_PARALLEL_1), get(values, AbstractProvider.STANDARD_PARALLEL_2)),
-												         Math.max(param.standardParallel1, param.standardParallel2)) : ok;
-										
-									} else if (!(lambert instanceof LambertConformal1SP && params instanceof Parameters1SP)) {
-										ok = false;
-									}
-
-									if (ok) {
-										try {
-											result.add(CRS.findMathTransform(CRS.decode(p.toCode()), targetCRS, lenient));
-										} catch (FactoryException e) {
-											System.err.println(e.getMessage());
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			if (!result.isEmpty()) {
-				if (result.size() > 1) {
-					System.err.println("Found multiple projections !"); // TODO: something
-				}
-				return result.get(0);
-			}
-		}
-		return null;
-	}
-
-	public boolean checkShpNodeProximity() {
-		return false;
 	}
 	
 	public boolean acceptsUrl(String url) {
@@ -554,18 +414,52 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		}
 		return false;
 	}
-
-	private boolean setSkipXsdValidationInZipReading = false;
 	
-	public final void setSkipXsdValidationInZipReading(boolean skip) {
-		setSkipXsdValidationInZipReading = skip;
+	// --------- Shapefile handling ---------
+	
+	private ShpHandler shpHandler;
+
+	public final void setShpHandler(ShpHandler handler) {
+		shpHandler = handler;
 	}
 	
-	public boolean skipXsdValidationInZipReading() {
-		return setSkipXsdValidationInZipReading;
+	public final ShpHandler getShpHandler() {
+		return shpHandler;
 	}
 
-	public void notifyTempFileWritten(File file) {
-		// Do nothing, let handler overload this method if they need it
+	// ------------ Zip handling ------------
+	
+	private ZipHandler zipHandler;
+
+	public final void setZipHandler(ZipHandler handler) {
+		zipHandler = handler;
+	}
+	
+	public ZipHandler getZipHandler() {
+		return zipHandler;
+	}
+	
+	// ------ Spreadsheet handling ----------
+
+	private SpreadSheetHandler ssHandler;
+
+	public final void setSpreadSheetHandler(SpreadSheetHandler handler) {
+		ssHandler = handler;
+	}
+	
+	public final SpreadSheetHandler getSpreadSheetHandler() {
+		return ssHandler;
+	}
+
+	public final void setCsvHandler(CsvHandler handler) {
+		setSpreadSheetHandler(handler);
+	}
+	
+	public final CsvHandler getCsvHandler() {
+		if (ssHandler instanceof CsvHandler) {
+			return (CsvHandler) ssHandler;
+		} else {
+			return null;
+		}
 	}
 }

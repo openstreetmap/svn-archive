@@ -21,6 +21,7 @@ import java.net.URL;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisConstants;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisLicense;
 
 public abstract class ParisDataSetHandler extends FrenchDataSetHandler implements ParisConstants {
 	
@@ -52,6 +53,14 @@ public abstract class ParisDataSetHandler extends FrenchDataSetHandler implement
 
 	private final void init(int documentId) {
 		this.documentId = documentId;
+		setLicense(new ParisLicense());
+		try {
+			if (documentId > 0) {
+				setLocalPortalURL(PORTAL + "jsp/site/Portal.jsp?document_id="+documentId + "&portlet_id="+portletId);
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -68,17 +77,6 @@ public abstract class ParisDataSetHandler extends FrenchDataSetHandler implement
 	@Override
 	public String getLocalPortalIconName() {
 		return ICON_PARIS_24;
-	}
-
-	public final URL getLocalPortalURL() {
-		try {
-			if (documentId > 0) {
-				return new URL(PORTAL + "jsp/site/Portal.jsp?document_id="+documentId + "&portlet_id="+portletId);
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	protected abstract String getDirectLink();

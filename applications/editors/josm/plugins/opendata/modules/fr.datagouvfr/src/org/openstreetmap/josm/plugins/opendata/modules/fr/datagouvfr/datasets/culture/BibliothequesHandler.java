@@ -15,8 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.culture;
 
-import java.nio.charset.Charset;
-
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
@@ -27,6 +25,7 @@ public class BibliothequesHandler extends DataGouvDataSetHandler {
 		super("Adresses-des-bibliothèques-municipales-30382179", lambert93);
 		setName("Bibliothèques municipales");
 		setDownloadFileName("lieux de lecture_geoloc.txt");
+		getCsvHandler().setCharset(ISO8859_15);
 	}
 
 	@Override
@@ -39,13 +38,5 @@ public class BibliothequesHandler extends DataGouvDataSetHandler {
 		for (Node n : ds.getNodes()) {
 			n.put("amenity", "library");
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvCharset()
-	 */
-	@Override
-	public Charset getCsvCharset() {
-		return Charset.forName(ISO8859_15);
 	}
 }

@@ -36,18 +36,11 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 	public GeoFlaHandler() {
 		super();
 		setName("GEOFLA®");
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.portals.fr.datagouvfr.datasets.DataGouvDataSetHandler#getLocalPortalURL()
-	 */
-	@Override
-	public URL getLocalPortalURL() {
+		getShpHandler().setPreferMultipolygonToSimpleWay(true);
 		try {
-			return new URL("http://professionnels.ign.fr/ficheProduitCMS.do?idDoc=6185461");
+			setLocalPortalURL("http://professionnels.ign.fr/ficheProduitCMS.do?idDoc=6185461");
 		} catch (MalformedURLException e) {
-			System.err.println(e.getMessage());
-			return null;
+			e.printStackTrace();
 		}
 	}
 
@@ -78,11 +71,6 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 
 	protected boolean isArrondissementFile(String filename) {
 		return acceptsShpFilename(filename, "ARRONDISSEMENT") || acceptsShpFilename(filename, "LIMITE_ARRONDISSEMENT");
-	}
-
-	@Override
-	public boolean preferMultipolygonToSimpleWay() {
-		return true;
 	}
 
 	@Override

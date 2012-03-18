@@ -6,6 +6,10 @@ import org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.datasets.Bru
 
 public class BDHandler extends BruxellesDataSetHandler {
 
+	public BDHandler() {
+		getCsvHandler().setSeparator(",");
+	}
+	
 	@Override
 	public boolean acceptsFilename(String filename) {
 		return acceptsCsvFilename(filename, "textfile");
@@ -17,13 +21,5 @@ public class BDHandler extends BruxellesDataSetHandler {
 			n.put("tourism", "artwork");
 			replace(n, "Description", "name");
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvSeparator()
-	 */
-	@Override
-	public String getCsvSeparator() {
-		return ",";
 	}
 }

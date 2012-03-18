@@ -15,13 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
 
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaQueryType.NODE;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaQueryType.WAY;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.NODE_RELATION;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.RELATION_WAY;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.WAY_NODE;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.WAY_RELATION;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +23,11 @@ import java.util.Map;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
+
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.*;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.*;
 
 public class PistesCyclablesHandler extends ToulouseDataSetHandler {
 
@@ -64,11 +61,11 @@ public class PistesCyclablesHandler extends ToulouseDataSetHandler {
 	 */
 	@Override
 	protected String getOverpassApiQueries(String bbox, String... conditions) {
-		return oaQuery(bbox, NODE, conditions) + "\n" + 
-				oaRecurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
-				oaQuery(bbox, WAY, conditions) + "\n" +
-				oaRecurse(WAY_NODE, "nodes") + "\n" +
-				oaRecurse(WAY_RELATION);
+		return OverpassApi.query(bbox, NODE, conditions) + "\n" + 
+				OverpassApi.recurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
+				OverpassApi.query(bbox, WAY, conditions) + "\n" +
+				OverpassApi.recurse(WAY_NODE, "nodes") + "\n" +
+				OverpassApi.recurse(WAY_RELATION);
 	}
 
 	private String applyHighwayTag(String name, IPrimitive p) {

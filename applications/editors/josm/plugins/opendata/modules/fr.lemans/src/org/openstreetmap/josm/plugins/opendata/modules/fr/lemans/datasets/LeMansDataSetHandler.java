@@ -22,12 +22,11 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.LeMansConstants;
 import org.openstreetmap.josm.tools.Pair;
 
 public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implements LeMansConstants {
-	
-	private String uuid;
 	
 	private String kmzUuid;
 	private String shpUuid;
@@ -57,7 +56,14 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 	}
 
 	private final void init(String uuid) {
-		this.uuid = uuid;
+		try {
+			setLicense(License.ODbL);
+			if (uuid != null && !uuid.isEmpty()) {
+				setLocalPortalURL(PORTAL + "page.do?t=2&uuid=" + uuid);
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 		
 	protected final void setKmzShpUuid(String kmzUuid, String shpUuid) {
@@ -72,22 +78,11 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 	public String getSource() {
 		return SOURCE_LE_MANS;
 	}
-
-	public final URL getLocalPortalURL() {
-		try {
-			if (uuid != null && !uuid.isEmpty()) {
-				return new URL(PORTAL + "page.do?t=2&uuid=" + uuid);
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
 	 */
-	@Override
+	/*@Override
 	public URL getLicenseURL() {
 		try {
 			return new URL(PORTAL + "download.do?uuid=3E907F53-550EA533-5AE8381B-44AE9F93");
@@ -95,8 +90,8 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
+	}*/
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURLs()
 	 */

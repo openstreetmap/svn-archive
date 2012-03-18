@@ -37,13 +37,13 @@ public class XlsReader extends SpreadSheetReader {
 	private Sheet sheet;
 	private int rowIndex;
 	
-	public XlsReader(AbstractDataSetHandler handler) {
+	public XlsReader(SpreadSheetHandler handler) {
 		super(handler);
 	}
 
 	public static DataSet parseDataSet(InputStream in,
 			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		return new XlsReader(handler).parse(in, instance);
+		return new XlsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
 	}
 
 	@Override

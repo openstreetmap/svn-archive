@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultZipHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -64,6 +65,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 	
 	public EauxDeSurfaceHandler() {
 		setName("Eaux de surface");
+		setZipHandler(new InternalZipHandler());
 	}
 	
 	@Override
@@ -122,27 +124,26 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 	private Pair<String, URL> getDownloadURL(WaterAgency a) throws MalformedURLException {
 		return new Pair<String, URL>(a.name, new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
 	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#notifyTempFileWritten(java.io.File)
-	 */
-	@Override
-	public void notifyTempFileWritten(File file) {
-		if (file.getName().matches(SHP_PATTERN.replace("(.*)", "F")+"\\.prj")) { // Adour-Garonne .prj files cannot be parsed because they do not contain quotes... 
-			try {
-				BufferedReader reader = new BufferedReader(new FileReader(file));
-				String line = reader.readLine();
-				reader.close();
-				if (!line.contains("\"")) {
-					for (String term : new String[]{"GCS_ETRS_1989", "D_ETRS_1989", "GRS_1980", "Greenwich", "Degree"}) {
-						line = line.replace(term, "\""+term+"\"");
+	
+	private class InternalZipHandler extends DefaultZipHandler {
+		@Override
+		public void notifyTempFileWritten(File file) {
+			if (file.getName().matches(SHP_PATTERN.replace("(.*)", "F")+"\\.prj")) { // Adour-Garonne .prj files cannot be parsed because they do not contain quotes... 
+				try {
+					BufferedReader reader = new BufferedReader(new FileReader(file));
+					String line = reader.readLine();
+					reader.close();
+					if (!line.contains("\"")) {
+						for (String term : new String[]{"GCS_ETRS_1989", "D_ETRS_1989", "GRS_1980", "Greenwich", "Degree"}) {
+							line = line.replace(term, "\""+term+"\"");
+						}
+						BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+						writer.write(line);
+						writer.close();
 					}
-					BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-					writer.write(line);
-					writer.close();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}

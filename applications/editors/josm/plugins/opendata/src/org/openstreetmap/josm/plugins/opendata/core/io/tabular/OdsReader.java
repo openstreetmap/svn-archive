@@ -37,13 +37,13 @@ public class OdsReader extends SpreadSheetReader {
 	
 	private static final String SEP = "TextP:\\[";
 	
-	public OdsReader(AbstractDataSetHandler handler) {
+	public OdsReader(SpreadSheetHandler handler) {
 		super(handler);
 	}
 
 	public static DataSet parseDataSet(InputStream in,
 			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		return new OdsReader(handler).parse(in, instance);
+		return new OdsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
 	}
 
 	@Override

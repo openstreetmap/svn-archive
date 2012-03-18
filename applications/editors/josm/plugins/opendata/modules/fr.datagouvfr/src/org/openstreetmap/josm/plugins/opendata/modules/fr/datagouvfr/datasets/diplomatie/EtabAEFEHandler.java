@@ -25,6 +25,7 @@ public class EtabAEFEHandler extends DataGouvDataSetHandler {
 		super("Géolocalisation-des-établissements-du-réseau-d'enseignement-de-l'AEFE-30382449", wgs84);
 		setName("Établissements du réseau d'enseignement de l'AEFE");
 		setDownloadFileName("ETALAB_MAEE_Extraction_LDAP_geoloc_AEFE_2011-10-13.csv");
+		getCsvHandler().setSeparator(",");
 	}
 
 	@Override
@@ -42,13 +43,5 @@ public class EtabAEFEHandler extends DataGouvDataSetHandler {
 			replace(n, "ENTStructureSiteWeb", "website");
 			replace(n, "ENTStructureEmail", "contact:email");
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvSeparator()
-	 */
-	@Override
-	public String getCsvSeparator() {
-		return ",";
 	}
 }

@@ -49,12 +49,11 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	private File file;
 	private String filename;
 	
-    public NetworkReader(String url, AbstractDataSetHandler handler, Class<? extends AbstractReader> readerClass) {
+    public NetworkReader(String url, AbstractDataSetHandler handler) {
         CheckParameterUtil.ensureParameterNotNull(url, "url");
-        //CheckParameterUtil.ensureParameterNotNull(readerClass, "readerClass");
     	this.url = url;
-        this.readerClass = readerClass;
         this.handler = handler;
+        this.readerClass = null;
     }
     
 	public final File getReadFile() {

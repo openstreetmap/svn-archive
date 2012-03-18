@@ -86,6 +86,8 @@ public interface OdConstants {
 	public static final String ICON_AGREEMENT_24 = "agreement24.png";
 	public static final String ICON_EMPTY_24 = "empty24.png";
 
+	public static final String ICON_LOOL_48 = "lool48.png";
+
     /**
      * File extensions.
      */
@@ -155,5 +157,6 @@ public interface OdConstants {
     /**
      * Resources
      */
-    public static final String DICTIONARY_FR = "/org/openstreetmap/josm/plugins/opendata/core/resources/dictionary.fr.csv";
+    public static final String RESOURCE_PATH = "/org/openstreetmap/josm/plugins/opendata/core/resources/";
+    public static final String DICTIONARY_FR = RESOURCE_PATH+"dictionary.fr.csv";
 }

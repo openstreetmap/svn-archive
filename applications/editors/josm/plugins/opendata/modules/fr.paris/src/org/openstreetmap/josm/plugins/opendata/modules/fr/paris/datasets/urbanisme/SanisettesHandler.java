@@ -31,6 +31,7 @@ public class SanisettesHandler extends ParisDataSetHandler {
 	public SanisettesHandler() {
 		super(93);
 		setName("Sanisettes");
+		getShpHandler().setCheckNodeProximity(true);
 	}
 
 	@Override
@@ -114,13 +115,5 @@ public class SanisettesHandler extends ParisDataSetHandler {
 	@Override
 	protected String getDirectLink() {
 		return PORTAL+"hn/sanisettes.zip";
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#checkShpNodeProximity()
-	 */
-	@Override
-	public boolean checkShpNodeProximity() {
-		return true;
 	}
 }

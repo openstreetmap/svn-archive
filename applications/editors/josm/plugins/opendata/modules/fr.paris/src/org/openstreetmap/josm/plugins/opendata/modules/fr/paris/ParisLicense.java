@@ -13,18 +13,18 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.modules.fr.paris;
 
+import org.openstreetmap.josm.plugins.opendata.core.licenses.ODbL;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
+public class ParisLicense extends ODbL {
 
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
-	}
-
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
+	public ParisLicense() {
+		// TODO: Paris license
+		/*try {
+			setURL(PORTAL + "/la-licence", "fr");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}*/
 	}
 }

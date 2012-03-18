@@ -15,8 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.be.datagovbe.datasets;
 
-import java.net.URL;
-
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.be.BelgianDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.be.datagovbe.DataGovBeConstants;
@@ -56,13 +54,5 @@ public abstract class DataGovDataSetHandler extends BelgianDataSetHandler implem
 	@Override
 	public String getSource() {
 		return SOURCE_DATAGOVBE;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalURL()
-	 */
-	@Override
-	public URL getLocalPortalURL() {
-		return null;
 	}
 }

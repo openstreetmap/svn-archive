@@ -13,18 +13,18 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.core.licenses;
 
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
-
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
-	}
-
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
+public class LOOL extends License implements OdConstants {
+	
+    //public static final String URL_FR = "http://www.data.gouv.fr/Licence-Ouverte-Open-Licence";
+    
+	public LOOL() {
+		setIcon(OdUtils.getImageIcon(ICON_LOOL_48, true));
+		setURL(LOOL.class.getResource(RESOURCE_PATH+"Licence-Ouverte-Open-Licence-ENG.rtf"), "en");
+		setURL(LOOL.class.getResource(RESOURCE_PATH+"Licence-Ouverte-Open-Licence.rtf"), "fr");
 	}
 }

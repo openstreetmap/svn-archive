@@ -49,12 +49,14 @@ public class ZipReader extends AbstractReader implements OdConstants {
 
 	private final ZipInputStream zis;
 	private final AbstractDataSetHandler handler;
+	private final ZipHandler zipHandler;
 	
 	private File file;
     
     public ZipReader(InputStream in, AbstractDataSetHandler handler) {
         this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
         this.handler = handler;
+        this.zipHandler = handler != null ? handler.getZipHandler() : null;
     }
 
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
@@ -115,8 +117,8 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					}
 					fos.close();
 					// Allow handler to perform specific treatments (for example, fix invalid .prj files)
-					if (handler != null) {
-						handler.notifyTempFileWritten(file);
+					if (zipHandler != null) {
+						zipHandler.notifyTempFileWritten(file);
 					}
 					// Set last modification date
 					long time = entry.getTime();
@@ -134,7 +136,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 						}
 					}
 					// Special treatment for XML files (check supported XSD), unless handler explicitely skip it
-					if (XML_FILE_FILTER.accept(file) && ((handler != null && handler.skipXsdValidationInZipReading()) 
+					if (XML_FILE_FILTER.accept(file) && ((zipHandler != null && zipHandler.skipXsdValidation()) 
 							|| OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
 						candidates.add(file);
 						System.out.println(entry.getName());

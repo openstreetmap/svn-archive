@@ -36,7 +36,6 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionChooser;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
@@ -52,9 +51,9 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		}
 	}
 
-	protected final AbstractDataSetHandler handler;
+	protected final SpreadSheetHandler handler;
 
-	public SpreadSheetReader(AbstractDataSetHandler handler) {
+	public SpreadSheetReader(SpreadSheetHandler handler) {
 		this.handler = handler;
 	}
 
@@ -121,7 +120,7 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			}
 		}
 
-		final boolean handlerOK = handler != null && handler.handlesSpreadSheetProjection();
+		final boolean handlerOK = handler != null && handler.handlesProjection();
 
 		if (proj != null) {
 			// projection identified, do nothing
@@ -167,7 +166,7 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 				}
 			}
 			if (en.isValid()) {
-				n.setCoor(proj != null && !handlerOK ? proj.eastNorth2latlon(en) : handler.getSpreadSheetCoor(en, fields));
+				n.setCoor(proj != null && !handlerOK ? proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
 			} else {
 				System.err.println("Warning: Skipping line "+lineNumber+" because no valid coordinates have been found.");
 			}

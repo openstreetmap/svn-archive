@@ -1,12 +1,19 @@
+//    JOSM opendata plugin.
+//    Copyright (C) 2011-2012 Don-vip
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.datasets;
-
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaQueryType.NODE;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaQueryType.WAY;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaQueryType.RELATION;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.NODE_RELATION;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.RELATION_WAY;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.WAY_NODE;
-import static org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler.OaRecurseType.WAY_RELATION;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +23,10 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi;
+
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.*;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.*;
 
 public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 
@@ -154,24 +165,24 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 	protected final String[] getOverpassApiConditions() {
 		List<String> conditions = new ArrayList<String>();
 		for (Tag tag : this.relevantTags) {
-			conditions.add(oaHasKey(tag.getKey(), tag.getValue()));
+			conditions.add(OverpassApi.hasKey(tag.getKey(), tag.getValue()));
 		}
 		return conditions.toArray(new String[0]);
 	}
 
 	protected String getOverpassApiQueries(String bbox, String ... conditions) {
 		String[] mpconditions = new String[conditions.length+1];
-		mpconditions[0] = oaHasKey("type", "multipolygon");
+		mpconditions[0] = OverpassApi.hasKey("type", "multipolygon");
 		for (int i=0; i<conditions.length; i++) {
 			mpconditions[i+1] = conditions[i];
 		}
-		return oaQuery(bbox, NODE, conditions) + "\n" + // Nodes 
-				oaRecurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
-				oaQuery(bbox, WAY, conditions) + "\n" + // Full ways and their full relations 
-				oaRecurse(WAY_NODE, "nodes") + "\n" +
-				oaRecurse(WAY_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
-				oaQuery(bbox, RELATION, mpconditions) + "\n" + // Full multipolygons
-				oaRecurse(RELATION_WAY, WAY_NODE);
+		return OverpassApi.query(bbox, NODE, conditions) + "\n" + // Nodes 
+			OverpassApi.recurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
+			OverpassApi.query(bbox, WAY, conditions) + "\n" + // Full ways and their full relations 
+			OverpassApi.recurse(WAY_NODE, "nodes") + "\n" +
+			OverpassApi.recurse(WAY_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
+			OverpassApi.query(bbox, RELATION, mpconditions) + "\n" + // Full multipolygons
+			OverpassApi.recurse(RELATION_WAY, WAY_NODE);
 	}
 	
 	/* (non-Javadoc)
@@ -182,13 +193,13 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		String result = "";
 		if (this.relevantUnion) {
 			for (Tag tag : this.relevantTags) {
-				result += getOverpassApiQueries(bbox, oaHasKey(tag.getKey(), tag.getValue())); 
+				result += getOverpassApiQueries(bbox, OverpassApi.hasKey(tag.getKey(), tag.getValue())); 
 			}
-			result = oaUnion(result);
+			result = OverpassApi.union(result);
 		} else {
-			result = oaUnion(getOverpassApiQueries(bbox, getOverpassApiConditions()));
+			result = OverpassApi.union(getOverpassApiQueries(bbox, getOverpassApiConditions()));
 		}
-		return result + oaPrint();
+		return result + OverpassApi.print();
 	}
 
 	/* (non-Javadoc)

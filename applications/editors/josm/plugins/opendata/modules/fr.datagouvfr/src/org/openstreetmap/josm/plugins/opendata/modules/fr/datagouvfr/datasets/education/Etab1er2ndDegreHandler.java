@@ -15,20 +15,33 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education;
 
-import java.nio.charset.Charset;
-
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 
 public class Etab1er2ndDegreHandler extends DataGouvDataSetHandler {
 
+	private class EtabCsvHandler extends DefaultCsvHandler {
+		
+		public EtabCsvHandler() {
+			setCharset(ISO8859_15);
+			setHandlesProjection(true);
+		}
+		
+		@Override
+		public LatLon getCoor(EastNorth en, String[] fields) {
+			return getLatLonByDptCode(en, fields[0].substring(0, 3), false);
+		}
+	}
+	
 	public Etab1er2ndDegreHandler() {
 		super("Géolocalisation-des-établissements-d'enseignement-du-premier-degré-et-du-second-degré-du-ministère-d-30378093");
 		setName("Établissements d'enseignement du premier degré et du second degré");
 		setDownloadFileName("MENJVA_etab_geoloc.csv");
+		setCsvHandler(new EtabCsvHandler());
 	}
 	
 	@Override
@@ -51,29 +64,5 @@ public class Etab1er2ndDegreHandler extends DataGouvDataSetHandler {
 			n.remove("sous_fic"); // cycle ? 1 pour ecoles, 3 pour colleges et lycees
 			// Voir http://www.infocentre.education.fr/bcn/domaine/voir/id/31
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#handlesCsvProjection()
-	 */
-	@Override
-	public boolean handlesSpreadSheetProjection() {
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvCoor(org.openstreetmap.josm.data.coor.EastNorth, java.lang.String[])
-	 */
-	@Override
-	public LatLon getSpreadSheetCoor(EastNorth en, String[] fields) {
-		return getLatLonByDptCode(en, fields[0].substring(0, 3), false);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvCharset()
-	 */
-	@Override
-	public Charset getCsvCharset() {
-		return Charset.forName(ISO8859_15);
 	}
 }

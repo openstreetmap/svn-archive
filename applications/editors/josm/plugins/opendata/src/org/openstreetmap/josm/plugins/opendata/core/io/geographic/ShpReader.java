@@ -83,7 +83,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class ShpReader extends AbstractReader implements OdConstants {
 
-	private final AbstractDataSetHandler handler;
+	private final ShpHandler handler;
 	
 	private final CoordinateReferenceSystem wgs84;
 	private final Map<String, Node> nodes;
@@ -92,7 +92,7 @@ public class ShpReader extends AbstractReader implements OdConstants {
 	private CoordinateReferenceSystem crs;
 	private MathTransform transform;
 	
-	public ShpReader(AbstractDataSetHandler handler) throws NoSuchAuthorityCodeException, FactoryException {
+	public ShpReader(ShpHandler handler) throws NoSuchAuthorityCodeException, FactoryException {
 		this.handler = handler;
 		this.wgs84 = CRS.decode("EPSG:4326");
 		this.nodes = new HashMap<String, Node>();
@@ -104,7 +104,7 @@ public class ShpReader extends AbstractReader implements OdConstants {
 			in.close();
 		}
 		try {
-			return new ShpReader(handler).parse(file, instance);
+			return new ShpReader(handler != null ? handler.getShpHandler() : null).parse(file, instance);
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable t) {
@@ -372,7 +372,7 @@ public class ShpReader extends AbstractReader implements OdConstants {
 	
 	private Node getNode(Point p, String key) {
 		Node n = nodes.get(key);
-		if (n == null && handler != null && handler.checkShpNodeProximity()) {
+		if (n == null && handler != null && handler.checkNodeProximity()) {
 			LatLon ll = new LatLon(p.getY(), p.getX());
 			for (Node node : nodes.values()) {
 				if (node.getCoor().equalsEpsilon(ll)) {

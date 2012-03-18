@@ -17,8 +17,6 @@ package org.openstreetmap.josm.plugins.opendata.core.datasets.be;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import org.openstreetmap.josm.Main;
@@ -27,6 +25,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 
 public abstract class BelgianDataSetHandler extends SimpleDataSetHandler implements BelgianConstants {
 
@@ -44,23 +43,50 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 		lambert1972,
 		lambert2008
 	};
+	
+	protected class InternalCsvHandler extends DefaultCsvHandler {
+		/*@Override
+		public List<Projection> getSpreadSheetProjections() {
+			if (singleProjection != null) {
+				return Arrays.asList(new Projection[]{singleProjection});
+			} else {
+				return Arrays.asList(projections);
+			}
+		}*/
+		
+		@Override
+		public LatLon getCoor(EastNorth en, String[] fields) {
+			if (singleProjection != null) {
+				return singleProjection.eastNorth2latlon(en);
+			} else {
+				return super.getCoor(en, fields);
+			}
+		}
+	}
 
 	public BelgianDataSetHandler() {
-		
+		init();
 	}
 
 	public BelgianDataSetHandler(String relevantTag) {
 		super(relevantTag);
+		init();
 	}
 
 	public BelgianDataSetHandler(boolean relevantUnion, String[] relevantTags) {
 		super(relevantUnion, relevantTags);
+		init();
 	}
 
 	public BelgianDataSetHandler(boolean relevantUnion, Tag[] relevantTags) {
 		super(relevantUnion, relevantTags);
+		init();
 	}
 	
+	private void init() {
+		setCsvHandler(new InternalCsvHandler());
+	}
+
 	protected final void setNationalPortalPath(String nationalPortalPathDe, String nationalPortalPathEn, String nationalPortalPathFr, String nationalPortalPathNl) {
 		this.nationalPortalPathDe = nationalPortalPathDe;
 		this.nationalPortalPathEn = nationalPortalPathEn;
@@ -70,6 +96,7 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 
 	protected final void setSingleProjection(Projection singleProjection) {
 		this.singleProjection = singleProjection;
+		getCsvHandler().setHandlesProjection(singleProjection != null);
 	}
 
 	/* (non-Javadoc)
@@ -114,37 +141,5 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 	@Override
 	public String getNationalPortalIconName() {
 		return ICON_BE_24;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#handlesCsvProjection()
-	 */
-	@Override
-	public boolean handlesSpreadSheetProjection() {
-		return singleProjection != null ? true : super.handlesSpreadSheetProjection();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvProjections()
-	 */
-	@Override
-	public List<Projection> getSpreadSheetProjections() {
-		if (singleProjection != null) {
-			return Arrays.asList(new Projection[]{singleProjection});
-		} else {
-			return Arrays.asList(projections);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getCsvCoor(org.openstreetmap.josm.data.coor.EastNorth, java.lang.String[])
-	 */
-	@Override
-	public LatLon getSpreadSheetCoor(EastNorth en, String[] fields) {
-		if (singleProjection != null) {
-			return singleProjection.eastNorth2latlon(en);
-		} else {
-			return super.getSpreadSheetCoor(en, fields);
-		}
 	}
 }

@@ -17,10 +17,12 @@ package org.openstreetmap.josm.plugins.opendata.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
@@ -55,6 +57,18 @@ public abstract class OdUtils {
 	}
 	
 	public static final ImageIcon getImageIcon(String iconName) {
-		return new ImageProvider(iconName).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
+		return getImageIcon(iconName, false);
+	}
+	
+	public static final ImageIcon getImageIcon(String iconName, boolean optional) {
+		return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
+	}
+	
+	public static final String getJosmLanguage() {
+		String lang = Main.pref.get("language");
+		if (lang == null || lang.isEmpty()) {
+			lang = Locale.getDefault().toString();
+		}
+		return lang;
 	}
 }

@@ -13,18 +13,19 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
+package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
+import java.nio.charset.Charset;
 
-public class ChantiersPonctuelsHandler extends ChantiersHandler {
+public interface CsvHandler extends SpreadSheetHandler {
 
-	public ChantiersPonctuelsHandler() {
-		super(14071, "Chantiers en cours (ponctuel)");
-		getCsvHandler().setCharset(ISO8859_15);
-	}
+	public void setCharset(Charset charset);
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Chantiers_Ponctuels");
-	}
+	public void setCharset(String charset);
+
+	public Charset getCharset();
+
+	public void setSeparator(String sep);
+	
+	public String getSeparator();
 }

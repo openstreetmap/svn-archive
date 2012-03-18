@@ -34,25 +34,29 @@ public class CsvReader extends SpreadSheetReader {
 	private BufferedReader reader;
 	private String line;
 
-	public CsvReader(AbstractDataSetHandler handler) {
+	public CsvReader(CsvHandler handler) {
 		this(handler, ";");
 	}
 
-	public CsvReader(AbstractDataSetHandler handler, String defaultSep) {
+	public CsvReader(CsvHandler handler, String defaultSep) {
 		super(handler);
-		this.charset = handler != null && handler.getCsvCharset() != null ? handler.getCsvCharset() : Charset.forName(UTF8);
-		this.sep = handler != null && handler.getCsvSeparator() != null ? handler.getCsvSeparator() : defaultSep;
+		this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(UTF8);
+		this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
 	}
 	
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		CsvReader csvReader = new CsvReader(handler);
+		CsvHandler csvHandler = null;
+		if (handler.getSpreadSheetHandler() instanceof CsvHandler) {
+			csvHandler = (CsvHandler) handler.getSpreadSheetHandler();
+		}
+		CsvReader csvReader = new CsvReader(csvHandler);
 		try {
 			return csvReader.parse(in, instance);
 		} catch (IllegalArgumentException e) {
-			if (handler == null) {
+			if (csvHandler == null || (csvHandler.getSeparator() != null && csvHandler.getSeparator().equals(";"))) {
 				// If default sep has been used, try comma
 				System.out.println(e.getMessage());
-				CsvReader newReader = new CsvReader(handler, ",");
+				CsvReader newReader = new CsvReader(csvHandler, ",");
 				newReader.initResources(in, instance);
 				newReader.line = csvReader.line;
 				return newReader.doParse(newReader.splitLine(), instance);

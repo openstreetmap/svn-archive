@@ -33,6 +33,7 @@ import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetReader;
 
 /**
@@ -75,7 +76,7 @@ public class TabReader extends AbstractMapInfoReader {
 	private class TabOsmReader extends SpreadSheetReader {
 
 		private final DbaseFileReader dbfReader;
-		public TabOsmReader(AbstractDataSetHandler handler, TabFiles tabFiles) throws IOException {
+		public TabOsmReader(SpreadSheetHandler handler, TabFiles tabFiles) throws IOException {
 			super(handler);
 			this.dbfReader = new DbaseFileReader(tabFiles, false, datCharset, null);
 		}
@@ -110,7 +111,7 @@ public class TabReader extends AbstractMapInfoReader {
 		parseHeader();
         try {
         	File dataFile = getDataFile(file, ".dat");
-        	ds.mergeFrom(new TabOsmReader(handler, new TabFiles(file, dataFile)).
+        	ds.mergeFrom(new TabOsmReader(handler != null ? handler.getSpreadSheetHandler() : null, new TabFiles(file, dataFile)).
         			doParse(columns.toArray(new String[0]), instance));
         } catch (IOException e) {
         	System.err.println(e.getMessage());

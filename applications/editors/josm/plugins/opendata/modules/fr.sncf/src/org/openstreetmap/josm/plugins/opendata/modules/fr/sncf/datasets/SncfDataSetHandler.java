@@ -1,15 +1,28 @@
+//    JOSM opendata plugin.
+//    Copyright (C) 2011-2012 Don-vip
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.datasets;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.SncfConstants;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.SncfLicense;
 
 public abstract class SncfDataSetHandler extends FrenchDataSetHandler implements SncfConstants {
-	
-	private String portalId;
 	
 	public SncfDataSetHandler(String portalId) {
 		init(portalId);
@@ -44,7 +57,14 @@ public abstract class SncfDataSetHandler extends FrenchDataSetHandler implements
 	}*/
 	
 	private final void init(String portalId) {
-		this.portalId = portalId;
+		setLicense(new SncfLicense());
+		if (portalId != null && !portalId.isEmpty()) {
+			try {
+				setLocalPortalURL(PORTAL + portalId);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -69,29 +89,5 @@ public abstract class SncfDataSetHandler extends FrenchDataSetHandler implements
 	@Override
 	public String getDataLayerIconName() {
 		return ICON_16;
-	}
-
-	public final URL getLocalPortalURL() {
-		try {
-			if (portalId != null) {
-				return new URL(PORTAL + portalId);
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
-	 */
-	@Override
-	public URL getLicenseURL() {
-		try {
-			return new URL("http://test.data-sncf.com/licence");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

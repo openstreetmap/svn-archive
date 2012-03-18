@@ -123,7 +123,6 @@ function init() {
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
   var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
-  var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
   var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
 
   var layerTransit = new OpenLayers.Layer.XYZ(
@@ -138,16 +137,19 @@ function init() {
       'Kartografi: <a href="http://www.stadtkreation.de/">Stadtkreation</a>, ' +
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
-  map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
+  map.addLayers([layerMapnik, layerCycle]);
   map.addLayers([layerScreenspec, layerHiking, layerSkiing, layerTransit]);
 
   if (mlon !== undefined && mlat !== undefined) {
     var markers = new OpenLayers.Layer.Markers("Markør",
       {displayInLayerSwitcher: false});
     map.addLayer(markers);
+    var size = new OpenLayers.Size(56,53);
+    var offset = new OpenLayers.Pixel(-17,-6);
+    var icon = new OpenLayers.Icon('pin.png', size, offset);
     var marker = new OpenLayers.Marker(new OpenLayers.LonLat(mlon, mlat).
       transform(new OpenLayers.Projection("EPSG:4326"),
-                new OpenLayers.Projection("EPSG:900913")));
+                new OpenLayers.Projection("EPSG:900913")), icon);
     markers.addMarker(marker);
   }
 

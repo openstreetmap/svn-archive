@@ -111,7 +111,7 @@ def main(options):
     # prepare the approach/inc dir: copy mapnik/inc, then patch with files from approach-inc-src
     shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),approach_inc_dir)
     original_approach_inc_dir = os.path.join(original_approach_dir,"approach-inc-src")    # copy the approach-specific inc files
-    copy_files(original_approach_inc_dir,approach_inc_dir,["layer-approach-entities.xml.inc","layer-approach-area.xml.inc","layer-approach-point.xml.inc"])
+    copy_files(original_approach_inc_dir,approach_inc_dir,["layer-approach-entities.xml.inc","layer-approach-area.xml.inc","layer-approach-point.xml.inc","layer-approach-water.xml.inc","layer-approach-rail.xml.inc"])
     # prepare the approach/symbols dir
     shutil.copytree(os.path.join(original_approach_dir,"approach-symbols-src"),os.path.join(approach_dir,"approach-symbols-src"))
 

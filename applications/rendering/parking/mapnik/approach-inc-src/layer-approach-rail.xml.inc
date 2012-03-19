@@ -168,7 +168,7 @@
        case when bridge in ('yes','true','1','viaduct') then 'yes'::text else bridge end as bridge,
        case when railway in ('spur','siding')
               or (railway='rail' and service in ('spur','siding','yard'))
-            then 'spur-siding-yard'::text else railway end as railway,
+            then 'spur-siding-yard'::text else railway end as railway
        from &prefix;_line
        where railway in ('light_rail','narrow_gauge','funicular','rail','subway','tram','spur','siding','platform','disused','abandoned','construction','miniature','turntable')
        order by z_order) as roads

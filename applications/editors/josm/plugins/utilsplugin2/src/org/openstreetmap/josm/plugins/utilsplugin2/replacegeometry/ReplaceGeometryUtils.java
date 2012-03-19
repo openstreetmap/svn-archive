@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry;
 
+import edu.princeton.cs.algs4.AssignmentProblem;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -263,16 +264,22 @@ public final class ReplaceGeometryUtils {
                 geometryPool.add(node);
         }
 
-        boolean useHungarian = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", false);
+        boolean useRobust = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", true);
         
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
         Map<Node, Node> nodeAssoc = new HashMap<Node, Node>();
         if (geometryPool.size() > 0 && nodePool.size() > 0) {
-            if (useHungarian) {  // use robust, but slower assignment
+            if (useRobust) {  // use robust, but slower assignment
                 int gLen = geometryPool.size();
                 int nLen = nodePool.size();
-                double cost[][] = new double[nLen][gLen];
+                int N = Math.max(gLen, nLen);
+                double cost[][] = new double[N][N];
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < N; j++) {
+                        cost[i][j] = Double.MAX_VALUE;
+                    }
+                }
 
                 double maxDistance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
                 for (int i = 0; i < nLen; i++) {
@@ -285,10 +292,10 @@ public final class ReplaceGeometryUtils {
                         }
                     }
                 }
-                int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
-                for (int i = 0; i < nLen; i++) {
-                    int nIdx = assignment[i][0];
-                    int gIdx = assignment[i][1];
+                AssignmentProblem assignment = new AssignmentProblem(cost);
+                for (int i = 0; i < N; i++) {
+                    int nIdx = i;
+                    int gIdx = assignment.sol(i);
                     if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
                         nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
                     }

@@ -380,17 +380,26 @@
     </Rule>
 
     <Rule>
-      <Filter>[highway] = 'road'</Filter>
-      &min_z13;
-      &max_z13;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="2" stroke-linecap="round"/>
+      <Filter>[highway] = 'living_street'</Filter>
+      &z13;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_muted;" stroke-width="1" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>([highway] = 'residential' or [highway] = 'unclassified') and not [tunnel] = 'yes'</Filter>
+      &z13;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_muted;" stroke-width="1" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary_link' and not [tunnel]='yes'</Filter>
-      &min_z13;
-      &max_z13;
+      &z13;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="4.5" stroke-linecap="round"/>
     </Rule>
+    <Rule>
+      <Filter>[highway] = 'road'</Filter>
+      &z13;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="2" stroke-linecap="round"/>
+    </Rule>
+
     <Rule>
       <Filter>[highway] = 'motorway_link' and not [tunnel] = 'yes'</Filter>
       &min_z13;
@@ -589,11 +598,6 @@
 
     <Rule>
       <Filter>([highway] = 'residential' or [highway] = 'unclassified') and not [tunnel] = 'yes'</Filter>
-      &z13;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_muted;" stroke-width="1" stroke-linecap="round"/>
-    </Rule>
-    <Rule>
-      <Filter>([highway] = 'residential' or [highway] = 'unclassified') and not [tunnel] = 'yes'</Filter>
       &z14;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_muted;" stroke-width="2" stroke-linecap="round"/>
     </Rule>
@@ -615,15 +619,8 @@
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
-      &min_z12;
-      &max_z13;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="1.5" stroke-linecap="round"/>
-    </Rule>
-    <Rule>
-      <Filter>[highway] = 'living_street'</Filter>
-      &min_z14;
-      &max_z14;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="3" stroke-linecap="round"/>
+      &z14;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_muted;" stroke-width="2" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
@@ -645,15 +642,13 @@
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
-      &min_z13;
-      &max_z13;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="4.5" stroke-linecap="round"/>
+      &z13;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="6" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
-      &min_z14;
-      &max_z14;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="6" stroke-linecap="round"/>
+      &z14;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="8" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>

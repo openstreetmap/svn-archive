@@ -395,6 +395,11 @@
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="4.5" stroke-linecap="round"/>
     </Rule>
     <Rule>
+      <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
+      &z13;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="6" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
       <Filter>[highway] = 'road'</Filter>
       &z13;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="2" stroke-linecap="round"/>
@@ -459,6 +464,11 @@
       &min_z14;
       &max_z14;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="3" stroke-linecap="round"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
+      &z14;
+      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads_debug;" stroke-width="8" stroke-linecap="round"/>
     </Rule>
 
     <Rule>
@@ -639,16 +649,6 @@
       &min_z17;
       &max_z18;
       <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="13" stroke-linecap="round"/>
-    </Rule>
-    <Rule>
-      <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
-      &z13;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="6" stroke-linecap="round"/>
-    </Rule>
-    <Rule>
-      <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
-      &z14;
-      <LineSymbolizer stroke-linejoin="round" stroke="&approach_roads;" stroke-width="8" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>

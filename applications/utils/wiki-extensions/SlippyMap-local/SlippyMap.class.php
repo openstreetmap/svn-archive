@@ -167,12 +167,8 @@ class SlippyMap {
 
 		$layer = strtolower( $layer );
 		$layerObjectDef = '';
-		if ( $layer == 'osmarender' ) {
-			$layerObjectDef = 'OpenLayers.Layer.OSM.Osmarender("Osmarender"); ';
-		} elseif ( $layer == 'mapnik' ) {
+		if ( $layer == 'mapnik' ) {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.Mapnik("Mapnik"); ';
-		} elseif ( $layer == 'maplint' ) {
-			$layerObjectDef = 'OpenLayers.Layer.OSM.Maplint("Maplint"); ';
 		} elseif ( $layer == 'cycle' ) {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.CycleMap("OpenCycleMap"); ';
 		} else {

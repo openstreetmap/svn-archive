@@ -211,7 +211,7 @@ public class SeaMark extends JPanel {
 		SIS_PTCL, SIS_PTED, SIS_IPT, SIS_BRTH, SIS_DOCK, SIS_LOCK, SIS_FBAR, SIS_BRDG, SIS_DRDG, SIS_TRFC,
 		SIS_DNGR, SIS_OBST, SIS_CABL, SIS_MILY, SIS_DSTR, SIS_WTHR, SIS_STRM, SIS_ICE, SIS_TIME, SIS_TIDE,
 		SIS_TSTM, SIS_TGAG, SIS_TSCL, SIS_DIVE, SIS_LGAG, LIT_DIRF, LIT_LEDG,
-		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT,
+		LMK_CHMY, LMK_CARN, LMK_DSHA, LMK_FLGS, LMK_FLRS, LMK_MNMT, LMK_TOWR, LMK_WNDM, LMK_WTRT, LMK_MNRT,
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR,
 		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
 		RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG,
@@ -292,7 +292,7 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.LMK_WNDM, "windmotor");
 		CatSTR.put(Cat.LMK_WTRT, "water_tower");
 		CatSTR.put(Cat.LMK_MAST, "mast");
-		CatSTR.put(Cat.LMK_WNDS, "wind_sock");
+		CatSTR.put(Cat.LMK_WNDS, "windsock");
 		CatSTR.put(Cat.LMK_CLMN, "column");
 		CatSTR.put(Cat.LMK_OBLK, "obelisk");
 		CatSTR.put(Cat.LMK_STAT, "statue");
@@ -301,6 +301,7 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.LMK_SCNR, "radar");
 		CatSTR.put(Cat.LMK_WNDL, "windmill");
 		CatSTR.put(Cat.LMK_SPIR, "spire");
+		CatSTR.put(Cat.LMK_MNRT, "minaret");
 		CatSTR.put(Cat.OFP_OIL, "oil");
 		CatSTR.put(Cat.OFP_PRD,  "production");
 		CatSTR.put(Cat.OFP_OBS, "observation"); 
@@ -1071,6 +1072,67 @@ public class SeaMark extends JPanel {
 
 	public void setRefl(Con con) {
 		reflectivity = con;
+	}
+
+	public enum Fnc {
+	  UNKFNC, HMO, CSTM, HLTH, HOSP, POFF, HOTEL, RWSTA, POLICE, WPOL, PILO, PILL, BANK, DCHQ, TRNS, FACT, PWRS, ADMIN, EDUC, CHCH, CHPL,
+	  TMPL, PGDA, SHSH, BTMP, MOSQ, MRBT, LOOK, COMS, TV, RADO, RADR, LSUP, MWAV, COOL, OBSV, TIMB, CLK, CTRL, AMOR, STAD, BUSS
+	}
+
+	public static final EnumMap<Fnc, String> FncSTR = new EnumMap<Fnc, String>(Fnc.class);
+	static {
+		FncSTR.put(Fnc.UNKFNC, "");
+		FncSTR.put(Fnc.HMO, "harbour-master");
+		FncSTR.put(Fnc.CSTM, "customs");
+		FncSTR.put(Fnc.HLTH, "health");
+		FncSTR.put(Fnc.HOSP, "hospital");
+		FncSTR.put(Fnc.POFF, "post_office");
+		FncSTR.put(Fnc.HOTEL, "hotel");
+		FncSTR.put(Fnc.RWSTA, "railway_station");
+		FncSTR.put(Fnc.POLICE, "police_station");
+		FncSTR.put(Fnc.WPOL, "water-police_station");
+		FncSTR.put(Fnc.PILO, "pilot_office");
+		FncSTR.put(Fnc.PILL, "pilot_lookout");
+		FncSTR.put(Fnc.BANK, "bank");
+		FncSTR.put(Fnc.DCHQ, "district_control");
+		FncSTR.put(Fnc.TRNS, "transit_shed");
+		FncSTR.put(Fnc.FACT, "factory");
+		FncSTR.put(Fnc.PWRS, "power_station");
+		FncSTR.put(Fnc.ADMIN, "administrative");
+		FncSTR.put(Fnc.EDUC, "educational");
+		FncSTR.put(Fnc.CHCH, "church");
+		FncSTR.put(Fnc.CHPL, "chapel");
+		FncSTR.put(Fnc.TMPL, "temple");
+		FncSTR.put(Fnc.PGDA, "pagoda");
+		FncSTR.put(Fnc.SHSH, "shinto_shrine");
+		FncSTR.put(Fnc.BTMP, "buddhist_temple");
+		FncSTR.put(Fnc.MOSQ, "mosque");
+		FncSTR.put(Fnc.MRBT, "marabout");
+		FncSTR.put(Fnc.LOOK, "lookout");
+		FncSTR.put(Fnc.COMS, "communication");
+		FncSTR.put(Fnc.TV, "television");
+		FncSTR.put(Fnc.RADO, "radio");
+		FncSTR.put(Fnc.RADR, "radar");
+		FncSTR.put(Fnc.LSUP, "light_support");
+		FncSTR.put(Fnc.MWAV, "microwave");
+		FncSTR.put(Fnc.COOL, "cooling");
+		FncSTR.put(Fnc.OBSV, "observation");
+		FncSTR.put(Fnc.TIMB, "time_ball");
+		FncSTR.put(Fnc.CLK, "clock");
+		FncSTR.put(Fnc.CTRL, "control");
+		FncSTR.put(Fnc.AMOR, "airship_mooring");
+		FncSTR.put(Fnc.STAD, "stadium");
+		FncSTR.put(Fnc.BUSS, "bus_station");
+	};
+
+	private Fnc function = Fnc.UNKFNC;
+
+	public Fnc getFunc() {
+		return function;
+	}
+
+	public void setFunc(Fnc fnc) {
+		function = fnc;
 	}
 
 	public String information = "";

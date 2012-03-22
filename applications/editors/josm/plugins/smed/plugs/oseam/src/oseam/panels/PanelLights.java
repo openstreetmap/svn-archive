@@ -121,6 +121,20 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
+	public JLabel functionLabel;
+	public JComboBox functionBox;
+	public EnumMap<Cat, Integer> functionss = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alfunctionBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : landCats.keySet()) {
+				int idx = landCats.get(cat);
+				if (dlg.node != null && (idx == landCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setCategory(cat);
+					dlg.panelMain.mark.testValid();
+				}
+			}
+		}
+	};
 	private ButtonGroup objButtons = new ButtonGroup();
 	public JRadioButton houseButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LighthouseButton.png")));
 	public JRadioButton majorButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LightMajorButton.png")));
@@ -226,23 +240,34 @@ public class PanelLights extends JPanel {
 		add(getObjButton(minorButton, 68, 0, 34, 32, "MinorLight", Obj.LITMIN));
 		add(getObjButton(landButton, 102, 0, 34, 32, "Landmark", Obj.LNDMRK));
 		add(getObjButton(platformButton, 136, 0, 34, 32, "Platform", Obj.OFSPLF));
-		add(getObjButton(vesselButton, 0, 35, 34, 32, "LightVessel", Obj.LITVES));
-		add(getObjButton(floatButton, 34, 35, 34, 32, "LightFloat", Obj.LITFLT));
-		add(getObjButton(trafficButton, 68, 35, 34, 32, "SSTraffic", Obj.SISTAT));
-		add(getObjButton(warningButton, 102, 35, 34, 32, "SSWarning", Obj.SISTAW));
-		add(getObjButton(coastguardButton, 0, 70, 34, 32, "CoastguardStation", Obj.CGUSTA));
-		add(getObjButton(pilotButton, 34, 70, 34, 32, "PilotBoarding", Obj.PILBOP));
-		add(getObjButton(rescueButton, 68, 70, 34, 32, "RescueStation", Obj.RSCSTA));
-		add(getObjButton(radioButton, 102, 70, 34, 32, "RadioStation", Obj.RDOSTA));
-		add(getObjButton(radarButton, 136, 70, 34, 32, "RadarStation", Obj.RADSTA));
+		add(getObjButton(vesselButton, 0, 32, 34, 32, "LightVessel", Obj.LITVES));
+		add(getObjButton(floatButton, 34, 32, 34, 32, "LightFloat", Obj.LITFLT));
+		add(getObjButton(trafficButton, 68, 32, 34, 32, "SSTraffic", Obj.SISTAT));
+		add(getObjButton(warningButton, 102, 32, 34, 32, "SSWarning", Obj.SISTAW));
+		add(getObjButton(coastguardButton, 0, 64, 34, 32, "CoastguardStation", Obj.CGUSTA));
+		add(getObjButton(pilotButton, 34, 64, 34, 32, "PilotBoarding", Obj.PILBOP));
+		add(getObjButton(rescueButton, 68, 64, 34, 32, "RescueStation", Obj.RSCSTA));
+		add(getObjButton(radioButton, 102, 64, 34, 32, "RadioStation", Obj.RDOSTA));
+		add(getObjButton(radarButton, 136, 64, 34, 32, "RadarStation", Obj.RADSTA));
+
+		functionLabel = new JLabel(Messages.getString("Function"), SwingConstants.CENTER);
+		functionLabel.setBounds(new Rectangle(5, 94, 160, 18));
+		add(functionLabel);
+		functionLabel.setVisible(true);
+
+		functionBox = new JComboBox();
+		functionBox.setBounds(new Rectangle(5, 110, 160, 18));
+		add(functionBox);
+		functionBox.addActionListener(alfunctionBox);
+		functionBox.setVisible(true);
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(5, 110, 160, 20));
+		categoryLabel.setBounds(new Rectangle(5, 125, 160, 18));
 		add(categoryLabel);
 		categoryLabel.setVisible(false);
 
 		landCatBox = new JComboBox();
-		landCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		landCatBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(landCatBox);
 		landCatBox.addActionListener(alLandCatBox);
 		addLCItem("", Cat.NOCAT);
@@ -268,7 +293,7 @@ public class PanelLights extends JPanel {
 		landCatBox.setVisible(false);
 
 		trafficCatBox = new JComboBox();
-		trafficCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		trafficCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(trafficCatBox);
 		trafficCatBox.addActionListener(alTrafficCatBox);
 		addTCItem("", Cat.NOCAT);
@@ -285,7 +310,7 @@ public class PanelLights extends JPanel {
 		trafficCatBox.setVisible(false);
 
 		warningCatBox = new JComboBox();
-		warningCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		warningCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(warningCatBox);
 		warningCatBox.addActionListener(alWarningCatBox);
 		addWCItem("", Cat.NOCAT);
@@ -307,7 +332,7 @@ public class PanelLights extends JPanel {
 		warningCatBox.setVisible(false);
 
 		platformCatBox = new JComboBox();
-		platformCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		platformCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(platformCatBox);
 		platformCatBox.addActionListener(alPlatformCatBox);
 		addPLItem("", Cat.NOCAT);
@@ -324,7 +349,7 @@ public class PanelLights extends JPanel {
 		platformCatBox.setVisible(false);
 
 		pilotCatBox = new JComboBox();
-		pilotCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		pilotCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(pilotCatBox);
 		pilotCatBox.addActionListener(alPilotCatBox);
 		addPTItem("", Cat.NOCAT);
@@ -334,7 +359,7 @@ public class PanelLights extends JPanel {
 		pilotCatBox.setVisible(false);
 
 		rescueCatBox = new JComboBox();
-		rescueCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		rescueCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(rescueCatBox);
 		rescueCatBox.addActionListener(alRescueCatBox);
 		addRSItem("", Cat.NOCAT);
@@ -351,7 +376,7 @@ public class PanelLights extends JPanel {
 		rescueCatBox.setVisible(false);
 
 		radioCatBox = new JComboBox();
-		radioCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		radioCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(radioCatBox);
 		radioCatBox.addActionListener(alRadioCatBox);
 		addROItem("", Cat.NOCAT);
@@ -376,7 +401,7 @@ public class PanelLights extends JPanel {
 		radioCatBox.setVisible(false);
 
 		radarCatBox = new JComboBox();
-		radarCatBox.setBounds(new Rectangle(5, 130, 160, 20));
+		radarCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(radarCatBox);
 		radarCatBox.addActionListener(alRadarCatBox);
 		addRAItem("", Cat.NOCAT);
@@ -385,10 +410,10 @@ public class PanelLights extends JPanel {
 		radarCatBox.setVisible(false);
 
 		chLabel = new JLabel("Ch:", SwingConstants.CENTER);
-		chLabel.setBounds(new Rectangle(140, 34, 30, 15));
+		chLabel.setBounds(new Rectangle(140, 32, 30, 15));
 		add(chLabel);
 		chBox = new JTextField();
-		chBox.setBounds(new Rectangle(140, 48, 30, 20));
+		chBox.setBounds(new Rectangle(140, 45, 30, 20));
 		chBox.setHorizontalAlignment(SwingConstants.CENTER);
 		add(chBox);
 		chBox.addFocusListener(flCh);

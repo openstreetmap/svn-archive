@@ -47,113 +47,135 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  */
 public class RoutingModel {
 
-    /**
-     * Logger
-     */
-    static Logger logger = Logger.getLogger(RoutingModel.class);
+	/**
+	 * Logger
+	 */
+	static Logger logger = Logger.getLogger(RoutingModel.class);
 
-    /**
-     * Graph to calculate route
-     */
-    public RoutingGraph routingGraph=null;
+	/**
+	 * Graph to calculate route
+	 */
+	public RoutingGraph routingGraph=null;
 
-    /**
-     * List of nodes that the route has to traverse
-     */
-    private List<Node> nodes=null;
+	/**
+	 * List of nodes that the route has to traverse
+	 */
+	private List<Node> nodes=null;
 
-    private List<OsmEdge> path=null;
-    /**
-     * Flag to advise about changes in the selected nodes.
-     */
-    private boolean changeNodes=false;
-    /**
-     * Default Constructor.
-     */
-    public RoutingModel(DataSet data) {
-        nodes = new ArrayList<Node>();
-System.out.println("gr " + data);
-        routingGraph = new RoutingGraph(data);
-    }
+	private List<OsmEdge> path=null;
 
-    /**
-     * Method that returns the selected nodes to calculate route.
-     * @return the selectedNodes
-     */
-    public List<Node> getSelectedNodes() {
-        return nodes;
-    }
+	/**
+	 * Flag to advise about changes in the selected nodes.
+	 */
+	private boolean changeNodes=false;
 
-    /**
-     * Adds a node to the route node list.
-     * @param node the node to add.
-     */
-    public void addNode(Node node) {
-        nodes.add(node);
-        this.changeNodes=true;
-    }
+	/**
+	 * Flag to advise about changes in ways.
+	 */
+	private boolean changeOneway=false;
 
-    /**
-     * Removes a node from the route node list.
-     * @param index the index of the node to remove.
-     */
-    public void removeNode(int index) {
-        if (nodes.size()>index) {
-            nodes.remove(index);
-            this.changeNodes=true;
-        }
-    }
+	/**
+	 * Default Constructor.
+	 */
+	public RoutingModel(DataSet data) {
+		nodes = new ArrayList<Node>();
+		System.out.println("gr " + data);
+		routingGraph = new RoutingGraph(data);
+	}
 
-    /**
-     * Inserts a node in the route node list.
-     * @param index the index where the node will be inserted
-     * @param node the node to be inserted
-     */
-    public void insertNode(int index, Node node) {
-        if (nodes.size()>=index) {
-            nodes.add(index, node);
-            this.changeNodes=true;
-        }
-    }
+	/**
+	 * Method that returns the selected nodes to calculate route.
+	 * @return the selectedNodes
+	 */
+	public List<Node> getSelectedNodes() {
+		return nodes;
+	}
 
-    /**
-     * Reverse list of nodes
-     */
-    public void reverseNodes() {
-        List<Node> aux = new ArrayList<Node>();
-        for (Node n : nodes) {
-            aux.add(0,n);
-        }
-        nodes = aux;
-        this.changeNodes=true;
-    }
+	/**
+	 * Adds a node to the route node list.
+	 * @param node the node to add.
+	 */
+	public void addNode(Node node) {
+		nodes.add(node);
+		this.changeNodes=true;
+	}
 
-    /**
-     * Get the edges of the route.
-     * @return A list of edges forming the shortest path
-     */
-    public List<OsmEdge> getRouteEdges() {
-        if (this.changeNodes || path==null)
-        {
-            path=this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
-            this.changeNodes=false;
-        }
-        return path;
-    }
+	/**
+	 * Removes a node from the route node list.
+	 * @param index the index of the node to remove.
+	 */
+	public void removeNode(int index) {
+		if (nodes.size()>index) {
+			nodes.remove(index);
+			this.changeNodes=true;
+		}
+	}
 
-    /**
-     * Marks that some node or the node order has changed so the path should be computed again
-     */
-    public void setNodesChanged() {
-        this.changeNodes = true;
-    }
+	/**
+	 * Inserts a node in the route node list.
+	 * @param index the index where the node will be inserted
+	 * @param node the node to be inserted
+	 */
+	public void insertNode(int index, Node node) {
+		if (nodes.size()>=index) {
+			nodes.add(index, node);
+			this.changeNodes=true;
+		}
+	}
 
-    /**
-     * Resets all data.
-     */
-    public void reset() {
-        nodes.clear();
-        this.changeNodes=true;
-    }
+	/**
+	 * Reverse list of nodes
+	 */
+	public void reverseNodes() {
+		List<Node> aux = new ArrayList<Node>();
+		for (Node n : nodes) {
+			aux.add(0,n);
+		}
+		nodes = aux;
+		this.changeNodes=true;
+	}
+
+	/**
+	 * Get the edges of the route.
+	 * @return A list of edges forming the shortest path
+	 */
+	public List<OsmEdge> getRouteEdges() {
+		if (this.changeNodes || path==null)
+		{
+			path=this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
+			this.changeNodes=false;
+			this.changeOneway=false;
+		}
+		return path;
+	}
+
+	/**
+	 * Marks that some node or the node order has changed so the path should be computed again
+	 */
+	public void setNodesChanged() {
+		this.changeNodes = true;
+	}
+
+	/**
+	 * Marks that "Ignore oneway" option has changed so the path should be computed again
+	 */
+	public void setOnewayChanged() {
+		this.changeOneway = true;
+	}
+
+	/**
+	 * Marks that "Ignore oneway" option has changed so the path should be computed again
+	 */
+	public boolean getOnewayChanged() {
+		return this.changeOneway;
+	}
+
+	/**
+	 * Resets all data.
+	 */
+	public void reset() {
+		nodes.clear();
+		this.changeNodes=true;
+	}
 
 }

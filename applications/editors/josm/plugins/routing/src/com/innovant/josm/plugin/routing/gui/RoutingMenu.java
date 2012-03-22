@@ -58,155 +58,156 @@ import com.innovant.josm.plugin.routing.RoutingPlugin;
  */
 public class RoutingMenu extends JMenu {
 
-    /**
-     * Default serial version UID
-     */
-    private static final long serialVersionUID = 3559922048225708480L;
+	/**
+	 * Default serial version UID
+	 */
+	private static final long serialVersionUID = 3559922048225708480L;
 
-    private JMenuItem startMI;
-    private JMenuItem reverseMI;
-    private JMenuItem clearMI;
-    private JMenuItem regraphMI;
-    private JMenu criteriaM;
-    private JMenu menu;
+	private final JMenuItem startMI;
+	private final JMenuItem reverseMI;
+	private final JMenuItem clearMI;
+	private final JMenuItem regraphMI;
+	private final JMenu criteriaM;
+	private final JMenu menu;
 
-    /**
-     * @param s
-     */
-    public RoutingMenu() {
-        MainMenu mm = Main.main.menu;
-        menu = mm.addMenu(marktr("Routing"), KeyEvent.VK_O, mm.defaultMenuPos, ht("/Plugin/Routing"));
+	/**
+	 * @param s
+	 */
+	public RoutingMenu() {
+		MainMenu mm = Main.main.menu;
+		menu = mm.addMenu(marktr("Routing"), KeyEvent.VK_O, mm.defaultMenuPos, ht("/Plugin/Routing"));
 
-        startMI = new JMenuItem(tr("Add routing layer"));
-        startMI.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                RoutingPlugin.getInstance().addLayer();
-            }
-        });
-        menu.add(startMI);
+		startMI = new JMenuItem(tr("Add routing layer"));
+		startMI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RoutingPlugin.getInstance().addLayer();
+			}
+		});
+		menu.add(startMI);
 
-        menu.addSeparator();
-        ButtonGroup group = new ButtonGroup();
+		menu.addSeparator();
+		ButtonGroup group = new ButtonGroup();
 
-        criteriaM = new JMenu(tr("Criteria"));
+		criteriaM = new JMenu(tr("Criteria"));
 
-        JRadioButtonMenuItem rshorter = new JRadioButtonMenuItem(tr("Shortest"));
-        rshorter.setSelected(true);
-        rshorter.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-                    RoutingModel routingModel = layer.getRoutingModel();
-                    if (e.getStateChange()==ItemEvent.SELECTED) {
-                        routingModel.routingGraph.setTypeRoute(RouteType.SHORTEST);
-                    } else {
-                        routingModel.routingGraph.setTypeRoute(RouteType.FASTEST);
-                    }
-                //  routingModel.routingGraph.resetGraph();
-                //  routingModel.routingGraph.createGraph();
-                    //TODO: Change this way
-                    //FIXME: do not change node but recalculate routing.
-                    routingModel.setNodesChanged();
-                    Main.map.repaint();
-                }
-            }
+		JRadioButtonMenuItem rshorter = new JRadioButtonMenuItem(tr("Shortest"));
+		rshorter.setSelected(true);
+		rshorter.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+					RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+					RoutingModel routingModel = layer.getRoutingModel();
+					if (e.getStateChange()==ItemEvent.SELECTED) {
+						routingModel.routingGraph.setTypeRoute(RouteType.SHORTEST);
+					} else {
+						routingModel.routingGraph.setTypeRoute(RouteType.FASTEST);
+					}
+					//  routingModel.routingGraph.resetGraph();
+					//  routingModel.routingGraph.createGraph();
+					//TODO: Change this way
+					//FIXME: do not change node but recalculate routing.
+					routingModel.setNodesChanged();
+					Main.map.repaint();
+				}
+			}
 
-        });
+		});
 
-        JRadioButtonMenuItem rfaster = new JRadioButtonMenuItem(tr("Fastest"));
-        group.add(rshorter);
-        group.add(rfaster);
-        criteriaM.add(rshorter);
-        criteriaM.add(rfaster);
+		JRadioButtonMenuItem rfaster = new JRadioButtonMenuItem(tr("Fastest"));
+		group.add(rshorter);
+		group.add(rfaster);
+		criteriaM.add(rshorter);
+		criteriaM.add(rfaster);
 
-        criteriaM.addSeparator();
-        JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem(tr("Ignore oneways"));
-        cbmi.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-                    RoutingModel routingModel = layer.getRoutingModel();
-                    if (e.getStateChange()==ItemEvent.SELECTED)
-                        routingModel.routingGraph.getRoutingProfile().setOnewayUse(false);
-                    else
-                        routingModel.routingGraph.getRoutingProfile().setOnewayUse(true);
-                    routingModel.setNodesChanged();
-                    Main.map.repaint();
-                }
-            }
-        });
-        criteriaM.add(cbmi);
-        menu.add(criteriaM);
+		criteriaM.addSeparator();
+		JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem(tr("Ignore oneways"));
+		cbmi.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+					RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+					RoutingModel routingModel = layer.getRoutingModel();
+					if (e.getStateChange()==ItemEvent.SELECTED)
+						routingModel.routingGraph.getRoutingProfile().setOnewayUse(false);
+					else
+						routingModel.routingGraph.getRoutingProfile().setOnewayUse(true);
+					routingModel.setNodesChanged();
+					routingModel.setOnewayChanged();
+					Main.map.repaint();
+				}
+			}
+		});
+		criteriaM.add(cbmi);
+		menu.add(criteriaM);
 
-        menu.addSeparator();
-        reverseMI = new JMenuItem(tr("Reverse route"));
-        reverseMI.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-                    RoutingModel routingModel = layer.getRoutingModel();
-                    routingModel.reverseNodes();
-                    Main.map.repaint();
-                }
-            }
-        });
-        menu.add(reverseMI);
+		menu.addSeparator();
+		reverseMI = new JMenuItem(tr("Reverse route"));
+		reverseMI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+					RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+					RoutingModel routingModel = layer.getRoutingModel();
+					routingModel.reverseNodes();
+					Main.map.repaint();
+				}
+			}
+		});
+		menu.add(reverseMI);
 
-        clearMI = new JMenuItem(tr("Clear route"));
-        clearMI.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-                    RoutingModel routingModel = layer.getRoutingModel();
-                    // Reset routing nodes and paths
-                    routingModel.reset();
-                    RoutingPlugin.getInstance().getRoutingDialog().clearNodes();
-                    Main.map.repaint();
-                }
-            }
-        });
-        menu.add(clearMI);
-        
-        regraphMI = new JMenuItem(tr("Reconstruct Graph"));
-        regraphMI.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-            	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-                    RoutingModel routingModel = layer.getRoutingModel();
-            	routingModel.routingGraph.resetGraph();
-            	routingModel.routingGraph.createGraph();
-            	}
+		clearMI = new JMenuItem(tr("Clear route"));
+		clearMI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+					RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+					RoutingModel routingModel = layer.getRoutingModel();
+					// Reset routing nodes and paths
+					routingModel.reset();
+					RoutingPlugin.getInstance().getRoutingDialog().clearNodes();
+					Main.map.repaint();
+				}
+			}
+		});
+		menu.add(clearMI);
 
-            }
-        });
-        menu.add(regraphMI);
-        
+		regraphMI = new JMenuItem(tr("Reconstruct Graph"));
+		regraphMI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-        // Initially disabled
-        disableAllItems();
-    }
+				if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+					RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+					RoutingModel routingModel = layer.getRoutingModel();
+					routingModel.routingGraph.resetGraph();
+					routingModel.routingGraph.createGraph();
+				}
 
-    public void disableAllItems() {
-        startMI.setEnabled(false);
-        reverseMI.setEnabled(false);
-        clearMI.setEnabled(false);
-        criteriaM.setEnabled(false);
-    }
+			}
+		});
+		menu.add(regraphMI);
 
-    public void enableStartItem() {
-        startMI.setEnabled(true);
-    }
 
-    public void enableRestOfItems() {
-        reverseMI.setEnabled(true);
-        clearMI.setEnabled(true);
-        criteriaM.setEnabled(true);
-    }
+		// Initially disabled
+		disableAllItems();
+	}
 
-    public void disableRestOfItems() {
-        reverseMI.setEnabled(false);
-        clearMI.setEnabled(false);
-        criteriaM.setEnabled(false);
-    }
+	public void disableAllItems() {
+		startMI.setEnabled(false);
+		reverseMI.setEnabled(false);
+		clearMI.setEnabled(false);
+		criteriaM.setEnabled(false);
+	}
+
+	public void enableStartItem() {
+		startMI.setEnabled(true);
+	}
+
+	public void enableRestOfItems() {
+		reverseMI.setEnabled(true);
+		clearMI.setEnabled(true);
+		criteriaM.setEnabled(true);
+	}
+
+	public void disableRestOfItems() {
+		reverseMI.setEnabled(false);
+		clearMI.setEnabled(false);
+		criteriaM.setEnabled(false);
+	}
 }

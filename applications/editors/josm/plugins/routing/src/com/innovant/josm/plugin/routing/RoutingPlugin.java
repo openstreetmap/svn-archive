@@ -34,11 +34,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
-import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent.DatasetEventType;
-import org.openstreetmap.josm.data.osm.event.DataSetListener;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
@@ -68,218 +64,218 @@ import com.innovant.josm.plugin.routing.gui.RoutingPreferenceDialog;
  * @version 0.3
  */
 public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSetListenerAdapter.Listener {
-    /**
-     * Logger
-     */
-    static Logger logger = Logger.getLogger(RoutingPlugin.class);
+	/**
+	 * Logger
+	 */
+	static Logger logger = Logger.getLogger(RoutingPlugin.class);
 
-    /**
-     * The list of routing layers
-     */
-    private ArrayList<RoutingLayer> layers;
+	/**
+	 * The list of routing layers
+	 */
+	private final ArrayList<RoutingLayer> layers;
 
-    /**
-     * The side dialog where nodes are listed
-     */
-    private RoutingDialog routingDialog;
+	/**
+	 * The side dialog where nodes are listed
+	 */
+	private final RoutingDialog routingDialog;
 
-    /**
-     * Preferences Settings Dialog.
-     */
-    private PreferenceSetting preferenceSettings;
+	/**
+	 * Preferences Settings Dialog.
+	 */
+	private final PreferenceSetting preferenceSettings;
 
-    /**
-     * MapMode for adding route nodes.
-     * We use this field to enable or disable the mode automatically.
-     */
-    private AddRouteNodeAction addRouteNodeAction;
+	/**
+	 * MapMode for adding route nodes.
+	 * We use this field to enable or disable the mode automatically.
+	 */
+	private AddRouteNodeAction addRouteNodeAction;
 
-    /**
-     * MapMode for removing route nodes.
-     * We use this field to enable or disable the mode automatically.
-     */
-    private RemoveRouteNodeAction removeRouteNodeAction;
+	/**
+	 * MapMode for removing route nodes.
+	 * We use this field to enable or disable the mode automatically.
+	 */
+	private RemoveRouteNodeAction removeRouteNodeAction;
 
-    /**
-     * MapMode for moving route nodes.
-     * We use this field to enable or disable the mode automatically.
-     */
-    private MoveRouteNodeAction moveRouteNodeAction;
+	/**
+	 * MapMode for moving route nodes.
+	 * We use this field to enable or disable the mode automatically.
+	 */
+	private MoveRouteNodeAction moveRouteNodeAction;
 
-    /**
-     * IconToggleButton for adding route nodes, we use this field to show or hide the button.
-     */
-    private IconToggleButton addRouteNodeButton;
+	/**
+	 * IconToggleButton for adding route nodes, we use this field to show or hide the button.
+	 */
+	private IconToggleButton addRouteNodeButton;
 
-    /**
-     * IconToggleButton for removing route nodes, we use this field to show or hide the button.
-     */
-    private IconToggleButton removeRouteNodeButton;
+	/**
+	 * IconToggleButton for removing route nodes, we use this field to show or hide the button.
+	 */
+	private IconToggleButton removeRouteNodeButton;
 
-    /**
-     * IconToggleButton for moving route nodes, we use this field to show or hide the button.
-     */
-    private IconToggleButton moveRouteNodeButton;
+	/**
+	 * IconToggleButton for moving route nodes, we use this field to show or hide the button.
+	 */
+	private IconToggleButton moveRouteNodeButton;
 
-    /**
-     * IconToggleButton for moving route nodes, we use this field to show or hide the button.
-     */
-    private RoutingMenu menu;
+	/**
+	 * IconToggleButton for moving route nodes, we use this field to show or hide the button.
+	 */
+	private final RoutingMenu menu;
 
-    /**
-     * Reference for the plugin class (as if it were a singleton)
-     */
-    private static RoutingPlugin plugin;
-    
-    private DataSetListenerAdapter datasetAdapter;
+	/**
+	 * Reference for the plugin class (as if it were a singleton)
+	 */
+	private static RoutingPlugin plugin;
 
-    /**
-     * Default Constructor
-     */
-    public RoutingPlugin(PluginInformation info) {
-        super(info);
-        
-        datasetAdapter = new DataSetListenerAdapter(this);
-        plugin = this; // Assign reference to the plugin class
-	if (new java.io.File("log4j.xml").exists()) {
-            DOMConfigurator.configure("log4j.xml");
-        } else {
-            System.err.println("Routing plugin warning: log4j configuration not found"); 
-        }
-        logger.debug("Loading routing plugin...");
-        preferenceSettings=new RoutingPreferenceDialog();
-        // Create side dialog
-        routingDialog = new RoutingDialog();
-        // Initialize layers list
-        layers = new ArrayList<RoutingLayer>();
-        // Add menu
-        menu = new RoutingMenu();
-        // Register this class as LayerChangeListener
-        MapView.addLayerChangeListener(this);
-        DatasetEventManager.getInstance().addDatasetListener(datasetAdapter, FireMode.IN_EDT_CONSOLIDATED);
-        logger.debug("Finished loading plugin");
-    }
+	private final DataSetListenerAdapter datasetAdapter;
 
-    /**
-     * Provides static access to the plugin instance, to enable access to the plugin methods
-     * @return the instance of the plugin
-     */
-    public static RoutingPlugin getInstance() {
-        return plugin;
-    }
+	/**
+	 * Default Constructor
+	 */
+	public RoutingPlugin(PluginInformation info) {
+		super(info);
 
-    /**
-     * Get the routing side dialog
-     * @return The instance of the routing side dialog
-     */
-    public RoutingDialog getRoutingDialog() {
-        return routingDialog;
-    }
+		datasetAdapter = new DataSetListenerAdapter(this);
+		plugin = this; // Assign reference to the plugin class
+		if (new java.io.File("log4j.xml").exists()) {
+			DOMConfigurator.configure("log4j.xml");
+		} else {
+			System.err.println("Routing plugin warning: log4j configuration not found");
+		}
+		logger.debug("Loading routing plugin...");
+		preferenceSettings=new RoutingPreferenceDialog();
+		// Create side dialog
+		routingDialog = new RoutingDialog();
+		// Initialize layers list
+		layers = new ArrayList<RoutingLayer>();
+		// Add menu
+		menu = new RoutingMenu();
+		// Register this class as LayerChangeListener
+		MapView.addLayerChangeListener(this);
+		DatasetEventManager.getInstance().addDatasetListener(datasetAdapter, FireMode.IN_EDT_CONSOLIDATED);
+		logger.debug("Finished loading plugin");
+	}
 
-    public void addLayer() {
-        OsmDataLayer osmLayer = Main.map.mapView.getEditLayer();
-        RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.getName() + "]", osmLayer);
-        layers.add(layer);
-        Main.main.addLayer(layer);
-    }
+	/**
+	 * Provides static access to the plugin instance, to enable access to the plugin methods
+	 * @return the instance of the plugin
+	 */
+	public static RoutingPlugin getInstance() {
+		return plugin;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
-     */
-    @Override
-    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if(newFrame != null) {
-            // Create plugin map modes
-            addRouteNodeAction = new AddRouteNodeAction(newFrame);
-            removeRouteNodeAction = new RemoveRouteNodeAction(newFrame);
-            moveRouteNodeAction = new MoveRouteNodeAction(newFrame);
-            // Create plugin buttons and add them to the toolbar
-            addRouteNodeButton = new IconToggleButton(addRouteNodeAction);
-            removeRouteNodeButton = new IconToggleButton(removeRouteNodeAction);
-            moveRouteNodeButton = new IconToggleButton(moveRouteNodeAction);
-            addRouteNodeButton.setAutoHideDisabledButton(true);
-            removeRouteNodeButton.setAutoHideDisabledButton(true);
-            moveRouteNodeButton.setAutoHideDisabledButton(true);
-            newFrame.addMapMode(addRouteNodeButton);
-            newFrame.addMapMode(removeRouteNodeButton);
-            newFrame.addMapMode(moveRouteNodeButton);
-            // Enable menu
-            menu.enableStartItem();
-            newFrame.addToggleDialog(routingDialog);
-        }
-    }
+	/**
+	 * Get the routing side dialog
+	 * @return The instance of the routing side dialog
+	 */
+	public RoutingDialog getRoutingDialog() {
+		return routingDialog;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
-     */
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-    	   	if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
-    		    menu.enableRestOfItems();    		
-    		    routingDialog.showDialog();
-    		    routingDialog.refresh();
-    	   	}else{											/*   hide Routing toolbar and dialog window  */
-    		    menu.disableRestOfItems();
-    		    routingDialog.hideDialog();
-    	   	}
-    }
+	public void addLayer() {
+		OsmDataLayer osmLayer = Main.map.mapView.getEditLayer();
+		RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.getName() + "]", osmLayer);
+		layers.add(layer);
+		Main.main.addLayer(layer);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#layerAdded(org.openstreetmap.josm.gui.layer.Layer)
-     */
-    public void layerAdded(Layer newLayer) {
-        // Add button(s) to the tool bar when the routing layer is added
-        if (newLayer instanceof RoutingLayer) {
-            menu.enableRestOfItems();
-            // Set layer on top and select layer, also refresh toggleDialog to reflect selection
-            Main.map.mapView.moveLayer(newLayer, 0);
-            logger.debug("Added routing layer.");
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
+	 */
+	@Override
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+		if(newFrame != null) {
+			// Create plugin map modes
+			addRouteNodeAction = new AddRouteNodeAction(newFrame);
+			removeRouteNodeAction = new RemoveRouteNodeAction(newFrame);
+			moveRouteNodeAction = new MoveRouteNodeAction(newFrame);
+			// Create plugin buttons and add them to the toolbar
+			addRouteNodeButton = new IconToggleButton(addRouteNodeAction);
+			removeRouteNodeButton = new IconToggleButton(removeRouteNodeAction);
+			moveRouteNodeButton = new IconToggleButton(moveRouteNodeAction);
+			addRouteNodeButton.setAutoHideDisabledButton(true);
+			removeRouteNodeButton.setAutoHideDisabledButton(true);
+			moveRouteNodeButton.setAutoHideDisabledButton(true);
+			newFrame.addMapMode(addRouteNodeButton);
+			newFrame.addMapMode(removeRouteNodeButton);
+			newFrame.addMapMode(moveRouteNodeButton);
+			// Enable menu
+			menu.enableStartItem();
+			newFrame.addToggleDialog(routingDialog);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#layerRemoved(org.openstreetmap.josm.gui.layer.Layer)
-     */
-    public void layerRemoved(Layer oldLayer) {
-        if ((oldLayer instanceof RoutingLayer) & (layers.size()==1)) {
-            // Remove button(s) from the tool bar when the last routing layer is removed
-            addRouteNodeButton.setVisible(false);
-            removeRouteNodeButton.setVisible(false);
-            moveRouteNodeButton.setVisible(false);
-            menu.disableRestOfItems();
-            layers.remove(oldLayer);
-            logger.debug("Removed routing layer.");
-        } else if (oldLayer instanceof OsmDataLayer) {
-            // Remove all associated routing layers
-            // Convert to Array to prevent ConcurrentModificationException when removing layers from ArrayList
-            // FIXME: can't remove associated routing layers without triggering exceptions in some cases
-            RoutingLayer[] layersArray = layers.toArray(new RoutingLayer[0]);
-            for (int i=0;i<layersArray.length;i++) {
-                if (layersArray[i].getDataLayer().equals(oldLayer)) {
-                    try {
-                        // Remove layer
-                        Main.map.mapView.removeLayer(layersArray[i]);
-                    } catch (IllegalArgumentException e) {
-                    }
-                }
-            }
-        }
-        // Reload RoutingDialog table model
-        routingDialog.refresh();
-    }
-    
-    public void processDatasetEvent(AbstractDatasetChangedEvent event){
-    	
-    	
-    }
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
-     */
-    @Override
-    public PreferenceSetting getPreferenceSetting() {
-        return preferenceSettings;
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
+	 */
+	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+		if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
+			menu.enableRestOfItems();
+			routingDialog.showDialog();
+			routingDialog.refresh();
+		}else{											/*   hide Routing toolbar and dialog window  */
+			menu.disableRestOfItems();
+			routingDialog.hideDialog();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#layerAdded(org.openstreetmap.josm.gui.layer.Layer)
+	 */
+	public void layerAdded(Layer newLayer) {
+		// Add button(s) to the tool bar when the routing layer is added
+		if (newLayer instanceof RoutingLayer) {
+			menu.enableRestOfItems();
+			// Set layer on top and select layer, also refresh toggleDialog to reflect selection
+			Main.map.mapView.moveLayer(newLayer, 0);
+			logger.debug("Added routing layer.");
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#layerRemoved(org.openstreetmap.josm.gui.layer.Layer)
+	 */
+	public void layerRemoved(Layer oldLayer) {
+		if ((oldLayer instanceof RoutingLayer) & (layers.size()==1)) {
+			// Remove button(s) from the tool bar when the last routing layer is removed
+			addRouteNodeButton.setVisible(false);
+			removeRouteNodeButton.setVisible(false);
+			moveRouteNodeButton.setVisible(false);
+			menu.disableRestOfItems();
+			layers.remove(oldLayer);
+			logger.debug("Removed routing layer.");
+		} else if (oldLayer instanceof OsmDataLayer) {
+			// Remove all associated routing layers
+			// Convert to Array to prevent ConcurrentModificationException when removing layers from ArrayList
+			// FIXME: can't remove associated routing layers without triggering exceptions in some cases
+			RoutingLayer[] layersArray = layers.toArray(new RoutingLayer[0]);
+			for (int i=0;i<layersArray.length;i++) {
+				if (layersArray[i].getDataLayer().equals(oldLayer)) {
+					try {
+						// Remove layer
+						Main.map.mapView.removeLayer(layersArray[i]);
+					} catch (IllegalArgumentException e) {
+					}
+				}
+			}
+		}
+		// Reload RoutingDialog table model
+		routingDialog.refresh();
+	}
+
+	public void processDatasetEvent(AbstractDatasetChangedEvent event){
+
+
+	}
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
+	 */
+	@Override
+	public PreferenceSetting getPreferenceSetting() {
+		return preferenceSettings;
+	}
 }

@@ -35,18 +35,18 @@ public class DataGouvFrModule extends AbstractModule {
 
 	public DataGouvFrModule(ModuleInformation info) {
 		super(info);
-        handlers.add(new Etab1er2ndDegreHandler());
-        handlers.add(new EtabAEFEHandler());
-        handlers.add(new BibliothequesHandler());
-        handlers.add(new EtabSupHandler());
-        handlers.add(new AssainissementHandler());
-        handlers.add(new RegistreParcellaireHandler());
-        handlers.add(new GeoFlaHandler());
-        handlers.add(new PassageNiveauHandler());
-        handlers.add(new ROEHandler());
-        handlers.add(new ForetsPubliquesHandler());
-        handlers.add(new ReservesBiologiquesHandler());
-        handlers.add(new EauxDeSurfaceHandler());
-        handlers.add(new InventaireForestierNationalHandler());
+        handlers.add(Etab1er2ndDegreHandler.class);
+        handlers.add(EtabAEFEHandler.class);
+        handlers.add(BibliothequesHandler.class);
+        handlers.add(EtabSupHandler.class);
+        handlers.add(AssainissementHandler.class);
+        handlers.add(RegistreParcellaireHandler.class);
+        handlers.add(GeoFlaHandler.class);
+        handlers.add(PassageNiveauHandler.class);
+        handlers.add(ROEHandler.class);
+        handlers.add(ForetsPubliquesHandler.class);
+        handlers.add(ReservesBiologiquesHandler.class);
+        handlers.add(EauxDeSurfaceHandler.class);
+        handlers.add(InventaireForestierNationalHandler.class);
     }
 }

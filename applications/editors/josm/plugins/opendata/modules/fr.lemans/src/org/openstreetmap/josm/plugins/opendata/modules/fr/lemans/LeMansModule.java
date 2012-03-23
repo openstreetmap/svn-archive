@@ -29,12 +29,12 @@ public class LeMansModule extends AbstractModule {
 
 	public LeMansModule(ModuleInformation info) {
 		super(info);
-		handlers.add(new ServicesCommunautairesMunicipauxHandler());
-		handlers.add(new CantonsSartheHandler());
-		handlers.add(new CommunesHandler());
-		handlers.add(new CodesPostauxHandler());
-		handlers.add(new CirconscriptionsLegislativesHandler());
-		handlers.add(new ConseilsQuartiersHandler());
-		handlers.add(new PointsApportVolontaireHandler());
+		handlers.add(ServicesCommunautairesMunicipauxHandler.class);
+		handlers.add(CantonsSartheHandler.class);
+		handlers.add(CommunesHandler.class);
+		handlers.add(CodesPostauxHandler.class);
+		handlers.add(CirconscriptionsLegislativesHandler.class);
+		handlers.add(ConseilsQuartiersHandler.class);
+		handlers.add(PointsApportVolontaireHandler.class);
     }
 }

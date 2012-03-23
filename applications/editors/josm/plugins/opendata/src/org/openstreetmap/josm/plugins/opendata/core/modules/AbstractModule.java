@@ -32,8 +32,10 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public abstract class AbstractModule implements Module, OdConstants {
 
-	protected final List<AbstractDataSetHandler> handlers = new ArrayList<AbstractDataSetHandler>();
-	
+	protected final List<Class<? extends AbstractDataSetHandler>> handlers = new ArrayList<Class <? extends AbstractDataSetHandler>>();
+
+	private final List<AbstractDataSetHandler> instanciatedHandlers = new ArrayList<AbstractDataSetHandler>();
+
 	protected final ModuleInformation info;
 	
 	public AbstractModule(ModuleInformation info) {
@@ -52,7 +54,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 	 * @see org.openstreetmap.josm.plugins.opendata.core.modules.Module#getHandlers()
 	 */
 	@Override
-	public List<AbstractDataSetHandler> getHandlers() {
+	public List<Class<? extends AbstractDataSetHandler>> getHandlers() {
 		return handlers;
 	}
 
@@ -70,7 +72,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 	@Override
 	public SourceProvider getMapPaintStyleSourceProvider() {
 		final List<SourceEntry> sources = new ArrayList<SourceEntry>();
-		for (AbstractDataSetHandler handler : handlers) {
+		for (AbstractDataSetHandler handler : getInstanciatedHandlers()) {
 			ExtendedSourceEntry src;
 			if (handler != null && (src = handler.getMapPaintStyle()) != null) {
 				try {
@@ -110,7 +112,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 	@Override
 	public SourceProvider getPresetSourceProvider() {
 		final List<SourceEntry> sources = new ArrayList<SourceEntry>();
-		for (AbstractDataSetHandler handler : handlers) {
+		for (AbstractDataSetHandler handler : getInstanciatedHandlers()) {
 			if (handler != null && handler.getTaggingPreset() != null) {
 				sources.add(handler.getTaggingPreset());
 			}
@@ -121,5 +123,29 @@ public abstract class AbstractModule implements Module, OdConstants {
 				return sources;
 			}
 		};
+	}
+	
+	@Override
+	public final List<AbstractDataSetHandler> getNewlyInstanciatedHandlers() {
+		List<AbstractDataSetHandler> result = new ArrayList<AbstractDataSetHandler>();
+		for (Class<? extends AbstractDataSetHandler> handlerClass : handlers) {
+			if (handlerClass != null) {
+				try {
+					result.add(handlerClass.newInstance());
+				} catch (InstantiationException e) {
+					System.err.println(e.getMessage());
+				} catch (IllegalAccessException e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		}
+		return result;
+	}
+
+	private final List<AbstractDataSetHandler> getInstanciatedHandlers() {
+		if (instanciatedHandlers.isEmpty()) {
+			instanciatedHandlers.addAll(getNewlyInstanciatedHandlers());
+		}
+		return instanciatedHandlers;
 	}
 }

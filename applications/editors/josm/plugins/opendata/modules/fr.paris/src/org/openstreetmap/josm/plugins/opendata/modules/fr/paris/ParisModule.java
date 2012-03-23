@@ -23,6 +23,6 @@ public class ParisModule extends AbstractModule {
 
 	public ParisModule(ModuleInformation info) {
 		super(info);
-        handlers.add(new SanisettesHandler());
+        handlers.add(SanisettesHandler.class);
     }
 }

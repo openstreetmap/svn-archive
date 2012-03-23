@@ -24,8 +24,10 @@ public interface Module {
 
 	public String getDisplayedName();
 
-	public List<AbstractDataSetHandler> getHandlers();
-	
+	public List<Class<? extends AbstractDataSetHandler>> getHandlers();
+
+	public List<AbstractDataSetHandler> getNewlyInstanciatedHandlers();
+
 	public SourceProvider getMapPaintStyleSourceProvider();
 	
 	public SourceProvider getPresetSourceProvider();

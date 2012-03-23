@@ -24,7 +24,7 @@ public class Cg41Module extends AbstractModule {
 
 	public Cg41Module(ModuleInformation info) {
 		super(info);
-		handlers.add(new ArretsBusHandler());
-		handlers.add(new ZonesInondablesBrayeHandler());
+		handlers.add(ArretsBusHandler.class);
+		handlers.add(ZonesInondablesBrayeHandler.class);
     }
 }

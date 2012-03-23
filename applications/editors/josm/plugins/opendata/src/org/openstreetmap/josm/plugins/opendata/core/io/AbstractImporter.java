@@ -43,7 +43,7 @@ public abstract class AbstractImporter extends OsmImporter implements OdConstant
     
     protected final AbstractDataSetHandler findDataSetHandler(File file) {
     	for (Module module : ModuleHandler.moduleList) {
-			for (AbstractDataSetHandler dsh : module.getHandlers()) {
+			for (AbstractDataSetHandler dsh : module.getNewlyInstanciatedHandlers()) {
 				if (dsh.acceptsFile(file)) {
 					return dsh;
 				}

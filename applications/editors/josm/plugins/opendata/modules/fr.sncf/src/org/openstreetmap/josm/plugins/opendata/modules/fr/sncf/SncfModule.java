@@ -23,6 +23,6 @@ public class SncfModule extends AbstractModule {
 
 	public SncfModule(ModuleInformation info) {
 		super(info);
-		handlers.add(new EquipementsHandler());
+		handlers.add(EquipementsHandler.class);
     }
 }

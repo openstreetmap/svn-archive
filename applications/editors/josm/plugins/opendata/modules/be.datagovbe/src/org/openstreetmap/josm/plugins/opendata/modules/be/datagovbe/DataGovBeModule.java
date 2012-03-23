@@ -23,6 +23,6 @@ public class DataGovBeModule extends AbstractModule {
 
 	public DataGovBeModule(ModuleInformation info) {
 		super(info);
-		handlers.add(new ArchitecturalHeritageHandler());
+		handlers.add(ArchitecturalHeritageHandler.class);
     }
 }

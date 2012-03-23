@@ -65,7 +65,7 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 	public boolean acceptsUrl(String url) {
 		this.handler = null;
 		for (Module module : ModuleHandler.moduleList) {
-			for (AbstractDataSetHandler handler : module.getHandlers()) {
+			for (AbstractDataSetHandler handler : module.getNewlyInstanciatedHandlers()) {
 				if (handler.acceptsUrl(url)) {
 					this.handler = handler;
 					return true;

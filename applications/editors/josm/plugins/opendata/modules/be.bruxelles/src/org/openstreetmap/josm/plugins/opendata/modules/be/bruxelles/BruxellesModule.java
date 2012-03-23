@@ -23,6 +23,6 @@ public class BruxellesModule extends AbstractModule {
 
 	public BruxellesModule(ModuleInformation info) {
 		super(info);
-		handlers.add(new BDHandler());
+		handlers.add(BDHandler.class);
     }
 }

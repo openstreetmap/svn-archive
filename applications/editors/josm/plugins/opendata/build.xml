@@ -147,6 +147,9 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README"/>

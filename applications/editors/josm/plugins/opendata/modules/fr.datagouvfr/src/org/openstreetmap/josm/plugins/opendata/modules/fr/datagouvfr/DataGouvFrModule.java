@@ -23,6 +23,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.cu
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.diplomatie.EtabAEFEHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.AssainissementHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.ForetsPubliquesHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.InventaireForestierNationalHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ecologie.ReservesBiologiquesHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education.Etab1er2ndDegreHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education.EtabSupHandler;
@@ -46,5 +47,6 @@ public class DataGouvFrModule extends AbstractModule {
         handlers.add(new ForetsPubliquesHandler());
         handlers.add(new ReservesBiologiquesHandler());
         handlers.add(new EauxDeSurfaceHandler());
+        handlers.add(new InventaireForestierNationalHandler());
     }
 }

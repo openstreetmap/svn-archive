@@ -84,6 +84,8 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
     		return XlsReader.class;
     	} else if (contentType.startsWith("application/octet-stream")) {
         	//return OdsReader.class;//FIXME, can be anything
+    	} else if (contentType.startsWith("text/csv")) {
+    		return CsvReader.class;
     	} else if (contentType.startsWith("text/plain")) {//TODO: extract charset
     		return CsvReader.class;
     	} else if (contentType.startsWith("tdyn/html")) {
@@ -137,12 +139,11 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             }
             if (readerClass == null) {
             	readerClass = findReaderByExtension(url.toLowerCase());
-            	if (readerClass != null) {
-            		filename = url.substring(url.lastIndexOf('/'));
-            	}
             }
             if (readerClass == null) {
            		throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
+            } else if (findReaderByExtension(url.toLowerCase()) != null) {
+            	filename = url.substring(url.lastIndexOf('/')+1);
             }
             if (readerClass.equals(ZipReader.class)) {
             	ZipReader zipReader = new ZipReader(in, handler);

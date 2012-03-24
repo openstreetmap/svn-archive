@@ -113,6 +113,7 @@ public class SeaMark extends JPanel {
 		object = obj;
 		if (obj == Obj.UNKOBJ) {
 			setCategory(Cat.NOCAT);
+			setFunc(Fnc.UNKFNC);
 			setShape(Shp.UNKSHP);
 			setColour(Ent.BODY, Col.UNKCOL);
 			setPattern(Ent.BODY, Pat.NOPAT);
@@ -298,7 +299,7 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.LMK_STAT, "statue");
 		CatSTR.put(Cat.LMK_CROS, "cross");
 		CatSTR.put(Cat.LMK_DOME, "dome");
-		CatSTR.put(Cat.LMK_SCNR, "radar");
+		CatSTR.put(Cat.LMK_SCNR, "radar_scanner");
 		CatSTR.put(Cat.LMK_WNDL, "windmill");
 		CatSTR.put(Cat.LMK_SPIR, "spire");
 		CatSTR.put(Cat.LMK_MNRT, "minaret");
@@ -1133,6 +1134,7 @@ public class SeaMark extends JPanel {
 
 	public void setFunc(Fnc fnc) {
 		function = fnc;
+		repaint();
 	}
 
 	public String information = "";
@@ -1261,7 +1263,7 @@ public class SeaMark extends JPanel {
  			tmp = true;
 			break;
 		case LNDMRK:
-			if (getCategory() != Cat.NOCAT)
+			if ((getCategory() != Cat.NOCAT) || (getFunc() != Fnc.UNKFNC))
 				tmp = true;
 			break;
 		}
@@ -1452,7 +1454,19 @@ public class SeaMark extends JPanel {
 			}
 		}
 
-		if ((getObject() == Obj.LNDMRK) && (getCategory() == Cat.NOCAT)) {
+		for (Obj obj : ObjSTR.keySet()) {
+			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":function")) {
+				str = keys.get("seamark:" + ObjSTR.get(obj) + ":function");
+				setFunc(Fnc.UNKFNC);
+				for (Fnc fnc : FncSTR.keySet()) {
+					if (FncSTR.get(fnc).equals(str)) {
+						setFunc(fnc);
+					}
+				}
+			}
+		}
+
+		if ((getObject() == Obj.LNDMRK) && (getCategory() == Cat.NOCAT) && (getFunc() == Fnc.UNKFNC)) {
 			setObject(Obj.LITHSE);
 		}
 
@@ -1993,13 +2007,19 @@ public class SeaMark extends JPanel {
 					imgStr += "FlareStack";
 					break;
 				case LMK_MNMT:
+				case LMK_CLMN:
+				case LMK_OBLK:
+				case LMK_STAT:
 					imgStr += "Monument";
 					break;
 				case LMK_MAST:
 					imgStr += "RadioMast";
 					break;
 				case LMK_TOWR:
-					imgStr += "LandTower";
+					if ((getFunc() == Fnc.CHCH) || (getFunc() == Fnc.CHPL))
+						imgStr += "ChurchTower";
+					else
+						imgStr += "LandTower";
 					break;
 				case LMK_WNDM:
 					imgStr += "Wind_Motor";
@@ -2007,6 +2027,52 @@ public class SeaMark extends JPanel {
 				case LMK_WTRT:
 					imgStr += "WaterTower";
 					break;
+				case LMK_DOME:
+					if ((getFunc() == Fnc.CHCH) || (getFunc() == Fnc.CHPL))
+						imgStr += "ChurchDome";
+					else
+						imgStr += "Dome";
+					break;
+				case LMK_SPIR:
+					if ((getFunc() == Fnc.CHCH) || (getFunc() == Fnc.CHPL))
+						imgStr += "ChurchSpire";
+					else
+						imgStr += "Spire";
+					break;
+				case LMK_MNRT:
+					imgStr += "Minaret";
+					break;
+				case LMK_WNDS:
+					imgStr += "Windsock";
+					break;
+				case LMK_CROS:
+					imgStr += "Cross";
+					break;
+				case LMK_SCNR:
+					imgStr += "Signal_Station";
+					break;
+				case LMK_WNDL:
+					imgStr += "Windmill";
+					break;
+				case NOCAT:
+					switch (getFunc()) {
+					case CHCH:
+					case CHPL:
+						imgStr += "Church";
+						break;
+					case TMPL:
+					case PGDA:
+					case SHSH:
+					case BTMP:
+						imgStr += "Temple";
+						break;
+					case MOSQ:
+						imgStr += "Minaret";
+						break;
+					case MRBT:
+						imgStr += "Spire";
+						break;
+					}
 				}
 				break;
 			case LITHSE:
@@ -2454,6 +2520,10 @@ public class SeaMark extends JPanel {
 
 				if (getObjPattern() != Pat.NOPAT) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":colour_pattern", PatSTR.get(getObjPattern())));
+				}
+
+				if (getFunc() != Fnc.UNKFNC) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":function", FncSTR.get(getFunc())));
 				}
 
 				if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH)

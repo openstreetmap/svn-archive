@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * Provides default rendering for elevation profile layer. 
@@ -132,12 +133,13 @@ public class DefaultElevationProfileRenderer implements
 	public void renderWayPoint(Graphics g, IElevationProfile profile,
 			MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
-		if (mv == null || profile == null || wpt == null) {
+		CheckParameterUtil.ensureParameterNotNull(g, "graphics");
+		CheckParameterUtil.ensureParameterNotNull(profile, "profile");
+		CheckParameterUtil.ensureParameterNotNull(mv, "map view");
+				
+		if (wpt == null) {
 			System.err.println(String.format(
-					"Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));
-			if (wpt == null) {
-				throw new RuntimeException("WPT must not be null, profile " + profile);
-			}
+					"Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));			
 			return;
 		}
 

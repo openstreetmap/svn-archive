@@ -45,7 +45,6 @@ public class ElevationProfilePlugin extends Plugin {
 			
 			eleMode = new ElevationMapMode("Elevation profile", Main.map);
 			eleModeButton = new IconToggleButton(eleMode);
-			eleModeButton.setAutoHideDisabledButton(true);
 		} catch (Exception e1) {
 			System.err.println("Init of ElevationProfilePlugin failed: " + e1);
 			e1.printStackTrace();

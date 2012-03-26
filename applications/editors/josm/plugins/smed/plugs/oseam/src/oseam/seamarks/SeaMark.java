@@ -61,7 +61,7 @@ public class SeaMark extends JPanel {
 
 	public enum Obj {
 		UNKOBJ, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP,
-		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP,
+		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, NOTMRK,
 		FLTCAR, FLTISD, FLTLAT, FLTSAW, FLTSPP,
 		LITMAJ, LITMIN, LITFLT, LITVES, LITHSE, LNDMRK,
 		MORFAC, BOYINB, SISTAW, SISTAT, OFSPLF,
@@ -89,6 +89,7 @@ public class SeaMark extends JPanel {
 		ObjSTR.put(Obj.LITMIN, "light_minor");
 		ObjSTR.put(Obj.LITFLT, "light_float");
 		ObjSTR.put(Obj.LITVES, "light_vessel");
+		ObjSTR.put(Obj.NOTMRK, "notice");
 		ObjSTR.put(Obj.LNDMRK, "landmark");
 		ObjSTR.put(Obj.LITHSE, "landmark");
 		ObjSTR.put(Obj.MORFAC, "mooring");
@@ -125,7 +126,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public enum Ent {
-		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM
+		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM, NOTICE
 	}
 
 	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
@@ -161,10 +162,11 @@ public class SeaMark extends JPanel {
 		EntMAP.put(Obj.RSCSTA, Ent.STATION);
 		EntMAP.put(Obj.RDOSTA, Ent.STATION);
 		EntMAP.put(Obj.RADSTA, Ent.STATION);
+		EntMAP.put(Obj.NOTMRK, Ent.NOTICE);
 	}
 
 	public enum Grp {
-		NUL, LAT, CAR, SAW, ISD, SPP, LGT, STN, PLF
+		NUL, LAT, CAR, SAW, ISD, SPP, LGT, STN, PLF, NTC
 	}
 
 	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
@@ -201,6 +203,7 @@ public class SeaMark extends JPanel {
 		GrpMAP.put(Obj.RSCSTA, Grp.STN);
 		GrpMAP.put(Obj.RDOSTA, Grp.STN);
 		GrpMAP.put(Obj.RADSTA, Grp.STN);
+		GrpMAP.put(Obj.NOTMRK, Grp.NTC);
 	}
 
 	public enum Cat {
@@ -217,7 +220,9 @@ public class SeaMark extends JPanel {
 		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
 		RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG,
 		ROS_BNO, ROS_BND, ROS_BNR, ROS_BNC, ROS_RDF, ROS_QTG, ROS_AER, ROS_DCA, ROS_LRN, ROS_DGPS, ROS_TRN, ROS_OMA,
-		ROS_SDS, ROS_CKA, ROS_PUB, ROS_COM, ROS_FAX, ROS_TIM, RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE
+		ROS_SDS, ROS_CKA, ROS_PUB, ROS_COM, ROS_FAX, ROS_TIM, RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE,
+		NTC_A1, NTC_A1a, NTC_A2, NTC_A3, NTC_A4, NTC_A4_1, NTC_A5, NTC_A5_1, NTC_A6, NTC_A7, NTC_A8, NTC_A9,
+		NTC_A10a, NTC_A10b, NTC_A12, NTC_A13, NTC_A14, NTC_A15, NTC_A16, NTC_A17, NTC_A18, NTC_A19, NTC_A20
 	}
 		 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -346,6 +351,29 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.ROS_COM, "comercial_broadcast");
 		CatSTR.put(Cat.ROS_FAX, "facsimile");
 		CatSTR.put(Cat.ROS_TIM, "time_signal");
+		CatSTR.put(Cat.NTC_A1, "no_entry");
+		CatSTR.put(Cat.NTC_A1a, "closed_area");
+		CatSTR.put(Cat.NTC_A2, "no_overtaking");
+		CatSTR.put(Cat.NTC_A3, "no_convoy_overtaking");
+		CatSTR.put(Cat.NTC_A4, "no_passing");
+		CatSTR.put(Cat.NTC_A4, "no_convoy_passing");
+		CatSTR.put(Cat.NTC_A5, "no_berthing");
+		CatSTR.put(Cat.NTC_A5_1, "no_berthing_lateral_limit");
+		CatSTR.put(Cat.NTC_A6, "no_anchoring");
+		CatSTR.put(Cat.NTC_A7, "no_mooring");
+		CatSTR.put(Cat.NTC_A8, "no_turning");
+		CatSTR.put(Cat.NTC_A9, "no_wash");
+		CatSTR.put(Cat.NTC_A10a, "no_passage_left");
+		CatSTR.put(Cat.NTC_A10b, "no_passage_right");
+		CatSTR.put(Cat.NTC_A12, "no_motor_craft");
+		CatSTR.put(Cat.NTC_A13, "no_sport_craft");
+		CatSTR.put(Cat.NTC_A14, "no_waterskiing");
+		CatSTR.put(Cat.NTC_A15, "no_sailing_craft");
+		CatSTR.put(Cat.NTC_A16, "no_unpowered_craft");
+		CatSTR.put(Cat.NTC_A17, "no_sailboards");
+		CatSTR.put(Cat.NTC_A18, "no_high_speeds");
+		CatSTR.put(Cat.NTC_A19, "no_launching_beaching");
+		CatSTR.put(Cat.NTC_A20, "no_waterbikes");
 	}
 
 	private Cat category = Cat.NOCAT;
@@ -1077,7 +1105,8 @@ public class SeaMark extends JPanel {
 
 	public enum Fnc {
 	  UNKFNC, HMO, CSTM, HLTH, HOSP, POFF, HOTEL, RWSTA, POLICE, WPOL, PILO, PILL, BANK, DCHQ, TRNS, FACT, PWRS, ADMIN, EDUC, CHCH, CHPL,
-	  TMPL, PGDA, SHSH, BTMP, MOSQ, MRBT, LOOK, COMS, TV, RADO, RADR, LSUP, MWAV, COOL, OBSV, TIMB, CLK, CTRL, AMOR, STAD, BUSS
+	  TMPL, PGDA, SHSH, BTMP, MOSQ, MRBT, LOOK, COMS, TV, RADO, RADR, LSUP, MWAV, COOL, OBSV, TIMB, CLK, CTRL, AMOR, STAD, BUSS,
+	  PRHB, RGLN, RSTN, RCMD, INFO
 	}
 
 	public static final EnumMap<Fnc, String> FncSTR = new EnumMap<Fnc, String>(Fnc.class);
@@ -1124,7 +1153,12 @@ public class SeaMark extends JPanel {
 		FncSTR.put(Fnc.AMOR, "airship_mooring");
 		FncSTR.put(Fnc.STAD, "stadium");
 		FncSTR.put(Fnc.BUSS, "bus_station");
-	};
+		FncSTR.put(Fnc.PRHB, "prohibition");
+		FncSTR.put(Fnc.RGLN, "regulation");
+		FncSTR.put(Fnc.RSTN, "restriction");
+		FncSTR.put(Fnc.RCMD, "recommendation");
+		FncSTR.put(Fnc.INFO, "information");
+	}
 
 	private Fnc function = Fnc.UNKFNC;
 

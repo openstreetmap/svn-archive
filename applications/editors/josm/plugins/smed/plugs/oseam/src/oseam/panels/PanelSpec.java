@@ -107,6 +107,16 @@ public class PanelSpec extends JPanel {
 			dlg.panelMain.panelTop.syncPanel();
 		}
 	};
+	public JToggleButton noticeButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/NoticeButton.png")));
+	private ActionListener alNotice = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (noticeButton.isSelected()) {
+				noticeButton.setBorderPainted(true);
+			} else {
+				noticeButton.setBorderPainted(false);
+			}
+		}
+	};
 	public JToggleButton mooringButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MooringButton.png")));
 	private ActionListener alMooring = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -156,10 +166,10 @@ public class PanelSpec extends JPanel {
 		add(getShapeButton(cairnButton, 102, 64, 34, 32, "CairnB", Shp.CAIRN, Obj.BCNSPP));
 
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
-		categoryLabel.setBounds(new Rectangle(5, 110, 160, 20));
+		categoryLabel.setBounds(new Rectangle(5, 125, 160, 18));
 		add(categoryLabel);
 		categoryBox = new JComboBox();
-		categoryBox.setBounds(new Rectangle(5, 130, 160, 20));
+		categoryBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(categoryBox);
 		categoryBox.setVisible(true);
 		categoryBox.addActionListener(alCategoryBox);
@@ -205,6 +215,13 @@ public class PanelSpec extends JPanel {
 		topmarkButton.addActionListener(alTop);
 		add(topmarkButton);
 
+		noticeButton.setBounds(new Rectangle(136, 32, 34, 32));
+		noticeButton.setToolTipText(Messages.getString("Notice"));
+		noticeButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		noticeButton.addActionListener(alNotice);
+		add(noticeButton);
+		noticeButton.setVisible(false);
+
 		mooringButton.setBounds(new Rectangle(136, 64, 34, 32));
 		mooringButton.setToolTipText(Messages.getString("Mooring"));
 		mooringButton.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -223,6 +240,7 @@ public class PanelSpec extends JPanel {
 			towerButton.setEnabled(false);
 			stakeButton.setEnabled(false);
 			cairnButton.setEnabled(false);
+			noticeButton.setEnabled(false);
 			topmarkButton.setVisible(false);
 			for (Cat cat : moorings.keySet()) {
 				int item = moorings.get(cat);
@@ -239,6 +257,7 @@ public class PanelSpec extends JPanel {
 			towerButton.setEnabled(true);
 			stakeButton.setEnabled(true);
 			cairnButton.setEnabled(true);
+			noticeButton.setEnabled(true);
 			topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 			topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
 			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
@@ -255,6 +274,7 @@ public class PanelSpec extends JPanel {
 			} else
 				button.setBorderPainted(false);
 		}
+		noticeButton.setBorderPainted(false);
 		dlg.panelMain.mark.testValid();
 	}
 

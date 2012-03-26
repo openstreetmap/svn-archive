@@ -176,9 +176,6 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
                 return null;
             throw new OsmTransferException(e);
         } finally {
-        	if (instance != null) {
-        		instance.finishTask();
-        	}
             progressMonitor.finishTask();
             try {
                 activeConnection = null;

@@ -46,7 +46,7 @@ public class CsvReader extends SpreadSheetReader {
 	
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
 		CsvHandler csvHandler = null;
-		if (handler.getSpreadSheetHandler() instanceof CsvHandler) {
+		if (handler != null && handler.getSpreadSheetHandler() instanceof CsvHandler) {
 			csvHandler = (CsvHandler) handler.getSpreadSheetHandler();
 		}
 		CsvReader csvReader = new CsvReader(csvHandler);

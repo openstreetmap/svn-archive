@@ -197,9 +197,6 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					System.err.println("Unsupported file extension: "+file.getName());
 				}
 				if (from != null) {
-					if (progressMonitor != null) {
-						instance.finishTask();
-					}
 					ds = from;
 				}
 			}

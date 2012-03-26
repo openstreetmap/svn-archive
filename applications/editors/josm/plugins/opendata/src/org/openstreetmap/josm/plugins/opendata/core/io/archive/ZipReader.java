@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -88,12 +90,15 @@ public class ZipReader extends AbstractReader implements OdConstants {
 		dir.delete();
 	}
 
-	public DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
+	public DataSet parseDoc(ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
 		
 	    final File temp = createTempDir();
 	    final List<File> candidates = new ArrayList<File>();
 	    
 	    try {
+	    	if (progressMonitor != null) {
+	    		progressMonitor.beginTask(tr("Reading Zip file..."));
+	    	}
 			ZipEntry entry;
 			while ((entry = zis.getNextEntry()) != null) {
 				File file = new File(temp + File.separator + entry.getName());
@@ -149,7 +154,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			file = null;
 			
 			if (candidates.size() > 1) {
-				CandidateChooser dialog = (CandidateChooser) new CandidateChooser(instance.getWindowParent(), candidates).showDialog();
+				CandidateChooser dialog = (CandidateChooser) new CandidateChooser(progressMonitor.getWindowParent(), candidates).showDialog();
 				if (dialog.getValue() != 1) {
 					return null; // User clicked Cancel
 				}
@@ -161,6 +166,10 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			if (file != null) {
 				DataSet from = null;
 				FileInputStream in = new FileInputStream(file);
+				ProgressMonitor instance = null;
+				if (progressMonitor != null) {
+					instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
+				}
 				if (file.getName().toLowerCase().endsWith(CSV_EXT)) {
 					from = CsvReader.parseDataSet(in, handler, instance);
 				} else if (file.getName().toLowerCase().endsWith(KML_EXT)) {
@@ -188,13 +197,19 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					System.err.println("Unsupported file extension: "+file.getName());
 				}
 				if (from != null) {
-					ds.mergeFrom(from);
+					if (progressMonitor != null) {
+						instance.finishTask();
+					}
+					ds = from;
 				}
 			}
 	    } catch (IllegalArgumentException e) {
 	    	System.err.println(e.getMessage());
 	    } finally {
 	    	deleteDir(temp);
+	    	if (progressMonitor != null) {
+	    		progressMonitor.finishTask();
+	    	}
 	    }
 		
 		return ds;

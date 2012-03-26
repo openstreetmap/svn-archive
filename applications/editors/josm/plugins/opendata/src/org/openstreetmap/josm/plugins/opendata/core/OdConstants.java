@@ -35,6 +35,7 @@ public interface OdConstants {
 	 */
 	public static final String UTF8 = "UTF-8";
 	public static final String ISO8859_15 = "ISO-8859-15";
+	public static final String CP850 = "Cp850";
 	public static final String CP1252 = "Cp1252";
 	public static final String MAC_ROMAN = "MacRoman";
 	

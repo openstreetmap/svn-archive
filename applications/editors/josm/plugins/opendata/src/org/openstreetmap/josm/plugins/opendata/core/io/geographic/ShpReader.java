@@ -24,16 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import org.geotools.data.DataStore;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.FileDataStore;
-import org.geotools.data.FileDataStoreFinder;
+import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -60,7 +62,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.OperationNotFoundException;
 import org.opengis.referencing.operation.TransformException;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -88,9 +90,10 @@ public class ShpReader extends AbstractReader implements OdConstants {
 	private final CoordinateReferenceSystem wgs84;
 	private final Map<String, Node> nodes;
 
-	private DataSet result;
 	private CoordinateReferenceSystem crs;
 	private MathTransform transform;
+	
+	private final Set<OsmPrimitive> featurePrimitives = new HashSet<OsmPrimitive>();
 	
 	public ShpReader(ShpHandler handler) throws NoSuchAuthorityCodeException, FactoryException {
 		this.handler = handler;
@@ -161,14 +164,151 @@ public class ShpReader extends AbstractReader implements OdConstants {
 		System.out.println(text + ": " + result + "("+o1+", "+o2+")");
 		return result;
 	}
+	
+	private void findCrsAndMathTransform(CoordinateReferenceSystem coordinateReferenceSystem, Component parent) throws FactoryException, UserCancelException, ShpMathTransformException {
+		crs = coordinateReferenceSystem;
+		try {
+			transform = CRS.findMathTransform(crs, wgs84);
+		} catch (OperationNotFoundException e) {
+			System.out.println(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
+			
+			List<CoordinateReferenceSystem> candidates = new ArrayList<CoordinateReferenceSystem>();
+			
+			// Find matching CRS with Bursa Wolf parameters in EPSG database
+			for (String code : CRS.getAuthorityFactory(false).getAuthorityCodes(ProjectedCRS.class)) {
+				CoordinateReferenceSystem candidate = CRS.decode(code);
+				if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
+					
+					Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
+							Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE));
+					if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
+						System.out.println("Found a potential CRS: "+candidate.getName());
+						candidates.add(candidate);
+					} else if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
+						compareDebug(crs, candidate);
+					}
+					Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
+				}
+			}
+			
+			if (candidates.size() > 1) {
+				System.err.println("Found several potential CRS.");//TODO: ask user which one to use
+			}
+			
+			if (candidates.size() > 0) {
+				CoordinateReferenceSystem newCRS = candidates.get(0);
+				try {
+					transform = CRS.findMathTransform(newCRS, wgs84, false);
+				} catch (OperationNotFoundException ex) {
+					System.err.println(newCRS.getName()+": "+e.getMessage());
+				}
+			}
+			
+			if (transform == null) {
+				if (handler != null) {
+					// ask handler if it can provide a math transform
+					transform = handler.findMathTransform(crs, wgs84, false);
+				}
+				if (transform == null) {
+					// ask user before trying lenient method
+					if (warnLenientMethod(parent, crs)) {
+						// User canceled
+						throw new UserCancelException();
+					}
+					System.out.println("Searching for a lenient math transform.");
+					transform = CRS.findMathTransform(crs, wgs84, true);
+				}
+			}
+		}
+		if (transform == null) {
+			throw new ShpMathTransformException("Unable to find math transform !");
+		}
+	}
+	
+	private void parseFeature(Feature feature, Component parent) 
+			throws UserCancelException, ShpMathTransformException, FactoryException, ShpCrsException, MismatchedDimensionException, TransformException {
+		featurePrimitives.clear();
+		GeometryAttribute geometry = feature.getDefaultGeometryProperty();
+		if (geometry != null) {
+
+			GeometryDescriptor desc = geometry.getDescriptor();
+			
+			if (crs == null && desc != null && desc.getCoordinateReferenceSystem() != null) {
+				findCrsAndMathTransform(desc.getCoordinateReferenceSystem(), parent);
+			} else if (crs == null) {
+				throw new ShpCrsException("Unable to detect CRS !");
+			}
+			
+			OsmPrimitive primitive = null;
+			
+			if (geometry.getValue() instanceof Point) {
+				primitive = createOrGetNode((Point) geometry.getValue());
+				
+			} else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
+				GeometryCollection mp = (GeometryCollection) geometry.getValue();
+				int nGeometries = mp.getNumGeometries(); 
+				if (nGeometries < 1) {
+					System.err.println("Error: empty geometry collection found");
+				} else {
+					Relation r = null;
+					Way w = null;
+					
+					for (int i=0; i<nGeometries; i++) {
+						Geometry g = mp.getGeometryN(i);
+						if (g instanceof Polygon) {
+							Polygon p = (Polygon) g;
+							// Do not create relation if there's only one polygon without interior ring
+							// except if handler prefers it
+							if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
+								r = createMultipolygon();
+							}
+							w = createWay(p.getExteriorRing());
+							if (r != null) {
+								addWayToMp(r, "outer", w);
+								for (int j=0; j<p.getNumInteriorRing(); j++) {
+									addWayToMp(r, "inner", createWay(p.getInteriorRingN(j)));
+								}
+							}
+						} else if (g instanceof LineString) {
+							w = createWay((LineString) g);
+						} else if (g instanceof Point) {
+							// Some belgian data sets hold points into collections ?!
+							readNonGeometricAttributes(feature, createOrGetNode((Point) g));
+						} else {
+							System.err.println("Error: unsupported geometry : "+g);
+						}
+					}
+					primitive = r != null ? r : w;
+				}
+			} else {
+				// Debug unknown geometry
+				System.out.println("\ttype: "+geometry.getType());
+				System.out.println("\tbounds: "+geometry.getBounds());
+				System.out.println("\tdescriptor: "+desc);
+				System.out.println("\tname: "+geometry.getName());
+				System.out.println("\tvalue: "+geometry.getValue());
+				System.out.println("\tid: "+geometry.getIdentifier());
+				System.out.println("-------------------------------------------------------------");
+			}
+			
+			if (primitive != null) {
+				// Read primitive non geometric attributes
+				readNonGeometricAttributes(feature, primitive);
+			}
+		}
+	}
 
 	public DataSet parse(File file, ProgressMonitor instance) throws IOException {
-		result = null;
 		crs = null;
 		transform = null;
 		try {
 			if (file != null) { 
-				FileDataStore dataStore = FileDataStoreFinder.getDataStore(file);
+		        Map params = new HashMap();
+		        params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
+		        if (handler != null && handler.getDbfCharset() != null) {
+		        	params.put(ShapefileDataStoreFactory.DBFCHARSET.key, handler.getDbfCharset());
+		        }
+				DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);//FIXME
 				if (dataStore == null) {
 					throw new IOException(tr("Unable to find a data store for file {0}", file.getName()));
 				}
@@ -179,144 +319,38 @@ public class ShpReader extends AbstractReader implements OdConstants {
 				FeatureSource<?,?> featureSource = dataStore.getFeatureSource(typeName);
 				FeatureCollection<?,?> collection = featureSource.getFeatures();
 				FeatureIterator<?> iterator = collection.features();
-					
-				result = new DataSet();
+				
+				if (instance != null) {
+					instance.beginTask(tr("Loading shapefile ({0} features)", collection.size()), collection.size());
+				}
+				
+				int n = 0;
+				
+				Component parent = instance != null ? instance.getWindowParent() : Main.parent;
 				
 				try {
 					while (iterator.hasNext()) {
-						Feature feature = iterator.next();
-						GeometryAttribute geometry = feature.getDefaultGeometryProperty();
-						if (geometry != null) {
-
-							GeometryDescriptor desc = geometry.getDescriptor();
-							
-							if (crs == null && desc != null && desc.getCoordinateReferenceSystem() != null) {
-								crs = desc.getCoordinateReferenceSystem();
-								try {
-									transform = CRS.findMathTransform(crs, wgs84);
-								} catch (OperationNotFoundException e) {
-									System.out.println(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
-									
-									List<CoordinateReferenceSystem> candidates = new ArrayList<CoordinateReferenceSystem>();
-									
-									// Find matching CRS with Bursa Wolf parameters in EPSG database
-									for (String code : CRS.getAuthorityFactory(false).getAuthorityCodes(ProjectedCRS.class)) {
-										CoordinateReferenceSystem candidate = CRS.decode(code);
-										if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
-											
-											Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
-													Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE));
-											if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
-												System.out.println("Found a potential CRS: "+candidate.getName());
-												candidates.add(candidate);
-											} else if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
-												compareDebug(crs, candidate);
-											}
-											Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
-										}
-									}
-									
-									if (candidates.size() > 1) {
-										System.err.println("Found several potential CRS.");//TODO: ask user which one to use
-									}
-									
-									if (candidates.size() > 0) {
-										CoordinateReferenceSystem newCRS = candidates.get(0);
-										try {
-											transform = CRS.findMathTransform(newCRS, wgs84, false);
-										} catch (OperationNotFoundException ex) {
-											System.err.println(newCRS.getName()+": "+e.getMessage());
-										}
-									}
-									
-									if (transform == null) {
-										if (handler != null) {
-											// ask handler if it can provide a math transform
-											transform = handler.findMathTransform(crs, wgs84, false);
-										}
-										if (transform == null) {
-											// ask user before trying lenient method
-											if (warnLenientMethod(instance.getWindowParent(), crs)) {
-												// User canceled
-												return result;
-											}
-											System.out.println("Searching for a lenient math transform.");
-											transform = CRS.findMathTransform(crs, wgs84, true);
-										}
-									}
-								}
-								if (transform == null) {
-									System.err.println("Unable to find math transform !");
-									// TODO: something
-									return result;
-								}
-							} else if (crs == null) {
-								System.err.println("Unable to detect CRS !");
-								// TODO: ask projection
-								return result;
+						n++;
+						try {
+							Object feature = iterator.next();
+							parseFeature(iterator.next(), parent);
+							if (handler != null) {
+								handler.notifyFeatureParsed(feature, ds, featurePrimitives);
 							}
-							
-							OsmPrimitive primitive = null;
-							
-							if (geometry.getValue() instanceof Point) {
-								primitive = createOrGetNode((Point) geometry.getValue());
-								
-							} else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
-								GeometryCollection mp = (GeometryCollection) geometry.getValue();
-								int nGeometries = mp.getNumGeometries(); 
-								if (nGeometries < 1) {
-									System.err.println("Error: empty geometry collection found");
-								} else {
-									Relation r = null;
-									Way w = null;
-									
-									for (int i=0; i<nGeometries; i++) {
-										Geometry g = mp.getGeometryN(i);
-										if (g instanceof Polygon) {
-											Polygon p = (Polygon) g;
-											// Do not create relation if there's only one polygon without interior ring
-											// except if handler prefers it
-											if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
-												r = createMultipolygon();
-											}
-											w = createWay(p.getExteriorRing());
-											if (r != null) {
-												addWayToMp(r, "outer", w);
-												for (int j=0; j<p.getNumInteriorRing(); j++) {
-													addWayToMp(r, "inner", createWay(p.getInteriorRingN(j)));
-												}
-											}
-										} else if (g instanceof LineString) {
-											w = createWay((LineString) g);
-										} else if (g instanceof Point) {
-											// Some belgian data sets hold points into collections ?!
-											readNonGeometricAttributes(feature, createOrGetNode((Point) g));
-										} else {
-											System.err.println("Error: unsupported geometry : "+g);
-										}
-									}
-									primitive = r != null ? r : w;
-								}
-							} else {
-								// Debug unknown geometry
-								System.out.println("\ttype: "+geometry.getType());
-								System.out.println("\tbounds: "+geometry.getBounds());
-								System.out.println("\tdescriptor: "+desc);
-								System.out.println("\tname: "+geometry.getName());
-								System.out.println("\tvalue: "+geometry.getValue());
-								System.out.println("\tid: "+geometry.getIdentifier());
-								System.out.println("-------------------------------------------------------------");
-							}
-							
-							if (primitive != null) {
-								// Read primitive non geometric attributes
-								readNonGeometricAttributes(feature, primitive);
-							}
+						} catch (UserCancelException e) {
+							return ds;
+						}
+						if (instance != null) {
+							instance.worked(1);
+							instance.setCustomText(n+"/"+collection.size());
 						}
 					}
 				} finally {
 					iterator.close();
 					nodes.clear();
+					if (instance != null) {
+						instance.setCustomText(null);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -324,7 +358,7 @@ public class ShpReader extends AbstractReader implements OdConstants {
 		} catch (Throwable t) {
 			throw new IOException(t);
 		}
-		return result;
+		return ds;
 	}
 	
     /**
@@ -384,21 +418,22 @@ public class ShpReader extends AbstractReader implements OdConstants {
 	}
 	
 	private Node createOrGetNode(Point p) throws MismatchedDimensionException, TransformException {
-		if (transform != null) {
-			Point p2 = (Point) JTS.transform(p, transform);
-			String key = p2.getX()+"/"+p2.getY();
-			//String key = LatLon.roundToOsmPrecisionStrict(p2.getX())+"/"+LatLon.roundToOsmPrecisionStrict(p2.getY());
-			Node n = getNode(p2, key);
-			if (n == null) {
-				nodes.put(key, n = new Node(new LatLon(p2.getY(), p2.getX())));
-				result.addPrimitive(n);
+		Point p2 = (Point) JTS.transform(p, transform);
+		String key = p2.getX()+"/"+p2.getY();
+		//String key = LatLon.roundToOsmPrecisionStrict(p2.getX())+"/"+LatLon.roundToOsmPrecisionStrict(p2.getY());
+		Node n = getNode(p2, key);
+		if (n == null) {
+			n = new Node(new LatLon(p2.getY(), p2.getX()));
+			if (handler == null || handler.useNodeMap()) {
+				nodes.put(key, n);
 			}
-			return n;
-		} else {
-			EastNorth en = new EastNorth(p.getX(), p.getY());
-			// TODO: something to transform coordinates
-			return new Node(en);
+			ds.addPrimitive(n);
+		} else if (n.getDataSet() == null) {
+		    // ShpHandler may have removed the node from DataSet (see Paris public light handler for example)
+		    ds.addPrimitive(n);
 		}
+		featurePrimitives.add(n);
+		return n;
 	}
 	
 	private Way createWay(LineString ls) {
@@ -412,19 +447,23 @@ public class ShpReader extends AbstractReader implements OdConstants {
 				}
 			}
 		}
-		result.addPrimitive(w);
-		return w;
+		return addOsmPrimitive(w);
 	}
 
 	private Relation createMultipolygon() {
 		Relation r = new Relation();
 		r.put("type", "multipolygon");
-		result.addPrimitive(r);
-		return r;
+		return addOsmPrimitive(r);
 	}
 
 	private void addWayToMp(Relation r, String role, Way w) {
 		//result.addPrimitive(w);
 		r.addMember(new RelationMember(role, w));
+	}
+	
+	private <T extends OsmPrimitive> T addOsmPrimitive(T p) {
+		ds.addPrimitive(p);
+		featurePrimitives.add(p);
+		return p;
 	}
 }

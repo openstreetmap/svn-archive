@@ -15,8 +15,10 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.AbstractDerivedCRS;
@@ -33,6 +35,8 @@ import org.opengis.referencing.crs.GeographicCRS;
 import org.opengis.referencing.datum.GeodeticDatum;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
 import org.openstreetmap.josm.data.projection.Ellipsoid;
 import org.openstreetmap.josm.data.projection.Projection;
@@ -53,7 +57,7 @@ public class DefaultShpHandler implements ShpHandler, OdConstants {
 		ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.WGS84, Ellipsoid.WGS84));
 	}
 	
-	private static final Double get(ParameterValueGroup values, ParameterDescriptor desc) {
+	protected static final Double get(ParameterValueGroup values, ParameterDescriptor desc) {
 		return (Double) values.parameter(desc.getName().getCode()).getValue();
 	}
 	
@@ -65,8 +69,10 @@ public class DefaultShpHandler implements ShpHandler, OdConstants {
 		return res; 
 	}
 	
+	private boolean useNodeMap = true;
 	private boolean checkNodeProximity = false;
 	private boolean preferMultipolygonToSimpleWay = false;
+	private Charset dbfCharset = null;
 
 	@Override
 	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS,
@@ -149,5 +155,30 @@ public class DefaultShpHandler implements ShpHandler, OdConstants {
 	@Override
 	public void setCheckNodeProximity(boolean check) {
 		checkNodeProximity = check;
+	}
+
+	@Override
+	public void setUseNodeMap(boolean use) {
+		useNodeMap = use;
+	}
+
+	@Override
+	public boolean useNodeMap() {
+		return useNodeMap;
+	}
+
+	@Override
+	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives) {
+		// To be overriden by modules handlers
+	}
+
+	@Override
+	public void setDbfCharset(Charset charset) {
+		dbfCharset = charset;
+	}
+	
+	@Override
+	public Charset getDbfCharset() {
+		return dbfCharset;
 	}
 }

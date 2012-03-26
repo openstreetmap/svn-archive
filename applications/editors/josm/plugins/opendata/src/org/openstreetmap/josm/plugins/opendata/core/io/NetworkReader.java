@@ -124,13 +124,12 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	@Override
 	public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
         InputStream in = null;
-        progressMonitor.beginTask(tr("Contacting Server...", 10));
+        ProgressMonitor instance = null;
         try {
-            in = getInputStreamRaw(url, progressMonitor.createSubTaskMonitor(9, false));
+        	in = getInputStreamRaw(url, progressMonitor);
             if (in == null)
                 return null;
             progressMonitor.subTask(tr("Downloading data..."));
-            ProgressMonitor instance = progressMonitor.createSubTaskMonitor(1, false);
             if (readerClass == null) {
             	readerClass = findReaderByAttachment();
             }
@@ -145,6 +144,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             } else if (findReaderByExtension(url.toLowerCase()) != null) {
             	filename = url.substring(url.lastIndexOf('/')+1);
             }
+            instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             if (readerClass.equals(ZipReader.class)) {
             	ZipReader zipReader = new ZipReader(in, handler);
             	DataSet ds = zipReader.parseDoc(instance);
@@ -176,6 +176,9 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
                 return null;
             throw new OsmTransferException(e);
         } finally {
+        	if (instance != null) {
+        		instance.finishTask();
+        	}
             progressMonitor.finishTask();
             try {
                 activeConnection = null;

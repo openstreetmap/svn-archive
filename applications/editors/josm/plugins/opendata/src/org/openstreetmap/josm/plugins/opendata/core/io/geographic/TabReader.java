@@ -111,8 +111,8 @@ public class TabReader extends AbstractMapInfoReader {
 		parseHeader();
         try {
         	File dataFile = getDataFile(file, ".dat");
-        	ds.mergeFrom(new TabOsmReader(handler != null ? handler.getSpreadSheetHandler() : null, new TabFiles(file, dataFile)).
-        			doParse(columns.toArray(new String[0]), instance));
+        	ds = new TabOsmReader(handler != null ? handler.getSpreadSheetHandler() : null, new TabFiles(file, dataFile)).
+        			doParse(columns.toArray(new String[0]), instance);
         } catch (IOException e) {
         	System.err.println(e.getMessage());
         }

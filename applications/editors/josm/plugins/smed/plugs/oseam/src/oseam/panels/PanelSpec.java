@@ -110,11 +110,15 @@ public class PanelSpec extends JPanel {
 	public JToggleButton noticeButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/NoticeButton.png")));
 	private ActionListener alNotice = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			dlg.panelMain.mark.clrMark();
 			if (noticeButton.isSelected()) {
+				dlg.panelMain.mark.setObject(Obj.NOTMRK);
 				noticeButton.setBorderPainted(true);
 			} else {
+				dlg.panelMain.mark.setObject(Obj.UNKOBJ);
 				noticeButton.setBorderPainted(false);
 			}
+			dlg.panelMain.syncPanel();
 		}
 	};
 	public JToggleButton mooringButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MooringButton.png")));
@@ -192,7 +196,7 @@ public class PanelSpec extends JPanel {
 		addCatItem(Messages.getString("FerryCross"), Cat.SPM_FRRY);
 		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
 		mooringBox = new JComboBox();
-		mooringBox.setBounds(new Rectangle(5, 130, 160, 20));
+		mooringBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(mooringBox);
 		mooringBox.setVisible(false);
 		mooringBox.addActionListener(alMooringBox);
@@ -220,7 +224,6 @@ public class PanelSpec extends JPanel {
 		noticeButton.setBorder(BorderFactory.createLoweredBevelBorder());
 		noticeButton.addActionListener(alNotice);
 		add(noticeButton);
-		noticeButton.setVisible(false);
 
 		mooringButton.setBounds(new Rectangle(136, 64, 34, 32));
 		mooringButton.setToolTipText(Messages.getString("Mooring"));

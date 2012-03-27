@@ -19,6 +19,7 @@ public class PanelMain extends JPanel {
 	public PanelSpec panelSpec = null;
 	public PanelLights panelLights = null;
 	public PanelMore panelMore = null;
+	public PanelNotice panelNotice = null;
 	public PanelTop panelTop = null;
 	public PanelFog panelFog = null;
 	public PanelRadar panelRadar = null;
@@ -180,6 +181,9 @@ public class PanelMain extends JPanel {
 		panelMore = new PanelMore(dlg);
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
 		panelMore.setVisible(false);
+		panelNotice = new PanelNotice(dlg);
+		panelNotice.setBounds(new Rectangle(40, 165, 360, 160));
+		panelNotice.setVisible(false);
 		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
 		panelTop.setVisible(false);
@@ -202,6 +206,7 @@ public class PanelMain extends JPanel {
 		add(panelSpec);
 		add(panelLights);
 		add(panelMore);
+		add(panelNotice);
 		add(panelTop);
 		add(panelFog);
 		add(panelRadar);
@@ -283,6 +288,7 @@ public class PanelMain extends JPanel {
 		panelSpec.setVisible(false);
 		panelLights.setVisible(false);
 		panelMore.setVisible(false);
+		panelNotice.setVisible(false);
 		panelTop.setVisible(false);
 		panelFog.setVisible(false);
 		panelRadar.setVisible(false);
@@ -308,6 +314,8 @@ public class PanelMain extends JPanel {
 				panelHaz.setVisible(true);
 				panelHaz.syncPanel();
 				break;
+			case NTC:
+				panelNotice.setVisible(true);
 			case SPP:
 				specButton.setBorderPainted(true);
 				panelSpec.setVisible(true);

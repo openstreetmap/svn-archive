@@ -1296,6 +1296,9 @@ public class SeaMark extends JPanel {
 		case RADSTA:
  			tmp = true;
 			break;
+		case NOTMRK:
+			if (getCategory() != Cat.NOCAT) 
+				tmp = true;
 		case LNDMRK:
 			if ((getCategory() != Cat.NOCAT) || (getFunc() != Fnc.UNKFNC))
 				tmp = true;
@@ -1404,12 +1407,6 @@ public class SeaMark extends JPanel {
 		if (keys.containsKey("seamark:name")) {
 			str = keys.get("seamark:name");
 			setName(str);
-		}
-		if (getName().isEmpty()) {
-			if (keys.containsKey("name")) {
-				str = keys.get("name");
-				setName(str);
-			}
 		}
 		
 		if (keys.containsKey("seamark:longname"))

@@ -332,8 +332,8 @@ public class ShpReader extends AbstractReader implements OdConstants {
 					while (iterator.hasNext()) {
 						n++;
 						try {
-							Object feature = iterator.next();
-							parseFeature(iterator.next(), parent);
+							Feature feature = iterator.next();
+							parseFeature(feature, parent);
 							if (handler != null) {
 								handler.notifyFeatureParsed(feature, ds, featurePrimitives);
 							}

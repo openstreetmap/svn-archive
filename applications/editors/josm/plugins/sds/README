@@ -30,5 +30,7 @@ counterpart for the SDS plugin. The server is slightly more HOT specific
 than the JOSM plugin, and comes with a search function and web editing
 interface for tags stored there.
 
-For more documentation on the SDS plugin and server, see <tbd>
+For more documentation on the SDS plugin and server, see:
+http://github.com/geofabrik/sds-server
+
 

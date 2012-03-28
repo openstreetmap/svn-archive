@@ -1,0 +1,34 @@
+SDS plugin
+----------
+
+The idea in this project is to enable JOSM users to record additional data
+with OSM objects, but that additional data lives in a different repository.
+The driver, in this instance, was that the data to be collected was
+unsuitable for public release due to privacy issues (personal data like
+household income etc.), but there may be other uses, for example if you want
+to record stuff that is too volatile or detailed for OSM.
+
+The separate data store has all information keyed against OSM object IDs,
+i.e. it cannot record geometries - only additional tags.
+
+The SDS plugin makes it possible to have JOSM query another data source for
+additional data related to objects just downloaded from OSM. For example,
+you download ways #15, #20, #25 from OSM, then the SDS plugin will query a
+different server "do you have extra info pertaining to ways #15, #20, #25?"
+and the server may or may not return extra info.
+
+These extra tags are then brought into JOSM just like any other tags, and
+they can be edited, styled, filtered, and validated normally.
+
+On upload, the plugin will again separate the extra tags from normal OSM
+tagging, and will upload extra tags to the separate server only. (This is
+based on a tag name rule, i.e. tags that begin with a defined prefix go to
+the separate server, and all else goes to OSM.)
+
+Geofabrik has also written a server (in Ruby on Rails) that serves as the
+counterpart for the SDS plugin. The server is slightly more HOT specific
+than the JOSM plugin, and comes with a search function and web editing
+interface for tags stored there.
+
+For more documentation on the SDS plugin and server, see <tbd>
+

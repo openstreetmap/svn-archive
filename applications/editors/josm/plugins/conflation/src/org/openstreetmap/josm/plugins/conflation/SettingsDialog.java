@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.conflation;
 
-import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -116,6 +115,7 @@ public class SettingsDialog extends ExtendedDialog {
         
         stringCheckBox = new JCheckBox();
         stringCheckBox.setSelected(false);
+        stringCheckBox.setEnabled(false);
         stringCheckBox.setText(tr("String"));
         costsPanel.add(stringCheckBox, GBC.std());
         stringWeightSpinner = new JSpinner(new SpinnerNumberModel(10.0, null, null, 1.0));
@@ -125,6 +125,7 @@ public class SettingsDialog extends ExtendedDialog {
         stringTextField = new JTextField("name", 14);
         costsPanel.add(stringTextField, GBC.std());
         
+        costsPanel.setEnabled(false);
         pnl.add(costsPanel);
         setContent(pnl);
         setupDialog();

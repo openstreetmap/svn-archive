@@ -11,7 +11,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;

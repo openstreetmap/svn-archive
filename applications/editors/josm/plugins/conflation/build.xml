@@ -39,7 +39,8 @@
     <import file="../build-common.xml"/>
 
     <!-- Needs to be used after import, otherwise ${plugin.dist.dir} is not defined -->
-    <property name="utilsplugin2" location="${plugin.dist.dir}/utilsplugin2.jar"/>   
+    <property name="jtsplugin" location="${plugin.dist.dir}/jts.jar"/>  
+    <property name="utilsplugin2" location="${plugin.dist.dir}/utilsplugin2.jar"/>
 
     <!--
     **********************************************************
@@ -51,6 +52,7 @@
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <classpath>
                 <pathelement path="${josm}"/>
+                <pathelement location="${jtsplugin}"/>
                 <pathelement location="${utilsplugin2}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
@@ -94,7 +96,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="(Warning: Experimental!) Tool for conflating (merging) data"/>
                 <attribute name="Plugin-Icon" value="images/conflation.png"/>
-                <attribute name="Plugin-Requires" value="utilsplugin2"/>
+                <attribute name="Plugin-Requires" value="jts;utilsplugin2"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Conflation"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

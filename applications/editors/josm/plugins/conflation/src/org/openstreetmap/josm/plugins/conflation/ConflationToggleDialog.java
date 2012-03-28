@@ -1,11 +1,17 @@
 package org.openstreetmap.josm.plugins.conflation;
 
+import com.vividsolutions.jcs.conflate.polygonmatch.*;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jump.feature.*;
+import com.vividsolutions.jump.task.TaskMonitor;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.event.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,7 +28,7 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.HungarianAlgorithm;
+import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryUtils;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -210,7 +216,7 @@ public class ConflationToggleDialog extends ToggleDialog
         public void actionPerformed(ActionEvent e) {
             //FIXME: should layer listen for selection change?
             ConflationCandidate c = conflationLayer.getSelectedCandidate();
-            if (c.getReferenceLayer() != c.getSubjectLayer()) {
+            if (settings.getReferenceLayer() != settings.getSubjectLayer()) {
                 JOptionPane.showMessageDialog(Main.parent, tr("Conflation between layers isn't supported yet."),
                         tr("Cannot conflate between layes"), JOptionPane.ERROR_MESSAGE);
                 return;
@@ -262,47 +268,120 @@ public class ConflationToggleDialog extends ToggleDialog
     public void dataChanged(DataChangedEvent event) {
     }
 
-    private ConflationCandidateList generateCandidates(ConflationSettings settings) {
-        ConflationCandidateList cands = new ConflationCandidateList();
+    /**
+     * Create FeatureSchema using union of all keys from all selected primitives
+     * @param prims
+     * @return 
+     */
+    private FeatureSchema createSchema(Collection<OsmPrimitive> prims) {
+        Set<String> keys = new HashSet<String>();
+        for (OsmPrimitive prim : prims) {
+            keys.addAll(prim.getKeys().keySet());
+        }
+        FeatureSchema schema = new FeatureSchema();
+        schema.addAttribute("__GEOMETRY__", AttributeType.GEOMETRY);
+        for (String key : keys) {
+            schema.addAttribute(key, AttributeType.STRING);
+        }
+        return schema;   
+    }
+    
+    private FeatureCollection createFeatureCollection(Collection<OsmPrimitive> prims) {
+        FeatureDataset dataset = new FeatureDataset(createSchema(prims));
+        for (OsmPrimitive prim : prims) {
+            dataset.add(new OsmFeature(prim));
+        }
+        return dataset;
+    }
+    
+    /**
+     * Progress monitor for use with JCS
+     */
+    private class JosmTaskMonitor extends PleaseWaitProgressMonitor implements TaskMonitor {
+        
+        @Override
+        public void report(String description) {
+            subTask(description);
+        }
 
-        // some initialization
-        int n = settings.getSubjectSelection().size();
-        int m = settings.getReferenceSelection().size();
-        double[][] cost = new double[n][m];
-        // calculate cost matrix
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                cost[i][j] = ConflationUtils.calcCost(
-                        settings.getSubjectSelection().get(i), settings.getReferenceSelection().get(j), settings);
-            }
+        @Override
+        public void report(int itemsDone, int totalItems, String itemDescription) {
+            subTask(String.format("Processing %d of %d %s", itemsDone, totalItems, itemDescription));
         }
-        // perform assignment using Hungarian algorithm
-        int[][] assignment = HungarianAlgorithm.hgAlgorithm(cost, "min");
-        OsmPrimitive subObject;
-        OsmPrimitive refObject;
-        for (int i = 0; i < n; i++) {
-            int subIdx = assignment[i][0];
-            int refIdx = assignment[i][1];
-            if (subIdx < n) {
-                subObject = settings.getSubjectSelection().get(subIdx);
-            } else {
-                subObject = null;
-            }
-            if (refIdx < m) {
-                refObject = settings.getReferenceSelection().get(refIdx);
-            } else {
-                refObject = null;
-            }
-            if (subObject != null && refObject != null) {
-                // TODO: do something!
-                if (!(cands.hasCandidate(refObject, subObject) || cands.hasCandidate(subObject, refObject))) {
-                    cands.add(new ConflationCandidate(
-                            refObject, settings.getReferenceLayer(),
-                            subObject, settings.getSubjectLayer(), cost[subIdx][refIdx]));
-                }
-            }
+
+        @Override
+        public void report(Exception exception) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
-        return cands;
+
+        @Override
+        public void allowCancellationRequests() {
+            setCancelable(true);
+        }
+
+        @Override
+        public boolean isCancelRequested() {
+            return isCanceled();
+        }
+        
+    }
+    
+    private ConflationCandidateList generateCandidates(ConflationSettings settings) {
+        JosmTaskMonitor monitor = new JosmTaskMonitor();
+        monitor.beginTask("Generating conflation candidates");
+        
+        // create Features and collections from primitive selections
+        Set<OsmPrimitive> allPrimitives = new HashSet<OsmPrimitive>();
+        allPrimitives.addAll(settings.getReferenceSelection());
+        allPrimitives.addAll(settings.getSubjectSelection());
+        FeatureCollection allFeatures = createFeatureCollection(allPrimitives);
+        FeatureCollection refColl = new FeatureDataset(allFeatures.getFeatureSchema());
+        FeatureCollection subColl = new FeatureDataset(allFeatures.getFeatureSchema());
+        for (Feature f : allFeatures.getFeatures()) {
+            OsmFeature osmFeature = (OsmFeature)f;
+            if (settings.getReferenceSelection().contains(osmFeature.getPrimitive()))
+                refColl.add(osmFeature);
+            if (settings.getSubjectSelection().contains(osmFeature.getPrimitive()))
+                subColl.add(osmFeature);
+        }
+        
+        // get maximum possible distance so scores can be scaled (FIXME: not quite accurate)
+        Envelope envelope = refColl.getEnvelope();
+        envelope.expandToInclude(subColl.getEnvelope());
+        double maxDistance = Point2D.distance(
+            envelope.getMinX(),
+            envelope.getMinY(),
+            envelope.getMaxX(),
+            envelope.getMaxY());
+        
+        // build matcher
+        CentroidDistanceMatcher centroid = new CentroidDistanceMatcher();
+        centroid.setMaxDistance(maxDistance);
+        IdenticalFeatureFilter identical = new IdenticalFeatureFilter();
+        FeatureMatcher[] matchers = {centroid, identical};
+        ChainMatcher chain = new ChainMatcher(matchers);
+        BasicFCMatchFinder basicFinder = new BasicFCMatchFinder(chain);
+        OneToOneFCMatchFinder finder = new OneToOneFCMatchFinder(basicFinder);
+
+        // FIXME: ignore/filter duplicate objects (i.e. same object in both sets)
+        // FIXME: fix match functions to work on point/linestring features as well
+        // find matches
+        Map<OsmFeature, Matches> map = finder.match(refColl, subColl, monitor);
+        
+        monitor.subTask("Finishing conflation candidate list");
+        
+        // convert to simple one-to-one match
+        ConflationCandidateList list = new ConflationCandidateList();
+        for (Map.Entry<OsmFeature, Matches> entry: map.entrySet()) {
+            OsmFeature target = entry.getKey();
+            OsmFeature subject = (OsmFeature)entry.getValue().getTopMatch();
+            list.add(new ConflationCandidate(target.getPrimitive(), subject.getPrimitive(),
+                    entry.getValue().getTopScore()));
+        }
+        
+        monitor.finishTask();
+        monitor.close();
+        return list;
     }
 
     private void performConflation() {

@@ -13,7 +13,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 class MatchTableModel extends AbstractTableModel implements ConflationListChangedListener {
 
     private ConflationCandidateList candidates = null;
-    private final static String[] columnNames = {tr("Reference"), tr("Subject"), "Distance (m)", "Cost", "Tags"};
+    private final static String[] columnNames = {tr("Reference"), tr("Subject"), "Distance (m)", "Score", "Tags"};
 
     @Override
     public int getColumnCount() {
@@ -32,6 +32,7 @@ class MatchTableModel extends AbstractTableModel implements ConflationListChange
         return columnNames[col];
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
         if (candidates == null)
             return null;
@@ -44,7 +45,7 @@ class MatchTableModel extends AbstractTableModel implements ConflationListChange
         } else if (col == 2) {
             return c.getDistance();
         } else if (col == 3) {
-            return c.getCost();
+            return c.getScore();
         }
         if (col == 4) {
             HashSet<OsmPrimitive> set = new HashSet<OsmPrimitive>();

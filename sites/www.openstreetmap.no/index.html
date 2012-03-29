@@ -122,7 +122,7 @@ function init() {
       'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
-  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
+  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Standard");
   var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
 
   var layerTransit = new OpenLayers.Layer.XYZ(
@@ -316,14 +316,6 @@ function updatelinks() {
     }
   }
 
-  node = $("compareanchor");
-  if (node) {
-    var args = getArgs(node.href);
-    args["lat"] = lat;
-    args["lon"] = lon;
-    args["zoom"] = zoom;
-    node.href = setArgs(node.href, args);
-  }
 }
 
 function toggleVisibility(id) {
@@ -400,14 +392,12 @@ div#map { width:100%; height:100%; }
   -webkit-border-bottom-left-radius:7px;
   -webkit-border-bottom-right-radius:7px;
 }
-#more, #search { display:none; }
+#search { display:none; }
 input#q { width:25em; }
-#videotutorial { display:none; text-align:center; }
 #menu a { color:inherit; }
 #tabs a { text-decoration:none; }
 .hide a { text-decoration:none; }
 #tabs a { margin-right:.9em; }
-#more ul li { line-height:1.4em; }
 .hide { font-size:14pt;position:absolute;right:1em;top:2px; }
 </style>
 
@@ -416,10 +406,8 @@ input#q { width:25em; }
 
   <div id="menu">
     <div id="tabs">
-    <a href="http://www.openstreetmap.org/"
-       title="OpenStreetMap er et fritt wiki-verdenskart. Klikk her for den internasjonale siden."><img id="logo"
-       src="OpenStreetMapNorge.png"
-       width="13" height="13" border="0" /></a>
+    <a href="http://wiki.openstreetmap.org/wiki/NO:Main_Page"
+       title="Les mer om OpenStreetMap, et fritt wiki-verdenskart.">OpenStreetMap.no</a>
     <a href="http://www.openstreetmap.org/edit"
        id="editanchor"
        title="Rediger kartet">Rediger</a>
@@ -437,9 +425,6 @@ input#q { width:25em; }
     <a href="#"
        onclick="javascript:toggleVisibility('search');"
        title="Naviger ved hjelp av stedsnavn">Søk</a>
-    <a href="#"
-       onclick="javascript:toggleVisibility('more');"
-       title="Kort om OSM og hint til å komme i gang">Informasjon</a>
     </div>
     <div id="search">
       <p>
@@ -458,56 +443,6 @@ input#q { width:25em; }
         <a href="#"
            onclick="javascript:toggleVisibility('search');"
            title="Skjul søkefeltet"
-          >&#x2716;</a>
-      </p>
-    </div>
-    <div id="more">
-      <p>
-        <strong>OpenStreetMap</strong> (OSM) er
-        et verdensomspennende prosjekt for å dele frie kartdata.
-        Hver måned bidrar
-        <a href="http://wiki.openstreetmap.org/wiki/Statistics"
-           title="OSM database statistikk (globalt)"
-          >13000 mennesker</a>
-        (<a href="https://spreadsheets.google.com/pub?key=0AhGotL8XToWSdFY5ZmdnZmhSTHZGa2QwUm5VdkpjMFE"
-           title="OSM database statistikk (Norge)"
-           >150 i Norge</a>)
-        med å samle inn data og lage løsninger som du kan bruke helt fritt.
-      </p>
-      <p>
-        Denne siden tilbyr norsktilpassede presentasjoner
-        av kartdataene i OSM.<br/>
-        Bruk '+'-menyen til høyre for å bytte mellom disse.
-      </p>
-      <ul>
-        <li><a href="http://wiki.openstreetmap.org/wiki/No:Beginners_Guide"
-              >Hvordan bidra til dugnadskartet</a> —
-            <a href="#"
-               onclick="javascript:toggleVisibility('videotutorial');"
-              >se en instruksjonsfilm</a></li>
-        <li><a href="http://wiki.openstreetmap.org/wiki/No:Map_Features"
-              >Oversikt over kartegenskaper (tagger) tilpasset Norge</a></li>
-        <li><a href="http://www.frikart.no/garmin/"
-              >Last ned kart til Garmin GPS</a></li>
-        <li>Til ruteplanlegging anbefaler vi
-            <a href="http://open.mapquest.com/?q=Norge">MapQuest open</a> og
-            <a href="http://www.openrouteservice.org/?lang=en">OpenRouteService</a>
-        </li>
-        <li><a id="compareanchor"
-              href="http://www.vidargundersen.com/osm/compare.html"
-              >Sammenlign med offentlige kart fra Statens Kartverk</a></li>
-        <li>Diskusjonsfora:
-            <a href="http://wiki.nuug.no/grupper/kart">epostliste</a> og
-            <a href="irc://irc.oftc.net/osm-no">IRC-kanal</a>
-        </li>
-      </ul>
-      <p id="videotutorial">
-<object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0"/><param name="allowFullScreen" value="true"/><param name="allowscriptaccess" value="always"/><embed src="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"/></object>
-      </p>
-      <p class="hide">
-        <a href="#"
-           onclick="javascript:toggleVisibility('more');"
-           title="Skjul informasjonsarket"
           >&#x2716;</a>
       </p>
     </div>

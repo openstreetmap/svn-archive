@@ -222,7 +222,9 @@ public class SeaMark extends JPanel {
 		ROS_BNO, ROS_BND, ROS_BNR, ROS_BNC, ROS_RDF, ROS_QTG, ROS_AER, ROS_DCA, ROS_LRN, ROS_DGPS, ROS_TRN, ROS_OMA,
 		ROS_SDS, ROS_CKA, ROS_PUB, ROS_COM, ROS_FAX, ROS_TIM, RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE,
 		NTC_A1, NTC_A1a, NTC_A2, NTC_A3, NTC_A4, NTC_A4_1, NTC_A5, NTC_A5_1, NTC_A6, NTC_A7, NTC_A8, NTC_A9,
-		NTC_A10a, NTC_A10b, NTC_A12, NTC_A13, NTC_A14, NTC_A15, NTC_A16, NTC_A17, NTC_A18, NTC_A19, NTC_A20
+		NTC_A10a, NTC_A10b, NTC_A12, NTC_A13, NTC_A14, NTC_A15, NTC_A16, NTC_A17, NTC_A18, NTC_A19, NTC_A20,
+		NTC_B1a, NTC_B1b, NTC_B2a, NTC_B2b, NTC_B3a, NTC_B3b, NTC_B4a, NTC_B4b, NTC_B5, NTC_B6, NTC_B7, NTC_B8, NTC_B9a, NTC_B9b, NTC_B11,
+		NTC_C1, NTC_C2, NTC_C3, NTC_C4, NTC_C5a, NTC_C5b, NTC_D1a, NTC_D1b, NTC_D2a, NTC_D2b, NTC_D3a, NTC_D3b
 	}
 		 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -374,6 +376,33 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.NTC_A18, "no_high_speeds");
 		CatSTR.put(Cat.NTC_A19, "no_launching_beaching");
 		CatSTR.put(Cat.NTC_A20, "no_waterbikes");
+		CatSTR.put(Cat.NTC_B1a, "");
+		CatSTR.put(Cat.NTC_B1b, "");
+		CatSTR.put(Cat.NTC_B2a, "");
+		CatSTR.put(Cat.NTC_B2a, "");
+		CatSTR.put(Cat.NTC_B3a, "");
+		CatSTR.put(Cat.NTC_B3a, "");
+		CatSTR.put(Cat.NTC_B4a, "");
+		CatSTR.put(Cat.NTC_B4a, "");
+		CatSTR.put(Cat.NTC_B5, "");
+		CatSTR.put(Cat.NTC_B6, "");
+		CatSTR.put(Cat.NTC_B7, "");
+		CatSTR.put(Cat.NTC_B8, "");
+		CatSTR.put(Cat.NTC_B9a, "");
+		CatSTR.put(Cat.NTC_B9b, "");
+		CatSTR.put(Cat.NTC_B11, "");
+		CatSTR.put(Cat.NTC_C1, "");
+		CatSTR.put(Cat.NTC_C2, "");
+		CatSTR.put(Cat.NTC_C3, "");
+		CatSTR.put(Cat.NTC_C4, "");
+		CatSTR.put(Cat.NTC_C5a, "");
+		CatSTR.put(Cat.NTC_C5b, "");
+		CatSTR.put(Cat.NTC_D1a, "");
+		CatSTR.put(Cat.NTC_D1b, "");
+		CatSTR.put(Cat.NTC_D2a, "");
+		CatSTR.put(Cat.NTC_D2b, "");
+		CatSTR.put(Cat.NTC_D3a, "");
+		CatSTR.put(Cat.NTC_D3b, "");
 	}
 
 	private Cat category = Cat.NOCAT;

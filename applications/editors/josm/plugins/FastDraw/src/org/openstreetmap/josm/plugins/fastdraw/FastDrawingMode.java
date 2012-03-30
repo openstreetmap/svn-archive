@@ -89,7 +89,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private KeyEvent releaseEvent;
     private boolean lineWasSaved;
     private boolean deltaChanged;
-
+    private final int mainKeyCode;
+    
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), 
 		Shortcut.registerShortcut("mapmode:fastdraw", tr("Mode: {0}", tr("Fast drawing mode")), KeyEvent.VK_F, Shortcut.SHIFT)
@@ -102,6 +103,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         cursorNode = ImageProvider.getCursor("crosshair", "joinnode");
         cursorDrawing = ImageProvider.getCursor("crosshair", "mode");
         //loadPrefs();
+        mainKeyCode = getShortcut().getKeyStroke().getKeyCode();
     }
 
 // <editor-fold defaultstate="collapsed" desc="Event listeners">
@@ -428,7 +430,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }
 
     private void doKeyEvent(KeyEvent e) {
-       // System.out.println(e);
+        if (getShortcut().isEvent(e)) { // repeated press
+            tryToLoadWay();
+            return;
+        }
         switch(e.getKeyCode()) {
         case KeyEvent.VK_BACK_SPACE:
             if (line.wasSimplified()) {
@@ -463,12 +468,14 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             } else {saveAsWay(true);}
         break;
         case KeyEvent.VK_DOWN:
+            if (ctrl || shift || alt) return;
             // more details
             e.consume();
             if (line.wasSimplified()) changeEpsilon(settings.epsilonMult);
             else changeDelta(1/1.1);
         break;
         case KeyEvent.VK_UP:
+            if (ctrl || shift || alt) return;
             // less details
             e.consume();
             if (line.wasSimplified()) changeEpsilon(1/settings.epsilonMult);
@@ -493,9 +500,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 Main.map.selectSelectTool(false);
             }
         break;
-        case KeyEvent.VK_T:
-            tryToLoadWay();
-        break;
+        
         case KeyEvent.VK_I:
            JOptionPane.showMessageDialog(Main.parent,
                         tr("{0} m - length of the line\n{1} nodes\n{2} points per km (maximum)\n{3} points per km (average)",

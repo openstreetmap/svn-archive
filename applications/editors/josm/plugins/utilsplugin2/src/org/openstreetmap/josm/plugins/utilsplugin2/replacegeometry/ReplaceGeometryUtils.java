@@ -290,7 +290,9 @@ public final class ReplaceGeometryUtils {
                         } else {
                             cost[i][j] = d;
                         }
+                        System.out.printf("%.6f ", cost[i][j]);
                     }
+                    System.out.printf("\n");
                 }
                 AssignmentProblem assignment = new AssignmentProblem(cost);
                 for (int i = 0; i < N; i++) {

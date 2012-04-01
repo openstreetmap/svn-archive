@@ -58,6 +58,7 @@ function init(){
     
     //Add LayerSwitcher
     var layerswitcher = new OpenLayers.Control.LayerSwitcher({roundedCornerColor: "#575757"});
+
 	map.addControl(layerswitcher);
 	layerswitcher.maximizeControl();
 		
@@ -78,7 +79,6 @@ function init(){
 			"http://tile.memomaps.de/tilegen/${z}/${x}/${y}.png", 
 			{numZoomLevels: 19,displayInLayerSwitcher:true,buffer:0,attribution:"", keyname: 'oepnvde'}),
         new OpenLayers.Layer.OSM.Mapnik("OSM Standard (Mapnik)", {attribution:"", keyname: 'mapnik'}),
-        new OpenLayers.Layer.OSM.Osmarender("Osmarender/Tiles@Home", {attribution:"", keyname: 'osmarender'})
     ]);
     
     //Add a marker layer
@@ -117,5 +117,6 @@ function init(){
    	//To fix language issues
     //document.getElementsByClassName('baseLbl')[0].innerHTML = "Grundkarte";
     //document.getElementsByClassName('dataLbl')[0].innerHTML = "&Uuml;berlagerungen";
-    $('.baseLbl').html('Grundkarten');    $('.dataLbl').html('&Uuml;berlagerungen');
+    $('.baseLbl').html('Grundkarten');
+    $('.dataLbl').html('&Uuml;berlagerungen');
 }

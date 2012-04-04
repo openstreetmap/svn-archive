@@ -15,17 +15,26 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-
-public interface ShpHandler extends GeographicHandler {
-
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
-
-	public void setDbfCharset(Charset charset);
+public interface GeographicHandler {
 	
-	public Charset getDbfCharset();
+	public void setPreferMultipolygonToSimpleWay(boolean prefer);
+
+	public boolean preferMultipolygonToSimpleWay();
+
+	public void setCheckNodeProximity(boolean check);
+	
+	public boolean checkNodeProximity();
+	
+	public void setUseNodeMap(boolean use);
+	
+	public boolean useNodeMap();
+	
+	public CoordinateReferenceSystem getCrsFor(String crsName) throws NoSuchAuthorityCodeException, FactoryException;
+
+	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException;
 }

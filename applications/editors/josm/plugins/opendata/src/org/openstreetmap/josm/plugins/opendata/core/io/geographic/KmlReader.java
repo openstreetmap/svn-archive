@@ -44,6 +44,19 @@ import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
 public class KmlReader extends AbstractReader implements OdConstants {
 
+    public static final String KML_PLACEMARK   = "Placemark";
+    public static final String KML_NAME	       = "name";
+    public static final String KML_COLOR       = "color";
+    public static final String KML_SIMPLE_DATA = "SimpleData";
+    public static final String KML_LINE_STRING = "LineString";
+    public static final String KML_POINT       = "Point";
+    public static final String KML_POLYGON     = "Polygon";
+    public static final String KML_OUTER_BOUND = "outerBoundaryIs";
+    public static final String KML_INNER_BOUND = "innerBoundaryIs";
+    public static final String KML_LINEAR_RING = "LinearRing";
+    public static final String KML_COORDINATES = "coordinates";
+    
+
     private XMLStreamReader parser;
     private Map<LatLon, Node> nodes = new HashMap<LatLon, Node>();
     

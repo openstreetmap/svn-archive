@@ -13,19 +13,14 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
+package org.openstreetmap.josm.plugins.opendata.core.datasets.at;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+public interface AustrianConstants extends OdConstants {
 
-public interface ShpHandler extends GeographicHandler {
-
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
-
-	public void setDbfCharset(Charset charset);
-	
-	public Charset getDbfCharset();
+	/**
+	 * Icon
+	 */
+	public static final String ICON_AT_24 = "at24.png";
 }

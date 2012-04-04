@@ -31,7 +31,6 @@ import org.opengis.parameter.ParameterDescriptor;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.crs.GeographicCRS;
 import org.opengis.referencing.datum.GeodeticDatum;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.Main;
@@ -48,7 +47,7 @@ import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Paramet
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.Pair;
 
-public class DefaultShpHandler implements ShpHandler, OdConstants {
+public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler, OdConstants {
 
 	private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>> 
 		ellipsoids = new ArrayList<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>>();
@@ -69,17 +68,13 @@ public class DefaultShpHandler implements ShpHandler, OdConstants {
 		return res; 
 	}
 	
-	private boolean useNodeMap = true;
-	private boolean checkNodeProximity = false;
-	private boolean preferMultipolygonToSimpleWay = false;
 	private Charset dbfCharset = null;
 
 	@Override
-	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS,
-			CoordinateReferenceSystem targetCRS, boolean lenient)
+	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient)
 			throws FactoryException {
-		if (sourceCRS instanceof GeographicCRS && sourceCRS.getName().getCode().equalsIgnoreCase("GCS_ETRS_1989")) {
-			return CRS.findMathTransform(CRS.decode("EPSG:4258"), targetCRS, lenient);
+		if (getCrsFor(sourceCRS.getName().getCode()) != null) {
+			return CRS.findMathTransform(getCrsFor(sourceCRS.getName().getCode()), targetCRS, lenient);
 		} else if (sourceCRS instanceof AbstractDerivedCRS && sourceCRS.getName().getCode().equalsIgnoreCase("Lambert_Conformal_Conic")) {
 			List<MathTransform> result = new ArrayList<MathTransform>();
 			AbstractDerivedCRS crs = (AbstractDerivedCRS) sourceCRS;
@@ -135,36 +130,6 @@ public class DefaultShpHandler implements ShpHandler, OdConstants {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public boolean preferMultipolygonToSimpleWay() {
-		return preferMultipolygonToSimpleWay;
-	}
-
-	@Override
-	public void setPreferMultipolygonToSimpleWay(boolean prefer) {
-		preferMultipolygonToSimpleWay = prefer;
-	}
-
-	@Override
-	public boolean checkNodeProximity() {
-		return checkNodeProximity;
-	}
-
-	@Override
-	public void setCheckNodeProximity(boolean check) {
-		checkNodeProximity = check;
-	}
-
-	@Override
-	public void setUseNodeMap(boolean use) {
-		useNodeMap = use;
-	}
-
-	@Override
-	public boolean useNodeMap() {
-		return useNodeMap;
 	}
 
 	@Override

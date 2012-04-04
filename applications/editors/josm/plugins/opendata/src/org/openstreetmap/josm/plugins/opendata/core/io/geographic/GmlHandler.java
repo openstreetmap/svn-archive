@@ -15,21 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-public class ShpCrsException extends Exception {
+public interface GmlHandler extends GeographicHandler {
 
-	public ShpCrsException() {
-		super();
-	}
-
-	public ShpCrsException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public ShpCrsException(String message) {
-		super(message);
-	}
-
-	public ShpCrsException(Throwable cause) {
-		super(cause);
-	}
 }

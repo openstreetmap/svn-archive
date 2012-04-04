@@ -15,21 +15,16 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-public class ShpMathTransformException extends Exception {
+import org.geotools.referencing.CRS;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
-	public ShpMathTransformException() {
-		super();
-	}
+public class DefaultGmlHandler extends DefaultGeographicHandler implements GmlHandler {
 
-	public ShpMathTransformException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public ShpMathTransformException(String message) {
-		super(message);
-	}
-
-	public ShpMathTransformException(Throwable cause) {
-		super(cause);
+	@Override
+	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient)
+			throws FactoryException {
+		return CRS.findMathTransform(sourceCRS, targetCRS, lenient);
 	}
 }

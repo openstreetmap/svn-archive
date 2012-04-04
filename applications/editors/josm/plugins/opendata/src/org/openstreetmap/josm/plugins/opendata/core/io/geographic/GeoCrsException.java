@@ -15,17 +15,21 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+public class GeoCrsException extends Exception {
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+	public GeoCrsException() {
+		super();
+	}
 
-public interface ShpHandler extends GeographicHandler {
+	public GeoCrsException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
+	public GeoCrsException(String message) {
+		super(message);
+	}
 
-	public void setDbfCharset(Charset charset);
-	
-	public Charset getDbfCharset();
+	public GeoCrsException(Throwable cause) {
+		super(cause);
+	}
 }

@@ -33,7 +33,9 @@ import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultZipHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultGmlHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultShpHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
@@ -86,6 +88,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		setShpHandler(new DefaultShpHandler());
 		setZipHandler(new DefaultZipHandler());
 		setCsvHandler(new DefaultCsvHandler());
+		setGmlHandler(new DefaultGmlHandler());
 	}
 	
 	private final boolean acceptsFilename(String filename, String[] expected, String ... extensions ) {
@@ -425,6 +428,18 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	
 	public final ShpHandler getShpHandler() {
 		return shpHandler;
+	}
+
+	// --------- GML handling ---------
+	
+	private GmlHandler gmlHandler;
+
+	public final void setGmlHandler(GmlHandler handler) {
+		gmlHandler = handler;
+	}
+	
+	public final GmlHandler getGmlHandler() {
+		return gmlHandler;
 	}
 
 	// ------------ Zip handling ------------

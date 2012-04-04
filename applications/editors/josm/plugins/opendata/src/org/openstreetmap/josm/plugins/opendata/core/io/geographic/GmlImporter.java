@@ -15,17 +15,26 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+import java.io.InputStream;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
-public interface ShpHandler extends GeographicHandler {
-
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
-
-	public void setDbfCharset(Charset charset);
+public class GmlImporter extends AbstractImporter {
 	
-	public Charset getDbfCharset();
+    public GmlImporter() {
+        super(GML_FILE_FILTER);
+    }
+
+	@Override
+	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+			throws IllegalDataException {
+		try {
+			return GmlReader.parseDataSet(in, handler, instance);
+		} catch (Exception e) {
+			throw new IllegalDataException(e);
+		}
+	}
 }

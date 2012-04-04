@@ -13,19 +13,20 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
+package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.at.AustrianGmlHandler;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchShpHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpHandler;
 
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+public abstract class NationalHandlers {
 
-public interface ShpHandler extends GeographicHandler {
+	public static final GmlHandler[] DEFAULT_GML_HANDLERS = new GmlHandler[]{
+		new AustrianGmlHandler()
+	};
 
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
-
-	public void setDbfCharset(Charset charset);
-	
-	public Charset getDbfCharset();
+	public static final ShpHandler[] DEFAULT_SHP_HANDLERS = new ShpHandler[]{
+		new FrenchShpHandler()
+	};
 }

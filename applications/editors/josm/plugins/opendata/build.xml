@@ -176,7 +176,7 @@
                 <attribute name="Plugin-Icon" value="images/dialogs/o24.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Requires" value="jts"/>
+                <!--<attribute name="Plugin-Requires" value="jts"/>-->
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -30,6 +30,7 @@ import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipReader;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifReader;
@@ -114,6 +115,8 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
     		return ShpReader.class;
     	} else if (filename.endsWith("."+TAB_EXT)) {
     		return TabReader.class;
+    	} else if (filename.endsWith("."+GML_EXT)) {
+    		return GmlReader.class;
     	} else if (filename.endsWith("."+ZIP_EXT)) {
     		return ZipReader.class;
     	} else {
@@ -166,6 +169,8 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             	return OdsReader.parseDataSet(in, handler, instance);
             } else if (readerClass.equals(XlsReader.class)) {
             	return XlsReader.parseDataSet(in, handler, instance);
+            } else if (readerClass.equals(GmlReader.class)) {
+            	return GmlReader.parseDataSet(in, handler, instance);
             } else {
             	throw new IllegalArgumentException("Unsupported reader class: "+readerClass.getName());
             }

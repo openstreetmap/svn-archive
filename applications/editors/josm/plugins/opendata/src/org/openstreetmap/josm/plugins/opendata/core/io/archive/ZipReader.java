@@ -38,6 +38,7 @@ import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifReader;
@@ -132,7 +133,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					}
 					// Test file name to see if it may contain useful data
 					for (String ext : new String[] {
-							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT
+							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, GML_EXT
 					}) {
 						if (entry.getName().toLowerCase().endsWith("."+ext)) {
 							candidates.add(file);
@@ -186,6 +187,8 @@ public class ZipReader extends AbstractReader implements OdConstants {
 					from = MifReader.parseDataSet(in, file, handler, instance);
 				} else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
 					from = TabReader.parseDataSet(in, file, handler, instance);
+				} else if (file.getName().toLowerCase().endsWith(GML_EXT)) {
+					from = GmlReader.parseDataSet(in, handler, instance);
 				} else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
 					if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
 						from = NeptuneReader.parseDataSet(in, handler, instance);

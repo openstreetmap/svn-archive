@@ -95,6 +95,7 @@ public interface OdConstants {
     public static final String CSV_EXT = "csv";
     public static final String KML_EXT = "kml";
     public static final String KMZ_EXT = "kmz";
+    public static final String GML_EXT = "gml";
     public static final String XLS_EXT = "xls";
     public static final String ODS_EXT = "ods";
     public static final String SHP_EXT = "shp";
@@ -120,6 +121,7 @@ public interface OdConstants {
     public static final ExtensionFileFilter SHP_FILE_FILTER = new ExtensionFileFilter(SHP_EXT, SHP_EXT, tr("Shapefiles") + " (*."+SHP_EXT+")");
     public static final ExtensionFileFilter MIF_TAB_FILE_FILTER = new ExtensionFileFilter(MIF_EXT+","+TAB_EXT, MIF_EXT, tr("MapInfo files") + " (*."+MIF_EXT+",*."+TAB_EXT+")");
     public static final ExtensionFileFilter KML_KMZ_FILE_FILTER = new ExtensionFileFilter(KML_EXT+","+KMZ_EXT, KMZ_EXT, tr("KML/KMZ files") + " (*."+KML_EXT+",*."+KMZ_EXT+")");
+    public static final ExtensionFileFilter GML_FILE_FILTER = new ExtensionFileFilter(GML_EXT, GML_EXT, tr("GML files") + " (*."+GML_EXT+")");
     public static final ExtensionFileFilter ZIP_FILE_FILTER = new ExtensionFileFilter(ZIP_EXT, ZIP_EXT, tr("Zip Files") + " (*."+ZIP_EXT+")");
     public static final ExtensionFileFilter XML_FILE_FILTER = new ExtensionFileFilter(XML_EXT, XML_EXT, tr("OpenData XML files") + " (*."+XML_EXT+")");
     
@@ -140,21 +142,6 @@ public interface OdConstants {
     public static final ProjectionPatterns PRJ_LAMBERT_1972 = new ProjectionPatterns("LAMB72|LAMB1972", new BelgianLambert1972());
     public static final ProjectionPatterns PRJ_LAMBERT_2008 = new ProjectionPatterns("LAMB08|LAMB2008", new BelgianLambert2008());
 
-    /**
-     * KML tags
-     */
-    public static final String KML_PLACEMARK   = "Placemark";
-    public static final String KML_NAME	       = "name";
-    public static final String KML_COLOR       = "color";
-    public static final String KML_SIMPLE_DATA = "SimpleData";
-    public static final String KML_LINE_STRING = "LineString";
-    public static final String KML_POINT       = "Point";
-    public static final String KML_POLYGON     = "Polygon";
-    public static final String KML_OUTER_BOUND = "outerBoundaryIs";
-    public static final String KML_INNER_BOUND = "innerBoundaryIs";
-    public static final String KML_LINEAR_RING = "LinearRing";
-    public static final String KML_COORDINATES = "coordinates";
-    
     /**
      * Resources
      */

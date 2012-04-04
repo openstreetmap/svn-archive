@@ -92,7 +92,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
     class WikipediaDownloadAction extends AbstractAction {
 
         public WikipediaDownloadAction() {
-            super(tr("Reload"), ImageProvider.get("refresh"));
+            super(tr("Reload"), ImageProvider.get("dialogs", "refresh"));
             putValue(SHORT_DESCRIPTION, tr("Fetches all coordinates from Wikipedia in the current view"));
         }
 

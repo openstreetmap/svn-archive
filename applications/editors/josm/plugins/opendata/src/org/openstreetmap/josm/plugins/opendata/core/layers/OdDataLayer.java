@@ -141,33 +141,35 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 		for (Action entry : super.getMenuEntries()) {
 			result.add(entry);
 		}
-		if (this.handler.getWikiURL() != null || this.handler.getLocalPortalURL() != null || this.handler.getNationalPortalURL() != null) { 
-			result.add(SeparatorLayerAction.INSTANCE);
-		}
-		if (this.handler.getWikiURL() != null) { 
-			result.add(new OpenLinkAction(this.handler.getWikiURL(), ICON_OSM_24, 
-					tr("View OSM Wiki page"), tr("Launch browser to the OSM Wiki page of the selected data set")));
-		}
-		if (this.handler.getLocalPortalURL() != null) { 
-			result.add(new OpenLinkAction(this.handler.getLocalPortalURL(), this.handler.getLocalPortalIconName(), 
-					tr("View Local Portal page"), tr("Launch browser to the local portal page of the selected data set")));
-		}
-		if (this.handler.getNationalPortalURL() != null) { 
-			result.add(new OpenLinkAction(this.handler.getNationalPortalURL(), this.handler.getNationalPortalIconName(), 
-					tr("View National Portal page"), tr("Launch browser to the national portal page of the selected data set")));
-		}
-		if (this.handler.getLicense() != null) {
-			License lic = this.handler.getLicense();
-			if (lic.getURL() != null && lic.getURL().getProtocol().startsWith("http")) {
-				result.add(new OpenLinkAction(lic.getURL(), ICON_AGREEMENT_24, 
-						tr("View License"), tr("Launch browser to the license page of the selected data set")));
+		if (this.handler != null) {
+			if (this.handler.getWikiURL() != null || this.handler.getLocalPortalURL() != null || this.handler.getNationalPortalURL() != null) { 
+				result.add(SeparatorLayerAction.INSTANCE);
 			}
-			if (lic.getSummaryURL() != null && lic.getSummaryURL().getProtocol().startsWith("http")) {
-				result.add(new OpenLinkAction(lic.getSummaryURL(), ICON_AGREEMENT_24, 
-						tr("View License (summary)"), tr("Launch browser to the summary license page of the selected data set")));
+			if (this.handler.getWikiURL() != null) { 
+				result.add(new OpenLinkAction(this.handler.getWikiURL(), ICON_OSM_24, 
+						tr("View OSM Wiki page"), tr("Launch browser to the OSM Wiki page of the selected data set")));
 			}
-			if ((lic.getURL() != null && !lic.getURL().getProtocol().startsWith("http")) || (lic.getSummaryURL() != null && !lic.getSummaryURL().getProtocol().startsWith("http"))) {
-				result.add(new ViewLicenseAction(lic, tr("View License"), tr("View the license of the selected data set")));
+			if (this.handler.getLocalPortalURL() != null) { 
+				result.add(new OpenLinkAction(this.handler.getLocalPortalURL(), this.handler.getLocalPortalIconName(), 
+						tr("View Local Portal page"), tr("Launch browser to the local portal page of the selected data set")));
+			}
+			if (this.handler.getNationalPortalURL() != null) { 
+				result.add(new OpenLinkAction(this.handler.getNationalPortalURL(), this.handler.getNationalPortalIconName(), 
+						tr("View National Portal page"), tr("Launch browser to the national portal page of the selected data set")));
+			}
+			if (this.handler.getLicense() != null) {
+				License lic = this.handler.getLicense();
+				if (lic.getURL() != null && lic.getURL().getProtocol().startsWith("http")) {
+					result.add(new OpenLinkAction(lic.getURL(), ICON_AGREEMENT_24, 
+							tr("View License"), tr("Launch browser to the license page of the selected data set")));
+				}
+				if (lic.getSummaryURL() != null && lic.getSummaryURL().getProtocol().startsWith("http")) {
+					result.add(new OpenLinkAction(lic.getSummaryURL(), ICON_AGREEMENT_24, 
+							tr("View License (summary)"), tr("Launch browser to the summary license page of the selected data set")));
+				}
+				if ((lic.getURL() != null && !lic.getURL().getProtocol().startsWith("http")) || (lic.getSummaryURL() != null && !lic.getSummaryURL().getProtocol().startsWith("http"))) {
+					result.add(new ViewLicenseAction(lic, tr("View License"), tr("View the license of the selected data set")));
+				}
 			}
 		}
 		return result.toArray(new Action[0]);

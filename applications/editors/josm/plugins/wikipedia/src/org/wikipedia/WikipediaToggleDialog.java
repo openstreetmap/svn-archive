@@ -6,7 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -22,7 +24,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.SideButton;
@@ -39,6 +43,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
         super(tr("Wikipedia"), "wikipedia", tr("Fetch Wikipedia articles with coordinates"), null, 150);
         createLayout(list, true, Arrays.asList(
                 new SideButton(new WikipediaDownloadAction()),
+                new SideButton(new AddWikipediaTagAction()),
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
     }
@@ -80,6 +85,37 @@ public class WikipediaToggleDialog extends ToggleDialog {
             this.name = name;
             this.description = description;
             this.coordinate = coordinate;
+        }
+
+        public String getHrefFromDescription() {
+            final Matcher m = Pattern.compile(".*href=\"(.+?)\".*").matcher(description);
+            if (m.matches()) {
+                return m.group(1);
+            } else {
+                System.err.println("Could not parse URL from: " + description);
+                return null;
+            }
+        }
+
+        public Tag createWikipediaTag() {
+            // get URL from description
+            String url = getHrefFromDescription();
+            if (url == null) {
+                return null;
+            }
+            // decode URL for nicer value
+            try {
+                url = URLDecoder.decode(url, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                throw new IllegalStateException(ex);
+            }
+            // extract Wikipedia language and
+            final Matcher m = Pattern.compile("https?://(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
+            if (!m.matches()) {
+                System.err.println("Could not extract Wikipedia tag from: " + url);
+                return null;
+            }
+            return new Tag("wikipedia:" + m.group(1), m.group(2));
         }
 
         @Override
@@ -152,12 +188,10 @@ public class WikipediaToggleDialog extends ToggleDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
-                Matcher m = Pattern.compile(".*href=\"([^\"]*)\".*").matcher(list.getSelectedValue().description);
-                if (m.matches()) {
-                    System.out.println("Wikipedia: opening " + m.group(1));
-                    OpenBrowser.displayUrl(m.group(1));
-                } else {
-                    System.err.println("No match: " + list.getSelectedValue().description);
+                String url = list.getSelectedValue().getHrefFromDescription();
+                if (url != null) {
+                    System.out.println("Wikipedia: opening " + url);
+                    OpenBrowser.displayUrl(url);
                 }
             }
         }
@@ -178,6 +212,27 @@ public class WikipediaToggleDialog extends ToggleDialog {
                     wikipediaLang.get());
             if (lang != null) {
                 wikipediaLang.put(lang);
+            }
+        }
+    }
+
+    class AddWikipediaTagAction extends AbstractAction {
+
+        public AddWikipediaTagAction() {
+            super(tr("Add Tag"), ImageProvider.get("pastetags"));
+            putValue(SHORT_DESCRIPTION, tr("Adds a ''wikipedia'' tag corresponding to this article to the selected objects"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (list.getSelectedValue() != null) {
+                Tag tag = list.getSelectedValue().createWikipediaTag();
+                if (tag != null) {
+                    ChangePropertyCommand cmd = new ChangePropertyCommand(
+                            Main.main.getCurrentDataSet().getSelected(),
+                            tag.getKey(), tag.getValue());
+                    Main.main.undoRedo.add(cmd);
+                }
             }
         }
     }

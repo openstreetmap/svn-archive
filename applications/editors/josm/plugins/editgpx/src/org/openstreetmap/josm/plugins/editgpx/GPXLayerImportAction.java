@@ -80,6 +80,7 @@ class GPXLayerImportAction extends AbstractAction {
             });
 
             JCheckBox dropFirst = new JCheckBox(tr("Drop existing path"));
+            dropFirst.setEnabled(!this.data.getTracks().isEmpty());
 
             panel.add(layerList);
             panel.add(dropFirst);
@@ -98,10 +99,13 @@ class GPXLayerImportAction extends AbstractAction {
                 return;
             }
 
-            for (Object o : layerList.getSelectedValues()) {
-		GpxLayer gpx = (GpxLayer )o;
-                synchronized(importing) {
-                    this.data.load(gpx.data, dropFirst.isSelected());
+            if (dropFirst.isSelected()) {
+                this.data.getTracks().clear();
+            }
+            synchronized(importing) {
+                for (Object o : layerList.getSelectedValues()) {
+                    GpxLayer gpx = (GpxLayer )o;
+                    this.data.load(gpx.data);
                 }
             }
             Main.map.mapView.repaint();

@@ -2,6 +2,7 @@ package org.openstreetmap.liveEditMapViewer;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -137,6 +138,7 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 				try {
 					// long t1 = System.currentTimeMillis();
 					int noSkipped = 0;
+					int nodeRate = 0;
 					if (drawX != null) {
 						overlayI = null;
 						overlayI = new BufferedImage(getWidth(), getHeight(),
@@ -147,11 +149,14 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 						int noDisp = 0;
 						synchronized (LiveEditMapViewer.instance) {
 							for (int i = 0; i < drawX.length; i++) {
+								long deltaTime = currTime - drawTime[i];
+								if ((deltaTime > 0) && (deltaTime < 1000)) nodeRate++;
 								if (drawX[i] < 0) {
 									noSkipped++;
 									continue;
 								}
-								long deltaTime = currTime - drawTime[i];
+								
+								
 								if (deltaTime > 0) {
 									noDisp++;
 									deltaTime = (long) (125.0 * Math.exp(-1.0
@@ -181,6 +186,10 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 								}
 
 							}
+							g.setColor(new Color(0, 0, 0, 255));
+							g.setFont(new Font("Courier New",Font.BOLD,14));
+							g.drawString(nodeRate + "n/s", 20, getHeight() - 20);
+							g.drawString("(c) OpenStreetMap contributers, CC-BY-SA", getWidth() - 350, getHeight() - 20);
 						}
 						// long t2 = System.currentTimeMillis();
 						// System.out.println("Displaying " + noDisp +
@@ -211,8 +220,8 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 
 	private void initChangeStream() {
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("http://planet.openstreetmap.org/minute-replicate/state.txt").openConnection();
-			conn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r27603");
+			HttpURLConnection conn = (HttpURLConnection) new URL("http://planet.openstreetmap.org/redaction-period/minute-replicate/state.txt").openConnection();
+			conn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r28184");
 			conn.setConnectTimeout(10000);
 			conn.setReadTimeout(25000);
 			int respCode = conn.getResponseCode();
@@ -262,7 +271,7 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 			// The normal way to exit is the FileNotFound exception
 			while (true) {
 				DecimalFormat myFormat = new DecimalFormat("000");
-				String url = "http://planet.openstreetmap.org/minute-replicate/"
+				String url = "http://planet.openstreetmap.org/redaction-period/minute-replicate/"
 						+ myFormat.format(seqNum / 1000000)
 						+ "/"
 						+ myFormat.format((seqNum / 1000) % 1000)
@@ -270,11 +279,13 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 						+ myFormat.format(seqNum % 1000) + ".osc.gz";
 				HttpURLConnection diffURLConn = (HttpURLConnection) new URL(url)
 						.openConnection();
-				diffURLConn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r27603");
+				diffURLConn.setRequestProperty("User-Agent", "LiveEditMapViewerJ-r28184");
 				//Need to set no-cache control header, as we will otherwise likely get a negative hit,
 				//as the first time we test it will be a 404 response, as that is how we probe if the next
 				//minutely diff is available.
 				diffURLConn.setRequestProperty("Cache-Control", "no-cache");
+				diffURLConn.setConnectTimeout(10000);
+				diffURLConn.setReadTimeout(25000);
 				
 				BufferedInputStream bis = new BufferedInputStream(
 						new GZIPInputStream(diffURLConn.getInputStream()));
@@ -443,8 +454,8 @@ public class LiveEditMapViewer extends JFrame implements MapViewChangeListener,
 		if ((me.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK) {
 			Point p = me.getPoint();
 			for (int i = 0; i < drawX.length; i++) {
-				if ((drawX[i] - 3 < p.x) && (drawX[i] + 3 > p.x)
-						&& (drawY[i] - 3 < p.y) && (drawY[i] + 3 > p.y)) {
+				if ((drawX[i] - 5 < p.x) && (drawX[i] + 5 > p.x)
+						&& (drawY[i] - 5 < p.y) && (drawY[i] + 5 > p.y)) {
 					if (desk != null) {
 						try {
 							desk.browse(new URI(

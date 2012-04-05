@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -23,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -37,8 +39,10 @@ public class WikipediaToggleDialog extends ToggleDialog {
         super(tr("Wikipedia"), "wikipedia", tr("Fetch Wikipedia articles with coordinates"), null, 150);
         createLayout(list, true, Arrays.asList(
                 new SideButton(new WikipediaDownloadAction()),
-                new SideButton(new OpenWikipediaArticleAction())));
+                new SideButton(new OpenWikipediaArticleAction()),
+                new SideButton(new WikipediaSettingsAction(), false)));
     }
+    final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getWikiLanguagePrefix());
     final DefaultListModel<WikipediaEntry> model = new DefaultListModel<WikipediaEntry>();
     final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
 
@@ -105,7 +109,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 final String bbox = min.lon() + "," + min.lat() + "," + max.lon() + "," + max.lat();
                 // construct url
                 final String url = "http://toolserver.org/~kolossos/geoworld/marks.php?"
-                        + "bbox=" + bbox + "&lang=" + LanguageInfo.getWikiLanguagePrefix();
+                        + "bbox=" + bbox + "&LANG=" + wikipediaLang.get();
                 System.out.println("Wikipedia: GET " + url);
                 // parse XML document
                 final XPathExpression xpathPlacemark = XPathFactory.newInstance().newXPath().compile("//Placemark");
@@ -155,6 +159,25 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 } else {
                     System.err.println("No match: " + list.getSelectedValue().description);
                 }
+            }
+        }
+    }
+
+    class WikipediaSettingsAction extends AbstractAction {
+
+        public WikipediaSettingsAction() {
+            super(tr("Language"), ImageProvider.get("dialogs/settings"));
+            putValue(SHORT_DESCRIPTION, tr("Sets the default language for the Wikipedia articles"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String lang = JOptionPane.showInputDialog(
+                    WikipediaToggleDialog.this,
+                    tr("Enter the Wikipedia language"),
+                    wikipediaLang.get());
+            if (lang != null) {
+                wikipediaLang.put(lang);
             }
         }
     }

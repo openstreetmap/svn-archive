@@ -157,7 +157,7 @@
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom14;
-      <PolygonSymbolizer fill="#ccc"/>
+      <PolygonSymbolizer fill="#fff"/>
    </Rule>
    <Rule>
       <Filter>[highway] = 'residential' or [highway]='unclassified' or [highway]='service'</Filter>
@@ -1206,31 +1206,31 @@
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom12;
       &minscale_zoom13;
-      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#66c" stroke-width="2.5" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom14;
       &minscale_zoom14;
-      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#66c" stroke-width="4" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom15;
       &minscale_zoom15;
-      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#66c" stroke-width="6" stroke-linecap="round"/>
     </Rule>
    <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom16;
       &minscale_zoom16;
-      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="9" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#66c" stroke-width="9" stroke-linecap="round"/>
     </Rule>
    <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom17;
       &minscale_zoom18;
-      <LineSymbolizer stroke-linejoin="round" stroke="white" stroke-width="14.5" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#66c" stroke-width="14.5" stroke-linecap="round"/>
     </Rule>
 </Style>
 <Style name="minor-roads-fill-links">
@@ -1816,31 +1816,31 @@
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom12;
       &minscale_zoom13;
-      <LineSymbolizer stroke-linejoin="round" stroke="#ccc" stroke-width="1.5" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom14;
       &minscale_zoom14;
-      <LineSymbolizer stroke-linejoin="round" stroke="#ccc" stroke-width="3" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom15;
       &minscale_zoom15;
-      <LineSymbolizer stroke-linejoin="round" stroke="#ccc" stroke-width="4.7" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="4.7" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom16;
       &minscale_zoom16;
-      <LineSymbolizer stroke-linejoin="round" stroke="#ccc" stroke-width="7.4" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="7.4" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'living_street'</Filter>
       &maxscale_zoom17;
       &minscale_zoom18;
-      <LineSymbolizer stroke-linejoin="round" stroke="#ccc" stroke-width="13" stroke-linecap="round"/>
+      <LineSymbolizer stroke-linejoin="round" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary' and not [tunnel]='yes'</Filter>
@@ -2176,8 +2176,8 @@
     <Rule>
       <Filter>[tracktype]='grade1'</Filter>
       &maxscale_zoom15;
-      <LineSymbolizer stroke="#b37700" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
-      <LineSymbolizer stroke="#f1f1f1" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+      <LineSymbolizer stroke="#b37700" stroke-width="4.4" stroke-linejoin="round" stroke-linecap="round"/>
+      <LineSymbolizer stroke="#f1f1f1" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>[tracktype]='grade2'</Filter>

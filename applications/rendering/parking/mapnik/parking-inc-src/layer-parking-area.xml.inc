@@ -9,9 +9,19 @@
       <LineSymbolizer stroke="&pa_fee_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond] = 'ticket'</Filter>
+      <Filter>[cond] = 'ticket' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_fee.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'ticket' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_fee.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'ticket' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_fee.png"/>
     </Rule>
 
     <!-- parking area: disc -->
@@ -23,9 +33,19 @@
       <LineSymbolizer stroke="&pa_disc_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond]='disc'</Filter>
+      <Filter>[cond]='disc' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_disc.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'disc' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_disc.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'disc' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_disc.png"/>
     </Rule>
 
     <!-- parking area: customers -->
@@ -37,9 +57,19 @@
       <LineSymbolizer stroke="&pa_customers_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond]='customers'</Filter>
+      <Filter>[cond]='customers' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='customers' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_cust.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='customers' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_cust.png"/>
     </Rule>
 
     <!-- parking area: residents -->
@@ -51,9 +81,19 @@
       <LineSymbolizer stroke="&pa_residents_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond]='residents'</Filter>
+      <Filter>[cond]='residents' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_resi.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='residents' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_resi.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='residents' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_resi.png"/>
     </Rule>
 
     <!-- parking area: private -->
@@ -65,9 +105,19 @@
       <LineSymbolizer stroke="&pa_private_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond]='private'</Filter>
+      <Filter>[cond]='private' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='private' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_priv.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond]='private' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_priv.png"/>
     </Rule>
 
     <!-- parking area: free -->
@@ -79,9 +129,19 @@
       <LineSymbolizer stroke="&pa_free_stroke;" stroke-width="&pa_stroke_width;" stroke-opacity="&pa_stroke_opacity;"/>
     </Rule>
     <Rule>
-      <Filter>[cond] = 'free'</Filter>
+      <Filter>[cond] = 'free' and [parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_free.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'free' and [parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_free.png"/>
+    </Rule>
+    <Rule>
+      <Filter>[cond] = 'free' and [parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_free.png"/>
     </Rule>
 
     <Rule>
@@ -93,8 +153,21 @@
     </Rule>
     <Rule>
       <ElseFilter/>
+      <Filter>[parking] = 'surface'</Filter>
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png"/>
+    </Rule>
+    <Rule>
+      <ElseFilter/>
+      <Filter>[parking] = 'multistorey'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_unkn.png"/>
+    </Rule>
+    <Rule>
+      <ElseFilter/>
+      <Filter>[parking] = 'underground'</Filter>
+      &maxscale_zoom16;
+      <PolygonPatternSymbolizer file="&symbols;/parking_underground_unkn.png"/>
     </Rule>
 </Style>
 
@@ -134,6 +207,15 @@ altes select mit tags->amenity:
     <Datasource>
       <Parameter name="table">
       (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
+        CASE /* parking= */ LOWER(COALESCE(parking,'surface'))
+        WHEN 'surface' THEN 'surface'
+        WHEN 'multy-storey' THEN 'multistorey'
+        WHEN 'underground' THEN 'underground'
+        WHEN 'sheds' THEN 'surface'
+        WHEN 'carports' THEN 'surface'
+        WHEN 'garages' THEN 'surface'
+	    ELSE 'surface'
+        END AS "parking",
         CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
         WHEN '--t' THEN 'ticket'
         WHEN 'y--' THEN 'ticket'
@@ -181,6 +263,15 @@ altes select mit tags->amenity:
     <Datasource>
       <Parameter name="table">
       (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
+        CASE /* parking= */ LOWER(COALESCE(parking,'surface'))
+        WHEN 'surface' THEN 'surface'
+        WHEN 'multy-storey' THEN 'multistorey'
+        WHEN 'underground' THEN 'underground'
+        WHEN 'sheds' THEN 'surface'
+        WHEN 'carports' THEN 'surface'
+        WHEN 'garages' THEN 'surface'
+	    ELSE 'surface'
+        END AS "parking",
         CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
         WHEN '--t' THEN 'ticket'
         WHEN 'y--' THEN 'ticket'

@@ -75,16 +75,17 @@ def create_parking_lane_icons(source_symbols_dir,dest_symbols_dir):
 
 def create_parking_area_icons(source_symbols_dir,dest_symbols_dir):
     tempf = "/tmp/2347856893476512873465.png"
-    df = os.path.join(dest_symbols_dir,"parking_area_source.png")
-    stampf = os.path.join(source_symbols_dir,"parking_area_stamp.png")
-    for c in condition_colors.iterkeys():
-        # step 1: colorize a "stamp" template image
-        p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',tempf])
-        p.wait()
-        # step 2: make it 50% transparent
-        # convert -size 16x16 parking_area_free.png xc:grey -alpha off -compose Copy_Opacity -composite  /tmp/a.png && gwenview /tmp/a.png
-        p = subprocess.Popen(['convert','-size','16x16',tempf,'xc:gray','-alpha','off','-compose','Copy_Opacity','-composite',df.replace('source',c)])
-        p.wait()
+    for icon_name_prefix  in ["parking_area","parking_multistorey","parking_underground"]:
+        df = os.path.join(dest_symbols_dir,icon_name_prefix+"_source.png")
+        stampf = os.path.join(source_symbols_dir,icon_name_prefix+"_stamp.png")
+        for c in condition_colors.iterkeys():
+            # step 1: colorize a "stamp" template image
+            p = subprocess.Popen(['convert','-size','16x16','xc:#'+condition_colors.get(c),stampf,'-compose','Darken','-composite',tempf])
+            p.wait()
+            # step 2: make it 50% transparent
+            # convert -size 16x16 parking_area_free.png xc:grey -alpha off -compose Copy_Opacity -composite  /tmp/a.png && gwenview /tmp/a.png
+            p = subprocess.Popen(['convert','-size','16x16',tempf,'xc:gray','-alpha','off','-compose','Copy_Opacity','-composite',df.replace('source',c)])
+            p.wait()
 
 
 def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):

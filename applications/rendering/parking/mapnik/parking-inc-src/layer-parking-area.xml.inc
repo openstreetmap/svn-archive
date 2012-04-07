@@ -157,18 +157,6 @@
       &maxscale_zoom16;
       <PolygonPatternSymbolizer file="&symbols;/parking_area_unkn.png"/>
     </Rule>
-    <Rule>
-      <ElseFilter/>
-      <Filter>[parking] = 'multistorey'</Filter>
-      &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_multistorey_unkn.png"/>
-    </Rule>
-    <Rule>
-      <ElseFilter/>
-      <Filter>[parking] = 'underground'</Filter>
-      &maxscale_zoom16;
-      <PolygonPatternSymbolizer file="&symbols;/parking_underground_unkn.png"/>
-    </Rule>
 </Style>
 
 <!--

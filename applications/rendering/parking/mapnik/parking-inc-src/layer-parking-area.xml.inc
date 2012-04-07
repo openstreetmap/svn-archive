@@ -207,7 +207,7 @@ altes select mit tags->amenity:
     <Datasource>
       <Parameter name="table">
       (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
-        CASE /* parking= */ LOWER(COALESCE(parking,'surface'))
+        CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
         WHEN 'surface' THEN 'surface'
         WHEN 'multy-storey' THEN 'multistorey'
         WHEN 'underground' THEN 'underground'
@@ -263,7 +263,7 @@ altes select mit tags->amenity:
     <Datasource>
       <Parameter name="table">
       (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
-        CASE /* parking= */ LOWER(COALESCE(parking,'surface'))
+        CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
         WHEN 'surface' THEN 'surface'
         WHEN 'multy-storey' THEN 'multistorey'
         WHEN 'underground' THEN 'underground'

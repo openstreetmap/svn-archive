@@ -358,7 +358,8 @@ public final class NodeWayUtils {
         for (Way way: usedWays) {
             List<Node> polyNodes = way.getNodes();
             // converts all points to EastNorth
-            for (Node n: polyNodes) polyPoints.add(n.getEastNorth());  
+            for (Node n: polyNodes) polyPoints.add(n.getEastNorth());
+            polyPoints.add(null); // next segment indicator
         }
         
         
@@ -367,7 +368,7 @@ public final class NodeWayUtils {
         Set<Way> newestWays = new HashSet<Way>();
         for (Node n : searchNodes) {
             //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
-            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)>0) {
+            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)) {
                 newestNodes.add(n);
             }
         }
@@ -391,7 +392,7 @@ public final class NodeWayUtils {
         if (!way.isClosed()) return;
         BBox box = way.getBBox();
         List<Node> polyNodes = way.getNodes();
-        List<EastNorth> polyPoints = new ArrayList<EastNorth>(polyNodes.size());
+        List<EastNorth> polyPoints = new ArrayList<EastNorth>(polyNodes.size()+5);
         
         // converts all points to EastNorth
         for (Node n: polyNodes) polyPoints.add(n.getEastNorth());  
@@ -401,7 +402,7 @@ public final class NodeWayUtils {
         Set<Way> newestWays = new HashSet<Way>();
         for (Node n : searchNodes) {
             //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
-            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)>0) {
+            if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)) {
                 newestNodes.add(n);
             }
         }
@@ -421,21 +422,33 @@ public final class NodeWayUtils {
         newWays.addAll(newestWays);
     }
     
+    public static boolean isPointInsidePolygon(EastNorth point, List<EastNorth> polygonPoints) {
+        int n = getRayIntersectionsCount(point, polygonPoints);
+        if (n<0) return true; // we are near node or near edge
+        return (n%2==1);
+    }
+    
     /**
      * @return 0 =  not inside polygon, 1 = strictly inside, 2 = near edge, 3 = near vertex
      */
-    public static int isPointInsidePolygon(EastNorth point, List<EastNorth> polygonPoints) {
+    public static int getRayIntersectionsCount(EastNorth point, List<EastNorth> polygonPoints) {
         int n=polygonPoints.size();
-        EastNorth oldPoint = polygonPoints.get(n-1);
+        if (point==null) return 0;
+        EastNorth oldPoint = null;
+                //polygonPoints.get(n-1);
         double n1,n2,n3,e1,e2,e3,d;
         int interCount=0;
         
         for (EastNorth curPoint : polygonPoints) {
+            if (oldPoint==null || curPoint==null) {
+                oldPoint = curPoint;
+                continue;
+            }
             n1 = curPoint.north(); n2 = oldPoint.north();  n3 =  point.north();
             e1 = curPoint.east(); e2 = oldPoint.east();  e3 =  point.east();
             
-            if (Math.abs(n1-n3)<1e-5 && Math.abs(e1-e3)<1e-5) return 3; // vertex
-            if (Math.abs(n2-n3)<1e-5 && Math.abs(e2-e3)<1e-5) return 3; // vertex
+            if (Math.abs(n1-n3)<1e-5 && Math.abs(e1-e3)<1e-5) return -3; // vertex
+            if (Math.abs(n2-n3)<1e-5 && Math.abs(e2-e3)<1e-5) return -3; // vertex
             
             // looking at oldPoint-curPoint segment
             if ( n1 > n2) {
@@ -444,12 +457,12 @@ public final class NodeWayUtils {
                     d = e1*n2 - n1*e2;
                     if (d<-1e-5) {
                         interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
-                    } else if (d<=1e-5) return 2; // boundary detected
+                    } else if (d<=1e-5) return -2; // boundary detected
                 }
             } else if (n1 == n2) {
                 if (n1 == n3) {
                     e1-=e3; e2-=e3;
-                    if ((e1 <=0 && e2 >= 0) || (e1 >=0 && e2 <= 0)) return 2;// boundary detected
+                    if ((e1 <=0 && e2 >= 0) || (e1 >=0 && e2 <= 0)) return -2;// boundary detected
                 }
             } else {
                 if (n1 <= n3 && n3 < n2) {
@@ -457,13 +470,13 @@ public final class NodeWayUtils {
                     d = e1*n2 - n1*e2;
                     if (d>1e-5) {
                         interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
-                    } else if (d>=-1e-5) return 2; // boundary detected
+                    } else if (d>=-1e-5) return -2; // boundary detected
                 }
             }
             oldPoint = curPoint;
         }
-       // System.out.printf("Intersected intercount %d %s\n",interCount, point.toString());
-        if (interCount%2 == 1) return 1; else return 0;
+        // System.out.printf("Intersected intercount %d %s\n",interCount, point.toString());
+        return interCount;
     }
     
     public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {

@@ -12,6 +12,7 @@ import sys
 import psycopg2
 
 class OSMDB:
+    """ OSM Database """
     DSN = None
     conn = None
     curs = None
@@ -21,13 +22,19 @@ class OSMDB:
         self.conn = psycopg2.connect(self.DSN)
         print "Encoding for this connection is", self.conn.encoding
         self.curs = self.conn.cursor()
-        
+    def __del__(self):
+        print "Closing connection"
+        self.conn.rollback()
+        self.conn.close()
+    def dummy(self):
+        print "dummy"
 def main_approach(options):
     bbox = options['bbox']
     DSN = options['dsn']
     print bbox
     osmdb = OSMDB(DSN)
     #highways = getHighwaysInBbox(DSN,bbox)
+    osmdb.dummy()
 
 if __name__ == '__main__':
     parser = OptionParser()

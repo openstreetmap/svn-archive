@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-# by kay - basic functions
-
-### config for Toolserver
-#DSN = 'dbname=osm_mapnik host=sql-mapnik'
-### config for devserver
-#DSN = 'dbname=hstore'
-### config for Crite
-#DSN = 'dbname=gis host=crite'
+# by kay
 
 import sys
 import psycopg2
@@ -27,12 +20,13 @@ class OSMDB:
         print "Closing connection"
         self.conn.rollback()
         self.conn.close()
-        self.conn.clos()
-    def dummy(self):
+    def dummy(self,bbox):
         #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
         result=[]
-        self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-        result += curs.fetchall()
+        #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
+        print "result for bbox("+bbox+")"
+        self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)")
+        result += self.curs.fetchall()
         print "resultlen="+len(result)
 
 def main(options):
@@ -41,7 +35,7 @@ def main(options):
     print bbox
     osmdb = OSMDB(DSN)
     #highways = getHighwaysInBbox(DSN,bbox)
-    osmdb.dummy()
+    osmdb.dummy(bbox)
 
 if __name__ == '__main__':
     parser = OptionParser()

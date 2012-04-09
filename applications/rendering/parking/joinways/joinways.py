@@ -10,6 +10,7 @@
 
 import sys
 import psycopg2
+from optparse import OptionParser
 
 class OSMDB:
     """ OSM Database """

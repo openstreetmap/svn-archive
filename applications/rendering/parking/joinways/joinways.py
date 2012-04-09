@@ -29,7 +29,8 @@ class OSMDB:
         self.conn.close()
     def dummy(self):
         print "dummy"
-def main_approach(options):
+
+def main(options):
     bbox = options['bbox']
     DSN = options['dsn']
     print bbox

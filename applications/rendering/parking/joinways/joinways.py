@@ -299,7 +299,7 @@ def main(options):
     osmdb = OsrayDB(DSN)
     #highways = getHighwaysInBbox(DSN,bbox)
     bxarray=bbox.split(",")
-    bbox="{b} {l},{t} {r}".format(b=bxarray[1],l=bxarray[0],t=bxarray[3],r=bxarray[2])
+    bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
     osmdb.set_bbox(bbox)
     osmdb.dummy(bbox)
 

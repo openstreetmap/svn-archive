@@ -12,7 +12,7 @@ import java.awt.Rectangle;
 import java.net.URL;
 
 public class SmedAbout implements SmedPluggable {
-
+/* Teste svn */
 	public SmedPluginManager manager = null;
 	
 	private int index = -1;

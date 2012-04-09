@@ -5,7 +5,7 @@
 BBOX=9.9315,49.78324,9.97245,49.81036
 
 JOINWAYS=/home/osm/workspace/parking/joinways/joinways.py
-$JOINWAYS --bbox $BBOX
+python $JOINWAYS --bbox $BBOX
 
 # now, render a sample image
 

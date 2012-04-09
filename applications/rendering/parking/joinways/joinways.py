@@ -256,6 +256,15 @@ class OsrayDB:
 
     def shutdown(self):
         self.conn.rollback()
+        
+    def dummy(self,bbox):
+        #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
+        result=[]
+        #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
+        print "result for bbox("+bbox+")"
+        self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)")
+        result += self.curs.fetchall()
+        print "resultlen="+len(result)
 
 class OSMDB:
     """ OSM Database """
@@ -288,7 +297,7 @@ def main(options):
     osmdb = OsrayDB(DSN)
     #highways = getHighwaysInBbox(DSN,bbox)
     bxarray=bbox.split(",")
-    bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
+    bbox="{b} {l},{t} {r}".format(b=bxarray[1],l=bxarray[0],t=bxarray[3],r=bxarray[2])
     osmdb.set_bbox(bbox)
     osmdb.dummy(bbox)
 

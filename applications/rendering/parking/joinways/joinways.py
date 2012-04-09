@@ -286,9 +286,10 @@ class OSMDB:
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
         print "result for bbox("+bbox+")"
+        print "select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)"
         self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)")
         result += self.curs.fetchall()
-        print "resultlen="+len(result)
+        print "resultlen={l}".format(l=len(result))
 
 def main(options):
     bbox = options['bbox']

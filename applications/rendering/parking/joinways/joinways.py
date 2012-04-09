@@ -264,7 +264,7 @@ class OsrayDB:
         print "result for bbox("+bbox+")"
         self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)")
         result += self.curs.fetchall()
-        print "resultlen="+len(result)
+        print "resultlen={l}".format(l=len(result))
 
 class OSMDB:
     """ OSM Database """

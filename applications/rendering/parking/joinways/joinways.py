@@ -263,9 +263,11 @@ class OsrayDB:
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
         print "result for bbox("+self.googbox+")"
         print "select osm_id,name from planet_line where \"way\" && "+self.googbox+""
-        self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
+        #self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
+        self.curs.execute("select name,string_agg(text(osm_id),',') from planet_line where highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
         result += self.curs.fetchall()
         print "resultlen={l}".format(l=len(result))
+        print "result={r}".format(r=result)
 
 class OSMDB:
     """ OSM Database """

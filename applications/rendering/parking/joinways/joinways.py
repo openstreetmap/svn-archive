@@ -261,9 +261,9 @@ class OsrayDB:
         #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-        print "result for bbox("+bbox+")"
-        print "select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)"
-        self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D("+bbox+")'::box3d, 4326)")
+        print "result for bbox("+self.googbox+")"
+        print "select osm_id,name from planet_line where \"way\" && "+self.googbox+""
+        self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
         result += self.curs.fetchall()
         print "resultlen={l}".format(l=len(result))
 

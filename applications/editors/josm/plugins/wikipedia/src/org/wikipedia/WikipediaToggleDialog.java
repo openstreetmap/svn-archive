@@ -47,7 +47,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
     }
-    final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getWikiLanguagePrefix());
+    final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final DefaultListModel<WikipediaEntry> model = new DefaultListModel<WikipediaEntry>();
     final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
 
@@ -115,7 +115,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 System.err.println("Could not extract Wikipedia tag from: " + url);
                 return null;
             }
-            return new Tag("wikipedia:" + m.group(1), m.group(2));
+            return new Tag("wikipedia", m.group(1) + ":" + m.group(2));
         }
 
         @Override

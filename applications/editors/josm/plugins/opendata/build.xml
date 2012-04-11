@@ -30,6 +30,7 @@
     <property name="plugin.main.version" value="5132"/>
     <!-- should not be necessary to change the following properties -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="jts" location="../../dist/jts.jar"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -92,21 +93,22 @@
     **********************************************************
     -->
     <target name="compile_geotools" depends="init">
-        <echo message="compiling JTS ... "/>
-        <javac srcdir="includes/com/vividsolutions/jts" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
         <echo message="compiling JSR-275 ... "/>
         <javac srcdir="includes/javax/measure" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
         <echo message="compiling Vecmath ... "/>
         <javac srcdir="includes/javax/vecmath" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
         <echo message="compiling GeoTools ... "/>
-        <javac debug="true" sourcepath="" srcdir="includes" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1">
+        <javac debug="false" sourcepath="" srcdir="includes" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1">
             <include name="org/geotools/**/*.java"/>
         	<include name="org/opengis/**/*.java"/>
+            <classpath>
+                <pathelement location="${jts}"/>
+            </classpath>
         </javac>
     </target>
     <!--
     **********************************************************
-    ** compile_naptune - compiles Neptune classes
+    ** compile_neptune - compiles Neptune classes
     **********************************************************
     -->
     <target name="compile_neptune" depends="init">
@@ -124,6 +126,7 @@
             <classpath>
         	    <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>
+                <pathelement location="${jts}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
@@ -176,7 +179,7 @@
                 <attribute name="Plugin-Icon" value="images/dialogs/o24.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <!--<attribute name="Plugin-Requires" value="jts"/>-->
+                <attribute name="Plugin-Requires" value="jts"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

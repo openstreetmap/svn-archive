@@ -65,7 +65,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
 
 	private static OdPlugin instance;
 	
-	public final XmlImporter xmlImporter;
+	public final XmlImporter xmlImporter = new XmlImporter();
 	
 	private final JMenu menu;
 	
@@ -81,7 +81,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
 				new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
 				new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
 				new ZipImporter(), // Archive containing any of the others
-				xmlImporter = new XmlImporter() // Generic importer for XML files (currently used for Neptune files)
+				xmlImporter // Generic importer for XML files (currently used for Neptune files)
 		})) {
 			ExtensionFileFilter.importers.add(0, importer);
 		}

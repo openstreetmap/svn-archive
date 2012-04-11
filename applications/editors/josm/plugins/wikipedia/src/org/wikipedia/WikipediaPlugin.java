@@ -9,6 +9,7 @@ public class WikipediaPlugin extends Plugin {
 
     public WikipediaPlugin(PluginInformation info) {
         super(info);
+        new WikipediaCopyTemplate();
     }
 
     @Override

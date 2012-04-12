@@ -33,7 +33,13 @@ class JoinDB (OSMDB):
         result += self.curs.fetchall()
         print "jw-result = "+str(result)
         return result[0][0]
-        
+
+    def insert_joined_highway(self,id,name,highway,way):
+        #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
+        result=[]
+        #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
+        self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ("+id+","+name+","+highway+","+way+")")
+
 
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
@@ -56,8 +62,9 @@ def main(options):
     for hw in highways:
         hwname = hw[0]
         hwsegments = hw[1]
-        hwjoined = osmdb.get_joined_ways(hwsegments)
+        hwjoinedway = osmdb.get_joined_ways(hwsegments)
         print hwjoined
+        osmdb.insert_joined_highway(0,hwname,"residential",hwjoinedway)
         break
 
 if __name__ == '__main__':

@@ -64,7 +64,7 @@ def main(options):
         hwsegments = hw[1]
         hwjoinedway = osmdb.get_joined_ways(hwsegments)
         print "* Highway "+hwname+": "+hwjoinedway
-        osmdb.insert_joined_highway(0,hwname,"residential",hwjoinedway)
+        osmdb.insert_joined_highway(str(0),hwname,"residential",hwjoinedway)
         break
 
 if __name__ == '__main__':

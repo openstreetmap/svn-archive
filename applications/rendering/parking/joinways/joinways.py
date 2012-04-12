@@ -41,6 +41,13 @@ class JoinDB (OSMDB):
         print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"',SetSrid('"+way+"'::Text,4326));"
         self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
 
+    def what_is_it(self,geom):
+        result=[]
+        self.curs.execute("select astext(setsrid('"+geom+"'::Text,4326))")
+        result += self.curs.fetchall()
+        print "whatisit-result = "+str(result)
+        
+        
 
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
@@ -66,6 +73,7 @@ def main(options):
         hwsegments = hw[1]
         hwjoinedway = osmdb.get_joined_ways(hwsegments)
         print "* Highway "+hwname+": "+hwjoinedway
+        osmdb.what_is_it(hwjoinedway)
         osmdb.insert_joined_highway(str(0),hwname,"residential",hwjoinedway)
 #        break
 

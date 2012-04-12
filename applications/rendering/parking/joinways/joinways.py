@@ -28,11 +28,10 @@ class JoinDB (OSMDB):
 
     def get_joined_ways(self,segment_ids):
         result=[]
-        
-        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in (36717484,36717485,5627159);")
+        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+");")
         result += self.curs.fetchall()
         print "jw-result = "+str(result)
-        return result[0]
+        return result[0][0]
         
 
 """

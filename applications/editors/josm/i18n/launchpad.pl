@@ -8,7 +8,7 @@ my ($user, $pwd);
 
 # Three ways to handle login data:
   # Enter data directly in these two lines (Be careful witn svn checkin later!)
-  # create a file "uploadpot.pl_credits" containing the two lines with proper values
+  # create a file "launchpad.pl_credits" containing the two lines with proper values
   # leave credits empty and enter them on runtime
 $user = '';
 $pwd = '';

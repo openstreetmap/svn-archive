@@ -7,7 +7,7 @@ import psycopg2
 class OSMDB:
     """ Handles queries to the planet database """
 
-    def __init__(self,dsn,prefix="planet_"):
+    def __init__(self,dsn,prefix="planet"):
         self.DSN = dsn
         self.prefix = prefix
         self.LIMIT = ""

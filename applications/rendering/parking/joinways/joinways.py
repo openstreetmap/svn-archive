@@ -38,14 +38,15 @@ class JoinDB (OSMDB):
         #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-#        print "insert into planet_line_join (join_id, name, highway, way) values ("+id+","+name+","+highway+","+way+");"
+        print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"','"+way+"');"
         self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"','"+way+"')")
 
 
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
 
-create table planet_line_join (join_id integer , name text, highway text, way geometry);
+create table planet_line_join (join_id integer , name text, highway text);
+select AddGeometryColumn('planet_line_join', 'way', 4326, 'LINESTRING', 2 );
 
 """
 

@@ -8,10 +8,10 @@ use strict;
 my $item = "";
 my $group;
 my $combo_n;
-my @combo_values;
-my $combo_idx;
+my $combo_type;
 my $result = 0;
 my $comment = 0;
+my $vctx;
 
 # This is a simple conversion and in no way a complete XML parser
 # but it works with a default Perl installation
@@ -110,64 +110,49 @@ while(my $line = <>)
       print "/* item $item role $n */ tr($n);\n";
     }
   }
-  # first handle display values
-  elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+display_values="(.*?)"/)
+  elsif($line =~ /<(combo|multiselect).*\s+text=(".*?")/)
   {
-    my ($type,$n,$vals) = ($1,fix($2),$3);
-    my $sp = ($type eq "combo" ? ",":";");
+    my ($type,$n) = ($1,fix($2));
     $combo_n = $n;
-    $combo_idx = 0;
-    my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
-    if($line =~ /text_context=(".*?")/)
+    $combo_type = $type;
+    $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
+    # text
+    my $tctx = ($line =~ /text_context=(".*?")/) ? $1 : undef;
+    print "/* item $item $type $n */" . ($tctx ? " trc($tctx, $n);" : " tr($n);");
+    # display_values / values
+    my $sp = ($type eq "combo" ? ",":";");
+    my $vals = ($line =~ /display_values="(.*?)"/) ? $1 : ($line =~ /values="(.*?)"/) ? $1 : undef;
+    if($vals)
     {
-      print "/* item $item $type $n */ trc($1,$n);";
-    }
-    else
-    {
-      print "/* item $item $type $n */ tr($n);";
-    }
-    $vals =~ s/\\$sp/\x91/g;
-    @combo_values = split $sp,$vals;
-    for (my $i=0; $i<@combo_values; ++$i)
-    {
-      my $val = $combo_values[$i];
-      $val =~ s/\x91/$sp/g;
-      $combo_values[$i] = $val;
-      next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      $val = fix($val);
-      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
+      my @combo_values = split $sp,$vals;
+      foreach my $val (@combo_values)
+      {
+        next if $val =~ /^[0-9-]+$/; # search for non-numbers
+        $val = fix($val);
+        print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
+      }
     }
     print "\n";
   }
-  elsif($line =~ /<(combo|multiselect).*\s+text=(".*?").*\s+values="(.*?)"/)
+  elsif(!$comment && $line =~ /<list_entry/)
   {
-    my ($type,$n,$vals) = ($1,fix($2),$3);
-    my $sp = ($type eq "combo" ? ",":";");
-    $combo_n = $n;
-    $combo_idx = 0;
-    my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
-    if($line =~ /text_context=(".*?")/)
+    my $vctxi = ($line =~ /value_context=(".*?")/) ? $1 : $vctx;
+    my $value = ($line =~ /value=(".*?")/) ? $1 : undef;
+    if($line =~ /display_value=(".*?")/)
     {
-      print "/* item $item $type $n */ trc($1,$n);";
+      my $val = fix($1);
+      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);") . "\n";
     }
     else
     {
-      print "/* item $item $type $n */ tr($n);";
+      my $val = fix($value);
+      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);") . "\n";
     }
-    @combo_values = split $sp,$vals;
-    foreach my $val (@combo_values)
+    if($line =~ /short_description=(".*?")/)
     {
-      next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      $val = fix($val);
-      print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
+      my $val = fix($1);
+      print "/* item $item $combo_type $combo_n entry $value short description */ tr($val);\n";
     }
-    print "\n";
-  }
-  elsif(!$comment && $line =~ /<short_description>(.*?)<\/short_description>/)
-  {
-    my $n = fix($1);
-    print "/* item $item combo $combo_n item \"$combo_values[$combo_idx]\" short description */ tr(\"$n\");\n";
-    $combo_idx++;
   }
   elsif($line =~ /<\/group>/)
   {
@@ -182,7 +167,6 @@ while(my $line = <>)
   elsif($line =~ /<\/combo/)
   {
     $combo_n = "";
-    $combo_idx = 0;
   }
   elsif(!$line)
   {

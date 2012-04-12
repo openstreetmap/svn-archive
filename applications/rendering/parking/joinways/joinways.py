@@ -45,7 +45,10 @@ class JoinDB (OSMDB):
         result=[]
         self.curs.execute("select astext(setsrid('"+geom+"'::Text,4326))")
         result += self.curs.fetchall()
-        print "whatisit-result = "+str(result)
+        itisa=result[0][0]
+        itisa=itisa.split('(')[0]
+        print "whatisit-result = "+itisa
+        return itisa
         
         
 

@@ -13,7 +13,7 @@ class OSMDB:
         self.LIMIT = ""
 
         print "Opening connection using dsn:", self.DSN
-        self.conn = psycopg2.connect(DSN)
+        self.conn = psycopg2.connect(self.DSN)
         print "Encoding for this connection is", self.conn.encoding
         self.curs = self.conn.cursor()
 

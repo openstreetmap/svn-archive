@@ -894,6 +894,7 @@
       <TextSymbolizer size="21" fill="&approach_road_text_debug;" placement="line" fontset-name="book-fonts">[name]</TextSymbolizer>
     </Rule>
 </Style>
+<!-- 
 <Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
      <StyleName>roads-text-name</StyleName>
      <Datasource>
@@ -906,6 +907,19 @@
          and power IS NULL
          and not (highway='track' and tracktype in ('grade2','grade3','grade4','grade5'))
          and name is not null
+      ) as roads
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+ -->
+<Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
+     <StyleName>roads-text-name</StyleName>
+     <Datasource>
+      <Parameter name="table">
+      (select way,highway,name
+       from &prefix;_line_join
+       where name is not null
       ) as roads
       </Parameter>
       &datasource-settings;

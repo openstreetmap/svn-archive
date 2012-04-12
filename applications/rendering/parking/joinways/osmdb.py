@@ -10,6 +10,7 @@ class OSMDB:
     def __init__(self,dsn,prefix="planet_"):
         self.DSN = dsn
         self.prefix = prefix
+        self.LIMIT = ""
 
         print "Opening connection using dsn:", self.DSN
         self.conn = psycopg2.connect(DSN)
@@ -76,7 +77,7 @@ class OSMDB:
 # ---------------------------------------------------------------------------
 
     def select_highways(self):
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway is not NULL "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway is not NULL "+self.LIMIT+";")
         rs = self.curs.fetchall()
         highways = []
         for res in rs:
@@ -93,7 +94,7 @@ class OSMDB:
         return highways
 
     def select_highway_areas(self):
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway is not NULL "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway is not NULL "+self.LIMIT+";")
         rs = self.curs.fetchall()
         areas = []
         for res in rs:
@@ -108,7 +109,7 @@ class OSMDB:
         return areas
 
     def select_amenity_areas(self):
-        self.curs.execute("SELECT osm_id,amenity,ST_AsText(\"way\") AS geom, ST_AsText(buffer(\"way\",1)) AS geombuffer, tags->'height' as height  "+self.FpW+" \"way\" && "+self.googbox+" and amenity is not NULL and (building is NULL or building='no')"+LIMIT+";")
+        self.curs.execute("SELECT osm_id,amenity,ST_AsText(\"way\") AS geom, ST_AsText(buffer(\"way\",1)) AS geombuffer, tags->'height' as height  "+self.FpW+" \"way\" && "+self.googbox+" and amenity is not NULL and (building is NULL or building='no')"+self.LIMIT+";")
         rs = self.curs.fetchall()
         areas = []
         for res in rs:
@@ -122,7 +123,7 @@ class OSMDB:
         return areas
 
     def select_buildings(self,buildingtype):
-        self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity,shop "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity,shop "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         buildings = []
         for res in rs:
@@ -139,7 +140,7 @@ class OSMDB:
 
     def select_landuse(self,landusetype):
         #print "SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";"
-        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         landuses = []
         for res in rs:
@@ -151,7 +152,7 @@ class OSMDB:
         return landuses
 
     def select_landuse_areas(self):
-        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse is not NULL "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse is not NULL "+self.LIMIT+";")
         rs = self.curs.fetchall()
         landuses = []
         for res in rs:
@@ -163,7 +164,7 @@ class OSMDB:
         return landuses
 
     def select_leisure_areas(self):
-        self.curs.execute("SELECT osm_id,leisure,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and leisure is not NULL "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,leisure,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and leisure is not NULL "+self.LIMIT+";")
         rs = self.curs.fetchall()
         leisures = []
         for res in rs:
@@ -175,7 +176,7 @@ class OSMDB:
         return leisures
 
     def select_waterway(self,waterwaytype):
-        self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         waterways = []
         for res in rs:
@@ -188,7 +189,7 @@ class OSMDB:
 
     def select_naturalwater(self):
         naturaltype='water'
-        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, layer "+self.FpW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, layer "+self.FpW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         waters = []
         for res in rs:
@@ -203,7 +204,7 @@ class OSMDB:
 
     def select_trees(self):
         naturaltype='tree'
-        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         trees = []
         for res in rs:
@@ -218,7 +219,7 @@ class OSMDB:
 
     def select_barriers(self):
         #print "barriers: SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";"
-        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+self.LIMIT+";")
         rs = self.curs.fetchall()
         barriers = []
         for res in rs:
@@ -231,7 +232,7 @@ class OSMDB:
         return barriers
 
     def select_barrier_lines(self):
-        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(ST_Buffer(\"way\",0.35)) AS geom, tags->'height' as height "+self.FlW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(ST_Buffer(\"way\",0.35)) AS geom, tags->'height' as height "+self.FlW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+self.LIMIT+";")
         # ,'join=mitre mitre_limit=5.0' (requires GEOS 3.2)
         rs = self.curs.fetchall()
         barriers = []

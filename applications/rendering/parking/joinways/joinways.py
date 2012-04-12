@@ -3,7 +3,7 @@
 
 import sys
 #import psycopg2
-import osmdb
+from osmdb import OSMDB
 from optparse import OptionParser
 
 class JoinDB (OSMDB):

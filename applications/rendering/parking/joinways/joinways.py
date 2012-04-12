@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 class JoinDB (OSMDB):
 
-    def get_highway_segments(self):
+    def get_highways_segments(self):
         #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
@@ -35,7 +35,7 @@ def main(options):
     bxarray=bbox.split(",")
     bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
     osmdb.set_bbox(bbox)
-    highways=osmdb.dummy()
+    highways=osmdb.get_highways_segments()
     print "highways={r}".format(r=highways)
 
 

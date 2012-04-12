@@ -49,7 +49,7 @@ class OSMDB:
             self.init_bbox_srs(bbox, '3857')
         elif srs=='900913':
             self.init_bbox_srs(bbox, '3857')
-        raise ValueException("Unknown srs")
+        raise ValueError("Unknown srs")
     
     def init_bbox_srs(self,bbox,srs):
         self.googbox = "transform(SetSRID('BOX3D("+bbox+")'::box3d,"+srs+"),900913)"

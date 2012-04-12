@@ -13,7 +13,7 @@ class JoinDB (OSMDB):
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
         print "result for bbox("+self.googbox+")"
-        print "select osm_id,name from planet_line where \"way\" && "+self.googbox+""
+        print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
         self.curs.execute("select name,string_agg(text(osm_id),',') from planet_line where highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
         result += self.curs.fetchall()
@@ -26,6 +26,22 @@ class JoinDB (OSMDB):
         print "result={r}".format(r=result)
         return highways
 
+    def get_joined_ways(self,segment_ids):
+        result=[]
+        
+        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in (36717484,36717485,5627159);")
+        result += self.curs.fetchall()
+        print "jw-result = "+str(result)
+        return result[0]
+        
+
+"""
+'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
+
+create table planet_line_join (join_id integer , name text, highway text, way geometry);
+
+"""
+
 def main(options):
     bbox = options['bbox']
     DSN = options['dsn']
@@ -36,8 +52,13 @@ def main(options):
     bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
     osmdb.set_bbox(bbox)
     highways=osmdb.get_highways_segments()
-    print "highways={r}".format(r=highways)
-
+    
+    for hw in highways:
+        hwname = hw[0]
+        hwsegments = hw[1]
+        hwjoined = osmdb.get_joined_ways(hwsegments)
+        print hwjoined
+        break
 
 if __name__ == '__main__':
     parser = OptionParser()

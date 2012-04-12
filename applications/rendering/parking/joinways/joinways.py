@@ -22,8 +22,8 @@ class JoinDB (OSMDB):
             ids=osmids.split(',')
             highways.append([hw,ids])
         
-        print "resultlen={l}".format(l=len(result))
-        print "result={r}".format(r=result)
+#        print "resultlen={l}".format(l=len(result))
+#        print "result={r}".format(r=result)
         return highways
 
     def get_joined_ways(self,segment_ids):

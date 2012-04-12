@@ -2,6 +2,7 @@
 # by kay
 
 import sys
+import string
 #import psycopg2
 from osmdb import OSMDB
 from optparse import OptionParser

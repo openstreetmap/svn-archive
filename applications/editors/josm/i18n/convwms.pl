@@ -20,7 +20,9 @@ print "class trans_wms { void tr(String s){} void f() {";
 my @lines;
 if($ARGV[0] && $ARGV[0] =~ /^http:\/\//)
 {
-  @lines = split("\r?\n", get($ARGV[0]));
+  my $content = get($ARGV[0]);
+  die "Couldn't get $ARGV[0]" unless defined $content;
+  @lines = split("\r?\n", $content);
 }
 else
 {

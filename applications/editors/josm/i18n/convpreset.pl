@@ -141,18 +141,19 @@ while(my $line = <>)
     if($line =~ /display_value=(".*?")/)
     {
       my $val = fix($1);
-      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);") . "\n";
+      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     else
     {
       my $val = fix($value);
-      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);") . "\n";
+      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     if($line =~ /short_description=(".*?")/)
     {
       my $val = fix($1);
-      print "/* item $item $combo_type $combo_n entry $value short description */ tr($val);\n";
+      print "/* item $item $combo_type $combo_n entry $value short description */ tr($val);";
     }
+    print "\n";
   }
   elsif($line =~ /<\/group>/)
   {

@@ -42,14 +42,15 @@ class OSMDB:
         self.googbox = None
         
     def set_bbox(self,bbox,srs = '4326'):
-         #options.get('srs','4326')
+        #options.get('srs','4326')
+        print "SRS="+str(srs)
         if srs=='4326':
             self.init_bbox_srs(bbox, '4326')
         elif srs=='3857':
             self.init_bbox_srs(bbox, '3857')
         elif srs=='900913':
             self.init_bbox_srs(bbox, '3857')
-        raise ValueError("Unknown srs")
+        raise ValueError("Unknown srs "+str(srs))
     
     def init_bbox_srs(self,bbox,srs):
         self.googbox = "transform(SetSRID('BOX3D("+bbox+")'::box3d,"+srs+"),900913)"

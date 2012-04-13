@@ -39,6 +39,9 @@ class JoinDB (OSMDB):
         highway['coords']=res[3]
         return highway
 
+    def collate_highways(self,highway):
+        return []
+
     def get_joined_ways(self,segment_ids):
         result=[]
         self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+");")
@@ -105,7 +108,9 @@ def main(options):
     bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
     osmdb.set_bbox(bbox)
     highway=osmdb.get_next_pending_highway()
-    print highway
+    print "Found pending highway '{name}'".format(name=highway['name'])
+    joinset=osmdb.collate_highways(highway)
+    print "  Found connected highways '{hws}'".format(hws=joinset)
 
 #        break
 

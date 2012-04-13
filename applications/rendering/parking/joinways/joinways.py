@@ -23,6 +23,22 @@ class JoinDB (OSMDB):
             ids=osmids.split(',')
             highways.append([hw,ids])
 
+    def find_same_named_highways(self,highway,bbox):
+        print "goog="+str(self.googbox)
+        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
+        self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name']))
+        rs = self.curs.fetchall()
+        highways = {}
+        for res in rs:
+            highway = {}
+            highway['osm_id']=res[0]
+            highway['highway']=res[1]
+            highway['name']=res[2]
+            highway['geom']=res[3]
+            highways[highway['osm_id']]=highway
+        return highways
+
+
     def get_next_pending_highway(self):
         result=[]
         # FIXME: bbox is to be removed later
@@ -36,15 +52,30 @@ class JoinDB (OSMDB):
         highway['osm_id']=res[0]
         highway['highway']=res[1]
         highway['name']=res[2]
-        highway['coords']=res[3]
+        highway['geom']=res[3]
         return highway
 
     def collate_highways(self,highway):
+        collated_highways={}
+        collated_highways[highway['osm_id']]=highway
+        print "collated_highways_0={ch}".format(ch=collated_highways)
+        current_bbox=highway['geom']
+        print "current_bbox={bb}".format(bb=current_bbox)
+        current_bbox=self.get_expanded_bbox(current_bbox,100.0)
+        print "current_bbox={bb}".format(bb=current_bbox)
+        collated_highways.update(self.find_same_named_highways(highway,current_bbox))
+        print "collated_highways_1={ch}".format(ch=collated_highways)
         return []
+
+    def get_expanded_bbox(self,geom,meter):
+        result=[]
+        self.curs.execute("select st_expand(cast(st_extent('{geom}') as box2d),{meter})".format(geom=geom,meter=meter))
+        result += self.curs.fetchall()
+        return result[0][0]
 
     def get_joined_ways(self,segment_ids):
         result=[]
-        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+");")
+        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+")")
         result += self.curs.fetchall()
         print "jw-result = "+str(result)
         return result[0][0]

@@ -76,8 +76,11 @@ def main(options):
         hwsegments = hw[1]
         hwjoinedway = osmdb.get_joined_ways(hwsegments)
         print "* Highway "+hwname+": "+hwjoinedway
-        osmdb.what_is_it(hwjoinedway)
-        osmdb.insert_joined_highway(str(0),hwname,"residential",hwjoinedway)
+        itisa = osmdb.what_is_it(hwjoinedway)
+        if itisa=='LINESTRING':
+            osmdb.insert_joined_highway(str(0),hwname,"residential",hwjoinedway)
+        else:
+            print "not handled yet: "+hwname
 #        break
 
 if __name__ == '__main__':

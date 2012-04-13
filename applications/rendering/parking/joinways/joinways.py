@@ -26,6 +26,7 @@ class JoinDB (OSMDB):
     def get_next_pending_highway(self):
         result=[]
         # FIXME: bbox is to be removed later
+        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom "+self.FlW+" jrhandled is False and highway is not Null and \"way\" && "+self.googbox+" and name is not Null limit 1"
         self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom "+self.FlW+" jrhandled is False and highway is not Null and \"way\" && "+self.googbox+" and name is not Null limit 1")
         result += self.curs.fetchall()
         if len(result)==0:
@@ -35,9 +36,8 @@ class JoinDB (OSMDB):
         highway['osm_id']=res[0]
         highway['highway']=res[1]
         highway['name']=res[2]
-        highway['coords']=WKT_to_line(res[3])
+        highway['coords']=res[3]
         return highway
-    
 
     def get_joined_ways(self,segment_ids):
         result=[]

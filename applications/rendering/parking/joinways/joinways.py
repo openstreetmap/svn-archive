@@ -55,24 +55,30 @@ class JoinDB (OSMDB):
         return highway
 
     def collate_highways(self,highway):
+        old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway
-        print "collated_highways_0={ch}".format(ch=collated_highways)
+        print "  collated_highways_0={ch}".format(ch=collated_highways)
 
-        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
-        current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
+#        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
+#        current_geom=self.get_joined_ways(all_osm_ids_of_collated_highways)
+#        current_bbox=self.get_expanded_bbox(current_geom,10.0)
+        current_bbox=self.get_expanded_bbox(highway['geom'],10.0)
+        print "    current_bbox={bb}".format(bb=current_bbox)
 
-        print "current_bbox={bb}".format(bb=current_bbox)
-        current_bbox=self.get_expanded_bbox(current_bbox,100.0)
-        print "current_bbox={bb}".format(bb=current_bbox)
-        collated_highways.update(self.find_same_named_highways(highway,current_bbox))
-        print "collated_highways_1={ch}".format(ch=collated_highways)
+        i=1
+        while current_bbox != old_bbox:
+            old_bbox = current_bbox
+#            print "current_bbox={bb}".format(bb=current_bbox)
+            collated_highways.update(self.find_same_named_highways(highway,current_bbox))
+            print "  collated_highways_{i}={ch}".format(i=i,ch=collated_highways)
+ 
+            all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
+            current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
+            print "    current_bbox={bb}".format(bb=current_bbox)
+            current_bbox=self.get_expanded_bbox(current_bbox,10.0)
+            i+=1
 
-        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
-        current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
-        print "current_bbox={bb}".format(bb=current_bbox)
-        current_bbox=self.get_expanded_bbox(current_bbox,100.0)
-        print "current_bbox={bb}".format(bb=current_bbox)
         return []
 
     def get_expanded_bbox(self,geom,meter):

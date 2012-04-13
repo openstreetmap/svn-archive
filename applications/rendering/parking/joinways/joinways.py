@@ -24,7 +24,6 @@ class JoinDB (OSMDB):
             highways.append([hw,ids])
 
     def find_same_named_highways(self,highway,bbox):
-        print "goog="+str(self.googbox)
         print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
         self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name']))
         rs = self.curs.fetchall()
@@ -59,12 +58,21 @@ class JoinDB (OSMDB):
         collated_highways={}
         collated_highways[highway['osm_id']]=highway
         print "collated_highways_0={ch}".format(ch=collated_highways)
-        current_bbox=highway['geom']
+
+        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
+        current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
+
         print "current_bbox={bb}".format(bb=current_bbox)
         current_bbox=self.get_expanded_bbox(current_bbox,100.0)
         print "current_bbox={bb}".format(bb=current_bbox)
         collated_highways.update(self.find_same_named_highways(highway,current_bbox))
         print "collated_highways_1={ch}".format(ch=collated_highways)
+
+        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
+        current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
+        print "current_bbox={bb}".format(bb=current_bbox)
+        current_bbox=self.get_expanded_bbox(current_bbox,100.0)
+        print "current_bbox={bb}".format(bb=current_bbox)
         return []
 
     def get_expanded_bbox(self,geom,meter):

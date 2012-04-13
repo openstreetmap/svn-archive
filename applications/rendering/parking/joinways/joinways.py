@@ -13,19 +13,31 @@ class JoinDB (OSMDB):
         #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
         result=[]
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-        print "result for bbox("+self.googbox+")"
-        print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
+        #print "result for bbox("+self.googbox+")"
+        #print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
         #self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
-        self.curs.execute("select name,string_agg(text(osm_id),',') from planet_line where highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
+        self.curs.execute("select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
         result += self.curs.fetchall()
         highways=[]
         for hw,osmids in result:
             ids=osmids.split(',')
             highways.append([hw,ids])
-        
-#        print "resultlen={l}".format(l=len(result))
-#        print "result={r}".format(r=result)
-        return highways
+
+    def get_next_pending_highway(self):
+        result=[]
+        # FIXME: bbox is to be removed later
+        self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom "+self.FlW+" jrhandled is False and highway is not Null and \"way\" && "+self.googbox+" and name is not Null limit 1")
+        result += self.curs.fetchall()
+        if len(result)==0:
+            raise BaseException("No pending highway found (this should not be an assert)")
+        res=result[0]
+        highway = {}
+        highway['osm_id']=res[0]
+        highway['highway']=res[1]
+        highway['name']=res[2]
+        highway['coords']=WKT_to_line(res[3])
+        return highway
+    
 
     def get_joined_ways(self,segment_ids):
         result=[]
@@ -60,7 +72,7 @@ select AddGeometryColumn('planet_line_join', 'way', 4326, 'LINESTRING', 2 );
 
 """
 
-def main(options):
+def main2(options):
     bbox = options['bbox']
     DSN = options['dsn']
     print bbox
@@ -81,6 +93,20 @@ def main(options):
             osmdb.insert_joined_highway(str(0),hwname,"residential",hwjoinedway)
         else:
             print "not handled yet: "+hwname
+#        break
+
+def main(options):
+    bbox = options['bbox']
+    DSN = options['dsn']
+    print bbox
+    osmdb = JoinDB(DSN)
+    #highways = getHighwaysInBbox(DSN,bbox)
+    bxarray=bbox.split(",")
+    bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
+    osmdb.set_bbox(bbox)
+    highway=osmdb.get_next_pending_highway()
+    print highway
+
 #        break
 
 if __name__ == '__main__':

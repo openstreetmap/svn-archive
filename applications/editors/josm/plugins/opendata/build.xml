@@ -39,7 +39,6 @@
     <property name="ant.build.javac.target" value="1.6"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <!--<property name="xerces" location="lib/xerces-2_11_0"/>-->
     <!--
     **********************************************************
     ** init - initializes the build
@@ -313,7 +312,7 @@
     
     <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
           <classpath>
-            <fileset dir="C:\Windows\SysWOW64\jaxb-ri-20120218\lib" includes="*.jar" />
+            <fileset dir="lib/jaxb-ri-20120218" includes="*.jar" />
           </classpath>
     </taskdef>
     <target name="xjc_neptune">

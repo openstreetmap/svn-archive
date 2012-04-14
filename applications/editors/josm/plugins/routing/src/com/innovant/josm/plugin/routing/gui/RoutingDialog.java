@@ -51,8 +51,8 @@ import com.innovant.josm.plugin.routing.RoutingModel;
  */
 public class RoutingDialog extends ToggleDialog {
 
-	private final DefaultListModel<String> model;
-	private JList<String> jList = null;
+	private final DefaultListModel model;
+	private JList jList = null;
 	private JScrollPane jScrollPane = null;
 
 	/**
@@ -63,7 +63,7 @@ public class RoutingDialog extends ToggleDialog {
 	public RoutingDialog() {
 		super(tr("Routing"), "routing", tr("Open a list of routing nodes"),
 				Shortcut.registerShortcut("subwindow:routing", tr("Toggle: {0}", tr("Routing")), KeyEvent.VK_R, Shortcut.ALT_CTRL_SHIFT), 150);
-		model = new DefaultListModel<String>();
+		model = new DefaultListModel();
 		createLayout(getJScrollPane(), false, null);
 	}
 
@@ -87,9 +87,9 @@ public class RoutingDialog extends ToggleDialog {
 	 *
 	 * @return javax.swing.JList
 	 */
-	private JList<String> getJList() {
+	private JList getJList() {
 		if (jList == null) {
-			jList = new JList<String>();
+			jList = new JList();
 			jList.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			jList.setModel(model);
 		}

@@ -109,7 +109,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
 			public void actionPerformed(ActionEvent e) {
 				JPanel p = new JPanel(new GridBagLayout());
 				p.add(new JLabel(tr("Weight")), GBC.std().insets(0, 0, 5, 0));
-				JComboBox<String> key = new JComboBox<String>();
+				JComboBox key = new JComboBox();
 				for (OsmWayTypes pk : OsmWayTypes.values())
 					key.addItem(pk.getTag());
 				JTextField value = new JTextField(10);

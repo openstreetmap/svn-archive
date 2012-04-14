@@ -28,52 +28,46 @@
 **
 -->
 <project name="videomapping" default="dist" basedir=".">
+
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="videomapping"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
-    <!--
-      ************************************************
-      ** should not be necessary to change the following properties
-     -->
-    <property name="josm" location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.src.dir" value="src"/>
-    <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir" value="../../dist"/>
-    <property name="ant.build.javac.target" value="1.6"/>
-    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="vlcj" value="lib/vlcj-1.1.5.1.jar"/>
-    <property name="jna" value="lib/jna.jar"/>
-    <property name="platform" value="lib/platform.jar"/>
-    <property name="log4j" value="lib/log4j.jar"/>
+
     <!--
     **********************************************************
-    ** init - initializes the build
+    ** include targets that all plugins have in common
     **********************************************************
     -->
-    <target name="init">
-        <mkdir dir="${plugin.build.dir}"/>
-    </target>
+    <import file="../build-common.xml"/>
+
+    <property name="vlcj" value="${plugin.lib.dir}/vlcj-1.1.5.1.jar"/>
+    <property name="jna" value="${plugin.lib.dir}/jna.jar"/>
+    <property name="platform" value="${plugin.lib.dir}/platform.jar"/>
+    <property name="log4j" value="${plugin.lib.dir}/log4j.jar"/>
+    <!-- classpath -->
+    <path id="classpath">
+        <pathelement path="${josm}"/>
+        <pathelement location="${vlcj}"/>
+        <!--Add extra libraries -->
+        <pathelement location="${jna}"/>
+        <pathelement location="${platform}"/>
+        <pathelement location="${log4j}"/>
+    </path>
     <!--
     **********************************************************
     ** compile - complies the source tree
+    ** Overrides the target from build-common.xml
     **********************************************************
     -->
     <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+        <echo message="compiling sources for ${plugin.jar} ..."/>
+        <javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <classpath>
-                <pathelement location="${vlcj}"/>
-                <!--Add extra libraries -->
-                <pathelement location="${jna}"/>
-                <pathelement location="${platform}"/>
-                <pathelement location="${log4j}"/>
-            </classpath>
         </javac>
     </target>
+
     <!--
     **********************************************************
     ** dist - creates the plugin jar
@@ -97,14 +91,14 @@
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <!--
+        <!--
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins
         ** manifest file. Property values will also show up in the list available
         ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
         **
         ************************************************
-    -->
+        -->
             <manifest>
                 <attribute name="Author" value="Matthias Meißer"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.videomapping.VideoPlugin"/>
@@ -116,143 +110,10 @@
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
             <!--added to bundle libs-->
-            <zipfileset src="lib/jna.jar"/>
-            <zipfileset src="lib/log4j.jar"/>
-            <zipfileset src="lib/platform.jar"/>
-            <zipfileset src="lib/vlcj-1.1.5.1.jar"/>
+            <zipfileset src="${jna}"/>
+            <zipfileset src="${log4j}"/>
+            <zipfileset src="${platform}"/>
+            <zipfileset src="${vlcj}"/>
         </jar>
-    </target>
-    <!--
-    **********************************************************
-    ** revision - extracts the current revision number for the
-    **    file build.number and stores it in the XML property
-    **    version.*
-    **********************************************************
-    -->
-    <target name="revision">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="."/>
-        </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
-    </target>
-    <!--
-    **********************************************************
-    ** clean - clean up the build environment
-    **********************************************************
-    -->
-    <target name="clean">
-        <delete dir="${plugin.build.dir}"/>
-        <delete file="${plugin.jar}"/>
-    </target>
-    <!--
-    **********************************************************
-    ** install - install the plugin in your local JOSM installation
-    **********************************************************
-    -->
-    <target name="install" depends="dist">
-        <property environment="env"/>
-        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
-            <and>
-                <os family="windows"/>
-            </and>
-        </condition>
-        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
-    </target>
-    <!--
-    ************************** Publishing the plugin *********************************** 
-    -->
-    <!--
-        ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
-        ** property ${coreversion.info.entry.revision}
-        **
-        -->
-    <target name="core-info">
-        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="../../core"/>
-        </exec>
-        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
-        <echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
-        <echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
-        <delete file="core.info.xml"/>
-    </target>
-    <!--
-        ** commits the source tree for this plugin
-        -->
-    <target name="commit-current">
-        <echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="commit"/>
-            <arg value="-m '${commit.message}'"/>
-            <arg value="."/>
-        </exec>
-    </target>
-    <!--
-        ** updates (svn up) the source tree for this plugin
-        -->
-    <target name="update-current">
-        <echo>Updating plugin source ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="up"/>
-            <arg value="."/>
-        </exec>
-        <echo>Updating ${plugin.jar} ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="up"/>
-            <arg value="../dist/${plugin.jar}"/>
-        </exec>
-    </target>
-    <!--
-        ** commits the plugin.jar 
-        -->
-    <target name="commit-dist">
-        <echo>
-    ***** Properties of published ${plugin.jar} *****
-    Commit message    : '${commit.message}'                 
-    Plugin-Mainversion: ${plugin.main.version}
-    JOSM build version: ${coreversion.info.entry.revision}
-    Plugin-Version    : ${version.entry.commit.revision}
-    ***** / Properties of published ${plugin.jar} *****                 
-                        
-    Now commiting ${plugin.jar} ...
-    </echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="-m '${commit.message}'"/>
-            <arg value="commit"/>
-            <arg value="${plugin.jar}"/>
-        </exec>
-    </target>
-    <!-- ** make sure svn is present as a command line tool ** -->
-    <target name="ensure-svn-present">
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
-            <env key="LANG" value="C"/>
-            <arg value="--version"/>
-        </exec>
-        <fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
-            <!-- return code not set at all? Most likely svn isn't installed -->
-            <condition>
-                <not>
-                    <isset property="svn.exit.code"/>
-                </not>
-            </condition>
-        </fail>
-        <fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
-            <!-- error code from SVN? Most likely svn is not what we are looking on this system -->
-            <condition>
-                <isfailure code="${svn.exit.code}"/>
-            </condition>
-        </fail>
-    </target>
-    <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
 </project>

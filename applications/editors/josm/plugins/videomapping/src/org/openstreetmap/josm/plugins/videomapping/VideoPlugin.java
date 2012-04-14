@@ -49,7 +49,7 @@ import com.sun.jna.LastErrorException;
 import com.sun.jna.NativeLibrary;
 
   /**
- * @author Matthias Meiﬂer (digi_c at arcor dot de)
+ * @author Matthias Mei√üer (digi_c at arcor dot de)
  * @ released under GPL
  * This Plugin allows you to link multiple videos against a GPS track and playback both synchronously 
  */
@@ -148,19 +148,19 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         };
         
         //now the options menu
-        VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), null, tr("follows the video icon automaticly"),null, false,"vm_keepcentered",false) {            
+        VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), (String)null, tr("follows the video icon automaticly"),null, false,"vm_keepcentered",false) {            
             public void actionPerformed(ActionEvent e) {
             	videoPositionLayer.setAutoCenter(VCenterIcon.isSelected());
             }
         });
         
-        VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), null, tr("Show subtitles in video"),null, false,"vm_subtitles",false) {
+        VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), (String)null, tr("Show subtitles in video"),null, false,"vm_subtitles",false) {
             public void actionPerformed(ActionEvent e) {
             	gpsVideoPlayer.setSubtitles(VSubTitles.isSelected());                            
             }
         });
         
-        VJumpLength = new JMenuItem(new JosmAction(tr("Jump length"), null, tr("Set the length of a jump"),null, false,"vm_jumplen",false) {            
+        VJumpLength = new JMenuItem(new JosmAction(tr("Jump length"), (String)null, tr("Set the length of a jump"),null, false,"vm_jumplen",false) {            
             public void actionPerformed(ActionEvent e) {
             	Object[] possibilities = {"200", "500", "1000", "2000", "10000"};
                 String s = (String)JOptionPane.showInputDialog(Main.parent,tr("Jump in video for x ms"),tr("Jump length"),JOptionPane.QUESTION_MESSAGE,null,possibilities,jumpLength);
@@ -169,7 +169,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
             }
         });
         
-        VLoopLength = new JMenuItem(new JosmAction(tr("Loop length"), null, tr("Set the length around a looppoint"),null, false,"vm_looplen",false) {            
+        VLoopLength = new JMenuItem(new JosmAction(tr("Loop length"), (String)null, tr("Set the length around a looppoint"),null, false,"vm_looplen",false) {            
             public void actionPerformed(ActionEvent e) {
             	Object[] possibilities = {"500", "1000", "3000", "5000", "10000"};
                 String s = (String)JOptionPane.showInputDialog(Main.parent,tr("Jump in video for x ms"),tr("Loop length"),JOptionPane.QUESTION_MESSAGE,null,possibilities,loopLength);
@@ -179,17 +179,17 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         });
         //TODO read deinterlacers list out of videoengine
         VDeinterlacer= new JMenu("Deinterlacer");
-        VIntNone= new JRadioButtonMenuItem(new JosmAction(tr("none"), null, tr("no deinterlacing"),null, false,"vm_deinterlacer",false) {            
+        VIntNone= new JRadioButtonMenuItem(new JosmAction(tr("none"), (String)null, tr("no deinterlacing"),null, false,"vm_deinterlacer",false) {            
             public void actionPerformed(ActionEvent e) {
             	gpsVideoPlayer.setDeinterlacer("none");
             }
         });
-        VIntBob= new JRadioButtonMenuItem(new JosmAction("bob", null, tr("deinterlacing using line doubling"),null, false,"vm_bobdeinterlace",false) {
+        VIntBob= new JRadioButtonMenuItem(new JosmAction("bob", (String)null, tr("deinterlacing using line doubling"),null, false,"vm_bobdeinterlace",false) {
             public void actionPerformed(ActionEvent e) {
             	gpsVideoPlayer.setDeinterlacer("bob");
             }
         });
-        VIntLinear= new JRadioButtonMenuItem(new JosmAction("linear", null, tr("deinterlacing using linear interpolation"),null, false,"vm_lineardeinterlace",false) {
+        VIntLinear= new JRadioButtonMenuItem(new JosmAction("linear", (String)null, tr("deinterlacing using linear interpolation"),null, false,"vm_lineardeinterlace",false) {
             public void actionPerformed(ActionEvent e) {
             	gpsVideoPlayer.setDeinterlacer("linear");
             }

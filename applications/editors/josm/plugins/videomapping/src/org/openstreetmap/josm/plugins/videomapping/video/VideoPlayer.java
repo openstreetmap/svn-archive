@@ -335,7 +335,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	
 	private void  notifyObservers() {
 		for (VideoPlayerObserver observer : observers) {
-			observer.update_plays();//TODO hier müssten gleich die Zeiten übergeben werden
+			observer.update_plays();//TODO hier mÃ¼ssten gleich die Zeiten Ã¼bergeben werden
 		}
 	}
 

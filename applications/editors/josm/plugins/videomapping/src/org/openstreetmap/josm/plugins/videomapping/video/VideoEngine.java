@@ -170,7 +170,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		notifyObservers(VideoObserversEvents.jumping);
 	}
 			
-	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
+	//TODO muss evtl. auf RÃ¼ckgabe fÃ¼r alle Videos erweitert werden
 	public long getVideoTime()
 	{
 		return videos.get(0).player.getTime();
@@ -193,7 +193,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		notifyObservers(VideoObserversEvents.jumping);
 	}
 	
-	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
+	//TODO muss evtl. auf RÃ¼ckgabe fÃ¼r alle Videos erweitert werden
 	public int getPosition()
 	{
 		return (int) (videos.get(0).player.getPosition()*100);
@@ -211,7 +211,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		notifyObservers(VideoObserversEvents.speeding);
 	}
 	
-	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
+	//TODO muss evtl. auf RÃ¼ckgabe fÃ¼r alle Videos erweitert werden
 	public int getSpeed()
 	{
 		return (int) (videos.get(0).player.getRate()*100);

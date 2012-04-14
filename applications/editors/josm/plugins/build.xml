@@ -14,7 +14,6 @@
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>	
-        <ant antfile="build.xml" target="dist" dir="conflation"/> <!-- Depends on utilsplugin2 -->
         <ant antfile="build.xml" target="dist" dir="canvec_helper"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="CommandLine"/>
@@ -42,6 +41,7 @@
         <ant antfile="build.xml" target="dist" dir="importvec"/>
         <ant antfile="build.xml" target="dist" dir="infomode"/>
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
+        <ant antfile="build.xml" target="dist" dir="jts"/>
         <ant antfile="build.xml" target="dist" dir="junctionchecking"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="licensechange"/>
@@ -93,6 +93,7 @@
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="waypoint_search"/>
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
+        <ant antfile="build.xml" target="dist" dir="wikipedia"/>
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
     </target>
     <target name="build_defect" depends="compile">
@@ -107,7 +108,6 @@
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="clean" dir="CommandLine"/>
-        <ant antfile="build.xml" target="clean" dir="conflation"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
         <ant antfile="build.xml" target="clean" dir="dataimport"/>
@@ -132,6 +132,7 @@
         <ant antfile="build.xml" target="clean" dir="importvec"/>
         <ant antfile="build.xml" target="clean" dir="infomode"/>
         <ant antfile="build.xml" target="clean" dir="irsrectify"/>
+        <ant antfile="build.xml" target="clean" dir="jts"/>
         <ant antfile="build.xml" target="clean" dir="junctionchecking"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
         <ant antfile="build.xml" target="clean" dir="licensechange"/>
@@ -185,6 +186,7 @@
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
         <ant antfile="build.xml" target="clean" dir="waypoint_search"/>
         <ant antfile="build.xml" target="clean" dir="wayselector"/>
+        <ant antfile="build.xml" target="clean" dir="wikipedia"/>
         <ant antfile="build.xml" target="clean" dir="wms-turbo-challenge2"/>
     </target>
     <target name="clean_install"/>

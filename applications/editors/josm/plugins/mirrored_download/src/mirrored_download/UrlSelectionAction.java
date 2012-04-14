@@ -15,7 +15,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class UrlSelectionAction extends JosmAction {
 
     public UrlSelectionAction() {
-        super(tr("Select OSM mirror URL"), null, tr("Select OSM mirror URL to download from."),
+        super(tr("Select OSM mirror URL"), (String)null, tr("Select OSM mirror URL to download from."),
                 null, true, "mirroreddownload/urlselection", true);
         putValue("help", ht("/Action/SelectUrl"));
     }

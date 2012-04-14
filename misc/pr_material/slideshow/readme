@@ -1,0 +1,13 @@
+This is a slodeshow with iamges related to OpenStreetMap.
+The images are mostly "Images of the Week" from the OpenStreetMap Wiki, others were given to and chosen by Frederik Ramm as he asked for some to show as a slideshow at the Intergeo.
+( http://lists.openstreetmap.org/pipermail/talk-de/2011-September/089126.html )
+Some images were added later by user malenki.
+
+How this works:
+"list" contains the list of files which will be shown plus a description for each of them.
+
+Based on this list make.pl creates in the directory "out" images with all the same size, containing the source image with a black frame and the description as caption beside them. 
+
+In its header make.pl has settings for the size and placement of the captions and the output size of the images.
+
+After generating the images, display the files in the directory "out" with an imageviewer like geeqie (successor of gqview) or a similar program capable of doing a slideshow.

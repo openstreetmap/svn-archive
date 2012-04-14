@@ -90,7 +90,7 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
         HtmlPanel hint = new HtmlPanel();
         hint.setText(
                 "<html>"
-                + tr("Please click on <strong>Download list</strong> to download and display a list of available plugins.")
+                + tr("Please click on <strong>Download list</strong> to download and display a list of available modules.")
                 + "</html>"
         );
         add(hint, gbc);

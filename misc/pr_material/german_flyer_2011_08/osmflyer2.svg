@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -14,7 +13,7 @@
    height="442.91336"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docname="osmflyer2.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
@@ -59,9 +58,9 @@
      objecttolerance="10"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="15.937575"
-     inkscape:cy="158.60976"
+     inkscape:zoom="1.0913783"
+     inkscape:cx="559.84253"
+     inkscape:cy="221.45668"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="316mm"
@@ -70,12 +69,12 @@
      showguides="false"
      inkscape:guide-bbox="true"
      inkscape:guide-points="true"
-     inkscape:window-width="1893"
-     inkscape:window-height="1179"
-     inkscape:window-x="27"
-     inkscape:window-y="0"
+     inkscape:window-width="1600"
+     inkscape:window-height="1125"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
      showgrid="false"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="0">
     <sodipodi:guide
        orientation="vertical"
        position="0"
@@ -1211,29 +1210,27 @@
          sodipodi:type="arc" />
     </g>
     <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/berlin-background-blaugrau.png"
+       sodipodi:absref="./berlin-background-blaugrau.png"
        xlink:href="berlin-background-blaugrau.png"
-       y="17.716511"
-       x="-183.63786"
-       id="image3047"
+       width="1409.6063"
        height="407.48032"
-       width="1409.6063" />
+       id="image3047"
+       x="-183.63786"
+       y="17.716511" />
     <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/./abzeichnen.png"
-       xlink:href="./abzeichnen.png"
-       width="233.923"
-       height="343.91879"
-       id="image3010"
+       y="49.628628"
        x="836.18811"
-       y="49.628628" />
+       id="image3010"
+       height="343.91879"
+       width="233.923"
+       xlink:href="./abzeichnen.png" />
     <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/./muenster.png"
-       xlink:href="./muenster.png"
-       width="233.85826"
-       height="343.70078"
-       id="image2970"
+       y="49.606285"
        x="311.81104"
-       y="49.606285" />
+       id="image2970"
+       height="343.70078"
+       width="233.85826"
+       xlink:href="./muenster.png" />
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FrobisherCondExtrabold"
@@ -1277,16 +1274,20 @@
            x="35.687172"
            y="88.272079"
            style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
-         id="flowPara3584"
-         style="font-size:10px">Im Internet gibt es kostenlose Stadtpläne und Karten zuhauf. Aber die Angebote sind meist nur zur privaten Nutzung gedacht und dürfen nicht weiterveröffentlicht werden; in einem Flyer wie diesem hier dürfte man sie zum Beispiel nicht abdrucken. Außerdem sind die kostenlosen Karten meist weder aktuell noch vollständig. Fehler werden nur langsam verbessert.</flowPara><flowPara
-         id="flowPara3586"
-         style="font-size:10px"> </flowPara><flowPara
-         id="flowPara3588"
-         style="font-size:10px">Viel wichtiger ist aber, dass man dort nur fertige Kartenbilder bekommt – nicht jedoch die Daten, aus denen sie berechnet wurden. Diese Daten braucht man, wenn man eigene Karten herstellen oder die Karte auf beliebigen Geräten verwenden will,  beispielsweise zur Routenberechnung.</flowPara><flowPara
-         id="flowPara3590"
-         style="font-size:10px" /><flowPara
-         id="flowPara3592"
-         style="font-size:10px">Deshalb sammeln bei OpenStreetMap freiwillige Mitarbeiter die Rohdaten selbst – weltweit, mal im Team und mal auf eigene Faust. Mit eigenen Daten und eigener Software lösen wir uns aus der Abhängigkeit von kommerziellen Anbietern. Wie bei der Wikipedia kann jeder mitmachen und etwas beisteuern. </flowPara></flowRoot>    <flowRoot
+         id="flowPara3407">Im Internet gibt es kostenlose Stadtpläne und Karten zuhauf. Aber die Angebote sind meist nur zur privaten Nutzung gedacht und dürfen nicht weiterveröffentlicht werden; in einem Flyer wie diesem hier dürfte man sie zum Beispiel nicht abdrucken. Außerdem sind die kos-tenlosen Karten meist weder aktuell noch vollständig. Fehler werden nur langsam verbessert.</flowPara><flowPara
+         id="flowPara4230"> </flowPara><flowPara
+         id="flowPara2699">            Viel wichtiger ist aber, dass man dort nur fertige</flowPara><flowPara
+         id="flowPara2705">                Kartenbilder bekommt – nicht jedoch die Da-</flowPara><flowPara
+         id="flowPara2707">                       ten, aus denen sie berechnet wurden. </flowPara><flowPara
+         id="flowPara5669">                        Diese Daten braucht man, wenn man</flowPara><flowPara
+         id="flowPara5663">                        eigene Karten herstellen oder die Karte </flowPara><flowPara
+         id="flowPara4232">                        auf beliebigen Geräten verwenden will, </flowPara><flowPara
+         id="flowPara5785">                        beispielsweise zur Routenberechnung.</flowPara><flowPara
+         id="flowPara5787" /><flowPara
+         id="flowPara4218">                        Deshalb sammeln bei OpenStreetMap</flowPara><flowPara
+         id="flowPara5749">                       freiwillige Mitarbeiter die Rohdaten</flowPara><flowPara
+         id="flowPara5751">                      selbst – weltweit, mal im Team und mal</flowPara><flowPara
+         id="flowPara5789">                     auf eigene Faust. Mit eigenen Daten und eigener Software lösen wir uns aus der Abhängigkeit von kommerziellen Anbietern. Wie bei der Wikipedia kann jeder mitmachen und etwas beisteuern.  </flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot3714"
        style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
@@ -1296,29 +1297,26 @@
        inkscape:export-ydpi="400.01047"><flowRegion
          id="flowRegion3716"><rect
            id="rect3718"
-           width="247.45358"
-           height="327.535"
+           width="233.45358"
+           height="425.53497"
            x="35.687172"
            y="88.272079"
            style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
-         id="flowPara3724"
-         style="font-size:10px">Die Kartendaten für OpenStreetMap werden auf ganz unterschiedliche Weise erfasst. GPS-Gerät und hand- schriftliche Notizen sind klassische Arbeitsmittel; der <flowSpan
-   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold;font-size:10px"
+         id="flowPara3724">Die Kartendaten für OpenStreetMap werden auf ganz unterschiedliche Weise erfasst. GPS-Gerät und hand- schriftliche Notizen sind klassische Arbeitsmittel; der <flowSpan
+   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold"
    id="flowSpan3427">GPS-Track</flowSpan> zeichnet dabei genau auf, welchen Weg der Datenerfasser (im Projekt: „Mapper“) zurückgelegt hat. Mittlerweile stehen dem Projekt vielerorts auch gute <flowSpan
-   style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
    id="flowSpan3052">Luftbilder</flowSpan> zur Verfügung.</flowPara><flowPara
-         id="flowPara3038"
-         style="font-size:10px" /><flowPara
-         id="flowPara3036"
-         style="font-size:10px">Ein speziell für OpenStreetMap entwickelter <flowSpan
-   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold;font-size:10px"
-   id="flowSpan3098">Editor</flowSpan> stellt Luftbilder und GPS-Tracks dar und zeigt auch bereits bei OSM erfasste Daten. Straßenverläufe, Gebäudeumrisse, Wälder oder Seen können vom Luftbild abgezeichnet werden, aber Informationen wie Haus- nummern, Straßennamen oder „Points of Interest“ fehlen im Luftbild. Diese Daten können nur mit genauer Ortskenntnis hinzugefügt werden – oder eben, indem der Mapper vor Ort recherchiert.</flowPara><flowPara
-         id="flowPara3040"
-         style="font-size:10px" /><flowPara
-         id="flowPara3046"
-         style="font-size:10px">Die Ergebnisse werden anschließend an die zentrale Projektdatenbank übertragen. Aus diesen Daten wird dann automatisch die <flowSpan
-   style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952000000292%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
-   id="flowSpan2929">fertige Karte</flowSpan> berechnet, und schon kurze Zeit später sind die neuen Änderungen für jeden sichtbar.</flowPara></flowRoot>    <rect
+         id="flowPara3038" /><flowPara
+         id="flowPara3036">Ein speziell für OpenStreetMap entwickelter <flowSpan
+   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold"
+   id="flowSpan3098">Editor</flowSpan> stellt Luftbilder und GPS-Tracks dar und zeigt auch bereits bei OSM erfasste Daten. Straßenverläufe, Ge- bäudeumrisse, Wälder oder Seen können vom Luftbild abgezeichnet werden, aber Informationen wie Haus- nummern, Straßennamen oder „Points of Interest“ fehlen im Luftbild. Diese Daten können nur mit genauer Ortskenntnis hinzugefügt werden – oder eben, indem der Mapper vor Ort recherchiert.</flowPara><flowPara
+         id="flowPara3040" /><flowPara
+         id="flowPara3046">Die Ergebnisse werden anschließend an die zentrale Projektdatenbank übertragen. Aus diesen Daten wird dann automatisch die <flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+   id="flowSpan2929">f</flowSpan><flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+   id="flowSpan3056">ertige Karte</flowSpan> berechnet, und schon kurze Zeit später sind die neuen Änderungen für jeden sichtbar.</flowPara></flowRoot>    <rect
        style="fill:none;stroke:#40406d;stroke-width:1.0629921;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3266"
        width="233.85828"
@@ -1339,29 +1337,26 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/./gps-screenshot-327.png"
-       xlink:href="./gps-screenshot-327.png"
-       width="40"
-       height="60"
+       y="242.10844"
+       x="56.76968"
        id="image3002"
-       x="56.76968"
-       y="242.10844" />
-    <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/./gps-screenshot-442.png"
-       xlink:href="./gps-screenshot-442.png"
+       height="60"
        width="40"
-       height="59.999996"
-       id="image3016"
-       x="56.76968"
-       y="242.10844" />
+       xlink:href="./gps-screenshot-327.png" />
     <image
-       sodipodi:absref="/tmp/1/german_flyer_2011_08/./garmin_62st_empty.png"
-       xlink:href="./garmin_62st_empty.png"
-       width="61.353943"
-       height="166.57401"
-       id="image3030"
+       y="242.10844"
+       x="56.76968"
+       id="image3016"
+       height="59.999996"
+       width="40"
+       xlink:href="./gps-screenshot-442.png" />
+    <image
+       y="187.69391"
        x="46.325783"
-       y="187.69391" />
+       id="image3030"
+       height="166.57401"
+       width="61.353943"
+       xlink:href="./garmin_62st_empty.png" />
     <g
        id="g3184"
        transform="translate(338.14645,-62.215395)">
@@ -1721,60 +1716,6 @@
              width="209.90233"
              id="rect3959-7" /></flowRegion><flowPara
            id="flowPara3961-7">fertige Karte</flowPara></flowRoot>    </g>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="854.5"
-       y="480.41336"
-       id="text3536"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3538"></tspan></text>
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot3540"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
-         id="flowRegion3542"><rect
-           id="rect3544"
-           width="53.5"
-           height="190"
-           x="117.5"
-           y="228.91336" /></flowRegion><flowPara
-         id="flowPara3546"></flowPara></flowRoot>    <flowRoot
-       xml:space="preserve"
-       id="flowRoot3552"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
-         id="flowRegion3554"><rect
-           id="rect3556"
-           width="154"
-           height="221.5"
-           x="22.5"
-           y="201.91336" /></flowRegion><flowPara
-         id="flowPara3558"></flowPara></flowRoot>    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="83"
-       y="260.41336"
-       id="text3572"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3574"></tspan></text>
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot3576"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
-         id="flowRegion3578"><rect
-           id="rect3580"
-           width="15.5"
-           height="60"
-           x="159.5"
-           y="338.91336" /></flowRegion><flowPara
-         id="flowPara3582"></flowPara></flowRoot>    <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 63.414214,186.156 C 86.150245,186.43543 78.768753,199.12717 79,201.41336 c 1.75,16.5 -0.603553,19.35876 2.896447,20.10876 3.5,0.75 1.237436,-0.35356 12.487436,1.64644 11.249997,2 10.012567,5.52818 12.012567,12.52818 2,7 2.31313,40.21618 2.62347,48.82017 2.21637,61.44729 -4.44974,54.57018 -11.815864,64.31067 -10.423548,8.71043 -48.786052,6.08676 -48.625629,0.25735 1.186937,1.31316 -28.364719,-159.82297 14.835787,-162.92893 z"
-       id="path4510"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssccc" />
   </g>
   <g
      inkscape:groupmode="layer"

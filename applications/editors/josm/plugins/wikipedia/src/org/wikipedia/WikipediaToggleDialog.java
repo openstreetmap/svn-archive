@@ -48,8 +48,8 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 new SideButton(new WikipediaSettingsAction(), false)));
     }
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
-    final DefaultListModel<WikipediaEntry> model = new DefaultListModel<WikipediaEntry>();
-    final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
+    final DefaultListModel model = new DefaultListModel();
+    final JList list = new JList(model) {
 
         {
             addMouseListener(new MouseAdapter() {
@@ -58,7 +58,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2 && getSelectedValue() != null) {
                         BoundingXYVisitor bbox = new BoundingXYVisitor();
-                        bbox.visit(getSelectedValue().coordinate);
+                        bbox.visit(((WikipediaEntry) getSelectedValue()).coordinate);
                         Main.map.mapView.recalculateCenterScale(bbox);
                     }
                 }
@@ -69,7 +69,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
         public String getToolTipText(MouseEvent e) {
             final int index = locationToIndex(e.getPoint());
             if (index >= 0) {
-                return "<html>" + model.getElementAt(index).description + "</html>";
+                return "<html>" + ((WikipediaEntry) model.getElementAt(index)).description + "</html>";
             } else {
                 return null;
             }
@@ -188,7 +188,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
-                String url = list.getSelectedValue().getHrefFromDescription();
+                String url = ((WikipediaEntry) list.getSelectedValue()).getHrefFromDescription();
                 if (url != null) {
                     System.out.println("Wikipedia: opening " + url);
                     OpenBrowser.displayUrl(url);
@@ -226,7 +226,7 @@ public class WikipediaToggleDialog extends ToggleDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
-                Tag tag = list.getSelectedValue().createWikipediaTag();
+                Tag tag = ((WikipediaEntry) list.getSelectedValue()).createWikipediaTag();
                 if (tag != null) {
                     ChangePropertyCommand cmd = new ChangePropertyCommand(
                             Main.main.getCurrentDataSet().getSelected(),

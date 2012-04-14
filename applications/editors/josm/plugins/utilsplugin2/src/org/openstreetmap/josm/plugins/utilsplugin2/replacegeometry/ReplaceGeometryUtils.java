@@ -292,19 +292,30 @@ public final class ReplaceGeometryUtils {
                         }
                     }
                 }
-                AssignmentProblem assignment = new AssignmentProblem(cost);
-                for (int i = 0; i < N; i++) {
-                    int nIdx = i;
-                    int gIdx = assignment.sol(i);
-                    if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
-                        nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
+                AssignmentProblem assignment;
+                try {
+                    assignment = new AssignmentProblem(cost);
+                    for (int i = 0; i < N; i++) {
+                        int nIdx = i;
+                        int gIdx = assignment.sol(i);
+                        if (cost[nIdx][gIdx] != Double.MAX_VALUE) {
+                            nodeAssoc.put(geometryPool.get(gIdx), nodePool.get(nIdx));
+                        }
+                    }
+                    // node will be moved, remove from pool
+                    for (Node n : nodeAssoc.values()) {
+                        nodePool.remove(n);
                     }
                 }
-                // node will be moved, remove from pool
-                for (Node n : nodeAssoc.values()) {
-                    nodePool.remove(n);
+                catch (Exception e) {
+                    useRobust = false;
+                    JOptionPane.showMessageDialog(Main.parent,
+                            tr("Exceeded iteration limit for robust method, using simpler method."),
+                            TITLE, JOptionPane.WARNING_MESSAGE);
+                    nodeAssoc = new HashMap<Node, Node>();
                 }
-            } else { // use simple, faster, but less robust assignment method
+            }
+            if (!useRobust) { // use simple, faster, but less robust assignment method
                 for (Node n : geometryPool) {
                     Node nearest = findNearestNode(n, nodePool);
                     if (nearest != null) {

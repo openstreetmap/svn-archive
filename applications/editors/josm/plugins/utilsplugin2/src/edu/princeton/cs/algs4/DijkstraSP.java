@@ -47,10 +47,14 @@ public class DijkstraSP {
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(G.V());
         pq.insert(s, distTo[s]);
+        int count = 0;
         while (!pq.isEmpty()) {
             int v = pq.delMin();
             for (DirectedEdge e : G.adj(v))
                 relax(e);
+            count++;
+            if (count > G.V())
+                throw new RuntimeException("Exceeded limit");
         }
 
         // check optimality conditions

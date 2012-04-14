@@ -75,6 +75,7 @@
         <ant antfile="build.xml" target="dist" dir="roadsigns"/>
         <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
+        <ant antfile="build.xml" target="dist" dir="sds"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
@@ -166,6 +167,7 @@
         <ant antfile="build.xml" target="clean" dir="roadsigns"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
+        <ant antfile="build.xml" target="clean" dir="sds"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>

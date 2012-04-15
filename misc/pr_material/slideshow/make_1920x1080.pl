@@ -8,14 +8,14 @@ use GD;
 use strict;
 my $WIDTH=1920;
 my $HEIGHT=1080;
-my $MARGIN_TOP=50;
+my $MARGIN_TOP=40;
 my $MARGIN_BOT=50;
 my $MARGIN_LEFT=500;
 my $MARGIN_RIGHT=50;
 my $OUTPUT_PATH="out/";
-my $LINE_HEIGHT=72;
-my $SIZE=32;
-my $FONT="/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
+my $LINE_HEIGHT=62;
+my $SIZE=30;
+my $FONT="/usr/share/fonts/dejavu/DejaVuSans.ttf";
 
 
 open(L,"liste") or die;

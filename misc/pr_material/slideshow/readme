@@ -9,5 +9,6 @@ How this works:
 Based on this list make.pl creates in the directory "out" images with all the same size, containing the source image with a black frame and the description as caption beside them. 
 
 In its header make.pl has settings for the size and placement of the captions and the output size of the images.
+Maybe you also have to adjust the path to font.
 
 After generating the images, display the files in the directory "out" with an imageviewer like geeqie (successor of gqview) or a similar program capable of doing a slideshow.

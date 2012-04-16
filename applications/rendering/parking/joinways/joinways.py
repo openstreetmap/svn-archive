@@ -5,6 +5,7 @@ import sys
 import string
 #import psycopg2
 from osmdb import OSMDB
+from geom import bbox
 from optparse import OptionParser
 
 class JoinDB (OSMDB):
@@ -24,7 +25,7 @@ class JoinDB (OSMDB):
             highways.append([hw,ids])
 
     def find_same_named_highways(self,highway,bbox):
-        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
+#        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
         self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name']))
         rs = self.curs.fetchall()
         highways = {}
@@ -38,11 +39,15 @@ class JoinDB (OSMDB):
         return highways
 
 
-    def get_next_pending_highway(self):
+    def get_next_pending_highway(self,bboxobj=None):
         result=[]
-        # FIXME: bbox is to be removed later
-        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom "+self.FlW+" jrhandled is False and highway is not Null and \"way\" && "+self.googbox+" and name is not Null limit 1"
-        self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom "+self.FlW+" jrhandled is False and highway is not Null and \"way\" && "+self.googbox+" and name is not Null limit 1")
+        if bboxobj!=None:
+            bbox_condition_sql = '"way" && {b} and '.format(b=bboxobj.get_bbox_sql())
+        else:
+            bbox_condition_sql = ''
+        select = "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} jrhandled is False and highway is not Null and {bbox} name is not Null limit 1".format(FlW=self.FlW,bbox=bbox_condition_sql)
+        print "Get Next Pending Highway: sql={s}".format(s=select)
+        self.curs.execute(select)
         result += self.curs.fetchall()
         if len(result)==0:
             raise BaseException("No pending highway found (this should not be an assert)")
@@ -58,7 +63,7 @@ class JoinDB (OSMDB):
         old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway
-        print "  collated_highways_0={ch}".format(ch=collated_highways)
+#        print "  collated_highways_0={ch}".format(ch=collated_highways)
 
 #        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
 #        current_geom=self.get_joined_ways(all_osm_ids_of_collated_highways)
@@ -66,20 +71,21 @@ class JoinDB (OSMDB):
         current_bbox=self.get_expanded_bbox(highway['geom'],10.0)
         print "    current_bbox={bb}".format(bb=current_bbox)
 
-        i=1
+        i=0
         while current_bbox != old_bbox:
             old_bbox = current_bbox
 #            print "current_bbox={bb}".format(bb=current_bbox)
             collated_highways.update(self.find_same_named_highways(highway,current_bbox))
-            print "  collated_highways_{i}={ch}".format(i=i,ch=collated_highways)
+#            print "  collated_highways_{i}={ch}".format(i=i,ch=collated_highways)
  
             all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
             current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
-            print "    current_bbox={bb}".format(bb=current_bbox)
+#            print "    current_bbox={bb}".format(bb=current_bbox)
             current_bbox=self.get_expanded_bbox(current_bbox,10.0)
             i+=1
 
-        return []
+        print "-> Found {n} highway segments in {i} iterations".format(n=len(collated_highways),i=i)
+        return collated_highways
 
     def get_expanded_bbox(self,geom,meter):
         result=[]
@@ -144,15 +150,18 @@ def main2(options):
 #        break
 
 def main(options):
-    bbox = options['bbox']
+    bboxstr = options['bbox']
     DSN = options['dsn']
-    print bbox
+    if bboxstr!='':
+        bboxobj = bbox({'bbox':bboxstr,'srs':'4326'})
+    else:
+        bboxobj = None
+    print bboxobj
+    print bboxobj.get_bbox_sql()
+
     osmdb = JoinDB(DSN)
-    #highways = getHighwaysInBbox(DSN,bbox)
-    bxarray=bbox.split(",")
-    bbox="{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
-    osmdb.set_bbox(bbox)
-    highway=osmdb.get_next_pending_highway()
+#    osmdb.set_bbox(bbox)
+    highway=osmdb.get_next_pending_highway(bboxobj)
     print "Found pending highway '{name}'".format(name=highway['name'])
     joinset=osmdb.collate_highways(highway)
     print "  Found connected highways '{hws}'".format(hws=joinset)

@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # by kay drangmeister
 
-import psycopg2
-from numpy import *
-from osray_geom import *
-
-LIMIT = 'LIMIT 5000'
-
 class bbox:
 
     bbox = None
     clientsrs='4326'
     dbsrs='900913'
+
+    def box_coords_ccc2bcb(self,box_coords):
+        """ converts box coordinates from format "b,l,t,r" (3 commas) to format "b l,t r" (blank comma blank) """
+        bxarray=box_coords.split(",")
+        return "{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
+        
 
     def get_bounds(self):
         polygonstring = self.bbox[0][0]
@@ -32,17 +32,21 @@ class bbox:
         print "Bounds [b l t r] = ",self.bottom,self.left,self.top,self.right
 
     def __init__(self,options):
+        """ parameters: bbox coords in ccc format, srs as string """
         #self.googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
         #self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
         #self.bbox = self.curs.fetchall()
         #self.get_bounds()
         self.clientsrs = options.get('srs','4326')
+        box_coords_ccc=options['bbox']
+        print "box_coords_ccc={bc}".format(bc=box_coords_ccc)
+        box_coords_bcb=self.box_coords_ccc2bcb(box_coords_ccc)
         if self.clientsrs=='4326':
-            self.init_bbox_4326(options['bbox'])
+            self.init_bbox_4326(box_coords_bcb)
         elif self.clientsrs=='3857':
-            self.init_bbox_3857(options['bbox'])
+            self.init_bbox_3857(box_coords_bcb)
         elif self.clientsrs=='900913':
-            self.init_bbox_3857(options['bbox'])
+            self.init_bbox_3857(box_coords_bcb)
 
 
     def init_bbox_srs(self,bbox,srs):

@@ -4185,7 +4185,7 @@
     <Datasource>
       <Parameter name="table">
 	    <!-- ToDo: Style-de hatte shop hier rausgenommen (?) -->
-      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,round(ele),coalesce("name:de",name) as name,ref,military,aeroway,waterway,historic,'yes'::text as point
+      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,round(ele) as ele,coalesce("name:de",name) as name,ref,military,aeroway,waterway,historic,'yes'::text as point
        from &prefix;_point
        where amenity is not null
           or shop in ('supermarket','bakery','clothes','fashion','convenience','doityourself','hairdresser','department_store','butcher','car','car_repair','bicycle','florist')

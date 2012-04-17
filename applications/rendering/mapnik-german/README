@@ -20,3 +20,7 @@ See http://www.openstreetmap.de/germanstyle.html for more.
 There is a developer and maintainer mailinglist at
 mapnik-de@lists.openstreetmap.de
 
+To deploy this style use the supplied default.style file for
+osm2pgsql and import data using the hstore extension of
+PostgreSQL (-k switch of osm2pgsql).
+

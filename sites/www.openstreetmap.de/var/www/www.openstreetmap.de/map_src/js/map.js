@@ -73,7 +73,9 @@ function init(){
        new OpenLayers.Layer.XYZ("OSM deutscher Stil", [
                "http://a.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
                "http://b.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
-               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],{attribution: '<a href="./germanstyle.html">About style</a>'}),
+               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
+               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],
+		{numZoomLevels: 19, attribution: '<a href="./germanstyle.html">About style</a>'}),
         new OpenLayers.Layer.OSM.CycleMap("Radfahrkarte (CycleMap)", {attribution:"", keyname: 'cycle'}),
         new OpenLayers.Layer.OSM("&Ouml;PNV-Karte", 
 			"http://tile.memomaps.de/tilegen/${z}/${x}/${y}.png", 

@@ -15,20 +15,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.urbanisme;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchShpHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.ParisDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.ParisShpHandler;
 import org.openstreetmap.josm.tools.Geometry;
 
 public class EclairagePublicHandler extends ParisDataSetHandler {
@@ -51,57 +44,11 @@ public class EclairagePublicHandler extends ParisDataSetHandler {
 		return PORTAL+"hn/eclairage_public.zip";
 	}
 	
-	private class InternalShpHandler extends FrenchShpHandler {
+	private final class InternalShpHandler extends ParisShpHandler {
 		
-		private final Map<String, Node> nodes = new HashMap<String, Node>();
-		
-		public InternalShpHandler() {
-			setDbfCharset(Charset.forName(CP850));
-		}
-		
-		private Node getNode(EastNorth en, String key) {
-			Node n = nodes.get(key);
-			/*if (n == null) {
-				for (Node node : nodes.values()) {
-					if (node.getEastNorth().equalsEpsilon(en, 0.0000001)) {
-						return node;
-					}
-				}
-			}*/
-			return n;
-		}
-		
-		private Node createOrGetNode(DataSet ds, EastNorth en) {
-			String key = en.getX()+"/"+en.getY();
-			Node n = getNode(en, key);
-			if (n == null) {
-				n = new Node(en);
-				nodes.put(key, n);
-				ds.addPrimitive(n);
-			}
-			return n;
-		}
-
 		@Override
 		public void notifyFeatureParsed(Object feature, DataSet result,	Set<OsmPrimitive> featurePrimitives) {
-			OsmPrimitive dataPrimitive = null;
-			Way closedWay = null;
-			List<Way> ways = new ArrayList<Way>();
-			List<Node> nodes = new ArrayList<Node>();
-			for (OsmPrimitive p : featurePrimitives) {
-				if (p.hasKeys()) {
-					dataPrimitive = p;
-				}
-				if (p instanceof Way) {
-					Way w = (Way) p;
-					ways.add(w);
-					if (w.isClosed()) {
-						closedWay = w;
-					}
-				} else if (p instanceof Node) {
-					nodes.add((Node) p);
-				}
-			}
+			initFeaturesPrimitives(featurePrimitives);
 			if (dataPrimitive == null) {
 				System.err.println("Found no primitive with tags");
 			} else if (closedWay == null) {
@@ -116,13 +63,7 @@ public class EclairagePublicHandler extends ParisDataSetHandler {
 				} else if (centroid.get("lamp_model:fr") != null && (dataPrimitive.get("Libelle") == null || !dataPrimitive.get("Libelle").equals(centroid.get("lamp_model:fr")))) {
 					System.err.println("Found 2 street lamps at the same position with different types: '"+centroid.get("lamp_model:fr")+"' and '"+dataPrimitive.get("Libelle")+"'.");
 				}
-				for (Way w : ways) {
-					w.setNodes(null);
-					result.removePrimitive(w);
-				}
-				for (Node n : nodes) {
-					result.removePrimitive(n);
-				}
+				removePrimitives(result);
 				
 				if (centroid.get("lamp_model:fr") != null) {
 					if (centroid.get("lamp_model:fr").contains("mural") && !centroid.get("lamp_model:fr").contains("au sol")) {

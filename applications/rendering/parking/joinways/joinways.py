@@ -79,13 +79,13 @@ class JoinDB (OSMDB):
 #            print "  collated_highways_{i}={ch}".format(i=i,ch=collated_highways)
  
             all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
-            current_bbox=self.get_joined_ways(all_osm_ids_of_collated_highways)
+            the_joined_way=self.get_joined_ways(all_osm_ids_of_collated_highways)
 #            print "    current_bbox={bb}".format(bb=current_bbox)
-            current_bbox=self.get_expanded_bbox(current_bbox,10.0)
+            current_bbox=self.get_expanded_bbox(the_joined_way,10.0)
             i+=1
 
-        print "-> Found {n} highway segments in {i} iterations".format(n=len(collated_highways),i=i)
-        return collated_highways
+        print "-> Found {n} highway segments in {i} iterations. Joined way is {w}".format(n=len(collated_highways),i=i,w=the_joined_way)
+        return collated_highways,the_joined_way
 
     def get_expanded_bbox(self,geom,meter):
         result=[]
@@ -97,7 +97,7 @@ class JoinDB (OSMDB):
         result=[]
         self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+")")
         result += self.curs.fetchall()
-        print "jw-result = "+str(result)
+#        print "jw-result = "+str(result)
         return result[0][0]
 
     def insert_joined_highway(self,id,name,highway,way):
@@ -107,6 +107,13 @@ class JoinDB (OSMDB):
         print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"',SetSrid('"+way+"'::Text,4326));"
         self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
 
+    def insert_joinmap_entry(self,join_id,segment_id):
+        self.curs.execute("insert into planet_line_joinmap (join_id, segment_id) values ('{jid}','{sid}')".format(jid=join_id,sid=segment_id))
+
+    def mark_as_handled(self,segment_id):
+        self.curs.execute("update planet_line set jrhandled=True where osm_id={oid}".format(oid=segment_id))
+
+
     def what_is_it(self,geom):
         result=[]
         self.curs.execute("select astext(setsrid('"+geom+"'::Text,4326))")
@@ -115,8 +122,21 @@ class JoinDB (OSMDB):
         itisa=itisa.split('(')[0]
         print "whatisit-result = "+itisa
         return itisa
-        
-        
+
+
+    def add_join_highway(self,highway,joinset,joinway):
+        join_id = highway['osm_id']
+        print "*** Adding '{name}' ({id}) to planet_line_join".format(name=highway['name'],id=join_id)
+        self.insert_joined_highway(str(join_id),highway['name'],highway['highway'],joinway)
+        print "(joinset={j})".format(j=joinset)
+        for segment in joinset.keys():
+            print "  * segment is {s}".format(s=joinset[segment])
+            self.insert_joinmap_entry(join_id,segment)
+            self.mark_as_handled(segment)
+
+    def clear_planet_line_join(self):
+        self.curs.execute("delete from planet_line_join")
+        self.curs.execute("delete from planet_line_joinmap")
 
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
@@ -160,11 +180,17 @@ def main(options):
     print bboxobj.get_bbox_sql()
 
     osmdb = JoinDB(DSN)
+
+    ###########
+#    osmdb.clear_planet_line_join()
+    ###########
+
 #    osmdb.set_bbox(bbox)
     highway=osmdb.get_next_pending_highway(bboxobj)
     print "Found pending highway '{name}'".format(name=highway['name'])
-    joinset=osmdb.collate_highways(highway)
-    print "  Found connected highways '{hws}'".format(hws=joinset)
+    joinset,joinway=osmdb.collate_highways(highway)
+#    print "  Found connected highways '{hws}'".format(hws=joinset)
+    osmdb.add_join_highway(highway,joinset,joinway)
 
 #        break
 

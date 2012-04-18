@@ -54,9 +54,9 @@ fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/open
 	Ant-Version: Apache Ant 1.8.2
 	Module-Description: Paris
 	Manifest-Version: 1.0
-	Module-Version: 28152
+	Module-Version: 28314
 	Created-By: 1.6.0_31-b05 (Sun Microsystems Inc.)
-	Module-Date: 2012-03-26T22:00:38.032831Z
+	Module-Date: 2012-04-18T17:40:13.229600Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
 fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.sncf.jar
 	Module-Icon: images/data.fr.sncf_24.png

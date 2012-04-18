@@ -55,7 +55,7 @@ fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/open
 	Module-Description: Paris
 	Manifest-Version: 1.0
 	Module-Version: 28152
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_31-b05 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-26T22:00:38.032831Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
 fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.sncf.jar

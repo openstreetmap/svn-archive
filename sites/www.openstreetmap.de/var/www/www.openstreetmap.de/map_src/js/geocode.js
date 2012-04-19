@@ -28,8 +28,9 @@
 
 //======================
 // OBJECTS
-var HOST_GEOCODE_URL = 'http://open.mapquestapi.com';
-var GEOCODE_POST = HOST_GEOCODE_URL + '/nominatim/v1/search?format=json&json_callback=showResultsGeocode';
+// var HOST_GEOCODE_URL = 'http://open.mapquestapi.com';
+// var GEOCODE_POST = HOST_GEOCODE_URL + '/nominatim/v1/search?format=json&json_callback=showResultsGeocode';
+var GEOCODE_POST =  'http://nominatim.openstreetmap.org/search.php?format=json&json_callback=showResultsGeocode';
 var searchType = 'search';
 
 //======================

@@ -1163,7 +1163,7 @@ public class RoutePatternAction extends JosmAction {
       }
 
       // Temp
-      if (firstNode != null)
+/*      if (firstNode != null)
       {
         Vector< AStarAlgorithm.Edge > path = new PublicTransportAStar(firstNode, lastNode).shortestPath();
         Iterator< AStarAlgorithm.Edge > iter = path.iterator();
@@ -1177,7 +1177,7 @@ public class RoutePatternAction extends JosmAction {
           System.out.print(edge.endIndex);
           System.out.print("\n");
         }
-      }
+      }*/
     }
     else if ("routePattern.overviewDelete".equals(event.getActionCommand()))
     {
@@ -1569,10 +1569,8 @@ public class RoutePatternAction extends JosmAction {
         {
           StopReference sr = detectMinDistance
               (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-          if (sr.index % 2 == 0)
-            offset += sr.pos;
-          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(),
+              calcOffset(sr, segmentMetrics));
           if (insPos >= 0)
             ++insPos;
 
@@ -1590,10 +1588,7 @@ public class RoutePatternAction extends JosmAction {
         {
           StopReference sr = detectMinDistance
               (curMember, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-          if (sr.index % 2 == 0)
-            offset += sr.pos;
-          stoplistData.insertRow(insPos, curMember, "", offset);
+          stoplistData.insertRow(insPos, curMember, "", calcOffset(sr, segmentMetrics));
           if (insPos >= 0)
             ++insPos;
         }
@@ -1639,22 +1634,22 @@ public class RoutePatternAction extends JosmAction {
           if (stoplistTable.isRowSelected(i))
           {
             StopReference sr = detectMinDistance
-            (stoplistData.nodes.elementAt(i), segmentMetrics,
-            cbRight.isSelected(), cbLeft.isSelected());
+                (stoplistData.nodes.elementAt(i), segmentMetrics,
+                cbRight.isSelected(), cbLeft.isSelected());
             if (sr != null)
             {
               if (sr.distance <
-                Double.parseDouble(tfSuggestStopsLimit.getText()) * 9.0 / 1000000.0 )
+                  Double.parseDouble(tfSuggestStopsLimit.getText()) * 9.0 / 1000000.0 )
               {
-            sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
-            srm.addElement(sr);
+                sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
+                srm.addElement(sr);
               }
               else
               {
-            sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
-            sr.index = segmentMetrics.size()*2;
-            sr.pos = 0;
-            srm.addElement(sr);
+                sr.role = (String)stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
+                sr.index = segmentMetrics.size()*2;
+                sr.pos = 0;
+                srm.addElement(sr);
               }
 
               stoplistData.nodes.removeElementAt(i);
@@ -1700,10 +1695,8 @@ public class RoutePatternAction extends JosmAction {
       {
         StopReference sr = detectMinDistance
             (srm.elementAt(i).node, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-        if (sr.index % 2 == 0)
-          offset += sr.pos;
-        stoplistData.insertRow(insPos, srm.elementAt(i).node, srm.elementAt(i).role, offset);
+        stoplistData.insertRow(insPos, srm.elementAt(i).node, srm.elementAt(i).role,
+            calcOffset(sr, segmentMetrics));
         if (insPos >= 0)
           ++insPos;
       }
@@ -1754,10 +1747,8 @@ public class RoutePatternAction extends JosmAction {
         {
           StopReference sr = detectMinDistance
               (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-          if (sr.index % 2 == 0)
-            offset += sr.pos;
-          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(),
+              calcOffset(sr, segmentMetrics));
           if (insPos >= 0)
             ++insPos;
         }
@@ -1820,8 +1811,7 @@ public class RoutePatternAction extends JosmAction {
           if (stopValue.equals(currentNode.get(stopKey)))
           {
             StopReference sr = detectMinDistance
-            (currentNode, segmentMetrics,
-            cbRight.isSelected(), cbLeft.isSelected());
+                (currentNode, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
             if ((sr != null) && (sr.distance <
                 Double.parseDouble(tfSuggestStopsLimit.getText()) * 9.0 / 1000000.0 ))
               srm.addElement(sr);
@@ -1842,10 +1832,8 @@ public class RoutePatternAction extends JosmAction {
       {
         StopReference sr = detectMinDistance
             (srm.elementAt(i).node, segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-        if (sr.index % 2 == 0)
-          offset += sr.pos;
-        stoplistData.addRow(srm.elementAt(i).node, srm.elementAt(i).role, offset);
+        stoplistData.addRow(srm.elementAt(i).node, srm.elementAt(i).role,
+            calcOffset(sr, segmentMetrics));
       }
 
       rebuildNodes();
@@ -2133,6 +2121,22 @@ public class RoutePatternAction extends JosmAction {
     segmentMetrics = fillSegmentMetrics();
   }
 
+  private double calcOffset(StopReference sr, Vector< SegmentMetric > segmentMetrics)
+  {
+    double offset = 0;
+    if ((sr.index+1) / 2 < segmentMetrics.size())
+    {
+      offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+      if (sr.index % 2 == 0)
+        offset += sr.pos;
+    }
+    else
+      offset = segmentMetrics.elementAt(segmentMetrics.size() - 1).distance
+          + segmentMetrics.elementAt(segmentMetrics.size() - 1).length;
+
+    return offset;
+  }
+
   private void fillStoplistTable
       (Iterator<RelationMember> relIter, int insPos) {
 
@@ -2147,10 +2151,8 @@ public class RoutePatternAction extends JosmAction {
           stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), 360.0);
         else
         {
-          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-          if (sr.index % 2 == 0)
-            offset += sr.pos;
-          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(),
+              calcOffset(sr, segmentMetrics));
           if (insPos >= 0)
             ++insPos;
         }

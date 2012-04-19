@@ -43,6 +43,9 @@ class OSMDB:
         rs = self.curs.fetchall()[0][0]
         return rs
 
+    def insert(self,insert):
+        self.curs.execute(insert)
+
     def update(self,update):
         self.curs.execute(update)
 

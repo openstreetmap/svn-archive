@@ -30,6 +30,9 @@ class OSMDB:
         self.conn.commit()
         self.conn.close()
 
+    def commit(self):
+        self.conn.commit()
+
     def select(self,select):
         self.curs.execute(select)
         rs = self.curs.fetchall()

@@ -38,6 +38,11 @@ class OSMDB:
         rs = self.curs.fetchall()
         return rs
 
+    def select_one(self,select):
+        self.curs.execute(select)
+        rs = self.curs.fetchall()[0][0]
+        return rs
+
     def update(self,update):
         self.curs.execute(update)
 

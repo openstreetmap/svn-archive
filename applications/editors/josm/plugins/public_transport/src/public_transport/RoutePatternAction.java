@@ -1115,6 +1115,10 @@ public class RoutePatternAction extends JosmAction {
       Vector< RelationMember > otherItems = new Vector< RelationMember >();
       int insPos = itineraryTable.getSelectedRow();
 
+      // Temp
+      Node firstNode = null;
+      Node lastNode = null;
+
       for (int i = 0; i < currentRoute.getMembersCount(); ++i)
       {
         RelationMember item = currentRoute.getMember(i);
@@ -1130,6 +1134,13 @@ public class RoutePatternAction extends JosmAction {
             role = "backward";
 
           itemsToReflect.add(new RelationMember(role, item.getWay()));
+
+          // Temp
+          if (firstNode == null)
+          {
+              firstNode = item.getWay().getNode(0);
+          }
+          lastNode = item.getWay().getNode(item.getWay().getNodesCount() - 1);
         }
         else if (item.isNode())
           itemsToReflect.add(item);
@@ -1149,6 +1160,23 @@ public class RoutePatternAction extends JosmAction {
       {
         if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
           relsList.setSelectedIndex(i);
+      }
+
+      // Temp
+      if (firstNode != null)
+      {
+        Vector< AStarAlgorithm.Edge > path = new PublicTransportAStar(firstNode, lastNode).shortestPath();
+        Iterator< AStarAlgorithm.Edge > iter = path.iterator();
+        while (iter.hasNext())
+        {
+          PublicTransportAStar.PartialWayEdge edge = (PublicTransportAStar.PartialWayEdge)iter.next();
+          System.out.print(edge.way.getUniqueId());
+          System.out.print("\t");
+          System.out.print(edge.beginIndex);
+          System.out.print("\t");
+          System.out.print(edge.endIndex);
+          System.out.print("\n");
+        }
       }
     }
     else if ("routePattern.overviewDelete".equals(event.getActionCommand()))
@@ -2107,6 +2135,7 @@ public class RoutePatternAction extends JosmAction {
 
   private void fillStoplistTable
       (Iterator<RelationMember> relIter, int insPos) {
+
     while (relIter.hasNext())
     {
       RelationMember curMember = relIter.next();
@@ -2114,17 +2143,17 @@ public class RoutePatternAction extends JosmAction {
       {
         StopReference sr = detectMinDistance
             (curMember.getNode(), segmentMetrics, cbRight.isSelected(), cbLeft.isSelected());
-        double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
-        System.out.print(sr.index);
-        System.out.print(" ");
-        System.out.print(offset);
-        System.out.print(" ");
-        System.out.println(sr.pos);
-        if (sr.index % 2 == 0)
-          offset += sr.pos;
-        stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
-        if (insPos >= 0)
-          ++insPos;
+        if (sr == null)
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), 360.0);
+        else
+        {
+          double offset = segmentMetrics.elementAt((sr.index+1) / 2).distance;
+          if (sr.index % 2 == 0)
+            offset += sr.pos;
+          stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(), offset);
+          if (insPos >= 0)
+            ++insPos;
+        }
       }
     }
   }
@@ -2173,7 +2202,7 @@ public class RoutePatternAction extends JosmAction {
   private StopReference detectMinDistance
       (Node node, Vector< SegmentMetric > segmentMetrics,
        boolean rhsPossible, boolean lhsPossible) {
-    if (node == null)
+    if (node == null || node.getCoor() == null)
       return null;
 
     int minIndex = -1;

@@ -38,6 +38,12 @@ class OSMDB:
         rs = self.curs.fetchall()
         return rs
 
+    def update(self,update):
+        self.curs.execute(update)
+
+    def delete(self,delete):
+        self.curs.execute(delete)
+
 # ---------------------------------------------------------------------------
 
     def clear_bbox(self):

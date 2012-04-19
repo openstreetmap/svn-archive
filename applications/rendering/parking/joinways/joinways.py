@@ -11,14 +11,8 @@ from optparse import OptionParser
 class JoinDB (OSMDB):
 
     def get_highways_segments(self):
-        #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
-        result=[]
-        #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-        #print "result for bbox("+self.googbox+")"
         #print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
-        #self.curs.execute("select osm_id,name from planet_line where \"way\" && "+self.googbox+"")
-        self.curs.execute("select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
-        result += self.curs.fetchall()
+        result=self.select("select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
         highways=[]
         for hw,osmids in result:
             ids=osmids.split(',')
@@ -28,10 +22,9 @@ class JoinDB (OSMDB):
         return name.replace("'","''")
 
     def find_same_named_highways(self,highway,bbox):
-        """ finds - within the small bbox - the highways with the same name. Returns dictionary with osm_id as key. """
-#        print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
-        self.curs.execute("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=self._escape_quote(highway['name'])))
-        rs = self.curs.fetchall()
+        """ Finds - within the small bbox - the highways with the same name. Returns dictionary with osm_id as key. """
+        # print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
+        rs=self.select("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=self._escape_quote(highway['name'])))
         highways = {}
         for res in rs:
             highway = {}
@@ -51,8 +44,7 @@ class JoinDB (OSMDB):
             bbox_condition_sql = ''
         select = "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} jrhandled is False and highway is not Null and {bbox} name is not Null limit 1".format(FlW=self.FlW,bbox=bbox_condition_sql)
         #print "Get Next Pending Highway: sql={s}".format(s=select)
-        self.curs.execute(select)
-        result = self.curs.fetchall()
+        result=self.select(select)
         if len(result)==0:
             return None
             # raise BaseException("No pending highway found (this should not be an assert)")
@@ -65,27 +57,18 @@ class JoinDB (OSMDB):
         return highway
 
     def collate_highways(self,highway):
+        """ check and collect iteratively if a same-named highway is in an expanded bbox around the current highway """
         old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway
-#        print "  collated_highways_0={ch}".format(ch=collated_highways)
-
-#        all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
-#        current_geom=self.get_joined_ways(all_osm_ids_of_collated_highways)
-#        current_bbox=self.get_expanded_bbox(current_geom,10.0)
         current_bbox=self.get_expanded_bbox(highway['geom'],10.0)
-        #print "    current_bbox={bb}".format(bb=current_bbox)
 
         i=0
         while current_bbox != old_bbox:
             old_bbox = current_bbox
-#            print "current_bbox={bb}".format(bb=current_bbox)
             collated_highways.update(self.find_same_named_highways(highway,current_bbox))
-#            print "  collated_highways_{i}={ch}".format(i=i,ch=collated_highways)
- 
-            all_osm_ids_of_collated_highways=map(lambda osmid: str(osmid),collated_highways.keys())
-            the_joined_way=self.get_joined_ways(all_osm_ids_of_collated_highways)
-#            print "    current_bbox={bb}".format(bb=current_bbox)
+
+            the_joined_way=self.get_joined_ways(collated_highways.keys())
             current_bbox=self.get_expanded_bbox(the_joined_way,10.0)
             i+=1
 
@@ -94,49 +77,39 @@ class JoinDB (OSMDB):
 
     def get_expanded_bbox(self,geom,meter):
         """ returns a bbox expanded by meter """
-        result=[]
-        self.curs.execute("select st_expand(cast(st_extent('{geom}') as box2d),{meter})".format(geom=geom,meter=meter))
-        result += self.curs.fetchall()
-        return result[0][0]
+        return self.select_one("select ST_Expand(cast(ST_Extent('{geom}') as BOX2D),{meter})".format(geom=geom,meter=meter))
 
     def get_joined_ways(self,segment_ids):
-        result=[]
-        self.curs.execute("select st_linemerge(st_collect(way)) "+self.FlW+" osm_id in ("+string.join(segment_ids,',')+")")
-        result += self.curs.fetchall()
-#        print "jw-result = "+str(result)
-        return result[0][0]
+        """ Get a joined way (likely a LINESTRING, but possibly a MULTILINESTRING) for the set of osm_ids (int) given """
+        segment_ids_as_strings=map(lambda osmid: str(osmid),segment_ids)
+        return self.select_one("select ST_Linemerge(ST_Collect(way)) {FlW} osm_id in ({seglist})".format(FlW=self.FlW,seglist=string.join(segment_ids_as_strings,',')))
 
     def _insert_joined_highway(self,id,name,highway,way):
         """ adds the joined highway (it may be a MULTILINE feature) to the jr tables. returns (just for info) the number of written ways (>1 if a MULTILINESTRING) """
-        #self.curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
-        #result=[]
-        #self.curs.execute("select osm_id,name from planet_line where \"way\" && SetSRID('BOX3D(1101474.25471931 6406603.879863935,1114223.324055468 6415715.307134068)'::box3d, 900913)")
-        #print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+name+"','"+highway+"',SetSrid('"+way+"'::Text,4326));"
         if self._which_geometry_is_it(way)=="LINESTRING":
             #print "inserting a simple way"
-            self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
+            self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
             return 1
         else:
             #print "inserting a MULTILINE way"
             ways = self._split_multiline_way(way)
             for one_way in ways:
-                self.curs.execute("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+one_way+"'::Text,4326))")
+                self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+one_way+"'::Text,4326))")
             return len(ways)
 
 
     def _insert_segment_into_joinmap(self,join_id,segment_id):
         """ adds a segment to the jr tables """
-        self.curs.execute("insert into planet_line_joinmap (join_id, segment_id) values ('{jid}','{sid}')".format(jid=join_id,sid=segment_id))
+        self.insert("insert into planet_line_joinmap (join_id, segment_id) values ('{jid}','{sid}')".format(jid=join_id,sid=segment_id))
 
     def _mark_segment_as_handled(self,segment_id):
         """ Mark the given segment (by osm_id) as handled in the jr tables """
-        self.curs.execute("update planet_line set jrhandled=True where osm_id={oid}".format(oid=segment_id))
+        self.update("update planet_line set jrhandled=True where osm_id={oid}".format(oid=segment_id))
 
 
     def _which_geometry_is_it(self,geom):
         """ Returns the WKT type of the geom, e.g. LINESTRING or MULTILINESTRING """
-        self.curs.execute("select astext(setsrid('"+geom+"'::Text,4326))")
-        itisa = self.curs.fetchall()[0][0] # get first (and only) result
+        itisa = self.select_one("select ST_AsText(ST_SetSRID('"+geom+"'::Text,4326))")
         itisa = itisa.split('(')[0]
         # print "whatisit-result = "+itisa
         return itisa
@@ -146,8 +119,7 @@ class JoinDB (OSMDB):
         ways=[]
         i=1
         while True:
-            self.curs.execute("select ST_GeometryN(ST_SetSRID('{way}'::Text,4326),{i})".format(way=multilineway,i=i))
-            way = self.curs.fetchall()[0][0] # get first (and only) result
+            way = self.select_one("select ST_GeometryN(ST_SetSRID('{way}'::Text,4326),{i})".format(way=multilineway,i=i))
             #print "way[{i}]={w}".format(i=i,w=way)
             if way==None:
                 break
@@ -171,14 +143,14 @@ class JoinDB (OSMDB):
 
     def clear_planet_line_join(self,bboxobj=None):
         print "*** clearing jr tables and flags"
-        self.curs.execute("delete from planet_line_join")
-        self.curs.execute("delete from planet_line_joinmap")
+        self.delete("delete from planet_line_join")
+        self.delete("delete from planet_line_joinmap")
         if bboxobj!=None:
             bbox_condition_sql = '"way" && {b} and '.format(b=bboxobj.get_bbox_sql())
         else:
             bbox_condition_sql = ''
         update = "update planet_line set jrhandled=False where {bbox} jrhandled is True".format(bbox=bbox_condition_sql)
-        self.curs.execute(update)
+        self.update(update)
 
 
 """

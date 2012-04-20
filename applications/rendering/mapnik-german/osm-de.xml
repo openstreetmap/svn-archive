@@ -4190,7 +4190,7 @@
 	    wuerde aus 222.000 einfach 222, aus 222.222 222.22). Desweiteren
 	    wird , statt . als Dezimaltrenner verwendet
 	    -->
-      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,trim(trailing ',' from replace(TO_CHAR(816.123::float,'FM9999D99'), '.', ',')) as ele,coalesce("name:de",name) as name,ref,military,aeroway,waterway,historic,'yes'::text as point
+      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,trim(trailing ',' from replace(TO_CHAR(ele,'FM9999D99'), '.', ',')) as ele,coalesce("name:de",name) as name,ref,military,aeroway,waterway,historic,'yes'::text as point
        from &prefix;_point
        where amenity is not null
           or shop in ('supermarket','bakery','clothes','fashion','convenience','doityourself','hairdresser','department_store','butcher','car','car_repair','bicycle','florist')

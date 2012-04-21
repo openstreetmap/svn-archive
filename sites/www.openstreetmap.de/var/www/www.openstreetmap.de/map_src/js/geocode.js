@@ -36,19 +36,35 @@ var searchType = 'search';
 //======================
 // FUNCTIONS
 /*
- * geocodeAddress()-Function to read out textfield and send request to a OSM nominatim geocoder
+ * geocodeAddress()-Function to read out textfield and check if it is a cordinate, if not send request to a OSM nominatim geocoder
  */
 function geocodeAddress(){
-	var freeform = document.getElementById('tfSearch').value;
+        var freeform = document.getElementById('tfSearch').value;
+        var query_1 = /[NS]\s+(\d\d)°\s+(\d\d\.\d\d\d)\s+[EW]\s+(\d\d\d)°\s+(\d\d\.\d\d\d)/;
+		var query_2 = /(\d\d)\.(\d.+)\s+(\d\d)\.(\d+)/
+        if (query_1.test(freeform) == true){
+			query_1.exec(freeform);
+			var latitude = parseFloat(RegExp.$1) + parseFloat(RegExp.$2)/60;
+			var longtitude = parseFloat(RegExp.$3) + parseFloat(RegExp.$4)/60;
+			setMarkerAndZoom(new OpenLayers.LonLat(longtitude,latitude));
+		}
+		else if (query_2.test(freeform) == true){
+			query_2.exec(freeform);
+			var latitude = RegExp.$1 + "." + RegExp.$2;
+			var longtitude = RegExp.$3 + "." + RegExp.$4;
+			console.log(longtitude + " " + latitude);
+			setMarkerAndZoom(new OpenLayers.LonLat(longtitude,latitude));
+		}
+		else {
+			document.getElementById('information').style.visibility = 'visible';
+			document.getElementById('information').innerHTML =  '<p class="infoHL">Einen Moment bitte ...</p>';
 
-	document.getElementById('information').style.visibility = 'visible';
-	document.getElementById('information').innerHTML =  '<p class="infoHL">Einen Moment bitte ...</p>';
-
-    var newURL = GEOCODE_POST + "&q="+freeform;
-	var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = newURL;
-    document.body.appendChild(script);
+			var newURL = GEOCODE_POST + "&q="+freeform;
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = newURL;
+			document.body.appendChild(script);
+		}
 }
 
 /*

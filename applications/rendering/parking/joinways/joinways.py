@@ -177,6 +177,23 @@ def main(options):
     if options['command']=='clear':
 	osmdb.clear_planet_line_join()
 
+    #
+    # handle deleted highway segments -> mark all joined highway's segments as unhandled in order to have them re-handled
+    #
+    i=0
+    while True:
+        highway=osmdb.get_next_deleted_highway()
+        if highway==None:
+            break
+        join_id=find_joinroad_by_segment(highway)
+        dirtylist=get_segments_of_joinroad(join_id)
+    osmdb.commit()
+    print "Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j)
+
+    #
+    # handle unhandled (or dirty) highway segments
+    #
+    ### FIXME: was passiert, wenn zu einem Segment eins angehängt wird, vorher müssten die alten segmente rausgelöscht werden.
     i=0
     while True:
         # osmdb.set_bbox(bbox)

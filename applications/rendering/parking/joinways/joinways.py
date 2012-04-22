@@ -36,6 +36,12 @@ class JoinDB (OSMDB):
         return highways
 
 
+    def get_next_deleted_highway(self):
+        """ Gets the next deleted highway (osm_id) """
+        select = "select osm_id from planet_line_join_deleted_segments limit 1"
+        highway_osm_id=self.select_one(select)
+        return highway_osm_id
+
     def get_next_pending_highway(self,bboxobj=None):
         """ Gets the next unhandled highway (osm_id+dict) """
         if bboxobj!=None:
@@ -106,7 +112,6 @@ class JoinDB (OSMDB):
         """ Mark the given segment (by osm_id) as handled in the jr tables """
         self.update("update planet_line set jrhandled=True where osm_id={oid}".format(oid=segment_id))
 
-
     def _which_geometry_is_it(self,geom):
         """ Returns the WKT type of the geom, e.g. LINESTRING or MULTILINESTRING """
         itisa = self.select_one("select ST_AsText(ST_SetSRID('"+geom+"'::Text,4326))")
@@ -126,8 +131,6 @@ class JoinDB (OSMDB):
             ways.append(way)
             i += 1
         return ways
-
-
 
     def add_join_highway(self,highway,joinset,joinway):
         """ Add the highway into the jr tables, handle all flagging """
@@ -151,6 +154,24 @@ class JoinDB (OSMDB):
             bbox_condition_sql = ''
         update = "update planet_line set jrhandled=False where {bbox} jrhandled is True".format(bbox=bbox_condition_sql)
         self.update(update)
+
+    def find_joinway_by_segment(self,segment_id):
+        """ Find the join_id of a highway segment. None if none found """
+        select="select join_id from planet_line_joinmap where segment_id={seg}".format(seg=segment_id)
+        return self.select_one(select)
+
+    def flush_deleted_segment(self,segment_id):
+        """ Removes a "deleted highway" from the deleted_segments table. """
+        delete="delete from planet_line_join_deleted_segments where osm_id={seg};".format(seg=segment_id)
+        self.delete(delete)
+
+    def get_segments_of_joinway(self,joinway_id):
+        select="select segment_id from planet_line_joinmap where join_id={jid};".format(jid=joinway_id)
+        segments=self.select_list(select)
+        return segments
+
+
+        
 
 
 """
@@ -181,12 +202,20 @@ def main(options):
     # handle deleted highway segments -> mark all joined highway's segments as unhandled in order to have them re-handled
     #
     i=0
+    j=0
     while True:
-        highway=osmdb.get_next_deleted_highway()
-        if highway==None:
+        segment_id=osmdb.get_next_deleted_highway()
+        if segment_id==None:
             break
-        join_id=find_joinroad_by_segment(highway)
-        dirtylist=get_segments_of_joinroad(join_id)
+        print "[] Handling deleted segment {seg}".format(seg=segment_id)
+        joinway_id=osmdb.find_joinway_by_segment(segment_id)
+        if joinway_id==None:  # deleted segment was not in joined highway -> ignore (FIXME: and warn)
+            print "   [] was not a joinway. Ignoring and flushing."
+            osmdb.flush_deleted_segment(segment_id)
+            continue
+        dirtylist=osmdb.get_segments_of_joinway(joinway_id)
+        print "   [] list of segments to mark: {l}".format(l=dirtylist)
+        break
     osmdb.commit()
     print "Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j)
 

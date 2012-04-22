@@ -45,12 +45,21 @@ public class ReplaceGeometryAction extends JosmAction {
         OsmPrimitive secondObject = selection.get(1);
         
         try {
-            ReplaceGeometryUtils.replaceWithNew(firstObject, secondObject);
+            ReplaceGeometryCommand replaceCommand =
+                    ReplaceGeometryUtils.buildReplaceWithNewCommand(firstObject, secondObject);
+            
+            // action was canceled
+            if (replaceCommand == null)
+                return;
+            
+            Main.main.undoRedo.add(replaceCommand);
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(Main.parent,
                     ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
+        } catch (ReplaceGeometryException ex) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
         }
-         
     }
 
     @Override

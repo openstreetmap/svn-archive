@@ -20,7 +20,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public final class ReplaceGeometryUtils {
     private static final String TITLE = tr("Replace Geometry");
-    
     /**
      * Replace new or uploaded object with new object
      * 
@@ -28,15 +27,15 @@ public final class ReplaceGeometryUtils {
      * @param secondObject
      * @return 
      */
-    public static boolean replaceWithNew(OsmPrimitive firstObject, OsmPrimitive secondObject) {
+    public static ReplaceGeometryCommand buildReplaceWithNewCommand(OsmPrimitive firstObject, OsmPrimitive secondObject) {
         if (firstObject instanceof Node && secondObject instanceof Node) {
-            return replaceNodeWithNew((Node) firstObject, (Node) secondObject);
+            return buildReplaceNodeWithNewCommand((Node) firstObject, (Node) secondObject);
         } else if (firstObject instanceof Way && secondObject instanceof Way) {
-            return replaceWayWithNew(Arrays.asList((Way) firstObject, (Way) secondObject));
+            return buildReplaceWayWithNewCommand(Arrays.asList((Way) firstObject, (Way) secondObject));
         } else if (firstObject instanceof Node) {
-            return upgradeNode((Node) firstObject, secondObject);
+            return createUpgradeNodeCommand((Node) firstObject, secondObject);
         } else if (secondObject instanceof Node) {
-            return upgradeNode((Node) secondObject, firstObject);
+            return createUpgradeNodeCommand((Node) secondObject, firstObject);
         } else {
             throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
@@ -50,16 +49,16 @@ public final class ReplaceGeometryUtils {
      * @param referenceSubject
      * @return 
      */
-    public static boolean replace(OsmPrimitive subjectObject, OsmPrimitive referenceSubject) {
+    public static ReplaceGeometryCommand buildReplaceCommand(OsmPrimitive subjectObject, OsmPrimitive referenceSubject) {
         if (subjectObject instanceof Node && referenceSubject instanceof Node) {
-            return replaceNode((Node) subjectObject, (Node) referenceSubject);
+            return buildReplaceNodeCommand((Node) subjectObject, (Node) referenceSubject);
         } else if (subjectObject instanceof Way && referenceSubject instanceof Way) {
-            return replaceWay((Way) subjectObject, (Way) referenceSubject);
+            return buildReplaceWayCommand((Way) subjectObject, (Way) referenceSubject);
         } else if (subjectObject instanceof Node) {
-            return upgradeNode((Node) subjectObject, referenceSubject);
+            return createUpgradeNodeCommand((Node) subjectObject, referenceSubject);
         } else if (referenceSubject instanceof Node) {
             // TODO: fix this illogical reversal?
-            return upgradeNode((Node) referenceSubject, subjectObject);
+            return createUpgradeNodeCommand((Node) referenceSubject, subjectObject);
         } else {
             throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
@@ -71,15 +70,15 @@ public final class ReplaceGeometryUtils {
      * @param secondNode
      * @return 
      */
-    public static boolean replaceNodeWithNew(Node firstNode, Node secondNode) {
+    public static ReplaceGeometryCommand buildReplaceNodeWithNewCommand(Node firstNode, Node secondNode) {
         if (firstNode.isNew() && !secondNode.isNew())
-            return replaceNode(secondNode, firstNode);
+            return buildReplaceNodeCommand(secondNode, firstNode);
         else if (!firstNode.isNew() && secondNode.isNew())
-            return replaceNode(firstNode, secondNode);
+            return buildReplaceNodeCommand(firstNode, secondNode);
         else
             // both nodes are new OR uploaded, act like MergeNodes, moving first
             // node to second
-            return replaceNode(firstNode, secondNode);
+            return buildReplaceNodeCommand(firstNode, secondNode);
     }
     
     /**
@@ -89,20 +88,17 @@ public final class ReplaceGeometryUtils {
      * @param referenceNode
      * @return
      */
-    public static boolean replaceNode(Node subjectNode, Node referenceNode) {
+    public static ReplaceGeometryCommand buildReplaceNodeCommand(Node subjectNode, Node referenceNode) {
         if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
         // FIXME: handle different layers
         List<Command> commands = new ArrayList<Command>();
         commands.add(MergeNodesAction.mergeNodes(Main.main.getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode));
 
-        Main.main.undoRedo.add(new SequenceCommand(
+        return new ReplaceGeometryCommand(
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
-                commands));
-        return true;
+                commands);
     }
     
     /**
@@ -111,17 +107,13 @@ public final class ReplaceGeometryUtils {
      * @param subjectNode node to be replaced
      * @param referenceObject object with greater spatial quality
      */
-    public static boolean upgradeNode(Node subjectNode, OsmPrimitive referenceObject) {
+    public static ReplaceGeometryCommand createUpgradeNodeCommand(Node subjectNode, OsmPrimitive referenceObject) {
         if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Node belongs to way(s), cannot replace."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
 
         if (referenceObject instanceof Relation && !((Relation) referenceObject).isMultipolygon()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Relation is not a multipolygon, cannot be used as a replacement."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(tr("Relation is not a multipolygon, cannot be used as a replacement."));
         }
 
         Node nodeToReplace = null;
@@ -153,7 +145,7 @@ public final class ReplaceGeometryUtils {
         Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(subjectNode, referenceObject);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
-            return false;
+            return null;
         }
         commands.addAll(tagResolutionCommands);
 
@@ -186,13 +178,12 @@ public final class ReplaceGeometryUtils {
 
         Main.main.getCurrentDataSet().setSelected(referenceObject);
 
-        Main.main.undoRedo.add(new SequenceCommand(
+        return new ReplaceGeometryCommand(
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
-                commands));
-        return true;
+                commands);
     }
     
-    public static boolean replaceWayWithNew(List<Way> selection) {
+    public static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
@@ -216,29 +207,22 @@ public final class ReplaceGeometryUtils {
         Way subjectWay = selection.get(1 - idxNew);
         
         if( !overrideNewCheck && (subjectWay.isNew() || !referenceWay.isNew()) ) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Please select one way that exists in the database and one new way with correct geometry."),
-                    TITLE, JOptionPane.WARNING_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(
+                    tr("Please select one way that exists in the database and one new way with correct geometry."));
         }
-        return replaceWay(subjectWay, referenceWay);
+        return buildReplaceWayCommand(subjectWay, referenceWay);
     }
     
-    public static boolean replaceWay(Way subjectWay, Way referenceWay) {
+    public static ReplaceGeometryCommand buildReplaceWayCommand(Way subjectWay, Way referenceWay) {
 
         Area a = Main.main.getCurrentDataSet().getDataSourceArea();
         if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("The ways must be entirely within the downloaded area."),
-                    TITLE, JOptionPane.WARNING_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(tr("The ways must be entirely within the downloaded area."));
         }
         
         if (hasImportantNode(referenceWay, subjectWay)) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."),
-                    TITLE, JOptionPane.WARNING_MESSAGE);
-            return false;
+            throw new ReplaceGeometryException(
+                    tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."));
         }
 
         List<Command> commands = new ArrayList<Command>();
@@ -247,7 +231,7 @@ public final class ReplaceGeometryUtils {
         Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(referenceWay, subjectWay);
         if (tagResolutionCommands == null) {
             // user canceled tag merge dialog
-            return false;
+            return null;
         }
         commands.addAll(tagResolutionCommands);
         
@@ -356,10 +340,9 @@ public final class ReplaceGeometryUtils {
             commands.add(new DeleteCommand(nodePool));
 
         // Two items in undo stack: change original way and delete geometry way
-        Main.main.undoRedo.add(new SequenceCommand(
+        return new ReplaceGeometryCommand(
                 tr("Replace geometry for way {0}", subjectWay.getDisplayName(DefaultNameFormatter.getInstance())),
-                commands));
-        return true;
+                commands);
     }
 
     /**

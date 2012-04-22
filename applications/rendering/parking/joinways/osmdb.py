@@ -39,9 +39,19 @@ class OSMDB:
         return rs
 
     def select_one(self,select):
+        """ return exactly one result from select """
         self.curs.execute(select)
         rs = self.curs.fetchall()[0][0]
         return rs
+
+    def select_list(self,select):
+        """ return a list of results (one column only!) from select. Empty list if no result rows. """
+        self.curs.execute(select)
+        rs = self.curs.fetchall()
+        l = []
+        for res in rs:
+            l.append(res[0])
+        return l
 
     def insert(self,insert):
         self.curs.execute(insert)

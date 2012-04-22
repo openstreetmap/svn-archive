@@ -1,10 +1,9 @@
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.czechaddress.gui.ManagerDialog;
-import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Shows the manager window for editing the database.
@@ -17,13 +16,14 @@ public class ManagerAction extends JosmAction {
 
     public ManagerAction() {
         super("Upravit databázi",
-              null,//"envelope-closed-big.png",
+              (String)null,//"envelope-closed-big.png",
               "Upravit jména elemntů dle mapy",
               null,
               true, "czechaddress/manager", true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         (new ManagerDialog()).setVisible(true);
     }
 }

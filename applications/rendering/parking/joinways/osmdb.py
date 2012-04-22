@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import sys
+import sys,string
 import psycopg2
 
 class OSMDB:
@@ -63,6 +63,10 @@ class OSMDB:
 
     def delete(self,delete):
         self.curs.execute(delete)
+
+    def sql_list_of_ids(self,list):
+        list_ids_as_strings=map(lambda osmid: str(osmid),list)
+        return "("+string.join(list_ids_as_strings,',')+")"
 
 # ---------------------------------------------------------------------------
 

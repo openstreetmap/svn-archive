@@ -39,13 +39,15 @@ class OSMDB:
         return rs
 
     def select_one(self,select):
-        """ return exactly one result from select """
+        """ Return exactly one result from select. None if no result rows. """
         self.curs.execute(select)
-        rs = self.curs.fetchall()[0][0]
-        return rs
+        rs = self.curs.fetchall()
+        if len(rs)==0:
+            return None
+        return rs[0][0]
 
     def select_list(self,select):
-        """ return a list of results (one column only!) from select. Empty list if no result rows. """
+        """ Return a list of results (one column only!) from select. Empty list if no result rows. """
         self.curs.execute(select)
         rs = self.curs.fetchall()
         l = []

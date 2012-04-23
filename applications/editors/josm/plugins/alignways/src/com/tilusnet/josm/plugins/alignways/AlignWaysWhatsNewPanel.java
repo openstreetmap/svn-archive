@@ -46,11 +46,15 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         btnHelpItem1 = new javax.swing.JButton();
         newItem2 = new javax.swing.JLabel();
 
-        lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">What's new...</span></div></html>");
+        lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">" 
+        				    + tr("What's new...") 
+        				    + "</span></div></html>");
 
         icnLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/alignways64.png"))); // NOI18N
 
-        newItem1.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>Added <b>angle preserving</b> aligning mode</li></ul></div></html>");
+        newItem1.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>"
+        				 + tr("Added <b>angle preserving</b> aligning mode") 
+        				 + "</li></ul></div></html>");
 
         btnHelpItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/extlink10.png"))); // NOI18N
         btnHelpItem1.setText("More Info");
@@ -68,7 +72,9 @@ public class AlignWaysWhatsNewPanel extends JPanel {
             }
         });
 
-        newItem2.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>Various improvements and bugfixes</li></ul></div></html>");
+        newItem2.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>"
+        				 + tr("Various improvements and bugfixes")
+        				 + "</li></ul></div></html>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,10 +137,10 @@ public class AlignWaysWhatsNewPanel extends JPanel {
           } catch (URISyntaxException ex) {
                 Logger.getLogger(AlignWaysWhatsNewPanel.class.getName()).log(Level.SEVERE, null, ex);
           } catch (IOException e) { 
-              JOptionPane.showMessageDialog(this, e, "Errr...", JOptionPane.WARNING_MESSAGE);
+              JOptionPane.showMessageDialog(this, e, tr("Errr..."), JOptionPane.WARNING_MESSAGE);
           }
         } else { 
-             JOptionPane.showMessageDialog(this, "Browser not supported.", "Errr...", JOptionPane.WARNING_MESSAGE);
+             JOptionPane.showMessageDialog(this, tr("Browser not supported."), tr("Errr..."), JOptionPane.WARNING_MESSAGE);
         }
     }
     

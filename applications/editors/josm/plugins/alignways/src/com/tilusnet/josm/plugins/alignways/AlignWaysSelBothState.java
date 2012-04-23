@@ -3,6 +3,7 @@
  */
 package com.tilusnet.josm.plugins.alignways;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 
 /**
@@ -25,7 +26,7 @@ public class AlignWaysSelBothState extends AlignWaysState {
     public void setHelpText() {
         Main.map.statusLine
         .setHelpText(AlignWaysPlugin.getAwAction().getShortcut().getKeyText() +
-                ": Align segments; Alt-click: Clear selection");
+                tr(": Align segments; Alt-click: Clear selection"));
     }
 
 }

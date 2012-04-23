@@ -3,6 +3,7 @@
  */
 package com.tilusnet.josm.plugins.alignways;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 
 /**
@@ -20,7 +21,7 @@ public abstract class AlignWaysState {
     public void altLClick(AlignWaysMode alignWaysMode) {
         alignWaysMode.setCurrentState(alignWaysMode.getNoneSelected());
         Main.map.statusLine
-        .setHelpText("Ctrl-Click: select reference way segment; Click: select way segment to be aligned");
+        .setHelpText(tr("Ctrl-Click: select reference way segment; Click: select way segment to be aligned"));
     }
 
 }

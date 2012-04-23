@@ -162,16 +162,34 @@ class JoinDB (OSMDB):
 
     def flush_deleted_segment(self,segment_id):
         """ Removes a "deleted highway" from the deleted_segments table. """
-        delete="delete from planet_line_join_deleted_segments where osm_id={seg};".format(seg=segment_id)
+        delete="delete from planet_line_join_deleted_segments where osm_id={seg}".format(seg=segment_id)
+        self.delete(delete)
+
+    def flush_deleted_segments(self,segment_list):
+        """ Removes a list of "deleted highways" from the deleted_segments table. """
+        segmentlistsql=self.sql_list_of_ids(segment_list)
+        delete="delete from planet_line_join_deleted_segments where osm_id in {seg}".format(seg=segmentlistsql)
         self.delete(delete)
 
     def get_segments_of_joinway(self,joinway_id):
-        select="select segment_id from planet_line_joinmap where join_id={jid};".format(jid=joinway_id)
+        select="select segment_id from planet_line_joinmap where join_id={jid}".format(jid=joinway_id)
         segments=self.select_list(select)
         return segments
 
+    def get_name_of_joinway(self,joinway_id):
+        select="select name from planet_line_join where join_id={jid}".format(jid=joinway_id)
+        return self.select_one(select)
 
-        
+    def mark_segments_unhandled(self,dirtylist):
+        dirtylistsql=self.sql_list_of_ids(dirtylist)
+        update="update planet_line set jrhandled=False where osm_id in {l}".format(l=dirtylistsql)
+        self.update(update)
+
+    def remove_joinway(self,joinway_id):
+        delete="delete from planet_line_join where join_id={j}".format(j=joinway_id)
+        self.delete(delete)
+        delete="delete from planet_line_joinmap where join_id={j}".format(j=joinway_id)
+        self.delete(delete)
 
 
 """
@@ -207,15 +225,26 @@ def main(options):
         segment_id=osmdb.get_next_deleted_highway()
         if segment_id==None:
             break
-        print "[] Handling deleted segment {seg}".format(seg=segment_id)
+        #print "[] Handling deleted segment {seg}".format(seg=segment_id)
         joinway_id=osmdb.find_joinway_by_segment(segment_id)
         if joinway_id==None:  # deleted segment was not in joined highway -> ignore (FIXME: and warn)
-            print "   [] was not a joinway. Ignoring and flushing."
+            #print "   [] was not a joinway. Ignoring and flushing."
             osmdb.flush_deleted_segment(segment_id)
+            ### FIXME: zur sicherheit in planet_line als dirty markieren (falls vorhanden), oder besser: ASSERT ERROR falls in planet_line vorhanden und jrhandled=True
             continue
         dirtylist=osmdb.get_segments_of_joinway(joinway_id)
-        print "   [] list of segments to mark: {l}".format(l=dirtylist)
-        break
+        name_of_joinway=osmdb.get_name_of_joinway(joinway_id)
+        #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
+        # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
+        # all of those must fail gracefully if an entry is not there (anymore).
+        osmdb.mark_segments_unhandled(dirtylist)
+        osmdb.flush_deleted_segments(dirtylist)
+        osmdb.remove_joinway(joinway_id)
+        i+=1
+        j+=len(dirtylist)
+        print "Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist)
+        if i%100==0:
+            osmdb.commit()
     osmdb.commit()
     print "Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j)
 
@@ -236,7 +265,7 @@ def main(options):
         numjoins = osmdb.add_join_highway(highway,joinset,joinway)
         if i%100==0:
             osmdb.commit()
-        print "Joined {i}. Highway '{name}': {segs} segments -> {numjoins} joined segments".format(i=i,name=highway['name'],segs=len(joinset),numjoins=numjoins)
+        print "Joined {i}. ({id}) '{name}': {segs} segments -> {numjoins} joined segments".format(i=i,id=highway['osm_id'],name=highway['name'],segs=len(joinset),numjoins=numjoins)
     osmdb.commit()
     print "Terminated adding {i} highways".format(i=i)
 

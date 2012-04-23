@@ -37,6 +37,55 @@ MAP
     IMAGEPATH "/osm/wms_tmp/"
   END
 
+ LAYER
+    NAME "Ruanda"
+    METADATA
+      "wms_title"  "Ruanda"
+      "wms_extent" "28.356243 -2.993915 31.465746 -1.053348"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© : osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/Ruanda"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "ruanda/Ruanda.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+LAYER
+    NAME "Cottbus"
+    METADATA
+      "wms_title"  "Cottbus"
+      "wms_extent" "14.185499 51.660378 14.502745 51.858363"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: OSM use only"
+    "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    OFFSITE 0 0 0
+    TILEINDEX "martin_dornfelder/cottbus.shp"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+  LAYER
+    NAME "Guben"
+    METADATA
+      "wms_title"  "Luftbilder Guben"
+      "wms_extent" "14.633230 51.920404 14.790094 51.987163"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/guben-4326.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
   LAYER
     NAME "Calau"
     METADATA
@@ -53,38 +102,7 @@ MAP
       "init=epsg:4326"
     END
   END
-  LAYER
-    NAME "Cottbus-Merzdorf"
-    METADATA
-      "wms_title"  "Luftbilder Cottbus-Merzdorf"
-      "wms_extent" "14.365237 51.753010 14.413440 51.784761"
-      "wms_srs"    "EPSG:4326"
-      "copyright"  "© Holger Neubert: osm-use only"
-      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
-    END
-    TYPE RASTER
-    STATUS ON
-    DATA "martin_dornfelder/cottbus-merzdorf-geo.tif"
-    PROJECTION
-      "init=epsg:4326"
-    END
-  END
- LAYER
-    NAME "Cottbus-Sandow"
-    METADATA
-      "wms_title"  "Luftbilder Cottbus-Sandow"
-      "wms_extent" "14.323081 51.737204 14.397514 51.781354"
-      "wms_srs"    "EPSG:4326"
-      "copyright"  "© Holger Neubert: osm-use only"
-      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
-    END
-    TYPE RASTER
-    STATUS ON
-    DATA "martin_dornfelder/cottbus-sandow-geo.tif"
-    PROJECTION
-      "init=epsg:4326"
-    END
-  END
+ 
   LAYER
     NAME "Gross-Schacksdorf-Brandenburg"
     METADATA
@@ -130,6 +148,22 @@ MAP
     TYPE RASTER
     STATUS ON
     DATA "radolfzell/radolfzell-4326.img"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+ LAYER
+    NAME "Lauchhammer"
+    METADATA
+      "wms_title"  "Lauchhammer"
+      "wms_extent" "13.710956 51.475946 13.771952 51.510783"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/lauchhammer.tif"
     PROJECTION
       "init=epsg:4326"
     END
@@ -436,6 +470,135 @@ LAYER
     "zoomlevels" "22"
   END
 END
+LAYER
+    NAME "Torgau"
+    METADATA
+      "wms_title"  "Torgau"
+      "wms_extent" "12.534695 51.198890 13.469901 51.782530"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: OSM use only"
+    END
+    TYPE RASTER
+    STATUS ON
+    OFFSITE 0 0 0
+    TILEINDEX "martin_dornfelder/torgau.shp"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+
+
+LAYER
+    NAME "Rehfeld-Brandenburg"
+    METADATA
+      "wms_title"  "Rehfeld"
+      "wms_extent" "13.165592 51.579486 13.180812 51.589129"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only 2011"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/Rehfeld_modifiziert.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+LAYER
+    NAME "Koelsa-Brandenburg"
+    METADATA
+      "wms_title"  "Koelsa"
+      "wms_extent" "13.202709 51.580498 13.218317 51.590386"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Holger Neubert: osm-use only 2011"
+      "wiki"       "http://wiki.openstreetmap.org/wiki/User:MartinDornfelder"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "martin_dornfelder/Koelsa_modifiziert.tif"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+  LAYER
+    NAME "Aerowest-Bonn"
+    METADATA
+      "wms_title"     "Aerowest - Luftbilder Bonn (10cm, 2003-04-12)"
+      "wms_extent"    "781128.536285 6555802.724708 803591.182523 6582993.925441"
+      "wms_srs"       "EPSG:900913"
+      "copyright"     "OSM 2010 - © Aerowest"
+      "wiki"          "http://wiki.openstreetmap.org/wiki/DE:WissensWert/Luftbilder"
+      "-wms-disabled" "true"
+      "-terms-of-use" "Es dürfen zeitlich begrenzt Daten für OpenStreetMap abgeleitet werden, darüber hinaus gilt die AGB von Aerowest. Komplette Spiegelungen, Archivierung und sonstige zweckfremde Nutzung sind nicht gestattet. Die Aktion geht bis zum 15.7.2012, danach dürfen die Bilder nicht mehr genutzt werden."
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "bonn-rheinsieg/bonn-beta2007-3857.img"
+    PROJECTION
+      "init=epsg:900913"
+    END
+  END
+  LAYER
+    NAME "Aerowest-Sankt_Augustin"
+    METADATA
+      "wms_title"     "Aerowest - Luftbilder Sankt Augustin (10cm, 2003-04-14)"
+      "wms_extent"    "792425.293079 6574697.813531 806813.861635 6586790.283497"
+      "wms_srs"       "EPSG:900913"
+      "copyright"     "OSM 2010 - © Aerowest"
+      "wiki"          "http://wiki.openstreetmap.org/wiki/DE:WissensWert/Luftbilder"
+      "-wms-disabled" "true"
+      "-terms-of-use" "Es dürfen zeitlich begrenzt Daten für OpenStreetMap abgeleitet werden, darüber hinaus gilt die AGB von Aerowest. Komplette Spiegelungen, Archivierung und sonstige zweckfremde Nutzung sind nicht gestattet. Die Aktion geht bis zum 15.7.2012, danach dürfen die Bilder nicht mehr genutzt werden."
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "bonn-rheinsieg/sanktaugustin-beta2007-3857.img"
+    PROJECTION
+      "init=epsg:900913"
+    END
+  END
+  LAYER
+    NAME "Aerowest-Siegburg"
+    METADATA
+      "wms_title"     "Aerowest - Luftbilder Siegburg (10cm, 2009-03-21)"
+      "wms_extent"    "798143.677786 6581895.064120 814882.617437 6591674.419143"
+      "wms_srs"       "EPSG:900913"
+      "copyright"     "OSM 2010 - © Aerowest"
+      "wiki"          "http://wiki.openstreetmap.org/wiki/DE:WissensWert/Luftbilder"
+      "-wms-disabled" "true"
+      "-terms-of-use" "Es dürfen zeitlich begrenzt Daten für OpenStreetMap abgeleitet werden, darüber hinaus gilt die AGB von Aerowest. Komplette Spiegelungen, Archivierung und sonstige zweckfremde Nutzung sind nicht gestattet. Die Aktion geht bis zum 15.7.2012, danach dürfen die Bilder nicht mehr genutzt werden."
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "bonn-rheinsieg/siegburg-beta2007-3857.img"
+    PROJECTION
+      "init=epsg:900913"
+    END
+  END
+  LAYER
+    NAME "Aerowest-Troisdorf"
+    METADATA
+      "wms_title"     "Aerowest - Luftbilder Troisdorf (10cm, 2007-10-14)"
+      "wms_extent"    "786963.964480 6578703.392585 803878.365398 6600340.464874"
+      "wms_srs"       "EPSG:900913"
+      "copyright"     "OSM 2010 - © Aerowest"
+      "wiki"          "http://wiki.openstreetmap.org/wiki/DE:WissensWert/Luftbilder"
+      "-wms-disabled" "true"
+      "-terms-of-use" "Es dürfen zeitlich begrenzt Daten für OpenStreetMap abgeleitet werden, darüber hinaus gilt die AGB von Aerowest. Komplette Spiegelungen, Archivierung und sonstige zweckfremde Nutzung sind nicht gestattet. Die Aktion geht bis zum 15.7.2012, danach dürfen die Bilder nicht mehr genutzt werden."
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "bonn-rheinsieg/troisdorf-beta2007-3857.img"
+    PROJECTION
+      "init=epsg:900913"
+    END
+  END
+
+
+###################
+# COPYRIGHT LAYER
+###################
 
   LAYER
     METADATA

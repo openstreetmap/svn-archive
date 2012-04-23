@@ -43,7 +43,7 @@ def application(env, start_response):
    if zoom is None:
     zoom = 19
    zoom = int(zoom)+1
-   if (layer.name != 'copyright'):
+   if layer.name != 'copyright':
     index_html += "<hr />\n"
     index_html += '<table border="0" width="100%">\n'
     index_html += '<tr><td width="30%%"><b>Name:</b></td><td>%s</td></tr>' % layer.name
@@ -51,6 +51,8 @@ def application(env, start_response):
     if wiki is not None:
      index_html += '<tr><td width="30%%"><b>Wiki:</b></td><td><a href="%s">%s</a></td></tr>' % (wiki,wiki)
     index_html += '<tr><td width="30%%"><b>Source:</b></td><td>%s</td></tr>' % layer.metadata.get('copyright')
+    if layer.metadata.get('-terms-of-use'):
+     index_html += '<tr><td width="30%%"><b>Terms of Use:</b></td><td>%s</td></tr>' % layer.metadata.get('-terms-of-use')
     index_html += '<tr><td width="30%%"><b>Content:</b></td><td>%s</td></tr>' % layer.metadata.get('wms_title')
     index_html += '<tr><td width="30%%"><b>Bounding Box:</b></td><td>%s</td></tr>' % extent
     index_html += '<tr><td width="30%%"><b>TMS URL for JOSM Imagery:</b></td><td><b>tms:%s/%s (zoom %d)</b></td></tr>' % (tmsurl,layer.name,zoom)

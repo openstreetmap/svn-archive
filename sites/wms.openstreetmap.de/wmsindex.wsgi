@@ -26,7 +26,21 @@ zoom=17
 
 mapfile='/osm/wms/osmwms.map'
 
-import re,cgi,mapscript,os
+import re,cgi,mapscript,os,pyproj
+
+# this will generate an extent in WGS84 projection
+# regardless of the actual layer projection
+def gen4326Extent(ms_extent,ms_srs):
+  ms_srs=ms_srs.lower()
+  if ms_srs == "espg:4326":
+    return ms_extent
+  else:
+    x0,y0,x1,y1=eval('['+ms_extent.replace(' ',',')+']')
+    proj4326 = pyproj.Proj(init='epsg:4326')
+    projlayer = pyproj.Proj({'init':ms_srs})
+    lon0,lat0 = pyproj.transform(projlayer,proj4326,x0,y0)
+    lon1,lat1 = pyproj.transform(projlayer,proj4326,x1,y1)
+    return "%f %f %f %f" % (lon0,lat0,lon1,lat1)
 
 def application(env, start_response):
   status = '200 OK'
@@ -38,12 +52,13 @@ def application(env, start_response):
   
   for i in range(0,map.numlayers):
    layer = map.getLayer(i)
-   extent = layer.metadata.get('wms_extent')
+   
    zoom = layer.metadata.get('zoomlevels')
    if zoom is None:
     zoom = 19
    zoom = int(zoom)+1
    if layer.name != 'copyright':
+    extent = gen4326Extent(layer.metadata.get('wms_extent'),layer.metadata.get('wms_srs'))
     index_html += "<hr />\n"
     index_html += '<table border="0" width="100%">\n'
     index_html += '<tr><td width="30%%"><b>Name:</b></td><td>%s</td></tr>' % layer.name

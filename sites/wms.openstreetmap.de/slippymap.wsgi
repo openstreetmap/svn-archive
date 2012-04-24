@@ -11,7 +11,21 @@
 template='/osm/wms/templates/slippymap.html'
 mapfile='/osm/wms/osmwms.map'
 
-import re,cgi,mapscript,os
+import re,cgi,mapscript,os,pyproj
+
+# this will generate an extent in WGS84 projection
+# regardless of the actual layer projection
+def gen4326Extent(ms_extent,ms_srs):
+  ms_srs=ms_srs.lower()
+  if ms_srs == "espg:4326":
+    return ms_extent
+  else:
+    x0,y0,x1,y1=eval('['+ms_extent.replace(' ',',')+']')
+    proj4326 = pyproj.Proj(init='epsg:4326')
+    projlayer = pyproj.Proj({'init':ms_srs})
+    lon0,lat0 = pyproj.transform(projlayer,proj4326,x0,y0)
+    lon1,lat1 = pyproj.transform(projlayer,proj4326,x1,y1)
+    return "%f %f %f %f" % (lon0,lat0,lon1,lat1)
 
 def genHTML(template,layername,bounds,zoom):
   templ = open(template,'r')
@@ -38,7 +52,7 @@ def application(environ, start_response):
   if layer is None:
    output = ('<html><body>&quot;<b>%s</b>&quot; is not a valid layername!</html></body>' % layername)
   else:
-   bounds=layer.metadata.get('wms_extent').replace(' ',',')
+   bounds=gen4326Extent(layer.metadata.get('wms_extent'),layer.metadata.get('wms_srs')).replace(' ',',')
   
    zoom = layer.metadata.get('zoomlevels')
    if zoom is None:

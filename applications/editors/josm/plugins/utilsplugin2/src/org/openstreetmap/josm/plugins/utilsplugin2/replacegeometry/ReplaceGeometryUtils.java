@@ -16,7 +16,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
- * @author Josh
+ * @author joshdoe
  */
 public final class ReplaceGeometryUtils {
     private static final String TITLE = tr("Replace Geometry");
@@ -33,9 +33,9 @@ public final class ReplaceGeometryUtils {
         } else if (firstObject instanceof Way && secondObject instanceof Way) {
             return buildReplaceWayWithNewCommand(Arrays.asList((Way) firstObject, (Way) secondObject));
         } else if (firstObject instanceof Node) {
-            return createUpgradeNodeCommand((Node) firstObject, secondObject);
+            return buildUpgradeNodeCommand((Node) firstObject, secondObject);
         } else if (secondObject instanceof Node) {
-            return createUpgradeNodeCommand((Node) secondObject, firstObject);
+            return buildUpgradeNodeCommand((Node) secondObject, firstObject);
         } else {
             throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
@@ -55,10 +55,10 @@ public final class ReplaceGeometryUtils {
         } else if (subjectObject instanceof Way && referenceSubject instanceof Way) {
             return buildReplaceWayCommand((Way) subjectObject, (Way) referenceSubject);
         } else if (subjectObject instanceof Node) {
-            return createUpgradeNodeCommand((Node) subjectObject, referenceSubject);
+            return buildUpgradeNodeCommand((Node) subjectObject, referenceSubject);
         } else if (referenceSubject instanceof Node) {
             // TODO: fix this illogical reversal?
-            return createUpgradeNodeCommand((Node) referenceSubject, subjectObject);
+            return buildUpgradeNodeCommand((Node) referenceSubject, subjectObject);
         } else {
             throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
@@ -107,7 +107,7 @@ public final class ReplaceGeometryUtils {
      * @param subjectNode node to be replaced
      * @param referenceObject object with greater spatial quality
      */
-    public static ReplaceGeometryCommand createUpgradeNodeCommand(Node subjectNode, OsmPrimitive referenceObject) {
+    public static ReplaceGeometryCommand buildUpgradeNodeCommand(Node subjectNode, OsmPrimitive referenceObject) {
         if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
             throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
@@ -428,6 +428,15 @@ public final class ReplaceGeometryUtils {
      * @return
      */
     protected static List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) {
+        // determine if the same key in each object has different values
+        boolean keysWithMultipleValues;
+        Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
+        set.add(source);
+        set.add(target);
+        TagCollection tagCol = TagCollection.unionOfAllPrimitives(set);
+        Set<String> keys = tagCol.getKeysWithMultipleValues();
+        keysWithMultipleValues = !keys.isEmpty();
+            
         Collection<OsmPrimitive> primitives = Arrays.asList(source, target);
         
         Set<RelationToChildReference> relationToNodeReferences = RelationToChildReference.getRelationToChildReferences(primitives);
@@ -447,8 +456,10 @@ public final class ReplaceGeometryUtils {
         dialog.prepareDefaultDecisions();
 
         // conflict resolution is necessary if there are conflicts in the merged tags
-        // or if at least one of the merged nodes is referred to by a relation
-        if (!tags.isApplicableToPrimitive() || relationToNodeReferences.size() > 1) {
+        // or if both objects have relation memberships
+        if (keysWithMultipleValues || 
+                (!RelationToChildReference.getRelationToChildReferences(source).isEmpty() &&
+                 !RelationToChildReference.getRelationToChildReferences(target).isEmpty())) {
             dialog.setVisible(true);
             if (dialog.isCanceled()) {
                 return null;

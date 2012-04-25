@@ -4,7 +4,9 @@
 #BBOX=9.911,49.774,9.9929,49.8282
 #BBOX=9.9315,49.78324,9.97245,49.81036
 # ganz Deutschland:
-BBOX=3.46,46.92,15.87,55.69
+#BBOX=3.46,46.92,15.87,55.69
+# 22° Streifen
+BBOX=0,-89.9,30,89.9
 
 JOINWAYS=/home/osm/workspace/parking/joinways/joinways.py
 python $JOINWAYS --bbox $BBOX --dsn 'dbname=gis'

@@ -31,7 +31,7 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
     private final JTextField distanceFactor = new JTextField(8);
 
     public SimplifyAreaPreferenceSetting() {
-        super("simplifyArea", "Simplify Area", "Node of the way (area) is removed if all of <u>Angle Weight</u>, <u>Area Weight</u> and <u>Distance Weight</u> are greater than 1. " +
+        super("simplifyArea", tr("Simplify Area"), tr("Node of the way (area) is removed if all of <u>Angle Weight</u>, <u>Area Weight</u> and <u>Distance Weight</u> are greater than 1. " +
                 "<u>Weight</u> is computed as <u>Value</u> / <u>Threshold</u>, where <u>Value</u> is one of <u>Angle</u>, <u>Area</u> and <u>Distance</u> " +
                 "computed from every three adjanced points of the way." +
                 "<ul><li><u>Value</u> of <u>Angle</u> is angle in degrees on the second node</li>" +
@@ -39,7 +39,7 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
                 "<li><u>Value</u> of the <u>Distance</u> is Cross Track Error Distance</li></ul>" +
                 "All three <u>Weight</u>s multiplied by its <u>Factor</u>s are summed and node of the lowest sum is removed first. " +
                 "Removal continues until there is no node to remove." +
-                "Merge Nearby Nodes is another step of the simplification that merges adjanced nodes that are closer than <u>Threshold</u> meters.");
+                "Merge Nearby Nodes is another step of the simplification that merges adjanced nodes that are closer than <u>Threshold</u> meters."));
     }
 
     @Override

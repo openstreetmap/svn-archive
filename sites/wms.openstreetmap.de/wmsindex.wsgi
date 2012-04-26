@@ -71,7 +71,8 @@ def application(env, start_response):
     index_html += '<tr><td width="30%%"><b>Content:</b></td><td>%s</td></tr>' % layer.metadata.get('wms_title')
     index_html += '<tr><td width="30%%"><b>Bounding Box:</b></td><td>%s</td></tr>' % extent
     index_html += '<tr><td width="30%%"><b>TMS URL for JOSM Imagery:</b></td><td><b>tms:%s/%s (zoom %d)</b></td></tr>' % (tmsurl,layer.name,zoom)
-    index_html += '<tr><td width="30%%"><b>WMS URL (for JOSM/Merkaartor):</b></td><td>%s?layers=%s&</td></tr>' % (wmsurl,layer.name)
+    if not layer.metadata.get('-wms-disabled'):
+     index_html += '<tr><td width="30%%"><b>WMS URL (for JOSM/Merkaartor):</b></td><td>%s?layers=%s&</td></tr>' % (wmsurl,layer.name)
     index_html += '<tr><td width="30%%"><b>Interactive map:</b></td><td><a href="%s/%s">%s/%s</a></td></tr>' % (mapurl,layer.name,mapurl,layer.name)
     latlon=extent.split()
     lon1=float(latlon[0])

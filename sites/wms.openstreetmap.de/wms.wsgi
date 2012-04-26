@@ -147,9 +147,13 @@ def application(env, start_response):
   try:
     layer=map.getLayerByName(query_layers)
     cstring=layer.metadata.get('copyright')
-    wms_disabled=layer.metadata.get('-wms-disabled')
   except:
     cstring=tcopyright
+
+  try:
+    wms_disabled=layer.metadata.get('-wms-disabled')
+  except:
+    wms_disabled='false'
   
   if wms_disabled == 'true' and not tilemode:
     return SException(start_response,'No WMS available for this layer, try TMS.')

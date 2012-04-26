@@ -460,7 +460,7 @@ LAYER
   CONNECTIONTYPE WMS
   METADATA
     "wms_title" "Luftbilder Liegenschaftsamt Karlsruhe"      
-    "wms_extent" "8.2756 48.9367 8.5471 49.0963"
+    "wms_extent" "3447002.869937 5422401.381695 3466999.846248 5439996.318378"
     "wms_srs" "EPSG:31467"
     "wms_server_version" "1.1.1"
     "wms_name" "0"

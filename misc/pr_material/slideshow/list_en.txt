@@ -1,0 +1,174 @@
+﻿2010-11-21_124231_656x1121_scrot_white_nile_dozen_islets.png:A part of the White Nile traced from underlying Landsat aerial imagery.
+2012-01-24_162433_scrot_coastline_error_Colombia_partly_rerendered_OSM.jpg:Result of misused coastlines in Colombia.
+2012-01-24_162648_scrot_coastline_error_Colombia_removed_OSM.jpg:After cleaning up the coastlines.
+2012-02-09_194844_scrot_Screenshot_Freiberg_Zentrum_weißer_Hintergrund_bearb.png:Center of a middle size town in JOSM.
+2011-03-29_060739_846x682_scrot.png:Not connected ferry routes cause routing problems.
+2011-03-29_060721_895x826_scrot.png:Not connected ferry routes cause routing problems.
+Lake_Nasser_old_gkrellShoot_2009-10-11_215934.png:Reservoir Lake Nasser right after a rework with JOSM and the (now outdated) Plugin Lakewalker.
+2011-03-22_175259_1526x1020_scrot_OSMembrane.png:OSMembrane is a graphical frontend for the mighty tool OSMosis
+2012-01-24_162304_scrot_coastline_error_near_Tashkent_OSM.jpg:Effect of a broken coastline near Tashkent.
+2012-01-24_162334_scrot_coastline_error_near_Tashkent_removed_OSM.jpg:Same place near Tashkent after repair.
+2012-01-24_162853_scrot_coastline_error_Colombia_zoomed_OSM.jpg:Effect of a broken coastline in Colombia.
+2012-01-24_162914_scrot_coastline_error_Colombia_zoomed_removed_OSM.jpg:Colombia after repair.
+2012-01-29_220401_scrot_osm_planned_routes_and_traced_ways.png:Ways planned to trace (purple) and really traced ones.
+2012-03-11_135159_scr_useless_import.jpg:Useless import since the imported data neither was better nor was reviewed by the importer.
+2011-11-09_174136_1407x1062_GPS-traces_at_0.0_scrot.jpg:GPS data at 0.0
+2011-09-12_215129_767x660_gpx_jump_scrot.jpg:A jumping GPX log.
+2011-05-15_122902_1893x1200_scrot_OSM_vandalism_Villahermosa.png:Effect of erroneous editing at Villahermosa.
+2011-05-15_221006_1893x1200_scrot_OSM_completely_fixed_vandalism_Villahermosa.png:Villahermosa fine again.
+2011-03-29_190139_1665x1118_scrot_gps_wolke_im_gpx.png:GPX-cloud
+2011-03-21_221306_1920x1200_scrot_JOSM_modern_art_missglückte_osmosis-abfrage.png:Erroneous
+(due to user) filtering by OSMosis.
+2011-03-12_133936_1309x1102_scrot_postleitzahlen_plz_germany.png:Postcode relations of Germany.
+2011-02-28_222107_1554x1094_scrot_tracing_europe.png:Some GPS traces across Europe.
+2011-02-12_232641_1893x1200_scrot_Josm_Tundra_leer_neu.png:Screenshot of Bing imagery in JOSM showing lakes in the tundra.
+2011-02-12_232709_1893x1200_scrot_Josm_Tundra_mapped.png:Screenshot of Bing imagery in JOSM showing mapped lakes in the tundra.
+2011-02-12_232742_1893x1200_scrot_Josm_Tundra_mapped_data_only.png:Screenshot of JOSM showing mapped lakes in the tundra.
+2011-02-11_231844_1186x1025_scrot_some_gpx_clouds.png:A collection of GPX logs with some clouds.
+2011-02-11_231723_1871x1106_scrot_december_2010.png:A months GPX logs.
+ITO_contributors_California_Bay.png:Major contributors to OpenStreetMap in the bay area of California (created by itoworld)
+ITO_contributors_London_detail.png:Major contributors to OpenStreetMap in central London (created by itoworld)
+ITO_edits_Milan.png:Edits in Milano (created by itoworld)
+ITO_Europe_secondary_highways.png:highway= primary and highway= secondary in Europe (created by itoworld)
+ITO_Minsk_buildings.png:Buildings (building=yes) in MInsk (created by itoworld)
+ITO_Wales_streams.png:waterways in Wales (created by itoworld)
+ford.jpg:highway=ford bei Banjat e Bënjes in Albania
+slowenien.jpg:Mapper aren't scared off easily: this track in Slovenia was temporarily flooded
+albanien.jpg:Not every highway=primary is paved (Albania)
+working_place_arbeitsplatz.jpg:JOSM running on two displays
+hikebikemap.de_on_HP_TouchPad.jpg:topographic hike- and bikemap: hikebikemap.de
+geo_1_osm.jpg:OSM-Vertreter beim Spitzen-gespräch "Digitalisierung von Stadt und Land" im Bundes-ministerium des Innern (Foto: BMI).
+2010-1.jpg:15 cm highres aerial imagery with 0.5 m positional accuracy of Lauf in Germany  donated by the local municipality. (KW 1/2010)
+2010-2.png:the bicyclemap now with hill-shading. (KW 2/2010)
+2010-3.jpg:Our response to the earthquake: WikiProject Haiti. (KW 3/2010)
+2010-4.png:Based on the second batch of tracks and panoramic images from norc.ro, the Romanian contributors organized a Virtual Mapping Party. In the image you can see the progress in Tulcea after a few days work. (KW 4/2010)
+2010-5.jpg:Nothing left to map? Try underground pipelines, deduced from manholes, wall markers and open pit construction work. (KW 5/2010)
+2010-6.jpg:Big printed OpenStreetMaps at the crisis center of the Worldbank for the earthquake of Haiti. (KW 6/2010)
+2010-7.png:A JOSM plugin can create GPS-Traces while steering a car of the early nineties through a WMS landscape. (KW 7/2010)
+2010-8.png:Rendering of Ayala Center on the OpenOrienteering map. (KW 8/2010)
+2010-9.png:mapgen.pl is a simple perl renderer for maps in SVG, PNG and PDF. (KW 9/2010)
+2010-10.jpg:map showing the data complexity (rot = more complex) (KW 10/2010)
+2010-11.jpg:This map shows the parts of London which have been renewed during the last year. (map from OSM Mapper) (KW 11/2010)
+2010-12.jpg:An isometric 3D map of Kralupy nad Vltavou Czech. (KW 12/2010)
+2010-13.jpg:OpenStreetMap Workshop at the FEATI University of Manila, Philippines. (KW 13/2010)
+2010-14.png:Helsinki at night - the Hike & Bike Map with the "at Night"-Overlay. (KW 14/2010)
+2010-15.png:Promenade Gardens in Georgetown, Guyana. Ways between trees an flowers in the park. (KW 15/2010)
+2010-16.png:TownGuide creates PDF maps with street and POI index. (KW 16/2010)
+2010-17.jpg:The OSM test for "free"-dom -- can you print it on a cake? Here a map of the Marikina Mapping Party. (KW 17/2010)
+2010-18.png:Survey points and topology, one of many map styles available for Garmin. (KW 18/2010)
+2010-19.jpg:An image showing itoWorld's visualisation of flights after vulcano Eyjafjallajökull erupted . (KW 19/2010)
+2010-20.jpg:Simon Clayson reports an OSM map being used for the route maps at trains of the Great Western. (KW 20/2010)
+2010-21.jpg:Mappers in the Kibera area of Nairobi. Mikel Maron is running a project called mapkibera there. (KW 21/2010)
+2010-23.JPG:Encouraging locals to contribute local POI information. Pins on a map at Spacemakers Brixton mini mapping party. (KW 23/2010)
+2010-26.JPG:Participants of OSMit2010, the second Italian meeting on OSM held in Genoa. (KW 26/2010)
+2010-27.png:GpsDrive showing OpenCycleMap tiles of the Balearic Islands. (KW 27/2010)
+2010-28.jpg:State Of The Map 2010 conference in Girona (Spain) (KW 28/2010)
+2010-29.jpg:Bus and tram stops in Kosice show OSM maps. (KW 29/2010)
+2010-30.JPG:Participants of Graian Alps Mapping Party, the second event on Italian mountain. (KW 30/2010)
+2010-31.png:Distribution of natural=tree nodes in Szczecin obtained from the city's cadastre bureau. (KW 31/2010)
+2010-32.JPG:Jhabjan's map of Sinj in Croatia, created for the tourism office. Aerial imagery was donated by the local aerial club. (KW 32/2010)
+2010-33.png:6 years after OSM started the British Islands arre mapped quite good. (KW 33/2010)
+2010-34.png:Hamburg has a large carnival three times a year for each 4 weeks. User mbuege maps all the attractions and fast food stands. (KW 34/2010)
+2010-35.jpg:OpenStreetMap meeting in Merida, Venezuela, August 2010 (KW 35/2010)
+2010-36.jpg:It doesn't need expensive tools to map for OSM: seav's notes during the Ortigas-Mandaluyong Mapping Party. (KW 36/2010)
+2010-37.png:Building outlines in Staffanstorp, Sweden courtesy of the town council GIS. (KW 37/2010)
+2010-38.png:An 8bit-game-like map of New York City based on OSM data. http://8bitnyc.com/ (KW 38/2010)
+2010-39.png:OSM map of Merida, Venezuela. Data by Fundacion GeoHorizontes de Venezuela, collected by HernanRamirez. (KW 39/2010)
+2010-40.jpg:Mapping Party in Marburg: Blind and seeing mappers discover a haptic model of the Elisabethkirche with barrier free GPS devices. (KW 40/2010)
+2010-41.jpg:Великие Луки Mapping Weekend banner: "We've come from different cities of Russia and Belarus to create the best map of Velikiye Luki in the world" (KW 41/2010)
+2010-42.jpg:One year after importing CORINE land cover data for France at 69 percent of the country landuses are mapped. (KW 42/2010)
+2010-43.jpg:Typographic maps manually traced from OSM data (KW 43/2010)
+2010-44.jpg:First results of the Kite Aerial Photography (KAP) – also a good advertising for OSM. (KW 44/2010)
+2010-45.png:The Nike Grid game is using OSM maps for London (with some help from Stamen and OSM attribution) (KW 45/2010)
+2010-46.png:OSM maps for political campaigns (Toronto) (KW 46/2010)
+2010-48.png:Adobe Illustrator showing a map of the city of Dublin - the SVG file was created with the latest version of Maperitive (KW 48/2010)
+2010-50.jpg:A great day mapping for residents of Montreuil-le-Gast (Brittany, France). The first time for many of us, but ultimately a great success! (KW 50/2010)
+2010-51.png:Komяpa found a way to render buildings in 3D. The Ostankino tower (mapped by Hind) looks realistic! (KW 51/2010)
+2010-52.png: The accessibility map of Castelfiorentino, Italy was made in the participatory process “Free Access for all”. (KW 52/2010)
+2011-1.png:Maps for winter sports at openpistemap.org with hillshading. (KW 1/2011)
+2011-2.png:OpenStreetMap on the british TV (K-9 episode "The Bounty Hunter" ). (KW 2/2011)
+2011-3.jpg:Landuse in Romania – data of the EEA consisting of 100 000 polygones was imported into OSM in December 2010. (KW 3/2011)
+2011-4.jpg:Fugro allows using his 40 cm aerial imagery for OpenStreetMap. (KW 4/2011)
+2011-5.jpg:Municipality council using Nicolas Dumoulin's map of potential flood, fire, cave-in hazards in a town.. (KW 5/2011)
+2011-6.png:Campus map uploaded to OSM by University of Delaware. (KW 6/2011)
+2011-7.png:glosm is a hardware-supported OpenGL-based OpenStreetMap renderer which can create 3D views. This example shows an area in Moskow. (KW 7/2011)
+2011-8.jpg:The software Gosmore with a 3D map of the theme park Marienfelde, Berlin (KW 8/2011)
+2011-9.png:OpenSeaMap showing a storm in the North Atlantic. Data provided by US and rendered by bluewater-info.net. (KW 09/2011)
+2011-10.png:Maperitive's custom DEM support showing detail of Viewfinder's Alps SRTM1 DEM compared to SRTM, for Lake Brienz area.. (KW 10/2011)
+2011-11.gif:The city of Saransk was mapped in only 50 hours. User osmisto has organized the first Russian online mapping party: it's still cold outside, so almost everyone attended. (KW 11/2011)
+2011-12.jpg:Tom Carden's Travel Time Tube Map creates isochronic maps of the London Underground (KW 12/2011)
+2011-13.png:Example of mySociety's travel maps, showing start-locations from which one type of transport beats another (in this case, public-transport vs car). (KW 13/2011)
+2011-14.jpg:OSM-3D now is available for all over Europe as virtual globe. (KW 14/2011)
+2011-15.png:A video shows the OpenStreetMap of Saransk and its possibilities. (KW 15/2011)
+2011-16.jpg:osm2xp uses OSM data to create buildings in 3D for the flight simulator X-Plane. (KW 16/2011)
+2011-17.png:Since April 1st OpenWhateverMap shows several map styles on one map. (KW 17/2011)
+2011-19.jpg:JOSM on a Asus Tablet PC with touchscreen (KW 19/2011)
+2011-20.jpg:London/Summer 2011 mapping parties are a sequence of social meet-ups on week-day evenings which may possibly include some mapping. (KW 20/2011)
+2011-21.png:23448 km from Vladivostok to Southafrica. 301 hours by car. Probably the longest route available at a public routing engine. (Cloudmade) (KW 21/2011)
+2011-22.png:Olympic sites starting to appear on the map as the buildings are completed. (KW 22/2011)
+2011-24.jpg:Comparison against IGN's BD Topo maps of Brittany: Green areas mean OSM has more than half the roads mapped. (KW 24/2011)
+2011-25.jpg:At the XHouseT project buildings details are mapped with the help of JOSM presets. Afterwards out of the OSM data X-Plane sceneries get rendered. (KW 25/2011)
+2011-27.png:OpenStreetMap printed on a blanket. (KW 27/2011)
+2011-28.png:Surveying centre of Penza (Russia) on mapping party – Photo mapping is a great way to quickly capture information about POIs, buildings, paths and other details. (KW 28/2011)
+2011-29.jpg:State Of The Map Europe 2011 attendees also attending a bar in Vienna with /big/ beers. (KW 29/2011)
+2011-30.jpg:Group photo from State Of The Map Europe 2011 conference in Vienna. (KW 30/2011)
+2011-31.png:The geodata of the Rowan Universität in OSM (KW 31/2011)
+2011-32.png:Detail of Venice map, where all transport is footpaths and canals. (Cloudmade featured style) (KW 32/2011)
+2011-33.jpg:Der Cambridgeshire Spurbus öffnete letzte Woche und es ist in OSM gemappt: Karte. (KW 33/2011)
+2011-34.png:Der Petersburger Damm wurde letzte Woche eröffnet, und ist bereits in OSM gemappt (KW 34/2011)
+2011-35.png:Map(nik)-Kuchen von der 7. OSM Geburtstagsparty in Toronto (KW 35/2011)
+2011-36.png:Die OSM Heat Map zeigt dir, wo du zu OSM beigetragen hast. (KW 36/2011)
+2011-37.jpg:Group photo with some of the Humanitarian OpenStreetMap Team in SOTM11 (KW 37/2011)
+2011-38.jpg:Welcome to see OSM's physical presence (KW 38/2011)
+2011-39.jpg:State Of The Map 2011 group photo, Denver, USA. 178 people. (KW 39/2011)
+2011-40.png:OSM Kindle maps, rendered in greyscale and optimised for one device (KW 40/2011)
+2009-1.jpg:A frame from 'OSM 2008 - A year of edits. Animation on the ITO Vimeo site. (KW 1/2009)
+2009-2.png:Postcodes of London displayed on the postcode map. (KW 2/2009)
+2009-3.png:The grid of british railways now is available on OpenTrainMap and the OSM UK rail network map. (KW 3/2009)
+2009-4.png:The Naga City GIS released their data to public domain and is now imported to OSM. All roads, railways, rivers and buildings. (KW 4/2009)
+2009-5.png:Map of Tartu, the green University town in Estonia were contributed by the City Government (KW 5/2009)
+2009-6.png:Where-can-i-live uses OSM maps to display houses within a certain commute time of work. (KW 6/2009)
+2009-8.png:osmdiff is a program to visualize and report changes in an area (KW 8/2009)
+2009-9.jpg:Kolumbianische Mapper besteigen den Vulkan Nevado del Ruiz (KW 9/2009)
+2009-10.jpg:http://www.norc.ro is a service similar to Google StreetView, offered by a Romanian company. They are using OpenStreetMap as an overlay to display the panoramas. (KW 10/2009)
+2009-11.png:GroundTruth is a new mapmaking tool for converting OSM data into Garmin maps. This featured image is a collage of various screenshots taken from MapSource, a Garmin unit and from Wiki pages containing rendering rules. (KW 11/2009)
+2009-12.png:Computer Science students at the University of Maryland have created a pedestrian routing map based on OpenStreetMap data. Support is even included for wheel friendly routing, and avoiding certain areas. (KW 12/2009)
+2009-13.jpg:OSM-3D view of Dresden from a Java 3D Map (KW 13/2009)
+2009-14.png:With the recently finished ABS Import of suburb boundary data, all of Australia has relatively up-to-date suburb boundary information. Image shows progress of import in Brisbane area, created using OSM Mapper. (KW 14/2009)
+2009-15.png:A routing plugin für JOSM. (KW 15/2009)
+2009-16.png:With GroundTruth created hillshading map for Garmin devices. Die Höhendaten stammen aus der Shuttle-Mission SRTM. The image shows MapSource. (KW 16/2009)
+2009-17.png:CloudMade's routing API gives turn-by-turn directions for vehicles, bicycles and pedestrians - all powered by OSM data (shown: route around Googleplex (KW 17/2009)
+2009-18.png:The building and open space layers from MassGIS for large swathes of Massachusetts have been imported thanks to effort by User:crschmidt and others in the region. [1] (KW 18/2009)
+2009-19.jpg:Sir Tim Berners-Lee recently received both a doctor honoris causa award (for his outstanding contributions to the WWW) and a hi-viz vest (for his outstanding mentions of OSM) (KW 19/2009)
+2009-20.jpg:TopOSM is a topographic view of OSM data (KW 20/2009)
+2009-21.png:MapAnalyst is an open source tool for distortion analysis in old maps, that uses OSM as a the default reference cartography. (Shown here: 1:50k map of Madrid dated from 1875) (KW 21/2009)
+2009-22.jpg:The first GPS device donated by the OSM foundation's GPStogo scheme at the mapping party and conference in Neiva Colombia (KW 22/2009)
+2009-23.jpg:The Sunderland Mapping Party being an example of the successful Mapping parties idea. Sunderland was chosen from the UK Mapping Priorities list. (KW 23/2009)
+2009-24.jpg:Thanks to the Mappa Mercia-subproject a printed map of Birmingham is available. (KW 24/2009)
+2009-25.png:A heat map of the complexity of OpenStreetMap (Tah-heatmap). (KW 25/2009)
+2009-26.jpg:The HaptoRender-Project created the first tactile map from OpenStreetMap data. (KW 26/2009)
+2009-27.png:The osmlive service shows worldwide OSM edits in delayed real-time. This image shows the result of a typical 24 hours of activity.. (KW 27/2009)
+2009-28.png:Trafficman Maps From Android 1.0 is released - edit OSM with the G1 from T-Mobile. 1 (KW 28/2009)
+2009-29.png:A visualasion of density shows ship movements in front of Rotterdam harbour. (KW 29/2009)
+2009-30.jpg:Group photo at the State Of The Map 2009. (KW 30/2009)
+2009-31.JPG:3D view of a route from http://www.osm-3d.org (KW 31/2009)
+2009-32.png:Mapper at the West Bank (KW 32/2009)
+2009-34.png:OpenStreetMap in Irish (Parks in Baile Átha Cliath at Ævar Arnfjörð Bjarmasons experimental Wikipedia map) or other languages. (KW 34/2009)
+2009-35.png:Grid of cycleways in Perth. With bicycle tagging further routes can be added. (KW 35/2009)
+2009-36.png:Black Rock City at the Burning Man Festival (KW 36/2009)
+2009-37.JPG:Much fun and new ways during the three days lasting Dolomiti Mapping Party at the Brenta's Dolomites. The picture was taken near the Tuckett hut. (KW 37/2009)
+2009-39.png:A touristic map of the Gaza strip! Could you ever see such a thing with commercial maps? (KW 39/2009)
+2009-40.png:Peculiar spiral street arrangement in the Pineta area of Lignano Sabbiadoro, Italy. (KW 40/2009)
+2009-41.png:Mapper in Bethlehem (KW 41/2009)
+2009-42.jpg:The Hüttenbach tourism association erected 12 printed hiking maps based on OSM. (KW 42/2009)
+2009-43.jpg:Rostock-3D - a 3D city model in OSM, with all buildings and correct building heights. (KW 43/2009)
+2009-45.png:Die TIGER Edited Map [1] zeigt den Fortschritt bei der Reparatur der TIGER-Daten der USA. (KW 45/2009)
+2009-46.png:A high resolution map of Grenoble based on the french cadastre data. (KW 46/2009)
+2009-47.jpg:Density of nodes in Scotland. (KW 47/2009)
+2009-48.jpg:maposmatic kann Stadtkarten erzeugen. Hier Saint-Pierre-du-Perray mit Straßenverzeichnis. (KW 48/2009)
+2009-49.jpg:Mit OpenStreetMap-Tassen sind die Map Features immer zur Hand. (KW 49/2009)
+2009-51.png:Einzeln getaggte Bäume in Alameda de Cervantes. (KW 51/2009)
+2009-52.png:Palmanova, Der Weihnachtsstern von Friuli Venezia Giulia. (KW 52/2009)
+Download-Layer Ostsee.png:Offline-Seekarten von OpenSeaMap
+SeaClearWannsee.png:Navigation mit OpenSeaMap und SeaClear 
+Wetter_Atlantiksturm.png:Atlantiksturm - Wetterkarte auf OpenSeaMap 

@@ -14,7 +14,7 @@ my $SIZE=20;
 my $FONT="/usr/share/fonts/dejavu/DejaVuSans.ttf";
 
 
-open(L,"liste") or die;
+open(L,"list") or die;
 
 my $count = 1;
 while(<L>)

@@ -16,6 +16,8 @@
 package org.openstreetmap.josm.plugins.opendata.core.io;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -106,21 +108,31 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 			schemaURL = schemas.get(0);
 		}
 		
-		Source xmlFile = new StreamSource(file);
-		
 		try {
-			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(schemaURL);
-			Validator validator = schema.newValidator();
-			validator.validate(xmlFile);
-			System.out.println(xmlFile.getSystemId() + " is valid");
-			return true;
-		} catch (SAXException e) {
-			System.out.println(xmlFile.getSystemId() + " is NOT valid");
-			System.out.println("Reason: " + e.getLocalizedMessage());
-		} catch (IOException e) {
-			System.out.println(xmlFile.getSystemId() + " is NOT valid");
-			System.out.println("Reason: " + e.getLocalizedMessage());
+			FileInputStream in = new FileInputStream(file);
+			Source xmlFile = new StreamSource(in);
+			try {
+				SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+				Schema schema = schemaFactory.newSchema(schemaURL);
+				Validator validator = schema.newValidator();
+				validator.validate(xmlFile);
+				System.out.println(xmlFile.getSystemId() + " is valid");
+				return true;
+			} catch (SAXException e) {
+				System.out.println(xmlFile.getSystemId() + " is NOT valid");
+				System.out.println("Reason: " + e.getLocalizedMessage());
+			} catch (IOException e) {
+				System.out.println(xmlFile.getSystemId() + " is NOT valid");
+				System.out.println("Reason: " + e.getLocalizedMessage());
+			} finally {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// Ignore exception 
+				}
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println(e.getMessage());
 		}
 		
 		return false;

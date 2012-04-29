@@ -296,14 +296,19 @@
       <PointSymbolizer file="&symbols;/tourist_archaeological2.glow.16.png" placement="interior"/>
     </Rule>
     <Rule>
-      &maxscale_zoom13;
+      &maxscale_zoom14;
       <Filter>[historic]='castle' and [ruins]='yes'</Filter>
       <PointSymbolizer file="&ATKISsymbols;/burgruine.png" placement="interior"/>
     </Rule>
     <Rule>
-      &maxscale_zoom13;
+      &maxscale_zoom14;
       <Filter>[historic]='castle' and not [ruins]='yes'</Filter>
       <PointSymbolizer file="&ATKISsymbols;/burg.png" placement="interior"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom17;
+      <Filter>[historic]='castle'</Filter>
+      <TextSymbolizer size="10" fill="black" dy="9" fontset-name="bold-fonts" halo-radius="1" wrap-width="34" placement="interior">[name]</TextSymbolizer>
     </Rule>
     <Rule>
       &maxscale_zoom16;
@@ -386,7 +391,7 @@
     <StyleName>points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,tags->'ruins' as ruins
+      (select way,coalesce("name:de",name) as name,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,tags->'ruins' as ruins
       from &prefix;_point
       where amenity is not null
          or shop is not null
@@ -405,7 +410,7 @@
     <StyleName>points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,tags->'ruins' as ruins
+      (select way,coalesce("name:de",name) as name,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,tags->'ruins' as ruins
       from &prefix;_polygon
       where amenity is not null
          or shop is not null

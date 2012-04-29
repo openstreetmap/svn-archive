@@ -6,12 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -23,7 +17,7 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
     public LaunchAction()  {
         super(
                 tr("Edit tags"),
-                null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
+                (String)null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
                 tr("Launches the tag editor dialog"),
                 Shortcut.registerShortcut("edit:launchtageditor", tr("Launches the tag editor dialog"),
                         KeyEvent.VK_1,Shortcut.ALT_SHIFT)
@@ -44,11 +38,13 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
         dialog.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         launchEditor();
     }
 
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    @Override
+	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         setEnabled(newSelection != null && newSelection.size() >0);
     }
 }

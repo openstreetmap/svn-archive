@@ -29,4 +29,16 @@ public interface SpreadSheetHandler {
 	public boolean handlesProjection();
 
 	public LatLon getCoor(EastNorth en, String[] fields);
+
+	public void setLineNumber(int n);
+	
+	public int getLineNumber();
+
+	public void setXCol(int i);
+
+	public void setYCol(int i);
+	
+	public int getXCol();
+
+	public int getYCol();
 }

@@ -73,6 +73,10 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		return handler != null && handler.getSheetNumber() > -1 ? handler.getSheetNumber() : 0;
 	}
 	
+	protected final int getLineNumber() {
+		return handler != null ? handler.getLineNumber() : -1;
+	}
+	
 	private class CoordinateColumns {
 		public int xCol = -1;
 		public int yCol = -1;
@@ -147,6 +151,10 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		while ((fields = readLine(progressMonitor)) != null) {
 			lineNumber++;
 			EastNorth en = new EastNorth(Double.NaN, Double.NaN);
+			if (handler != null) {
+				handler.setXCol(-1);
+				handler.setYCol(-1);
+			}
 			Node n = new Node();
 			for (int i = 0; i<fields.length; i++) {
 				try {
@@ -154,8 +162,14 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 						throw new IllegalArgumentException(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, i+1));
 					} else if (i == columns.xCol) {
 						en.setLocation(parseDouble(fields[i]), en.north());
+						if (handler != null) {
+							handler.setXCol(i);
+						}
 					} else if (i == columns.yCol) {
 						en.setLocation(en.east(), parseDouble(fields[i]));
+						if (handler != null) {
+							handler.setYCol(i);
+						}
 					} else if (!allProjIndexes.contains(i)) {
 						if (!fields[i].isEmpty()) {
 							n.put(header[i], fields[i]);
@@ -184,14 +198,18 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		
 		String[] header = null;
 		int length = 0;
+		int n = 0;
 		
 		while (header == null || length == 0) {
+			n++;
 			header = readLine(progressMonitor);
 			length = 0;
-			if (header == null) {
+			if (header == null && n > getLineNumber()) {
 				return null;
-			} else for (String field : header) {
-				length += field.length();
+			} else if (header != null && (getLineNumber() == -1 || getLineNumber() == n)) {
+				for (String field : header) {
+					length += field.length();
+				}
 			}
 		}
 		

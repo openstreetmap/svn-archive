@@ -71,4 +71,12 @@ public abstract class OdUtils {
 		}
 		return lang;
 	}
+	
+    public static final double convertMinuteSecond(double minute, double second) {
+        return (minute/60.0) + (second/3600.0);
+    }
+
+    public static final double convertDegreeMinuteSecond(double degree, double minute, double second) {
+        return degree + convertMinuteSecond(minute, second);
+    }
 }

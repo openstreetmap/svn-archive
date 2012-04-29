@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.ed
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.education.EtabSupHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.hydrologie.EauxDeSurfaceHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.hydrologie.ROEHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.transport.AeroportsHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.transport.PassageNiveauHandler;
 
 public class DataGouvFrModule extends AbstractModule {
@@ -48,5 +49,6 @@ public class DataGouvFrModule extends AbstractModule {
         handlers.add(ReservesBiologiquesHandler.class);
         handlers.add(EauxDeSurfaceHandler.class);
         handlers.add(InventaireForestierNationalHandler.class);
+        handlers.add(AeroportsHandler.class);
     }
 }

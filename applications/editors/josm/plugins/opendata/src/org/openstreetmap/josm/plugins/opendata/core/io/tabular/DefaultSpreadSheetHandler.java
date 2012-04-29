@@ -21,7 +21,11 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class DefaultSpreadSheetHandler implements SpreadSheetHandler {
 
 	private int sheetNumber = -1;
+	private int lineNumber = -1;
 	private boolean handlesProjection = false;
+	
+	private int xCol = -1;
+	private int yCol = -1;
 	
 	@Override
 	public int getSheetNumber() {
@@ -46,5 +50,35 @@ public class DefaultSpreadSheetHandler implements SpreadSheetHandler {
 	@Override
 	public LatLon getCoor(EastNorth en, String[] fields) {
 		return null;
+	}
+
+	@Override
+	public void setLineNumber(int n) {
+		lineNumber = n;
+	}
+
+	@Override
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	@Override
+	public void setXCol(int i) {
+		xCol = i;
+	}
+
+	@Override
+	public void setYCol(int i) {
+		yCol = i;
+	}
+
+	@Override
+	public int getXCol() {
+		return xCol;
+	}
+
+	@Override
+	public int getYCol() {
+		return yCol;
 	}
 }

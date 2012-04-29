@@ -1,11 +1,11 @@
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
+import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -28,10 +28,11 @@ public class LoadImageAction extends JosmAction {
      * Constructor...
      */
     public LoadImageAction() {
-        super(tr("Import image"), null, tr("Import georeferenced image"), null, false, "importimage/loadimage", true);
+        super(tr("Import image"), (String)null, tr("Import georeferenced image"), null, false, "importimage/loadimage", true);
     }
 
-    public void actionPerformed(ActionEvent arg0) {
+    @Override
+	public void actionPerformed(ActionEvent arg0) {
 
         // Choose a file
         JFileChooser fc = new JFileChooser(Main.pref.get("plugins.importimage.importpath", null));

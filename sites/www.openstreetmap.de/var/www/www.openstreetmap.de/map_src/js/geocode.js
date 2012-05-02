@@ -40,21 +40,29 @@ var searchType = 'search';
  */
 function geocodeAddress(){
         var freeform = document.getElementById('tfSearch').value;
-        var query_1 = /[NS].(\d{2,})°\s+(\d{2}.\d{3})\s+[EW]\s+(\d{2,})°\s+(\d{2}.\d{3})/;
-	var query_2 = /(\d\d)\.(\d.+)\s+(\d\d)\.(\d+)/
+        var query_1 = /[NS]\s*(\d{2,})°\s+(\d{2}\.\d{3,})\s+[EW]\s*(\d{1,})°\s+(\d{2}\.\d{3,})/;
+	var query_2 = /(\d+)\.(\d.+)\s+(\d+)\.(\d+)/;
+        var query_3 = /[NS]\s*(\d{1,})°\s*(\d{2,})'\s*(\d{1,}\.\d{2,})"\s*[EW]\s*(\d{1,})°\s*(\d{2,})'\s*(\d{1,}\.\d{2,})"/
         if (query_1.test(freeform) == true){
 			query_1.exec(freeform);
 			var latitude = parseFloat(RegExp.$1) + parseFloat(RegExp.$2)/60;
 			var longtitude = parseFloat(RegExp.$3) + parseFloat(RegExp.$4)/60;
 			setMarkerAndZoom(new OpenLayers.LonLat(longtitude,latitude));
-		}
-		else if (query_2.test(freeform) == true){
+        }
+        else if (query_3.test(freeform) == true){
+                        query_3.exec(freeform);
+                        console.log(RegExp.$1, RegExp.$2,RegExp.$3,RegExp.$4,RegExp.$5,RegExp.$6);
+                        var latitude = ((parseFloat(RegExp.$3))/60 + parseFloat(RegExp.$2))/60 + parseFloat(RegExp.$1);
+                        var longtitude = (((parseFloat(RegExp.$6))/60 + parseFloat(RegExp.$5))/60) + parseFloat(RegExp.$4);
+			setMarkerAndZoom(new OpenLayers.LonLat(longtitude,latitude));
+        }
+	else if (query_2.test(freeform) == true){
 			query_2.exec(freeform);
 			var latitude = RegExp.$1 + "." + RegExp.$2;
 			var longtitude = RegExp.$3 + "." + RegExp.$4;
 			setMarkerAndZoom(new OpenLayers.LonLat(longtitude,latitude));
-		}
-		else {
+	}
+	else {
 			document.getElementById('information').style.visibility = 'visible';
 			document.getElementById('information').innerHTML =  '<p class="infoHL">Einen Moment bitte ...</p>';
 
@@ -63,7 +71,7 @@ function geocodeAddress(){
 			script.type = 'text/javascript';
 			script.src = newURL;
 			document.body.appendChild(script);
-		}
+	}
 }
 
 /*

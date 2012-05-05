@@ -37,6 +37,7 @@ import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
@@ -91,7 +92,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 		dir.delete();
 	}
 
-	public DataSet parseDoc(ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
+	public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
 		
 	    final File temp = createTempDir();
 	    final List<File> candidates = new ArrayList<File>();
@@ -155,16 +156,22 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			file = null;
 			
 			if (candidates.size() > 1) {
-				CandidateChooser dialog = (CandidateChooser) new CandidateChooser(progressMonitor.getWindowParent(), candidates).showDialog();
-				if (dialog.getValue() != 1) {
-					return null; // User clicked Cancel
+				DialogPrompter<CandidateChooser> prompt = new DialogPrompter() {
+					@Override
+					protected CandidateChooser buildDialog() {
+						return new CandidateChooser(progressMonitor.getWindowParent(), candidates);
+					}
+				};
+				if (prompt.promptInEdt().getValue() == 1) {
+					file = prompt.getDialog().getSelectedFile();
 				}
-				file = dialog.getSelectedFile();
 			} else if (candidates.size() == 1) {
 				file = candidates.get(0);
 			}
 			
-			if (file != null) {
+			if (file == null) {
+				return null;
+			} else {
 				DataSet from = null;
 				FileInputStream in = new FileInputStream(file);
 				ProgressMonitor instance = null;

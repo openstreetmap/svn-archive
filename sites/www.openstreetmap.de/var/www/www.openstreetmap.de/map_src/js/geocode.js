@@ -96,9 +96,17 @@ function showResultsGeocode(response) {
 			html += '<tr class="'+rowstyle+'">';
 			html += '<td align="right" valign="top"><span class="routeSummarybold">'+resultNum+'.</span></td>';
 			html += '<td class="'+rowstyle+'">';
+			if (result.class && result.type && result.class in geocoder_searchtypes &&
+			       geocoder_searchtypes[result.class][result.type] != undefined) {
+				html += geocoder_searchtypes[result.class][result.type] + ' ';
+			}
 			if(result.display_name){
 				var new_display_name = result.display_name;//.replace(/,/g, ",<br />")
 				html += '<a href="#" onclick="javascript:setMarkerAndZoom(new OpenLayers.LonLat('+result.lon+','+result.lat+'));">'+new_display_name.trim()+'</a>';
+			}
+			html += '</td><td>';
+			if(result.icon){
+				html += '<img src="' + result.icon + '">';
 			}
 			html += "</td></tr>";
 			

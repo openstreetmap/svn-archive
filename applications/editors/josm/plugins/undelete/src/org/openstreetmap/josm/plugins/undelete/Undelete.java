@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
@@ -119,9 +120,11 @@ public class Undelete extends Plugin {
         if (dialog.getValue() != 1) return;
         Main.pref.putInteger("undelete.lasttype", cbType.getSelectedIndex());
         Main.pref.put("undelete.newlayer", layer.isSelected());
-        Main.pref.put("undelete.osmid", Long.toString(tfId.getOsmId()));
+        Main.pref.put("undelete.osmid", tfId.getText());
         List<Long> ids=new ArrayList<Long>();
-        ids.add(tfId.getOsmId());
+        for (PrimitiveId id: tfId.getIds()) {
+        	ids.add(id.getUniqueId());
+        }
         undelete(layer.isSelected(), cbType.getType(), ids, 0);
       }
     }

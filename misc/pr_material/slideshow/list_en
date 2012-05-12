@@ -1,32 +1,4 @@
-﻿2010-11-21_124231_656x1121_scrot_white_nile_dozen_islets.png:A part of the White Nile traced from underlying Landsat aerial imagery.
-2012-01-24_162433_scrot_coastline_error_Colombia_partly_rerendered_OSM.jpg:Result of misused coastlines in Colombia.
-2012-01-24_162648_scrot_coastline_error_Colombia_removed_OSM.jpg:After cleaning up the coastlines.
-2012-02-09_194844_scrot_Screenshot_Freiberg_Zentrum_weißer_Hintergrund_bearb.png:Center of a middle size town in JOSM.
-2011-03-29_060739_846x682_scrot.png:Not connected ferry routes cause routing problems.
-2011-03-29_060721_895x826_scrot.png:Not connected ferry routes cause routing problems.
-Lake_Nasser_old_gkrellShoot_2009-10-11_215934.png:Reservoir Lake Nasser right after a rework with JOSM and the (now outdated) Plugin Lakewalker.
-2011-03-22_175259_1526x1020_scrot_OSMembrane.png:OSMembrane is a graphical frontend for the mighty tool OSMosis
-2012-01-24_162304_scrot_coastline_error_near_Tashkent_OSM.jpg:Effect of a broken coastline near Tashkent.
-2012-01-24_162334_scrot_coastline_error_near_Tashkent_removed_OSM.jpg:Same place near Tashkent after repair.
-2012-01-24_162853_scrot_coastline_error_Colombia_zoomed_OSM.jpg:Effect of a broken coastline in Colombia.
-2012-01-24_162914_scrot_coastline_error_Colombia_zoomed_removed_OSM.jpg:Colombia after repair.
-2012-01-29_220401_scrot_osm_planned_routes_and_traced_ways.png:Ways planned to trace (purple) and really traced ones.
-2012-03-11_135159_scr_useless_import.jpg:Useless import since the imported data neither was better nor was reviewed by the importer.
-2011-11-09_174136_1407x1062_GPS-traces_at_0.0_scrot.jpg:GPS data at 0.0
-2011-09-12_215129_767x660_gpx_jump_scrot.jpg:A jumping GPX log.
-2011-05-15_122902_1893x1200_scrot_OSM_vandalism_Villahermosa.png:Effect of erroneous editing at Villahermosa.
-2011-05-15_221006_1893x1200_scrot_OSM_completely_fixed_vandalism_Villahermosa.png:Villahermosa fine again.
-2011-03-29_190139_1665x1118_scrot_gps_wolke_im_gpx.png:GPX-cloud
-2011-03-21_221306_1920x1200_scrot_JOSM_modern_art_missglückte_osmosis-abfrage.png:Erroneous
-(due to user) filtering by OSMosis.
-2011-03-12_133936_1309x1102_scrot_postleitzahlen_plz_germany.png:Postcode relations of Germany.
-2011-02-28_222107_1554x1094_scrot_tracing_europe.png:Some GPS traces across Europe.
-2011-02-12_232641_1893x1200_scrot_Josm_Tundra_leer_neu.png:Screenshot of Bing imagery in JOSM showing lakes in the tundra.
-2011-02-12_232709_1893x1200_scrot_Josm_Tundra_mapped.png:Screenshot of Bing imagery in JOSM showing mapped lakes in the tundra.
-2011-02-12_232742_1893x1200_scrot_Josm_Tundra_mapped_data_only.png:Screenshot of JOSM showing mapped lakes in the tundra.
-2011-02-11_231844_1186x1025_scrot_some_gpx_clouds.png:A collection of GPX logs with some clouds.
-2011-02-11_231723_1871x1106_scrot_december_2010.png:A months GPX logs.
-ITO_contributors_California_Bay.png:Major contributors to OpenStreetMap in the bay area of California (created by itoworld)
+﻿ITO_contributors_California_Bay.png:Major contributors to OpenStreetMap in the bay area of California (created by itoworld)
 ITO_contributors_London_detail.png:Major contributors to OpenStreetMap in central London (created by itoworld)
 ITO_edits_Milan.png:Edits in Milano (created by itoworld)
 ITO_Europe_secondary_highways.png:highway= primary and highway= secondary in Europe (created by itoworld)
@@ -172,3 +144,30 @@ geo_1_osm.jpg:OSM-Vertreter beim Spitzen-gespräch "Digitalisierung von Stadt un
 Download-Layer Ostsee.png:Offline-Seekarten von OpenSeaMap
 SeaClearWannsee.png:Navigation mit OpenSeaMap und SeaClear 
 Wetter_Atlantiksturm.png:Atlantiksturm - Wetterkarte auf OpenSeaMap 
+2010-11-21_124231_656x1121_scrot_white_nile_dozen_islets.png:A part of the White Nile traced from underlying Landsat aerial imagery.
+2012-01-24_162433_scrot_coastline_error_Colombia_partly_rerendered_OSM.jpg:Result of misused coastlines in Colombia.
+2012-01-24_162648_scrot_coastline_error_Colombia_removed_OSM.jpg:After cleaning up the coastlines.
+2012-02-09_194844_scrot_Screenshot_Freiberg_Zentrum_weißer_Hintergrund_bearb.png:Center of a middle size town in JOSM.
+2011-03-29_060739_846x682_scrot.png:Not connected ferry routes cause routing problems.
+2011-03-29_060721_895x826_scrot.png:Not connected ferry routes cause routing problems.
+Lake_Nasser_old_gkrellShoot_2009-10-11_215934.png:Reservoir Lake Nasser right after a rework with JOSM and the (now outdated) Plugin Lakewalker.
+2011-03-22_175259_1526x1020_scrot_OSMembrane.png:OSMembrane is a graphical frontend for the mighty tool OSMosis
+2012-01-24_162304_scrot_coastline_error_near_Tashkent_OSM.jpg:Effect of a broken coastline near Tashkent.
+2012-01-24_162334_scrot_coastline_error_near_Tashkent_removed_OSM.jpg:Same place near Tashkent after repair.
+2012-01-24_162853_scrot_coastline_error_Colombia_zoomed_OSM.jpg:Effect of a broken coastline in Colombia.
+2012-01-24_162914_scrot_coastline_error_Colombia_zoomed_removed_OSM.jpg:Colombia after repair.
+2012-01-29_220401_scrot_osm_planned_routes_and_traced_ways.png:Ways planned to trace (purple) and really traced ones.
+2012-03-11_135159_scr_useless_import.jpg:Useless import since the imported data neither was better nor was reviewed by the importer.
+2011-11-09_174136_1407x1062_GPS-traces_at_0.0_scrot.jpg:GPS data at 0.0
+2011-09-12_215129_767x660_gpx_jump_scrot.jpg:A jumping GPX log.
+2011-05-15_122902_1893x1200_scrot_OSM_vandalism_Villahermosa.png:Effect of erroneous editing at Villahermosa.
+2011-05-15_221006_1893x1200_scrot_OSM_completely_fixed_vandalism_Villahermosa.png:Villahermosa fine again.
+2011-03-29_190139_1665x1118_scrot_gps_wolke_im_gpx.png:GPX-cloud
+2011-03-21_221306_1920x1200_scrot_JOSM_modern_art_missglückte_osmosis-abfrage.png:Erroneous (due to user) filtering by OSMosis.
+2011-03-12_133936_1309x1102_scrot_postleitzahlen_plz_germany.png:Postcode relations of Germany.
+2011-02-28_222107_1554x1094_scrot_tracing_europe.png:Some GPS traces across Europe.
+2011-02-12_232641_1893x1200_scrot_Josm_Tundra_leer_neu.png:Screenshot of Bing imagery in JOSM showing lakes in the tundra.
+2011-02-12_232709_1893x1200_scrot_Josm_Tundra_mapped.png:Screenshot of Bing imagery in JOSM showing mapped lakes in the tundra.
+2011-02-12_232742_1893x1200_scrot_Josm_Tundra_mapped_data_only.png:Screenshot of JOSM showing mapped lakes in the tundra.
+2011-02-11_231844_1186x1025_scrot_some_gpx_clouds.png:A collection of GPX logs with some clouds.
+2011-02-11_231723_1871x1106_scrot_december_2010.png:A months GPX logs.

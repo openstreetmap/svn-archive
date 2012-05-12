@@ -1,8 +1,5 @@
 #!/usr/bin/perl
-
-# How this works:
-# "list" contains the list of files 
-
+#see the readme file for instructions
 
 use GD;
 use strict;
@@ -16,9 +13,10 @@ my $OUTPUT_PATH="out/";
 my $LINE_HEIGHT=62;
 my $SIZE=30;
 my $FONT="/usr/share/fonts/dejavu/DejaVuSans.ttf";
+my $CAPTIONS="list_en";
 
 
-open(L,"list") or die;
+open(L,$CAPTIONS) or die;
 
 my $count = 1;
 while(<L>)

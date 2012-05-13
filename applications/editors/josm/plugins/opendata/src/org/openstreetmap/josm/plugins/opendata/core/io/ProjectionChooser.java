@@ -26,8 +26,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.tools.GBC;
 
 @SuppressWarnings("serial")
@@ -41,7 +42,7 @@ public class ProjectionChooser extends ExtendedDialog {
     /**
      * Combobox with all projections available
      */
-    private final JComboBox projectionCombo = new JComboBox(Projections.getProjections().toArray());
+    private final JComboBox projectionCombo = new JComboBox(ProjectionPreference.getProjectionChoices().toArray());
 
 	public ProjectionChooser(Component parent) {
 		this(parent, tr("Projection method"), new String[] {tr("OK"), tr("Cancel")});
@@ -63,6 +64,7 @@ public class ProjectionChooser extends ExtendedDialog {
 	}
 	
 	public Projection getProjection() {
-		return (Projection) projectionCombo.getSelectedItem();
+		ProjectionChoice choice = (ProjectionChoice) projectionCombo.getSelectedItem();
+		return choice != null ? choice.getProjection() : null;
 	}
 }

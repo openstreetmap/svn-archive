@@ -39,11 +39,12 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
 import org.openstreetmap.josm.data.projection.Ellipsoid;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic;
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters;
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters1SP;
 import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Parameters2SP;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -82,7 +83,8 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
 			if (transform instanceof LambertConformal && crs.getDatum() instanceof GeodeticDatum) {
 				LambertConformal lambert = (LambertConformal) transform;
 				GeodeticDatum geo = (GeodeticDatum) crs.getDatum();
-				for (Projection p : Projections.getProjections()) {
+				for (ProjectionChoice choice : ProjectionPreference.getProjectionChoices()) {
+					Projection p = choice.getProjection();
 					if (p instanceof AbstractProjection) {
 						AbstractProjection ap = (AbstractProjection) p;
 						if (ap.getProj() instanceof LambertConformalConic) {

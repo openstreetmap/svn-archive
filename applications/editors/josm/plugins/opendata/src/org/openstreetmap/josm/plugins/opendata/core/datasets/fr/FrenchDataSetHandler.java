@@ -19,7 +19,6 @@ import static org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesPro
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,16 +40,15 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 	private String nationalPortalPath;
 
 	protected static final Projection lambert93 = PRJ_LAMBERT_93.getProjection(); // France metropolitaine
-	protected static final UTM utm20 = new UTM(20, Hemisphere.North, false); // Guadeloupe, Martinique
-	protected static final UTM utm22 = new UTM(22, Hemisphere.North, false); // Guyane
-	protected static final UTM utm38 = new UTM(38, Hemisphere.South, false); // Mayotte
-	protected static final UTM utm40 = new UTM(40, Hemisphere.South, false); // Reunion
+	protected static final UTM utm20 = new UTM(20, Hemisphere.North); // Guadeloupe, Martinique
+	protected static final UTM utm22 = new UTM(22, Hemisphere.North); // Guyane
+	protected static final UTM utm38 = new UTM(38, Hemisphere.South); // Mayotte
+	protected static final UTM utm40 = new UTM(40, Hemisphere.South); // Reunion
 	
 	protected static final Lambert[] lambert4Zones = new Lambert[4];
 	static {
 		for (int i=0; i<lambert4Zones.length; i++) {
-			lambert4Zones[i] = new Lambert();
-			lambert4Zones[i].setPreferences(Arrays.asList(Integer.toString(i+1)));
+			lambert4Zones[i] = new Lambert(i);
 		}
 	}
 

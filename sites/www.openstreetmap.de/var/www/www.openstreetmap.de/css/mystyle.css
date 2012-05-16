@@ -264,3 +264,11 @@ ul.carousel_tabs li a:focus {
 {
 	border: 0;
 }
+
+.screenshots {
+	width: 250px;
+}
+
+#table_123 p {
+	margin-top: 10px;
+}

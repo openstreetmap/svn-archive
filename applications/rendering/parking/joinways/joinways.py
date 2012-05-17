@@ -10,6 +10,12 @@ from optparse import OptionParser
 
 class JoinDB (OSMDB):
 
+    highway_types={'residential':'r','trunk':'r','trunk_link':'r','primary':'r','primary_link':'r','secondary':'r','secondary_link':'r',
+        'tertiary':'r','tertiary_link':'r','living_street':'r','road':'r','service':'r','unclassified':'r','motorway':'r','motorway_link':'r',
+        'cycleway':'m','pedestrian':'m','footway':'m','path':'m','raceway':'m','construction':'m','proposed':'m','bridleway':'m','steps':'m','byway':'m','platform':'m','trail':'m',
+        'private':'bug','abandoned':'bug','turning_circle':'bug','ter':'bug','undefined':'bug','unsurfaced':'bug','cycleway; footway':'bug','unbuilt':'bug','rest_area':'bug','residential; tertiary; residential':'bug','emergency_access_point':'bug','racetrack':'bug','disused':'bug','minor':'bug','secondary;tertiary':'bug','private road':'bug','residential;steps':'bug',
+        'track':'t'}
+
     def get_highways_segments(self):
         #print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
         result=self.select("select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
@@ -92,8 +98,18 @@ class JoinDB (OSMDB):
 
     def _insert_joined_highway(self,id,name,highway,way):
         """ adds the joined highway (it may be a MULTILINE feature) to the jr tables. returns (just for info) the number of written ways (>1 if a MULTILINESTRING) """
+        # just a quick test if highway is valid. (I had instances of highway=')
+        if highway not in self.highway_types:
+            if highway=="'":
+                print 'Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway)
+                highway="fixme"
+            else:
+                print 'Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway)
+                highway="fixme"
+#                raise Exception('Illegal highway type for way ({id}): "{ht}"'.format(id=id,ht=highway))
         if self._which_geometry_is_it(way)=="LINESTRING":
             #print "inserting a simple way"
+            #print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))"
             self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
             return 1
         else:
@@ -206,10 +222,11 @@ def main(options):
     DSN = options['dsn']
     if bboxstr!='':
         bboxobj = bbox({'bbox':bboxstr,'srs':'4326'})
+        print bboxobj
+        print bboxobj.get_bbox_sql()
     else:
         bboxobj = None
-    print bboxobj
-    print bboxobj.get_bbox_sql()
+        print "No bbox used"
 
     osmdb = JoinDB(DSN)
 
@@ -266,6 +283,8 @@ def main(options):
         if i%100==0:
             osmdb.commit()
         print "Joined {i}. ({id}) '{name}': {segs} segments -> {numjoins} joined segments".format(i=i,id=highway['osm_id'],name=highway['name'],segs=len(joinset),numjoins=numjoins)
+        if i>50000:
+            break
     osmdb.commit()
     print "Terminated adding {i} highways".format(i=i)
 

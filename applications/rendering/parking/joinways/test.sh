@@ -6,10 +6,11 @@
 # ganz Deutschland:
 #BBOX=3.46,46.92,15.87,55.69
 # 22° Streifen
-BBOX=0,-89.9,30,89.9
+BBOX=-180,-89.9,180,89.9
 
 JOINWAYS=/home/osm/workspace/parking/joinways/joinways.py
-python $JOINWAYS --bbox $BBOX --dsn 'dbname=gis'
+python $JOINWAYS --dsn 'dbname=gis'
+#python $JOINWAYS --bbox $BBOX --dsn 'dbname=gis'
 
 # now, render a sample image
 

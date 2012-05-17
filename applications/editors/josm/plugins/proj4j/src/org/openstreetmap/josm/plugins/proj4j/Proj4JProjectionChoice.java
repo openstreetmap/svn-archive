@@ -1,11 +1,10 @@
 //License: GPL. For details, see README file.
 package org.openstreetmap.josm.plugins.proj4j;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import javax.swing.event.DocumentEvent;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import javax.swing.JLabel;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,15 +25,15 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.tools.GBC;
 
 /* TODO:
@@ -43,14 +42,10 @@ import org.openstreetmap.josm.tools.GBC;
  *          add it to Proj4J directly
  *      * Allow user to input proj.4 settings explicitly, or load from a file
  */
-public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.Projection, org.openstreetmap.josm.data.projection.ProjectionSubPrefs {
+public class Proj4JProjectionChoice implements ProjectionChoice {
 
     private String crsCode = "EPSG:4326";
     private String filterText = "";
-    private org.osgeo.proj4j.CoordinateReferenceSystem proj4jCRS;
-    private org.osgeo.proj4j.CoordinateReferenceSystem wgs84CRS;
-    private org.osgeo.proj4j.CoordinateTransform transformToWGS84;
-    private org.osgeo.proj4j.CoordinateTransform transformFromWGS84;
     private JTable table;
     private JTextField filterTextField;
     private JLabel selectedLabel;
@@ -58,9 +53,7 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
     private TableRowSorter<CRSTableModel> sorter;
     private ActionListener actionListener;
 
-    public ProjectionProj4J() {
-        super();
-
+    public Proj4JProjectionChoice() {
         try {
             model = new CRSTableModel();
         } catch (IOException e) {
@@ -69,81 +62,91 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
         }
 
         sorter = new TableRowSorter<CRSTableModel>(model);
-
-        setupTransformations();
+    }
+    
+    @Override
+    public String getId() {
+        return "proj4jplugin";
     }
 
     @Override
-    public void setupPreferencePanel(JPanel p, ActionListener actionListener) {
-        GridBagConstraints c = new GridBagConstraints();
-        p.setLayout(new GridBagLayout());
+    public JPanel getPreferencePanel(ActionListener actionListener) {
+        return new Proj4JPanel(actionListener);
+    }
+    
+    protected class Proj4JPanel extends JPanel {
+        
+        public Proj4JPanel(ActionListener actionListener) {
+            GridBagConstraints c = new GridBagConstraints();
+            this.setLayout(new GridBagLayout());
 
-        JLabel filterLabel = new JLabel(tr("Filter"), SwingConstants.TRAILING);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GBC.NONE;
-        p.add(filterLabel, c);
+            JLabel filterLabel = new JLabel(tr("Filter"), SwingConstants.TRAILING);
+            c.gridx = 0;
+            c.gridy = 0;
+            c.fill = GBC.NONE;
+            this.add(filterLabel, c);
 
-        c.gridx = 1;
-        c.gridy = 0;
-        c.fill = GBC.HORIZONTAL;
-        filterTextField = new JTextField(filterText, 20);
-        filterTextField.getDocument().addDocumentListener(
-                new DocumentListener() {
+            c.gridx = 1;
+            c.gridy = 0;
+            c.fill = GBC.HORIZONTAL;
+            filterTextField = new JTextField(filterText, 20);
+            filterTextField.getDocument().addDocumentListener(
+                    new DocumentListener() {
 
-                    public void insertUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
+                        public void insertUpdate(DocumentEvent e) {
+                            newFilter();
+                        }
 
-                    public void removeUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
+                        public void removeUpdate(DocumentEvent e) {
+                            newFilter();
+                        }
 
-                    public void changedUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
-                });
-        p.add(filterTextField, c);
+                        public void changedUpdate(DocumentEvent e) {
+                            newFilter();
+                        }
+                    });
+            this.add(filterTextField, c);
 
-        selectedLabel = new JLabel(tr("Selected: {0}", crsCode), SwingConstants.TRAILING);
-        c.gridx = 3;
-        c.gridy = 0;
-        c.fill = GBC.HORIZONTAL;
-        p.add(selectedLabel);
+            selectedLabel = new JLabel(tr("Selected: {0}", crsCode), SwingConstants.TRAILING);
+            c.gridx = 3;
+            c.gridy = 0;
+            c.fill = GBC.HORIZONTAL;
+            this.add(selectedLabel);
 
-        filterLabel.setLabelFor(filterTextField);
+            filterLabel.setLabelFor(filterTextField);
 
-        table = new JTable(model);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        table.setFillsViewportHeight(true);
-        table.setRowSorter(sorter);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            table = new JTable(model);
+            table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            table.setFillsViewportHeight(true);
+            table.setRowSorter(sorter);
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        c.gridx = 0;
-        c.gridy = 1;
-        c.fill = GBC.BOTH;
-        c.gridwidth = 3;
-        p.add(scrollPane, c);
+            JScrollPane scrollPane = new JScrollPane(table);
+            c.gridx = 0;
+            c.gridy = 1;
+            c.fill = GBC.BOTH;
+            c.gridwidth = 3;
+            this.add(scrollPane, c);
 
-        // Update table using filterText
-        newFilter();
+            // Update table using filterText
+            newFilter();
 
-        // Select and show row containing saved projection/CRS, if visible
-        int index = model.findCode(crsCode);
-        if (index >= 0) {
-            index = table.convertRowIndexToView(index);
+            // Select and show row containing saved projection/CRS, if visible
+            int index = model.findCode(crsCode);
             if (index >= 0) {
-                table.addRowSelectionInterval(index, index);
-                table.scrollRectToVisible(table.getCellRect(index, 0, true));
+                index = table.convertRowIndexToView(index);
+                if (index >= 0) {
+                    table.addRowSelectionInterval(index, index);
+                    table.scrollRectToVisible(table.getCellRect(index, 0, true));
+                }
             }
+
+            // add listener to react to table selections
+            table.getSelectionModel().addListSelectionListener(
+                    new SelectionListener(table));
+
+            Proj4JProjectionChoice.this.actionListener = actionListener;
         }
-
-        // add listener to react to table selections
-        table.getSelectionModel().addListSelectionListener(
-                new SelectionListener(table));
-
-        this.actionListener = actionListener;
     }
 
     @Override
@@ -167,68 +170,17 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
             if (array.length > 1) {
                 filterText = array[1];
             }
-            setupTransformations();
         }
     }
 
     @Override
-    public double getDefaultZoomInPPD() {
-        //TODO: this needs to be changed per projection
-        return 1.01;
-    }
-
-    /**
-     * @param LatLon WGS84 (in degree)
-     * @return xy east/north (in whatever unit the projection uses, m/ft/deg/etc)
-     */
-    @Override
-    public EastNorth latlon2eastNorth(LatLon p) {
-        org.osgeo.proj4j.ProjCoordinate pc1 = new org.osgeo.proj4j.ProjCoordinate(p.lon(), p.lat());
-        org.osgeo.proj4j.ProjCoordinate pc2 = new org.osgeo.proj4j.ProjCoordinate();
-        //System.out.println("From " + pc1.x + " " + pc1.y);
-        transformFromWGS84.transform(pc1, pc2);
-        //System.out.println("To " + pc2.x + " " + pc2.y);
-        return new EastNorth(pc2.x, pc2.y);
-    }
-
-    /**
-     * @param xy east/north (in whatever unit the projection uses, m/ft/deg/etc)
-     * @return LatLon WGS84 (in degree)
-     */
-    @Override
-    public LatLon eastNorth2latlon(EastNorth p) {
-        org.osgeo.proj4j.ProjCoordinate pc1 = new org.osgeo.proj4j.ProjCoordinate(p.east(), p.north());
-        org.osgeo.proj4j.ProjCoordinate pc2 = new org.osgeo.proj4j.ProjCoordinate();
-        //System.out.println("InvFrom " + pc1.x + " " + pc1.y);
-        transformToWGS84.transform(pc1, pc2);
-        //System.out.println("InvTo " + pc2.x + " " + pc2.y);
-        return new LatLon(pc2.y, pc2.x);
+    public Projection getProjection() {
+        return new Proj4JProjection(crsCode);
     }
 
     @Override
     public String toString() {
-        // TODO: include description in string
-        return tr("Proj4J: {0} selected", crsCode);
-    }
-
-    @Override
-    public String toCode() {
-        return crsCode;
-    }
-
-    @Override
-    public String getCacheDirectoryName() {
-        return "Proj4J";
-    }
-
-    @Override
-    public Bounds getWorldBoundsLatLon() {
-        org.osgeo.proj4j.proj.Projection proj = proj4jCRS.getProjection();
-
-        // FIXME: Do we need to convert these coords because of possibly differing datums?
-        LatLon min = new LatLon(proj.getMinLatitudeDegrees(), proj.getMinLongitudeDegrees());
-        LatLon max = new LatLon(proj.getMaxLatitudeDegrees(), proj.getMaxLongitudeDegrees());
-        return new Bounds(min, max);
+        return tr("Proj4J Plugin");
     }
 
     @Override
@@ -245,7 +197,6 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
             if (index >= 0) {
                 crsCode = model.getCRSEntryAt(index).getName();
                 selectedLabel.setText(tr("Selected: {0}", crsCode));
-                setupTransformations();
                 if (actionListener != null) {
                     actionListener.actionPerformed(new ActionEvent(selectedLabel, 0, "CRS changed"));
                 }
@@ -264,21 +215,6 @@ public class ProjectionProj4J implements org.openstreetmap.josm.data.projection.
         public void valueChanged(ListSelectionEvent e) {
             updateSelectedCode();
         }
-    }
-
-    private void setupTransformations() {
-        org.osgeo.proj4j.CRSFactory crsFactory =
-                new org.osgeo.proj4j.CRSFactory();
-        org.osgeo.proj4j.CoordinateTransformFactory transFactory =
-                new org.osgeo.proj4j.CoordinateTransformFactory();
-
-        // Create coordinate reference systems for source and target
-        proj4jCRS = crsFactory.createFromName(crsCode);
-        wgs84CRS = crsFactory.createFromName("EPSG:4326");
-
-        // Create transformations between CRS
-        transformToWGS84 = transFactory.createTransform(proj4jCRS, wgs84CRS);
-        transformFromWGS84 = transFactory.createTransform(wgs84CRS, proj4jCRS);
     }
 
     private void newFilter() {

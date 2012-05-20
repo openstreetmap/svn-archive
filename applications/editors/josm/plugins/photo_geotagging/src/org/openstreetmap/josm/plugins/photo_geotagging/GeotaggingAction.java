@@ -211,7 +211,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
                     chooseFiles(e.getFile());
                     if (canceled) return;
-                    ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(), e.getGpsTime().getTime());
+                    ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(), e.getGpsTime().getTime(), e.getElevation());
 
                     if (mTimeMode == MTIME_MODE_GPS) {
                         mTime = e.getGpsTime().getTime();

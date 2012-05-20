@@ -21,6 +21,7 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
 import org.apache.sanselan.formats.tiff.constants.GPSTagConstants;
+import org.apache.sanselan.formats.tiff.fieldtypes.FieldType;
 import org.apache.sanselan.formats.tiff.write.TiffOutputDirectory;
 import org.apache.sanselan.formats.tiff.write.TiffOutputField;
 import org.apache.sanselan.formats.tiff.write.TiffOutputSet;
@@ -35,18 +36,19 @@ public class ExifGPSTagger {
      * @param lat latitude
      * @param lon longitude
      * @param gpsTime time in milliseconds
+     * @param ele elevation - can be null if not available
      */
-    public static void setExifGPSTag(File jpegImageFile, File dst, double lat, double lon, long gpsTime) throws IOException {
+    public static void setExifGPSTag(File jpegImageFile, File dst, double lat, double lon, long gpsTime, Double ele) throws IOException {
         try {
-            setExifGPSTagWorker(jpegImageFile, dst, lat, lon, gpsTime);
+            setExifGPSTagWorker(jpegImageFile, dst, lat, lon, gpsTime, ele);
         } catch (ImageReadException ire) {
-            throw new IOException(tr("Read error!"));
+            throw new IOException(tr("Read error: "+ire), ire);
         } catch (ImageWriteException ire2) {
-            throw new IOException(tr("Write error!"));
+            throw new IOException(tr("Write error: "+ire2), ire2);
         }
     }
 
-    public static void setExifGPSTagWorker(File jpegImageFile, File dst, double lat, double lon, long gpsTime) throws IOException,
+    public static void setExifGPSTagWorker(File jpegImageFile, File dst, double lat, double lon, long gpsTime, Double ele) throws IOException,
             ImageReadException, ImageWriteException
     {
         OutputStream os = null;
@@ -107,6 +109,23 @@ public class ExifGPSTagger {
             exifDirectory.add(gpsDateStamp);
 
             SanselanFixes.setGPSInDegrees(outputSet, lon, lat);
+
+            if (ele != null) {
+                byte eleRef =  ele >= 0 ? (byte) 0 : (byte) 1;
+                TiffOutputField gpsAltitudeRef = new TiffOutputField(
+                        GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF,
+                        FieldType.FIELD_TYPE_BYTE, 1, new byte[] { eleRef });
+                exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF);
+                exifDirectory.add(gpsAltitudeRef);
+
+                Number[] val = new Number[] { Math.abs(ele) };
+                byte[] bytes = FieldType.FIELD_TYPE_RATIONAL.writeData(val, outputSet.byteOrder);
+                TiffOutputField gpsAltitude = new TiffOutputField(
+                        GPSTagConstants.GPS_TAG_GPS_ALTITUDE,
+                        FieldType.FIELD_TYPE_RATIONAL, 1, bytes);
+                exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_ALTITUDE);
+                exifDirectory.add(gpsAltitude);
+            }
 
             os = new FileOutputStream(dst);
             os = new BufferedOutputStream(os);

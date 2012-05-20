@@ -110,7 +110,8 @@
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="commit"/>
-            <arg value="-m '${commit.message}'"/>
+            <arg value="-m"/>
+            <arg value="${commit.message}"/>
             <arg value="."/>
         </exec>
     </target>
@@ -147,7 +148,8 @@
     </echo>
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
-            <arg value="-m '${commit.message}'"/>
+            <arg value="-m"/>
+            <arg value="${commit.message}"/>
             <arg value="commit"/>
             <arg value="${plugin.jar}"/>
         </exec>

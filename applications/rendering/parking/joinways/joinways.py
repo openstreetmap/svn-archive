@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import sys
-import string
+import sys,time,string,logging
 #import psycopg2
 from osmdb import OSMDB
 from geom import bbox
@@ -17,8 +16,11 @@ class JoinDB (OSMDB):
         'track':'t'}
 
     def get_highways_segments(self):
-        #print "select osm_id,name "+self.FlW+" \"way\" && "+self.googbox+""
-        result=self.select("select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name")
+        st=time.time()
+        sel="select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name"
+        result=self.select(sel)
+        t=time.time()-st
+        logging.debug("{t}s: {sel}".format(t=t,sel=sel))
         highways=[]
         for hw,osmids in result:
             ids=osmids.split(',')
@@ -29,8 +31,12 @@ class JoinDB (OSMDB):
 
     def find_same_named_highways(self,highway,bbox):
         """ Finds - within the small bbox - the highways with the same name. Returns dictionary with osm_id as key. """
+        st=time.time()
         # print "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=highway['name'])
-        rs=self.select("select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=self._escape_quote(highway['name'])))
+        sel="select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} highway is not Null and \"way\" && '{bbox}'::BOX2D and name='{name}'".format(FlW=self.FlW,bbox=bbox,name=self._escape_quote(highway['name']))
+        rs=self.select(sel)
+        t=time.time()-st
+        logging.debug("{t:.2f}s: {sel}".format(t=t,sel=sel))
         highways = {}
         for res in rs:
             highway = {}
@@ -50,13 +56,15 @@ class JoinDB (OSMDB):
 
     def get_next_pending_highway(self,bboxobj=None):
         """ Gets the next unhandled highway (osm_id+dict) """
+        st=time.time()
         if bboxobj!=None:
             bbox_condition_sql = '"way" && {b} and '.format(b=bboxobj.get_bbox_sql())
         else:
             bbox_condition_sql = ''
-        select = "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} jrhandled is False and highway is not Null and {bbox} name is not Null limit 1".format(FlW=self.FlW,bbox=bbox_condition_sql)
-        #print "Get Next Pending Highway: sql={s}".format(s=select)
+        select = "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} jrhandled is False and highway is not Null and {bbox} name is not Null order by osm_id limit 1".format(FlW=self.FlW,bbox=bbox_condition_sql)
         result=self.select(select)
+        t=time.time()-st
+        logging.debug("{t:.2f}s: Get Next Pending Highway: {sel}".format(t=t,sel=select))
         if len(result)==0:
             return None
             # raise BaseException("No pending highway found (this should not be an assert)")
@@ -84,7 +92,10 @@ class JoinDB (OSMDB):
             current_bbox=self.get_expanded_bbox(the_joined_way,10.0)
             i+=1
 
-        #print "-> Found {n} highway segments in {i} iterations. Joined way is {w}".format(n=len(collated_highways),i=i,w=the_joined_way)
+        w=the_joined_way
+        if len(w)>19:
+            w=w[:8]+"..."+w[-8:]
+        logging.debug("-> Found {n} highway segments in {i} iterations. Joined way is {w}".format(n=len(collated_highways),i=i,w=w))
         return collated_highways,the_joined_way
 
     def get_expanded_bbox(self,geom,meter):
@@ -101,10 +112,10 @@ class JoinDB (OSMDB):
         # just a quick test if highway is valid. (I had instances of highway=')
         if highway not in self.highway_types:
             if highway=="'":
-                print 'Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway)
+                logging.warn('Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway))
                 highway="fixme"
             else:
-                print 'Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway)
+                logging.warn('Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway))
                 highway="fixme"
 #                raise Exception('Illegal highway type for way ({id}): "{ht}"'.format(id=id,ht=highway))
         if self._which_geometry_is_it(way)=="LINESTRING":
@@ -161,7 +172,7 @@ class JoinDB (OSMDB):
         return numjoins
 
     def clear_planet_line_join(self,bboxobj=None):
-        print "*** clearing jr tables and flags"
+        logging.warn("*** clearing jr tables and flags")
         self.delete("delete from planet_line_join")
         self.delete("delete from planet_line_joinmap")
         if bboxobj!=None:
@@ -222,11 +233,11 @@ def main(options):
     DSN = options['dsn']
     if bboxstr!='':
         bboxobj = bbox({'bbox':bboxstr,'srs':'4326'})
-        print bboxobj
-        print bboxobj.get_bbox_sql()
+        logging.info(bboxobj)
+        logging.info(bboxobj.get_bbox_sql())
     else:
         bboxobj = None
-        print "No bbox used"
+        logging.info("No bbox used")
 
     osmdb = JoinDB(DSN)
 
@@ -236,6 +247,7 @@ def main(options):
     #
     # handle deleted highway segments -> mark all joined highway's segments as unhandled in order to have them re-handled
     #
+    delestarttime=time.time()
     i=0
     j=0
     while True:
@@ -259,18 +271,23 @@ def main(options):
         osmdb.remove_joinway(joinway_id)
         i+=1
         j+=len(dirtylist)
-        print "Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist)
+        logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
         if i%100==0:
             osmdb.commit()
     osmdb.commit()
-    print "Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j)
+    logging.info("Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j))
+    dele=i
+    deletime=time.time()-delestarttime
+    delerate=dele/deletime
 
     #
     # handle unhandled (or dirty) highway segments
     #
     ### FIXME: was passiert, wenn zu einem Segment eins angehängt wird, vorher müssten die alten segmente rausgelöscht werden.
+    addstarttime=time.time()
     i=0
     while True:
+        ts=time.time()
         # osmdb.set_bbox(bbox)
         highway=osmdb.get_next_pending_highway(bboxobj)
         if highway==None:
@@ -282,18 +299,25 @@ def main(options):
         numjoins = osmdb.add_join_highway(highway,joinset,joinway)
         if i%100==0:
             osmdb.commit()
-        print "Joined {i}. ({id}) '{name}': {segs} segments -> {numjoins} joined segments".format(i=i,id=highway['osm_id'],name=highway['name'],segs=len(joinset),numjoins=numjoins)
+        t=time.time()-ts
+        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins))
         if i>50000:
             break
     osmdb.commit()
-    print "Terminated adding {i} highways".format(i=i)
+    add=i
+    addtime=time.time()-addstarttime
+    addrate=add/addtime
+
+    logging.info("Terminated adding {i} highways".format(i=i))
+    logging.warn("Joinways ended: {dele} highways deleted in {deletime:.0f} seconds ({delerate:.2f} d/s), {add} highways added in {addtime:.0f} seconds ({addrate:.2f} a/s)".format(dele=dele,deletime=deletime,delerate=delerate,add=add,addtime=addtime,addrate=addrate))
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=logging.DEBUG)
     parser = OptionParser()
     parser.add_option("-c", "--command", dest="command", help="The command to execute. Default is update. Possible values are update, install, clear", default="update")
     parser.add_option("-b", "--bbox", dest="bbox", help="bounding box to restrict to", default="")
     parser.add_option("-d", "--dsn", dest="dsn", help="DSN, default is 'dbname=gis host=crite'", default="dbname=gis host=crite")
     (options, args) = parser.parse_args()
-    print options
+    logging.debug(options)
     main(options.__dict__)
     sys.exit(0)

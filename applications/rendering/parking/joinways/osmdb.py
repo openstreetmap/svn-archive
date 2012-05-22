@@ -65,6 +65,7 @@ class OSMDB:
         self.curs.execute(delete)
 
     def sql_list_of_ids(self,list):
+        """ Returns string: list of IDs, e.g. '(1,2,3)' from [1,2,3] for use in sql queries"""
         list_ids_as_strings=map(lambda osmid: str(osmid),list)
         return "("+string.join(list_ids_as_strings,',')+")"
 
@@ -107,6 +108,11 @@ class OSMDB:
                 self.right=float(latlon[0])
                 self.top=float(latlon[1])
         print "Bounds [b l t r] = ",self.bottom,self.left,self.top,self.right
+
+    def coords_from_bbox(self,bbox):
+        bbox = bbox.replace(' ',',')
+        coordslist = map(lambda coord: float(coord), bbox.split(','))
+        return tuple(coordslist)
 
 # ---------------------------------------------------------------------------
 

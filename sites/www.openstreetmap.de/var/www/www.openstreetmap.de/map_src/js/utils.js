@@ -96,9 +96,8 @@
 	function updateMapKey(force) {
 		var html = document.getElementById('information').innerHTML;
 		var layer = map.baseLayer.keyname;
-		
-		if (force || html.startsWith("Legende")) {
 
+		if (force || html.startsWith("Legende")) {
 			var zoom = map.getZoom();
 			if(layer == 'cycle'){
 				document.getElementById('information').innerHTML = 'Legende:<br><div id="mapkey_area"><iframe src="legende/opencyclemap.html"/></div>';
@@ -120,6 +119,7 @@
 			else{
 				document.getElementById('information').innerHTML = 'Legende:<br><br>Leider keine Legende für diesen Kartenstil verfügbar …';
 			}
+			
 			openSlide('slider');
 		}
 	}

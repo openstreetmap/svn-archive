@@ -110,6 +110,9 @@ class OSMDB:
         print "Bounds [b l t r] = ",self.bottom,self.left,self.top,self.right
 
     def coords_from_bbox(self,bbox):
+        bbox = bbox[4:] # cut off the "BOX("
+        bbox = bbox[:-1] # cut off the ")"
+        
         bbox = bbox.replace(' ',',')
         coordslist = map(lambda coord: float(coord), bbox.split(','))
         return tuple(coordslist)

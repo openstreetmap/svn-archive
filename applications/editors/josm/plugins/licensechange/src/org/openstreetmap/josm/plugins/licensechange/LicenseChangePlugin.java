@@ -199,7 +199,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
         Visitor v = new Visitor() {
             public void visit(Node n) {
                 if (!nodeUsers.containsKey(n.getId())) {
-                    if ("clean".equals(n.get("odbl"))) {
+                    if (("clean".equals(n.get("odbl")) && !Main.pref.getBoolean("licensechange.ignore_odbl_clean", false))) {
                         nodeUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
                     } else {
                         nodesToLoad.append(",");
@@ -209,7 +209,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
             }
             public void visit(Way n) {
                 if (!wayUsers.containsKey(n.getId())) {
-                    if ("clean".equals(n.get("odbl"))) {
+                    if (("clean".equals(n.get("odbl")) && !Main.pref.getBoolean("licensechange.ignore_odbl_clean", false))) {
                         wayUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
                     } else {
                         waysToLoad.append(",");
@@ -219,7 +219,7 @@ public class LicenseChangePlugin extends Plugin implements LayerChangeListener
             }
             public void visit(Relation n) {
                 if (!relationUsers.containsKey(n.getId())) {
-                    if ("clean".equals(n.get("odbl"))) {
+                    if (("clean".equals(n.get("odbl")) && !Main.pref.getBoolean("licensechange.ignore_odbl_clean", false))) {
                         relationUsers.put(new Long(n.getId()), new HashMap<User, Severity>(Collections.singletonMap(n.getUser(), Severity.CLEAN)));
                     } else {
                         relationsToLoad.append(",");

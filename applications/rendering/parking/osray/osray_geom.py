@@ -5,7 +5,7 @@
 #from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 #import urlparse
 #import osray
-import math
+import math,cmath
 import random
 import re
 
@@ -31,7 +31,7 @@ def WKT_to_line(linestring):
     linestring = linestring[11:] # cut off the "LINESTRING("
     linestring = linestring[:-1] # cut off the ")"
     points = linestring.split(',')
-    numpoints = len(points)
+    #numpoints = len(points)
     line=[]
     for i,point in enumerate(points):
         x,y = point.split(' ')
@@ -44,7 +44,7 @@ def WKT_to_polygon(polygonstring):
     polygonstring = polygonstring[8:] # cut off the "POLYGON("
     polygonstring = polygonstring[:-1] # cut off the ")"
     points = polygonstring.split(',') #.strip('(').strip(')')
-    numpoints = len(points)
+    #numpoints = len(points)
     polygon=[]
     for i,point in enumerate(points):
         x,y = point.split(' ')
@@ -127,7 +127,8 @@ def calc_bearing(x1,y1,x2,y2,side):
     else:
         raise TypeError('side must be left or right')
     #v=v*(1/abs(v)) # normalize
-    angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
+    #angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
+    angl = cmath.phase(v) # angle (radians) (0°=right, and counterclockwise)
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 

@@ -56,7 +56,7 @@ public class Undelete extends Plugin {
 
     public Undelete(PluginInformation info) {
         super(info);
-        Undelete = MainMenu.add(Main.main.menu.fileMenu, new UndeleteAction());
+        Undelete = MainMenu.addAfter(Main.main.menu.fileMenu, new UndeleteAction(), false, Main.main.menu.updateModified);
 
     }
 
@@ -82,27 +82,19 @@ public class Undelete extends Plugin {
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         gc.gridy = 0;
         gc.weightx = 0;
-        all.add(new JLabel(tr("Object type:")), gc);
-        OsmPrimitiveTypesComboBox cbType = new OsmPrimitiveTypesComboBox();
-        cbType.setToolTipText("Choose the OSM object type");
-        cbType.setSelectedIndex(Main.pref.getInteger("undelete.lasttype", 0));
-        gc.weightx = 1;
-        all.add(cbType, gc);
-        gc.gridy = 1;
-        gc.weightx = 0;
         all.add(new JLabel(tr("Object ID:")), gc);
         OsmIdTextField tfId = new OsmIdTextField();
         tfId.setText(Main.pref.get("undelete.osmid"));
-        tfId.setToolTipText(tr("Enter the ID of the object that should be undeleted"));
+        tfId.setToolTipText(tr("Enter the type and ID of the objects that should be undeleted, e.g., ''n1 w2''"));
         // forward the enter key stroke to the undelete button
         tfId.getKeymap().removeKeyStrokeBinding(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
         gc.weightx = 1;
         all.add(tfId, gc);
-        gc.gridy = 2;
+        gc.gridy++;
         gc.fill = GridBagConstraints.BOTH;
         gc.weighty = 1.0;
         gc.weightx = 0;
-        gc.gridy = 3;
+        gc.gridy++;
         all.add(layer, gc);
         ExtendedDialog dialog = new ExtendedDialog(Main.parent,
                 tr("Undelete Object"),
@@ -118,21 +110,16 @@ public class Undelete extends Plugin {
         //dialog.configureContextsensitiveHelp("/Action/DownloadObject", true /* show help button */);
         dialog.showDialog();
         if (dialog.getValue() != 1) return;
-        Main.pref.putInteger("undelete.lasttype", cbType.getSelectedIndex());
         Main.pref.put("undelete.newlayer", layer.isSelected());
         Main.pref.put("undelete.osmid", tfId.getText());
-        List<Long> ids=new ArrayList<Long>();
-        for (PrimitiveId id: tfId.getIds()) {
-        	ids.add(id.getUniqueId());
-        }
-        undelete(layer.isSelected(), cbType.getType(), ids, 0);
+        undelete(layer.isSelected(), tfId.getIds(), 0);
       }
     }
 
     /**
      * Download the given primitive.
      */
-    public void undelete(boolean newLayer, final OsmPrimitiveType type, final List<Long> ids, final long parent) {
+    public void undelete(boolean newLayer, final List<PrimitiveId> ids, final long parent) {
         OsmDataLayer tmpLayer = Main.main.getEditLayer();
         if ((tmpLayer == null) || newLayer) {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
@@ -143,9 +130,8 @@ public class Undelete extends Plugin {
         final OsmDataLayer layer=tmpLayer;
 
         HistoryLoadTask task  = new HistoryLoadTask();
-        for (long id: ids)
-        {
-          task.add (id, type);
+        for (PrimitiveId id: ids) {
+            task.add(id);
         }
 
 
@@ -154,10 +140,13 @@ public class Undelete extends Plugin {
 
         Runnable r = new Runnable() {
             @Override
-			public void run() {
+            public void run() {
               List<Node> nodes=new ArrayList<Node>();
-              for (long id: ids)
+              for (PrimitiveId pid: ids)
               {
+
+                final Long id = pid.getUniqueId();
+                final OsmPrimitiveType type = pid.getType();
 
                 History h = HistoryDataSet.getInstance().getHistory(id, type);
 
@@ -170,14 +159,14 @@ public class Undelete extends Plugin {
                 if (visible)
                 {
                   // If the object is not deleted we get the real object
-                  DownloadPrimitiveTask download=new DownloadPrimitiveTask(new SimplePrimitiveId(id, type), layer);
-                  System.out.println(tr("Will get {0}", id));
+                  DownloadPrimitiveTask download=new DownloadPrimitiveTask(pid, layer);
+                  System.out.println(tr("Will get {0}", pid));
                   download.run();
 
 
-                  System.out.println(tr("Looking for {0}", id));
+                  System.out.println(tr("Looking for {0}", pid));
                   primitive=datas.getPrimitiveById(id, type);
-                  System.out.println(tr("Found {0}", primitive.getId()));
+                  System.out.println(tr("Found {0}", String.valueOf(primitive.getId())));
                   if (parent>0 && type.equals(OsmPrimitiveType.NODE))
                   {
                       nodes.add((Node)primitive);
@@ -213,8 +202,11 @@ public class Undelete extends Plugin {
 
                     HistoryWay hWay = (HistoryWay) hPrimitive2;
                     //System.out.println(tr("Primitive {0} version {1}: {2} nodes", hPrimitive2.getId(), hPrimitive2.getVersion(), hWay.getNumNodes()));
-                    List<Long> nodeIds = hWay.getNodes();
-                    undelete(false, OsmPrimitiveType.NODE, nodeIds, id);
+                    List<PrimitiveId> nodeIds = new ArrayList<PrimitiveId>();
+                    for (Long i: hWay.getNodes()) {
+                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
+                    }
+                    undelete(false, nodeIds, id);
 
                     primitive=way;
 
@@ -264,7 +256,7 @@ public class Undelete extends Plugin {
 
                 //HistoryBrowserDialogManager.getInstance().show(h);
               }
-              if ((parent>0) && (type.equals(OsmPrimitiveType.NODE)))
+              if (parent>0 && !ids.isEmpty() && ids.iterator().next().getType().equals(OsmPrimitiveType.NODE))
               {
                 Way parentWay=(Way)datas.getPrimitiveById(parent, OsmPrimitiveType.WAY);
 

@@ -2,6 +2,7 @@
 
 use utf8;
 use encoding "utf8";
+binmode STDERR, ":encoding(utf8)";
 use Term::ReadKey;
 use Encode;
 

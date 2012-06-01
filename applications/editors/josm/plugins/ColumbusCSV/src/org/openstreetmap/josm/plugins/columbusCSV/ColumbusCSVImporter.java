@@ -58,7 +58,7 @@ public class ColumbusCSVImporter extends FileImporter {
 			progressMonitor = NullProgressMonitor.INSTANCE;
 		}
 
-		progressMonitor.beginTask(String.format(tr("Importing CSV file '%s'..."),
+		progressMonitor.beginTask(String.format(tr("Importing CSV file ''%s''..."),
 				file.getName(), 4));
 		progressMonitor.setTicksCount(1);
 

@@ -96,7 +96,7 @@
                 <attribute name="Author" value="Michael Bishop"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.canvec_helper.canvec_helper"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Overlays the canvec tile grid on the map and prints URL's to the .zip files    future goals: allow auto-downloading and loading of canvec .osm files"/>
+                <attribute name="Plugin-Description" value="Overlays the canvec tile grid on the map and prints URL''s to the .zip files. Future goals: allow auto-downloading and loading of canvec .osm files"/>
                 <!--<attribute name="Plugin-Icon" value="..."/>-->
                 <!--<attribute name="Plugin-Link" value="http://ext.earthtools.ca/dummy"/>-->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

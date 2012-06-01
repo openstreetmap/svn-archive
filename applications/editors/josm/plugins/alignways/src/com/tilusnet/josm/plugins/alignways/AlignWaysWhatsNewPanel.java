@@ -47,7 +47,7 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         newItem2 = new javax.swing.JLabel();
 
         lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">" 
-        				    + tr("What's new...") 
+        				    + tr("What''s new...") 
         				    + "</span></div></html>");
 
         icnLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/alignways64.png"))); // NOI18N

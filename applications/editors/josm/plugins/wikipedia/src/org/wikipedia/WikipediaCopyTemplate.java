@@ -15,10 +15,10 @@ public class WikipediaCopyTemplate {
 
     public WikipediaCopyTemplate() {
         final CoordCopyTemplate coord = new CoordCopyTemplate(
-                tr("Copy '{{Coord}}' template"), "wikipedia-coord",
+                tr("Copy ''{{Coord}}'' template"), "wikipedia-coord",
                 "{{Coord|{lat}|{lon}}}");
         final CoordCopyTemplate coordinate = new CoordCopyTemplate(
-                tr("Copy '{{Coordinate}}' template"), "wikipedia-coordinate",
+                tr("Copy ''{{Coordinate}}'' template"), "wikipedia-coordinate",
                 "{{Coordinate|NS={lat}|EW={lon}|type=landmark|region=}}");
         MainMenu.addAfter(Main.main.menu.editMenu, coord, false, Main.main.menu.copyCoordinates);
         MainMenu.addAfter(Main.main.menu.editMenu, coordinate, false, Main.main.menu.copyCoordinates);

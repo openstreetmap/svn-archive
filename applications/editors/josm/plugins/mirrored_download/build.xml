@@ -1,53 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+** This is the build file for the mirrored_download plugin
+**
+** Maintaining versions
+** ====================
+** see README.template
+**
 ** Usage
 ** =====
 ** To build it run
 **
 **    > ant  dist
 **
-** To install the generated plugin locally (in you default plugin directory) run
+** To install the generated plugin locally (in your default plugin directory) run
 **
 **    > ant  install
 **
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
+** To build against the core in ../../core, create a correct manifest and deploy to
+** SVN,
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
+**
 **
 -->
 <project name="mirrored_download" default="dist" basedir=".">
-    <property name="josm.basedir" location="../.."/>
-    <!--
-      ************************************************
-      ** should not be necessary to change the following properties
-     -->
-    <property name="josm" location="${josm.basedir}/core/dist/josm-custom.jar"/>
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.src.dir" value="src"/>
-    <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir" value="${josm.basedir}/dist"/>
-    <property name="ant.build.javac.target" value="1.6"/>
-    <property name="plugin.dist.dir" value="${josm.basedir}/dist"/>
-    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value=""/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="5097"/>
+
     <!--
     **********************************************************
-    ** init - initializes the build
+    ** include targets that all plugins have in common
     **********************************************************
     -->
-    <target name="init">
-        <mkdir dir="${plugin.build.dir}"/>
-    </target>
-    <!--
-    **********************************************************
-    ** compile - complies the source tree
-    **********************************************************
-    -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
+    <import file="../build-common.xml"/>
+
     <!--
     **********************************************************
     ** dist - creates the plugin jar
@@ -72,62 +62,23 @@
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <!--
-        ************************************************
-        ** configure these properties. Most of them will be copied to the plugins
-        ** manifest file. Property values will also show up in the list available
-        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-        **
-        ************************************************
-    -->
+            ************************************************
+            ** configure these properties. Most of them will be copied to the plugins
+            ** manifest file. Property values will also show up in the list available
+            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
+            **
+            ************************************************
+            -->
             <manifest>
                 <attribute name="Author" value="Roland M. Olbricht"/>
                 <attribute name="Plugin-Class" value="mirrored_download.MirroredDownloadPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Simplifies download from different read-only APIs."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/mirrored_download"/>
-                <attribute name="Plugin-Mainversion" value="5097"/>
+                <attribute name="Plugin-Icon" value="images/download_mirror.png"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
-    </target>
-    <!--
-    **********************************************************
-    ** revision - extracts the current revision number for the
-    **    file build.number and stores it in the XML property
-    **    version.*
-    **********************************************************
-    -->
-    <target name="revision">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="."/>
-        </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
-    </target>
-    <!--
-    **********************************************************
-    ** clean - clean up the build environment
-    **********************************************************
-    -->
-    <target name="clean">
-        <delete dir="${plugin.build.dir}"/>
-        <delete file="${plugin.jar}"/>
-    </target>
-    <!--
-    **********************************************************
-    ** install - install the plugin in your local JOSM installation
-    **********************************************************
-    -->
-    <target name="install" depends="dist">
-        <property environment="env"/>
-        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
-            <and>
-                <os family="windows"/>
-            </and>
-        </condition>
-        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

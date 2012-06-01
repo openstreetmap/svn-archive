@@ -40,7 +40,7 @@ public class MirroredDownloadAction extends JosmAction {
     static final String XAPI_QUERY_TOOLTIP = tr("XAPI query, e.g., '''' (to download all data), ''[highway=*]'', or ''[[network=VRR][ref=603|613]''");
 
     public MirroredDownloadAction() {
-        super(tr("Download from OSM mirror..."), (String)null, tr("Download map data from the OSM server."),
+        super(tr("Download from OSM mirror..."), "download_mirror", tr("Download map data from the OSM server."),
                 Shortcut.registerShortcut("mirror:download", tr("File: {0}", tr("Download from OSM mirror...")), KeyEvent.VK_DOWN, Shortcut.ALT_SHIFT),
                 true, "mirroreddownload/download", true);
         putValue("help", ht("/Action/MirroredDownload"));

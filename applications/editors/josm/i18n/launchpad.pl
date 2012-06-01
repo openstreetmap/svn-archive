@@ -169,6 +169,30 @@ sub potupload
     $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
     chdir("po");
     $mech->submit_form(with_fields => {"file" => "josm.pot"});
+    $mech->get("https://translations.launchpad.net/josm/trunk/+imports?field.filter_status=NEEDS_REVIEW&field.filter_extension=pot");
+    my @links;
+    foreach my $line (split("\n", $mech->content()))
+    {
+      push (@links, $1) if $line =~ /href="(\/\+imports\/\d+)"/;
+    }
+    if(!@links)
+    {
+      warn "Upload not found in import list, upload possibly failed.";
+    }
+    elsif(@links > 1)
+    {
+      warn "More than one upload found in import list, cannot approve.";
+    }
+    else
+    {
+      $mech->get("https://translations.launchpad.net$links[0]");
+      $mech->submit_form(form_name => "launchpadform", button => "field.actions.approve");
+      if(!($mech->content() =~ /There are no entries that match this filtering/))
+      {
+        warn "Approving possibly failed.";
+      }
+    }
+
     chdir("..");
 }
 

@@ -3,12 +3,13 @@ How to use:
 Tasks:
 1) Getting new translation catalog file:
 Call "ant pot"
-Upload the new file to Launchpad (see below)
+Afterwards the new file should be uploaded to Launchpad (see (5) below)
 
 2) Updating translations to current state (from daily updated Bazar repository):
 Call "ant update" or "ant updatecore" when plugins are unwanted
+NOTE: The Bazar repository is updated once a day. For most recent data try (6) and (4) instead.
 
-3) Update translations from Launchpad download:
+3) Update translations from Launchpad download file:
 Call "./launchpad.pl <url>", where <url> is the supplied URL from launchpad.
 This call always builds core and plugins, but safely can be aborted after core is completed.
 
@@ -18,9 +19,12 @@ Call "ant test".
 
 5) Upload POT file to launchpad:
 Call "./launchpad.pl upload". You need to set login information (see file how to do) or enter them when running.
+Can also be issued by hand on the Launchpad web page.
 
 6) Request launchpad po file download:
 Call "./launchpad.pl download". You need to set login information (see file how to do) or enter them when running.
+Can also be issued by hand on the Launchpad web page.
+After some time a mail is sent with a URL. With this URL step (4) can be done.
 
 NOTE:
 a) Your repositories should not have any local modifications which modify string elements!

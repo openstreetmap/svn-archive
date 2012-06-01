@@ -356,6 +356,7 @@ sub main
   my %lang;
   my @po;
   my $basename = shift @ARGV;
+  $basename .= "/" if !($basename =~ /[\/\\:]$/);
   foreach my $arg (@ARGV)
   {
     foreach my $f (glob $arg)

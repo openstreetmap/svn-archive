@@ -11,7 +11,9 @@
 ; You should have received a copy of the GNU General Public License
 ; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;
-; Copyright 2009-2010 Stephan Knauss <osm@stephans-server.de>
+; Check http://www.osm-tools.org/ for updates.
+;
+; Copyright 2009-2011 Stephan Knauss <osm@stephans-server.de>
 
 ; This installer is based on the ideas of the abandoned installer hosted on sourceforge
 ; http://sourceforge.net/projects/wintah/
@@ -46,7 +48,7 @@ InstallDir C:\TilesAtHome
 ; InstType      klappt damit die Umschaltung zwischen 32bit und 64 bit?
 LicenseForceSelection checkbox
 Name "Tiles@Home for Windows"
-!define VERSION 1.0.1.2
+!define VERSION 1.0.1.3
 OutFile "tahwin-setup_${VERSION}.exe"
 RequestExecutionLevel admin
 ShowInstDetails show
@@ -83,7 +85,8 @@ VIProductVersion "${VERSION}"
 !define JRE_VERSION "1.6"
 ; to get download link, browse http://java.com/en/download/manual.jsp 
 ; http://javadl.sun.com/webapps/download/AutoDL?BundleId=44457   JRE-6u23 
-!define JRE_URL "http://javadl.sun.com/webapps/download/AutoDL?BundleId=44457"
+; http://javadl.sun.com/webapps/download/AutoDL?BundleId=49024   JRE-6u26
+!define JRE_URL "http://javadl.sun.com/webapps/download/AutoDL?BundleId=49024"
 !include "JREDyna.nsh"
 
 VAR HTTPPROXY
@@ -94,6 +97,9 @@ VAR IPADDRESS2
 VAR PORT2
 
 VAR TAHDL
+
+; store the silent mode requested by user (/S command line for silent)
+VAR SILENTMODE
 
 
 ; ===== Pages =====
@@ -175,10 +181,10 @@ Section "Core Components" SecCoreComponents
 
 
   ; Activestate does not allow redistribution of their software. So download is needed 
-  ${FileDownload} "$TAHDL" "http://downloads.activestate.com/ActivePerl/releases/5.10.1.1008"   "ActivePerl-5.10.1.1008-MSWin32-x86-294165.zip" "c090aaae8e689592f58235e0c705c685"
+  ${FileDownload} "$TAHDL" "http://downloads.activestate.com/ActivePerl/releases/5.14.1.1401"   "ActivePerl-5.14.1.1401-MSWin32-x86-294969.zip" "b787066279f5f5aa1288faae3403e6b0"
     RMDir /r "$INSTDIR\perl"
     ZipDLL::extractall $TAHDL\$0 $INSTDIR\tmp
-    Rename $INSTDIR\tmp\ActivePerl-5.10.1.1008-MSWin32-x86-294165\perl $INSTDIR\perl
+    Rename $INSTDIR\tmp\ActivePerl-5.14.1.1401-MSWin32-x86-294969\perl $INSTDIR\perl
     RMDir /r $INSTDIR\tmp
     ${StrRep} $0 "$INSTDIR\perl" "\" "\\"
     nsExec::ExecToLog '"$INSTDIR\perl\bin\wperl.exe" "$INSTDIR\perl\bin\reloc_perl" "$0"'
@@ -188,28 +194,19 @@ Section "Core Components" SecCoreComponents
         Abort
     ${EndIf}
 
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/R/RO/ROBERTMAY/Win32-GUI" "Win32-GUI-1.06.ppmx"        "65f72dcae55e45b3f7ffeabddb89f894"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/A/AB/ABW"                 "AppConfig-1.66.ppmx"        "f536298fc87a5c5c8d70670923658555"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/E/EW/EWILHELM"            "Math-Vec-1.01.ppmx"         "b5f10875b9f9ee3b02ad72ce6a284e82"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/K/KM/KMACLEOD"            "libxml-perl-0.08.ppmx"      "b62b1e6a5049ca8871b71a08ca1386d3"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/M/MS/MSERGEANT"           "XML-XPath-1.13.ppmx"        "3bbebe1abc3992e2c29756229906eb0a"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/J/JO/JOSEPHW"             "XML-Writer-0.606.ppmx"      "507e6a33a48d4993afd86ba01ca2a4b1"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SA/SAMV"                "Set-Object-1.27.ppmx"       "77fbdeb9244d1db0dea7fb58269f4aff"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SH/SHLOMIF"             "Error-0.17015.ppmx"         "d789bfd5887d4ee04b2a326a1be206d6"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "7532C17433DE135AF7457F8EE590C47B"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.89-PPM510.tar.gz" "1C2FC9B0C27431F745DCADB718252249"
-  ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SI/SIMONW"              "Module-Pluggable-3.8.ppmx"  "6838970862acd3a387d58864ec0db78e"
-
-  ${ppmInstall}   "$TAHDL" "Win32-GUI-1.06.ppmx"
-  ${ppmInstall}   "$TAHDL" "AppConfig-1.66.ppmx"
-  ${ppmInstall}   "$TAHDL" "Math-Vec-1.01.ppmx"
-  ${ppmInstall}   "$TAHDL" "libxml-perl-0.08.ppmx"
-  ${ppmInstall}   "$TAHDL" "XML-XPath-1.13.ppmx"
-  ${ppmInstall}   "$TAHDL" "Set-Object-1.27.ppmx"
-  ${ppmInstall}   "$TAHDL" "XML-Writer-0.606.ppmx"
-  ${ppmInstall}   "$TAHDL" "Error-0.17015.ppmx"
-  ${ppmInstall}   "$TAHDL" "IPC-Run.ppd"
-  ${ppmInstall}   "$TAHDL" "Module-Pluggable-3.8.ppmx"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "222E0B3EF0EAD5B51CFFE11432D95648"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.89-PPM514.tar.gz" "4bb2f08bd90abdfb77c40c016d37b5ab"
+  
+  ${ppmInstall}   "$TAHDL" "$TAHDL\IPC-Run.ppd"
+  ${ppmInstall}   "$TAHDL" "Win32-GUI"
+  ${ppmInstall}   "$TAHDL" "AppConfig"
+  ${ppmInstall}   "$TAHDL" "Math-Vec"
+  ${ppmInstall}   "$TAHDL" "libxml-perl"
+  ${ppmInstall}   "$TAHDL" "XML-XPath"
+  ${ppmInstall}   "$TAHDL" "Set-Object"
+  ${ppmInstall}   "$TAHDL" "XML-Writer"
+  ${ppmInstall}   "$TAHDL" "Error"
+  ${ppmInstall}   "$TAHDL" "Module-Pluggable"
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Download Tiles@home using svn
@@ -322,15 +319,21 @@ Section "Fonts" SecFonts
 SectionEnd
 
 Section "Batik Renderer" SecBatik
-  SectionIn RO
+   SectionIn RO
 
    AddSize 21000
 
-  call DownloadAndInstallJREIfNecessary
+   ; force java install to be always silent. restore previous state afterwards
+   ; TODO: java installer not silent. lib setting wrong argument. Disabled for now. 
+   ;SetSilent silent
+   call DownloadAndInstallJREIfNecessary
+   StrCmp $SILENTMODE "normal" 0 +2
+   SetSilent normal
+   
 
-  SetOutPath $INSTDIR\batik
-  File /r /x .svn binary-source\batik\*.*
-  
+   SetOutPath $INSTDIR\batik
+   File /r /x .svn binary-source\batik\*.*
+
 SectionEnd
 
 Section "Downloaded Cache" SecDownload
@@ -411,6 +414,14 @@ LangString DESC_SecBatik ${LANG_ENGLISH} "Batik rasterizer, requires Java"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
+Function .onInit
+
+   IfSilent 0 +3
+      StrCpy $SILENTMODE "silent"
+      goto +2
+      StrCpy $SILENTMODE "normal"
+
+FunctionEnd
 
 Function ConnectInternet
 
@@ -495,9 +506,10 @@ Function ppmInstall
 	Pop $2
 	Pop $1
 	SetOutPath $1
-    nsExec::ExecToLog '"$INSTDIR\perl\bin\wperl.exe" "$INSTDIR\perl\bin\ppm" "install" "--nodeps" "$1\$2"'
+    DetailPrint 'Installing perl module $2 ...'
+    nsExec::ExecToLog '"$INSTDIR\perl\bin\wperl.exe" "$INSTDIR\perl\bin\ppm" "install" "$2"'
     Pop $0
-    DetailPrint '"ppm" "install" "$2" returned $0'
+    DetailPrint '... "ppm install $2" returned $0'
     ${If} $0 != 0
     	Abort
     ${EndIf}

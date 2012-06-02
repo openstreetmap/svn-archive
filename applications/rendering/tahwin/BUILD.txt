@@ -2,7 +2,7 @@ How to build installer
 ----------------------
 
 - Install Nullsoft Scriptable Install System from http://nsis.sourceforge.net/Main_Page
-- optional install eclipte extension
+- optional install eclipse extension
 
 - download binaries bundled with installer into binary-source folder. see contents.txt for details
 

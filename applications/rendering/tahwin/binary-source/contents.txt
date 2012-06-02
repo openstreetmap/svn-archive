@@ -12,8 +12,9 @@ extract files flat into mentioned subdirectories
   I included two dlls (libpng13.dll, zlib.dll) that are missing in the distribution but required and hard to find
 
 \snv\
-  source http://subversion.tigris.org/files/documents/15/47914/svn-win32-1.6.6.zip
-  cmd-line client for SVN
+  source http://www.collab.net/downloads/subversion/
+  CollabNet Subversion Command-Line Client
+  extract binaries into subfolder "bin"
 
 \batik\
   source http://www.apache.org/dist/xmlgraphics/batik/batik-1.7.zip

@@ -45,7 +45,7 @@
     <StyleName>coast-poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">&world_boundaries;/processed_p</Parameter>
+      <Parameter name="file">&world_boundaries;/land_polygons</Parameter>
     </Datasource>
 </Layer>
 <Layer name="builtup" status="on" srs="&srsmercator;">

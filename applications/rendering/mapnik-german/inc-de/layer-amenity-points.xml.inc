@@ -308,7 +308,6 @@
     <Rule>
       &maxscale_zoom17;
       <Filter>[historic]='castle'</Filter>
-      <TextSymbolizer size="10" fill="black" dy="9" fontset-name="bold-fonts" halo-radius="1" wrap-width="34" placement="interior">[name]</TextSymbolizer>
     </Rule>
     <Rule>
       &maxscale_zoom16;

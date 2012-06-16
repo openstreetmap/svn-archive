@@ -29,7 +29,7 @@
 -->
 <project name="restart" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
+    <property name="commit.message" value="fix #j5635 -- pass java start options when restarting"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
     <!--

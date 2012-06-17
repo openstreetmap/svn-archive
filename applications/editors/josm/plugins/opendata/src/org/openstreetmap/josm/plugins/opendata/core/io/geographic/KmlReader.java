@@ -131,20 +131,22 @@ public class KmlReader extends AbstractReader implements OdConstants {
             		ds.addPrimitive(way = new Way());
             		list.add(way);
             	} else if (parser.getLocalName().equals(KML_COORDINATES)) {
-            		String[] tab = parser.getElementText().split(" ");
+            		String[] tab = parser.getElementText().trim().split(" ");
             		for (int i = 0; i < tab.length; i ++) {
-            			String[] values = tab[i].split(","); 
-            			LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecisionStrict();
-            			node = nodes.get(ll);
-            			if (node == null) {
-            				ds.addPrimitive(node = new Node(ll));
-            				nodes.put(ll, node);
-            				if (values.length > 2 && !values[2].equals("0")) {
-            					node.put("ele", values[2]);
-            				}
-            			}
-            			if (way != null) {
-            				way.addNode(node);
+            			String[] values = tab[i].split(",");
+            			if (values.length >= 2) {
+	            			LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecisionStrict();
+	            			node = nodes.get(ll);
+	            			if (node == null) {
+	            				ds.addPrimitive(node = new Node(ll));
+	            				nodes.put(ll, node);
+	            				if (values.length > 2 && !values[2].equals("0")) {
+	            					node.put("ele", values[2]);
+	            				}
+	            			}
+	            			if (way != null) {
+	            				way.addNode(node);
+	            			}
             			}
             		}
             	}

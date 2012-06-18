@@ -2633,32 +2633,54 @@ public class SeaMark extends JPanel {
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", ColSTR.get(sectors.get(i)[0])));
 				if (!((String) sectors.get(i)[1]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":character", (String) sectors.get(i)[1]));
+				else if (!((String) sectors.get(0)[1]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":character", (String) sectors.get(0)[1]));
 				if (!((String) sectors.get(i)[2]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":group", (String) sectors.get(i)[2]));
+				else if (!((String) sectors.get(0)[2]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":group", (String) sectors.get(0)[2]));
 				if (!((String) sectors.get(i)[3]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sequence", (String) sectors.get(i)[3]));
+				else if (!((String) sectors.get(0)[3]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sequence", (String) sectors.get(0)[3]));
 				if (!((String) sectors.get(i)[4]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":period", (String) sectors.get(i)[4]));
+				else if (!((String) sectors.get(0)[4]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":period", (String) sectors.get(0)[4]));
 				if (sectors.get(i)[5] != Lit.UNKLIT)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":category", LitSTR.get(sectors.get(i)[5])));
+				else if (sectors.get(0)[5] != Lit.UNKLIT)
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":category", LitSTR.get(sectors.get(0)[5])));
 				if (!((String) sectors.get(i)[6]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sector_start", (String) sectors.get(i)[6]));
 				if (!((String) sectors.get(i)[7]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":sector_end", (String) sectors.get(i)[7]));
 				if (!((String) sectors.get(i)[8]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":radius", (String) sectors.get(i)[8]));
+				else if (!((String) sectors.get(0)[8]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":radius", (String) sectors.get(0)[8]));
 				if (!((String) sectors.get(i)[9]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(i)[9]));
+				else if (!((String) sectors.get(0)[9]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(0)[9]));
 				if (!((String) sectors.get(i)[10]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(i)[10]));
+				else if (!((String) sectors.get(0)[10]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(0)[10]));
 				if (sectors.get(i)[11] != Vis.UNKVIS)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":visibility", VisSTR.get(sectors.get(i)[11])));
+				else if (sectors.get(0)[11] != Vis.UNKVIS)
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":visibility", VisSTR.get(sectors.get(0)[11])));
 				if (sectors.get(i)[12] != Exh.UNKEXH)
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":exhibition", ExhSTR.get(sectors.get(i)[12])));
+				else if (sectors.get(0)[12] != Exh.UNKEXH)
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":exhibition", ExhSTR.get(sectors.get(0)[12])));
 				if (!((String) sectors.get(i)[13]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":orientation", (String) sectors.get(i)[13]));
 				if (!((String) sectors.get(i)[14]).isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(i)[14]));
+				else if (!((String) sectors.get(0)[14]).isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(0)[14]));
 			}
 
 			if (getFogSound() != Fog.NOFOG) {

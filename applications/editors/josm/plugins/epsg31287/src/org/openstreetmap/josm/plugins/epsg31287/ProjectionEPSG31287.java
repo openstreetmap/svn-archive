@@ -4,31 +4,27 @@ package org.openstreetmap.josm.plugins.epsg31287;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.GridBagLayout;
-import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.tools.GBC;
 
-public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projection.Projection, org.openstreetmap.josm.data.projection.ProjectionSubPrefs {
+public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projection.Projection {
 
-	private double dx = 0.0;
-	private double dy = 0.0;
+	private final double dx;
+	private final double dy;
 	private final static String projCode = "EPSG:31287";
 
 	private final com.jhlabs.map.proj.Projection projection;
 
 	public ProjectionEPSG31287() {
-		super();
+		this(0,0);
+	}
+
+	public ProjectionEPSG31287(double dx, double dy) {
+		this.dx = dx;
+		this.dy = dy;
 		// use use com.jhlabs.map.proj.ProjectionFactory for doing all the math
 		projection = com.jhlabs.map.proj.ProjectionFactory.fromPROJ4Specification(
 				new String[] {
@@ -44,62 +40,6 @@ public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projecti
 						,"+no_defs"
 				}
 		);
-	}
-
-	// PreferencePanel, not used in plugin mode, useful for JOSM custom-build
-	@Override
-	public void setupPreferencePanel(JPanel p, ActionListener actionListener) {
-		//p.add(new HtmlPanel("<i>EPSG:31287 - Bessel 1841 in Lambert_Conformal_Conic_2SP</i>"), GBC.eol().fill(GBC.HORIZONTAL));
-		//p.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
-		p.setLayout(new GridBagLayout());
-
-		JTextField gdx = new JTextField(""+dx);
-		JTextField gdy = new JTextField(""+dy);
-
-		p.add(new JLabel(tr("dx")), GBC.std().insets(5,5,0,5));
-		p.add(GBC.glue(1, 0), GBC.std().fill(GBC.HORIZONTAL));
-		p.add(gdx, GBC.eop().fill(GBC.HORIZONTAL));
-
-		p.add(new JLabel(tr("dy")), GBC.std().insets(5,5,0,5));
-		p.add(GBC.glue(1, 0), GBC.std().fill(GBC.HORIZONTAL));
-		p.add(gdy, GBC.eop().fill(GBC.HORIZONTAL));
-		p.add(GBC.glue(1, 1), GBC.eol().fill(GBC.BOTH));
-
-	}
-
-	// for PreferencePanel, not used in plugin mode, useful for JOSM custom-build
-	@Override
-	public Collection<String> getPreferences(JPanel p) {
-		dx = new Double(((JTextField)p.getComponent(2)).getText());
-		dy = new Double(((JTextField)p.getComponent(5)).getText());
-		return Arrays.asList(""+dx,""+dy);
-	}
-
-	// for PreferencePanel, not used in plugin mode, useful for JOSM custom-build
-	@Override
-	public Collection<String> getPreferencesFromCode(String code) {
-		dx = 85.0;
-		dy = 45.0;
-		return null;
-	}
-
-	// for PreferencePanel, not used in plugin mode, useful for JOSM custom-build
-	@Override
-	public void setPreferences(Collection<String> args) {
-		if(args != null)
-		{
-			String[] array = args.toArray(new String[0]);
-			if (array.length > 0) {
-				try {
-					dx = Double.parseDouble(array[0]);
-				} catch(NumberFormatException e) {}
-			}
-			if (array.length > 1) {
-				try {
-					dy = Double.parseDouble(array[1]);
-				} catch(NumberFormatException e) {}
-			}
-		}
 	}
 
 	@Override
@@ -161,9 +101,5 @@ public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projecti
 		return projCode;
 	}
 
-	@Override
-	public String[] allCodes() {
-		return new String[] {projCode};
-	}
 
 }

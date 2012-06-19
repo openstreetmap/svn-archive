@@ -1,8 +1,8 @@
 package pdfimport;
 
-import java.awt.BorderLayout;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -23,8 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
-import javax.swing.AbstractAction;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -49,15 +49,13 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.Projections;
-import org.openstreetmap.josm.data.projection.ProjectionSubPrefs;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
 import org.openstreetmap.josm.gui.progress.SwingRenderingProgressMonitor;
-import org.openstreetmap.josm.gui.SideButton;
-import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.io.OsmExporter;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.WindowGeometry;
@@ -81,23 +79,28 @@ public class LoadPdfDialog extends JFrame{
 
 		}
 
+		@Override
 		public void setCustomText(String message) {
 			this.pBar.setString(this.title + message);
 		}
 
+		@Override
 		public void setIndeterminate(boolean indeterminate) {
 			this.pBar.setIndeterminate(indeterminate);
 		}
 
+		@Override
 		public void setMaximum(int maximum) {
 			this.pBar.setMaximum(maximum);
 		}
 
+		@Override
 		public void setTaskTitle(String taskTitle) {
 			this.title = taskTitle;
 			this.pBar.setString(this.title);
 		}
 
+		@Override
 		public void setValue(int value) {
 			this.pBar.setValue(value);
 		}
@@ -167,42 +170,49 @@ public class LoadPdfDialog extends JFrame{
 	private void addListeners() {
 
 		this.projectionCombo.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				updateProjectionPrefButton();
 			}
 
 		});
 		this.projectionPreferencesButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				showProjectionPreferences();
 			}
 		});
 
 		this.loadFileButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadFilePressed();
 			}
 		});
 
 		this.okButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				okPressed();
 			}
 		});
 
 		this.saveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				savePressed();
 			}
 		});
 
 		this.showButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				showPressed();
 			}
 		});
 
 		this.cancelButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				cancelPressed();
 			}
@@ -217,12 +227,14 @@ public class LoadPdfDialog extends JFrame{
 		});
 
 		this.getMinButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				getMinPressed();
 			}
 		});
 
 		this.getMaxButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				getMaxPressed();
 			}
@@ -235,8 +247,7 @@ public class LoadPdfDialog extends JFrame{
 		c.gridheight = 1;c.gridwidth = 1;c.weightx =1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
 
 		this.projectionCombo = new JComboBox();
-		this.projectionCombo.addItem(tr("Select projection..."));
-		for (Projection p: Projections.getProjections()) {
+		for (ProjectionChoice p: ProjectionPreference.getProjectionChoices()) {
 			this.projectionCombo.addItem(p);
 		}
 
@@ -418,12 +429,12 @@ public class LoadPdfDialog extends JFrame{
 	}
 
 	private class ProjectionSubPrefsDialog extends JDialog {
-		private ProjectionSubPrefs projPref;
+		private final ProjectionChoice projPref;
 		private OKAction actOK;
 		private CancelAction actCancel;
 		private JPanel projPrefPanel;
 
-		public ProjectionSubPrefsDialog(Component parent, ProjectionSubPrefs pr) {
+		public ProjectionSubPrefsDialog(Component parent, ProjectionChoice pr) {
 			super(JOptionPane.getFrameForComponent(parent), ModalityType.DOCUMENT_MODAL);
 
 			projPref = pr;
@@ -441,9 +452,7 @@ public class LoadPdfDialog extends JFrame{
 		}
 
 		protected JPanel buildInputForm() {
-			JPanel pnl = new JPanel();
-			projPref.setupPreferencePanel(pnl, null);
-			return pnl;
+			return projPref.getPreferencePanel(null);
 		}
 
 		protected JPanel buildButtonRow() {
@@ -479,6 +488,7 @@ public class LoadPdfDialog extends JFrame{
 			putValue(SMALL_ICON, ImageProvider.get("ok"));
 			}
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 			projPref.setPreferences(projPref.getPreferences(projPrefPanel));
 			setVisible(false);
@@ -492,6 +502,7 @@ public class LoadPdfDialog extends JFrame{
 			putValue(SMALL_ICON, ImageProvider.get("cancel"));
 			}
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 			setVisible(false);
 			}
@@ -511,24 +522,23 @@ public class LoadPdfDialog extends JFrame{
 	}
 
 	private void updateProjectionPrefButton() {
-		Object proj = projectionCombo.getSelectedItem();
+//		ProjectionChoice proj = (ProjectionChoice) projectionCombo.getSelectedItem();
 
+		//TODO
 		// Enable/disable pref button
-		if(!(proj instanceof ProjectionSubPrefs)) {
-			projectionPreferencesButton.setEnabled(false);
-		} else {
+//		if(!(proj instanceof ProjectionSubPrefs)) {
+//			projectionPreferencesButton.setEnabled(false);
+//		} else {
 			projectionPreferencesButton.setEnabled(true);
-		}
+//		}
 	}
 
 	private void showProjectionPreferences() {
-		Object proj = projectionCombo.getSelectedItem();
+		ProjectionChoice proj = (ProjectionChoice) projectionCombo.getSelectedItem();
 
-		if(proj instanceof ProjectionSubPrefs) {
-			ProjectionSubPrefsDialog dlg =
-			new ProjectionSubPrefsDialog(this, (ProjectionSubPrefs)proj);
-			dlg.setVisible(true);
-		}
+		ProjectionSubPrefsDialog dlg = new ProjectionSubPrefsDialog(this, proj);
+		dlg.setVisible(true);
+
 	}
 
 	private void loadFilePressed() {
@@ -545,6 +555,7 @@ public class LoadPdfDialog extends JFrame{
 
 		this.runAsBackgroundTask(
 				new Runnable() {
+					@Override
 					public void run() {
 						//async part
 						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
@@ -562,6 +573,7 @@ public class LoadPdfDialog extends JFrame{
 				},
 				new ActionListener() {
 
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						//sync part
 						if (data!= null) {
@@ -607,6 +619,7 @@ public class LoadPdfDialog extends JFrame{
 
 		this.runAsBackgroundTask(
 				new Runnable() {
+					@Override
 					public void run() {
 						//async part
 						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
@@ -616,6 +629,7 @@ public class LoadPdfDialog extends JFrame{
 				},
 				new ActionListener() {
 
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						//sync part
 						//rebuild layer with latest projection
@@ -642,6 +656,7 @@ public class LoadPdfDialog extends JFrame{
 
 		this.runAsBackgroundTask(
 				new Runnable() {
+					@Override
 					public void run() {
 						//async part
 						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
@@ -651,6 +666,7 @@ public class LoadPdfDialog extends JFrame{
 				},
 				new ActionListener() {
 
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						//sync part
 						LoadPdfDialog.this.setVisible(false);
@@ -768,10 +784,12 @@ public class LoadPdfDialog extends JFrame{
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Thread t = new Thread(new Runnable()
 		{
+			@Override
 			public void run() {
 				task.run();
 
 				SwingUtilities.invokeLater(new Runnable(){
+					@Override
 					public void run() {
 						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						after.actionPerformed(null);
@@ -929,9 +947,9 @@ public class LoadPdfDialog extends JFrame{
 
 
 	private FilePlacement parsePlacement() {
-		Object selectedProjection = this.projectionCombo.getSelectedItem();
+		ProjectionChoice selectedProjection = (ProjectionChoice) this.projectionCombo.getSelectedItem();
 
-		if (!(selectedProjection instanceof Projection))
+		if (selectedProjection == null)
 		{
 			JOptionPane.showMessageDialog(Main.parent, tr("Please set a projection."));
 			return null;
@@ -939,7 +957,7 @@ public class LoadPdfDialog extends JFrame{
 
 		FilePlacement placement = new FilePlacement();
 
-		placement.projection = (Projection)this.projectionCombo.getSelectedItem();
+		placement.projection = selectedProjection.getProjection();
 
 		try
 		{
@@ -969,7 +987,20 @@ public class LoadPdfDialog extends JFrame{
 			placement = new FilePlacement();
 		}
 
-		this.projectionCombo.setSelectedItem(placement.projection);
+		if (placement.projection != null) {
+			String projectionCode = placement.projection.toCode();
+			BIG_LOOP:
+			for (ProjectionChoice projectionChoice: ProjectionPreference.getProjectionChoices()) {
+				for (String code: projectionChoice.allCodes()) {
+					if (code.equals(projectionCode)) {
+						projectionChoice.getPreferencesFromCode(projectionCode);
+						this.projectionCombo.setSelectedItem(projectionChoice);
+						break BIG_LOOP;
+					}
+				}
+			}
+		}
+
 		this.minXField.setText(Double.toString(placement.minX));
 		this.maxXField.setText(Double.toString(placement.maxX));
 		this.minYField.setText(Double.toString(placement.minY));

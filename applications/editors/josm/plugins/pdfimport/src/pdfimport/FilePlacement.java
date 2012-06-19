@@ -10,7 +10,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.ProjectionInfo;
 
 public class FilePlacement {
 	public Projection projection = null;

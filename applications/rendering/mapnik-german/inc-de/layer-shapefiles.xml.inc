@@ -13,9 +13,16 @@
      <TextSymbolizer size="8" dy="2" fill="grey" fontset-name="book-fonts" halo-radius="1">[NAMEASCII]</TextSymbolizer>
     </Rule>
 </Style>
-<Style name="land">
+<Style name="world">
     <Rule>
       &maxscale_zoom0;
+      &minscale_zoom9;
+      <PolygonSymbolizer fill="#f2efe9"/>
+    </Rule>
+</Style>
+<Style name="land_polygons">
+    <Rule>
+      &maxscale_zoom10;
       <PolygonSymbolizer fill="#f2efe9"/>
     </Rule>
 </Style>
@@ -27,13 +34,15 @@
       <PolygonSymbolizer fill="#ddd"/>
     </Rule>
 </Style>
-<!-- 
-We no longer Use processed_p.tar.bz2 and shoreline_300.tar.bz2
-Instead we use th land polygons from
-http://data.openstreetmapdata.com/land-polygons-split-3857.zip 
--->
-<Layer name="land" status="on" srs="&srs900913;">
-    <StyleName>land</StyleName>
+<Layer name="world" status="on" srs="&srs900913;">
+    <StyleName>world</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&world_boundaries;/shoreline_300</Parameter>
+    </Datasource>
+</Layer>
+<Layer name="land_polygons" status="on" srs="&srs900913;">
+    <StyleName>land_polygons</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
       <Parameter name="file">&world_boundaries;/land_polygons</Parameter>

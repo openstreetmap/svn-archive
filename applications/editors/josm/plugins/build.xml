@@ -26,7 +26,6 @@
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="ElevationProfile"/>
         <ant antfile="build.xml" target="dist" dir="epci-fr"/>
-        <ant antfile="build.xml" target="dist" dir="epsg31287"/>
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="FastDraw"/>
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
@@ -118,7 +117,6 @@
         <ant antfile="build.xml" target="clean" dir="editgpx"/>
         <ant antfile="build.xml" target="clean" dir="ElevationProfile"/>
         <ant antfile="build.xml" target="clean" dir="epci-fr"/>
-        <ant antfile="build.xml" target="clean" dir="epsg31287"/>
         <ant antfile="build.xml" target="clean" dir="ext_tools"/>
         <ant antfile="build.xml" target="clean" dir="FastDraw"/>
         <ant antfile="build.xml" target="clean" dir="FixAddresses"/>

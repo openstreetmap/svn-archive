@@ -147,7 +147,7 @@ public class PanelSectors extends JFrame {
 			switch (col) {
 			case 0:
 				if (row == 0)
-					return Messages.getString("Common");
+					return Messages.getString("Default");
 				else
 					return row;
 			case 1:

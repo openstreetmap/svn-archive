@@ -2623,12 +2623,11 @@ public class SeaMark extends JPanel {
 				}
 			}
 
-			for (int i = 0; i < sectors.size(); i++) {
+			for (int i = (sectors.size() > 1 ? 1 : 0); i < sectors.size(); i++) {
 				String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
 				if (sectors.get(i)[0] != Col.UNKCOL)
 					if ((sectors.get(i)[15] != Col.UNKCOL) && ((String)sectors.get(i)[1]).contains("Al"))
-						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", (ColSTR.get(sectors.get(i)[0]))
-								+ ";" + ColSTR.get(sectors.get(i)[15])));
+						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", (ColSTR.get(sectors.get(i)[0])) + ";" + ColSTR.get(sectors.get(i)[15])));
 					else
 						Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour", ColSTR.get(sectors.get(i)[0])));
 				if (!((String) sectors.get(i)[1]).isEmpty())

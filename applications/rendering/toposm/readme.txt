@@ -4,6 +4,10 @@ Lars Ahlzen
 lars (at) ahlzen.com
 
 
+NOTE: TopOSM development has moved to GitHub:
+https://github.com/Ahlzen/TopOSM
+
+
 Requirements:
 -------------
 * Standard UN*X tools (bash, sed, awk, ...)

@@ -228,26 +228,28 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         for (WikipediaEntry i : entries) {
             articleNames.add(i.wikipediaArticle);
         }
-        final String url = "https://toolserver.org/~simon04/getGeoJSONStatus.php"
-                + "?lang=" + wikipediaLang.get()
-                + "&articles=" + encodeURL(Utils.join(",", articleNames));
-        System.out.println("Wikipedia: GET " + url);
         Map<String, Boolean> status = new HashMap<String, Boolean>();
+        if (!articleNames.isEmpty()) {
+            final String url = "https://toolserver.org/~simon04/getGeoJSONStatus.php"
+                    + "?lang=" + wikipediaLang.get()
+                    + "&articles=" + encodeURL(Utils.join(",", articleNames));
+            System.out.println("Wikipedia: GET " + url);
 
-        try {
-            final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
-            while (scanner.hasNext()) {
-                //[article]\t[0|1]
-                final String line = scanner.next();
-                final String[] x = line.split("\t");
-                if (x.length == 2) {
-                    status.put(x[0], "1".equals(x[1]));
-                } else {
-                    System.err.println("Unknown element "+line);
+            try {
+                final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
+                while (scanner.hasNext()) {
+                    //[article]\t[0|1]
+                    final String line = scanner.next();
+                    final String[] x = line.split("\t");
+                    if (x.length == 2) {
+                        status.put(x[0], "1".equals(x[1]));
+                    } else {
+                        System.err.println("Unknown element " + line);
+                    }
                 }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
             }
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
         }
 
         model.clear();

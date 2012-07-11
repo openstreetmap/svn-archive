@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -52,6 +52,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -93,8 +94,15 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 @Override
                 public JLabel getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    if (articles.contains(((WikipediaEntry) value).name)) {
+                    final WikipediaEntry entry = (WikipediaEntry) value;
+                    if (entry.getWiwosmStatus() != null && entry.getWiwosmStatus()) {
+                        label.setIcon(ImageProvider.getIfAvailable("misc", "grey_check"));
+                        label.setToolTipText(tr("Available via WIWOSM server"));
+                    } else if (articles.contains(entry.wikipediaArticle)) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "green_check"));
+                        label.setToolTipText(tr("Available in local dataset"));
+                    } else {
+                        label.setToolTipText(tr("Not linked yet"));
                     }
                     return label;
                 }
@@ -106,10 +114,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             final int index = locationToIndex(e.getPoint());
             if (index >= 0) {
                 final String description = ((WikipediaEntry) model.getElementAt(index)).description;
-                return description == null ? null : ("<html>" + description + "</html>");
-            } else {
-                return null;
+                if (description != null) {
+                    return "<html>" + description + "</html>";
+                }
             }
+            return super.getToolTipText(e);
         }
     };
 
@@ -127,11 +136,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 return null;
             }
             // decode URL for nicer value
-            try {
-                url = URLDecoder.decode(url, "UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex);
-            }
+            url = decodeURL(url);
             // extract Wikipedia language and
             final Matcher m = Pattern.compile("https?://(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
             if (!m.matches()) {
@@ -146,6 +151,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         final String name, description;
         final String wikipediaLang, wikipediaArticle;
         final LatLon coordinate;
+        private Boolean wiwosmStatus;
 
         public WikipediaEntry(String name, String description, LatLon coordinate) {
             this.name = name;
@@ -169,6 +175,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         }
 
         protected final String getHrefFromDescription() {
+            if (description == null) {
+                return null;
+            }
             final Matcher m = Pattern.compile(".*href=\"(.+?)\".*").matcher(description);
             if (m.matches()) {
                 return m.group(1);
@@ -182,6 +191,27 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             return new Tag("wikipedia", wikipediaLang + ":" + wikipediaArticle);
         }
 
+        private void updateWiwosmStatus() {
+            try {
+                final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
+                        + "&lang=" + wikipediaLang
+                        + "&article=" + encodeURL(wikipediaArticle);
+                System.out.println("Wikipedia: GET " + url);
+                final Scanner scanner = new Scanner(new URL(url).openStream());
+                wiwosmStatus = scanner.hasNextInt() && scanner.nextInt() == 1;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        public void setWiwosmStatus(Boolean wiwosmStatus) {
+            this.wiwosmStatus = wiwosmStatus;
+        }
+
+        public Boolean getWiwosmStatus() {
+            return wiwosmStatus;
+        }
+
         @Override
         public String toString() {
             return name;
@@ -190,6 +220,40 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         @Override
         public int compareTo(WikipediaEntry o) {
             return name.compareTo(o.name);
+        }
+    }
+
+    private void setWikipediaEntries(Collection<WikipediaEntry> entries) {
+        Collection<String> articleNames = new ArrayList<String>();
+        for (WikipediaEntry i : entries) {
+            articleNames.add(i.wikipediaArticle);
+        }
+        final String url = "https://toolserver.org/~simon04/getGeoJSONStatus.php"
+                + "?lang=" + wikipediaLang.get()
+                + "&articles=" + encodeURL(Utils.join(",", articleNames));
+        System.out.println("Wikipedia: GET " + url);
+        Map<String, Boolean> status = new HashMap<String, Boolean>();
+
+        try {
+            final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
+            while (scanner.hasNext()) {
+                //[article]\t[0|1]
+                final String line = scanner.next();
+                final String[] x = line.split("\t");
+                if (x.length == 2) {
+                    status.put(x[0], "1".equals(x[1]));
+                } else {
+                    System.err.println("Unknown element "+line);
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        model.clear();
+        for (WikipediaEntry i : entries) {
+            i.setWiwosmStatus(status.get(i.wikipediaArticle));
+            model.addElement(i);
         }
     }
 
@@ -219,7 +283,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
                 NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
                 // construct WikipediaEntry for each XML element
-                List<WikipediaEntry> entries = new LinkedList<WikipediaEntry>();
+                List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>(nodes.getLength());
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final String[] coord = xpathCoord.evaluate(nodes.item(i)).split(",");
                     if (coord.length <= 2) {
@@ -232,10 +296,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 }
                 Collections.sort(entries);
                 // add entries to list model
-                model.clear();
-                for (WikipediaEntry i : entries) {
-                    model.addElement(i);
-                }
+                setWikipediaEntries(entries);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -258,17 +319,17 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 final String url = "http://toolserver.org/~daniel/WikiSense/CategoryIntersect.php?"
                         + "wikilang=" + wikipediaLang.get()
                         + "&wikifam=.wikipedia.org"
-                        + "&basecat=" + URLEncoder.encode(category, "UTF-8")
+                        + "&basecat=" + encodeURL(category)
                         + "&basedeep=3&templates=&mode=al&format=csv";
                 System.out.println("Wikipedia: GET " + url);
                 final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
-                if (scanner.hasNext()) {
-                    model.clear();
-                }
+                final List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>();
                 while (scanner.hasNext()) {
                     final String article = scanner.next().split("\t")[1].replace("_", " ");
-                    model.addElement(new WikipediaEntry(article, wikipediaLang.get(), article));
+                    entries.add(new WikipediaEntry(article, wikipediaLang.get(), article));
                 }
+                Collections.sort(entries);
+                setWikipediaEntries(entries);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -290,7 +351,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 if (entry.getHrefFromDescription() != null) {
                     url = entry.getHrefFromDescription();
                 } else {
-                    url = "http://" + entry.wikipediaLang + ".wikipedia.org/wiki/" + entry.wikipediaArticle.replace(" ", "_");
+                    url = "http://" + entry.wikipediaLang + ".wikipedia.org/wiki/"
+                            + encodeURL(entry.wikipediaArticle.replace(" ", "_"));
                 }
                 System.out.println("Wikipedia: opening " + url);
                 OpenBrowser.displayUrl(url);
@@ -361,13 +423,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             }
         } else if (wp != null) {
             //wikipedia=[lang]:[article]
-            try {
-                String[] item = URLDecoder.decode(wp, "UTF-8").split(":", 2);
-                if (item.length == 2 && wikipediaLang.get().equals(item[0])) {
-                    r.add(item[1].replace("_", " "));
-                }
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex);
+            String[] item = decodeURL(wp).split(":", 2);
+            if (item.length == 2 && wikipediaLang.get().equals(item[0])) {
+                r.add(item[1].replace("_", " "));
             }
         }
         // consider wikipedia:[lang]=*
@@ -381,12 +439,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         } else if (wpLang != null) {
             //wikipedia:[lang]=[lang]:[article]
             //wikipedia:[lang]=[article]
-            try {
-                String[] item = URLDecoder.decode(wpLang, "UTF-8").split(":", 2);
-                r.add(item[item.length == 2 ? 1 : 0].replace("_", " "));
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex);
-            }
+            String[] item = decodeURL(wpLang).split(":", 2);
+            r.add(item[item.length == 2 ? 1 : 0].replace("_", " "));
         }
         return r;
     }
@@ -417,5 +471,21 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     public void processDatasetEvent(AbstractDatasetChangedEvent event) {
         updateWikipediaArticles();
         list.repaint();
+    }
+
+    public static String decodeURL(String url) {
+        try {
+            return URLDecoder.decode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public static String encodeURL(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 }

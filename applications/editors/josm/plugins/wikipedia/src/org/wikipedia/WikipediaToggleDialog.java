@@ -6,17 +6,27 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,30 +34,40 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.StringProperty;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-public class WikipediaToggleDialog extends ToggleDialog {
+public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditLayerChangeListener, DataSetListenerAdapter.Listener {
 
     public WikipediaToggleDialog() {
         super(tr("Wikipedia"), "wikipedia", tr("Fetch Wikipedia articles with coordinates"), null, 150);
         createLayout(list, true, Arrays.asList(
-                new SideButton(new WikipediaDownloadAction()),
+                new SideButton(new WikipediaLoadCoordinatesAction()),
+                new SideButton(new WikipediaLoadCategoryAction()),
                 new SideButton(new AddWikipediaTagAction()),
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
     }
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
+    final Set<String> articles = new HashSet<String>();
     final DefaultListModel model = new DefaultListModel();
     final JList list = new JList(model) {
 
@@ -57,10 +77,26 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2 && getSelectedValue() != null) {
-                        BoundingXYVisitor bbox = new BoundingXYVisitor();
-                        bbox.visit(((WikipediaEntry) getSelectedValue()).coordinate);
-                        Main.map.mapView.recalculateCenterScale(bbox);
+                        final WikipediaEntry entry = (WikipediaEntry) getSelectedValue();
+                        if (entry.coordinate != null) {
+                            BoundingXYVisitor bbox = new BoundingXYVisitor();
+                            bbox.visit(entry.coordinate);
+                            Main.map.mapView.recalculateCenterScale(bbox);
+                        }
+                        SearchAction.search(entry.name.replaceAll("\\(.*\\)", ""), SearchAction.SearchMode.replace);
                     }
+                }
+            });
+
+            setCellRenderer(new DefaultListCellRenderer() {
+
+                @Override
+                public JLabel getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (articles.contains(((WikipediaEntry) value).name)) {
+                        label.setIcon(ImageProvider.getIfAvailable("misc", "green_check"));
+                    }
+                    return label;
                 }
             });
         }
@@ -69,37 +105,24 @@ public class WikipediaToggleDialog extends ToggleDialog {
         public String getToolTipText(MouseEvent e) {
             final int index = locationToIndex(e.getPoint());
             if (index >= 0) {
-                return "<html>" + ((WikipediaEntry) model.getElementAt(index)).description + "</html>";
+                final String description = ((WikipediaEntry) model.getElementAt(index)).description;
+                return description == null ? null : ("<html>" + description + "</html>");
             } else {
                 return null;
             }
         }
     };
 
-    static class WikipediaEntry implements Comparable<WikipediaEntry> {
+    static class WikipediaLangArticle {
 
-        String name, description;
-        LatLon coordinate;
+        final String lang, article;
 
-        public WikipediaEntry(String name, String description, LatLon coordinate) {
-            this.name = name;
-            this.description = description;
-            this.coordinate = coordinate;
+        public WikipediaLangArticle(String lang, String article) {
+            this.lang = lang;
+            this.article = article;
         }
 
-        public String getHrefFromDescription() {
-            final Matcher m = Pattern.compile(".*href=\"(.+?)\".*").matcher(description);
-            if (m.matches()) {
-                return m.group(1);
-            } else {
-                System.err.println("Could not parse URL from: " + description);
-                return null;
-            }
-        }
-
-        public Tag createWikipediaTag() {
-            // get URL from description
-            String url = getHrefFromDescription();
+        public static WikipediaLangArticle parseFromUrl(String url) {
             if (url == null) {
                 return null;
             }
@@ -112,10 +135,51 @@ public class WikipediaToggleDialog extends ToggleDialog {
             // extract Wikipedia language and
             final Matcher m = Pattern.compile("https?://(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
             if (!m.matches()) {
-                System.err.println("Could not extract Wikipedia tag from: " + url);
                 return null;
             }
-            return new Tag("wikipedia", m.group(1) + ":" + m.group(2));
+            return new WikipediaLangArticle(m.group(1), m.group(2));
+        }
+    }
+
+    static class WikipediaEntry implements Comparable<WikipediaEntry> {
+
+        final String name, description;
+        final String wikipediaLang, wikipediaArticle;
+        final LatLon coordinate;
+
+        public WikipediaEntry(String name, String description, LatLon coordinate) {
+            this.name = name;
+            this.description = description;
+            this.coordinate = coordinate;
+
+            final WikipediaLangArticle wp = WikipediaLangArticle.parseFromUrl(getHrefFromDescription());
+            if (wp == null) {
+                System.err.println("Could not extract Wikipedia tag from: " + getHrefFromDescription());
+            }
+            this.wikipediaLang = wp == null ? null : wp.lang;
+            this.wikipediaArticle = wp == null ? null : wp.article;
+        }
+
+        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle) {
+            this.name = name;
+            this.description = null;
+            this.wikipediaLang = wikipediaLang;
+            this.wikipediaArticle = wikipediaArticle;
+            this.coordinate = null;
+        }
+
+        protected final String getHrefFromDescription() {
+            final Matcher m = Pattern.compile(".*href=\"(.+?)\".*").matcher(description);
+            if (m.matches()) {
+                return m.group(1);
+            } else {
+                System.err.println("Could not parse URL from: " + description);
+                return null;
+            }
+        }
+
+        protected final Tag createWikipediaTag() {
+            return new Tag("wikipedia", wikipediaLang + ":" + wikipediaArticle);
         }
 
         @Override
@@ -129,10 +193,10 @@ public class WikipediaToggleDialog extends ToggleDialog {
         }
     }
 
-    class WikipediaDownloadAction extends AbstractAction {
+    class WikipediaLoadCoordinatesAction extends AbstractAction {
 
-        public WikipediaDownloadAction() {
-            super(tr("Reload"), ImageProvider.get("dialogs", "refresh"));
+        public WikipediaLoadCoordinatesAction() {
+            super(tr("Coordinates"), ImageProvider.get("dialogs", "refresh"));
             putValue(SHORT_DESCRIPTION, tr("Fetches all coordinates from Wikipedia in the current view"));
         }
 
@@ -178,6 +242,39 @@ public class WikipediaToggleDialog extends ToggleDialog {
         }
     }
 
+    class WikipediaLoadCategoryAction extends AbstractAction {
+
+        public WikipediaLoadCategoryAction() {
+            super(tr("Category"), ImageProvider.get("dialogs", "refresh"));
+            putValue(SHORT_DESCRIPTION, tr("Fetches a list of all Wikipedia articles of a category"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                final String category = JOptionPane.showInputDialog(
+                        Main.parent,
+                        tr("Enter the Wikipedia category"));
+                final String url = "http://toolserver.org/~daniel/WikiSense/CategoryIntersect.php?"
+                        + "wikilang=" + wikipediaLang.get()
+                        + "&wikifam=.wikipedia.org"
+                        + "&basecat=" + URLEncoder.encode(category, "UTF-8")
+                        + "&basedeep=3&templates=&mode=al&format=csv";
+                System.out.println("Wikipedia: GET " + url);
+                final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
+                if (scanner.hasNext()) {
+                    model.clear();
+                }
+                while (scanner.hasNext()) {
+                    final String article = scanner.next().split("\t")[1].replace("_", " ");
+                    model.addElement(new WikipediaEntry(article, wikipediaLang.get(), article));
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     class OpenWikipediaArticleAction extends AbstractAction {
 
         public OpenWikipediaArticleAction() {
@@ -188,11 +285,15 @@ public class WikipediaToggleDialog extends ToggleDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
-                String url = ((WikipediaEntry) list.getSelectedValue()).getHrefFromDescription();
-                if (url != null) {
-                    System.out.println("Wikipedia: opening " + url);
-                    OpenBrowser.displayUrl(url);
+                WikipediaEntry entry = (WikipediaEntry) list.getSelectedValue();
+                final String url;
+                if (entry.getHrefFromDescription() != null) {
+                    url = entry.getHrefFromDescription();
+                } else {
+                    url = "http://" + entry.wikipediaLang + ".wikipedia.org/wiki/" + entry.wikipediaArticle.replace(" ", "_");
                 }
+                System.out.println("Wikipedia: opening " + url);
+                OpenBrowser.displayUrl(url);
             }
         }
     }
@@ -207,11 +308,12 @@ public class WikipediaToggleDialog extends ToggleDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             String lang = JOptionPane.showInputDialog(
-                    WikipediaToggleDialog.this,
+                    Main.parent,
                     tr("Enter the Wikipedia language"),
                     wikipediaLang.get());
             if (lang != null) {
                 wikipediaLang.put(lang);
+                updateWikipediaArticles();
             }
         }
     }
@@ -235,5 +337,85 @@ public class WikipediaToggleDialog extends ToggleDialog {
                 }
             }
         }
+    }
+
+    protected void updateWikipediaArticles() {
+        articles.clear();
+        if (Main.main != null && Main.main.getCurrentDataSet() != null) {
+            for (final OsmPrimitive p : Main.main.getCurrentDataSet().allPrimitives()) {
+                articles.addAll(getWikipediaArticles(p));
+            }
+        }
+    }
+
+    protected Collection<String> getWikipediaArticles(OsmPrimitive p) {
+        Collection<String> r = new ArrayList<String>();
+        final Map<String, String> tags = p.getKeys();
+        // consider wikipedia=[lang]:*
+        final String wp = tags.get("wikipedia");
+        if (wp != null && wp.startsWith("http")) {
+            //wikipedia=http...
+            final WikipediaLangArticle item = WikipediaLangArticle.parseFromUrl(wp);
+            if (item != null && wikipediaLang.get().equals(item.lang)) {
+                r.add(item.article.replace("_", " "));
+            }
+        } else if (wp != null) {
+            //wikipedia=[lang]:[article]
+            try {
+                String[] item = URLDecoder.decode(wp, "UTF-8").split(":", 2);
+                if (item.length == 2 && wikipediaLang.get().equals(item[0])) {
+                    r.add(item[1].replace("_", " "));
+                }
+            } catch (UnsupportedEncodingException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+        // consider wikipedia:[lang]=*
+        final String wpLang = tags.get("wikipedia:" + wikipediaLang.get());
+        if (wpLang != null && wpLang.startsWith("http")) {
+            //wikipedia:[lang]=http...
+            final WikipediaLangArticle item = WikipediaLangArticle.parseFromUrl(wpLang);
+            if (wikipediaLang.get().equals(item.lang)) {
+                r.add(item.article.replace("_", " "));
+            }
+        } else if (wpLang != null) {
+            //wikipedia:[lang]=[lang]:[article]
+            //wikipedia:[lang]=[article]
+            try {
+                String[] item = URLDecoder.decode(wpLang, "UTF-8").split(":", 2);
+                r.add(item[item.length == 2 ? 1 : 0].replace("_", " "));
+            } catch (UnsupportedEncodingException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+        return r;
+    }
+
+    private final DataSetListenerAdapter dataChangedAdapter = new DataSetListenerAdapter(this);
+
+    @Override
+    public void showNotify() {
+        DatasetEventManager.getInstance().addDatasetListener(dataChangedAdapter, FireMode.IN_EDT_CONSOLIDATED);
+        MapView.addEditLayerChangeListener(this);
+        updateWikipediaArticles();
+    }
+
+    @Override
+    public void hideNotify() {
+        DatasetEventManager.getInstance().removeDatasetListener(dataChangedAdapter);
+        MapView.removeEditLayerChangeListener(this);
+        articles.clear();
+    }
+
+    @Override
+    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+        updateWikipediaArticles();
+        list.repaint();
+    }
+
+    @Override
+    public void processDatasetEvent(AbstractDatasetChangedEvent event) {
+        updateWikipediaArticles();
+        list.repaint();
     }
 }

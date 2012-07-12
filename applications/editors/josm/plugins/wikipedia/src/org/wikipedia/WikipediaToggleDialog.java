@@ -338,7 +338,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class OpenWikipediaArticleAction extends AbstractAction {
 
         public OpenWikipediaArticleAction() {
-            super(tr("Open Article"));
+            super(tr("Open Article"), ImageProvider.getIfAvailable("browser"));
             putValue(SHORT_DESCRIPTION, tr("Opens the Wikipedia article of the selected item in a browser"));
         }
 

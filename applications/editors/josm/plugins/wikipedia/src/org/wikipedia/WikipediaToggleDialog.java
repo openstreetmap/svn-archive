@@ -66,6 +66,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 new SideButton(new AddWikipediaTagAction()),
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
+        setTitle(/* I18n: [language].Wikipedia.org */ tr("{0}.Wikipedia.org", wikipediaLang.get()));
     }
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final Set<String> articles = new HashSet<String>();
@@ -97,28 +98,19 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     final WikipediaEntry entry = (WikipediaEntry) value;
                     if (entry.getWiwosmStatus() != null && entry.getWiwosmStatus()) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "grey_check"));
-                        label.setToolTipText(tr("Available via WIWOSM server"));
+                        label.setToolTipText(/* I18n: WIWOSM server already links Wikipedia article to object/s */ tr("Available via WIWOSM server"));
                     } else if (articles.contains(entry.wikipediaArticle)) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "green_check"));
-                        label.setToolTipText(tr("Available in local dataset"));
+                        label.setToolTipText(/* I18n: object/s from dataset contain link to Wikipedia article */ tr("Available in local dataset"));
                     } else {
                         label.setToolTipText(tr("Not linked yet"));
+                    }
+                    if (entry.description != null) {
+                        label.setToolTipText("<html>" + entry.description + "</html>");
                     }
                     return label;
                 }
             });
-        }
-
-        @Override
-        public String getToolTipText(MouseEvent e) {
-            final int index = locationToIndex(e.getPoint());
-            if (index >= 0) {
-                final String description = ((WikipediaEntry) model.getElementAt(index)).description;
-                if (description != null) {
-                    return "<html>" + description + "</html>";
-                }
-            }
-            return super.getToolTipText(e);
         }
     };
 
@@ -299,6 +291,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 Collections.sort(entries);
                 // add entries to list model
                 setWikipediaEntries(entries);
+                setTitle(/* I18n: [language].Wikipedia.org: coordinates */ tr("{0}.Wikipedia.org: coordinates", wikipediaLang.get()));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -335,6 +328,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 }
                 Collections.sort(entries);
                 setWikipediaEntries(entries);
+                setTitle(/* I18n: [language].Wikipedia.org: [category] */ tr("{0}.Wikipedia.org: {1}", wikipediaLang.get(), category));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

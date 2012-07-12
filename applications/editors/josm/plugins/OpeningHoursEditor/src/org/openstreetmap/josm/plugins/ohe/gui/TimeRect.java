@@ -213,8 +213,10 @@ public class TimeRect extends JPanel implements MouseListener,
 
     @Override
     public void mouseExited(MouseEvent evt) {
-        if (transformType < 0)
+        if (transformType < 0) {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+        editor.mousePositionChanged(0, 0, false);
     }
 
     @Override
@@ -292,8 +294,9 @@ public class TimeRect extends JPanel implements MouseListener,
 
     @Override
     public void mouseMoved(MouseEvent evt) {
-        if (transformType < 0)
+        if (transformType < 0) {
             setCursor(new Cursor(transformCursorTypes[getTransformType(evt)]));
+        }
         editor.mousePositionChanged(evt.getX() + getX(), evt.getY() + getY(), true);
     }
 }

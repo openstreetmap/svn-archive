@@ -39,6 +39,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -71,7 +72,7 @@ public class OhePlugin extends Plugin {
      */
     public OhePlugin(PluginInformation info) {
         super(info);
-        Main.main.menu.toolsMenu.add(new OheMenuAction());
+        MainMenu.add(Main.main.menu.toolsMenu, new OheMenuAction());
     }
 
     /**
@@ -87,7 +88,7 @@ public class OhePlugin extends Plugin {
             super(tr("Edit opening hours"), "opening_hours.png",
                     tr("Edit time-tag of selected element in a graphical interface"), Shortcut.registerShortcut(
                             "tools:opening_hourseditor", tr("Tool: {0}", tr("Edit opening hours")), KeyEvent.VK_O,
-                            Shortcut.ALT_CTRL_SHIFT), false);
+                            Shortcut.ALT_CTRL_SHIFT), true);
         }
 
         @Override

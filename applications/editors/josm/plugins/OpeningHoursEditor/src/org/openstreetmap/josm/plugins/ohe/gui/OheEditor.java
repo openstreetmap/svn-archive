@@ -46,13 +46,15 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
                 if (OheEditor.this.isEnabled()) {
                     g.setColor(Color.WHITE);
                     g.fillRect(0, 0, getWidth(), getHeight());
+                    
+                    // draw the time from 12PM to 00AM in a different color
                     if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
                         g.setColor(new Color(255, 255, 218));
                         g.fillRect(0, getMinutePosition(12 * 60), getWidth(), getHeight() - getMinutePosition(12 * 60));
                     }
 
                     // horizontal Lines
-                    for (int i = 1; i < 24; ++i) {
+                    for (int i = 0; i <= 24; ++i) {
                         if (i % 3 == 0) {
                             g.setColor(Color.BLACK);
                         } else {
@@ -64,7 +66,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
 
                     // vertical Lines
                     g.setColor(Color.BLACK);
-                    for (int i = 1; i < 7; ++i) {
+                    for (int i = 0; i <= 7; ++i) {
                         g.drawLine(getDayPosition(i), 0, getDayPosition(i), getHeight());
                     }
 
@@ -112,7 +114,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
                 g.setColor(Color.BLACK);
                 for (int i = 0; i < 7; ++i) {
                     if (i > 0) {
-                        g.drawLine(getDayPosition(i) + 1, 0, getDayPosition(i) + 1, getHeight());
+                        g.drawLine(getDayPosition(i), 0, getDayPosition(i), getHeight());
                     }
 
                     String text = OpeningTimeCompiler.WEEKDAYS[i];
@@ -133,17 +135,21 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
             public void paintComponent(Graphics g) {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
+                
+                // draw the time from 12PM to 00AM in a different color
                 if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
                     g.setColor(new Color(255, 255, 218));
                     g.fillRect(0, getMinutePosition(12 * 60), getWidth(), getHeight() - getMinutePosition(12 * 60));
                 }
 
-                for (int i = 1; i < 24; ++i) {
+                for (int i = 0; i <= 24; ++i) {
                     if (i % 3 == 0) {
                         g.setColor(Color.BLACK);
-                        String text = OpeningTimeUtils.timeString(i * 60, dialog.getHourMode(), false);
-                        g.drawString(text, (timeAxisWidth - g.getFontMetrics().stringWidth(text)) / 2,
-                                getMinutePosition(i * 60) + (int) (g.getFontMetrics().getHeight() * 0.35));
+                        if (i % 24 != 0) {
+                            String text = OpeningTimeUtils.timeString(i * 60, dialog.getHourMode(), false);
+                            g.drawString(text, (timeAxisWidth - g.getFontMetrics().stringWidth(text)) / 2,
+                                    getMinutePosition(i * 60) + (int) (g.getFontMetrics().getHeight() * 0.35));
+                        }
                     } else {
                         g.setColor(Color.LIGHT_GRAY);
                     }
@@ -215,12 +221,6 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         int width = getDayPosition(dayEnd) - getDayPosition(dayStart);
         int height = getMinutePosition(minutesEnd) - getMinutePosition(minutesStart);
 
-        // work around openjdk bug
-        if (Main.isOpenjdk) {
-            x++;
-            y++;
-        }
-
         if (minutesStart == minutesEnd)
             return new Rectangle(x, y - 2 - TimeRect.verticalNonDrawedPixels, width, height + 5 + 2
                     * TimeRect.verticalNonDrawedPixels);
@@ -266,16 +266,25 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseEntered(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         mousePositionChanged(0, 0, true);
     }
 
     @Override
     public void mouseExited(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         mousePositionChanged(0, 0, false);
     }
 
     @Override
     public void mousePressed(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         day0 = (int) Math.floor(evt.getX() / getDayWidth());
         minute0 = (int) Math.floor(evt.getY() / (getMinuteHeight() * TimeRect.minuteResterize))
         * TimeRect.minuteResterize;
@@ -287,6 +296,9 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseReleased(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         // mouse must be moved 5px before creating a rect
         if (xDragStart == -1 || Math.abs(evt.getX() - xDragStart) + Math.abs(evt.getY() - yDragStart) > 5) {
             int day2 = Math.min(day0, day1);
@@ -307,12 +319,15 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseDragged(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         // mouse must be moved 5px before drawing a rect
         if (xDragStart == -1 || Math.abs(evt.getX() - xDragStart) + Math.abs(evt.getY() - yDragStart) > 5) {
             xDragStart = -1;
             day1 = (int) Math.floor(evt.getX() / getDayWidth());
             minute1 = (int) Math.floor(evt.getY() / (getMinuteHeight() * TimeRect.minuteResterize))
-            * TimeRect.minuteResterize;
+                    * TimeRect.minuteResterize;
 
             // ensure that the new time is in a valid range
             day1 = Math.max(day1, 0);
@@ -327,6 +342,9 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseMoved(MouseEvent evt) {
+        if (!isEnabled()) {
+            return; // allow no mouse actions when the editor is not enabled
+        }
         mousePositionChanged(evt.getX(), evt.getY(), true);
     }
 
@@ -334,7 +352,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         if (mouseInside) {
             int actualDay = (int) Math.floor(x / getDayWidth());
             int minutes = (int) Math.floor(y / (getMinuteHeight() * TimeRect.minuteResterize))
-            * TimeRect.minuteResterize;
+                    * TimeRect.minuteResterize;
             actualDay = Math.max(0, Math.min(6, actualDay));
             minutes = Math.max(0, Math.min(24 * 60, minutes));
             dialog.setMousePositionText(OpeningTimeCompiler.WEEKDAYS[actualDay] + " "

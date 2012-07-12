@@ -318,6 +318,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 final String category = JOptionPane.showInputDialog(
                         Main.parent,
                         tr("Enter the Wikipedia category"));
+                if (category == null) {
+                    return;
+                }
                 final String url = "http://toolserver.org/~daniel/WikiSense/CategoryIntersect.php?"
                         + "wikilang=" + wikipediaLang.get()
                         + "&wikifam=.wikipedia.org"

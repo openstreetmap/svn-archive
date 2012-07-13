@@ -222,8 +222,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         }
         Map<String, Boolean> status = new HashMap<String, Boolean>();
         if (!articleNames.isEmpty()) {
-            final String url = "https://toolserver.org/~simon04/getGeoJSONStatus.php"
-                    + "?lang=" + wikipediaLang.get()
+            final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
+                    + "&lang=" + wikipediaLang.get()
                     + "&articles=" + encodeURL(Utils.join(",", articleNames));
             System.out.println("Wikipedia: GET " + url);
 

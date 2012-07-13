@@ -99,7 +99,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Simplifys linking OSM objects to Wikipedia articles"/>
                 <attribute name="Plugin-Icon" value="images/dialogs/wikipedia.png"/>
-                <attribute name="Plugin-Link" value="http://josm.openstreetmap.de/wiki/Plugins/wikipedia"/>
+                <attribute name="Plugin-Link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Wikipedia"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

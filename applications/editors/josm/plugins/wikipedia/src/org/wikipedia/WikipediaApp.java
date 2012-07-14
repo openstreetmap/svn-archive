@@ -73,8 +73,12 @@ public final class WikipediaApp {
             final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
             final List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>();
             while (scanner.hasNext()) {
-                final String article = scanner.next().split("\t")[1].replace("_", " ");
-                entries.add(new WikipediaEntry(article, wikipediaLang, article));
+                // TODO ignore redirects
+                final String[] x = scanner.next().split("\t");
+                if ("0".equals(x[0].trim())) { // denotes article
+                    final String article = x[1].replace("_", " ");
+                    entries.add(new WikipediaEntry(article, wikipediaLang, article));
+                }
             }
             return entries;
         } catch (IOException ex) {

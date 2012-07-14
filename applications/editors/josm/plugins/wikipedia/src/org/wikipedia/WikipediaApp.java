@@ -2,8 +2,10 @@
 package org.wikipedia;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -93,13 +95,20 @@ public final class WikipediaApp {
         }
         Map<String, Boolean> status = new HashMap<String, Boolean>();
         if (!articleNames.isEmpty()) {
-            final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
-                    + "&lang=" + wikipediaLang
-                    + "&articles=" + encodeURL(Utils.join(",", articleNames));
+            final String url = "http://toolserver.org/~simon04/getGeoJSON.php?action=check"
+                    + "&lang=" + wikipediaLang;
             System.out.println("Wikipedia: GET " + url);
 
             try {
-                final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
+                URLConnection connection = new URL(url).openConnection();
+                connection.setDoOutput(true);
+
+                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+                out.write("articles=" + encodeURL(Utils.join(",", articleNames)));
+                out.close();
+
+
+                final Scanner scanner = new Scanner(connection.getInputStream()).useDelimiter("\n");
                 while (scanner.hasNext()) {
                     //[article]\t[0|1]
                     final String line = scanner.next();

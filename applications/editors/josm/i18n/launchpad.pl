@@ -166,7 +166,7 @@ sub dologin
 sub potupload
 {
     my $mech = dologin();
-    print "Starting upload.\n"
+    print "Starting upload.\n";
     sleep(2);
     $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
     chdir("po");

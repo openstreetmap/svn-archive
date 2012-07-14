@@ -166,9 +166,13 @@ sub dologin
 sub potupload
 {
     my $mech = dologin();
+    print "Starting upload.\n"
+    sleep(2);
     $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
     chdir("po");
     $mech->submit_form(with_fields => {"file" => "josm.pot"});
+    sleep(10);
+    print "Trying to approve upload.\n";
     $mech->get("https://translations.launchpad.net/josm/trunk/+imports?field.filter_status=NEEDS_REVIEW&field.filter_extension=pot");
     my @links;
     foreach my $line (split("\n", $mech->content()))

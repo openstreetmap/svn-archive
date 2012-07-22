@@ -86,7 +86,7 @@ public class OsmChangesetContentParser {
             }
             return l;
         }
-
+/*
         protected long getAttributeLong(Attributes attr, String name, long defaultValue) throws SAXException{
             String v = attr.getValue(name);
             if (v == null)
@@ -95,24 +95,24 @@ public class OsmChangesetContentParser {
             try {
                 l = Long.parseLong(v);
             } catch(NumberFormatException e) {
-                throwException(tr("Illegal value for mandatory attribute ''{0}'' of type long. Got ''{1}''.", name, v));
+                throwException(tr("Illegal value for attribute ''{0}'' of type long. Got ''{1}''.", name, v));
             }
             if (l < 0) {
-                throwException(tr("Illegal value for mandatory attribute ''{0}'' of type long (>=0). Got ''{1}''.", name, v));
+                throwException(tr("Illegal value for attribute ''{0}'' of type long (>=0). Got ''{1}''.", name, v));
             }
             return l;
         }
-
-        protected Double getMandatoryAttributeDouble(Attributes attr, String name) throws SAXException{
+*/
+        protected Double getAttributeDouble(Attributes attr, String name) throws SAXException{
             String v = attr.getValue(name);
             if (v == null) {
-                throwException(tr("Missing mandatory attribute ''{0}''.", name));
+                return null;
             }
             double d = 0.0;
             try {
                 d = Double.parseDouble(v);
             } catch(NumberFormatException e) {
-                throwException(tr("Illegal value for mandatory attribute ''{0}'' of type double. Got ''{1}''.", name, v));
+                throwException(tr("Illegal value for attribute ''{0}'' of type double. Got ''{1}''.", name, v));
             }
             return d;
         }
@@ -124,14 +124,14 @@ public class OsmChangesetContentParser {
             }
             return v;
         }
-
+/*
         protected String getAttributeString(Attributes attr, String name, String defaultValue) {
             String v = attr.getValue(name);
             if (v == null)
                 return defaultValue;
             return v;
         }
-
+*/
         protected boolean getMandatoryAttributeBoolean(Attributes attr, String name) throws SAXException{
             String v = attr.getValue(name);
             if (v == null) {
@@ -155,10 +155,11 @@ public class OsmChangesetContentParser {
             // Hack: reverter doesn't need user information, so always use User.getAnonymous()
             // TODO: Update OsmChangesetContentParser from the core or update core OsmChangesetContentParser to make it usable with reverter
             if (type.equals(OsmPrimitiveType.NODE)) {
-                double lat = getMandatoryAttributeDouble(atts, "lat");
-                double lon = getMandatoryAttributeDouble(atts, "lon");
+                Double lat = getAttributeDouble(atts, "lat");
+                Double lon = getAttributeDouble(atts, "lon");
+                LatLon coor = (lat != null && lon != null) ? new LatLon(lat,lon) : null;
                 primitive = new HistoryNode(
-                        id,version,visible,User.getAnonymous(),changesetId,timestamp, new LatLon(lat,lon)
+                        id,version,visible,User.getAnonymous(),changesetId,timestamp, coor
                 );
 
             } else if (type.equals(OsmPrimitiveType.WAY)) {

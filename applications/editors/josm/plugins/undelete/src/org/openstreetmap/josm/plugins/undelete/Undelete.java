@@ -176,12 +176,12 @@ public class Undelete extends Plugin {
                 {
                   if (type.equals(OsmPrimitiveType.NODE))
                   {
-                    // We get all info from the latest version
-                    hPrimitive2=hPrimitive1;
+                    // We get version and user from the latest version, coordinates and tags from n-1 version
+                    hPrimitive2=h.getByVersion(h.getNumVersions()-1);
 
                     Node node = new Node(id, (int) hPrimitive1.getVersion());
 
-                    HistoryNode hNode = (HistoryNode) hPrimitive1;
+                    HistoryNode hNode = (HistoryNode) hPrimitive2;
                     node.setCoor(hNode.getCoords());
 
                     primitive=node;

@@ -729,9 +729,9 @@ public class SeaMark extends JPanel {
 		if (sectors.size() > i)
 			switch (att) {
 			case 4:
+			case 8:
 			case 9:
 			case 10:
-			case 14:
 				sectors.get(i)[att] = validDecimal((String)obj);
 				break;
 			case 6:

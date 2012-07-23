@@ -255,7 +255,7 @@ public final class WikipediaApp {
 
         public String getBrowserUrl() {
             if (getHrefFromDescription() != null) {
-                return getHrefFromDescription();
+                return getHrefFromDescription().replace(" ", "_");
             } else {
                 return "http://" + wikipediaLang + ".wikipedia.org/wiki/"
                         + encodeURL(wikipediaArticle.replace(" ", "_"));

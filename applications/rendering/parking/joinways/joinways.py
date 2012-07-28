@@ -218,6 +218,13 @@ class JoinDB (OSMDB):
         delete="delete from planet_line_joinmap where join_id={j}".format(j=joinway_id)
         self.delete(delete)
 
+    def area_of_joinway(self,joinway):
+        bbox_of_joinway=self.get_expanded_bbox(joinway,0.0)
+        xs,ys,xe,ye=self.coords_from_bbox(bbox_of_joinway)
+        dx=abs(xe-xs)
+        dy=abs(ye-ys)
+        area=dx*dy/1000000.0
+        return area
 
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
@@ -300,7 +307,8 @@ def main(options):
         if i%100==0:
             osmdb.commit()
         t=time.time()-ts
-        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins))
+        area=osmdb.area_of_joinway(joinway)
+        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area}km²,{tpa}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
         if i>50000:
             break
     osmdb.commit()
@@ -312,7 +320,7 @@ def main(options):
     logging.warn("Joinways ended: {dele} highways deleted in {deletime:.0f} seconds ({delerate:.2f} d/s), {add} highways added in {addtime:.0f} seconds ({addrate:.2f} a/s)".format(dele=dele,deletime=deletime,delerate=delerate,add=add,addtime=addtime,addrate=addrate))
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=logging.DEBUG)
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=logging.INFO)
     parser = OptionParser()
     parser.add_option("-c", "--command", dest="command", help="The command to execute. Default is update. Possible values are update, install, clear", default="update")
     parser.add_option("-b", "--bbox", dest="bbox", help="bounding box to restrict to", default="")

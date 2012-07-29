@@ -238,6 +238,7 @@ select AddGeometryColumn('planet_line_join', 'way', 4326, 'LINESTRING', 2 );
 def main(options):
     bboxstr = options['bbox']
     DSN = options['dsn']
+    maxobjects = int(objects['maxobjects'])
     if bboxstr!='':
         bboxobj = bbox({'bbox':bboxstr,'srs':'4326'})
         logging.info(bboxobj)
@@ -281,6 +282,9 @@ def main(options):
         logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
         if i%100==0:
             osmdb.commit()
+        if maxobjects>0 and i>maxobjects:
+            break
+
     osmdb.commit()
     logging.info("Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j))
     dele=i
@@ -308,8 +312,8 @@ def main(options):
             osmdb.commit()
         t=time.time()-ts
         area=osmdb.area_of_joinway(joinway)
-        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area}km²,{tpa}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
-        if i>50000:
+        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
+        if maxobjects>0 and i>maxobjects:
             break
     osmdb.commit()
     add=i
@@ -325,6 +329,7 @@ if __name__ == '__main__':
     parser.add_option("-c", "--command", dest="command", help="The command to execute. Default is update. Possible values are update, install, clear", default="update")
     parser.add_option("-b", "--bbox", dest="bbox", help="bounding box to restrict to", default="")
     parser.add_option("-d", "--dsn", dest="dsn", help="DSN, default is 'dbname=gis host=crite'", default="dbname=gis host=crite")
+    parser.add_option("-m", "--maxobjects", dest="maxobjects", help="maximum number of objects to treat, default is 50000. Set to 0 for unlimited.", default="50000")
     (options, args) = parser.parse_args()
     logging.debug(options)
     main(options.__dict__)

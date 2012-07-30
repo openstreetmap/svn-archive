@@ -238,7 +238,7 @@ select AddGeometryColumn('planet_line_join', 'way', 4326, 'LINESTRING', 2 );
 def main(options):
     bboxstr = options['bbox']
     DSN = options['dsn']
-    maxobjects = int(objects['maxobjects'])
+    maxobjects = int(options['maxobjects'])
     if bboxstr!='':
         bboxobj = bbox({'bbox':bboxstr,'srs':'4326'})
         logging.info(bboxobj)

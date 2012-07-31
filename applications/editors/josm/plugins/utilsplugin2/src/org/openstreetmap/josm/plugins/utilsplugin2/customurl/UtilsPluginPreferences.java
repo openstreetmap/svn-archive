@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
@@ -37,10 +36,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
     @Override
     public void addGui(PreferenceTabbedPane gui) {
-        JPanel pp = gui.createPreferenceTab(this);
-        JPanel all = new JPanel();
-        GridBagLayout layout = new GridBagLayout();
-        all.setLayout(layout);
+        JPanel all = new JPanel(new GridBagLayout());
 
         // FIXME: get rid of hardcoded URLS
 
@@ -102,8 +98,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
             }
         });
         all.add(table,GBC.eop().fill());
-
-        pp.add(all, GBC.eol().fill(GridBagConstraints.BOTH));
+        createPreferenceTabWithScrollPane(gui, all);
     }
 
     private void fillRows(List<String> items) {

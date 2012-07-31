@@ -60,7 +60,7 @@ sub processOSMFiles
 
 		my $Country = $FileDetails[0];
 		next if grep(/^$Country$/, split(/,/, $Config{'ignore_osm_files'})); # added to get rid of pseudo-country "Alps" in Europe, 2010-05-20 FR
-		$Country =~ s/.osm(\.bz2|.gz)?$//g;
+		$Country =~ s/.osm(\.bz2|.gz|.pbf)?$//g;
 		$Country = ucfirst($Country);
 		
 		my $Date = $FileDetails[1];
@@ -102,7 +102,9 @@ sub processOSMFiles
 		my $openmode = "<$name";
 		$openmode = "bunzip2 <$name |" if($name =~ /\.bz2$/);
 		$openmode = "gunzip <$name |" if($name =~ /\.gz$/);
+		$openmode = "$Config{'osmosis_path'} --read-pbf file=$name --write-xml file=- |" if($name =~ /\.pbf$/);
 
+                print "OpenMode: $openmode\nFiles in folder:";
 		open(OSMFILE, $openmode) || die("Could not open osm file! :: $OSMfile");
 		binmode OSMFILE,"encoding(utf-8)";
 		my $count = 1;

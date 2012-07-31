@@ -183,6 +183,7 @@ sub getOSMFiles
 	my ($Folder, @Urls) = @_;
 
 	my %usefiles;
+	my %double;
 	foreach my $key (sort keys %Config)
 	{
 		$usefiles{$Config{$key}} = 1 if $key =~ /^osmDownloadFile/ && $Config{$key};
@@ -215,22 +216,32 @@ sub getOSMFiles
 				my $Date = $2;
 				my $FileName = $1;
 				my $usename = $FileName;
-				next if (!($FileName =~ /\.osm/)) || ($FileName =~ /\.md5/) || ($FileName =~ /\.pbf/);
+				next if (!($FileName =~ /\.osm/)) || ($FileName =~ /\.md5/);
 				# strip date
 				$usename =~ s/-\d+(\.osm.*)$/$1/;
 				next if %usefiles && !$usefiles{$usename};
+				my $basename = $usename;
+				$basename =~ s/\.osm.*$//;
+				next if $double{$basename};
 
-				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");
+				$usename =~ s/.(bz2|gz|pbf)// if($Config{'extract_OsmFiles'} eq "yes");
 
-				if(!$files{$usename} || $files{$usename} ne $Date)#
+				if(!$files{$usename} || $files{$usename} ne $Date)
 				{
-					system "ln -sf '$Url/$FileName' '$Folder/$usename'";
 					++$new;
 					if($Config{'extract_OsmFiles'} eq "yes")
 					{
-						system("bunzip2 $Folder/$FileName");
+					        system "ln -sf '$Url/$FileName' '$Folder/$FileName'";
+						system("bunzip2 $Folder/$FileName") if $FileName =~ /.bz2/;
+						system("gunzip $Folder/$FileName") if $FileName =~ /.gz/;
+						system("$Config{'osmosis_path'} --read-pbf file=$Folder/$FileName --write-xml file=$Folder/$usename") if $FileName =~ /.pbf/;
+					}
+					else
+					{
+					        system "ln -sf '$Url/$FileName' '$Folder/$usename'";
 					}
 				}
+				$double{$basename}= 1;
 				delete $files{$usename};
 				print FILELIST "$usename|$Date\n";
                         }
@@ -245,8 +256,11 @@ sub getOSMFiles
 				my $FileName = $3;
 				my $usename = $FileName;
 				next if %usefiles && !$usefiles{$usename};
+				my $basename = $usename;
+				$basename =~ s/\.osm.*$//;
+				next if $double{$basename};
 
-				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");
+				$usename =~ s/.(bz2|gz|pbf)// if($Config{'extract_OsmFiles'} eq "yes");
 
 				if(!$files{$usename} || $files{$usename} ne $Date)#
 				{
@@ -254,10 +268,13 @@ sub getOSMFiles
 					++$new;
 					if($Config{'extract_OsmFiles'} eq "yes")
 					{
-						system("bunzip2 $Folder/$FileName");
+						system("bunzip2 $Folder/$FileName") if $FileName =~ /.bz2/;
+						system("gunzip $Folder/$FileName") if $FileName =~ /.gz/;
+						system("$Config{'osmosis_path'} --read-pbf file=$Folder/$FileName --write-xml file=$Folder/$usename") if $FileName =~ /.pbf/;
 					}
 				}
-				delete $files{$usename};
+				delete $files{$basename};
+				$double{$usename}= 1;
 				print FILELIST "$usename|$Date\n";
 			}
 		}

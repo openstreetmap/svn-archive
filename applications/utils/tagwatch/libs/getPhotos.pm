@@ -159,7 +159,7 @@ sub getImageList
 				$KeyLine  =~ s/\n//g;
 
 				# parse key image
-				if($KeyLine =~ m{^image=(?:(?:Image|image|File):)?(.*\.[a-zA-Z]+)})
+				if($KeyLine =~ m{^image=(?:(?:Image|image|File|file):)?(.*\.[a-zA-Z]+)})
 				{
 					my $name = $1;
 					$name =~ s/%(..)/chr(hex($1))/eg;

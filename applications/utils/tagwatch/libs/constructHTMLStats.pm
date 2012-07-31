@@ -1162,13 +1162,17 @@ sub buildRelationPages
 
 		# create memberlist from the information in the OSMwiki
 		my @tmpl_wikimember_loop;
-		foreach my $Member(keys %{$WikiDescription{'Relation'}->{$RelationName}->{'member'}})
+		eval
 		{
-			my %row = ("icon" => parseWikiSyntax($WikiDescription{'Relation'}->{$RelationName}->{'member'}->{$Member}),
-			   	   "name" => $Member);
+			foreach my $Member(keys %{$WikiDescription{'Relation'}->{$RelationName}->{'member'}})
+			{
+				my %row = ("icon" => parseWikiSyntax($WikiDescription{'Relation'}->{$RelationName}->{'member'}->{$Member}),
+				   	   "name" => $Member);
 
-			push(@tmpl_wikimember_loop, \%row);
-		}
+				push(@tmpl_wikimember_loop, \%row);
+			}
+		};
+		print $@;
 	
 		#++++++++++++++++++++++++++++
 		# fill template
@@ -1734,6 +1738,7 @@ sub loadWikiInformation
 			# parse all other Tag informations
 			elsif($RelationLine =~ m{^(.*)=(.*)\s*$})
 			{
+			        next if($1 eq "member");
 				$WikiDescription{'Relation'}->{$RelationListLine}->{$1} = $2;
 
 				if($1 eq 'group')

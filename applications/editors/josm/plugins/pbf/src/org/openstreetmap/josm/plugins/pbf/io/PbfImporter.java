@@ -31,12 +31,12 @@ import org.xml.sax.SAXException;
  * @author Don-vip
  *
  */
-public class PbfImporter extends OsmImporter implements PbfConstants {
-    
+public class PbfImporter extends OsmImporter {
+
     public PbfImporter() {
-        super(FILE_FILTER);
+        super(PbfConstants.FILE_FILTER);
     }
-    
+
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.io.OsmImporter#parseDataSet(java.io.InputStream, org.openstreetmap.josm.gui.progress.ProgressMonitor)
 	 */

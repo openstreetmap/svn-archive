@@ -16,7 +16,6 @@ public class AdvancedSettingsDialog extends MyDialog {
 
     private final JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
     private final JCheckBox cSoftCur = new JCheckBox(tr("Rotate crosshair"));
-    private final JCheckBox cAddrNode = new JCheckBox(tr("Use address nodes under buildings"));
 
     public AdvancedSettingsDialog() {
         super(tr("Advanced settings"));
@@ -30,11 +29,9 @@ public class AdvancedSettingsDialog extends MyDialog {
 
         panel.add(cBigMode, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(cSoftCur, GBC.eol().fill(GBC.HORIZONTAL));
-        panel.add(cAddrNode, GBC.eol().fill(GBC.HORIZONTAL));
 
         cBigMode.setSelected(ToolSettings.isBBMode());
         cSoftCur.setSelected(ToolSettings.isSoftCursor());
-        cAddrNode.setSelected(ToolSettings.PROP_USE_ADDR_NODE.get());
 
         setupDialog();
         showDialog();
@@ -45,6 +42,5 @@ public class AdvancedSettingsDialog extends MyDialog {
         ToolSettings.saveTags();
         ToolSettings.setBBMode(cBigMode.isSelected());
         ToolSettings.setSoftCursor(cSoftCur.isSelected());
-        ToolSettings.PROP_USE_ADDR_NODE.put(cAddrNode.isSelected());
     }
 }

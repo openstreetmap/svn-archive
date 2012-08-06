@@ -29,7 +29,7 @@
 -->
 <project name="buildings_tools" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="BuildingTools: shortcut changes - binary"/>
+    <property name="commit.message" value="BuildingTools: move &quot;use address nodes&quot; option to building size dialog and turn it off by default"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="5035"/>
     <!--

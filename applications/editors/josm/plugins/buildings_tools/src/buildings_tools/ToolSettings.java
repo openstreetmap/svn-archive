@@ -13,7 +13,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 public class ToolSettings {
-    public static BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", true);
+    public static BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", false);
     private static double width = 0;
     private static double lenstep = 0;
     private static boolean useAddr;

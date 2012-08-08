@@ -240,9 +240,9 @@ public class ChangesetReverter {
         if (!current.getKeys().equals(history.getTags())) return false;
         switch (current.getType()) {
         case NODE:
-        	LatLon currentCoor = ((Node)current).getCoor();
-        	LatLon historyCoor = ((HistoryNode)history).getCoords();
-        	return currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor));
+            LatLon currentCoor = ((Node)current).getCoor();
+            LatLon historyCoor = ((HistoryNode)history).getCoords();
+            return currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor));
         case WAY:
             List<Node> currentNodes = ((Way)current).getNodes();
             List<Long> historyNodes = ((HistoryWay)history).getNodes();

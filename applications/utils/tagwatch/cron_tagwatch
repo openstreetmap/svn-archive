@@ -51,9 +51,16 @@ foreach my $arg (@ARGV)
   {
     if(-d $name && -e "$WEBDIR/$name")
     {
-      system "mv $WEBDIR/$name ${name}_old_$$";
-      system "mv -f $name $WEBDIR";
-      system "rm -r ${name}_old_$$";
+      if($name eq "photos")
+      {
+        system "mv -f $name/* $WEBDIR/$name/";
+      }
+      else
+      {
+        system "mv $WEBDIR/$name ${name}_old_$$";
+        system "mv -f $name $WEBDIR";
+        system "rm -r ${name}_old_$$";
+      }
     }
     else
     {

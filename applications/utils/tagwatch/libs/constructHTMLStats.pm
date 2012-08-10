@@ -90,7 +90,7 @@ sub constructHTML
 		my @FileDetails=split(/\|/,$File);
 
 		$Country = $FileDetails[0];
-		$Country =~ s/.osm(\.bz2|.gz)?$//g;
+		$Country =~ s/.osm(\.bz2|\.gz|\.pbf)?$//g;
 		$Country = ucfirst($Country);
 		$Date = $FileDetails[1];
 		my $OSMfile = $FileDetails[0];

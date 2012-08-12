@@ -7,7 +7,7 @@ Afterwards the new file should be uploaded to Launchpad (see (5) below)
 
 2) Updating translations to current state (from daily updated Bazar repository):
 Call "ant update" or "ant updatecore" when plugins are unwanted
-NOTE: The Bazar repository is updated once a day. For most recent data try (6) and (4) instead.
+NOTE: The Bazar repository is updated once a day. For most recent data try (6) and (3) instead.
 
 3) Update translations from Launchpad download file:
 Call "./launchpad.pl <url>", where <url> is the supplied URL from launchpad.

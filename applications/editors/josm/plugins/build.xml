@@ -43,7 +43,6 @@
         <ant antfile="build.xml" target="dist" dir="jts"/>
         <ant antfile="build.xml" target="dist" dir="junctionchecking"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
-        <ant antfile="build.xml" target="dist" dir="licensechange"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
@@ -134,7 +133,6 @@
         <ant antfile="build.xml" target="clean" dir="jts"/>
         <ant antfile="build.xml" target="clean" dir="junctionchecking"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
-        <ant antfile="build.xml" target="clean" dir="licensechange"/>
         <ant antfile="build.xml" target="clean" dir="livegps"/>
         <ant antfile="build.xml" target="clean" dir="mapdust"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>

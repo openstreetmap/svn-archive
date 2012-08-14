@@ -117,6 +117,20 @@ def main(options):
 
     generate_approach_layer_xml.main_approach({'sourcedir':approach_dir, 'sourcefile':'osm-approach-src.xml', 'destdir':deploy_dir, 'stylename':'approach'})
 
+    # (6) create the mapnik_joinroads styles
+    mapnik_joinroads_dir = os.path.join(temp_dir,"mapnik-joinroads")
+    mapnik_joinroads_inc_dir = os.path.join(mapnik_joinroads_dir,"inc")
+    os.makedirs(mapnik_joinroads_dir)
+    shutil.copy2(os.path.join(".","osm-mapnik-joinroads.xml"),os.path.join(mapnik_joinroads_dir,"osm-mapnik-joinroads.xml"))
+    # prepare the mapnik_joinroads/inc dir: copy mapnik/inc, then patch with files from mapnik_joinroads-inc-src
+    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),mapnik_joinroads_inc_dir)
+    original_mapnik_joinroads_inc_dir = os.path.join(".","mapnik-joinroads-inc-src")    # copy the mapnik_joinroads-specific inc files
+    copy_files(original_mapnik_joinroads_inc_dir,mapnik_joinroads_inc_dir,[])
+    # prepare the mapnik_joinroads/symbols dir -  just copy mapnik
+    # os.makedirs(os.path.join(os.path.join(deploy_dir,"mapnik"),"symbols"))
+    shutil.copytree(mapnik_joinroads_dir,os.path.join(deploy_dir,"mapnik-joinroads"))
+    shutil.copytree(os.path.join(patched_mapnik_dir,"symbols"),os.path.join(os.path.join(deploy_dir,"mapnik-joinroads"),"symbols"))
+    #generate_wifi_layer_xml.main_wifi({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':wifi_dir, 'sourcepfile':'osm-wifi-src.xml', 'destdir':deploy_dir, 'stylename':'wifi'})
 
 
 if __name__ == '__main__':

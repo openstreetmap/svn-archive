@@ -19,11 +19,11 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
-public class InstallationSportiveBalmaHandler extends ToulouseDataSetHandler {
+public class InstallationSportiveToulouseHandler extends ToulouseDataSetHandler {
 
-    public InstallationSportiveBalmaHandler() {
-        super(14010);
-        setWikiPage("Installations sportives (Balma)");
+    public InstallationSportiveToulouseHandler() {
+        super(14413);
+        setWikiPage("Installations sportives (Toulouse)");
         setCategory(CAT_SPORT);
     }
 
@@ -35,7 +35,7 @@ public class InstallationSportiveBalmaHandler extends ToulouseDataSetHandler {
     @Override
     public void updateDataSet(DataSet ds) {
         for (Node n : ds.getNodes()) {
-            if (n.get("name").startsWith("Gymnase")) {
+            /*if (n.get("name").startsWith("Gymnase")) {
                 n.put("leisure", "sports_centre");
             } else if (n.get("name").startsWith("Piscine")) {
                 n.put("leisure", "swimming_pool");
@@ -52,7 +52,7 @@ public class InstallationSportiveBalmaHandler extends ToulouseDataSetHandler {
                 n.put("amenity", "dojo");
             } else if (n.get("name").startsWith("Boulodrome")) {
                 n.put("sport", "boules");
-            }
+            }*/
         }
     }
 }

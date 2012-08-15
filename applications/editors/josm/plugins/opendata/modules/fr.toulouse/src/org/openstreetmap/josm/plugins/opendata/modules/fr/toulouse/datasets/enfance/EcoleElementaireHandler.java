@@ -21,27 +21,27 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class EcoleElementaireHandler extends ToulouseDataSetHandler {
 
-	public EcoleElementaireHandler() {
-		super(12474, "amenity=school");
-		setWikiPage("Écoles élémentaires publiques");
-		setCategory(CAT_ENFANCE);
-		for (String forbidden : new String[]{"maternelle","primaire","collège","lycée","secondaire"}) {
-			addForbiddenTag("school:FR="+forbidden);
-		}
-	}
+    public EcoleElementaireHandler() {
+        super(12474, "amenity=school");
+        setWikiPage("Écoles élémentaires publiques");
+        setCategory(CAT_ENFANCE);
+        for (String forbidden : new String[]{"maternelle","primaire","collège","lycée","secondaire"}) {
+            addForbiddenTag("school:FR="+forbidden);
+        }
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Ecoles_Elem_Publiques");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvKmzTabFilename(filename, "Ecoles_Elem_Publiques");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.put("amenity", "school");
-			n.put("school:FR", "elementaire");
-			n.put("operator", "public");
-			replace(n, "Ecole", "name");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            n.put("amenity", "school");
+            n.put("school:FR", "elementaire");
+            n.put("operator", "public");
+            replace(n, "Ecole", "name");
+        }
+    }
 }

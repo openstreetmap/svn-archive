@@ -27,40 +27,40 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class NumerosRueHandler extends ToulouseDataSetHandler {
 
-	public NumerosRueHandler() {
-		super(12673, "addr:housenumber");
-		setWikiPage("Numéros de rue");
-		setCategory(CAT_URBANISME);
-	}
+    public NumerosRueHandler() {
+        super(12673, "addr:housenumber");
+        setWikiPage("Numéros de rue");
+        setCategory(CAT_URBANISME);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Numeros");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvKmzTabFilename(filename, "Numeros");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		Map<String, Relation> associatedStreets = new HashMap<String, Relation>();
-		
-		for (Node n : ds.getNodes()) {
-			replace(n, "no", "addr:housenumber");
-			n.remove("numero");
-			replace(n, "lib_off", "addr:street");
-			n.remove("mot_directeur");
-			n.remove("name");
-			n.remove("rivoli");
-			n.remove("nrivoli");
-			//n.remove("sti");
-			n.remove("color");
-			String streetName = NamesFrUtils.checkStreetName(n, "addr:street");
-			Relation street = associatedStreets.get(n.get("sti"));
-			if (street == null) {
-				associatedStreets.put(n.get("sti"), street = new Relation());
-				street.put("type", "associatedStreet");
-				street.put("name", streetName);
-				ds.addPrimitive(street);
-			}
-			street.addMember(new RelationMember("house", n));
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        Map<String, Relation> associatedStreets = new HashMap<String, Relation>();
+        
+        for (Node n : ds.getNodes()) {
+            replace(n, "no", "addr:housenumber");
+            n.remove("numero");
+            replace(n, "lib_off", "addr:street");
+            n.remove("mot_directeur");
+            n.remove("name");
+            n.remove("rivoli");
+            n.remove("nrivoli");
+            //n.remove("sti");
+            n.remove("color");
+            String streetName = NamesFrUtils.checkStreetName(n, "addr:street");
+            Relation street = associatedStreets.get(n.get("sti"));
+            if (street == null) {
+                associatedStreets.put(n.get("sti"), street = new Relation());
+                street.put("type", "associatedStreet");
+                street.put("name", streetName);
+                ds.addPrimitive(street);
+            }
+            street.addMember(new RelationMember("house", n));
+        }
+    }
 }

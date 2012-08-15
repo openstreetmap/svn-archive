@@ -21,21 +21,21 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class Parcelles1830Handler extends ToulouseDataSetHandler {
 
-	public Parcelles1830Handler() {
-		super(12534);
-		setName("Parcellaire de 1830");
-		setCategory(CAT_PATRIMOINE);
-	}
+    public Parcelles1830Handler() {
+        super(12534);
+        setName("Parcellaire de 1830");
+        setCategory(CAT_PATRIMOINE);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsKmzTabFilename(filename, "Parcelles_1830");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsKmzTabFilename(filename, "Parcelles_1830");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Relation r : ds.getRelations()) {
-			replace(r, "Nom_prenom", "name");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Relation r : ds.getRelations()) {
+            replace(r, "Nom_prenom", "name");
+        }
+    }
 }

@@ -21,28 +21,28 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class RecupEmballageHandler extends ToulouseDataSetHandler {
 
-	public RecupEmballageHandler() {
-		super(12494, "amenity=recycling");
-		setWikiPage("Récup' Emballage");
-		setCategory(CAT_ENVIRONNEMENT);
-	}
+    public RecupEmballageHandler() {
+        super(12494, "amenity=recycling");
+        setWikiPage("Récup' Emballage");
+        setCategory(CAT_ENVIRONNEMENT);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Recup_Emballage");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvKmzTabFilename(filename, "Recup_Emballage");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.remove("name");
-			n.put("amenity", "recycling");
-			n.put("recycling_type", "container");
-			n.put("recycling:plastic_bottles", "yes");
-			n.put("recycling:beverage_cartons", "yes");
-			n.put("recycling:cardboard", "yes");
-			n.put("recycling:newspaper", "yes");
-			n.put("recycling:magazines", "yes");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            n.remove("name");
+            n.put("amenity", "recycling");
+            n.put("recycling_type", "container");
+            n.put("recycling:plastic_bottles", "yes");
+            n.put("recycling:beverage_cartons", "yes");
+            n.put("recycling:cardboard", "yes");
+            n.put("recycling:newspaper", "yes");
+            n.put("recycling:magazines", "yes");
+        }
+    }
 }

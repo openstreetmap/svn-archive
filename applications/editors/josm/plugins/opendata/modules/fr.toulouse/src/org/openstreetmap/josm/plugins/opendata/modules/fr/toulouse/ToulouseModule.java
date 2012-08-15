@@ -40,6 +40,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.envi
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.patrimoine.Parcelles1680Handler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.patrimoine.Parcelles1830Handler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.sport.InstallationSportiveBalmaHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.sport.InstallationSportiveToulouseHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.topographie.AltimetrieVoieHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ChantiersLineairesHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ChantiersPonctuelsHandler;
@@ -58,8 +59,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urba
 
 public class ToulouseModule extends AbstractModule {
 
-	public ToulouseModule(ModuleInformation info) {
-		super(info);
+    public ToulouseModule(ModuleInformation info) {
+        super(info);
         handlers.add(SanisetteHandler.class);
         handlers.add(NumerosRueHandler.class);
         handlers.add(CommuneHandler.class);
@@ -98,5 +99,6 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(InstallationSportiveBalmaHandler.class);
         handlers.add(ChantiersPonctuelsHandler.class);
         handlers.add(ChantiersLineairesHandler.class);
+        handlers.add(InstallationSportiveToulouseHandler.class);
     }
 }

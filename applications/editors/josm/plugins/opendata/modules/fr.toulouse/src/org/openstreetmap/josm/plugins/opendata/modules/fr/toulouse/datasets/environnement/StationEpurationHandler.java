@@ -21,22 +21,22 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class StationEpurationHandler extends ToulouseDataSetHandler {
 
-	public StationEpurationHandler() {
-		super(12500, "man_made=wastewater_plant");
-		setWikiPage("Stations d'épuration");
-		setCategory(CAT_ENVIRONNEMENT);
-	}
+    public StationEpurationHandler() {
+        super(12500, "man_made=wastewater_plant");
+        setWikiPage("Stations d'épuration");
+        setCategory(CAT_ENVIRONNEMENT);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Stations_epurations");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvKmzTabFilename(filename, "Stations_epurations");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			replace(n, "NOM_STATION", "name");
-			n.put("man_made", "wastewater_plant");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            replace(n, "NOM_STATION", "name");
+            n.put("man_made", "wastewater_plant");
+        }
+    }
 }

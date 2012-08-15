@@ -21,23 +21,23 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class PetiteEnfanceEtJeunesseBalmaHandler extends ToulouseDataSetHandler {
 
-	public PetiteEnfanceEtJeunesseBalmaHandler() {
-		super(14001);
-		setWikiPage("Petite enfance et jeunesse");
-		setCategory(CAT_ENFANCE);
-	}
+    public PetiteEnfanceEtJeunesseBalmaHandler() {
+        super(14001);
+        setWikiPage("Petite enfance et jeunesse");
+        setCategory(CAT_ENFANCE);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsKmzFilename(filename, "Petite enfance et jeunesse");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsKmzFilename(filename, "Petite enfance et jeunesse");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			if (n.get("name").equalsIgnoreCase("Crèche")) {
-				n.put("amenity", "kindergarten");
-			}
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            if (n.get("name").equalsIgnoreCase("Crèche")) {
+                n.put("amenity", "kindergarten");
+            }
+        }
+    }
 }

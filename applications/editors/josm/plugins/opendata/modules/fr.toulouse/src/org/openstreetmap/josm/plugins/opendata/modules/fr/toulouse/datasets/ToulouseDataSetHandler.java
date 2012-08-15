@@ -23,85 +23,85 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseConst
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseLicense;
 
 public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implements ToulouseConstants {
-	
-	public ToulouseDataSetHandler(int portalId) {
-		init(portalId);
-	}
-	
-	public ToulouseDataSetHandler(int portalId, String relevantTag) {
-		super(relevantTag);
-		init(portalId);
-	}
-	
-	public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String ... relevantTags) {
-		super(relevantUnion, relevantTags);
-		init(portalId);
-	}
+    
+    public ToulouseDataSetHandler(int portalId) {
+        init(portalId);
+    }
+    
+    public ToulouseDataSetHandler(int portalId, String relevantTag) {
+        super(relevantTag);
+        init(portalId);
+    }
+    
+    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String ... relevantTags) {
+        super(relevantUnion, relevantTags);
+        init(portalId);
+    }
 
-	public ToulouseDataSetHandler(int portalId, String ... relevantTags) {
-		this(portalId, false, relevantTags);
-	}
+    public ToulouseDataSetHandler(int portalId, String ... relevantTags) {
+        this(portalId, false, relevantTags);
+    }
 
-	/*public ToulouseDataSetHandler(int portalId, Tag relevantTag) {
-		super(relevantTag);
-		init(portalId);
-	}*/
-	
-	public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag ... relevantTags) {
-		super(relevantUnion, relevantTags);
-		init(portalId);
-	}
+    /*public ToulouseDataSetHandler(int portalId, Tag relevantTag) {
+        super(relevantTag);
+        init(portalId);
+    }*/
+    
+    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag ... relevantTags) {
+        super(relevantUnion, relevantTags);
+        init(portalId);
+    }
 
-	/*public ToulouseDataSetHandler(int portalId, Tag ... relevantTags) {
-		this(portalId, false, relevantTags);
-	}*/
-	
-	private final void init(int portalId) {
-		try {
-			setLicense(new ToulouseLicense());
-			if (portalId > 0) {
-				String url = PORTAL + "/les-donnees/-/opendata/card/" + portalId + "--";
-				setLocalPortalURL(url);
-				//setLicenseURL(url+"/license");
-				setDataURL(url+"/resource/document");
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-	}
+    /*public ToulouseDataSetHandler(int portalId, Tag ... relevantTags) {
+        this(portalId, false, relevantTags);
+    }*/
+    
+    private final void init(int portalId) {
+        try {
+            setLicense(new ToulouseLicense());
+            if (portalId > 0) {
+                String url = PORTAL + "/les-donnees/-/opendata/card/" + portalId + "--";
+                setLocalPortalURL(url);
+                //setLicenseURL(url+"/license");
+                setDataURL(url+"/resource/document");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getSource()
-	 */
-	@Override
-	public String getSource() {
-		return SOURCE_GRAND_TOULOUSE;
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getSource()
+     */
+    @Override
+    public String getSource() {
+        return SOURCE_GRAND_TOULOUSE;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalIconName()
-	 */
-	@Override
-	public String getLocalPortalIconName() {
-		return ICON_CROIX_24;
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalIconName()
+     */
+    @Override
+    public String getLocalPortalIconName() {
+        return ICON_CROIX_24;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataLayerIconName()
-	 */
-	@Override
-	public String getDataLayerIconName() {
-		return ICON_CROIX_16;
-	}
-	
-	protected final void setWikiPage(String wikiPage) {
-		if (wikiPage != null && !wikiPage.isEmpty()) {
-			setName(wikiPage.replace("_", " "));
-			try {
-				setWikiURL(WIKI + "/" + wikiPage.replace(" ", "_"));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataLayerIconName()
+     */
+    @Override
+    public String getDataLayerIconName() {
+        return ICON_CROIX_16;
+    }
+    
+    protected final void setWikiPage(String wikiPage) {
+        if (wikiPage != null && !wikiPage.isEmpty()) {
+            setName(wikiPage.replace("_", " "));
+            try {
+                setWikiURL(WIKI + "/" + wikiPage.replace(" ", "_"));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

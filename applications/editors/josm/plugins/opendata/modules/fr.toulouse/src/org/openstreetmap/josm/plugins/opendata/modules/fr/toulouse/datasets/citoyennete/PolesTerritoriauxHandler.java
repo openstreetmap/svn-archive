@@ -21,21 +21,21 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class PolesTerritoriauxHandler extends ToulouseDataSetHandler {
 
-	public PolesTerritoriauxHandler() {
-		super(12568);
-		setName("Pôles territoriaux ");
-		setCategory(CAT_CITOYENNETE);
-	}
+    public PolesTerritoriauxHandler() {
+        super(12568);
+        setName("Pôles territoriaux ");
+        setCategory(CAT_CITOYENNETE);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsKmzTabFilename(filename, "Poles_territoriaux");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsKmzTabFilename(filename, "Poles_territoriaux");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Relation r : ds.getRelations()) {
-			replace(r, "Nom_pole", "name");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Relation r : ds.getRelations()) {
+            replace(r, "Nom_pole", "name");
+        }
+    }
 }

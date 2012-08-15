@@ -19,45 +19,45 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetCategory;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 
 public interface ToulouseConstants extends FrenchConstants {
-	
-	/**
-	 * Sources
-	 */
-	public static final String SOURCE_GRAND_TOULOUSE = "GrandToulouse";
-	public static final String SOURCE_TISSEO = "Tisséo SMTC";
-	
-	/**
-	 * Wiki
-	 */
-	public static final String WIKI = "http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData";
+    
+    /**
+     * Sources
+     */
+    public static final String SOURCE_GRAND_TOULOUSE = "GrandToulouse";
+    public static final String SOURCE_TISSEO = "Tisséo SMTC";
+    
+    /**
+     * Wiki
+     */
+    public static final String WIKI = "http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData";
 
-	/**
-	 * Portal
-	 */
-	public static final String PORTAL = "http://data.grandtoulouse.fr";
+    /**
+     * Portal
+     */
+    public static final String PORTAL = "http://data.grandtoulouse.fr";
 
-	/**
-	 * Icons
-	 */
-	public static final String ICON_CROIX_16 = "data.fr.toulouse_16.png";
-	public static final String ICON_CROIX_24 = "data.fr.toulouse_24.png";
+    /**
+     * Icons
+     */
+    public static final String ICON_CROIX_16 = "data.fr.toulouse_16.png";
+    public static final String ICON_CROIX_24 = "data.fr.toulouse_24.png";
 
-	/**
-	 * NEPTUNE XML Schema modified to accept Tisséo files
-	 */
-	public static final String TOULOUSE_NEPTUNE_XSD = "/neptune_toulouse/neptune.xsd";
-	
-	/**
-	 * Categories: TODO: icons
-	 */
-	public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "");
-	public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "");
-	public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "");
-	public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "");
-	public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "");
-	public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "");
-	public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "");
-	public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "");
-	public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "");
-	public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "");
+    /**
+     * NEPTUNE XML Schema modified to accept Tisséo files
+     */
+    public static final String TOULOUSE_NEPTUNE_XSD = "/neptune_toulouse/neptune.xsd";
+    
+    /**
+     * Categories: TODO: icons
+     */
+    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "");
+    public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "");
+    public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "");
+    public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "");
+    public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "");
+    public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "");
+    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "");
+    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "");
+    public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "");
+    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "");
 }

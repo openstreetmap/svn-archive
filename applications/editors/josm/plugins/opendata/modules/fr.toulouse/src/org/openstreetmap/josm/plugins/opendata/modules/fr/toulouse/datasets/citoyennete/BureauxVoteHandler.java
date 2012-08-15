@@ -21,22 +21,22 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class BureauxVoteHandler extends ToulouseDataSetHandler {
 
-	public BureauxVoteHandler() {
-		super(12550, "polling_station");
-		setWikiPage("Bureaux de vote 2012");
-		setCategory(CAT_CITOYENNETE);
-	}
+    public BureauxVoteHandler() {
+        super(12550, "polling_station");
+        setWikiPage("Bureaux de vote 2012");
+        setCategory(CAT_CITOYENNETE);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsKmzTabFilename(filename, "Lieu_vote_2012");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsKmzTabFilename(filename, "Lieu_vote_2012");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Relation r : ds.getRelations()) {
-			replace(r, "TEXT", "name");
-			r.put("polling_station", "2012");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Relation r : ds.getRelations()) {
+            replace(r, "TEXT", "name");
+            r.put("polling_station", "2012");
+        }
+    }
 }

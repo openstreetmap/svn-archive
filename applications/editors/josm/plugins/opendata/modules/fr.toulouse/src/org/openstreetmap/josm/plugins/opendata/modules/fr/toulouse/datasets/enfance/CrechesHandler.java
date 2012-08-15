@@ -21,22 +21,22 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class CrechesHandler extends ToulouseDataSetHandler {
 
-	public CrechesHandler() {
-		super(12462, "amenity=kindergarten");
-		setWikiPage("Crèches");
-		setCategory(CAT_ENFANCE);
-	}
+    public CrechesHandler() {
+        super(12462, "amenity=kindergarten");
+        setWikiPage("Crèches");
+        setCategory(CAT_ENFANCE);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvKmzTabFilename(filename, "Creches");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvKmzTabFilename(filename, "Creches");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.put("amenity", "kindergarten");
-			replace(n, "NOM", "name");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            n.put("amenity", "kindergarten");
+            replace(n, "NOM", "name");
+        }
+    }
 }

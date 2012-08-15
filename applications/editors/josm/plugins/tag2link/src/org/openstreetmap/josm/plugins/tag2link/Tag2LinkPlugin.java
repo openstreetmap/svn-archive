@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 package org.openstreetmap.josm.plugins.tag2link;
 
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.tag2link.listeners.MembershipPopupListener;
@@ -28,6 +27,7 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
  * Main class of tag2link plugin.
  * @author Don-vip
  * History:
+ * 0.3d 15-Aug-2012 Add ref:(FR:)?FINESS and osm.fr link for ref:(FR:)?INSEE (josm#7961)
  * 0.3c 22-Dec-2011 Add contact namespace for website
  * 0.3b 29-Oct-2011 Add UAI support
  * 0.3a 29-Oct-2011 Add Country-code prefix, IGN support + not-yet-tested POST requests support
@@ -43,15 +43,15 @@ public class Tag2LinkPlugin extends Plugin {
 
     // private Tag2LinkPreferenceSetting preferenceSetting; TODO
 
-	/**
-	 * Initializes the plugin.
-	 * @param info
-	 */
-	public Tag2LinkPlugin(PluginInformation info) {
-		super(info);
-		// this.preferenceSetting = new Tag2LinkPreferenceSetting();
-		Tag2LinkRuleChecker.init();
-	}
+    /**
+     * Initializes the plugin.
+     * @param info The plugin info provided by JOSM
+     */
+    public Tag2LinkPlugin(PluginInformation info) {
+        super(info);
+        // this.preferenceSetting = new Tag2LinkPreferenceSetting();
+        Tag2LinkRuleChecker.init();
+    }
 
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()

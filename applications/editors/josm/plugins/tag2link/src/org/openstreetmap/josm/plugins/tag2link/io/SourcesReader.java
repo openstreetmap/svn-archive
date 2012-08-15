@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -41,14 +41,27 @@ import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Source;
 
+/**
+ * Class allowing to read the sources file.
+ * @author Don-vip
+ *
+ */
 public class SourcesReader implements Tag2LinkConstants {
     
     XMLStreamReader parser;
     
+    /**
+     * Constructs a new {@code SourcesReader}.
+     * @param parser The XML parser
+     */
     public SourcesReader(XMLStreamReader parser) {
         this.parser = parser;
     }
 
+    /**
+     * Reads the sources and replies them as a {@code Collection}. 
+     * @return The colleciton of sources.
+     */
     public static Collection<Source> readSources() {
         List<Source> result = new ArrayList<Source>();
 
@@ -183,7 +196,7 @@ public class SourcesReader implements Tag2LinkConstants {
         c.keyPattern = Pattern.compile(parser.getAttributeValue(null, "k"));
         String v = parser.getAttributeValue(null, "v");
         if (v != null) {
-        	c.valPattern = Pattern.compile(v);
+            c.valPattern = Pattern.compile(v);
         }
         c.id = parser.getAttributeValue(null, "id");
         jumpToEnd();
@@ -196,19 +209,19 @@ public class SourcesReader implements Tag2LinkConstants {
         String href = parser.getAttributeValue(null, "href");
         
         if ("POST".equals(parser.getAttributeValue(null, "method"))) {
-        	Map<String, String> headers = null;
-        	Map<String, String> params = null;
-        	while (parser.hasNext()) {
+            Map<String, String> headers = null;
+            Map<String, String> params = null;
+            while (parser.hasNext()) {
                 int event = parser.next();
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     if (parser.getLocalName().equals("header")) {
                         if (headers == null) {
-                        	headers = new HashMap<String, String>();
+                            headers = new HashMap<String, String>();
                         }
                         headers.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
                     } else if (parser.getLocalName().equals("param")) {
                         if (params == null) {
-                        	params = new HashMap<String, String>();
+                            params = new HashMap<String, String>();
                         }
                         params.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
                     } else {
@@ -216,14 +229,14 @@ public class SourcesReader implements Tag2LinkConstants {
                     }
                 } else if (event == XMLStreamConstants.END_ELEMENT) {
                     if (parser.getLocalName().equals("link")) {
-                    	break;
+                        break;
                     }
                 }
             }
-        	link = new LinkPost(name, href, headers, params);
+            link = new LinkPost(name, href, headers, params);
         } else {
-	        link = new Link(name, href);
-	        jumpToEnd();
+            link = new Link(name, href);
+            jumpToEnd();
         }
         return link;
     }

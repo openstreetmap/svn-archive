@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -25,11 +25,20 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 
+/**
+ * Action allowing to open a mailto:// link.
+ * @author Don-vip
+ *
+ */
 @SuppressWarnings("serial")
 public class OpenMailAction extends JosmAction implements Tag2LinkConstants {
-	
+    
     private String url;
     
+    /**
+     * Constructs a new {@code OpenMailAction}.
+     * @param link The link to open
+     */
     public OpenMailAction(Link link) {
         super(tr(link.name), MAIL_ICON_24, tr("Launch your default software for sending an email to the selected contact address"), null, false);
         this.url = link.url;
@@ -37,13 +46,13 @@ public class OpenMailAction extends JosmAction implements Tag2LinkConstants {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	if (Desktop.isDesktopSupported()) {
-    		try {
-    			System.out.println("Sending "+url);
-				Desktop.getDesktop().mail(new URI(url));
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-    	}
+        if (Desktop.isDesktopSupported()) {
+            try {
+                System.out.println("Sending "+url);
+                Desktop.getDesktop().mail(new URI(url));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

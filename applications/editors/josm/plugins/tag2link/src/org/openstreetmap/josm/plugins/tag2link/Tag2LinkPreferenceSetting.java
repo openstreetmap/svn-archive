@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -20,8 +20,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
+/**
+ * Preferences of tag2link plugin. Currently not implemented.
+ * @author Don-vip
+ *
+ */
 public class Tag2LinkPreferenceSetting extends DefaultTabPreferenceSetting implements Tag2LinkConstants {
 
+    /**
+     * Constructs a new {@code Tag2LinkPreferenceSetting}.
+     */
     public Tag2LinkPreferenceSetting() {
         super(ICON_48, tr("Tag2Link Preferences"), tr("Tag2Link Preferences"));
     }

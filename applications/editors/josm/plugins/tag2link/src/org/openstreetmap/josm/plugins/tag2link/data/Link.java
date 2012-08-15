@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@ public class Link implements Cloneable {
     public String url;
     
     public Link(String name, String url) {
-    	this.name = name;
-    	this.url = url;
+        this.name = name;
+        this.url = url;
     }
     
     public Link(Link link) {
-    	this(new String(link.name), new String(link.url));
+        this(new String(link.name), new String(link.url));
     }
     
     protected final boolean containsParams(String s) {
@@ -44,19 +44,19 @@ public class Link implements Cloneable {
         return nameContainsParams() || urlContainsParams();
     }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Link [name=" + name + ", url=" + url + "]";
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Link [name=" + name + ", url=" + url + "]";
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	public Link clone() throws CloneNotSupportedException {
-		return new Link(this);
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Link clone() throws CloneNotSupportedException {
+        return new Link(this);
+    }
 }

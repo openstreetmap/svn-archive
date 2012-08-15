@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -22,22 +22,33 @@ package org.openstreetmap.josm.plugins.tag2link;
  */
 public interface Tag2LinkConstants {
 
-	/**
-	 * XML Schema
-	 */
-	public static final String XML_LOCATION = "/resources/tag2link_sources.xml";
-	
-	/**
-	 * File encoding.
-	 */
-	public static final String UTF8_ENCODING = "UTF-8";
-	
-	/**
-	 * Plugin icons.
-	 */
-	public static String ICON_16 = "tag2linkv2_16x16.png";
-	public static String ICON_24 = "tag2linkv2_24x24.png";
+    /**
+     * XML Schema
+     */
+    public static final String XML_LOCATION = "/resources/tag2link_sources.xml";
+    
+    /**
+     * File encoding.
+     */
+    public static final String UTF8_ENCODING = "UTF-8";
+    
+    /**
+     * Plugin icon, 16x16 pixels.
+     */
+    public static String ICON_16 = "tag2linkv2_16x16.png";
+    
+    /**
+     * Plugin icon, 24x24 pixels.
+     */
+    public static String ICON_24 = "tag2linkv2_24x24.png";
+
+    /**
+     * Plugin icon, 48x48 pixels.
+     */
     public static String ICON_48 = "tag2linkv2_48x48.png";
     
+    /**
+     * Mail icon, 24x24 pixels.
+     */
     public static String MAIL_ICON_24 = "tag2mailv3_24x24.png";
 }

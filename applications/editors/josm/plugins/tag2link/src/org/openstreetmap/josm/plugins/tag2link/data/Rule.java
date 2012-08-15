@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -34,54 +34,54 @@ public class Rule {
         public final Map<String, String> params;
         private String prefix;
         public MatchingTag(String key, String value, String prefix) {
-        	this.key = key;
-        	this.value = value;
-        	this.params = new HashMap<String, String>();
-        	this.prefix = prefix;
-        	addKeyValueParams();
+            this.key = key;
+            this.value = value;
+            this.params = new HashMap<String, String>();
+            this.prefix = prefix;
+            addKeyValueParams();
         }
         public void addParams(Matcher m, String paramName) {
-    		for (int i = 1; i<=m.groupCount(); i++) {
-    			params.put(prefix+paramName+"."+i, m.group(i));
-    		}
+            for (int i = 1; i<=m.groupCount(); i++) {
+                params.put(prefix+paramName+"."+i, m.group(i));
+            }
         }
         private void addKeyValueParams() {
-        	params.put("k", key);
-        	params.put("v", value);
-        	if (!prefix.isEmpty()) {
-            	params.put(prefix+"k", key);
-            	params.put(prefix+"v", value);
-        	}
+            params.put("k", key);
+            params.put("v", value);
+            if (!prefix.isEmpty()) {
+                params.put(prefix+"k", key);
+                params.put(prefix+"v", value);
+            }
         }
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "MatchingTag [" + (key != null ? "key=" + key + ", " : "")
-					+ (value != null ? "value=" + value + ", " : "")
-					+ (params != null ? "params=" + params + ", " : "")
-					+ (prefix != null ? "prefix=" + prefix : "") + "]";
-		}
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "MatchingTag [" + (key != null ? "key=" + key + ", " : "")
+                    + (value != null ? "value=" + value + ", " : "")
+                    + (params != null ? "params=" + params + ", " : "")
+                    + (prefix != null ? "prefix=" + prefix : "") + "]";
+        }
     }
     
     public static class EvalResult {
-    	private final int conditionsNumber;
-    	public EvalResult(int conditionsNumber) {
-    		this.conditionsNumber = conditionsNumber;
-    	}
+        private final int conditionsNumber;
+        public EvalResult(int conditionsNumber) {
+            this.conditionsNumber = conditionsNumber;
+        }
         public final Collection<MatchingTag> matchingTags = new ArrayList<MatchingTag>();
         public boolean matches() {
             return conditionsNumber > 0 && matchingTags.size() >= conditionsNumber;
         }
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "EvalResult [conditionsNumber=" + conditionsNumber
-					+ ", matchingTags=" + matchingTags + "]";
-		}
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "EvalResult [conditionsNumber=" + conditionsNumber
+                    + ", matchingTags=" + matchingTags + "]";
+        }
     }
     
     public EvalResult evaluates(Map<String, String> tags) {
@@ -90,21 +90,21 @@ public class Rule {
             for (String key : tags.keySet()) {
                 Matcher keyMatcher = c.keyPattern.matcher(key);
                 if (keyMatcher.matches()) {
-                	String idPrefix = c.id == null ? "" : c.id+".";
-            		MatchingTag tag = new MatchingTag(key, tags.get(key), idPrefix);
-            		tag.addParams(keyMatcher, "k");
-                	boolean matchingTag = true;
-                	if (c.valPattern != null) {
-                		Matcher valMatcher = c.valPattern.matcher(tag.value);
-                		if (valMatcher.matches()) {
-                			tag.addParams(valMatcher, "v");
-                		} else {
-                			matchingTag = false;
-                		}
-                	}
-                	if (matchingTag) {
-                		result.matchingTags.add(tag);
-                	}
+                    String idPrefix = c.id == null ? "" : c.id+".";
+                    MatchingTag tag = new MatchingTag(key, tags.get(key), idPrefix);
+                    tag.addParams(keyMatcher, "k");
+                    boolean matchingTag = true;
+                    if (c.valPattern != null) {
+                        Matcher valMatcher = c.valPattern.matcher(tag.value);
+                        if (valMatcher.matches()) {
+                            tag.addParams(valMatcher, "v");
+                        } else {
+                            matchingTag = false;
+                        }
+                    }
+                    if (matchingTag) {
+                        result.matchingTags.add(tag);
+                    }
                 }
             }
         }
@@ -112,20 +112,20 @@ public class Rule {
     }
     
     public EvalResult evaluates(IPrimitive p) {
-    	return evaluates(p.getKeys());
+        return evaluates(p.getKeys());
     }
 
-	public EvalResult evaluates(Tag tag) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(tag.getKey(), tag.getValue());
-		return evaluates(map);
-	}
+    public EvalResult evaluates(Tag tag) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(tag.getKey(), tag.getValue());
+        return evaluates(map);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Rule [conditions=" + conditions + ", links=" + links + "]";
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Rule [conditions=" + conditions + ", links=" + links + "]";
+    }
 }

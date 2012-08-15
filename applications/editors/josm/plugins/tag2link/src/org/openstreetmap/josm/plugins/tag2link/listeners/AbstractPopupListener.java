@@ -1,5 +1,5 @@
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011 Don-vip & FrViPofm
+//    Copyright (C) 2011-2012 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -53,12 +53,12 @@ public abstract class AbstractPopupListener implements PopupMenuListener {
     }
     
     protected void addLink(JPopupMenu popup, Link link) {
-    	JosmAction action = null;
-    	if (link.url.matches("mailto:.*")) {
-    		action = new OpenMailAction(link);
-    	} else {
-    		action = new OpenLinkAction(link);
-    	}
+        JosmAction action = null;
+        if (link.url.matches("mailto:.*")) {
+            action = new OpenMailAction(link);
+        } else {
+            action = new OpenLinkAction(link);
+        }
 
         itemList.add(popup.add(action));
     }

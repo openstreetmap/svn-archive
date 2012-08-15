@@ -20,7 +20,7 @@
 
     <!-- Global --> 
 
-    <source name="Common">
+    <src name="Common">
         <rule>
             <condition k="(contact:)?website" />
             <link name="View website" href="%v%" />
@@ -33,32 +33,32 @@
             <condition k="(contact:)?email" v="[^@]+@[^@]+" />
             <link name="Send Email" href="mailto:%v%" />
         </rule>
-    </source>
+    </src>
     
-    <source name="Wikipedia">
+    <src name="Wikipedia">
         <rule>
             <condition k="wikipedia(?::(\p{Lower}{2,}))?" v="(?:(\p{Lower}{2,}):)?(.*)" />
             <link name="View %name% article" href="http://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
         </rule>
-    </source>
+    </src>
 
-    <source name="WHC">
+    <src name="WHC">
         <rule>
             <condition k="ref:whc" v="[0-9-]+" />
             <link name="View UNESCO sheet" href="http://whc.unesco.org/%lang(en,fr):en%/list/%v%" />
         </rule>
-    </source>
+    </src>
     
     <!-- Only for France --> 
     
-    <source name="SANDRE" country-code="FR">
+    <src name="SANDRE" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?sandre" v="[A-Z0-9-]{8}" />
             <link name="View %name% sheet of river" href="http://services.sandre.eaufrance.fr/Courdo/Fiche/client/fiche_courdo.php?CdSandre=%v%" />
         </rule>
-    </source>
+    </src>
     
-    <source name="INSEE" country-code="FR">
+    <src name="INSEE" country-code="FR">
         <rule>
             <condition k="admin_level" v="8"/>
             <condition k="ref:(FR:)?INSEE" v="(\p{Digit}{2})(\p{Digit}{3})" id="ref"/>
@@ -95,16 +95,16 @@
             <link name="View %name% map of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/carte_regions.asp" />
             <link name="View %name% list of regions" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/region.asp" />
         </rule>
-    </source>
+    </src>
     
-    <source name="CEF" country-code="FR">
+    <src name="CEF" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?CEF" v="[A-Z0-9_]{8}" />
             <link name="View %name% sheet of church" href="http://www.messesinfo.catholique.fr/public/fiche.php?valcode=%v%" />
         </rule>
-    </source>
+    </src>
 
-    <source name="MHS" country-code="FR">
+    <src name="MHS" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?mhs" v="\p{Upper}{2}\p{Digit}{8}" />
             <link name="View Mérimée sheet of monument" href="http://www.culture.gouv.fr/public/mistral/mersri_fr?ACTION=CHERCHER&amp;FIELD_1=REF&amp;VALUE_1=%v%" />
@@ -113,9 +113,9 @@
             <condition k="ref:(FR:)?INSEE" v="\p{Digit}{5}" />
             <link name="View Mérimée list for this municipality" href="http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION=CHERCHER&amp;FIELD_1=cmer1&amp;VALUE_1=%v%" />
         </rule>
-    </source>
+    </src>
 
-    <source name="IGN" country-code="FR">
+    <src name="IGN" country-code="FR">
 		<!-- 
 		http://geodesie.ign.fr/fiches/index.php?module=e&action=fichepdf&source=carte&sit_no=4509302&geo_cid=0&lambda=1.90024744&phi=48.03041621
 		 -->
@@ -136,21 +136,21 @@
             <condition k="ref" v="\p{Digit}{7}" id="ref" />
             <link name="View %name% sheet of geodesic site" href="http://geodesie.ign.fr/fiches/index.php?module=e&amp;action=fichepdf&amp;source=carte&amp;sit_no=%ref.v.1%" />
         </rule>
-    </source>
+    </src>
 
-    <source name="Education Nationale" country-code="FR">
+    <src name="Education Nationale" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?UAI" />
             <link name="View UAI sheet of school/college" href="http://www.education.gouv.fr/bce/avancee/fiche.php?NUMERO_UAI=%v%&amp;type_info=UAI_all" />
         </rule>
-    </source>
+    </src>
 
     <!-- social facility --> 
-    <source name="FINESS" country-code="FR">
+    <src name="FINESS" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?FINESS" v="[A-Z0-9-]{9}" />
             <link name="View %name% sheet of hospital/home" href="http://finess.sante.gouv.fr/finess/jsp/actionDetailEtablissement.do?noFiness=%v%" />
         </rule>
-    </source>
+    </src>
     
 </tag2link>

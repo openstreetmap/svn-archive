@@ -143,7 +143,7 @@ public class SourcesReader implements Tag2LinkConstants {
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
-                if (parser.getLocalName().equals("source")) {
+                if (parser.getLocalName().equals("src")) {
                     result.add(parseSource());
                 } else {
                     parseUnknown();

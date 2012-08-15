@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -30,7 +31,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * The closed ways are just split at the selected nodes (which must be exactly two).
  * The nodes remain in their original order.
- * 
+ *
  * This is similar to SplitWayAction with the addition that the split ways are closed
  * immediately.
  */
@@ -53,6 +54,7 @@ public class SplitObjectAction extends JosmAction {
      * This method performs an expensive check whether the selection clearly defines one
      * of the split actions outlined above, and if yes, calls the splitObject method.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
 
@@ -71,8 +73,21 @@ public class SplitObjectAction extends JosmAction {
 
 
         Way selectedWay = null;
-        if (!selectedWays.isEmpty()){
-            selectedWay = selectedWays.get(0);
+        Way splitWay = null;
+
+        if (selectedNodes.isEmpty()) {              // if no nodes are selected - try to find split way
+            for (Way selWay : selectedWays) {       // we assume not more 2 ways in the list
+                if (selWay != null &&               // If one of selected ways is not closed we have it to get split points
+                    selWay.isUsable() &&
+                    !selWay.isClosed() &&
+                    selWay.getKeys().isEmpty()) {
+                        selectedNodes.add(selWay.firstNode());
+                        selectedNodes.add(selWay.lastNode());
+                        splitWay = selWay;
+                } else {
+                    selectedWay = selWay;           // use another way as selected way
+                }
+            }
         }
 
         // If only nodes are selected, try to guess which way to split. This works if there
@@ -188,12 +203,31 @@ public class SplitObjectAction extends JosmAction {
         //        List<List<Node>> wayChunks = buildSplitChunks(selectedWay, selectedNodes);
         if (wayChunks != null) {
             // close the chunks
-            for (List<Node> wayChunk : wayChunks) {
-                wayChunk.add(wayChunk.get(0));
+            // update the logic - if we have splitWay not null, we have to add points from it to both chunks (in the correct direction)
+            if (splitWay == null) {
+                for (List<Node> wayChunk : wayChunks) {
+                    wayChunk.add(wayChunk.get(0));
+                }
+            } else {
+                for (List<Node> wayChunk : wayChunks) {
+                    // check direction of the chunk and add splitWay nodes in the correct order
+                    List<Node> way = splitWay.getNodes();
+                    if (wayChunk.get(0).equals(splitWay.firstNode())) {
+                        // add way to the end in the opposite direction.
+                        way.remove(way.size()-1); // remove the last node
+                        Collections.reverse(way);
+                    } else {
+                        // add way to the end in the given direction, remove the first node
+                        way.remove(0);
+                    }
+                    wayChunk.addAll(way);
+                }
             }
             SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getEditLayer(), selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
             //            SplitObjectResult result = splitObject(getEditLayer(),selectedWay, wayChunks);
             Main.main.undoRedo.add(result.getCommand());
+            if (splitWay != null)
+                Main.main.undoRedo.add(new DeleteCommand(splitWay));
             getCurrentDataSet().setSelected(result.getNewSelection());
         }
     }
@@ -206,17 +240,17 @@ public class SplitObjectAction extends JosmAction {
      * out from the selectionChanged listener).
      */
     private boolean checkSelection(Collection<? extends OsmPrimitive> selection) {
-        boolean way = false;
         int node = 0;
+        int ways = 0;
         for (OsmPrimitive p : selection) {
-            if (p instanceof Way && !way) {
-                way = true;
+            if (p instanceof Way) {
+                ways++;
             } else if (p instanceof Node) {
                 node++;
             } else
                 return false;
         }
-        return node == 2;
+        return node == 2 || ways == 1 || ways == 2; //only 2 nodes selected. one split-way selected. split-way + way to split.
     }
 
     @Override

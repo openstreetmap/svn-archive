@@ -63,6 +63,7 @@
             <condition k="admin_level" v="8"/>
             <condition k="ref:(FR:)?INSEE" v="(\p{Digit}{2})(\p{Digit}{3})" id="ref"/>
             <link name="View %name% municipality sheet" href="http://www.insee.fr/fr/methodes/nomenclatures/cog/fichecommunale.asp?codedep=%ref.v.1%&amp;codecom=%ref.v.2%" />
+            <link name="View %name% sheet on osm.fr" href="http://openstreetmap.fr/outils/etat-commune?insee=%ref.v%" />
         </rule>
         <rule>
             <condition k="political_division" v="FR:canton"/>
@@ -141,6 +142,14 @@
         <rule>
             <condition k="ref:(FR:)?UAI" />
             <link name="View UAI sheet of school/college" href="http://www.education.gouv.fr/bce/avancee/fiche.php?NUMERO_UAI=%v%&amp;type_info=UAI_all" />
+        </rule>
+    </source>
+
+    <!-- social facility --> 
+    <source name="FINESS" country-code="FR">
+        <rule>
+            <condition k="ref:(FR:)?FINESS" v="[A-Z0-9-]{9}" />
+            <link name="View %name% sheet of hospital/home" href="http://finess.sante.gouv.fr/finess/jsp/actionDetailEtablissement.do?noFiness=%v%" />
         </rule>
     </source>
     

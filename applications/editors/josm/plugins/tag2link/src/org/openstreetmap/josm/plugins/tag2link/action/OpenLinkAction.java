@@ -78,8 +78,11 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
 				fos.close();
 				
 		    	System.out.println("Opening "+filename);
-		        OpenBrowser.displayUrl("file://"+filename);
-				
+		    	String result = OpenBrowser.displayUrl("file://"+filename);
+		        if (result != null) {
+		        	System.err.println(result);
+		        }
+		        
 			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
 			} catch (IOException ex) {
@@ -87,7 +90,10 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
 			}
     	} else {
 	    	System.out.println("Opening "+link.url);
-	        OpenBrowser.displayUrl(link.url);
+	        String result = OpenBrowser.displayUrl(link.url);
+	        if (result != null) {
+	        	System.err.println(result);
+	        }
     	}
     }
 }

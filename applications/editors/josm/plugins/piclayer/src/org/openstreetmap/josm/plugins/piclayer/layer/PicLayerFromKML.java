@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.piclayer.layer.kml.KMLGroundOverlay;
@@ -52,8 +51,8 @@ public class PicLayerFromKML extends PicLayerAbstract {
         LatLon coord1 = new LatLon(cal.getNorth(), cal.getEast());
         LatLon coord2 = new LatLon(cal.getSouth(), cal.getWest());
 
-        EastNorth en1 = Main.getProjection().latlon2eastNorth(coord1);
-        EastNorth en2 = Main.getProjection().latlon2eastNorth(coord2);
+        EastNorth en1 = projection.latlon2eastNorth(coord1);
+        EastNorth en2 = projection.latlon2eastNorth(coord2);
 
 
         EastNorth imagePosition = new EastNorth((en1.getX()+en2.getX())/2, (en1.getY()+en2.getY())/2);

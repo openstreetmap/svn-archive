@@ -47,9 +47,11 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationFromWorldAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
@@ -120,6 +122,8 @@ public abstract class PicLayerAbstract extends Layer {
     private static final int pinWidth = 64;
     private static final int pinHeight = 64;
 
+    protected final Projection projection;
+
     /**
      * Constructor
      */
@@ -136,6 +140,8 @@ public abstract class PicLayerAbstract extends Layer {
             // allow system to load the image and use it in future
             pinTiledImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/v6_64.png"))).getImage();
         }
+
+        projection = Main.getProjection();
     }
 
     /**
@@ -200,6 +206,7 @@ public abstract class PicLayerAbstract extends Layer {
                 SeparatorLayerAction.INSTANCE,
                 new SavePictureCalibrationAction(this),
                 new LoadPictureCalibrationAction(this),
+                new LoadPictureCalibrationFromWorldAction(this),
                 SeparatorLayerAction.INSTANCE,
                 new RenameLayerAction(null,this),
         };
@@ -301,12 +308,12 @@ public abstract class PicLayerAbstract extends Layer {
          * Also, this should get us somewhere in the range of meters,
          * so we get the result at the point 'en' and not some average.
          */
-        double naturalScale = Main.getProjection().getDefaultZoomInPPD();
+        double naturalScale = projection.getDefaultZoomInPPD();
         naturalScale *= 0.01; // make a little smaller
 
-        LatLon ll1 = Main.getProjection().eastNorth2latlon(
+        LatLon ll1 = projection.eastNorth2latlon(
                 new EastNorth(en.east() - naturalScale, en.north()));
-        LatLon ll2 = Main.getProjection().eastNorth2latlon(
+        LatLon ll2 = projection.eastNorth2latlon(
                 new EastNorth(en.east() + naturalScale, en.north()));
 
         double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
@@ -315,12 +322,12 @@ public abstract class PicLayerAbstract extends Layer {
 
     /* see getMetersPerEasting */
     private double getMetersPerNorthing(EastNorth en) {
-        double naturalScale = Main.getProjection().getDefaultZoomInPPD();
+        double naturalScale = projection.getDefaultZoomInPPD();
         naturalScale *= 0.01;
 
-        LatLon ll1 = Main.getProjection().eastNorth2latlon(
+        LatLon ll1 = projection.eastNorth2latlon(
                 new EastNorth(en.east(), en.north()- naturalScale));
-        LatLon ll2 = Main.getProjection().eastNorth2latlon(
+        LatLon ll2 = projection.eastNorth2latlon(
                 new EastNorth(en.east(), en.north() + naturalScale));
 
         double dist = ll1.greatCircleDistance(ll2) / naturalScale / 2;
@@ -336,7 +343,7 @@ public abstract class PicLayerAbstract extends Layer {
     public void visitBoundingBox(BoundingXYVisitor arg0) {
         if ( image == null )
             return;
-        String projcode = Main.getProjection().toCode();
+        String projcode = projection.toCode();
 
         // TODO: bounding box only supported when coordinates are in meters
         // The reason for that is that this .cal think makes us a hard time.

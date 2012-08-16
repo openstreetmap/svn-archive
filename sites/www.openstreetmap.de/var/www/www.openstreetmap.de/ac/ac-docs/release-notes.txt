@@ -1,0 +1,79 @@
+Version 3.03.07
+	released 2012-03-08
+	- Fix database dump issue on some servers (missing id_external_ref).
+	- Fix for date_default_timezone_set() issue on newer PHP installs.
+	- Fix css display issue in install script.
+	
+Version 3.03.06
+	released 2012-02-13
+	- Fix display issue for April 2012 and other months requiring extra row of empty dates.
+	- Path changes to resolve issue with Windows servers
+	- Language check bug fixed when adding new language (on some servers)
+	- Check that install script has been deleted after installation (for security)
+	- Other minor bug fixes.
+	
+Version 3.03.05
+	released 2011-08-30
+	- fix minor css error
+
+Version 3.03.04
+	released 2011-08-10
+	- Fix language file not found error on servers not accepting $_REQUEST
+	- Modified code to allow NUM_MONTHS to be over-ridden by $_GET[num_months] (otherwise default value is used)
+	- Added ID column to calendar items list in admin - this is the id used for iframes etc. and removed id_external_ref column to avoid confusion (this field is not used by the code)
+	- Fixed encoding bug for weekdays - http://forum.ajaxavailabilitycalendar.com/viewtopic.php?f=23&t=1014
+	- Updated Mootools version
+	- Other minor adjustments. 
+	
+Version 3.03.03
+	released 2011-01-31
+	- Fix security risk
+	- Bug Fixes as reported in the forum:
+		. Last Update date
+		. Language directory issues
+		. JavaScript error which caused IE8 to freeze in admin.
+	- Admin specific calendar css style sheet to allow customization of front-end calendar without affecting the admin panel.
+	- Other minor adjustments. 
+
+Version 3.03.02
+	released 2010-02-12
+	- Fix path error in admin
+	- Removed language packages for download (other than English and Spanish) - Will add languages to download page in web (to do)
+	- Removed unused files, images, icons etc from directories.
+	- Renamed various constant variables to use a uniform system.
+	- Added various missing language texts.
+	- Enabled deletion of all booking items and languages
+	- New function "itemTitle()" to retrieve the title of the currently selected calendar item
+	
+Version 3.03.01
+	released 2010-02-10
+	- Fix installation bug if "prefix" is defined for database tables.
+	- Fix "root" path issue in some php versions.
+	- Enable deletion of all Booking items (disabled in demo version)
+	- Fixed url to calender preview in admin panel.
+	
+Version 3.03
+	released 2010-02-07
+	- New Item field "id ref" to hold an external reference id number (for example for applications that already have the items in a separate database table).
+	- Administration of Booking Stages and Item "active states"
+	- Added support for themes (currently only default theme provided)
+	- Restructure of directory and file system
+
+Version 3.02
+	released 2009-11-07
+	- Language administration added - languages can now be added and edited via admin.
+	- New function to get calendar last update date "get_cal_update_date(ID_ITEM)"
+	
+	
+Version 3.01
+	released September 2009
+	- User admin added to allow individual users to be added with permission to administrate 
+	their own calendars but NOT the general calendar details (states etc)
+
+Version 3.0
+	released August 2009
+	- complete rewrite of version 2.
+	- use mootools for all javascript needs
+	- complete administration panel to control all aspects of the calendar
+	- unlimited "states" now possible
+	- many other new features

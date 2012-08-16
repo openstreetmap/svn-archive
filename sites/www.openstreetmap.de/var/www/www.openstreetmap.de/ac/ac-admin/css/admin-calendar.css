@@ -1,0 +1,194 @@
+/* CHANGE THIS PATH ACCORDING TO YOUR THEME !!!!! */
+
+/* define background image for special states - I use one single image that holds all the colors */
+.cal_month ul li.booked_am,
+.cal_month ul li.booked_pm,
+.cal_month ul li.booked_pr_am,
+.cal_month ul li.booked_pr_pm	{	background-image:url("../../ac-contents/themes/default/images/bg_days.png");}	
+
+#cal_wrapper{
+	font: 11px/1.6 Arial, sans-serif;
+	color: #444;
+	width:670px;
+	margin:20px auto;
+	}
+#the_months{
+	float:left; 
+	width:534px;
+	}
+.clear{	clear:both;}
+#ajax_message{
+	text-align:center;
+	border-top:1px solid #CCC;
+	border-bottom:1px solid #CCC;
+	background: #FFFFEE;
+	float:left;
+	margin-left:10px;
+	width:260px;
+	}
+/* month loading animation - push to center*/
+.img_loading_month{
+	margin:50px;
+	}
+/*
+calendar key
+***************************/
+
+#key_wrapper{
+	float:right;
+	text-align:center;
+	}
+#key{
+	width:122px;
+	background: #EEE;
+	color:#111;
+	}
+#key .cal_title{
+	color:#FFF;
+	}
+#key ul{
+	text-align:left;
+	}
+#key ul li{
+	float:none;
+	}
+#key ul li span{
+	margin-left:22px;
+	width:90px;
+	text-align:left;
+	display:block;
+	}
+#key #footer_data{
+	font-size:0.7em;
+	clear:both;
+	}
+
+
+/*
+calendar controls (back and next)
+***************************/
+#cal_controls{
+	margin-bottom:10px;
+	}
+#cal_controls #cal_prev{
+	float:left;
+	}
+#cal_controls #cal_next{	
+	float:left; 
+	margin-left:2px;
+	}
+#cal_controls #cal_admin{
+	float:left;
+	margin-left:10px;
+	}
+
+/*
+calendar month styles
+***************************/
+.cal_month{
+	/* month div*/
+	width:170px;
+	border:1px solid #006699;
+	background:#FFFFEE;
+	line-height:20px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	padding-bottom:6px;
+	float:left;
+	margin-right:6px;
+	margin-bottom:6px;
+	min-height:194px;
+	color:#666;
+	}
+#key .cal_title,
+.cal_month .cal_title{
+	border-bottom: 1px solid #CCC;
+	background:#006699;
+	padding:2px;
+	text-align:center;
+	color:#FFF;
+	}	
+.cal_month ul{
+	clear:both;
+	list-style:none;
+	margin:0px;
+	padding:4px;
+	margin:auto;
+	width:168px;
+	color:#FFF;
+	}
+.cal_month ul li{
+	float:left;
+	width:20px;
+	height:20px;
+	border:1px solid #CCC;
+	margin-right:1px;
+	margin-bottom:1px;
+	text-align:center;
+	background-color:#DDD;
+	color:#000;
+	font-size:90%;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+
+/* day titles (m,t,w etc. */
+.cal_month ul.cal_weekday li{	
+	color:#FFF;
+	background-color:#006699;
+	border:1px solid #006699;
+	}
+/* no month date */
+.cal_month ul li.cal_empty{		
+	background-color:#EEE;
+	border:1px solid #EEE;
+	color:#CCC;
+	}
+
+.cal_month ul li.booked			{	background-color: #FF0000;	}		/* complete day booked */
+.cal_month ul li.booked_pr		{	background-color: #ff9700;	}		/* complete day provisionally booked */
+
+
+
+
+
+/*
+calendar date styles
+class name must be the same as defined in admin panel
+***************************/
+
+.cal_month ul li.offer			{	background-color:lime;		}
+.cal_month ul li.changeover		{	background-color:pink;		}
+
+
+
+
+	
+/* position background image for each state - adjust to your image */
+.cal_month ul li.booked_am		{	background-position: 200px top;	}
+.cal_month ul li.booked_pm		{	background-position: 230px top;	}
+.cal_month ul li.booked_pr_am	{	background-position: 140px top;	}
+.cal_month ul li.booked_pr_pm	{	background-position: 170px top;	}
+
+.cal_month ul li.weekend		{	/*border:1px solid #3399CC;*//*altered via mootools*/}
+.cal_month ul li.today			{	border:1px dotted #006699;	}	/* current date - MUST be defined last otherwise other classes might overwrite it*/
+/*.cal_month ul li:hover{	background:#006699; color:#FFF;}*/
+
+
+.tips{
+	background: #000;
+	padding:6px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	color:#FFF;
+	border:2px solid #666;
+}
+.cal_month ul li.weeknum_spacer{
+	width:4px;
+	background-color:#FFFFEE;
+	border:none;
+	}
+.cal_month ul li.weeknum{
+	width:4px;
+	background-color:green;
+	}

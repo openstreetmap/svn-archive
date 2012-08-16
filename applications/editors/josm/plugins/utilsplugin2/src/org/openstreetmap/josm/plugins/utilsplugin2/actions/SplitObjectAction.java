@@ -169,6 +169,12 @@ public class SplitObjectAction extends JosmAction {
                                 JOptionPane.WARNING_MESSAGE);
                 return;
             }
+        } else if (selectedWay != null && selectedNodes.isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("The selected way is not a split way, please select split points or split way too."),
+                    tr("Warning"),
+                    JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
         // we're guaranteed to have two nodes

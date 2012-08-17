@@ -17,7 +17,6 @@ my $factor = 10**7; # number by which all coordinates in source CSV are multipli
 my $tile_folder;
 my $zoom;
 my $bbox_str = '-180,-85,180,85';
-#my $bbox_str = '27.4,50,62,63'; # Russia z11..z14 http://www.openstreetmap.org/?box=yes&bbox=27.4,50,62,63
 
 my $help;
 my $verbose;

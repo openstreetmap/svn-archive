@@ -67,7 +67,7 @@ sub generate_lowzoom {
     my $zoom = shift;
     my $z = $zoom + 1;
 
-    print STDERR "Generating zoom $zoom" if $verbose;
+    print STDERR "Generating zoom $zoom bitiles" if $verbose;
     for( my $x = $xmin - $xmin%2; $x <= $xmax; $x += 2 ) {
         print STDERR '.' if $verbose;
         make_path("$source_dir/$zoom/".($x/2));
@@ -220,7 +220,7 @@ sub generate_empty_tiles {
 sub clean_bitiles {
     my $zoom = shift;
 
-    print STDERR "Removing z$zoom bitiles\n" if $verbose;
+    print STDERR "Removing zoom $zoom bitiles\n" if $verbose;
     opendir(my $dh, "$source_dir/$zoom") || return;
     my @xlist = grep { /^\d+$/ && -d "$source_dir/$zoom/$_" } readdir($dh);
     closedir($dh);

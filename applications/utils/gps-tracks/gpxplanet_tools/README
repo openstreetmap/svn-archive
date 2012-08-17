@@ -1,0 +1,13 @@
+These tools are for processing planet.gpx, an enormous CSV file
+consisting of point coordinates.
+
+cut_todo.pl
+	Extract points inside a polygon specified by a osmosis' poly file.
+	Can be used to make regional extracts of planet.gpx.
+
+gpx2bitiles.pl
+	Renders planet.gpx or its part into "bitiles": bit arrays that can
+	later be rendered into regular png images.
+
+bitiles2png.pl
+	Convert bitiles to png images and generate low zoom tiles from them.

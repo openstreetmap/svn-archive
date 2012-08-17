@@ -9,5 +9,9 @@ gpx2bitiles.pl
 	Renders planet.gpx or its part into "bitiles": bit arrays that can
 	later be rendered into regular png images.
 
+clean_bitiles.pl
+	Clean bitiles of salt-and-pepper type noise (there's a lot of it
+        between latitudes -28.65 and 28.65).
+
 bitiles2png.pl
 	Convert bitiles to png images and generate low zoom tiles from them.

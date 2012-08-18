@@ -10,5 +10,5 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public interface PolyType {
     public static final String EXTENSION = "poly";
-    public static final ExtensionFileFilter FILE_FILTER = new ExtensionFileFilter(EXTENSION, EXTENSION, tr("Osmosis polygon files") + " (*." + EXTENSION + ")");
+    public static final ExtensionFileFilter FILE_FILTER = new ExtensionFileFilter(EXTENSION, EXTENSION, tr("Osmosis polygon filter files") + " (*." + EXTENSION + ")");
 }

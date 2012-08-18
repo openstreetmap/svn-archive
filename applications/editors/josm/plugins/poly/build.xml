@@ -98,7 +98,7 @@
                 <attribute name="Author" value="Zverik"/>
                 <attribute name="Plugin-Class" value="poly.PolyPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Read and write osmosis' poly files"/>
+                <attribute name="Plugin-Description" value="Read and write osmosis' poly filter files"/>
                 <attribute name="Plugin-Early" value="false"/>
                 <!--<attribute name="Plugin-Icon" value="images/pbf_24.png"/>-->
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format"/>

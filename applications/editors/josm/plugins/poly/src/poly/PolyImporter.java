@@ -93,33 +93,33 @@ public class PolyImporter extends OsmImporter {
                         areas.get(0).setPolygonName(name);
                     parsingSection = false;
                 }
-            }
-
-            if( !parsingSection ) {
-                area = new Area(line);
-                parsingSection = true;
             } else {
-                // reading area, parse coordinates
-                String[] tokens = line.split("\\s+");
-                double[] coords = new double[2];
-                int tokenCount = 0;
-                for( String token : tokens ) {
-                    if( token.length() > 0 ) {
-                        if( tokenCount > 2 )
-                            throw new IllegalDataException(tr("A polygon coordinate line must contain exactly 2 numbers"));
-                        try {
-                            coords[tokenCount++] = Double.parseDouble(token);
-                        } catch( NumberFormatException e ) {
-                            throw new IllegalDataException(tr("Unable to parse {0} as a number", token));
+                if( !parsingSection ) {
+                    area = new Area(line);
+                    parsingSection = true;
+                } else {
+                    // reading area, parse coordinates
+                    String[] tokens = line.split("\\s+");
+                    double[] coords = new double[2];
+                    int tokenCount = 0;
+                    for( String token : tokens ) {
+                        if( token.length() > 0 ) {
+                            if( tokenCount > 2 )
+                                throw new IllegalDataException(tr("A polygon coordinate line must contain exactly 2 numbers"));
+                            try {
+                                coords[tokenCount++] = Double.parseDouble(token);
+                            } catch( NumberFormatException e ) {
+                                throw new IllegalDataException(tr("Unable to parse {0} as a number", token));
+                            }
                         }
                     }
+                    if( tokenCount < 2 )
+                        throw new IllegalDataException(tr("A polygon coordinate line must contain exactly 2 numbers"));
+                    LatLon coord = new LatLon(coords[1], coords[0]);
+                    if( !coord.isValid() )
+                        throw new IllegalDataException(tr("Invalid coordinates were found: {0}, {1}", coord.lat(), coord.lon()));
+                    area.addNode(coord);
                 }
-                if( tokenCount < 2 )
-                    throw new IllegalDataException(tr("A polygon coordinate line must contain exactly 2 numbers"));
-                LatLon coord = new LatLon(coords[1], coords[0]);
-                if( !coord.isValid() )
-                    throw new IllegalDataException(tr("Invalid coordinates were found"));
-                area.addNode(coord);
             }
         }
         return areas;
@@ -127,6 +127,8 @@ public class PolyImporter extends OsmImporter {
 
     private DataSet constructDataSet( List<Area> areas ) {
         DataSet ds = new DataSet();
+        ds.setUploadDiscouraged(true);
+        
         boolean foundInner = false;
         for( Area area : areas ) {
             if( !area.isOuter() )
@@ -186,8 +188,11 @@ public class PolyImporter extends OsmImporter {
 
         public void constructWay( DataSet ds ) {
             way = new Way();
-            for( LatLon coord : nodes )
-                way.addNode(new Node(coord));
+            for( LatLon coord : nodes ) {
+                Node node = new Node(coord);
+                ds.addPrimitive(node);
+                way.addNode(node);
+            }
             way.addNode(way.getNode(0));
             way.put("ref", name);
             if( polygonName != null )

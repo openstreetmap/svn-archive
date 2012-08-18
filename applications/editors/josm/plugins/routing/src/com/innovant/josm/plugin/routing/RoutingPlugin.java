@@ -29,6 +29,7 @@ package com.innovant.josm.plugin.routing;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -137,8 +138,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 
 		datasetAdapter = new DataSetListenerAdapter(this);
 		plugin = this; // Assign reference to the plugin class
-		if (new java.io.File("log4j.xml").exists()) {
-			DOMConfigurator.configure("log4j.xml");
+		File log4jConfigFile = new java.io.File("log4j.xml");
+		if (log4jConfigFile.exists()) {
+			DOMConfigurator.configure(log4jConfigFile.getPath());
 		} else {
 			System.err.println("Routing plugin warning: log4j configuration not found");
 		}

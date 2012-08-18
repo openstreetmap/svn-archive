@@ -71,7 +71,6 @@ public class RoutingMenu extends JMenu {
 	private final JMenu menu;
 
 	/**
-	 * @param s
 	 */
 	public RoutingMenu() {
 		MainMenu mm = Main.main.menu;
@@ -193,6 +192,7 @@ public class RoutingMenu extends JMenu {
 		reverseMI.setEnabled(false);
 		clearMI.setEnabled(false);
 		criteriaM.setEnabled(false);
+		regraphMI.setEnabled(false);
 	}
 
 	public void enableStartItem() {
@@ -203,11 +203,13 @@ public class RoutingMenu extends JMenu {
 		reverseMI.setEnabled(true);
 		clearMI.setEnabled(true);
 		criteriaM.setEnabled(true);
+		regraphMI.setEnabled(true);
 	}
 
 	public void disableRestOfItems() {
 		reverseMI.setEnabled(false);
 		clearMI.setEnabled(false);
 		criteriaM.setEnabled(false);
+		regraphMI.setEnabled(false);
 	}
 }

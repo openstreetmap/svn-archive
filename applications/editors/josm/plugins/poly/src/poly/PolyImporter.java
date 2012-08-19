@@ -46,7 +46,7 @@ public class PolyImporter extends OsmImporter {
         try {
             progressMonitor.beginTask(tr("Reading polygon filter file..."), 2);
             progressMonitor.indeterminateSubTask(tr("Reading polygon filter file..."));
-            reader = new BufferedReader(new InputStreamReader(in));
+            reader = new BufferedReader(new InputStreamReader(in, "UTF8"));
             List<Area> areas = loadPolygon(reader);
             progressMonitor.worked(1);
             

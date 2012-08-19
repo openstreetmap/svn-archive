@@ -40,7 +40,9 @@ public class PolyExporter extends OsmExporter {
             try {
                 DataSet ds = ((OsmDataLayer)layer).data;
                 Map<Way, Boolean> ways = new TreeMap<Way, Boolean>(new AreaComparator());
-                String polygonName = layer.getName();
+                String polygonName = file.getName();
+                if( polygonName.indexOf('.') > 0 )
+                    polygonName = polygonName.substring(0, polygonName.indexOf('.'));
                 for( Way w : ds.getWays() ) {
                     if( w.isClosed() ) {
                         boolean outer = true;
@@ -57,7 +59,7 @@ public class PolyExporter extends OsmExporter {
                         }
                         ways.put(w, outer);
                         if( w.hasKey("name") )
-                            polygonName = w.get("name");
+                            polygonName = w.get("name").replace("\n", " ");
                     }
                 }
 

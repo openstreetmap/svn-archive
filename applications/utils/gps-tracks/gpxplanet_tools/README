@@ -65,15 +65,15 @@ xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles
 perl clean_bitiles.pl -i ausbitiles -o acbitiles
 
 
-6. Create PNG tiles for Australia, zooms 3 to 12.
+6. Create PNG tiles for Australia, zoom levels 0 to 12.
 
-perl bitiles2png.pl -i acbitiles -o austiles -z 12 -u 3 -v
+perl bitiles2png.pl -i acbitiles -o austiles -0 -v
 
 
-7. Create PNG tiles for Sydney with light green dots,
-   also write empty tiles where there are no points.
+7. Create PNG tiles for Sydney with light green dots, zooms 5 to 12.
+   Write empty tiles where there are no points.
 
-perl bitiles2png.pl -i acbitiles -o sydneytiles -b 150.8,-34.1,151.4,-33.6 -z 12 -u 3 -c 0,255,0 -e -v
+perl bitiles2png.pl -i acbitiles -o sydneytiles -b 150.8,-34.1,151.4,-33.6 -z 12 -u 5 -c 0,255,0 -e -v
 
 
 AUTHOR

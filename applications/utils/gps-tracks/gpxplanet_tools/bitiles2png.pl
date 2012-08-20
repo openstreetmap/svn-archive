@@ -18,6 +18,7 @@ my $delete_original;
 my $zoom;
 my $colour_str = '0,0,0';
 my $uptozoom;
+my $zoom0;
 my $make_empty_tiles;
 my $help;
 my $verbose;
@@ -29,7 +30,8 @@ GetOptions('h|help' => \$help,
            'i|input=s' => \$source_dir,
            'o|output=s' => \$dest_dir,
            'z|zoom=i' => \$zoom,
-           'u|zoom0=i' => \$uptozoom,
+           'u|uptozoom=i' => \$uptozoom,
+           '0|zoom0' => \$zoom0,
            'd|delorig' => \$delete_original,
            'e|empty' => \$make_empty_tiles,
            'c|colour=s' => \$colour_str,
@@ -42,10 +44,11 @@ if( $help ) {
 
 usage("Please specify input directory with -i") unless defined($source_dir);
 die "Source directory not found" unless -d $source_dir;
-usage("Please specify source zoom level with -z") unless defined($zoom);
+$zoom = find_zoom($source_dir) unless defined($zoom);
 
 $dest_dir = $source_dir unless defined($dest_dir);
 $uptozoom = $zoom unless defined($uptozoom) && $uptozoom <= $zoom;
+$uptozoom = 0 if $zoom0;
 
 my @colour = split(",", $colour_str);
 die "Colour should be three comma-separated numbers: r,g,b" unless $#colour == 2;
@@ -267,6 +270,16 @@ sub set_tile_bounds {
     $tile_bounds[1] = int((1 - log(tan(deg2rad($bbox[3])) + sec(deg2rad($bbox[3])))/pi)/2 * $zoom2);
 }
 
+sub find_zoom {
+    my $dir = shift;
+    my $dh;
+    opendir($dh, $dir) or die "Cannot open $dir";
+    my @zlist = sort grep { /^\d+$/ && -d "$dir/$_" } readdir($dh);
+    closedir($dh);
+    die "No tiles found in $dir" if $#zlist < 0;
+    return $zlist[-1];
+}
+
 sub usage {
     my ($msg) = @_;
     print STDERR "$msg\n\n" if defined($msg);
@@ -276,13 +289,14 @@ sub usage {
 This script traverses input directory and creates PNG tiles from all
 bitiles found (created with gpx2bitiles.pl).
 
-usage: $prog [-h] [-v] -i source [-o target] -z zoom [-u zoom] [-d] [-e] [-c colour]
+usage: $prog [-h] [-v] -i source [-o target] [-z zoom] [-u zoom] [-0] [-d] [-e] [-c colour]
 
  -h        : print ths help message and exit.
  -i source : directory with bitiles.
  -o target : directory to store PNG tiles (by default equal to source).
  -z zoom   : bitiles zoom level.
  -u zoom   : generate tiles up to that zoom level (e.g. 0).
+ -0        : equivalent to -u 0.
  -b bbox   : limit tiles by a bounding box (four comma-separated
              numbers: minlon,minlat,maxlon,maxlat).
  -d        : delete processed bitiles.

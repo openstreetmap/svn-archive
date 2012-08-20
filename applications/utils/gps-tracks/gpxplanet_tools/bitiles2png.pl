@@ -265,7 +265,6 @@ sub set_tile_bounds {
     $tile_bounds[2] = int(($bbox[2]-$eps+180)/360 * $zoom2);
     $tile_bounds[3] = int((1 - log(tan(deg2rad($bbox[1])) + sec(deg2rad($bbox[1])))/pi)/2 * $zoom2);
     $tile_bounds[1] = int((1 - log(tan(deg2rad($bbox[3])) + sec(deg2rad($bbox[3])))/pi)/2 * $zoom2);
-print "x=$tile_bounds[0]..$tile_bounds[2]; y=$tile_bounds[1]..$tile_bounds[3]\n";
 }
 
 sub usage {

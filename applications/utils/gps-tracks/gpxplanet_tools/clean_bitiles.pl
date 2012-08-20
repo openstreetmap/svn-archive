@@ -98,6 +98,7 @@ sub clean_tile {
     }
     $vec->Index_List_Remove(@pixels_to_remove);
   }
+  return if !$vec->Norm();
   make_path("$dest_dir/$z/$x");
   sysopen(BITILE, "$dest_dir/$z/$x/$y.bitile", O_RDWR | O_CREAT | O_BINARY);
   syswrite(BITILE, $vec->Block_Read());

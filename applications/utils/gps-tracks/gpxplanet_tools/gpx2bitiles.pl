@@ -104,6 +104,7 @@ while(<CSV>) {
   set_pixel("$folder/$ytile.bitile", $xpix, $ypix);
 }
 close CSV;
+unlink "$state_file$thread";
 
 sub set_pixel {
   my($filename, $x, $y) = @_;

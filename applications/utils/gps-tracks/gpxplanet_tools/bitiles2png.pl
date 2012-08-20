@@ -9,6 +9,7 @@ use Bit::Vector;
 use File::Path 2.07 qw(make_path);
 use File::Basename;
 use Getopt::Long;
+use Math::Trig;
 use Fcntl qw( O_RDONLY O_RDWR O_CREAT O_BINARY );
 
 my $source_dir;
@@ -20,6 +21,8 @@ my $uptozoom;
 my $make_empty_tiles;
 my $help;
 my $verbose;
+my $bbox_str = '-180,-85,180,85';
+my @tile_bounds = (0, 0, 2**18, 2**18);
 
 GetOptions('h|help' => \$help,
            'v|verbose' => \$verbose,
@@ -30,6 +33,7 @@ GetOptions('h|help' => \$help,
            'd|delorig' => \$delete_original,
            'e|empty' => \$make_empty_tiles,
            'c|colour=s' => \$colour_str,
+           'b|bbox=s' => \$bbox_str,
            ) || usage();
 
 if( $help ) {
@@ -46,19 +50,21 @@ $uptozoom = $zoom unless defined($uptozoom) && $uptozoom <= $zoom;
 my @colour = split(",", $colour_str);
 die "Colour should be three comma-separated numbers: r,g,b" unless $#colour == 2;
 
+set_tile_bounds($bbox_str) if( $bbox_str );
+
 my $xmin;
 my $ymin;
 my $xmax;
 my $ymax;
 
-process_zoom($zoom);
+process_zoom($zoom, 1);
 
 if( $uptozoom < $zoom && $xmin <= $xmax && $ymin <= $ymax ) {
     for my $zoomd (1 .. $zoom-$uptozoom) {
         my $newzoom = $zoom - $zoomd;
         generate_lowzoom($newzoom);
         clean_bitiles($newzoom + 1) if $delete_original || $newzoom + 1 < $zoom;
-        process_zoom($newzoom);
+        process_zoom($newzoom, 0);
     }
 }
 clean_bitiles($uptozoom) if $delete_original || $uptozoom < $zoom;
@@ -112,7 +118,7 @@ sub quadtile {
 }
 
 sub process_zoom {
-    my $zoom = shift;
+    my ($zoom, $skip) = @_;
     print STDERR "Generating PNG images for zoom $zoom" if $verbose;
 
     $xmin = 10**6;
@@ -133,6 +139,7 @@ sub process_zoom {
     }
 
     for my $x (@xlist) {
+        next if $skip && ($x < $tile_bounds[0] || $x > $tile_bounds[2]);
         my $folder = "$source_dir/$zoom/$x";
         opendir($dh, $folder) || next;
         my @ylist = grep { /^\d+\.bitile$/ && -r "$folder/$_" } readdir($dh);
@@ -144,6 +151,7 @@ sub process_zoom {
         for my $y (@ylist) {
             $y =~ /^(\d+)/;
             my $yt = $1;
+            next if $skip && ($yt < $tile_bounds[1] || $yt > $tile_bounds[3]);
 
             my $vec = read_bit_vector("$folder/$y");
             my $tile = vector2png($vec);
@@ -242,6 +250,24 @@ sub clean_bitiles {
     rmdir "$source_dir/$zoom";
 }
 
+sub set_tile_bounds {
+    my $bbox_str = shift;
+    my @bbox = split(",", $bbox_str);
+    die("badly formed bounding box - use four comma-separated values for ".
+       "bottom left latitude, bottom left longitude, top right latitude, ".
+       "top right longitude") unless $#bbox == 3;
+    die("max longitude is less than min longitude") if ($bbox[2] < $bbox[0]);
+    die("max latitude is less than min latitude") if ($bbox[3] < $bbox[1]);
+    
+    my $zoom2 = 2**$zoom;
+    my $eps = 10**-8;
+    $tile_bounds[0] = int(($bbox[0]+$eps+180)/360 * $zoom2);
+    $tile_bounds[2] = int(($bbox[2]-$eps+180)/360 * $zoom2);
+    $tile_bounds[3] = int((1 - log(tan(deg2rad($bbox[1])) + sec(deg2rad($bbox[1])))/pi)/2 * $zoom2);
+    $tile_bounds[1] = int((1 - log(tan(deg2rad($bbox[3])) + sec(deg2rad($bbox[3])))/pi)/2 * $zoom2);
+print "x=$tile_bounds[0]..$tile_bounds[2]; y=$tile_bounds[1]..$tile_bounds[3]\n";
+}
+
 sub usage {
     my ($msg) = @_;
     print STDERR "$msg\n\n" if defined($msg);
@@ -258,8 +284,10 @@ usage: $prog [-h] [-v] -i source [-o target] -z zoom [-u zoom] [-d] [-e] [-c col
  -o target : directory to store PNG tiles (by default equal to source).
  -z zoom   : bitiles zoom level.
  -u zoom   : generate tiles up to that zoom level (e.g. 0).
+ -b bbox   : limit tiles by a bounding box (four comma-separated
+             numbers: minlon,minlat,maxlon,maxlat).
  -d        : delete processed bitiles.
- -e        : generate empty tiles where there's no bitiles.
+ -e        : generate empty tiles where there are no bitiles.
  -c colour : colour of GPS points (three comma-separated numbers: r,g,b
              default is black).
  -v        : display progress.

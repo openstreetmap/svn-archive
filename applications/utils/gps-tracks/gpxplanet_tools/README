@@ -1,9 +1,14 @@
 These tools are for processing planet.gpx, an enormous CSV file
 consisting of point coordinates.
 
-cut_todo.pl
+filter_points.pl
 	Extract points inside a polygon specified by a osmosis' poly file.
-	Can be used to make regional extracts of planet.gpx.
+	Can be used to make a regional extract of planet.gpx.
+
+filter-points-multi.pl
+	Similar to filter_points.pl, but processes several poly files
+	(creating several output files) at once. Useful for making regional
+	extracts.
 
 gpx2bitiles.pl
 	Renders planet.gpx or its part into "bitiles": bit arrays that can
@@ -15,3 +20,57 @@ clean_bitiles.pl
 
 bitiles2png.pl
 	Convert bitiles to png images and generate low zoom tiles from them.
+
+
+EXAMPLES
+
+1. Make a regional extract for Austria.
+
+xz -cdv gps-points.csv.xz | perl filter-points.pl -p austria.poly | xz > austria.csv.xz
+
+Result: austria.csv.xz with every point that lies inside austria.poly polygon.
+
+
+2. Make regional extracts for Austria and Germany simultaneously.
+
+Create a file regions.lst with the following two lines:
+
+poly/europe/austria.poly
+poly/europe/germany.poly
+
+Run a script:
+
+xz -cdv gps-points.csv.xz | perl filter-points-multi.pl -l regions.lst -o extracts -z
+
+Result: two files in "extracts" directory, austria.csv.gz and germany.csv.gz
+(gzipped because of -z switch).
+
+
+3. Create zoom 12 bitiles for Australia.
+
+xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12
+
+
+4. The same, but in three processes.
+
+Run the following commands simultaneously (in different windows or processes):
+
+xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12 -t 1,3
+xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12 -t 2,3
+xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12 -t 3,3
+
+
+5. Remove noise from generated bitiles.
+
+perl clean_bitiles.pl -i ausbitiles -o acbitiles
+
+
+6. Create PNG tiles for Australia, zooms 3 to 12.
+
+perl bitiles2png.pl -i acbitiles -o austiles -z 12 -u 3 -v
+
+
+7. Create PNG tiles for Sydney with light green dots,
+   also write empty tiles where there are no points.
+
+perl bitiles2png.pl -i acbitiles -o sydneytiles -b 150.8,-34.1,151.4,-33.6 -z 12 -u 3 -c 0,255,0 -e -v

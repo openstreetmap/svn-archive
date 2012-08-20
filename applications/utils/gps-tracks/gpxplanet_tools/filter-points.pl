@@ -40,15 +40,14 @@ if( $polyfile ) {
 }
 elsif( $bbox ) {
     # simply set minlat, maxlat etc from bbox parameter - no polygons
-    ($minlat, $minlon, $maxlat, $maxlon) = split(",", $bbox);
-    die ("badly formed bounding box - use four comma-separated values for ".
-        "bottom left latitude, bottom left longitude, top right latitude, ".
-        "top right longitude") unless defined($maxlon);
+    ($minlon, $minlat, $maxlon, $maxlat) = split(",", $bbox);
+    die ("badly formed bounding box - use four comma-separated values for left longitude, ".
+        "bottom latitude, right longitude, top latitude") unless defined($maxlat);
     die ("max longitude is less than min longitude") if ($maxlon < $minlon);
     die ("max latitude is less than min latitude") if ($maxlat < $minlat);
 }
 else {
-    die "Please specify either bounding box or polygon file.";
+    usage("Please specify either bounding box or polygon file.");
 }
 
 $minlat *= $factor;
@@ -136,6 +135,9 @@ sub read_poly {
 }
 
 sub usage {
+    my ($msg) = @_;
+    print STDERR "$msg\n\n" if defined($msg);
+
     my $prog = basename($0);
     print STDERR << "EOF";
 This script receives CSV file of "lat,lon" and filters it by bounding

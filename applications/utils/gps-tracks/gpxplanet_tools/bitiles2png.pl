@@ -44,16 +44,16 @@ if( $help ) {
 
 usage("Please specify input directory with -i") unless defined($source_dir);
 die "Source directory not found" unless -d $source_dir;
-$zoom = find_zoom($source_dir) unless defined($zoom);
-
 $dest_dir = $source_dir unless defined($dest_dir);
-$uptozoom = $zoom unless defined($uptozoom) && $uptozoom <= $zoom;
+
+$zoom = find_zoom($source_dir) unless defined($zoom);
+$uptozoom = $zoom unless defined($uptozoom) && $uptozoom <= $zoom && $uptozoom >= 0;
 $uptozoom = 0 if $zoom0;
 
+die "Colour should be three comma-separated numbers: r,g,b" unless $colour_str =~ /^\d{1,3},\d{1,3},\d{1,3}$/;
 my @colour = split(",", $colour_str);
-die "Colour should be three comma-separated numbers: r,g,b" unless $#colour == 2;
 
-set_tile_bounds($bbox_str) if( $bbox_str );
+set_tile_bounds($bbox_str) if $bbox_str;
 
 my $xmin;
 my $ymin;

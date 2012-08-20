@@ -57,12 +57,15 @@ while(<LIST>) {
 close LIST;
 
 open CSV, "<$infile" or die "Cannot open $infile: $!\n";
+my $lastline = '';
 while(<CSV>) {
     if (/^(-?\d+),(-?\d+),(-?\d+(?:\.\d+)?)/)
     {
+        next if $nodupes && ($lastline eq $_);
         for my $poly (@polygons) {
-            $poly->[0]->print($_) if (!$nodupes || ($lastline ne $_)) && is_in_poly($poly->[1], $1, $2);
+            $poly->[0]->print($_) if is_in_poly($poly->[1], $1, $2);
         }
+        $lastline = $_;
     }
 }
 close CSV;

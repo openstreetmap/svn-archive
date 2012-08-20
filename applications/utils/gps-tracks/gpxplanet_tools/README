@@ -1,5 +1,5 @@
 These tools are for processing planet.gpx, an enormous CSV file
-consisting of point coordinates.
+consisting of point coordinates. Get it at http://planet.osm.org/gps/
 
 filter_points.pl
 	Extract points inside a polygon specified by a osmosis' poly file.
@@ -74,3 +74,10 @@ perl bitiles2png.pl -i acbitiles -o austiles -z 12 -u 3 -v
    also write empty tiles where there are no points.
 
 perl bitiles2png.pl -i acbitiles -o sydneytiles -b 150.8,-34.1,151.4,-33.6 -z 12 -u 3 -c 0,255,0 -e -v
+
+
+AUTHOR
+
+Written by Ilya Zverev. All scripts are under WTFPL license: you can
+do whatever you want with them. Please do not make regional extracts
+or tiles of your cat. Thanks.

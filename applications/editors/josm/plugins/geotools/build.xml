@@ -78,9 +78,6 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-        <copy todir="${plugin.build.dir}/lib">
-            <fileset dir="lib"/>
-        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README"/>

@@ -87,14 +87,8 @@ sub getPhotos
 				}
 				eval
 				{
-					my $x;
-					my $image = Image::Magick->new();
-					die if !$image;
-					open(IMAGE, '>:raw', "$CacheDir/tmp.$ext") or die;
-					print IMAGE $Data;
-					close(IMAGE);
-					$x = $image->Read(filename=>"$CacheDir/tmp.$ext") and die $x;
-					unlink "$CacheDir/tmp.$ext";
+					my $image = Image::Magick->new() or die;
+					my $x = $image->BlobToImage($Data) and die $x;
 					# Calcuate image size
 					my ($W, $H, $scale) = getsize($image->Get('width', 'height'));
 

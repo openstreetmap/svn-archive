@@ -17,6 +17,7 @@ my $factor = 10**7; # number by which all coordinates in source CSV are multipli
 my $tile_folder;
 my $zoom;
 my $bbox_str = '-180,-85,180,85';
+#my $bbox_str = '27.4,50,62,63'; # Russia z11..z14 http://www.openstreetmap.org/?box=yes&bbox=27.4,50,62,63
 
 my $help;
 my $verbose;
@@ -65,7 +66,7 @@ if( defined($thread_str) ) {
   my $bxwidth = $bxmax - $bxmin + 1;
   die("Total number of threads is higher than horizontal number of tiles") if $total > $bxwidth;
   my $width = int(($bxwidth + $total - 1) / $total);
-  $xmintile = ($thread-1) * $width;
+  $xmintile = $bxmin + ($thread-1) * $width;
   $xmaxtile = $xmintile + $width - 1;
   # print STDERR "Thread $thread: width=$width (of $bxwidth, $bxmin..$bxmax), $xmintile..$xmaxtile\n"; exit;
 }

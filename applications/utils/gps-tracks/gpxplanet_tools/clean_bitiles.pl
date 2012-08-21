@@ -15,14 +15,15 @@ my $dest_dir;
 my $help;
 my $verbose;
 my $maxpixels = 64;
-my $threshold = 6;
+my $threshold;
+my $threshold_m = 300;
 
 GetOptions('h|help' => \$help,
            'v|verbose' => \$verbose,
            'i|input=s' => \$source_dir,
            'o|output=s' => \$dest_dir,
            'p|pixels=i' => \$maxpixels,
-           't|threshold=i' => \$threshold,
+           't|threshold=i' => \$threshold_m,
            ) || usage();
 
 if( $help ) {
@@ -46,6 +47,11 @@ for my $z (@zlist) {
   closedir($dh);
   next if $#xlist < 0;
   print STDERR "Processing zoom $z" if $verbose;
+  
+  my $resolution = 156543.04 * 0.5 / (2**$z); # meters/pixel at 60 degrees lat
+  $threshold = int($threshold_m / $resolution);
+  $threshold = 64 if $threshold > 64;
+  $threshold = 2 if $threshold < 2;
 
   for my $x (@xlist) {
     my $folder = "$source_dir/$z/$x";
@@ -132,7 +138,8 @@ usage: $prog [-h] [-v] -i source -o target [-p pixels] [-t threshold]
  -i source    : directory with bitiles.
  -o target    : directory to store processed bitiles.
  -p pixels    : maximal number of pixels to start cleaning procedure ($maxpixels).
- -t threshold : radius of an empty area around a pixel to remove it ($threshold).
+ -t threshold : radius of an empty area around a pixel to remove it (in meters,
+                default is $threshold).
  -v           : display progress.
 
 EOF

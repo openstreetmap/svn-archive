@@ -29,6 +29,7 @@
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="FastDraw"/>
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
+        <ant antfile="build.xml" target="dist" dir="geotools"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
@@ -119,6 +120,7 @@
         <ant antfile="build.xml" target="clean" dir="ext_tools"/>
         <ant antfile="build.xml" target="clean" dir="FastDraw"/>
         <ant antfile="build.xml" target="clean" dir="FixAddresses"/>
+        <ant antfile="build.xml" target="clean" dir="geotools"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>

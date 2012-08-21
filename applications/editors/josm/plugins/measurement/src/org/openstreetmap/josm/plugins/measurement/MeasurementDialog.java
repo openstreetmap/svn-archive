@@ -132,11 +132,11 @@ public class MeasurementDialog extends ToggleDialog {
                             segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
                             lastNode = n;
                         }
-                    } else if(p instanceof Way) {
+                    } else if (p instanceof Way) {
                         Way w = (Way)p;
                         Node lastN = null;
-                        for(Node n: w.getNodes()) {
-                            if(lastN != null) {
+                        for (Node n: w.getNodes()) {
+                            if (lastN != null && lastN.getCoor() != null && n.getCoor() != null) {
                                 length += lastN.getCoor().greatCircleDistance(n.getCoor());
                                 //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                                 area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))

@@ -88,7 +88,8 @@ sub getPhotos
 				eval
 				{
 					my $image = Image::Magick->new() or die;
-					my $x = $image->BlobToImage($Data) and die $x;
+					my $x;
+					$x = $image->BlobToImage($Data) and die $x;
 					# Calcuate image size
 					my ($W, $H, $scale) = getsize($image->Get('width', 'height'));
 

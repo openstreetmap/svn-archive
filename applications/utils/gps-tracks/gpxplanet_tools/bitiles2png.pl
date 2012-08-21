@@ -256,9 +256,8 @@ sub clean_bitiles {
 sub set_tile_bounds {
     my $bbox_str = shift;
     my @bbox = split(",", $bbox_str);
-    die("badly formed bounding box - use four comma-separated values for ".
-       "bottom left latitude, bottom left longitude, top right latitude, ".
-       "top right longitude") unless $#bbox == 3;
+    die ("badly formed bounding box - use four comma-separated values for left longitude, ".
+        "bottom latitude, right longitude, top latitude") unless $#bbox == 3;
     die("max longitude is less than min longitude") if ($bbox[2] < $bbox[0]);
     die("max latitude is less than min latitude") if ($bbox[3] < $bbox[1]);
     

@@ -42,9 +42,8 @@ usage("Please specify output directory with -o") unless defined($tile_folder);
 usage("Please specify zoom level with -z") unless defined($zoom);
 
 my @bbox = split(",", $bbox_str);
-die("badly formed bounding box - use four comma-separated values for ".
-   "bottom left latitude, bottom left longitude, top right latitude, ".
-   "top right longitude") unless $#bbox == 3;
+die ("badly formed bounding box - use four comma-separated values for left longitude, ".
+    "bottom latitude, right longitude, top latitude") unless $#bbox == 3;
 die("max longitude is less than min longitude") if ($bbox[2] < $bbox[0]);
 die("max latitude is less than min latitude") if ($bbox[3] < $bbox[1]);
 
@@ -68,7 +67,6 @@ if( defined($thread_str) ) {
   my $width = int(($bxwidth + $total - 1) / $total);
   $xmintile = $bxmin + ($thread-1) * $width;
   $xmaxtile = $xmintile + $width - 1;
-  # print STDERR "Thread $thread: width=$width (of $bxwidth, $bxmin..$bxmax), $xmintile..$xmaxtile\n"; exit;
 }
 
 my $count = 0;

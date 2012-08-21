@@ -59,7 +59,7 @@ open CSV, "<$infile" or die "Cannot open $infile: $!\n";
 open OUT, ">$outfile" or die "Cannot open $outfile for writing: $!\n";
 my $lastline = '';
 while(<CSV>) {
-    if (/^(-?\d+),(-?\d+),(-?\d+(?:\.\d+)?)/)
+    if (/^(-?\d+),(-?\d+)/)
     {
         print OUT if (!$nodupes || ($lastline ne $_)) && is_in_poly($1, $2);
         $lastline = $_;
@@ -114,10 +114,10 @@ sub read_poly {
         {
             my $pol = Math::Polygon->new(points => $currentpoints);
             push(@{$borderpolys}, [$pol,$invert,[$pol->bbox]]) unless $pol->nrPoints == 0;
-                printf STDERR "Added polygon: %d points (%d,%d)-(%d,%d) %s\n",
-                    $borderpolys->[-1][0]->nrPoints,
-                    @{$borderpolys->[-1][2]},
-                    ($borderpolys->[-1][1] ? "exclude" : "include") unless $pol->nrPoints == 0;
+#                printf STDERR "Added polygon: %d points (%d,%d)-(%d,%d) %s\n",
+#                    $borderpolys->[-1][0]->nrPoints,
+#                    @{$borderpolys->[-1][2]},
+#                    ($borderpolys->[-1][1] ? "exclude" : "include") unless $pol->nrPoints == 0;
             undef $currentpoints;
         }
         elsif (defined($currentpoints))

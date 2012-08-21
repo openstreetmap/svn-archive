@@ -59,7 +59,7 @@ close LIST;
 open CSV, "<$infile" or die "Cannot open $infile: $!\n";
 my $lastline = '';
 while(<CSV>) {
-    if (/^(-?\d+),(-?\d+),(-?\d+(?:\.\d+)?)/)
+    if (/^(-?\d+),(-?\d+)/)
     {
         next if $nodupes && ($lastline eq $_);
         for my $poly (@polygons) {

@@ -312,7 +312,7 @@
     
     <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
           <classpath>
-            <fileset dir="lib/jaxb-ri-20120218" includes="*.jar" />
+            <fileset dir="lib/jaxb" includes="*.jar" />
           </classpath>
     </taskdef>
     <target name="xjc_neptune">

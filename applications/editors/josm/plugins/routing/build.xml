@@ -29,7 +29,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="added one-way support in roundabouts"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5464"/>
 
     <!--
     **********************************************************

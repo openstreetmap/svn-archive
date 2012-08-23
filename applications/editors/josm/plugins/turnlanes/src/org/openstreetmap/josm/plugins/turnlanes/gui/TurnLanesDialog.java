@@ -17,7 +17,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -39,7 +38,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 
-public class TurnLanesDialog extends ToggleDialog {
+public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeListener, SelectionChangedListener {
     private class EditAction extends JosmAction {
         private static final long serialVersionUID = 4114119073563457706L;
         
@@ -151,31 +150,8 @@ public class TurnLanesDialog extends ToggleDialog {
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
         
-        MapView.addEditLayerChangeListener(new EditLayerChangeListener() {
-            @Override
-            public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
-                if (oldLayer != null) {
-                    oldLayer.data.removeDataSetListener(dataSetListener);
-                }
-                
-                if (newLayer != null) {
-                    newLayer.data.addDataSetListener(dataSetListener);
-                }
-            }
-        });
-        
-        DataSet.addSelectionListener(new SelectionChangedListener() {
-            @Override
-            public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-                if (selected.equals(new HashSet<OsmPrimitive>(newSelection))) {
-                    return;
-                }
-                selected.clear();
-                selected.addAll(newSelection);
-                
-                refresh();
-            }
-        });
+        MapView.addEditLayerChangeListener(this);
+        DataSet.addSelectionListener(this);
         
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
         final ButtonGroup group = new ButtonGroup();
@@ -215,4 +191,33 @@ public class TurnLanesDialog extends ToggleDialog {
             junctionPane.setJunction(new GuiContainer(mc));
         }
     }
+
+	@Override
+	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+        if (oldLayer != null) {
+            oldLayer.data.removeDataSetListener(dataSetListener);
+        }
+        
+        if (newLayer != null) {
+            newLayer.data.addDataSetListener(dataSetListener);
+        }
+	}
+
+	@Override
+	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        if (selected.equals(new HashSet<OsmPrimitive>(newSelection))) {
+            return;
+        }
+        selected.clear();
+        selected.addAll(newSelection);
+        
+        refresh();
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+        MapView.removeEditLayerChangeListener(this);
+        DataSet.removeSelectionListener(this);
+	}
 }

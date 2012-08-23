@@ -222,8 +222,8 @@ public class CommandLine extends Plugin {
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
 	{
+		currentMapFrame = newFrame;
 		if (oldFrame == null && newFrame != null) {
-			currentMapFrame = newFrame;
 			JToolBar tb = new JToolBar();
 			tb.setLayout(new BorderLayout());
 			tb.setFloatable(false);

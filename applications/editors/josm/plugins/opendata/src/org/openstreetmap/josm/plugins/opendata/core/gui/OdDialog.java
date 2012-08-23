@@ -140,5 +140,6 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
     public void destroy() {
         super.destroy();
         MapView.removeLayerChangeListener(this);
+        MapView.removeEditLayerChangeListener(this);
     }
 }

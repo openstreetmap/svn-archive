@@ -46,10 +46,9 @@ public class EditGpxPlugin extends Plugin {
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if(oldFrame == null && newFrame != null) {
-            mode.setFrame(newFrame);
-
-            if(Main.map != null)
+        mode.setFrame(newFrame);
+        if (oldFrame == null && newFrame != null) {
+            if (Main.map != null)
                 Main.map.addMapMode(btn);
         }
     }

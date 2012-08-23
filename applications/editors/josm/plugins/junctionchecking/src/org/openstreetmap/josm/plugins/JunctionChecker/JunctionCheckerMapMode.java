@@ -137,21 +137,23 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
 	 * Draw a selection rectangle on screen.
 	 */
 	private void paintRect(Point p1, Point p2) {
-		Graphics g = frame.getGraphics();//Main.map.mapView.getGraphics();
-
-		Rectangle r = oldRect;
-		if (r != null) {
-			//overwrite old rct
+		if (frame != null) {
+			Graphics g = frame.getGraphics();
+	
+			Rectangle r = oldRect;
+			if (r != null) {
+				//overwrite old rct
+				g.setXORMode(Color.BLACK);
+				g.setColor(Color.WHITE);
+				g.drawRect(r.x,r.y,r.width,r.height);
+			}
+	
 			g.setXORMode(Color.BLACK);
 			g.setColor(Color.WHITE);
+			r = createRect(p1,p2);
 			g.drawRect(r.x,r.y,r.width,r.height);
+			oldRect = r;
 		}
-
-		g.setXORMode(Color.BLACK);
-		g.setColor(Color.WHITE);
-		r = createRect(p1,p2);
-		g.drawRect(r.x,r.y,r.width,r.height);
-		oldRect = r;
 	}
 
 	public ChannelDiGraph getDigraph() {
@@ -160,5 +162,11 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
 
 	public void setDigraph(ChannelDiGraph digraph) {
 		this.digraph = digraph;
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		MapView.removeLayerChangeListener(this);
 	}
 }

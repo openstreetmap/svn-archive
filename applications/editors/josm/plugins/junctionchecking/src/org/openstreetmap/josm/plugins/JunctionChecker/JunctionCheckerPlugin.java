@@ -48,11 +48,11 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
 
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+		jcMapMode.setFrame(newFrame);
 		if (newFrame != null) {
 			junctionCheckDialog = new JunctionCheckDialog(this);
 			newFrame.addToggleDialog(junctionCheckDialog);
 			MapView.addLayerChangeListener(this);
-			jcMapMode.setFrame(newFrame);
 		} else
 			MapView.removeLayerChangeListener(this);
 	}

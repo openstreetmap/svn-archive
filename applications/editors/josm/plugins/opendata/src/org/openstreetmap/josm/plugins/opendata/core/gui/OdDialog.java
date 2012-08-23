@@ -22,6 +22,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.plugins.opendata.core.actions.ToolsAction;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdLayer;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -32,6 +33,7 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
     private final SideButton selectButton;
     private final SideButton downloadButton;
     private final SideButton diffButton;
+    private final SideButton toolsButton;
     
     private final List<SideButton> buttons;
     
@@ -82,7 +84,8 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 		this.buttons = Arrays.asList(new SideButton[] {
 				selectButton = new SideButton(new SelectAction()), 
 				downloadButton = new SideButton(new DownloadAction()), 
-				diffButton = new SideButton(new DiffAction())
+				diffButton = new SideButton(new DiffAction()),
+				toolsButton = new SideButton(new ToolsAction())
         });
 		
 		disableAllButtons();
@@ -132,4 +135,10 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 	@Override
 	public void layerRemoved(Layer oldLayer) {
 	}
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        MapView.removeLayerChangeListener(this);
+    }
 }

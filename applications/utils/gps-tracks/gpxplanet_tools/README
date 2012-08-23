@@ -21,6 +21,8 @@ clean_bitiles.pl
 bitiles2png.pl
 	Convert bitiles to png images and generate low zoom tiles from them.
 
+You can create antialiased low zoom tiles using https://github.com/AMDmi3/tiletool
+
 
 EXAMPLES
 

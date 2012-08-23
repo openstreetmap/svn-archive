@@ -87,6 +87,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             MapView.removeLayerChangeListener(this);
             UploadAction.unregisterUploadHook(uploadHook);
             uploadHook = null;
+            dialog = null;
         }
     }
 

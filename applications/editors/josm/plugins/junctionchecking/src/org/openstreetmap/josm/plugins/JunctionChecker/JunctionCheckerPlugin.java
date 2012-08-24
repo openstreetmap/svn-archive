@@ -27,105 +27,104 @@ import org.openstreetmap.josm.plugins.JunctionChecker.util.RelationProducer;
  */
 public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener{
 
-	private static final String COLORSCHEMEFILTERFILE = "/resources/xml/colorscheme.xml";
-	private JunctionCheckDialog junctionCheckDialog;
-	private File pathDir;
-	private final RelationProducer relationproducer;
-	//Die benötigten Layer für JOSM
-	private OsmDataLayer osmlayer; //IN diesem Layer sind die Originaldaten gespiechert, aus denen der Channel-Digraph erzeugt wird
-	private ChannelDiGraphLayer channelDigraphLayer;
-	private final ColorSchemeXMLReader cXMLReaderMK;
-	private ChannelDiGraph channelDigraph;
-	private final JunctionCheckerMapMode jcMapMode;
-	private MapMode normalMapMode;
+    private static final String COLORSCHEMEFILTERFILE = "/resources/xml/colorscheme.xml";
+    private JunctionCheckDialog junctionCheckDialog;
+    private File pathDir;
+    private final RelationProducer relationproducer;
+    //Die benötigten Layer für JOSM
+    private OsmDataLayer osmlayer; //IN diesem Layer sind die Originaldaten gespiechert, aus denen der Channel-Digraph erzeugt wird
+    private ChannelDiGraphLayer channelDigraphLayer;
+    private final ColorSchemeXMLReader cXMLReaderMK;
+    private ChannelDiGraph channelDigraph;
+    private final JunctionCheckerMapMode jcMapMode;
+    private MapMode normalMapMode;
 
-	public JunctionCheckerPlugin(PluginInformation info) {
-		super(info);
-		jcMapMode = new JunctionCheckerMapMode(Main.map, "junctionchecking", tr("construct channel digraph and search for junctions"));
-		relationproducer = new RelationProducer(this);
-		cXMLReaderMK = new ColorSchemeXMLReader(COLORSCHEMEFILTERFILE);
-	}
+    public JunctionCheckerPlugin(PluginInformation info) {
+        super(info);
+        jcMapMode = new JunctionCheckerMapMode(Main.map, "junctionchecking", tr("construct channel digraph and search for junctions"));
+        relationproducer = new RelationProducer(this);
+        cXMLReaderMK = new ColorSchemeXMLReader(COLORSCHEMEFILTERFILE);
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		jcMapMode.setFrame(newFrame);
-		if (newFrame != null) {
-			junctionCheckDialog = new JunctionCheckDialog(this);
-			newFrame.addToggleDialog(junctionCheckDialog);
-			MapView.addLayerChangeListener(this);
-		} else
-			MapView.removeLayerChangeListener(this);
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        jcMapMode.setFrame(newFrame);
+        if (newFrame != null) {
+            junctionCheckDialog = new JunctionCheckDialog(this);
+            newFrame.addToggleDialog(junctionCheckDialog);
+            MapView.addLayerChangeListener(this);
+        } else
+            MapView.removeLayerChangeListener(this);
+    }
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if (newLayer instanceof OsmDataLayer) {
-			this.getJunctionCheckDialog().setActivateCreateDigraph(true);
-			this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
-			if (normalMapMode != null) {
-				Main.map.selectMapMode(normalMapMode);
-			}
-		}
-		if (newLayer == channelDigraphLayer) {
-			this.getJunctionCheckDialog().setActivateCreateDigraph(false);
-			this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(true);
-			Main.map.selectMapMode(jcMapMode);
-		}
-	}
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        if (newLayer instanceof OsmDataLayer) {
+            this.getJunctionCheckDialog().setActivateCreateDigraph(true);
+            this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
+            if (normalMapMode != null) {
+                Main.map.selectMapMode(normalMapMode);
+            }
+        } else if (newLayer instanceof ChannelDiGraphLayer) {
+            this.getJunctionCheckDialog().setActivateCreateDigraph(false);
+            this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(true);
+            Main.map.selectMapMode(jcMapMode);
+        }
+    }
 
-	public void layerAdded(Layer newLayer) {
-	}
+    public void layerAdded(Layer newLayer) {
+    }
 
-	public void layerRemoved(Layer oldLayer) {
-		if (oldLayer == channelDigraphLayer) {
-			channelDigraphLayer = null;
-			this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
-			return;
-		}
-		else {
-			this.getJunctionCheckDialog().setActivateCreateDigraph(false);
-		}
-	}
+    public void layerRemoved(Layer oldLayer) {
+        if (oldLayer == channelDigraphLayer) {
+            channelDigraphLayer = null;
+            this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
+            return;
+        }
+        else {
+            this.getJunctionCheckDialog().setActivateCreateDigraph(false);
+        }
+    }
 
-	public ChannelDiGraphLayer getChannelDigraphLayer() {
-		if (channelDigraphLayer == null) {
-			channelDigraphLayer = new ChannelDiGraphLayer(cXMLReaderMK);
-		}
-		return channelDigraphLayer;
-	}
+    public ChannelDiGraphLayer getChannelDigraphLayer() {
+        if (channelDigraphLayer == null) {
+            channelDigraphLayer = new ChannelDiGraphLayer(cXMLReaderMK);
+        }
+        return channelDigraphLayer;
+    }
 
-	public JunctionCheckDialog getJunctionCheckDialog() {
-		return junctionCheckDialog;
-	}
+    public JunctionCheckDialog getJunctionCheckDialog() {
+        return junctionCheckDialog;
+    }
 
-	public File getPathDir() {
-		return pathDir;
-	}
+    public File getPathDir() {
+        return pathDir;
+    }
 
-	public OsmDataLayer getOsmlayer() {
-		return osmlayer;
-	}
+    public OsmDataLayer getOsmlayer() {
+        return osmlayer;
+    }
 
-	public void setOsmlayer(OsmDataLayer osmlayer) {
-		this.osmlayer = osmlayer;
-	}
+    public void setOsmlayer(OsmDataLayer osmlayer) {
+        this.osmlayer = osmlayer;
+    }
 
-	public RelationProducer getRelationProducer() {
-		return relationproducer;
-	}
+    public RelationProducer getRelationProducer() {
+        return relationproducer;
+    }
 
-	public ChannelDiGraph getChannelDigraph() {
-		return channelDigraph;
-	}
+    public ChannelDiGraph getChannelDigraph() {
+        return channelDigraph;
+    }
 
-	public void setChannelDigraph(ChannelDiGraph channelDigraph) {
-		this.channelDigraph = channelDigraph;
-	}
+    public void setChannelDigraph(ChannelDiGraph channelDigraph) {
+        this.channelDigraph = channelDigraph;
+    }
 
-	public JunctionCheckerMapMode getJcMapMode() {
-		return jcMapMode;
-	}
+    public JunctionCheckerMapMode getJcMapMode() {
+        return jcMapMode;
+    }
 
-	public void setNormalMapMode(MapMode mm) {
-		normalMapMode = mm;
-	}
+    public void setNormalMapMode(MapMode mm) {
+        normalMapMode = mm;
+    }
 }

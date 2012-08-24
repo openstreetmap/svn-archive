@@ -140,7 +140,9 @@ public class MeasurementLayer extends Layer {
         }
         DecimalFormat nf = new DecimalFormat("#0.00");
         DecimalFormat nf2 = new DecimalFormat("#0.0");
-        MeasurementPlugin.measurementDialog.pathLengthLabel.setText(pathLength < 800?nf2.format(pathLength) + " m":nf.format(pathLength/1000) + " km");
+        if (MeasurementPlugin.measurementDialog != null) { 
+            MeasurementPlugin.measurementDialog.pathLengthLabel.setText(pathLength < 800?nf2.format(pathLength) + " m":nf.format(pathLength/1000) + " km");
+        }
     }
 
     public static double calcX(LatLon p1){

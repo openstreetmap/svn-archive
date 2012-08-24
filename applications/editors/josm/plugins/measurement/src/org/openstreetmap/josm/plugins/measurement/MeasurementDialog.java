@@ -31,7 +31,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog {
+public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -58,7 +58,7 @@ public class MeasurementDialog extends ToggleDialog {
      * The measurement label for the segment angle, actually updated, if 2 nodes are selected
      */
     protected JLabel segAngleLabel;
-
+    
     /**
      * Constructor
      */
@@ -111,52 +111,8 @@ public class MeasurementDialog extends ToggleDialog {
         createLayout(valuePanel, false, Arrays.asList(new SideButton[] {
             resetButton
         }));
-
-        final MeasurementDialog dlg = this;
-
-        DataSet.addSelectionListener(new SelectionChangedListener() {
-            @Override
-            public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
-                double length = 0.0;
-                double segAngle = 0.0;
-                double area = 0.0;
-                Node lastNode = null;
-                for(OsmPrimitive p:arg0) {
-                    // ignore incomplete nodes
-                    if(p instanceof Node && !((Node)p).isIncomplete()) {
-                        Node n =(Node)p;
-                        if(lastNode == null) {
-                            lastNode = n;
-                        } else {
-                            length += lastNode.getCoor().greatCircleDistance(n.getCoor());
-                            segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
-                            lastNode = n;
-                        }
-                    } else if (p instanceof Way) {
-                        Way w = (Way)p;
-                        Node lastN = null;
-                        for (Node n: w.getNodes()) {
-                            if (lastN != null && lastN.getCoor() != null && n.getCoor() != null) {
-                                length += lastN.getCoor().greatCircleDistance(n.getCoor());
-                                //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
-                                area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
-                                - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
-                                segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
-                            }
-                            lastN = n;
-                        }
-                        if (lastN != null && lastN == w.getNodes().iterator().next())
-                            area = Math.abs(area / 2);
-                        else
-                            area = 0;
-                    }
-                }
-                dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
-
-                dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");
-                dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
-            }
-        });
+        
+        DataSet.addSelectionListener(this);
     }
 
     /**
@@ -165,4 +121,54 @@ public class MeasurementDialog extends ToggleDialog {
     public void resetValues(){
         MeasurementPlugin.getCurrentLayer().reset();
     }
+
+	@Override
+	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        double length = 0.0;
+        double segAngle = 0.0;
+        double area = 0.0;
+        Node lastNode = null;
+        for (OsmPrimitive p : newSelection) {
+            // ignore incomplete nodes
+            if (p instanceof Node && !((Node)p).isIncomplete()) {
+                Node n =(Node)p;
+                if (lastNode == null) {
+                    lastNode = n;
+                } else {
+                    length += lastNode.getCoor().greatCircleDistance(n.getCoor());
+                    segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
+                    lastNode = n;
+                }
+            } else if (p instanceof Way) {
+                Way w = (Way)p;
+                Node lastN = null;
+                for (Node n: w.getNodes()) {
+                    if (lastN != null && lastN.getCoor() != null && n.getCoor() != null) {
+                        length += lastN.getCoor().greatCircleDistance(n.getCoor());
+                        //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
+                        area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
+                        - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
+                        segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
+                    }
+                    lastN = n;
+                }
+                if (lastN != null && lastN == w.getNodes().iterator().next())
+                    area = Math.abs(area / 2);
+                else
+                    area = 0;
+            }
+        }
+        selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
+        segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");
+        selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#destroy()
+	 */
+	@Override
+	public void destroy() {
+		super.destroy();
+		DataSet.removeSelectionListener(this);
+	}
 }

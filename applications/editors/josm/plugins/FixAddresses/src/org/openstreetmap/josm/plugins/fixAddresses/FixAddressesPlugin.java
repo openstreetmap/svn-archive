@@ -26,7 +26,6 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectIncompleteA
  * The Class FixAddressesPlugin is the main entry point for the plugin.
  */
 public class FixAddressesPlugin extends Plugin {
-	private static IncompleteAddressesDialog incompleteAddrDlg;
 	private static FixAddressesPreferences preferences;
 
 	/**
@@ -54,15 +53,11 @@ public class FixAddressesPlugin extends Plugin {
 	 */
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		// TODO Auto-generated method stub
-		super.mapFrameInitialized(oldFrame, newFrame);
-
 		if (newFrame != null) {
-			incompleteAddrDlg = new IncompleteAddressesDialog();
 			FixAddressesMapMode faMode = new FixAddressesMapMode(Main.map);
 			IconToggleButton faModeButton = new IconToggleButton(faMode);
 			faModeButton.setVisible(true);
-			newFrame.addToggleDialog(incompleteAddrDlg);
+			newFrame.addToggleDialog(new IncompleteAddressesDialog());
 		}
 	}
 
@@ -70,13 +65,6 @@ public class FixAddressesPlugin extends Plugin {
 	public PreferenceSetting getPreferenceSetting() {
 		// TODO Auto-generated method stub
 		return getPreferences();
-	}
-
-	/**
-	 * @return the incompleteAddrDlg
-	 */
-	protected static IncompleteAddressesDialog getIncompleteAddrDlg() {
-		return incompleteAddrDlg;
 	}
 
 	/**

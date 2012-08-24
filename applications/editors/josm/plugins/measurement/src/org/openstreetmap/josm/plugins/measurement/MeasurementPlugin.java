@@ -20,22 +20,25 @@ public class MeasurementPlugin extends Plugin {
 
     public MeasurementPlugin(PluginInformation info) {
         super(info);
-        mode = new MeasurementMode(Main.map, "measurement", tr("measurement mode"));
-        btn = new IconToggleButton(mode);
-        btn.setVisible(true);
-        measurementDialog = new MeasurementDialog();
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if(newFrame != null)
-            newFrame.addToggleDialog(measurementDialog);
-        if(Main.map != null)
-            Main.map.addMapMode(btn);
+        if (newFrame != null) {
+            newFrame.addToggleDialog(measurementDialog = new MeasurementDialog());
+            mode = new MeasurementMode(newFrame, "measurement", tr("measurement mode"));
+            btn = new IconToggleButton(mode);
+            btn.setVisible(true);
+            newFrame.addMapMode(btn);
+        } else {
+        	btn = null;
+        	mode = null;
+        	measurementDialog = null;
+        }
     }
 
-    public static MeasurementLayer getCurrentLayer(){
-        if(currentLayer == null){
+    public static MeasurementLayer getCurrentLayer() {
+        if (currentLayer == null) {
             currentLayer = new MeasurementLayer(tr("Measurements"));
             Main.main.addLayer(currentLayer);
             MapView.addLayerChangeListener(new LayerChangeListener(){

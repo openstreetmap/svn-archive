@@ -162,10 +162,4 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
         }
 
     }
-
-    public JCheckBoxMenuItem getWindowMenuItem() {
-        return windowMenuItem;
-    }
-
-
 }

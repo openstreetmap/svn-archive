@@ -78,7 +78,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 	/**
 	 * The side dialog where nodes are listed
 	 */
-	private final RoutingDialog routingDialog;
+	private RoutingDialog routingDialog;
 
 	/**
 	 * Preferences Settings Dialog.
@@ -146,8 +146,6 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 		}
 		logger.debug("Loading routing plugin...");
 		preferenceSettings=new RoutingPreferenceDialog();
-		// Create side dialog
-		routingDialog = new RoutingDialog();
 		// Initialize layers list
 		layers = new ArrayList<RoutingLayer>();
 		// Add menu
@@ -187,7 +185,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 	 */
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if(newFrame != null) {
+		if (newFrame != null) {
 			// Create plugin map modes
 			addRouteNodeAction = new AddRouteNodeAction(newFrame);
 			removeRouteNodeAction = new RemoveRouteNodeAction(newFrame);
@@ -204,7 +202,15 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 			newFrame.addMapMode(moveRouteNodeButton);
 			// Enable menu
 			menu.enableStartItem();
-			newFrame.addToggleDialog(routingDialog);
+			newFrame.addToggleDialog(routingDialog = new RoutingDialog());
+		} else {
+			addRouteNodeAction = null;
+			removeRouteNodeAction = null;
+			moveRouteNodeAction = null;
+			addRouteNodeButton = null;
+			removeRouteNodeButton = null;
+			moveRouteNodeButton = null;
+			routingDialog = null;
 		}
 	}
 
@@ -215,11 +221,15 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 		if (newLayer instanceof RoutingLayer) {			/*   show Routing toolbar and dialog window  */
 			menu.enableRestOfItems();
-			routingDialog.showDialog();
-			routingDialog.refresh();
+			if (routingDialog != null) {
+				routingDialog.showDialog();
+				routingDialog.refresh();
+			}
 		}else{											/*   hide Routing toolbar and dialog window  */
 			menu.disableRestOfItems();
-			routingDialog.hideDialog();
+			if (routingDialog != null) {
+				routingDialog.hideDialog();
+			}
 		}
 	}
 
@@ -266,7 +276,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 			}
 		}
 		// Reload RoutingDialog table model
-		routingDialog.refresh();
+		if (routingDialog != null) {
+			routingDialog.refresh();
+		}
 	}
 
 	public void processDatasetEvent(AbstractDatasetChangedEvent event){

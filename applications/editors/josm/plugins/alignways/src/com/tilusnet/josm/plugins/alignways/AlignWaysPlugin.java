@@ -2,8 +2,6 @@ package com.tilusnet.josm.plugins.alignways;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.JMenuItem;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.IconToggleButton;
@@ -19,12 +17,11 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class AlignWaysPlugin extends Plugin {
 
-    static AlignWaysMode awMode;
-    private final IconToggleButton btn;
-    static JMenuItem alignWaysMenuItem;
-    static JosmAction awAction;
-    static AlignWaysDialog awDialog;
-    static IconToggleButton optBtn;
+    private static AlignWaysMode awMode;
+    private static IconToggleButton btn;
+    private static JosmAction awAction;
+    private static AlignWaysDialog awDialog;
+    private static IconToggleButton optBtn;
 
     // The major version is e.g. used to decide when to trigger What's New windows
     public static final int AlignWaysMajorVersion = 2;
@@ -32,34 +29,26 @@ public class AlignWaysPlugin extends Plugin {
     public AlignWaysPlugin(PluginInformation info) {
         super(info);
         
-        // Construct the AlignWays mode toggle button
-        awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
-        btn = new IconToggleButton(awMode);
-        btn.setVisible(true);
-        
         // Add the action entries to the Tools Menu
         Main.main.menu.toolsMenu.addSeparator();
         awAction = new AlignWaysAction();
-        alignWaysMenuItem = MainMenu.add(Main.main.menu.toolsMenu, awAction);
-        
-        awDialog = new AlignWaysDialog(awMode);
-        // Prevent user clicking on the Windows menu entry while panel is meaningless
-        awDialog.getWindowMenuItem().setEnabled(false);
+        MainMenu.add(Main.main.menu.toolsMenu, awAction);
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if(newFrame != null) {
-            optBtn = newFrame.addToggleDialog(AlignWaysPlugin.getAwDialog());
+        if (newFrame != null) {
+            // Construct the AlignWays mode toggle button
+            awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
+            btn = new IconToggleButton(awMode);
+            btn.setVisible(true);
+            newFrame.addMapMode(btn);
+            optBtn = newFrame.addToggleDialog(awDialog = new AlignWaysDialog(awMode));
         } else {
-            // Disable menu item in Windows menu
-            awDialog.getWindowMenuItem().setEnabled(false);
-        }
-
-        if (Main.map != null) {
-            Main.map.addMapMode(btn);
-            // Re-enable menu item in Windows menu
-            awDialog.getWindowMenuItem().setEnabled(true);
+            awDialog = null;
+            optBtn = null;
+            btn = null;
+            awMode = null;
         }
     }
 
@@ -90,5 +79,4 @@ public class AlignWaysPlugin extends Plugin {
     public static IconToggleButton getOptBtn() {
         return optBtn;
     }
-
 }

@@ -128,8 +128,8 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
         }
     };
     
-    private final Action editAction = new EditAction();
-    private final Action validateAction = new ValidateAction();
+    private final JosmAction editAction = new EditAction();
+    private final JosmAction validateAction = new ValidateAction();
     
     private static final long serialVersionUID = -1998375221636611358L;
     
@@ -219,5 +219,7 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
 		super.destroy();
         MapView.removeEditLayerChangeListener(this);
         DataSet.removeSelectionListener(this);
+        editAction.destroy();
+        validateAction.destroy();
 	}
 }

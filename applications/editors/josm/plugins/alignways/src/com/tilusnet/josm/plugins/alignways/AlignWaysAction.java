@@ -57,7 +57,7 @@ public class AlignWaysAction extends JosmAction {
                         .equals(((AlignWaysCmdKeepLength) c).getPrevAffectedNodes()))) {
 
                     AlignWaysCmdKeepLength cmdAW;
-                    if (AlignWaysPlugin.awDialog.getAwOpt() == AligningModeOption.ALGN_OPT_KEEP_ANGLE) {
+                    if (AlignWaysPlugin.getAwDialog().getAwOpt() == AligningModeOption.ALGN_OPT_KEEP_ANGLE) {
                         cmdAW = new AlignWaysCmdKeepAngles();
                     } else {
                         cmdAW = new AlignWaysCmdKeepLength();

@@ -28,7 +28,7 @@ import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileLayer;
  * 
  */
 public class ElevationProfilePlugin extends Plugin {
-	protected static ElevationProfileDialog eleProfileDlg;
+	
 	private ElevationMapMode eleMode;
 	private IconToggleButton eleModeButton;
 	private static ElevationProfileLayer currentLayer;
@@ -41,8 +41,6 @@ public class ElevationProfilePlugin extends Plugin {
 		super(info);
 
 		try {
-			eleProfileDlg = new ElevationProfileDialog();
-			
 			eleMode = new ElevationMapMode("Elevation profile", Main.map);
 			eleModeButton = new IconToggleButton(eleMode);
 		} catch (Exception e1) {
@@ -61,13 +59,11 @@ public class ElevationProfilePlugin extends Plugin {
 		super.mapFrameInitialized(oldFrame, newFrame);
 		
 		if (newFrame != null) {
-			newFrame.addToggleDialog(eleProfileDlg);
-			eleProfileDlg.addModelListener(eleMode);			
-		}
-		
-		if(Main.map != null){
-			Main.map.toolGroup.add(eleModeButton);
+			newFrame.toolGroup.add(eleModeButton);
+			ElevationProfileDialog eleProfileDlg = new ElevationProfileDialog();
+			eleProfileDlg.addModelListener(eleMode);
 			eleProfileDlg.setProfileLayer(getCurrentLayer());
+			newFrame.addToggleDialog(eleProfileDlg);
 		}
 	}
 	

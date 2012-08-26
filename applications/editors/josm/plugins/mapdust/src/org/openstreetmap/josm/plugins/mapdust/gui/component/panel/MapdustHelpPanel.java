@@ -97,13 +97,13 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
      * tab
      */
     private String buildText() {
-        String version = Main.pref.get("mapdust.version");
-        String localVersion = Main.pref.get("mapdust.localVersion");
+        Integer version = Integer.decode(Main.pref.get("mapdust.version"));
+        Integer localVersion = Integer.decode(Main.pref.get("mapdust.localVersion"));
         String txt = "<html>";
         txt += "<font style='font-size:10px' face='Times New Roman'>";
         txt += "<b>You are using MapDust version ";
         txt += "<i style='color:red;font-size:10px'>";
-        if (version.equals(localVersion)) {
+        if (version <= localVersion) {
             txt += version + "</i>.</b><br>";
         } else {
             txt += localVersion + "</i>. There is an update available. ";

@@ -17,7 +17,6 @@ my $factor = 10**7; # number by which all coordinates in source CSV are multipli
 my $tile_folder;
 my $zoom;
 my $bbox_str = '-180,-85,180,85';
-#my $bbox_str = '27.4,50,62,63'; # Russia z11..z14 http://www.openstreetmap.org/?box=yes&bbox=27.4,50,62,63
 
 my $help;
 my $verbose;
@@ -73,7 +72,8 @@ my $count = 0;
 if( open(STATE, "<$state_file$thread") ) {
   my $line = <STATE>;
   close STATE;
-  $count = -$1 if $line =~ /^\d+/;
+  $count = -$1 if $line =~ /^(\d+)/;
+  print STDERR "Continuing from line $count\n" if $verbose;
 }
 
 open CSV, "<$infile" or die "Cannot open $infile: $!\n";

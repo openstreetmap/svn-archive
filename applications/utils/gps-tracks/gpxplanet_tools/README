@@ -61,6 +61,12 @@ xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles
 xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12 -t 2,3
 xz -cdv gps-points.csv.xz | perl gpx2bitiles.pl -b 112,-44,154,-10 -o ausbitiles -z 12 -t 3,3
 
+During its run, gpx2bitiles script creates temporary files gpx2bitiles.state*.
+Those files are needed in case something happens: processing a CSV file
+can take several days, and this is a mean to resume processing. If you have
+stopped the script and do not intend on resuming, do not forget to delete
+state files.
+
 
 5. Remove noise from generated bitiles.
 

@@ -94,9 +94,9 @@
             -->
             <manifest>
                 <attribute name="Author" value="Malcolm Herring"/>
-                <attribute name="Plugin-Class" value="smed.Smed"/>
+                <attribute name="Plugin-Class" value="smed2.Smed2"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Create and edit seamaps for OpenSeaMap"/>
+                <attribute name="Plugin-Description" value="Edit features for OpenSeaMap"/>
                 <attribute name="Plugin-Icon" value="images/Smed.png"/>
                 <attribute name="Plugin-Link" value="http://openseamap.org/"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

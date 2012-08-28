@@ -10,9 +10,6 @@ filter-points-multi.pl
 	(creating several output files) at once. Useful for making regional
 	extracts.
 
-filter-points-multi-xz.pl
-	The same as previous script, but compresses output files with xz.
-
 gpx2bitiles.pl
 	Renders planet.gpx or its part into "bitiles": bit arrays that can
 	later be rendered into regular png images.

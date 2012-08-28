@@ -58,7 +58,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         
         String url =  Main.pref.get("osm-server.url", null);
         if (url == null) {
-            url = OsmApiUrlInputPanel.defaulturl;
+            url = OsmApi.DEFAULT_API_URL;
         }
         
         CRC32 id = new CRC32();

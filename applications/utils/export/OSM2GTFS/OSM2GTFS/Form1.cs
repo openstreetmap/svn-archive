@@ -311,7 +311,8 @@ namespace OSM2GTFS
                         {
                             var wayMember = memberList[i];
                             if (!ways.ContainsKey(wayMember.RelationRef)) {
-                                MessageBox.Show("missing way");  // Debugger convenience breakpoint line
+                                LogMessage("Error in relation " + route.TagList["name"] + "; missing way ID " + wayMember.RelationRef.ToString(), true);
+                                return false;
                             }
                             var way = ways[wayMember.RelationRef];
 

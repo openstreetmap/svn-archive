@@ -20,7 +20,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.actions.SaveAsAction;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerSaveAsAction;
@@ -45,7 +44,7 @@ public class BoundsLayerSaveAsAction extends LayerSaveAsAction {
 	    	if (layer instanceof XmlBoundsLayer) {
 	    		return createAndOpenSaveFileChooser(tr("Save Imagery XML file"), XmlBoundsConstants.EXTENSION);
 	    	} else {
-	    		return SaveActionBase.openFileDialog(layer);
+	    		return null;
 	    	}
 	    }
 	}

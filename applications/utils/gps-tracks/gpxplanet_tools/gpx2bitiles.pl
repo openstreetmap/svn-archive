@@ -69,20 +69,21 @@ if( defined($thread_str) ) {
 }
 
 my $count = 0;
+my $ctarget = 0;
 if( open(STATE, "<$state_file$thread") ) {
   my $line = <STATE>;
   close STATE;
-  $count = -$1 if $line =~ /^(\d+)/;
-  print STDERR "Continuing from line $count\n" if $verbose;
+  $ctarget = $1 if $line =~ /^(\d+)/;
+  print STDERR "Continuing from line $ctarget\n" if $verbose;
 }
 
 open CSV, "<$infile" or die "Cannot open $infile: $!\n";
 while(<CSV>) {
   $count++;
-  next if $count <= 0;
+  next if $count < $ctarget;
   if( $count % 10000 == 0 && open(STATE, ">$state_file$thread") ) {
     print STDERR '.' if $verbose;
-    print STATE $count-1;
+    print STATE $count;
     close STATE;
   }
 

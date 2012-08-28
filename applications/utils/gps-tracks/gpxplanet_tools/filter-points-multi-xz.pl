@@ -3,14 +3,14 @@
 # This script filters gps-points csv file by a set of polygons.
 # Written by Ilya Zverev, licensed under WTFPL.
 # Poly reading sub is from extract_polygon.pl by Frederik Ramm.
+# This version writes xz files. Note that the module is in beta.
 
 use strict;
 use Math::Polygon;
 use Getopt::Long;
 use File::Basename;
 use File::Path 2.07 qw(make_path);
-use IO::Compress::Gzip;
-use IO::File;
+use IO::Compress::Xz;
 
 my $factor = 10000000;
 
@@ -20,7 +20,6 @@ my $infile = '-';
 my $target = '.';
 my $suffix = '';
 my $polylist;
-my $zip;
 my $nodupes;
 
 GetOptions('h|help' => \$help,
@@ -29,7 +28,6 @@ GetOptions('h|help' => \$help,
            'o|target=s' => \$target,
            's|suffix=s' => \$suffix,
            'l|list=s' => \$polylist,
-           'z|gzip' => \$zip,
            'd|nodupes' => \$nodupes,
            ) || usage();
 
@@ -46,11 +44,10 @@ while(<LIST>) {
     chomp;
     my $p = $_;
     my $filename = $target.'/'.basename($p);
-    $filename =~ s/\.poly$/$suffix\.csv/;
-    $filename .= '.gz' if $zip;
+    $filename =~ s/\.poly$/$suffix\.csv.xz/;
     print STDERR "$p -> $filename\n" if $verbose;
     my $bp = read_poly($p);
-    my $fh = $zip ? new IO::Compress::Gzip $filename : IO::File->new($filename, 'w');
+    my $fh = new IO::Compress::Xz $filename;
     die "Cannot open file: $!" if !$fh;
     push @polygons, [$fh, $bp];
 }
@@ -138,14 +135,13 @@ sub usage {
     my $prog = basename($0);
     print STDERR << "EOF";
 This script receives CSV file of "lat,lon" and filters it by a number
-of osmosis' polygon files.
+of osmosis' polygon files. The result is compressed with xz.
 
 usage: $prog [-h] [-i infile] [-o target] [-l list] [-s suffix] [-z]
 
  -h        : print ths help message and exit.
  -i infile : CSV points file to process (default is STDIN).
  -o target : directory to put resulting files.
- -z        : compress output file with gzip.
  -l list   : file with names of poly files.
  -s suffix : a suffix to add to all output files.
  -d        : remove duplicate consecutive points.
@@ -154,6 +150,10 @@ usage: $prog [-h] [-i infile] [-o target] [-l list] [-s suffix] [-z]
 All coordinates in source CSV file should be multiplied by $factor
 (you can change this number in the code). Please keep the number
 of polygons below 200, or unexpected problems may occur.
+
+Warning: xz perl module is in beta stage. There is a tiny chance
+of generating broken files; in that case please report to the
+module author: Paul Marquess, pmqs@cpan.org.
 
 EOF
     exit;

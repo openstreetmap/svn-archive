@@ -119,9 +119,6 @@ sub read_poly {
                     || $currentpoints->[0][1] != $currentpoints->[-1][1];
                 my $pol = Math::Polygon->new(points => $currentpoints);
                 push(@{$borderpolys}, [$pol,$invert,[$pol->bbox]]);
-                printf STDERR "Added polygon: %d points (%d,%d)-(%d,%d) %s\n",
-                    $borderpolys->[-1][0]->nrPoints, @{$borderpolys->[-1][2]},
-                    ($borderpolys->[-1][1] ? "exclude" : "include") if $verbose;
                 # yes, this should never happend, but just in case
                 die "Polygon is not closed" if !$pol->isClosed();
             }

@@ -15,6 +15,7 @@ use Fcntl qw( O_RDONLY O_RDWR O_CREAT O_BINARY );
 my $source_dir;
 my $dest_dir;
 my $delete_original;
+my $keep;
 my $zoom;
 my $colour_str = '0,0,0';
 my $uptozoom;
@@ -33,6 +34,7 @@ GetOptions('h|help' => \$help,
            'u|uptozoom=i' => \$uptozoom,
            '0|zoom0' => \$zoom0,
            'd|delorig' => \$delete_original,
+           'k|keep' => \$keep,
            'e|empty' => \$make_empty_tiles,
            'c|colour=s' => \$colour_str,
            'b|bbox=s' => \$bbox_str,
@@ -66,7 +68,7 @@ if( $uptozoom < $zoom && $xmin <= $xmax && $ymin <= $ymax ) {
     for my $zoomd (1 .. $zoom-$uptozoom) {
         my $newzoom = $zoom - $zoomd;
         generate_lowzoom($newzoom);
-        clean_bitiles($newzoom + 1) if $delete_original || $newzoom + 1 < $zoom;
+        clean_bitiles($newzoom + 1) if !$keep && ($delete_original || $newzoom + 1 < $zoom);
         process_zoom($newzoom, 0);
     }
 }
@@ -300,6 +302,7 @@ usage: $prog [-h] [-v] -i source [-o target] [-z zoom] [-u zoom] [-0] [-d] [-e] 
  -b bbox   : limit tiles by a bounding box (four comma-separated
              numbers: minlon,minlat,maxlon,maxlat).
  -d        : delete processed bitiles.
+ -k        : keep all generated bitiles.
  -e        : generate empty tiles where there are no bitiles.
  -c colour : colour of GPS points (three comma-separated numbers: r,g,b
              default is black).

@@ -79,7 +79,7 @@ perl bitiles2png.pl -i acbitiles -o austiles -0 -v
 
 
 7. Create PNG tiles for Sydney with light green dots, zooms 5 to 12.
-   Write empty tiles where there are no points.
+   Write empty tiles where there are no points (JOSM requires them).
 
 perl bitiles2png.pl -i acbitiles -o sydneytiles -b 150.8,-34.1,151.4,-33.6 -z 12 -u 5 -c 0,255,0 -e -v
 

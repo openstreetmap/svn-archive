@@ -78,6 +78,7 @@ sub generate_lowzoom {
 
     print STDERR "Generating zoom $zoom bitiles" if $verbose;
     for( my $x = $xmin - $xmin%2; $x <= $xmax; $x += 2 ) {
+        next if !-d "$source_dir/$z/$x" && !-d "$source_dir/$z/".($x+1);
         print STDERR '.' if $verbose;
         make_path("$source_dir/$zoom/".($x/2));
         for( my $y = $ymin - $ymin%2; $y <= $ymax; $y += 2 ) {

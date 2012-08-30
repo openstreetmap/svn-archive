@@ -119,7 +119,7 @@ sub read_poly {
                     || $currentpoints->[0][1] != $currentpoints->[-1][1];
                 my $pol = Math::Polygon->new(points => $currentpoints);
                 push(@{$borderpolys}, [$pol,$invert,[$pol->bbox]]);
-                # yes, this should never happend, but just in case
+                # yes, this should never happen, but just in case
                 die "Polygon is not closed" if !$pol->isClosed();
             }
             undef $currentpoints;

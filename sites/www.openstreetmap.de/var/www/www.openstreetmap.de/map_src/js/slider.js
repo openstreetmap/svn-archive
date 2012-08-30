@@ -50,6 +50,11 @@ function toggleSlide(objname){
 		// div is not hidden, so slide left
 		slide_left(objname);
 	}
+	//Open Or Close ILikeOSM
+	if(iLikeOSM){
+		if(iLikeOSM.div.style.display == "none"){ iLikeOSM.div.style.display = ""; }
+		else{ iLikeOSM.div.style.display = "none"; }
+	}
 }
 
 function openSlide(objname){
@@ -57,6 +62,8 @@ function openSlide(objname){
 	 	// div is hidden, so let's slide right
 		slide_right(objname);
 	}
+	//Close ILikeOSM
+	if(iLikeOSM){ iLikeOSM.div.style.display = "none"; }
 }
 
 function closeSlide(objname){
@@ -66,6 +73,8 @@ function closeSlide(objname){
 		// div is not hidden, so slide left
 		slide_left(objname);
 	}
+	//Open ILikeOSM
+	if(iLikeOSM){ iLikeOSM.div.style.display = ""; }
 }
 
 function slide_right(objname){

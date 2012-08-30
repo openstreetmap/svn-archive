@@ -30,6 +30,8 @@
 // OBJECTS
 var map;
 var markersLayer;
+var iLikeOSM;
+
 OpenLayers.ImgPath = "./map_src/themes/dark/";
 OpenLayers.Lang.setCode('de');
 
@@ -42,9 +44,6 @@ function init(){
     map = new OpenLayers.Map("map", {
 			controls: [
 				new OpenLayers.Control.Navigation(),
-			// new OpenLayers.Control.MouseDefaults(),
-            // new OpenLayers.Control.MousePosition(),
-            // new OpenLayers.Control.ScaleLine()
             	new OpenLayers.Control.Permalink(),
             	new OpenLayers.Control.Attribution()
             ],
@@ -57,10 +56,13 @@ function init(){
     } );
     
     //Add LayerSwitcher
-    var layerswitcher = new OpenLayers.Control.LayerSwitcher({roundedCornerColor: "#575757"});
-
+    var layerswitcher = new OpenLayers.Control.LayerSwitcher({roundedCorner: true, roundedCornerColor: "#575757"});
 	map.addControl(layerswitcher);
 	layerswitcher.maximizeControl();
+	
+	//Add ILikeOSM
+	iLikeOSM = new OpenLayers.ILikeOSM({defaultlanguage: 'de'});
+	map.addControl(iLikeOSM);
 		
 	//Add Panzoombar
 	var panZoomBar = new OpenLayers.Control.PanZoom({id:'panzoombar',displayClass:'olControlPanZoomBar'})
@@ -77,9 +79,9 @@ function init(){
                "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],
 		{numZoomLevels: 19, attribution: '<a href="./germanstyle.html">About style</a>'}),
         new OpenLayers.Layer.OSM.CycleMap("Radfahrkarte (CycleMap)", {attribution:"", keyname: 'cycle'}),
-        new OpenLayers.Layer.OSM("&Ouml;PNV-Karte", 
+        new OpenLayers.Layer.XYZ("&Ouml;PNV-Karte", 
 			"http://tile.memomaps.de/tilegen/${z}/${x}/${y}.png", 
-			{numZoomLevels: 19,displayInLayerSwitcher:true,buffer:0,attribution:"", keyname: 'oepnvde'}),
+			{numZoomLevels: 19, attribution:"", keyname: 'oepnvde'}),
         new OpenLayers.Layer.OSM.Mapnik("OSM Standard (Mapnik)", {attribution:"", keyname: 'mapnik'}),
     ]);
     

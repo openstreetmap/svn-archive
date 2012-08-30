@@ -5,23 +5,23 @@ html,body {
 	width: 100%;
 }
 
-div.olControlLayerSwitcher .layersDiv {
-	font-size: 13px; 
-    padding-top: 5px; 
-    padding-left: 10px; 
-    padding-bottom: 5px; 
-    padding-right: 75px; 
-    background-color: #575757; 
-    width: 100%; 
-    height: 100%; 
-}
-
-div.olControlLayerSwitcher input {
-    width: 20px;
-}
-
 div.olControlLayerSwitcher {
-    width: 240px;
+	width: 240px;	
+	font-size: 13px;
+}
+div.olControlLayerSwitcher .layersDiv {
+    background-color: #575757;
+    padding-right: 220px;
+}
+
+div.olControlLayerSwitcher label {
+    color:white;
+    font-weight: bold;
+    text-align: left;
+	white-space:nowrap;
+	/* Bootstrap Hack */
+	margin-top: -25px;
+	margin-left: 20px;
 }
 
 div.olControlPermalink {
@@ -42,9 +42,6 @@ div.olControlAttribution {
 	font-size: 11px;
 }
 
-.layersDiv {
-	padding-right: 75px;
-}
  
 #karte_nav {
 	position: absolute;

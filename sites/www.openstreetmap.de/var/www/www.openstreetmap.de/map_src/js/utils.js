@@ -97,7 +97,7 @@
 		var html = document.getElementById('information').innerHTML;
 		var layer = map.baseLayer.keyname;
 
-		if (force || html.startsWith("Legende")) {
+		if (force || html.indexOf("Legende") === 0) {
 			var zoom = map.getZoom();
 			if(layer == 'cycle'){
 				document.getElementById('information').innerHTML = 'Legende:<br><div id="mapkey_area"><iframe src="legende/opencyclemap.html"/></div>';

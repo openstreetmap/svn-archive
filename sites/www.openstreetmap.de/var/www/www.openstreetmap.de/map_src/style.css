@@ -8,7 +8,7 @@ html,body {
 div.olControlLayerSwitcher {
 	width: 240px;	
 	font-size: 13px;
-	top: 60px;
+	top: 70px;
 }
 div.olControlLayerSwitcher .layersDiv {
     background-color: #575757;
@@ -180,9 +180,13 @@ div.mnav ul li {
 }
 
 #information {
+
 	color: #000000;
+
 	overflow: auto;
+
 	height: 100%;
+
 	overflow-x: hidden;
 	margin-left: 5px;
 	margin-right: 5px;

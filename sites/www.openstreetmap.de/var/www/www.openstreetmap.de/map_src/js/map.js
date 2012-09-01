@@ -76,7 +76,7 @@ function init(){
                "http://a.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
                "http://b.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
                "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png",
-               "http://c.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],
+               "http://d.tile.openstreetmap.de/tiles/osmde/${z}/${x}/${y}.png"],
 		{numZoomLevels: 19, attribution: '<a href="./germanstyle.html">About style</a>'}),
         new OpenLayers.Layer.OSM.CycleMap("Radfahrkarte (CycleMap)", {attribution:"", keyname: 'cycle'}),
         new OpenLayers.Layer.XYZ("&Ouml;PNV-Karte", 

@@ -3,7 +3,6 @@ package S57;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
-import S57.S57obj;
 import S57.S57obj.*;
 
 public class S57att {
@@ -221,7 +220,7 @@ public class S57att {
 	  return AttS57.get(atta) != 0 ? AttS57.get(atta) : AttIENC.get(atta);
 	}
 
-	public static Integer encodeAttribute(Att attribute, Integer objl) {	// Convert OSeaM attribute enumeration to S57 attribute code
+	public static Integer encodeAttribute(Att attribute) {	// Convert OSeaM attribute enumeration to S57 attribute code
 	  return AttS57.get(attribute) != 0 ? AttS57.get(attribute) : AttIENC.get(attribute);
 	}
 

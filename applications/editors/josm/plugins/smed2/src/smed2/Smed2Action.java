@@ -10,6 +10,11 @@ import javax.swing.WindowConstants;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.JosmAction;
 
+import S57.*;
+import S57.S57obj.*;
+import S57.S57att.*;
+import S57.S57val.*;
+
 import panels.PanelMain;
 
 public class Smed2Action extends JosmAction {
@@ -50,6 +55,9 @@ public class Smed2Action extends JosmAction {
 		frame.setVisible(true);
 		panelMain = new PanelMain();
 		frame.add(panelMain);
+System.out.println(S57att.enumAttribute("category", Obj.BCNCAR));
+AttVal tst = null;
+tst = S57val.convertValue("stake", Att.BCNSHP);
 	}
 
 	public void closeDialog() {

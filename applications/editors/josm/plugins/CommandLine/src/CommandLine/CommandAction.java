@@ -46,6 +46,10 @@ public class CommandAction extends JosmAction {
 				putValue(Action.SMALL_ICON, ImageProvider.get("blankmenu"));
 				putValue(Action.LARGE_ICON_KEY, ImageProvider.get("blankmenu"));
 			}
+			catch (RuntimeException e) {
+				putValue(Action.SMALL_ICON, ImageProvider.get("blankmenu"));
+				putValue(Action.LARGE_ICON_KEY, ImageProvider.get("blankmenu"));
+			}
 		}
 
 		this.parentCommand = parentCommand;

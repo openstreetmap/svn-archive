@@ -8,6 +8,7 @@ html,body {
 div.olControlLayerSwitcher {
 	width: 240px;	
 	font-size: 13px;
+	top: 60px;
 }
 div.olControlLayerSwitcher .layersDiv {
     background-color: #575757;

@@ -9,7 +9,7 @@ use Math::Trig;
 use File::Path 2.07 qw(make_path);
 use File::Basename;
 use Bit::Vector;
-use Fcntl qw( SEEK_SET O_RDWR O_BINARY O_CREAT );
+use Fcntl qw( SEEK_SET O_RDWR O_RDONLY O_BINARY O_CREAT );
 use Getopt::Long;
 
 my $factor = 10**7; # number by which all coordinates in source CSV are multiplied
@@ -50,6 +50,7 @@ my $zoom2 = 2**$zoom;
 my $xmintile = 0;
 my $xmaxtile = 2**18;
 my $thread = '';
+my @cache = ('', undef, 0);
 
 if( defined($thread_str) ) {
   die("Badly formed thread string: it must be THREAD,TOTAL") unless $thread_str =~ /^(\d+),(\d+)$/;
@@ -74,6 +75,7 @@ if( open(STATE, "<$state_file$thread") ) {
   my $line = <STATE>;
   close STATE;
   $ctarget = $1 if $line =~ /^(\d+)/;
+  flush_tile();
   print STDERR "Continuing from line $ctarget\n" if $verbose;
 }
 
@@ -100,27 +102,36 @@ while(<CSV>) {
   my $xpix = int(256 * ($x - $xtile));
   my $ypix = int(256 * ($y - $ytile));
   my $folder = "$tile_folder/$zoom/$xtile";
-  make_path($folder);
-  set_pixel("$folder/$ytile.bitile", $xpix, $ypix);
+  my $vec = read_tile("$folder/$ytile.bitile");
+  $vec->Bit_On($ypix * 256 + $xpix);
 }
 close CSV;
+flush_tile();
 unlink "$state_file$thread";
 
-sub set_pixel {
-  my($filename, $x, $y) = @_;
+sub read_tile {
+  my $filename = shift;
+  return $cache[1] if $filename eq $cache[0];
+  flush_tile();
+
   my $vec = Bit::Vector->new(65536);
-  my $read;
-
-  print STDERR "Error opening tile $filename\n" unless sysopen(BITILE, $filename, O_RDWR | O_CREAT | O_BINARY);
-  if( sysread(BITILE, $read, 8192) == 8192 ) {
-      $vec->Block_Store($read);
+  if( sysopen(BITILE, $filename, O_RDONLY | O_BINARY) ) {
+    if( sysread(BITILE, my $read, 8192) == 8192 ) {
+        $vec->Block_Store($read);
+    }
+    close BITILE;
   }
+  $cache[0] = $filename;
+  $cache[1] = $vec;
+  $cache[2] = $vec->Norm();
+  return $vec;
+}
 
-  if( !$vec->bit_test($y * 256 + $x) ) {
-    $vec->Bit_On($y * 256 + $x);
-    sysseek(BITILE, 0, SEEK_SET);
-    syswrite(BITILE, $vec->Block_Read());
-  }
+sub flush_tile {
+  return if !$cache[0] || $cache[1]->Norm() == $cache[2];
+  make_path(dirname($cache[0]));
+  print STDERR "Error opening tile $cache[0]\n" unless sysopen(BITILE, $cache[0], O_RDWR | O_CREAT | O_BINARY);
+  syswrite(BITILE, $cache[1]->Block_Read());
   close BITILE;
 }
 

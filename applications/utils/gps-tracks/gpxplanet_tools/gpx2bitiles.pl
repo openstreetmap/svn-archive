@@ -101,8 +101,8 @@ while(<CSV>) {
   next if $xtile < $xmintile || $xtile > $xmaxtile;
   my $xpix = int(256 * ($x - $xtile));
   my $ypix = int(256 * ($y - $ytile));
-  my $folder = "$tile_folder/$zoom/$xtile";
-  my $vec = read_tile("$folder/$ytile.bitile");
+
+  my $vec = read_tile("$tile_folder/$zoom/$xtile/$ytile.bitile");
   $vec->Bit_On($ypix * 256 + $xpix);
 }
 close CSV;

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.openstreetmap.josm.data.coor.CachedLatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
-public class EditGpxWayPoint {
+public class EditGpxWayPoint implements Comparable<EditGpxWayPoint> {
     private final double time;
     private final CachedLatLon coor;
     private boolean deleted;
@@ -33,7 +33,18 @@ public class EditGpxWayPoint {
         return deleted;
     }
 
+    /**
+     * returns this waypoint's time in seconds since Epoch
+     */
+    public double getTime() {
+        return time;
+    }
+
     public CachedLatLon getCoor() {
         return coor;
+    }
+
+    public int compareTo(EditGpxWayPoint o) {
+        return Double.compare(getTime(), o.getTime());
     }
 }

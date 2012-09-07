@@ -1,20 +1,32 @@
 package relcontext.actions;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.tools.ImageProvider;
+
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
+import relcontext.relationfix.AssociatedStreetFixer;
+import relcontext.relationfix.BoundaryFixer;
+import relcontext.relationfix.MultipolygonFixer;
+import relcontext.relationfix.NothingFixer;
+import relcontext.relationfix.RelationFixer;
 
 public class SortAndFixAction extends AbstractAction implements ChosenRelationListener {
-    private ChosenRelation rel;
+	private static final long serialVersionUID = 1L;
+	private ChosenRelation rel;
+    private List<RelationFixer> fixers;
 
     public SortAndFixAction( ChosenRelation rel ) {
         super();
@@ -24,6 +36,13 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);
+        
+        // construct all available fixers
+        fixers = new ArrayList<RelationFixer>();
+        fixers.add(new BoundaryFixer()); // should be before multipolygon as takes special case of multipolygon relation - boundary
+        fixers.add(new MultipolygonFixer());
+        fixers.add(new AssociatedStreetFixer());
+        
     }
 
     public void actionPerformed( ActionEvent e ) {
@@ -36,28 +55,19 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         setEnabled(newRelation != null && needsFixing( newRelation));
     }
 
-    public static boolean needsFixing( Relation rel ) {
-        return !isIncomplete(rel) && (areMultipolygonTagsEmpty(rel) || areBoundaryTagsNotRight(rel));
+    public boolean needsFixing( Relation rel ) {
+        return !isIncomplete(rel) && !getFixer(rel).isRelationGood(rel);
+    }
+    
+    private RelationFixer getFixer( Relation rel ) {
+    	for(RelationFixer fixer : fixers)
+    		if (fixer.isFixerApplicable(rel))
+    			return fixer;
+    	return new NothingFixer();
     }
 
-    public static Command fixRelation( Relation rel ) {
-        Relation r = rel;
-        boolean fixed = false;
-        // todo: sort members
-        // todo: set roles for multipolygon members
-        Relation rr = fixMultipolygonRoles(r);
-        if( rr != null ) {
-            r = rr;
-            fixed = true;
-        }
-        // todo: set roles for boundary members
-        rr= fixBoundaryRoles(r);
-        if( rr != null ) {
-            r = rr;
-            fixed = true;
-        }
-
-        return fixed ? new ChangeCommand(rel, r) : null;
+    public Command fixRelation( Relation rel ) {
+        return getFixer(rel).fixRelation(rel);
     }
 
     protected static boolean isIncomplete( Relation r ) {
@@ -69,96 +79,4 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         return false;
     }
 
-    /**
-     * Check for ways that have roles different from "outer" and "inner".
-     */
-    private static boolean areMultipolygonTagsEmpty( Relation r ) {
-        if( r == null || r.getMembersCount() == 0 || !ChosenRelation.isMultipolygon(r) )
-            return false;
-        for( RelationMember m : r.getMembers() ) {
-            if( m.getType().equals(OsmPrimitiveType.WAY) && (m.getRole() == null || (!m.getRole().equals("outer") && !m.getRole().equals("inner"))) )
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check for nodes and relations without needed roles.
-     */
-    private static boolean areBoundaryTagsNotRight( Relation r ) {
-        if( r == null || r.getMembersCount() == 0 || !r.hasKey("type") || !r.get("type").equals("boundary") )
-            return false;
-        for( RelationMember m : r.getMembers() ) {
-            if( m.getType().equals(OsmPrimitiveType.RELATION) && (m.getRole() == null || !m.getRole().equals("subarea")) )
-                return true;
-            else if(m.getType().equals(OsmPrimitiveType.NODE) && (m.getRole() == null || (!m.getRole().equals("label") && !m.getRole().equals("admin_centre"))) )
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * Basically, created multipolygon from scratch, and if successful, replace roles with new ones.
-     */
-    private static Relation fixMultipolygonRoles( Relation source ) {
-        Collection<Way> ways = new ArrayList<Way>();
-        for( OsmPrimitive p : source.getMemberPrimitives() )
-            if( p instanceof Way )
-                ways.add((Way)p);
-        MultipolygonCreate mpc = new MultipolygonCreate();
-        String error = mpc.makeFromWays(ways);
-        if( error != null )
-            return null;
-
-        Relation r = new Relation(source);
-        boolean fixed = false;
-        Set<Way> outerWays = new HashSet<Way>();
-        for( MultipolygonCreate.JoinedPolygon poly : mpc.outerWays )
-            for( Way w : poly.ways )
-                outerWays.add(w);
-        Set<Way> innerWays = new HashSet<Way>();
-        for( MultipolygonCreate.JoinedPolygon poly : mpc.innerWays )
-            for( Way w : poly.ways )
-                innerWays.add(w);
-        for( int i = 0; i < r.getMembersCount(); i++ ) {
-            RelationMember m = r.getMember(i);
-            if( m.isWay() ) {
-                String role = null;
-                if( outerWays.contains((Way)m.getMember()) )
-                    role = "outer";
-                else if( innerWays.contains((Way)m.getMember()) )
-                    role = "inner";
-                if( role != null && !role.equals(m.getRole()) ) {
-                    r.setMember(i, new RelationMember(role, m.getMember()));
-                    fixed = true;
-                }
-            }
-        }
-        return fixed ? r : null;
-    }
-
-    private static Relation fixBoundaryRoles( Relation source ) {
-        Relation r = new Relation(source);
-        boolean fixed = false;
-        for( int i = 0; i < r.getMembersCount(); i++ ) {
-            RelationMember m = r.getMember(i);
-            String role = null;
-            if( m.isRelation() )
-                role = "subarea";
-            else if( m.isNode() ) {
-                Node n = (Node)m.getMember();
-                if( !n.isIncomplete() ) {
-                    if( n.hasKey("place") )
-                        role = "admin_centre";
-                    else
-                        role = "label";
-                }
-            }
-            if( role != null && !role.equals(m.getRole()) ) {
-                r.setMember(i, new RelationMember(role, m.getMember()));
-                fixed = true;
-            }
-        }
-        return fixed ? r : null;
-    }
 }

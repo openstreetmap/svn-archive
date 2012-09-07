@@ -117,13 +117,21 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         float opacity = dataLayer == null ? 0.0f : !dataLayer.isVisible() ? 0.0f : (float)dataLayer.getOpacity();
         if( opacity < 0.01 )
             return;
-
-        Stroke oldStroke = g.getStroke();
+        
         Composite oldComposite = g.getComposite();
-        g.setColor(Color.yellow);
+        Stroke oldStroke = g.getStroke();
         g.setStroke(new BasicStroke(9, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.setColor(Color.yellow);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f * opacity));
-        for( OsmPrimitive element : chosenRelation.getMemberPrimitives() ) {
+        
+        drawRelations(g, mv, bbox, chosenRelation);
+        
+        g.setComposite(oldComposite);
+        g.setStroke(oldStroke);
+        
+    }
+    private void drawRelations(Graphics2D g, MapView mv, Bounds bbox, Relation rel) {
+        for( OsmPrimitive element : rel.getMemberPrimitives() ) {
             if( element.getType() == OsmPrimitiveType.NODE ) {
                 Node node = (Node)element;
                 Point center = mv.getPoint(node);
@@ -141,12 +149,13 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
                     g.draw(b);
                 }
             } else if( element.getType() == OsmPrimitiveType.RELATION ) {
-                // todo: draw all relation members (recursion?)
+            	Color oldColor = g.getColor();
+            	g.setColor(Color.magenta);
+                drawRelations(g, mv, bbox, (Relation)element);
+                g.setColor(oldColor);
             }
             // todo: closedway, multipolygon - ?
         }
-        g.setStroke(oldStroke);
-        g.setComposite(oldComposite);
     }
 
     public void relationMembersChanged( RelationMembersChangedEvent event ) {

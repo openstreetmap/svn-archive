@@ -107,17 +107,17 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         });
         roleBox.setVisible(false);
         enterRoleAction = new EnterRoleAction(); // just for the shortcut
+        sortAndFixAction = new SortAndFixAction(chosenRelation);
 
         // [±][X] relation U [AZ][Down][Edit]
         chosenRelationPanel = new JPanel(new GridBagLayout());
-        addRemoveMemberAction = new AddRemoveMemberAction(chosenRelation);
+        addRemoveMemberAction = new AddRemoveMemberAction(chosenRelation, sortAndFixAction);
         chosenRelationPanel.add(new JButton(addRemoveMemberAction), GBC.std());
         chosenRelationPanel.add(sizeButton(new JButton(new ClearChosenRelationAction(chosenRelation)), 32, 0), GBC.std());
         final ChosenRelationComponent chosenRelationComponent = new ChosenRelationComponent(chosenRelation);
         chosenRelationComponent.addMouseListener(relationMouseAdapter);
         chosenRelationPanel.add(chosenRelationComponent, GBC.std().fill().insets(5, 0, 5, 0));
         chosenRelationPanel.add(roleBox, GBC.std().fill().insets(5, 0, 5, 0));
-        sortAndFixAction = new SortAndFixAction(chosenRelation);
         final JButton sortAndFixButton = (JButton) sizeButton(new JButton(sortAndFixAction), 32, 0);
         chosenRelationPanel.add(sortAndFixButton, GBC.std().fill(GBC.VERTICAL));
         final Action downloadChosenRelationAction = new DownloadChosenRelationAction(chosenRelation);

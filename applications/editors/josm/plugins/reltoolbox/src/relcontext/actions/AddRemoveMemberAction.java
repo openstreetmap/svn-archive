@@ -1,21 +1,25 @@
 package relcontext.actions;
 
-import java.util.*;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
@@ -29,12 +33,14 @@ import relcontext.ChosenRelationListener;
 public class AddRemoveMemberAction extends JosmAction implements ChosenRelationListener {
     private static final String ACTION_NAME = "Add/remove member";
     private ChosenRelation rel;
+    private SortAndFixAction sortAndFix;
 
-    public AddRemoveMemberAction( ChosenRelation rel ) {
+    public AddRemoveMemberAction( ChosenRelation rel, SortAndFixAction sortAndFix ) {
         super(null, "relcontext/addremove", tr("Add/remove members from the chosen relation"),
                 Shortcut.registerShortcut("reltoolbox:addremove", tr("Relation Toolbox: {0}", tr("Add/remove members from the chosen relation")),
                 KeyEvent.VK_EQUALS, Shortcut.DIRECT), false);
         this.rel = rel;
+        this.sortAndFix = sortAndFix;
         rel.addChosenRelationListener(this);
         updateEnabledState();
     }
@@ -50,7 +56,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         toAdd.removeAll(r.getMemberPrimitives());
 
         // 0. check if relation is broken (temporary)
-        boolean isBroken = !toAdd.isEmpty() && SortAndFixAction.needsFixing(r);
+        boolean isBroken = !toAdd.isEmpty() && sortAndFix.needsFixing(r);
 
         // 1. remove all present members
         r.removeMembersFor(getCurrentDataSet().getSelected());
@@ -65,7 +71,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         }
 
         // 3. check for roles again (temporary)
-        Command roleFix = !isBroken && SortAndFixAction.needsFixing(r) ? SortAndFixAction.fixRelation(r) : null;
+        Command roleFix = !isBroken && sortAndFix.needsFixing(r) ? sortAndFix.fixRelation(r) : null;
         if( roleFix != null )
             roleFix.executeCommand();
 

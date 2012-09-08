@@ -32,7 +32,7 @@ public class ZipImporter extends AbstractImporter {
 	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
 			throws IllegalDataException {
 		try {
-			return ZipReader.parseDataSet(in, handler, instance);
+			return ZipReader.parseDataSet(in, handler, instance, true);
 		} catch (Exception e) {
 			throw new IllegalDataException(e);
 		}

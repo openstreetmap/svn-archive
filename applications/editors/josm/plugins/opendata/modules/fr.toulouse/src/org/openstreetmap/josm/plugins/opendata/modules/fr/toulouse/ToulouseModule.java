@@ -15,8 +15,19 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.TreeSet;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
 import org.openstreetmap.josm.plugins.opendata.core.modules.AbstractModule;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.associations.Club3eAgeHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.BureauxVoteHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.MairieAnnexeHandler;
@@ -100,5 +111,58 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(ChantiersPonctuelsHandler.class);
         handlers.add(ChantiersLineairesHandler.class);
         handlers.add(InstallationSportiveToulouseHandler.class);
+    }
+    
+    public static final DataSet data = new DataSet();
+    
+    private static final Collection<Relation> getBoundaries(int admin_level) {
+        Collection<Relation> result = new TreeSet<Relation>(new Comparator<Relation>() {
+            @Override
+            public int compare(Relation o1, Relation o2) {
+                return o1.get("ref").compareTo(o2.get("ref"));
+            }
+        });
+        synchronized (data) {
+            for (Relation r : data.getRelations()) {
+                if (r.hasTag("admin_level", Integer.toString(admin_level)) && 
+                        (r.hasKey("name") || r.hasKey("ref") || r.hasKey("description"))) {
+                    result.add(r);
+                }
+            }
+        }
+        return result;
+    }
+    
+    public static final void downloadData() {
+        synchronized (data) {
+            if (data.allPrimitives().isEmpty()) {
+                for (final ToulouseDataSetHandler handler : new ToulouseDataSetHandler[]{
+                        new SecteursHandler(), new QuartiersHandler()}) {
+                    Main.worker.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                DataSet ds = new NetworkReader(handler.getDataURL().toString(), handler, false).
+                                        parseOsm(NullProgressMonitor.INSTANCE);
+                                handler.updateDataSet(ds);
+                                synchronized (data) {
+                                    data.mergeFrom(ds);
+                                }
+                            } catch (OsmTransferException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+    
+    public static final Collection<Relation> getSectors() {
+        return getBoundaries(10);
+    }
+
+    public static final Collection<Relation> getNeighbourhoods() {
+        return getBoundaries(11);
     }
 }

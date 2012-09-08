@@ -52,7 +52,7 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 
 	@Override
 	public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
-        downloadTask = new InternalDownloadTasK(newLayer, new NetworkReader(url, handler), progressMonitor);
+        downloadTask = new InternalDownloadTasK(newLayer, new NetworkReader(url, handler, true), progressMonitor);
         currentBounds = null;
         if (handler == null || !handler.hasLicenseToBeAccepted() || askLicenseAgreement(handler.getLicense())) {
         	return Main.worker.submit(downloadTask);

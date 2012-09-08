@@ -54,17 +54,20 @@ public class ZipReader extends AbstractReader implements OdConstants {
 	private final ZipInputStream zis;
 	private final AbstractDataSetHandler handler;
 	private final ZipHandler zipHandler;
+	private final boolean promptUser;
 	
 	private File file;
     
-    public ZipReader(InputStream in, AbstractDataSetHandler handler) {
+    public ZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) {
         this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
         this.handler = handler;
         this.zipHandler = handler != null ? handler.getZipHandler() : null;
+        this.promptUser = promptUser;
     }
 
-	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
-		return new ZipReader(in, handler).parseDoc(instance);
+	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
+	        throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+		return new ZipReader(in, handler, promptUser).parseDoc(instance);
 	}
 	
 	public final File getReadFile() {
@@ -155,7 +158,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 			
 			file = null;
 			
-			if (candidates.size() > 1) {
+			if (promptUser && candidates.size() > 1) {
 				DialogPrompter<CandidateChooser> prompt = new DialogPrompter() {
 					@Override
 					protected CandidateChooser buildDialog() {
@@ -165,7 +168,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 				if (prompt.promptInEdt().getValue() == 1) {
 					file = prompt.getDialog().getSelectedFile();
 				}
-			} else if (candidates.size() == 1) {
+			} else if (!candidates.isEmpty()) {
 				file = candidates.get(0);
 			}
 			

@@ -69,6 +69,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	
 	private final JMenu menu;
 	
+	private OdDialog dialog;
+	
 	public OdPlugin(PluginInformation info) { // NO_UCD
 		super(info);
 		if (instance == null) {
@@ -166,7 +168,9 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (newFrame != null) {
-			newFrame.addToggleDialog(new OdDialog());
+			newFrame.addToggleDialog(dialog = new OdDialog());
+		} else {
+		    dialog = null;
 		}
 	}
 	
@@ -202,6 +206,10 @@ public final class OdPlugin extends Plugin implements OdConstants {
 
     public final File getResourcesDirectory() {
     	return getSubDirectory("resources");
+    }
+
+    public OdDialog getDialog() {
+        return dialog;
     }
 
     /*

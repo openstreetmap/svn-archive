@@ -46,15 +46,17 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	private final String url;
 	private final AbstractDataSetHandler handler;
 	private Class<? extends AbstractReader> readerClass;
+	private final boolean promptUser;
 
 	private File file;
 	private String filename;
 	
-    public NetworkReader(String url, AbstractDataSetHandler handler) {
+    public NetworkReader(String url, AbstractDataSetHandler handler, boolean promptUser) {
         CheckParameterUtil.ensureParameterNotNull(url, "url");
     	this.url = url;
         this.handler = handler;
         this.readerClass = null;
+        this.promptUser = promptUser;
     }
     
 	public final File getReadFile() {
@@ -149,7 +151,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             }
             instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             if (readerClass.equals(ZipReader.class)) {
-            	ZipReader zipReader = new ZipReader(in, handler);
+            	ZipReader zipReader = new ZipReader(in, handler, promptUser);
             	DataSet ds = zipReader.parseDoc(instance);
             	file = zipReader.getReadFile();
             	return ds;

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -477,4 +478,24 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 			return null;
 		}
 	}
+	
+	// Tools
+
+	private final Collection<JosmAction> tools = new ArrayList<JosmAction>();
+	
+	public final Collection<JosmAction> getTools() {
+	    return tools;
+	}
+	
+	public final boolean addTool(JosmAction tool) {
+        return tool != null ? tools.add(tool) : false;
+	}
+	
+	public final boolean removeTool(JosmAction tool) {
+	    return tool != null ? tools.remove(tool) : false;
+	}
+
+    public void notifyActive() {
+        // To be overriden when the handler has specific treatments to perform when its layer becomes active
+    }
 }

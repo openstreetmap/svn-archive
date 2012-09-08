@@ -5,9 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -22,7 +25,6 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
-import org.openstreetmap.josm.plugins.opendata.core.actions.ToolsAction;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdLayer;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -75,6 +77,16 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 			}
 		}
     }
+    
+    private class ToolsAction extends JosmAction {
+        public ToolsAction() {
+            super(marktr("Tools"), "dialogs/utils", tr("Open tools menu for this data."), null, false);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Done via mouseListener
+        }
+    }
 
 	public OdDialog() {
 		super("OpenData", ICON_CORE_24, tr("Open the OpenData window."), 
@@ -86,6 +98,19 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 				downloadButton = new SideButton(new DownloadAction()), 
 				diffButton = new SideButton(new DiffAction()),
 				toolsButton = new SideButton(new ToolsAction())
+        });
+		
+		this.toolsButton.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mousePressed(MouseEvent e) {
+	            if (Main.main.getEditLayer() instanceof OdLayer) {
+                    JPopupMenu popup = new JPopupMenu();
+	                for (JosmAction tool : dataLayer.handler.getTools()) {
+	                    popup.add(tool);
+	                }
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+	            }
+		    }
         });
 		
 		disableAllButtons();
@@ -123,6 +148,7 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 			} else if (dataLayer.diffLayer == null) {
 				diffButton.setEnabled(true);
 			}
+			toolsButton.setEnabled(dataLayer.handler != null && !dataLayer.handler.getTools().isEmpty());
 		} else {
 			disableAllButtons();
 		}
@@ -141,5 +167,9 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
         super.destroy();
         MapView.removeLayerChangeListener(this);
         MapView.removeEditLayerChangeListener(this);
+    }
+
+    public OdDataLayer getDataLayer() {
+        return dataLayer;
     }
 }

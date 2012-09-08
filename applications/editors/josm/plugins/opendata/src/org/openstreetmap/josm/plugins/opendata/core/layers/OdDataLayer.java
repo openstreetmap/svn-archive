@@ -114,6 +114,9 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 
 	@Override
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+	    if (newLayer == this && this.handler != null) {
+	        this.handler.notifyActive();
+	    }
 	}
 
 	@Override

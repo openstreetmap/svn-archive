@@ -119,7 +119,13 @@ public class ToulouseModule extends AbstractModule {
         Collection<Relation> result = new TreeSet<Relation>(new Comparator<Relation>() {
             @Override
             public int compare(Relation o1, Relation o2) {
-                return o1.get("ref").compareTo(o2.get("ref"));
+                if (o1.hasKey("name") && o2.hasKey("name")) {
+                    return o1.get("name").compareTo(o2.get("name"));
+                } else if (o1.hasKey("ref") && o2.hasKey("ref")) {
+                    return o1.get("ref").compareTo(o2.get("ref"));
+                } else {
+                    return o1.get("description").compareTo(o2.get("description"));
+                }
             }
         });
         synchronized (data) {
@@ -137,7 +143,7 @@ public class ToulouseModule extends AbstractModule {
         synchronized (data) {
             if (data.allPrimitives().isEmpty()) {
                 for (final ToulouseDataSetHandler handler : new ToulouseDataSetHandler[]{
-                        new SecteursHandler(), new QuartiersHandler()}) {
+                        new CommuneHandler(), new SecteursHandler(), new QuartiersHandler()}) {
                     Main.worker.submit(new Runnable() {
                         @Override
                         public void run() {
@@ -156,6 +162,10 @@ public class ToulouseModule extends AbstractModule {
                 }
             }
         }
+    }
+    
+    public static final Collection<Relation> getMunicipalities() {
+        return getBoundaries(8);
     }
     
     public static final Collection<Relation> getSectors() {

@@ -91,6 +91,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
                 //setLicenseURL(url+"/license");
                 setDataURL(url+"/resource/document");
             }
+            addTool(new SplitByMunicipality());
             addTool(new SplitBySector());
             addTool(new SplitByNeighbourhood());
         } catch (MalformedURLException e) {
@@ -158,7 +159,16 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
                         data.addPrimitive(new Relation((Relation)p));
                     }
                 }
-                Main.main.addLayer(new OdDataLayer(data, baseName+"/"+boundary.get("ref"), null, ToulouseDataSetHandler.this));
+                if (!data.allPrimitives().isEmpty()) {
+                    String name = boundary.get("name");
+                    if (name == null || name.isEmpty()) {
+                        name = boundary.get("ref");
+                    }
+                    if (name == null || name.isEmpty()) {
+                        name = boundary.get("description");
+                    }
+                    Main.main.addLayer(new OdDataLayer(data, baseName+"/"+name, null, ToulouseDataSetHandler.this));
+                }
             }
         }
         @Override
@@ -188,6 +198,16 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         }
     }
     
+    protected class SplitByMunicipality extends SplitAction {
+        public SplitByMunicipality() {
+            super(marktr("Split by municipality"), tr("Split this data by municipality (admin_level=8)."));
+        }
+        @Override
+        protected Collection<Relation> getBoundaries() {
+            return ToulouseModule.getMunicipalities();
+        }
+    }
+
     protected class SplitBySector extends SplitAction {
         public SplitBySector() {
             super(marktr("Split by sector"), tr("Split this data by sector (admin_level=10)."));

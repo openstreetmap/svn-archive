@@ -71,11 +71,11 @@ fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opend
 fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.toulouse.jar
 	Module-Icon: images/data.fr.toulouse_24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: Toulouse
 	Manifest-Version: 1.0
-	Module-Version: 28143
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Module-Version: 28696
+	Created-By: 1.6.0_35-b10 (Sun Microsystems Inc.)
 	Module-Link: http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData
-	Module-Date: 2012-03-23T20:49:59.310593Z
+	Module-Date: 2012-09-08T17:09:04.122269Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModule

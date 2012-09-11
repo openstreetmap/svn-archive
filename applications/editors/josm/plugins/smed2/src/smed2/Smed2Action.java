@@ -9,11 +9,9 @@ import javax.swing.WindowConstants;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.JosmAction;
-
-import S57.*;
-import S57.S57obj.*;
-import S57.S57att.*;
-import S57.S57val.*;
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.data.imagery.ImageryInfo;
+import org.openstreetmap.josm.Main;
 
 import panels.PanelMain;
 
@@ -24,6 +22,7 @@ public class Smed2Action extends JosmAction {
 	private JFrame frame = null;
 	private boolean isOpen = false;
 	public PanelMain panelMain = null;
+	public ImageryLayer rendering;
 
 	public Smed2Action() {
 		super(editor, "Smed2", editor, null, true);
@@ -55,13 +54,14 @@ public class Smed2Action extends JosmAction {
 		frame.setVisible(true);
 		panelMain = new PanelMain();
 		frame.add(panelMain);
-System.out.println(S57att.enumAttribute("category", Obj.BCNCAR));
-AttVal tst = null;
-tst = S57val.convertValue("stake", Att.BCNSHP);
+System.out.println("hello");
+		rendering = ImageryLayer.create(new ImageryInfo("OpenSeaMap"));
+		Main.main.addLayer(rendering);		
 	}
 
 	public void closeDialog() {
 		if (isOpen) {
+			Main.main.removeLayer(rendering);
 			frame.setVisible(false);
 			frame.dispose();
 		}

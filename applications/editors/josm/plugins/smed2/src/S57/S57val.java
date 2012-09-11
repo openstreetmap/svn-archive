@@ -247,84 +247,261 @@ public class S57val {
 		Catmfa.put(CatMFA.MFA_CRST, new S57enum(1, "crustaceans")); Catmfa.put(CatMFA.MFA_OYMS, new S57enum(2, "oysters_mussels")); Catmfa.put(CatMFA.MFA_FISH, new S57enum(3, "fish"));
 		Catmfa.put(CatMFA.MFA_SEAW, new S57enum(4, "seaweed")); Catmfa.put(CatMFA.MFA_PRLC, new S57enum(5, "pearl_culture"));
 	}
-  /*
-	private static final EnumMap<, S57enum> Catmpa = new EnumMap<, S57enum>(.class); static {{1, "practice")); {2, "torpedo")); {3, "submarine")); {4, "firing")); {5, "mine-laying")); {6, "small_arms")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catmor = new EnumMap<, S57enum>(.class); static {{1, "dolphin")); {2, "deviation_dolphin")); {3, "bollard")); {4, "wall")); {5, "pile")); {6, "chain")); {7, "buoy")); {8, "shore_ropes")); {9, "automatic")); {10, "post")); {11, "wire")); {12, "cable")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catnav = new EnumMap<, S57enum>(.class); static {{1, "clearing")); {2, "transit")); {3, "leading")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catobs = new EnumMap<, S57enum>(.class); static {{1, "stump")); {2, "wellhead")); {3, "diffuser")); {4, "crib")); {5, "fish_haven")); {6, "foul_area")); {7, "foul_ground")); {8, "ice_boom")); {9, "ground_tackle")); {10, "boom")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catofp = new EnumMap<, S57enum>(.class); static {{1, "oil")); {2, "production")); {3, "observation")); {4, "alp")); {5, "salm")); {6, "mooring")); {7, "artificial_island")); {8, "fpso")); {9, "accommodation")); {10, "nccb")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catolb = new EnumMap<, S57enum>(.class); static {{1, "retention")); {2, "floating")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catple = new EnumMap<, S57enum>(.class); static {{1, "stake")); {2, "snag")); {3, "post")); {4, "tripodal")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catpil = new EnumMap<, S57enum>(.class); static {{1, "cruising_vessel")); {2, "helicopter")); {3, "from_shore")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catpip = new EnumMap<, S57enum>(.class); static {{2, "outfall")); {3, "intake")); {4, "sewer")); {5, "bubbler")); {6, "supply")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catpra = new EnumMap<, S57enum>(.class); static {{1, "quarry")); {2, "mine")); {3, "stockpile")); {4, "power_station")); {5, "refinery")); {6, "timber_yard")); {7, "factory")); {8, "tank_farm")); {9, "wind_farm")); {10, "slag")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catpyl = new EnumMap<, S57enum>(.class); static {{1, "power")); {2, "telecom")); {3, "aerial")); {4, "bridge")); {5, "bridge_pier")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catqua = new EnumMap<, S57enum>(.class); static {{1, "a")); {2, "b")); {3, "c")); {4, "d")); {5, "e")); {6, "not_evaluated")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catras = new EnumMap<, S57enum>(.class); static {{1, "surveillance")); {2, "coast")); {0, NULL} };
+	public enum CatMPA { MPA_UNKN, MPA_PRCT, MPA_TRPD, MPA_SUBM, MPA_FIRG, MPA_MINL, MPA_SMLA } 
+	private static final EnumMap<CatMPA, S57enum> Catmpa = new EnumMap<CatMPA, S57enum>(CatMPA.class); static { Catmpa.put(CatMPA.MPA_UNKN, new S57enum(0, ""));
+		Catmpa.put(CatMPA.MPA_PRCT, new S57enum(1, "practice")); Catmpa.put(CatMPA.MPA_TRPD, new S57enum(2, "torpedo")); Catmpa.put(CatMPA.MPA_SUBM, new S57enum(3, "submarine"));
+		Catmpa.put(CatMPA.MPA_FIRG, new S57enum(4, "firing")); Catmpa.put(CatMPA.MPA_MINL, new S57enum(5, "mine-laying")); Catmpa.put(CatMPA.MPA_SMLA, new S57enum(6, "small_arms"));
+	}
+	public enum CatMOR { MOR_UNKN, MOR_DLPN, MOR_DDPN, MOR_BLRD, MOR_WALL, MOR_PILE, MOR_CHAN, MOR_BUOY, MOR_SHRP, MOR_AUTO, MOR_POST, MOR_WIRE, MOR_CABL } 
+	private static final EnumMap<CatMOR, S57enum> Catmor = new EnumMap<CatMOR, S57enum>(CatMOR.class); static { Catmor.put(CatMOR.MOR_UNKN, new S57enum(0, ""));
+		Catmor.put(CatMOR.MOR_DLPN, new S57enum(1, "dolphin")); Catmor.put(CatMOR.MOR_DDPN, new S57enum(2, "deviation_dolphin")); Catmor.put(CatMOR.MOR_BLRD, new S57enum(3, "bollard"));
+		Catmor.put(CatMOR.MOR_WALL, new S57enum(4, "wall")); Catmor.put(CatMOR.MOR_PILE, new S57enum(5, "pile")); Catmor.put(CatMOR.MOR_CHAN, new S57enum(6, "chain"));
+		Catmor.put(CatMOR.MOR_BUOY, new S57enum(7, "buoy")); Catmor.put(CatMOR.MOR_SHRP, new S57enum(8, "shore_ropes")); Catmor.put(CatMOR.MOR_AUTO, new S57enum(9, "automatic"));
+		Catmor.put(CatMOR.MOR_POST, new S57enum(10, "post")); Catmor.put(CatMOR.MOR_WIRE, new S57enum(11, "wire")); Catmor.put(CatMOR.MOR_CABL, new S57enum(12, "cable"));
+	}
+	public enum CatNAV { NAV_UNKN, NAV_CLRG, NAV_TRST, NAV_LDNG }
+	private static final EnumMap<CatNAV, S57enum> Catnav = new EnumMap<CatNAV, S57enum>(CatNAV.class); static { Catnav.put(CatNAV.NAV_UNKN, new S57enum(0, ""));
+		Catnav.put(CatNAV.NAV_CLRG, new S57enum(1, "clearing")); Catnav.put(CatNAV.NAV_TRST, new S57enum(2, "transit")); Catnav.put(CatNAV.NAV_LDNG, new S57enum(3, "leading"));
+	}
+	public enum CatOBS { OBS_UNKN, OBS_STMP, OBS_WELH, OBS_DIFF, OBS_CRIB, OBS_FHVN, OBS_FLAR, OBS_FLGD, OBS_ICEB, OBS_GTKL, OBS_BOOM } 
+	private static final EnumMap<CatOBS, S57enum> Catobs = new EnumMap<CatOBS, S57enum>(CatOBS.class); static { Catobs.put(CatOBS.OBS_UNKN, new S57enum(0, ""));
+		Catobs.put(CatOBS.OBS_STMP, new S57enum(1, "stump")); Catobs.put(CatOBS.OBS_WELH, new S57enum(2, "wellhead")); Catobs.put(CatOBS.OBS_DIFF, new S57enum(3, "diffuser"));
+		Catobs.put(CatOBS.OBS_CRIB, new S57enum(4, "crib")); Catobs.put(CatOBS.OBS_FHVN, new S57enum(5, "fish_haven")); Catobs.put(CatOBS.OBS_FLAR, new S57enum(6, "foul_area"));
+		Catobs.put(CatOBS.OBS_FLGD, new S57enum(7, "foul_ground")); Catobs.put(CatOBS.OBS_ICEB, new S57enum(8, "ice_boom")); Catobs.put(CatOBS.OBS_GTKL, new S57enum(9, "ground_tackle"));
+		Catobs.put(CatOBS.OBS_BOOM, new S57enum(10, "boom"));
+	}
+	public enum CatOFP { OFP_UNKN, OFP_OIL, OFP_PROD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOOR, OFP_AISL, OFP_FPSO, OFP_ACCN, OFP_NCCB } 
+	private static final EnumMap<CatOFP, S57enum> Catofp = new EnumMap<CatOFP, S57enum>(CatOFP.class); static { Catofp.put(CatOFP.OFP_UNKN, new S57enum(0, ""));
+		Catofp.put(CatOFP.OFP_OIL, new S57enum(1, "oil")); Catofp.put(CatOFP.OFP_PROD, new S57enum(2, "production")); Catofp.put(CatOFP.OFP_OBS, new S57enum(3, "observation"));
+		Catofp.put(CatOFP.OFP_ALP, new S57enum(4, "alp")); Catofp.put(CatOFP.OFP_SALM, new S57enum(5, "salm")); Catofp.put(CatOFP.OFP_MOOR, new S57enum(6, "mooring"));
+		Catofp.put(CatOFP.OFP_AISL, new S57enum(7, "artificial_island")); Catofp.put(CatOFP.OFP_FPSO, new S57enum(8, "fpso")); Catofp.put(CatOFP.OFP_ACCN, new S57enum(9, "accommodation"));
+		Catofp.put(CatOFP.OFP_NCCB, new S57enum(10, "nccb"));
+	}
+	public enum CatOLB { OLB_UNKN, OLB_RETN, OLB_FLTG }
+	private static final EnumMap<CatOLB, S57enum> Catolb = new EnumMap<CatOLB, S57enum>(CatOLB.class); static { Catolb.put(CatOLB.OLB_UNKN, new S57enum(0, ""));
+		Catolb.put(CatOLB.OLB_RETN, new S57enum(1, "retention")); Catolb.put(CatOLB.OLB_FLTG, new S57enum(2, "floating"));
+	}
+	public enum CatPLE { PLE_UNKN, PLE_STAK, PLE_SNAG, PLE_POST, PLE_TRIP }
+	private static final EnumMap<CatPLE, S57enum> Catple = new EnumMap<CatPLE, S57enum>(CatPLE.class); static { Catple.put(CatPLE.PLE_UNKN, new S57enum(0, ""));
+		Catple.put(CatPLE.PLE_STAK, new S57enum(1, "stake")); Catple.put(CatPLE.PLE_SNAG, new S57enum(2, "snag")); Catple.put(CatPLE.PLE_POST, new S57enum(3, "post"));
+		Catple.put(CatPLE.PLE_TRIP, new S57enum(4, "tripodal"));
+	}
+	public enum CatPIL { PIL_UNKN, PIL_CVSL, PIL_HELI, PIL_SHOR }
+	private static final EnumMap<CatPIL, S57enum> Catpil = new EnumMap<CatPIL, S57enum>(CatPIL.class); static { Catpil.put(CatPIL.PIL_UNKN, new S57enum(0, ""));
+		Catpil.put(CatPIL.PIL_CVSL, new S57enum(1, "cruising_vessel")); Catpil.put(CatPIL.PIL_HELI, new S57enum(2, "helicopter")); Catpil.put(CatPIL.PIL_SHOR, new S57enum(3, "from_shore"));
+	}
+	public enum CatPIP { PIP_UNKN, PIP_OFAL, PIP_ITAK, PIP_SEWR, PIP_BBLR, PIP_SPPL }
+	private static final EnumMap<CatPIP, S57enum> Catpip = new EnumMap<CatPIP, S57enum>(CatPIP.class); static { Catpip.put(CatPIP.PIP_UNKN, new S57enum(0, ""));
+		Catpip.put(CatPIP.PIP_OFAL, new S57enum(2, "outfall")); Catpip.put(CatPIP.PIP_ITAK, new S57enum(3, "intake")); Catpip.put(CatPIP.PIP_SEWR, new S57enum(4, "sewer"));
+		Catpip.put(CatPIP.PIP_BBLR, new S57enum(5, "bubbler")); Catpip.put(CatPIP.PIP_SPPL, new S57enum(6, "supply"));
+	}
+	public enum CatPRA { PRA_UNKN, PRA_QRRY, PRA_MINE, PRA_STPL, PRA_PSTN, PRA_RFNY, PRA_TYRD, PRA_FACT, PRA_TFRM, PRA_WFRM, PRA_SLAG } 
+	private static final EnumMap<CatPRA, S57enum> Catpra = new EnumMap<CatPRA, S57enum>(CatPRA.class); static { Catpra.put(CatPRA.PRA_UNKN, new S57enum(0, ""));
+		Catpra.put(CatPRA.PRA_QRRY, new S57enum(1, "quarry")); Catpra.put(CatPRA.PRA_MINE, new S57enum(2, "mine")); Catpra.put(CatPRA.PRA_STPL, new S57enum(3, "stockpile"));
+		Catpra.put(CatPRA.PRA_PSTN, new S57enum(4, "power_station")); Catpra.put(CatPRA.PRA_RFNY, new S57enum(5, "refinery")); Catpra.put(CatPRA.PRA_TYRD, new S57enum(6, "timber_yard"));
+		Catpra.put(CatPRA.PRA_FACT, new S57enum(7, "factory")); Catpra.put(CatPRA.PRA_TFRM, new S57enum(8, "tank_farm")); Catpra.put(CatPRA.PRA_WFRM, new S57enum(9, "wind_farm"));
+		Catpra.put(CatPRA.PRA_SLAG, new S57enum(10, "slag"));
+	}
+	public enum CatPYL { PYL_UNKN, PYL_POWR, PYL_TELE, PYL_AERL, PYL_BRDG, PYL_PIER } 
+	private static final EnumMap<CatPYL, S57enum> Catpyl = new EnumMap<CatPYL, S57enum>(CatPYL.class); static { Catpyl.put(CatPYL.PYL_UNKN, new S57enum(0, ""));
+		Catpyl.put(CatPYL.PYL_POWR, new S57enum(1, "power")); Catpyl.put(CatPYL.PYL_TELE, new S57enum(2, "telecom")); Catpyl.put(CatPYL.PYL_AERL, new S57enum(3, "aerial"));
+		Catpyl.put(CatPYL.PYL_BRDG, new S57enum(4, "bridge")); Catpyl.put(CatPYL.PYL_PIER, new S57enum(5, "bridge_pier"));
+	}
+	public enum CatQUA { QUA_UNKN, QUA_A, QUA_B, QUA_C, QUA_D, QUA_E, QUA_NEVL } 
+	private static final EnumMap<CatQUA, S57enum> Catqua = new EnumMap<CatQUA, S57enum>(CatQUA.class); static { Catqua.put(CatQUA.QUA_UNKN, new S57enum(0, ""));
+		Catqua.put(CatQUA.QUA_A, new S57enum(1, "a")); Catqua.put(CatQUA.QUA_B, new S57enum(2, "b")); Catqua.put(CatQUA.QUA_C, new S57enum(3, "c"));
+		Catqua.put(CatQUA.QUA_D, new S57enum(4, "d")); Catqua.put(CatQUA.QUA_E, new S57enum(5, "e")); Catqua.put(CatQUA.QUA_NEVL, new S57enum(6, "not_evaluated"));
+	}
+	public enum CatRAS { RAS_UNKN, RAS_SURV, RAS_COST }
+	private static final EnumMap<CatRAS, S57enum> Catras = new EnumMap<CatRAS, S57enum>(CatRAS.class); static { Catras.put(CatRAS.RAS_UNKN, new S57enum(0, ""));
+		Catras.put(CatRAS.RAS_SURV, new S57enum(1, "surveillance")); Catras.put(CatRAS.RAS_COST, new S57enum(2, "coast"));
+	}
 	public enum CatRTB { RTB_UNKN, RTB_RAMK, RTB_RACN, RTB_LDG }
-	private static final EnumMap<, S57enum> Catrtb = new EnumMap<, S57enum>(.class); static {[RTB_UNKN]={0, "")); [RTB_RAMK]={1, "ramark")); [RTB_RACN]={2, "racon")); [RTB_LDG]={3, "leading")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catros = new EnumMap<, S57enum>(.class); static {{1, "omnidirectional")); {2, "directional")); {3, "rotating_pattern")); {4, "consol")); {5, "rdf")); {6, "qtg")); {7, "aeronautical")); {8, "decca")); {9, "loran")); {10, "dgps")); {11, "toran"));
-	  {12, "omega")); {13, "syledis")); {14, "chaika")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cattrk = new EnumMap<, S57enum>(.class); static {{1, "fixed_marks")); {2, "no_fixed_marks")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catrsc = new EnumMap<, S57enum>(.class); static {{1, "lifeboat")); {2, "rocket")); {3, "lifeboat_rocket")); {4, "refuge_shipwrecked")); {5, "refuge_intertidal")); {6, "lifeboat_on_mooring")); {7, "radio")); {8, "first_aid")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catrea = new EnumMap<, S57enum>(.class); static {{1, "safety")); {2, "no_anchoring")); {3, "no_fishing")); {4, "nature_reserve")); {5, "bird_sanctuary")); {6, "game_reserve")); {7, "seal_sanctuary")); {8, "degaussing_range")); {9, "military"));
-	  {10, "historic_wreck")); {11, "inshore_traffic")); {12, "navigational_aid_safety")); {13, "stranding_danger")); {14, "minefield")); {15, "no_diving")); {16, "to_be_avoided")); {17, "prohibited")); {18, "swimming"));
-	  {19, "waiting")); {20, "research")); {21, "dredging")); {22, "fish_sanctuary")); {23, "ecological_reserve")); {24, "no_wake")); {25, "swinging")); {26, "water_skiing")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catrod = new EnumMap<, S57enum>(.class); static {{1, "motorway")); {2, "major_road")); {3, "minor_road")); {4, "track")); {5, "major_street")); {6, "minor_street")); {7, "crossing")); {8, "path")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catrun = new EnumMap<, S57enum>(.class); static {{1, "aeroplane")); {2, "helicopter")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catsea = new EnumMap<, S57enum>(.class); static {{1, "general")); {2, "gat")); {3, "bank")); {4, "deep")); {5, "bay")); {6, "trench")); {7, "basin")); {8, "mud_flats")); {9, "reef")); {10, "ledge")); {11, "canyon")); {12, "narrows")); {13, "shoal"));
-	  {14, "knoll")); {15, "ridge")); {16, "seamount")); {17, "pinnacle")); {18, "abyssal_plain")); {19, "plateau")); {20, "spur")); {21, "shelf")); {22, "trough")); {23, "saddle")); {24, "abyssal_hills")); {25, "apron"));
-	  {26, "archipelagic_apron")); {27, "borderland")); {28, "continental_margin")); {29, "continental_rise")); {30, "escarpment")); {31, "fan")); {32, "fracture_zone")); {33, "gap")); {34, "guyot")); {35, "hill")); {36, "hole"));
-	  {37, "levee")); {38, "median valley")); {39, "moat")); {40, "mountains")); {41, "peak")); {42, "province")); {43, "rise")); {44, "sea channel")); {45, "seamount chain")); {46, "shelf-edge")); {47, "sill")); {48, "slope"));
-	  {49, "terrace")); {50, "valley")); {51, "canal")); {52, "lake")); {53, "river")); {54, "reach")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catslc = new EnumMap<, S57enum>(.class); static {{1, "breakwater")); {2, "groyne")); {3, "mole")); {4, "pier")); {5, "promenade_pier")); {6, "wharf")); {7, "training_wall")); {8, "rip_rap")); {9, "revetment")); {10, "sea_wall"));
-	  {11, "landing_steps")); {12, "ramp")); {13, "slipway")); {14, "fender")); {15, "solid_face_wharf")); {16, "open_face_wharf")); {17, "log_ramp")); {18, "lock_wall")); {0, NULL} };
+	private static final EnumMap<CatRTB, S57enum> Catrtb = new EnumMap<CatRTB, S57enum>(CatRTB.class); static {Catrtb.put(CatRTB.RTB_UNKN, new S57enum(0, ""));
+		Catrtb.put(CatRTB.RTB_RAMK, new S57enum(1, "ramark")); Catrtb.put(CatRTB.RTB_RACN, new S57enum(2, "racon")); Catrtb.put(CatRTB.RTB_LDG, new S57enum(3, "leading"));
+	}
+	public enum CatROS { ROS_UNKN, ROS_OMNI, ROS_DIRL, ROS_ROTP, ROS_CNSL, ROS_RDF, ROS_QTA, ROS_AERO, ROS_DECA, ROS_LORN, ROS_DAPS, ROS_TORN, ROS_OMGA, ROS_SYLD, ROS_CHKA } 
+	private static final EnumMap<CatROS, S57enum> Catros = new EnumMap<CatROS, S57enum>(CatROS.class); static { Catros.put(CatROS.ROS_UNKN, new S57enum(0, ""));
+		Catros.put(CatROS.ROS_OMNI, new S57enum(1, "omnidirectional")); Catros.put(CatROS.ROS_DIRL, new S57enum(2, "directional"));	Catros.put(CatROS.ROS_ROTP, new S57enum(3, "rotating_pattern"));
+		Catros.put(CatROS.ROS_CNSL, new S57enum(4, "consol")); Catros.put(CatROS.ROS_RDF, new S57enum(5, "rdf")); Catros.put(CatROS.ROS_QTA, new S57enum(6, "qtg"));
+		Catros.put(CatROS.ROS_AERO, new S57enum(7, "aeronautical")); Catros.put(CatROS.ROS_DECA, new S57enum(8, "decca")); Catros.put(CatROS.ROS_LORN, new S57enum(9, "loran"));
+		Catros.put(CatROS.ROS_DAPS, new S57enum(10, "dgps")); Catros.put(CatROS.ROS_TORN, new S57enum(11, "toran")); Catros.put(CatROS.ROS_OMGA, new S57enum(12, "omega"));
+		Catros.put(CatROS.ROS_SYLD, new S57enum(13, "syledis")); Catros.put(CatROS.ROS_CHKA, new S57enum(14, "chaika"));
+	}
+	public enum CatTRK { TRK_UNKN, TRK_FIXM, TRK_NFXM }
+	private static final EnumMap<CatTRK, S57enum> Cattrk = new EnumMap<CatTRK, S57enum>(CatTRK.class); static { Cattrk.put(CatTRK.TRK_UNKN, new S57enum(0, ""));
+		Cattrk.put(CatTRK.TRK_FIXM, new S57enum(1, "fixed_marks")); Cattrk.put(CatTRK.TRK_NFXM, new S57enum(2, "no_fixed_marks"));
+	}
+	public enum CatRSC { RSC_UNKN, RSC_LIFB, RSC_ROKT, RSC_LBRK, RSC_RFSW, RSC_RFIT, RSC_LBOM, RSC_RDIO, RSC_FSTA } 
+	private static final EnumMap<CatRSC, S57enum> Catrsc = new EnumMap<CatRSC, S57enum>(CatRSC.class); static { Catrsc.put(CatRSC.RSC_UNKN, new S57enum(0, ""));
+		Catrsc.put(CatRSC.RSC_LIFB, new S57enum(1, "lifeboat")); Catrsc.put(CatRSC.RSC_ROKT, new S57enum(2, "rocket")); Catrsc.put(CatRSC.RSC_LBRK, new S57enum(3, "lifeboat_rocket"));
+		Catrsc.put(CatRSC.RSC_RFSW, new S57enum(4, "refuge_shipwrecked")); Catrsc.put(CatRSC.RSC_RFIT, new S57enum(5, "refuge_intertidal")); Catrsc.put(CatRSC.RSC_LBOM, new S57enum(6, "lifeboat_on_mooring"));
+		Catrsc.put(CatRSC.RSC_RDIO, new S57enum(7, "radio")); Catrsc.put(CatRSC.RSC_FSTA, new S57enum(8, "first_aid"));
+	}
+	public enum CatREA { REA_UNKN, REA_SFTY, REA_NANC, REA_NFSH, REA_NATR, REA_BRDS, REA_GRSV, REA_SEAL, REA_DEGR, REA_MILY, REA_HIST, REA_INST,
+		REA_NASF, REA_STRD, REA_MINE, REA_NDIV, REA_TBAV, REA_PROH, REA_SWIM, REA_WAIT, REA_RSCH, REA_DREG, REA_FSNC, REA_ERES, REA_NWAK, REA_SWNG, REA_WSKI } 
+	private static final EnumMap<CatREA, S57enum> Catrea = new EnumMap<CatREA, S57enum>(CatREA.class); static { Catrea.put(CatREA.REA_UNKN, new S57enum(0, ""));
+		Catrea.put(CatREA.REA_SFTY, new S57enum(1, "safety")); Catrea.put(CatREA.REA_NANC, new S57enum(2, "no_anchoring")); Catrea.put(CatREA.REA_NFSH, new S57enum(3, "no_fishing"));
+		Catrea.put(CatREA.REA_NATR, new S57enum(4, "nature_reserve")); Catrea.put(CatREA.REA_BRDS, new S57enum(5, "bird_sanctuary")); Catrea.put(CatREA.REA_GRSV, new S57enum(6, "game_reserve"));
+		Catrea.put(CatREA.REA_SEAL, new S57enum(7, "seal_sanctuary")); Catrea.put(CatREA.REA_DEGR, new S57enum(8, "degaussing_range")); Catrea.put(CatREA.REA_MILY, new S57enum(9, "military"));
+	  Catrea.put(CatREA.REA_HIST, new S57enum(10, "historic_wreck")); Catrea.put(CatREA.REA_INST, new S57enum(11, "inshore_traffic")); Catrea.put(CatREA.REA_NASF, new S57enum(12, "navigational_aid_safety"));
+	  Catrea.put(CatREA.REA_STRD, new S57enum(13, "stranding_danger")); Catrea.put(CatREA.REA_MINE, new S57enum(14, "minefield")); Catrea.put(CatREA.REA_NDIV, new S57enum(15, "no_diving"));
+	  Catrea.put(CatREA.REA_TBAV, new S57enum(16, "to_be_avoided")); Catrea.put(CatREA.REA_PROH, new S57enum(17, "prohibited")); Catrea.put(CatREA.REA_SWIM, new S57enum(18, "swimming"));
+	  Catrea.put(CatREA.REA_WAIT, new S57enum(19, "waiting")); Catrea.put(CatREA.REA_RSCH, new S57enum(20, "research")); Catrea.put(CatREA.REA_DREG, new S57enum(21, "dredging"));
+	  Catrea.put(CatREA.REA_FSNC, new S57enum(22, "fish_sanctuary")); Catrea.put(CatREA.REA_ERES, new S57enum(23, "ecological_reserve")); Catrea.put(CatREA.REA_NWAK, new S57enum(24, "no_wake"));
+	  Catrea.put(CatREA.REA_SWNG, new S57enum(25, "swinging")); Catrea.put(CatREA.REA_WSKI, new S57enum(26, "water_skiing"));
+	}
+	public enum CatROD { ROD_UNKN, ROD_MWAY, ROD_MAJR, ROD_MINR, ROD_TRAK, ROD_MAJS, ROD_MINS, ROD_CRSG, ROD_PATH } 
+	private static final EnumMap<CatROD, S57enum> Catrod = new EnumMap<CatROD, S57enum>(CatROD.class); static { Catrod.put(CatROD.ROD_UNKN, new S57enum(0, ""));
+		Catrod.put(CatROD.ROD_MWAY, new S57enum(1, "motorway")); Catrod.put(CatROD.ROD_MAJR, new S57enum(2, "major_road")); Catrod.put(CatROD.ROD_MINR, new S57enum(3, "minor_road"));
+		Catrod.put(CatROD.ROD_TRAK, new S57enum(4, "track")); Catrod.put(CatROD.ROD_MAJS, new S57enum(5, "major_street")); Catrod.put(CatROD.ROD_MINS, new S57enum(6, "minor_street"));
+		Catrod.put(CatROD.ROD_CRSG, new S57enum(7, "crossing")); Catrod.put(CatROD.ROD_PATH, new S57enum(8, "path"));
+	}
+	public enum CatRUN { RUN_UNKN, RUN_AERP, RUN_HELI }
+	private static final EnumMap<CatRUN, S57enum> Catrun = new EnumMap<CatRUN, S57enum>(CatRUN.class); static { Catrun.put(CatRUN.RUN_UNKN, new S57enum(0, ""));
+		Catrun.put(CatRUN.RUN_AERP, new S57enum(1, "aeroplane")); Catrun.put(CatRUN.RUN_HELI, new S57enum(2, "helicopter"));
+	}
+	public enum CatSEA { SEA_UNKN, SEA_GENL, SEA_GAT, SEA_BANK, SEA_DEEP, SEA_BAY, SEA_TRCH, SEA_BASN, SEA_MDFT, SEA_REEF, SEA_LEDG, SEA_CNYN, SEA_NRRW, SEA_SHOL,
+		SEA_KNOL, SEA_RIDG, SEA_SMNT, SEA_PNCL, SEA_APLN, SEA_PLTU, SEA_SPUR, SEA_SHLF, SEA_TRGH, SEA_SDDL, SEA_AHLL, SEA_APRN, SEA_AAPN, SEA_BLND, SEA_CMGN, SEA_CRIS,
+		SEA_ESCT, SEA_FAN, SEA_FZON, SEA_GAP, SEA_GUYT, SEA_HILL, SEA_HOLE, SEA_LEVE, SEA_MVLY, SEA_MOAT, SEA_MTNS, SEA_PEAK, SEA_PVNC, SEA_RISE, SEA_SCNL, SEA_SCHN,
+		SEA_SEDG, SEA_SILL, SEA_SLOP, SEA_TRRC, SEA_VLLY, SEA_CANL, SEA_LAKE, SEA_RIVR, SEA_RECH }
+	private static final EnumMap<CatSEA, S57enum> Catsea = new EnumMap<CatSEA, S57enum>(CatSEA.class); static { Catsea.put(CatSEA.SEA_UNKN, new S57enum(0, ""));
+		Catsea.put(CatSEA.SEA_GENL, new S57enum(1, "general")); Catsea.put(CatSEA.SEA_GAT, new S57enum(2, "gat")); Catsea.put(CatSEA.SEA_BANK, new S57enum(3, "bank"));
+		Catsea.put(CatSEA.SEA_DEEP, new S57enum(4, "deep")); Catsea.put(CatSEA.SEA_BAY, new S57enum(5, "bay")); Catsea.put(CatSEA.SEA_TRCH, new S57enum(6, "trench"));
+		Catsea.put(CatSEA.SEA_BASN, new S57enum(7, "basin")); Catsea.put(CatSEA.SEA_MDFT, new S57enum(8, "mud_flats")); Catsea.put(CatSEA.SEA_REEF, new S57enum(9, "reef"));
+		Catsea.put(CatSEA.SEA_LEDG, new S57enum(10, "ledge")); Catsea.put(CatSEA.SEA_CNYN, new S57enum(11, "canyon")); Catsea.put(CatSEA.SEA_NRRW, new S57enum(12, "narrows"));
+		Catsea.put(CatSEA.SEA_SHOL, new S57enum(13, "shoal")); Catsea.put(CatSEA.SEA_KNOL, new S57enum(14, "knoll")); Catsea.put(CatSEA.SEA_RIDG, new S57enum(15, "ridge"));
+		Catsea.put(CatSEA.SEA_SMNT, new S57enum(16, "seamount")); Catsea.put(CatSEA.SEA_PNCL, new S57enum(17, "pinnacle")); Catsea.put(CatSEA.SEA_APLN, new S57enum(18, "abyssal_plain"));
+		Catsea.put(CatSEA.SEA_PLTU, new S57enum(19, "plateau")); Catsea.put(CatSEA.SEA_SPUR, new S57enum(20, "spur")); Catsea.put(CatSEA.SEA_SHLF, new S57enum(21, "shelf"));
+		Catsea.put(CatSEA.SEA_TRGH, new S57enum(22, "trough")); Catsea.put(CatSEA.SEA_SDDL, new S57enum(23, "saddle")); Catsea.put(CatSEA.SEA_AHLL, new S57enum(24, "abyssal_hills"));
+		Catsea.put(CatSEA.SEA_APRN, new S57enum(25, "apron")); Catsea.put(CatSEA.SEA_AAPN, new S57enum(26, "archipelagic_apron")); Catsea.put(CatSEA.SEA_BLND, new S57enum(27, "borderland"));
+		Catsea.put(CatSEA.SEA_CMGN, new S57enum(28, "continental_margin")); Catsea.put(CatSEA.SEA_CRIS, new S57enum(29, "continental_rise")); Catsea.put(CatSEA.SEA_ESCT, new S57enum(30, "escarpment"));
+		Catsea.put(CatSEA.SEA_FAN, new S57enum(31, "fan")); Catsea.put(CatSEA.SEA_FZON, new S57enum(32, "fracture_zone")); Catsea.put(CatSEA.SEA_GAP, new S57enum(33, "gap"));
+		Catsea.put(CatSEA.SEA_GUYT, new S57enum(34, "guyot")); Catsea.put(CatSEA.SEA_HILL, new S57enum(35, "hill")); Catsea.put(CatSEA.SEA_HOLE, new S57enum(36, "hole"));
+		Catsea.put(CatSEA.SEA_LEVE, new S57enum(37, "levee")); Catsea.put(CatSEA.SEA_MVLY, new S57enum(38, "median valley")); Catsea.put(CatSEA.SEA_MOAT, new S57enum(39, "moat"));
+		Catsea.put(CatSEA.SEA_MTNS, new S57enum(40, "mountains")); Catsea.put(CatSEA.SEA_PEAK, new S57enum(41, "peak")); Catsea.put(CatSEA.SEA_PVNC, new S57enum(42, "province"));
+		Catsea.put(CatSEA.SEA_RISE, new S57enum(43, "rise")); Catsea.put(CatSEA.SEA_SCNL, new S57enum(44, "sea channel")); Catsea.put(CatSEA.SEA_SCHN, new S57enum(45, "seamount_chain"));
+		Catsea.put(CatSEA.SEA_SEDG, new S57enum(46, "shelf-edge")); Catsea.put(CatSEA.SEA_SILL, new S57enum(47, "sill")); Catsea.put(CatSEA.SEA_SLOP, new S57enum(48, "slope"));
+		Catsea.put(CatSEA.SEA_TRRC, new S57enum(49, "terrace")); Catsea.put(CatSEA.SEA_VLLY, new S57enum(50, "valley")); Catsea.put(CatSEA.SEA_CANL, new S57enum(51, "canal")); 
+		Catsea.put(CatSEA.SEA_LAKE, new S57enum(52, "lake")); Catsea.put(CatSEA.SEA_RIVR, new S57enum(53, "river")); Catsea.put(CatSEA.SEA_RECH, new S57enum(54, "reach"));
+	}
+	public enum CatSLC { SLC_UNKN, SLC_BWTR, SLC_GRYN, SLC_MOLE, SLC_PIER, SLC_PPER, SLC_WHRF, SLC_TWAL, SLC_RPRP, SLC_RVMT, SLC_SWAL, SLC_LSTP,
+		SLC_RAMP, SLC_SWAY, SLC_FNDR, SLC_SFWF,  SLC_OFWF,  SLC_LRMP,  SLC_LWAL } 
+	private static final EnumMap<CatSLC, S57enum> Catslc = new EnumMap<CatSLC, S57enum>(CatSLC.class); static { Catslc.put(CatSLC.SLC_UNKN, new S57enum(0, ""));
+		Catslc.put(CatSLC.SLC_BWTR, new S57enum(1, "breakwater")); Catslc.put(CatSLC.SLC_GRYN, new S57enum(2, "groyne")); Catslc.put(CatSLC.SLC_MOLE, new S57enum(3, "mole"));
+		Catslc.put(CatSLC.SLC_PIER, new S57enum(4, "pier")); Catslc.put(CatSLC.SLC_PPER, new S57enum(5, "promenade_pier")); Catslc.put(CatSLC.SLC_WHRF, new S57enum(6, "wharf"));
+		Catslc.put(CatSLC.SLC_TWAL, new S57enum(7, "training_wall")); Catslc.put(CatSLC.SLC_RPRP, new S57enum(8, "rip_rap")); Catslc.put(CatSLC.SLC_RVMT, new S57enum(9, "revetment"));
+		Catslc.put(CatSLC.SLC_SWAL, new S57enum(10, "sea_wall")); Catslc.put(CatSLC.SLC_LSTP, new S57enum(11, "landing_steps")); Catslc.put(CatSLC.SLC_RAMP, new S57enum(12, "ramp"));
+		Catslc.put(CatSLC.SLC_SWAY, new S57enum(13, "slipway")); Catslc.put(CatSLC.SLC_FNDR, new S57enum(14, "fender")); Catslc.put(CatSLC.SLC_SFWF, new S57enum(15, "solid_face_wharf"));
+		Catslc.put(CatSLC.SLC_OFWF, new S57enum(16, "open_face_wharf")); Catslc.put(CatSLC.SLC_LRMP, new S57enum(17, "log_ramp")); Catslc.put(CatSLC.SLC_LWAL, new S57enum(18, "lock_wall"));
+	}
 	public enum CatSIT { SIT_UNKN, SIT_PRTC, SIT_PRTE, SIT_IPT, SIT_BRTH, SIT_DOCK, SIT_LOCK, SIT_FLDB, SIT_BRDG, SIT_DRDG, SIT_TCLT }
-	private static final EnumMap<, S57enum>  Catsit = new EnumMap<, S57enum>(.class); static {[SIT_UNKN]={0, "")); [SIT_PRTC]={1, "port_control")); [SIT_PRTE]={2, "port_entry_departure")); [SIT_IPT]={3, "ipt")); [SIT_BRTH]={4, "berthing")); [SIT_DOCK]={5, "dock"));
-	  [SIT_LOCK]={6, "lock")); [SIT_FLDB]={7, "flood_barrage")); [SIT_BRDG]={8, "bridge_passage")); [SIT_DRDG]={9, "dredging")); [SIT_TCLT]={10, "traffic_control_light")); {0, NULL} };
+	private static final EnumMap<CatSIT, S57enum>  Catsit = new EnumMap<CatSIT, S57enum>(CatSIT.class); static {Catsit.put(CatSIT.SIT_UNKN, new S57enum(0, ""));
+		Catsit.put(CatSIT.SIT_PRTC, new S57enum(1, "port_control")); Catsit.put(CatSIT.SIT_PRTE, new S57enum(2, "port_entry_departure")); Catsit.put(CatSIT.SIT_IPT, new S57enum(3, "ipt"));
+		Catsit.put(CatSIT.SIT_BRTH, new S57enum(4, "berthing")); Catsit.put(CatSIT.SIT_DOCK, new S57enum(5, "dock")); Catsit.put(CatSIT.SIT_LOCK, new S57enum(6, "lock"));
+		Catsit.put(CatSIT.SIT_FLDB, new S57enum(7, "flood_barrage")); Catsit.put(CatSIT.SIT_BRDG, new S57enum(8, "bridge_passage")); Catsit.put(CatSIT.SIT_DRDG, new S57enum(9, "dredging"));
+		Catsit.put(CatSIT.SIT_TCLT, new S57enum(10, "traffic_control_light"));
+	}
 	public enum CatSIW { SIW_UNKN, SIW_DNGR, SIW_OBST, SIW_CABL, SIW_MILY, SIW_DSTR, SIW_WTHR, SIW_STRM, SIW_ICE, SIW_TIME, SIW_TIDE, SIW_TSTR,
 	  SIW_TIDG, SIW_TIDS, SIW_DIVE, SIW_WTLG, SIW_VRCL, SIW_DPTH }
-	private static final EnumMap<, S57enum>  Catsiw = new EnumMap<, S57enum>(.class); static {[SIW_UNKN]={0, "")); [SIW_DNGR]={1, "danger")); [SIW_OBST]={2, "maritime_obstruction")); [SIW_CABL]={3, "cable")); [SIW_MILY]={4, "military")); [SIW_DSTR]={5, "distress"));
-	  [SIW_WTHR]={6, "weather")); [SIW_STRM]={7, "storm")); [SIW_ICE]={8, "ice")); [SIW_TIME]={9, "time")); [SIW_TIDE]={10, "tide")); [SIW_TSTR]={11, "tidal_stream")); [SIW_TIDG]={12, "tide_gauge"));
-	  [SIW_TIDS]={13, "tide_scale")); [SIW_DIVE]={14, "diving")); [SIW_WTLG]={15, "water_level_gauge")); [SIW_VRCL]={16, "vertical_clearance")); [SIW_DPTH]={18, "depth")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catsil = new EnumMap<, S57enum>(.class); static {{1, "silo")); {2, "tank")); {3, "grain_elevator")); {4, "water_tower")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catslo = new EnumMap<, S57enum>(.class); static {{1, "cutting")); {2, "embankment")); {3, "dune")); {4, "hill")); {5, "pingo")); {6, "cliff")); {7, "scree")); {0, NULL} };
+	private static final EnumMap<CatSIW, S57enum>  Catsiw = new EnumMap<CatSIW, S57enum>(CatSIW.class); static {Catsiw.put(CatSIW.SIW_UNKN, new S57enum(0, ""));
+		Catsiw.put(CatSIW.SIW_DNGR, new S57enum(1, "danger")); Catsiw.put(CatSIW.SIW_OBST, new S57enum(2, "maritime_obstruction")); Catsiw.put(CatSIW.SIW_CABL, new S57enum(3, "cable"));
+		Catsiw.put(CatSIW.SIW_MILY, new S57enum(4, "military")); Catsiw.put(CatSIW.SIW_DSTR, new S57enum(5, "distress")); Catsiw.put(CatSIW.SIW_WTHR, new S57enum(6, "weather"));
+		Catsiw.put(CatSIW.SIW_STRM, new S57enum(7, "storm")); Catsiw.put(CatSIW.SIW_ICE, new S57enum(8, "ice")); Catsiw.put(CatSIW.SIW_TIME, new S57enum(9, "time"));
+		Catsiw.put(CatSIW.SIW_TIDE, new S57enum(10, "tide")); Catsiw.put(CatSIW.SIW_TSTR, new S57enum(11, "tidal_stream")); Catsiw.put(CatSIW.SIW_TIDG, new S57enum(12, "tide_gauge"));
+	  Catsiw.put(CatSIW.SIW_TIDS, new S57enum(13, "tide_scale")); Catsiw.put(CatSIW.SIW_DIVE, new S57enum(14, "diving")); Catsiw.put(CatSIW.SIW_WTLG, new S57enum(15, "water_level_gauge"));
+	  Catsiw.put(CatSIW.SIW_VRCL, new S57enum(16, "vertical_clearance")); Catsiw.put(CatSIW.SIW_DPTH, new S57enum(18, "depth"));
+	}
+	public enum CatSIL { SIL_UNKN, SIL_SILO, SIL_TANK, SIL_GRNE, SIL_WTRT } 
+	private static final EnumMap<CatSIL, S57enum> Catsil = new EnumMap<CatSIL, S57enum>(CatSIL.class); static { Catsil.put(CatSIL.SIL_UNKN, new S57enum(0, ""));
+		Catsil.put(CatSIL.SIL_SILO, new S57enum(1, "silo")); Catsil.put(CatSIL.SIL_TANK, new S57enum(2, "tank")); Catsil.put(CatSIL.SIL_GRNE, new S57enum(3, "grain_elevator"));
+		Catsil.put(CatSIL.SIL_WTRT, new S57enum(4, "water_tower"));
+	}
+	public enum CatSLO { SLO_UNKN, SLO_CUTG, SLO_EMBK, SLO_DUNE, SLO_HILL, SLO_PINO, SLO_CLIF, SLO_SCRE } 
+	private static final EnumMap<CatSLO, S57enum> Catslo = new EnumMap<CatSLO, S57enum>(CatSLO.class); static { Catslo.put(CatSLO.SLO_UNKN, new S57enum(0, ""));
+		Catslo.put(CatSLO.SLO_CUTG, new S57enum(1, "cutting")); Catslo.put(CatSLO.SLO_EMBK, new S57enum(2, "embankment")); Catslo.put(CatSLO.SLO_DUNE, new S57enum(3, "dune"));
+		Catslo.put(CatSLO.SLO_HILL, new S57enum(4, "hill")); Catslo.put(CatSLO.SLO_PINO, new S57enum(5, "pingo")); Catslo.put(CatSLO.SLO_CLIF, new S57enum(6, "cliff")); Catslo.put(CatSLO.SLO_SCRE, new S57enum(7, "scree"));
+	}
 	public enum CatSCF { SCF_UNKN, SCF_VBTH, SCF_CLUB, SCF_BHST, SCF_SMKR, SCF_BTYD, SCF_INN, SCF_RSRT, SCF_CHDR, SCF_PROV, SCF_DCTR, SCF_PHRM,
 		SCF_WTRT, SCF_FUEL, SCF_ELEC, SCF_BGAS, SCF_SHWR, SCF_LAUN, SCF_WC, SCF_POST, SCF_TELE, SCF_REFB, SCF_CARP, SCF_BTPK, SCF_CRVN, SCF_CAMP,
 		SCF_PMPO, SCF_EMRT, SCF_SLPW, SCF_VMOR, SCF_SCRB, SCF_PCNC, SCF_MECH, SCF_SECS }
-	private static final EnumMap<, S57enum> Catscf = new EnumMap<, S57enum>(.class); static {[SCF_UNKN]={0, "")); [SCF_VBTH]={1, "visitor_berth")); [SCF_CLUB]={2, "nautical_club")); [SCF_BHST]={3, "boat_hoist")); [SCF_SMKR]={4, "sailmaker")); [SCF_BTYD]={5, "boatyard"));
-	  [SCF_INN]={6, "public_inn")); [SCF_RSRT]={7, "restaurant")); [SCF_CHDR]={8, "chandler")); [SCF_PROV]={9, "provisions")); [SCF_DCTR]={10, "doctor")); [SCF_PHRM]={11, "pharmacy")); [SCF_WTRT]={12, "water_tap"));
-	  [SCF_FUEL]={13, "fuel_station")); [SCF_ELEC]={14, "electricity")); [SCF_BGAS]={15, "bottle_gas")); [SCF_SHWR]={16, "showers")); [SCF_LAUN]={17, "laundrette")); [SCF_WC]={18, "toilets"));
-	  [SCF_POST]={19, "post_box"));  [SCF_TELE]={20, "telephone")); [SCF_REFB]={21, "refuse_bin")); [SCF_CARP]={22, "car_park")); [SCF_BTPK]={23, "boats_trailers_park")); [SCF_CRVN]={24, "caravan_site"));
-	  [SCF_CAMP]={25, "camping_site"));  [SCF_PMPO]={26, "pump-out")); [SCF_EMRT]={27, "emergency_telephone")); [SCF_SLPW]={28, "slipway")); [SCF_VMOR]={29, "visitors_mooring"));
-	  [SCF_SCRB]={30, "scrubbing_berth")); [SCF_PCNC]={31, "picnic_area"));  [SCF_MECH]={32, "mechanics_workshop")); [SCF_SECS]={33, "security_service")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catspm = new EnumMap<, S57enum>(.class); static {{1, "firing_danger_area")); {2, "target")); {3, "marker_ship")); {4, "degaussing_range")); {5, "barge")); {6, "cable")); {7, "spoil_ground")); {8, "outfall")); {9, "odas")); {10, "recording"));
-	  {11, "seaplane_anchorage")); {12, "recreation_zone")); {13, "private")); {14, "mooring")); {15, "lanby")); {16, "leading")); {17, "measured_distance")); {18, "notice")); {19, "tss")); {20, "no_anchoring")); {21, "no_berthing"));
-	  {22, "no_overtaking")); {23, "no_two-way_traffic")); {24, "reduced_wake")); {25, "speed_limit")); {26, "stop")); {27, "warning")); {28, "sound_ship_siren")); {29, "restricted_vertical_clearance")); {30, "maximum_vessel_draught"));
-	  {31, "restricted_horizontal_clearance")); {32, "strong_current")); {33, "berthing")); {34, "overhead_power_cable")); {35, "channel_edge_gradient")); {36, "telephone")); {37, "ferry_crossing")); {38, "marine_traffic_lights"));
-	  {39, "pipeline")); {40, "anchorage")); {41, "clearing")); {42, "control")); {43, "diving")); {44, "refuge_beacon")); {45, "foul_ground")); {46, "yachting")); {47, "heliport")); {48, "gps")); {49, "seaplane_landing"));
-	  {50, "no_entry")); {51, "work_in_progress")); {52, "unknown_purpose")); {53, "wellhead")); {54, "channel_separation")); {55, "marine_farm")); {56, "artificial_reef, ")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cattss = new EnumMap<, S57enum>(.class); static {{1, "imo_adopted")); {2, "not_imo_adopted")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catveg = new EnumMap<, S57enum>(.class); static {{1, "grass")); {2, "paddy")); {3, "bush")); {4, "deciduous_wood")); {5, "coniferous_wood")); {6, "wood")); {7, "mangroves")); {8, "park")); {9, "parkland")); {10, "mixed_crops")); {11, "reed"));
-	  {12, "moss")); {13, "tree")); {14, "evergreen_tree")); {15, "coniferous_tree")); {16, "palm_tree")); {17, "nipa_palm_tree")); {18, "casuarina_tree")); {19, "eucalypt_tree")); {20, "deciduous_tree")); {21, "mangrove_tree"));
-	  {22, "filao_tree")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catwat = new EnumMap<, S57enum>(.class); static {{1, "breakers")); {2, "eddies")); {3, "overfalls")); {4, "tide_rips")); {5, "bombora")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catwed = new EnumMap<, S57enum>(.class); static {{1, "kelp")); {2, "sea_weed")); {3, "sea_grass")); {4, "saragasso")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catwrk = new EnumMap<, S57enum>(.class); static {{1, "non-dangerous")); {2, "dangerous")); {3, "distributed_remains")); {4, "mast_showing")); {5, "hull_showing")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catzoc = new EnumMap<, S57enum>(.class); static {{1, "a1")); {2, "a2")); {3, "b")); {4, "c")); {5, "d")); {6, "u")); {0, NULL} };
-	public enum ColCOL { COL_UNK, COL_WHT, COL_BLK, COL_RED, COL_GRN, COL_BLU, COL_YEL, COL_GRY, COL_BRN, COL_AMB, COL_VIO, COL_ORG, COL_MAG, COL_PNK }
-	private static final EnumMap<, S57enum> Colour = new EnumMap<, S57enum>(.class); static {[COL_UNK]={0, "")); [COL_WHT]={1, "white")); [COL_BLK]={2, "black")); [COL_RED]={3, "red")); [COL_GRN]={4, "green")); [COL_BLU]={5, "blue")); [COL_YEL]={6, "yellow")); [COL_GRY]={7, "grey"));
-	  [COL_BRN]={8, "brown")); [COL_AMB]={9, "amber")); [COL_VIO]={10, "violet")); [COL_ORG]={11, "orange")); [COL_MAG]={12, "magenta")); [COL_PNK]={13, "pink")); {0, NULL} };
-	public enum ColPAT { PAT_UNKN, PAT_HORI, PAT_VERT, PAT_DIAG, PAT_SQUR, PAT_STRP, PAT_BRDR, PAT_CROS, PAT_SALT }
-	private static final EnumMap<, S57enum> Colpat = new EnumMap<, S57enum>(.class); static {[PAT_UNKN]={0, "")); [PAT_HORI]={1, "horizontal")); [PAT_VERT]={2, "vertical")); [PAT_DIAG]={3, "diagonal")); [PAT_SQUR]={4, "squared")); [PAT_STRP]={5, "stripes")); [PAT_BRDR]={6, "border"));
-	  [PAT_CROS]={7, "cross")); [PAT_SALT]={8, "saltire")); {0, NULL} };
-	private static final EnumMap<, S57enum> Condtn = new EnumMap<, S57enum>(.class); static {{1, "under_construction")); {2, "ruined")); {3, "under_reclamation")); {4, "wingless")); {5, "planned_construction")); {0, NULL} };
-	private static final EnumMap<, S57enum> Conrad = new EnumMap<, S57enum>(.class); static {{1, "conspicuous")); {2, "not_conspicuous")); {3, "reflector")); {0, NULL} };
-	private static final EnumMap<, S57enum> Convis = new EnumMap<, S57enum>(.class); static {{1, "conspicuous")); {2, "not_conspicuous")); {0, NULL} };
-	private static final EnumMap<, S57enum> Dunits = new EnumMap<, S57enum>(.class); static {{1, "metres")); {2, "fathoms_feet")); {3, "fathoms")); {4, "fathoms_fractions")); {0, NULL} };
-	private static final EnumMap<, S57enum> Exclit = new EnumMap<, S57enum>(.class); static {{1, "24h")); {2, "day")); {3, "fog")); {4, "night")); {5, "warning")); {6, "storm")); {0, NULL} };
-	private static final EnumMap<, S57enum> Expsou = new EnumMap<, S57enum>(.class); static {{1, "within")); {2, "shoaler")); {3, "deeper")); {0, NULL} };
-	public enum FncFNC { FNC_UNKN, FNC_HBRM, FNC_CSTM, FNC_HLTH, FNC_HOSP, FNC_POST, FNC_HOTL, FNC_RAIL, FNC_POLC, FNC_WPOL, FNC_PILO, FNC_PILL, FNC_BANK,
+	private static final EnumMap<CatSCF, S57enum> Catscf = new EnumMap<CatSCF, S57enum>(CatSCF.class); static { Catscf.put(CatSCF.SCF_UNKN, new S57enum(0, ""));
+		Catscf.put(CatSCF.SCF_VBTH, new S57enum(1, "visitor_berth")); Catscf.put(CatSCF.SCF_CLUB, new S57enum(2, "nautical_club")); Catscf.put(CatSCF.SCF_BHST, new S57enum(3, "boat_hoist"));
+		Catscf.put(CatSCF.SCF_SMKR, new S57enum(4, "sailmaker")); Catscf.put(CatSCF.SCF_BTYD, new S57enum(5, "boatyard")); Catscf.put(CatSCF.SCF_INN, new S57enum(6, "public_inn"));
+		Catscf.put(CatSCF.SCF_RSRT, new S57enum(7, "restaurant")); Catscf.put(CatSCF.SCF_CHDR, new S57enum(8, "chandler")); Catscf.put(CatSCF.SCF_PROV, new S57enum(9, "provisions"));
+		Catscf.put(CatSCF.SCF_DCTR, new S57enum(10, "doctor")); Catscf.put(CatSCF.SCF_PHRM, new S57enum(11, "pharmacy")); Catscf.put(CatSCF.SCF_WTRT, new S57enum(12, "water_tap"));
+	  Catscf.put(CatSCF.SCF_FUEL, new S57enum(13, "fuel_station")); Catscf.put(CatSCF.SCF_ELEC, new S57enum(14, "electricity")); Catscf.put(CatSCF.SCF_BGAS, new S57enum(15, "bottle_gas"));
+	  Catscf.put(CatSCF.SCF_SHWR, new S57enum(16, "showers")); Catscf.put(CatSCF.SCF_LAUN, new S57enum(17, "laundrette")); Catscf.put(CatSCF.SCF_WC, new S57enum(18, "toilets"));
+	  Catscf.put(CatSCF.SCF_POST, new S57enum(19, "post_box")); Catscf.put(CatSCF.SCF_TELE, new S57enum(20, "telephone")); Catscf.put(CatSCF.SCF_REFB, new S57enum(21, "refuse_bin"));
+	  Catscf.put(CatSCF.SCF_CARP, new S57enum(22, "car_park")); Catscf.put(CatSCF.SCF_BTPK, new S57enum(23, "boat_trailers_park")); Catscf.put(CatSCF.SCF_CRVN, new S57enum(24, "caravan_site"));
+	  Catscf.put(CatSCF.SCF_CAMP, new S57enum(25, "camping_site"));  Catscf.put(CatSCF.SCF_PMPO, new S57enum(26, "pump-out")); Catscf.put(CatSCF.SCF_EMRT, new S57enum(27, "emergency_telephone"));
+	  Catscf.put(CatSCF.SCF_SLPW, new S57enum(28, "slipway")); Catscf.put(CatSCF.SCF_VMOR, new S57enum(29, "visitors_mooring")); Catscf.put(CatSCF.SCF_SCRB, new S57enum(30, "scrubbing_berth"));
+	  Catscf.put(CatSCF.SCF_PCNC, new S57enum(31, "picnic_area")); Catscf.put(CatSCF.SCF_MECH, new S57enum(32, "mechanics_workshop")); Catscf.put(CatSCF.SCF_SECS, new S57enum(33, "security_service"));
+	}
+	public enum CatSPM { SPM_UNKN, SPM_FDGA, SPM_TRGT, SPM_MSHP, SPM_DGRG, SPM_BARG, SPM_CABL, SPM_SPLG, SPM_OFAL, SPM_ODAS, SPM_RCDG, SPM_SPLA, SPM_RCZN, SPM_PRVT, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_MDST,
+		SPM_NOTC, SPM_TSS, SPM_NANC, SPM_NBRT, SPM_NOTK, SPM_NTWT, SPM_RWAK, SPM_SPDL, SPM_STOP, SPM_WRNG, SPM_SSSN, SPM_RVCL, SPM_MVDT, SPM_RHCL, SPM_SCNT, SPM_BRTH, SPM_OHPC, SPM_CHEG, SPM_TELE, SPM_FCRS,
+		SPM_MTRL, SPM_PLIN, SPM_ANCH, SPM_CLRG, SPM_CTRL, SPM_DIVG, SPM_RBCN, SPM_FGND, SPM_YCHT, SPM_HPRT, SPM_GPS, SPM_SLDG, SPM_NENT, SPM_WRKP, SPM_UKPP, SPM_WELH, SPM_CHSP, SPM_MFRM, SPM_AREF } 
+	private static final EnumMap<CatSPM, S57enum> Catspm = new EnumMap<CatSPM, S57enum>(CatSPM.class); static { Catspm.put(CatSPM.SPM_UNKN, new S57enum(0, ""));
+		Catspm.put(CatSPM.SPM_FDGA, new S57enum(1, "firing_danger_area")); Catspm.put(CatSPM.SPM_TRGT, new S57enum(2, "target")); Catspm.put(CatSPM.SPM_MSHP, new S57enum(3, "marker_ship"));
+		Catspm.put(CatSPM.SPM_DGRG, new S57enum(4, "degaussing_range")); Catspm.put(CatSPM.SPM_BARG, new S57enum(5, "barge")); Catspm.put(CatSPM.SPM_CABL, new S57enum(6, "cable"));
+		Catspm.put(CatSPM.SPM_SPLG, new S57enum(7, "spoil_ground")); Catspm.put(CatSPM.SPM_OFAL, new S57enum(8, "outfall")); Catspm.put(CatSPM.SPM_ODAS, new S57enum(9, "odas"));
+		Catspm.put(CatSPM.SPM_RCDG, new S57enum(10, "recording")); Catspm.put(CatSPM.SPM_SPLA, new S57enum(11, "seaplane_anchorage")); Catspm.put(CatSPM.SPM_RCZN, new S57enum(12, "recreation_zone"));
+		Catspm.put(CatSPM.SPM_PRVT, new S57enum(13, "private")); Catspm.put(CatSPM.SPM_MOOR, new S57enum(14, "mooring")); Catspm.put(CatSPM.SPM_LNBY, new S57enum(15, "lanby"));
+		Catspm.put(CatSPM.SPM_LDNG, new S57enum(16, "leading")); Catspm.put(CatSPM.SPM_MDST, new S57enum(17, "measured_distance")); Catspm.put(CatSPM.SPM_NOTC, new S57enum(18, "notice"));
+		Catspm.put(CatSPM.SPM_TSS, new S57enum(19, "tss")); Catspm.put(CatSPM.SPM_NANC, new S57enum(20, "no_anchoring")); Catspm.put(CatSPM.SPM_NBRT, new S57enum(21, "no_berthing"));
+		Catspm.put(CatSPM.SPM_NOTK, new S57enum(22, "no_overtaking")); Catspm.put(CatSPM.SPM_NTWT, new S57enum(23, "no_two-way_traffic")); Catspm.put(CatSPM.SPM_RWAK, new S57enum(24, "reduced_wake"));
+		Catspm.put(CatSPM.SPM_SPDL, new S57enum(25, "speed_limit")); Catspm.put(CatSPM.SPM_STOP, new S57enum(26, "stop")); Catspm.put(CatSPM.SPM_WRNG, new S57enum(27, "warning"));
+		Catspm.put(CatSPM.SPM_SSSN, new S57enum(28, "sound_ship_siren")); Catspm.put(CatSPM.SPM_RVCL, new S57enum(29, "restricted_vertical_clearance"));
+		Catspm.put(CatSPM.SPM_MVDT, new S57enum(30, "maximum_vessel_draught")); Catspm.put(CatSPM.SPM_RHCL, new S57enum(31, "restricted_horizontal_clearance"));
+		Catspm.put(CatSPM.SPM_SCNT, new S57enum(32, "strong_current")); Catspm.put(CatSPM.SPM_BRTH, new S57enum(33, "berthing")); Catspm.put(CatSPM.SPM_OHPC, new S57enum(34, "overhead_power_cable"));
+		Catspm.put(CatSPM.SPM_CHEG, new S57enum(35, "channel_edge_gradient")); Catspm.put(CatSPM.SPM_TELE, new S57enum(36, "telephone")); Catspm.put(CatSPM.SPM_FCRS, new S57enum(37, "ferry_crossing"));
+		Catspm.put(CatSPM.SPM_MTRL, new S57enum(38, "marine_traffic_lights")); Catspm.put(CatSPM.SPM_PLIN, new S57enum(39, "pipeline")); Catspm.put(CatSPM.SPM_ANCH, new S57enum(40, "anchorage"));
+		Catspm.put(CatSPM.SPM_CLRG, new S57enum(41, "clearing")); Catspm.put(CatSPM.SPM_CTRL, new S57enum(42, "control")); Catspm.put(CatSPM.SPM_DIVG, new S57enum(43, "diving"));
+		Catspm.put(CatSPM.SPM_RBCN, new S57enum(44, "refuge_beacon")); Catspm.put(CatSPM.SPM_FGND, new S57enum(45, "foul_ground")); Catspm.put(CatSPM.SPM_YCHT, new S57enum(46, "yachting"));
+		Catspm.put(CatSPM.SPM_HPRT, new S57enum(47, "heliport")); Catspm.put(CatSPM.SPM_GPS, new S57enum(48, "gps")); Catspm.put(CatSPM.SPM_SLDG, new S57enum(49, "seaplane_landing"));
+	  Catspm.put(CatSPM.SPM_NENT, new S57enum(50, "no_entry")); Catspm.put(CatSPM.SPM_WRKP, new S57enum(51, "work_in_progress")); Catspm.put(CatSPM.SPM_UKPP, new S57enum(52, "unknown_purpose"));
+	  Catspm.put(CatSPM.SPM_WELH, new S57enum(53, "wellhead")); Catspm.put(CatSPM.SPM_CHSP, new S57enum(54, "channel_separation")); Catspm.put(CatSPM.SPM_MFRM, new S57enum(55, "marine_farm"));
+	  Catspm.put(CatSPM.SPM_AREF, new S57enum(56, "artificial_reef"));
+	}
+	public enum CatTSS { TSS_UNKN, TSS_IMOA, TSS_NIMO }
+	private static final EnumMap<CatTSS, S57enum> Cattss = new EnumMap<CatTSS, S57enum>(CatTSS.class); static { Cattss.put(CatTSS.TSS_UNKN, new S57enum(0, ""));
+		Cattss.put(CatTSS.TSS_IMOA, new S57enum(1, "imo_adopted")); Cattss.put(CatTSS.TSS_NIMO, new S57enum(2, "not_imo_adopted"));
+	}
+	public enum CatVEG { VEG_UNKN, VEG_GRAS, VEG_PDDY, VEG_BUSH, VEG_DCDW, VEG_CONW, VEG_WOOD, VEG_MGRV, VEG_PARK, VEG_PKLD, VEG_MCRP, VEG_REED, VEG_MOSS,
+		VEG_TREE, VEG_EVGT, VEG_CONT, VEG_PLMT, VEG_NPMT, VEG_CSAT, VEG_EUCT, VEG_DCDT, VEG_MRVT, VEG_FLOT }
+	private static final EnumMap<CatVEG, S57enum> Catveg = new EnumMap<CatVEG, S57enum>(CatVEG.class); static { Catveg.put(CatVEG.VEG_UNKN, new S57enum(0, ""));
+		Catveg.put(CatVEG.VEG_GRAS, new S57enum(1, "grass")); Catveg.put(CatVEG.VEG_PDDY, new S57enum(2, "paddy")); Catveg.put(CatVEG.VEG_BUSH, new S57enum(3, "bush"));
+		Catveg.put(CatVEG.VEG_DCDW, new S57enum(4, "deciduous_wood")); Catveg.put(CatVEG.VEG_CONW, new S57enum(5, "coniferous_wood")); Catveg.put(CatVEG.VEG_WOOD, new S57enum(6, "wood"));
+		Catveg.put(CatVEG.VEG_MGRV, new S57enum(7, "mangroves")); Catveg.put(CatVEG.VEG_PARK, new S57enum(8, "park")); Catveg.put(CatVEG.VEG_PKLD, new S57enum(9, "parkland"));
+		Catveg.put(CatVEG.VEG_MCRP, new S57enum(10, "mixed_crops")); Catveg.put(CatVEG.VEG_REED, new S57enum(11, "reed")); Catveg.put(CatVEG.VEG_MOSS, new S57enum(12, "moss"));
+		Catveg.put(CatVEG.VEG_TREE, new S57enum(13, "tree")); Catveg.put(CatVEG.VEG_EVGT, new S57enum(14, "evergreen_tree")); Catveg.put(CatVEG.VEG_CONT, new S57enum(15, "coniferous_tree"));
+		Catveg.put(CatVEG.VEG_PLMT, new S57enum(16, "palm_tree")); Catveg.put(CatVEG.VEG_NPMT, new S57enum(17, "nipa_palm_tree")); Catveg.put(CatVEG.VEG_CSAT, new S57enum(18, "casuarina_tree"));
+		Catveg.put(CatVEG.VEG_EUCT, new S57enum(19, "eucalypt_tree")); Catveg.put(CatVEG.VEG_DCDT, new S57enum(20, "deciduous_tree")); Catveg.put(CatVEG.VEG_MRVT, new S57enum(21, "mangrove_tree"));
+		Catveg.put(CatVEG.VEG_FLOT, new S57enum(22, "filao_tree"));
+	}
+		 /*
+	private static final EnumMap<, S57enum> Catwat = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "breakers")); []={2, "eddies")); []={3, "overfalls")); []={4, "tide_rips"));
+	 []={5, "bombora")); }
+	private static final EnumMap<, S57enum> Catwed = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "kelp")); []={2, "sea_weed")); []={3, "sea_grass")); []={4, "saragasso")); }
+	private static final EnumMap<, S57enum> Catwrk = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "non-dangerous")); []={2, "dangerous")); []={3, "distributed_remains"));
+	 []={4, "mast_showing")); []={5, "hull_showing")); }
+	private static final EnumMap<, S57enum> Catzoc = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "a1")); []={2, "a2")); []={3, "b")); []={4, "c")); []={5, "d")); []={6, "u")); }
+	public enum ColCOL []={ COL_UNK, COL_WHT, COL_BLK, COL_RED, COL_GRN, COL_BLU, COL_YEL, COL_GRY, COL_BRN, COL_AMB, COL_VIO, COL_ORG, COL_MAG, COL_PNK }
+	private static final EnumMap<, S57enum> Colour = new EnumMap<, S57enum>(.class); static {[COL_UNK]={0, "")); [COL_WHT]={1, "white")); [COL_BLK]={2, "black")); [COL_RED]={3, "red"));
+	 [COL_GRN]={4, "green")); [COL_BLU]={5, "blue")); [COL_YEL]={6, "yellow")); [COL_GRY]={7, "grey"));
+	  [COL_BRN]={8, "brown")); [COL_AMB]={9, "amber")); [COL_VIO]={10, "violet")); [COL_ORG]={11, "orange")); [COL_MAG]={12, "magenta")); [COL_PNK]={13, "pink")); }
+	public enum ColPAT []={ PAT_UNKN, PAT_HORI, PAT_VERT, PAT_DIAG, PAT_SQUR, PAT_STRP, PAT_BRDR, PAT_CROS, PAT_SALT }
+	private static final EnumMap<, S57enum> Colpat = new EnumMap<, S57enum>(.class); static {[PAT_UNKN]={0, "")); [PAT_HORI]={1, "horizontal")); [PAT_VERT]={2, "vertical"));
+	 [PAT_DIAG]={3, "diagonal")); [PAT_SQUR]={4, "squared")); [PAT_STRP]={5, "stripes")); [PAT_BRDR]={6, "border"));
+	  [PAT_CROS]={7, "cross")); [PAT_SALT]={8, "saltire")); }
+	private static final EnumMap<, S57enum> Condtn = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "under_construction")); []={2, "ruined")); []={3, "under_reclamation"));
+	 []={4, "wingless")); []={5, "planned_construction")); }
+	private static final EnumMap<, S57enum> Conrad = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "conspicuous")); []={2, "not_conspicuous")); []={3, "reflector")); }
+	private static final EnumMap<, S57enum> Convis = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "conspicuous")); []={2, "not_conspicuous")); }
+	private static final EnumMap<, S57enum> Dunits = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "metres")); []={2, "fathoms_feet")); []={3, "fathoms")); []={4, "fathoms_fractions")); }
+	private static final EnumMap<, S57enum> Exclit = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "24h")); []={2, "day")); []={3, "fog")); []={4, "night")); []={5, "warning")); []={6, "storm")); }
+	private static final EnumMap<, S57enum> Expsou = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "within")); []={2, "shoaler")); []={3, "deeper")); }
+	public enum FncFNC []={ FNC_UNKN, FNC_HBRM, FNC_CSTM, FNC_HLTH, FNC_HOSP, FNC_POST, FNC_HOTL, FNC_RAIL, FNC_POLC, FNC_WPOL, FNC_PILO, FNC_PILL, FNC_BANK,
 		FNC_DIST, FNC_TRNS, FNC_FCTY, FNC_POWR, FNC_ADMIN, FNC_EDUC, FNC_CHCH, FNC_CHPL, FNC_TMPL, FNC_PGDA, FNC_SHSH, FNC_BTMP, FNC_MOSQ, FNC_MRBT,
 		FNC_LOOK, FNC_COMM, FNC_TV, FNC_RADO, FNC_RADR, FNC_LGHT, FNC_MCWV, FNC_COOL, FNC_OBS, FNC_TMBL, FNC_CLOK, FNC_CTRL, FNC_ASHM, FNC_STAD, FNC_BUSS }
 	private static final EnumMap<, S57enum> Functn = new EnumMap<, S57enum>(.class); static {[FNC_UNKN]={0, "")); [FNC_HBRM]={2, "harbour-master")); [FNC_CSTM]={3, "customs")); [FNC_HLTH]={4, "health")); [FNC_HOSP]={5, "hospital")); [FNC_POST]={6, "post_office")); [FNC_HOTL]={7, "hotel"));
@@ -333,59 +510,88 @@ public class S57val {
 	  [FNC_CHCH]={20, "church")); [FNC_CHPL]={21, "chapel")); [FNC_TMPL]={22, "temple")); [FNC_PGDA]={23, "pagoda")); [FNC_SHSH]={24, "shinto_shrine")); [FNC_BTMP]={25, "buddhist_temple")); [FNC_MOSQ]={26, "mosque"));
 	  [FNC_MRBT]={27, "marabout")); [FNC_LOOK]={28, "lookout")); [FNC_COMM]={29, "communiCation")); [FNC_TV]={30, "television")); [FNC_RADO]={31, "radio")); [FNC_RADR]={32, "radar")); [FNC_LGHT]={33, "light_support"));
 	  [FNC_MCWV]={34, "microwave")); [FNC_COOL]={35, "cooling")); [FNC_OBS]={36, "observation")); [FNC_TMBL]={37, "time_ball")); [FNC_CLOK]={38, "clock")); [FNC_CTRL]={39, "control")); [FNC_ASHM]={40, "airship_mooring"));
-	  [FNC_STAD]={41, "stadium")); [FNC_BUSS]={42, "bus_station")); {0, NULL} };
-	private static final EnumMap<, S57enum> Hunits = new EnumMap<, S57enum>(.class); static {{1, "metres")); {2, "feet")); {3, "kilometres")); {4, "hectometres")); {5, "statute_miles")); {6, "nautical_miles")); {0, NULL} };
-	private static final EnumMap<, S57enum> Jrsdtn = new EnumMap<, S57enum>(.class); static {{1, "international")); {2, "national")); {3, "national_sub-division")); {0, NULL} };
-	public enum LitCHR { CHR_UNKN, CHR_F, CHR_FL, CHR_LFL, CHR_Q, CHR_VQ, CHR_UQ, CHR_ISO, CHR_OC, CHR_IQ, CHR_IVQ, CHR_IUQ, CHR_MO, CHR_FFL,
+	  [FNC_STAD]={41, "stadium")); [FNC_BUSS]={42, "bus_station")); }
+	private static final EnumMap<, S57enum> Hunits = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "metres")); []={2, "feet")); []={3, "kilometres")); []={4, "hectometres"));
+	 []={5, "statute_miles")); []={6, "nautical_miles")); }
+	private static final EnumMap<, S57enum> Jrsdtn = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "international")); []={2, "national")); []={3, "national_sub-division")); }
+	public enum LitCHR []={ CHR_UNKN, CHR_F, CHR_FL, CHR_LFL, CHR_Q, CHR_VQ, CHR_UQ, CHR_ISO, CHR_OC, CHR_IQ, CHR_IVQ, CHR_IUQ, CHR_MO, CHR_FFL,
 		CHR_FLLFL, CHR_OCFL, CHR_FLFL, CHR_ALOC, CHR_ALLFL, CHR_ALFL, CHR_ALGR, CHR_QLFL, CHR_VQLFL, CHR_UQLFL, CHR_AL, CHR_ALFFL }
 	private static final EnumMap<, S57enum> Litchr = new EnumMap<, S57enum>(.class); static {[CHR_UNKN]={0, "")); [CHR_F]={1, "F")); [CHR_FL]={2, "Fl")); [CHR_LFL]={3, "LFl")); [CHR_Q]={4, "Q")); [CHR_VQ]={5, "VQ")); [CHR_UQ]={6, "UQ")); [CHR_ISO]={7, "Iso")); [CHR_OC]={8, "Oc"));
 	  [CHR_IQ]={9, "IQ")); [CHR_IVQ]={10, "IVQ")); [CHR_IUQ]={11, "IUQ")); [CHR_MO]={12, "Mo")); [CHR_FFL]={13, "FFl")); [CHR_FLLFL]={14, "FlLFl")); [CHR_OCFL]={15, "OcFl")); [CHR_FLFL]={16, "FLFl")); [CHR_ALOC]={17, "Al.Oc"));
-	  [CHR_ALLFL]={18, "Al.LFl")); [CHR_ALFL]={19, "Al.Fl")); [CHR_ALGR]={20, "Al.Gr")); [CHR_QLFL]={25, "Q+LFl")); [CHR_VQLFL]={26, "VQ+LFl")); [CHR_UQLFL]={27, "UQ+LFl")); [CHR_AL]={28, "Al")); [CHR_ALFFL]={29, "Al.FFl")); {0, NULL} };
-	private static final EnumMap<, S57enum> Litvis = new EnumMap<, S57enum>(.class); static {{1, "high")); {2, "low")); {3, "faint")); {4, "intensified")); {5, "unintensified")); {6, "restricted")); {7, "obscured")); {8, "part_obscured")); {0, NULL} };
-	private static final EnumMap<, S57enum> Marsys = new EnumMap<, S57enum>(.class); static {{1, "iala-a")); {2, "iala-b")); {9, "none")); {10, "other")); {11, "cevni")); {12, "riwr")); {0, NULL} };
-	private static final EnumMap<, S57enum> Natcon = new EnumMap<, S57enum>(.class); static {{1, "masonry")); {2, "concreted")); {3, "loose_boulders")); {4, "hard-surfaced")); {5, "unsurfaced")); {6, "wooden")); {7, "metal")); {8, "grp")); {9, "painted")); {0, NULL} };
-	private static final EnumMap<, S57enum> Natsur = new EnumMap<, S57enum>(.class); static {{1, "mud")); {2, "clay")); {3, "silt")); {4, "sand")); {5, "stone")); {6, "gravel")); {7, "pebbles")); {8, "cobbles")); {9, "rock")); {11, "lava")); {14, "coral")); {17, "shells")); {18, "boulder")); {0, NULL} };
-	private static final EnumMap<, S57enum> Natqua = new EnumMap<, S57enum>(.class); static {{1, "fine")); {2, "medium")); {3, "coarse")); {4, "broken")); {5, "sticky")); {6, "soft")); {7, "stiff")); {8, "volcanic")); {9, "calcareous")); {10, "hard")); {0, NULL} };
-	private static final EnumMap<, S57enum> Prodct = new EnumMap<, S57enum>(.class); static {{1, "oil")); {2, "gas")); {3, "water")); {4, "stone")); {5, "coal")); {6, "ore")); {7, "chemicals")); {8, "drinking_water")); {9, "milk")); {10, "bauxite")); {11, "coke")); {12, "iron_ingots")); {13, "salt"));
-	  {14, "sand")); {15, "timber")); {16, "sawdust")); {17, "scrap")); {18, "lng")); {19, "lpg")); {20, "wine")); {21, "cement")); {22, "grain")); {0, NULL} };
-	private static final EnumMap<, S57enum> Quasou = new EnumMap<, S57enum>(.class); static {{1, "known")); {2, "unknown")); {3, "doubtful")); {4, "unreliable")); {5, "no_bottom_found")); {6, "least_known")); {7, "least_unknown")); {8, "not_surveyed")); {9, "not_confirmed")); {10, "maintained"));
-	  {11, "not_maintained")); {0, NULL} };
-	private static final EnumMap<, S57enum> Restrn = new EnumMap<, S57enum>(.class); static {{1, "no_anchoring")); {2, "restricted_anchoring")); {3, "no_fishing")); {4, "restricted_fishing")); {5, "no_trawling")); {6, "restricted_trawling")); {7, "no_entry")); {8, "restricted_entry"));
-	  {9, "no_dredging")); {10, "restricted_dredging")); {11, "no_diving")); {12, "restricted_diving")); {13, "no_wake")); {14, "to_be_avoided")); {15, "no_construction")); {16, "no_discharging")); {17, "restricted_discharging"));
-	  {18, "no_ exploration_development")); {19, "restricted_exploration_development")); {20, "no_drilling")); {21, "restricted_drilling")); {22, "no_historical_artifacts_removal")); {23, "no_lightering")); {24, "no_dragging"));
-	  {25, "no_stopping")); {26, "no_landing")); {27, "restricted_speed")); {28, "overtaking prohibited")); {29, "overtaking of convoys by convoys prohibited")); {30, "passing or overtaking prohibited"));
-	  {31, "berthing prohibited")); {32, "berthing restricted")); {33, "making fast prohibited")); {34, "making fast restricted")); {35, "turning prohibited")); {36, "restricted fairway depth")); {0, NULL} };
-	private static final EnumMap<, S57enum> Siggen = new EnumMap<, S57enum>(.class); static {{1, "automatic")); {2, "wave")); {3, "hand")); {4, "wind")); {0, NULL} };
-	private static final EnumMap<, S57enum> Status = new EnumMap<, S57enum>(.class); static {{1, "permanent")); {2, "occasional")); {3, "recommended")); {4, "not_in_use")); {5, "intermittent")); {6, "reserved")); {7, "tempory")); {8, "private")); {9, "mandatory")); {11, "extinguished"));
-	  {12, "illuminated")); {13, "historic")); {14, "public")); {15, "synchronised")); {16, "watched")); {17, "unwatched")); {18, "existence_doubtful")); {19, "on_request")); {20, "drop_away")); {21, "rising")); {22, "increasing"));
-	  {23, "decreasing")); {24, "strong")); {25, "good")); {26, "moderately")); {27, "poor")); {0, NULL} };
-	private static final EnumMap<, S57enum> Surtyp = new EnumMap<, S57enum>(.class); static {{1, "sketch")); {2, "controlled")); {4, "examination")); {5, "passage")); {6, "remote")); {0, NULL} };
-	private static final EnumMap<, S57enum> Tecsou = new EnumMap<, S57enum>(.class); static {{1, "echo-sounder")); {2, "side-scan_sonar")); {3, "multi-beam")); {4, "diver")); {5, "lead-line")); {6, "wire-drag")); {7, "laser")); {8, "vertical_acoustic")); {9, "electromagnetic"));
-	  {10, "photogrammetry")); {11, "satellite")); {12, "levelling")); {13, "side-scan_sonar")); {14, "computer")); {0, NULL} };
-	public enum TopSHP { TOP_UNKN, TOP_CONE, TOP_ICONE, TOP_SPHR, TOP_ISD, TOP_CAN, TOP_BORD, TOP_SALT, TOP_CROS, TOP_CUBE, TOP_WEST, TOP_EAST, TOP_RHOM,
+	  [CHR_ALLFL]={18, "Al.LFl")); [CHR_ALFL]={19, "Al.Fl")); [CHR_ALGR]={20, "Al.Gr")); [CHR_QLFL]={25, "Q+LFl")); [CHR_VQLFL]={26, "VQ+LFl")); [CHR_UQLFL]={27, "UQ+LFl")); [CHR_AL]={28, "Al")); [CHR_ALFFL]={29, "Al.FFl")); }
+	private static final EnumMap<, S57enum> Litvis = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "high")); []={2, "low")); []={3, "faint")); []={4, "intensified"));
+	 []={5, "unintensified")); []={6, "restricted")); []={7, "obscured")); []={8, "part_obscured")); }
+	private static final EnumMap<, S57enum> Marsys = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "iala-a")); []={2, "iala-b")); []={9, "none")); []={10, "other"));
+	 []={11, "cevni")); []={12, "riwr")); }
+	private static final EnumMap<, S57enum> Natcon = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "masonry")); []={2, "concreted")); []={3, "loose_boulders"));
+	 []={4, "hard-surfaced")); []={5, "unsurfaced")); []={6, "wooden")); []={7, "metal")); []={8, "grp")); []={9, "painted")); }
+	private static final EnumMap<, S57enum> Natsur = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "mud")); []={2, "clay")); []={3, "silt")); []={4, "sand")); []={5, "stone"));
+	 []={6, "gravel")); []={7, "pebbles")); []={8, "cobbles")); []={9, "rock")); []={11, "lava")); []={14, "coral")); []={17, "shells")); []={18, "boulder")); }
+	private static final EnumMap<, S57enum> Natqua = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "fine")); []={2, "medium")); []={3, "coarse")); []={4, "broken"));
+	 []={5, "sticky")); []={6, "soft")); []={7, "stiff")); []={8, "volcanic")); []={9, "calcareous")); []={10, "hard")); }
+	private static final EnumMap<, S57enum> Prodct = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "oil")); []={2, "gas")); []={3, "water")); []={4, "stone"));
+	 []={5, "coal")); []={6, "ore")); []={7, "chemicals")); []={8, "drinking_water")); []={9, "milk")); []={10, "bauxite")); []={11, "coke")); []={12, "iron_ingots")); []={13, "salt"));
+	  []={14, "sand")); []={15, "timber")); []={16, "sawdust")); []={17, "scrap")); []={18, "lng")); []={19, "lpg")); []={20, "wine")); []={21, "cement")); []={22, "grain")); }
+	private static final EnumMap<, S57enum> Quasou = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "known")); []={2, "unknown")); []={3, "doubtful")); []={4, "unreliable"));
+	 []={5, "no_bottom_found")); []={6, "least_known")); []={7, "least_unknown")); []={8, "not_surveyed")); []={9, "not_confirmed")); []={10, "maintained"));
+	  []={11, "not_maintained")); }
+	private static final EnumMap<, S57enum> Restrn = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "no_anchoring")); []={2, "restricted_anchoring")); []={3, "no_fishing"));
+	 []={4, "restricted_fishing")); []={5, "no_trawling")); []={6, "restricted_trawling")); []={7, "no_entry")); []={8, "restricted_entry"));
+	  []={9, "no_dredging")); []={10, "restricted_dredging")); []={11, "no_diving")); []={12, "restricted_diving")); []={13, "no_wake")); []={14, "to_be_avoided")); []={15, "no_construction"));
+	   []={16, "no_discharging")); []={17, "restricted_discharging"));
+	  []={18, "no_ exploration_development")); []={19, "restricted_exploration_development")); []={20, "no_drilling")); []={21, "restricted_drilling")); []={22, "no_historical_artifacts_removal"));
+	   []={23, "no_lightering")); []={24, "no_dragging"));
+	  []={25, "no_stopping")); []={26, "no_landing")); []={27, "restricted_speed")); []={28, "overtaking prohibited")); []={29, "overtaking of convoys by convoys prohibited"));
+	   []={30, "passing or overtaking prohibited"));
+	  []={31, "berthing prohibited")); []={32, "berthing restricted")); []={33, "making fast prohibited")); []={34, "making fast restricted")); []={35, "turning prohibited"));
+	   []={36, "restricted fairway depth")); }
+	private static final EnumMap<, S57enum> Siggen = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "automatic")); []={2, "wave")); []={3, "hand")); []={4, "wind")); }
+	private static final EnumMap<, S57enum> Status = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "permanent")); []={2, "occasional")); []={3, "recommended"));
+	 []={4, "not_in_use")); []={5, "intermittent")); []={6, "reserved")); []={7, "tempory")); []={8, "private")); []={9, "mandatory")); []={11, "extinguished"));
+	  []={12, "illuminated")); []={13, "historic")); []={14, "public")); []={15, "synchronised")); []={16, "watched")); []={17, "unwatched")); []={18, "existence_doubtful"));
+	   []={19, "on_request")); []={20, "drop_away")); []={21, "rising")); []={22, "increasing"));
+	  []={23, "decreasing")); []={24, "strong")); []={25, "good")); []={26, "moderately")); []={27, "poor")); }
+	private static final EnumMap<, S57enum> Surtyp = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "sketch")); []={2, "controlled")); []={4, "examination"));
+	 []={5, "passage")); []={6, "remote")); }
+	private static final EnumMap<, S57enum> Tecsou = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "echo-sounder")); []={2, "side-scan_sonar")); []={3, "multi-beam"));
+	 []={4, "diver")); []={5, "lead-line")); []={6, "wire-drag")); []={7, "laser")); []={8, "vertical_acoustic")); []={9, "electromagnetic"));
+	  []={10, "photogrammetry")); []={11, "satellite")); []={12, "levelling")); []={13, "side-scan_sonar")); []={14, "computer")); }
+	public enum TopSHP []={ TOP_UNKN, TOP_CONE, TOP_ICONE, TOP_SPHR, TOP_ISD, TOP_CAN, TOP_BORD, TOP_SALT, TOP_CROS, TOP_CUBE, TOP_WEST, TOP_EAST, TOP_RHOM,
 	  TOP_NORTH, TOP_SOUTH, TOP_BESM, TOP_IBESM, TOP_FLAG, TOP_SPRH, TOP_SQUR, TOP_HRECT, TOP_VRECT, TOP_TRAP, TOP_ITRAP, TOP_TRI, TOP_ITRI, TOP_CIRC,
 	  TOP_CRSS, TOP_T, TOP_TRCL, TOP_CRCL, TOP_RHCL, TOP_CLTR, TOP_OTHR }
-	private static final EnumMap<, S57enum> Topshp = new EnumMap<, S57enum>(.class); static {[TOP_UNKN]={0, "")); [TOP_CONE]={1, "cone, point up")); [TOP_ICONE]={2, "cone, point down")); [TOP_SPHR]={3, "sphere")); [TOP_ISD]={4, "2 spheres")); [TOP_CAN]={5, "cylinder")); [TOP_BORD]={6, "board"));
-	  [TOP_SALT]={7, "x-shape")); [TOP_CROS]={8, "cross")); [TOP_CUBE]={9, "cube, point up")); [TOP_WEST]={10, "2 cones point together")); [TOP_EAST]={11, "2 cones base together")); [TOP_RHOM]={12, "rhombus"));
-	  [TOP_NORTH]={13, "2 cones up")); [TOP_SOUTH]={14, "2 cones down")); [TOP_BESM]={15, "besom, point up")); [TOP_IBESM]={16, "besom, point down")); [TOP_FLAG]={17, "flag")); [TOP_SPRH]={18, "sphere over rhombus"));
-	  [TOP_SQUR]={19, "square")); [TOP_HRECT]={20, "rectangle, horizontal")); [TOP_VRECT]={21, "rectangle, vertical")); [TOP_TRAP]={22, "trapezium, up")); [TOP_ITRAP]={23, "trapezium, down")); [TOP_TRI]={24, "triangle, point up"));
-	  [TOP_ITRI]={25, "triangle, point down")); [TOP_CIRC]={26, "circle")); [TOP_CRSS]={27, "2 upright crosses")); [TOP_T]={28, "t-shape")); [TOP_TRCL]={29, "triangle, point up over circle")); [TOP_CRCL]={30, "upright cross over circle"));
-	  [TOP_RHCL]={31, "rhombus over circle")); [TOP_CLTR]={32, "circle over triangle, point up")); [TOP_OTHR]={33, "other")); {0, NULL} };
-	private static final EnumMap<, S57enum> Trafic = new EnumMap<, S57enum>(.class); static {{1, "inbound")); {2, "outbbound")); {3, "one-way")); {4, "two-way")); {0, NULL} };
-	private static final EnumMap<, S57enum> Watlev = new EnumMap<, S57enum>(.class); static {{1, "part-submerged")); {2, "dry")); {3, "submerged")); {4, "covers")); {5, "awash")); {6, "floods")); {7, "floating")); {8, "above_mwl")); {9, "below_mwl")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cat_ts = new EnumMap<, S57enum>(.class); static {{1, "flood")); {2, "ebb")); {3, "other")); {0, NULL} };
-	private static final EnumMap<, S57enum> Punits = new EnumMap<, S57enum>(.class); static {{1, "metres")); {2, "degrees")); {3, "millimetres")); {4, "feet")); {5, "cables")); {0, NULL} };
-	private static final EnumMap<, S57enum> Quapos = new EnumMap<, S57enum>(.class); static {{1, "surveyed")); {2, "unsurveyed")); {3, "part-surveyed")); {4, "approximate")); {5, "doubtful")); {6, "unreliable")); {7, "reported_unsurveyd")); {8, "unconfirmed")); {9, "estimated"));
-	  {10, "precise")); {11, "calculated")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catachi = new EnumMap<, S57enum>(.class); static {{1, "unrestricted")); {2, "deep-water")); {3, "tanker")); {4, "explosives")); {5, "quarantine")); {6, "sea-plane")); {7, "small_craft")); {9, "24_hours")); {10, "pushing-navigation_vessels"));
-	  {11, "non-pushing-navigation_vessels")); {0, NULL} };
-	private static final EnumMap<, S57enum> Verdat = new EnumMap<, S57enum>(.class); static {{1, "mlws")); {2, "mllws")); {3, "msl")); {4, "llw")); {5, "mlw")); {6, "llws")); {7, "amlws")); {8, "islw")); {9, "lws")); {10, "alat"));  {11, "nllw")); {12, "mllw")); {13, "lw")); {14, "amlw")); {15, "amllw"));
-	  {16, "mhw")); {17, "mhws")); {18, "hw")); {19, "amsl")); {20, "hws")); {21, "mhhw")); {22, "eslw")); {23, "lat")); {24, "local")); {25, "igld1985")); {26, "mlw")); {27, "llwlt")); {28, "hhwlt")); {29, "nhhw")); {30, "hat"));
-	  {31, "llwrl")); {32, "lhwrl")); {33, "lmwrl")); {34, "ehw_dglw")); {35, "hshw_dhsw")); {36, "rlwl_donau")); {37, "hshw_donau")); {38, "drlwrl_olr")); {39, "rpwl")); {40, "rnbl")); {41, "ohio_rd")); {0, NULL} };
-	public enum AddMRK { MRK_UNKN, MRK_TOPB, MRK_BOTB, MRK_RTRI, MRK_LTRI, MRK_BTRI	}
-	private static final EnumMap<, S57enum> Addmrk = new EnumMap<, S57enum>(.class); static {[MRK_UNKN]={0, "")); [MRK_TOPB]={1, "top_board")); [MRK_BOTB]={2, "bottom_board")); [MRK_RTRI]={3, "right_triangle")); [MRK_LTRI]={4, "left_triangle")); [MRK_BTRI]={5, "bottom_triangle")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catbnk = new EnumMap<, S57enum>(.class); static {{1, "steep")); {2, "flat")); {3, "fastened")); {4, "unfastened")); {0, NULL} };
-	public enum Cat_NMK { NMK_UNKN, NMK_NENT, NMK_CLSA, NMK_NOVK, NMK_NCOV, NMK_NPAS, NMK_NBRT, NMK_NBLL, NMK_NANK, NMK_NMOR, NMK_NTRN, NMK_NWSH,
+	private static final EnumMap<, S57enum> Topshp = new EnumMap<, S57enum>(.class); static {[TOP_UNKN]={0, "")); [TOP_CONE]={1, "cone, point up")); [TOP_ICONE]={2, "cone, point down"));
+	 [TOP_SPHR]={3, "sphere")); [TOP_ISD]={4, "2 spheres")); [TOP_CAN]={5, "cylinder")); [TOP_BORD]={6, "board"));
+	  [TOP_SALT]={7, "x-shape")); [TOP_CROS]={8, "cross")); [TOP_CUBE]={9, "cube, point up")); [TOP_WEST]={10, "2 cones point together")); [TOP_EAST]={11, "2 cones base together"));
+	   [TOP_RHOM]={12, "rhombus"));
+	  [TOP_NORTH]={13, "2 cones up")); [TOP_SOUTH]={14, "2 cones down")); [TOP_BESM]={15, "besom, point up")); [TOP_IBESM]={16, "besom, point down")); [TOP_FLAG]={17, "flag"));
+	   [TOP_SPRH]={18, "sphere over rhombus"));
+	  [TOP_SQUR]={19, "square")); [TOP_HRECT]={20, "rectangle, horizontal")); [TOP_VRECT]={21, "rectangle, vertical")); [TOP_TRAP]={22, "trapezium, up")); [TOP_ITRAP]={23, "trapezium, down"));
+	   [TOP_TRI]={24, "triangle, point up"));
+	  [TOP_ITRI]={25, "triangle, point down")); [TOP_CIRC]={26, "circle")); [TOP_CRSS]={27, "2 upright crosses")); [TOP_T]={28, "t-shape")); [TOP_TRCL]={29, "triangle, point up over circle"));
+	   [TOP_CRCL]={30, "upright cross over circle"));
+	  [TOP_RHCL]={31, "rhombus over circle")); [TOP_CLTR]={32, "circle over triangle, point up")); [TOP_OTHR]={33, "other")); }
+	private static final EnumMap<, S57enum> Trafic = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "inbound")); []={2, "outbbound")); []={3, "one-way")); []={4, "two-way")); }
+	private static final EnumMap<, S57enum> Watlev = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "part-submerged")); []={2, "dry")); []={3, "submerged")); []={4, "covers"));
+	 []={5, "awash")); []={6, "floods")); []={7, "floating")); []={8, "above_mwl")); []={9, "below_mwl")); }
+	private static final EnumMap<, S57enum> Cat_ts = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "flood")); []={2, "ebb")); []={3, "other")); }
+	private static final EnumMap<, S57enum> Punits = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "metres")); []={2, "degrees")); []={3, "millimetres")); []={4, "feet"));
+	 []={5, "cables")); }
+	private static final EnumMap<, S57enum> Quapos = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "surveyed")); []={2, "unsurveyed")); []={3, "part-surveyed"));
+	 []={4, "approximate")); []={5, "doubtful")); []={6, "unreliable")); []={7, "reported_unsurveyd")); []={8, "unconfirmed")); []={9, "estimated"));
+	  []={10, "precise")); []={11, "calculated")); }
+	private static final EnumMap<, S57enum> Catachi = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "unrestricted")); []={2, "deep-water")); []={3, "tanker"));
+	 []={4, "explosives")); []={5, "quarantine")); []={6, "sea-plane")); []={7, "small_craft")); []={9, "24_hours")); []={10, "pushing-navigation_vessels"));
+	  []={11, "non-pushing-navigation_vessels")); }
+	private static final EnumMap<, S57enum> Verdat = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "mlws")); []={2, "mllws")); []={3, "msl")); []={4, "llw"));
+	 []={5, "mlw")); []={6, "llws")); []={7, "amlws")); []={8, "islw")); []={9, "lws")); []={10, "alat"));  []={11, "nllw")); []={12, "mllw")); []={13, "lw")); []={14, "amlw")); []={15, "amllw"));
+	  []={16, "mhw")); []={17, "mhws")); []={18, "hw")); []={19, "amsl")); []={20, "hws")); []={21, "mhhw")); []={22, "eslw")); []={23, "lat")); []={24, "local")); []={25, "igld1985"));
+	   []={26, "mlw")); []={27, "llwlt")); []={28, "hhwlt")); []={29, "nhhw")); []={30, "hat"));
+	  []={31, "llwrl")); []={32, "lhwrl")); []={33, "lmwrl")); []={34, "ehw_dglw")); []={35, "hshw_dhsw")); []={36, "rlwl_donau")); []={37, "hshw_donau")); []={38, "drlwrl_olr"));
+	   []={39, "rpwl")); []={40, "rnbl")); []={41, "ohio_rd")); }
+	public enum AddMRK []={ MRK_UNKN, MRK_TOPB, MRK_BOTB, MRK_RTRI, MRK_LTRI, MRK_BTRI	}
+	private static final EnumMap<, S57enum> Addmrk = new EnumMap<, S57enum>(.class); static {[MRK_UNKN]={0, "")); [MRK_TOPB]={1, "top_board")); [MRK_BOTB]={2, "bottom_board")); [MRK_RTRI]={3, "right_triangle")); [MRK_LTRI]={4, "left_triangle")); [MRK_BTRI]={5, "bottom_triangle")); }
+	private static final EnumMap<, S57enum> Catbnk = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "steep")); []={2, "flat")); []={3, "fastened")); []={4, "unfastened")); }
+	public enum Cat_NMK []={ NMK_UNKN, NMK_NENT, NMK_CLSA, NMK_NOVK, NMK_NCOV, NMK_NPAS, NMK_NBRT, NMK_NBLL, NMK_NANK, NMK_NMOR, NMK_NTRN, NMK_NWSH,
 		NMK_NPSL, NMK_NPSR, NMK_NMTC, NMK_NSPC, NMK_NWSK, NMK_NSLC, NMK_NUPC, NMK_NSLB, NMK_NWBK, NMK_NHSC, NMK_NLBG, NMK_MVTL, NMK_MVTR, NMK_MVTP,
 		NMK_MVTS, NMK_KPTP, NMK_KPTS, NMK_CSTP, NMK_CSTS, NMK_STOP, NMK_SPDL, NMK_SHRN, NMK_KPLO, NMK_GWJN, NMK_GWCS, NMK_MKRC, NMK_LMDP, NMK_LMHR,
 		NMK_LMWD, NMK_NAVR, NMK_CHDL, NMK_CHDR, NMK_CHTW, NMK_CHOW, NMK_OPTR, NMK_OPTL, NMK_PRTL, NMK_PRTR, NMK_ENTP, NMK_OVHC, NMK_WEIR, NMK_FERN,
@@ -412,45 +618,67 @@ public class S57val {
 	  [NMK_MWAR]={86, "main_waterway_ahead_right")); [NMK_MWAL]={87, "main_waterway_ahead_left")); [NMK_WARL]={88, "main_waterway_ahead_right_secondary_left")); [NMK_WALR]={89, "main_waterway_ahead_left_secondary_right"));
 	  [NMK_PEND]={90, "prohibition_ends")); [NMK_DWTR]={91, "drinking_water")); [NMK_TELE]={92, "telephone")); [NMK_MTCP]={93, "motor_craft_permitted")); [NMK_SPCP]={94, "sport_craft_permitted")); [NMK_WSKP]={95, "waterskiing_permitted"));
 	  [NMK_SLCP]={96, "sailing_craft_permitted")); [NMK_UPCP]={97, "unpowered_craft_permitted")); [NMK_SLBP]={98, "sailboards_permitted")); [NMK_RADI]={99, "radio_information"));
-	  [NMK_WTBP]={100, "waterbikes_permitted")); [NMK_HSCP]={101, "high_speeds_permitted")); [NMK_LBGP]={102, "launching_beaching_permitted")); {0, NULL} };
-	private static final EnumMap<, S57enum> Clsdng = new EnumMap<, S57enum>(.class); static {{1, "one_blue")); {2, "two_blue")); {3, "three_blue")); {4, "no_blue")); {0, NULL} };
-	private static final EnumMap<, S57enum> Dirimp = new EnumMap<, S57enum>(.class); static {{1, "upstream")); {2, "downstream")); {3, "left_bank")); {4, "right_bank")); {5, "to_harbour")); {0, NULL} };
-	private static final EnumMap<, S57enum> Fnctnm = new EnumMap<, S57enum>(.class); static {{1, "prohibition")); {2, "regulation")); {3, "restriction")); {4, "recommendation")); {5, "information")); {0, NULL} };
-	private static final EnumMap<, S57enum> Bunves = new EnumMap<, S57enum>(.class); static {{1, "bunker_vessel_available")); {2, "no_bunker_vessel_available")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catbrt = new EnumMap<, S57enum>(.class); static {{1, "loading")); {2, "unloading")); {3, "overnight_accommodation")); {4, "pushing-navigation")); {5, "non-pushing-navigation")); {6, "fleeting")); {7, "first_class")); {8, "second_class")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catbun = new EnumMap<, S57enum>(.class); static {{1, "diesel oil")); {2, "water")); {3, "ballast")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catccl = new EnumMap<, S57enum>(.class); static {{1, "small_vessels")); {2, "peniche")); {3, "campine_barge")); {4, "dortmund-ems_barge")); {5, "rhine-herne_barge")); {6, "1-barge_push-tow"));
-	  {7, "2-barge_push-tow_long")); {8, "2-barge_push-tow_wide")); {9, "4-barge_push-tow")); {10, "6-barge_push-tow")); {11, "no_cemt_class")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catcom = new EnumMap<, S57enum>(.class); static {{1, "vts_centre")); {2, "vts_sector")); {3, "ivs_point")); {4, "mid")); {5, "lock")); {6, "bridge")); {7, "custom")); {8, "harbour")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cathbr = new EnumMap<, S57enum>(.class); static {{1, "custom")); {2, "refuge")); {3, "marina")); {4, "fishing")); {5, "private")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catrfd = new EnumMap<, S57enum>(.class); static {{1, "cargo_residue")); {2, "waste_oil")); {3, "grey_black_water")); {4, "domestic_refuse")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cattml = new EnumMap<, S57enum>(.class); static {{1, "passenger")); {2, "ferry")); {3, "transhipment")); {4, "roro")); {0, NULL} };
-	private static final EnumMap<, S57enum> Trshgd = new EnumMap<, S57enum>(.class); static {{1, "containers")); {2, "bulk")); {3, "oil")); {4, "fuel")); {5, "chemicals")); {6, "liquid")); {7, "explosive")); {8, "fish")); {9, "cars")); {10, "general")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catgag = new EnumMap<, S57enum>(.class); static {{1, "staff")); {2, "recording")); {3, "recording_remote_access")); {4, "recording_external_indiCator")); {5, "recording_remote_access_indiCator")); {0, NULL} };
-	private static final EnumMap<, S57enum> Reflev = new EnumMap<, S57enum>(.class); static {{1, "baltic")); {2, "adriatic")); {3, "amsterdam")); {4, "msl")); {5, "other")); {6, "ngvd29")); {7, "navd88")); {8, "msl1912")); {9, "msl1929")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catvtr = new EnumMap<, S57enum>(.class); static {{1, "official")); {2, "private")); {3, "car_cranes")); {4, "car_planks")); {5, "permission_required")); {6, "locked_gate")); {0, NULL} };
-	private static final EnumMap<, S57enum> Cattab = new EnumMap<, S57enum>(.class); static {{1, "operational_period")); {2, "non-operational_period")); {0, NULL} };
-	private static final EnumMap<, S57enum> Useshp = new EnumMap<, S57enum>(.class); static {{1, "liner_trade")); {2, "occasional_professional_shipping")); {3, "leisure")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catexs = new EnumMap<, S57enum>(.class); static {{1, "lift-lock")); {2, "aqueduct")); {3, "sloping_plane_lock")); {4, "water_slope_lock")); {5, "other")); {0, NULL} };
-	private static final EnumMap<, S57enum> Catwwm = new EnumMap<, S57enum>(.class); static {{1, "waterway_right")); {2, "waterway_left")); {3, "waterway_separation")); {4, "channel_right")); {5, "channel_left")); {6, "channel_separation")); {7, "channel_right_bank")); {8, "channel_left_bank"));
-	  {9, "crossover_right")); {10, "crossover_left")); {11, "danger_right")); {12, "danger_left")); {13, "turnoff_right")); {14, "turnoff_left")); {15, "junction_right")); {16, "junction_left")); {17, "harbour_right"));
-	  {18, "harbour_left")); {19, "bridge_pier")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lg_spr = new EnumMap<, S57enum>(.class); static {{1, "other")); {2, "speed_over_ground")); {3, "speed_through_water")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lg_wdu = new EnumMap<, S57enum>(.class); static {{1, "other")); {2, "cubic_metres")); {3, "tonnes")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lg_rel = new EnumMap<, S57enum>(.class); static {{1, "other")); {2, "usage_of_waterway")); {3, "carriage_of_equipment")); {4, "task_operation")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lg_fnc = new EnumMap<, S57enum>(.class); static {{1, "other")); {2, "prohibited")); {3, "prohibited_with_exceptions")); {4, "permitted")); {5, "permitted_with_exceptions")); {6, "recommended")); {7, "not_recommended")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_csi = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {3, "non-motorized")); {5, "craft")); {6, "vessel")); {7, "inland_waterway")); {8, "sea-going")); {9, "motor")); {10, "motor_tanker")); {11, "motor_cargo")); {12, "canal_barge"));
-	  {13, "tug")); {14, "pusher")); {15, "barge")); {16, "tank_barge")); {17, "dumb_barge")); {18, "lighter")); {19, "tank_lighter")); {20, "cargo_lighter")); {21, "ship_borne_lighter")); {22, "passenger")); {23, "passenger_sailing"));
-	  {24, "day_trip")); {25, "cabin")); {26, "high-speed")); {27, "floating_equipment")); {28, "worksite")); {29, "recreational")); {30, "dinghy")); {31, "floating_establishment")); {32, "floating_object")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_cse = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {3, "non-motorized")); {5, "craft")); {6, "vessel")); {7, "inland_waterway")); {8, "sea-going")); {9, "motor")); {10, "motor_tanker")); {11, "motor_cargo")); {12, "canal_barge"));
-	  {13, "tug")); {14, "pusher")); {15, "barge")); {16, "tank_barge")); {17, "dumb_barge")); {18, "lighter")); {19, "tank_lighter")); {20, "cargo_lighter")); {21, "ship_borne_lighter")); {22, "passenger")); {23, "passenger_sailing"));
-	  {24, "day_trip")); {25, "cabin")); {26, "high-speed")); {27, "floating_equipment")); {28, "worksite")); {29, "recreational")); {30, "dinghy")); {31, "floating_establishment")); {32, "floating_object")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_asi = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {3, "single")); {5, "convoy")); {6, "formation")); {7, "rigid_convoy")); {8, "pushed_convoy")); {9, "breasted")); {10, "towed_convoy")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_ase = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {3, "single")); {5, "convoy")); {6, "formation")); {7, "rigid_convoy")); {8, "pushed_convoy")); {9, "breasted")); {10, "towed_convoy")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_cci = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {4, "bulk")); {5, "dry")); {6, "liquid")); {7, "liquid_n")); {8, "liquid_c")); {9, "gas")); {0, NULL} };
-	private static final EnumMap<, S57enum> Lc_cce = new EnumMap<, S57enum>(.class); static {{1, "all")); {2, "other")); {4, "bulk")); {5, "dry")); {6, "liquid")); {7, "liquid_n")); {8, "liquid_c")); {9, "gas")); {0, NULL} };
-	private static final EnumMap<, S57enum> Shptyp = new EnumMap<, S57enum>(.class); static {{1, "cargo")); {2, "container")); {3, "tanker")); {4, "sailing")); {5, "fishing")); {6, "special_purpose.")); {7, "man_of_war")); {8, "submarine")); {9, "high-speed")); {10, "bulk_carrier"));
-	  {11, "seaplane")); {12, "tugboat")); {13, "passenger")); {14, "ferry")); {15, "boat")); {0, NULL} };
+	  [NMK_WTBP]={100, "waterbikes_permitted")); [NMK_HSCP]={101, "high_speeds_permitted")); [NMK_LBGP]={102, "launching_beaching_permitted")); }
+	private static final EnumMap<, S57enum> Clsdng = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "one_blue")); []={2, "two_blue")); []={3, "three_blue")); []={4, "no_blue")); }
+	private static final EnumMap<, S57enum> Dirimp = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "upstream")); []={2, "downstream")); []={3, "left_bank")); []={4, "right_bank")); []={5, "to_harbour")); }
+	private static final EnumMap<, S57enum> Fnctnm = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "prohibition")); []={2, "regulation")); []={3, "restriction"));
+	 []={4, "recommendation")); []={5, "information")); }
+	private static final EnumMap<, S57enum> Bunves = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "bunker_vessel_available")); []={2, "no_bunker_vessel_available")); }
+	private static final EnumMap<, S57enum> Catbrt = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "loading")); []={2, "unloading")); []={3, "overnight_accommodation"));
+	 []={4, "pushing-navigation")); []={5, "non-pushing-navigation")); []={6, "fleeting")); []={7, "first_class")); []={8, "second_class")); }
+	private static final EnumMap<, S57enum> Catbun = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "diesel oil")); []={2, "water")); []={3, "ballast")); }
+	private static final EnumMap<, S57enum> Catccl = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "small_vessels")); []={2, "peniche")); []={3, "campine_barge"));
+	 []={4, "dortmund-ems_barge")); []={5, "rhine-herne_barge")); []={6, "1-barge_push-tow"));
+	  []={7, "2-barge_push-tow_long")); []={8, "2-barge_push-tow_wide")); []={9, "4-barge_push-tow")); []={10, "6-barge_push-tow")); []={11, "no_cemt_class")); }
+	private static final EnumMap<, S57enum> Catcom = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "vts_centre")); []={2, "vts_sector")); []={3, "ivs_point")); []={4, "mid")); []={5, "lock")); []={6, "bridge")); []={7, "custom")); []={8, "harbour")); }
+	private static final EnumMap<, S57enum> Cathbr = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "custom")); []={2, "refuge")); []={3, "marina")); []={4, "fishing")); []={5, "private")); }
+	private static final EnumMap<, S57enum> Catrfd = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "cargo_residue")); []={2, "waste_oil")); []={3, "grey_black_water")); []={4, "domestic_refuse")); }
+	private static final EnumMap<, S57enum> Cattml = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "passenger")); []={2, "ferry")); []={3, "transhipment")); []={4, "roro")); }
+	private static final EnumMap<, S57enum> Trshgd = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "containers")); []={2, "bulk")); []={3, "oil")); []={4, "fuel"));
+	 []={5, "chemicals")); []={6, "liquid")); []={7, "explosive")); []={8, "fish")); []={9, "cars")); []={10, "general")); }
+	private static final EnumMap<, S57enum> Catgag = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "staff")); []={2, "recording")); []={3, "recording_remote_access"));
+	 []={4, "recording_external_indiCator")); []={5, "recording_remote_access_indiCator")); }
+	private static final EnumMap<, S57enum> Reflev = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "baltic")); []={2, "adriatic")); []={3, "amsterdam")); []={4, "msl"));
+	 []={5, "other")); []={6, "ngvd29")); []={7, "navd88")); []={8, "msl1912")); []={9, "msl1929")); }
+	private static final EnumMap<, S57enum> Catvtr = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "official")); []={2, "private")); []={3, "car_cranes")); []={4, "car_planks")); []={5, "permission_required")); []={6, "locked_gate")); }
+	private static final EnumMap<, S57enum> Cattab = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "operational_period")); []={2, "non-operational_period")); }
+	private static final EnumMap<, S57enum> Useshp = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "liner_trade")); []={2, "occasional_professional_shipping")); []={3, "leisure")); }
+	private static final EnumMap<, S57enum> Catexs = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "lift-lock")); []={2, "aqueduct")); []={3, "sloping_plane_lock"));
+	 []={4, "water_slope_lock")); []={5, "other")); }
+	private static final EnumMap<, S57enum> Catwwm = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "waterway_right")); []={2, "waterway_left")); []={3, "waterway_separation"));
+	 []={4, "channel_right")); []={5, "channel_left")); []={6, "channel_separation")); []={7, "channel_right_bank")); []={8, "channel_left_bank"));
+	  []={9, "crossover_right")); []={10, "crossover_left")); []={11, "danger_right")); []={12, "danger_left")); []={13, "turnoff_right")); []={14, "turnoff_left")); []={15, "junction_right"));
+	   []={16, "junction_left")); []={17, "harbour_right"));
+	  []={18, "harbour_left")); []={19, "bridge_pier")); }
+	private static final EnumMap<, S57enum> Lg_spr = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "other")); []={2, "speed_over_ground")); []={3, "speed_through_water")); }
+	private static final EnumMap<, S57enum> Lg_wdu = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "other")); []={2, "cubic_metres")); []={3, "tonnes")); }
+	private static final EnumMap<, S57enum> Lg_rel = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "other")); []={2, "usage_of_waterway")); []={3, "carriage_of_equipment"));
+	 []={4, "task_operation")); }
+	private static final EnumMap<, S57enum> Lg_fnc = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "other")); []={2, "prohibited")); []={3, "prohibited_with_exceptions"));
+	 []={4, "permitted")); []={5, "permitted_with_exceptions")); []={6, "recommended")); []={7, "not_recommended")); }
+	private static final EnumMap<, S57enum> Lc_csi = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={3, "non-motorized")); []={5, "craft"));
+	 []={6, "vessel")); []={7, "inland_waterway")); []={8, "sea-going")); []={9, "motor")); []={10, "motor_tanker")); []={11, "motor_cargo")); []={12, "canal_barge"));
+	  []={13, "tug")); []={14, "pusher")); []={15, "barge")); []={16, "tank_barge")); []={17, "dumb_barge")); []={18, "lighter")); []={19, "tank_lighter")); []={20, "cargo_lighter"));
+	   []={21, "ship_borne_lighter")); []={22, "passenger")); []={23, "passenger_sailing"));
+	  []={24, "day_trip")); []={25, "cabin")); []={26, "high-speed")); []={27, "floating_equipment")); []={28, "worksite")); []={29, "recreational")); []={30, "dinghy"));
+	   []={31, "floating_establishment")); []={32, "floating_object")); }
+	private static final EnumMap<, S57enum> Lc_cse = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={3, "non-motorized")); []={5, "craft"));
+	 []={6, "vessel")); []={7, "inland_waterway")); []={8, "sea-going")); []={9, "motor")); []={10, "motor_tanker")); []={11, "motor_cargo")); []={12, "canal_barge"));
+	  []={13, "tug")); []={14, "pusher")); []={15, "barge")); []={16, "tank_barge")); []={17, "dumb_barge")); []={18, "lighter")); []={19, "tank_lighter")); []={20, "cargo_lighter"));
+	   []={21, "ship_borne_lighter")); []={22, "passenger")); []={23, "passenger_sailing"));
+	  []={24, "day_trip")); []={25, "cabin")); []={26, "high-speed")); []={27, "floating_equipment")); []={28, "worksite")); []={29, "recreational")); []={30, "dinghy"));
+	   []={31, "floating_establishment")); []={32, "floating_object")); }
+	private static final EnumMap<, S57enum> Lc_asi = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={3, "single")); []={5, "convoy"));
+	 []={6, "formation")); []={7, "rigid_convoy")); []={8, "pushed_convoy")); []={9, "breasted")); []={10, "towed_convoy")); }
+	private static final EnumMap<, S57enum> Lc_ase = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={3, "single")); []={5, "convoy"));
+	 []={6, "formation")); []={7, "rigid_convoy")); []={8, "pushed_convoy")); []={9, "breasted")); []={10, "towed_convoy")); }
+	private static final EnumMap<, S57enum> Lc_cci = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={4, "bulk")); []={5, "dry"));
+	 []={6, "liquid")); []={7, "liquid_n")); []={8, "liquid_c")); []={9, "gas")); }
+	private static final EnumMap<, S57enum> Lc_cce = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "all")); []={2, "other")); []={4, "bulk")); []={5, "dry"));
+	 []={6, "liquid")); []={7, "liquid_n")); []={8, "liquid_c")); []={9, "gas")); }
+	private static final EnumMap<, S57enum> Shptyp = new EnumMap<, S57enum>(.class); static { []={0, "")); []={1, "cargo")); []={2, "container")); []={3, "tanker")); []={4, "sailing"));
+	 []={5, "fishing")); []={6, "special_purpose.")); []={7, "man_of_war")); []={8, "submarine")); []={9, "high-speed")); []={10, "bulk_carrier"));
+	  []={11, "seaplane")); []={12, "tugboat")); []={13, "passenger")); []={14, "ferry")); []={15, "boat")); }
 */
 	private static final EnumMap<Att, S57key> keys = new EnumMap<Att, S57key>(Att.class);
 	static {
@@ -467,7 +695,6 @@ public class S57val {
 		keys.put(Att.CATHAF, new S57key(Conv.L, Cathaf)); keys.put(Att.CATHLK, new S57key(Conv.L, Cathlk)); keys.put(Att.CATICE, new S57key(Conv.E, Catice));
 		keys.put(Att.CATINB, new S57key(Conv.E, Catinb)); keys.put(Att.CATLND, new S57key(Conv.L, Catlnd)); keys.put(Att.CATLMK, new S57key(Conv.L, Catlmk));
 		keys.put(Att.CATLAM, new S57key(Conv.E, Catlam)); keys.put(Att.CATLIT, new S57key(Conv.L, Catlit)); keys.put(Att.CATMFA, new S57key(Conv.E, Catmfa));
-		/*
 		keys.put(Att.CATMPA, new S57key(Conv.L, Catmpa)); keys.put(Att.CATMOR, new S57key(Conv.E, Catmor)); keys.put(Att.CATNAV, new S57key(Conv.E, Catnav));
 		keys.put(Att.CATOBS, new S57key(Conv.E, Catobs)); keys.put(Att.CATOFP, new S57key(Conv.L, Catofp)); keys.put(Att.CATOLB, new S57key(Conv.E, Catolb));
 		keys.put(Att.CATPLE, new S57key(Conv.E, Catple)); keys.put(Att.CATPIL, new S57key(Conv.E, Catpil)); keys.put(Att.CATPIP, new S57key(Conv.L, Catpip));
@@ -475,9 +702,10 @@ public class S57val {
 		keys.put(Att.CATRAS, new S57key(Conv.E, Catras)); keys.put(Att.CATRTB, new S57key(Conv.E, Catrtb)); keys.put(Att.CATROS, new S57key(Conv.L, Catros));
 		keys.put(Att.CATTRK, new S57key(Conv.E, Cattrk)); keys.put(Att.CATRSC, new S57key(Conv.L, Catrsc)); keys.put(Att.CATREA, new S57key(Conv.L, Catrea));
 		keys.put(Att.CATROD, new S57key(Conv.E, Catrod)); keys.put(Att.CATRUN, new S57key(Conv.E, Catrun)); keys.put(Att.CATSEA, new S57key(Conv.E, Catsea));
-		keys.put(Att.CATSLC, new S57key(Conv.E, Catslc)); keys.put(Att.CATSIT, new S57key(Conv.L, Catsit)); keys.put(Att.CATSIW, new S57key(Conv.L, Catsiw));
 		keys.put(Att.CATSIL, new S57key(Conv.E, Catsil)); keys.put(Att.CATSLO, new S57key(Conv.E, Catslo)); keys.put(Att.CATSCF, new S57key(Conv.L, Catscf));
+		keys.put(Att.CATSLC, new S57key(Conv.E, Catslc)); keys.put(Att.CATSIT, new S57key(Conv.L, Catsit)); keys.put(Att.CATSIW, new S57key(Conv.L, Catsiw));
 		keys.put(Att.CATSPM, new S57key(Conv.L, Catspm)); keys.put(Att.CATTSS, new S57key(Conv.E, Cattss)); keys.put(Att.CATVEG, new S57key(Conv.L, Catveg));
+		/*
 		keys.put(Att.CATWAT, new S57key(Conv.E, Catwat)); keys.put(Att.CATWED, new S57key(Conv.E, Catwed)); keys.put(Att.CATWRK, new S57key(Conv.E, Catwrk));
 		keys.put(Att.CATZOC, new S57key(Conv.E, Catzoc)); keys.put(Att.$SPACE, new S57key(Conv.E, null)); keys.put(Att.$CHARS, new S57key(Conv.A, null));
 		keys.put(Att.COLOUR, new S57key(Conv.L, Colour)); keys.put(Att.COLPAT, new S57key(Conv.L, Colpat)); keys.put(Att.COMCHA, new S57key(Conv.A, null));

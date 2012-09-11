@@ -48,8 +48,11 @@ public class AssociatedStreetFixer extends RelationFixer {
 		if (streetName == null) streetName = "";
 		for (RelationMember m : rel.getMembers()) {
 			if ("street".equals(m.getRole()) && !streetName.equals(m.getWay().get("name"))) {
-			    setWarningMessage(tr("Relation has streets with different names"));
-			    return false;
+			    String anotherName = m.getWay().get("name");
+			    if (anotherName != null && !anotherName.isEmpty()) {
+    			    setWarningMessage(tr("Relation has streets with different names"));
+    			    return false;
+			    }
 			}
 		}
 		clearWarningMessage();

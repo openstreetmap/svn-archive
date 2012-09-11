@@ -45,8 +45,9 @@ public class AssociatedStreetFixer extends RelationFixer {
 		}
 		// check that all street members have same name as relation (???)
 		String streetName = rel.get("name");
+		if (streetName == null) streetName = "";
 		for (RelationMember m : rel.getMembers()) {
-			if (m.getRole().equals("street") && !m.getWay().get("name").equals(streetName)) {
+			if ("street".equals(m.getRole()) && !streetName.equals(m.getWay().get("name"))) {
 			    setWarningMessage(tr("Relation has streets with different names"));
 			    return false;
 			}

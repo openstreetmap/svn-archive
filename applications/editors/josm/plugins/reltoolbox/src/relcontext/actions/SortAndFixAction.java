@@ -36,21 +36,27 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         this.rel = rel;
         rel.addChosenRelationListener(this);
         setEnabled(false);
-        
+
         // construct all available fixers
         fixers = new ArrayList<RelationFixer>();
-        fixers.add(new BoundaryFixer()); // should be before multipolygon as takes special case of multipolygon relation - boundary
-        fixers.add(new MultipolygonFixer());
-        fixers.add(new AssociatedStreetFixer());
-        
+        //should be before multipolygon as takes special case of multipolygon relation - boundary
+        fixers.add(new BoundaryFixer()); // boundary, multipolygon, boundary=administrative
+        fixers.add(new MultipolygonFixer()); // multipolygon
+        fixers.add(new AssociatedStreetFixer()); //associatedStreet
+
+        for(RelationFixer fix : fixers) {
+            fix.setFixAction(this);
+        }
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         Command c = fixRelation(rel.get());
         if( c != null )
             Main.main.undoRedo.add(c);
     }
 
+    @Override
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
         setEnabled(newRelation != null && needsFixing( newRelation));
     }
@@ -58,7 +64,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     public boolean needsFixing( Relation rel ) {
         return !isIncomplete(rel) && !getFixer(rel).isRelationGood(rel);
     }
-    
+
     private RelationFixer getFixer( Relation rel ) {
     	for(RelationFixer fixer : fixers)
     		if (fixer.isFixerApplicable(rel))

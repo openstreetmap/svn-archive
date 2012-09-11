@@ -1,5 +1,7 @@
 package relcontext.relationfix;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,8 +24,8 @@ public class MultipolygonFixer extends RelationFixer {
 	public MultipolygonFixer() {
 		super("multipolygon");
 	}
-	
-	protected MultipolygonFixer(String[] types) {
+
+	protected MultipolygonFixer(String...types) {
 		super(types);
 	}
 
@@ -31,8 +33,11 @@ public class MultipolygonFixer extends RelationFixer {
 	@Override
 	public boolean isRelationGood(Relation rel) {
 		for (RelationMember m : rel.getMembers())
-			if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole())))
-				return false;
+			if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
+			    setWarningMessage(tr("Way without 'inner' or 'outer' role found"));
+			    return false;
+			}
+		clearWarningMessage();
 		return true;
 	}
 

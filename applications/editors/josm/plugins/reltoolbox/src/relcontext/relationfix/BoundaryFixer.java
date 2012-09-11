@@ -1,5 +1,7 @@
 package relcontext.relationfix;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
@@ -14,11 +16,11 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 public class BoundaryFixer extends MultipolygonFixer {
 
 	public BoundaryFixer() {
-		super(new String[]{"boundary", "multipolygon"});
+		super("boundary", "multipolygon");
 	}
-	
+
 	/**
-	 * For boundary relations both "boundary" and "multipolygon" types are applicable, but 
+	 * For boundary relations both "boundary" and "multipolygon" types are applicable, but
 	 * it should also have key boundary=administrative to be fully boundary.
 	 * @see http://wiki.openstreetmap.org/wiki/Relation:boundary
 	 */
@@ -26,17 +28,24 @@ public class BoundaryFixer extends MultipolygonFixer {
 	public boolean isFixerApplicable(Relation rel) {
 		return super.isFixerApplicable(rel) && "administrative".equals(rel.get("boundary"));
 	}
-	
+
 	@Override
 	public boolean isRelationGood(Relation rel) {
 		for( RelationMember m : rel.getMembers() ) {
-            if (m.getType().equals(OsmPrimitiveType.RELATION) && !"subarea".equals(m.getRole()))
+            if (m.getType().equals(OsmPrimitiveType.RELATION) && !"subarea".equals(m.getRole())) {
+                setWarningMessage(tr("Relation without 'subarea' role found"));
                 return false;
-            if (m.getType().equals(OsmPrimitiveType.NODE) && !("label".equals(m.getRole()) || "admin_centre".equals(m.getRole())))
+            }
+            if (m.getType().equals(OsmPrimitiveType.NODE) && !("label".equals(m.getRole()) || "admin_centre".equals(m.getRole()))) {
+                setWarningMessage(tr("Node without 'label' or 'admin_centre' role found"));
                 return false;
-            if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole())))
+            }
+            if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
+                setWarningMessage(tr("Way without 'inner' or 'outer' role found"));
 				return false;
+            }
         }
+		clearWarningMessage();
 		return true;
 	}
 

@@ -77,9 +77,15 @@ public class BoundaryFixer extends MultipolygonFixer {
             else if( m.isNode() ) {
                 Node n = (Node)m.getMember();
                 if( !n.isIncomplete() ) {
-                    if( n.hasKey("place") )
-                        role = "admin_centre";
-                    else
+                    if( n.hasKey("place") ) {
+                        String place = n.get("place");
+                        if (place.equals("state") || place.equals("country") ||
+                                place.equals("county") || place.equals("region")) {
+                            role = "label";
+                        } else {
+                            role = "admin_centre";
+                        }
+                    } else
                         role = "label";
                 }
             }

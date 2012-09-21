@@ -1,5 +1,6 @@
 package smed2;
 
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -51,6 +52,8 @@ public class Smed2Action extends JosmAction {
 			}
 		});
 		frame.setSize(new Dimension(480, 480));
+		frame.setLocation(100, 200);
+		frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
 		panelMain = new PanelMain();
 		frame.add(panelMain);

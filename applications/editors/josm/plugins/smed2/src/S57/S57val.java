@@ -61,7 +61,7 @@ public class S57val {
 	public enum CatACH { ACH_UNKN, ACH_UNRD, ACH_DEEP, ACH_TANK, ACH_EXPL, ACH_QUAR, ACH_SEAP, ACH_SMCF, ACH_SMCM, ACH_H24P, ACH_LTPD, ACH_NPSH, ACH_DRYC, ACH_RAFT }
 	private static final EnumMap<CatACH, S57enum> Catach = new EnumMap<CatACH, S57enum>(CatACH.class); static {Catach.put(CatACH.ACH_UNKN, new S57enum(0, ""));
 		Catach.put(CatACH.ACH_UNRD, new S57enum(1, "unrestricted")); Catach.put(CatACH.ACH_DEEP, new S57enum(2, "deep_water")); Catach.put(CatACH.ACH_TANK, new S57enum(3, "tanker"));
-		Catach.put(CatACH.ACH_EXPL, new S57enum(4, "explosives")); Catach.put(CatACH.ACH_QUAR, new S57enum(5, "quarantine")); Catach.put(CatACH.ACH_SEAP, new S57enum(6, "sea-plane"));
+		Catach.put(CatACH.ACH_EXPL, new S57enum(4, "explosives")); Catach.put(CatACH.ACH_QUAR, new S57enum(5, "quarantine")); Catach.put(CatACH.ACH_SEAP, new S57enum(6, "seaplane"));
 		Catach.put(CatACH.ACH_SMCF, new S57enum(7, "small_craft")); Catach.put(CatACH.ACH_SMCM, new S57enum(8, "small_craft_mooring")); Catach.put(CatACH.ACH_H24P, new S57enum(9, "24_hour"));
 		Catach.put(CatACH.ACH_LTPD, new S57enum(10, "limited_period")); Catach.put(CatACH.ACH_NPSH, new S57enum(11, "non_pushing")); Catach.put(CatACH.ACH_DRYC, new S57enum(12, "dry_cargo"));
 		Catach.put(CatACH.ACH_RAFT, new S57enum(13, "raft"));

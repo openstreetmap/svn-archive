@@ -78,7 +78,7 @@ public class S57obj {
 
 	private static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
 	static {
-		ObjSTR.put(Obj.UNKOBJ, "");	ObjSTR.put(Obj.ADMARE, "administration");	ObjSTR.put(Obj.AIRARE, "airfield");	ObjSTR.put(Obj.ACHBRT, "anchor_berth");
+		ObjSTR.put(Obj.UNKOBJ, "");	ObjSTR.put(Obj.ADMARE, "administrative_area");	ObjSTR.put(Obj.AIRARE, "airfield");	ObjSTR.put(Obj.ACHBRT, "anchor_berth");
 		ObjSTR.put(Obj.ACHARE, "anchorage"); ObjSTR.put(Obj.BCNCAR, "beacon_cardinal");	ObjSTR.put(Obj.BCNISD, "beacon_isolated_danger");
 		ObjSTR.put(Obj.BCNLAT, "beacon_lateral");	ObjSTR.put(Obj.BCNSAW, "beacon_safe_water"); ObjSTR.put(Obj.BCNSPP, "beacon_special_purpose");
 		ObjSTR.put(Obj.BERTHS, "berth"); ObjSTR.put(Obj.BRIDGE, "bridge"); ObjSTR.put(Obj.BUISGL, "building"); ObjSTR.put(Obj.BUAARE, "built-up_area");

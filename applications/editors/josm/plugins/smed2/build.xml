@@ -72,6 +72,9 @@
             <fileset dir="resources"/>
         </copy>
         <copy todir="${plugin.build.dir}/images">
+            <fileset dir="${plugin.src.dir}/images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
         <copy todir="${plugin.build.dir}/data">

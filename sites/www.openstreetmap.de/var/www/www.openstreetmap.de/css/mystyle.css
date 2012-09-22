@@ -180,7 +180,6 @@ ul.carousel_tabs li a:focus {
 #carousel-content img {
 	max-width: 145px;
 	max-height: 145px;
-    margin-left: 50px;
     margin-top: 20px;
 }
 
@@ -206,14 +205,15 @@ ul.carousel_tabs li a:focus {
 #map_select img {
 	max-width: 110px;
 	max-height: 110px;
-/*    margin-top: 30px;*/
-	margin-left: 20px;
-	margin-right: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 }
 
 #map_select .description {
 	width: 145px;
-	margin-left: 5px;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 4px;
 	font-size: 12px;
 	color: #909090;

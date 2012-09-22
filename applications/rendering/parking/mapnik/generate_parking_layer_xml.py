@@ -211,6 +211,12 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
     plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
     things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pllma,plrma,pll,plr]
+    if True: # add maxstay styles and layers
+        plmls = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-maxstay-left'))
+        plmll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-maxstay-left'))
+        plmrs = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-maxstay-right'))
+        plmrl = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-maxstay-right'))
+        things+=[plmls,plmll,plmrs,plmrl]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
     # handle the parking points / nodes

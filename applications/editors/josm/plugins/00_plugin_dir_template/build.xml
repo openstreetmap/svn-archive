@@ -6,7 +6,7 @@
 ** ====================
 ** see README.template
 **
-** Usage
+** Usage 
 ** =====
 ** To build it run
 **
@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="myPluginName" default="dist" basedir=".">
+<project name="gpsblam" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
@@ -93,12 +93,12 @@
             ************************************************
             -->
             <manifest>
-                <attribute name="Author" value="..."/>
-                <attribute name="Plugin-Class" value="..."/>
+                <attribute name="Author" value="Russell Edwards"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.gpsblam.GPSBlamPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="..."/>
-                <attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
+                <attribute name="Plugin-Description" value="Analyse a set of GPS points to obtain its centre and direction of spread."/>
+                <attribute name="Plugin-Icon" value="images/mapmode/gpsblam_mode.png"/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

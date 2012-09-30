@@ -125,7 +125,7 @@ namespace OsmUtils.Framework
         {
             osm osmData = new osm ();
             osmData.Version = "0.5";
-            osmData.Generator = "OsmUtils";
+            osmData.Generator = "Srtm2Osm";
             osmData.Node = new List<osmNode> ();
             osmData.Way = new List<osmWay> ();
             osmData.Relation = new List<osmRelation> ();

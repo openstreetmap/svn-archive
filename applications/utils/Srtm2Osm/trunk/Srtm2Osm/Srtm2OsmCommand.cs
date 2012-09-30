@@ -94,7 +94,9 @@ namespace Srtm2Osm
             double elevationStepInUnits = elevationStep * elevationUnits;
             contourMarker.Configure (elevationUnits);
 
-            long wayId = 1000000000, nodeId = 2000000000;
+            // Start with highest possible ID and count down. That should give maximum space between
+            // contour data and real OSM data.
+            long wayId = long.MaxValue, nodeId = long.MaxValue;
 
             if (largeAreaMode)
             {
@@ -125,7 +127,7 @@ namespace Srtm2Osm
 
                                 contourMarker.MarkContour (way, isohypse);
 
-                                way.Id = wayId++;
+                                way.Id = wayId--;
                                 way.Nd = new List<osmWayND> ();
                                 way.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
 
@@ -136,7 +138,7 @@ namespace Srtm2Osm
                                     Point3<double> point = polyline.Vertices[i];
 
                                     OsmUtils.OsmSchema.osmNode node = new osmNode ();
-                                    node.Id = nodeId++;
+                                    node.Id = nodeId--;
                                     node.Lat = point.Y + corrY;
                                     node.Lon = point.X + corrX;
                                     node.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
@@ -182,7 +184,7 @@ namespace Srtm2Osm
                 {
                     foreach (Polyline polyline in isohypse.Segments)
                     {
-                        OsmWay isohypseWay = new OsmWay (wayId++);
+                        OsmWay isohypseWay = new OsmWay (wayId--);
                         contourMarker.MarkContour (isohypseWay, isohypse);
                         osmDb.AddWay (isohypseWay);
 
@@ -192,7 +194,7 @@ namespace Srtm2Osm
                         {
                             Point3<double> point = polyline.Vertices[i];
 
-                            OsmNode node = new OsmNode(nodeId++, point.Y + corrY, point.X + corrX);
+                            OsmNode node = new OsmNode(nodeId--, point.Y + corrY, point.X + corrX);
                             osmDb.AddNode(node);
 
                             isohypseWay.AddNode (node.ObjectId);

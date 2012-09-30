@@ -23,7 +23,7 @@ namespace OsmUtils.Framework
         /// Gets the ID of the referenced OSM object.
         /// </summary>
         /// <value>The ID of the referenced OSM object.</value>
-        public int ReferenceId
+        public long ReferenceId
         {
             get { return referenceId; }
         }
@@ -34,7 +34,7 @@ namespace OsmUtils.Framework
         /// </summary>
         /// <param name="referenceType">Type of the referenced OSM object.</param>
         /// <param name="referenceId">The ID of the referenced OSM object.</param>
-        public OsmRelationMemberReference (OsmReferenceType referenceType, int referenceId)
+        public OsmRelationMemberReference (OsmReferenceType referenceType, long referenceId)
         {
             this.referenceType = referenceType;
             this.referenceId = referenceId;
@@ -84,6 +84,6 @@ namespace OsmUtils.Framework
         }
 
         private OsmReferenceType referenceType;
-        private int referenceId;
+        private long referenceId;
     }
 }

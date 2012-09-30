@@ -16,7 +16,7 @@ namespace OsmUtils.Framework
             get { return longitude; }
         }
 
-        public OsmNode (int nodeId, double latitude, double longitude)
+        public OsmNode (long nodeId, double latitude, double longitude)
             : base (nodeId)
         {
             this.latitude = latitude;

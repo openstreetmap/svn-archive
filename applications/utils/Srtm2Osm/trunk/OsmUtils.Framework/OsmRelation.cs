@@ -14,7 +14,7 @@ namespace OsmUtils.Framework
         /// a specified ID.
         /// </summary>
         /// <param name="relationId">The relation ID.</param>
-        public OsmRelation (int relationId)
+        public OsmRelation (long relationId)
             : base (relationId)
         {
         }
@@ -26,7 +26,7 @@ namespace OsmUtils.Framework
         /// <param name="referenceId">The ID of the referenced OSM object.</param>
         /// <param name="role">The role of the relation's member.</param>
         /// <exception cref="ArgumentException">A member with the same key already exists in the relation.</exception>
-        public void AddMember (OsmReferenceType referenceType, int referenceId, string role)
+        public void AddMember (OsmReferenceType referenceType, long referenceId, string role)
         {
             OsmRelationMember member = new OsmRelationMember (referenceType, referenceId, role);
             members.Add (member.MemberReference, member);

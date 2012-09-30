@@ -289,7 +289,7 @@ namespace OsmUtils.OsmSchema
         private System.Collections.Generic.List<tag> tag;
         
         /// <remarks/>
-        private int id;
+        private long id;
         
         /// <remarks/>
         private bool idSpecified;
@@ -325,7 +325,7 @@ namespace OsmUtils.OsmSchema
         {
         }
         
-        public osmNode(System.Collections.Generic.List<tag> tag, int id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, double lat, bool latSpecified, double lon, bool lonSpecified, string action)
+        public osmNode(System.Collections.Generic.List<tag> tag, long id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, double lat, bool latSpecified, double lon, bool lonSpecified, string action)
         {
             this.tag = tag;
             this.id = id;
@@ -358,7 +358,7 @@ namespace OsmUtils.OsmSchema
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute(AttributeName="id")]
-        public int Id
+        public long Id
         {
             get
             {
@@ -555,7 +555,7 @@ namespace OsmUtils.OsmSchema
         private System.Collections.Generic.List<tag> tag;
         
         /// <remarks/>
-        private int id;
+        private long id;
         
         /// <remarks/>
         private bool idSpecified;
@@ -625,7 +625,7 @@ namespace OsmUtils.OsmSchema
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute(AttributeName="id")]
-        public int Id
+        public long Id
         {
             get
             {
@@ -750,7 +750,7 @@ namespace OsmUtils.OsmSchema
     {
         
         /// <remarks/>
-        private int @ref;
+        private long @ref;
         
         /// <remarks/>
         private bool refSpecified;
@@ -759,14 +759,14 @@ namespace OsmUtils.OsmSchema
         {
         }
         
-        public osmWayND(int @ref, bool refSpecified)
+        public osmWayND(long @ref, bool refSpecified)
         {
             this.@ref = @ref;
             this.refSpecified = refSpecified;
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute(AttributeName="ref")]
-        public int Ref
+        public long Ref
         {
             get
             {
@@ -816,7 +816,7 @@ namespace OsmUtils.OsmSchema
         private System.Collections.Generic.List<tag> tag;
         
         /// <remarks/>
-        private int id;
+        private long id;
         
         /// <remarks/>
         private bool idSpecified;
@@ -840,7 +840,7 @@ namespace OsmUtils.OsmSchema
         {
         }
         
-        public osmRelation(System.Collections.Generic.List<osmRelationMember> member, System.Collections.Generic.List<tag> tag, int id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, string action)
+        public osmRelation(System.Collections.Generic.List<osmRelationMember> member, System.Collections.Generic.List<tag> tag, long id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, string action)
         {
             this.member = member;
             this.tag = tag;
@@ -886,7 +886,7 @@ namespace OsmUtils.OsmSchema
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute(AttributeName="id")]
-        public int Id
+        public long Id
         {
             get
             {
@@ -1014,7 +1014,7 @@ namespace OsmUtils.OsmSchema
         private string type;
         
         /// <remarks/>
-        private int @ref;
+        private long @ref;
         
         /// <remarks/>
         private bool refSpecified;
@@ -1051,7 +1051,7 @@ namespace OsmUtils.OsmSchema
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute(AttributeName="ref")]
-        public int Ref
+        public long Ref
         {
             get
             {

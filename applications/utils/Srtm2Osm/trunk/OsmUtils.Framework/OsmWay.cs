@@ -7,7 +7,7 @@ namespace OsmUtils.Framework
 {
     public class OsmWay : OsmObjectBase, ICloneable
     {
-        public IList<int> NodesList
+        public IList<long> NodesList
         {
             get { return nodesList; }
         }
@@ -23,17 +23,17 @@ namespace OsmUtils.Framework
             }
         }
 
-        public OsmWay (int wayId)
+        public OsmWay (long wayId)
             : base (wayId)
         {
         }
 
-        public void AddNode (int nodeId)
+        public void AddNode (long nodeId)
         {
             nodesList.Add (nodeId);
         }
 
-        public IEnumerable<int> EnumerateNodesIds ()
+        public IEnumerable<long> EnumerateNodesIds ()
         {
             return nodesList;
         }
@@ -94,7 +94,7 @@ namespace OsmUtils.Framework
         {
             base.CopyToClone (clone);
 
-            ((OsmWay)clone).nodesList = new List<int> (nodesList);
+            ((OsmWay)clone).nodesList = new List<long> (nodesList);
         }
 
         #region ICloneable Members
@@ -109,12 +109,12 @@ namespace OsmUtils.Framework
         {
             OsmWay clone = new OsmWay (ObjectId);
             CopyToClone (clone);
-            clone.nodesList = new List<int> (nodesList);
+            clone.nodesList = new List<long> (nodesList);
             return clone;
         }
 
         #endregion
 
-        private List<int> nodesList = new List<int> ();
+        private List<long> nodesList = new List<long> ();
     }
 }

@@ -13,7 +13,7 @@ namespace OsmUtils.Framework
 
     public abstract class OsmObjectBase
     {
-        public int ObjectId
+        public long ObjectId
         {
             get { return objectId; }
         }
@@ -49,7 +49,7 @@ namespace OsmUtils.Framework
 
         public IDictionary<string, OsmTag> Tags { get { return tags; } }
 
-        protected OsmObjectBase (int objectId)
+        protected OsmObjectBase (long objectId)
         {
             this.objectId = objectId;
         }
@@ -128,7 +128,7 @@ namespace OsmUtils.Framework
             }
         }
 
-        private int objectId;
+        private long objectId;
         private DateTime timestamp;
         private string user;
         private bool visible;

@@ -60,7 +60,7 @@ namespace OsmUtils.Framework
         /// <param name="referenceId">The ID of the referenced OSM object.</param>
         /// <param name="role">The role of the relation's member.</param>
         public OsmRelationMember (OsmReferenceType referenceType,
-            int referenceId,
+            long referenceId,
             string role)
             : this (new OsmRelationMemberReference (referenceType, referenceId), role)
         {

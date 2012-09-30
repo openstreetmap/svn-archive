@@ -94,7 +94,7 @@ namespace Srtm2Osm
             double elevationStepInUnits = elevationStep * elevationUnits;
             contourMarker.Configure (elevationUnits);
 
-            int wayId = 1000000000, nodeId = 2000000000;
+            long wayId = 1000000000, nodeId = 2000000000;
 
             if (largeAreaMode)
             {
@@ -129,7 +129,7 @@ namespace Srtm2Osm
                                 way.Nd = new List<osmWayND> ();
                                 way.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
 
-                                int firstNodeId = 0;
+                                long firstNodeId = 0;
 
                                 for (int i = 0; i < polyline.Vertices.Count; i++)
                                 {
@@ -186,7 +186,7 @@ namespace Srtm2Osm
                         contourMarker.MarkContour (isohypseWay, isohypse);
                         osmDb.AddWay (isohypseWay);
 
-                        int firstNodeId = nodeId;
+                        long firstNodeId = nodeId;
 
                         for (int i = 0; i < polyline.VerticesCount; i++)
                         {

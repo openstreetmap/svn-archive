@@ -8,12 +8,12 @@ namespace OsmUtils.Framework
 {
     public class OsmDatabase
     {
-        public IDictionary<int, OsmNode> Nodes
+        public IDictionary<long, OsmNode> Nodes
         {
             get { return nodes; }
         }
 
-        public IDictionary<int, OsmWay> Ways
+        public IDictionary<long, OsmWay> Ways
         {
             get { return ways; }
         }
@@ -22,7 +22,7 @@ namespace OsmUtils.Framework
         /// Gets a dictionary of OSM relations in the OSM database.
         /// </summary>
         /// <value>A dictionary of OSM relations.</value>
-        public IDictionary<int, OsmRelation> Relations
+        public IDictionary<long, OsmRelation> Relations
         {
             get { return relations; }
         }
@@ -262,9 +262,9 @@ namespace OsmUtils.Framework
             return osmObjectActionStringConstants[(int)action];
         }
 
-        private Dictionary<int, OsmNode> nodes = new Dictionary<int, OsmNode> ();
-        private Dictionary<int, OsmWay> ways = new Dictionary<int, OsmWay> ();
-        private Dictionary<int, OsmRelation> relations = new Dictionary<int, OsmRelation> ();
+        private Dictionary<long, OsmNode> nodes = new Dictionary<long, OsmNode> ();
+        private Dictionary<long, OsmWay> ways = new Dictionary<long, OsmWay> ();
+        private Dictionary<long, OsmRelation> relations = new Dictionary<long, OsmRelation> ();
 
         static private string[] osmObjectActionStringConstants = new string[] { null, "delete", "modify" };
         static private string[] osmReferenceTypeStringConstants = new string[] { null, "node", "way", "relation" };

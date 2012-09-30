@@ -19,7 +19,7 @@ namespace Srtm2Osm
 
             cmd = new Srtm2OsmCommand ();
 
-            int i = cmd.ParseArgs (Args, 0);
+            cmd.ParseArgs (Args, 0);
             cmdList.Add (cmd);
 
             return cmdList;

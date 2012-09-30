@@ -66,16 +66,17 @@ namespace Srtm2Osm
                 srtmIndex = SrtmIndex.Load (srtmIndexFilename);
             }
 
+            ConsoleActivityLogger activityLogger = new ConsoleActivityLogger();
+            activityLogger.LogLevel = ActivityLogLevel.Verbose;
+
             Srtm3Storage.SrtmSource = srtmSource;
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);
+            storage.ActivityLogger = activityLogger;
 
             Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY, 
                 bounds.MaxX - corrX, bounds.MaxY - corrY);
      
             IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
-
-            ConsoleActivityLogger activityLogger = new ConsoleActivityLogger ();
-            activityLogger.LogLevel = ActivityLogLevel.Verbose;
 
             DigitalElevationModelStatistics statistics = dem.CalculateStatistics ();
 
@@ -474,8 +475,7 @@ namespace Srtm2Osm
         }
 
         private Bounds2 bounds;
-        private double corrX = 0;
-        private double corrY = 0;
+        private double corrX, corrY;
         private bool generateIndex;
         private string srtmDir = "srtm";
         private int elevationStep = 20;

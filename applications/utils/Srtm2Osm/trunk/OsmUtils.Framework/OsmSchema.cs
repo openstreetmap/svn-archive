@@ -579,7 +579,7 @@ namespace OsmUtils.OsmSchema
         {
         }
         
-        public osmWay(System.Collections.Generic.List<osmWayND> nd, System.Collections.Generic.List<tag> tag, int id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, string action)
+        public osmWay(System.Collections.Generic.List<osmWayND> nd, System.Collections.Generic.List<tag> tag, long id, bool idSpecified, string timestamp, string user, bool visible, bool visibleSpecified, string action)
         {
             this.nd = nd;
             this.tag = tag;
@@ -1026,7 +1026,7 @@ namespace OsmUtils.OsmSchema
         {
         }
         
-        public osmRelationMember(string type, int @ref, bool refSpecified, string role)
+        public osmRelationMember(string type, long @ref, bool refSpecified, string role)
         {
             this.type = type;
             this.@ref = @ref;

@@ -164,7 +164,7 @@ namespace OsmUtils.Framework
                 exportedWay.Action = FormatOsmObjectAction (way.Action);
 
                 exportedWay.Nd = new List<osmWayND> ();
-                foreach (int nodeId in way.EnumerateNodesIds ())
+                foreach (long nodeId in way.EnumerateNodesIds ())
                 {
                     osmWayND wayNode = new osmWayND ();
                     wayNode.Ref = nodeId;

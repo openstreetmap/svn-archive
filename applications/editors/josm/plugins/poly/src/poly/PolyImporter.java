@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -72,6 +74,7 @@ public class PolyImporter extends OsmImporter {
         List<Area> areas = new ArrayList<Area>();
         Area area = null;
         boolean parsingSection = false;
+        int fixedCoords = 0;
         while(true) {
             String line;
             do {
@@ -116,12 +119,25 @@ public class PolyImporter extends OsmImporter {
                     if( tokenCount < 2 )
                         throw new IllegalDataException(tr("A polygon coordinate line must contain exactly 2 numbers"));
                     LatLon coord = new LatLon(coords[1], coords[0]);
-                    if( !coord.isValid() )
-                        throw new IllegalDataException(tr("Invalid coordinates were found: {0}, {1}", coord.lat(), coord.lon()));
+                    if( !coord.isValid() ) {
+                        // fix small deviations
+                        double lat = coord.lat();
+                        double lon = coord.lon();
+                        if( lon < -180.0 && lon> -185.0 ) lon = -180.0;
+                        if( lon > 180.0 && lon < 185.0 ) lon = 180.0;
+                        if( lat < -90.0 && lat > -95.0 ) lat = -90.0;
+                        if( lat > 90.0 && lat < 95.0 ) lat = 90.0;
+                        fixedCoords++;
+                        coord = new LatLon(lat, lon);
+                        if( !coord.isValid() )
+                            throw new IllegalDataException(tr("Invalid coordinates were found: {0}, {1}", coord.lat(), coord.lon()));
+                    }
                     area.addNode(coord);
                 }
             }
         }
+        if( fixedCoords > 0 )
+            JOptionPane.showMessageDialog(Main.parent, tr("{0} points were outside world bounds and were moved", fixedCoords), "Import poly", JOptionPane.WARNING_MESSAGE);
         return areas;
     }
 
@@ -194,7 +210,6 @@ public class PolyImporter extends OsmImporter {
                 way.addNode(node);
             }
             way.addNode(way.getNode(0));
-            way.put("ref", name);
             if( polygonName != null )
                 way.put("name", polygonName);
             ds.addPrimitive(way);

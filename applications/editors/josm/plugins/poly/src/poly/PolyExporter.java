@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,29 +40,19 @@ public class PolyExporter extends OsmExporter {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
             try {
                 DataSet ds = ((OsmDataLayer)layer).data;
-                Map<Way, Boolean> ways = new TreeMap<Way, Boolean>(new AreaComparator());
+                Map<Way, Boolean> ways = new TreeMap<Way, Boolean>();
                 String polygonName = file.getName();
                 if( polygonName.indexOf('.') > 0 )
                     polygonName = polygonName.substring(0, polygonName.indexOf('.'));
                 for( Way w : ds.getWays() ) {
                     if( w.isClosed() ) {
-                        boolean outer = true;
-                        for( OsmPrimitive p : w.getReferrers() ) {
-                            if( p instanceof Relation && ((Relation)p).isMultipolygon() ) {
-                                for( RelationMember m : ((Relation)p).getMembers() ) {
-                                    if( m.refersTo(w) && "inner".equals(m.getRole()) ) {
-                                        outer = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if( !outer ) break;
-                        }
+                        boolean outer = isOuter(w);
                         ways.put(w, outer);
                         if( w.hasKey("name") )
                             polygonName = w.get("name").replace("\n", " ");
                     }
                 }
+                ways = sortOuterInner(ways);
 
                 int counter = 1;
                 writer.write(polygonName);
@@ -69,10 +60,10 @@ public class PolyExporter extends OsmExporter {
                 for( Way w : ways.keySet() ) {
                     if( !ways.get(w) )
                         writer.write('!');
-                    writer.write(w.hasKey("ref") ? w.get("ref") : String.valueOf(counter++));
+                    writer.write(String.valueOf(counter++));
                     writer.newLine();
                     for( Node n : w.getNodes() ) {
-                        writer.write(String.format(Locale.ENGLISH, "   %E   %E", n.getCoor().lon(), n.getCoor().lat()));
+                        writer.write(String.format(Locale.ENGLISH, "   %f   %f", n.getCoor().lon(), n.getCoor().lat()));
                         writer.newLine();
                     }
                     writer.write("END");
@@ -86,17 +77,31 @@ public class PolyExporter extends OsmExporter {
         }
     }
 
-    private class AreaComparator implements Comparator<Way> {
-        @Override
-        public int compare( Way w1, Way w2 ) {
-            if( w1.hasKey("ref") && !w2.hasKey("ref") )
-                return -1;
-            else if( !w1.hasKey("ref") && w2.hasKey("ref") )
-                return 1;
-            else if( w1.hasKey("ref") && w2.hasKey("ref") && !w1.get("ref").equals(w2.get("ref")) )
-                return w1.get("ref").compareTo(w2.get("ref"));
-            else
-                return w1.compareTo(w2);
+    private boolean isOuter( Way w ) {
+        for( OsmPrimitive p : w.getReferrers() ) {
+            if( p instanceof Relation && ((Relation)p).isMultipolygon() ) {
+                for( RelationMember m : ((Relation)p).getMembers() ) {
+                    if( m.refersTo(w) && "inner".equals(m.getRole()) ) {
+                        return false;
+                    }
+                }
+            }
         }
+        return true;
+    }
+
+    private Map<Way, Boolean> sortOuterInner( Map<Way, Boolean> ways ) {
+        LinkedHashMap<Way, Boolean> result = new LinkedHashMap<Way, Boolean>(ways.size());
+        List<Way> inner = new ArrayList<Way>();
+        for( Way w : ways.keySet() ) {
+            Boolean outer = ways.get(w);
+            if( outer )
+                result.put(w, outer);
+            else
+                inner.add(w);
+        }
+        for( Way w : inner )
+            result.put(w, Boolean.FALSE);
+        return result;
     }
 }

@@ -21,6 +21,8 @@ namespace Brejc.DemLibrary
 
     public class Srtm3Storage : IDemLoader
     {
+        public IActivityLogger ActivityLogger { get { return activityLogger; } set { activityLogger = value; } }
+
         public SrtmIndex SrtmIndex
         {
             get { return index; }
@@ -113,6 +115,8 @@ namespace Brejc.DemLibrary
                         string url = srtmSource + continentalRegion.ToString() + "/" + filename;
 
                         string localFilename = Path.Combine (srtm3CachePath, filename);
+
+                        this.activityLogger.Log(ActivityLogLevel.Verbose, "Downloading SRTM cell " + cell.CellFileName);
 
                         WebRequest request = WebRequest.Create(new System.Uri(url));
                         WebResponse response = request.GetResponse();
@@ -233,5 +237,6 @@ namespace Brejc.DemLibrary
 
         private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/";
 
+        private IActivityLogger activityLogger = new ConsoleActivityLogger();
     }
 }

@@ -19,3 +19,6 @@
 <!ENTITY pa_fill_opacity "0.5">
 <!ENTITY pa_stroke_opacity_semi "0.5">
 <!ENTITY pa_fill_opacity_semi "0.5">
+
+<!ENTITY pl_maxstay_dy_right "-15">
+<!ENTITY pl_maxstay_dy_left "15">

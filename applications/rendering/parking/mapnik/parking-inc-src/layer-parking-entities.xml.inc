@@ -22,3 +22,4 @@
 
 <!ENTITY pl_maxstay_dy_right "-15">
 <!ENTITY pl_maxstay_dy_left "15">
+<!ENTITY pl_maxstay_upright "auto">

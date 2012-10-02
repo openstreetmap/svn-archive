@@ -33,15 +33,15 @@ public class BoundaryFixer extends MultipolygonFixer {
 	public boolean isRelationGood(Relation rel) {
 		for( RelationMember m : rel.getMembers() ) {
             if (m.getType().equals(OsmPrimitiveType.RELATION) && !"subarea".equals(m.getRole())) {
-                setWarningMessage(tr("Relation without 'subarea' role found"));
+                setWarningMessage(tr("Relation without ''subarea'' role found"));
                 return false;
             }
             if (m.getType().equals(OsmPrimitiveType.NODE) && !("label".equals(m.getRole()) || "admin_centre".equals(m.getRole()))) {
-                setWarningMessage(tr("Node without 'label' or 'admin_centre' role found"));
+                setWarningMessage(tr("Node without ''label'' or ''admin_centre'' role found"));
                 return false;
             }
             if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
-                setWarningMessage(tr("Way without 'inner' or 'outer' role found"));
+                setWarningMessage(tr("Way without ''inner'' or ''outer'' role found"));
 				return false;
             }
         }

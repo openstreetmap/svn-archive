@@ -34,7 +34,7 @@ public class MultipolygonFixer extends RelationFixer {
 	public boolean isRelationGood(Relation rel) {
 		for (RelationMember m : rel.getMembers())
 			if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
-			    setWarningMessage(tr("Way without 'inner' or 'outer' role found"));
+			    setWarningMessage(tr("Way without ''inner'' or ''outer'' role found"));
 			    return false;
 			}
 		clearWarningMessage();

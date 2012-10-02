@@ -26,15 +26,15 @@ public class AssociatedStreetFixer extends RelationFixer {
 	public boolean isRelationGood(Relation rel) {
 		for (RelationMember m : rel.getMembers()) {
     		if (m.getType().equals(OsmPrimitiveType.NODE) && !"house".equals(m.getRole())) {
-    		    setWarningMessage(tr("Node without 'house' role found"));
+    		    setWarningMessage(tr("Node without ''house'' role found"));
     			return false;
     		}
     		if (m.getType().equals(OsmPrimitiveType.WAY) && !("house".equals(m.getRole()) || "street".equals(m.getRole()))) {
-    		    setWarningMessage(tr("Way without 'house' or 'street' role found"));
+    		    setWarningMessage(tr("Way without ''house'' or ''street'' role found"));
     		    return false;
     		}
     		if (m.getType().equals(OsmPrimitiveType.RELATION) && !"house".equals(m.getRole())) {
-    		    setWarningMessage(tr("Relation without 'house' role found"));
+    		    setWarningMessage(tr("Relation without ''house'' role found"));
     			return false;
     		}
     	}

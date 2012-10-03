@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace OsmUtils.OsmClient
 {
-    public class OsmClient05
+    public class OsmClient06
     {
         public osm GetMap (double bottomLeftLng, double bottomLeftLat, double topRightLng, double topRightLat)
         {
@@ -55,6 +55,6 @@ namespace OsmUtils.OsmClient
             return new Uri (osmApiServerUrl, commandName);
         }
 
-        private Uri osmApiServerUrl = new Uri (@"http://api.openstreetmap.org/api/0.5/");
+        private Uri osmApiServerUrl = new Uri (@"http://api.openstreetmap.org/api/0.6/");
     }
 }

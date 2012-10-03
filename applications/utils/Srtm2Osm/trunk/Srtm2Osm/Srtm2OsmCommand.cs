@@ -99,6 +99,11 @@ namespace Srtm2Osm
             // contour data and real OSM data.
             long wayId = long.MaxValue, nodeId = long.MaxValue;
 
+            // The following IDs do exist in the OSM database
+            string user = "Srtm2Osm";
+            int uid = 941874;
+            int changeset = 13341398;
+
             if (largeAreaMode)
             {
                 XmlSerializer nodeSerializer = new XmlSerializer (typeof (osmNode), new XmlRootAttribute ("node"));
@@ -117,7 +122,7 @@ namespace Srtm2Osm
                     using (XmlWriter writer = XmlWriter.Create (stream, settings))
                     {
                         writer.WriteStartElement ("osm");
-                        writer.WriteAttributeString ("version", "0.5");
+                        writer.WriteAttributeString ("version", "0.6");
                         writer.WriteAttributeString ("generator", "Srtm2Osm");
 
                         alg.Isoplete (dem, elevationStepInUnits, delegate (Isohypse isohypse)
@@ -130,7 +135,11 @@ namespace Srtm2Osm
 
                                 way.Id = wayId--;
                                 way.Nd = new List<osmWayND> ();
-                                way.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+                                way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+                                way.Version = 1;
+                                way.User = user;
+                                way.Uid = uid;
+                                way.Changeset = changeset;
 
                                 long firstNodeId = 0;
 
@@ -142,7 +151,11 @@ namespace Srtm2Osm
                                     node.Id = nodeId--;
                                     node.Lat = point.Y + corrY;
                                     node.Lon = point.X + corrX;
-                                    node.Timestamp = DateTime.MinValue.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+                                    node.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+                                    node.Version = 1;
+                                    node.User = user;
+                                    node.Uid = uid;
+                                    node.Changeset = changeset;
 
                                     // Do explicity set the Lat- / LonSpecified properties.
                                     // Otherwise the lat / lon XML attributes would not get written, if the node has
@@ -177,7 +190,7 @@ namespace Srtm2Osm
                 OsmDatabase osmDb = new OsmDatabase ();
                 if (osmMergeFile != null)
                 {
-                    osm osmExistingFile = OsmClient05.LoadFile (osmMergeFile);
+                    osm osmExistingFile = OsmClient06.LoadFile (osmMergeFile);
                     osmDb.ImportData (osmExistingFile);
                 }
 
@@ -186,6 +199,8 @@ namespace Srtm2Osm
                     foreach (Polyline polyline in isohypse.Segments)
                     {
                         OsmWay isohypseWay = new OsmWay (wayId--);
+                        isohypseWay.Visible = true;
+                        isohypseWay.Timestamp = DateTime.UtcNow;
                         contourMarker.MarkContour (isohypseWay, isohypse);
                         osmDb.AddWay (isohypseWay);
 
@@ -196,6 +211,8 @@ namespace Srtm2Osm
                             Point3<double> point = polyline.Vertices[i];
 
                             OsmNode node = new OsmNode(nodeId--, point.Y + corrY, point.X + corrX);
+                            node.Visible = true;
+                            node.Timestamp = DateTime.UtcNow;
                             osmDb.AddNode(node);
 
                             isohypseWay.AddNode (node.ObjectId);
@@ -208,8 +225,8 @@ namespace Srtm2Osm
                 }
 
                 activityLogger.Log (ActivityLogLevel.Normal, "Saving the contour data to the file...");
-                OsmUtils.OsmSchema.osm osmData = osmDb.ExportData ();
-                OsmUtils.OsmClient.OsmClient05.SaveFile (osmData, outputOsmFile);
+                OsmUtils.OsmSchema.osm osmData = osmDb.ExportData (user, uid, changeset);
+                OsmUtils.OsmClient.OsmClient06.SaveFile (osmData, outputOsmFile);
             }
 
             // TODO: SVG file generator code

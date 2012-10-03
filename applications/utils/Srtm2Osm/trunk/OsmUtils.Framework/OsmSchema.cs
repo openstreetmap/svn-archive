@@ -14,7 +14,12 @@
 /*
  * This source code was manually edited due to the lack of the appropriate .wsdl file.
  * 
- * The change included the Version property / version field in the classes osmNode, osmWay and osmRelation.
+ * The change included
+ * - Version property / field in the classes osmNode, osmWay and osmRelation
+ * - Changeset property / field in the classes osmNode, osmWay and osmRelation
+ * - Uid property / field in the classes osmNode, osmWay and osmRelation
+ * - Upload property / field in the class osm
+ * 
  * This was needed to made the schema of these elements *in parts* compatible with the XML from API v0.6.
  * Missing stuff:
  *  - changesets
@@ -22,6 +27,7 @@
  *  - user data
  *  - user preferences
  *  - copyright, attribution & license attributes in osm tag
+ *  - relation members are ordered
  */
 
 namespace OsmUtils.OsmSchema
@@ -116,12 +122,15 @@ namespace OsmUtils.OsmSchema
         
         /// <remarks/>
         private string generator;
+
+        /// <remarks>manually added</remarks>
+        private bool upload;
         
         public osm()
         {
         }
         
-        public osm(System.Collections.Generic.List<osmBound> bound, System.Collections.Generic.List<osmNode> node, System.Collections.Generic.List<osmWay> way, System.Collections.Generic.List<osmRelation> relation, string version, string generator)
+        public osm(System.Collections.Generic.List<osmBound> bound, System.Collections.Generic.List<osmNode> node, System.Collections.Generic.List<osmWay> way, System.Collections.Generic.List<osmRelation> relation, string version, string generator, bool upload)
         {
             this.bound = bound;
             this.node = node;
@@ -129,6 +138,7 @@ namespace OsmUtils.OsmSchema
             this.relation = relation;
             this.version = version;
             this.generator = generator;
+            this.upload = upload;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("bound", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -223,6 +233,22 @@ namespace OsmUtils.OsmSchema
                 if ((this.generator != value))
                 {
                     this.generator = value;
+                }
+            }
+        }
+
+        [System.Xml.Serialization.XmlAttributeAttribute(AttributeName = "upload")]
+        public bool Upload
+        {
+            get
+            {
+                return this.upload;
+            }
+            set
+            {
+                if ((this.upload != value))
+                {
+                    this.upload = value;
                 }
             }
         }

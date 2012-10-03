@@ -29,7 +29,7 @@ namespace Srtm2Osm
         {
             System.Diagnostics.FileVersionInfo version = System.Diagnostics.FileVersionInfo.GetVersionInfo
                 (System.Reflection.Assembly.GetExecutingAssembly ().Location);
-            System.Console.Out.WriteLine ("Srtm2Osm v{0} by Igor Brejc", version.FileVersion);
+            System.Console.Out.WriteLine ("Srtm2Osm v{0} by Igor Brejc and others", version.FileVersion);
             System.Console.Out.WriteLine ();
             System.Console.Out.WriteLine ("Uses SRTM data to generate elevation contour lines for use in OpenStreetMap");
             System.Console.Out.WriteLine ();

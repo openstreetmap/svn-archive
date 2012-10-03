@@ -124,6 +124,7 @@ namespace Srtm2Osm
                         writer.WriteStartElement ("osm");
                         writer.WriteAttributeString ("version", "0.6");
                         writer.WriteAttributeString ("generator", "Srtm2Osm");
+                        writer.WriteAttributeString ("upload", "false");
 
                         alg.Isoplete (dem, elevationStepInUnits, delegate (Isohypse isohypse)
                         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using OsmUtils.OsmSchema;
 using Brejc.Geometry;
 
@@ -122,11 +123,20 @@ namespace OsmUtils.Framework
             }
         }
 
+        /// <summary>
+        /// Exports the contents of this database to OSM XML.
+        /// </summary>
+        /// <param name="user">Username</param>
+        /// <param name="uid">User ID</param>
+        /// <param name="changeset">Changeset ID</param>
+        /// <returns>Data for XmlSerializer</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
         public osm ExportData (string user, int uid, int changeset)
         {
             osm osmData = new osm ();
             osmData.Version = "0.6";
             osmData.Generator = "Srtm2Osm";
+            osmData.Upload = false;
             osmData.Node = new List<osmNode> ();
             osmData.Way = new List<osmWay> ();
             osmData.Relation = new List<osmRelation> ();

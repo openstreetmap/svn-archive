@@ -25,9 +25,7 @@ my $revision = '$Revision$';
 $revision =~ s/^.*?(\d+).*$/$1/;
 my $agent = "JOSM_Launchpad/1.$revision";
 
-my $count = 0;#11;
 my $cleanall = 0;#1;
-my $upload = 0;#1;
 
 if($#ARGV != 0)
 {
@@ -46,12 +44,19 @@ elsif($ARGV[0] eq "bzr" || $ARGV[0] eq "bzronly")
     if($ARGV[0] ne "bzronly")
     {
       system "ant";
-      makeupload();
     }
 }
 elsif($ARGV[0] eq "upload")
 {
     potupload();
+}
+elsif($ARGV[0] eq "uploadall")
+{
+    makeupload();
+}
+elsif($ARGV[0] eq "approveall")
+{
+  approveall(dologin());
 }
 elsif($ARGV[0] eq "download")
 {
@@ -75,33 +80,74 @@ else
     makeupload();
 }
 
+sub approveall
+{
+    my ($mech) = @_;
+    print "Trying to approve upload.\n";
+    $mech->get("https://translations.launchpad.net/josm/trunk/+imports?field.filter_status=NEEDS_REVIEW&field.filter_extension=all");
+    my @links;
+    foreach my $line (split("\n", $mech->content()))
+    {
+        push (@links, $1) if $line =~ /href="(\/\+imports\/\d+)"/;
+    }
+    if(!@links)
+    {
+        warn "No upload found in import list, upload possibly failed.";
+    }
+    else
+    {
+        foreach my $link (@links)
+        {
+            eval
+            {
+                print "Approve $link upload.\n";
+                $mech->get("https://translations.launchpad.net$link");
+                $mech->form_with_fields("field.potemplate");
+                $mech->select("field.potemplate", "josm");
+                $mech->click_button(name => "field.actions.approve");
+            };
+            print $@ if $@;
+        }
+    }
+}
+
 sub makeupload
 {
-    if($upload)
+    my $count = 11;
+    my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
+    my $mech = dologin();
+    $outdate =~ s/[\r\n]+//;
+    mkdir "build/josm";
+    system "cp po/*.po po/josm.pot build/josm";
+    chdir "build";
+    print "Starting upload ($outdate).\n";
+    if(!$count)
     {
-        my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
-        chomp $outdate;
-        mkdir "build/josm";
-        system "cp po/*.po po/josm.pot build/josm";
-        chdir "build";
-        if(!$count)
-        {
-          system "tar -cjf ../launchpad_upload_josm_$outdate.tar.bz2 josm";
-        }
-        else
-        {
-          my @files = sort glob("josm/*.po");
-          my $num = 1;
-          while($#files >= 0)
-          {
-            my @f = splice(@files, 0, $count);
-            system "tar -cjf ../launchpad_upload_josm_${outdate}_$num.tar.bz2 josm/josm.pot ".join(" ",@f);
-            ++$num;
-          }
-        }
-        system "rm -rv josm";
-        chdir "..";
+      system "tar -cjf launchpad_upload_josm_$outdate.tar.bz2 josm";
+      $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
+      $mech->submit_form(with_fields => {"file" => "launchpad_upload_josm_$outdate.tar.bz2"});
+      sleep(10);
     }
+    else
+    {
+      my @files = sort glob("josm/*.po");
+      my $num = 1;
+      while($#files >= 0)
+      {
+        my @f = splice(@files, 0, $count);
+        my $file = "launchpad_upload_josm_${outdate}_$num.tar.bz2";
+        print "Create file $file.\n";
+        system "tar -cjf $file ".join(" ",@f);
+        print "Upload file $file.\n";
+        $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
+        $mech->submit_form(with_fields => {"file" => $file});
+        sleep(10);
+        ++$num;
+      }
+    }
+    system "rm -rv josm";
+    chdir "..";
+    approveall($mech);
 }
 
 sub copypo

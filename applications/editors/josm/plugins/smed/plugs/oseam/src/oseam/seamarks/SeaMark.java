@@ -1711,7 +1711,7 @@ public class SeaMark extends JPanel {
 				if (str.contains(";")) {
 					String strs[] = str.split(";");
 					for (Col col : ColSTR.keySet())
-						if (ColSTR.get(col).equals(strs[1]))
+						if ((strs.length > 1) && ColSTR.get(col).equals(strs[1]))
 							setLightAtt(Att.ALT, i, col);
 					str = strs[0];
 				}

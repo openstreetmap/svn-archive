@@ -59,7 +59,7 @@ public class SmedTabAction extends JosmAction {
         frame = new JFrame(editor);
         smedStatusBar = new JTextField();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setAlwaysOnTop(true);
 
         //Add content to the window.

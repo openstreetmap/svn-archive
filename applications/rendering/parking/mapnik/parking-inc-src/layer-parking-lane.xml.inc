@@ -1193,43 +1193,43 @@
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='free'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: disc -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='disc'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1" fill="&pa_disc;">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: ticket -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='ticket'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='customers'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='residents'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1" fill="&pa_residents;">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: private -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='private'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- right parking lane: unknown -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:right]='unknown'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'r:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_right;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
 </Style>
 
@@ -1240,9 +1240,10 @@
         (select way,
                 COALESCE(tags->'parking:lane:right',tags->'parking:lane:both') as "parking:lane:right",
                 COALESCE(tags->'parking:condition:right',tags->'parking:condition:both') as "parking:condition:right",
-                COALESCE(tags->'parking:condition:right:maxstay',tags->'parking:condition:both:maxstay') as "maxstay"
+                COALESCE(COALESCE(tags->'parking:condition:right:maxstay',tags->'parking:condition:both:maxstay') ,
+                COALESCE(tags->'parking:condition:right:residents',tags->'parking:condition:both:residents') ) as "maxstay"
                 from &prefix;_line
-                where ((tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')) and (tags ? 'parking:condition:right:maxstay')
+                where ((tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')) and ((tags ? 'parking:condition:right:maxstay') or (tags ? 'parking:condition:both:maxstay') or (tags ? 'parking:condition:right:residents') or (tags ? 'parking:condition:both:residents'))
         ) as roads
         </Parameter>
         &datasource-settings;
@@ -1254,43 +1255,43 @@
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='free'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: disc -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='disc'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1" fill="&pa_disc;">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: ticket -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='ticket'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='customers'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: residents -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='residents'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1" fill="&pa_residents;">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: private -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='private'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
     <!-- left parking lane: unknown -->
     <Rule>
         &maxscale_zoom15;
         <Filter>[parking:condition:left]='unknown'</Filter>
-        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">'l:'+[maxstay]</TextSymbolizer>
+        <TextSymbolizer face-name="DejaVu Sans Bold" size="12" dy="&pl_maxstay_dy_left;" placement="line" upright="&pl_maxstay_upright;" wrap-width="35" allow-overlap="1">[maxstay]</TextSymbolizer>
     </Rule>
 </Style>
 
@@ -1301,9 +1302,10 @@
         (select way,
                 COALESCE(tags->'parking:lane:left',tags->'parking:lane:both') as "parking:lane:left",
                 COALESCE(tags->'parking:condition:left',tags->'parking:condition:both') as "parking:condition:left",
-                COALESCE(tags->'parking:condition:left:maxstay',tags->'parking:condition:both:maxstay') as "maxstay"
+                COALESCE(COALESCE(tags->'parking:condition:left:maxstay',tags->'parking:condition:both:maxstay') ,
+                COALESCE(tags->'parking:condition:left:residents',tags->'parking:condition:both:residents') ) as "maxstay"
                 from &prefix;_line
-                where ((tags ? 'parking:lane:left') or (tags ? 'parking:lane:both')) and (tags ? 'parking:condition:left:maxstay')
+                where ((tags ? 'parking:lane:left') or (tags ? 'parking:lane:both')) and ((tags ? 'parking:condition:left:maxstay') or (tags ? 'parking:condition:both:maxstay') or (tags ? 'parking:condition:left:residents') or (tags ? 'parking:condition:both:residents'))
         ) as roads
         </Parameter>
         &datasource-settings;

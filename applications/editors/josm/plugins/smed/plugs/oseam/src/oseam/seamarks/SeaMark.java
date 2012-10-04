@@ -1282,6 +1282,7 @@ public class SeaMark extends JPanel {
 	}
 
 	public boolean testValid() {
+		if (dlg.node == null) return false;
 		boolean tmp = false;
 		dlg.manager.showVisualMessage("");
 		switch (getObject()) {

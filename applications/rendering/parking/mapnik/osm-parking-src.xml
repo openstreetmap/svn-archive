@@ -16,4 +16,17 @@
 &layer-parking-lane;
 &layer-parking-point;
 
+<Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
+     <StyleName>roads-text-name</StyleName>
+     <Datasource>
+      <Parameter name="table">
+      (select way,highway,name
+       from &prefix;_line_join
+       where name is not null
+      ) as roads
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
 </Map>

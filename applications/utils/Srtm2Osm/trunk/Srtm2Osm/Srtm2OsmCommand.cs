@@ -395,22 +395,38 @@ namespace Srtm2Osm
                             string queryPart = slippyMapUrl.Query;
                             NameValueCollection queryParameters = HttpUtility.ParseQueryString (queryPart);
 
-                            if (queryParameters["lat"] == null
-                                || queryParameters["lon"] == null
-                                || queryParameters["zoom"] == null)
+                            if (queryParameters["lat"] != null
+                                && queryParameters["lon"] != null
+                                && queryParameters["zoom"] != null)
+                            {
+                                double lat = 0;
+                                double lng = 0;
+                                int zoomLevel = 0;
+
+                                try
+                                {
+                                    lat = Double.Parse(queryParameters["lat"], invariantCulture);
+                                    lng = Double.Parse(queryParameters["lon"], invariantCulture);
+                                    zoomLevel = Int32.Parse(queryParameters["zoom"], invariantCulture);
+                                }
+                                catch (FormatException fex)
+                                {
+                                    throw new ArgumentException ("Invalid slippymap URL.", fex);
+                                }
+
+                                if (zoomLevel < 2 || zoomLevel >= zoomLevels.Length)
+                                    throw new ArgumentException ("Zoom level is out of range.");
+
+                                // 30 is the width of the screen in centimeters
+                                double boxSizeInKilometers = zoomLevels[zoomLevel] * 30.0 / 100 / 1000;
+
+                                bounds = CalculateBounds (lat, lng, boxSizeInKilometers);
+                            }
+                            else if (queryParameters["bbox"] != null)
+                                bounds = CalculateBounds (queryParameters["bbox"]);
+                            else
                                 throw new ArgumentException ("Invalid slippymap URL.");
 
-                            double lat = Double.Parse (queryParameters ["lat"], invariantCulture);
-                            double lng = Double.Parse (queryParameters ["lon"], invariantCulture);
-                            int zoomLevel = Int32.Parse (queryParameters["zoom"], invariantCulture);
-
-                            if (zoomLevel < 2 || zoomLevel >= zoomLevels.Length)
-                                throw new ArgumentException ("Zoom level is out of range.");
-
-                            // 30 is the width of the screen in centimeters
-                            double boxSizeInKilometers = zoomLevels[zoomLevel] * 30.0 / 100 / 1000;
-
-                            bounds = CalculateBounds (lat, lng, boxSizeInKilometers);
                             continue;
                         }
 
@@ -467,6 +483,9 @@ namespace Srtm2Osm
 
         static private Bounds2 CalculateBounds (double lat, double lng, double boxSizeInKilometers)
         {
+            if (boxSizeInKilometers <= 0)
+                throw new ArgumentException("Box size must be a positive number.");
+
             double minLat, maxLat, minLng, maxLng;
 
             // calculate deltas for the given kilometers
@@ -486,8 +505,38 @@ namespace Srtm2Osm
             if (minLng <= -180 || maxLng > 180)
                 throw new ArgumentException ("Longitude is out of range.");
 
-            if (boxSizeInKilometers <= 0)
-                throw new ArgumentException ("Box size must be a positive number.");
+            return new Bounds2 (minLng, minLat, maxLng, maxLat);
+        }
+
+        static private Bounds2 CalculateBounds (string bbox)
+        {
+            if (String.IsNullOrEmpty(bbox))
+                throw new ArgumentException ("String is NULL or empty.", "bbox");
+
+            string[] parts = bbox.Split (new char[] { ',' });
+
+            if (parts.Length != 4)
+                throw new ArgumentException ("Bounding box has not exactly four parts.", "bbox");
+
+            double minLat, maxLat, minLng, maxLng;
+
+            try
+            {
+                minLng = Double.Parse (parts[0], System.Globalization.CultureInfo.InvariantCulture);
+                minLat = Double.Parse (parts[1], System.Globalization.CultureInfo.InvariantCulture);
+                maxLng = Double.Parse (parts[2], System.Globalization.CultureInfo.InvariantCulture);
+                maxLat = Double.Parse (parts[3], System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (FormatException fex)
+            {
+                throw new ArgumentException ("Bounding box was not parseable.", fex);
+            }
+
+            if (minLat <= -90 || maxLat > 90)
+                throw new ArgumentException ("Latitude is out of range.");
+
+            if (minLng <= -180 || maxLng > 180)
+                throw new ArgumentException ("Longitude is out of range.");
 
             return new Bounds2 (minLng, minLat, maxLng, maxLat);
         }

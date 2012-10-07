@@ -58,7 +58,8 @@ sub process_poly()
     while($line = <>)
     {
         last if ($line =~ /^END/); # end of poly
-        my ($dummy, $x, $y) = split(/\s+/, $line);
+        $line =~ /^\s*(\S+)\s+(\S+)/ or die("cannot parse input line: $_");
+        my ($x, $y) = ($1, $2);
         my $existingnode = $nodehash{"$x|$y"};
         if (defined($existingnode))
         {

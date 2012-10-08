@@ -61,12 +61,13 @@
 # 0.38 -gpxcolor; -gpxsize
 # 0.39 parameter bug dirprg fixed; sanitize bug fixed 
 # 0.40 draw only items inside drawing area; check for undefined relation nodes, reduce errors
+# 0.41 fixed icon space occupy error; eliminated labels drawn outside map area
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.40" ;
+my $version = "0.41" ;
 my $programName = "mapweaver" ;
 
 use strict ;

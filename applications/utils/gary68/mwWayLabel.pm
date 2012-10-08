@@ -399,24 +399,27 @@ sub createWayLabels {
 						my @finalWay = @$ref ;
 	
 						# TODO IF INSIDE
+						# print "final way @finalWay\n" ;
 
-						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
-						createPath ($pathName, \@finalWay, "definitions") ;
+						if ( ! coordsOut (@finalWay) ) {
+							my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
+							createPath ($pathName, \@finalWay, "definitions") ;
 
-						my $size = $$ruleRef{'labelsize'} ;
-						my $color = $$ruleRef{'labelcolor'} ;
-						my $font = $$ruleRef{'labelfont'} ;
-						my $fontFamily = $$ruleRef{'labelfontfamily'} ;
-						my $labelBold = $$ruleRef{'labelbold'} ;
-						my $labelItalic = $$ruleRef{'labelitalic'} ;
-						my $labelHalo = $$ruleRef{'labelhalo'} ;
-						my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
+							my $size = $$ruleRef{'labelsize'} ;
+							my $color = $$ruleRef{'labelcolor'} ;
+							my $font = $$ruleRef{'labelfont'} ;
+							my $fontFamily = $$ruleRef{'labelfontfamily'} ;
+							my $labelBold = $$ruleRef{'labelbold'} ;
+							my $labelItalic = $$ruleRef{'labelitalic'} ;
+							my $labelHalo = $$ruleRef{'labelhalo'} ;
+							my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
 
-						my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
-						# pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
-						pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], 50, "text") ;
+							my $svgText = createTextSVG ( $fontFamily, $font, $labelBold, $labelItalic, $size, $color, $labelHalo, $labelHaloColor) ;  
+							# pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], $pos->[1], "text") ;
+							pathText ($svgText, $name, $pathName, $$ruleRef{'labeloffset'}, $pos->[0], 50, "text") ;
 
-						boxOccupyLines (\@finalWay, $size/2, 3) ;
+							boxOccupyLines (\@finalWay, $size/2, 3) ;
+						}
 					}
 					else {
 						$numWayLabelsOmitted++ ;

@@ -105,7 +105,6 @@ sub placeLabelAndIcon {
 				LABAB: foreach my $xShift (@shifts) {
 					foreach my $yShift (@shifts) {
 						$posCount++ ;
-						# if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
 						if ( ( ! boxAreaOccupied ($iconX+$xShift, $iconY+$sizeY1+$yShift, $iconX+$sizeX1+$xShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
 							placeIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1, "nodes") ;
 							$iconAreaX1 = $iconX+$xShift ;
@@ -183,7 +182,7 @@ sub placeLabelAndIcon {
 						if ($tries > 1) { $numLabelsMoved++ ; }
 					} # label
 
-					boxOccupyArea ($iconAreaX1, $iconAreaX1, $iconAreaX2, $iconAreaY2, 0, 2) ;
+					boxOccupyArea ($iconAreaX1, $iconAreaY1, $iconAreaX2, $iconAreaY2, 0, 2) ;
 				} # pos found
 				else {
 					# no, count omitted

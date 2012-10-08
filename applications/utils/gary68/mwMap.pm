@@ -41,6 +41,7 @@ require Exporter ;
 @ISA = qw ( Exporter AutoLoader ) ;
 
 @EXPORT = qw (	initGraph
+			coordsOut
 			drawCircle
 			drawSquare
 			drawTriangle
@@ -72,7 +73,7 @@ require Exporter ;
 
 my @belowWays = ("background", "base", "area", "multi") ;
 
-my @aboveWays = ( "arealabels", "wayLabels", "shields", "routes", "routeStops", "nodes", "icons", "text", "additional", "occupied") ;
+my @aboveWays = ( "arealabels", "wayLabels", "routes", "routeStops", "shields", "nodes", "icons", "text", "additional", "occupied") ;
 
 my @elements = ("scale", "ruler", "legend", "wns", "header", "footer", "rectangles", "title", "gpx") ;
 
@@ -187,19 +188,24 @@ sub drawWay {
 	my $refp = simplifyPoints (\@points) ;
 	@points = @$refp ;
 
+	if ( ! coordsOut (@points) ) {
 
-	my $svg = "<polyline points=\"" ;
-	for (my$i=0; $i<scalar(@points)-1; $i+=2) {
-		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
-	}
+		my $svg = "<polyline points=\"" ;
+		for (my$i=0; $i<scalar(@points)-1; $i+=2) {
+			$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
+		}
 
-	$svg = $svg . "\" $svgString />" ;
+		$svg = $svg . "\" $svgString />" ;
 
-	if (defined $layerNumber) {
-		push @{ $wayLayer{ $layerNumber } }, $svg ;
+		if (defined $layerNumber) {
+			push @{ $wayLayer{ $layerNumber } }, $svg ;
+		}
+		else {
+			push @{ $svgLayer { $layerName } }, $svg ;
+		}
 	}
 	else {
-		push @{ $svgLayer { $layerName } }, $svg ;
+		# if () { print "way not drawn, outside\n" ; }
 	}
 }
 
@@ -213,10 +219,12 @@ sub drawText {
 		($x, $y) = convert ($x, $y) ;
 	}
 
-	my $svg = "<text x=\"$x\" y=\"$y\" $svgString>" . $text . "</text>" ;
+	if ( ! coordsOut ($x, $y) ) {
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+		my $svg = "<text x=\"$x\" y=\"$y\" $svgString>" . $text . "</text>" ;
 
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 
@@ -235,10 +243,14 @@ sub drawCircle {
 	if ($convertRadius) {
 		$radius = $radius / (1000 * distance ($left, $bottom, $right, $bottom) ) * $sizeX ;
 	}
-	my $svg = "<circle cx=\"$x\" cy=\"$y\" r=\"$radius\" " ;
-	$svg .= $format . " />" ;
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+	if ( ! coordsOut ($x, $y) ) {
+
+		my $svg = "<circle cx=\"$x\" cy=\"$y\" r=\"$radius\" " ;
+		$svg .= $format . " />" ;
+
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 sub drawSquare {
@@ -259,10 +271,13 @@ sub drawSquare {
 	my $y1 = $y - $size ;
 	my $dSize = 2 * $size ;
 
-	my $svg = "<rect x=\"$x1\" y=\"$y1\" width=\"$dSize\" height=\"$dSize\" " ;
-	$svg .= $format . " />" ;
+	if ( ! coordsOut ($x, $y) ) {
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+		my $svg = "<rect x=\"$x1\" y=\"$y1\" width=\"$dSize\" height=\"$dSize\" " ;
+		$svg .= $format . " />" ;
+
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 sub drawTriangle {
@@ -288,10 +303,13 @@ sub drawTriangle {
 	my $x3 = $x + $h ;
 	my $y3 = $y + $h ;
 
-	my $svg = "<polyline points=\"$x1,$y1 $x2,$y2 $x3,$y3 $x1,$y1\" " ;
-	$svg .= $format . " />" ;
+	if ( ! coordsOut ($x1, $y1, $x2, $y2, $x3, $y3) ) {
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+		my $svg = "<polyline points=\"$x1,$y1 $x2,$y2 $x3,$y3 $x1,$y1\" " ;
+		$svg .= $format . " />" ;
+
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 sub drawDiamond {
@@ -317,10 +335,12 @@ sub drawDiamond {
 	my $x4 = $x ; # bottom
 	my $y4 = $y + $size ;
 
-	my $svg = "<polyline points=\"$x1,$y1 $x2,$y2 $x3,$y3 $x4,$y4 $x1,$y1\" " ;
-	$svg .= $format . " />" ;
+	if ( ! coordsOut ($x1, $y1, $x2, $y2, $x3, $y3, $x4, $y4) ) {
+		my $svg = "<polyline points=\"$x1,$y1 $x2,$y2 $x3,$y3 $x4,$y4 $x1,$y1\" " ;
+		$svg .= $format . " />" ;
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 sub drawRect {
@@ -338,10 +358,12 @@ sub drawRect {
 	my $sizeX = $x2 - $x1 ;
 	my $sizeY = $y2 - $y1 ;
 
-	my $svg = "<rect x=\"$x1\" y=\"$y1\" width=\"$sizeX\" height=\"$sizeY\" " ;
-	$svg .= $format . " />" ;
+	if ( ! coordsOut ($x1, $y1, $x2, $y2) ) {
+		my $svg = "<rect x=\"$x1\" y=\"$y1\" width=\"$sizeX\" height=\"$sizeY\" " ;
+		$svg .= $format . " />" ;
 
-	push @{ $svgLayer { $layerName } }, $svg ;
+		push @{ $svgLayer { $layerName } }, $svg ;
+	}
 }
 
 
@@ -391,14 +413,20 @@ sub placeIcon {
 #
 # create SVG text for icons
 #
-	my ($x, $y, $icon, $sizeX, $sizeY, $layer) = @_ ;
-	my ($out) = "<image x=\"" . $x . "\"" ;
-	$out .= " y=\"" . $y . "\"" ;
-	if ($sizeX > 0) { $out .= " width=\"" . $sizeX . "\"" ; }
-	if ($sizeY > 0) { $out .= " height=\"" . $sizeY . "\"" ; }
-	$out .= " xlink:href=\"" . $icon . "\" />" ;
 
-	push @{ $svgLayer{ $layer } }, $out ;
+
+	my ($x, $y, $icon, $sizeX, $sizeY, $layer) = @_ ;
+
+	if ( ! coordsOut ($x, $y) ) {
+
+		my ($out) = "<image x=\"" . $x . "\"" ;
+		$out .= " y=\"" . $y . "\"" ;
+		if ($sizeX > 0) { $out .= " width=\"" . $sizeX . "\"" ; }
+		if ($sizeY > 0) { $out .= " height=\"" . $sizeY . "\"" ; }
+		$out .= " xlink:href=\"" . $icon . "\" />" ;
+
+		push @{ $svgLayer{ $layer } }, $out ;
+	}
 }
 
 
@@ -1165,6 +1193,30 @@ sub createLegendFile {
 		print "creating png file $pngName ($dpi dpi)...\n" ;
 		`inkscape --export-dpi=$dpi -e $pngName $svgName` ;
 	}
+}
+
+sub coordsOut {
+	my @points = @_ ;
+
+	my $allOut = 0 ;
+
+	my $outLeft = 1 ;
+	my $outRight = 1 ;
+	my $outTop = 1 ;
+	my $outBottom = 1 ;
+
+	for (my $i=0; $i < scalar(@points) - 1; $i += 2) {
+		my $x = $points[$i] ;
+		my $y = $points[$i+1] ;
+		if ($x >= 0) { $outLeft = 0 ; }
+		if ($x <= $sizeX) { $outRight = 0 ; }
+		if ($y >= 0) { $outBottom = 0 ; }
+		if ($y <= $sizeY) { $outTop = 0 ; }
+	}
+
+	if ( ($outLeft) or ($outRight) or ($outTop) or ($outBottom) ) { $allOut = 1 ; }
+
+	return $allOut ;
 }
 
 1 ;

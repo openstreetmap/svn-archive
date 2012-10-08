@@ -335,22 +335,25 @@ sub createWayLabels {
 					while ($position < $wLen) {
 						my ($x, $y) = getPointOfWay (\@points, $position) ;
 						# print "XY: $x, $y\n" ;
+						
+						if ( ! coordsOut ($x, $y) ) {
 
-						# place shield if not occupied
+							# place shield if not occupied
 			
-						my ($ssx, $ssy) = getShieldSizes($name) ;
+							my ($ssx, $ssy) = getShieldSizes($name) ;
 
-						my $x2 = int ($x - $ssx / 2) ;
-						my $y2 = int ($y - $ssy / 2) ;
+							my $x2 = int ($x - $ssx / 2) ;
+							my $y2 = int ($y - $ssy / 2) ;
 
-						# print "AREA: $x2, $y2, $x2+$lLen, $y2+$lLen\n" ;
+							# print "AREA: $x2, $y2, $x2+$lLen, $y2+$lLen\n" ;
 
-						if ( ! mwLabel::boxAreaOccupied ($x2, $y2+$ssy, $x2+$ssx, $y2) ) {
+							if ( ! mwLabel::boxAreaOccupied ($x2, $y2+$ssy, $x2+$ssx, $y2) ) {
 
-							my $id = getShieldId ($name) ;
-							addToLayer ("shields", "<use xlink:href=\"#$id\" x=\"$x2\" y=\"$y2\" />") ;
+								my $id = getShieldId ($name) ;
+								addToLayer ("shields", "<use xlink:href=\"#$id\" x=\"$x2\" y=\"$y2\" />") ;
 
-							mwLabel::boxOccupyArea ($x2, $y2+$ssy, $x2+$ssx, $y2, 0, 3) ;
+								mwLabel::boxOccupyArea ($x2, $y2+$ssy, $x2+$ssx, $y2, 0, 3) ;
+							}
 						}
 
 						$position += $step ;
@@ -394,6 +397,8 @@ sub createWayLabels {
 						my ($pos) = shift @positions ;
 						my ($ref, $angle) = subWay (\@points, $lLen, $pos->[0], $pos->[1]) ;
 						my @finalWay = @$ref ;
+	
+						# TODO IF INSIDE
 
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 						createPath ($pathName, \@finalWay, "definitions") ;

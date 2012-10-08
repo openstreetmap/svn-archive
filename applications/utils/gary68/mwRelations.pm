@@ -170,7 +170,7 @@ sub processRoutes {
 
 					# stops
 					if ( (grep /stop/, $member->[2]) and ($member->[0] eq "node") ) {
-						if ( $$ruleRef{'nodesize'} > 0) {
+						if ( ( $$ruleRef{'nodesize'} > 0) and (defined $$latRef{$member->[1]}) and (defined $$lonRef{$member->[1]}) ) {
 							my $svgString = "fill=\"$color\" " ;
 							drawCircle ($$lonRef{$member->[1]}, $$latRef{$member->[1]}, 1, $$ruleRef{'nodesize'}, 0, $svgString, 'routes') ;
 						}
@@ -222,15 +222,19 @@ sub processRoutes {
 				$pathNumber++ ;
 
 				my @points = nodes2Coordinates( @way ) ;
-				createPath ($pathName, \@points, "definitions") ;
 
-				my $size = cv('routelabelsize') ;
-				my $font = cv('routelabelfont') ;
-				my $fontFamily = cv('routelabelfontfamily') ;
-				my $color = cv('routelabelcolor') ;
+				if ( ! coordsOut (@points) ) {
 
-				my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;
-				pathText ($svgText, $label, $pathName, cv('routelabeloffset'), "middle", 50, "routes") ;
+					createPath ($pathName, \@points, "definitions") ;
+
+					my $size = cv('routelabelsize') ;
+					my $font = cv('routelabelfont') ;
+					my $fontFamily = cv('routelabelfontfamily') ;
+					my $color = cv('routelabelcolor') ;
+
+					my $svgText = createTextSVG ( $fontFamily, $font, $size, $color, undef, undef) ;
+					pathText ($svgText, $label, $pathName, cv('routelabeloffset'), "middle", 50, "routes") ;
+				}
 			}
 		}
 	}

@@ -60,12 +60,13 @@
 # 0.37 -dirprg program to create directory; gpx support
 # 0.38 -gpxcolor; -gpxsize
 # 0.39 parameter bug dirprg fixed; sanitize bug fixed 
-# 0.40 
+# 0.40 draw only items inside drawing area; check for undefined relation nodes, reduce errors
+# 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.39" ;
+my $version = "0.40" ;
 my $programName = "mapweaver" ;
 
 use strict ;

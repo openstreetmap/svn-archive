@@ -63,168 +63,172 @@ sub placeLabelAndIcon {
 	if (cv('debug') eq "1") { print "PLAI: $lon, $lat, $offset, $thickness, $text, $svgText, $icon, $iconSizeX, $iconSizeY, $layer\n" ; }
 
 	my ($x, $y) = mwMap::convert ($lon, $lat) ; # center !
-	$y = $y + $offset ;
 
-	my ($ref) = splitLabel ($text) ;
-	my (@lines) = @$ref ;
-	my $numLines = scalar @lines ;
-	my $maxTextLenPix = 0 ;
-	my $orientation = "" ;
-	my $lineDist = cv ('linedist') ; ;
-	my $tries = 0 ;
-	my $allowIconMove = cv ('allowiconmove') ;
+	if ( ! coordsOut ($x, $y) ) {
 
-	my ($textSize) = ( $svgText =~ /font-size=\"(\d+)\"/ ) ;
-	if ( ! defined $textSize ) { die ("ERROR: font size could not be determined from svg format string \"$svgText\"\n") ; }
+		$y = $y + $offset ;
 
-	foreach my $line (@lines) {
-		my $len = length ($line) * cv('ppc') / 10 * $textSize ; # in pixels
-		if ($len > $maxTextLenPix) { $maxTextLenPix = $len ; }
-	}
-	my $spaceTextX = $maxTextLenPix ;
-	my $spaceTextY = $numLines * ($lineDist+$textSize) ;
+		my ($ref) = splitLabel ($text) ;
+		my (@lines) = @$ref ;
+		my $numLines = scalar @lines ;
+		my $maxTextLenPix = 0 ;
+		my $orientation = "" ;
+		my $lineDist = cv ('linedist') ; ;
+		my $tries = 0 ;
+		my $allowIconMove = cv ('allowiconmove') ;
+
+		my ($textSize) = ( $svgText =~ /font-size=\"(\d+)\"/ ) ;
+		if ( ! defined $textSize ) { die ("ERROR: font size could not be determined from svg format string \"$svgText\"\n") ; }
+
+		foreach my $line (@lines) {
+			my $len = length ($line) * cv('ppc') / 10 * $textSize ; # in pixels
+			if ($len > $maxTextLenPix) { $maxTextLenPix = $len ; }
+		}
+		my $spaceTextX = $maxTextLenPix ;
+		my $spaceTextY = $numLines * ($lineDist+$textSize) ;
 
 
-	if ($icon ne "none") {
-		$numIcons++ ;
-		# space for icon?
-			my $sizeX1 = $iconSizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
-			my $sizeY1 = $iconSizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
-			my $iconX = $x - $sizeX1/2 ; # top left corner
-			my $iconY = $y - $sizeY1/2 ; 
+		if ($icon ne "none") {
+			$numIcons++ ;
+			# space for icon?
+				my $sizeX1 = $iconSizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
+				my $sizeY1 = $iconSizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
+				my $iconX = $x - $sizeX1/2 ; # top left corner
+				my $iconY = $y - $sizeY1/2 ; 
 
-			my @shifts = (0) ;
-			if ($allowIconMove eq "1") {
-				@shifts = ( 0, -15, 15 ) ;
-			}
-			my $posFound = 0 ; my $posCount = 0 ;
-			my ($iconAreaX1, $iconAreaY1, $iconAreaX2, $iconAreaY2) ;
-			LABAB: foreach my $xShift (@shifts) {
-				foreach my $yShift (@shifts) {
-					$posCount++ ;
-					# if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
-					if ( ( ! boxAreaOccupied ($iconX+$xShift, $iconY+$sizeY1+$yShift, $iconX+$sizeX1+$xShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
-						placeIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1, "nodes") ;
-						$iconAreaX1 = $iconX+$xShift ;
-						$iconAreaY1 = $iconY+$sizeY1+$yShift ;
-						$iconAreaX2 = $iconX+$sizeX1+$xShift ;
-						$iconAreaY2 = $iconY+$yShift ;
-
-						$posFound = 1 ;
-						if ($posCount > 1) { $numIconsMoved++ ; }
-						$iconX = $iconX + $xShift ; # for later use with label
-						$iconY = $iconY + $yShift ;
-						last LABAB ;
-					}
+				my @shifts = (0) ;
+				if ($allowIconMove eq "1") {
+					@shifts = ( 0, -15, 15 ) ;
 				}
-			}
-			if ($posFound == 1) {
+				my $posFound = 0 ; my $posCount = 0 ;
+				my ($iconAreaX1, $iconAreaY1, $iconAreaX2, $iconAreaY2) ;
+				LABAB: foreach my $xShift (@shifts) {
+					foreach my $yShift (@shifts) {
+						$posCount++ ;
+						# if ( ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
+						if ( ( ! boxAreaOccupied ($iconX+$xShift, $iconY+$sizeY1+$yShift, $iconX+$sizeX1+$xShift, $iconY+$yShift) ) or ( cv('forcenodes') eq "1" )  ) {
+							placeIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1, "nodes") ;
+							$iconAreaX1 = $iconX+$xShift ;
+							$iconAreaY1 = $iconY+$sizeY1+$yShift ;
+							$iconAreaX2 = $iconX+$sizeX1+$xShift ;
+							$iconAreaY2 = $iconY+$yShift ;
 
-				# label text?
-				if ($text ne "") {
-					$numLabels++ ;
-
-
-					$sizeX1 += 1 ; $sizeY1 += 1 ;
-
-					my ($x1, $x2, $y1, $y2) ;
-					# $x, $y centered 
-					# yes, check if space for label, choose position, draw
-					# no, count omitted text
-
-					my @positions = () ; my $positionFound = 0 ;
-					# pos 1 centered below
-					$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $sizeY1/2 + $spaceTextY ; $y2 = $y + $sizeY1/2 ; $orientation = "centered" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-					# pos 2/3 to the right, bottom, top
-					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-					# pos 4 centered upon
-					$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y - $sizeY1/2 - $spaceTextY ; $orientation = "centered" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-					# pos 5/6 to the right, below and upon
-					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-					# left normal, bottom, top
-					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-					# left corners, bottom, top
-					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
-					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-
-
-					$tries = 0 ;
-					LABB: foreach my $pos (@positions) {
-						$tries++ ;
-
-						$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], \@lines, $svgText, $layer) ;
-
-						if ($positionFound == 1) {
-							last LABB ;
+							$posFound = 1 ;
+							if ($posCount > 1) { $numIconsMoved++ ; }
+							$iconX = $iconX + $xShift ; # for later use with label
+							$iconY = $iconY + $yShift ;
+							last LABAB ;
 						}
 					}
-					if ($positionFound == 0) { $numLabelsOmitted++ ; }
-					if ($tries > 1) { $numLabelsMoved++ ; }
-				} # label
+				}
+				if ($posFound == 1) {
 
-				boxOccupyArea ($iconAreaX1, $iconAreaX1, $iconAreaX2, $iconAreaY2, 0, 2) ;
-			} # pos found
-			else {
-				# no, count omitted
-				$numIconsOmitted++ ;
-			}
-	}
-	else { # only text
-		my ($x1, $x2, $y1, $y2) ;
-		# x1, x2, y1, y2
-		# left, right, bottom, top		
-		# choose space for text, draw
-		# count omitted
+					# label text?
+					if ($text ne "") {
+						$numLabels++ ;
 
-		$numLabels++ ;
-		my @positions = () ;
-		$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "left" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-		$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y + $spaceTextY ; $y2 = $y ; $orientation = "left" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
 
-		$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-		$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						$sizeX1 += 1 ; $sizeY1 += 1 ;
 
-		$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $thickness ; $y2 = $y - ($thickness + $spaceTextY) ; $orientation = "centered" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
-		$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $thickness + $spaceTextY ; $y2 = $y + $thickness ; $orientation = "centered" ; 
-		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						my ($x1, $x2, $y1, $y2) ;
+						# $x, $y centered 
+						# yes, check if space for label, choose position, draw
+						# no, count omitted text
 
-		my $positionFound = 0 ;
-		$tries = 0 ;
-		LABA: foreach my $pos (@positions) {
-			$tries++ ;
-			# print "$lines[0]   $pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines\n" ;
+						my @positions = () ; my $positionFound = 0 ;
+						# pos 1 centered below
+						$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $sizeY1/2 + $spaceTextY ; $y2 = $y + $sizeY1/2 ; $orientation = "centered" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
 
-			$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], \@lines, $svgText, $layer) ;
+						# pos 2/3 to the right, bottom, top
+						$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
 
-			if ($positionFound == 1) {
-				last LABA ;
-			}
+						# pos 4 centered upon
+						$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y - $sizeY1/2 - $spaceTextY ; $orientation = "centered" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+						# pos 5/6 to the right, below and upon
+						$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+						# left normal, bottom, top
+						$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+						# left corners, bottom, top
+						$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+						$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
+						push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+
+						$tries = 0 ;
+						LABB: foreach my $pos (@positions) {
+							$tries++ ;
+
+							$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], \@lines, $svgText, $layer) ;
+
+							if ($positionFound == 1) {
+								last LABB ;
+							}
+						}
+						if ($positionFound == 0) { $numLabelsOmitted++ ; }
+						if ($tries > 1) { $numLabelsMoved++ ; }
+					} # label
+
+					boxOccupyArea ($iconAreaX1, $iconAreaX1, $iconAreaX2, $iconAreaY2, 0, 2) ;
+				} # pos found
+				else {
+					# no, count omitted
+					$numIconsOmitted++ ;
+				}
 		}
-		if ($positionFound == 0) { $numLabelsOmitted++ ; }
-		if ($tries > 1) { $numLabelsMoved++ ; }
+		else { # only text
+			my ($x1, $x2, $y1, $y2) ;
+			# x1, x2, y1, y2
+			# left, right, bottom, top		
+			# choose space for text, draw
+			# count omitted
+
+			$numLabels++ ;
+			my @positions = () ;
+			$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "left" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+			$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y + $spaceTextY ; $y2 = $y ; $orientation = "left" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+			$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+			$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+			$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $thickness ; $y2 = $y - ($thickness + $spaceTextY) ; $orientation = "centered" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+			$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $thickness + $spaceTextY ; $y2 = $y + $thickness ; $orientation = "centered" ; 
+			push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+			my $positionFound = 0 ;
+			$tries = 0 ;
+			LABA: foreach my $pos (@positions) {
+				$tries++ ;
+				# print "$lines[0]   $pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines\n" ;
+
+				$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], \@lines, $svgText, $layer) ;
+
+				if ($positionFound == 1) {
+					last LABA ;
+				}
+			}
+			if ($positionFound == 0) { $numLabelsOmitted++ ; }
+			if ($tries > 1) { $numLabelsMoved++ ; }
+		}
 	}
 }
 

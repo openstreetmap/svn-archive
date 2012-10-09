@@ -227,10 +227,14 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
+    # replace the "roads-text-name" style with the one using abbreviations
+    parking_dom_cut_style(dest_parking_style_document,'roads-text-name')
+    parking_roadnames_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'roads-text-name'))
+    #parking_dom_insert_things_before_style(dest_parking_style_document,[parking_roadnames_style],'cliffs')
     # replace the "roads-text-name" layer with the one using the planet_line_join table
     parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')
     parking_roadnames_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'roads-text-name'))
-    parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_layer],'text')
+    parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_style,parking_roadnames_layer],'text')
 
     output= dest_parking_style_document.implementation.createLSOutput() 
     output.systemId= dest_parking_style_file

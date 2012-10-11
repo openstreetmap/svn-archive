@@ -20,9 +20,12 @@ div.olControlLayerSwitcher label {
     font-weight: bold;
     text-align: left;
 	white-space:nowrap;
-	/* Bootstrap Hack */
-	margin-top: -25px;
 	margin-left: 20px;
+	/* Bootstrap Hack */
+	top: -10px;
+	position: relative;
+	float: none !important;
+	line-height: 0px;
 }
 
 div.olControlPermalink {

@@ -137,7 +137,7 @@ function setMarkerAndZoom(lonlat){
 	
 	//Hack - FIXME !
 	lonlat.lon -= 450;
-	//Set Center
+	//Set Center with Zoom
 	map.setCenter(lonlat, 15);
 }
 

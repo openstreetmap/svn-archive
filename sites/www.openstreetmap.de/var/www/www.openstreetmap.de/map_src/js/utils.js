@@ -108,7 +108,8 @@
 			else if(layer != undefined){
 				//html += '<div id="mapkey_area"><iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/></div>';
 				document.getElementById('information').innerHTML = 'Legende:<br><div id="mapkey_area"></div>';
-	   			var iframe = document.createElement("iframe");				$("#mapkey_area").append(iframe);
+	   			var iframe = document.createElement("iframe");
+				$("#mapkey_area").append(iframe);
 		   		var form = document.createElement("form");
 		   		$(form).attr({"action":"http://www.openstreetmap.org/key","method":"POST"});
 		   		$(form).append($(document.createElement('input')).attr({"type":"hidden","name":"layer","value":"mapnik"}));
@@ -126,10 +127,18 @@
 
 	function mapMoved() {
 	    var lonlat = map.getCenter().clone();
+	    
+	    // Hack - FIXME ! (see geocode.js), otherwise center would not be at marker
+		lonlat.lon += 450;
+	    
 	    lonlat.transform(projmerc, proj4326);
+	    // Build URLs for routing services, editing and bug reporting
 	    var pos = '?lon=' + lonlat.lon.toFixed(5) + '&lat=' + lonlat.lat.toFixed(5) + '&zoom=' + map.getZoom();
+	    var posORS = '/?start=' + lonlat.lon.toFixed(5) + ',' + lonlat.lat.toFixed(5) + '&lon=' + lonlat.lon.toFixed(5) + '&lat=' + lonlat.lat.toFixed(5) + '&zoom=' + map.getZoom();
+	    var posOSRM = '?hl=de&loc=' + lonlat.lat.toFixed(5) + ',' + lonlat.lon.toFixed(5) + '&z=' + map.getZoom() + '&center=' + lonlat.lat.toFixed(5) + ',' + lonlat.lon.toFixed(5);
     	
-	    document.getElementById('editMap').innerHTML = '<a class="btn success" href="http://www.openstreetmap.org/edit'+pos+'" target="_blank">Karte bearbeiten!</a>';
-	    document.getElementById('errorMap').innerHTML = '<a class="btn danger" href="http://www.openstreetbugs.org'+pos+'" target="_blank">Fehler melden!</a>';
+    	document.getElementById('Route').innerHTML = '<button class="btn dropdown-toggle" data-toggle="dropdown">Route<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="http://wiki.openstreetmap.org/wiki/Routing/online_routers" target="_blank">Auswahl an Routing-Services:</a></li><li class="divider"></li><li><a href="http://open.mapquest.de/" target="_blank">Mapquest <span class="descRoute">Auto, Fahrrad, Fußgänger | Weltweit</span></a></li><li><a href="http://www.openrouteservice.org'+posORS+'" target="_blank">OpenRouteService <span class="descRouteORS">Auto, Fahrrad, Fußgänger | Europa</span></a></li><li><a href="http://map.project-osrm.org/'+posOSRM+'" target="_blank">OSRM <span class="descRoute">Auto | Weltweit</span></a></li></ul>';
+	    document.getElementById('editMap').innerHTML = '<a class="btn success" href="http://www.openstreetmap.org/edit'+pos+'" target="_blank">Karte bearbeiten</a>';
+	    document.getElementById('errorMap').innerHTML = '<a class="btn danger" href="http://www.openstreetbugs.org'+pos+'" target="_blank">Fehler melden</a>';
 	}
 	

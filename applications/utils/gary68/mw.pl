@@ -62,12 +62,13 @@
 # 0.39 parameter bug dirprg fixed; sanitize bug fixed 
 # 0.40 draw only items inside drawing area; check for undefined relation nodes, reduce errors
 # 0.41 fixed icon space occupy error; eliminated labels drawn outside map area
+# 0.42 fixed error with area label svg string
 # 
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.41" ;
+my $version = "0.42" ;
 my $programName = "mapweaver" ;
 
 use strict ;

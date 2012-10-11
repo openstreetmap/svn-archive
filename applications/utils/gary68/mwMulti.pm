@@ -99,9 +99,29 @@ sub processMultipolygons {
 				if ($name ne "") {
 					if ($size >= cv('minarealabelsize') ) {
 						$mpLabels++ ;
-						# print "MP LABEL: $name\n" ;
+						if (cv('debug') eq "1") { print "MP LABEL: $name, size: $$ruleRef{'labelsize'}, color: $$ruleRef{'labelcolor'}\n" ; }
+
 						my ($x, $y) = areaCenter ( $multiPaths{$multiId}[0] ) ;
-						$svgText = createTextSVG ( undef, undef, $$ruleRef{'labelsize'}, $$ruleRef{'labelcolor'}, undef, undef ) ;
+
+
+						my $labelFont = $$ruleRef{'labelfont'} ;
+						my $labelFontFamily = $$ruleRef{'labelfontfamily'} ;
+						my $labelSize = $$ruleRef{'labelsize'} ;
+						my $color = $$ruleRef{'labelcolor'} ;
+						my $labelBold = $$ruleRef{'labelbold'} ;
+						my $labelItalic = $$ruleRef{'labelitalic'} ;
+						my $labelHalo = $$ruleRef{'labelhalo'} ;
+						my $labelHaloColor = $$ruleRef{'labelhalocolor'} ;
+
+						my $svgText = createTextSVG ( $labelFontFamily, $labelFont, $labelBold, $labelItalic, $labelSize, $color, $labelHalo, $labelHaloColor) ;  
+
+
+
+
+
+
+						# $svgText = createTextSVG ( undef, undef, $$ruleRef{'labelsize'}, $$ruleRef{'labelcolor'}, undef, undef ) ;
+						if (cv('debug') eq "1") { print "MP LABEL: svg: \"$svgText\"\n" ; }
 						placeLabelAndIcon ($x, $y, 1, 0, $name, $svgText, "none", 0, 0, "arealabels") ;
 					} # if size
 					else {

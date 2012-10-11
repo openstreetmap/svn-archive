@@ -17,7 +17,7 @@
     <Rule>
       &maxscale_zoom0;
       &minscale_zoom9;
-      <PolygonSymbolizer fill="#f2efe9" gamma="0.6" />
+      <PolygonSymbolizer fill="#f2efe9"/>
     </Rule>
 </Style>
 <Style name="land_polygons">
@@ -38,7 +38,7 @@
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">&world_boundaries;/land_polygons_300</Parameter>
+      <Parameter name="file">&world_boundaries;/shoreline_300</Parameter>
     </Datasource>
 </Layer>
 <Layer name="land_polygons" status="on" srs="&srs900913;">

@@ -173,12 +173,12 @@ sub processWays {
 		# AREAS
 
 		$ruleRef = getAreaRule (\@tags) ;
-		if (defined $ruleRef) {
+		my @nodes = @{ $$nodesRef{ $wayId } } ;
+		if ( (defined $ruleRef) and ($nodes[0] == $nodes[-1]) ) {
 			my $color = $$ruleRef{'color'} ;
 			my $icon = $$ruleRef{'icon'} ;
 			my $base = $$ruleRef{'base'} ;
 			my $svgString = $$ruleRef{'svgstring'} ;
-			my @nodes = @{ $$nodesRef{ $wayId } } ;
 			my $size = areaSize (\@nodes) ;
 			my @ways = [@nodes] ;
 

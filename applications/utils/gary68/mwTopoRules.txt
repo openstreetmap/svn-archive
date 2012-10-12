@@ -1,12 +1,10 @@
 #
-# standard ruleset for mapweaver
+# topo ruleset for mapweaver
 #
 
-RULE NODE
-keyvalue=amenity=post_box
-icon=./icons/postbox.svg
-iconsize=40
-toscale=10000
+RULE CONFIG scaleset=25000
+RULE CONFIG ruler=2
+RULE CONFIG legend=4
 
 RULE NODE
 keyvalue=place=city
@@ -43,9 +41,9 @@ legendlabel=Vorort
 
 RULE WAY
 keyvalue=highway=motorway
-color=blue
-size=28
-label=shield:icons/shield_ger_bab.def
+color=white
+size=18
+label=ref
 labelsize=60
 labeloffset=11
 bordercolor=black
@@ -54,136 +52,115 @@ direxclude=yes
 
 RULE WAY
 keyvalue=highway=motorway_link
-color=blue
-size=20
+label=none
+color=white
+size=14
 bordercolor=black
 bordersize=2
 direxclude=yes
 
 RULE WAY
 keyvalue=highway=trunk
-color=blue
-size=26
-label=shield:icons/shield_ger_bs.def
+color=white
+size=18
+label=ref
 bordercolor=black
-bordersize=4
+bordersize=2
 direxclude=yes
 
 RULE WAY
 keyvalue=highway=trunk_link
-color=blue
-size=20
+label=none
+color=white
+size=14
 bordercolor=black
 bordersize=2
 direxclude=yes
 
 RULE WAY
 keyvalue=highway=primary
-label=shield:icons/shield_ger_bs.def
+label=ref
 labelsize=50
 labeloffset=10
-color=red
-size=26
+color=white
+size=14
 bordercolor=black
-bordersize=4
+bordersize=2
 legend=yes
 legendlabel=Bundesstraße
 
 RULE WAY
 keyvalue=highway=primary_link
-color=red
-size=20
+label=none
+color=white
+size=14
 bordercolor=black
 bordersize=2
 
 RULE WAY
 keyvalue=highway=secondary
-label=shield:icons/shield_ger_ls.def
+label=ref
 labelsize=50
 labeloffset=9
-color=orange
-size=24
+color=white
+size=14
 bordercolor=black
-bordersize=4
+bordersize=2
 legend=yes
 legendlabel=Landstraße
 
 RULE WAY
 keyvalue=highway=secondary_link
-color=orange
-size=20
+label=none
+color=white
+size=14
 bordercolor=black
 bordersize=2
 
 RULE WAY
 keyvalue=highway=tertiary
-color=lightgreen
+color=white
+label=ref
 labelsize=22
 labeloffset=9
-size=22
+size=14
 bordercolor=black
-bordersize=4
+bordersize=2
 legend=yes
 legendlabel=Kreisstraße
 
 RULE WAY
 keyvalue=highway=residential
-label=name
-labelsize=20
+label=none
+labelsize=18
 labeloffset=8
-color=grey
-size=22
-bordersize=4
-toscale=10000
+color=white
+size=10
+bordersize=2
 legend=yes
 legendlabel=Wohnstraße
 
-RULE WAY
-keyvalue=highway=residential
-label=none
-color=grey
-size=5:10
-bordersize=0
-fromscale=10001
-toscale=50000
 
 RULE WAY
 keyvalue=highway=sevice
 label=none
-color=grey
-size=20
-bordersize=0
-toscale=10000
+color=white
+size=8
+bordersize=2
 
 RULE WAY
 keyvalue=highway=track
 label=name
 labelsize=20
-color=darkgrey
+color=black
 size=3
 labeloffset=-2
 bordersize=0
-toscale=10000
 
-RULE WAY
-keyvalue=highway=track
-label=none
-color=darkgrey
-size=1
-bordersize=0
-fromscale=10001
-toscale=50000
-
-RULE AREA
-keyvalue=landuse=residential
-color=lightgray
-base=yes
-legend=yes
-legendlabel=Wohngegend
 
 RULE AREA
 keyvalue=building=yes
-color=darkgray
+color=black
 legend=yes
 legendlabel=Gebäude
 
@@ -250,16 +227,6 @@ color=lightgreen
 base=yes
 
 RULE AREA
-keyvalue=landuse=industrial
-color=lightgray
-base=yes
-
-RULE AREA
-keyvalue=landuse=commercial
-color=lightgray
-base=yes
-
-RULE AREA
 keyvalue=aeroway=runway
 color=gray
 base=yes
@@ -274,28 +241,15 @@ base=yes
 
 
 RULE AREA
-keyvalue=amenity=parking
-icon=icons/areaParking.svg
-legend=yes
-legendlabel=Parkplatz
-
-RULE AREA
-keyvalue=leisure=golf_course
-icon=icons/areaGolf.svg
-
-RULE AREA
 keyvalue=landuse=cemetery
 icon=icons/areaCemetery.svg
 
 
-RULE ROUTE
-type=hiking
-color=blue;green;yellow
-opacity=100
-label=name
-dash=20,20
+#RULE ROUTE
+#type=hiking
+#color=blue;green;yellow
+#opacity=100
+#label=name
+#dash=20,20
 
-RULE ROUTE
-type=bus
-color=black;brown
-label=ref
+

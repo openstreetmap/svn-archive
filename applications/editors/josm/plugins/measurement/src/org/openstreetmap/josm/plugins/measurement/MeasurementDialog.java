@@ -70,7 +70,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
 
         resetButton = new SideButton(new AbstractAction() {
         	{
-        		putValue(NAME, marktr("Reset"));
+        		putValue(NAME, tr("Reset"));
         		putValue(SMALL_ICON,ImageProvider.get("dialogs", "select"));
         		putValue(SHORT_DESCRIPTION, tr("Reset current measurement results and delete measurement path."));
         		putValue("help", HelpUtil.ht("/Dialog/Measurement#Reset"));

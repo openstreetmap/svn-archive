@@ -18,7 +18,8 @@
     <property name="plugin.lib.dir"         value="lib"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir"        value="../../dist"/>
-    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="ant.build.javac.target" value="1.6"/>
+    <property name="ant.build.javac.source" value="1.6"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
     <!--
@@ -36,7 +37,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
@@ -56,8 +57,8 @@
             <arg value="."/>
         </exec>
         <xmlproperty prefix="version" keepRoot="false" collapseAttributes="true">
-	  <propertyresource name="svn.revision.output"/>
-	</xmlproperty>
+            <propertyresource name="svn.revision.output"/>
+        </xmlproperty>
     </target>
     <!--
     **********************************************************
@@ -175,7 +176,21 @@
             </condition>
         </fail>
     </target>
+
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+    </target>
+
+    <target name="runjosm" depends="install">
+        <java jar="${josm}" fork="true">
+        </java>
+    </target>
+
+    <target name="profilejosm" depends="install">
+        <nbprofiledirect>
+        </nbprofiledirect>
+        <java jar="${josm}" fork="true">
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+        </java>
     </target>
 </project>
 

@@ -31,6 +31,7 @@
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
         <ant antfile="build.xml" target="dist" dir="geotools"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
+        <ant antfile="build.xml" target="dist" dir="gpsblam"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="HouseNumberTaggingTool"/>
@@ -55,16 +56,17 @@
         <ant antfile="build.xml" target="dist" dir="NanoLog"/>
         <ant antfile="build.xml" target="dist" dir="native-password-manager"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
+        <ant antfile="build.xml" target="dist" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="dist" dir="opendata"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
-        <ant antfile="build.xml" target="dist" dir="pbf"/>
         <ant antfile="build.xml" target="dist" dir="pdfimport"/>
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="dist" dir="poly"/>
         <ant antfile="build.xml" target="dist" dir="print"/>
         <ant antfile="build.xml" target="dist" dir="proj4j"/>
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
@@ -98,8 +100,10 @@
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="trustosm"/>
+        <ant antfile="build.xml" target="dist" dir="pbf"/>
     </target>
     <target name="clean">
+        <ant antfile="build.xml" target="clean" dir="00_plugin_dir_template"/>
         <ant antfile="build.xml" target="clean" dir="addrinterpolation"/>
         <ant antfile="build.xml" target="clean" dir="alignways"/>
         <ant antfile="build.xml" target="clean" dir="buildings_tools"/>
@@ -122,6 +126,7 @@
         <ant antfile="build.xml" target="clean" dir="FixAddresses"/>
         <ant antfile="build.xml" target="clean" dir="geotools"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
+        <ant antfile="build.xml" target="clean" dir="gpsblam"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="HouseNumberTaggingTool"/>
@@ -146,6 +151,7 @@
         <ant antfile="build.xml" target="clean" dir="NanoLog"/>
         <ant antfile="build.xml" target="clean" dir="native-password-manager"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
+        <ant antfile="build.xml" target="clean" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="clean" dir="opendata"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
@@ -156,6 +162,7 @@
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="clean" dir="poly"/>
         <ant antfile="build.xml" target="clean" dir="print"/>
         <ant antfile="build.xml" target="clean" dir="proj4j"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>

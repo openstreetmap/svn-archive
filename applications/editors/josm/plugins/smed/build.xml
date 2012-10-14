@@ -135,6 +135,8 @@
     -->
     <target name="clean">
         <delete dir="${plugin.build.dir}"/>
+        <delete dir="${smed_core.dist.dir}"/>
+        <delete dir="${smed.dist.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
     <!--

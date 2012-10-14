@@ -54,6 +54,19 @@
         <pathelement location="${platform}"/>
         <pathelement location="${log4j}"/>
     </path>
+    <!--
+    **********************************************************
+    ** compile - complies the source tree
+    ** Overrides the target from build-common.xml
+    **********************************************************
+    -->
+    <target name="compile" depends="init">
+        <echo message="compiling sources for ${plugin.jar} ..."/>
+        <javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
 
     <!--
     **********************************************************

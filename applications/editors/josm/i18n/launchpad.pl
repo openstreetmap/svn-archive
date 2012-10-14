@@ -31,7 +31,6 @@ if($#ARGV != 0)
 {
     warn "No argument given (try Launchpad download URL, \"bzr\", \"bzronly\", \"upload\" or \"download\").";
     system "ant";
-    makeupload();
 }
 elsif($ARGV[0] eq "bzr" || $ARGV[0] eq "bzronly")
 {
@@ -56,7 +55,7 @@ elsif($ARGV[0] eq "uploadall")
 }
 elsif($ARGV[0] eq "approveall")
 {
-  approveall(dologin());
+    approveall(dologin());
 }
 elsif($ARGV[0] eq "download")
 {
@@ -77,7 +76,6 @@ else
     copypo("build/josm_trans");
     system "rm -rv build/josm_trans";
     system "ant";
-    makeupload();
 }
 
 sub approveall

@@ -103,7 +103,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
         clear();
         if( newLayer != null && oldLayer == null ) {
             Main.map.mapView.addTemporaryLayer(this);
-        } else if( oldLayer != null ) {
+        } else if( newLayer == null ) {
             Main.map.mapView.removeTemporaryLayer(this);
         }
     }

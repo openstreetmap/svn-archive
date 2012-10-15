@@ -5,6 +5,7 @@ import sys,os,subprocess,shutil
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
+# a good dom example site is here: http://www.java2s.com/Tutorial/Python/0400__XML/ProcessingXML.htm
 
 #import colorsys
 
@@ -227,6 +228,7 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
     parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
+    '''
     # replace the "roads-text-name" style with the one using abbreviations
     parking_dom_cut_style(dest_parking_style_document,'roads-text-name')
     parking_roadnames_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'roads-text-name'))
@@ -235,6 +237,28 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')
     parking_roadnames_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'roads-text-name'))
     parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_style,parking_roadnames_layer],'text')
+    '''
+    # replace the TextSymbolizer elements within the roads-text-style with placement-type list and placements od abbreviations
+    rtn_style=None
+    els = dest_parking_style_document.getElementsByTagName("Style")
+    for el in els:
+        if el.getAttribute("name")=="roads-text-name":
+            rtn_style=el
+    assert rtn_style!=None
+    rules = rtn_style.getElementsByTagName("Rule")
+    for rule in rules:
+        #print "isinstance" #print isinstance(rule,pxdom.Element)
+        TextSymbolizers = rule.getElementsByTagName("TextSymbolizer")
+        for TextSymbolizer in TextSymbolizers:
+                TextSymbolizer.setAttribute("placement-type","list")
+                plc1 = dest_parking_style_document.createElement('Placement')
+                plc1.appendChild(dest_parking_style_document.createTextNode('[abbr]'))
+                TextSymbolizer.appendChild(plc1)
+
+    # replace the "roads-text-name" layer with the one using the planet_line_join table
+    parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')
+    parking_roadnames_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'roads-text-name'))
+    parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_layer],'text')
 
     output= dest_parking_style_document.implementation.createLSOutput() 
     output.systemId= dest_parking_style_file

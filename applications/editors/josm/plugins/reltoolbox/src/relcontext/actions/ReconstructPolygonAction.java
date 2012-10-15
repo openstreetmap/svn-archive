@@ -63,7 +63,10 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 	rel.clear();
 	List<Way> newSelection = new ArrayList<Way>();
 	List<Command> commands = new ArrayList<Command>();
-	commands.add(new DeleteCommand(r));
+        Command c = DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(r), true, true);
+        if( c == null )
+            return;
+	commands.add(c);
 	
 	for( JoinedPolygon p : mpc.outerWays ) {
 	    // move all tags from relation and common tags from ways

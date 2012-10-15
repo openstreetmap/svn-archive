@@ -184,7 +184,7 @@ a.menu::after, .dropdown-toggle::after {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: 1337;
   display: none;
   float: left;
   min-width: 400px;

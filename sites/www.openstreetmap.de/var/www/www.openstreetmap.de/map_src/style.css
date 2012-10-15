@@ -20,7 +20,7 @@ div.olControlLayerSwitcher label {
     font-weight: bold;
     text-align: left;
 	white-space:nowrap;
-	margin-left: 20px;
+	left: 20px;
 	/* Bootstrap Hack */
 	top: -10px;
 	position: relative;

@@ -13,7 +13,6 @@ import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
 
-import reverter.corehacks.MultiOsmReader;
 
 public class OsmServerMultiObjectReader extends OsmServerReader {
     private MultiOsmReader rdr = new MultiOsmReader();

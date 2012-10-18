@@ -3420,7 +3420,8 @@ int UserInterface (int argc, char *argv[],
     if (!f || (char*)-1L == (char*) (ld = 
              (ldCtrlType *) mmap (NULL, sizeof (*ld), PROT_READ | PROT_WRITE,
                                   MAP_SHARED, fileno (f), 0))
-        || lockf (F_LOCK, fileno (f), sizeof (*ld)) != 0) {
+        //|| lockf (F_LOCK, fileno (f), sizeof (*ld)) != 0) {
+		|| lockf (fileno (f), F_LOCK, sizeof (*ld)) != 0) {
       printf ("Content-Type: text/plain\n\r\n\rLd ctrl error%p %p %s\n\r",
         f, ld, strerror (errno));
       return 0;
@@ -3435,12 +3436,15 @@ int UserInterface (int argc, char *argv[],
     gettimeofday (&ld->inst[myInst].start, &tz);
     if (++ld->free >= MAX_INST) ld->free = 0;
     UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
-    lockf (F_ULOCK, fileno (f), sizeof (*ld));
+    //lockf (F_ULOCK, fileno (f), sizeof (*ld));
+	lockf (fileno (f), F_ULOCK, sizeof (*ld));
     for (int i = 0; i < ld->inst[myInst].maks && RouteLoop (); i++) {}
-    lockf (F_LOCK, fileno (f), sizeof (*ld));
+    //lockf (F_LOCK, fileno (f), sizeof (*ld));
+	lockf (fileno (f), F_LOCK, sizeof (*ld));
     ld->inst[myInst].start.tv_sec = 0; // Mark that we're done.
     UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
-    lockf (F_ULOCK, fileno (f), sizeof (*ld));
+    //lockf (F_ULOCK, fileno (f), sizeof (*ld));
+	lockf (fileno (f), F_ULOCK, sizeof (*ld));
     #else
     while (RouteLoop ()) {}
 /*  It is reasonable to assume that there exists a short route in the actual

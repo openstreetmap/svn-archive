@@ -892,7 +892,7 @@ long munmap (void *ptr, long size)
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 60
-#define MAX_NODES 26500000 /* Max in a group */
+#define MAX_NODES 32840000 /* Max in a group */
 #define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
 #define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS
@@ -1506,7 +1506,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
     (strcmp (k2v["cycleway"], "opposite_lane") == 0 ||
      strcmp (k2v["cycleway"], "opposite_track") == 0 ||
      strcmp (k2v["cycleway"], "opposite") == 0)) &&
-     !(k2v["oneway:bicyle"] && (strcmp (k2v["oneway:bicycle"], "0") == 0 ||
+     !(k2v["oneway:bicycle"] && (strcmp (k2v["oneway:bicycle"], "0") == 0 ||
                                 strcmp (k2v["oneway:bicycle"], "no") == 0))) {
     // On oneway roads, cyclists are only allowed to go in the opposite
     // direction, if the cycleway tag exist and starts with "opposite"
@@ -2144,6 +2144,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   fseek (pak, ftell (pak), SEEK_SET);
   vector<halfSegType> lseg;
   ndBase = (ndType*)(data + ndStart);
+  #ifndef ONLY_ROUTING
   REBUILDWATCH (for (ndType *ndItr = ndBase;
                 ndItr < ndBase + hashTable[bucketsMin1 + 1]; ndItr++)) {
   //while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
@@ -2170,7 +2171,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       way->clon = ndItr->lon + way->dlon;
     }
 
-    #ifndef ONLY_ROUTING
     // This is a simplified version of the rebuild: It does not use groups or files
     // and the lats & lons have been dereferenced previously. So the pairing is
     // simplified a lot.
@@ -2230,8 +2230,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
         //printf ("%d %d\n", lowzOther, lseg.size ());
       } // If the way belongs in the lowzoom
     } // If it was the start of a way
-    #endif
   } // For each highzoom nd
+  #endif
   REBUILDWATCH (qsort (&lseg[0], lseg.size () / 2, sizeof (lseg[0]) * 2, 
     (int (*)(const void *, const void *))HalfSegCmp));
   int *lpair = new int[lowzOther - FIRST_LOWZ_OTHER];

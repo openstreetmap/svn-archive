@@ -11,7 +11,7 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Close':'Cl','Lane':'Ln','Street':'St','Road':'Rd','Parkway':'Pkwy','West':'W','East':'E','South':'S','North':'N'})
+endabbreviations1.update({'Avenue':'Ave','Close':'Cl','Court':'Ct','Drive':'Dr','Lane':'Ln','Street':'St','Road':'Rd','Parkway':'Pkwy','West':'W','East':'E','South':'S','North':'N','Place':'Pl.'})
 endabbreviations2.update({'Avenue':'A','Close':'C','Lane':'L','Street':'S','Road':'R','Parkway':'Pky','Rd':'R','St':'S','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N'})
 
@@ -21,13 +21,17 @@ endabbreviations2.update({'Straße':'S','straße':'s.'})
 begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
 
+#dutch
+endabbreviations1.update({'Straat':'Str.','straat':'str.'})
+endabbreviations2.update({'Straat':'S','straat':'s.'})
+
 #french
-begabbreviations1.update({'Impasse':'Imp.','Rue':'R.','rue':'r.'})
+begabbreviations1.update({'Chemin':'Ch.','Impasse':'Imp.','Rue':'R.','rue':'r.'})
 begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 
 #spanish
-begabbreviations1.update({'Rua':'R.','rua':'r.'})
-begabbreviations2.update({'Rua':'R','rua':'r'})
+begabbreviations1.update({'Camino':'Cno.','Rua':'R.','rua':'r.','Calle':'C.','calle':'c.'})
+begabbreviations2.update({'Rua':'R','rua':'r','Calle':'C','calle':'c'})
 
 #italian
 begabbreviations1.update({'Via':'V.','via':'v.'})

@@ -6,6 +6,7 @@ import sys,time,string,logging
 from osmdb import OSMDB
 from geom import bbox
 from optparse import OptionParser
+import streetnameabbreviations
 
 class JoinDB (OSMDB):
 
@@ -15,6 +16,8 @@ class JoinDB (OSMDB):
         'private':'bug','abandoned':'bug','turning_circle':'bug','ter':'bug','undefined':'bug','unsurfaced':'bug','cycleway; footway':'bug','unbuilt':'bug','rest_area':'bug','residential; tertiary; residential':'bug','emergency_access_point':'bug','racetrack':'bug','disused':'bug','minor':'bug','secondary;tertiary':'bug','private road':'bug','residential;steps':'bug',
         'track':'t'}
 
+    '''
+     no longer used? remove!
     def get_highways_segments(self):
         st=time.time()
         sel="select name,string_agg(text(osm_id),',') "+self.FlW+" highway is not Null and \"way\" && "+self.googbox+" and name is not Null group by name"
@@ -25,6 +28,7 @@ class JoinDB (OSMDB):
         for hw,osmids in result:
             ids=osmids.split(',')
             highways.append([hw,ids])
+    '''
 
     def _escape_quote(self,name):
         return name.replace("'","''")

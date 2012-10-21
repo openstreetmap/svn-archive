@@ -36,7 +36,7 @@ begabbreviations1.update({'Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Rue':'R
 begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 
 #spanish
-begabbreviations1.update({'Camino':'Cno.','Rua':'R.','rua':'r.','Calle':'C.','calle':'c.'})
+begabbreviations1.update({'Avenida':'Av.','avenida':'av.','Camino':'Cno.','Rua':'R.','rua':'r.','Calle':'C.','calle':'c.'})
 begabbreviations2.update({'Rua':'R','rua':'r','Calle':'C','calle':'c'})
 
 #catalan
@@ -48,6 +48,9 @@ begabbreviations2.update({'Via':'V','via':'v'})
 
 #svenska
 endabbreviations1.update({'gatan':'g.','gata':'g.','vägen':'v.','väg':'v.'})
+
+#norsk
+endabbreviations1.update({'gaten':'g.','gate':'g.','veien':'v.','vei':'v.'})
 
 
 

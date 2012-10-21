@@ -127,6 +127,24 @@ legend=yes
 legendlabel=Kreisstraße
 
 RULE WAY
+keyvalue=highway=tertiary_link
+color=lightgreen
+label=none
+size=22
+bordercolor=black
+bordersize=4
+legend=no
+
+RULE WAY
+keyvalue=highway=unclassified
+color=lightgreen
+label=none
+size=22
+bordercolor=black
+bordersize=4
+legend=no
+
+RULE WAY
 keyvalue=highway=residential
 label=name
 labelsize=20
@@ -148,7 +166,7 @@ fromscale=10001
 toscale=50000
 
 RULE WAY
-keyvalue=highway=sevice
+keyvalue=highway=service
 label=none
 color=grey
 size=20

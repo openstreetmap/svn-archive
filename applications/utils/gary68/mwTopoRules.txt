@@ -149,6 +149,15 @@ legend=yes
 legendlabel=Kreisstraße
 
 RULE WAY
+keyvalue=highway=tertiary_link
+color=white
+label=none
+size=14
+bordercolor=black
+bordersize=2
+legend=no
+
+RULE WAY
 keyvalue=highway=residential
 label=none
 labelsize=18
@@ -159,9 +168,18 @@ bordersize=2
 legend=yes
 legendlabel=Wohnstraße
 
+RULE WAY
+keyvalue=highway=unclassified
+label=none
+labelsize=18
+labeloffset=8
+color=white
+size=8
+bordersize=2
+legend=no
 
 RULE WAY
-keyvalue=highway=sevice
+keyvalue=highway=service
 label=none
 color=white
 size=6
@@ -295,5 +313,51 @@ icon=icons/areaCemetery.svg
 #opacity=100
 #label=name
 #dash=20,20
+
+
+
+#
+#
+#
+
+RULE NODE
+keyvalue=aerialway=station
+size=15
+labelsize=25
+shape=circle
+legend=no
+
+RULE NODE
+keyvalue=aerialway=pylon
+size=10
+shape=circle
+legend=no
+
+RULE WAY
+keyvalue=aerialway=cable_car
+label=name
+labelsize=20
+color=black
+size=8
+labeloffset=-2
+bordersize=0
+
+RULE WAY
+keyvalue=aerialway=gondola
+label=name
+labelsize=20
+color=black
+size=6
+labeloffset=-2
+bordersize=0
+
+RULE WAY
+keyvalue=aerialway=*
+label=name
+labelsize=20
+color=black
+size=4
+labeloffset=-2
+bordersize=0
 
 

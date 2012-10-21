@@ -24,6 +24,7 @@ use warnings ;
 use mwConfig ;
 use mwMap ;
 use mwLabel ;
+use LWP::Simple ;
 
 use OSM::osm ;
 
@@ -49,6 +50,9 @@ my %memWayTags ;
 my %memRelationMembers ;
 my %memRelationTags ;
 
+my $overpassSource0 = "interpreter?data=node%5B%22name%22%3D%22NAME%22%5D%3Bout%20body%3B%0A" ;
+my $overpassSource1 = "interpreter?data=node%5B%22name%22%3D%22NEAR%22%5D%3Bnode%28around%3ADIST%29%5B%22name%22%3D%22NAME%22%5D%3Bout%3B" ;
+my $overpassSource3 = "interpreter?data=%28node%28BOTTOM%2CLEFT%2CTOP%2CRIGHT%29%3B%3C%3B%3E%3B%29%3Bout%20meta%3B" ;
 
 
 sub readFile {
@@ -62,6 +66,79 @@ sub readFile {
 	my $osmName ;
 	if (defined cv('in')) { $osmName = cv('in') ; }
 
+
+	my $clipbbox = "" ;
+	if (defined cv('clipbbox')) { $clipbbox = cv('clipbbox') ; }
+
+	if ( cv('overpass') eq "1" ) {
+		if ( cv('place') eq "" ) { die ("ERROR: option place not specified.\n") ; }
+
+		my $overpassNear = cv('near') ;
+		my $overpassDistance = cv('overpassdistance') ;
+		my $overpassName = cv('place') ;
+		my $overpassUrl1 = cv('overpassserver') . $overpassSource1 ;
+
+		if ( cv('near') eq "" ) {
+			$overpassUrl1 = cv('overpassserver') . $overpassSource0 ;
+		}
+
+		$overpassUrl1 =~ s/NEAR/$overpassNear/ ;
+		$overpassUrl1 =~ s/DIST/$overpassDistance/ ;
+		$overpassUrl1 =~ s/NAME/$overpassName/ ;
+
+		if ( cv('debug') eq "1" ) { print "Overpass Query1: $overpassUrl1 ...\n" ; }
+		print "Send Query 1 to overpass server..\n" ;
+		my $result1 = get ( $overpassUrl1 ) ;
+		if ( ! defined $result1 ) { die ("ERROR: bad overpass result!\n") ; }
+
+		if ( cv('debug') eq "1" ) { print "\n$result1\n\n" ; }
+
+		# get lon, lat
+
+		my ($placeLon) = ( $result1 =~ /lon=\"([\d\.\-]+)/ ) ;
+		my ($placeLat) = ( $result1 =~ /lat=\"([\d\.\-]+)/ ) ;
+
+		if ((! defined $placeLon) or (! defined $placeLat)) { die ("ERROR: lon/lat could not be obtained from 1st overpass result.\n") ; }
+
+		print "place $overpassName found:\n" ;
+		print "lon= $placeLon\n" ;
+		print "lat= $placeLat\n" ;
+
+
+		# calc bbox
+
+		my $overLeft = $placeLon - cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ;  
+		my $overRight = $placeLon + cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ; 
+		my $overTop = $placeLat + cv('latrad')/111.11 ; 
+		my $overBottom = $placeLat - cv('latrad')/111.11 ;
+
+		my $overpassUrl2 = cv('overpassserver') . $overpassSource3 ;
+		$overpassUrl2 =~ s/LEFT/$overLeft/ ;
+		$overpassUrl2 =~ s/RIGHT/$overRight/ ;
+		$overpassUrl2 =~ s/TOP/$overTop/ ;
+		$overpassUrl2 =~ s/BOTTOM/$overBottom/ ;
+
+
+		if ( cv('debug') eq "1" ) { print "Overpass Query2: $overpassUrl2\n" ; }
+		print "Send Query 2 to overpass server..\n" ;
+		my $result2 = get ( $overpassUrl2 ) ;
+		if ( ! defined $result2 ) { die ("ERROR: bad overpass result!\n") ; }
+
+		# save
+
+
+		my $opFileName = "overpass.osm" ;
+		open (my $overFile, ">", $opFileName) ;
+		print $overFile $result2 ;
+		close ( $overFile ) ;
+
+		setConfigValue ('in', $opFileName) ;
+		$osmName = $opFileName ;
+		# setConfigValue ('place', '') ;
+
+		$clipbbox = "$overLeft,$overBottom,$overRight,$overTop" ;
+		if ( cv('debug') eq "1" ) { print "clipbox: $clipbbox\n" ; }
+	}
 
 	if ( grep /\.pbf/, $osmName ) {
 		my $newName = $osmName ;
@@ -77,13 +154,10 @@ sub readFile {
 	}
 
 
-	my $clipbbox = "" ;
-	if (defined cv('clipbbox')) { $clipbbox = cv('clipbbox') ; }
-
 	# -place given? look for place and call osmosis
 
 	my $placeFound = 0 ; my $placeLon ; my $placeLat ;
-	if ( cv('place') ne "") {
+	if ( ( cv('place') ne "") and (cv('overpass') ne "1" ) ) {
 		my ($placeId) = ( cv('place') =~ /([\d]+)/);
 		if (!defined $placeId) { $placeId = -999999999 ; }
 		print "looking for place...\n" ;

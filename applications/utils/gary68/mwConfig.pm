@@ -94,6 +94,12 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["elementFontFamily","sans-serif","default font family for map elements like title, scale, grid etc.", "map"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
+
+			["overpass",0,"use overpass servers to get data (CLO)", "job"],
+			["near","","search only near this name (when using overpass) (CLO)", "job"],
+			["overpassdistance",50000,"overpass distance for near search (CLO)", "job"],
+			["overpassserver","http://www.overpass-api.de/api/","overpass server address (CLO)", "job"],
+
 			["gpx","","gpx file to overlay (CLO)", "map"],
 			["gpxColor","black","color for gpx objects (CLO)", "map"],
 			["gpxSize",10,"base size of gpx objects (CLO)", "map"],
@@ -286,8 +292,12 @@ sub readConfigFile {
 sub getProgramOptions {
 
 
-my $optResult = GetOptions ( 	"in=s" 		=> \$cv{'in'},		# the in file, mandatory
-				"gpx:s"		=> \$cv{'gpx'},
+my $optResult = GetOptions ( 	"in=s" 			=> \$cv{'in'},		# the in file, mandatory
+				"overpass" 		=> \$cv{'overpass'},
+				"near:s" 		=> \$cv{'near'},
+				"overpassdistance:i" 	=> \$cv{'overpassdistance'},
+				"overpassserver:s" 	=> \$cv{'overpassserver'},
+				"gpx:s"			=> \$cv{'gpx'},
 				"gpxcolor:s"		=> \$cv{'gpxcolor'},
 				"gpxsize:i"		=> \$cv{'gpxsize'},
 				"ini:s"		=> \$cv{'ini'},

@@ -4,11 +4,11 @@
 
 RULE CONFIG scaleset=25000
 RULE CONFIG ruler=2
-RULE CONFIG legend=4
+# RULE CONFIG legend=4
 
 RULE NODE
 keyvalue=place=city
-size=40
+size=0
 labelsize=60
 shape=square
 legend=yes
@@ -18,36 +18,54 @@ RULE NODE
 keyvalue=place=town
 label=name
 labelsize=45
-size=30
+size=0
 legend=yes
 legendlabel=Stadt
 
 RULE NODE
 keyvalue=place=village
-size=20
+size=0
 labelsize=30
 svgString=fill="black"
-toscale=50000
 legend=yes
 legendlabel=Dorf
 
 RULE NODE
 keyvalue=place=suburb
-size=20
+size=0
 labelsize=30
-toscale=50000
 legend=yes
 legendlabel=Vorort
+
+RULE NODE
+keyvalue=natural=peak
+size=15
+label=name!ele
+labelsize=30
+shape=triangle
+
+RULE NODE
+keyvalue=man_made=tower
+icon=icons/tower.svg
+label=none
+labelsize=30
+
+RULE NODE
+keyvalue=railway=station
+label=name
+shape=square
+size=12
+labelsize=30
 
 RULE WAY
 keyvalue=highway=motorway
 color=white
 size=18
 label=ref
-labelsize=60
+labelsize=30
 labeloffset=11
 bordercolor=black
-bordersize=2
+bordersize=4
 direxclude=yes
 
 RULE WAY
@@ -64,8 +82,9 @@ keyvalue=highway=trunk
 color=white
 size=18
 label=ref
+labelsize=30
 bordercolor=black
-bordersize=2
+bordersize=4
 direxclude=yes
 
 RULE WAY
@@ -80,7 +99,7 @@ direxclude=yes
 RULE WAY
 keyvalue=highway=primary
 label=ref
-labelsize=50
+labelsize=25
 labeloffset=10
 color=white
 size=14
@@ -100,7 +119,7 @@ bordersize=2
 RULE WAY
 keyvalue=highway=secondary
 label=ref
-labelsize=50
+labelsize=25
 labeloffset=9
 color=white
 size=14
@@ -121,7 +140,7 @@ RULE WAY
 keyvalue=highway=tertiary
 color=white
 label=ref
-labelsize=22
+labelsize=25
 labeloffset=9
 size=14
 bordercolor=black
@@ -135,7 +154,7 @@ label=none
 labelsize=18
 labeloffset=8
 color=white
-size=10
+size=8
 bordersize=2
 legend=yes
 legendlabel=Wohnstraße
@@ -145,7 +164,7 @@ RULE WAY
 keyvalue=highway=sevice
 label=none
 color=white
-size=8
+size=6
 bordersize=2
 
 RULE WAY
@@ -156,6 +175,26 @@ color=black
 size=3
 labeloffset=-2
 bordersize=0
+
+RULE WAY
+keyvalue=waterway=stream
+label=name
+labelsize=20
+labelcolor=darkblue
+color=lightblue
+size=5
+labeloffset=-2
+bordersize=0
+
+RULE WAY
+keyvalue=railway=rail
+label=none
+color=white
+size=4
+bordersize=2
+bordercolor=black
+dash=40,40
+dashcap=butt
 
 
 RULE AREA
@@ -169,6 +208,11 @@ keyvalue=natural=water
 color=lightblue
 base=yes
 label=name
+
+RULE AREA
+keyvalue=waterway=riverbank
+color=lightblue
+base=yes
 
 RULE AREA
 keyvalue=natural=land

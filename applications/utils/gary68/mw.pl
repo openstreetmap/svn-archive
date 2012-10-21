@@ -64,12 +64,12 @@
 # 0.41 fixed icon space occupy error; eliminated labels drawn outside map area
 # 0.42 fixed error with area label svg string
 # 0.43 check if areas (simple ways) are closed before drawing
-# 
+# 0.44 overpass options added
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.43" ;
+my $version = "0.44" ;
 my $programName = "mapweaver" ;
 
 use strict ;

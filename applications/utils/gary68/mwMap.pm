@@ -294,10 +294,11 @@ sub drawTriangle {
 		$size = $size / (1000 * distance ($left, $bottom, $right, $bottom) ) * $sizeX ;
 	}
 
-	my $h = int ( sqrt ($size * $size / 2) ) ;
+	my $h = int ( sqrt ($size * $size / 2)  ) ;
 
 	my $x1 = $x ;
-	my $y1 = $y - $size ;
+	# my $y1 = $y - $size ;
+	my $y1 = $y - $h ;
 	my $x2 = $x - $h ;
 	my $y2 = $y + $h ;
 	my $x3 = $x + $h ;

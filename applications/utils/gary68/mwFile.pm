@@ -129,6 +129,7 @@ sub readFile {
 
 		my $opFileName = "overpass.osm" ;
 		open (my $overFile, ">", $opFileName) ;
+		binmode($overFile, ":utf8") ;
 		print $overFile $result2 ;
 		close ( $overFile ) ;
 

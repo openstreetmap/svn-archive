@@ -11,9 +11,9 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Close':'Cl','Court':'Ct','Drive':'Dr','Lane':'Ln','Street':'St','Road':'Rd','Parkway':'Pkwy','West':'W','East':'E','South':'S','North':'N','Place':'Pl.'})
+endabbreviations1.update({'Avenue':'Ave','Close':'Cl','Court':'Ct','Drive':'Dr','Lane':'Ln','Street':'St','Road':'Rd','Parkway':'Pkwy','West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE','Place':'Pl.','Way':'Wy'})
 endabbreviations2.update({'Avenue':'A','Close':'C','Lane':'L','Street':'S','Road':'R','Parkway':'Pky','Rd':'R','St':'S','Ln':'L'})
-begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N'})
+begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 
 #german
 endabbreviations1.update({'Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','Brücke':'Br.','brücke':'br.'})
@@ -40,6 +40,8 @@ begabbreviations1.update({'Carrer':'C.','carrer':'c.'})
 begabbreviations1.update({'Via':'V.','via':'v.'})
 begabbreviations2.update({'Via':'V','via':'v'})
 
+#svenska
+endabbreviations1.update({'gatan':'g.'})
 
 
 

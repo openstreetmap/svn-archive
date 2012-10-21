@@ -20,15 +20,19 @@ begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwe
 endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','Brücke':'Br.','brücke':'br.'})
 endabbreviations1.update({'berg':'bg.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
-begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','Zum ':'Z. '})
+begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Zum ':'Z. '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
+
+#swiss
+endabbreviations1.update({'Strasse':'Str.','strasse':'str.'})
+endabbreviations2.update({'Strasse':'S','strasse':'s.'})
 
 #dutch
 endabbreviations1.update({'Straat':'Str.','straat':'str.'})
 endabbreviations2.update({'Straat':'S','straat':'s.'})
 
 #french
-begabbreviations1.update({'Chemin':'Ch.','Impasse':'Imp.','Rue':'R.','rue':'r.'})
+begabbreviations1.update({'Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Rue':'R.','rue':'r.'})
 begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 
 #spanish

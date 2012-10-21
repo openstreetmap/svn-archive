@@ -11,14 +11,16 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Close':'Cl','Court':'Ct','Drive':'Dr','Lane':'Ln','Street':'St','Road':'Rd','Parkway':'Pkwy','West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE','Place':'Pl.','Way':'Wy'})
-endabbreviations2.update({'Avenue':'A','Close':'C','Lane':'L','Street':'S','Road':'R','Parkway':'Pky','Rd':'R','St':'S','Ln':'L'})
+endabbreviations1.update({'Avenue':'Ave','Boulevard':'Blvd','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Lane':'Ln','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Terrace':'Ter','Way':'Wy'})
+endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
+endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Street':'S','Road':'R','Parkway':'Pky','Rd':'R','St':'S','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 
 #german
-endabbreviations1.update({'Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','Brücke':'Br.','brücke':'br.'})
+endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','Brücke':'Br.','brücke':'br.'})
+endabbreviations1.update({'berg':'bg.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
-begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A '})
+begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','Zum ':'Z. '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
 
 #dutch
@@ -41,7 +43,7 @@ begabbreviations1.update({'Via':'V.','via':'v.'})
 begabbreviations2.update({'Via':'V','via':'v'})
 
 #svenska
-endabbreviations1.update({'gatan':'g.'})
+endabbreviations1.update({'gatan':'g.','gata':'g.','vägen':'v.','väg':'v.'})
 
 
 

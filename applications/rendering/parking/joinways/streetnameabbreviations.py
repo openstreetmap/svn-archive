@@ -33,6 +33,9 @@ begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 begabbreviations1.update({'Camino':'Cno.','Rua':'R.','rua':'r.','Calle':'C.','calle':'c.'})
 begabbreviations2.update({'Rua':'R','rua':'r','Calle':'C','calle':'c'})
 
+#catalan
+begabbreviations1.update({'Carrer':'C.','carrer':'c.'})
+
 #italian
 begabbreviations1.update({'Via':'V.','via':'v.'})
 begabbreviations2.update({'Via':'V','via':'v'})
@@ -119,12 +122,14 @@ def specialabbr(name):
         #print matches
         if matches!=None:
             groups = matches.groups()
-            firstname = groups[0]
-            secondname = groups[1]
+            firstname = unicode(groups[0],'utf8')
+            secondname = unicode(groups[1],'utf8')
             waytype=groups[2]
             #print waytype
             if waytype in endabbreviations1:
-                result=firstname[:1]+'.-'+secondname+'-'+endabbreviations1[waytype]
+                # unicode("ÄBC",'utf8')[:1].encode('utf8')
+                #result=firstname[:1]+'.-'+secondname+'-'+endabbreviations1[waytype]
+                result=(firstname[:1]+u'.-'+secondname+u'-'+unicode(endabbreviations1[waytype],'utf8')).encode('utf8')
                 print "### person-str: {i}->{o}".format(i=name,o=result)
                 return result
     # US NSEW roads, e.g. "East 2nd Avenue"

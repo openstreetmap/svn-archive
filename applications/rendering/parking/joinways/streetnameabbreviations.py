@@ -13,7 +13,7 @@ begabbreviations2 = {}
 # english/american
 endabbreviations1.update({'Avenue':'Ave','Boulevard':'Blvd','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Terrace':'Ter','Trail':'Trl','Way':'Wy'})
 endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
-endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Street':'S','Road':'R','Parkway':'Pky','Rd':'R','St':'S','Ln':'L'})
+endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Road':'R','Parkway':'Pky','Rd':'R','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 
 #german

@@ -61,11 +61,8 @@ endabbreviations1.update({'vænget':'v.'})
 
 class NameDB (OSMDB):
 
-    def _escape_quote(self,name):
-        return name.replace("'","''")
-
     def get_unabbreviated_highways(self,num):
-        """ Finds - within the small bbox - the highways with the same name. Returns dictionary with osm_id as key. """
+        """ finds num highways with yet unabbreviated names """
         st=time.time()
         self.FljW = "FROM "+self.prefix+"_line_join WHERE"
         sel="select distinct join_id,name {FljW} abbravailable is Null limit {lim}".format(FljW=self.FljW,lim=num)
@@ -81,15 +78,10 @@ class NameDB (OSMDB):
             highways[highway['join_id']]=highway
         return highways
 
-    def _escape_quote(self,name):
-        if name==None:
-            return None
-        return name.replace("'","''")
-
-    def _quote_or_null(self,name):
-        if name==None:
+    def _quote_or_null(self,text):
+        if text==None:
             return 'Null'
-        return "'"+name.replace("'","''")+"'"
+        return "'"+text.replace("'","''")+"'"
 
     def set_abbreviated_highways(self,join_id,name,a1,a2,a3):
         aa='true'

@@ -66,11 +66,12 @@
 # 0.43 check if areas (simple ways) are closed before drawing
 # 0.44 overpass options added
 # 0.45 utf-8 encoding error solved for overpass data
+# 0.46 out parameter fixed
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.45" ;
+my $version = "0.46" ;
 my $programName = "mapweaver" ;
 
 use strict ;

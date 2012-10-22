@@ -302,7 +302,7 @@ my $optResult = GetOptions ( 	"in=s" 			=> \$cv{'in'},		# the in file, mandatory
 				"gpxsize:i"		=> \$cv{'gpxsize'},
 				"ini:s"		=> \$cv{'ini'},
 				"style=s" 	=> \$cv{'style'},		# the style file, mandatory
-				"out:s"		=> \$cv{'svgname'},		# outfile name or default
+				"out:s"		=> \$cv{'out'},		# outfile name or default
 				"size:i"	=> \$cv{'size'},		# specifies pic size longitude in pixels
 				"maxtargetsize:s"	=> \$cv{'maxtargetsize'},		# specifies pic size in cm
 				"legend:i"	=> \$cv{'legend'},		# legend?

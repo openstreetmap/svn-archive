@@ -226,7 +226,7 @@ class JoinDB (OSMDB):
 
     def area_of_joinway(self,joinway):
         bbox_of_joinway=self.get_expanded_bbox(joinway,0.0)
-        xs,ys,xe,ye=self.coords_from_bbox(bbox_of_joinway)
+        xs,ys,xe,ye=bbox.coords_from_bbox(bbox_of_joinway)
         dx=abs(xe-xs)
         dy=abs(ye-ys)
         area=dx*dy/1000000.0

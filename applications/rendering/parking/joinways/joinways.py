@@ -279,8 +279,8 @@ class JoinDB (OSMDB):
             # self.set_bbox(bbox)
             logging.warn("handle_new_hw_segments (i={i})".format(i=i))
             highway=self.get_next_pending_highway()
-            print "The next pending highway was "
-            print highway
+            #print "The next pending highway was "
+            #print highway
             if highway==None:
                 break
             i+=1
@@ -337,9 +337,9 @@ def main(options):
         name=highway['name']
         join_id=highway['join_id']
         a1,a2,a3 = streetnameabbreviations.getAbbreviations(name)
-        print "jid={jid}: name='{n}', abbr1='{a1}', abbr2='{a2}', abbr3='{a3}'".format(jid=join_id,n=name,a1=a1,a2=a2,a3=a3)
+        logging.info("jid={jid}: name='{n}', abbr1='{a1}', abbr2='{a2}', abbr3='{a3}'".format(jid=join_id,n=name,a1=a1,a2=a2,a3=a3))
         if a1==None:
-            print "***** no abbreviation found for {n}".format(n=name)
+            logging.warn("***** no abbreviation found for {n}".format(n=name))
         namedb.set_abbreviated_highways(join_id,name,a1,a2,a3)
 
 

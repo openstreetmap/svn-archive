@@ -47,7 +47,7 @@ begabbreviations1.update({'Piazza':'P.','Via':'V.','via':'v.','Vía':'V.','vía'
 begabbreviations2.update({'Via':'V','via':'v','Vía':'V','vía':'v'})
 
 #svenska
-endabbreviations1.update({'gatan':'g.','gata':'g.','vägen':'v.','väg':'v.'})
+endabbreviations1.update({'gatan':'g.','gata':'g.','gränd':'gr.','gränden':'gr.','stråket':'str.','vägen':'v.','väg':'v.'})
 
 #norsk
 endabbreviations1.update({'gaten':'g.','gate':'g.','veien':'v.','vei':'v.'})
@@ -55,6 +55,91 @@ endabbreviations1.update({'gaten':'g.','gate':'g.','veien':'v.','vei':'v.'})
 #danish
 endabbreviations1.update({'vænget':'v.'})
 
+#finnish
+endabbreviations1.update({'katu':'k.','kuja':'kj.','polku':'p.','porras':'prs.','puisto':'ps.','raitti':'r.','rinne':'r.','tie':'t.'})
+begabbreviations1.update({'Pohjoinen ':'Pohj. ','Eteläinen ':'Et. '})
+begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. '})
+
+"""
+12:29:21 <kay_D> Hi alv
+12:30:18 <kay_D> would you mind helping me a bit with road name abbreviations?
+13:43:39 <alv> umm hi. which ones?
+14:13:22 <kay_D> I am trying to handle abbriviations, like "Hauptstrasse"->"Hauptstr." in German. Do you have 
+  finnish examples?
+14:14:09 <alv> i wrote these already the wrong way, but you'll get them:
+14:14:15 <alv> "t." = "tie" ("v."="väg" for swedish names), "k."="katu" ("g."="gatan" for swedish equivalent 
+  name), "kj"="kuja" ("alley"). less frequent ones include "rn."="rinne" (literally "hillside"), "p." = 
+  "polku" (literally "unmade footpath"). "ps"="puisto" (park), "r." ="raitti" (se: "str"="stråket"), 
+  literally something akin to a main road in a village
+14:16:01 <kay_D> .oO( damn encoding ) wait a sec.
+14:16:31 <alv> one more for names in swedish  "gr" = "gränden"/"gränd" (alley)
+14:19:00 <kay_D> ok, thanks a lot. I am currently running a conversion script for my DB, maybe it helps.
+14:19:20 <kay_D> I'll send you a pointer to the result then :-) couple of days to go.
+14:20:15 <alv> oh, a rare one: "porras" = "prs." (lit. "one step (of stairs)"). 
+14:21:34 <kay_D> Have you seen I used Helsinki as a good example for road splitting/joining at SotM?
+14:21:44 <alv> nope
+14:22:29 <alv> I had just moved home, so didn't really follow/catch up the presentations
+14:22:50 <kay_D> http://wiki.openstreetmap.org/wiki/State_Of_The_Map_2012/Saturday  <- choose the "commented 
+  slides" pdf or ods.
+14:23:37 <kay_D> You can gracefully skip the "how to tag parking lanes" part, you are the most expert that I 
+  know :)
+14:24:26 <kay_D> Hope everything went well with your move.
+14:26:20 <alv> yes
+14:26:40 <alv> i still have some drilling to do, like the last wall lamps
+14:27:25 <kay_D> I have not placed lamps everywhere in my living room yet, and we live there for >3y now. :-(
+14:27:29 <alv> this time it was a very short distance, like 110 meters door-to-door, including the lift
+14:27:39 <kay_D> he he
+14:28:07 <alv> much less stressfull, when you don't need to pack the whole apartment into a hgv
+14:28:34 <kay_D> yes, my last move was 220m only, too.
+14:28:47 <kay_D> but included lots of stairs.
+14:31:31 <alv> that joining looks nice
+14:32:31 <kay_D> Thanks. I think it is dearly needed for OSM rendering.
+14:32:51 <alv> current mapnik looses the name on quite a lot of roads, even when we don't do overkill 
+  accurate parking splits.
+14:33:02 <kay_D> true
+14:34:21 <kay_D> but "micromapping" is coming up for lots of places, especially bigger cities.
+14:34:26 <alv> they seem to name new streets more and more with past persons' names, so new streets have 
+  longer names than the old ones.
+14:42:24 <kay_D> I included a special case abbreviation that abbreviates the first name: 
+  "Alfred-Nobel-Strasse" -> "A.-Nobel-Str."
+14:43:12 <kay_D> But that works only in german due to our habit of connecting nouns with hyphens. So if two 
+  hyphens are present, I assume the first word being a first name.
+14:43:53 <alv> in the beginning of a name, some roads in finland have "Pohjoinen " (northern) = "Pohj. " or 
+  "P. "
+14:44:05 <kay_D> If you can come up with a good identifying algorithm for finnish names, I could include that 
+  too.
+14:44:12 <alv> likewise "Eteläinen "="Et. " = "E. "
+14:45:14 <kay_D> ok, I can handle "beginning" and "ending" abbreviations.
+14:47:32 <alv> but sometimes it's for example "Pohjoisxxxxkatu", which is rarely abbreviated (like this 
+  Pohjoisesplanadi http://osm.org/go/0xPLphyby--?m ) - i'm not even sure if i've ever seen "P.esplanadi", 
+  because it's strange to have the lower case "e".
+14:47:53 <alv> "northstreet" vs "northern street"
+14:48:57 <kay_D> understood. Same in German. I cannot abbreviate if it's part of a longer word.
+14:49:16 <kay_D> I mean I cannot abbreviate at the beginning.
+14:50:40 <alv> i don't think there's a anything automatic that could work for names
+14:52:21 <alv> I've seen, Urho Kekkosen katu = U. K. katu. but Birger Kaipiaisen katu = "Birger Kaip. katu", 
+  or Katariina Saksilaisen katu -> "K. Saksilaisen katu".
+14:52:51 <alv> just about all old named-after-person roads are with the surname only.
+14:53:02 <alv> or just some version of the first name
+14:54:03 <kay_D> why is in your second example the last name abbreviated?
+14:54:30 <alv> don't ask me :)
+14:54:32 <kay_D> or do you have (like japanese) sometimes the first name as the second word?
+14:54:43 <alv> no
+14:55:13 <kay_D> ok. can I just assume that if I see three words, last one is Katu, that the first word is a 
+  first name? :-)
+14:55:26 <alv> guess it could be easier to recognize on a map that way, vs. B. Kaipiaisen k.
+14:55:38 <alv> i have no idea who he/she was.
+14:56:30 <alv> likely, unless it's Etelä/Itä/Länsi/Pohjois/eteläinen/itäinen/läntinen/pohjoinen
+14:56:50 <alv> if you get a list of them, i can look through.
+14:57:02 <kay_D> Deal! :)
+14:57:21 <alv> (maybe not right now, i have those lamps to drill, but later in the evening)
+14:58:02 <kay_D> I am at work, too, will take a few days I guess :)
+14:58:49 <kay_D> could you please do me a favour and copy our chat log into an email, send it to 
+  kay@drangmeister.net, because I cannot see the special characters correctly in the chat window :-(
+14:59:20 <kay_D> I tried with all sorts of encoding, but it did not work. Likely a chat server screws them.
+14:59:40 <kay_D> (or ircII I use)
+End of kay_D buffer    Wed Oct 24 15:01:06 2012
+"""
 
 
 

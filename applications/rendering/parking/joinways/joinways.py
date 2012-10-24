@@ -113,27 +113,27 @@ class JoinDB (OSMDB):
         segment_ids_as_strings=map(lambda osmid: str(osmid),segment_ids)
         return self.select_one("select ST_Linemerge(ST_Collect(way)) {FlW} osm_id in ({seglist})".format(FlW=self.FlW,seglist=string.join(segment_ids_as_strings,',')))
 
-    def _insert_joined_highway(self,id,name,highway,way):
+    def _insert_joined_highway(self,join_id,name,highway,way):
         """ adds the joined highway (it may be a MULTILINE feature) to the jr tables. returns (just for info) the number of written ways (>1 if a MULTILINESTRING) """
         # just a quick test if highway is valid. (I had instances of highway=')
         if highway not in self.highway_types:
             if highway=="'":
-                logging.warn('Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway))
+                logging.warn('Illegal highway type for way ({join_id}): "{ht}" - using "fixme" instead.'.format(join_id=join_id,ht=highway))
                 highway="fixme"
             else:
-                logging.warn('Illegal highway type for way ({id}): "{ht}" - using "fixme" instead.'.format(id=id,ht=highway))
+                logging.warn('Illegal highway type for way ({join_id}): "{ht}" - using "fixme" instead.'.format(join_id=join_id,ht=highway))
                 highway="fixme"
-#                raise Exception('Illegal highway type for way ({id}): "{ht}"'.format(id=id,ht=highway))
+#                raise Exception('Illegal highway type for way ({join_id}): "{ht}"'.format(join_id=join_id,ht=highway))
         if self._which_geometry_is_it(way)=="LINESTRING":
             #print "inserting a simple way"
-            #print "insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))"
-            self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
+            #print "insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))"
+            self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
             return 1
         else:
             #print "inserting a MULTILINE way"
             ways = self._split_multiline_way(way)
             for one_way in ways:
-                self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+one_way+"'::Text,4326))")
+                self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+one_way+"'::Text,4326))")
             return len(ways)
 
 
@@ -277,7 +277,10 @@ class JoinDB (OSMDB):
         while True:
             ts=time.time()
             # self.set_bbox(bbox)
+            logging.warn("handle_new_hw_segments (i={i})".format(i=i))
             highway=self.get_next_pending_highway()
+            print "The next pending highway was "
+            print highway
             if highway==None:
                 break
             i+=1
@@ -297,14 +300,6 @@ class JoinDB (OSMDB):
         addtime=time.time()-addstarttime
         return (add,addtime)
 
-"""
-'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
-
-create table planet_line_join (join_id integer , name text, highway text);
-select AddGeometryColumn('planet_line_join', 'way', 4326, 'LINESTRING', 2 );
-
-"""
-
 
 def main(options):
     bboxstr = options['bbox']
@@ -323,7 +318,7 @@ def main(options):
         osmdb.set_globalboundingbox(bboxobj)
 
     if options['command']=='clear':
-	osmdb.clear_planet_line_join()
+        osmdb.clear_planet_line_join()
 
     dele,deletime = osmdb.handle_deleted_highway_segments()
     delerate=dele/deletime

@@ -94,6 +94,7 @@ my @initial = (	["verbose",0,  "print some more information (CLO)", "misc"],
 			["elementFontFamily","sans-serif","default font family for map elements like title, scale, grid etc.", "map"],
 
 			["in","map.osm","osm in file (CLO)", "job"],
+			["srtm","","srtm in file (CLO)", "job"],
 
 			["overpass",0,"use overpass servers to get data (CLO)", "job"],
 			["near","","search only near this name (when using overpass) (CLO)", "job"],
@@ -303,6 +304,7 @@ my $optResult = GetOptions ( 	"in=s" 			=> \$cv{'in'},		# the in file, mandatory
 				"ini:s"		=> \$cv{'ini'},
 				"style=s" 	=> \$cv{'style'},		# the style file, mandatory
 				"out:s"		=> \$cv{'out'},		# outfile name or default
+				"srtm:s"		=> \$cv{'srtm'},		# srtm file name
 				"size:i"	=> \$cv{'size'},		# specifies pic size longitude in pixels
 				"maxtargetsize:s"	=> \$cv{'maxtargetsize'},		# specifies pic size in cm
 				"legend:i"	=> \$cv{'legend'},		# legend?

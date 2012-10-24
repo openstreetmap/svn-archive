@@ -2,7 +2,7 @@
 # topo ruleset for mapweaver
 #
 
-RULE CONFIG scaleset=25000
+RULE CONFIG scaleset=12500
 RULE CONFIG ruler=2
 # RULE CONFIG legend=4
 
@@ -25,7 +25,7 @@ legendlabel=Stadt
 RULE NODE
 keyvalue=place=village
 size=0
-labelsize=30
+labelsize=35
 svgString=fill="black"
 legend=yes
 legendlabel=Dorf
@@ -33,9 +33,16 @@ legendlabel=Dorf
 RULE NODE
 keyvalue=place=suburb
 size=0
-labelsize=30
+labelsize=35
 legend=yes
 legendlabel=Vorort
+
+RULE NODE
+keyvalue=place=locality
+size=15
+label=name
+labelsize=25
+shape=circle
 
 RULE NODE
 keyvalue=natural=peak
@@ -57,13 +64,19 @@ shape=square
 size=12
 labelsize=30
 
+RULE NODE
+keyvalue=amenity=restaurant
+icon=icons/restaurant.svg
+label=name
+labelsize=30
+
 RULE WAY
 keyvalue=highway=motorway
 color=white
 size=18
 label=ref
 labelsize=30
-labeloffset=11
+labeloffset=-25
 bordercolor=black
 bordersize=4
 direxclude=yes
@@ -83,6 +96,7 @@ color=white
 size=18
 label=ref
 labelsize=30
+labeloffset=-25
 bordercolor=black
 bordersize=4
 direxclude=yes
@@ -100,8 +114,8 @@ RULE WAY
 keyvalue=highway=primary
 label=ref
 labelsize=25
-labeloffset=10
-color=white
+labeloffset=-20
+color=yellow
 size=14
 bordercolor=black
 bordersize=2
@@ -111,7 +125,7 @@ legendlabel=Bundesstraße
 RULE WAY
 keyvalue=highway=primary_link
 label=none
-color=white
+color=yellow
 size=14
 bordercolor=black
 bordersize=2
@@ -120,8 +134,8 @@ RULE WAY
 keyvalue=highway=secondary
 label=ref
 labelsize=25
-labeloffset=9
-color=white
+labeloffset=-20
+color=yellow
 size=14
 bordercolor=black
 bordersize=2
@@ -131,17 +145,17 @@ legendlabel=Landstraße
 RULE WAY
 keyvalue=highway=secondary_link
 label=none
-color=white
+color=yellow
 size=14
 bordercolor=black
 bordersize=2
 
 RULE WAY
 keyvalue=highway=tertiary
-color=white
+color=yellow
 label=ref
 labelsize=25
-labeloffset=9
+labeloffset=-20
 size=14
 bordercolor=black
 bordersize=2
@@ -160,8 +174,6 @@ legend=no
 RULE WAY
 keyvalue=highway=residential
 label=none
-labelsize=18
-labeloffset=8
 color=white
 size=8
 bordersize=2
@@ -186,22 +198,94 @@ size=6
 bordersize=2
 
 RULE WAY
+keyvalue=highway=track;tracktype=grade1
+label=name
+labelsize=25
+labeloffset=-15
+color=white
+size=4
+bordersize=2
+
+RULE WAY
+keyvalue=highway=track;tracktype=grade2
+label=name
+labelsize=25
+labeloffset=-15
+color=white
+size=4
+bordersize=2
+
+RULE WAY
+keyvalue=highway=track;tracktype=grade3
+label=name
+labelsize=25
+labeloffset=-15
+color=black
+size=2
+bordersize=0
+
+RULE WAY
+keyvalue=highway=track;tracktype=grade4
+label=none
+color=black
+size=2
+bordersize=0
+dash=20,20
+
+RULE WAY
+keyvalue=highway=track;tracktype=grade5
+label=none
+color=black
+size=2
+bordersize=0
+dash=10,20
+
+RULE WAY
 keyvalue=highway=track
 label=name
-labelsize=20
+labelsize=25
+labeloffset=-15
 color=black
-size=3
-labeloffset=-2
+size=2
 bordersize=0
+
+RULE WAY
+keyvalue=highway=footway
+label=name
+labelsize=25
+labeloffset=-15
+color=black
+size=2
+bordersize=0
+dash=5,15
+
+RULE WAY
+keyvalue=highway=path
+label=name
+labelsize=25
+labeloffset=-15
+color=black
+size=2
+bordersize=0
+dash=5,5
+
+RULE WAY
+keyvalue=highway=steps
+color=black
+size=5
+bordersize=0
+dash=4,4
+dashcap=butt
+
 
 RULE WAY
 keyvalue=waterway=stream
 label=name
-labelsize=20
+labelsize=25
 labelcolor=darkblue
 color=lightblue
 size=5
-labeloffset=-2
+labeloffset=0
 bordersize=0
 
 RULE WAY
@@ -360,4 +444,116 @@ size=4
 labeloffset=-2
 bordersize=0
 
+
+#---
+
+RULE WAY
+keyvalue=contour_ext=elevation_major
+label=ele
+labelsize=25
+labelcolor=green
+color=green
+size=3
+labeloffset=-2
+bordersize=0
+
+RULE WAY
+keyvalue=contour_ext=elevation_medium
+label=ele
+labelsize=20
+labelcolor=green
+color=green
+size=2
+labeloffset=-2
+bordersize=0
+
+RULE WAY
+keyvalue=contour_ext=elevation_minor
+label=none
+labelcolor=green
+color=green
+size=1
+labeloffset=-2
+bordersize=0
+
+
+
+# MOUNTAINS
+
+RULE NODE
+keyvalue=mountain_pass=yes
+icon=icons/mountainPass.svg
+label=name!ele
+labelsize=30
+
+RULE NODE
+keyvalue=tourism=viewpoint
+icon=icons/viewpoint.svg
+label=name
+labelsize=30
+
+RULE NODE
+keyvalue=tourism=alpine_hut
+icon=icons/alpineHut.svg
+label=name
+labelsize=30
+
+RULE NODE
+keyvalue=amenity=shelter
+icon=icons/shelter.svg
+label=name
+labelsize=30
+
+
+RULE WAY
+keyvalue=natural=ridge
+color=grey
+size=4
+label=name
+labelsize=30
+labeloffset=3
+
+RULE WAY
+keyvalue=natural=arete
+color=grey
+size=4
+label=name
+labelsize=30
+labeloffset=3
+
+
+
+# POWER
+
+RULE NODE
+keyvalue=power=tower
+size=8
+label=none
+shape=square
+
+RULE NODE
+keyvalue=power=pole
+size=6
+label=none
+shape=square
+
+RULE WAY
+keyvalue=power=line
+color=orange
+size=2
+bordersize=0
+label=none
+
+RULE AREA
+keyvalue=power=station
+color=gray
+
+RULE AREA
+keyvalue=power=sub_station
+color=gray
+
+RULE NODE
+keyvalue=power=generator;source=wind
+icon=icons/powerWind.svg
+label=none
 

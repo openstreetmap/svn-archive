@@ -157,6 +157,11 @@ sub readFile {
 
 	# -place given? look for place and call osmosis
 
+	my $left ;
+	my $right ;
+	my $top ;
+	my $bottom ;
+
 	my $placeFound = 0 ; my $placeLon ; my $placeLat ;
 	if ( ( cv('place') ne "") and (cv('overpass') ne "1" ) ) {
 		my ($placeId) = ( cv('place') =~ /([\d]+)/);
@@ -200,10 +205,10 @@ sub readFile {
 			print "place $place found at " ;
 			print "lon: $placeLon " ;
 			print "lat: $placeLat\n" ;
-			my $left = $placeLon - cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ;  
-			my $right = $placeLon + cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ; 
-			my $top = $placeLat + cv('latrad')/111.11 ; 
-			my $bottom = $placeLat - cv('latrad')/111.11 ;
+			$left = $placeLon - cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ;  
+			$right = $placeLon + cv('lonrad')/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ; 
+			$top = $placeLat + cv('latrad')/111.11 ; 
+			$bottom = $placeLat - cv('latrad')/111.11 ;
 
 			print "call osmosis...\n" ;
 
@@ -226,6 +231,29 @@ sub readFile {
 			die() ;
 		}
 	}
+
+
+	my $srtmFileName = cv('srtm') ;
+	if ( $srtmFileName ne "" ) {
+
+		my $cmdX = "osmosis --read-xml $osmName --rx file=\"$srtmFileName\" --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right --merge --write-xml file=\"./temp2.osm\"" ;
+		my $cmdP = "osmosis --read-xml $osmName --read-pbf file=\"$srtmFileName\" --bounding-box completeWays=yes completeRelations=yes bottom=$bottom top=$top left=$left right=$right --merge --write-xml file=\"./temp2.osm\"" ;
+
+		my $cmd = "" ;
+		if (grep /\.pbf/, $srtmFileName) {
+			$cmd = $cmdP ;
+		}
+		else {
+			$cmd = $cmdX ;
+		}
+
+		print "call osmosis to merge SRTM data...\n$cmd\n" ;
+
+		`$cmd` ;
+
+		$osmName = "temp2.osm" ;
+	}
+
 
 
 

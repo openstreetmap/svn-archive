@@ -6,6 +6,7 @@ import sys,time,string,logging
 from osmdb import OSMDB
 from geom import bbox
 from optparse import OptionParser
+from streetnameabbreviations import NameDB
 import streetnameabbreviations
 
 class JoinDB (OSMDB):
@@ -30,8 +31,9 @@ class JoinDB (OSMDB):
             highways.append([hw,ids])
     '''
 
-    def _escape_quote(self,name):
-        return name.replace("'","''")
+    def __init__(self,dsn,maxobjects=0):
+        self.maxobjects = maxobjects
+        OSMDB.__init__(self, dsn)
 
     def find_same_named_highways(self,highway,bbox):
         """ Finds - within the small bbox - the highways with the same name. Returns dictionary with osm_id as key. """
@@ -58,11 +60,11 @@ class JoinDB (OSMDB):
         highway_osm_id=self.select_one(select)
         return highway_osm_id
 
-    def get_next_pending_highway(self,bboxobj=None):
+    def get_next_pending_highway(self):
         """ Gets the next unhandled highway (osm_id+dict) """
         st=time.time()
-        if bboxobj!=None:
-            bbox_condition_sql = '"way" && {b} and '.format(b=bboxobj.get_bbox_sql())
+        if self.globalboundingbox!=None:
+            bbox_condition_sql = '"way" && {b} and '.format(b=self.get_globalboundingbox().get_bbox_sql())
         else:
             bbox_condition_sql = ''
         select = "select osm_id,highway,name,ST_AsText(\"way\") AS geom {FlW} jrhandled is False and highway is not Null and {bbox} name is not Null order by osm_id limit 1".format(FlW=self.FlW,bbox=bbox_condition_sql)
@@ -230,6 +232,71 @@ class JoinDB (OSMDB):
         area=dx*dy/1000000.0
         return area
 
+    def handle_deleted_highway_segments(self):
+        """ handle deleted highway segments -> mark all joined highway's segments as unhandled in order to have them re-handled """
+        delestarttime=time.time()
+        i=0
+        j=0
+        while True:
+            segment_id=self.get_next_deleted_highway()
+            if segment_id==None:
+                break
+            #print "[] Handling deleted segment {seg}".format(seg=segment_id)
+            joinway_id=self.find_joinway_by_segment(segment_id)
+            if joinway_id==None:  # deleted segment was not in joined highway -> ignore (FIXME: and warn)
+                #print "   [] was not a joinway. Ignoring and flushing."
+                self.flush_deleted_segment(segment_id)
+                ### FIXME: zur sicherheit in planet_line als dirty markieren (falls vorhanden), oder besser: ASSERT ERROR falls in planet_line vorhanden und jrhandled=True
+                continue
+            dirtylist=self.get_segments_of_joinway(joinway_id)
+            name_of_joinway=self.get_name_of_joinway(joinway_id)
+            #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
+            # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
+            # all of those must fail gracefully if an entry is not there (anymore).
+            self.mark_segments_unhandled(dirtylist)
+            self.flush_deleted_segments(dirtylist)
+            self.remove_joinway(joinway_id)
+            i+=1
+            j+=len(dirtylist)
+            logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
+            if i%100==0:
+                self.commit()
+            if self.maxobjects>0 and i>self.maxobjects:
+                break
+        self.commit()
+        logging.info("Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j))
+        dele=i
+        deletime=time.time()-delestarttime
+        return (dele,deletime)
+
+    def handle_new_highway_segments(self):
+        """ handle unhandled (or dirty) highway segments """
+        ### FIXME: was passiert, wenn zu einem Segment eins angehängt wird, vorher müssten die alten segmente rausgelöscht werden.
+        addstarttime=time.time()
+        i=0
+        while True:
+            ts=time.time()
+            # self.set_bbox(bbox)
+            highway=self.get_next_pending_highway()
+            if highway==None:
+                break
+            i+=1
+            #print "Found {i}. pending highway '{name}'".format(i=i,name=highway['name'])
+            joinset,joinway=self.collate_highways(highway)
+            # print "  Found connected highways '{hws}'".format(hws=joinset)
+            numjoins = self.add_join_highway(highway,joinset,joinway)
+            if i%100==0:
+                self.commit()
+            t=time.time()-ts
+            area=self.area_of_joinway(joinway)
+            logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
+            if self.maxobjects>0 and i>self.maxobjects:
+                break
+        self.commit()
+        add=i
+        addtime=time.time()-addstarttime
+        return (add,addtime)
+
 """
 'Kittelstra\xc3\x9fe', '36717484,36717485,5627159'
 
@@ -251,81 +318,38 @@ def main(options):
         bboxobj = None
         logging.info("No bbox used")
 
-    osmdb = JoinDB(DSN)
+    osmdb = JoinDB(DSN,maxobjects)
+    if bboxobj != None:
+        osmdb.set_globalboundingbox(bboxobj)
 
     if options['command']=='clear':
 	osmdb.clear_planet_line_join()
 
-    #
-    # handle deleted highway segments -> mark all joined highway's segments as unhandled in order to have them re-handled
-    #
-    delestarttime=time.time()
-    i=0
-    j=0
-    while True:
-        segment_id=osmdb.get_next_deleted_highway()
-        if segment_id==None:
-            break
-        #print "[] Handling deleted segment {seg}".format(seg=segment_id)
-        joinway_id=osmdb.find_joinway_by_segment(segment_id)
-        if joinway_id==None:  # deleted segment was not in joined highway -> ignore (FIXME: and warn)
-            #print "   [] was not a joinway. Ignoring and flushing."
-            osmdb.flush_deleted_segment(segment_id)
-            ### FIXME: zur sicherheit in planet_line als dirty markieren (falls vorhanden), oder besser: ASSERT ERROR falls in planet_line vorhanden und jrhandled=True
-            continue
-        dirtylist=osmdb.get_segments_of_joinway(joinway_id)
-        name_of_joinway=osmdb.get_name_of_joinway(joinway_id)
-        #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
-        # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
-        # all of those must fail gracefully if an entry is not there (anymore).
-        osmdb.mark_segments_unhandled(dirtylist)
-        osmdb.flush_deleted_segments(dirtylist)
-        osmdb.remove_joinway(joinway_id)
-        i+=1
-        j+=len(dirtylist)
-        logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
-        if i%100==0:
-            osmdb.commit()
-        if maxobjects>0 and i>maxobjects:
-            break
-
-    osmdb.commit()
-    logging.info("Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j))
-    dele=i
-    deletime=time.time()-delestarttime
+    dele,deletime = osmdb.handle_deleted_highway_segments()
     delerate=dele/deletime
-
-    #
-    # handle unhandled (or dirty) highway segments
-    #
-    ### FIXME: was passiert, wenn zu einem Segment eins angehängt wird, vorher müssten die alten segmente rausgelöscht werden.
-    addstarttime=time.time()
-    i=0
-    while True:
-        ts=time.time()
-        # osmdb.set_bbox(bbox)
-        highway=osmdb.get_next_pending_highway(bboxobj)
-        if highway==None:
-            break
-        i+=1
-        #print "Found {i}. pending highway '{name}'".format(i=i,name=highway['name'])
-        joinset,joinway=osmdb.collate_highways(highway)
-        # print "  Found connected highways '{hws}'".format(hws=joinset)
-        numjoins = osmdb.add_join_highway(highway,joinset,joinway)
-        if i%100==0:
-            osmdb.commit()
-        t=time.time()-ts
-        area=osmdb.area_of_joinway(joinway)
-        logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
-        if maxobjects>0 and i>maxobjects:
-            break
-    osmdb.commit()
-    add=i
-    addtime=time.time()-addstarttime
+    add,addtime = osmdb.handle_new_highway_segments()
     addrate=add/addtime
-
-    logging.info("Terminated adding {i} highways".format(i=i))
     logging.warn("Joinways ended: {dele} highways deleted in {deletime:.0f} seconds ({delerate:.2f} d/s), {add} highways added in {addtime:.0f} seconds ({addrate:.2f} a/s)".format(dele=dele,deletime=deletime,delerate=delerate,add=add,addtime=addtime,addrate=addrate))
+
+    # -----------
+    # name abbreviations part here
+
+    num = maxobjects
+    namedb = NameDB(DSN)
+    highways=namedb.get_unabbreviated_highways(num)
+    #print highways
+    for highway in highways.itervalues():
+        name=highway['name']
+        join_id=highway['join_id']
+        a1,a2,a3 = streetnameabbreviations.getAbbreviations(name)
+        print "jid={jid}: name='{n}', abbr1='{a1}', abbr2='{a2}', abbr3='{a3}'".format(jid=join_id,n=name,a1=a1,a2=a2,a3=a3)
+        if a1==None:
+            print "***** no abbreviation found for {n}".format(n=name)
+        namedb.set_abbreviated_highways(join_id,name,a1,a2,a3)
+
+
+
+
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=logging.INFO)

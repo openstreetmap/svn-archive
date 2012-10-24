@@ -3,6 +3,7 @@
 
 import sys,string
 import psycopg2
+from geom import bbox
 
 class OSMDB:
     """ Handles queries to the planet database """
@@ -17,7 +18,7 @@ class OSMDB:
         print "Encoding for this connection is", self.conn.encoding
         self.curs = self.conn.cursor()
 
-        self.clear_bbox()
+        self.clear_globalboundingbox()
 
         self.latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
         self.coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
@@ -64,13 +65,36 @@ class OSMDB:
     def delete(self,delete):
         self.curs.execute(delete)
 
-    def sql_list_of_ids(self,list):
+    def sql_list_of_ids(self,liste):
         """ Returns string: list of IDs, e.g. '(1,2,3)' from [1,2,3] for use in sql queries"""
-        list_ids_as_strings=map(lambda osmid: str(osmid),list)
+        list_ids_as_strings=map(lambda osmid: str(osmid),liste)
         return "("+string.join(list_ids_as_strings,',')+")"
 
-# ---------------------------------------------------------------------------
+    def _escape_quote(self,name):
+        return name.replace("'","''")
 
+    def _quote_or_null(self,text):
+        """ for update statements: escape names with single quotes and surround them with single quotes, or 'Null' if text is None """
+        if text==None:
+            return 'Null'
+        return "'"+text.replace("'","''")+"'"
+
+
+# ---------------------------------------------------------------------------
+# old
+    def clear_globalboundingbox(self):
+        """ clears the global bounding box """
+        self.globalboundingbox = None
+
+    def set_globalboundingbox(self,bbox,srs = '4326'):
+        """ sets the global bounding box """
+        self.globalboundingbox = bbox({'bbox':bbox,'srs':srs})
+
+    def get_globalboundingbox(self,bbox,srs = '4326'):
+        """ gets the global bounding box """
+        return self.globalboundingbox
+
+    """
     def clear_bbox(self):
         self.bbox = None
         self.googbox = None
@@ -116,9 +140,10 @@ class OSMDB:
         bbox = bbox.replace(' ',',')
         coordslist = map(lambda coord: float(coord), bbox.split(','))
         return tuple(coordslist)
+    """
 
 # ---------------------------------------------------------------------------
-
+    """
     def select_highways(self):
         self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway is not NULL "+self.LIMIT+";")
         rs = self.curs.fetchall()
@@ -287,4 +312,4 @@ class OSMDB:
             barrier['height']=res[3]
             barriers.append(barrier)
         return barriers
-
+    """

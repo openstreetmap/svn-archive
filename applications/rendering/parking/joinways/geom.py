@@ -12,6 +12,13 @@ class bbox:
         bxarray=box_coords.split(",")
         return "{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
         
+    def coords_from_bbox(self,bbox):
+        bbox = bbox[4:] # cut off the "BOX("
+        bbox = bbox[:-1] # cut off the ")"
+        
+        bbox = bbox.replace(' ',',')
+        coordslist = map(lambda coord: float(coord), bbox.split(','))
+        return tuple(coordslist)
 
     def get_bounds(self):
         polygonstring = self.bbox[0][0]
@@ -19,7 +26,7 @@ class bbox:
         polygonstring = polygonstring[:-2] # cut off the "))"
         points = polygonstring.split(',')
 
-        numpoints = len(points)
+        #numpoints = len(points)
         for i,point in enumerate(points):
             latlon = point.split(' ')
             if (i==0):
@@ -66,4 +73,4 @@ class bbox:
         #self.get_bounds()
 
     def get_bbox_sql(self):
-       return self.bbox
+        return self.bbox

@@ -7,12 +7,14 @@ class bbox:
     clientsrs='4326'
     dbsrs='900913'
 
-    def box_coords_ccc2bcb(self,box_coords):
+    @staticmethod
+    def box_coords_ccc2bcb(box_coords):
         """ converts box coordinates from format "b,l,t,r" (3 commas) to format "b l,t r" (blank comma blank) """
         bxarray=box_coords.split(",")
         return "{b} {l},{t} {r}".format(b=bxarray[0],l=bxarray[1],t=bxarray[2],r=bxarray[3])
-        
-    def coords_from_bbox(self,bbox):
+
+    @staticmethod
+    def coords_from_bbox(bbox):
         bbox = bbox[4:] # cut off the "BOX("
         bbox = bbox[:-1] # cut off the ")"
         

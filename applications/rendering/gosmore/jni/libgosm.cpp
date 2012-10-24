@@ -1530,25 +1530,25 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
 ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
 { // Helper function when a way is copied into lowzoom table.
   if (forward) {
-    nd += nd->other[1];
-    if (nd->other[1]) return nd;
+    nd += nd->other[0];
+    if (nd->other[0]) return nd;
   }
   if (nd->lat == nd[1].lat && nd->lon == nd[1].lon) {
     if ((nd->lat != nd[2].lat || nd->lon != nd[2].lon) &&
         (nd->lat != nd[-1].lat || nd->lon != nd[-1].lon ||
          // If there is a 3rd object there,
-         (nd[-1].other[0] == 0 && nd[-1].other[0] == 0)) &&
+         (nd[-1].other[1] == 0 && nd[-1].other[1] == 0)) &&
         // then it must be a node
-        nd + 1 != ndItr && nd[1].other[!forward ? 1 : 0] == 0
+        nd + 1 != ndItr && nd[1].other[forward ? 1 : 0] == 0
         // Must not loop back to start and must not be T juntion
         && StyleNr (w) == StyleNr ((wayType*)(data + nd[1].wayPtr))) nd++;
   }
   else if (nd->lat == nd[-1].lat && nd->lon == nd[-1].lon &&
            (nd->lat != nd[-2].lat || nd->lon != nd[-2].lon ||
             // If there is a 3rd object there,
-            (nd[-2].other[0] == 0 && nd[-2].other[0] == 0)) &&
+            (nd[-2].other[1] == 0 && nd[-2].other[1] == 0)) &&
             // then it must be a node
-           nd - 1 != ndItr && nd[-1].other[!forward ? 1 : 0] == 0
+           nd - 1 != ndItr && nd[-1].other[forward ? 1 : 0] == 0
            // Must not loop back to start and must not be T juntion
            && StyleNr (w) == StyleNr ((wayType*)(data + nd[-1].wayPtr))) nd--;
   // If nd ends at a point where exactly two ways meet and they have the same
@@ -2188,12 +2188,12 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     // and the lats & lons have been dereferenced previously. So the pairing is
     // simplified a lot.
     ndType *prev = LFollow (ndItr, ndItr, way, 0);
-    if (!ndItr->other[0] && prev->wayPtr >= ndItr->wayPtr) {
+    if (!ndItr->other[1] && prev->wayPtr >= ndItr->wayPtr) {
       int length = 0;
       ndType *end;
-      for (end = ndItr; end->other[1]; end = LFollow (end, ndItr, way, 1)) {
-        length += lrint (sqrt (Sqr ((double)(end->lat - end[end->other[1]].lat)) +
-                               Sqr ((double)(end->lon - end[end->other[1]].lon))));
+      for (end = ndItr; end->other[0]; end = LFollow (end, ndItr, way, 1)) {
+        length += lrint (sqrt (Sqr ((double)(end->lat - end[end->other[0]].lat)) +
+                               Sqr ((double)(end->lon - end[end->other[0]].lon))));
         if (prev != ndItr && end->wayPtr < ndItr->wayPtr) break;
         // If it is circular and we didn't start at the way with the lowest
         // wayPtr, then we abort

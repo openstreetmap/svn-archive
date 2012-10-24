@@ -892,11 +892,10 @@ long munmap (void *ptr, long size)
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 60
-#define MAX_NODES 32840000 /* Max in a group */
 #define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
-#define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
+#define NGROUP(x)  ((x) / max_nodes % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS
-#define S1GROUP(x) ((x) / MAX_NODES % NGROUPS + IDXGROUPS + NGROUPS)
+#define S1GROUP(x) ((x) / max_nodes % NGROUPS + IDXGROUPS + NGROUPS)
 #define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
 #define PAIRS (16 * 1024 * 1024)
 #define PAIRGROUPS 120
@@ -913,17 +912,24 @@ struct halfSegType { // Rebuild only
   int lon, lat, other, wayPtr;
 };
 
+struct wayPartType { // Rebuild only
+  int other, wayPtr;
+  long long id;
+};
+
 struct nodeType {
-  int id, lon, lat;
+  long long id;
+  int lon, lat;
 };
 
 char *data;
+int max_nodes;
 
-inline nodeType *FindNode (nodeType *table, int id)
+inline nodeType *FindNode (nodeType *table, long long id)
 {
   unsigned hash = id;
   for (;;) {
-    nodeType *n = &table[hash % MAX_NODES];
+    nodeType *n = &table[hash % max_nodes];
     if (n->id < 0 || n->id == id) return n;
     hash = hash * (__int64) 1664525 + 1013904223;
   }
@@ -1589,6 +1595,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   
   
   //------------------ OSM Data File (/dev/stdin) : ------------------------
+  max_nodes = ((time (NULL) - 1351071438) * (long long) 20 + 1980820697) /
+    NGROUPS; // Linear extrapolation from Oct 2012 at 20 nodes / second.
   xmlTextReaderPtr xml = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
   FILE *groupf[PAIRGROUP2 (0) + PAIRGROUPS2];
   char groupName[PAIRGROUP2 (0) + PAIRGROUPS2][9];
@@ -1615,15 +1623,15 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 #endif
     
   nodeType nd;
-  halfSegType s[2];
+  wayPartType wp[2];
   int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
   int yesMask = 0, noMask = 0;
   struct {
     wayType *w; // Pointer to the first version in the master file.
     int off;
   } *wayFseek = NULL;
-  int wStyle = elemCnt, ref = 0;
-  int relationType = 0, onewayReverse = 0;
+  int wStyle = elemCnt, relationType = 0, onewayReverse = 0;
+  long long ref = 0;
   vector<int> wayMember;
   map<int,int> wayId;
   wayType w;
@@ -1678,8 +1686,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   char *tag_k = NULL, *role = NULL; //, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
   //char *nameTag = NULL;
   k2vType k2v, wayRole; // wayRole should be a vector< struct{char*,int} > ...
-  deque<int> wayNd;
-  map<int, deque<int> > outer;
+  deque<long long> wayNd;
+  map<int, deque<long long> > outer;
   REBUILDWATCH (while (xmlTextReaderRead (xml) == 1)) {
     char *name = (char *) BAD_CAST xmlTextReaderName (xml);
     //xmlChar *value = xmlTextReaderValue (xml); // always empty
@@ -1690,10 +1698,10 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	char *aname = (char *) BAD_CAST xmlTextReaderName (xml);
 	char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
 	//        if (xmlStrcasecmp (name, "node") == 0) 
-	if (stricmp (aname, "id") == 0) nd.id = atoi (avalue);
+	if (stricmp (aname, "id") == 0) nd.id = atoll (avalue);
 	if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
 	if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
-	if (stricmp (aname, "ref") == 0) ref = atoi (avalue);
+	if (stricmp (aname, "ref") == 0) ref = atoll (avalue);
 	if (stricmp (aname, "type") == 0) relationType = avalue[0];
 
 #define K_IS(x) (stricmp (tag_k, x) == 0)
@@ -1782,7 +1790,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
         while (!wayMember.empty ()) {
           int idx;
           for (idx = wayMember.size () - 1; !outer[wayMember[idx]].empty () ; idx--) {
-            deque<int> *o = &outer[wayMember[idx]];
+            deque<long long> *o = &outer[wayMember[idx]];
             if (wayNd.empty () || wayNd.back () == o->front () || idx == 0) {
               if (!wayNd.empty () && wayNd.back () == o->front ()) wayNd.pop_back ();
               wayNd.insert (wayNd.end (), o->begin (), o->end ());
@@ -1824,7 +1832,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
         }
         membershipType membership =
           *relationTable == (isNode ? 'n' : nameIsRelation ? 'x' : 'w') &&
-	      atoi (relationTable + 1) == nd.id ? relationTable : NULL;
+	      atoll (relationTable + 1) == nd.id ? relationTable : NULL;
 
         for (membershipType m = membership; m; m = Next (m)) {
           if (strcmp (Role (m), "inner") == 0 && wStyle == elemCnt) {
@@ -1836,7 +1844,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             }
           }
           else if (strcmp (Role (m), "outer") == 0) {
-            outer[nd.id] = deque<int> ();
+            outer[nd.id] = deque<long long> ();
             outer[nd.id].insert (outer[nd.id].end (), wayNd.begin (), wayNd.end ());
           }
 	}
@@ -1853,28 +1861,28 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	if (wStyle == elemCnt /* 1 trick that did help enough to make files < 400MB
 	  || (!k2v["name"] && srec[wStyle].areaColour != -1)*/ ) wayNd.clear ();
 	else {
-	  s[0].other = -2;
+	  wp[0].other = -2;
 	  while (!wayNd.empty ()) {
-            s[0].wayPtr = ftell (pak);
-            s[1].wayPtr = TO_HALFSEG;
-            s[1].other = s[0].other + 1;
-            s[0].lat = onewayReverse ? wayNd.back () : wayNd.front ();
+            wp[0].wayPtr = ftell (pak);
+            wp[1].wayPtr = TO_HALFSEG;
+            wp[1].other = wp[0].other + 1;
+            wp[0].id = onewayReverse ? wayNd.back () : wayNd.front ();
             /*if (lowzListCnt >=
                 int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
             lowzList[lowzListCnt++] = s[0].lat; */
             if (onewayReverse) wayNd.pop_back ();
             else wayNd.pop_front ();
-            s[0].other = wayNd.empty () ? -2 : nOther++ * 2;
-            FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+            wp[0].other = wayNd.empty () ? -2 : nOther++ * 2;
+            FWRITE (wp, sizeof (wp), 1, groupf[S1GROUP (wp[0].id)]);
           }
 	  if (nameIsNode && (!wayFseek || wayFseek->off)) {
-	    s[0].lat = nd.id; // Create 2 fake halfSegs
-	    s[0].wayPtr = ftell (pak);
-	    s[1].wayPtr = TO_HALFSEG;
-	    s[0].other = -2; // No next
-	    s[1].other = -1; // No prev
+	    wp[0].id = nd.id; // Create 2 fake halfSegs
+	    wp[0].wayPtr = ftell (pak);
+	    wp[1].wayPtr = TO_HALFSEG;
+	    wp[0].other = -2; // No next
+	    wp[1].other = -1; // No prev
 	    //lowzList[lowzListCnt++] = nd.id;
-            FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+            FWRITE (wp, sizeof (wp), 1, groupf[S1GROUP (wp[0].id)]);
 	  }
 	  
 	  w.bits |= ~noMask & ((yesMask & (1 << accessR)) 
@@ -2009,24 +2017,29 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     assert (groupf[i] = fopen64 (groupName[i], "w+b"));
   } // Avoid exceeding ulimit
   
-  nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * MAX_NODES);
+  nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * max_nodes);
   if (!nodes) {
     fprintf (stderr, "Out of memory. Reduce MAX_NODES and increase GRPs\n");
     return 3;
   }
+  halfSegType s[2];
   for (int i = NGROUP (0); i < NGROUP (0) + NGROUPS; i++) {
     rewind (groupf[i]);
-    memset (nodes, -1, sizeof (*nodes) * MAX_NODES);
+    memset (nodes, -1, sizeof (*nodes) * max_nodes);
     REBUILDWATCH (while (fread (&nd, sizeof (nd), 1, groupf[i]) == 1)) {
       memcpy (FindNode (nodes, nd.id), &nd, sizeof (nd));
     }
     fclose (groupf[i]);
     unlink (groupName[i]);
     rewind (groupf[i + NGROUPS]);
-    REBUILDWATCH (while (fread (s, sizeof (s), 1, groupf[i + NGROUPS])
+    REBUILDWATCH (while (fread (wp, sizeof (wp), 1, groupf[i + NGROUPS])
 			 == 1)) {
-      nodeType *n = FindNode (nodes, s[0].lat);
+      nodeType *n = FindNode (nodes, wp[0].id);
       //if (n->id == -1) printf ("** Undefined node %d\n", s[0].lat);
+      s[0].other = wp[0].other;
+      s[1].other = wp[1].other;
+      s[0].wayPtr = wp[0].wayPtr;
+      s[1].wayPtr = wp[1].wayPtr;
       s[0].lat = s[1].lat = n->id != -1 ? n->lat : INT_MIN;
       s[0].lon = s[1].lon = n->id != -1 ? n->lon : INT_MIN;
       FWRITE (s, sizeof (s), 1,
@@ -2310,7 +2323,8 @@ int XmlTee (void * /*context*/, char *buf, int len)
 int XmlClose (void */*context*/) { return 0; }
 
 struct memberType {
-  int ref, type;
+  int type;
+  long long ref;
   const char *role, *tags;
 };
 
@@ -2375,7 +2389,7 @@ int SortRelations (void)
           if (stricmp (aname, "type") == 0) {
             member.back ().type = avalue[0] == 'r' ? 'x' : avalue[0];
           }
-          else if (stricmp (aname, "ref") == 0) member.back ().ref = atoi (avalue);
+          else if (stricmp (aname, "ref") == 0) member.back ().ref = atoll (avalue);
           else if (name[0] == 't' && stricmp (aname, "k") == 0) {
             *s += avalue;
             *s += '\n';
@@ -2408,7 +2422,7 @@ int SortRelations (void)
          (int (*)(const void *, const void *)) MemberCmp);
   FILE *idx = fopen ("relations.tbl", "wb");
   for (unsigned i = 0; i < member.size (); i++) {
-    fprintf (idx, "%c%d%c%s%c", member[i].type, member[i].ref, '\0', member[i].role, '\0');
+    fprintf (idx, "%c%lld%c%s%c", member[i].type, member[i].ref, '\0', member[i].role, '\0');
     for (const char *ptr = member[i].tags; *ptr; ptr += strcspn (ptr, "\n") + 1) {
       fprintf (idx, "%.*s%c", (int) strcspn (ptr, "\n"), ptr, '\0');
     }

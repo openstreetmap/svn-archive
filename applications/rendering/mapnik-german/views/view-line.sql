@@ -50,6 +50,7 @@ tags->'poi' as "poi",
 tags->'population' as "population",
 "power" as "power",
 tags->'power_source' as "power_source",
+tags->'proposed' as "proposed",
 "railway" as "railway",
 tags->'ref' as "ref",
 tags->'religion' as "religion",
@@ -74,4 +75,4 @@ z_order as z_order,
 tags as tags
 FROM planet_osm_line;
 
-GRANT select ON view_osmde_line to osm;
+GRANT select ON view_osmde_line to public;

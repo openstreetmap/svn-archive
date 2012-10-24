@@ -15,4 +15,4 @@ way as way,
 "tags" as "tags"
 FROM planet_osm_roads;
 
-GRANT select ON view_osmde_roads TO osm;
+GRANT select ON view_osmde_roads TO public;

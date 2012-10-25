@@ -277,7 +277,7 @@ class JoinDB (OSMDB):
         while True:
             ts=time.time()
             # self.set_bbox(bbox)
-            logging.warn("handle_new_hw_segments (i={i})".format(i=i))
+            #logging.warn("handle_new_hw_segments (i={i})".format(i=i))
             highway=self.get_next_pending_highway()
             #print "The next pending highway was "
             #print highway

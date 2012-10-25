@@ -27,6 +27,8 @@ namespace Brejc.DemLibrary
     [Serializable]
     public class SrtmIndex
     {
+        public IActivityLogger ActivityLogger { get { return activityLogger; } set { activityLogger = value; } }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "latitude+90")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "longitude+180")]
         public int GetValueForCell (int longitude, int latitude)
@@ -66,6 +68,8 @@ namespace Brejc.DemLibrary
         /// </summary>
         public void Generate ()
         {
+            activityLogger.Log(ActivityLogLevel.Verbose, "Downloading data for SRTM index generation");
+
             for (SrtmContinentalRegion continentalRegion = (SrtmContinentalRegion)(SrtmContinentalRegion.None + 1); 
                  continentalRegion < SrtmContinentalRegion.End;
                  continentalRegion++)
@@ -132,5 +136,8 @@ namespace Brejc.DemLibrary
         }
 
         private int[] data = new int[360*180];
+
+        [NonSerialized()]
+        private IActivityLogger activityLogger;
     }
 }

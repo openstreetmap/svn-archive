@@ -39,6 +39,9 @@ namespace Srtm2Osm
         [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void Execute ()
         {
+            ConsoleActivityLogger activityLogger = new ConsoleActivityLogger();
+            activityLogger.LogLevel = ActivityLogLevel.Verbose;
+
             // first make sure that the SRTM directory exists
             if (false == Directory.Exists (srtmDir))
                 Directory.CreateDirectory (srtmDir);
@@ -60,14 +63,12 @@ namespace Srtm2Osm
             if (generateIndex)
             {
                 srtmIndex = new SrtmIndex ();
+                srtmIndex.ActivityLogger = activityLogger;
                 srtmIndex.Generate ();
                 srtmIndex.Save (srtmIndexFilename);
 
                 srtmIndex = SrtmIndex.Load (srtmIndexFilename);
             }
-
-            ConsoleActivityLogger activityLogger = new ConsoleActivityLogger();
-            activityLogger.LogLevel = ActivityLogLevel.Verbose;
 
             Srtm3Storage.SrtmSource = srtmSource;
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);

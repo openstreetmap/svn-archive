@@ -2,7 +2,7 @@
 <FxCopProject Version="1.36" Name="My FxCop Project">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
-  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <Stylesheet Apply="False">.\lib\Microsoft FxCop 1.36\XmlFxCopReport.xsl</Stylesheet>
   <SaveMessages>
    <Project Status="Active, Excluded" NewOnly="False" />
    <Report Status="Active" NewOnly="False" />
@@ -665,28 +665,6 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#.ctor(System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmBound&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmNode&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmWay&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmRelation&gt;,System.String,System.String)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
-              <Issue>
-               <Item>'List&lt;osmBound&gt;'</Item>
-               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;osmNode&gt;'</Item>
-               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;osmRelation&gt;'</Item>
-               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;osmWay&gt;'</Item>
-               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Bound">
             <Messages>
              <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">

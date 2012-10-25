@@ -1,7 +1,6 @@
 package relcontext;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.Command;
 import java.io.BufferedReader;
@@ -12,7 +11,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
-import org.openstreetmap.josm.data.osm.NameFormatter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.DefaultTableModel;
@@ -312,13 +310,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( newSelection == null )
             return;
 
-        final NameFormatter formatter = DefaultNameFormatter.getInstance();
-        Set<Relation> relations = new TreeSet<Relation>(new Comparator<Relation>() {
-            public int compare( Relation r1, Relation r2 ) {
-                int diff = r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
-                return diff != 0 ? diff : r1.compareTo(r2);
-            }
-        });
+        Set<Relation> relations = new TreeSet<Relation>(
+                DefaultNameFormatter.getInstance().getRelationComparator());
         for( OsmPrimitive element : newSelection ) {
             for( OsmPrimitive ref : element.getReferrers() ) {
                 if( ref instanceof Relation && !ref.isIncomplete() && !ref.isDeleted() ) {

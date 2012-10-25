@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.NameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
@@ -160,12 +159,7 @@ public class FindRelationAction extends JosmAction {
             }
         }
 
-        final NameFormatter formatter = DefaultNameFormatter.getInstance();
-        Collections.sort(relations, new Comparator<Relation>() {
-            public int compare( Relation r1, Relation r2 ) {
-                return r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
-            }
-        });
+        Collections.sort(relations, DefaultNameFormatter.getInstance().getRelationComparator());
         data.setRelations(relations);
     }
 

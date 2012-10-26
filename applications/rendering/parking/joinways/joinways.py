@@ -332,7 +332,7 @@ def main(options):
     num = maxobjects
     namedb = NameDB(DSN)
     highways=namedb.get_unabbreviated_highways(num)
-    #print highways
+    logging.warn("Starting abbreviation of highways: {h}".format(h=str(highways)))
     for highway in highways.itervalues():
         name=highway['name']
         join_id=highway['join_id']
@@ -341,6 +341,7 @@ def main(options):
         if a1==None:
             logging.warn("***** no abbreviation found for {n}".format(n=name))
         namedb.set_abbreviated_highways(join_id,name,a1,a2,a3)
+    logging.warn("NameAbbreviate ended.")
 
 
 

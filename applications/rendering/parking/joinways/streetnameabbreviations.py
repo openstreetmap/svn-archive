@@ -11,7 +11,7 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Boulevard':'Blvd','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Terrace':'Ter','Trail':'Trl','Way':'Wy'})
+endabbreviations1.update({'Avenue':'Ave','Boulevard':'Blvd','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Highway':'Hwy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Terrace':'Ter','Trail':'Trl','Way':'Wy'})
 endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Road':'R','Parkway':'Pky','Rd':'R','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
@@ -32,7 +32,7 @@ endabbreviations1.update({'Straat':'Str.','straat':'str.','vej':'v.'})
 endabbreviations2.update({'Straat':'S','straat':'s.'})
 
 #french
-begabbreviations1.update({'Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Rue':'R.','rue':'r.'})
+begabbreviations1.update({'Avenue':'Av.','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Rue':'R.','rue':'r.'})
 begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 
 #spanish
@@ -59,6 +59,9 @@ endabbreviations1.update({'vænget':'v.'})
 endabbreviations1.update({'katu':'k.','kuja':'kj.','polku':'p.','porras':'prs.','puisto':'ps.','raitti':'r.','rinne':'r.','tie':'t.'})
 begabbreviations1.update({'Pohjoinen ':'Pohj. ','Eteläinen ':'Et. '})
 begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. '})
+
+#russian
+endabbreviations1.update({'аллея':'ал.','бульвар':'бул.','набережная':'наб.','переулок':'пер.','площадь':'пл.','проезд':'пр.','проспект':'просп.','шоссе':'ш.','тупик':'туп.','улица':'ул.'})
 
 """
 12:29:21 <kay_D> Hi alv

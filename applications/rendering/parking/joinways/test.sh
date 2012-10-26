@@ -9,7 +9,7 @@
 BBOX=-180,-89.9,180,89.9
 
 JOINWAYS=/home/osm/workspace/parking/joinways/joinways.py
-python $JOINWAYS --dsn 'dbname=gis' --maxobjects 10
+python $JOINWAYS --dsn 'dbname=gis' --maxobjects 100000
 #python $JOINWAYS --bbox $BBOX --dsn 'dbname=gis'
 
 # now, render a sample image

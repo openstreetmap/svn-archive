@@ -252,8 +252,14 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
         for TextSymbolizer in TextSymbolizers:
                 TextSymbolizer.setAttribute("placement-type","list")
                 plc1 = dest_parking_style_document.createElement('Placement')
-                plc1.appendChild(dest_parking_style_document.createTextNode('[abbr]'))
+                plc1.appendChild(dest_parking_style_document.createTextNode('[abbr1]'))
                 TextSymbolizer.appendChild(plc1)
+                plc2 = dest_parking_style_document.createElement('Placement')
+                plc2.appendChild(dest_parking_style_document.createTextNode('[abbr2]'))
+                TextSymbolizer.appendChild(plc2)
+                plc3 = dest_parking_style_document.createElement('Placement')
+                plc3.appendChild(dest_parking_style_document.createTextNode('[abbr3]'))
+                TextSymbolizer.appendChild(plc3)
 
     # replace the "roads-text-name" layer with the one using the planet_line_join table
     parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')

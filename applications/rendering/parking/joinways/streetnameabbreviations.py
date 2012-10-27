@@ -11,16 +11,16 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Boulevard':'Blvd','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Highway':'Hwy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Terrace':'Ter','Trail':'Trl','Way':'Wy'})
+endabbreviations1.update({'Avenue':'Ave','Alley':'Aly','Boulevard':'Blvd','Bridge':'Br','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Garden':'Gdn','Gardens':'Gdns','Highway':'Hwy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Square':'Sq','Terrace':'Ter','Trail':'Trl','View':'Vw','Way':'Wy'})
 endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Road':'R','Parkway':'Pky','Rd':'R','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 
 #german
-endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','promenade':'prm.','Brücke':'Br.','brücke':'br.'})
-endabbreviations1.update({'berg':'bg.','heim':'hm.','graben':'gr.','park':'pk.'})
+endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','promenade':'prm.','Brücke':'Br.','brücke':'br.','Ring':'Rg.','Steige':'Stg.'})
+endabbreviations1.update({'bach':'b.','berg':'bg.','burg':'bg.','dorf':'d.','feld':'fd.','heim':'hm.','graben':'gr.','park':'pk.','stein':'st.','gässle':'g.','gässchen':'g.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
-begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Zum ':'Z. '})
+begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Vor dem ':'V. d. ','Zum ':'Z. '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
 
 #swiss
@@ -28,23 +28,23 @@ endabbreviations1.update({'Strasse':'Str.','strasse':'str.'})
 endabbreviations2.update({'Strasse':'S','strasse':'s.'})
 
 #dutch
-endabbreviations1.update({'Straat':'Str.','straat':'str.','vej':'v.'})
+endabbreviations1.update({'Plaats':'Pl.','plaats':'pl.','Straat':'Str.','straat':'str.','vej':'v.'})
 endabbreviations2.update({'Straat':'S','straat':'s.'})
 
 #french
-begabbreviations1.update({'Avenue':'Av.','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Rue':'R.','rue':'r.'})
+begabbreviations1.update({'Avenue':'Av.','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Promenade':'Prmd.','Route de la ':'Rt. d. l. ','Rue':'R.','rue':'r.'})
 begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
 
 #spanish
-begabbreviations1.update({'Avenida':'Av.','avenida':'av.','Camino':'Cno.','Rua':'R.','rua':'r.','Calle':'C.','calle':'c.'})
-begabbreviations2.update({'Rua':'R','rua':'r','Calle':'C','calle':'c'})
+begabbreviations1.update({'Avenida':'Av.','avenida':'av.','Camino':'Cno.','Plaza de ':'Pl. d. ','Plaza':'Pl.','Rua':'R.','rua':'r.','Rúa':'R.','rúa':'r.','Calle':'C.','calle':'c.'})
+begabbreviations2.update({'Rua':'R','rua':'r','Rúa':'R','rúa':'r','Calle':'C','calle':'c'})
 
 #catalan
 begabbreviations1.update({'Carrer':'C.','carrer':'c.'})
 
 #italian
-begabbreviations1.update({'Piazza':'P.','Via':'V.','via':'v.','Vía':'V.','vía':'v.'})
-begabbreviations2.update({'Via':'V','via':'v','Vía':'V','vía':'v'})
+begabbreviations1.update({'Piazza':'P.','Strada':'S.','Via':'V.','via':'v.','Vía':'V.','vía':'v.','Viale':'Vle.'})
+begabbreviations2.update({'Via':'V','via':'v','Vía':'V','vía':'v','Viale':'V'})
 
 #svenska
 endabbreviations1.update({'gatan':'g.','gata':'g.','gränd':'gr.','gränden':'gr.','stråket':'str.','vägen':'v.','väg':'v.'})
@@ -63,7 +63,16 @@ begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. '})
 #russian
 endabbreviations1.update({'аллея':'ал.','бульвар':'бул.','набережная':'наб.','переулок':'пер.','площадь':'пл.','проезд':'пр.','проспект':'просп.','шоссе':'ш.','тупик':'туп.','улица':'ул.'})
 
+#ladinisch
+begabbreviations1.update({'Streda ':'Str. '})
+
+#errors
+errorbegin = {'strada','via'}
+errorend = {'bridge'}
+
 """
+
+
 12:29:21 <kay_D> Hi alv
 12:30:18 <kay_D> would you mind helping me a bit with road name abbreviations?
 13:43:39 <alv> umm hi. which ones?

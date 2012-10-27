@@ -1,7 +1,16 @@
-Srtm2Osm tool by Igor Brejc
+Srtm2Osm tool by Igor Brejc and others
 
 VERSION HISTORY
 ---------------
+
+1.10
+----
+- using 64 bit integers for element IDs.
+- node / way element IDs start at 2^63-1 and are counted down: No need for updating the starting ID in future (like in version 1.8 ext).
+- added console logging of download phase.
+- output is now compatible to XML output of API 0.6.
+- added "upload=false" attribute to "osm" tag.
+- added support for slippymap URLs with bbox parameter.
 
 1.9
 ---
@@ -12,7 +21,7 @@ VERSION HISTORY
 - fixed possible Exception on network errors.
 - fixed missing "timestamp" XML attribute on exports which were made with the -large option.
 - fixed missing "lon" / "lat" XML attribute when nodes were at 0° longitude or latitude.
-- do not crash when no bounds were specified by the user.
+- do not crash when bounds were not specified by the user.
 
 1.8 ext
 -------

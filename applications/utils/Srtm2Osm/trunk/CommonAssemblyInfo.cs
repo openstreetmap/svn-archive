@@ -16,8 +16,8 @@ using System.Reflection;
 [assembly: AssemblyCopyrightAttribute("Copyright (C) 2007-2012 Igor Brejc and others")]
 [assembly: AssemblyTrademarkAttribute("")]
 [assembly: AssemblyCultureAttribute("")]
-[assembly: AssemblyFileVersionAttribute("1.9.907.1")]
-[assembly: AssemblyInformationalVersionAttribute("1.9")]
+[assembly: AssemblyFileVersionAttribute("1.10.27.0")]
+[assembly: AssemblyInformationalVersionAttribute("1.10")]
 [assembly: AssemblyDelaySignAttribute(false)]
 [assembly: AssemblyKeyNameAttribute("")]
 

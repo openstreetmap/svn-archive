@@ -4181,6 +4181,7 @@
          and leisure IS NULL
          and landuse IS NULL
          and name is not null
+         and railway != 'abandoned'
       ) as roads
       </Parameter>
       &datasource-settings;

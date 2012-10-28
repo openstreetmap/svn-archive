@@ -17,10 +17,10 @@ endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 
 #german
-endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Platz':'Pl.','platz':'pl.','promenade':'prm.','Brücke':'Br.','brücke':'br.','Ring':'Rg.','Steige':'Stg.'})
-endabbreviations1.update({'bach':'b.','berg':'bg.','burg':'bg.','dorf':'d.','feld':'fd.','heim':'hm.','graben':'gr.','park':'pk.','stein':'st.','gässle':'g.','gässchen':'g.'})
+endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Hof':'H.','Platz':'Pl.','platz':'pl.','promenade':'prm.','Brücke':'Br.','brücke':'br.','Ring':'Rg.','Steige':'Stg.'})
+endabbreviations1.update({'bach':'b.','berg':'bg.','burg':'bg.','dorf':'d.','feld':'fd.','heim':'hm.','hof':'h.','graben':'gr.','park':'pk.','ring':'rg.','stein':'st.','gässle':'g.','gässchen':'g.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
-begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Vor dem ':'V. d. ','Zum ':'Z. '})
+begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Vor dem ':'V. d. ','Zum ':'Z. ','Zur ':'Z. '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
 
 #swiss
@@ -28,12 +28,13 @@ endabbreviations1.update({'Strasse':'Str.','strasse':'str.'})
 endabbreviations2.update({'Strasse':'S','strasse':'s.'})
 
 #dutch
-endabbreviations1.update({'Plaats':'Pl.','plaats':'pl.','Straat':'Str.','straat':'str.','vej':'v.'})
+endabbreviations1.update({'Laan':'Ln.','laan':'ln.','Plaats':'Pl.','plaats':'pl.','Plein':'Pln.','plein':'pln.','Straat':'Str.','straat':'str.','vej':'v.'})
+endabbreviations1.update({'Oost':'O.','Noord':'N.','Zuid':'Z.','West':'W.'})
 endabbreviations2.update({'Straat':'S','straat':'s.'})
 
 #french
-begabbreviations1.update({'Avenue':'Av.','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Promenade':'Prmd.','Route de la ':'Rt. d. l. ','Rue':'R.','rue':'r.'})
-begabbreviations2.update({'Impasse':'I','Rue':'R','rue':'r'})
+begabbreviations1.update({'Avenue':'Av.','Allée du ':'Al. d. ','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Promenade':'Prmd.','Route de la ':'Rt. d. l. ','Rue':'R.','rue':'r.'})
+begabbreviations2.update({'Impasse':'I','Rue de la ':'R d l ','rue':'r'})
 
 #spanish
 begabbreviations1.update({'Avenida':'Av.','avenida':'av.','Camino':'Cno.','Plaza de ':'Pl. d. ','Plaza':'Pl.','Rua':'R.','rua':'r.','Rúa':'R.','rúa':'r.','Calle':'C.','calle':'c.'})
@@ -243,7 +244,7 @@ def specialabbr(name):
 def getAbbreviations(name):
     abbr1 = findabbr(name,begabbreviations1,endabbreviations1)
 #    if abbr1 == None:
-  #      return (name,name,name)
+#        return (name,name,name)
     abbr2 = findabbr(name,begabbreviations2,endabbreviations2)
 #    if abbr2 == None:
 #        return (abbr1,abbr1,abbr1)

@@ -189,7 +189,7 @@ public class SimplifyAreaAction extends JosmAction {
         }
 
         final Collection<Command> avgCommands = averageNearbyNodes(ways, nodesReallyToRemove);
-        if (avgCommands != null) {
+        if (avgCommands != null && !avgCommands.isEmpty()) {
             allCommands.add(new SequenceCommand(tr("average nearby nodes"), avgCommands));
         }
 
@@ -300,7 +300,9 @@ public class SimplifyAreaAction extends JosmAction {
                 }
 
                 newWay.setNodes(nodes);
-                commands.add(new ChangeCommand(way, newWay));
+                if (!way.equals(newWay)) {
+                    commands.add(new ChangeCommand(way, newWay));
+                }
             }
         }
 

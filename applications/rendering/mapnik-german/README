@@ -7,11 +7,12 @@ instructions and helper programs from that directory apply
 equally to here, and changes made to that style could, and
 often should, be patched in here as well. 
 
-This style has been developed by Beate Braun for her Bachelor
-Thesis at HFT Stuttgart, with support from Geofabrik. The 
-style is made freely available here for anyone to use, subject
-to any constraints possibly inherited from the original Mapnik
-style.
+This style has originally been developed by Beate Braun for her
+Bachelor Thesis at HFT Stuttgart, with support from Geofabrik
+and is now maintained by the openstreetmap community.
+
+The style is made freely available here for anyone to use, subject
+to any constraints possibly inherited from the original Mapnik style.
 
 This style is in use at http://www.openstreetmap.de/.
 
@@ -22,5 +23,8 @@ mapnik-de@lists.openstreetmap.de
 
 To deploy this style use the supplied default.style file for
 osm2pgsql and import data using the hstore extension of
-PostgreSQL (-k switch of osm2pgsql).
+PostgreSQL (--hstore --hstore-match-only switches of osm2pgsql).
 
+To keep the database compatible to the "original" Mapnik style we
+now use views instead of tables. SQL scripts to set up these views
+are supplied in the views directory.

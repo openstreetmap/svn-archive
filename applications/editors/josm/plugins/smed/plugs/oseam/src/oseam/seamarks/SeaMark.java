@@ -57,8 +57,6 @@ public class SeaMark extends JPanel {
 		repaint();
 	}
 	
-	private String longName = "";
-
 	public enum Obj {
 		UNKOBJ, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP,
 		BOYCAR, BOYISD, BOYLAT, BOYSAW, BOYSPP, NOTMRK,
@@ -1439,11 +1437,6 @@ public class SeaMark extends JPanel {
 			setName(str);
 		}
 		
-		if (keys.containsKey("seamark:longname"))
-			longName = keys.get("seamark:longname");
-		else
-			longName = "";
-
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":category")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":category");
@@ -2555,9 +2548,6 @@ public class SeaMark extends JPanel {
 
 			if (!getName().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:name", getName()));
-
-			if (!longName.isEmpty())
-				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:longname", longName));
 
 			String objStr = ObjSTR.get(object);
 			if (objStr != null) {

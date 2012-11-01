@@ -292,6 +292,9 @@ class JoinDB (OSMDB):
                 self.commit()
             t=time.time()-ts
             area=self.area_of_joinway(joinway)
+            if area==0.0: # prevent a rare division by zero bug (maybe due to ways with a single node only)
+                area=1
+                logging.info("***** found zero-sized area: {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
             logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
             if self.maxobjects>0 and i>self.maxobjects:
                 break
@@ -332,7 +335,7 @@ def main(options):
     num = maxobjects
     namedb = NameDB(DSN)
     highways=namedb.get_unabbreviated_highways(num)
-    logging.warn("Starting abbreviation of highways: {h}".format(h=str(highways)))
+    logging.warn("Starting abbreviation of {l} highways".format(l=len(highways)))
     for highway in highways.itervalues():
         name=highway['name']
         join_id=highway['join_id']

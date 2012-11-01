@@ -11,7 +11,7 @@ begabbreviations1 = {}
 begabbreviations2 = {}
 
 # english/american
-endabbreviations1.update({'Avenue':'Ave','Alley':'Aly','Boulevard':'Blvd','Bridge':'Br','Circle':'Cir','Close':'Cl','Court':'Ct','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Garden':'Gdn','Gardens':'Gdns','Highway':'Hwy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Square':'Sq','Terrace':'Ter','Trail':'Trl','View':'Vw','Way':'Wy'})
+endabbreviations1.update({'Avenue':'Ave','Alley':'Aly','Boulevard':'Blvd','Bridge':'Br','Circle':'Cir','Close':'Cl','Court':'Ct','Cove':'Cv','Crescent':'Cr','Drive':'Dr','Expressway':'Expy','Garden':'Gdn','Gardens':'Gdns','Highway':'Hwy','Lane':'Ln','Park':'Pk','Parkway':'Pkwy','Place':'Pl.','Road':'Rd','Street':'St','Square':'Sq','Terrace':'Ter','Trail':'Trl','View':'Vw','Way':'Wy'})
 endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Road':'R','Parkway':'Pky','Rd':'R','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})

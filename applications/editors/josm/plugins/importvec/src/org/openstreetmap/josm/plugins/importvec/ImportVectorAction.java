@@ -28,7 +28,8 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.projection.Mercator;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionInfo;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -142,7 +143,7 @@ public class ImportVectorAction extends JosmAction {
         protected void finish() {
         }
 
-        Mercator projection = new Mercator();
+        Projection projection = ProjectionInfo.getProjectionByCode("EPSG:3857"); // Mercator
         EastNorth center;
         double scale;
 

@@ -11,9 +11,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.projection.Lambert;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 public class MenuActionLoadFromCache extends JosmAction {
@@ -31,17 +28,17 @@ public class MenuActionLoadFromCache extends JosmAction {
             return;
 
         File[] files = fc.getSelectedFiles();
-        int layoutZone = getCurrentProjZone();
+        int layoutZone = CadastrePlugin.getCadastreProjectionLayoutZone();
         nextFile:
         for (File file : files) {
             if (file.exists()) {
                 String filename = file.getName();
                 String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
                 if ((ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z) &&
-                    !(Main.getProjection() instanceof LambertCC9Zones))
+                    !(CadastrePlugin.isLambert_cc9()))
                     || (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N) &&
-                            !(Main.getProjection() instanceof UTM_France_DOM))
-                    || (ext.length() == 1) && !(Main.getProjection() instanceof Lambert)) {
+                            !(CadastrePlugin.isUtm_france_dom()))
+                    || (ext.length() == 1) && !(CadastrePlugin.isLambert())) {
                         JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
                 } else {
@@ -87,13 +84,13 @@ public class MenuActionLoadFromCache extends JosmAction {
     protected static JFileChooser createAndOpenFileChooser() {
         JFileChooser fc = new JFileChooser(new File(CadastrePlugin.cacheDir));
         fc.setMultiSelectionEnabled(true);
-        int layoutZone = new MenuActionLoadFromCache().getCurrentProjZone();
+        int layoutZone = CadastrePlugin.getCadastreProjectionLayoutZone();
         if (layoutZone != -1) {
-            if (Main.getProjection() instanceof Lambert)
+            if (CadastrePlugin.isLambert())
                 fc.addChoosableFileFilter(CacheFileLambert4ZoneFilter.filters[layoutZone]);
-            else if (Main.getProjection() instanceof LambertCC9Zones)
+            else if (CadastrePlugin.isLambert_cc9())
                 fc.addChoosableFileFilter(CacheFileLambert9ZoneFilter.filters[layoutZone]);
-            else if (Main.getProjection() instanceof UTM_France_DOM)
+            else if (CadastrePlugin.isUtm_france_dom())
                 fc.addChoosableFileFilter(CacheFileUTM20NFilter.filters[layoutZone]);
         }
         fc.setAcceptAllFileFilterUsed(false);
@@ -105,14 +102,4 @@ public class MenuActionLoadFromCache extends JosmAction {
         return fc;
     }
 
-    private int getCurrentProjZone() {
-        int zone = -1;
-        if (Main.getProjection() instanceof LambertCC9Zones)
-            zone = ((LambertCC9Zones)Main.getProjection()).getLayoutZone();
-        else if (Main.getProjection() instanceof Lambert)
-            zone = ((Lambert)Main.getProjection()).getLayoutZone();
-        else if (Main.getProjection() instanceof UTM_France_DOM)
-            zone = ((UTM_France_DOM)Main.getProjection()).getCurrentGeodesic();
-        return zone;
-    }
 }

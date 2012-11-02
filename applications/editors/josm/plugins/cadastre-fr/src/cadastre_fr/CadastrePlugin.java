@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -20,14 +23,16 @@ import javax.swing.KeyStroke;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
+import org.openstreetmap.josm.data.projection.AbstractProjection;
+import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.data.projection.*;
 
 /**
  *
@@ -369,10 +374,49 @@ public class CadastrePlugin extends Plugin {
         }
     }
 
+    public static boolean isLambert() {
+        String code = Main.getProjection().toCode();
+        return Arrays.asList(ProjectionPreference.lambert.allCodes()).contains(code);
+    }
+
+    public static boolean isUtm_france_dom() {
+        String code = Main.getProjection().toCode();
+        return Arrays.asList(ProjectionPreference.utm_france_dom.allCodes()).contains(code);
+    }
+
+    public static boolean isLambert_cc9() {
+        String code = Main.getProjection().toCode();
+        return Arrays.asList(ProjectionPreference.lambert_cc9.allCodes()).contains(code);
+    }
+
     public static boolean isCadastreProjection() {
-        return Main.getProjection().toString().equals(new Lambert().toString())
-            || Main.getProjection().toString().equals(new UTM_France_DOM().toString())
-            || Main.getProjection().toString().equals(new LambertCC9Zones().toString());
+        return isLambert() || isUtm_france_dom() || isLambert_cc9();
+    }
+
+    public static int getCadastreProjectionLayoutZone() {
+        int zone = -1;
+        Projection proj = Main.getProjection();
+        if (proj instanceof AbstractProjection) {
+            Integer code = ((AbstractProjection) proj).getEpsgCode();
+            if (code != null) {
+                if (code >= 3942 && code <= 3950) {                 // LambertCC9Zones
+                    zone = code - 3942;
+                } else if (code >= 27561 && 27564 <= code) {        // Lambert
+                    zone = code - 27561;
+                } else {                                            // UTM_France_DOM
+                    Map<Integer, Integer> utmfr = new HashMap<Integer, Integer>();
+                    utmfr.put(2969, 0);
+                    utmfr.put(2970, 1);
+                    utmfr.put(2973, 2);
+                    utmfr.put(2975, 3);
+                    utmfr.put(2972, 4);
+                    if (utmfr.containsKey(code)) {
+                        zone = utmfr.get(code);
+                    }
+                }
+            }
+        }
+        return zone;
     }
 
     public static void safeSleep(long milliseconds) {

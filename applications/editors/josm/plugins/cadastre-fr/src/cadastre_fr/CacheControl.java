@@ -20,8 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 
 public class CacheControl implements Runnable {
 
@@ -216,9 +214,9 @@ public class CacheControl implements Runnable {
 
     private String WMSFileExtension() {
         String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
-        if (Main.getProjection() instanceof LambertCC9Zones)
+        if (CadastrePlugin.isLambert_cc9())
             ext = cLambertCC9Z + ext;
-        else if (Main.getProjection() instanceof UTM_France_DOM)
+        else if (CadastrePlugin.isUtm_france_dom())
             ext = cUTM20N + ext;
         return ext;
     }

@@ -19,8 +19,6 @@ public class PanelMain extends JPanel {
 	public PanelSpec panelSpec = null;
 	public PanelLights panelLights = null;
 	public PanelMore panelMore = null;
-	public PanelNotice panelNotice = null;
-	public JScrollPane scrollNotice = null;
 	public PanelTop panelTop = null;
 	public PanelFog panelFog = null;
 	public PanelRadar panelRadar = null;
@@ -187,12 +185,6 @@ public class PanelMain extends JPanel {
 		panelMore.setBounds(new Rectangle(40, 165, 360, 160));
 		panelMore.setVisible(false);
 		add(panelMore);
-		panelNotice = new PanelNotice(dlg);
-		panelNotice.setPreferredSize(new Dimension(340, 300));
-		scrollNotice = new JScrollPane(panelNotice, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollNotice.setBounds(new Rectangle(40, 165, 360, 160));
-		scrollNotice.setVisible(false);
-		add(scrollNotice);
 		panelTop = new PanelTop(dlg);
 		panelTop.setBounds(new Rectangle(40, 165, 360, 160));
 		panelTop.setVisible(false);
@@ -291,7 +283,6 @@ public class PanelMain extends JPanel {
 		panelSpec.setVisible(false);
 		panelLights.setVisible(false);
 		panelMore.setVisible(false);
-		scrollNotice.setVisible(false);
 		panelTop.setVisible(false);
 		panelFog.setVisible(false);
 		panelRadar.setVisible(false);
@@ -317,8 +308,6 @@ public class PanelMain extends JPanel {
 				panelHaz.setVisible(true);
 				panelHaz.syncPanel();
 				break;
-			case NTC:
-				scrollNotice.setVisible(true);
 			case SPP:
 				specButton.setBorderPainted(true);
 				panelSpec.setVisible(true);

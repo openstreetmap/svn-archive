@@ -132,10 +132,8 @@ public abstract class AbstractModule implements Module, OdConstants {
 			if (handlerClass != null) {
 				try {
 					result.add(handlerClass.newInstance());
-				} catch (InstantiationException e) {
-					System.err.println(e.getMessage());
-				} catch (IllegalAccessException e) {
-					System.err.println(e.getMessage());
+				} catch (Throwable t) {
+					System.err.println(t.getClass().getName()+": "+t.getMessage());
 				}
 			}
 		}

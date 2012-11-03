@@ -35,10 +35,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.projection.Epsg4326;
-import org.openstreetmap.josm.data.projection.Lambert93;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
@@ -122,7 +120,7 @@ public class MifReader extends AbstractMapInfoReader {
 			int offset = datum == Custom ? 4 : 0;
 
 			if (proj == Longitude_Latitude) {
-				josmProj = new Epsg4326();
+				josmProj = Projections.getProjectionByCode("EPSG:4326"); // WGS 84
 				return;
 			}
 			
@@ -237,11 +235,11 @@ public class MifReader extends AbstractMapInfoReader {
 				if ((datum == Geodetic_Reference_System_1980_GRS_80 || datum == Custom) && equals(originLon, 3.0)) {
 					// This sounds good for Lambert 93 or Lambert CC 9
 					if (equals(originLat, 46.5) && equals(stdP1, 44.0) && equals(stdP2, 49.0) && equals(falseEasting, 700000.0) && equals(falseNorthing, 6600000.0)) {
-						josmProj = new Lambert93();
+						josmProj = Projections.getProjectionByCode("EPSG:2154"); // Lambert 93
 					} else if (equals(falseEasting, 1700000.0)) {
 						for (int i=0; josmProj == null && i<9; i++) {
 							if (equals(originLat, 42.0+i) && equals(stdP1, 41.25+i) && equals(stdP2, 42.75+i) && equals(falseNorthing, (i+1)*1000000.0 + 200000.0)) {
-								josmProj = new LambertCC9Zones(i);
+								josmProj = Projections.getProjectionByCode("EPSG:"+Integer.toString(3942 + i)); // LambertCC9Zones
 							}
 						}
 					}

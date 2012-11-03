@@ -21,10 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.data.projection.BelgianLambert1972;
-import org.openstreetmap.josm.data.projection.BelgianLambert2008;
-import org.openstreetmap.josm.data.projection.Epsg4326;
-import org.openstreetmap.josm.data.projection.Lambert93;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesProjectionPatterns;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
@@ -135,12 +132,12 @@ public interface OdConstants {
     public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<ProjectionPatterns>();
     
     public static final ProjectionPatterns PRJ_UNKNOWN = new ProjectionPatterns("");
-    public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux", new Epsg4326());
-    public static final ProjectionPatterns PRJ_LAMBERT_93 = new ProjectionPatterns("LAMB93|L93", new Lambert93());
+    public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux", Projections.getProjectionByCode("EPSG:4326"));
+    public static final ProjectionPatterns PRJ_LAMBERT_93 = new ProjectionPatterns("LAMB93|L93", Projections.getProjectionByCode("EPSG:2154"));
     public static final ProjectionPatterns PRJ_LAMBERT_CC_9_ZONES = new LambertCC9ZonesProjectionPatterns("LAMBZ|CC(42|43|44|45|46|47|48|49|50)");
 
-    public static final ProjectionPatterns PRJ_LAMBERT_1972 = new ProjectionPatterns("LAMB72|LAMB1972", new BelgianLambert1972());
-    public static final ProjectionPatterns PRJ_LAMBERT_2008 = new ProjectionPatterns("LAMB08|LAMB2008", new BelgianLambert2008());
+    public static final ProjectionPatterns PRJ_LAMBERT_1972 = new ProjectionPatterns("LAMB72|LAMB1972", Projections.getProjectionByCode("EPSG:31370"));
+    public static final ProjectionPatterns PRJ_LAMBERT_2008 = new ProjectionPatterns("LAMB08|LAMB2008", Projections.getProjectionByCode("EPSG:3812"));
 
     /**
      * Resources

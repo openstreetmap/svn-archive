@@ -4,7 +4,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.ProjectionInfo;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -12,7 +12,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class BuildingsToolsPlugin extends Plugin {
-    public static Projection proj = ProjectionInfo.getProjectionByCode("EPSG:3857"); // Mercator
+    public static Projection proj = Projections.getProjectionByCode("EPSG:3857"); // Mercator
 
     public static EastNorth latlon2eastNorth(LatLon p) {
         return proj.latlon2eastNorth(p);

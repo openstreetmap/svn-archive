@@ -31,7 +31,6 @@ import java.util.Map;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -44,13 +43,6 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 	private static final NumberFormat formatFrance = NumberFormat.getInstance(Locale.FRANCE);
 	private static final NumberFormat formatUK = NumberFormat.getInstance(Locale.UK);
 	
-	protected static final LambertCC9Zones[] projLambCC9Zones = new LambertCC9Zones[9];
-	static {
-		for (int i=0; i<projLambCC9Zones.length; i++) {
-			projLambCC9Zones[i] = new LambertCC9Zones(i);
-		}
-	}
-
 	protected final SpreadSheetHandler handler;
 
 	public SpreadSheetReader(SpreadSheetHandler handler) {

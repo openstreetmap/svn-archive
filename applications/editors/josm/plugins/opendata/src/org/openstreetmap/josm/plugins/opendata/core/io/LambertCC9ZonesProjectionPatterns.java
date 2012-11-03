@@ -4,15 +4,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.regex.Matcher;
 
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.Projections;
 
 public class LambertCC9ZonesProjectionPatterns extends ProjectionPatterns {
 	
-	public static final LambertCC9Zones[] lambertCC9Zones = new LambertCC9Zones[9];
+	public static final Projection[] lambertCC9Zones = new Projection[9];
 	static {
 		for (int i=0; i<lambertCC9Zones.length; i++) {
-			lambertCC9Zones[i] = new LambertCC9Zones(i);
+			lambertCC9Zones[i] = Projections.getProjectionByCode("EPSG:"+Integer.toString(3942+i));
 		}
 	}
 

@@ -26,10 +26,8 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.data.projection.UTM;
-import org.openstreetmap.josm.data.projection.UTM.Hemisphere;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 
@@ -40,15 +38,15 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 	private String nationalPortalPath;
 
 	protected static final Projection lambert93 = PRJ_LAMBERT_93.getProjection(); // France metropolitaine
-	protected static final UTM utm20 = new UTM(20, Hemisphere.North); // Guadeloupe, Martinique
-	protected static final UTM utm22 = new UTM(22, Hemisphere.North); // Guyane
-	protected static final UTM utm38 = new UTM(38, Hemisphere.South); // Mayotte
-	protected static final UTM utm40 = new UTM(40, Hemisphere.South); // Reunion
+	protected static final Projection utm20 = Projections.getProjectionByCode("EPSG:32620"); // UTM 20 N - Guadeloupe, Martinique
+	protected static final Projection utm22 = Projections.getProjectionByCode("EPSG:32622"); // UTM 22 N - Guyane
+	protected static final Projection utm38 = Projections.getProjectionByCode("EPSG:32738"); // UTM 38 S - Mayotte
+	protected static final Projection utm40 = Projections.getProjectionByCode("EPSG:32740"); // UTM 40 S - Reunion
 	
-	protected static final Lambert[] lambert4Zones = new Lambert[4];
+	protected static final Projection[] lambert4Zones = new Projection[4];
 	static {
 		for (int i=0; i<lambert4Zones.length; i++) {
-			lambert4Zones[i] = new Lambert(i);
+			lambert4Zones[i] = Projections.getProjectionByCode("EPSG:"+Integer.toString(27561+i));
 		}
 	}
 

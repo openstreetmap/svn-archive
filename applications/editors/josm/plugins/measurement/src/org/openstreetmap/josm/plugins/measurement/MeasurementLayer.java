@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -34,6 +33,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -138,10 +138,8 @@ public class MeasurementLayer extends Layer {
             }
             last = p;
         }
-        DecimalFormat nf = new DecimalFormat("#0.00");
-        DecimalFormat nf2 = new DecimalFormat("#0.0");
         if (MeasurementPlugin.measurementDialog != null) { 
-            MeasurementPlugin.measurementDialog.pathLengthLabel.setText(pathLength < 800?nf2.format(pathLength) + " m":nf.format(pathLength/1000) + " km");
+            MeasurementPlugin.measurementDialog.pathLengthLabel.setText(NavigatableComponent.getDistText(pathLength));
         }
     }
 

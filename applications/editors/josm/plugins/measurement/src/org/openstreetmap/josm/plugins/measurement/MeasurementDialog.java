@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.measurement;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -86,17 +86,17 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
 
         valuePanel.add(new JLabel(tr("Path Length")));
 
-        pathLengthLabel = new JLabel("0 m");
+        pathLengthLabel = new JLabel(NavigatableComponent.getDistText(0));
         valuePanel.add(pathLengthLabel);
 
         valuePanel.add(new JLabel(tr("Selection Length")));
 
-        selectLengthLabel = new JLabel("0 m");
+        selectLengthLabel = new JLabel(NavigatableComponent.getDistText(0));
         valuePanel.add(selectLengthLabel);
 
         valuePanel.add(new JLabel(tr("Selection Area")));
 
-        selectAreaLabel = new JLabel("0 m\u00b2");
+        selectAreaLabel = new JLabel(NavigatableComponent.getAreaText(0));
         valuePanel.add(selectAreaLabel);
 
         JLabel angle = new JLabel(tr("Angle"));
@@ -158,9 +158,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                     area = 0;
             }
         }
-        selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
+        selectLengthLabel.setText(NavigatableComponent.getDistText(length));
         segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");
-        selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
+        selectAreaLabel.setText(NavigatableComponent.getAreaText(area));
 	}
 
 	/* (non-Javadoc)

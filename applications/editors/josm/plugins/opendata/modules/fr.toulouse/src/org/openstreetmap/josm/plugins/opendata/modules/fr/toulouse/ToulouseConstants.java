@@ -24,17 +24,18 @@ public interface ToulouseConstants extends FrenchConstants {
      * Sources
      */
     public static final String SOURCE_GRAND_TOULOUSE = "GrandToulouse";
+    public static final String SOURCE_TOULOUSE_METROPOLE = "ToulouseMetropole";
     public static final String SOURCE_TISSEO = "Tisséo SMTC";
     
     /**
      * Wiki
      */
-    public static final String WIKI = "http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData";
+    public static final String WIKI = "http://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData";
 
     /**
      * Portal
      */
-    public static final String PORTAL = "http://data.grandtoulouse.fr";
+    public static final String PORTAL = "http://data.toulouse-metropole.fr";
 
     /**
      * Icons

@@ -104,7 +104,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
      */
     @Override
     public String getSource() {
-        return SOURCE_GRAND_TOULOUSE;
+        return SOURCE_TOULOUSE_METROPOLE;
     }
 
     /* (non-Javadoc)

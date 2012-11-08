@@ -21,7 +21,7 @@ endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße'
 endabbreviations1.update({'bach':'b.','berg':'bg.','burg':'bg.','dorf':'d.','feld':'fd.','heim':'hm.','hof':'h.','graben':'gr.','park':'pk.','ring':'rg.','stein':'st.','gässle':'g.','gässchen':'g.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
 begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Vor dem ':'V. d. ','Zum ':'Z. ','Zur ':'Z. '})
-begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.',})
+begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.','Am ':'','Zum ':'','Zur ':''})
 
 #swiss
 endabbreviations1.update({'Strasse':'Str.','strasse':'str.'})
@@ -57,9 +57,10 @@ endabbreviations1.update({'gaten':'g.','gate':'g.','veien':'v.','vei':'v.'})
 endabbreviations1.update({'vænget':'v.'})
 
 #finnish
-endabbreviations1.update({'katu':'k.','kuja':'kj.','polku':'p.','porras':'prs.','puisto':'ps.','raitti':'r.','rinne':'r.','tie':'t.'})
-begabbreviations1.update({'Pohjoinen ':'Pohj. ','Eteläinen ':'Et. '})
-begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. '})
+endabbreviations1.update({'aukio':'auk.','kaari':'kri','kaarenpolku':'k.p.','katu':'k.','kuja':'kj.','laituri':'lait.','niemi':'n.','polku':'p.','porras':'prs.','puisto':'ps.','ranta':'r.','raitti':'r.','rinne':'rn.','silta':'s.','tie':'t.','tori':'tr.','vierto':'v.'})
+endabbreviations2.update({'aukio':'a.','kaari':'k','katu':'k','laituri':'l.','rinne':'r.'})
+begabbreviations1.update({'Pohjoinen ':'Pohj. ','Eteläinen ':'Et. ','Itäinen ':'It. ','Läntinen ':'Länt. '})
+begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. ','Itäinen ':'I. ','Läntinen ':'L. '})
 
 #russian
 endabbreviations1.update({'аллея':'ал.','бульвар':'бул.','набережная':'наб.','переулок':'пер.','площадь':'пл.','проезд':'пр.','проспект':'просп.','шоссе':'ш.','тупик':'туп.','улица':'ул.'})

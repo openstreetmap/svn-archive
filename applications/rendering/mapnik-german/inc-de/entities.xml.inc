@@ -44,3 +44,5 @@
 <!ENTITY minscale_zoom17 "<MinScaleDenominator>2500</MinScaleDenominator>">
 <!ENTITY maxscale_zoom18 "<MaxScaleDenominator>2500</MaxScaleDenominator>">
 <!ENTITY minscale_zoom18 "">
+<!ENTITY % color-settings SYSTEM "color-settings.xml.inc">
+%color-settings;

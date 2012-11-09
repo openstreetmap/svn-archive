@@ -14,6 +14,7 @@ public class MirroredDownloadPlugin extends Plugin {
         MainMenu.add(Main.main.menu.editMenu, new UrlSelectionAction());
     }
     private static String downloadUrl = null;
+    private static boolean addMeta = true;
 
     public static String getDownloadUrl() {
         if (downloadUrl == null)
@@ -21,11 +22,23 @@ public class MirroredDownloadPlugin extends Plugin {
             downloadUrl = Main.pref.get("plugin.mirrored_download.preferred-url");
             if (downloadUrl == null)
                 downloadUrl = "http://overpass-api.de/api/xapi?";
+                
+            String metaFlag = Main.pref.get("plugin.mirrored_download.preferred-meta-flag");
+            addMeta = !("void".equals(metaFlag));
         }
         return downloadUrl;
+    }
+    
+    public static boolean getAddMeta() {
+        return addMeta;
     }
 
     public static void setDownloadUrl(String downloadUrl_) {
         downloadUrl = downloadUrl_;
     }
+
+    public static void setAddMeta(boolean addMeta_) {
+        addMeta = addMeta_;
+    }
+
 }

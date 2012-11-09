@@ -29,6 +29,7 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -74,6 +75,7 @@ public class UrlSelectionDialog
   private JDialog jDialog = null;
   private JTabbedPane tabbedPane = null;
   private JComboBox cbSelectUrl = null;
+  private JCheckBox cbAddMeta = null;
 
   public UrlSelectionDialog() {
     Frame frame = JOptionPane.getFrameForComponent(Main.parent);
@@ -104,9 +106,7 @@ public class UrlSelectionDialog
     cbSelectUrl = new JComboBox();
     cbSelectUrl.setEditable(true);
 
-    String preferredUrl = Main.pref.get("plugin.mirrored_download.preferred-url");
-    if (preferredUrl != null && !"".equals(preferredUrl))
-      cbSelectUrl.addItem(preferredUrl);
+    cbSelectUrl.addItem(MirroredDownloadPlugin.getDownloadUrl());
 
     for (String url: getURLs()) {
       cbSelectUrl.addItem(url);
@@ -117,12 +117,28 @@ public class UrlSelectionDialog
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 1;
-    layoutCons.gridwidth = 1;
+    layoutCons.gridwidth = 2;
     layoutCons.weightx = 0.0;
     layoutCons.weighty = 0.0;
     layoutCons.fill = GridBagConstraints.BOTH;
     gridbag.setConstraints(cbSelectUrl, layoutCons);
     contentPane.add(cbSelectUrl);
+
+    cbAddMeta = new JCheckBox(tr("Enforce meta data"));
+    cbAddMeta.setEnabled(true);
+    cbAddMeta.setSelected(MirroredDownloadPlugin.getAddMeta());
+
+    cbAddMeta.setActionCommand("selectMetaFlag");
+    cbAddMeta.addActionListener(new MetaFlagChangedAction());
+
+    layoutCons.gridx = 0;
+    layoutCons.gridy = 2;
+    layoutCons.gridwidth = 2;
+    layoutCons.weightx = 0.0;
+    layoutCons.weighty = 0.0;
+    layoutCons.fill = GridBagConstraints.BOTH;
+    gridbag.setConstraints(cbAddMeta, layoutCons);
+    contentPane.add(cbAddMeta);
 
     jDialog.pack();
     jDialog.setLocationRelativeTo(frame);
@@ -159,6 +175,16 @@ public class UrlSelectionDialog
       MirroredDownloadPlugin.setDownloadUrl(cbSelectUrl.getSelectedItem().toString());
       Main.pref.put("plugin.mirrored_download.preferred-url",
           cbSelectUrl.getSelectedItem().toString());
+    }
+
+  }
+
+  public class MetaFlagChangedAction implements ActionListener {
+
+    public void actionPerformed(ActionEvent e) {
+      MirroredDownloadPlugin.setAddMeta(cbAddMeta.isSelected());
+      Main.pref.put("plugin.mirrored_download.preferred-meta-flag",
+          cbAddMeta.isSelected() ? "meta" : "void");
     }
 
   }

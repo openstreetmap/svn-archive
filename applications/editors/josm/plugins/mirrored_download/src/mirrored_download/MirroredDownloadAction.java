@@ -161,7 +161,8 @@ public class MirroredDownloadAction extends JosmAction {
         protected String getRequestForBbox(double lon1, double lat1, double lon2, double lat2) {
             return overpassQuery.isEmpty() && "*".equals(overpassType)
                     ? super.getRequestForBbox(lon1, lat1, lon2, lat2)
-                    : overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "][@meta]" + overpassQuery;
+                    : overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]"
+                        + (MirroredDownloadPlugin.getAddMeta() ? "[@meta]" : "") + overpassQuery;
         }
 
         @Override

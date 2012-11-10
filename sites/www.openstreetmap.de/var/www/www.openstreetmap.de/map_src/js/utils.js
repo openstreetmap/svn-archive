@@ -111,7 +111,7 @@
 	   			var iframe = document.createElement("iframe");
 				$("#mapkey_area").append(iframe);
 		   		var form = document.createElement("form");
-		   		$(form).attr({"action":"http://www.openstreetmap.org/key","method":"POST"});
+		   		$(form).attr({"action":"http://www.openstreetmap.org/key","method":"GET"});
 		   		$(form).append($(document.createElement('input')).attr({"type":"hidden","name":"layer","value":"mapnik"}));
 		   		$(form).append($(document.createElement('input')).attr({"type":"hidden","name":"zoom","value":"18"}));
 				$(iframe).contents().find('body').append(form);

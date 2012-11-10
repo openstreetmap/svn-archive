@@ -5,7 +5,7 @@ html,body {
 	width: 100%;
 }
 
-/* 240-pixel layout for iPhone-sized screens */
+/* layout for iPhone-sized screens */
 @media (max-width: 520px) {
 	
 	/*Logo und Buttons ausblenden*/

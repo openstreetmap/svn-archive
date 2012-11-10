@@ -11,6 +11,11 @@
 	<meta name="author" content="" />
 	<meta name="revisit-After" content="7 days" />
 	<meta name="distribution" content="global" />
+	
+	<!-- make media queries for responsive work -->
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	
 	<link rel="icon" href="img/favicon.png" type="image/png">
 	<link rel="Shortcut Icon" href="img/favicon.png" type="image/png">
 	
@@ -88,7 +93,17 @@
     </div>
 	<script type="text/javascript">
 		  $('baseLbl').html('Grundkarte');
+		  // remove iPhone address bar on load
+		  // When ready...
+		  window.addEventListener("load",function() {
+		    // Set a timeout...
+		    setTimeout(function(){
+		      // Hide the address bar!
+		      window.scrollTo(0, 1);
+		    }, 0);
+		  });
  	</script>
     <script type="text/javascript" src="map_src/js/searchtypes.js"></script>
+
 </body>
 </html>

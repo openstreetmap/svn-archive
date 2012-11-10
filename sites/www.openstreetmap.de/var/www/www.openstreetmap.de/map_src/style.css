@@ -5,6 +5,112 @@ html,body {
 	width: 100%;
 }
 
+/* 240-pixel layout for iPhone-sized screens */
+@media (max-width: 520px) {
+	
+	/*Logo und Buttons ausblenden*/
+	#osm_logo {
+		display: none;
+	}
+	
+	#errorMap, #Route, #editMap {
+		display: none;
+	}
+	
+	/*Suche verschieben*/
+	#search {
+		left: 5px !important;
+		top: 45px !important;
+	}
+	
+	#tfSearch {
+		width: 210px !important;
+		padding: 0px 10px;
+	}
+	
+	/*Navigation formatieren*/
+	div.mnav {
+		text-align: center !important;
+	}
+	
+	ul, ol {
+		margin-left: 0px !important;
+	}
+	
+	#karte_nav {
+		left: 5px;
+		right: 10px !important;
+		font-size: 12px !important;
+	}
+	
+	div.mnav ul li {
+		padding: 0 15px 0 0 !important;
+	}
+	
+	/*Kartenbox größer machen/anpassen*/
+	#wrapper {
+		top: 80px !important;
+		left: 5px !important;
+		right: 5px !important;
+		height: 87%;
+	}
+	
+	body {
+		height: 130%;
+	}
+	
+	/*iLike und Zoom-Controls ausblenden*/
+	div.olILikeOSM {
+		display: none;
+	}
+	
+	#panzoombar {
+				display: none;
+	}
+	
+	/*LayerSwitcher anpassen*/
+	div.olControlLayerSwitcher {
+		top: 10px !important;
+	}
+	
+	input[type="checkbox"], input[type="radio"] {
+		height: 20px !important;
+		width: 20px !important;
+	}
+	
+	div.olControlLayerSwitcher label {
+		top: -20px !important;
+		left: 30px !important;
+		line-height: 15px !important;
+	}
+	
+	/*Slider für Suchergebnisse schmaler machen*/
+	#slider {
+		width: 300px !important;
+	}
+	
+	/*Footer*/
+	#legend {
+		display: none;
+	}
+	
+	#copyright {
+		right: 5px !important;
+		text-align: right;
+		top: 110%;
+	}
+	
+	#copyright:before {
+	  display: block;
+	  text-align: center;
+	  font-family: "Helvetica Neue";
+	  content: 'Mehr:';
+	  font-weight: bold;
+	  font-size: 14px;
+  	}
+	
+}
+
 div.olControlLayerSwitcher {
 	width: 240px;	
 	font-size: 13px;

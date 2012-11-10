@@ -272,3 +272,85 @@ ul.carousel_tabs li a:focus {
 #table_123 p {
 	margin-top: 10px;
 }
+
+/* responsive container */
+.respcontainer {
+	width: 95% !important;
+	max-width: 940px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+/* layout for iPhone-sized screens */
+@media (max-width: 520px) {
+	/* Navigation formatieren */
+	div.mnav {
+		text-align: center !important;
+	}
+	
+	ul, ol {
+		margin-left: 0px !important;
+	}
+	
+	.responsive_nav {
+		left: 5px;
+		right: 10px !important;
+		font-size: 12px !important;
+	}
+	
+	div.mnav ul li {
+		padding: 0 15px 0 0 !important;
+	}
+	
+	div.mtop {
+		margin-top: 5px;
+	}
+	
+	/* Logo und Headline */
+	
+	#osm_logo {
+		width: 50px;
+		padding-top: 35px;
+	}
+	
+	h1.osm_heading {
+		font-size: 20px;
+		margin-bottom: 5px;
+		margin-top: -12px;
+		margin-left: 55px;
+		line-height: 24px;
+	}
+	
+	/* Text Formatierung */
+	#faq p, #community p, #gps p, #license p, #server p, #fan p, #contact p {
+		padding-left: 0px;
+	}
+	
+	h2 {
+		line-height: 24px;
+		padding-bottom: 10px;
+	}
+	
+	/* Anpassungen für einzelne Seiten */
+	#contact .offset1 {
+		margin-left: 10px;
+	}
+	
+	#fan .span9 {
+		width: auto;
+	}
+	
+	#table_123 img {
+		width: 30px;
+		height: 30px;
+	}
+	
+	#table_123 img.screenshots {
+		width: 250px;
+		height: auto;
+	}
+	
+	#table_123 td {
+		padding: 10px 2px 9px;
+	}
+}

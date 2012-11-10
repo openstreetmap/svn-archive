@@ -3,7 +3,7 @@
 <!ENTITY % entities SYSTEM "inc-de/entities.xml.inc">
 %entities;
 ]>
-<Map background-color="#f0f0ea" srs="&srs900913;" minimum-version="2.1.0">
+<Map background-color="#97d0d0" srs="&srs900913;" minimum-version="2.1.0">
   &fontset-settings;
 <Style name="turning_circle-casing">
     <Rule>

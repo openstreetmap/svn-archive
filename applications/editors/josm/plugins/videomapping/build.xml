@@ -41,9 +41,9 @@
     -->
     <import file="../build-common.xml"/>
 
-    <property name="vlcj" value="${plugin.lib.dir}/vlcj-1.1.5.1.jar"/>
-    <property name="jna" value="${plugin.lib.dir}/jna.jar"/>
-    <property name="platform" value="${plugin.lib.dir}/platform.jar"/>
+    <property name="vlcj" value="${plugin.lib.dir}/vlcj-2.1.0.jar"/>
+    <property name="jna" value="${plugin.lib.dir}/jna-3.4.0.jar"/>
+    <property name="platform" value="${plugin.lib.dir}/platform-3.4.0.jar"/>
     <property name="log4j" value="${plugin.lib.dir}/log4j.jar"/>
     <!-- classpath -->
     <path id="classpath">

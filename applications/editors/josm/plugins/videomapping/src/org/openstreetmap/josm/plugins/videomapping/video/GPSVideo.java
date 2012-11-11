@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
-import java.awt.Canvas;
 import java.io.File;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +8,8 @@ import javax.swing.JComponent;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
+
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 // a specific synced video
 public class GPSVideo extends Video{
@@ -23,14 +23,14 @@ public class GPSVideo extends Video{
 	public WayPoint lastWayPoint;
 	private VideoPositionLayer videoPositionLayer;
 	
-	public GPSVideo(File filename, String id) {
-		super(filename,id);
+	public GPSVideo(File filename, String id, MediaPlayerFactory mediaPlayerFactory) {
+		super(filename,id,mediaPlayerFactory);
 	}
 	
 	public GPSVideo(Video video)
 	{
-		super(video.filename,video.id);
-		this.player=video.player;
+		super(video.filename, video.id, video.mediaPlayerFactory);
+		this.player = video.player;
 	}
 	
 	//calculates attributes basing upon the current position

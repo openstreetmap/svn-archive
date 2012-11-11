@@ -1,25 +1,25 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.swing.*;
-
-import static org.openstreetmap.josm.tools.I18n.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -34,9 +34,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.videomapping.video.GPSVideo;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
-import org.openstreetmap.josm.plugins.videomapping.video.Video;
 
 //Basic rendering and GPS layer interaction
 public class VideoPositionLayer extends Layer implements MouseListener,MouseMotionListener {
@@ -106,7 +104,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
         layerIcon.paintIcon(null, g, p.x-layerIcon.getIconWidth()/2, p.y-layerIcon.getIconHeight()/2);
         g.drawString(gpsTimeFormat.format(iconPosition.getTime()),p.x-15,p.y-15);
 	}
-	
+/*	
 	private void paintInterpolatedSegment(Graphics2D g) {
 		g.setColor(Color.CYAN);
 		List<WayPoint>ls=getInterpolatedSegment(iconPosition,5,5);
@@ -141,7 +139,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 		ls.add(interpolate(new Date(test.getTime()+500)));
 		return ls;
 	}
-	
+*/	
 	//creates a waypoint for the corresponding time
 	public WayPoint interpolate(Date GPSTime)
 	{

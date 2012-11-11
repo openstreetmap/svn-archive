@@ -1,44 +1,67 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Window;
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.jna.NativeLibrary;
-
-import uk.co.caprica.vlcj.binding.internal.libvlc_media_player_t;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.player.DeinterlaceMode;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
-import uk.co.caprica.vlcj.player.VideoMetaData;
 import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
-import uk.co.caprica.vlcj.runtime.windows.WindowsCanvas;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.runtime.windows.WindowsRuntimeUtil;
 
-import static org.openstreetmap.josm.tools.I18n.*;
+import com.sun.jna.NativeLibrary;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 
 //concrete Player library that is able to playback multiple videos
-public class VideoEngine implements MediaPlayerEventListener{
+public class VideoEngine implements MediaPlayerEventListener {
 	private FullScreenStrategy fullScreenStrategy;
-	private MediaPlayerFactory mediaPlayerFactory;
+	public MediaPlayerFactory mediaPlayerFactory;
 	private List<Video> videos;
 	private List<VideosObserver> observers;
 	private final String[] libvlcArgs = {""};
     private final String[] standardMediaOptions = {""};
     private final static String[] deinterlacers = {"bob","linear"};
-    private final float initialCanvasFactor = 0.5f;
+    //private final float initialCanvasFactor = 0.5f;
 	private boolean singleVideoMode; //commands will only affect the last added video
 	private Video lastAddedVideo;
 	
 	//called at plugin start to setup library
-	public static void setupPlayer()
-	{
-		NativeLibrary.addSearchPath("libvlc", WindowsRuntimeUtil.getVlcInstallDir());
+	public static void setupPlayer() {
+	    String vlcInstallDir = null;
+	    
+	    if (RuntimeUtil.isWindows()) {
+	        vlcInstallDir = WindowsRuntimeUtil.getVlcInstallDir();
+	        String arch = System.getProperty("os.arch");
+	        if (vlcInstallDir == null && arch.equals("amd64")) {
+	            try {
+	                vlcInstallDir = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, 
+	                        WindowsRuntimeUtil.VLC_REGISTRY_KEY.replaceFirst("\\\\", "\\\\Wow6432Node\\\\"), 
+	                        WindowsRuntimeUtil.VLC_INSTALL_DIR_KEY);
+	            } catch (RuntimeException e) {
+	                System.err.println(e.getMessage());
+	            }
+	        }
+	    } else if (RuntimeUtil.isMac()) {
+	        // TODO
+	    } else if (RuntimeUtil.isNix()) {
+            // TODO
+	    }
+	    
+        if (vlcInstallDir != null) {
+            System.out.println("videomapping: found VLC install dir: "+vlcInstallDir);
+            NativeLibrary.addSearchPath("libvlc", vlcInstallDir);
+        } else {
+            System.err.println("videomapping: unable to locate VLC install dir");
+        }
 	}
 	
 	public VideoEngine(Window parent)
@@ -46,32 +69,28 @@ public class VideoEngine implements MediaPlayerEventListener{
 		System.setProperty("logj4.configuration","file:log4j.xml"); //TODO still unsure if we can't link this to the JOSM log4j instance
 		videos = new LinkedList<Video>();
 		observers = new LinkedList<VideosObserver>();
-		try
-		{
+		try {
 			mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
 	        fullScreenStrategy = new DefaultFullScreenStrategy(parent);
-		}
-		catch (NoClassDefFoundError e)
-        {
+		} catch (NoClassDefFoundError e) {
             System.err.println(tr("Unable to find JNA Java library!"));
-        }
-        catch (UnsatisfiedLinkError e)
-        {
+        } catch (UnsatisfiedLinkError e) {
             System.err.println(tr("Unable to find native libvlc library!"));
-        }        
+        } catch (Throwable t) {
+            System.err.println(t.getMessage());
+        }
 	}
 	
 	public void add(Video video)
 	{
 		try
 		{
-			EmbeddedMediaPlayer mp;
-			mp = mediaPlayerFactory.newMediaPlayer(fullScreenStrategy);
+			EmbeddedMediaPlayer mp = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
 			video.player=mp;
 			mp.setStandardMediaOptions(standardMediaOptions);
 			videos.add(video);
 			lastAddedVideo=video;
-			mp.setVideoSurface(video.canvas);
+			mp.setVideoSurface(video.videoSurface);
 	        mp.addMediaPlayerEventListener(this);
 	        String mediaPath = video.filename.getAbsoluteFile().toString();
 	        mp.playMedia(mediaPath); 
@@ -86,7 +105,7 @@ public class VideoEngine implements MediaPlayerEventListener{
             System.err.println(tr("Unable to find native libvlc library!"));
         }
 	}
-	
+	/*
 	private Video getVideo(MediaPlayer mp)
 	{
 		for (Video video : videos) {
@@ -94,7 +113,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		}
 		return null;
 	}
-
+*/
 	public List<Video> getVideos() {		
 		return videos;
 	}
@@ -245,7 +264,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 	}
 		
 	
-	public void setDeinterlacer (String deinterlacer)
+	public void setDeinterlacer (DeinterlaceMode deinterlacer)
 	{
 		if (singleVideoMode)
 		{
@@ -281,6 +300,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 			video.player.stop();
 			video.player.release();
 			video.player=null;
+			video.videoSurface=null;
 			video.canvas=null;
 		}
 		mediaPlayerFactory.release();        
@@ -301,11 +321,11 @@ public class VideoEngine implements MediaPlayerEventListener{
 	public void backward(MediaPlayer arg0) {
 		
 	}
-
+/*
 	public void buffering(MediaPlayer arg0) {
 		
 	}
-
+*/
 	public void error(MediaPlayer arg0) {
 		
 	}
@@ -321,7 +341,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 	public void lengthChanged(MediaPlayer arg0, long arg1) {
 		
 	}
-
+/*
 	public void mediaChanged(MediaPlayer arg0) {
 		
 	}
@@ -331,7 +351,7 @@ public class VideoEngine implements MediaPlayerEventListener{
 		getVideo(mp).canvas.setSize(new Dimension((int)(org.width*initialCanvasFactor), (int)(org.height*initialCanvasFactor)));
 		notifyObservers(VideoObserversEvents.resizing);		
 	}
-
+*/
 	public void opening(MediaPlayer arg0) {
 		
 	}
@@ -384,5 +404,83 @@ public class VideoEngine implements MediaPlayerEventListener{
 		singleVideoMode = true;
 		
 	}
+
+    @Override
+    public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void buffering(MediaPlayer mediaPlayer, float newCache) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaMetaChanged(MediaPlayer mediaPlayer, int metaType) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaSubItemAdded(MediaPlayer mediaPlayer, libvlc_media_t subItem) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaDurationChanged(MediaPlayer mediaPlayer, long newDuration) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaParsedChanged(MediaPlayer mediaPlayer, int newStatus) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaFreed(MediaPlayer mediaPlayer) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mediaStateChanged(MediaPlayer mediaPlayer, int newState) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void newMedia(MediaPlayer mediaPlayer) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void subItemPlayed(MediaPlayer mediaPlayer, int subItemIndex) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void subItemFinished(MediaPlayer mediaPlayer, int subItemIndex) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void endOfSubItems(MediaPlayer mediaPlayer) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

@@ -1,32 +1,20 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
-import java.awt.BorderLayout;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.plugins.videomapping.VideoObserver;
 import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
-
-import static org.openstreetmap.josm.tools.I18n.*;
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 
 //extends video playback, major control has the video player
 public class GPSVideoPlayer extends VideoPlayer

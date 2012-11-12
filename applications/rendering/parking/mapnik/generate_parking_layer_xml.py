@@ -6,6 +6,7 @@ from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
 # a good dom example site is here: http://www.java2s.com/Tutorial/Python/0400__XML/ProcessingXML.htm
+from generate_utils import *
 
 #import colorsys
 
@@ -40,10 +41,6 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     output.encoding= 'utf-8' 
     serialiser= document.implementation.createLSSerializer() 
     serialiser.write(document, output)
-
-def strip_doctype(f):
-    p = subprocess.Popen(['sed','-i','2,10 d',f]) # -i means 'in place'
-    p.wait()
 
 def create_parking_icons(source_symbols_dir,dest_symbols_dir):
     create_parking_lane_icons(source_symbols_dir,dest_symbols_dir)
@@ -104,32 +101,6 @@ def create_parking_point_icons(source_symbols_dir,dest_symbols_dir):
         print (['convert','-size','16x16',tempf,stampf,'-compose','Darken','-composite',df])
         p.wait()
 
-def copy_files(src,dest,files):
-    for f in files:
-        if type(f) is tuple:
-            shutil.copy2(os.path.join(src,f[0]),os.path.join(dest,f[1]))
-        else:
-            shutil.copy2(os.path.join(src,f),os.path.join(dest,f))
-
-def colorize_icon(sf,df,color):
-    p = subprocess.Popen(['convert',sf,'-fill','#'+color,'-colorize','100',df])
-    p.wait()
-
-def hflip_icon(sf,df):
-    p = subprocess.Popen(['convert',sf,'-flip',df])
-    p.wait()
-
-def stamp_icon(sf,df,stampf):
-    p = subprocess.Popen(['convert',sf,stampf,'-compose','Darken','-composite',df])
-    p.wait()
-
-def add_license_files(dirname):
-    f = open(os.path.join(dirname,"CONTACT"), 'w')
-    f.write("This style is created by kayd@toolserver.org")
-    f.close
-    f = open(os.path.join(dirname,"LICENSE"), 'w')
-    f.write("This derived work is published by the author, Kay Drangmeister, under the same license as the original OSM mapnik style sheet (found here: http://svn.openstreetmap.org/applications/rendering/mapnik)")
-    f.close
 
 def main_parktrans(options):
     style_name = options['stylename']
@@ -150,7 +121,7 @@ def main_parktrans(options):
 
     create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
     transmogrify_file(os.path.join(source_dir,source_file),style_file,"")
-    strip_doctype(style_file)
+    strip_doctype_n(style_file,10)
     add_license_files(dest_dir_style)
 
 def main_parking(options):
@@ -171,7 +142,7 @@ def main_parking(options):
 
     create_parking_icons(source_symbols_dir_style,dest_dir_style_symbols)
     merge_bw_noicons_and_parktrans_style(os.path.join(source_bwn_dir,source_bwn_file),os.path.join(source_p_dir,source_p_file),style_file)
-    #strip_doctype(style_file)
+    #strip_doctype(style_file) strip_doctype_n(style_file,10)
     add_license_files(dest_dir_style)
 
 def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_file,dest_parking_style_file):
@@ -183,62 +154,62 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     dest_parking_style_document = parser.parseURI(bwnoicons_style_file)
     parktrans_style_document = parser.parseURI(parktrans_style_file)
 
-    parking_area_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area'))
-    parking_area_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area'))
+    parking_area_style = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parking-area'))
+    parking_area_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parking-area'))
     things=[parking_area_style,parking_area_layer]
     #better put parking area layer earlier, before all roads 
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,things,'turning_circle-casing')
     # duplicate the parking-area layer in order to make it less transparent
-    clone_of_parking_area_layer = parking_dom_clone_layer(dest_parking_style_document,'parking-area')
+    clone_of_parking_area_layer = mapnikdoc_clone_layer(dest_parking_style_document,'parking-area')
     clone_of_parking_area_layer.setAttribute('name','parking-area-double')
-    parking_dom_insert_things_before_layer(dest_parking_style_document,clone_of_parking_area_layer,'turning_circle-casing')
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,clone_of_parking_area_layer,'turning_circle-casing')
 
     #add a second parking area layer on top of the parking-aisle roads.
-    parking_area_top_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-top'))
+    parking_area_top_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parking-area-top'))
     things=[parking_area_top_layer]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,things,'direction_pre_bridges')
 
     # handle the parking lanes
-    pllno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-no'))
-    plrno = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-no'))
-    pllin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-parallel'))
-    plrin = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-parallel'))
-    plldi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-diagonal'))
-    plrdi = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-diagonal'))
-    pllor = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-perpendicular'))
-    plror = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-perpendicular'))
-    pllma = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-left-marked'))
-    plrma = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-right-marked'))
-    pll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-left'))
-    plr = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-right'))
+    pllno = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-left-no'))
+    plrno = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-right-no'))
+    pllin = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-left-parallel'))
+    plrin = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-right-parallel'))
+    plldi = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-left-diagonal'))
+    plrdi = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-right-diagonal'))
+    pllor = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-left-perpendicular'))
+    plror = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-right-perpendicular'))
+    pllma = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-left-marked'))
+    plrma = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-right-marked'))
+    pll = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parkinglane-left'))
+    plr = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parkinglane-right'))
     things=[pllno,plrno,pllin,plrin,plldi,plrdi,pllor,plror,pllma,plrma,pll,plr]
     if True: # add maxstay styles and layers
-        plmls = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-maxstay-left'))
-        plmll = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-maxstay-left'))
-        plmrs = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parkinglane-maxstay-right'))
-        plmrl = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parkinglane-maxstay-right'))
+        plmls = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-maxstay-left'))
+        plmll = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parkinglane-maxstay-left'))
+        plmrs = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parkinglane-maxstay-right'))
+        plmrl = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parkinglane-maxstay-right'))
         things+=[plmls,plmll,plmrs,plmrl]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
     # handle the parking points / nodes
-    parking_points_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-points'))
-    parking_points_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-points'))
-    parking_area_text_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'parking-area-text'))
-    parking_area_text_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'parking-area-text'))
+    parking_points_style = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parking-points'))
+    parking_points_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parking-points'))
+    parking_area_text_style = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'parking-area-text'))
+    parking_area_text_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'parking-area-text'))
     things=[parking_points_style,parking_points_layer,parking_area_text_style,parking_area_text_layer]
-    parking_dom_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,things,'admin-01234')
 
     '''
     # replace the "roads-text-name" style with the one using abbreviations
-    parking_dom_cut_style(dest_parking_style_document,'roads-text-name')
-    parking_roadnames_style = dest_parking_style_document.adoptNode(parking_dom_cut_style(parktrans_style_document,'roads-text-name'))
+    mapnikdoc_cut_style(dest_parking_style_document,'roads-text-name')
+    parking_roadnames_style = dest_parking_style_document.adoptNode(mapnikdoc_cut_style(parktrans_style_document,'roads-text-name'))
     #parking_dom_insert_things_before_style(dest_parking_style_document,[parking_roadnames_style],'cliffs')
     # replace the "roads-text-name" layer with the one using the planet_line_join table
-    parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')
-    parking_roadnames_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'roads-text-name'))
-    parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_style,parking_roadnames_layer],'text')
+    mapnikdoc_cut_layer(dest_parking_style_document,'roads-text-name')
+    parking_roadnames_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'roads-text-name'))
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_style,parking_roadnames_layer],'text')
     '''
-    # replace the TextSymbolizer elements within the roads-text-style with placement-type list and placements od abbreviations
+    # replace the TextSymbolizer elements within the roads-text-style with placement-type list and placements of abbreviations
     rtn_style=None
     els = dest_parking_style_document.getElementsByTagName("Style")
     for el in els:
@@ -262,9 +233,9 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
                 TextSymbolizer.appendChild(plc3)
 
     # replace the "roads-text-name" layer with the one using the planet_line_join table
-    parking_dom_cut_layer(dest_parking_style_document,'roads-text-name')
-    parking_roadnames_layer = dest_parking_style_document.adoptNode(parking_dom_cut_layer(parktrans_style_document,'roads-text-name'))
-    parking_dom_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_layer],'text')
+    mapnikdoc_cut_layer(dest_parking_style_document,'roads-text-name')
+    parking_roadnames_layer = dest_parking_style_document.adoptNode(mapnikdoc_cut_layer(parktrans_style_document,'roads-text-name'))
+    mapnikdoc_insert_things_before_layer(dest_parking_style_document,[parking_roadnames_layer],'text')
 
     output= dest_parking_style_document.implementation.createLSOutput() 
     output.systemId= dest_parking_style_file
@@ -279,53 +250,6 @@ def merge_bw_noicons_and_parktrans_style(bwnoicons_style_file,parktrans_style_fi
     serialiser= parktrans_style_document.implementation.createLSSerializer() 
     serialiser.write(parktrans_style_document, output)
     '''
-
-def parking_dom_insert_things_before_layer(document,things,here):
-    # insert things after the "leisure" layer
-    els = document.getElementsByTagName("Layer")
-    #print "els="
-    #print els
-    for el in els:
-        #print "layername={ln}".format(ln=el.getAttribute("name"))
-        if el.getAttribute("name")==here:
-            #print "found it"
-            if type(things) is list:
-                for s in things:
-                    el.parentNode.insertBefore(s,el)
-            else:
-                el.parentNode.insertBefore(things,el)
-            return
-    raise 'Layer name not found'
-
-def parking_dom_clone_layer(document,what):
-    els = document.getElementsByTagName("Layer")
-    for el in els:
-        #print "layername={ln}".format(ln=el.getAttribute("name"))
-        if el.getAttribute("name")==what:
-            #print "found it"
-            clone = el.cloneNode(True)
-            return clone
-    raise BaseException('Layer name {ln} not found'.format(ln=what))
-
-def parking_dom_cut_layer(document,what):
-    els = document.getElementsByTagName("Layer")
-    for el in els:
-        #print "layername={ln}".format(ln=el.getAttribute("name"))
-        if el.getAttribute("name")==what:
-            #print "found it"
-            el.parentNode.removeChild(el)
-            return el
-    raise BaseException('Layer name {ln} not found'.format(ln=what))
-
-def parking_dom_cut_style(document,what):
-    els = document.getElementsByTagName("Style")
-    for el in els:
-        #print "layername={ln}".format(ln=el.getAttribute("name"))
-        if el.getAttribute("name")==what:
-            #print "found it"
-            el.parentNode.removeChild(el)
-            return el
-    raise BaseException('Style name {sn} not found'.format(sn=what))
 
 """
 ./generate_xml.py osm-parking-src.xml    osm-parking.xml    --accept-none --host sql-mapnik --dbname osm_mapnik --prefix planet --inc ./parking-inc --symbols ./parking-symbols/ --world_boundaries /home/project/o/s/m/osm/data/world_boundaries/ --password ''

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+%entities;
+]>
+<Map background-color="#b5d0d0" srs="&srs900913;" minimum-version="2.0.0">
+
+<Layer name="roads-text-name" status="on" srs="&osm2pgsql_projection;">
+     <StyleName>roads-text-name</StyleName>
+     <Datasource>
+      <Parameter name="table">
+      (select way,highway,name,COALESCE(abbr1,name) as abbr1,COALESCE(abbr2,abbr1,name) as abbr2,COALESCE(abbr3,abbr2,abbr1,name) as abbr3
+       from &prefix;_line_join
+       where name is not null
+      ) as roads
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
+</Map>

@@ -5,7 +5,7 @@ import sys,os,shutil
 from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 #import colorsys
-import mapnik_to_bw,generate_parking_layer_xml,generate_wifi_layer_xml,generate_approach_layer_xml
+import mapnik_to_bw,generate_parking_layer_xml,generate_wifi_layer_xml,generate_approach_layer_xml,generate_osmorg_layer_xml
 
 def add_license_files(dirname):
     f = open(os.path.join(dirname,"CONTACT"), 'w')
@@ -47,6 +47,7 @@ def main(options):
     original_parking_dir = options['parkingdir']
     original_wifi_dir = options['wifidir']
     original_approach_dir = options['approachdir']
+    original_osmorg_dir = options['osmorgdir']
     settings_dir = options['settingsdir']
     temp_dir = options['tempdir']
     deploy_dir = options['deploydir']
@@ -117,20 +118,28 @@ def main(options):
 
     generate_approach_layer_xml.main_approach({'sourcedir':approach_dir, 'sourcefile':'osm-approach-src.xml', 'destdir':deploy_dir, 'stylename':'approach'})
 
-    # (6) create the mapnik_joinroads styles
-    mapnik_joinroads_dir = os.path.join(temp_dir,"mapnik-joinroads")
-    mapnik_joinroads_inc_dir = os.path.join(mapnik_joinroads_dir,"inc")
-    os.makedirs(mapnik_joinroads_dir)
-    shutil.copy2(os.path.join(".","osm-mapnik-joinroads.xml"),os.path.join(mapnik_joinroads_dir,"osm-mapnik-joinroads.xml"))
-    # prepare the mapnik_joinroads/inc dir: copy mapnik/inc, then patch with files from mapnik_joinroads-inc-src
-    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),mapnik_joinroads_inc_dir)
-    original_mapnik_joinroads_inc_dir = os.path.join(".","mapnik-joinroads-inc-src")    # copy the mapnik_joinroads-specific inc files
-    copy_files(original_mapnik_joinroads_inc_dir,mapnik_joinroads_inc_dir,[])
+    # (6) create the osmorg style - a copy of the original osm.org mapnik style, but with joined roads and abbreviations
+    tmp_osmorg_dir = os.path.join(temp_dir,"osmorg")
+    tmp_osmorg_inc_dir = os.path.join(tmp_osmorg_dir,"inc")
+    tmp_osmorg_symbols_dir = os.path.join(tmp_osmorg_dir,"symbols")
+    os.makedirs(tmp_osmorg_dir)
+    # prepare the osmorg/inc dir: copy mapnik/inc
+    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),tmp_osmorg_inc_dir)
     # prepare the mapnik_joinroads/symbols dir -  just copy mapnik
-    # os.makedirs(os.path.join(os.path.join(deploy_dir,"mapnik"),"symbols"))
-    shutil.copytree(mapnik_joinroads_dir,os.path.join(deploy_dir,"mapnik-joinroads"))
-    shutil.copytree(os.path.join(patched_mapnik_dir,"symbols"),os.path.join(os.path.join(deploy_dir,"mapnik-joinroads"),"symbols"))
+    shutil.copytree(os.path.join(patched_mapnik_dir,"symbols"),tmp_osmorg_symbols_dir)
+    
+    shutil.copytree(os.path.join(patched_mapnik_dir,"inc"),os.path.join(os.path.join(deploy_dir,"osmorg"),"inc"))
+    shutil.copytree(os.path.join(patched_mapnik_dir,"symbols"),os.path.join(os.path.join(deploy_dir,"osmorg"),"symbols"))
+    
+    shutil.copy2(os.path.join(patched_mapnik_dir,"osm.xml"),os.path.join(tmp_osmorg_dir,"osm.xml"))
+    shutil.copy2(os.path.join(original_osmorg_dir,"osm-osmorg-src.xml"),os.path.join(tmp_osmorg_dir,"osm-osmorg-src.xml"))
+#############    shutil.copy2(os.path.join(original_osmorg_dir,"osm-osmorg-src.xml"),os.path.join(tmp_osmorg_dir,"osm-osmorg-src-kay.xml"))
+
+    #deploy_osmorg_dir = os.path.join(deploy_dir,"mapnik-joinroads")
+    #shutil.copytree(tmp_osmorg_dir,deploy_osmorg_dir)
+    #shutil.copytree(os.path.join(patched_mapnik_dir,"symbols"),os.path.join(deploy_osmorg_dir,"symbols"))
     #generate_wifi_layer_xml.main_wifi({'sourcebwndir':os.path.join(deploy_dir,'bw-noicons'), 'sourcebwnfile':'osm-bw-noicons.xml', 'sourcepdir':wifi_dir, 'sourcepfile':'osm-wifi-src.xml', 'destdir':deploy_dir, 'stylename':'wifi'})
+    generate_osmorg_layer_xml.main_osmorg({'sourcedir':tmp_osmorg_dir, 'sourcemapnikfile':'osm.xml', 'sourceosmorgfile':'osm-osmorg-src.xml', 'destdir':deploy_dir, 'stylename':'osmorg'})
 
 
 if __name__ == '__main__':
@@ -139,6 +148,7 @@ if __name__ == '__main__':
     parser.add_option("-p", "--parkingdir", dest="parkingdir", help="path to the parking source directory", default=".")
     parser.add_option("-w", "--wifidir", dest="wifidir", help="path to the wifi source directory", default=".")
     parser.add_option("-a", "--approachdir", dest="approachdir", help="path to the approach source directory", default=".")
+    parser.add_option("-o", "--osmorgdir", dest="osmorgdir", help="path to the osmorg source directory", default=".")
     parser.add_option("-s", "--settingsdir", dest="settingsdir", help="path to the mapnik settings directory", default="./mapnik-patch")
     parser.add_option("-t", "--tempdir", dest="tempdir", help="path to the temporary directory", default="/tmp/kays-styles-mapnik")
     parser.add_option("-d", "--deploydir", dest="deploydir", help="path to the deploy directory, further dirs are created within. default is '/tmp'", default="/tmp")

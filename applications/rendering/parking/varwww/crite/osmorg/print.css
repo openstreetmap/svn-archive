@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+.olControlAttribution {
+    font-size: smaller;
+    right: 3px;
+    bottom: 0.5em;
+    position: absolute;
+    display: block;
+    color: black;
+    text-decoration: none;    
+}
+.olControlAttribution:after {
+    font-size: smallest;
+    content: " - http://creativecommons.org/licenses/by-sa/2.0/";
+}
+
+.noprint { display: none; margin: 0; padding: 0; line-height: 0; }
+
+div.olControlMousePosition, 
+.olControlPermalink,
+.olControlNavToolbar,
+.olControlLayerSwitcher,
+.olControlPanZoomBar {
+    display: none;
+}

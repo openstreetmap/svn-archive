@@ -9,6 +9,29 @@ from generate_utils import *
 
 
 def osmorgdoc_adopt_roads_text_layer(doc,patch_doc):
+    # replace the TextSymbolizer elements within the roads-text-style with placement-type list and placements of abbreviations
+    rtn_style=None
+    els = doc.getElementsByTagName("Style")
+    for el in els:
+        if el.getAttribute("name")=="roads-text-name":
+            rtn_style=el
+    assert rtn_style!=None
+    rules = rtn_style.getElementsByTagName("Rule")
+    for rule in rules:
+        #print "isinstance" #print isinstance(rule,pxdom.Element)
+        TextSymbolizers = rule.getElementsByTagName("TextSymbolizer")
+        for TextSymbolizer in TextSymbolizers:
+                TextSymbolizer.setAttribute("placement-type","list")
+                plc1 = doc.createElement('Placement')
+                plc1.appendChild(doc.createTextNode('[abbr1]'))
+                TextSymbolizer.appendChild(plc1)
+                plc2 = doc.createElement('Placement')
+                plc2.appendChild(doc.createTextNode('[abbr2]'))
+                TextSymbolizer.appendChild(plc2)
+                plc3 = doc.createElement('Placement')
+                plc3.appendChild(doc.createTextNode('[abbr3]'))
+                TextSymbolizer.appendChild(plc3)
+
     # replace the "roads-text-name" layer with the one using the planet_line_join table
     mapnikdoc_cut_layer(doc,'roads-text-name')
     parking_roadnames_layer = doc.adoptNode(mapnikdoc_cut_layer(patch_doc,'roads-text-name'))

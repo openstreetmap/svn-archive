@@ -29,6 +29,7 @@
     </Datasource>
 </Layer>
 
+<!--
 <Style name="roads-text-name">
     <Rule>
       <Filter>[highway] = 'trunk' or [highway] = 'primary'</Filter>
@@ -120,5 +121,6 @@
       <TextSymbolizer size="11" fill="#000" placement="line" placement-type="list" fontset-name="book-fonts" halo-radius="1">[name]<Placement>[abbr]</Placement></TextSymbolizer>
     </Rule>
 </Style>
+-->
 
 </Map>

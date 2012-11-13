@@ -15,12 +15,14 @@ endabbreviations1.update({'Avenue':'Ave','Alley':'Aly','Boulevard':'Blvd','Bridg
 endabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
 endabbreviations2.update({'Avenue':'A','Boulevard':'Bd','Close':'C','Lane':'L','Road':'R','Parkway':'Pky','Rd':'R','Ln':'L'})
 begabbreviations1.update({'West':'W','East':'E','South':'S','North':'N','Southwest':'SW','Southeast':'SE','Northwest':'NW','Northeast':'NE'})
+begabbreviations1.update({'Upper ':'Up ','Lower':'Lr '})
 
 #german
 endabbreviations1.update({'Allee':'Al.','allee':'al.','Straße':'Str.','straße':'str.','Weg':'W.','weg':'w.','Gasse':'G.','gasse':'g.','Hof':'H.','Platz':'Pl.','platz':'pl.','promenade':'prm.','Brücke':'Br.','brücke':'br.','Ring':'Rg.','Steige':'Stg.'})
 endabbreviations1.update({'bach':'b.','berg':'bg.','burg':'bg.','dorf':'d.','feld':'fd.','heim':'hm.','hof':'h.','graben':'gr.','park':'pk.','ring':'rg.','stein':'st.','gässle':'g.','gässchen':'g.'})
 endabbreviations2.update({'Straße':'S','straße':'s.'})
 begabbreviations1.update({'Straße der':'Str. d.','Straße des':'Str. d.','Weg':'W.','Gasse':'G.','An der':'A. d.','An dem':'A. d.','Auf der':'A. d.','Auf dem':'A. d.','Am ':'A ','In den ':'I. d. ','Vor dem ':'V. d. ','Zum ':'Z. ','Zur ':'Z. '})
+begabbreviations1.update({'Unterer ':'U. ','Untere ':'U. ','Unteres ':'U. ','Oberer ':'Ob. ','Obere ':'Ob. ','Oberes ':'Ob. '})
 begabbreviations2.update({'Straße der':'S. d.','Straße des':'S. d.','Am ':'','Zum ':'','Zur ':''})
 
 #swiss

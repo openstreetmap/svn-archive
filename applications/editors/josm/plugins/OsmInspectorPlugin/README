@@ -1,0 +1,21 @@
+README 
+======
+
+How to install it and run it (On MacOS X and possibly *nix systems)
+
+
+*Download and install JOSM from http://josm.openstreetmap.de/
+*svn co http://svn.telenav.com/map/JavaProjects/OSMInspectorPlugin/trunk/ OSMInspectorPlugin
+*cd OsmInspectorPlugin
+*ant install
+*in your bashrc have the following
+java -cp gt-api-8.0.jar:gt-coverage-8.0.jar:gt-data-8.0.jar:gt-epsg-extension-8.0.jar:gt-epsg-hsql-8.0.jar:gt-main-8.0.jar:gt-metadata-8.0.jar:gt-opengis-8.0.jar:gt-referencing-8.0.jar:gt-referencing3D-8.0.jar:gt-render-8.0.jar:gt-wfs-8.0.jar:jts-1.12.jar:commons-collections-3.1.jar:OsmInspectorPlugin.jar:gt-xsd-wfs-8.0.jar:gt-xsd-core-8.0.jar:gt-xml-8.0.jar:jt-zonalstats-1.2.0.jar:jt-utils-1.2.0.jar:jsr-275-1.0-beta-2.jar:hsqldb-1.8.0.7.jar:gt-cql-8.0.jar:commons-jxpath-1.3.jar:josm-custom.jar org.openstreetmap.josm.gui.MainApplication 
+
+Readme for your plugin 
+
+    * Plugin author and contact email address.
+    
+    * The license for your plugin source code. If you have no special preferences, 
+      you can pick the license that is used for JOSM ("GPL v2 or later").
+      
+    * Notes for future developers, if needed.

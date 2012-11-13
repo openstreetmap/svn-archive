@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/gt-api-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-data-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-main-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-opengis-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-referencing-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-referencing3D-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-render-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jts-1.12.jar"/>
+	<classpathentry kind="lib" path="/JOSM/dist/josm-custom.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 (MacOS X Default)"/>
+	<classpathentry kind="lib" path="lib/gt-wfs-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-epsg-extension-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-epsg-hsql-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-metadata-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/gt-coverage-8.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

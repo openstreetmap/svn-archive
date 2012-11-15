@@ -14,15 +14,18 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.Main;
 
+import S57.S57dat;
+
 import panels.PanelMain;
 
 public class Smed2Action extends JosmAction {
 
 	private static final long serialVersionUID = 1L;
 	private static String editor = tr("SeaMap Editor");
-	private JFrame frame = null;
+	public static JFrame frame = null;
+	public static S57dat panelS57;
 	private boolean isOpen = false;
-	public PanelMain panelMain = null;
+	public static PanelMain panelMain = null;
 	public ImageryLayer rendering;
 
 	public Smed2Action() {
@@ -57,6 +60,9 @@ public class Smed2Action extends JosmAction {
 		frame.setVisible(true);
 		panelMain = new PanelMain();
 		frame.add(panelMain);
+		panelS57 = new S57dat();
+		panelS57.setVisible(false);
+		frame.add(panelS57);
 System.out.println("hello");
 		rendering = ImageryLayer.create(new ImageryInfo("OpenSeaMap"));
 		Main.main.addLayer(rendering);		

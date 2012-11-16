@@ -17,11 +17,11 @@ public class MirroredDownloadPlugin extends Plugin {
     private static boolean addMeta = true;
 
     public static String getDownloadUrl() {
-        if (downloadUrl == null)
-        {
+        if (downloadUrl == null || downloadUrl.isEmpty()) {
             downloadUrl = Main.pref.get("plugin.mirrored_download.preferred-url");
-            if (downloadUrl == null)
+            if (downloadUrl == null || downloadUrl.isEmpty()) {
                 downloadUrl = "http://overpass-api.de/api/xapi?";
+            }
                 
             String metaFlag = Main.pref.get("plugin.mirrored_download.preferred-meta-flag");
             addMeta = !("void".equals(metaFlag));

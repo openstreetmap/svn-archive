@@ -75,6 +75,19 @@
     -->
     <target name="dist" depends="compile,revision">
         <echo message="creating ${ant.project.name}.jar ... "/>
+        <unjar dest="${plugin.build.dir}">
+            <fileset dir="lib" includes="*.jar" />
+        </unjar>
+    	<delete includeemptydirs="true">
+    		<fileset dir="${plugin.build.dir}" >
+    			<include name="*.class" />
+                <include name="*.html" />
+    		</fileset>
+            <fileset dir="${plugin.build.dir}/META-INF" includes="**/*" excludes="**/*.jai" />
+    	</delete>
+        <copy todir="${plugin.build.dir}/META-INF">
+            <fileset dir="resources/META-INF"/>
+        </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
@@ -84,9 +97,6 @@
                 <include name="GPL-v3.0.txt"/>
             </fileset>
         </copy>
-        <unjar dest="${plugin.build.dir}">
-            <fileset dir="lib" includes="*.jar" />
-        </unjar>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <!--
             ************************************************
@@ -105,6 +115,7 @@
                 <!--<attribute name="Plugin-Link" value="http://fixme.com"/>-->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Requires" value="jts"/>
+                <attribute name="Plugin-Stage" value="20"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -103,8 +103,9 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides Java Topology Suite (JTS) library and related utilities. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
                 <attribute name="Plugin-Icon" value="images/jts.png"/>
-                <attribute name="Plugin-Link" value="http://fixme.com"/>
+                <!--<attribute name="Plugin-Link" value="http://fixme.com"/>-->
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Stage" value="10"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

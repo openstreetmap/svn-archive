@@ -86,22 +86,6 @@ public class ImportImagePlugin extends Plugin{
                 logger.debug("Plugin properties loaded");
             }
 
-            /* Change class path:
-             * Use java reflection methods to add URLs to the class-path.
-             * Changes take effect when calling methods of other plugin classes
-             * (new threads)
-             * */
-            URLClassLoader sysLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            String[] libraryNames = pluginProps.getProperty("libraries").split(",");
-            Class<URLClassLoader> sysclass = URLClassLoader.class;
-            Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
-            method.setAccessible(true);
-            for (int i = 0; i < libraryNames.length; i++) {
-                File library = new File(PLUGINLIBRARIES_DIR + "/" + libraryNames[i]);
-                method.invoke(sysLoader, new Object[]{library.toURI().toURL()});
-            }
-
-
             // load information about supported reference systems
             PluginOperations.loadCRSData(pluginProps);
 
@@ -113,7 +97,6 @@ public class ImportImagePlugin extends Plugin{
             Main.main.menu.fileMenu.insert(loadFileAction, 8);
             Main.main.menu.fileMenu.insertSeparator(9);
 
-
         } catch (Exception e) {
             logger.fatal("Error while loading plugin", e);
             try {
@@ -124,7 +107,6 @@ public class ImportImagePlugin extends Plugin{
         }
 
         logger.info("Plugin successfully loaded.");
-
     }
 
     /**
@@ -135,7 +117,6 @@ public class ImportImagePlugin extends Plugin{
      */
     private void checkInstallation() throws IOException
     {
-
         // check plugin resource state
         boolean isInstalled = true;
         if(!new File(PLUGINPROPERTIES_PATH).exists()
@@ -185,42 +166,6 @@ public class ImportImagePlugin extends Plugin{
                 logger.debug("Logging properties created");
             }
 
-
-            // Copy all needed JAR files to $PLUGIN_DIR$/lib/
-            String[] libStrings = pluginProps.getProperty("libraries").split(",");
-
-            for (int i = 0; i < libStrings.length; i++) {
-
-                URL url = pluginClassLoader.getResource("lib/" + libStrings[i]);
-
-                FileOutputStream out = null;
-
-                try{
-                    out = new FileOutputStream(new File(libDir, libStrings[i]));
-                } catch (FileNotFoundException e) {
-                    break;
-                }
-
-                BufferedInputStream in = null;
-                try
-                {
-                    in = new BufferedInputStream(url.openStream());
-
-                    byte[] buffer = new byte[1024];
-                    while (true)
-                    {
-                        int count = in.read(buffer);
-                        if (count == -1)
-                            break;
-                        out.write(buffer, 0, count);
-                    }
-                }
-                finally
-                {
-                    if (in != null)
-                        in.close();
-                }
-            }
             logger.debug("Plugin successfully installed");
         }
     }

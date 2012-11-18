@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.media.jai.PlanarImage;
-import javax.swing.Action;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -28,7 +28,6 @@ import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MapView;
@@ -207,7 +206,12 @@ public class ImageLayer extends Layer {
             g.scale(scalex, scaley);
 
             // Draw picture
-            g.drawImage(image, 0, 0, null);
+            try {
+                g.drawImage(image, 0, 0, null);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // TODO: prevents this to happen when displaying GeoTIFF images (see #7902)
+                e.printStackTrace();
+            }
 
         } else {
             logger.error("Error while dawing image: image == null or Graphics == null");

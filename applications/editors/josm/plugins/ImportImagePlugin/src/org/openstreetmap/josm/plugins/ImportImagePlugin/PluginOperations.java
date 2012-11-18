@@ -18,25 +18,19 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridCoverageFactory;
-import org.geotools.coverage.processing.DefaultProcessor;
+import org.geotools.coverage.processing.CoverageProcessor;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.WorldFileReader;
 import org.geotools.factory.Hints;
 import org.geotools.gce.geotiff.GeoTiffReader;
 import org.geotools.geometry.Envelope2D;
-import org.geotools.image.jai.Registry;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.metadata.content.ImageDescription;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.cs.CoordinateSystemAxis;
 import org.opengis.util.InternationalString;
-
-
 
 /**
  * Class provides methods for resampling operations, IO and stores important data.
@@ -83,14 +77,12 @@ public class PluginOperations {
 
         GridCoverage2D destination = null;
 
-        DefaultProcessor processor = new DefaultProcessor(null);
-        ParameterValueGroup resampleParams = processor.getOperation("Resample")
-                .getParameters();
+        CoverageProcessor processor = new CoverageProcessor();
+        ParameterValueGroup resampleParams = processor.getOperation("Resample").getParameters();
 
         // set parameters
         resampleParams.parameter("Source").setValue(coverage);
-        resampleParams.parameter("CoordinateReferenceSystem").setValue(
-                targetCrs);
+        resampleParams.parameter("CoordinateReferenceSystem").setValue(targetCrs);
 
         // resample coverage with given parameters
         destination = (GridCoverage2D) processor.doOperation(resampleParams);
@@ -379,29 +371,24 @@ public class PluginOperations {
         Set<String> supportedCodes = CRS.getSupportedCodes("EPSG");
         CRSAuthorityFactory fac = CRS.getAuthorityFactory(false);
 
-        for (Iterator iterator = supportedCodes.iterator(); iterator.hasNext();) {
+        for (Iterator<String> iterator = supportedCodes.iterator(); iterator.hasNext();) {
             String string = (String) iterator.next();
             try {
                 if ("WGS84(DD)".equals(string)) {
                     continue;
                 }
                 InternationalString desc = fac.getDescriptionText("EPSG:" + string);
-
                 String description = desc.toString() + " [-EPSG:" + string + "-]";
-
                 crsDescriptions.add(description);
-
                 if(defaultcrsString != null && defaultcrsString.equalsIgnoreCase("EPSG:" + string)){
                     boolean isEastingFirst = Boolean.valueOf(pluginProps.getProperty("default_crs_eastingfirst"));
                     defaultSourceCRS = CRS.decode("EPSG:" + string, isEastingFirst);
                     defaultSourceCRSDescription = description;
                 }
-            } catch (NoSuchAuthorityCodeException e) {
-                logger.error("Error while loading EPSG data: " + e.getMessage());
+
             } catch (FactoryException e) {
                 logger.error("Error while loading EPSG data: " + e.getMessage());
             }
         }
     }
-
 }

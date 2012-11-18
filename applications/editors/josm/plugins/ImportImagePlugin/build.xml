@@ -44,7 +44,7 @@
 	<property name="plugin.src.dir"         value="src"/>
 	<!-- this is the directory where the plugin jar is copied to -->
 	<property name="plugin.dist.dir"        value="../../dist"/>
-	<property name="ant.build.javac.target" value="1.5"/>
+	<property name="ant.build.javac.target" value="1.6"/>
 	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
@@ -64,10 +64,16 @@
     -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... "/>
-		<javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+		<javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
             <classpath>
                 <pathelement location="${josm}"/>
                 <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="../jts/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="../geotools/lib">
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
@@ -84,14 +90,7 @@
 	<target name="dist" depends="compile,revision">
 		<echo message="creating ${ant.project.name}.jar ... "/>
 		
-		<copy todir="${plugin.build.dir}/lib">
-			<fileset dir="lib">
-				  <not>
-				    <filename name="log4j-1.2.12.jar"/>
-				  </not>
-			</fileset>
-		</copy>
-        <unjar src="lib/log4j-1.2.12.jar" dest="${plugin.build.dir}"/>
+        <unjar src="lib/log4j-1.2.17.jar" dest="${plugin.build.dir}"/>
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images"/>
 		</copy>
@@ -123,6 +122,7 @@
                 <attribute name="Plugin-Icon" value="images/layericon.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Requires" value="geotools"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>
 		</jar>
@@ -270,26 +270,6 @@
 	</target>
 
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
-	</target>
-	
-	<target name="unjar-test" >
-        <!--unjar dest="C:/Workspace_2/geotoolstest/lib/unjartest">
-            <fileset dir="lib"/>
-        </unjar-->
-        
-        		<jar destfile="C:/Workspace_2/geotoolstest/lib/unjartest/${ant.project.name}.jar" basedir="C:/Workspace_2/geotoolstest/lib/unjartest">
-
-			<manifest>
-                <attribute name="Author" value="Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.CoveragePlugin.CoveragePlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Plugin for importing spatial referenced images"/>
-                <attribute name="Plugin-Link" value="..."/>
-                <attribute name="Plugin-Mainversion" value=".."/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Class-path" value=" . CoveragePlugin/lib/commons-beanutils-1.7.0.jar CoveragePlugin/lib/commons-pool-1.5.3.jar CoveragePlugin/lib/geoapi-2.3-M1.jar CoveragePlugin/lib/geoapi-pending-2.3-M1.jar CoveragePlugin/lib/geoapi.jar CoveragePlugin/lib/gt-api-2.6.0.jar CoveragePlugin/lib/gt-coverage-2.6.0.jar CoveragePlugin/lib/gt-epsg-extension-2.6.0.jar CoveragePlugin/lib/gt-epsg-hsql-2.6.0.jar CoveragePlugin/lib/gt-geotiff-2.6.0.jar CoveragePlugin/lib/gt-main-2.6.0.jar CoveragePlugin/lib/gt-metadata-2.6.0.jar CoveragePlugin/lib/gt-referencing-2.6.0.jar CoveragePlugin/lib/hsqldb-1.8.0.7.jar CoveragePlugin/lib/imageio-ext-tiff-1.0.4.jar CoveragePlugin/lib/imageio-ext-utilities-1.0.4.jar CoveragePlugin/lib/jai_codec-1.1.3.jar CoveragePlugin/lib/jai_core.jar CoveragePlugin/lib/jai_imageio-1.1.jar CoveragePlugin/lib/jdom-1.0.jar CoveragePlugin/lib/jsr-275-1.0-beta-2.jar CoveragePlugin/lib/jts-1.10.jar CoveragePlugin/lib/log4j-1.2.12.jar CoveragePlugin/lib/vecmath-1.3.2.jar" />
-			</manifest>
-		</jar>
 	</target>
 	
 </project>

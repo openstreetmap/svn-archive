@@ -29,8 +29,8 @@ public class GPSVideoPlayer extends VideoPlayer
 		videoPositionLayer.setGPSVideoPlayer(this);
 	}
 
-	public GPSVideo addVideo(File Videofile) {		
-		GPSVideo video = new GPSVideo(super.addVideo(Videofile,Integer.toString(videos.size())));
+	public GPSVideo addVideo(File videofile) {		
+		GPSVideo video = new GPSVideo(super.addVideo(videofile,Integer.toString(videos.size())));
 		enableSingleVideoMode(true);
 		videos.add(video);
 		addSyncButton(video);

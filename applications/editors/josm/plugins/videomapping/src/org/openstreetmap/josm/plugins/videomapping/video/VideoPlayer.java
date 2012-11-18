@@ -65,9 +65,8 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 	    this.addWindowListener(this);
 	}
 	
-	public Video addVideo(File Videofile, String id)
-	{
-		Video video = new Video(Videofile,id,videoengine.mediaPlayerFactory);
+	public Video addVideo(File videofile, String id) {
+		Video video = new Video(videofile,id,videoengine.mediaPlayerFactory);
 		canvasPanel.add(video.panel);
 		video.canvas.setSize(new Dimension(300, 300)); // will be updated by the video engine itself
 		videoengine.add(video);
@@ -373,7 +372,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		
 	}
     
-
-    
-
+	public boolean isCorrectlyInitiliazed() {
+	    return videoengine != null && videoengine.mediaPlayerFactory != null;
+	}
 }

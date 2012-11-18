@@ -63,6 +63,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
 	private GpxLayer gpsLayer;
 	private VideoPositionLayer videoPositionLayer;
 	private GPSVideoPlayer gpsVideoPlayer;
+	
+	public static String VLC_VERSION = "2.0.x";
 
 	public VideoPlugin(PluginInformation info) {
 		super(info);
@@ -235,8 +237,15 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
             	gpsVideoPlayer.setLoopLength(loopLength);
             	enableVideoControlMenus(true);
         	}
-        	if (gpsVideoPlayer != null) {
+        	if (gpsVideoPlayer != null && gpsVideoPlayer.isCorrectlyInitiliazed()) {
         	    gpsVideoPlayer.addVideo(fc.getSelectedFile());
+        	} else {
+                JOptionPane.showMessageDialog(Main.parent, 
+                        tr("VLC library is not correctly initialized."+
+                                " Please check that VLC {0} is correctly installed on your system."+
+                                " Its architecture (32/64 bits) must also be the same as the JRE that runs JOSM.", VLC_VERSION),
+                        tr("Error"), JOptionPane.ERROR_MESSAGE
+                        );
         	}
         }		
 	}

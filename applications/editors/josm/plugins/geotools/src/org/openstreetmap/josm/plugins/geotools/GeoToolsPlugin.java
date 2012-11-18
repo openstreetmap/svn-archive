@@ -23,6 +23,10 @@ public class GeoToolsPlugin extends Plugin {
     }
 
     private void initJAI() {
+        // Disable mediaLib searching that produces unwanted errors
+        // See http://www.java.net/node/666373
+        System.setProperty("com.sun.media.jai.disableMediaLib", "true");
+                
         // As the JAI jars are bundled in the geotools plugin, JAI initialization does not work,
         // so we need to perform the tasks described here ("Initialization and automatic loading of registry objects"):
         // http://docs.oracle.com/cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/OperationRegistry.html

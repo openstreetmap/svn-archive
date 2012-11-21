@@ -121,7 +121,7 @@
                 <attribute name="Plugin-Icon" value="images/layericon.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Requires" value="log4j, geotools"/>
+                <attribute name="Plugin-Requires" value="log4j; geotools"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>
 		</jar>

@@ -42,6 +42,9 @@
     <path id="classpath">
         <fileset dir="${plugin.lib.dir}" includes="**/*.jar"/>
         <pathelement path="${josm}"/>
+        <fileset dir="../log4j/lib">
+            <include name="**/*.jar"/>
+        </fileset>
     </path>
     <!--
     **********************************************************
@@ -88,10 +91,10 @@
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Routing"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Stage" value="50"/>
+                <attribute name="Plugin-Requires" value="log4j"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
             <zipfileset src="${plugin.lib.dir}/jgrapht-jdk1.5.jar"/>
-            <zipfileset src="${plugin.lib.dir}/log4j-1.2.15.jar"/>
         </jar>
     </target>
 </project>

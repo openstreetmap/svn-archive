@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
@@ -27,5 +26,6 @@
 	<classpathentry kind="lib" path="/JOSM-GeoTools/lib/imageio-ext-tiff-1.1.5.jar"/>
 	<classpathentry kind="lib" path="/JOSM-GeoTools/lib/imageio-ext-utilities-1.1.5.jar"/>
 	<classpathentry kind="lib" path="/JOSM-GeoTools/lib/gt-opengis-8.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-log4j"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

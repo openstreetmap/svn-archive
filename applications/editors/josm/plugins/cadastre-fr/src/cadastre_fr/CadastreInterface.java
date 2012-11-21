@@ -110,6 +110,7 @@ public class CadastreInterface {
             searchFormURL = new URL(baseURL + "/scpc/accueil.do");
             while (cookied == false && retries > 0) {
                 urlConn = (HttpURLConnection)searchFormURL.openConnection();
+                urlConn.setRequestProperty("Connection", "close");
                 urlConn.setRequestMethod("GET");
                 urlConn.connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {

@@ -235,6 +235,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     private String grabSVG(URL url) throws IOException, OsmTransferException {
         wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
+        wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
         InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE);

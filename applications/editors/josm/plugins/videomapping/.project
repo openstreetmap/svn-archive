@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>VideoMapping</name>
+	<name>JOSM-videomapping</name>
 	<comment></comment>
 	<projects>
 		<project>JOSM</project>

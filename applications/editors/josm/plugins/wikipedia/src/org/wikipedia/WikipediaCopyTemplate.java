@@ -3,7 +3,10 @@ package org.wikipedia;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
@@ -13,15 +16,20 @@ import org.openstreetmap.josm.tools.Utils;
 
 public class WikipediaCopyTemplate {
 
+    private static final List<CoordCopyTemplate> TEMPLATES = Arrays.asList(
+            new CoordCopyTemplate(tr("Copy {0} template", "{{Coordinate}}"), "wikipedia-coordinate", "{{Coordinate|NS={lat}|EW={lon}|type=landmark|region=}}"),
+            new CoordCopyTemplate(tr("Copy {0} template", "{{Coord}}"), "wikipedia-coord", "{{Coord|{lat}|{lon}}}"),
+            new CoordCopyTemplate(tr("Copy {0} template", "{{Location dec}}"), "wikipedia-location-dec", "{{Location dec|{lat}|{lon}}}"),
+            new CoordCopyTemplate(tr("Copy {0} template", "{{Object location dec}}"), "wikipedia-object-location-dec", "{{Object location dec|{lat}|{lon}}}")
+            );
+
     public WikipediaCopyTemplate() {
-        final CoordCopyTemplate coord = new CoordCopyTemplate(
-                tr("Copy {0} template", "''{{Coord}}''"), "wikipedia-coord",
-                "{{Coord|{lat}|{lon}}}");
-        final CoordCopyTemplate coordinate = new CoordCopyTemplate(
-                tr("Copy {0} template", "''{{Coordinate}}''"), "wikipedia-coordinate",
-                "{{Coordinate|NS={lat}|EW={lon}|type=landmark|region=}}");
-        MainMenu.addAfter(Main.main.menu.editMenu, coord, false, Main.main.menu.copyCoordinates);
-        MainMenu.addAfter(Main.main.menu.editMenu, coordinate, false, Main.main.menu.copyCoordinates);
+        JosmAction previous = Main.main.menu.copyCoordinates;
+        for (final CoordCopyTemplate t : TEMPLATES) {
+            MainMenu.addAfter(Main.main.menu.editMenu, t, false, previous);
+            previous = t;
+            //MainMenu.addAfter(Main.main.menu.editMenu, coord, false, Main.main.menu.copyCoordinates);
+        }
     }
 
     private static class CoordCopyTemplate extends JosmAction {

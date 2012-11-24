@@ -24,5 +24,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-tiff-1.1.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-utilities-1.1.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gt-opengis-8.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-shapefile-8.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

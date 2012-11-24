@@ -38,7 +38,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 		setName("GEOFLA®");
 		getShpHandler().setPreferMultipolygonToSimpleWay(true);
 		try {
-			setLocalPortalURL("http://professionnels.ign.fr/ficheProduitCMS.do?idDoc=6185461");
+			setLocalPortalURL("http://professionnels.ign.fr/geofla#tab-3");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -194,7 +194,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 	}
 	
 	private Pair<String, URL> getGeoflaURL(String name, String urlSuffix) throws MalformedURLException {
-		return new Pair<String, URL>(name, new URL("http://professionnels.ign.fr/DISPLAY/000/"+urlSuffix));
+		return new Pair<String, URL>(name, new URL("http://professionnels.ign.fr/sites/default/files/"+urlSuffix));
 	}
 
 	/* (non-Javadoc)
@@ -204,8 +204,8 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 	public List<Pair<String, URL>> getDataURLs() {
 		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
 		try {
-			result.add(getGeoflaURL("Départements France métropolitaine et Corse", "528/175/5281750/GEOFLADept_FR_Corse_AV_L93.zip"));
-			result.add(getGeoflaURL("Départements France entière",                 "528/175/5281754/FR_DOM_Mayotte_shp_WGS84.zip"));
+			result.add(getGeoflaURL("Départements France métropolitaine et Corse", "GEOFLADept_FR_Corse_AV_L93.zip"));
+			result.add(getGeoflaURL("Départements France entière",                 "FR_DOM_Mayotte_shp_WGS84.zip"));
 			// FIXME: tar.gz files
 			/*result.add(getGeoflaURL("Communes France métropolitaine", "531/266/5312664/GEOFLA_1-1_SHP_LAMB93_FR-ED111.tar.gz"));
 			result.add(getGeoflaURL("Communes Guadeloupe",            "531/265/5312650/GEOFLA_1-1_SHP_UTM20W84_GP-ED111.tar.gz"));

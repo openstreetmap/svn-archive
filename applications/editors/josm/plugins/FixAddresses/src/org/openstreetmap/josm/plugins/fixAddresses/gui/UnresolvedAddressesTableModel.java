@@ -29,6 +29,7 @@
 package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trc;
 
 import java.util.Collections;
 
@@ -47,7 +48,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final String[] COLUMN_NAMES = new String[] { tr("Street"),
-			tr("Number"), tr("City"), tr("Postcode"), tr("Name") };
+			tr("Number"), trc("address", "City" /* fix #8140 */), tr("Postcode"), tr("Name") };
 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[] {
 			String.class, String.class, String.class, String.class,

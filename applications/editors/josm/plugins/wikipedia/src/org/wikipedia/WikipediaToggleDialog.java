@@ -144,7 +144,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             if (category == null) {
                 return;
             }
-            List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCategory(wikipediaLang.get(), category);
+            List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCategory(
+                    wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
             setWikipediaEntries(entries);
             setTitle(/* I18n: [language].Wikipedia.org: [category] */ tr("{0}.Wikipedia.org: {1}", wikipediaLang.get(), category));
         }

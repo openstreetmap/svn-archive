@@ -64,23 +64,35 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category) {
+    static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
-            final String url = "http://toolserver.org/~daniel/WikiSense/CategoryIntersect.php?"
-                    + "wikilang=" + wikipediaLang
-                    + "&wikifam=.wikipedia.org"
-                    + "&basecat=" + encodeURL(category)
-                    + "&basedeep=3&templates=&mode=al&format=csv";
+            final String url = "http://toolserver.org/~magnus/catscan_rewrite.php"
+                    + "?project=wikipedia"
+                    + "&ext_image_data="
+                    + "&file_usage_data="
+                    + "&show_redirects=no"
+                    + "&format=tsv"
+                    + "&doit=doit"
+                    + "&depth=" + depth
+                    + "&language=" + wikipediaLang
+                    + "&categories=" + encodeURL(category);
             System.out.println("Wikipedia: GET " + url);
-            final Scanner scanner = new Scanner(new URL(url).openStream()).useDelimiter("\n");
+            final Scanner scanner = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\n");
             final List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>();
-            while (scanner.hasNext()) {
-                // TODO ignore redirects
-                final String[] x = scanner.next().split("\t");
-                if ("0".equals(x[0].trim())) { // denotes article
-                    final String article = x[1].replace("_", " ");
-                    entries.add(new WikipediaEntry(article, wikipediaLang, article));
+            {
+                // skip first two rows
+                final String header = scanner.next(); // |subset
+                if (!"|subset".equals(header.trim())) {
+                    throw new RuntimeException("Wikipedia: Invalid header: " + header);
                 }
+                final String colspec = scanner.next(); //title	id	namespace	len	touched	seen	nstext
+                if (!colspec.startsWith("title")) {
+                    throw new RuntimeException("Wikipedia: Invalid colspec: " + colspec);
+                }
+            }
+            while (scanner.hasNext()) {
+                final String article = scanner.next().split("\t")[0].trim().replace("_", " ");
+                entries.add(new WikipediaEntry(article, wikipediaLang, article));
             }
             return entries;
         } catch (IOException ex) {
@@ -95,7 +107,7 @@ public final class WikipediaApp {
         }
         Map<String, Boolean> status = new HashMap<String, Boolean>();
         if (!articleNames.isEmpty()) {
-            final String url = "http://toolserver.org/~simon04/getGeoJSON.php?action=check"
+            final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
             System.out.println("Wikipedia: GET " + url);
 

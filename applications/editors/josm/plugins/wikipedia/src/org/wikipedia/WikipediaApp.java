@@ -66,32 +66,15 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
-            final String url = "http://toolserver.org/~magnus/catscan_rewrite.php"
-                    + "?project=wikipedia"
-                    + "&ext_image_data="
-                    + "&file_usage_data="
-                    + "&show_redirects=no"
-                    + "&format=tsv"
-                    + "&doit=doit"
+            final String url = "http://toolserver.org/~simon04/cats.php"
+                    + "?lang=" + wikipediaLang
                     + "&depth=" + depth
-                    + "&language=" + wikipediaLang
-                    + "&categories=" + encodeURL(category);
+                    + "&cat=" + encodeURL(category);
             System.out.println("Wikipedia: GET " + url);
             final Scanner scanner = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\n");
             final List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>();
-            {
-                // skip first two rows
-                final String header = scanner.next(); // |subset
-                if (!"|subset".equals(header.trim())) {
-                    throw new RuntimeException("Wikipedia: Invalid header: " + header);
-                }
-                final String colspec = scanner.next(); //title	id	namespace	len	touched	seen	nstext
-                if (!colspec.startsWith("title")) {
-                    throw new RuntimeException("Wikipedia: Invalid colspec: " + colspec);
-                }
-            }
             while (scanner.hasNext()) {
-                final String article = scanner.next().split("\t")[0].trim().replace("_", " ");
+                final String article = scanner.next().trim().replace("_", " ");
                 entries.add(new WikipediaEntry(article, wikipediaLang, article));
             }
             return entries;

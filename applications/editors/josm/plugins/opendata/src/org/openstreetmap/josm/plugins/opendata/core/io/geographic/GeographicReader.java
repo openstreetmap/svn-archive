@@ -253,19 +253,24 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
 				
 				// Find matching CRS with Bursa Wolf parameters in EPSG database
 				for (String code : CRS.getAuthorityFactory(false).getAuthorityCodes(ProjectedCRS.class)) {
-					CoordinateReferenceSystem candidate = CRS.decode(code);
-					if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
-						
-						Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
-								Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE));
-						if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
-							System.out.println("Found a potential CRS: "+candidate.getName());
-							candidates.add(candidate);
-						} else if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
-							compareDebug(crs, candidate);
-						}
-						Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
-					}
+				    try {
+    					CoordinateReferenceSystem candidate = CRS.decode(code);
+    					if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
+    						
+    						Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
+    								Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE));
+    						if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
+    							System.out.println("Found a potential CRS: "+candidate.getName());
+    							candidates.add(candidate);
+    						} else if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
+    							compareDebug(crs, candidate);
+    						}
+    						Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
+    					}
+				    } catch (FactoryException ex) {
+				        // Silently ignore exceptions
+				        //System.err.println("Warning: cannot decode "+code+". "+ex.getMessage());
+				    }
 				}
 				
 				if (candidates.size() > 1) {

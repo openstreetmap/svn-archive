@@ -33,57 +33,20 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4968"/>
-
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
+	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
+    <property name="plugin.author" value="Don-vip &amp; FrViPofm"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.tag2link.Tag2LinkPlugin"/>
+    <property name="plugin.description" value="Launch browser to a Web resource about a selected object having known tags, such as Wikipedia"/>
+    <property name="plugin.icon" value="images/tag2linkv2_24x24.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE-2.0.txt"/>
-                <include name="gpl-3.0.txt"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-            <manifest>
-                <attribute name="Author" value="Don-vip &amp; FrViPofm"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.tag2link.Tag2LinkPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Launch browser to a Web resource about a selected object having known tags, such as Wikipedia"/>
-                <attribute name="Plugin-Early" value="false"/>
-                <attribute name="Plugin-Icon" value="images/tag2linkv2_24x24.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
 </project>

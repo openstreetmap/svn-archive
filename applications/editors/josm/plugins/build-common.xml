@@ -278,5 +278,22 @@
             <jvmarg value="${profiler.info.jvmargs.agent}"/>
         </java>
     </target>
+    <!--
+    ** shows a help text 
+    -->
+    <target name="help">
+        <echo>
+    You can use following targets:
+    * dist        This default target builds the plugin jar file
+    * clean       Cleanup automaticall created files
+    * publish     Checkin source code, build jar and checkin plugin jar
+                  (requires proper entry for SVN commit message!)
+    * install     Install the plugin in current system
+    * runjosm     Install plugin and start josm
+    * profilejosm Install plugin and start josm in profiling mode
+    
+    There are other targets, which usually should not be called manually.
+        </echo>
+    </target>
 </project>
 

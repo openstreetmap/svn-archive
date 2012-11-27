@@ -42,7 +42,7 @@
     <!--<property name="plugin.icon" value="..."/>-->
     <!--<property name="plugin.link" value="..."/>-->
     <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="jts"/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
     <property name="plugin.stage" value="5"/>
 
     <!-- ** include targets that all plugins have in common ** -->

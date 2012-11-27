@@ -37,10 +37,95 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
         </javac>
+    </target>
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${plugin.build.dir}/resources" failonerror="no" includeemptydirs="no">
+            <fileset dir="resources"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/images" failonerror="no" includeemptydirs="no">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data" failonerror="no" includeemptydirs="no">
+            <fileset dir="data"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="LICENSE"/>
+            </fileset>
+        </copy>
+        <delete file="MANIFEST" failonerror="no"/>
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+            <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            <attribute name="Plugin-Class" value="${plugin.class}" />
+            <attribute name="Plugin-Description" value="${plugin.description}" />
+            <attribute name="Plugin-Date" value="${version.entry.commit.date}" />
+            <attribute name="Author" value="${plugin.author}"/>
+        </manifest>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Link"/>
+            <param name="propery.name" value="plugin.link"/>
+            <param name="propery.value" value="${plugin.link}"/>
+        </antcall>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Icon"/>
+            <param name="propery.name" value="plugin.icon"/>
+            <param name="propery.value" value="${plugin.icon}"/>
+        </antcall>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Early"/>
+            <param name="propery.name" value="plugin.early"/>
+            <param name="propery.value" value="${plugin.early}"/>
+        </antcall>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Requires"/>
+            <param name="propery.name" value="plugin.requires"/>
+            <param name="propery.value" value="${plugin.requires}"/>
+        </antcall>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Stage"/>
+            <param name="propery.name" value="plugin.stage"/>
+            <param name="propery.value" value="${plugin.stage}"/>
+        </antcall>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST">
+            <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" erroronmissingdir="no"/>
+        </jar>
+        <delete file="MANIFEST" failonerror="no"/>
+    </target>
+    <target name="add-manifest-attribute" depends="check-manifest-attribute" if="have-${propery.name}">
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="${manifest.attribute}" value="${propery.value}" />
+        </manifest>
+    </target>
+    <target name="check-manifest-attribute">
+        <condition property="have-${propery.name}">
+            <and>
+                <isset property="${propery.name}"/>
+                <not>
+                    <equals arg1="${propery.value}" arg2=""/>
+                </not>
+                <not>
+                    <equals arg1="${propery.value}" arg2="..."/>
+                </not>
+            </and>
+        </condition>
     </target>
     <!--
     **********************************************************

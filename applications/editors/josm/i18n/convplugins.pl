@@ -21,7 +21,7 @@ foreach my $arg (@ARGV)
     while(my $line = <FILE>)
     {
       chomp($line);
-      if($line =~ /name=\"Plugin-Description\" +value=\"(.*)\"/)
+      if($line =~ /name=\"[Pp]lugin.[Dd]escription\" +value=\"(.*)\"/)
       {
         $printed = 1;
         print "/* Plugin $plugin */\ntr(\"$1\");\n" if($plugin ne "myPluginName");

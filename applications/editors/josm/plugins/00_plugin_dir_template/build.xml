@@ -34,54 +34,19 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4394"/>
 
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
+    <property name="plugin.author" value="..."/>
+    <property name="plugin.class" value="..."/>
+    <property name="plugin.description" value="..."/>
+    <property name="plugin.icon" value="..."/>
+    <property name="plugin.link" value="..."/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
   
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-            <manifest>
-                <attribute name="Author" value="..."/>
-                <attribute name="Plugin-Class" value="..."/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="..."/>
-                <attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
 </project>

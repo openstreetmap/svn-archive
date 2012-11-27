@@ -4,7 +4,7 @@ README
 Readme for imagery-xml-bounds JOSM plugin
 
     * Author: Don-vip
-    * License: GPL v3 (see gpl-3.0.txt)
+    * License: GPL v3 (see GPL-3.0.txt)
     
 This plugin allows to generate textual Imagery boundaries in XML format from a multipolygon, compatible with JOSM Maps wiki page.
 

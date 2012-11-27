@@ -50,11 +50,10 @@
     </target>
     <!--
     **********************************************************
-    ** dist - creates the plugin jar
+    ** setup-dist - copies files for distribution
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
+    <target name="setup-dist-default">
         <copy todir="${plugin.build.dir}/resources" failonerror="no" includeemptydirs="no">
             <fileset dir="resources"/>
         </copy>
@@ -71,6 +70,18 @@
                 <include name="*GPL*"/>
             </fileset>
         </copy>
+    </target>
+    <target name="setup-dist">
+	<antcall target="setup-dist-default" />
+    </target>
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+	<antcall target="setup-dist" />
         <delete file="MANIFEST" failonerror="no"/>
         <manifest file="MANIFEST" mode="update">
             <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

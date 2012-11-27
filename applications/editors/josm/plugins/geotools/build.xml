@@ -1,41 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="geotools" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="5236"/>
 	
-    <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
-    -->
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.geotools.GeoToolsPlugin"/>
     <property name="plugin.description" value="Provides parts of the GeoTools library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
@@ -50,11 +19,10 @@
 	
     <!--
     **********************************************************
-    ** dist - creates the plugin jar
+    ** setup-dist - copies files for distribution
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
+    <target name="setup-dist">
         <unjar dest="${plugin.build.dir}">
             <fileset dir="lib" includes="*.jar" />
         </unjar>
@@ -68,31 +36,6 @@
         <copy todir="${plugin.build.dir}/META-INF">
             <fileset dir="resources/META-INF"/>
         </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data" includeemptydirs="no">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Author" value="${plugin.author}"/>
-                <attribute name="Plugin-Class" value="${plugin.class}"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="${plugin.description}"/>
-                <attribute name="Plugin-Icon" value="${plugin.icon}"/>
-                <!--<attribute name="Plugin-Link" value="${plugin.link}"/>-->
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Requires" value="${plugin.requires}"/>
-                <attribute name="Plugin-Stage" value="${plugin.stage}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
+        <antcall target="setup-dist-default" />
     </target>
 </project>

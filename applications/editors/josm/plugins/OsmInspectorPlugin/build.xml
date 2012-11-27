@@ -1,277 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="OsmInspectorPlugin" default="dist" basedir=".">
-	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Commit message" />
-	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="4394" />
-	<!-- should not be necessary to change the following properties -->
-	<property name="josm" location="lib/josm-custom.jar" />
-	<property name="plugin.build.dir" value="build" />
-	<property name="plugin.src.dir" value="src" />
-	<property name="plugin.lib.dir" value="lib" />
-	<property name="plugin.jar" value="OsmInspectorPlugin.jar" />
-	<property name="api" value="lib/gt-api-8.0.jar" />
-	<property name="coverage" value="lib/gt-coverage-8.0.jar" />
-	<property name="data" value="lib/gt-data-8.0.jar" />
-	<property name="espg" value="lib/gt-epsg-extension-8.0.jar" />
-	<property name="hsql" value="lib/gt-epsg-hsql-8.0.jar" />
-	<property name="main" value="lib/gt-main-8.0.jar" />
-	<property name="metadata" value="lib/gt-metadata-8.0.jar" />
-	<property name="opengis" value="lib/gt-opengis-8.0.jar" />
-	<property name="referencing" value="lib/gt-referencing-8.0.jar" />
-	<property name="referencing3D" value="lib/gt-referencing3D-8.0.jar" />
-	<property name="render" value="lib/gt-render-8.0.jar" />
-	<property name="wfs" value="lib/gt-wfs-8.0.jar" />
-	<property name="jts" value="lib/jts-1.12.jar" />
-	<property name="collections" value="lib/commons-collections-3.1.jar" />
-	<property name="jxpath" value="lib/commons-jxpath-1.3.jar" />
-	<property name="schema" value="lib/gt-app-schema-resolver-8.0.jar" />
-	<property name="cql" value="lib/gt-cql-8.0.jar" />
-	<property name="xml" value="lib/gt-xml-8.0.jar" />
-	<property name="xsdcore" value="lib/gt-xsd-core-8.0.jar" />
-	<property name="xsdwfs" value="lib/gt-xsd-wfs-8.0.jar" />
-	<property name="hsqldb" value="lib/hsqldb-1.8.0.7.jar" />
-	<property name="jsr" value="lib/jsr-275-1.0-beta-2.jar" />
-	<property name="utils" value="lib/jt-utils-1.2.0.jar" />
-	<property name="zonalstats" value="lib/jt-zonalstats-1.2.0.jar" />
+<!--
+** This is a template build file for a JOSM  plugin.
+**
+** Maintaining versions
+** ====================
+** see README.template
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant  dist
+**
+** To install the generated plugin locally (in you default plugin directory) run
+**
+**    > ant  install
+**
+** The generated plugin jar is not automatically available in JOSMs plugin configuration
+** dialog. You have to check it in first.
+**
+** Use the ant target 'publish' to check in the plugin and make it available to other
+** JOSM users:
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
+**
+**
+-->
+<project name="OsmInspector" default="dist" basedir=".">
 
-	<!-- this is the directory where the plugin jar is copied to -->
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="4394"/>
 
-	<!--
-    **********************************************************
-    ** init - initializes the build
-    **********************************************************
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-	<path id="classpath">
-		<pathelement path="${josm}" />
-		<pathelement path="${plugin.build.dir}" />
-		<pathelement path="${api}" />
-		<pathelement path="${coverage}" />
-		<pathelement path="${data}" />
-		<pathelement path="${espg}" />
-		<pathelement path="${hsql}" />
-		<pathelement path="${main}" />
-		<pathelement path="${metadata}" />
-		<pathelement path="${opengis}" />
-		<pathelement path="${referencing}" />
-		<pathelement path="${referencing3D}" />
-		<pathelement path="${render}" />
-		<pathelement path="${wfs}" />
-		<pathelement path="${jts}" />
-		<pathelement path="${collections}" />
-		<pathelement path="${jxpath}" />
-		<pathelement path="${cql}" />
-                <pathelement path="${xml}" />
-                <pathelement path="${xsdcore}" />
-                <pathelement path="${xsdwfs}" />
-                <pathelement path="${hsqldb}" />
-		<pathelement path="${jsr}" />
-                <pathelement path="${utils}" />
-                <pathelement path="${zonalstats}" />
-	</path>
-	<!-- clean the build -->
-	<target name="clean">
-		<delete dir="${plugin.build.dir}" />
-		<delete file="${plugin.jar}" />
-	</target>
+    <property name="plugin.author" value="Nikhil Shirahatti"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.osminspector.OsmInspectorPlugin"/>
+    <property name="plugin.description" value="Bring in errors from Osm Inspector and display it on the current JOSM bounding box"/>
+    <property name="plugin.icon" value="images/osmInspector.jpg"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
 
-	<target name="init" depends="clean">
-		<mkdir dir="${plugin.build.dir}" />
-	</target>
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
 
-
-	<!--
-    **********************************************************
-    ** compile - complies the source tree
-    **********************************************************
-    -->
-	<target name="compile" depends="init">
-		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" debug="true" destdir="${plugin.build.dir}">
-			<classpath refid="classpath" />
-			<compilerarg value="-Xlint:deprecation" />
-			<compilerarg value="-Xlint:unchecked" />
-		</javac>
-	</target>
-	<!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-	<target name="dist" depends="compile">
-		<echo message="creating ${plugin.jar} ... " />
-		<copy todir="${plugin.build.dir}/lib">
-			<fileset dir="lib" />
-		</copy>
-		<copy todir="${plugin.build.dir}/images">
-			<fileset dir="images" />
-		</copy>
-		<copy todir="${plugin.build.dir}/dialogs">
-			<fileset dir="images" />
-		</copy>
-		<copy todir="${plugin.build.dir}/data">
-			<fileset dir="data" />
-		</copy>
-		<copy todir="${plugin.build.dir}">
-			<fileset dir=".">
-				<include name="README" />
-				<include name="LICENSE" />
-			</fileset>
-		</copy>
-		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-			<!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-			<manifest>
-				<attribute name="Author" value="Nikhil Shirahatti" />
-				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.osminspector.OsmInspectorPlugin" />
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="Bring in errors from Osm Inspector and display it on the current Josm bounding box" />
-				<attribute name="Plugin-Icon" value="images/osmInspector.jpg" />
-				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust" />
-				<attribute name="Plugin-Mainversion" value="1.0" />
-				<attribute name="Plugin-Version" value="0.0" />
-				<attribute name="Class-Path" value="lib/commons-collections-3.1.jar lib/commons-jxpath-1.3.jar lib/gt-api-8.0.jar lib/gt-app-schema-resolver-8.0.jar lib/gt-coverage-8.0.jar lib/gt-cql-8.0.jar lib/gt-data-8.0.jar lib/gt-epsg-extension-8.0.jar lib/gt-epsg-hsql-8.0.jar lib/gt-main-8.0.jar lib/gt-metadata-8.0.jar lib/gt-opengis-8.0.jar lib/gt-referencing-8.0.jar lib/gt-referencing3D-8.0.jar lib/gt-render-8.0.jar lib/gt-wfs-8.0.jar lib/gt-xml-8.0.jar lib/gt-xsd-core-8.0.jar lib/gt-xsd-wfs-8.0.jar lib/hsqldb-1.8.0.7.jar lib/jsr-275-1.0-beta-2.jar lib/jt-utils-1.2.0.jar lib/jt-zonalstats-1.2.0.jar lib/jts-1.12.jar" />
-			</manifest>
-		 <!--added to bundle libs-->
-                <zipfileset src="${api}" />
-                <zipfileset src="${coverage}" />
-                <zipfileset src="${data}" />
-                <zipfileset src="${espg}" />
-                <zipfileset src="${hsql}" />
-                <zipfileset src="${main}" />
-                <zipfileset src="${metadata}" />
-                <zipfileset src="${opengis}" />
-                <zipfileset src="${referencing}" />
-                <zipfileset src="${referencing3D}" />
-                <zipfileset src="${render}" />
-                <zipfileset src="${wfs}" />
-                <zipfileset src="${jts}" />
-                <zipfileset src="${collections}" />
-                <zipfileset src="${jxpath}" />
-                <zipfileset src="${cql}" />
-                <zipfileset src="${xml}" />
-                <zipfileset src="${xsdcore}" />
-                <zipfileset src="${xsdwfs}" />
-                <zipfileset src="${hsqldb}" />
-                <zipfileset src="${jsr}" />
-                <zipfileset src="${utils}" />
-                <zipfileset src="${zonalstats}" />
-		</jar>
-	</target>
-	<!--
-    **********************************************************
-    ** revision - extracts the current revision number for the
-    **    file build.number and stores it in the XML property
-    **    version.*
-    **********************************************************
-    -->
-	<target name="revision">
-
-	</target>
-	<!--
-    **********************************************************
-    ** install - install the plugin in your local JOSM installation
-    **********************************************************
-    -->
-	<target name="install" depends="dist">
-		<property environment="env" />
-		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
-			<and>
-				<os family="windows" />
-			</and>
-		</condition>
-		<copy file="${plugin.jar}" todir="${josm.plugins.dir}" />
-	</target>
-	<!--
-    ************************** Publishing the plugin *********************************** 
-    -->
-	<!--
-    ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
-    ** property ${coreversion.info.entry.revision}
-    -->
-	<target name="core-info">
-		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C" />
-			<arg value="info" />
-			<arg value="--xml" />
-			<arg value="../../core" />
-		</exec>
-		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true" />
-		<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
-		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
-		<delete file="core.info.xml" />
-	</target>
-	<!-- commits the source tree for this plugin -->
-	<target name="commit-current">
-		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C" />
-			<arg value="commit" />
-			<arg value="-m '${commit.message}'" />
-			<arg value="." />
-		</exec>
-	</target>
-	<!-- updates (svn up) the source tree for this plugin -->
-	<target name="update-current">
-		<echo>Updating plugin source ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C" />
-			<arg value="up" />
-			<arg value="." />
-		</exec>
-		<echo>Updating ${plugin.jar} ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C" />
-			<arg value="up" />
-			<arg value="../dist/${plugin.jar}" />
-		</exec>
-	</target>
-	<!-- commits the plugin.jar -->
-	<target name="commit-dist">
-		<echo>
-    ***** Properties of published ${plugin.jar} *****
-    Commit message    : '${commit.message}'                    
-    Plugin-Mainversion: ${plugin.main.version}
-    JOSM build version: ${coreversion.info.entry.revision}
-    Plugin-Version    : ${version.entry.commit.revision}
-    ***** / Properties of published ${plugin.jar} *****                    
-                        
-    Now commiting ${plugin.jar} ...
-    </echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C" />
-			<arg value="-m '${commit.message}'" />
-			<arg value="commit" />
-			<arg value="${plugin.jar}" />
-		</exec>
-	</target>
-	<!-- make sure svn is present as a command line tool -->
-	<target name="ensure-svn-present">
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
-			<env key="LANG" value="C" />
-			<arg value="--version" />
-		</exec>
-		<fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
-			<!-- return code not set at all? Most likely svn isn't installed -->
-			<condition>
-				<not>
-					<isset property="svn.exit.code" />
-				</not>
-			</condition>
-		</fail>
-		<fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
-			<!-- error code from SVN? Most likely svn is not what we are looking on this system -->
-			<condition>
-				<isfailure code="${svn.exit.code}" />
-			</condition>
-		</fail>
-	</target>
-	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,dist,commit-dist">
-	</target>
 </project>

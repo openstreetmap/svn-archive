@@ -296,7 +296,7 @@
         <echo>
     You can use following targets:
     * dist        This default target builds the plugin jar file
-    * clean       Cleanup automaticall created files
+    * clean       Cleanup automatical created files
     * publish     Checkin source code, build jar and checkin plugin jar
                   (requires proper entry for SVN commit message!)
     * install     Install the plugin in current system

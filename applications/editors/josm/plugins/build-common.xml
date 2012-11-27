@@ -67,7 +67,8 @@
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README"/>
-                <include name="LICENSE"/>
+                <include name="LICENSE*"/>
+                <include name="*GPL*"/>
             </fileset>
         </copy>
         <delete file="MANIFEST" failonerror="no"/>

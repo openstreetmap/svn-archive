@@ -34,11 +34,19 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4687"/>
 
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.pbf.PbfPlugin"/>
+    <property name="plugin.description" value="Import OSM data in PBF format"/>
+    <!--<property name="plugin.icon" value="images/pbf_24.png"/>-->
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
   
     <!--
@@ -55,48 +63,5 @@
             <src path="gen" />
         </javac>
     </target>
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="gpl-3.0.txt"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-            <manifest>
-                <attribute name="Author" value="Don-vip"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.pbf.PbfPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Import OSM data in PBF format"/>
-                <attribute name="Plugin-Early" value="false"/>
-                <!--<attribute name="Plugin-Icon" value="images/pbf_24.png"/>-->
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
+	
 </project>

@@ -4,8 +4,8 @@ README
 Readme for JOSM PBF plugin
 
     * Author: Don-vip
-    * License: GPL v3 (see gpl-3.0.txt) (all sources, except ones under crosby.binary package)
-    * License: LGPL v3 (see lgpl-3.0.txt) (only sources under crosby.binary package)
+    * License: GPL v3 (see GPL-3.0.txt) (all sources, except ones under crosby.binary package)
+    * License: LGPL v3 (see LGPL-3.0.txt) (only sources under crosby.binary package)
     
 This plugin allows to import OSM data in PBF format.
 

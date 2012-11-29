@@ -15,6 +15,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,6 +27,8 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class CsvImporter extends AbstractImporter {
+    
+    public static final String COLOMBUS_HEADER = "INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX";
 	
     public CsvImporter() {
         super(CSV_FILE_FILTER);
@@ -38,4 +43,27 @@ public class CsvImporter extends AbstractImporter {
 			throw new IllegalDataException(e);
 		}
 	}
+
+    @Override
+    public boolean acceptFile(File pathname) {
+        return super.acceptFile(pathname) && !isColombusCsv(pathname);
+    }
+
+    public static boolean isColombusCsv(File file) {
+        boolean result = false;
+        if (file != null && file.isFile()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                try {
+                    String line = reader.readLine();
+                    result = line != null && line.equalsIgnoreCase(COLOMBUS_HEADER);
+                } finally {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                // Ignore exceptions
+            }
+        }
+        return result;
+    }
 }

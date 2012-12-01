@@ -19,32 +19,20 @@
 	
     <!--
     **********************************************************
-    ** setup-dist - copies files for distribution
-    **********************************************************
-    -->
-    <target name="setup-dist">
-        <copy todir="${plugin.build.dir}/META-INF">
-            <fileset dir="META-INF"/>
-        </copy>
-        <antcall target="setup-dist-default" />
-    </target>
-    	
-    <!--
-    **********************************************************
-    ** post-dist - removes files from the generated jar
+    ** post-dist - replaces files from the generated jar
     **********************************************************
     -->
     <target name="post-dist">
     	<move file="${plugin.jar}" todir="${plugin.build.dir}" />
     	<jar destfile="${plugin.jar}">
+            <fileset dir="jar"/>
     		<zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
                 <exclude name="*.class"/>
     			<exclude name="*.html"/>
-                <exclude name="META-INF/*.txt"/>
-                <exclude name="META-INF/*.xml"/>
-                <exclude name="META-INF/maven/**/*" />
+                <exclude name="META-INF/**/*"/>
                 <exclude name="javax/*.txt"/>
     		</zipfileset>
+            <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar" includes="META-INF/*.jai" />
     	</jar>
     	<delete file="${plugin.build.dir}/${ant.project.name}.jar" />
     </target>

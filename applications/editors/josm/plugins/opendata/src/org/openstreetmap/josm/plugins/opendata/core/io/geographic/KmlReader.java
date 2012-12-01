@@ -131,7 +131,7 @@ public class KmlReader extends AbstractReader implements OdConstants {
             		ds.addPrimitive(way = new Way());
             		list.add(way);
             	} else if (parser.getLocalName().equals(KML_COORDINATES)) {
-            		String[] tab = parser.getElementText().trim().split(" ");
+            		String[] tab = parser.getElementText().trim().split("\\s");
             		for (int i = 0; i < tab.length; i ++) {
             			String[] values = tab[i].split(",");
             			if (values.length >= 2) {

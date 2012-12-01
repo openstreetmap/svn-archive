@@ -142,6 +142,6 @@ public interface OdConstants {
     /**
      * Resources
      */
-    public static final String RESOURCE_PATH = "/org/openstreetmap/josm/plugins/opendata/core/resources/";
+    public static final String RESOURCE_PATH = "/resources/org/openstreetmap/josm/plugins/opendata/core/resources/";
     public static final String DICTIONARY_FR = RESOURCE_PATH+"dictionary.fr.csv";
 }

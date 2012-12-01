@@ -18,5 +18,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="lib" path="/JOSM/dist/jts.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/josm-utilsplugin2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-jts"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

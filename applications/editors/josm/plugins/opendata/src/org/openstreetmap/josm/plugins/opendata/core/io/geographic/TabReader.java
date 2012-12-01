@@ -20,14 +20,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.DataUtilities;
-import org.geotools.data.shapefile.ShpFileType;
-import org.geotools.data.shapefile.ShpFiles;
+import org.geotools.data.shapefile.TabFiles;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -53,26 +50,7 @@ public class TabReader extends AbstractMapInfoReader {
 			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
 		return new TabReader(handler).parse(in, file, instance, Charset.forName(ISO8859_15));
 	}
-	
-	private class TabFiles extends ShpFiles {
-		public TabFiles(File headerFile, File dataFile) throws IllegalArgumentException {
-			super(DataUtilities.fileToURL(headerFile));
-			urls.put(ShpFileType.DBF, DataUtilities.fileToURL(dataFile));
-		}
 		
-		@Override
-	    protected String baseName(Object obj) {
-            if (obj instanceof URL) {
-                return toBase(((URL) obj).toExternalForm());
-            }
-            return null;
-	    }
-	    
-	    private String toBase(String path) {
-	        return path.substring(0, path.toLowerCase().lastIndexOf(".tab"));
-	    }
-	}
-	
 	private class TabOsmReader extends SpreadSheetReader {
 
 		private final DbaseFileReader dbfReader;

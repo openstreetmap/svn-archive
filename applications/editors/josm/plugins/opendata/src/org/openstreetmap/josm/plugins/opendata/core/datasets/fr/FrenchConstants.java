@@ -32,5 +32,5 @@ public interface FrenchConstants extends OdConstants {
 	/**
 	 * NEPTUNE XML Schema
 	 */
-	public static final String NEPTUNE_XSD = "/neptune/neptune.xsd";
+	public static final String NEPTUNE_XSD = "/resources/neptune/neptune.xsd";
 }

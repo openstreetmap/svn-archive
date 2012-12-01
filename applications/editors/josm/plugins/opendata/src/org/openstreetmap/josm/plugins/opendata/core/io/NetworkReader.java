@@ -139,10 +139,10 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             	readerClass = findReaderByAttachment();
             }
             if (readerClass == null) {
-            	readerClass = findReaderByContentType();
+                readerClass = findReaderByExtension(url.toLowerCase());
             }
             if (readerClass == null) {
-            	readerClass = findReaderByExtension(url.toLowerCase());
+            	readerClass = findReaderByContentType();
             }
             if (readerClass == null) {
            		throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?

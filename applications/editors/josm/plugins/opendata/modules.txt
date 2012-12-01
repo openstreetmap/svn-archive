@@ -1,31 +1,31 @@
 be.bruxelles.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/be.bruxelles.jar
 	Module-Icon: images/data.be.bruxelles_24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: Bruxelles
 	Manifest-Version: 1.0
 	Module-Version: 28143
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-23T20:49:59.310593Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.BruxellesModule
 be.datagovbe.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/be.datagovbe.jar
 	Module-Icon: images/be24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: Belgian Open Data initiative
 	Manifest-Version: 1.0
 	Module-Version: 28143
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-23T20:49:59.310593Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.be.datagovbe.DataGovBeModule
 fr.cg41.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.cg41.jar
 	Module-Icon: images/data.fr.cg41_24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: CG41 - Loir-et-Cher
 	Manifest-Version: 1.0
 	Module-Version: 28143
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-23T20:49:59.310593Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.cg41.Cg41Module
 fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.datagouvfr.jar
@@ -41,22 +41,22 @@ fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrModule
 fr.lemans.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.lemans.jar
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: Informations publiques du Mans Métropole.
 	Manifest-Version: 1.0
 	Module-Version: 28143
-	Created-By: 1.6.0_30-b12 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-23T20:49:59.310593Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.LeMansModule
 fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.paris.jar
 	Module-Icon: images/data.fr.paris_24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.8.2
+	Ant-Version: Apache Ant 1.8.3
 	Module-Description: Paris
 	Manifest-Version: 1.0
-	Module-Version: 28314
-	Created-By: 1.6.0_31-b05 (Sun Microsystems Inc.)
-	Module-Date: 2012-04-18T17:40:13.229600Z
+	Module-Version: 29015
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
+	Module-Date: 2012-12-01T21:52:08.165123Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
 fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.sncf.jar
 	Module-Icon: images/data.fr.sncf_24.png
@@ -65,7 +65,7 @@ fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opend
 	Module-Description: SNCF
 	Manifest-Version: 1.0
 	Module-Version: 28143
-	Created-By: 1.6.0_35-b10 (Sun Microsystems Inc.)
+	Created-By: 1.6.0_37-b06 (Sun Microsystems Inc.)
 	Module-Date: 2012-03-23T20:49:59.310593Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.SncfModule
 fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.toulouse.jar

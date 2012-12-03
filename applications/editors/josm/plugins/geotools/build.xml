@@ -10,7 +10,7 @@
     <property name="plugin.description" value="Provides parts of the GeoTools library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     <property name="plugin.icon" value="images/compass.png"/>
     <!--<property name="plugin.link" value="..."/>-->
-    <property name="plugin.early" value="true"/>
+    <!--<property name="plugin.early" value="..."/>-->
     <property name="plugin.requires" value="jts"/>
     <property name="plugin.stage" value="20"/>
 
@@ -24,7 +24,7 @@
     -->
     <target name="post-dist">
     	<move file="${plugin.jar}" todir="${plugin.build.dir}" />
-    	<jar destfile="${plugin.jar}">
+    	<jar destfile="${plugin.jar}" filesetmanifest="merge">
             <fileset dir="jar"/>
     		<zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
                 <exclude name="*.class"/>
@@ -32,7 +32,10 @@
                 <exclude name="META-INF/**/*"/>
                 <exclude name="javax/*.txt"/>
     		</zipfileset>
-            <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar" includes="META-INF/*.jai" />
+    	    <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
+    	        <include name="META-INF/MANIFEST.MF"/>
+    	        <include name="META-INF/*.jai"/>
+    	    </zipfileset>
     	</jar>
     	<delete file="${plugin.build.dir}/${ant.project.name}.jar" />
     </target>

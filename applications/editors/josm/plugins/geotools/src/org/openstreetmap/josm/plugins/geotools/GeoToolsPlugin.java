@@ -19,6 +19,7 @@ public class GeoToolsPlugin extends Plugin {
     public GeoToolsPlugin(PluginInformation info) {
         super(info);
         initJAI();
+        initGeoTools();
         checkEPSG();
     }
 
@@ -60,6 +61,12 @@ public class GeoToolsPlugin extends Plugin {
             //    System.out.println("geotools: JAI mode "+mode+": "+Arrays.toString(registry.getDescriptorNames(mode)));
             //}
         }
+    }
+    
+    private void initGeoTools() {
+        // Force Axis order. Fix #8248
+        // See http://docs.geotools.org/stable/userguide/library/referencing/order.html
+        System.setProperty("org.geotools.referencing.forceXY", "true");
     }
 
     private void checkEPSG() {

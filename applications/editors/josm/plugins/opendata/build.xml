@@ -9,7 +9,7 @@
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
     <!--<property name="plugin.early" value="..."/>-->
-    <property name="plugin.requires" value="geotools;utilsplugin2"/>
+    <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
     <!--<property name="plugin.stage" value="..."/>-->
 
     <!-- ** include targets that all plugins have in common ** -->

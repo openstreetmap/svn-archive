@@ -32,6 +32,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * first search) and then changes the tags to be the reverse of the order in which
  * they were found.
  */
+@SuppressWarnings("serial")
 public class ReverseTerraceAction extends JosmAction {
 
     public ReverseTerraceAction() {

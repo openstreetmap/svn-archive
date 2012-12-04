@@ -41,6 +41,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
  *
  * @author casualwalker
  */
+@SuppressWarnings("serial")
 public class HouseNumberInputHandler extends JosmAction implements ActionListener, FocusListener, ItemListener {
     private final TerracerAction terracerAction;
     private final Way outline, street;

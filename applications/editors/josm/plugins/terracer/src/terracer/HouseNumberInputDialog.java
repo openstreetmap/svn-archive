@@ -15,9 +15,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.awt.event.ActionEvent;
 import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
@@ -56,7 +56,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     final static String DELETE_OUTLINE = "plugins.terracer.delete_outline";
     final static String INTERPOLATION = "plugins.terracer.interpolation";
 
-    final private Way street;
+    //final private Way street;
     final private String streetName;
     final private boolean relationExists;
     final ArrayList<Node> housenumbers;
@@ -99,7 +99,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
                 true
         );
         this.inputHandler = handler;
-        this.street = street;
+        //this.street = street;
         this.streetName = streetName;
         this.relationExists = relationExists;
         this.housenumbers = housenumbers;
@@ -229,7 +229,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */
     @Override protected void buttonAction(int buttonIndex, final ActionEvent evt) {
-        String a = evt.getActionCommand();
+        //String a = evt.getActionCommand();
         this.inputHandler.actionPerformed(evt);
     }
 

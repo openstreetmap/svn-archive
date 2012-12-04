@@ -173,9 +173,21 @@ public final class TerracerAction extends JosmAction {
             return;
         }
 
-        // If we have a street, try to find an associatedStreet relation that could be reused.
         Relation associatedStreet = null;
-        if (street != null) {
+
+        // Try to find an associatedStreet relation that could be reused from outline.
+        for (OsmPrimitive p : outline.getReferrers()) {
+            if (p instanceof Relation) {
+                Relation rel = (Relation) p;
+                if ("associatedStreet".equals(rel.get("type"))) {
+                    associatedStreet = rel;
+                    break;
+                }
+            }
+        }
+        
+        // If we have a street, try to find an associatedStreet relation that could be reused.
+        if (associatedStreet == null && street != null) {
             outer:for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
                 if (!(osm instanceof Relation)) continue;
                 Relation rel = (Relation) osm;
@@ -436,6 +448,9 @@ public final class TerracerAction extends JosmAction {
                 Relation newAssociatedStreet = new Relation(associatedStreet);
                 for (Way w : ways) {
                     newAssociatedStreet.addMember(new RelationMember("house", w));
+                }
+                if (deleteOutline) {
+                    newAssociatedStreet.removeMembersFor(outline);
                 }
                 this.commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
             }

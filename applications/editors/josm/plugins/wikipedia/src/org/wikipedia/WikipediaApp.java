@@ -158,6 +158,29 @@ public final class WikipediaApp {
         return r;
     }
 
+    static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
+        try {
+            Collection<WikipediaLangArticle> r = new ArrayList<WikipediaLangArticle>();
+            final String url = "http://" + wikipediaLang + ".wikipedia.org/w/api.php" +
+                    "?action=query" +
+                    "&prop=langlinks" +
+                    "&titles=" + article +
+                    "&lllimit=500" +
+                    "&format=xml";
+            System.out.println("Wikipedia: GET " + url);
+            final Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
+            final NodeList nodes = (NodeList) XPathFactory.newInstance().newXPath().compile("//ll").evaluate(xml, XPathConstants.NODESET);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                final String lang = nodes.item(i).getAttributes().getNamedItem("lang").getTextContent();
+                final String name = nodes.item(i).getTextContent();
+                r.add(new WikipediaLangArticle(lang, name));
+            }
+            return r;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     static class WikipediaLangArticle {
 
         final String lang, article;

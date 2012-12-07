@@ -398,7 +398,7 @@ public final class TerracerAction extends JosmAction {
                     additionalKeys = housenumbers.get(i).getKeys().entrySet();
                 }
 
-                addressBuilding(terr, street, streetName, number, additionalKeys);
+                addressBuilding(terr, street, streetName, number, additionalKeys, associatedStreet);
 
                 ways.add(terr);
                 this.commands.add(new AddCommand(terr));
@@ -428,7 +428,7 @@ public final class TerracerAction extends JosmAction {
                     number = firstHouseNum.get("addr:housenumber");
                 }
             }
-            addressBuilding(outline, street, streetName, number, null);
+            addressBuilding(outline, street, streetName, number, null, associatedStreet);
             ways.add(outline);
         }
 
@@ -486,9 +486,10 @@ public final class TerracerAction extends JosmAction {
      * @param streetName the name of a street (may be null). Used if not null and street is null.
      * @param number The house number
      * @param additionalKeys More keys to be copied onto the new outline
+     * @param associatedStreet The associated street. Used to determine if addr:street should be set or not.
      */
     private void addressBuilding(Way outline, Way street, String streetName,
-            String number, Set<Entry<String, String>> additionalKeys) {
+            String number, Set<Entry<String, String>> additionalKeys, Relation associatedStreet) {
         if (number != null) {
             // only, if the user has specified house numbers
             this.commands.add(new ChangePropertyCommand(outline, "addr:housenumber", number));
@@ -506,10 +507,13 @@ public final class TerracerAction extends JosmAction {
         if (!outline.hasKey("building") && !buildingAdded) {
             this.commands.add(new ChangePropertyCommand(outline, "building", "yes"));
         }
-        if (street != null) {
-            this.commands.add(new ChangePropertyCommand(outline, "addr:street", street.get("name")));
-        } else if (streetName != null && !streetName.trim().isEmpty()) {
-            this.commands.add(new ChangePropertyCommand(outline, "addr:street", streetName.trim()));
+        // Only put addr:street if no relation exists or if it has no name
+        if (associatedStreet == null || !associatedStreet.hasKey("name")) {
+            if (street != null) {
+                this.commands.add(new ChangePropertyCommand(outline, "addr:street", street.get("name")));
+            } else if (streetName != null && !streetName.trim().isEmpty()) {
+                this.commands.add(new ChangePropertyCommand(outline, "addr:street", streetName.trim()));
+            }
         }
     }
 

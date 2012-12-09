@@ -5,15 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
@@ -26,7 +23,6 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.osminspector.gui.OsmInspectorDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsmInspectorPlugin extends Plugin 
@@ -38,7 +34,7 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
    
 
     /** The bounding box from where the MapDust bugs are down-loaded */
-    private Bounds bBox;
+    //private Bounds bBox;
 
     private OsmInspectorLayer inspectorLayer;
     
@@ -60,8 +56,8 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
     	System.out.println("Initialized Plugin...");
         Shortcut shortcut = Shortcut.registerShortcut("OsmInspector", tr("Toggle: {0}", tr("Open OsmInspector")),
                 KeyEvent.VK_1, Shortcut.ALT_SHIFT);
-        String name = "Osm Inspector error reports";
-        String tooltip = "Activates the Osm Inspector reporter plugin";
+        //String name = "Osm Inspector error reports";
+        //String tooltip = "Activates the Osm Inspector reporter plugin";
         
         /* add default values for static variables */
         Main.pref.put("osmInspector.nickname", "osmi");
@@ -136,7 +132,9 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
 	//  Delegate feature selection to layer
 	//
 	public void mouseClicked(MouseEvent arg0) {
-		inspectorLayer.selectFeatures(arg0.getX(), arg0.getY());
+	    if (inspectorLayer != null) {
+	        inspectorLayer.selectFeatures(arg0.getX(), arg0.getY());
+	    }
 	}
 
 	@Override

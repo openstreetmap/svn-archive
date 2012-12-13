@@ -18,7 +18,7 @@ public class WikipediaAddNamesAction extends JosmAction {
 
     public WikipediaAddNamesAction() {
         super(tr("Add names from Wikipedia"), "dialogs/wikipedia",
-                tr("Fetches interwiki links from Wikipedia in order to several name tags"),
+                tr("Fetches interwiki links from Wikipedia in order to add several name tags"),
                 null, true);
     }
 

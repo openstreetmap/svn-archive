@@ -1,6 +1,5 @@
 package smed2;
 
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -14,7 +13,7 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.Main;
 
-import S57.S57dat;
+import s57.S57dat;
 
 import panels.PanelMain;
 

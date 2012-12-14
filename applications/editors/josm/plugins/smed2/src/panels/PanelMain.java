@@ -13,8 +13,6 @@ import org.openstreetmap.josm.Main;
 
 import smed2.Smed2Action;
 
-import S57.S57dat;
-
 public class PanelMain extends JPanel {
 
 	private static final long serialVersionUID = 1L;

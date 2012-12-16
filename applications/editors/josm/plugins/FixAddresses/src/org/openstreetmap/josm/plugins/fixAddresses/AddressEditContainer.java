@@ -531,7 +531,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			clearProblems();
 
 			for (OsmPrimitive osmPrimitive : osmData) {
-				osmPrimitive.visit(this);
+				if (osmPrimitive.isUsable()) {
+					osmPrimitive.visit(this);
+				}
 			}
 
 			resolveAddresses();

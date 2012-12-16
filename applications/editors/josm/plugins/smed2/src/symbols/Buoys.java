@@ -121,6 +121,24 @@ public class Buoys {
 		p.moveTo(-19.0, -23.0); p.lineTo(-12.0,-42.0); p.lineTo(12.0,-42.0); p.lineTo(19.0,-23.0);
     Float.add(new Instr(Prim.PLIN, p));
 	}
+	
+	public static final ArrayList<Instr> Ice = new ArrayList<Instr>();
+	static {
+		ArrayList<Instr> colours = new ArrayList<Instr>();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,0); p.quadTo(-30.0,0.0,-30.0,-15.0); p.lineTo(-30.0,-25.0); p.lineTo(30.0,-25.0); p.lineTo(30.0,-15); p.quadTo(30.0,0.0,15.0,0.0);
+		p.lineTo(8.0, 0.0); p.curveTo(8.0,-11.0,-8.0,-11.0,-8.0,0.0); p.closePath();
+		colours.add(new Instr(Prim.P1, p));
+    Ice.add(new Instr(Prim.COLR, colours));
+    Ice.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Ice.add(new Instr(Prim.FILL, Color.black));
+    Ice.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
+    Ice.add(new Instr(Prim.LINE, new Line2D.Double(-35,0,-10,0)));
+    Ice.add(new Instr(Prim.LINE, new Line2D.Double(10,0,35,0)));
+		p = new Path2D.Double(); p.moveTo(-15.0,0); p.quadTo(-30.0,0.0,-30.0,-15.0); p.lineTo(-30.0,-25.0); p.lineTo(30.0,-25.0); p.lineTo(30.0,-15); p.quadTo(30.0,0.0,15.0,0.0);
+		Ice.add(new Instr(Prim.PLIN, p));
+		p = new Path2D.Double(); p.moveTo(-6.0,8.0); p.lineTo(-6.0,40.0); p.lineTo(6.0,40.0); p.lineTo(6.0,8.0);
+		Ice.add(new Instr(Prim.PLIN, p));
+	}
 
 	public static final ArrayList<Instr> Pillar = new ArrayList<Instr>();
 	static {

@@ -22,19 +22,18 @@ import s57.S57val.*;
 public class Symbols {
 
 	public enum Prim {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, SYMB,
-		P1, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
 	public enum Handle {
 		CC, TL, TR, TC, LC, RC, BL, BR, BC
 	}
 
-	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0,
-		0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
+	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
+			0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0,
-		0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
+	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
+			0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
 
 	private static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
@@ -85,22 +84,26 @@ public class Symbols {
 	}
 
 	public static void drawSymbol(Graphics2D g2, ArrayList<Instr> symbol, int zoom, double x, double y, Delta dd, Scheme cs) {
-		int pn = cs.pat.size();
-		int cn = cs.col.size() - pn + 1;
+		int pn = 0;
+		int cn = 0;
+		if (cs != null) {
+			pn = cs.pat.size();
+			cn = cs.col.size() - ((pn != 0) ? pn - 1 : 0);
+		}
 		AffineTransform savetr = g2.getTransform();
 		g2.translate(x, y);
 		g2.scale(symbolScale[zoom], symbolScale[zoom]);
 		for (Instr item : symbol) {
 			switch (item.type) {
 			case BBOX:
-				Rectangle bbox = (Rectangle)item.params;
+				Rectangle bbox = (Rectangle) item.params;
 				double dx = 0.0;
 				double dy = 0.0;
 				if (dd != null) {
 					switch (dd.h) {
 					case CC:
-						dx = bbox.x + (bbox.width/2.0);
-						dy = bbox.y - (bbox.height/2.0);
+						dx = bbox.x + (bbox.width / 2.0);
+						dy = bbox.y - (bbox.height / 2.0);
 						break;
 					case TL:
 						dx = bbox.x;
@@ -111,16 +114,16 @@ public class Symbols {
 						dy = bbox.y;
 						break;
 					case TC:
-						dx = bbox.x + (bbox.width/2.0);
+						dx = bbox.x + (bbox.width / 2.0);
 						dy = bbox.y;
 						break;
 					case LC:
 						dx = bbox.x;
-						dy = bbox.y - (bbox.height/2.0);
+						dy = bbox.y - (bbox.height / 2.0);
 						break;
 					case RC:
 						dx = bbox.x + bbox.width;
-						dy = bbox.y - (bbox.height/2.0);
+						dy = bbox.y - (bbox.height / 2.0);
 						break;
 					case BL:
 						dx = bbox.x;
@@ -131,7 +134,7 @@ public class Symbols {
 						dy = bbox.y - bbox.height;
 						break;
 					case BC:
-						dx = bbox.x + (bbox.width/2.0);
+						dx = bbox.x + (bbox.width / 2.0);
 						dy = bbox.y - bbox.height;
 						break;
 					}
@@ -146,6 +149,16 @@ public class Symbols {
 						case P1:
 							if (cn > 0) {
 								g2.setPaint(bodyColours.get(cs.col.get(0)));
+								g2.fill((Path2D.Double) patch.params);
+							}
+							break;
+						case P2:
+							if (cn > 0) {
+								if (cn > 1) {
+									g2.setPaint(bodyColours.get(cs.col.get(1)));
+								} else {
+									g2.setPaint(bodyColours.get(cs.col.get(0)));
+								}
 								g2.fill((Path2D.Double) patch.params);
 							}
 							break;
@@ -209,6 +222,9 @@ public class Symbols {
 				break;
 			case PGON:
 				g2.fill((Path2D.Double) item.params);
+				break;
+			case SYMB:
+				drawSymbol(g2, (ArrayList<Instr>) item.params, zoom, 0.0, 0.0, null, null);
 				break;
 			}
 		}

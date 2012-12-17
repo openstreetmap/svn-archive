@@ -37,7 +37,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom11;
-    <Filter>[natural] = 'grass' or [natural] = 'grassland' or [natural] = 'meadow' or [tourism] = 'camp_site' or [tourism]='caravan_site' or [tourism] = 'picnic_site'</Filter>
+    <Filter>[natural] = 'grassland' or [natural] = 'meadow' or [tourism] = 'camp_site' or [tourism]='caravan_site' or [tourism] = 'picnic_site'</Filter>
     <PolygonSymbolizer>
       <CssParameter name="fill">&openland-color;</CssParameter>
     </PolygonSymbolizer>
@@ -53,12 +53,12 @@
     <Filter>[natural] = 'scrub'</Filter>
     &maxscale_zoom12;
     <PolygonSymbolizer>
-      <CssParameter name="fill">&openland-color;</CssParameter>
+      <CssParameter name="fill">&forestland-color;</CssParameter>
      </PolygonSymbolizer>
   </Rule>
   <Rule>
     &maxscale_zoom8;
-     <Filter>[landuse] = 'residential' or [landuse] ='commercial' or [landuse] = 'industrial' or [landuse] = 'retail'</Filter>
+     <Filter>[landuse] = 'residential' or [landuse] ='commercial' or [landuse] = 'industrial' or [landuse] = 'retail' or [landuse]='farmyard'</Filter>
     <PolygonSymbolizer>
       <CssParameter name="fill">&urbanarea-color;</CssParameter>
     </PolygonSymbolizer>
@@ -78,7 +78,7 @@
    </PolygonSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[landuse] = 'field' or [natural] = 'crop' or [landuse] = 'farm' or [landuse] = 'farmland'</Filter>
+    <Filter>[landuse] = 'field' or [landuse] = 'farm' or [landuse] = 'farmland'</Filter>
     &maxscale_zoom11;
     <PolygonSymbolizer>
       <CssParameter name="fill">&farmland-color;</CssParameter>
@@ -101,7 +101,7 @@
   </Rule>
 -->
   <Rule>
-    <Filter>[amenity]='parking' or [landuse]='playground' or [leisure]='playground' or [landuse]='farmyard' or [landuse]='parking' or [highway]='pedestrian' or [highway]='services' or [highway]='turning_circle' or [power]='station' or [power]='sub_station'</Filter>
+    <Filter>[amenity]='parking' or [landuse]='playground' or [leisure]='playground' or [landuse]='parking' or [highway]='pedestrian' or [highway]='services' or [highway]='turning_circle' or [power]='station' or [power]='sub_station'</Filter>
     &maxscale_zoom12;
    <PolygonSymbolizer>
        <CssParameter name="fill">&roadcore-color;</CssParameter>

@@ -7,7 +7,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom15;
-    <Filter>[sport]='motor' or [highway]='raceway'</Filter>
+    <Filter>[sport]='motor' or [sport]='motocross' or [highway]='raceway'</Filter>
     <PointSymbolizer file="&symbols;/motorsport.png"/>
   </Rule>
   <Rule>

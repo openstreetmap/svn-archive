@@ -70,7 +70,7 @@ public class S57val {
 	private static final EnumMap<CatBRG, S57enum> Catbrg = new EnumMap<CatBRG, S57enum>(CatBRG.class); static {Catbrg.put(CatBRG.BRG_UNKN, new S57enum(0, ""));
 		Catbrg.put(CatBRG.BRG_FIXD, new S57enum(1, "fixed")); Catbrg.put(CatBRG.BRG_OPEN, new S57enum(2, "opening")); Catbrg.put(CatBRG.BRG_SWNG, new S57enum(3, "swing"));
 		Catbrg.put(CatBRG.BRG_LIFT, new S57enum(4, "lifting")); Catbrg.put(CatBRG.BRG_BASC, new S57enum(5, "bascule")); Catbrg.put(CatBRG.BRG_PONT, new S57enum(6, "pontoon"));
-		Catbrg.put(CatBRG.BRG_DRAW, new S57enum(7, "draw")); Catbrg.put(CatBRG.BRG_TRNS, new S57enum(8, "transporter")); Catbrg.put(CatBRG.BRG_FOOT, new S57enum(9, "footbridge"));
+		Catbrg.put(CatBRG.BRG_DRAW, new S57enum(7, "drawbridge")); Catbrg.put(CatBRG.BRG_TRNS, new S57enum(8, "transporter")); Catbrg.put(CatBRG.BRG_FOOT, new S57enum(9, "footbridge"));
 		Catbrg.put(CatBRG.BRG_VIAD, new S57enum(10, "viaduct")); Catbrg.put(CatBRG.BRG_AQUA, new S57enum(11, "aqueduct")); Catbrg.put(CatBRG.BRG_SUSP, new S57enum(12, "suspension"));
 	}
 	public enum CatBUA { BUA_UNKN, BUA_URBN, BUA_STTL, BUA_VLLG, BUA_TOWN, BUA_CITY, BUA_HOLV }

@@ -26,6 +26,52 @@
      minimum_version="0.7.1">
   &fontset-settings;
 
+<Style name="snowplowing">
+  <Rule>
+    <Filter>[highway]='unclassified' and ([snowplowing]='no' or [piste:type] = 'nordic')</Filter>
+    &maxscale_zoom12;
+    &minscale_zoom12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trail-color;</CssParameter>
+      <CssParameter name="stroke-width">0.9</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[highway]='unclassified' and ([snowplowing]='no' or [piste:type] = 'nordic')</Filter>
+    &maxscale_zoom13;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trail-color;</CssParameter>
+      <CssParameter name="stroke-width">1.4</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[highway]='unclassified' and ([snowplowing]='no' or [piste:type] = 'nordic')</Filter>
+    &maxscale_zoom14;
+    &minscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trail-color;</CssParameter>
+      <CssParameter name="stroke-width">2.2</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[highway]='unclassified' and ([snowplowing]='no' or [piste:type] = 'nordic')</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trail-color;</CssParameter>
+      <CssParameter name="stroke-width">3</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
 <Style name="skiing">
   <Rule>
     <Filter>[piste:grooming]='backcountry'</Filter>
@@ -302,6 +348,21 @@
 &layer-buildings;
 &layer-roads;
 &layer-nationalpark;
+
+<Layer name="snowplowing" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>snowplowing</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,highway,snowplowing,"piste:type","piste:grooming"
+       from &prefix;_line
+       where snowplowing="no"
+          or "piste:type" in ('nordic')
+          or "piste:grooming" is not null
+      ) as snowplowing
+      </Parameter>
+      &datasource-settings;
+   </Datasource>
+</Layer>
 
 <Layer name="skiing" status="on" srs="&osm2pgsql_projection;">
     <StyleName>skiing</StyleName>

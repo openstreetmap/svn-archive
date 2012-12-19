@@ -745,6 +745,10 @@ public class S57val {
 		Addmrk.put(AddMRK.MRK_TOPB, new S57enum(1, "top_board")); Addmrk.put(AddMRK.MRK_BOTB, new S57enum(2, "bottom_board")); Addmrk.put(AddMRK.MRK_RTRI, new S57enum(3, "right_triangle"));
 		Addmrk.put(AddMRK.MRK_LTRI, new S57enum(4, "left_triangle")); Addmrk.put(AddMRK.MRK_BTRI, new S57enum(5, "bottom_triangle"));
 	}
+	public enum BnkWTW { BWW_UNKN, BWW_LEFT, BWW_RGHT }
+	private static final EnumMap<BnkWTW, S57enum> Bnkwtw = new EnumMap<BnkWTW, S57enum>(BnkWTW.class); static { Bnkwtw.put(BnkWTW.BWW_UNKN, new S57enum(0, ""));
+	Bnkwtw.put(BnkWTW.BWW_LEFT, new S57enum(1, "left")); Bnkwtw.put(BnkWTW.BWW_RGHT, new S57enum(2, "right"));
+	}
 	public enum CatBNK { BNK_UNKN, BNK_STEP, BNK_FLAT, BNK_FAST, BNK_UFST }
 	private static final EnumMap<CatBNK, S57enum> Catbnk = new EnumMap<CatBNK, S57enum>(CatBNK.class); static { Catbnk.put(CatBNK.BNK_UNKN, new S57enum(0, ""));
 		Catbnk.put(CatBNK.BNK_STEP, new S57enum(1, "steep")); Catbnk.put(CatBNK.BNK_FLAT, new S57enum(2, "flat")); Catbnk.put(CatBNK.BNK_FAST, new S57enum(3, "fastened"));
@@ -757,7 +761,7 @@ public class S57val {
 		NMK_FERI, NMK_BRTP, NMK_BTLL, NMK_BTLS, NMK_BTRL, NMK_BTUP, NMK_BTP1, NMK_BTP2, NMK_BTP3, NMK_BTUN, NMK_BTN1, NMK_BTN2, NMK_BTN3, NMK_BTUM,
 		NMK_BTU1, NMK_BTU2, NMK_BTU3, NMK_ANKP, NMK_MORP, NMK_VLBT, NMK_TRNA, NMK_SWWC, NMK_SWWR, NMK_SWWL, NMK_WRSA, NMK_WLSA, NMK_WRSL, NMK_WLSR,
 		NMK_WRAL, NMK_WLAR, NMK_MWWC, NMK_MWWJ, NMK_MWAR, NMK_MWAL, NMK_WARL, NMK_WALR, NMK_PEND, NMK_DWTR, NMK_TELE, NMK_MTCP, NMK_SPCP, NMK_WSKP,
-		NMK_SLCP, NMK_UPCP, NMK_SLBP, NMK_RADI, NMK_WTBP, NMK_HSCP, NMK_LBGP }
+		NMK_SLCP, NMK_UPCP, NMK_SLBP, NMK_RADI, NMK_WTBP, NMK_HSCP, NMK_LBGP, NMK_KTPM, NMK_KTSM, NMK_KTMR, NMK_CRTP, NMK_CRTS, NMK_TRBM, NMK_RSPD }
 	private static final EnumMap<CatNMK, S57enum> Catnmk = new EnumMap<CatNMK, S57enum>(CatNMK.class); static { Catnmk.put(CatNMK.NMK_UNKN, new S57enum(0, ""));
 		Catnmk.put(CatNMK.NMK_NENT, new S57enum(1, "no_entry")); Catnmk.put(CatNMK.NMK_CLSA, new S57enum(2, "closed_area")); Catnmk.put(CatNMK.NMK_NOVK, new S57enum(3, "no_overtaking"));
 		Catnmk.put(CatNMK.NMK_NCOV, new S57enum(4, "no_convoy_overtaking")); Catnmk.put(CatNMK.NMK_NPAS, new S57enum(5, "no_passing")); Catnmk.put(CatNMK.NMK_NBRT, new S57enum(6, "no_berthing"));
@@ -797,6 +801,9 @@ public class S57val {
 	  Catnmk.put(CatNMK.NMK_SPCP, new S57enum(94, "sport_craft_permitted")); Catnmk.put(CatNMK.NMK_WSKP, new S57enum(95, "waterskiing_permitted")); Catnmk.put(CatNMK.NMK_SLCP, new S57enum(96, "sailing_craft_permitted"));
 	  Catnmk.put(CatNMK.NMK_UPCP, new S57enum(97, "unpowered_craft_permitted")); Catnmk.put(CatNMK.NMK_SLBP, new S57enum(98, "sailboards_permitted")); Catnmk.put(CatNMK.NMK_RADI, new S57enum(99, "radio_information"));
 	  Catnmk.put(CatNMK.NMK_WTBP, new S57enum(100, "waterbikes_permitted")); Catnmk.put(CatNMK.NMK_HSCP, new S57enum(101, "high_speeds_permitted")); Catnmk.put(CatNMK.NMK_LBGP, new S57enum(102, "launching_beaching_permitted"));
+	  Catnmk.put(CatNMK.NMK_KTPM, new S57enum(103, "keep_to_port_margin")); Catnmk.put(CatNMK.NMK_KTSM, new S57enum(104, "keep_to_starboard_margin")); Catnmk.put(CatNMK.NMK_KTMR, new S57enum(105, "keep_to_mid-river"));
+	  Catnmk.put(CatNMK.NMK_CRTP, new S57enum(106, "cross_river_to_port")); Catnmk.put(CatNMK.NMK_CRTS, new S57enum(107, "cross_river_to_starboard")); Catnmk.put(CatNMK.NMK_TRBM, new S57enum(108, "traffic_between_margins"));
+	  Catnmk.put(CatNMK.NMK_RSPD, new S57enum(109, "reduce_speed")); 
 	}
 	public enum ClsDNG { DNG_UNKN, DNG_1BLU, DNG_2BLU, DNG_3BLU, DNG_0BLU, DNG_1RED }
 	private static final EnumMap<ClsDNG, S57enum> Clsdng = new EnumMap<ClsDNG, S57enum>(ClsDNG.class); static { Clsdng.put(ClsDNG.DNG_UNKN, new S57enum(0, ""));
@@ -1060,21 +1067,21 @@ public class S57val {
 		keys.put(Att.SCHREF, new S57key(Conv.S, null)); keys.put(Att.USESHP, new S57key(Conv.E, Useshp)); keys.put(Att.CURVHW, new S57key(Conv.F, null));
 		keys.put(Att.CURVLW, new S57key(Conv.F, null)); keys.put(Att.CURVMW, new S57key(Conv.F, null)); keys.put(Att.CURVOW, new S57key(Conv.F, null));
 		keys.put(Att.APTREF, new S57key(Conv.S, null)); keys.put(Att.SHPTYP, new S57key(Conv.E, Shptyp)); keys.put(Att.UPDMSG, new S57key(Conv.S, null));
-		keys.put(Att.ADDMRK, new S57key(Conv.L, Addmrk)); keys.put(Att.CATBNK, new S57key(Conv.E, Catbnk)); keys.put(Att.CATNMK, new S57key(Conv.E, Catnmk));
-		keys.put(Att.CATBRT, new S57key(Conv.L, Catbrt)); keys.put(Att.CATBUN, new S57key(Conv.L, Catbun)); keys.put(Att.CATCCL, new S57key(Conv.L, Catccl));
-		keys.put(Att.CATCOM, new S57key(Conv.L, Catcom)); keys.put(Att.CATHBR, new S57key(Conv.L, Cathbr)); keys.put(Att.CATRFD, new S57key(Conv.L, Catrfd));
-		keys.put(Att.CATTML, new S57key(Conv.L, Cattml)); keys.put(Att.CATGAG, new S57key(Conv.L, Catgag)); keys.put(Att.CATVTR, new S57key(Conv.L, Catvtr));
-		keys.put(Att.CATTAB, new S57key(Conv.E, Cattab)); keys.put(Att.CATEXS, new S57key(Conv.E, Catexs)); keys.put(Att.CATWWM, new S57key(Conv.E, Catwwm));
-		keys.put(Att.LG_SPD, new S57key(Conv.F, null)); keys.put(Att.LG_SPR, new S57key(Conv.L, Lg_spr)); keys.put(Att.LG_BME, new S57key(Conv.F, null));
-		keys.put(Att.LG_LGS, new S57key(Conv.F, null)); keys.put(Att.LG_DRT, new S57key(Conv.F, null)); keys.put(Att.LG_WDP, new S57key(Conv.F, null));
-		keys.put(Att.LG_WDU, new S57key(Conv.E, Lg_wdu)); keys.put(Att.LG_REL, new S57key(Conv.L, Lg_rel)); keys.put(Att.LG_FNC, new S57key(Conv.L, Lg_fnc));
-		keys.put(Att.LG_DES, new S57key(Conv.S, null)); keys.put(Att.LG_PBR, new S57key(Conv.S, null)); keys.put(Att.LC_CSI, new S57key(Conv.L, Lc_csi));
-		keys.put(Att.LC_CSE, new S57key(Conv.L, Lc_cse)); keys.put(Att.LC_ASI, new S57key(Conv.L, Lc_asi)); keys.put(Att.LC_ASE, new S57key(Conv.L, Lc_ase));
-		keys.put(Att.LC_CCI, new S57key(Conv.L, Lc_cci)); keys.put(Att.LC_CCE, new S57key(Conv.L, Lc_cce)); keys.put(Att.LC_BM1, new S57key(Conv.F, null));
-		keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null)); keys.put(Att.LC_LG2, new S57key(Conv.F, null));
-		keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null)); keys.put(Att.LC_SP1, new S57key(Conv.F, null));
-		keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null)); keys.put(Att.LC_WD2, new S57key(Conv.F, null));
-		keys.put(Att.LITRAD, new S57key(Conv.A, null));
+		keys.put(Att.ADDMRK, new S57key(Conv.L, Addmrk)); keys.put(Att.BNKWTW, new S57key(Conv.E, Bnkwtw)); keys.put(Att.CATBNK, new S57key(Conv.E, Catbnk));
+		keys.put(Att.CATNMK, new S57key(Conv.E, Catnmk)); keys.put(Att.CATBRT, new S57key(Conv.L, Catbrt)); keys.put(Att.CATBUN, new S57key(Conv.L, Catbun));
+		keys.put(Att.CATCCL, new S57key(Conv.L, Catccl)); keys.put(Att.CATCOM, new S57key(Conv.L, Catcom)); keys.put(Att.CATHBR, new S57key(Conv.L, Cathbr));
+		keys.put(Att.CATRFD, new S57key(Conv.L, Catrfd)); keys.put(Att.CATTML, new S57key(Conv.L, Cattml)); keys.put(Att.CATGAG, new S57key(Conv.L, Catgag));
+		keys.put(Att.CATVTR, new S57key(Conv.L, Catvtr)); keys.put(Att.CATTAB, new S57key(Conv.E, Cattab)); keys.put(Att.CATEXS, new S57key(Conv.E, Catexs));
+		keys.put(Att.CATWWM, new S57key(Conv.E, Catwwm)); keys.put(Att.LG_SPD, new S57key(Conv.F, null)); keys.put(Att.LG_SPR, new S57key(Conv.L, Lg_spr));
+		keys.put(Att.LG_BME, new S57key(Conv.F, null)); keys.put(Att.LG_LGS, new S57key(Conv.F, null)); keys.put(Att.LG_DRT, new S57key(Conv.F, null));
+		keys.put(Att.LG_WDP, new S57key(Conv.F, null)); keys.put(Att.LG_WDU, new S57key(Conv.E, Lg_wdu)); keys.put(Att.LG_REL, new S57key(Conv.L, Lg_rel));
+		keys.put(Att.LG_FNC, new S57key(Conv.L, Lg_fnc)); keys.put(Att.LG_DES, new S57key(Conv.S, null)); keys.put(Att.LG_PBR, new S57key(Conv.S, null));
+		keys.put(Att.LC_CSI, new S57key(Conv.L, Lc_csi)); keys.put(Att.LC_CSE, new S57key(Conv.L, Lc_cse)); keys.put(Att.LC_ASI, new S57key(Conv.L, Lc_asi));
+		keys.put(Att.LC_ASE, new S57key(Conv.L, Lc_ase)); keys.put(Att.LC_CCI, new S57key(Conv.L, Lc_cci)); keys.put(Att.LC_CCE, new S57key(Conv.L, Lc_cce));
+		keys.put(Att.LC_BM1, new S57key(Conv.F, null)); keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null));
+		keys.put(Att.LC_LG2, new S57key(Conv.F, null)); keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null));
+		keys.put(Att.LC_SP1, new S57key(Conv.F, null)); keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null));
+		keys.put(Att.LC_WD2, new S57key(Conv.F, null)); keys.put(Att.LITRAD, new S57key(Conv.A, null));
 	}
 	
 	public static String decodeValue(String val, Integer attl) {          // Convert S57 attribute value string to OSeaM attribute value string

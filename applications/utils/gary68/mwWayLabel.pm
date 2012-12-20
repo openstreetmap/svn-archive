@@ -101,7 +101,7 @@ sub preprocessWayLabels {
 			my @segments = @$nodesRef ;
 			# print "PPWL:    processing name $name, " . scalar (@segments) . " segments\n" ;
 
-			if ( ! grep /shield/i, $name) {
+			if ( ! grep /shield:/i, $name) {
 
 				my @newSegments = () ;
 				foreach my $segment (@segments) {
@@ -298,7 +298,7 @@ sub createWayLabels {
 
 		# wns?
 		if ( ($lLen > $wLen * 0.95) and ( cv('wns') > 0 ) ) {
-			if ( ( $toLabel != 0 ) and ( ! grep /shield/i, $name) and ( wayVisible( \@points ) ) ) {
+			if ( ( $toLabel != 0 ) and ( ! grep /shield:/i, $name) and ( wayVisible( \@points ) ) ) {
 				if ( ! defined $wnsUnique{$name} ) {
 					my $oldName = $name ;
 					$wnsUnique{$name} = 1 ;
@@ -320,7 +320,7 @@ sub createWayLabels {
 		}
 		else {
 
-			if (grep /shield/i, $name) {
+			if (grep /shield:/i, $name) {
 
 				createShield ($name, $$ruleRef{'labelsize'} ) ;
 

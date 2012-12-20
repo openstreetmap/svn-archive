@@ -68,11 +68,13 @@
 # 0.45 utf-8 encoding error solved for overpass data
 # 0.46 out parameter fixed
 # 0.47 added srtm option
+# 0.48 shield error corrected
+
 
 # TODO
 # -different tempfilenames
 
-my $version = "0.47" ;
+my $version = "0.48" ;
 my $programName = "mapweaver" ;
 
 use strict ;

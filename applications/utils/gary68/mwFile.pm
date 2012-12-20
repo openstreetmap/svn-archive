@@ -255,8 +255,6 @@ sub readFile {
 	}
 
 
-
-
 	# STORE DATA
 	my $nr = 0 ; my $wr = 0 ; my $rr = 0 ;
 	print "reading osm file...\n" ;

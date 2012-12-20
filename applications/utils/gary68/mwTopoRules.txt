@@ -17,7 +17,7 @@ legendlabel=Großstadt
 RULE NODE
 keyvalue=place=town
 label=name
-labelsize=45
+labelsize=50
 size=0
 legend=yes
 legendlabel=Stadt
@@ -25,7 +25,7 @@ legendlabel=Stadt
 RULE NODE
 keyvalue=place=village
 size=0
-labelsize=35
+labelsize=40
 svgString=fill="black"
 legend=yes
 legendlabel=Dorf
@@ -33,15 +33,15 @@ legendlabel=Dorf
 RULE NODE
 keyvalue=place=suburb
 size=0
-labelsize=35
+labelsize=40
 legend=yes
 legendlabel=Vorort
 
 RULE NODE
 keyvalue=place=locality
-size=15
+size=10
 label=name
-labelsize=25
+labelsize=30
 shape=circle
 
 RULE NODE
@@ -198,6 +198,13 @@ size=6
 bordersize=2
 
 RULE WAY
+keyvalue=highway=pedestrian
+label=none
+color=white
+size=6
+bordersize=2
+
+RULE WAY
 keyvalue=highway=track;tracktype=grade1
 label=name
 labelsize=25
@@ -301,7 +308,7 @@ dashcap=butt
 
 RULE AREA
 keyvalue=building=yes
-color=black
+color=grey
 legend=yes
 legendlabel=Gebäude
 
@@ -420,28 +427,28 @@ legend=no
 RULE WAY
 keyvalue=aerialway=cable_car
 label=name
-labelsize=20
+labelsize=25
 color=black
 size=8
-labeloffset=-2
+labeloffset=-10
 bordersize=0
 
 RULE WAY
 keyvalue=aerialway=gondola
 label=name
-labelsize=20
+labelsize=25
 color=black
 size=6
-labeloffset=-2
+labeloffset=-10
 bordersize=0
 
 RULE WAY
 keyvalue=aerialway=*
 label=name
-labelsize=20
+labelsize=25
 color=black
 size=4
-labeloffset=-2
+labeloffset=-10
 bordersize=0
 
 
@@ -521,6 +528,16 @@ label=name
 labelsize=30
 labeloffset=3
 
+RULE WAY
+keyvalue=natural=cliff
+color=red
+size=6
+label=name
+labelsize=30
+labeloffset=-20
+bordercolor=white
+bordersize=0
+dash=8,8
 
 
 # POWER

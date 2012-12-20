@@ -92,6 +92,9 @@ public class CacheControl implements Runnable {
     }
 
     public boolean loadCacheIfExist() {
+        if (!CadastrePlugin.isCadastreProjection()) {
+            CadastrePlugin.askToChangeProjection();
+        }
         try {
             File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
             if (file.exists()) {

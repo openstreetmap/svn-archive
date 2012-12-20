@@ -35,10 +35,7 @@ public class MenuActionGrab extends JosmAction {
                 if (wmsLayer != null)
                     DownloadWMSVectorImage.download(wmsLayer);
             } else {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("To enable the cadastre WMS plugin, change\n"
-                         + "the current projection to one of the cadastre\n"
-                         + "projections and retry"));
+                CadastrePlugin.askToChangeProjection();
             }
         } else
             new MenuActionNewLocation().actionPerformed(e);

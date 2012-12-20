@@ -93,10 +93,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
                 // download sub-images of the cadastre scan and join them into one single
                 Main.worker.execute(this);
             } else {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("To enable the cadastre WMS plugin, change\n"
-                         + "the current projection to one of the cadastre\n"
-                         + "projections and retry"));
+                CadastrePlugin.askToChangeProjection();
             }
         }
     }

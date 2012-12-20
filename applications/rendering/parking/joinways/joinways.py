@@ -145,6 +145,11 @@ class JoinDB (OSMDB):
         """ Mark the given segment (by osm_id) as handled in the jr tables """
         self.update("update planet_line set jrhandled=True where osm_id={oid}".format(oid=segment_id))
 
+    def _mark_segments_as_handled(self,segment_id_list):
+        """ Mark the given segments (by osm_id) as handled in the jr tables """
+        segment_id_sql_list = self.sql_list_of_ids(segment_id_list)
+        self.update("update planet_line set jrhandled=True where osm_id in {oids}".format(oid=segment_id_sql_list))
+
     def _which_geometry_is_it(self,geom):
         """ Returns the WKT type of the geom, e.g. LINESTRING or MULTILINESTRING """
         itisa = self.select_one("select ST_AsText(ST_SetSRID('"+geom+"'::Text,4326))")
@@ -171,10 +176,11 @@ class JoinDB (OSMDB):
         #print "*** Adding '{name}' ({id}) to planet_line_join".format(name=highway['name'],id=join_id)
         numjoins = self._insert_joined_highway(str(join_id),highway['name'],highway['highway'],joinway)
         #print "(joinset={j})".format(j=joinset)
-        for segment_id in joinset.keys():
+        join = joinset.keys()
+        for segment_id in join:
             #print "  * segment is {s}".format(s=joinset[segment_id])
             self._insert_segment_into_joinmap(join_id,segment_id)
-            self._mark_segment_as_handled(segment_id)
+        self._mark_segments_as_handled(join)
         return numjoins
 
     def clear_planet_line_join(self,bboxobj=None):
@@ -217,6 +223,27 @@ class JoinDB (OSMDB):
         dirtylistsql=self.sql_list_of_ids(dirtylist)
         update="update planet_line set jrhandled=False where osm_id in {l}".format(l=dirtylistsql)
         self.update(update)
+
+    def assert_segment_is_unrecorded(self,segment_id):
+        while True:
+            select="select join_id from planet_line_joinmap where segment_id={sid}".format(sid=segment_id)
+            jidlist = self.select_list(select)
+            if not jidlist:
+                break
+            jid = jidlist[0]
+            logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times}.".format(sid=segment_id,jid=jid,n=len(jidlist)))
+            logging.warn("...removing it.")
+            # this means mark all segments of the joinway as unhandled. This covers the case that a segment is being separated from a once joined set.
+
+            dirtylist=self.get_segments_of_joinway(jid)
+            #name_of_joinway=self.get_name_of_joinway(jid)
+            #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
+            # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
+            # all of those must fail gracefully if an entry is not there (anymore).
+            self.mark_segments_unhandled(dirtylist)
+            self.remove_joinway(jid)
+            logging.warn("...done.")
+        return
 
     def remove_joinway(self,joinway_id):
         delete="delete from planet_line_join where join_id={j}".format(j=joinway_id)
@@ -261,7 +288,7 @@ class JoinDB (OSMDB):
             logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
             if i%100==0:
                 self.commit()
-            if self.maxobjects>0 and i>self.maxobjects:
+            if self.maxobjects>0 and i>=self.maxobjects:
                 break
         self.commit()
         logging.info("Found {i} deleted segments and marked {j} highways as dirty".format(i=i,j=j))
@@ -284,6 +311,7 @@ class JoinDB (OSMDB):
             if highway==None:
                 break
             i+=1
+            self.assert_segment_is_unrecorded(highway)
             #print "Found {i}. pending highway '{name}'".format(i=i,name=highway['name'])
             joinset,joinway=self.collate_highways(highway)
             # print "  Found connected highways '{hws}'".format(hws=joinset)
@@ -296,7 +324,7 @@ class JoinDB (OSMDB):
                 area=1
                 logging.info("***** found zero-sized area: {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
             logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
-            if self.maxobjects>0 and i>self.maxobjects:
+            if self.maxobjects>0 and i>=self.maxobjects:
                 break
         self.commit()
         add=i

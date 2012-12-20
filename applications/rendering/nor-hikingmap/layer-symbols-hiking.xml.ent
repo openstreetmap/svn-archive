@@ -158,7 +158,7 @@
 
 <Style name="symbols-eating">
   <Rule>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <Filter>[amenity]='cafe'</Filter>
     <PointSymbolizer file="&symbols;/cafe.png"/>
   </Rule>
@@ -225,7 +225,7 @@
       fill="black" dy="9" halo_radius="1"/>
   </Rule>
   <Rule>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <Filter>[amenity]='cafe'</Filter>
     <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
       fill="black" dy="9" halo_radius="1"/>

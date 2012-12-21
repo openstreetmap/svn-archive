@@ -235,17 +235,12 @@ class JoinDB (OSMDB):
                 break
             jid = jidlist[0]
             logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times).".format(sid=segment_id,jid=jid,n=len(jidlist)))
-            logging.warn("...removing it.")
+            #logging.warn("...removing it.")
             # this means mark all segments of the joinway as unhandled. This covers the case that a segment is being separated from a once joined set.
-
             dirtylist=self.get_segments_of_joinway(jid)
-            #name_of_joinway=self.get_name_of_joinway(jid)
-            #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
-            # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
-            # all of those must fail gracefully if an entry is not there (anymore).
             self.mark_segments_unhandled(dirtylist)
             self.remove_joinway(jid)
-            logging.warn("...done.")
+            #logging.warn("...done.")
         return
 
     def remove_joinway(self,joinway_id):

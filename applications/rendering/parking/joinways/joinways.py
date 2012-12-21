@@ -148,7 +148,7 @@ class JoinDB (OSMDB):
     def _mark_segments_as_handled(self,segment_id_list):
         """ Mark the given segments (by osm_id) as handled in the jr tables """
         segment_id_sql_list = self.sql_list_of_ids(segment_id_list)
-        self.update("update planet_line set jrhandled=True where osm_id in {oids}".format(oid=segment_id_sql_list))
+        self.update("update planet_line set jrhandled=True where osm_id in {oids}".format(oids=segment_id_sql_list))
 
     def _which_geometry_is_it(self,geom):
         """ Returns the WKT type of the geom, e.g. LINESTRING or MULTILINESTRING """

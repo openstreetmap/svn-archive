@@ -234,7 +234,7 @@ class JoinDB (OSMDB):
             if not jidlist:
                 break
             jid = jidlist[0]
-            logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times}.".format(sid=segment_id,jid=jid,n=len(jidlist)))
+            logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times).".format(sid=segment_id,jid=jid,n=len(jidlist)))
             logging.warn("...removing it.")
             # this means mark all segments of the joinway as unhandled. This covers the case that a segment is being separated from a once joined set.
 

@@ -224,7 +224,10 @@ class JoinDB (OSMDB):
         update="update planet_line set jrhandled=False where osm_id in {l}".format(l=dirtylistsql)
         self.update(update)
 
-    def assert_segment_is_unrecorded(self,segment_id):
+    def assert_segment_is_unrecorded(self,highway):
+        """ Assert that the given highway (structure) is not in the database, i.e. it is either a new one or had been deleted in the step before.
+        """
+        segment_id = highway['osm_id']
         while True:
             select="select join_id from planet_line_joinmap where segment_id={sid}".format(sid=segment_id)
             jidlist = self.select_list(select)

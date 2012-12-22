@@ -59,6 +59,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsImporter;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public final class OdPlugin extends Plugin implements OdConstants {
@@ -94,6 +95,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
         buildMenu();
         // Add download task
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);
+        // Delete previous temp dirs if any (old plugin versions did not remove them correctly)
+        OdUtils.deletePreviousTempDirs();
 	}
 	
 	public static final OdPlugin getInstance() {

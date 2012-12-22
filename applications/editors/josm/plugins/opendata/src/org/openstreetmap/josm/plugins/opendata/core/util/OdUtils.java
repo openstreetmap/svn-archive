@@ -15,6 +15,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.util;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +33,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public abstract class OdUtils {
 	
+    private static final String TEMP_DIR_PREFIX = "josm_opendata_temp_";
+    
     public static final boolean isMultipolygon(OsmPrimitive p) {
         return p instanceof Relation && ((Relation) p).isMultipolygon();
     }
@@ -78,5 +83,44 @@ public abstract class OdUtils {
 
     public static final double convertDegreeMinuteSecond(double degree, double minute, double second) {
         return degree + convertMinuteSecond(minute, second);
+    }
+    
+    public static final File createTempDir() throws IOException {
+        final File temp = File.createTempFile(TEMP_DIR_PREFIX, Long.toString(System.nanoTime()));
+
+        if (!temp.delete()) {
+            throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+        }
+
+        if (!temp.mkdir()) {
+            throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+        }
+        
+        return temp;
+    }
+    
+    public static final void deleteDir(File dir) {
+        for (File file : dir.listFiles()) {
+            if (!file.delete()) {
+                file.deleteOnExit();
+            }
+        }
+        if (!dir.delete()) {
+            dir.deleteOnExit();
+        }
+    }
+    
+    public static final void deletePreviousTempDirs() {
+        File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+        if (tmpDir.exists() && tmpDir.isDirectory()) {
+            for (File dir : tmpDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(TEMP_DIR_PREFIX);
+                }
+            })) {
+                deleteDir(dir);
+            }
+        }
     }
 }

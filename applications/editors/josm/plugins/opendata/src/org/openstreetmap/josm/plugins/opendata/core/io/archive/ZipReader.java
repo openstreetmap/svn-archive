@@ -48,6 +48,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.geographic.TabReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 public class ZipReader extends AbstractReader implements OdConstants {
 
@@ -74,30 +75,9 @@ public class ZipReader extends AbstractReader implements OdConstants {
 		return file;
 	}
 	
-	private static final File createTempDir() throws IOException {
-	    final File temp = File.createTempFile("josm_opendata_temp_", Long.toString(System.nanoTime()));
-
-	    if (!temp.delete()) {
-	        throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-	    }
-
-	    if (!temp.mkdir()) {
-	        throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-	    }
-	    
-	    return temp;
-	}
-	
-	private static final void deleteDir(File dir) {
-        for (File file : dir.listFiles()) {
-            file.delete();
-        }
-		dir.delete();
-	}
-
 	public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
 		
-	    final File temp = createTempDir();
+	    final File temp = OdUtils.createTempDir();
 	    final List<File> candidates = new ArrayList<File>();
 	    
 	    try {
@@ -216,7 +196,7 @@ public class ZipReader extends AbstractReader implements OdConstants {
 	    } catch (IllegalArgumentException e) {
 	    	System.err.println(e.getMessage());
 	    } finally {
-	    	deleteDir(temp);
+	        OdUtils.deleteDir(temp);
 	    	if (progressMonitor != null) {
 	    		progressMonitor.finishTask();
 	    	}

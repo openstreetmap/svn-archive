@@ -212,6 +212,14 @@ public class Buoys {
     Sphere.add(new Instr(Prim.EARC, new Arc2D.Double(-26.5,-39.4,60.0,60.0,-18.0,216.0,Arc2D.OPEN)));
 	}
 	public static final ArrayList<Instr> Storage = new ArrayList<Instr>();
+	static {
+		Storage.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Storage.add(new Instr(Prim.FILL, Color.black));
+		Storage.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
+    Path2D.Double p = new Path2D.Double(); p.moveTo(-50.0,0.0); p.lineTo(-40.0,-20.0); p.lineTo(40.0,-20.0); p.lineTo(40.0,-20.0);
+    p.lineTo(50.0,0.0); p.lineTo(40.0,20.0); p.lineTo(-40.0,20.0); p.closePath();
+    Storage.add(new Instr(Prim.PLIN, p));
+	}
 	public static final ArrayList<Instr> Super = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();

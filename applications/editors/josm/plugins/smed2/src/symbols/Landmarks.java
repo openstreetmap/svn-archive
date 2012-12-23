@@ -11,6 +11,7 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -49,19 +50,61 @@ public class Landmarks {
 		ChurchTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		ChurchTower.add(new Instr(Prim.FILL, Color.black));
 		ChurchTower.add(new Instr(Prim.RECT, new Rectangle2D.Double(-36,-36,72,72)));
+		ChurchTower.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
 	}
 	public static final ArrayList<Instr> Cross = new ArrayList<Instr>();
 	public static final ArrayList<Instr> DishAerial = new ArrayList<Instr>();
 	public static final ArrayList<Instr> Dome = new ArrayList<Instr>();
+	static {
+		Dome.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Dome.add(new Instr(Prim.FILL, Color.black));
+		Dome.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-36,-36,72,72)));
+		Dome.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+	}
 	public static final ArrayList<Instr> Flagstaff = new ArrayList<Instr>();
 	public static final ArrayList<Instr> FlareStack = new ArrayList<Instr>();
 	public static final ArrayList<Instr> LandTower = new ArrayList<Instr>();
 	public static final ArrayList<Instr> Mast = new ArrayList<Instr>();
+	static {
+		Mast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
+		Mast.add(new Instr(Prim.FILL, Color.black));
+		Mast.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
+		Mast.add(new Instr(Prim.LINE, new Line2D.Double(-35,0,-10,0)));
+		Mast.add(new Instr(Prim.LINE, new Line2D.Double(10,0,35,0)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(0.0,-150.0); p.lineTo(25.0,0.0);
+		Mast.add(new Instr(Prim.PLIN, p));
+	}
 	public static final ArrayList<Instr> Minaret = new ArrayList<Instr>();
 	public static final ArrayList<Instr> Monument = new ArrayList<Instr>();
 	public static final ArrayList<Instr> RadioMast = new ArrayList<Instr>();
+	static {
+		RadioMast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
+		RadioMast.add(new Instr(Prim.FILL, Color.black));
+		RadioMast.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
+		RadioMast.add(new Instr(Prim.LINE, new Line2D.Double(-35,0,-10,0)));
+		RadioMast.add(new Instr(Prim.LINE, new Line2D.Double(10,0,35,0)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(0.0,-150.0); p.lineTo(25.0,0.0);
+		RadioMast.add(new Instr(Prim.PLIN, p));
+		RadioMast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL)));
+		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,45.0,-90.0,Arc2D.OPEN)));
+		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,45.0,-90.0,Arc2D.OPEN)));
+		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,225.0,-90.0,Arc2D.OPEN)));
+		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,225.0,-90.0,Arc2D.OPEN)));
+	}
 	public static final ArrayList<Instr> Platform = new ArrayList<Instr>();
+	static {
+		Platform.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Platform.add(new Instr(Prim.FILL, Color.black));
+		Platform.add(new Instr(Prim.RECT, new Rectangle2D.Double(-48,-48,96,96)));
+		Platform.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+	}
 	public static final ArrayList<Instr> Spire = new ArrayList<Instr>();
+	static {
+		Spire.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Spire.add(new Instr(Prim.FILL, Color.black));
+		Spire.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-25,-25,50,50)));
+		Spire.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+	}
 	public static final ArrayList<Instr> Temple = new ArrayList<Instr>();
 	public static final ArrayList<Instr> WaterTower = new ArrayList<Instr>();
 	public static final ArrayList<Instr> WindMotor = new ArrayList<Instr>();

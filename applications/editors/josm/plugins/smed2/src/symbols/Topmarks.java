@@ -21,7 +21,10 @@ import symbols.Symbols.Instr;
 import symbols.Symbols.Prim;
 
 public class Topmarks {
-
+	
+	public static final ArrayList<Instr> FogSignal = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Light = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Radar = new ArrayList<Instr>();
 	public static final ArrayList<Instr> TopBoard = new ArrayList<Instr>();
 	static {
 		TopBoard.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));

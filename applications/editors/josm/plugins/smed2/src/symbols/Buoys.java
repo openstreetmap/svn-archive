@@ -35,7 +35,6 @@ public class Buoys {
 		p.curveTo(38.0,-32.0,43.0,-11.0,43.0,0); p.moveTo(-32.0,-36.0); p.curveTo(-23.0,-25.0,-21.0,-12.0,-21.0,0.0);
     Barrel.add(new Instr(Prim.PLIN, p));
 	}
-
 	public static final ArrayList<Instr> Can = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -62,7 +61,6 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(-31.6, 0); p.lineTo(-15.7,-47.4); p.lineTo(41.1,-28.4); p.lineTo(31.6,0);
     Can.add(new Instr(Prim.PLIN, p));
 	}
-	
 	public static final ArrayList<Instr> Cone = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -89,7 +87,6 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(-31.6, 0); p.curveTo(-24.9,-32.2,1.4,-38.7,12.7,-37.9); p.curveTo(21.9,-30.5,32.8,-18.4,32.1,0.0);
     Cone.add(new Instr(Prim.PLIN, p));
 	}
-	
 	public static final ArrayList<Instr> Float = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -121,7 +118,6 @@ public class Buoys {
 		p.moveTo(-19.0, -23.0); p.lineTo(-12.0,-42.0); p.lineTo(12.0,-42.0); p.lineTo(19.0,-23.0);
     Float.add(new Instr(Prim.PLIN, p));
 	}
-	
 	public static final ArrayList<Instr> Ice = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -139,7 +135,6 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(-6.0,8.0); p.lineTo(-6.0,40.0); p.lineTo(6.0,40.0); p.lineTo(6.0,8.0);
 		Ice.add(new Instr(Prim.PLIN, p));
 	}
-
 	public static final ArrayList<Instr> Pillar = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -167,7 +162,6 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(-32.0,0.0); p.lineTo(-2.8,-32.5); p.lineTo(25.6,-96.7); p.lineTo(37.0,-92.9); p.lineTo(21.8,-24.3); p.lineTo(25.0,0.0);
 		Pillar.add(new Instr(Prim.PLIN, p));
 	}
-	
 	public static final ArrayList<Instr> Spar = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -192,7 +186,6 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(-3.2,-9.5); p.lineTo(25.6,-96.7); p.lineTo(37.0,-92.9); p.lineTo(8.2,-5.7);
 		Spar.add(new Instr(Prim.PLIN, p));
 	}
-	
 	public static final ArrayList<Instr> Sphere = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -218,7 +211,7 @@ public class Buoys {
     Sphere.add(new Instr(Prim.LINE, new Line2D.Double(10,0,40,0)));
     Sphere.add(new Instr(Prim.EARC, new Arc2D.Double(-26.5,-39.4,60.0,60.0,-18.0,216.0,Arc2D.OPEN)));
 	}
-	
+	public static final ArrayList<Instr> Storage = new ArrayList<Instr>();
 	public static final ArrayList<Instr> Super = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();

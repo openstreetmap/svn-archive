@@ -9,6 +9,21 @@
 
 package symbols;
 
-public class Facilities {
+import java.util.ArrayList;
 
+import symbols.Symbols.Instr;
+
+public class Facilities {
+	public static final ArrayList<Instr> Boatlift = new ArrayList<Instr>();//was Crane
+	public static final ArrayList<Instr> Boatyard = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Chandler = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Fuel = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Laundrette = new ArrayList<Instr>();
+	public static final ArrayList<Instr> PumpOut = new ArrayList<Instr>();
+	public static final ArrayList<Instr> SailingClub = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Shower = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Slipway = new ArrayList<Instr>();
+	public static final ArrayList<Instr> Toilet = new ArrayList<Instr>();
+	public static final ArrayList<Instr> VisitorBerth = new ArrayList<Instr>();
+	public static final ArrayList<Instr> VisitorMooring = new ArrayList<Instr>();
 }

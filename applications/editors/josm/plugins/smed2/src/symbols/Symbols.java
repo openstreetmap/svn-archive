@@ -29,10 +29,10 @@ public class Symbols {
 		CC, TL, TR, TC, LC, RC, BL, BR, BC
 	}
 
-	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
+	public static final double symbolScale[] = { 1.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
 			0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
+	public static final double textScale[] = { 1.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
 			0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
 
 	private static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
@@ -224,7 +224,7 @@ public class Symbols {
 				g2.fill((Path2D.Double) item.params);
 				break;
 			case SYMB:
-				drawSymbol(g2, (ArrayList<Instr>) item.params, zoom, 0.0, 0.0, null, null);
+				drawSymbol(g2, (ArrayList<Instr>) item.params, 0, 0.0, 0.0, null, null);
 				break;
 			}
 		}

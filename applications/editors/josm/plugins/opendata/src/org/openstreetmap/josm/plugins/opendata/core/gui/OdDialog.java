@@ -91,7 +91,7 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
 	public OdDialog() {
 		super("OpenData", ICON_CORE_24, tr("Open the OpenData window."), 
 				Shortcut.registerShortcut("subwindow:opendata", tr("Toggle: {0}", "OpenData"),
-						KeyEvent.VK_A, Shortcut.ALT_CTRL_SHIFT), 150);
+						KeyEvent.VK_A, Shortcut.ALT_CTRL_SHIFT), 150, false, OdPreferenceSetting.class);
 		
 		this.buttons = Arrays.asList(new SideButton[] {
 				selectButton = new SideButton(new SelectAction()), 

@@ -1,16 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="opendata" default="dist" basedir=".">
-    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5554"/>
-
+    <property name="plugin.main.version" value="5631"/>
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.opendata.OdPlugin"/>
     <property name="plugin.description" value="Convert data from Open Data portals to OSM layer"/>
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
-    <!--<property name="plugin.early" value="..."/>-->
     <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
-    <!--<property name="plugin.stage" value="..."/>-->
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

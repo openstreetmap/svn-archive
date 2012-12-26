@@ -22,17 +22,17 @@ import s57.S57val.*;
 public class Symbols {
 
 	public enum Prim {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
 	public enum Handle {
 		CC, TL, TR, TC, LC, RC, BL, BR, BC
 	}
 
-	public static final double symbolScale[] = { 1.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
+	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
 			0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-	public static final double textScale[] = { 1.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
+	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
 			0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
 
 	private static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
@@ -83,7 +83,25 @@ public class Symbols {
 		}
 	}
 
-	public static void drawSymbol(Graphics2D g2, ArrayList<Instr> symbol, int zoom, double x, double y, Delta dd, Scheme cs) {
+	public static class Symbol {
+		ArrayList<Instr> instr;
+		double scale;
+		double x;
+		double y;
+		Delta delta;
+		Scheme scheme;
+
+		public Symbol(ArrayList<Instr> iinstr, double iscale, double ix, double iy, Delta idelta, Scheme ischeme) {
+			instr = iinstr;
+			scale = iscale;
+			x = ix;
+			y = iy;
+			delta = idelta;
+			scheme = ischeme;
+		}
+	}
+
+	public static void drawSymbol(Graphics2D g2, ArrayList<Instr> symbol, double scale, double x, double y, Delta dd, Scheme cs) {
 		int pn = 0;
 		int cn = 0;
 		if (cs != null) {
@@ -92,7 +110,7 @@ public class Symbols {
 		}
 		AffineTransform savetr = g2.getTransform();
 		g2.translate(x, y);
-		g2.scale(symbolScale[zoom], symbolScale[zoom]);
+		g2.scale(scale, scale);
 		for (Instr item : symbol) {
 			switch (item.type) {
 			case BBOX:
@@ -223,8 +241,14 @@ public class Symbols {
 			case PGON:
 				g2.fill((Path2D.Double) item.params);
 				break;
+			case RSHP:
+				g2.fill((RectangularShape) item.params);
+				break;
 			case SYMB:
-				drawSymbol(g2, (ArrayList<Instr>) item.params, 0, 0.0, 0.0, null, null);
+				Symbol s = (Symbol) item.params;
+				drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
+				break;
+			case TEXT:
 				break;
 			}
 		}

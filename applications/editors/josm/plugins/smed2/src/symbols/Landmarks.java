@@ -33,8 +33,8 @@ public class Landmarks {
 	
 	public static final ArrayList<Instr> Chimney = new ArrayList<Instr>();
 	static {
-		Chimney.add(new Instr(Prim.SYMB, Landmarks.Base));
-		Base.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Chimney.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Chimney.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Chimney.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(-10.0,-120.0); p.lineTo(10.0,-120.0); p.lineTo(25.0,0.0);
 		p.moveTo(-10.0,-128.0); p.curveTo(-13.0,-147.0,15.0,-159.0,20.0,-148.0);
@@ -61,7 +61,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> Cross = new ArrayList<Instr>();
 	static {
-		Cross.add(new Instr(Prim.SYMB, Landmarks.Base));
+		Cross.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Cross.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Cross.add(new Instr(Prim.FILL, Color.black));
 		Cross.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-150)));
@@ -69,7 +69,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> DishAerial = new ArrayList<Instr>();
 	static {
-		DishAerial.add(new Instr(Prim.SYMB, Landmarks.Base));
+		DishAerial.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		DishAerial.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
 		DishAerial.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-7.8,-6.0); p.lineTo(0.0,-62.0); p.lineTo(7.8,-6.0); p.moveTo(18.0,-109.0); p.lineTo(25.0,-113.0);
@@ -81,11 +81,11 @@ public class Landmarks {
 		Dome.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Dome.add(new Instr(Prim.FILL, Color.black));
 		Dome.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-36,-36,72,72)));
-		Dome.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+		Dome.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
 	public static final ArrayList<Instr> Flagstaff = new ArrayList<Instr>();
 	static {
-		Flagstaff.add(new Instr(Prim.SYMB, Landmarks.Base));
+		Flagstaff.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Flagstaff.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Flagstaff.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-10.0); p.lineTo(0.0,-150.0); p.moveTo(0.0,-140.0); p.lineTo(40.0,-140.0); p.lineTo(40.0,-100.0); p.lineTo(0.0,-100.0);
@@ -93,7 +93,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> FlareStack = new ArrayList<Instr>();
 	static {
-		FlareStack.add(new Instr(Prim.SYMB, Landmarks.Base));
+		FlareStack.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		FlareStack.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		FlareStack.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-7.8,-6.0); p.lineTo(-7.8,-100.0); p.lineTo(7.8,-100.0); p.lineTo(7.8,-6.0);
@@ -104,7 +104,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> LandTower = new ArrayList<Instr>();
 	static {
-		LandTower.add(new Instr(Prim.SYMB, Landmarks.Base));
+		LandTower.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		LandTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		LandTower.add(new Instr(Prim.FILL, Color.black));
 		LandTower.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-120)));
@@ -113,7 +113,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> Mast = new ArrayList<Instr>();
 	static {
-		Mast.add(new Instr(Prim.SYMB, Landmarks.Base));
+		Mast.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Mast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
 		Mast.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(0.0,-150.0); p.lineTo(25.0,0.0);
@@ -121,7 +121,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> RadioMast = new ArrayList<Instr>();
 	static {
-		RadioMast.add(new Instr(Prim.SYMB, Landmarks.Mast));
+		RadioMast.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Mast, 1.0, 0, 0, null, null)));
 		RadioMast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL)));
 		RadioMast.add(new Instr(Prim.FILL, Color.black));
 		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,45.0,-90.0,Arc2D.OPEN)));
@@ -131,7 +131,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> Monument = new ArrayList<Instr>();
 	static {
-		Monument.add(new Instr(Prim.SYMB, Landmarks.Base));
+		Monument.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Monument.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Monument.add(new Instr(Prim.FILL, Color.black));
 		Monument.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-105)));
@@ -143,18 +143,18 @@ public class Landmarks {
 		Platform.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Platform.add(new Instr(Prim.FILL, Color.black));
 		Platform.add(new Instr(Prim.RECT, new Rectangle2D.Double(-48,-48,96,96)));
-		Platform.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+		Platform.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
 	public static final ArrayList<Instr> Spire = new ArrayList<Instr>();
 	static {
 		Spire.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Spire.add(new Instr(Prim.FILL, Color.black));
 		Spire.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-25,-25,50,50)));
-		Spire.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
+		Spire.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
 	public static final ArrayList<Instr> Minaret = new ArrayList<Instr>();
 	static {
-		Minaret.add(new Instr(Prim.SYMB, Landmarks.Spire));
+		Minaret.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Spire, 1.0, 0, 0, null, null)));
 		Minaret.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Minaret.add(new Instr(Prim.LINE, new Line2D.Double(0,-25,0,-50)));
 		Minaret.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
@@ -170,7 +170,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> WaterTower = new ArrayList<Instr>();
 	static {
-		WaterTower.add(new Instr(Prim.SYMB, Landmarks.Base));
+		WaterTower.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		WaterTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WaterTower.add(new Instr(Prim.FILL, Color.black));
 		WaterTower.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-120)));
@@ -179,7 +179,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> WindMotor = new ArrayList<Instr>();
 	static {
-		WindMotor.add(new Instr(Prim.SYMB, Landmarks.Base));
+		WindMotor.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		WindMotor.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		WindMotor.add(new Instr(Prim.FILL, Color.black));
 		WindMotor.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-90)));
@@ -197,7 +197,7 @@ public class Landmarks {
 	}
 	public static final ArrayList<Instr> Windsock = new ArrayList<Instr>();
 	static {
-		Windsock.add(new Instr(Prim.SYMB, Landmarks.Base));
+		Windsock.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Windsock.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Windsock.add(new Instr(Prim.FILL, Color.black));
 		Windsock.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-100)));

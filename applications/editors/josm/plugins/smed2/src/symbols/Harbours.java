@@ -11,6 +11,7 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -24,6 +25,7 @@ import symbols.Symbols.Prim;
 public class Harbours {
 	public static final ArrayList<Instr> Anchor = new ArrayList<Instr>();
 	static {
+		Anchor.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
 		Anchor.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Anchor.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-59,20,20)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(23.0,-40.0); p.lineTo(23.0,-30.0); p.lineTo(6.0,-30.0); p.lineTo(7.0,31.0); p.quadTo(21.0,29.0,31.0,22.0);

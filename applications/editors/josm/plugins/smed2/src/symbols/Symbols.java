@@ -118,10 +118,11 @@ public class Symbols {
 				double dx = 0.0;
 				double dy = 0.0;
 				if (dd != null) {
+					g2.transform(dd.t);
 					switch (dd.h) {
 					case CC:
 						dx = bbox.x + (bbox.width / 2.0);
-						dy = bbox.y - (bbox.height / 2.0);
+						dy = bbox.y + (bbox.height / 2.0);
 						break;
 					case TL:
 						dx = bbox.x;
@@ -137,27 +138,26 @@ public class Symbols {
 						break;
 					case LC:
 						dx = bbox.x;
-						dy = bbox.y - (bbox.height / 2.0);
+						dy = bbox.y + (bbox.height / 2.0);
 						break;
 					case RC:
 						dx = bbox.x + bbox.width;
-						dy = bbox.y - (bbox.height / 2.0);
+						dy = bbox.y + (bbox.height / 2.0);
 						break;
 					case BL:
 						dx = bbox.x;
-						dy = bbox.y - bbox.height;
+						dy = bbox.y + bbox.height;
 						break;
 					case BR:
 						dx = bbox.x + bbox.width;
-						dy = bbox.y - bbox.height;
+						dy = bbox.y + bbox.height;
 						break;
 					case BC:
 						dx = bbox.x + (bbox.width / 2.0);
-						dy = bbox.y - bbox.height;
+						dy = bbox.y + bbox.height;
 						break;
 					}
-					g2.translate(dx, dy);
-					g2.transform(dd.t);
+					g2.translate(-dx, -dy);
 				}
 				break;
 			case COLR:

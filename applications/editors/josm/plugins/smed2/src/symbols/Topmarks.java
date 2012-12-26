@@ -27,7 +27,7 @@ public class Topmarks {
 	public static final ArrayList<Instr> Radar = new ArrayList<Instr>();
 	public static final ArrayList<Instr> TopBoard = new ArrayList<Instr>();
 	static {
-		TopBoard.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));
+		TopBoard.add(new Instr(Prim.BBOX, new Rectangle(-20,-80,40,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-19.0,-2.0); p.lineTo(-19.0,-39.0); p.lineTo(19.0,-39.0); p.lineTo(19.0,-2.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -39,7 +39,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopCan = new ArrayList<Instr>();
 	static {
-		TopCan.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));
+		TopCan.add(new Instr(Prim.BBOX, new Rectangle(-20,-80,40,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-12.0,-15.0); p.lineTo(-12.0,-48.0); p.lineTo(12.0,-48.0); p.lineTo(12.0,-15.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -52,7 +52,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopCone = new ArrayList<Instr>();
 	static {
-		TopCone.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));
+		TopCone.add(new Instr(Prim.BBOX, new Rectangle(-20,-80,40,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-15.0); p.lineTo(0.0,-45.0); p.lineTo(15.0,-15.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -65,7 +65,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopCross = new ArrayList<Instr>();
 	static {
-		TopCross.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopCross.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-5.0,-15.0); p.lineTo(-5.0,-32.5); p.lineTo(-22.5,-32.5);	p.lineTo(-22.5,-42.5); p.lineTo(-5.0,-42.5);
 		p.lineTo(-5.0,-60.0); p.lineTo(5.0,-60.0); p.lineTo(5.0,-42.5); p.lineTo(22.5,-42.5);	p.lineTo(22.5,-32.5); p.lineTo(5.0,-32.5); p.lineTo(5.0,-15.0); p.closePath();
@@ -81,7 +81,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopEast = new ArrayList<Instr>();
 	static {
-		TopEast.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopEast.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-80.0); p.lineTo(-15.0,-47.0); p.lineTo(15.0,-47.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -99,7 +99,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopIsol = new ArrayList<Instr>();
 	static {
-		TopIsol.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopIsol.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-13.0,-55.0); p.curveTo(-13.0, -72.3, 13.0, -72.3, 13.0,-55.0); p.curveTo(13.0, -37.7, -13.0, -37.7, -13.0,-55.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -115,7 +115,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopMooring = new ArrayList<Instr>();
 	static {
-		TopMooring.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopMooring.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		TopMooring.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopMooring.add(new Instr(Prim.FILL, Color.black));
 		TopMooring.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-1.5,-6,3,3)));
@@ -123,7 +123,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopNorth = new ArrayList<Instr>();
 	static {
-		TopNorth.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopNorth.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-78.0); p.lineTo(-15.0,-45.0); p.lineTo(15.0,-45.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -140,7 +140,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopSouth = new ArrayList<Instr>();
 	static {
-		TopSouth.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopSouth.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-78.0); p.lineTo(0.0,-45.0);  p.lineTo(15.0,-78.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -157,7 +157,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopSphere = new ArrayList<Instr>();
 	static {
-		TopSphere.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopSphere.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-14.0,-28.0); p.curveTo(-14.0,-46.7,14.0,-46.7,14.0,-28.0); p.curveTo(14.0,-9.3,-14.0,-9.3,-14.0,-28.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -170,7 +170,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopSquare = new ArrayList<Instr>();
 	static {
-		TopSquare.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));
+		TopSquare.add(new Instr(Prim.BBOX, new Rectangle(-20,-80,40,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-13.0,-1.0); p.lineTo(-13.0,-27.0); p.lineTo(13.0,-27.0); p.lineTo(13.0,-1.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -182,7 +182,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopTriangle = new ArrayList<Instr>();
 	static {
-		TopTriangle.add(new Instr(Prim.BBOX, new Rectangle(-20,80,40,80)));
+		TopTriangle.add(new Instr(Prim.BBOX, new Rectangle(-20,-80,40,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-1.0); p.lineTo(0.0,-29.0); p.lineTo(15.0,-1.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -194,7 +194,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopWest = new ArrayList<Instr>();
 	static {
-		TopWest.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopWest.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-78.0); p.lineTo(0.0,-45.0);  p.lineTo(15.0,-78.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
@@ -211,7 +211,7 @@ public class Topmarks {
 	}
 	public static final ArrayList<Instr> TopX = new ArrayList<Instr>();
 	static {
-		TopX.add(new Instr(Prim.BBOX, new Rectangle(-30,80,60,80)));
+		TopX.add(new Instr(Prim.BBOX, new Rectangle(-30,-80,60,80)));
 		ArrayList<Instr> colours = new ArrayList<Instr>();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-27.7); p.lineTo(-12.4,-15.7); p.lineTo(-19.3,-22.6); p.lineTo(-7.3,-35.0); p.lineTo(-19.3,-47.3);
 		p.lineTo(-12.4,-54.2); p.lineTo(0.0,-42.4); p.lineTo(12.4,-54.2); p.lineTo(19.3,-47.3); p.lineTo(7.3,-35.0); p.lineTo(19.3,-22.6); p.lineTo(12.4,-15.7); p.closePath();

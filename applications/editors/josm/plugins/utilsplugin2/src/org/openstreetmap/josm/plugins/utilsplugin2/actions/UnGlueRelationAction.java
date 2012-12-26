@@ -4,28 +4,26 @@ package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.tools.I18n.trn;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Duplicate nodes, ways and relations that are used by multiple relations.
@@ -71,7 +69,7 @@ public class UnGlueRelationAction extends JosmAction {
                     }                    
                     newPrimitives.add(newp);
                     cmds.add(new AddCommand(newp));
-                    cmds.add(new ChangeCommand(relation, changeRelationMember(relation, p, newp)));
+                    cmds.add(new ChangeRelationMemberCommand(relation, p, newp));
                 } else {
                     first = false;
                 }
@@ -92,23 +90,57 @@ public class UnGlueRelationAction extends JosmAction {
 
     /**
      * Change member in relation to another one
-     * @param relation
-     * @param orginalMember member to change
-     * @param newMember
-     * @return new relation were change is made
      */
-    private Relation changeRelationMember(Relation relation, OsmPrimitive orginalMember, OsmPrimitive newMember) {
-        LinkedList<RelationMember> newrms = new LinkedList<RelationMember>();
-        for (RelationMember rm : relation.getMembers()) {
-            if (rm.getMember() == orginalMember) {
-                newrms.add(new RelationMember(rm.getRole(),newMember));
-            } else {
-                newrms.add(rm);
-            }
+    private class ChangeRelationMemberCommand extends Command {
+
+        private final Relation relation;
+        private final OsmPrimitive oldMember;
+        private final OsmPrimitive newMember;
+        
+        public ChangeRelationMemberCommand(Relation relation, OsmPrimitive oldMember, OsmPrimitive newMember) {
+            this.relation = relation;
+            this.oldMember = oldMember;
+            this.newMember = newMember;
         }
-        Relation newRelation  = new Relation(relation);
-        newRelation.setMembers(newrms);
-        return newRelation;
+
+        private boolean replaceMembers(OsmPrimitive oldP, OsmPrimitive newP) {
+            if (relation == null || oldMember == null || newMember == null) {
+                return false;
+            }
+            LinkedList<RelationMember> newrms = new LinkedList<RelationMember>();
+            for (RelationMember rm : relation.getMembers()) {
+                if (rm.getMember() == oldP) {
+                    newrms.add(new RelationMember(rm.getRole(), newP));
+                } else {
+                    newrms.add(rm);
+                }
+            }
+            relation.setMembers(newrms);
+            return true;
+        }
+        
+        @Override
+        public boolean executeCommand() {
+            return replaceMembers(oldMember, newMember);
+        }
+
+        @Override
+        public void fillModifiedData(Collection<OsmPrimitive> modified,
+                Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {
+            modified.add(relation);
+        }
+
+        @Override
+        public void undoCommand() {
+            replaceMembers(newMember, oldMember);
+        }
+
+        @Override
+        public String getDescriptionText() {
+            return tr("Change relation member for {0} {1}",
+                    OsmPrimitiveType.from(relation),
+                    relation.getDisplayName(DefaultNameFormatter.getInstance()));
+        }
     }
 
     @Override

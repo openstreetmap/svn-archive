@@ -2,7 +2,10 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.curves;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,13 +62,13 @@ public class CircleArcMaker {
 
         Set<Way> targetWays = new HashSet<Way>();
 
-        boolean nodesHasBeenChoosen = false;
+        boolean nodesHaveBeenChoosen = false;
         if (selectedNodes.size() == 3) {
             Iterator<Node> nodeIter = selectedNodes.iterator();
             n1 = nodeIter.next();
             n2 = nodeIter.next();
             n3 = nodeIter.next();
-            nodesHasBeenChoosen = true;
+            nodesHaveBeenChoosen = true;
             if (selectedWays.isEmpty()) { // Create a brand new way
                 Way newWay = new Way();
                 targetWays.add(newWay);
@@ -75,10 +78,10 @@ public class CircleArcMaker {
                 newWay.addNode(n3);
             }
         }
-        if (selectedWays.isEmpty() == false) {
+        if (!selectedWays.isEmpty()) {
             // TODO: use only two nodes inferring the orientation from the parent way.
 
-            if (nodesHasBeenChoosen == false) {
+            if (!nodesHaveBeenChoosen) {
                 // Use the three last nodes in the way as anchors. This is intended to be used with the
                 // built in draw mode
                 Way w = selectedWays.iterator().next(); //TODO: select last selected way instead
@@ -88,17 +91,31 @@ public class CircleArcMaker {
                 n3 = w.getNode(nodeCount - 1);
                 n2 = w.getNode(nodeCount - 2);
                 n1 = w.getNode(nodeCount - 3);
-                nodesHasBeenChoosen = true;
+                nodesHaveBeenChoosen = true;
             }
-            targetWays.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
-            targetWays.addAll(OsmPrimitive.getFilteredList(n2.getReferrers(), Way.class));
-            targetWays.addAll(OsmPrimitive.getFilteredList(n3.getReferrers(), Way.class));
-            //            for(Way w : selectedWays) {
-            //                targetWays.add(w);
-            //            }
-
+            // Fix #7341. Find the first way having all nodes in common to sort them in its nodes order
+            List<Node> consideredNodes = Arrays.asList(new Node[]{n1,n2,n3});
+            for (Way w : selectedWays) {
+                final List<Node> nodes = w.getNodes();
+                if (nodes.containsAll(consideredNodes)) {
+                    Collections.sort(consideredNodes, new Comparator<Node>() {
+                        @Override
+                        public int compare(Node a, Node b) {
+                            return nodes.indexOf(a) - nodes.indexOf(b);
+                        }
+                    });
+                    n1 = consideredNodes.get(0);
+                    n2 = consideredNodes.get(1);
+                    n3 = consideredNodes.get(2);
+                    break;
+                }
+            }
+            
+            for (Node n : consideredNodes) {
+                targetWays.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
+            }
         }
-        if (nodesHasBeenChoosen == false) {
+        if (!nodesHaveBeenChoosen) {
             return null;
         }
 

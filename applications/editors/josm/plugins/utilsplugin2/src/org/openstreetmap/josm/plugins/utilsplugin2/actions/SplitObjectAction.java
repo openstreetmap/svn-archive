@@ -75,7 +75,8 @@ public class SplitObjectAction extends JosmAction {
         Way selectedWay = null;
         Way splitWay = null;
 
-        if (selectedNodes.isEmpty()) {              // if no nodes are selected - try to find split way
+        if (selectedNodes.size() != 2) {            // if not exactly 2 nodes are selected - try to find split way
+            selectedNodes.clear();                  // empty selected nodes (see #8237)
             for (Way selWay : selectedWays) {       // we assume not more 2 ways in the list
                 if (selWay != null &&               // If one of selected ways is not closed we have it to get split points
                     selWay.isUsable() &&

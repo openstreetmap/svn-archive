@@ -22,7 +22,7 @@ import s57.S57val.*;
 public class Symbols {
 
 	public enum Prim {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
 	public enum Handle {
@@ -247,8 +247,6 @@ public class Symbols {
 			case SYMB:
 				Symbol s = (Symbol) item.params;
 				drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
-				break;
-			case TEXT:
 				break;
 			}
 		}

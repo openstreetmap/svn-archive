@@ -84,18 +84,19 @@ class JoinDB (OSMDB):
 
     def collate_highways(self,highway):
         """ check and collect iteratively if a same-named highway is in an expanded bbox around the current highway """
+        expand_by_this_many_meters = 10.0
         old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway
-        current_bbox=self.get_expanded_bbox(highway['geom'],10.0)
+        current_bbox=self.get_expanded_bbox(highway['geom'],expand_by_this_many_meters)
 
         i=0
         while current_bbox != old_bbox:
             old_bbox = current_bbox
             collated_highways.update(self.find_same_named_highways(highway,current_bbox))
-
+            # FIXME: wieso wird hier immer der Joinway berechnet während der expand-phase? Das genügt doch nachher einmal.
             the_joined_way=self.get_joined_ways(collated_highways.keys())
-            current_bbox=self.get_expanded_bbox(the_joined_way,10.0)
+            current_bbox=self.get_expanded_bbox(the_joined_way,expand_by_this_many_meters)
             i+=1
 
         w=the_joined_way
@@ -110,8 +111,7 @@ class JoinDB (OSMDB):
 
     def get_joined_ways(self,segment_ids):
         """ Get a joined way (likely a LINESTRING, but possibly a MULTILINESTRING) for the set of osm_ids (int) given """
-        segment_ids_as_strings=map(lambda osmid: str(osmid),segment_ids)
-        return self.select_one("select ST_Linemerge(ST_Collect(way)) {FlW} osm_id in ({seglist})".format(FlW=self.FlW,seglist=string.join(segment_ids_as_strings,',')))
+        return self.select_one("select ST_Linemerge(ST_Collect(way)) {FlW} osm_id in {seglist}".format(FlW=self.FlW,seglist=self.sql_list_of_ids(segment_ids)))
 
     def _insert_joined_highway(self,join_id,name,highway,way):
         """ adds the joined highway (it may be a MULTILINE feature) to the jr tables. returns (just for info) the number of written ways (>1 if a MULTILINESTRING) """
@@ -182,6 +182,17 @@ class JoinDB (OSMDB):
             self._insert_segment_into_joinmap(join_id,segment_id)
         self._mark_segments_as_handled(join)
         return numjoins
+
+    def assert_joinway_is_not_duplicated(self,highway,joinset,joinway):
+        """ Check the highway in the jr tables """
+        join_id = highway['osm_id']
+        #print "*** Adding '{name}' ({id}) to planet_line_join".format(name=highway['name'],id=join_id)
+        segments = joinset.keys()
+        select = "select join_id from planet_line_joinmap where segment_id in {l}".format(l=self.sql_list_of_ids(segments))
+        joinways = self.select_list(select)
+        if len(joinways)==1:
+            return
+        logging.error("***** programming error: segment set {l} has just been inserted as joinway {jw} but is part of joinways {jwl}".format(l=self.sql_list_of_ids(segments),jw=join_id,jwl=self.sql_list_of_ids(joinways)))
 
     def clear_planet_line_join(self,bboxobj=None):
         logging.warn("*** clearing jr tables and flags")
@@ -314,6 +325,7 @@ class JoinDB (OSMDB):
             joinset,joinway=self.collate_highways(highway)
             # print "  Found connected highways '{hws}'".format(hws=joinset)
             numjoins = self.add_join_highway(highway,joinset,joinway)
+            self.assert_joinway_is_not_duplicated(joinset)
             if i%100==0:
                 self.commit()
             t=time.time()-ts

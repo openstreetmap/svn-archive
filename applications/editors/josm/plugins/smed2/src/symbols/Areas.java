@@ -134,7 +134,47 @@ public class Areas {
 		Seaplane.add(new Instr(Prim.SYMB, new Symbols.Symbol(Areas.Plane, 1.0, 0, 0, null, null)));
 	}
 	public static final ArrayList<Instr> WindFarm = new ArrayList<Instr>();
+	static {
+		WindFarm.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WindFarm.add(new Instr(Prim.FILL, Color.black));
+		WindFarm.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-100,-100,200,200)));
+		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(-35,50,35,50)));
+		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,50,0,-27.5)));
+		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,-27.5,30,-27.5)));
+		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,-27.5,-13.8,-3.8)));
+		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,-27.5,-13.8,-53.6)));
+	}
 	public static final ArrayList<Instr> WreckD = new ArrayList<Instr>();
+	static {
+		WreckD.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
+		WreckD.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-50,-40,100,80)));
+		WreckD.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
+		WreckD.add(new Instr(Prim.FILL, Color.black));
+		WreckD.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-50,-40,100,80)));
+		WreckD.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,40,0)));
+		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(0,-30,0,30)));
+		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
+		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(20,-15,20,15)));
+	}
 	public static final ArrayList<Instr> WreckND = new ArrayList<Instr>();
+	static {
+		WreckND.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckND.add(new Instr(Prim.FILL, Color.black));
+		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,40,0)));
+		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(0,-30,0,30)));
+		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
+		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(20,-15,20,15)));
+	}
 	public static final ArrayList<Instr> WreckS = new ArrayList<Instr>();
+	static {
+		WreckS.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckS.add(new Instr(Prim.FILL, Color.black));
+		WreckS.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-6,-6,12,12)));
+		WreckS.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-6,0)));
+		WreckS.add(new Instr(Prim.LINE, new Line2D.Double(40,0,6,0)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-30,0); p.lineTo(-40,-25); p.lineTo(-0.3,-12.6); p.lineTo(13.7,-37.7); p.lineTo(16.3,-36.3);
+		p.lineTo(2.7,-11.6); p.lineTo(37.5,0); p.lineTo(6,0); p.curveTo(5.6,-8,-5.6,-8,-6,0); p.closePath();
+		WreckS.add(new Instr(Prim.PGON, p));
+	}
 }

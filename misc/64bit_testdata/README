@@ -1,0 +1,59 @@
+
+--------------------------------
+DO NOT UPLOAD THESE FILES TO OSM
+--------------------------------
+
+Test data for 64bit node IDs
+
+This directory contains three sets of files which you can use to
+test-run the OSM software you are using and see if it supports IDs
+larger than the signed 32bit integer range (2^31-1).
+
+It is expected that OSM node IDs will break this barrier in early 
+2013.
+
+The test data is a small sample from OSM data and depicts the area 
+around V. C. Bird International Airport on the Caribbean island of 
+Antigua. 
+
+The files are:
+
+base-X.osm 
+base-X.osm.pbf
+   - basic OSM data for the sample area.
+
+diff-X.osc
+   - a diff that adds the Stanford Cricket Ground to the data.
+
+full-X.osm
+full-X.osm.pbf
+   - sample area including the Stanford Cricket Ground.
+
+There are three sets of files with different "X":
+
+X = s32
+   - signed 32bit id range; these files should work correctly
+   with all existing software. Contains some nodes in the 1...1000
+   range and some in the 2**31-2500 range.
+
+X = u32
+   - unsigned 32bit id range; if your software works with these
+   then you're probably good for another year. Contains some nodes
+   in the 1...1000 range and some in the 2**31...2**31+1000 range
+   so that they would wrap to 1...1000 if you were limited to 2**31.
+
+X = 64
+   - 64bit id range; if your software works with these then you
+   you're ok for quite a long time to come. Contains some nodes
+   in the 1...1000 range and some in the 2**32...2**32+1000 range
+   so that they would wrap to 1...1000 if you were limited to 2**32.
+
+There is also a file called broken.osm which depicts what happens
+if you do indeed have an integer overflow; it contains lots of nodes
+twice. There's also a "correct.png" showing how the data looks like
+in JOSM, and "broken.png" which is something you'll see if you have
+an integer overflow.
+
+--------------------------------
+DO NOT UPLOAD THESE FILES TO OSM
+--------------------------------

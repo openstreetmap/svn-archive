@@ -417,13 +417,19 @@ def main(options):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=logging.INFO)
     parser = OptionParser()
+    parser.add_option("-l", "--loglevel", dest="loglevel", help="Loglevel [INFO|WARN|DEBUG]. Default is INFO.", default="INFO")
     parser.add_option("-c", "--command", dest="command", help="The command to execute. Default is update. Possible values are update, install, clear", default="update")
     parser.add_option("-b", "--bbox", dest="bbox", help="bounding box to restrict to", default="")
     parser.add_option("-d", "--dsn", dest="dsn", help="DSN, default is 'dbname=gis host=crite'", default="dbname=gis host=crite")
     parser.add_option("-m", "--maxobjects", dest="maxobjects", help="maximum number of objects to treat, default is 50000. Set to 0 for unlimited.", default="50000")
     (options, args) = parser.parse_args()
+    loglevel = options['loglevel'].upper()
+    if loglevel!=None:
+        ll = {'INFO':logging.INFO, 'WARN':logging.WARN, 'DEBUG':logging.DEBUG}[loglevel]
+    else:
+        ll = logging.INFO
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',filename='/home/osm/bin/diffs/logs/joinways2.log',level=ll)
     logging.debug(options)
     main(options.__dict__)
     sys.exit(0)

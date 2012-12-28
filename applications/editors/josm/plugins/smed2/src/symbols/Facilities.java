@@ -11,13 +11,7 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.*;
 import java.util.ArrayList;
 
 import symbols.Symbols.Instr;

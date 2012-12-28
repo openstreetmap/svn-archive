@@ -11,10 +11,12 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
+import symbols.Symbols.Caption;
 import symbols.Symbols.Delta;
 import symbols.Symbols.Handle;
 import symbols.Symbols.Instr;
@@ -52,6 +54,10 @@ public class Notices {
 	private static final ArrayList<Instr> Slipway = new ArrayList<Instr>();
 	private static final ArrayList<Instr> Speedboat = new ArrayList<Instr>();
 	private static final ArrayList<Instr> Sport = new ArrayList<Instr>();
+	static {
+		Sport.add(new Instr(Prim.FONT, new Font("Arial", Font.BOLD, 15)));
+		Sport.add(new Instr(Prim.TEXT, new Caption("SPORT", (float)-25.0, (float)5.0)));
+	}
 	private static final ArrayList<Instr> Turn = new ArrayList<Instr>();
 	static {
 		Turn.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
@@ -63,6 +69,10 @@ public class Notices {
 		Turn.add(new Instr(Prim.PGON, p));
 	}
 	private static final ArrayList<Instr> VHF = new ArrayList<Instr>();
+	static {
+		VHF.add(new Instr(Prim.FONT, new Font("Arial", Font.BOLD, 20)));
+		VHF.add(new Instr(Prim.TEXT, new Caption("VHF", (float)-20.0, (float)-5.0)));
+	}
 	private static final ArrayList<Instr> Waterbike = new ArrayList<Instr>();
 	private static final ArrayList<Instr> Waterski = new ArrayList<Instr>();
 	private static final ArrayList<Instr> NoticeA = new ArrayList<Instr>();
@@ -203,10 +213,50 @@ public class Notices {
 	static {
 		NoticeA10b.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA10a, 1.0, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))), null)));
 	}
-	public static final ArrayList<Instr> NoticeA11= new ArrayList<Instr>();
+	public static final ArrayList<Instr> NoticeA12= new ArrayList<Instr>();
 	static {
-		NoticeA11.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
-		NoticeA11.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Motor, 1.0, 0, 0, null, null)));
+		NoticeA12.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA12.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Motor, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA13= new ArrayList<Instr>();
+	static {
+		NoticeA13.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA13.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Sport, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA14= new ArrayList<Instr>();
+	static {
+		NoticeA14.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA14.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Waterski, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA15= new ArrayList<Instr>();
+	static {
+		NoticeA15.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA15.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Sailboat, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA16= new ArrayList<Instr>();
+	static {
+		NoticeA16.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA16.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Rowboat, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA17= new ArrayList<Instr>();
+	static {
+		NoticeA17.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA17.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Sailboard, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA18= new ArrayList<Instr>();
+	static {
+		NoticeA18.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA18.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Speedboat, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA19= new ArrayList<Instr>();
+	static {
+		NoticeA19.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA19.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Slipway, 1.0, 0, 0, null, null)));
+	}
+	public static final ArrayList<Instr> NoticeA20= new ArrayList<Instr>();
+	static {
+		NoticeA20.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
+		NoticeA20.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.Waterbike, 1.0, 0, 0, null, null)));
 	}
 	public static final ArrayList<Instr> NoticeB2a = new ArrayList<Instr>();
 	public static final ArrayList<Instr> NoticeB2b = new ArrayList<Instr>();
@@ -217,6 +267,11 @@ public class Notices {
 	public static final ArrayList<Instr> NoticeB5 = new ArrayList<Instr>();
 	public static final ArrayList<Instr> NoticeB7 = new ArrayList<Instr>();
 	public static final ArrayList<Instr> NoticeB8 = new ArrayList<Instr>();
+	public static final ArrayList<Instr> NoticeB11a = new ArrayList<Instr>();
+	static {
+		NoticeB11a.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.NoticeB, 1.0, 0, 0, null, null)));
+		NoticeB11a.add(new Instr(Prim.SYMB, new Symbols.Symbol(Notices.VHF, 1.0, 0, 0, null, null)));
+	}
 	public static final ArrayList<Instr> NoticeC1 = new ArrayList<Instr>();
 	public static final ArrayList<Instr> NoticeC2 = new ArrayList<Instr>();
 	public static final ArrayList<Instr> NoticeC3 = new ArrayList<Instr>();

@@ -14,7 +14,10 @@ It is expected that OSM node IDs will break this barrier in early
 
 The test data is a small sample from OSM data and depicts the area 
 around V. C. Bird International Airport on the Caribbean island of 
-Antigua. 
+Antigua, and covers the following bounding box:
+
+minlon=-61.8114 minlat=17.1255 maxlon=-61.7733 maxlat=17.1542
+
 
 The files are:
 

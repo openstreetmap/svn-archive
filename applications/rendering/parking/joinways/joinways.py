@@ -188,7 +188,7 @@ class JoinDB (OSMDB):
         # if l>0
         # remove/flush all existing joinways, and mark all their individual segments as unhandled.
         # note that the set of segments may be larger than the newly calculated joinway's segments (joinset parameter).
-        logging.warn("*** merger: segment set {l} is in the following (to be removed) joinways {jwl}".format(l=self.sql_list_of_ids(segments),jwl=self.sql_list_of_ids(existing_joinways)))
+        logging.warn("Merger: Joinway {jw}'s segment set {l} is in the following (to be removed) joinways {jwl}".format(jw=join_id,l=self.sql_list_of_ids(segments),jwl=self.sql_list_of_ids(existing_joinways)))
         for existing_joinway in existing_joinways:
             self.unhandle_joinway(existing_joinway)
         return

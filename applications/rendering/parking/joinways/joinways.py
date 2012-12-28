@@ -170,6 +170,29 @@ class JoinDB (OSMDB):
             i += 1
         return ways
 
+
+
+    def detect_and_handle_merger(self,highway,joinset,joinway):
+        """  if a segment adds to a previously existing joinroad (e.g. a side road is added) """
+        join_id = highway['osm_id']
+        segments = joinset.keys()
+        select = "select distinct join_id from planet_line_joinmap where segment_id in {l}".format(l=self.sql_list_of_ids(segments))
+        existing_joinways = self.select_list(select)
+        l = len(existing_joinways)
+        if l==0:
+            return
+        if l==1:
+            # just a quick assertion: the segments should not be in the same joinway as existed before, as it should have been deleted by the delete handling first.
+            if existing_joinways[0]==join_id:
+                logging.error("***** programming error: segment set {l} will be inserted as joinway {jw} which existed (but should have been deleted by osm2pgsql)".format(l=self.sql_list_of_ids(segments),jw=join_id))
+        # if l>0
+        # remove/flush all existing joinways, and mark all their individual segments as unhandled.
+        # note that the set of segments may be larger than the newly calculated joinway's segments (joinset parameter).
+        logging.warn("*** merger: segment set {l} is in the following (to be removed) joinways {jwl}".format(l=self.sql_list_of_ids(segments),jwl=self.sql_list_of_ids(existing_joinways)))
+        for existing_joinway in existing_joinways:
+            self.unhandle_joinway(existing_joinway)
+        return
+
     def add_join_highway(self,highway,joinset,joinway):
         """ Add the highway into the jr tables, handle all flagging """
         join_id = highway['osm_id']
@@ -248,12 +271,16 @@ class JoinDB (OSMDB):
             logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times).".format(sid=segment_id,jid=jid,n=len(jidlist)))
             #logging.warn("...removing it.")
             # this means mark all segments of the joinway as unhandled. This covers the case that a segment is being separated from a once joined set.
-            dirtylist=self.get_segments_of_joinway(jid)
-            self.mark_segments_unhandled(dirtylist)
-            self.remove_joinway(jid)
+            self.unhandle_joinway(jid)
             #logging.warn("...done.")
         return
 
+    def unhandle_joinway(self,joinway_id):
+        """ removes a joinway and marks its segments as unhandled """
+        dirtylist=self.get_segments_of_joinway(joinway_id)
+        self.mark_segments_unhandled(dirtylist)
+        self.remove_joinway(joinway_id)
+        
     def remove_joinway(self,joinway_id):
         delete="delete from planet_line_join where join_id={j}".format(j=joinway_id)
         self.delete(delete)
@@ -324,6 +351,7 @@ class JoinDB (OSMDB):
             #print "Found {i}. pending highway '{name}'".format(i=i,name=highway['name'])
             joinset,joinway=self.collate_highways(highway)
             # print "  Found connected highways '{hws}'".format(hws=joinset)
+            self.detect_and_handle_merger(highway,joinset,joinway) # if a segment adds to a previously existing joinroad (e.g. a side road is added)
             numjoins = self.add_join_highway(highway,joinset,joinway)
             self.assert_joinway_is_not_duplicated(highway,joinset,joinway)
             if i%100==0:

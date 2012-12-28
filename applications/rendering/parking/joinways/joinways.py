@@ -188,7 +188,7 @@ class JoinDB (OSMDB):
         join_id = highway['osm_id']
         #print "*** Adding '{name}' ({id}) to planet_line_join".format(name=highway['name'],id=join_id)
         segments = joinset.keys()
-        select = "select join_id from planet_line_joinmap where segment_id in {l}".format(l=self.sql_list_of_ids(segments))
+        select = "select distinct join_id from planet_line_joinmap where segment_id in {l}".format(l=self.sql_list_of_ids(segments))
         joinways = self.select_list(select)
         if len(joinways)==1:
             return

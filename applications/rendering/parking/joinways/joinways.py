@@ -424,7 +424,7 @@ if __name__ == '__main__':
     parser.add_option("-d", "--dsn", dest="dsn", help="DSN, default is 'dbname=gis host=crite'", default="dbname=gis host=crite")
     parser.add_option("-m", "--maxobjects", dest="maxobjects", help="maximum number of objects to treat, default is 50000. Set to 0 for unlimited.", default="50000")
     (options, args) = parser.parse_args()
-    loglevel = options['loglevel'].upper()
+    loglevel = options.__dict__['loglevel'].upper()
     if loglevel!=None:
         ll = {'INFO':logging.INFO, 'WARN':logging.WARN, 'DEBUG':logging.DEBUG}[loglevel]
     else:

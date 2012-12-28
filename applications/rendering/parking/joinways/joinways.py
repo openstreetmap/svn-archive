@@ -325,7 +325,7 @@ class JoinDB (OSMDB):
             joinset,joinway=self.collate_highways(highway)
             # print "  Found connected highways '{hws}'".format(hws=joinset)
             numjoins = self.add_join_highway(highway,joinset,joinway)
-            self.assert_joinway_is_not_duplicated(joinset)
+            self.assert_joinway_is_not_duplicated(highway,joinset,joinway)
             if i%100==0:
                 self.commit()
             t=time.time()-ts

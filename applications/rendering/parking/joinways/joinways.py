@@ -84,7 +84,7 @@ class JoinDB (OSMDB):
 
     def collate_highways(self,highway):
         """ check and collect iteratively if a same-named highway is in an expanded bbox around the current highway """
-        expand_by_this_many_meters = 10.0
+        expand_by_this_many_meters = 50.0 # earlier value 10.0 had issues with unnamed roundabouts (ping pong loops with competing joinways)
         old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway

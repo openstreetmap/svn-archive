@@ -28,3 +28,133 @@ PostgreSQL (--hstore --hstore-match-only switches of osm2pgsql).
 To keep the database compatible to the "original" Mapnik style we
 now use views instead of tables. SQL scripts to set up these views
 are supplied in the views directory.
+
+
+Quickstart
+==========
+
+This quickstart guide was tested on a Ubuntu 12.04 machine using
+- mapnik 2.1.0
+- osm2pgsql SVN version 0.81.0
+- postgresql-9.1
+
+Recommended packages that should be installed:
+
+- from Ubuntu repository:
+  postgis postgresql postgresql-9.1-postgis
+  
+- from ppa:mapnik/v2.1.0:
+  libmapnik mapnik-utils python-mapnik
+  
+- from ppa:kakrueger/openstreetmap
+  osm2pgsql
+
+The working directory is "/home/USERNAME/osm".
+In addition to this repository, the mapnik repository is required for tile
+generation:
+
+    svn co http://svn.openstreetmap.org/applications/rendering/mapnik
+    svn co http://svn.openstreetmap.org/applications/rendering/mapnik-german
+
+
+Set up world_boundaries
+-----------------------
+
+The mapnik world_boundaries have to be downloaded. For more information,
+read "mapnik/README".
+
+    cd mapnik
+    ./get-coastlines.sh
+
+These shapefiles are also needed by mapnik, but ./get-coastlines does not
+take care of them. Copy those files to the "mpanik/world_boundaries" directory.
+- ftp://195.16.220.82/pub/osm/mapnik-data-files/world_boundaries/110m_admin_0_boundary_lines_land.dbf
+- ftp://195.16.220.82/pub/osm/mapnik-data-files/world_boundaries/110m_admin_0_boundary_lines_land.shp
+
+mapnik-german requires land-polygons files that need to be extracted to the
+"mapnik/world_boundaries" directory as well. It is important that the
+Mercantor projection is used and NOT the WGS84 projection:
+- http://data.openstreetmapdata.com/land-polygons-split-3857.zip
+
+
+Setup database
+--------------
+
+Download and extract a file containing OSM data. The planet file is large,
+so we will use the smaller sachsen.osm from:
+- http://downloads.cloudmade.com/europe/western_europe/germany/sachsen/sachsen.osm.bz2
+
+Setup your OSM database by e.g. installing the package
+"openstreetmap-postgis-db-setup" or by issuing these commands:
+
+    sudo -u postgres createdb -E UTF8 -O postgres osm
+    sudo -u postgres createlang plpgsql osm
+    sudo -u postgres psql osm < /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
+    sudo -u postgres psql osm < /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
+
+We assume that there is a database named "osm" to which the user "postgres"
+has full access. The associated password of the user "postgres" is "USERPWD".
+
+Once the database is set-up. Import sachsen.osm using osm2pgsql with the
+--hstore (-k) option:
+
+    osm2pgsql -m -d osm --hstore -W \
+              -S ./mapnik-german/views/default.style \
+              ./sachsen.osm
+
+Create the views (view_osmde_*) for the mapnik-german style:
+
+    sudo -u postgres psql osm < ./mapnik-german/views/view-line.sql
+    sudo -u postgres psql osm < ./mapnik-german/views/view-point.sql
+    sudo -u postgres psql osm < ./mapnik-german/views/view-polygon.sql
+    sudo -u postgres psql osm < ./mapnik-german/views/view-roads.sql
+    
+    sudo -u postgres psql -d osm
+    SELECT populate_geometry_columns();
+
+
+Generate XML file
+-----------------
+
+At this point, everything is set and we can generate the osm-local.xml file:
+(Replace /home/USERNAME/osm and USERPWD)
+
+    ./mapnik/generate_xml.py \
+      --host 'localhost' \
+      --port 5432 \
+      --dbname osm \
+      --prefix view_osmde \
+      --user postgres \
+      --password 'USERPWD' \
+      --inc /home/USERNAME/osm/mapnik-german/inc-de \
+      --world_boundaries /home/USERNAME/osm/mapnik/world_boundaries \
+      /home/USERNAME/osm/mapnik-german/osm-de.xml > /home/USERNAME/osm/mapnik-german/osm-local.xml
+
+
+Generate tiles
+--------------
+
+The "mapnik/generate_tiles.py" script must be edited to point to the correct
+"osm-local.xml" file. Create a copy in "mapnik-german" and modify it according
+to your wishes.
+
+    cp ./mapnik/generate_tiles.py ./mapnik-german/
+
+Find the line
+
+    mapfile = home + "/svn.openstreetmap.org/applications/rendering/mapnik/osm-local.xml"
+
+and replace it with
+
+    mapfile = home + "/osm/mapnik-german/osm-local.xml".
+
+Then the only thing to do is to setup a region of interest (which must be in
+Saxony in this case, because we only used sachsen.osm), e.g.
+
+    # Leipzig
+    bbox = (12.3086,51.2834,12.4353,51.3678)
+    render_tiles(bbox, mapfile, tile_dir, 7, 17 , "Leipzig")
+
+Run the script to generate the tiles:
+
+    ./mapnik-german/generate_tiles.py

@@ -73,7 +73,9 @@ take care of them. Copy those files to the "mpanik/world_boundaries" directory.
 
 mapnik-german requires land-polygons files that need to be extracted to the
 "mapnik/world_boundaries" directory as well. It is important that the
-Mercantor projection is used and NOT the WGS84 projection:
+Mercator projection is used and NOT the WGS84 projection:
+- http://openstreetmapdata.com/data/land-polygons
+or
 - http://data.openstreetmapdata.com/land-polygons-split-3857.zip
 
 
@@ -95,7 +97,8 @@ Setup your OSM database by e.g. installing the package
 We assume that there is a database named "osm" to which the user "postgres"
 has full access. The associated password of the user "postgres" is "USERPWD".
 
-Once the database is set-up. Import sachsen.osm using osm2pgsql with the
+Once the database is set-up (which should already be the case if you have
+been using mapnik before), mport sachsen.osm using osm2pgsql with the
 --hstore (-k) option:
 
     osm2pgsql -m -d osm --hstore -W \
@@ -116,8 +119,8 @@ Create the views (view_osmde_*) for the mapnik-german style:
 Generate XML file
 -----------------
 
-At this point, everything is set and we can generate the osm-local.xml file:
-(Replace /home/USERNAME/osm and USERPWD)
+At this point, everything is set and we can generate the osm-local.xml file
+(Replace /home/USERNAME/osm and USERPWD):
 
     ./mapnik/generate_xml.py \
       --host 'localhost' \
@@ -148,7 +151,7 @@ and replace it with
 
     mapfile = home + "/osm/mapnik-german/osm-local.xml".
 
-Then the only thing to do is to setup a region of interest (which must be in
+Then you only need to setup a region of interest (which must be in
 Saxony in this case, because we only used sachsen.osm), e.g.
 
     # Leipzig

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import sys,time,string,logging
+import sys,time,logging,random
 #import psycopg2
 from osmdb import OSMDB
 from geom import bbox
@@ -84,7 +84,9 @@ class JoinDB (OSMDB):
 
     def collate_highways(self,highway):
         """ check and collect iteratively if a same-named highway is in an expanded bbox around the current highway """
-        expand_by_this_many_meters = 50.0 # earlier value 10.0 had issues with unnamed roundabouts (ping pong loops with competing joinways)
+        # FIXME: better use a buffer around the street in order to find attached ones. BBoxes give problems e.g. for the Bernstrasse here:
+        # http://www.openstreetmap.org/?way=131047597,131047602,131047604,124904118,124904119,106915385,123729605,123729606,117751125,131048677,88232929,116526818,131048676,38302181,38302185,27822320,86651386,42348030,42348031
+        expand_by_this_many_meters = random.uniform(15.0,50.0) # earlier value 10.0 had issues with unnamed roundabouts (ping pong loops with competing joinways), fixed values as well. Trying with random range.
         old_bbox=""
         collated_highways={}
         collated_highways[highway['osm_id']]=highway

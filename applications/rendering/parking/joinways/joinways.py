@@ -8,6 +8,18 @@ from geom import bbox
 from optparse import OptionParser
 from streetnameabbreviations import NameDB
 import streetnameabbreviations
+from collections import deque
+
+class loopdetect():
+    queue = deque(['a','b','c','d'])
+    def add_id(self,join_id):
+        self.queue.append(join_id)
+        if len(self.queue)>4:
+            self.queue.popleft()
+    def check_for_duplicates(self):
+        if(self.queue[3]==self.queue[1] and self.queue[2]==self.queue[0]):
+            return True
+        return False
 
 class JoinDB (OSMDB):
 
@@ -30,6 +42,7 @@ class JoinDB (OSMDB):
             ids=osmids.split(',')
             highways.append([hw,ids])
     '''
+    loop_detect_queue = loopdetect()
 
     def __init__(self,dsn,maxobjects=0):
         self.maxobjects = maxobjects
@@ -191,6 +204,14 @@ class JoinDB (OSMDB):
         # remove/flush all existing joinways, and mark all their individual segments as unhandled.
         # note that the set of segments may be larger than the newly calculated joinway's segments (joinset parameter).
         logging.warn("Merger: Joinway {jw}'s segment set {l} is in the following (to be removed) joinways {jwl}".format(jw=join_id,l=self.sql_list_of_ids(segments),jwl=self.sql_list_of_ids(existing_joinways)))
+        #
+        # FIXME: temp workaround for endless loop:
+        # build a queue and check that join_ids are not looping
+        #
+        self.loop_detect_queue.add_id(join_id)
+        if self.loop_detect_queue.check_for_duplicates():
+            logging.error("***** Loop detected: ignoring and adding duplicate way")
+            return
         for existing_joinway in existing_joinways:
             self.unhandle_joinway(existing_joinway)
         return

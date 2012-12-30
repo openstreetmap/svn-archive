@@ -33,6 +33,10 @@ are supplied in the views directory.
 Quickstart
 ==========
 
+Further reading:
+- http://wiki.openstreetmap.org/wiki/Mapnik
+- http://wiki.openstreetmap.org/wiki/Mapnik/PostGIS
+
 This quickstart guide was tested on a Ubuntu 12.04 machine using
 - mapnik 2.1.0
 - osm2pgsql SVN version 0.81.0
@@ -67,9 +71,8 @@ read "mapnik/README".
     ./get-coastlines.sh
 
 These shapefiles are also needed by mapnik, but ./get-coastlines does not
-take care of them. Copy those files to the "mpanik/world_boundaries" directory.
-- ftp://195.16.220.82/pub/osm/mapnik-data-files/world_boundaries/110m_admin_0_boundary_lines_land.dbf
-- ftp://195.16.220.82/pub/osm/mapnik-data-files/world_boundaries/110m_admin_0_boundary_lines_land.shp
+take care of them. Unpack those files to the "mpanik/world_boundaries" directory.
+- http://www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_boundary_lines_land.zip
 
 mapnik-german requires land-polygons files that need to be extracted to the
 "mapnik/world_boundaries" directory as well. It is important that the

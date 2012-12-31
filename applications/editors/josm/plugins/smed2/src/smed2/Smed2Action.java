@@ -45,6 +45,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
 	public ImageryLayer rendering;
+	public Collection<OsmPrimitive> data = null;
 
 	private final DataSetListener dataSetListener = new DataSetListener() {
 
@@ -91,7 +92,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 	public Smed2Action() {
 		super(editor, "Smed2", editor, null, true);
-		MapView.addEditLayerChangeListener(this); // DataSet.addDataSetListener(DataListener);
+		MapView.addEditLayerChangeListener(this);
 		DataSet.addSelectionListener(this);
 	}
 
@@ -144,12 +145,16 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 	@Override
 	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+		System.out.println(newLayer);
 		if (oldLayer != null) {
 			oldLayer.data.removeDataSetListener(dataSetListener);
 		}
 
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
+			data = newLayer.data.allPrimitives();
+		} else {
+			data = null;
 		}
 	}
 

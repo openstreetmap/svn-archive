@@ -15,7 +15,7 @@ public class S57val {
 		}
 	}
 	
-	private enum Conv { S, A, L, E, F, I }
+	public enum Conv { S, A, L, E, F, I }
 	
 	static class S57key {
 		Conv conv;
@@ -586,10 +586,11 @@ public class S57val {
 		Litvis.put(LitVIS.LIT_INTS, new S57enum(4, "intensified")); Litvis.put(LitVIS.LIT_UINT, new S57enum(5, "unintensified")); Litvis.put(LitVIS.LIT_RSTR, new S57enum(6, "restricted"));
 		Litvis.put(LitVIS.LIT_OBSC, new S57enum(7, "obscured")); Litvis.put(LitVIS.LIT_POBS, new S57enum(8, "part_obscured"));
 	}
-	public enum MarSYS { SYS_UNKN, SYS_IALA, SYS_IALB, SYS_NONE, SYS_OTHR, SYS_CEVN, SYS_RIWR }
+	public enum MarSYS { SYS_UNKN, SYS_IALA, SYS_IALB, SYS_NONE, SYS_OTHR, SYS_CEVN, SYS_RIWR, SYS_BWR2, SYS_BNWR, SYS_PPWB }
 	private static final EnumMap<MarSYS, S57enum> Marsys = new EnumMap<MarSYS, S57enum>(MarSYS.class); static { Marsys.put(MarSYS.SYS_UNKN, new S57enum(0, ""));
 		Marsys.put(MarSYS.SYS_IALA, new S57enum(1, "iala-a")); Marsys.put(MarSYS.SYS_IALB, new S57enum(2, "iala-b")); Marsys.put(MarSYS.SYS_NONE, new S57enum(9, "none"));
 		Marsys.put(MarSYS.SYS_OTHR, new S57enum(10, "other")); Marsys.put(MarSYS.SYS_CEVN, new S57enum(11, "cevni")); Marsys.put(MarSYS.SYS_RIWR, new S57enum(12, "riwr"));
+		Marsys.put(MarSYS.SYS_BWR2, new S57enum(13, "bniwr2")); Marsys.put(MarSYS.SYS_BNWR, new S57enum(14, "bniwr")); Marsys.put(MarSYS.SYS_PPWB, new S57enum(15, "ppwbc"));
 	}
 	public enum NatCON { CON_UNKN, CON_MSNY, CON_CONC, CON_BDRS, CON_HSRF, CON_USRF, CON_WOOD, CON_METL, CON_GRP, CON_PNTD }
 	private static final EnumMap<NatCON, S57enum> Natcon = new EnumMap<NatCON, S57enum>(NatCON.class); static { Natcon.put(NatCON.CON_UNKN, new S57enum(0, ""));
@@ -793,7 +794,7 @@ public class S57val {
 	  Catnmk.put(CatNMK.NMK_SWWL, new S57enum(77, "secondary_waterway_left")); Catnmk.put(CatNMK.NMK_WRSA, new S57enum(78, "main_waterway_right_secondary_ahead"));
 	  Catnmk.put(CatNMK.NMK_WLSA, new S57enum(79, "main_waterway_left_secondary_ahead")); Catnmk.put(CatNMK.NMK_WRSL, new S57enum(80, "main_waterway_right_secondary_left"));
 	  Catnmk.put(CatNMK.NMK_WLSR, new S57enum(81, "main_waterway_left_secondary_right")); Catnmk.put(CatNMK.NMK_WRAL, new S57enum(82, "main_waterway_right_secondary_ahead_left"));
-	  Catnmk.put(CatNMK.NMK_WLAR, new S57enum(83, "main_waterway_left_secondary waterway_ahead_right")); Catnmk.put(CatNMK.NMK_MWWC, new S57enum(84, "main_waterway_crossing"));
+	  Catnmk.put(CatNMK.NMK_WLAR, new S57enum(83, "main_waterway_left_secondary_ahead_right")); Catnmk.put(CatNMK.NMK_MWWC, new S57enum(84, "main_waterway_crossing"));
 	  Catnmk.put(CatNMK.NMK_MWWJ, new S57enum(85, "main_waterway_junction")); Catnmk.put(CatNMK.NMK_MWAR, new S57enum(86, "main_waterway_ahead_right"));
 	  Catnmk.put(CatNMK.NMK_MWAL, new S57enum(87, "main_waterway_ahead_left")); Catnmk.put(CatNMK.NMK_WARL, new S57enum(88, "main_waterway_ahead_right_secondary_left"));
 	  Catnmk.put(CatNMK.NMK_WALR, new S57enum(89, "main_waterway_ahead_left_secondary_right")); Catnmk.put(CatNMK.NMK_PEND, new S57enum(90, "prohibition_ends"));

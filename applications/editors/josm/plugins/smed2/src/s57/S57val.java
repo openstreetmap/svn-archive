@@ -26,9 +26,9 @@ public class S57val {
 	}
 	
 	public static class AttVal {
-		Att att;
-		Conv conv;
-		Object val;
+		public Att att;
+		public Conv conv;
+		public Object val;
 		AttVal(Att a, Conv c, Object v) {
 			att = a; conv = c; val = v;
 		}

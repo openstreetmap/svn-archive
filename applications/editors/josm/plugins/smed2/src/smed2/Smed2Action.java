@@ -1,12 +1,11 @@
 package smed2;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.Collection;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.Map.Entry;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -16,23 +15,12 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DataSetListener;
-import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
-import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
-import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
-import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
-import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
-import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
-import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
+import seamap.Map;
 
 import panels.PanelMain;
 
@@ -45,6 +33,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
 	public ImageryLayer rendering;
+	public Map map = null;
 	public Collection<OsmPrimitive> data = null;
 
 	private final DataSetListener dataSetListener = new DataSetListener() {
@@ -129,7 +118,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		panelS57 = new S57dat();
 		panelS57.setVisible(false);
 		frame.add(panelS57);
-		System.out.println("hello");
+//		System.out.println("hello");
 		rendering = ImageryLayer.create(new ImageryInfo("OpenSeaMap"));
 		Main.main.addLayer(rendering);
 	}
@@ -139,22 +128,34 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 			Main.main.removeLayer(rendering);
 			frame.setVisible(false);
 			frame.dispose();
+			data = null;
+			map = null;
 		}
 		isOpen = false;
 	}
 
 	@Override
 	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
-		System.out.println(newLayer);
 		if (oldLayer != null) {
 			oldLayer.data.removeDataSetListener(dataSetListener);
 		}
-
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data.allPrimitives();
-		} else {
+			map = new Map();
+			for (OsmPrimitive osm : data) {
+				if (osm instanceof Node) {
+					map.addNode(((Node)osm).getId(), ((Node)osm).getCoor().lat(), ((Node)osm).getCoor().lon());
+				} else if (osm instanceof Way) {
+					map.addWay(((Way)osm).getId());
+				}
+				for (Entry<String, String> entry : osm.getKeys().entrySet()) {
+					map.addTag(entry.getKey(), entry.getValue());
+				}
+			}
+ 		} else {
 			data = null;
+			map = null;
 		}
 	}
 

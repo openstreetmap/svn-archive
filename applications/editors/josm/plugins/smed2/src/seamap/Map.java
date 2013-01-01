@@ -37,7 +37,6 @@ public class Map {
 	}
 
 	public class Feature {
-		public long id;
 		public Fflag flag;
 		public ArrayList<Long> refs;
 		public Obj type;
@@ -49,7 +48,6 @@ public class Map {
 		}
 		
 		void clean() {
-			id = 0;
 			flag = Fflag.UNKN;
 			refs = new ArrayList<Long>();
 			type = Obj.UNKOBJ;

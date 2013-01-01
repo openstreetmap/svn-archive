@@ -40,42 +40,42 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void dataChanged(DataChangedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void otherDatasetChange(AbstractDatasetChangedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void primitivesAdded(PrimitivesAddedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void primitivesRemoved(PrimitivesRemovedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void relationMembersChanged(RelationMembersChangedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void tagsChanged(TagsChangedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 
 		@Override
 		public void wayNodesChanged(WayNodesChangedEvent e) {
-			System.out.println(e);
+			reMap();
 		}
 	};
 
@@ -142,17 +142,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data.allPrimitives();
-			map = new Map();
-			for (OsmPrimitive osm : data) {
-				if (osm instanceof Node) {
-					map.addNode(((Node)osm).getId(), ((Node)osm).getCoor().lat(), ((Node)osm).getCoor().lon());
-				} else if (osm instanceof Way) {
-					map.addWay(((Way)osm).getId());
-				}
-				for (Entry<String, String> entry : osm.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
-				}
-			}
+			reMap();
  		} else {
 			data = null;
 			map = null;
@@ -163,6 +153,24 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	void reMap() {
+		map = new Map();
+		for (OsmPrimitive osm : data) {
+			if (osm instanceof Node) {
+				map.addNode(((Node)osm).getId(), ((Node)osm).getCoor().lat(), ((Node)osm).getCoor().lon());
+			} else if (osm instanceof Way) {
+				map.addWay(((Way)osm).getId());
+				for (Node node : ((Way)osm).getNodes()) {
+					map.addToWay(((Way)osm).getUniqueId(), node.getUniqueId());
+				}
+			}
+			for (Entry<String, String> entry : osm.getKeys().entrySet()) {
+				map.addTag(entry.getKey(), entry.getValue());
+			}
+		}
+	
 	}
 
 }

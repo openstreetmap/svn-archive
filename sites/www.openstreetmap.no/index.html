@@ -19,6 +19,7 @@
 var lat=65.4;
 var lon=17.0;
 var zoom=5;
+var layers;
 var epsg4326 = new OpenLayers.Projection("EPSG:4326");
 OpenLayers.Lang.setCode("nb");
 
@@ -306,12 +307,12 @@ function updatelinks() {
 
   node = $("historyanchor");
   if (node) {
-    if (zoom >= 13) {
+    if (zoom >= 11) {
       var args = new Object();
       args.lat = lat;
       args.lon = lon;
       args.zoom = zoom;
-      node.href = setArgs("http://matt.dev.openstreetmap.org/owl_viewer/weeklymap", args);
+      node.href = setArgs("http://zverik.osm.rambler.ru/whodidit/", args);
       node.title = i18n("javascripts.site.history_tooltip");
     } else {
       node.href = 'javascript:alert(i18n("javascripts.site.history_zoom_alert"));';
@@ -421,7 +422,7 @@ input#q { width:25em; }
     <a href="http://www.openstreetmap.org/edit"
        id="editanchor"
        title="Rediger kartet">Rediger</a>
-    <a href="http://matt.dev.openstreetmap.org/owl_viewer/weeklymap"
+    <a href="http://zverik.osm.rambler.ru/whodidit/"
        id="historyanchor"
        title="Vis redigeringer for dette området">Historikk</a>
     <a href="http://www.openstreetmap.org/export"

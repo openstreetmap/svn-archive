@@ -122,8 +122,11 @@ function init() {
       'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
       'Driftet av <a href="http://www.safeinnovations.com/">Safe Computing AS</a>'});
 
-  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Standard");
-  var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
+  var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Standard",
+    {attribution: 'Kartdata: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors<\/a>'});
+
+  var layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter",
+    {attribution: 'Kartdata: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors<\/a>'});
 
   var layerTransit = new OpenLayers.Layer.XYZ(
     "Kollektivtransport (beta)",

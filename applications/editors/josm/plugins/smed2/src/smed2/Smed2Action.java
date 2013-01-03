@@ -40,42 +40,42 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void dataChanged(DataChangedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void otherDatasetChange(AbstractDatasetChangedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void primitivesAdded(PrimitivesAddedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void primitivesRemoved(PrimitivesRemovedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void relationMembersChanged(RelationMembersChangedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void tagsChanged(TagsChangedEvent e) {
-			reMap();
+			// reMap();
 		}
 
 		@Override
 		public void wayNodesChanged(WayNodesChangedEvent e) {
-			reMap();
+			// reMap();
 		}
 	};
 
@@ -118,7 +118,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		panelS57 = new S57dat();
 		panelS57.setVisible(false);
 		frame.add(panelS57);
-//		System.out.println("hello");
+		// System.out.println("hello");
 		rendering = ImageryLayer.create(new ImageryInfo("OpenSeaMap"));
 		Main.main.addLayer(rendering);
 	}
@@ -143,7 +143,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data.allPrimitives();
 			reMap();
- 		} else {
+		} else {
 			data = null;
 			map = null;
 		}
@@ -154,23 +154,32 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	void reMap() {
 		map = new Map();
 		for (OsmPrimitive osm : data) {
-			if (osm instanceof Node) {
-				map.addNode(((Node)osm).getId(), ((Node)osm).getCoor().lat(), ((Node)osm).getCoor().lon());
-			} else if (osm instanceof Way) {
-				map.addWay(((Way)osm).getId());
-				for (Node node : ((Way)osm).getNodes()) {
-					map.addToWay(((Way)osm).getUniqueId(), node.getUniqueId());
+			System.out.println(osm);
+			if ((osm instanceof Node) || (osm instanceof Way)) {
+				if (osm instanceof Node) {
+					map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
+				} else {
+					map.addWay(((Way) osm).getUniqueId());
+					for (Node node : ((Way) osm).getNodes()) {
+						map.addToWay((node.getUniqueId()));
+					}
+				}
+				for (Entry<String, String> entry : osm.getKeys().entrySet()) {
+					map.addTag(entry.getKey(), entry.getValue());
+				}
+				map.tagsDone();
+			} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
+				map.addMpoly(((Relation) osm).getUniqueId());
+				for (RelationMember mem : ((Relation) osm).getMembers()) {
+					if (mem.getType() == OsmPrimitiveType.WAY)
+						map.addToMpoly(mem.getUniqueId(), (mem.getRole().equals("outer")));
 				}
 			}
-			for (Entry<String, String> entry : osm.getKeys().entrySet()) {
-				map.addTag(entry.getKey(), entry.getValue());
-			}
 		}
-	
 	}
 
 }

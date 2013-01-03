@@ -38,18 +38,14 @@ public class Map {
 
 	public class Feature {
 		public Fflag flag;
-		public ArrayList<Long> refs;
+		public long refs;
 		public Obj type;
 		public EnumMap<Att, AttItem> atts;
 		public EnumMap<Obj, HashMap<Integer, EnumMap<Att, AttItem>>> objs;
 
 		Feature() {
-			clean();
-		}
-		
-		void clean() {
 			flag = Fflag.UNKN;
-			refs = new ArrayList<Long>();
+			refs = 0;
 			type = Obj.UNKOBJ;
 			atts = new EnumMap<Att, AttItem>(Att.class);
 			objs = new EnumMap<Obj, HashMap<Integer, EnumMap<Att, AttItem>>>(Obj.class);
@@ -69,49 +65,57 @@ public class Map {
 	public HashMap<Long, Coord> nodes;
 	public HashMap<Long, ArrayList<Long>> ways;
 	public HashMap<Long, ArrayList<Long>> mpolys;
-	public ArrayList<Feature> features;
+	public HashMap<Long, Feature> features;
 
 	private Feature feature;
+	private ArrayList<Long> list;
 
 	public Map() {
 		nodes = new HashMap<Long, Coord>();
 		ways = new HashMap<Long, ArrayList<Long>>();
 		mpolys = new HashMap<Long, ArrayList<Long>>();
 		feature = new Feature();
-		features = new ArrayList<Feature>();
-		features.add(feature);
+		features = new HashMap<Long, Feature>();
 	}
 
 	public void addNode(long id, double lat, double lon) {
 		nodes.put(id, new Coord(lat, lon));
-		if (feature.type == Obj.UNKOBJ) {
-			feature.clean();
-		} else {
-			feature = new Feature();
-			features.add(feature);
-		}
+		feature = new Feature();
+		feature.refs = id;
+		feature.flag = Fflag.NODE;
 	}
 
 	public void addWay(long id) {
-		ways.put(id, new ArrayList<Long>());
-		if (feature.type == Obj.UNKOBJ) {
-			feature.clean();
-		} else {
-			feature = new Feature();
-			features.add(feature);
-		}
-	}
-
-	public void addToWay(long way, long node) {
-		ways.get(way).add(node);
+		list = new ArrayList<Long>();
+		ways.put(id, list);
+		feature = new Feature();
+		feature.refs = id;
+		feature.flag = Fflag.WAY;
 	}
 
 	public void addMpoly(long id) {
-		mpolys.put(id, new ArrayList<Long>());
+		list = new ArrayList<Long>();
+		mpolys.put(id, list);
 	}
 
-	public void addToMpoly(long id, long way) {
-		mpolys.get(id).add(way);
+	public void addToWay(long node) {
+		list.add(node);
+	}
+
+	public void addToMpoly(long way, boolean outer) {
+		if (outer)
+			list.add(0, way);
+		else
+			list.add(way);
+	}
+
+	public void tagsDone() {
+		if (feature.type != Obj.UNKOBJ) {
+			if ((feature.flag == Fflag.WAY) && (list.size() > 0) && (list.get(0) == list.get(list.size() - 1))) {
+				feature.flag = Fflag.AREA;
+			}
+			features.put(feature.refs, feature);
+		}
 	}
 
 	public void addTag(String key, String val) {

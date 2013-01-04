@@ -15,10 +15,18 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-	<target name="runjosm" depends="install">
+    <target name="runjosm" depends="install">
         <java jar="${josm}" fork="true">
             <arg line="e:/test.osm"/>
         </java>
     </target>
+
+    <target name="setup-dist">
+        <antcall target="setup-dist-default" />
+        <copy todir="${plugin.build.dir}">
+            <fileset dir="src" includes="**/*.txt"/>
+        </copy>
+    </target>
+
     
 </project>

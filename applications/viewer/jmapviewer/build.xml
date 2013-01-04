@@ -12,7 +12,7 @@
 	</target>
 
 	<target name="build">
-		<javac srcdir="src" destdir="bin" source="1.5" target="1.5" debug="true" includeantruntime="false">
+		<javac srcdir="src" destdir="bin" source="1.6" target="1.6" debug="true" includeantruntime="false">
 			<include name="org/openstreetmap/gui/jmapviewer/**" />
 		</javac>
 

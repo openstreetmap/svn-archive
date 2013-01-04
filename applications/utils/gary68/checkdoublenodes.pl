@@ -3,6 +3,7 @@
 #
 #
 # Copyright (C) 2008, Gerhard Schwanz
+# Copyright (C) 2013, Michael Bemmerl
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
 # Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -48,6 +49,9 @@ my @dupes = () ;
 my $nodeCount = 0 ;
 my $numberDupes = 0 ;
 
+my $blacklistFile = "blacklist.txt" ;
+my @blacklist = () ;
+
 ###############
 # get parameter
 ###############
@@ -75,8 +79,14 @@ print "\n$program $version for file $osmName\n\n" ;
 
 
 
-
-
+########################
+# load node id blacklist
+########################
+if (-e $blacklistFile) {
+	open (FILE, "<", $blacklistFile) or die ("Failed to load blacklist file!") ;
+	@blacklist = <FILE> ;
+	close (FILE); 
+}
 
 
 ######################
@@ -91,13 +101,19 @@ if ($nodeId != -1) {
 }
 
 while ($nodeId != -1) {
-	$nodeCount++ ;
+	# check if node ID is in blacklist
+	if ($nodeId ~~ @blacklist) {
+		print "Node with ID $nodeId ignored due to matching blacklist entry.\n" ;
+	}
+	else {
+		$nodeCount++ ;
 
-	my ($hashValue) = int ($nodeLon * 1000) * 1000000 + int ($nodeLat * 1000) ;
-	push @{$nodesHash{$hashValue}}, $nodeId ;
+		my ($hashValue) = int ($nodeLon * 1000) * 1000000 + int ($nodeLat * 1000) ;
+		push @{$nodesHash{$hashValue}}, $nodeId ;
 
-	$lon{$nodeId} = $nodeLon ;
-	$lat{$nodeId} = $nodeLat ;
+		$lon{$nodeId} = $nodeLon ;
+		$lat{$nodeId} = $nodeLat ;
+	}
 
 	# next
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;

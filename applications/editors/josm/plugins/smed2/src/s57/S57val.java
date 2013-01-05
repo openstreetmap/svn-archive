@@ -1051,7 +1051,7 @@ public class S57val {
 		keys.put(Att.VALDCO, new S57key(Conv.F, null)); keys.put(Att.VALLMA, new S57key(Conv.F, null)); keys.put(Att.VALMAG, new S57key(Conv.F, null));
 		keys.put(Att.VALMXR, new S57key(Conv.F, null)); keys.put(Att.VALNMR, new S57key(Conv.F, null)); keys.put(Att.VALSOU, new S57key(Conv.F, null));
 		keys.put(Att.VERACC, new S57key(Conv.F, null)); keys.put(Att.VERCLR, new S57key(Conv.F, null)); keys.put(Att.VERCCL, new S57key(Conv.F, null));
-		keys.put(Att.VERCOP, new S57key(Conv.F, null)); keys.put(Att.VERCSA, new S57key(Conv.F, null)); keys.put(Att.VERDAT, new S57key(Conv.E, null));
+		keys.put(Att.VERCOP, new S57key(Conv.F, null)); keys.put(Att.VERCSA, new S57key(Conv.F, null)); keys.put(Att.VERDAT, new S57key(Conv.E, Verdat));
 		keys.put(Att.VERLEN, new S57key(Conv.F, null)); keys.put(Att.WATLEV, new S57key(Conv.E, Watlev)); keys.put(Att.CAT_TS, new S57key(Conv.E, Cat_ts));
 		keys.put(Att.PUNITS, new S57key(Conv.E, Punits)); keys.put(Att.NINFOM, new S57key(Conv.S, null)); keys.put(Att.NOBJNM, new S57key(Conv.S, null));
 		keys.put(Att.NPLDST, new S57key(Conv.S, null)); keys.put(Att.$NTXST, new S57key(Conv.S, null)); keys.put(Att.NTXTDS, new S57key(Conv.S, null));
@@ -1133,35 +1133,48 @@ public class S57val {
 		}
 		return "";
 	}
-	
-	public static Enum<?> enumValue(String val, Att att) {           // Convert OSeaM attribute value string to OSeaM enumeration
+
+	public static Enum<?> enumValue(String val, Att att) { // Convert OSeaM attribute value string to OSeaM enumeration
 		EnumMap<?, ?> map = keys.get(att).map;
 		Enum<?> unkn = null;
-		for (Object item : map.keySet()) {
-			if (unkn == null) unkn = (Enum<?>)item;
-			if (((S57enum)map.get(item)).val.equals(val))
-				return (Enum<?>)item;
+		if (map != null) {
+			for (Object item : map.keySet()) {
+				if (unkn == null)
+					unkn = (Enum<?>) item;
+				if (((S57enum) map.get(item)).val.equals(val))
+					return (Enum<?>) item;
+			}
 		}
 		return unkn;
 	}
-	
-	public static AttVal convertValue(String val, Att att) {         // Convert OSeaM attribute value string to OSeaM value struct
+
+	public static AttVal convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value struct
 		switch (keys.get(att).conv) {
 		case A:
 		case S:
-			return new AttVal(att, keys.get(att).conv, val);
+			return new AttVal(att, Conv.S, val);
 		case E:
-				return new AttVal(att, keys.get(att).conv, enumValue(val, att));
+			return new AttVal(att, Conv.E, enumValue(val, att));
 		case L:
-			ArrayList list = new ArrayList();
+			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 			for (String item : val.split(";")) {
 				list.add(enumValue(item, att));
 			}
-			return new AttVal(att, keys.get(att).conv, list);
+			return new AttVal(att, Conv.L, list);
 		case I:
-			return new AttVal(att, keys.get(att).conv, Integer.parseInt(val));
+			try {
+				long i = Long.parseLong(val);
+				return new AttVal(att, Conv.I, i);
+			} catch (Exception e) {
+				break;
+			}
 		case F:
-			return new AttVal(att, keys.get(att).conv, Float.parseFloat(val));
+			try {
+				double f = Double.parseDouble(val);
+				return new AttVal(att, Conv.F, f);
+			} catch (Exception e) {
+				break;
+			}
 		}
 		return new AttVal(att, keys.get(att).conv, null);
 	}

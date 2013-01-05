@@ -11,8 +11,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
+import org.openstreetmap.josm.gui.layer.*;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.*;
@@ -20,7 +20,7 @@ import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
-import seamap.Map;
+import seamap.SeaMap;
 
 import panels.PanelMain;
 
@@ -32,8 +32,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	public static S57dat panelS57;
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
-	public ImageryLayer rendering;
-	public Map map = null;
+	public MapImage rendering;
+	public SeaMap map = null;
 	public Collection<OsmPrimitive> data = null;
 
 	private final DataSetListener dataSetListener = new DataSetListener() {
@@ -119,13 +119,14 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		panelS57.setVisible(false);
 		frame.add(panelS57);
 		// System.out.println("hello");
-		rendering = ImageryLayer.create(new ImageryInfo("OpenSeaMap"));
+		rendering = new MapImage(new ImageryInfo("OpenSeaMap"), map);
 		Main.main.addLayer(rendering);
 	}
 
 	public void closeDialog() {
 		if (isOpen) {
 			Main.main.removeLayer(rendering);
+			MapView.removeEditLayerChangeListener(this);
 			frame.setVisible(false);
 			frame.dispose();
 			data = null;
@@ -156,9 +157,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	}
 
 	void reMap() {
-		map = new Map();
+		map = new SeaMap();
 		for (OsmPrimitive osm : data) {
-			System.out.println(osm);
 			if ((osm instanceof Node) || (osm instanceof Way)) {
 				if (osm instanceof Node) {
 					map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
@@ -181,5 +181,4 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 			}
 		}
 	}
-
 }

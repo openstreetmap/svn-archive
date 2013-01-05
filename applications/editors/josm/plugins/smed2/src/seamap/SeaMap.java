@@ -20,7 +20,7 @@ import s57.S57obj.*;
 import s57.S57val;
 import s57.S57val.*;
 
-public class Map {
+public class SeaMap {
 
 	public enum Fflag {
 		UNKN, NODE, WAY, AREA
@@ -65,17 +65,21 @@ public class Map {
 	public HashMap<Long, Coord> nodes;
 	public HashMap<Long, ArrayList<Long>> ways;
 	public HashMap<Long, ArrayList<Long>> mpolys;
-	public HashMap<Long, Feature> features;
+	public EnumMap<Obj, ArrayList<Feature>> features;
+	public double minlat;
+	public double minlon;
+	public double maxlat;
+	public double maxlon;
 
 	private Feature feature;
 	private ArrayList<Long> list;
 
-	public Map() {
+	public SeaMap() {
 		nodes = new HashMap<Long, Coord>();
 		ways = new HashMap<Long, ArrayList<Long>>();
 		mpolys = new HashMap<Long, ArrayList<Long>>();
 		feature = new Feature();
-		features = new HashMap<Long, Feature>();
+		features = new EnumMap<Obj, ArrayList<Feature>>(Obj.class);
 	}
 
 	public void addNode(long id, double lat, double lon) {
@@ -114,7 +118,10 @@ public class Map {
 			if ((feature.flag == Fflag.WAY) && (list.size() > 0) && (list.get(0) == list.get(list.size() - 1))) {
 				feature.flag = Fflag.AREA;
 			}
-			features.put(feature.refs, feature);
+			if (features.get(feature.type) == null) {
+				features.put(feature.type, new ArrayList<Feature>());
+			}
+			features.get(feature.type).add(feature);
 		}
 	}
 
@@ -143,7 +150,7 @@ public class Map {
 					atts = new EnumMap<Att, AttItem>(Att.class);
 				}
 				AttVal attval = S57val.convertValue(val, att);
-				atts.put(att, new AttItem(attval.conv, attval.val));
+				if (attval.val != null) atts.put(att, new AttItem(attval.conv, attval.val));
 			} else {
 				if (subkeys[1].equals("type")) {
 					feature.type = S57obj.enumType(val);
@@ -151,7 +158,7 @@ public class Map {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
 					if (att != Att.UNKATT) {
 						AttVal attval = S57val.convertValue(val, att);
-						feature.atts.put(att, new AttItem(attval.conv, attval.val));
+						if (attval.val != null) feature.atts.put(att, new AttItem(attval.conv, attval.val));
 					}
 				}
 			}

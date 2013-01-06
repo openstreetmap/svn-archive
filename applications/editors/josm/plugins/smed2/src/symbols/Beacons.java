@@ -16,11 +16,15 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
 
 import symbols.Symbols.Instr;
 import symbols.Symbols.Prim;
 
+import s57.S57val.*;
+
 public class Beacons {
+	
 	public static final ArrayList<Instr> Beacon = new ArrayList<Instr>();
 	static {
 		ArrayList<Instr> colours = new ArrayList<Instr>();
@@ -153,5 +157,12 @@ public class Beacons {
 		WithyStarboard.add(new Instr(Prim.LINE, new Line2D.Double(-20,-50,0,-60)));
 		WithyStarboard.add(new Instr(Prim.LINE, new Line2D.Double(30,-21,0,-35)));
 		WithyStarboard.add(new Instr(Prim.LINE, new Line2D.Double(-30,-21,0,-35)));
+	}
+	
+	public static final EnumMap<BcnSHP, ArrayList<Instr>> Shapes = new EnumMap<BcnSHP, ArrayList<Instr>>(BcnSHP.class);
+	static {
+		Shapes.put(BcnSHP.BCN_UNKN, Beacons.Beacon); Shapes.put(BcnSHP.BCN_STAK, Beacons.Stake); Shapes.put(BcnSHP.BCN_TOWR, Beacons.Tower);
+		Shapes.put(BcnSHP.BCN_LATT, Beacons.Beacon); Shapes.put(BcnSHP.BCN_PILE, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POLE, Beacons.Stake);
+		Shapes.put(BcnSHP.BCN_CARN, Beacons.Cairn); Shapes.put(BcnSHP.BCN_BUOY, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POST, Beacons.Stake);
 	}
 }

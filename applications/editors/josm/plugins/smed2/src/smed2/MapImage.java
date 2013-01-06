@@ -1,30 +1,44 @@
 package smed2;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
 
 import javax.swing.Action;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
+import seamap.MapHelper;
+import seamap.Renderer;
 import seamap.SeaMap;
-import symbols.Symbols;
-import symbols.Buoys;
+import seamap.SeaMap.Coord;
 
-public class MapImage extends ImageryLayer implements ZoomChangeListener {
+public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHelper {
 
 	private SeaMap mapdata;
+//	private Params imageParams;
+	private Renderer renderer;
+
+	private double top;
+	private double bottom;
+	private double left;
+	private double right;
+	private double width;
+	private double height;
 	private int zoom;
 	
 	public MapImage(ImageryInfo info, SeaMap map) {
 		super(info);
+		zoomChanged();
 		MapView.addZoomChangeListener(this);
+		mapdata = map;
 	}
 	
 	@Override
@@ -49,17 +63,26 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener {
 
 	@Override
 	public void paint(Graphics2D g2, MapView mv, Bounds bb) {
-		double scale = Symbols.symbolScale[zoom]*Math.pow(2, (zoom-12));
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-		Symbols.drawSymbol(g2, Buoys.Pillar, scale, 768, 768, null, null);
-		g2.drawString(String.valueOf(zoom), 768, 800);
+		g2.setPaint(new Color(0xb5d0d0));
+		g2.fill(Main.map.mapView.getBounds());
+		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), mapdata, this);
 	}
 
 	@Override
 	public void zoomChanged() {
-		Bounds bounds = Main.map.mapView.getRealBounds();
-		zoom = ((int)Math.min(18, Math.max(9, Math.round(Math.floor(Math.log(4096/bounds.asRect().width)/Math.log(2))))));
+		if ((Main.map != null) && (Main.map.mapView != null)) {
+			Bounds bounds = Main.map.mapView.getRealBounds();
+			top = bounds.getMax().lat();
+			bottom = bounds.getMin().lat();
+			left = bounds.getMin().lon();
+			right = bounds.getMax().lon();
+			width = Main.map.mapView.getBounds().getWidth();
+			height = Main.map.mapView.getBounds().getHeight();
+			zoom = ((int) Math.min(18, Math.max(9, Math.round(Math.floor(Math.log(4096 / bounds.asRect().width) / Math.log(2))))));
+		}
 	}
 
+	public Point2D getPoint(Coord coord) {
+		return Main.map.mapView.getPoint2D(new LatLon(coord.lat, coord.lon));
+	}
 }

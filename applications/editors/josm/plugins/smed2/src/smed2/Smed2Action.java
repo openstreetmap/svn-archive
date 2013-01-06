@@ -120,7 +120,9 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		frame.add(panelS57);
 		// System.out.println("hello");
 		rendering = new MapImage(new ImageryInfo("OpenSeaMap"), map);
+		rendering.setBackgroundLayer(true);
 		Main.main.addLayer(rendering);
+		reMap();
 	}
 
 	public void closeDialog() {
@@ -129,8 +131,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 			MapView.removeEditLayerChangeListener(this);
 			frame.setVisible(false);
 			frame.dispose();
-			data = null;
-			map = null;
+//			data = null;
+//			map = null;
 		}
 		isOpen = false;
 	}
@@ -158,25 +160,27 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 	void reMap() {
 		map = new SeaMap();
-		for (OsmPrimitive osm : data) {
-			if ((osm instanceof Node) || (osm instanceof Way)) {
-				if (osm instanceof Node) {
-					map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
-				} else {
-					map.addWay(((Way) osm).getUniqueId());
-					for (Node node : ((Way) osm).getNodes()) {
-						map.addToWay((node.getUniqueId()));
+		if (data != null) {
+			for (OsmPrimitive osm : data) {
+				if ((osm instanceof Node) || (osm instanceof Way)) {
+					if (osm instanceof Node) {
+						map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
+					} else {
+						map.addWay(((Way) osm).getUniqueId());
+						for (Node node : ((Way) osm).getNodes()) {
+							map.addToWay((node.getUniqueId()));
+						}
 					}
-				}
-				for (Entry<String, String> entry : osm.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
-				}
-				map.tagsDone();
-			} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
-				map.addMpoly(((Relation) osm).getUniqueId());
-				for (RelationMember mem : ((Relation) osm).getMembers()) {
-					if (mem.getType() == OsmPrimitiveType.WAY)
-						map.addToMpoly(mem.getUniqueId(), (mem.getRole().equals("outer")));
+					for (Entry<String, String> entry : osm.getKeys().entrySet()) {
+						map.addTag(entry.getKey(), entry.getValue());
+					}
+					map.tagsDone();
+				} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
+					map.addMpoly(((Relation) osm).getUniqueId());
+					for (RelationMember mem : ((Relation) osm).getMembers()) {
+						if (mem.getType() == OsmPrimitiveType.WAY)
+							map.addToMpoly(mem.getUniqueId(), (mem.getRole().equals("outer")));
+					}
 				}
 			}
 		}

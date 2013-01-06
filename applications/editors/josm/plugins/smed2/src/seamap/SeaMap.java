@@ -53,8 +53,8 @@ public class SeaMap {
 	}
 
 	public class Coord {
-		double lat;
-		double lon;
+		public double lat;
+		public double lon;
 
 		Coord(double ilat, double ilon) {
 			lat = ilat;
@@ -66,10 +66,6 @@ public class SeaMap {
 	public HashMap<Long, ArrayList<Long>> ways;
 	public HashMap<Long, ArrayList<Long>> mpolys;
 	public EnumMap<Obj, ArrayList<Feature>> features;
-	public double minlat;
-	public double minlon;
-	public double maxlat;
-	public double maxlon;
 
 	private Feature feature;
 	private ArrayList<Long> list;
@@ -148,6 +144,7 @@ public class SeaMap {
 				EnumMap<Att, AttItem> atts = items.get(idx);
 				if (atts == null) {
 					atts = new EnumMap<Att, AttItem>(Att.class);
+					items.put(idx, atts);
 				}
 				AttVal attval = S57val.convertValue(val, att);
 				if (attval.val != null) atts.put(att, new AttItem(attval.conv, attval.val));

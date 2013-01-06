@@ -9,104 +9,149 @@
 
 package seamap;
 
-import s57.S57obj.Obj;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+
+import s57.S57att;
+import s57.S57val.BcnSHP;
+import s57.S57att.*;
+import s57.S57obj;
+import s57.S57obj.*;
+import s57.S57val;
+import s57.S57val.*;
+
+import seamap.SeaMap.AttItem;
 import seamap.SeaMap.Feature;
+import symbols.Beacons;
+import symbols.Symbols.Instr;
 
 public class Rules {
 
-	public static void MainRules (SeaMap map) {
-		for (Feature feature : map.features.get(Obj.SLCONS)) shoreline(feature);
-		for (Feature feature : map.features.get(Obj.PIPSOL)) pipelines(feature);
-		for (Feature feature : map.features.get(Obj.CBLSUB)) cables(feature);
-		for (Feature feature : map.features.get(Obj.PIPOHD)) pipelines(feature);
-		for (Feature feature : map.features.get(Obj.CBLOHD)) cables(feature);
-		for (Feature feature : map.features.get(Obj.TSEZNE)) separation(feature);
-		for (Feature feature : map.features.get(Obj.TSSCRS)) separation(feature);
-		for (Feature feature : map.features.get(Obj.TSSRON)) separation(feature);
-		for (Feature feature : map.features.get(Obj.TSELNE)) separation(feature);
-		for (Feature feature : map.features.get(Obj.TSSLPT)) separation(feature);
-		for (Feature feature : map.features.get(Obj.TSSBND)) separation(feature);
-		for (Feature feature : map.features.get(Obj.SNDWAV)) areas(feature);
-		for (Feature feature : map.features.get(Obj.OSPARE)) areas(feature);
-		for (Feature feature : map.features.get(Obj.FAIRWY)) areas(feature);
-		for (Feature feature : map.features.get(Obj.DRGARE)) areas(feature);
-		for (Feature feature : map.features.get(Obj.RESARE)) areas(feature);
-		for (Feature feature : map.features.get(Obj.SPLARE)) areas(feature);
-		for (Feature feature : map.features.get(Obj.SEAARE)) areas(feature);
-		for (Feature feature : map.features.get(Obj.OBSTRN)) obstructions(feature);
-		for (Feature feature : map.features.get(Obj.UWTROC)) obstructions(feature);
-		for (Feature feature : map.features.get(Obj.MARCUL)) areas(feature);
-		for (Feature feature : map.features.get(Obj.WTWAXS)) waterways(feature);
-		for (Feature feature : map.features.get(Obj.RECTRC)) transits(feature);
-		for (Feature feature : map.features.get(Obj.NAVLNE)) transits(feature);
-		for (Feature feature : map.features.get(Obj.HRBFAC)) harbours(feature);
-		for (Feature feature : map.features.get(Obj.ACHARE)) harbours(feature);
-		for (Feature feature : map.features.get(Obj.ACHBRT)) harbours(feature);
-		for (Feature feature : map.features.get(Obj.LOKBSN)) locks(feature);
-		for (Feature feature : map.features.get(Obj.LKBSPT)) locks(feature);
-		for (Feature feature : map.features.get(Obj.GATCON)) locks(feature);
-		for (Feature feature : map.features.get(Obj.DISMAR)) distances(feature);
-		for (Feature feature : map.features.get(Obj.HULKES)) ports(feature);
-		for (Feature feature : map.features.get(Obj.CRANES)) ports(feature);
-		for (Feature feature : map.features.get(Obj.LNDMRK)) landmarks(feature);
-		for (Feature feature : map.features.get(Obj.MORFAC)) moorings(feature);
-		for (Feature feature : map.features.get(Obj.NOTMRK)) notices(feature);
-		for (Feature feature : map.features.get(Obj.SMCFAC)) marinas(feature);
-		for (Feature feature : map.features.get(Obj.BRIDGE)) bridges(feature);
-		for (Feature feature : map.features.get(Obj.LITMAJ)) lights(feature);
-		for (Feature feature : map.features.get(Obj.LITMIN)) lights(feature);
-		for (Feature feature : map.features.get(Obj.LIGHTS)) lights(feature);
-		for (Feature feature : map.features.get(Obj.SISTAT)) signals(feature);
-		for (Feature feature : map.features.get(Obj.SISTAW)) signals(feature);
-		for (Feature feature : map.features.get(Obj.CGUSTA)) signals(feature);
-		for (Feature feature : map.features.get(Obj.RDOSTA)) signals(feature);
-		for (Feature feature : map.features.get(Obj.RADSTA)) signals(feature);
-		for (Feature feature : map.features.get(Obj.RSCSTA)) signals(feature);
-		for (Feature feature : map.features.get(Obj.PILBOP)) signals(feature);
-		for (Feature feature : map.features.get(Obj.WTWGAG)) gauges(feature);
-		for (Feature feature : map.features.get(Obj.OFSPLF)) platforms(feature);
-		for (Feature feature : map.features.get(Obj.WRECKS)) wrecks(feature);
-		for (Feature feature : map.features.get(Obj.LITVES)) floats(feature);
-		for (Feature feature : map.features.get(Obj.LITFLT)) floats(feature);
-		for (Feature feature : map.features.get(Obj.BOYINB)) floats(feature);
-		for (Feature feature : map.features.get(Obj.BOYLAT)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BOYCAR)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BOYISD)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BOYSAW)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BOYSPP)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BOYWTW)) buoys(feature);
-		for (Feature feature : map.features.get(Obj.BCNLAT)) beacons(feature);
-		for (Feature feature : map.features.get(Obj.BCNCAR)) beacons(feature);
-		for (Feature feature : map.features.get(Obj.BCNISD)) beacons(feature);
-		for (Feature feature : map.features.get(Obj.BCNSAW)) beacons(feature);
-		for (Feature feature : map.features.get(Obj.BCNSPP)) beacons(feature);
-		for (Feature feature : map.features.get(Obj.BCNWTW)) beacons(feature);
+	static SeaMap map;
+	static int zoom;
+	
+	public static void MainRules (SeaMap m, int z) {
+		map = m;
+		zoom = z;
+		ArrayList<Feature> feature;
+		if ((feature = map.features.get(Obj.SLCONS)) != null) shoreline(feature);
+		if ((feature = map.features.get(Obj.SLCONS)) != null) shoreline(feature);
+		if ((feature = map.features.get(Obj.PIPSOL)) != null) pipelines(feature);
+		if ((feature = map.features.get(Obj.CBLSUB)) != null) cables(feature);
+		if ((feature = map.features.get(Obj.PIPOHD)) != null) pipelines(feature);
+		if ((feature = map.features.get(Obj.CBLOHD)) != null) cables(feature);
+		if ((feature = map.features.get(Obj.TSEZNE)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.TSSCRS)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.TSSRON)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.TSELNE)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.TSSLPT)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.TSSBND)) != null) separation(feature);
+		if ((feature = map.features.get(Obj.SNDWAV)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.OSPARE)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.FAIRWY)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.DRGARE)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.RESARE)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.SPLARE)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.SEAARE)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.OBSTRN)) != null) obstructions(feature);
+		if ((feature = map.features.get(Obj.UWTROC)) != null) obstructions(feature);
+		if ((feature = map.features.get(Obj.MARCUL)) != null) areas(feature);
+		if ((feature = map.features.get(Obj.WTWAXS)) != null) waterways(feature);
+		if ((feature = map.features.get(Obj.RECTRC)) != null) transits(feature);
+		if ((feature = map.features.get(Obj.NAVLNE)) != null) transits(feature);
+		if ((feature = map.features.get(Obj.HRBFAC)) != null) harbours(feature);
+		if ((feature = map.features.get(Obj.ACHARE)) != null) harbours(feature);
+		if ((feature = map.features.get(Obj.ACHBRT)) != null) harbours(feature);
+		if ((feature = map.features.get(Obj.LOKBSN)) != null) locks(feature);
+		if ((feature = map.features.get(Obj.LKBSPT)) != null) locks(feature);
+		if ((feature = map.features.get(Obj.GATCON)) != null) locks(feature);
+		if ((feature = map.features.get(Obj.DISMAR)) != null) distances(feature);
+		if ((feature = map.features.get(Obj.HULKES)) != null) ports(feature);
+		if ((feature = map.features.get(Obj.CRANES)) != null) ports(feature);
+		if ((feature = map.features.get(Obj.LNDMRK)) != null) landmarks(feature);
+		if ((feature = map.features.get(Obj.MORFAC)) != null) moorings(feature);
+		if ((feature = map.features.get(Obj.NOTMRK)) != null) notices(feature);
+		if ((feature = map.features.get(Obj.SMCFAC)) != null) marinas(feature);
+		if ((feature = map.features.get(Obj.BRIDGE)) != null) bridges(feature);
+		if ((feature = map.features.get(Obj.LITMAJ)) != null) lights(feature);
+		if ((feature = map.features.get(Obj.LITMIN)) != null) lights(feature);
+		if ((feature = map.features.get(Obj.LIGHTS)) != null) lights(feature);
+		if ((feature = map.features.get(Obj.SISTAT)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.SISTAW)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.CGUSTA)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.RDOSTA)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.RADSTA)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.RSCSTA)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.PILBOP)) != null) signals(feature);
+		if ((feature = map.features.get(Obj.WTWGAG)) != null) gauges(feature);
+		if ((feature = map.features.get(Obj.OFSPLF)) != null) platforms(feature);
+		if ((feature = map.features.get(Obj.WRECKS)) != null) wrecks(feature);
+		if ((feature = map.features.get(Obj.LITVES)) != null) floats(feature);
+		if ((feature = map.features.get(Obj.LITFLT)) != null) floats(feature);
+		if ((feature = map.features.get(Obj.BOYINB)) != null) floats(feature);
+		if ((feature = map.features.get(Obj.BOYLAT)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BOYCAR)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BOYISD)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BOYSAW)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BOYSPP)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BOYWTW)) != null) buoys(feature);
+		if ((feature = map.features.get(Obj.BCNLAT)) != null) beacons(feature);
+		if ((feature = map.features.get(Obj.BCNCAR)) != null) beacons(feature);
+		if ((feature = map.features.get(Obj.BCNISD)) != null) beacons(feature);
+		if ((feature = map.features.get(Obj.BCNSAW)) != null) beacons(feature);
+		if ((feature = map.features.get(Obj.BCNSPP)) != null) beacons(feature);
+		if ((feature = map.features.get(Obj.BCNWTW)) != null) beacons(feature);
 	}
 	
-	private static void shoreline(Feature feature) {}
-	private static void pipelines(Feature feature) {}
-	private static void cables(Feature feature) {}
-	private static void separation(Feature feature) {}
-	private static void areas(Feature feature) {}
-	private static void obstructions(Feature feature) {}
-	private static void waterways(Feature feature) {}
-	private static void transits(Feature feature) {}
-	private static void harbours(Feature feature) {}
-	private static void locks(Feature feature) {}
-	private static void distances(Feature feature) {}
-	private static void ports(Feature feature) {}
-	private static void landmarks(Feature feature) {}
-	private static void moorings(Feature feature) {}
-	private static void notices(Feature feature) {}
-	private static void marinas(Feature feature) {}
-	private static void bridges(Feature feature) {}
-	private static void lights(Feature feature) {}
-	private static void floats(Feature feature) {}
-	private static void signals(Feature feature) {}
-	private static void wrecks(Feature feature) {}
-	private static void gauges(Feature feature) {}
-	private static void platforms(Feature feature) {}
-	private static void buoys(Feature feature) {}
-	private static void beacons(Feature feature) {}
-
+	private static void shoreline(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+		}
+	}
+	private static void pipelines(ArrayList<Feature> features) {}
+	private static void cables(ArrayList<Feature> features) {}
+	private static void separation(ArrayList<Feature> features) {}
+	private static void areas(ArrayList<Feature> features) {}
+	private static void obstructions(ArrayList<Feature> features) {}
+	private static void waterways(ArrayList<Feature> features) {}
+	private static void transits(ArrayList<Feature> features) {}
+	private static void harbours(ArrayList<Feature> features) {}
+	private static void locks(ArrayList<Feature> features) {}
+	private static void distances(ArrayList<Feature> features) {}
+	private static void ports(ArrayList<Feature> features) {}
+	private static void landmarks(ArrayList<Feature> features) {}
+	private static void moorings(ArrayList<Feature> features) {}
+	private static void notices(ArrayList<Feature> features) {}
+	private static void marinas(ArrayList<Feature> features) {}
+	private static void bridges(ArrayList<Feature> features) {}
+	private static void lights(ArrayList<Feature> features) {}
+	private static void floats(ArrayList<Feature> features) {}
+	private static void signals(ArrayList<Feature> features) {}
+	private static void wrecks(ArrayList<Feature> features) {}
+	private static void gauges(ArrayList<Feature> features) {}
+	private static void platforms(ArrayList<Feature> features) {}
+	private static void buoys(ArrayList<Feature> features) {}
+	private static void beacons(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			BcnSHP shape;
+			HashMap<Integer, EnumMap<Att, AttItem>> objs = feature.objs.get(feature.type);
+			if (objs == null) shape = BcnSHP.BCN_UNKN;
+			else {
+				EnumMap<Att, AttItem> atts = objs.get(0);
+				if (atts == null) shape = BcnSHP.BCN_UNKN;
+				else {
+					AttItem item = atts.get(Att.BCNSHP);
+					if (item == null) shape = BcnSHP.BCN_UNKN;
+					else shape = (BcnSHP) item.val;
+				}
+			}
+			if (shape == BcnSHP.BCN_PRCH) {
+				
+			} else if (shape == BcnSHP.BCN_WTHY) {
+					
+			} else {
+				Renderer.symbol(feature, Beacons.Shapes.get(shape));
+			}
+		}
+	}
 }

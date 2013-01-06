@@ -23,16 +23,14 @@ import seamap.SeaMap.Coord;
 public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHelper {
 
 	private SeaMap mapdata;
-//	private Params imageParams;
-	private Renderer renderer;
 
-	private double top;
-	private double bottom;
-	private double left;
-	private double right;
-	private double width;
-	private double height;
-	private int zoom;
+	double top;
+	double bottom;
+	double left;
+	double right;
+	double width;
+	double height;
+	int zoom;
 	
 	public MapImage(ImageryInfo info, SeaMap map) {
 		super(info);

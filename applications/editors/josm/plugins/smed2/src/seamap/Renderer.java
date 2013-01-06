@@ -13,7 +13,14 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 
+import s57.S57att.Att;
+import s57.S57obj.Obj;
+import s57.S57val.ColCOL;
+import s57.S57val.*;
+import s57.S57val;
 import seamap.SeaMap.*;
 import symbols.Symbols;
 import symbols.Symbols.*;
@@ -39,9 +46,27 @@ public class Renderer {
 		}
 	}
 	
-	public static void symbol(Feature feature, ArrayList<Instr> symbol) {
+	public static EnumMap<Att, AttItem> getAtts(Feature feature, Obj obj, int idx) {
+		HashMap<Integer, EnumMap<Att, AttItem>> objs = feature.objs.get(obj);
+		if (objs == null) return null;
+		else return objs.get(idx);
+	}
+	
+	public static Object getAttVal(Feature feature, Obj obj, int idx, Att att) {
+		EnumMap<Att, AttItem> atts = getAtts(feature, obj, idx);
+		if (atts == null) return  S57val.nullVal(att);
+		else {
+			AttItem item = atts.get(att);
+			if (item == null) return S57val.nullVal(att);
+			return item.val;
+		}
+	}
+	
+	public static void symbol(Feature feature, ArrayList<Instr> symbol, Obj obj) {
 		Point2D point = helper.getPoint(map.nodes.get(feature.refs));
-		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, null);
+		ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
+		ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, new Scheme(pattern, colours));
 	}
 	
 }

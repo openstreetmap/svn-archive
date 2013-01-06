@@ -10,21 +10,15 @@
 package seamap;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
 
-import s57.S57att;
-import s57.S57val.BcnSHP;
-import s57.S57att.*;
-import s57.S57obj;
-import s57.S57obj.*;
-import s57.S57val;
 import s57.S57val.*;
+import s57.S57att.*;
+import s57.S57obj.*;
 
 import seamap.SeaMap.AttItem;
 import seamap.SeaMap.Feature;
 import symbols.Beacons;
-import symbols.Symbols.Instr;
+import symbols.Buoys;
 
 public class Rules {
 
@@ -105,8 +99,8 @@ public class Rules {
 	}
 	
 	private static void shoreline(ArrayList<Feature> features) {
-		for (Feature feature : features) {
-		}
+//		for (Feature feature : features) {
+//		}
 	}
 	private static void pipelines(ArrayList<Feature> features) {}
 	private static void cables(ArrayList<Feature> features) {}
@@ -130,27 +124,35 @@ public class Rules {
 	private static void wrecks(ArrayList<Feature> features) {}
 	private static void gauges(ArrayList<Feature> features) {}
 	private static void platforms(ArrayList<Feature> features) {}
-	private static void buoys(ArrayList<Feature> features) {}
+	private static void buoys(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
+			Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type);
+		}
+	}
 	private static void beacons(ArrayList<Feature> features) {
 		for (Feature feature : features) {
-			BcnSHP shape;
-			HashMap<Integer, EnumMap<Att, AttItem>> objs = feature.objs.get(feature.type);
-			if (objs == null) shape = BcnSHP.BCN_UNKN;
-			else {
-				EnumMap<Att, AttItem> atts = objs.get(0);
-				if (atts == null) shape = BcnSHP.BCN_UNKN;
-				else {
-					AttItem item = atts.get(Att.BCNSHP);
-					if (item == null) shape = BcnSHP.BCN_UNKN;
-					else shape = (BcnSHP) item.val;
+			BcnSHP shape = (BcnSHP) Renderer.getAttVal(feature, feature.type, 0, Att.BCNSHP);
+			if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY)) && (feature.type == Obj.BCNLAT)) {
+				CatLAM cat = (CatLAM) Renderer.getAttVal(feature, feature.type, 0, Att.CATLAM);
+				switch (cat) {
+				case LAM_PORT:
+					if (shape == BcnSHP.BCN_PRCH)
+						Renderer.symbol(feature, Beacons.PerchPort, feature.type);
+					else
+						Renderer.symbol(feature, Beacons.WithyPort, feature.type);
+					break;
+				case LAM_STBD:
+					if (shape == BcnSHP.BCN_PRCH)
+						Renderer.symbol(feature, Beacons.PerchStarboard, feature.type);
+					else
+						Renderer.symbol(feature, Beacons.WithyStarboard, feature.type);
+					break;
+				default:
+					Renderer.symbol(feature, Beacons.Stake, feature.type);
 				}
-			}
-			if (shape == BcnSHP.BCN_PRCH) {
-				
-			} else if (shape == BcnSHP.BCN_WTHY) {
-					
 			} else {
-				Renderer.symbol(feature, Beacons.Shapes.get(shape));
+				Renderer.symbol(feature, Beacons.Shapes.get(shape), feature.type);
 			}
 		}
 	}

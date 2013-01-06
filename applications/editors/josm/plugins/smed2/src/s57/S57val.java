@@ -1085,6 +1085,28 @@ public class S57val {
 		keys.put(Att.LC_WD2, new S57key(Conv.F, null)); keys.put(Att.LITRAD, new S57key(Conv.A, null));
 	}
 	
+	public static Object nullVal(Att att) {
+		switch (keys.get(att).conv) {
+		case A:
+		case S:
+			return "";
+		case E:
+			for (Enum<?> key : keys.get(att).map.keySet())
+				return key;
+		case L:
+			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+			for (Enum<?> key : keys.get(att).map.keySet()) {
+				list.add(key);
+				return list;
+			}
+		case I:
+			return null;
+		case F:
+			return null;
+		}
+		return null;
+	}
+	
 	public static String decodeValue(String val, Integer attl) {          // Convert S57 attribute value string to OSeaM attribute value string
 		Att att = S57att.lookupAttribute(attl);
 		switch (keys.get(att).conv) {

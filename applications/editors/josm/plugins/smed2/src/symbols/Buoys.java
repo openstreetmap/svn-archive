@@ -13,7 +13,9 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 
+import s57.S57val.BoySHP;
 import symbols.Symbols.*;
 
 public class Buoys {
@@ -245,5 +247,12 @@ public class Buoys {
 		Super.add(new Instr(Prim.LINE, new Line2D.Double(10,0,54,0)));
 		p = new Path2D.Double(); p.moveTo(-48.0,0); p.lineTo(-28.0,-42.0); p.lineTo(28.0,-42.0); p.lineTo(48.0,0);
     Super.add(new Instr(Prim.PLIN, p));
+	}
+	
+	public static final EnumMap<BoySHP, ArrayList<Instr>> Shapes = new EnumMap<BoySHP, ArrayList<Instr>>(BoySHP.class);
+	static {
+		Shapes.put(BoySHP.BOY_UNKN, Buoys.Pillar); Shapes.put(BoySHP.BOY_CONE, Buoys.Cone); Shapes.put(BoySHP.BOY_CAN, Buoys.Can);
+		Shapes.put(BoySHP.BOY_SPHR, Buoys.Sphere); Shapes.put(BoySHP.BOY_PILR, Buoys.Pillar); Shapes.put(BoySHP.BOY_SPAR, Buoys.Spar);
+		Shapes.put(BoySHP.BOY_BARL, Buoys.Barrel); Shapes.put(BoySHP.BOY_SUPR, Buoys.Super); Shapes.put(BoySHP.BOY_ICE, Buoys.Ice);
 	}
 }

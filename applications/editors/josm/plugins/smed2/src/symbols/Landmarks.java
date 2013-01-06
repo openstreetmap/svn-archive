@@ -17,9 +17,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
 
-import symbols.Symbols.Instr;
-import symbols.Symbols.Prim;
+import s57.S57val.*;
+import symbols.Symbols.*;
+
 
 public class Landmarks {
 	private static final ArrayList<Instr> Base = new ArrayList<Instr>();
@@ -208,5 +210,26 @@ public class Landmarks {
 		p.moveTo(10.0,-150.0); p.lineTo(50.0,-145.0); p.lineTo(120.0,-70.0); p.quadTo(120.0,-55.0,105.0,-55.0);
 		p.lineTo(55,-95); p.lineTo(40,-102); p.lineTo(10,-100); p.moveTo(40,-102); p.lineTo(50,-120); p.moveTo(55,-95); p.lineTo(75,-97);
 		Windsock.add(new Instr(Prim.PLIN, p));
+	}
+	
+	public static final EnumMap<CatLMK, ArrayList<Instr>> Shapes = new EnumMap<CatLMK, ArrayList<Instr>>(CatLMK.class);
+	static {
+		Shapes.put(CatLMK.LMK_CARN, Beacons.Cairn); Shapes.put(CatLMK.LMK_CHMY, Landmarks.Chimney);
+		Shapes.put(CatLMK.LMK_DISH, Landmarks.DishAerial); Shapes.put(CatLMK.LMK_FLAG, Landmarks.Flagstaff); Shapes.put(CatLMK.LMK_FLAR, Landmarks.FlareStack);
+		Shapes.put(CatLMK.LMK_MAST, Landmarks.Mast); Shapes.put(CatLMK.LMK_WNDS, Landmarks.Windsock); Shapes.put(CatLMK.LMK_MNMT, Landmarks.Monument);
+		Shapes.put(CatLMK.LMK_CLMN, Landmarks.Monument); Shapes.put(CatLMK.LMK_MEML, Landmarks.Monument); Shapes.put(CatLMK.LMK_OBLK, Landmarks.Monument);
+		Shapes.put(CatLMK.LMK_STAT, Landmarks.Monument); Shapes.put(CatLMK.LMK_CROS, Landmarks.Cross); Shapes.put(CatLMK.LMK_DOME, Landmarks.Dome);
+		Shapes.put(CatLMK.LMK_RADR, Landmarks.RadioMast); Shapes.put(CatLMK.LMK_TOWR, Landmarks.LandTower); Shapes.put(CatLMK.LMK_WNDM, Landmarks.Windmill);
+		Shapes.put(CatLMK.LMK_WNDG, Landmarks.WindMotor); Shapes.put(CatLMK.LMK_SPIR, Landmarks.Spire); Shapes.put(CatLMK.LMK_BLDR, Beacons.Cairn);
+		Shapes.put(CatLMK.LMK_MNRT, Landmarks.Minaret); Shapes.put(CatLMK.LMK_WTRT, Landmarks.WaterTower);
+	}
+
+	public static final EnumMap<FncFNC, ArrayList<Instr>> Funcs = new EnumMap<FncFNC, ArrayList<Instr>>(FncFNC.class);
+	static {
+		Funcs.put(FncFNC.FNC_CHCH, Landmarks.Church); Funcs.put(FncFNC.FNC_CHPL, Landmarks.Church); Funcs.put(FncFNC.FNC_TMPL, Landmarks.Temple);
+		Funcs.put(FncFNC.FNC_PGDA, Landmarks.Temple); Funcs.put(FncFNC.FNC_SHSH, Landmarks.Temple); Funcs.put(FncFNC.FNC_BTMP, Landmarks.Temple);
+		Funcs.put(FncFNC.FNC_MOSQ, Landmarks.Minaret); Funcs.put(FncFNC.FNC_MRBT, Landmarks.Spire); Funcs.put(FncFNC.FNC_COMM, Landmarks.RadioMast);
+		Funcs.put(FncFNC.FNC_TV, Landmarks.RadioMast); Funcs.put(FncFNC.FNC_RADO, Landmarks.RadioMast); Funcs.put(FncFNC.FNC_RADR, Landmarks.RadioMast);
+		Funcs.put(FncFNC.FNC_LGHT, Beacons.LightMajor); Funcs.put(FncFNC.FNC_MCWV, Landmarks.RadioMast);
 	}
 }

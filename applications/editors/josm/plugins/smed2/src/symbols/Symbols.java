@@ -124,150 +124,152 @@ public class Symbols {
 		AffineTransform savetr = g2.getTransform();
 		g2.translate(x, y);
 		g2.scale(scale, scale);
-		for (Instr item : symbol) {
-			switch (item.type) {
-			case BBOX:
-				Rectangle bbox = (Rectangle) item.params;
-				double dx = 0.0;
-				double dy = 0.0;
-				if (dd != null) {
-					g2.transform(dd.t);
-					switch (dd.h) {
-					case CC:
-						dx = bbox.x + (bbox.width / 2.0);
-						dy = bbox.y + (bbox.height / 2.0);
-						break;
-					case TL:
-						dx = bbox.x;
-						dy = bbox.y;
-						break;
-					case TR:
-						dx = bbox.x + bbox.width;
-						dy = bbox.y;
-						break;
-					case TC:
-						dx = bbox.x + (bbox.width / 2.0);
-						dy = bbox.y;
-						break;
-					case LC:
-						dx = bbox.x;
-						dy = bbox.y + (bbox.height / 2.0);
-						break;
-					case RC:
-						dx = bbox.x + bbox.width;
-						dy = bbox.y + (bbox.height / 2.0);
-						break;
-					case BL:
-						dx = bbox.x;
-						dy = bbox.y + bbox.height;
-						break;
-					case BR:
-						dx = bbox.x + bbox.width;
-						dy = bbox.y + bbox.height;
-						break;
-					case BC:
-						dx = bbox.x + (bbox.width / 2.0);
-						dy = bbox.y + bbox.height;
-						break;
-					}
-					g2.translate(-dx, -dy);
-				}
-				break;
-			case COLR:
-				if ((cs != null) && (cs.col != null)) {
-					for (Instr patch : (ArrayList<Instr>) item.params) {
-						switch (patch.type) {
-						case P1:
-							if (cn > 0) {
-								g2.setPaint(bodyColours.get(cs.col.get(0)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+		if (symbol != null) {
+			for (Instr item : symbol) {
+				switch (item.type) {
+				case BBOX:
+					Rectangle bbox = (Rectangle) item.params;
+					double dx = 0.0;
+					double dy = 0.0;
+					if (dd != null) {
+						g2.transform(dd.t);
+						switch (dd.h) {
+						case CC:
+							dx = bbox.x + (bbox.width / 2.0);
+							dy = bbox.y + (bbox.height / 2.0);
 							break;
-						case P2:
-							if (cn > 0) {
-								if (cn > 1) {
-									g2.setPaint(bodyColours.get(cs.col.get(1)));
-								} else {
-									g2.setPaint(bodyColours.get(cs.col.get(0)));
-								}
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case TL:
+							dx = bbox.x;
+							dy = bbox.y;
 							break;
-						case H2:
-							if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-								g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case TR:
+							dx = bbox.x + bbox.width;
+							dy = bbox.y;
 							break;
-						case H3:
-							if ((cn == 3) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-								g2.setPaint(bodyColours.get(cs.col.get(1)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case TC:
+							dx = bbox.x + (bbox.width / 2.0);
+							dy = bbox.y;
 							break;
-						case H4:
-							if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-								g2.setPaint(bodyColours.get(cs.col.get(1)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case LC:
+							dx = bbox.x;
+							dy = bbox.y + (bbox.height / 2.0);
 							break;
-						case H5:
-							if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-								g2.setPaint(bodyColours.get(cs.col.get(2)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case RC:
+							dx = bbox.x + bbox.width;
+							dy = bbox.y + (bbox.height / 2.0);
 							break;
-						case V2:
-							if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_VERT)) {
-								g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
-								g2.fill((Path2D.Double) patch.params);
-							}
+						case BL:
+							dx = bbox.x;
+							dy = bbox.y + bbox.height;
+							break;
+						case BR:
+							dx = bbox.x + bbox.width;
+							dy = bbox.y + bbox.height;
+							break;
+						case BC:
+							dx = bbox.x + (bbox.width / 2.0);
+							dy = bbox.y + bbox.height;
 							break;
 						}
+						g2.translate(-dx, -dy);
 					}
+					break;
+				case COLR:
+					if ((cs != null) && (cs.col != null)) {
+						for (Instr patch : (ArrayList<Instr>) item.params) {
+							switch (patch.type) {
+							case P1:
+								if (cn > 0) {
+									g2.setPaint(bodyColours.get(cs.col.get(0)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case P2:
+								if (cn > 0) {
+									if (cn > 1) {
+										g2.setPaint(bodyColours.get(cs.col.get(1)));
+									} else {
+										g2.setPaint(bodyColours.get(cs.col.get(0)));
+									}
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case H2:
+								if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
+									g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case H3:
+								if ((cn == 3) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
+									g2.setPaint(bodyColours.get(cs.col.get(1)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case H4:
+								if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
+									g2.setPaint(bodyColours.get(cs.col.get(1)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case H5:
+								if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
+									g2.setPaint(bodyColours.get(cs.col.get(2)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case V2:
+								if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_VERT)) {
+									g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							}
+						}
+					}
+					break;
+				case STRK:
+					g2.setStroke((BasicStroke) item.params);
+					break;
+				case FILL:
+					g2.setPaint((Color) item.params);
+					break;
+				case LINE:
+					g2.draw((Line2D.Double) item.params);
+					break;
+				case RECT:
+					g2.draw((Rectangle2D.Double) item.params);
+					break;
+				case RRCT:
+					g2.draw((RoundRectangle2D.Double) item.params);
+					break;
+				case ELPS:
+					g2.draw((Ellipse2D.Double) item.params);
+					break;
+				case EARC:
+					g2.draw((Arc2D.Double) item.params);
+					break;
+				case PLIN:
+					g2.draw((Path2D.Double) item.params);
+					break;
+				case PGON:
+					g2.fill((Path2D.Double) item.params);
+					break;
+				case RSHP:
+					g2.fill((RectangularShape) item.params);
+					break;
+				case SYMB:
+					Symbol s = (Symbol) item.params;
+					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
+					break;
+				case FONT:
+					g2.setFont((Font) item.params);
+					break;
+				case TEXT:
+					Caption c = (Caption) item.params;
+					g2.drawString(c.str, c.x, c.y);
+					break;
 				}
-				break;
-			case STRK:
-				g2.setStroke((BasicStroke) item.params);
-				break;
-			case FILL:
-				g2.setPaint((Color) item.params);
-				break;
-			case LINE:
-				g2.draw((Line2D.Double) item.params);
-				break;
-			case RECT:
-				g2.draw((Rectangle2D.Double) item.params);
-				break;
-			case RRCT:
-				g2.draw((RoundRectangle2D.Double) item.params);
-				break;
-			case ELPS:
-				g2.draw((Ellipse2D.Double) item.params);
-				break;
-			case EARC:
-				g2.draw((Arc2D.Double) item.params);
-				break;
-			case PLIN:
-				g2.draw((Path2D.Double) item.params);
-				break;
-			case PGON:
-				g2.fill((Path2D.Double) item.params);
-				break;
-			case RSHP:
-				g2.fill((RectangularShape) item.params);
-				break;
-			case SYMB:
-				Symbol s = (Symbol) item.params;
-				drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
-				break;
-			case FONT:
-				g2.setFont((Font)item.params);
-				break;
-			case TEXT:
-				Caption c = (Caption)item.params;
-				g2.drawString(c.str, c.x, c.y);
-				break;
 			}
 		}
 		g2.setTransform(savetr);

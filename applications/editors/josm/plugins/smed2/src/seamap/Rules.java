@@ -15,10 +15,12 @@ import s57.S57val.*;
 import s57.S57att.*;
 import s57.S57obj.*;
 
-import seamap.SeaMap.AttItem;
-import seamap.SeaMap.Feature;
+import seamap.SeaMap.*;
 import symbols.Beacons;
 import symbols.Buoys;
+import symbols.Harbours;
+import symbols.Landmarks;
+import symbols.Symbols.Instr;
 
 public class Rules {
 
@@ -113,17 +115,102 @@ public class Rules {
 	private static void locks(ArrayList<Feature> features) {}
 	private static void distances(ArrayList<Feature> features) {}
 	private static void ports(ArrayList<Feature> features) {}
-	private static void landmarks(ArrayList<Feature> features) {}
-	private static void moorings(ArrayList<Feature> features) {}
+	private static void landmarks(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			ArrayList<CatLMK> cats = (ArrayList<CatLMK>) Renderer.getAttVal(feature, feature.type, 0, Att.CATLMK);
+			ArrayList<Instr> catSym = Landmarks.Shapes.get(cats.get(0));
+			ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) Renderer.getAttVal(feature, feature.type, 0, Att.FUNCTN);
+			ArrayList<Instr> fncSym = Landmarks.Funcs.get(fncs.get(0));
+			if ((fncs.get(0) == FncFNC.FNC_CHCH) && (cats.get(0) == CatLMK.LMK_TOWR)) catSym = Landmarks.ChurchTower;
+			Renderer.symbol(feature, catSym, feature.type);
+			Renderer.symbol(feature, fncSym, feature.type);
+		}
+	}
+	private static void moorings(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			CatMOR cat = (CatMOR) Renderer.getAttVal(feature, feature.type, 0, Att.CATMOR);
+			switch (cat) {
+			case MOR_DLPN:
+				Renderer.symbol(feature, Harbours.Dolphin, feature.type);
+				break;
+			case MOR_DDPN:
+				Renderer.symbol(feature, Harbours.DeviationDolphin, feature.type);
+				break;
+			case MOR_BLRD:
+			case MOR_POST:
+				Renderer.symbol(feature, Harbours.Bollard, feature.type);
+				break;
+			case MOR_BUOY:
+				BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
+				if (shape == BoySHP.BOY_UNKN) shape = BoySHP.BOY_SPHR;
+				Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type);
+				break;
+			}
+		}
+	}
 	private static void notices(ArrayList<Feature> features) {}
 	private static void marinas(ArrayList<Feature> features) {}
 	private static void bridges(ArrayList<Feature> features) {}
-	private static void lights(ArrayList<Feature> features) {}
-	private static void floats(ArrayList<Feature> features) {}
-	private static void signals(ArrayList<Feature> features) {}
 	private static void wrecks(ArrayList<Feature> features) {}
 	private static void gauges(ArrayList<Feature> features) {}
-	private static void platforms(ArrayList<Feature> features) {}
+	private static void lights(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			switch (feature.type) {
+			case LITMAJ:
+				Renderer.symbol(feature, Beacons.LightMajor, feature.type);
+				break;
+			case LITMIN:
+			case LIGHTS:
+				Renderer.symbol(feature, Beacons.LightMinor, feature.type);
+				break;
+			}
+		}
+	}
+	private static void signals(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			switch (feature.type) {
+			case SISTAT:
+			case SISTAW:
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				break;
+			case RDOSTA:
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				break;
+			case RADSTA:
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				break;
+			case PILBOP:
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				break;
+			case CGUSTA:
+//			Renderer.symbol(feature, Harbours.CGuardStation, feature.type);
+			break;
+			case RSCSTA:
+//				Renderer.symbol(feature, Harbours.RescueStation, feature.type);
+				break;
+			}
+		}
+	}
+	private static void floats(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			switch (feature.type) {
+			case LITVES:
+				Renderer.symbol(feature, Buoys.Super, feature.type);
+				break;
+			case LITFLT:
+				Renderer.symbol(feature, Buoys.Float, feature.type);
+				break;
+			case BOYINB:
+				Renderer.symbol(feature, Buoys.Storage, feature.type);
+				break;
+			}
+		}
+	}
+	private static void platforms(ArrayList<Feature> features) {
+		for (Feature feature : features) {
+			Renderer.symbol(feature, Landmarks.Platform, feature.type);
+		}
+	}
 	private static void buoys(ArrayList<Feature> features) {
 		for (Feature feature : features) {
 			BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);

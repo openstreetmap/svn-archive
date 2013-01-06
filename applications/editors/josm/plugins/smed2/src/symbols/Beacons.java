@@ -62,6 +62,7 @@ public class Beacons {
 	}
 	public static final ArrayList<Instr> LightMajor = new ArrayList<Instr>();
 	static {
+		LightMajor.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_NON_ZERO);
 		p.moveTo(0.0,-7.0); p.curveTo(-9.3,-6.5,-9.3,6.5,0.0,7.0); p.curveTo(9.3,6.5,9.3,-6.5,0.0,-7.0); p.closePath();
 		p.moveTo(0.0,-35.5); p.lineTo(8.0,-11.2); p.lineTo(33.5,-11.2); p.lineTo(12.8,4.0);
@@ -70,6 +71,7 @@ public class Beacons {
 	}
 	public static final ArrayList<Instr> LightMinor = new ArrayList<Instr>();
 	static {
+		LightMinor.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-26.5); p.lineTo(6.0,-8.4); p.lineTo(25.1,-8.4); p.lineTo(9.6,3.0);
 		p.lineTo(15.4,21.4); p.lineTo(0.0,9.8); p.lineTo(-15.4,21.4); p.lineTo(-9.6,3.0); p.lineTo(-25.1,-8.4); p.lineTo(-6.0,-8.4); p.closePath();
 		LightMinor.add(new Instr(Prim.PGON, p));

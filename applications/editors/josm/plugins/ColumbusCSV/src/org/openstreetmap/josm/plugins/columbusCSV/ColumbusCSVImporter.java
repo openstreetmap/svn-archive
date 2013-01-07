@@ -16,14 +16,19 @@ package org.openstreetmap.josm.plugins.columbusCSV;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -36,85 +41,115 @@ import org.openstreetmap.josm.io.IllegalDataException;
  * 
  */
 public class ColumbusCSVImporter extends FileImporter {
-	public static final String COLUMBUS_FILE_EXT = "csv";
-	public static final String COLUMBUS_FILE_EXT_DOT = "." + COLUMBUS_FILE_EXT;
+    public static final String COLUMBUS_FILE_EXT = "csv";
+    public static final String COLUMBUS_FILE_EXT_DOT = "." + COLUMBUS_FILE_EXT;
 
-	public ColumbusCSVImporter() {
-		super(new ExtensionFileFilter(COLUMBUS_FILE_EXT, COLUMBUS_FILE_EXT,
-				tr("Columbus V-900 CSV Files") + " (*" + COLUMBUS_FILE_EXT_DOT
-						+ ")"));
+    public ColumbusCSVImporter() {
+	super(new ExtensionFileFilter(COLUMBUS_FILE_EXT, COLUMBUS_FILE_EXT,
+		tr("Columbus V-900 CSV Files") + " (*" + COLUMBUS_FILE_EXT_DOT
+			+ ")"));
+    }
+
+    @Override
+    public boolean acceptFile(File pathname) {
+	try {
+	    // do some deep packet inspection...
+	    boolean ok = super.acceptFile(pathname)
+		    && ColumbusCSVReader.isColumbusFile(pathname);
+	    return ok;
+	} catch (Exception ex) {
+	    return false;
+	}
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.openstreetmap.josm.io.FileImporter#importData(java.io.File,
+     * org.openstreetmap.josm.gui.progress.ProgressMonitor)
+     */
+    @Override
+    public void importData(File file, ProgressMonitor progressMonitor)
+	    throws IOException, IllegalDataException {
+	String fn = file.getPath();
+
+	if (progressMonitor == null) { // make sure that there is a progress
+				       // monitor...
+	    progressMonitor = NullProgressMonitor.INSTANCE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.io.FileImporter#importData(java.io.File, org.openstreetmap.josm.gui.progress.ProgressMonitor)
-	 */
-	@Override
-	public void importData(File file, ProgressMonitor progressMonitor)
-			throws IOException, IllegalDataException {
-		String fn = file.getPath();
+	progressMonitor.beginTask(String.format(
+		tr("Importing CSV file ''%s''..."), file.getName(), 4));
+	progressMonitor.setTicksCount(1);
 
-		if (progressMonitor == null) { // make sure that there is a progress
-										// monitor...
-			progressMonitor = NullProgressMonitor.INSTANCE;
-		}
+	if (fn.toLowerCase().endsWith(COLUMBUS_FILE_EXT_DOT)) {
+	    try {
+		ColumbusCSVReader r = new ColumbusCSVReader();
 
-		progressMonitor.beginTask(String.format(tr("Importing CSV file ''%s''..."),
-				file.getName(), 4));
+		// transform CSV into GPX
+		GpxData gpxData = r.transformColumbusCSV(fn);
+		assert (gpxData != null);
 		progressMonitor.setTicksCount(1);
 
-		if (fn.toLowerCase().endsWith(COLUMBUS_FILE_EXT_DOT)) {
-			try {
-				ColumbusCSVReader r = new ColumbusCSVReader();
+		r.dropBufferLists();
 
-				// transform CSV into GPX
-				GpxData gpxData = r.transformColumbusCSV(fn);
-				progressMonitor.setTicksCount(1);
+		progressMonitor.setTicksCount(2);
 
-				r.dropBufferLists();
+		GpxLayer gpxLayer = new GpxLayer(gpxData, file.getName());
+		assert (gpxLayer != null);
 
-				progressMonitor.setTicksCount(2);
+		// add layer to show way points
+		Main.main.addLayer(gpxLayer);
 
-				GpxLayer gpxLayer = new GpxLayer(gpxData, file.getName());
-				
-				// add layer to show way points
-				Main.main.addLayer(gpxLayer);
+		progressMonitor.setTicksCount(3);
 
-				progressMonitor.setTicksCount(3);
-
-				// ... and scale view appropriately - if wished by user
-				if (ColumbusCSVPreferences.zoomAfterImport()) {
-					AutoScaleAction action = new AutoScaleAction("data");
-					action.autoScale();
-				}
-				progressMonitor.setTicksCount(4);
-
-				if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
-					MarkerLayer ml = new MarkerLayer(gpxData, String.format(tr("Markers from %s"), file.getName()), file, gpxLayer);
-					if (ml.data.size() > 0) {
-						Main.main.addLayer(ml);
-					} else {
-						System.err.println("Warning: File contains no markers.");
-					}
-					/* WORKAROUND (Bugfix: #6912): Set marker offset to 0.0 to avoid message "This is after the end of the recording"  
-					for (Marker marker : ml.data) {
-						marker.offset = 0.0;						
-					}*/
-				} else {
-					System.err.println("Warning: Option 'marker.makeautomarkers' is not set; audio marker layer is not created.");
-				}
-			} catch (Exception e) {
-				// catch and forward exception
-				e.printStackTrace(System.err);
-				throw new IllegalDataException(e);
-			} finally { // take care of monitor...
-				progressMonitor.finishTask();
-			}
-		} else {
-			throw new IOException(
-					tr(String
-							.format(
-									"Unsupported file extension (file '%s' does not end with '%s')!",
-									file.getName(), COLUMBUS_FILE_EXT)));
+		// ... and scale view appropriately - if wished by user
+		if (ColumbusCSVPreferences.zoomAfterImport()) {
+		    AutoScaleAction action = new AutoScaleAction("data");
+		    action.autoScale();
 		}
+		progressMonitor.setTicksCount(4);
+
+		if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
+		    try {
+			MarkerLayer ml = new MarkerLayer(gpxData,
+				tr("Markers of ") + file.getName(), file,
+				gpxLayer);
+
+			assert (ml != null);
+			assert (ml.data != null);
+
+			System.out.println("Layer: " + ml);
+			System.out.println("Data: " + ml.data != null);
+			System.out.println("Data size: " + ml.data.size());
+
+			Main.main.addLayer(ml);
+			if (ml.data.size() > 0) {
+
+			} else {
+			    System.out
+				    .println("Warning: File contains no markers.");
+			}
+		    } catch (Exception exLayer) {
+			System.out.println(exLayer);
+			exLayer.printStackTrace(System.err);
+		    }
+		} else {
+		    System.out
+			    .println("Warning: Option 'marker.makeautomarkers' is not set; audio marker layer is not created.");
+		}
+	    } catch (Exception e) {
+		// catch and forward exception
+		e.printStackTrace(System.err);
+		throw new IllegalDataException(e);
+	    } finally { // take care of monitor...
+		progressMonitor.finishTask();
+	    }
+	} else {
+	    throw new IOException(
+		    tr(String
+			    .format("Unsupported file extension (file '%s' does not end with '%s')!",
+				    file.getName(), COLUMBUS_FILE_EXT)));
 	}
+    }
 }

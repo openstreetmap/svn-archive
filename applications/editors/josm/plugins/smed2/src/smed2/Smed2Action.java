@@ -22,12 +22,14 @@ import s57.S57dat;
 import seamap.SeaMap;
 
 import panels.PanelMain;
+import panels.ShowFrame;
 
 public class Smed2Action extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
 
 	private static final long serialVersionUID = 1L;
 	private static String editor = tr("SeaMap Editor");
-	public static JFrame frame = null;
+	public static JFrame editFrame = null;
+	public static ShowFrame showFrame = null;
 	public static S57dat panelS57;
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
@@ -44,7 +46,10 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
-			// reMap();
+			if (map != null) {
+				Node node = e.getNode();
+				map.moveNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
+			}
 		}
 
 		@Override
@@ -80,8 +85,6 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 	public Smed2Action() {
 		super(editor, "Smed2", editor, null, true);
-		MapView.addEditLayerChangeListener(this);
-		DataSet.addSelectionListener(this);
 	}
 
 	@Override
@@ -91,47 +94,56 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (!isOpen)
 					createFrame();
 				else
-					frame.toFront();
+					editFrame.toFront();
 				isOpen = true;
 			}
 		});
 	}
 
 	protected void createFrame() {
-		frame = new JFrame(editor);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setResizable(true);
-		frame.setAlwaysOnTop(false);
-
-		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		editFrame = new JFrame(editor);
+		editFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		editFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				closeDialog();
 			}
 		});
-		frame.setSize(new Dimension(480, 480));
-		frame.setLocation(100, 200);
-		frame.setAlwaysOnTop(true);
-		frame.setVisible(true);
+		editFrame.setSize(new Dimension(480, 480));
+		editFrame.setLocation(100, 200);
+		editFrame.setResizable(true);
+		editFrame.setAlwaysOnTop(true);
+		editFrame.setVisible(true);
 		panelMain = new PanelMain();
-		frame.add(panelMain);
+		editFrame.add(panelMain);
 		panelS57 = new S57dat();
 		panelS57.setVisible(false);
-		frame.add(panelS57);
+		editFrame.add(panelS57);
+
+		showFrame = new ShowFrame("Seamark Inspector");
+		showFrame.setSize(new Dimension(300, 300));
+		Rectangle rect = Main.map.mapView.getBounds();
+		showFrame.setLocation(50, (rect.y + rect.height - 200));
+		showFrame.setResizable(false);
+		showFrame.setAlwaysOnTop(true);
+		showFrame.setVisible(false);
+
 		// System.out.println("hello");
-		rendering = new MapImage(new ImageryInfo("OpenSeaMap"), map);
+		rendering = new MapImage(new ImageryInfo("OpenSeaMap"), this);
 		rendering.setBackgroundLayer(true);
 		Main.main.addLayer(rendering);
-		reMap();
+		MapView.addEditLayerChangeListener(this);
+		DataSet.addSelectionListener(this);
+		editLayerChanged(Main.main.getEditLayer(), Main.main.getEditLayer());
 	}
 
 	public void closeDialog() {
 		if (isOpen) {
 			Main.main.removeLayer(rendering);
 			MapView.removeEditLayerChangeListener(this);
-			frame.setVisible(false);
-			frame.dispose();
-//			data = null;
-//			map = null;
+			editFrame.setVisible(false);
+			editFrame.dispose();
+			data = null;
+			map = null;
 		}
 		isOpen = false;
 	}
@@ -144,7 +156,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data.allPrimitives();
-			reMap();
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		} else {
 			data = null;
 			map = null;
@@ -152,12 +165,31 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	}
 
 	@Override
-	public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
-		// TODO Auto-generated method stub
+	public void selectionChanged(Collection<? extends OsmPrimitive> selection) {
+		Node nextNode = null;
+		Node node = null;
 
+		if (selection.size() == 0) showFrame.setVisible(false);
+		for (OsmPrimitive osm : selection) {
+			if (osm instanceof Node) {
+				nextNode = (Node) osm;
+				if (selection.size() == 1) {
+					if (nextNode.compareTo(node) != 0) {
+						node = nextNode;
+						showFrame.setVisible(true);
+						showFrame.showFeature(node, map);
+					}
+				} else {
+					showFrame.setVisible(false);
+				}
+			}
+		}
+		if (nextNode == null) {
+			node = null;
+		}
 	}
 
-	void reMap() {
+	void makeMap() {
 		map = new SeaMap();
 		if (data != null) {
 			for (OsmPrimitive osm : data) {
@@ -173,7 +205,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					for (Entry<String, String> entry : osm.getKeys().entrySet()) {
 						map.addTag(entry.getKey(), entry.getValue());
 					}
-					map.tagsDone();
+					map.tagsDone(osm.getUniqueId());
 				} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
 					map.addMpoly(((Relation) osm).getUniqueId());
 					for (RelationMember mem : ((Relation) osm).getMembers()) {

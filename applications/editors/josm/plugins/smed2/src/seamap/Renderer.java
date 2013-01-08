@@ -13,7 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import s57.S57att.Att;
@@ -42,18 +41,18 @@ public class Renderer {
 		if (map != null) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-			Rules.MainRules(map, zoom);
+			Rules.rules(map, zoom);
 		}
 	}
 	
-	public static EnumMap<Att, AttItem> getAtts(Feature feature, Obj obj, int idx) {
-		HashMap<Integer, EnumMap<Att, AttItem>> objs = feature.objs.get(obj);
+	public static AttMap getAtts(Feature feature, Obj obj, int idx) {
+		HashMap<Integer, AttMap> objs = feature.objs.get(obj);
 		if (objs == null) return null;
 		else return objs.get(idx);
 	}
 	
 	public static Object getAttVal(Feature feature, Obj obj, int idx, Att att) {
-		EnumMap<Att, AttItem> atts = getAtts(feature, obj, idx);
+		AttMap atts = getAtts(feature, obj, idx);
 		if (atts == null) return  S57val.nullVal(att);
 		else {
 			AttItem item = atts.get(att);
@@ -61,9 +60,39 @@ public class Renderer {
 			return item.val;
 		}
 	}
+
+	public static Coord findCentroid(Feature feature) {
+    double slon = 0.0;
+    double slat = 0.0;
+    double sarc = 0.0;
+    double llon = 0.0;
+    double llat = 0.0;
+		if (feature.flag == Fflag.NODE) {
+			return map.nodes.get(feature.refs);
+		}
+		ArrayList<Long> way = map.ways.get(feature.refs);
+		if (feature.flag == Fflag.WAY) {
+			llon = map.nodes.get(way.get(1)).lon;
+			llat = map.nodes.get(way.get(1)).lat;
+		} else {
+			llon = map.nodes.get(way.get(0)).lon;
+			llat = map.nodes.get(way.get(0)).lat;
+		}
+		for (long node : way) {
+      double lon = map.nodes.get(node).lon;
+      double lat = map.nodes.get(node).lat;
+      double arc = Math.sqrt(Math.pow((lon-llon), 2) + Math.pow((lat-llat), 2));
+      slon += (lon * arc);
+      slat += (lat * arc);
+      sarc += arc;
+      llon = lon;
+      llat = lat;
+		}
+		return map.new Coord((sarc > 0.0 ? slat/sarc : 0.0), (sarc > 0.0 ? slon/sarc : 0.0));
+	}
 	
 	public static void symbol(Feature feature, ArrayList<Instr> symbol, Obj obj) {
-		Point2D point = helper.getPoint(map.nodes.get(feature.refs));
+		Point2D point = helper.getPoint(findCentroid(feature));
 		ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
 		ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, new Scheme(pattern, colours));

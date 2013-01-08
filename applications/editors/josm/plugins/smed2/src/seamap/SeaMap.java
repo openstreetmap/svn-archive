@@ -14,7 +14,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 import s57.S57att;
-import s57.S57att.*;
+import s57.S57att.Att;
 import s57.S57obj;
 import s57.S57obj.*;
 import s57.S57val;
@@ -36,19 +36,68 @@ public class SeaMap {
 		}
 	}
 
+	public class AttMap extends EnumMap<Att, AttItem> {
+		private static final long serialVersionUID = 1L;
+		public AttMap() {
+			super(Att.class);
+		}
+	}
+	
+	public class ObjTab extends HashMap<Integer, AttMap> {
+		private static final long serialVersionUID = 1L;
+		public ObjTab() {
+			super();
+		}
+	}
+	
+	public class ObjMap extends EnumMap<Obj, ObjTab> {
+		private static final long serialVersionUID = 1L;
+		public ObjMap() {
+			super(Obj.class);
+		}
+	}
+	
+	public class NodeTab extends HashMap<Long, Coord> {
+		private static final long serialVersionUID = 1L;
+		public NodeTab() {
+			super();
+		}
+	}
+	
+	public class WayTab extends HashMap<Long, ArrayList<Long>> {
+		private static final long serialVersionUID = 1L;
+		public WayTab() {
+			super();
+		}
+	}
+	
+	public class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
+		private static final long serialVersionUID = 1L;
+		public FtrMap() {
+			super(Obj.class);
+		}
+	}
+	
+	public class FtrTab extends HashMap<Long, Feature> {
+		private static final long serialVersionUID = 1L;
+		public FtrTab() {
+			super();
+		}
+	}
+	
 	public class Feature {
 		public Fflag flag;
 		public long refs;
 		public Obj type;
-		public EnumMap<Att, AttItem> atts;
-		public EnumMap<Obj, HashMap<Integer, EnumMap<Att, AttItem>>> objs;
+		public AttMap atts;
+		public ObjMap objs;
 
 		Feature() {
 			flag = Fflag.UNKN;
 			refs = 0;
 			type = Obj.UNKOBJ;
-			atts = new EnumMap<Att, AttItem>(Att.class);
-			objs = new EnumMap<Obj, HashMap<Integer, EnumMap<Att, AttItem>>>(Obj.class);
+			atts = new AttMap();
+			objs = new ObjMap();
 		}
 	}
 
@@ -56,26 +105,28 @@ public class SeaMap {
 		public double lat;
 		public double lon;
 
-		Coord(double ilat, double ilon) {
+		public Coord(double ilat, double ilon) {
 			lat = ilat;
 			lon = ilon;
 		}
 	}
 
-	public HashMap<Long, Coord> nodes;
-	public HashMap<Long, ArrayList<Long>> ways;
-	public HashMap<Long, ArrayList<Long>> mpolys;
-	public EnumMap<Obj, ArrayList<Feature>> features;
+	public NodeTab nodes;
+	public WayTab ways;
+	public WayTab mpolys;
+	public FtrMap features;
+	public FtrTab index;
 
 	private Feature feature;
 	private ArrayList<Long> list;
 
 	public SeaMap() {
-		nodes = new HashMap<Long, Coord>();
-		ways = new HashMap<Long, ArrayList<Long>>();
-		mpolys = new HashMap<Long, ArrayList<Long>>();
+		nodes = new NodeTab();
+		ways = new WayTab();
+		mpolys = new WayTab();
 		feature = new Feature();
-		features = new EnumMap<Obj, ArrayList<Feature>>(Obj.class);
+		features = new FtrMap();
+		index = new FtrTab();
 	}
 
 	public void addNode(long id, double lat, double lon) {
@@ -83,6 +134,10 @@ public class SeaMap {
 		feature = new Feature();
 		feature.refs = id;
 		feature.flag = Fflag.NODE;
+	}
+
+	public void moveNode(long id, double lat, double lon) {
+		nodes.put(id, new Coord(lat, lon));
 	}
 
 	public void addWay(long id) {
@@ -109,9 +164,10 @@ public class SeaMap {
 			list.add(way);
 	}
 
-	public void tagsDone() {
-		if (feature.type != Obj.UNKOBJ) {
-			if ((feature.flag == Fflag.WAY) && (list.size() > 0) && (list.get(0) == list.get(list.size() - 1))) {
+	public void tagsDone(long id) {
+		if ((feature.type != Obj.UNKOBJ) && !((feature.flag == Fflag.WAY) && (list.size() < 2))) {
+			index.put(id, feature);
+			if ((feature.flag == Fflag.WAY) && (list.size() > 0) && (list.get(0).equals(list.get(list.size() - 1)))) {
 				feature.flag = Fflag.AREA;
 			}
 			if (features.get(feature.type) == null) {
@@ -136,14 +192,14 @@ public class SeaMap {
 				} catch (Exception e) {
 					att = S57att.enumAttribute(subkeys[2], obj);
 				}
-				HashMap<Integer, EnumMap<Att, AttItem>> items = feature.objs.get(obj);
+				ObjTab items = feature.objs.get(obj);
 				if (items == null) {
-					items = new HashMap<Integer, EnumMap<Att, AttItem>>();
+					items = new ObjTab();
 					feature.objs.put(obj, items);
 				}
-				EnumMap<Att, AttItem> atts = items.get(idx);
+				AttMap atts = items.get(idx);
 				if (atts == null) {
-					atts = new EnumMap<Att, AttItem>(Att.class);
+					atts = new AttMap();
 					items.put(idx, atts);
 				}
 				AttVal attval = S57val.convertValue(val, att);

@@ -1,7 +1,9 @@
 package smed2;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
 import javax.swing.Action;
@@ -17,12 +19,11 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
 import seamap.MapHelper;
 import seamap.Renderer;
-import seamap.SeaMap;
 import seamap.SeaMap.Coord;
 
 public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHelper {
 
-	private SeaMap mapdata;
+	private Smed2Action dlg;
 
 	double top;
 	double bottom;
@@ -32,11 +33,11 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 	double height;
 	int zoom;
 	
-	public MapImage(ImageryInfo info, SeaMap map) {
+	public MapImage(ImageryInfo info, Smed2Action d) {
 		super(info);
-		zoomChanged();
+		dlg = d;
 		MapView.addZoomChangeListener(this);
-		mapdata = map;
+		zoomChanged();
 	}
 	
 	@Override
@@ -61,9 +62,13 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 
 	@Override
 	public void paint(Graphics2D g2, MapView mv, Bounds bb) {
-		g2.setPaint(new Color(0xb5d0d0));
-		g2.fill(Main.map.mapView.getBounds());
-		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), mapdata, this);
+		Rectangle rect = Main.map.mapView.getBounds();
+		g2.setBackground(new Color(0xb5d0d0));
+		g2.clearRect(rect.x, rect.y, rect.width, rect.height);
+		g2.setPaint(Color.black);
+		g2.setFont(new Font("Arial", Font.BOLD, 20));
+		g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));
+		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), dlg.map, this);
 	}
 
 	@Override

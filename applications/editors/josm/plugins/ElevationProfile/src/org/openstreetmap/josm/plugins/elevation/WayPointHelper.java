@@ -206,14 +206,15 @@ public class WayPointHelper {
 	 * GeoidData}.
 	 */
 	public static byte getGeoidCorrection(WayPoint wpt) {
+	    	/*
 		int lat = (int)Math.round(wpt.getCoor().lat());
 		int lon = (int)Math.round(wpt.getCoor().lon());
 		byte geoid = GeoidData.getGeoid(lat, lon);
-		/*
+		
 		System.out.println(
 				String.format("Geoid(%d, %d) = %d", lat, lon, geoid));
-*/
-		return geoid;
+	    	 */
+		return 0;
 	}
 
 	/**

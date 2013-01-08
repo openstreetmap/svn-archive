@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ColumbusCSV" default="dist" basedir=".">
-
-    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+	<!-- enter the SVN commit message -->
+	<property name="commit.message" value="Commit message"/>
+    <!-- Enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="5047"/>
-
+	
+	<!-- Plugin meta data -->
     <property name="plugin.author" value="Oliver Wieland"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.columbusCSV.ColumbusCSVPlugin"/>
     <property name="plugin.description" value="Imports proprietary CSV files of the Columbus/Visiontac V-900 GPS logger into a GPX layer."/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ColumbusCSV"/>
+	<!-- Plugin icon -->
     <property name="plugin.icon" value="images/colcsvicon.png"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
-
-    <!-- ** include targets that all plugins have in common ** -->
-    <import file="../build-common.xml"/>
 	
+	<!-- Plugin version info -->
+	<property name="plugin.version" value="${version.entry.commit.revision}"/>
+	<property name="plugin.stage" value="60"/>
+    
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>	
 </project>

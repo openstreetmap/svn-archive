@@ -122,7 +122,8 @@ public class Rules {
 			ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) Renderer.getAttVal(feature, feature.type, 0, Att.FUNCTN);
 			ArrayList<Instr> fncSym = Landmarks.Funcs.get(fncs.get(0));
 			if ((fncs.get(0) == FncFNC.FNC_CHCH) && (cats.get(0) == CatLMK.LMK_TOWR)) catSym = Landmarks.ChurchTower;
-			if ((cats.get(0) == CatLMK.LMK_UNKN) && (fncs.get(0) == FncFNC.FNC_UNKN)) catSym = Beacons.LightMajor;
+			if ((cats.get(0) == CatLMK.LMK_UNKN) && (fncs.get(0) == FncFNC.FNC_UNKN) && (feature.objs.get(Obj.LIGHTS) != null)) catSym = Beacons.LightMajor;
+			if (cats.get(0) == CatLMK.LMK_RADR) fncSym = Landmarks.RadioTV;
 			Renderer.symbol(feature, catSym, feature.type);
 			Renderer.symbol(feature, fncSym, feature.type);
 		}

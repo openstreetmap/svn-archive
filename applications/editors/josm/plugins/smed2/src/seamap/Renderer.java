@@ -53,7 +53,7 @@ public class Renderer {
 	
 	public static Object getAttVal(Feature feature, Obj obj, int idx, Att att) {
 		AttMap atts = getAtts(feature, obj, idx);
-		if (atts == null) return  S57val.nullVal(att);
+		if (atts == null) return S57val.nullVal(att);
 		else {
 			AttItem item = atts.get(att);
 			if (item == null) return S57val.nullVal(att);
@@ -61,32 +61,52 @@ public class Renderer {
 		}
 	}
 
+	public static double calcArea(Feature feature) {
+	  if (feature.flag == Fflag.AREA) {
+			ArrayList<Long> way = map.ways.get(feature.refs);
+			Coord coord = map.nodes.get(way.get(0));
+	    double llat = coord.lat;
+	    double llon = coord.lon;
+	    double area = 0.0;
+			for (long node : way) {
+				coord = map.nodes.get(node);
+	      area += ((llon * coord.lat) - (llat * coord.lon));
+	      llat = coord.lat;
+	      llon = coord.lon;
+	    }
+	    return Math.abs(area) / 2.0 * 60.0 * 60.0;
+	  }
+	  return 0.0;
+	}
+
 	public static Coord findCentroid(Feature feature) {
-    double slon = 0.0;
-    double slat = 0.0;
-    double sarc = 0.0;
-    double llon = 0.0;
-    double llat = 0.0;
-		if (feature.flag == Fflag.NODE) {
-			return map.nodes.get(feature.refs);
-		}
+		Coord coord;
 		ArrayList<Long> way = map.ways.get(feature.refs);
-		if (feature.flag == Fflag.WAY) {
-			llon = map.nodes.get(way.get(1)).lon;
-			llat = map.nodes.get(way.get(1)).lat;
-		} else {
-			llon = map.nodes.get(way.get(0)).lon;
-			llat = map.nodes.get(way.get(0)).lat;
+		switch (feature.flag) {
+		case NODE:
+			return map.nodes.get(feature.refs);
+		case WAY:
+			coord = map.nodes.get(way.get(1));
+			break;
+		case AREA:
+		default:
+			coord = map.nodes.get(way.get(0));
 		}
+    double slat = 0.0;
+    double slon = 0.0;
+    double sarc = 0.0;
+    double llat = coord.lat;
+    double llon = coord.lon;
 		for (long node : way) {
-      double lon = map.nodes.get(node).lon;
-      double lat = map.nodes.get(node).lat;
+			coord = map.nodes.get(node);
+      double lon = coord.lon;
+      double lat = coord.lat;
       double arc = Math.sqrt(Math.pow((lon-llon), 2) + Math.pow((lat-llat), 2));
-      slon += (lon * arc);
       slat += (lat * arc);
+      slon += (lon * arc);
       sarc += arc;
-      llon = lon;
       llat = lat;
+      llon = lon;
 		}
 		return map.new Coord((sarc > 0.0 ? slat/sarc : 0.0), (sarc > 0.0 ? slon/sarc : 0.0));
 	}

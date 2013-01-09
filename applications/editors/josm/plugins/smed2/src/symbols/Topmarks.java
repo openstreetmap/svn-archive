@@ -12,13 +12,15 @@ package symbols;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.EnumMap;
 
-import symbols.Symbols.Instr;
-import symbols.Symbols.Prim;
+import s57.S57val.*;
+import symbols.Symbols.*;
 
 public class Topmarks {
 	
@@ -225,4 +227,18 @@ public class Topmarks {
 		p.lineTo(12.4,-54.2); p.lineTo(19.3,-47.3); p.lineTo(7.3,-35.0); p.lineTo(19.3,-22.6); p.lineTo(12.4,-15.7); p.closePath();
 		TopX.add(new Instr(Prim.PLIN, p));
 	}
+	
+	public static final EnumMap<BoySHP, Delta> Buoys = new EnumMap<BoySHP, Delta>(BoySHP.class);
+	static {
+		Buoys.put(BoySHP.BOY_PILR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
+		Buoys.put(BoySHP.BOY_SPAR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
+		Buoys.put(BoySHP.BOY_CAN, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		Buoys.put(BoySHP.BOY_CONE, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		Buoys.put(BoySHP.BOY_SPHR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		Buoys.put(BoySHP.BOY_BARL, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		Buoys.put(BoySHP.BOY_SUPR, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0))); 
+		Buoys.put(BoySHP.BOY_ICE, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -25.0))); 
+	}
+	public static final Delta Floats = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
+
 }

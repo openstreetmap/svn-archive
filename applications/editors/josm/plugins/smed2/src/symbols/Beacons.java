@@ -11,6 +11,7 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
@@ -60,6 +61,25 @@ public class Beacons {
 		Cairn.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-43,-40,40,40)));
 		Cairn.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-18,-70,36,36)));
 	}
+	public static final ArrayList<Instr> FogSignal = new ArrayList<Instr>();
+	static {
+		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		FogSignal.add(new Instr(Prim.FILL, Color.black));
+		FogSignal.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
+		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(10.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		FogSignal.add(new Instr(Prim.FILL, new Color(0xd400d4)));
+		FogSignal.add(new Instr(Prim.EARC, new Arc2D.Double(-120.0,-120.0,240.0,240.0,190.0,50.0,Arc2D.OPEN)));
+		FogSignal.add(new Instr(Prim.EARC, new Arc2D.Double(-92.5,-92.5,185.0,185.0,190.0,50.0,Arc2D.OPEN)));
+		FogSignal.add(new Instr(Prim.EARC, new Arc2D.Double(-65.0,-65.0,130.0,130.0,190.0,50.0,Arc2D.OPEN)));
+	}
+	public static final ArrayList<Instr> LightFlare = new ArrayList<Instr>();
+	static {
+		LightFlare.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-3,-3,6,6)));
+		Path2D.Double p = new Path2D.Double();
+		p.moveTo(0.0,-25.0); p.lineTo(15.0,-95.0); p.curveTo(20.0,-123.0,-20.0,-123.0,-15.0,-95.0);
+		p.closePath();
+		LightFlare.add(new Instr(Prim.PGON, p));
+	}
 	public static final ArrayList<Instr> LightMajor = new ArrayList<Instr>();
 	static {
 		LightMajor.add(new Instr(Prim.FILL, Color.black));
@@ -94,6 +114,12 @@ public class Beacons {
 		PerchStarboard.add(new Instr(Prim.LINE, new Line2D.Double(25,-40,0,-68.7)));
 		PerchStarboard.add(new Instr(Prim.LINE, new Line2D.Double(-25,-40,0,-68.7)));
 	}
+	public static final ArrayList<Instr> RadarStation = new ArrayList<Instr>();
+	static {
+		RadarStation.add(new Instr(Prim.STRK, new BasicStroke(2.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		RadarStation.add(new Instr(Prim.FILL, new Color(0xd400d4)));
+		RadarStation.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-125,-125,250,250)));
+	}
 	public static final ArrayList<Instr> Stake = new ArrayList<Instr>();
 	static {
 		Stake.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
@@ -110,7 +136,7 @@ public class Beacons {
 		colours.add(new Instr(Prim.H4, p));
 		p = new Path2D.Double(); p.moveTo(-2.0,-17.5); p.lineTo(-2.0,-35.0); p.lineTo(2.0,-35.0); p.lineTo(2.0,-17.5); p.closePath();
 		colours.add(new Instr(Prim.H5, p));
-    Stake.add(new Instr(Prim.COLR, colours));
+		Stake.add(new Instr(Prim.COLR, colours));
 		Stake.add(new Instr(Prim.FILL, Color.black));
 		Stake.add(new Instr(Prim.LINE, new Line2D.Double(-10,0,10,0)));
 	}

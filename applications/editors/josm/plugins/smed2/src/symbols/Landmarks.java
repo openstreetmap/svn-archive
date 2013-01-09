@@ -121,16 +121,6 @@ public class Landmarks {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(0.0,-150.0); p.lineTo(25.0,0.0);
 		Mast.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> RadioMast = new ArrayList<Instr>();
-	static {
-		RadioMast.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Mast, 1.0, 0, 0, null, null)));
-		RadioMast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL)));
-		RadioMast.add(new Instr(Prim.FILL, Color.black));
-		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,45.0,-90.0,Arc2D.OPEN)));
-		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,45.0,-90.0,Arc2D.OPEN)));
-		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,225.0,-90.0,Arc2D.OPEN)));
-		RadioMast.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,225.0,-90.0,Arc2D.OPEN)));
-	}
 	public static final ArrayList<Instr> Monument = new ArrayList<Instr>();
 	static {
 		Monument.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
@@ -146,6 +136,15 @@ public class Landmarks {
 		Platform.add(new Instr(Prim.FILL, Color.black));
 		Platform.add(new Instr(Prim.RECT, new Rectangle2D.Double(-48,-48,96,96)));
 		Platform.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
+	}
+	public static final ArrayList<Instr> RadioTV = new ArrayList<Instr>();
+	static {
+		RadioTV.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL)));
+		RadioTV.add(new Instr(Prim.FILL, Color.black));
+		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,45.0,-90.0,Arc2D.OPEN)));
+		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,45.0,-90.0,Arc2D.OPEN)));
+		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,225.0,-90.0,Arc2D.OPEN)));
+		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,225.0,-90.0,Arc2D.OPEN)));
 	}
 	public static final ArrayList<Instr> Spire = new ArrayList<Instr>();
 	static {
@@ -219,7 +218,7 @@ public class Landmarks {
 		Shapes.put(CatLMK.LMK_MAST, Landmarks.Mast); Shapes.put(CatLMK.LMK_WNDS, Landmarks.Windsock); Shapes.put(CatLMK.LMK_MNMT, Landmarks.Monument);
 		Shapes.put(CatLMK.LMK_CLMN, Landmarks.Monument); Shapes.put(CatLMK.LMK_MEML, Landmarks.Monument); Shapes.put(CatLMK.LMK_OBLK, Landmarks.Monument);
 		Shapes.put(CatLMK.LMK_STAT, Landmarks.Monument); Shapes.put(CatLMK.LMK_CROS, Landmarks.Cross); Shapes.put(CatLMK.LMK_DOME, Landmarks.Dome);
-		Shapes.put(CatLMK.LMK_RADR, Landmarks.RadioMast); Shapes.put(CatLMK.LMK_TOWR, Landmarks.LandTower); Shapes.put(CatLMK.LMK_WNDM, Landmarks.Windmill);
+		Shapes.put(CatLMK.LMK_RADR, Landmarks.Mast); Shapes.put(CatLMK.LMK_TOWR, Landmarks.LandTower); Shapes.put(CatLMK.LMK_WNDM, Landmarks.Windmill);
 		Shapes.put(CatLMK.LMK_WNDG, Landmarks.WindMotor); Shapes.put(CatLMK.LMK_SPIR, Landmarks.Spire); Shapes.put(CatLMK.LMK_BLDR, Beacons.Cairn);
 		Shapes.put(CatLMK.LMK_MNRT, Landmarks.Minaret); Shapes.put(CatLMK.LMK_WTRT, Landmarks.WaterTower);
 	}
@@ -228,8 +227,8 @@ public class Landmarks {
 	static {
 		Funcs.put(FncFNC.FNC_CHCH, Landmarks.Church); Funcs.put(FncFNC.FNC_CHPL, Landmarks.Church); Funcs.put(FncFNC.FNC_TMPL, Landmarks.Temple);
 		Funcs.put(FncFNC.FNC_PGDA, Landmarks.Temple); Funcs.put(FncFNC.FNC_SHSH, Landmarks.Temple); Funcs.put(FncFNC.FNC_BTMP, Landmarks.Temple);
-		Funcs.put(FncFNC.FNC_MOSQ, Landmarks.Minaret); Funcs.put(FncFNC.FNC_MRBT, Landmarks.Spire); Funcs.put(FncFNC.FNC_COMM, Landmarks.RadioMast);
-		Funcs.put(FncFNC.FNC_TV, Landmarks.RadioMast); Funcs.put(FncFNC.FNC_RADO, Landmarks.RadioMast); Funcs.put(FncFNC.FNC_RADR, Landmarks.RadioMast);
-		Funcs.put(FncFNC.FNC_LGHT, Beacons.LightMajor); Funcs.put(FncFNC.FNC_MCWV, Landmarks.RadioMast);
+		Funcs.put(FncFNC.FNC_MOSQ, Landmarks.Minaret); Funcs.put(FncFNC.FNC_MRBT, Landmarks.Spire); Funcs.put(FncFNC.FNC_COMM, Landmarks.RadioTV);
+		Funcs.put(FncFNC.FNC_TV, Landmarks.RadioTV); Funcs.put(FncFNC.FNC_RADO, Landmarks.RadioTV); Funcs.put(FncFNC.FNC_RADR, Landmarks.RadioTV);
+		Funcs.put(FncFNC.FNC_LGHT, Beacons.LightMajor); Funcs.put(FncFNC.FNC_MCWV, Landmarks.RadioTV);
 	}
 }

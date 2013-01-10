@@ -15,12 +15,10 @@ import s57.S57val.*;
 import s57.S57att.*;
 import s57.S57obj.*;
 
+import seamap.SeaMap.AttItem;
 import seamap.SeaMap.*;
-import symbols.Beacons;
-import symbols.Buoys;
-import symbols.Harbours;
-import symbols.Landmarks;
-import symbols.Symbols.Instr;
+import symbols.*;
+import symbols.Symbols.*;
 
 public class Rules {
 
@@ -118,14 +116,14 @@ public class Rules {
 	private static void landmarks(ArrayList<Feature> features) {
 		for (Feature feature : features) {
 			ArrayList<CatLMK> cats = (ArrayList<CatLMK>) Renderer.getAttVal(feature, feature.type, 0, Att.CATLMK);
-			ArrayList<Instr> catSym = Landmarks.Shapes.get(cats.get(0));
+			Symbol catSym = Landmarks.Shapes.get(cats.get(0));
 			ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) Renderer.getAttVal(feature, feature.type, 0, Att.FUNCTN);
-			ArrayList<Instr> fncSym = Landmarks.Funcs.get(fncs.get(0));
+			Symbol fncSym = Landmarks.Funcs.get(fncs.get(0));
 			if ((fncs.get(0) == FncFNC.FNC_CHCH) && (cats.get(0) == CatLMK.LMK_TOWR)) catSym = Landmarks.ChurchTower;
 			if ((cats.get(0) == CatLMK.LMK_UNKN) && (fncs.get(0) == FncFNC.FNC_UNKN) && (feature.objs.get(Obj.LIGHTS) != null)) catSym = Beacons.LightMajor;
 			if (cats.get(0) == CatLMK.LMK_RADR) fncSym = Landmarks.RadioTV;
-			Renderer.symbol(feature, catSym, feature.type);
-			Renderer.symbol(feature, fncSym, feature.type);
+			Renderer.symbol(feature, catSym, feature.type, null);
+			Renderer.symbol(feature, fncSym, feature.type, null);
 		}
 	}
 	private static void moorings(ArrayList<Feature> features) {
@@ -133,19 +131,19 @@ public class Rules {
 			CatMOR cat = (CatMOR) Renderer.getAttVal(feature, feature.type, 0, Att.CATMOR);
 			switch (cat) {
 			case MOR_DLPN:
-				Renderer.symbol(feature, Harbours.Dolphin, feature.type);
+				Renderer.symbol(feature, Harbours.Dolphin, feature.type, null);
 				break;
 			case MOR_DDPN:
-				Renderer.symbol(feature, Harbours.DeviationDolphin, feature.type);
+				Renderer.symbol(feature, Harbours.DeviationDolphin, feature.type, null);
 				break;
 			case MOR_BLRD:
 			case MOR_POST:
-				Renderer.symbol(feature, Harbours.Bollard, feature.type);
+				Renderer.symbol(feature, Harbours.Bollard, feature.type, null);
 				break;
 			case MOR_BUOY:
 				BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
 				if (shape == BoySHP.BOY_UNKN) shape = BoySHP.BOY_SPHR;
-				Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type);
+				Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null);
 				break;
 			}
 		}
@@ -159,11 +157,11 @@ public class Rules {
 		for (Feature feature : features) {
 			switch (feature.type) {
 			case LITMAJ:
-				Renderer.symbol(feature, Beacons.LightMajor, feature.type);
+				Renderer.symbol(feature, Beacons.LightMajor, feature.type, null);
 				break;
 			case LITMIN:
 			case LIGHTS:
-				Renderer.symbol(feature, Beacons.LightMinor, feature.type);
+				Renderer.symbol(feature, Beacons.LightMinor, feature.type, null);
 				break;
 			}
 		}
@@ -173,22 +171,22 @@ public class Rules {
 			switch (feature.type) {
 			case SISTAT:
 			case SISTAW:
-				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type, null);
 				break;
 			case RDOSTA:
-				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type, null);
 				break;
 			case RADSTA:
-				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type, null);
 				break;
 			case PILBOP:
-				Renderer.symbol(feature, Harbours.SignalStation, feature.type);
+				Renderer.symbol(feature, Harbours.SignalStation, feature.type, null);
 				break;
 			case CGUSTA:
-//			Renderer.symbol(feature, Harbours.CGuardStation, feature.type);
+//			Renderer.symbol(feature, Harbours.CGuardStation, feature.type, null);
 			break;
 			case RSCSTA:
-//				Renderer.symbol(feature, Harbours.RescueStation, feature.type);
+//				Renderer.symbol(feature, Harbours.RescueStation, feature.type, null);
 				break;
 			}
 		}
@@ -197,26 +195,31 @@ public class Rules {
 		for (Feature feature : features) {
 			switch (feature.type) {
 			case LITVES:
-				Renderer.symbol(feature, Buoys.Super, feature.type);
+				Renderer.symbol(feature, Buoys.Super, feature.type, null);
 				break;
 			case LITFLT:
-				Renderer.symbol(feature, Buoys.Float, feature.type);
+				Renderer.symbol(feature, Buoys.Float, feature.type, null);
 				break;
 			case BOYINB:
-				Renderer.symbol(feature, Buoys.Storage, feature.type);
+				Renderer.symbol(feature, Buoys.Storage, feature.type, null);
 				break;
 			}
+			if (feature.objs.get(Obj.TOPMAR) != null)
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Floats);
 		}
 	}
 	private static void platforms(ArrayList<Feature> features) {
 		for (Feature feature : features) {
-			Renderer.symbol(feature, Landmarks.Platform, feature.type);
+			Renderer.symbol(feature, Landmarks.Platform, feature.type, null);
 		}
 	}
 	private static void buoys(ArrayList<Feature> features) {
 		for (Feature feature : features) {
 			BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
-			Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type);
+			Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null);
+			if (feature.objs.get(Obj.TOPMAR) != null) {
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Buoys.get(shape));
+			}
 		}
 	}
 	private static void beacons(ArrayList<Feature> features) {
@@ -227,21 +230,23 @@ public class Rules {
 				switch (cat) {
 				case LAM_PORT:
 					if (shape == BcnSHP.BCN_PRCH)
-						Renderer.symbol(feature, Beacons.PerchPort, feature.type);
+						Renderer.symbol(feature, Beacons.PerchPort, feature.type, null);
 					else
-						Renderer.symbol(feature, Beacons.WithyPort, feature.type);
+						Renderer.symbol(feature, Beacons.WithyPort, feature.type, null);
 					break;
 				case LAM_STBD:
 					if (shape == BcnSHP.BCN_PRCH)
-						Renderer.symbol(feature, Beacons.PerchStarboard, feature.type);
+						Renderer.symbol(feature, Beacons.PerchStarboard, feature.type, null);
 					else
-						Renderer.symbol(feature, Beacons.WithyStarboard, feature.type);
+						Renderer.symbol(feature, Beacons.WithyStarboard, feature.type, null);
 					break;
 				default:
-					Renderer.symbol(feature, Beacons.Stake, feature.type);
+					Renderer.symbol(feature, Beacons.Stake, feature.type, null);
 				}
 			} else {
-				Renderer.symbol(feature, Beacons.Shapes.get(shape), feature.type);
+				Renderer.symbol(feature, Beacons.Shapes.get(shape), feature.type, null);
+				if (feature.objs.get(Obj.TOPMAR) != null)
+					Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Beacons);
 			}
 		}
 	}

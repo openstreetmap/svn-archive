@@ -96,15 +96,23 @@ public class Symbols {
 		}
 	}
 
-	public static class Symbol {
-		ArrayList<Instr> instr;
+	public static class Symbol extends ArrayList<Instr> {
+		private static final long serialVersionUID = 1L;
+
+		public Symbol() {
+			super();
+		}
+	}
+	
+	public static class SubSymbol {
+		Symbol instr;
 		double scale;
 		double x;
 		double y;
 		Delta delta;
 		Scheme scheme;
 
-		public Symbol(ArrayList<Instr> iinstr, double iscale, double ix, double iy, Delta idelta, Scheme ischeme) {
+		public SubSymbol(Symbol iinstr, double iscale, double ix, double iy, Delta idelta, Scheme ischeme) {
 			instr = iinstr;
 			scale = iscale;
 			x = ix;
@@ -114,7 +122,7 @@ public class Symbols {
 		}
 	}
 
-	public static void drawSymbol(Graphics2D g2, ArrayList<Instr> symbol, double scale, double x, double y, Delta dd, Scheme cs) {
+	public static void drawSymbol(Graphics2D g2, Symbol symbol, double scale, double x, double y, Delta dd, Scheme cs) {
 		int pn = 0;
 		int cn = 0;
 		if (cs != null) {
@@ -259,7 +267,7 @@ public class Symbols {
 					g2.fill((RectangularShape) item.params);
 					break;
 				case SYMB:
-					Symbol s = (Symbol) item.params;
+					SubSymbol s = (SubSymbol) item.params;
 					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
 					break;
 				case FONT:

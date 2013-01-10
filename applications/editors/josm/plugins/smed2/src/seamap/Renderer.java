@@ -111,11 +111,11 @@ public class Renderer {
 		return map.new Coord((sarc > 0.0 ? slat/sarc : 0.0), (sarc > 0.0 ? slon/sarc : 0.0));
 	}
 	
-	public static void symbol(Feature feature, ArrayList<Instr> symbol, Obj obj) {
+	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta) {
 		Point2D point = helper.getPoint(findCentroid(feature));
 		ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
 		ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
-		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, new Scheme(pattern, colours));
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(pattern, colours));
 	}
 	
 }

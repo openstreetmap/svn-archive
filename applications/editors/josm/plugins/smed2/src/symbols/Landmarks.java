@@ -16,7 +16,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.EnumMap;
 
 import s57.S57val.*;
@@ -24,7 +23,7 @@ import symbols.Symbols.*;
 
 
 public class Landmarks {
-	private static final ArrayList<Instr> Base = new ArrayList<Instr>();
+	private static final Symbol Base = new Symbol();
 	static {
 		Base.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Base.add(new Instr(Prim.FILL, Color.black));
@@ -33,9 +32,9 @@ public class Landmarks {
 		Base.add(new Instr(Prim.LINE, new Line2D.Double(10,0,35,0)));
 	}
 	
-	public static final ArrayList<Instr> Chimney = new ArrayList<Instr>();
+	public static final Symbol Chimney = new Symbol();
 	static {
-		Chimney.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Chimney.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Chimney.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Chimney.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(-10.0,-120.0); p.lineTo(10.0,-120.0); p.lineTo(25.0,0.0);
@@ -44,7 +43,7 @@ public class Landmarks {
 		p.moveTo(11.0,-128.0); p.curveTo(13.4,-132.0,20.0,-132.0,20.0,-136.0);
 		Chimney.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> Church = new ArrayList<Instr>();
+	public static final Symbol Church = new Symbol();
 	static {
 		Church.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(10.0,-10.0); p.lineTo(37.0,-10.0); p.quadTo(48.0,-10.0,48.0,-21.0); p.lineTo(50.0,-21.0); p.lineTo(50.0,21.0);
@@ -54,48 +53,48 @@ public class Landmarks {
 		p.quadTo(-10.0,-48.0,-21.0,-48.0); p.lineTo(-21.0,-50.0); p.lineTo(21.0,-50.0); p.lineTo(21.0,-48.0); p.quadTo(10.0,-48.0,10.0,-37.0); p.closePath();
 		Church.add(new Instr(Prim.PGON, p));
 	}
-	public static final ArrayList<Instr> ChurchTower = new ArrayList<Instr>();
+	public static final Symbol ChurchTower = new Symbol();
 	static {
 		ChurchTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		ChurchTower.add(new Instr(Prim.FILL, Color.black));
 		ChurchTower.add(new Instr(Prim.RECT, new Rectangle2D.Double(-36,-36,72,72)));
 		ChurchTower.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-2,-2,4,4)));
 	}
-	public static final ArrayList<Instr> Cross = new ArrayList<Instr>();
+	public static final Symbol Cross = new Symbol();
 	static {
-		Cross.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Cross.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Cross.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Cross.add(new Instr(Prim.FILL, Color.black));
 		Cross.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-150)));
 		Cross.add(new Instr(Prim.LINE, new Line2D.Double(-30,-115,30,-115)));
 	}
-	public static final ArrayList<Instr> DishAerial = new ArrayList<Instr>();
+	public static final Symbol DishAerial = new Symbol();
 	static {
-		DishAerial.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		DishAerial.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		DishAerial.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
 		DishAerial.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-7.8,-6.0); p.lineTo(0.0,-62.0); p.lineTo(7.8,-6.0); p.moveTo(18.0,-109.0); p.lineTo(25.0,-113.0);
 		p.moveTo(-9.5,-157.0); p.curveTo(-60.7,-125.5,-16.5,-33.9,44.9,-61.7); p.closePath();
 		DishAerial.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> Dome = new ArrayList<Instr>();
+	public static final Symbol Dome = new Symbol();
 	static {
 		Dome.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Dome.add(new Instr(Prim.FILL, Color.black));
 		Dome.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-36,-36,72,72)));
 		Dome.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
-	public static final ArrayList<Instr> Flagstaff = new ArrayList<Instr>();
+	public static final Symbol Flagstaff = new Symbol();
 	static {
-		Flagstaff.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Flagstaff.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Flagstaff.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Flagstaff.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-10.0); p.lineTo(0.0,-150.0); p.moveTo(0.0,-140.0); p.lineTo(40.0,-140.0); p.lineTo(40.0,-100.0); p.lineTo(0.0,-100.0);
 		Flagstaff.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> FlareStack = new ArrayList<Instr>();
+	public static final Symbol FlareStack = new Symbol();
 	static {
-		FlareStack.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		FlareStack.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		FlareStack.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		FlareStack.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-7.8,-6.0); p.lineTo(-7.8,-100.0); p.lineTo(7.8,-100.0); p.lineTo(7.8,-6.0);
@@ -104,40 +103,40 @@ public class Landmarks {
 		p = new Path2D.Double(); p.moveTo(21.6,-169.6); p.curveTo(-22.0,-132.4,-27.4,-103.5,3.0,-100.0); p.curveTo(39.0,-118.0,-4.0,-141.0,21.6,-169.6);
 		FlareStack.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> LandTower = new ArrayList<Instr>();
+	public static final Symbol LandTower = new Symbol();
 	static {
-		LandTower.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		LandTower.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		LandTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		LandTower.add(new Instr(Prim.FILL, Color.black));
 		LandTower.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-120)));
 		LandTower.add(new Instr(Prim.LINE, new Line2D.Double(25,0,15,-120)));
 		LandTower.add(new Instr(Prim.RECT, new Rectangle2D.Double(-15,-150,30,30)));
 	}
-	public static final ArrayList<Instr> Mast = new ArrayList<Instr>();
+	public static final Symbol Mast = new Symbol();
 	static {
-		Mast.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Mast.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Mast.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)));
 		Mast.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0.0); p.lineTo(0.0,-150.0); p.lineTo(25.0,0.0);
 		Mast.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> Monument = new ArrayList<Instr>();
+	public static final Symbol Monument = new Symbol();
 	static {
-		Monument.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Monument.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Monument.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Monument.add(new Instr(Prim.FILL, Color.black));
 		Monument.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-105)));
 		Monument.add(new Instr(Prim.LINE, new Line2D.Double(25,0,15,-105)));
 		Monument.add(new Instr(Prim.EARC, new Arc2D.Double(-25.0,-150.0,50.0,50.0,233.0,-285.0,Arc2D.OPEN)));
 	}
-	public static final ArrayList<Instr> Platform = new ArrayList<Instr>();
+	public static final Symbol Platform = new Symbol();
 	static {
 		Platform.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Platform.add(new Instr(Prim.FILL, Color.black));
 		Platform.add(new Instr(Prim.RECT, new Rectangle2D.Double(-48,-48,96,96)));
 		Platform.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
-	public static final ArrayList<Instr> RadioTV = new ArrayList<Instr>();
+	public static final Symbol RadioTV = new Symbol();
 	static {
 		RadioTV.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL)));
 		RadioTV.add(new Instr(Prim.FILL, Color.black));
@@ -146,22 +145,22 @@ public class Landmarks {
 		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-30.0,-180.0,60.0,60.0,225.0,-90.0,Arc2D.OPEN)));
 		RadioTV.add(new Instr(Prim.EARC, new Arc2D.Double(-45.0,-195.0,90.0,90.0,225.0,-90.0,Arc2D.OPEN)));
 	}
-	public static final ArrayList<Instr> Spire = new ArrayList<Instr>();
+	public static final Symbol Spire = new Symbol();
 	static {
 		Spire.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Spire.add(new Instr(Prim.FILL, Color.black));
 		Spire.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-25,-25,50,50)));
 		Spire.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-4,-4,8,8)));
 	}
-	public static final ArrayList<Instr> Minaret = new ArrayList<Instr>();
+	public static final Symbol Minaret = new Symbol();
 	static {
-		Minaret.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Spire, 1.0, 0, 0, null, null)));
+		Minaret.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Spire, 1.0, 0, 0, null, null)));
 		Minaret.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Minaret.add(new Instr(Prim.LINE, new Line2D.Double(0,-25,0,-50)));
 		Minaret.add(new Instr(Prim.STRK, new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Minaret.add(new Instr(Prim.EARC, new Arc2D.Double(-40.0,-110.0,80.0,60.0,180.0,180.0,Arc2D.OPEN)));
 	}
-	public static final ArrayList<Instr> Temple = new ArrayList<Instr>();
+	public static final Symbol Temple = new Symbol();
 	static {
 		Temple.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Temple.add(new Instr(Prim.RECT, new Rectangle2D.Double(-25,-15,50,30)));
@@ -169,18 +168,18 @@ public class Landmarks {
 		Temple.add(new Instr(Prim.LINE, new Line2D.Double(-35,-21,35,21)));
 		Temple.add(new Instr(Prim.LINE, new Line2D.Double(-35,21,35,-21)));
 	}
-	public static final ArrayList<Instr> WaterTower = new ArrayList<Instr>();
+	public static final Symbol WaterTower = new Symbol();
 	static {
-		WaterTower.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		WaterTower.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		WaterTower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WaterTower.add(new Instr(Prim.FILL, Color.black));
 		WaterTower.add(new Instr(Prim.LINE, new Line2D.Double(-25,0,-15,-120)));
 		WaterTower.add(new Instr(Prim.LINE, new Line2D.Double(25,0,15,-120)));
 		WaterTower.add(new Instr(Prim.RECT, new Rectangle2D.Double(-25,-150,50,30)));
 	}
-	public static final ArrayList<Instr> WindMotor = new ArrayList<Instr>();
+	public static final Symbol WindMotor = new Symbol();
 	static {
-		WindMotor.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		WindMotor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		WindMotor.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		WindMotor.add(new Instr(Prim.FILL, Color.black));
 		WindMotor.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-90)));
@@ -188,7 +187,7 @@ public class Landmarks {
 		WindMotor.add(new Instr(Prim.LINE, new Line2D.Double(0,-90,-14,-116.6)));
 		WindMotor.add(new Instr(Prim.LINE, new Line2D.Double(0,-90,-14.3,-66.7)));
 	}
-	public static final ArrayList<Instr> Windmill = new ArrayList<Instr>();
+	public static final Symbol Windmill = new Symbol();
 	static {
 		Windmill.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Windmill.add(new Instr(Prim.FILL, Color.black));
@@ -196,9 +195,9 @@ public class Landmarks {
 		Windmill.add(new Instr(Prim.LINE, new Line2D.Double(-30,-42,30,10)));
 		Windmill.add(new Instr(Prim.LINE, new Line2D.Double(-30,10,30,-42)));
 	}
-	public static final ArrayList<Instr> Windsock = new ArrayList<Instr>();
+	public static final Symbol Windsock = new Symbol();
 	static {
-		Windsock.add(new Instr(Prim.SYMB, new Symbols.Symbol(Landmarks.Base, 1.0, 0, 0, null, null)));
+		Windsock.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Landmarks.Base, 1.0, 0, 0, null, null)));
 		Windsock.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Windsock.add(new Instr(Prim.FILL, Color.black));
 		Windsock.add(new Instr(Prim.LINE, new Line2D.Double(0,-10,0,-100)));
@@ -211,7 +210,7 @@ public class Landmarks {
 		Windsock.add(new Instr(Prim.PLIN, p));
 	}
 	
-	public static final EnumMap<CatLMK, ArrayList<Instr>> Shapes = new EnumMap<CatLMK, ArrayList<Instr>>(CatLMK.class);
+	public static final EnumMap<CatLMK, Symbol> Shapes = new EnumMap<CatLMK, Symbol>(CatLMK.class);
 	static {
 		Shapes.put(CatLMK.LMK_CARN, Beacons.Cairn); Shapes.put(CatLMK.LMK_CHMY, Landmarks.Chimney);
 		Shapes.put(CatLMK.LMK_DISH, Landmarks.DishAerial); Shapes.put(CatLMK.LMK_FLAG, Landmarks.Flagstaff); Shapes.put(CatLMK.LMK_FLAR, Landmarks.FlareStack);
@@ -223,7 +222,7 @@ public class Landmarks {
 		Shapes.put(CatLMK.LMK_MNRT, Landmarks.Minaret); Shapes.put(CatLMK.LMK_WTRT, Landmarks.WaterTower);
 	}
 
-	public static final EnumMap<FncFNC, ArrayList<Instr>> Funcs = new EnumMap<FncFNC, ArrayList<Instr>>(FncFNC.class);
+	public static final EnumMap<FncFNC, Symbol> Funcs = new EnumMap<FncFNC, Symbol>(FncFNC.class);
 	static {
 		Funcs.put(FncFNC.FNC_CHCH, Landmarks.Church); Funcs.put(FncFNC.FNC_CHPL, Landmarks.Church); Funcs.put(FncFNC.FNC_TMPL, Landmarks.Temple);
 		Funcs.put(FncFNC.FNC_PGDA, Landmarks.Temple); Funcs.put(FncFNC.FNC_SHSH, Landmarks.Temple); Funcs.put(FncFNC.FNC_BTMP, Landmarks.Temple);

@@ -13,19 +13,18 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.geom.*;
-import java.util.ArrayList;
 
 import symbols.Symbols.*;
 
 public class Areas {
-	public static final ArrayList<Instr> Plane = new ArrayList<Instr>();
+	public static final Symbol Plane = new Symbol();
 	static {
 		Plane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(40,20); p.lineTo(50,10); p.lineTo(27.0,13.3); p.lineTo(23.7,6.8); p.lineTo(40.0,5.0); p.curveTo(55,4,55,-9,40,-10);
 		p.quadTo(31,-11,30,-15); p.lineTo(-30,2); p.quadTo(-35,-12,-45,-15); p.quadTo(-56,-3,-50,15); p.lineTo(18.4,7.3); p.lineTo(21.7,14); p.lineTo(-20,20); p.closePath();
 		Plane.add(new Instr(Prim.PGON, p));
 	}
-	public static final ArrayList<Instr> Cable = new ArrayList<Instr>();
+	public static final Symbol Cable = new Symbol();
 	static {
 		Cable.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,60)));
 		Cable.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
@@ -33,7 +32,7 @@ public class Areas {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,0); p.curveTo(-13,-13,-13,-17,0,-30); p.curveTo(13,-43,13,-47,0,-60);
 		Cable.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> LaneArrow = new ArrayList<Instr>();
+	public static final Symbol LaneArrow = new Symbol();
 	static {
 		LaneArrow.add(new Instr(Prim.STRK, new BasicStroke(10.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		LaneArrow.add(new Instr(Prim.FILL, new Color(0x80c480ff, true)));
@@ -41,17 +40,17 @@ public class Areas {
 		p.lineTo(0,-240); p.lineTo(-40,-195); p.lineTo(-15,-195); p.lineTo(-15,0); p.closePath();
 		LaneArrow.add(new Instr(Prim.PLIN, p));
 	}
-	public static final ArrayList<Instr> LineAnchor = new ArrayList<Instr>();
+	public static final Symbol LineAnchor = new Symbol();
 	static {
 		LineAnchor.add(new Instr(Prim.FILL, new Color(0xc480ff)));
-		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.Symbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
+		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
 	}
-	public static final ArrayList<Instr> LinePlane = new ArrayList<Instr>();
+	public static final Symbol LinePlane = new Symbol();
 	static {
 		LinePlane.add(new Instr(Prim.FILL, new Color(0xc480ff)));
-		LinePlane.add(new Instr(Prim.SYMB, new Symbols.Symbol(Areas.Plane, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
+		LinePlane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
 	}
-	public static final ArrayList<Instr> MarineFarm = new ArrayList<Instr>();
+	public static final Symbol MarineFarm = new Symbol();
 	static {
 		MarineFarm.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		MarineFarm.add(new Instr(Prim.FILL, Color.black));
@@ -61,7 +60,7 @@ public class Areas {
 		MarineFarm.add(new Instr(Prim.PLIN, p));
 		MarineFarm.add(new Instr(Prim.RSHP, new Ellipse2D.Double(9,-2,4,4)));
 	}
-	public static final ArrayList<Instr> NoWake = new ArrayList<Instr>();
+	public static final Symbol NoWake = new Symbol();
 	static {
 		NoWake.add(new Instr(Prim.STRK, new BasicStroke(12.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoWake.add(new Instr(Prim.FILL, new Color(0xa30075)));
@@ -71,7 +70,7 @@ public class Areas {
 		NoWake.add(new Instr(Prim.LINE, new Line2D.Double(-60,60,60,-60)));
 		NoWake.add(new Instr(Prim.LINE, new Line2D.Double(-60,-60,60,60)));
 	}
-	public static final ArrayList<Instr> Pipeline = new ArrayList<Instr>();
+	public static final Symbol Pipeline = new Symbol();
 	static {
 		Pipeline.add(new Instr(Prim.BBOX, new Rectangle(-15,-60,30,60)));
 		Pipeline.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
@@ -79,7 +78,7 @@ public class Areas {
 		Pipeline.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-50)));
 		Pipeline.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-10,-60,20,20)));
 	}
-	public static final ArrayList<Instr> Restricted = new ArrayList<Instr>();
+	public static final Symbol Restricted = new Symbol();
 	static {
 		Restricted.add(new Instr(Prim.BBOX, new Rectangle(-15,-30,30,30)));
 		Restricted.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
@@ -87,7 +86,7 @@ public class Areas {
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-30)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,-15,17,-15)));
 	}
-	public static final ArrayList<Instr> Rock = new ArrayList<Instr>();
+	public static final Symbol Rock = new Symbol();
 	static {
 		Rock.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		Rock.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
@@ -98,7 +97,7 @@ public class Areas {
 		Rock.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,20,0)));
 		Rock.add(new Instr(Prim.LINE, new Line2D.Double(0,-20,0,20)));
 	}
-	public static final ArrayList<Instr> RockA = new ArrayList<Instr>();
+	public static final Symbol RockA = new Symbol();
 	static {
 		RockA.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		RockA.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
@@ -113,7 +112,7 @@ public class Areas {
 		RockA.add(new Instr(Prim.RSHP, new Ellipse2D.Double(9,-17,8,8)));
 		RockA.add(new Instr(Prim.RSHP, new Ellipse2D.Double(9,9,8,8)));
 	}
-	public static final ArrayList<Instr> RockC = new ArrayList<Instr>();
+	public static final Symbol RockC = new Symbol();
 	static {
 		RockC.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		RockC.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
@@ -125,15 +124,15 @@ public class Areas {
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(-10,17.3,10,-17.3)));
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(10,17.3,-10,-17.3)));
 	}
-	public static final ArrayList<Instr> Sandwaves = new ArrayList<Instr>();
-	public static final ArrayList<Instr> Seaplane = new ArrayList<Instr>();
+	public static final Symbol Sandwaves = new Symbol();
+	public static final Symbol Seaplane = new Symbol();
 	static {
 		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Seaplane.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Seaplane.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-60,-60,120,120)));
-		Seaplane.add(new Instr(Prim.SYMB, new Symbols.Symbol(Areas.Plane, 1.0, 0, 0, null, null)));
+		Seaplane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 1.0, 0, 0, null, null)));
 	}
-	public static final ArrayList<Instr> WindFarm = new ArrayList<Instr>();
+	public static final Symbol WindFarm = new Symbol();
 	static {
 		WindFarm.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WindFarm.add(new Instr(Prim.FILL, Color.black));
@@ -144,7 +143,7 @@ public class Areas {
 		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,-27.5,-13.8,-3.8)));
 		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,-27.5,-13.8,-53.6)));
 	}
-	public static final ArrayList<Instr> WreckD = new ArrayList<Instr>();
+	public static final Symbol WreckD = new Symbol();
 	static {
 		WreckD.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		WreckD.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-50,-40,100,80)));
@@ -157,7 +156,7 @@ public class Areas {
 		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
 		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(20,-15,20,15)));
 	}
-	public static final ArrayList<Instr> WreckND = new ArrayList<Instr>();
+	public static final Symbol WreckND = new Symbol();
 	static {
 		WreckND.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WreckND.add(new Instr(Prim.FILL, Color.black));
@@ -166,7 +165,7 @@ public class Areas {
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(20,-15,20,15)));
 	}
-	public static final ArrayList<Instr> WreckS = new ArrayList<Instr>();
+	public static final Symbol WreckS = new Symbol();
 	static {
 		WreckS.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WreckS.add(new Instr(Prim.FILL, Color.black));

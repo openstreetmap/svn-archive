@@ -140,6 +140,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                 setZoom(zoomSlider.getValue());
             }
         });
+        zoomSlider.setFocusable(false);
         add(zoomSlider);
         int size = 18;
         try {
@@ -157,6 +158,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                 zoomIn();
             }
         });
+        zoomInButton.setFocusable(false);
         add(zoomInButton);
         try {
             ImageIcon icon = new ImageIcon(JMapViewer.class.getResource("images/minus.png"));
@@ -173,6 +175,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                 zoomOut();
             }
         });
+        zoomOutButton.setFocusable(false);
         add(zoomOutButton);
     }
 

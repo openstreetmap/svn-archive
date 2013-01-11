@@ -65,21 +65,24 @@ public class Renderer {
 	  if (feature.flag == Fflag.AREA) {
 			ArrayList<Long> way = map.ways.get(feature.refs);
 			Coord coord = map.nodes.get(way.get(0));
-	    double llat = coord.lat;
-	    double llon = coord.lon;
-	    double area = 0.0;
+	    double llon = Math.toRadians(coord.lon);
+	    double llat = Math.toRadians(coord.lat);
+	    double sigma = 0.0;
 			for (long node : way) {
 				coord = map.nodes.get(node);
-	      area += ((llon * coord.lat) - (llat * coord.lon));
-	      llat = coord.lat;
-	      llon = coord.lon;
+				double lat = Math.toRadians(coord.lat);
+				double lon = Math.toRadians(coord.lon);
+				sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+				llon = lon;
+				llat = lat;
 	    }
-	    return Math.abs(area) / 2.0 * 60.0 * 60.0;
+	    return Math.abs(sigma) / 2.0 * 3444 * 3444;
 	  }
 	  return 0.0;
 	}
 
 	public static Coord findCentroid(Feature feature) {
+		double tst = calcArea(feature);
 		Coord coord;
 		ArrayList<Long> way = map.ways.get(feature.refs);
 		switch (feature.flag) {
@@ -101,7 +104,7 @@ public class Renderer {
 			coord = map.nodes.get(node);
       double lon = coord.lon;
       double lat = coord.lat;
-      double arc = Math.sqrt(Math.pow((lon-llon), 2) + Math.pow((lat-llat), 2));
+      double arc = (Math.acos(Math.cos(Math.toRadians(lon-llon)) * Math.cos(Math.toRadians(lat-llat))));
       slat += (lat * arc);
       slon += (lon * arc);
       sarc += arc;

@@ -112,7 +112,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
-		editFrame.setVisible(true);
+		editFrame.setVisible(false);
 		panelMain = new PanelMain();
 		editFrame.add(panelMain);
 		panelS57 = new S57dat();
@@ -168,6 +168,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	public void selectionChanged(Collection<? extends OsmPrimitive> selection) {
 		Node nextNode = null;
 		Node node = null;
+		Way nextWay = null;
+		Way way = null;
 
 		if (selection.size() == 0) showFrame.setVisible(false);
 		for (OsmPrimitive osm : selection) {
@@ -178,6 +180,18 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 						node = nextNode;
 						showFrame.setVisible(true);
 						showFrame.showFeature(node, map);
+					}
+				} else {
+					showFrame.setVisible(false);
+				}
+			}
+			else if (osm instanceof Way) {
+				nextWay = (Way) osm;
+				if (selection.size() == 1) {
+					if (nextWay.compareTo(way) != 0) {
+						way = nextWay;
+						showFrame.setVisible(true);
+						showFrame.showFeature(way, map);
 					}
 				} else {
 					showFrame.setVisible(false);

@@ -143,7 +143,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         add(zoomSlider);
         int size = 18;
         try {
-            ImageIcon icon = new ImageIcon(getClass().getResource("images/plus.png"));
+            ImageIcon icon = new ImageIcon(JMapViewer.class.getResource("images/plus.png"));
             zoomInButton = new JButton(icon);
         } catch (Exception e) {
             zoomInButton = new JButton("+");
@@ -159,7 +159,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         });
         add(zoomInButton);
         try {
-            ImageIcon icon = new ImageIcon(getClass().getResource("images/minus.png"));
+            ImageIcon icon = new ImageIcon(JMapViewer.class.getResource("images/minus.png"));
             zoomOutButton = new JButton(icon);
         } catch (Exception e) {
             zoomOutButton = new JButton("-");

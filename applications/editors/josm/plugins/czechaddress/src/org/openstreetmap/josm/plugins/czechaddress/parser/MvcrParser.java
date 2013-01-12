@@ -207,11 +207,12 @@ public class MvcrParser extends XMLParser {
 //  IMPLEMENTING THE DatabaseParser
 //==============================================================================
 
-    static final String URL_DEFAULT = "http://aplikace.mvcr.cz/adresa/adresy.zip";
+    static final String URL_DEFAULT = "http://aplikace.mvcr.cz/adresy/Download.aspx";
     static final String URL_PREFERENCES_KEY = "czechaddress.databaseurl";
 
     static final String[] OLD_URLS = {
-        "http://web.mvcr.cz/adresa/adresy.zip" // Remove around 10.02.2011
+        "http://web.mvcr.cz/adresa/adresy.zip", // Remove around 10.02.2011
+	"http://aplikace.mvcr.cz/adresa/adresy.zip" // Removed around 12.01.2013
     };
 
     @Override

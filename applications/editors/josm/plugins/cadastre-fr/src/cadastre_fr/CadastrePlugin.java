@@ -129,7 +129,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  *                 - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
  *                   of multiple municipalities in parallel.
  * 2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
- *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance 
+ *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
+ * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626. 
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.1";
@@ -242,6 +243,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released
             //cadastreJMenu.add(menuActionBoundaries);
+            cadastreJMenu.add(new JMenuItem(new MenuActionOpenPreferences()));
         }
         setEnabledAll(menuEnabled);
     }

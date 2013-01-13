@@ -1005,6 +1005,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
+    public TileController getTileController() {
+        return tileController;
+    }
+    
     /**
      * Return tile information caching class
      * @see TileLoaderListener#getTileCache()

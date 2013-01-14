@@ -50,12 +50,11 @@ public class Notices {
 	private static final Symbol Speedboat = new Symbol();
 	private static final Symbol Sport = new Symbol();
 	static {
-		Sport.add(new Instr(Prim.FONT, new Font("Arial", Font.BOLD, 15)));
-		Sport.add(new Instr(Prim.TEXT, new Caption("SPORT", (float)-25.0, (float)5.0)));
+		Sport.add(new Instr(Prim.TEXT, new Caption("SPORT", new TextStyle(new Font("Arial", Font.BOLD, 15)), (float)-25.0, (float)5.0)));
 	}
 	private static final Symbol Turn = new Symbol();
 	static {
-		Turn.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Turn.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Turn.add(new Instr(Prim.FILL, Color.black));
 		Turn.add(new Instr(Prim.EARC, new Arc2D.Double(-9.0,-9.0,18.0,18.0,270.0,230.0,Arc2D.OPEN)));
 		Turn.add(new Instr(Prim.EARC, new Arc2D.Double(-20.0,-20.0,40.0,40.0,315.0,-280.0,Arc2D.OPEN)));
@@ -65,8 +64,7 @@ public class Notices {
 	}
 	private static final Symbol VHF = new Symbol();
 	static {
-		VHF.add(new Instr(Prim.FONT, new Font("Arial", Font.BOLD, 20)));
-		VHF.add(new Instr(Prim.TEXT, new Caption("VHF", (float)-20.0, (float)-5.0)));
+		VHF.add(new Instr(Prim.TEXT, new Caption("VHF", new TextStyle(new Font("Arial", Font.BOLD, 20)), (float)-20.0, (float)-5.0)));
 	}
 	private static final Symbol Waterbike = new Symbol();
 	private static final Symbol Waterski = new Symbol();
@@ -76,10 +74,10 @@ public class Notices {
 		NoticeA.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
 		NoticeA.add(new Instr(Prim.FILL, Color.white));
 		NoticeA.add(new Instr(Prim.RSHP, new Rectangle2D.Double(-21,-21,42,42)));
-		NoticeA.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		NoticeA.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		NoticeA.add(new Instr(Prim.FILL, new Color(0xe80000)));
 		NoticeA.add(new Instr(Prim.LINE, new Line2D.Double(-25,-25,25,25)));
-		NoticeA.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeA.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeA.add(new Instr(Prim.FILL, Color.black));
 		NoticeA.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
 	}
@@ -89,7 +87,7 @@ public class Notices {
 		NoticeB.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
 		NoticeB.add(new Instr(Prim.FILL, Color.white));
 		NoticeB.add(new Instr(Prim.RSHP, new Rectangle2D.Double(-21,-21,42,42)));
-		NoticeB.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeB.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeB.add(new Instr(Prim.FILL, Color.black));
 		NoticeB.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
 	}
@@ -97,7 +95,7 @@ public class Notices {
 	static {
 		NoticeE.add(new Instr(Prim.FILL, new Color(0x0000a0)));
 		NoticeE.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
-		NoticeE.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeE.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeE.add(new Instr(Prim.FILL, Color.black));
 		NoticeE.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
 	}
@@ -107,7 +105,7 @@ public class Notices {
 	static {
 		NoticeA1.add(new Instr(Prim.FILL, new Color(0xe80000)));
 		NoticeA1.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
-		NoticeA1.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeA1.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeA1.add(new Instr(Prim.FILL, Color.white));
 		NoticeA1.add(new Instr(Prim.RSHP, new Rectangle2D.Double(-30,-10,60,20)));
 		NoticeA1.add(new Instr(Prim.FILL, Color.black));
@@ -117,7 +115,7 @@ public class Notices {
 	static {
 		NoticeA1a.add(new Instr(Prim.FILL, new Color(0xe80000)));
 		NoticeA1a.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
-		NoticeA1a.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeA1a.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeA1a.add(new Instr(Prim.FILL, Color.white));
 		NoticeA1a.add(new Instr(Prim.RSHP, new Rectangle2D.Double(-29,-10,58,20)));
 		NoticeA1a.add(new Instr(Prim.FILL, Color.black));
@@ -184,7 +182,7 @@ public class Notices {
 	public static final Symbol NoticeA9 = new Symbol();
 	static {
 		NoticeA9.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
-		NoticeA9.add(new Instr(Prim.STRK, new BasicStroke(7.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeA9.add(new Instr(Prim.STRK, new BasicStroke(7, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeA9.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-23,10); p.curveTo(-11,10,-12,4,0,4); p.curveTo(12,4,11,10,23,10);
 		p.moveTo(-23,-3); p.curveTo(-11,-3,-12,-9,0,-9); p.curveTo(12,-9,11,-3,23,-3);
@@ -199,7 +197,7 @@ public class Notices {
 		NoticeA10a.add(new Instr(Prim.FILL, new Color(0xe80000)));
 		p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,0); p.lineTo(0,30); p.closePath();
 		NoticeA10a.add(new Instr(Prim.PGON, p));
-		NoticeA10a.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeA10a.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoticeA10a.add(new Instr(Prim.FILL, Color.black));
 		p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,0); p.lineTo(0,30); p.lineTo(30,0); p.closePath();
 		NoticeA10a.add(new Instr(Prim.PLIN, p));

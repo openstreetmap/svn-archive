@@ -37,49 +37,42 @@ public class SeaMap {
 	}
 
 	public class AttMap extends EnumMap<Att, AttItem> {
-		private static final long serialVersionUID = 1L;
 		public AttMap() {
 			super(Att.class);
 		}
 	}
 	
 	public class ObjTab extends HashMap<Integer, AttMap> {
-		private static final long serialVersionUID = 1L;
 		public ObjTab() {
 			super();
 		}
 	}
 	
 	public class ObjMap extends EnumMap<Obj, ObjTab> {
-		private static final long serialVersionUID = 1L;
 		public ObjMap() {
 			super(Obj.class);
 		}
 	}
 	
 	public class NodeTab extends HashMap<Long, Coord> {
-		private static final long serialVersionUID = 1L;
 		public NodeTab() {
 			super();
 		}
 	}
 	
 	public class WayTab extends HashMap<Long, ArrayList<Long>> {
-		private static final long serialVersionUID = 1L;
 		public WayTab() {
 			super();
 		}
 	}
 	
 	public class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
-		private static final long serialVersionUID = 1L;
 		public FtrMap() {
 			super(Obj.class);
 		}
 	}
 	
 	public class FtrTab extends HashMap<Long, Feature> {
-		private static final long serialVersionUID = 1L;
 		public FtrTab() {
 			super();
 		}
@@ -130,14 +123,14 @@ public class SeaMap {
 	}
 
 	public void addNode(long id, double lat, double lon) {
-		nodes.put(id, new Coord(lat, lon));
+		nodes.put(id, new Coord(Math.toRadians(lat), Math.toRadians(lon)));
 		feature = new Feature();
 		feature.refs = id;
 		feature.flag = Fflag.NODE;
 	}
 
 	public void moveNode(long id, double lat, double lon) {
-		nodes.put(id, new Coord(lat, lon));
+		nodes.put(id, new Coord(Math.toRadians(lat), Math.toRadians(lon)));
 	}
 
 	public void addWay(long id) {

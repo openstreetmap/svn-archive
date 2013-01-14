@@ -40,7 +40,7 @@ public class Beacons {
 		p = new Path2D.Double(); p.moveTo(0.0,-70.0); p.lineTo(6.0,-70.0); p.lineTo(6.0,-8.5); p.quadTo(3.0,-9.3,0.0,-10.0); p.closePath();
     colours.add(new Instr(Prim.V2, p));
     Beacon.add(new Instr(Prim.COLR, colours));
-    Beacon.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Beacon.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     Beacon.add(new Instr(Prim.FILL, Color.black));
     Beacon.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     Beacon.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,-10,0)));
@@ -50,7 +50,7 @@ public class Beacons {
 	}
 	public static final Symbol Cairn = new Symbol();
 	static {
-		Cairn.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Cairn.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Cairn.add(new Instr(Prim.FILL, Color.black));
 		Cairn.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Cairn.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-10,0)));
@@ -61,10 +61,10 @@ public class Beacons {
 	}
 	public static final Symbol FogSignal = new Symbol();
 	static {
-		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		FogSignal.add(new Instr(Prim.FILL, Color.black));
 		FogSignal.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
-		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(10.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		FogSignal.add(new Instr(Prim.STRK, new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		FogSignal.add(new Instr(Prim.FILL, new Color(0xd400d4)));
 		FogSignal.add(new Instr(Prim.EARC, new Arc2D.Double(-120.0,-120.0,240.0,240.0,190.0,50.0,Arc2D.OPEN)));
 		FogSignal.add(new Instr(Prim.EARC, new Arc2D.Double(-92.5,-92.5,185.0,185.0,190.0,50.0,Arc2D.OPEN)));
@@ -96,7 +96,7 @@ public class Beacons {
 	}
 	public static final Symbol PerchPort = new Symbol();
 	static {
-		PerchPort.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		PerchPort.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		PerchPort.add(new Instr(Prim.FILL, Color.black));
 		PerchPort.add(new Instr(Prim.LINE, new Line2D.Double(-10,0,10,0)));
 		PerchPort.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-40)));
@@ -105,7 +105,7 @@ public class Beacons {
 	}
 	public static final Symbol PerchStarboard = new Symbol();
 	static {
-		PerchStarboard.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		PerchStarboard.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		PerchStarboard.add(new Instr(Prim.FILL, Color.black));
 		PerchStarboard.add(new Instr(Prim.LINE, new Line2D.Double(-10,0,10,0)));
 		PerchStarboard.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-70)));
@@ -120,7 +120,7 @@ public class Beacons {
 	}
 	public static final Symbol Stake = new Symbol();
 	static {
-		Stake.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Stake.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Stake.add(new Instr(Prim.FILL, Color.black));
 		Stake.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-70)));
 		Symbol colours = new Symbol();
@@ -154,7 +154,7 @@ public class Beacons {
 		p = new Path2D.Double(); p.moveTo(0.0,-70.0); p.lineTo(20.0,-70.0); p.lineTo(25.0,0.0); p.lineTo(10.0,0.0); p.quadTo(10.0,-10.0,0.0,-10.0); p.closePath();
     colours.add(new Instr(Prim.V2, p));
     Tower.add(new Instr(Prim.COLR, colours));
-    Tower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Tower.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     Tower.add(new Instr(Prim.FILL, Color.black));
     Tower.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     Tower.add(new Instr(Prim.LINE, new Line2D.Double(-35,0,-10,0)));
@@ -164,7 +164,7 @@ public class Beacons {
 	}
 	public static final Symbol WithyPort = new Symbol();
 	static {
-		WithyPort.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		WithyPort.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		WithyPort.add(new Instr(Prim.FILL, Color.black));
 		WithyPort.add(new Instr(Prim.LINE, new Line2D.Double(-10,0,10,0)));
 		WithyPort.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-70)));
@@ -175,7 +175,7 @@ public class Beacons {
 	}
 	public static final Symbol WithyStarboard = new Symbol();
 	static {
-		WithyStarboard.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		WithyStarboard.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		WithyStarboard.add(new Instr(Prim.FILL, Color.black));
 		WithyStarboard.add(new Instr(Prim.LINE, new Line2D.Double(-10,0,10,0)));
 		WithyStarboard.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-70)));

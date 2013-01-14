@@ -27,14 +27,14 @@ public class Areas {
 	public static final Symbol Cable = new Symbol();
 	static {
 		Cable.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,60)));
-		Cable.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
+		Cable.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
 		Cable.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,0); p.curveTo(-13,-13,-13,-17,0,-30); p.curveTo(13,-43,13,-47,0,-60);
 		Cable.add(new Instr(Prim.PLIN, p));
 	}
 	public static final Symbol LaneArrow = new Symbol();
 	static {
-		LaneArrow.add(new Instr(Prim.STRK, new BasicStroke(10.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		LaneArrow.add(new Instr(Prim.STRK, new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		LaneArrow.add(new Instr(Prim.FILL, new Color(0x80c480ff, true)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(15,0); p.lineTo(15,-195); p.lineTo(40,-195);
 		p.lineTo(0,-240); p.lineTo(-40,-195); p.lineTo(-15,-195); p.lineTo(-15,0); p.closePath();
@@ -52,7 +52,7 @@ public class Areas {
 	}
 	public static final Symbol MarineFarm = new Symbol();
 	static {
-		MarineFarm.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		MarineFarm.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		MarineFarm.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-23,12); p.lineTo(-23,23); p.lineTo(23,23); p.lineTo(23,12); p.moveTo(-8,15); p.lineTo(-8,23); p.moveTo(8,15); p.lineTo(8,23);
 		p.moveTo(-23,-12); p.lineTo(-23,-23); p.lineTo(23,-23); p.lineTo(23,-12); p.moveTo(-8,-15); p.lineTo(-8,-23); p.moveTo(8,-15); p.lineTo(8,-23);
@@ -62,18 +62,18 @@ public class Areas {
 	}
 	public static final Symbol NoWake = new Symbol();
 	static {
-		NoWake.add(new Instr(Prim.STRK, new BasicStroke(12.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoWake.add(new Instr(Prim.STRK, new BasicStroke(12, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoWake.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-60,20); p.curveTo(-28,20,-32,0,0,0); p.curveTo(32,0,28,20,60,20); p.moveTo(-60,0); p.curveTo(-28,0,-32,-20,0,-20); p.curveTo(32,-20,28,0,60,0);
 		NoWake.add(new Instr(Prim.PLIN, p));
-		NoWake.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoWake.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		NoWake.add(new Instr(Prim.LINE, new Line2D.Double(-60,60,60,-60)));
 		NoWake.add(new Instr(Prim.LINE, new Line2D.Double(-60,-60,60,60)));
 	}
 	public static final Symbol Pipeline = new Symbol();
 	static {
 		Pipeline.add(new Instr(Prim.BBOX, new Rectangle(-15,-60,30,60)));
-		Pipeline.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Pipeline.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Pipeline.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Pipeline.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-50)));
 		Pipeline.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-10,-60,20,20)));
@@ -81,7 +81,7 @@ public class Areas {
 	public static final Symbol Restricted = new Symbol();
 	static {
 		Restricted.add(new Instr(Prim.BBOX, new Rectangle(-15,-30,30,30)));
-		Restricted.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Restricted.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Restricted.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-30)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,-15,17,-15)));
@@ -90,10 +90,10 @@ public class Areas {
 	static {
 		Rock.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		Rock.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
-		Rock.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
+		Rock.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
 		Rock.add(new Instr(Prim.FILL, Color.black));
 		Rock.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-30,-30,60,60)));
-		Rock.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Rock.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Rock.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,20,0)));
 		Rock.add(new Instr(Prim.LINE, new Line2D.Double(0,-20,0,20)));
 	}
@@ -101,10 +101,10 @@ public class Areas {
 	static {
 		RockA.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		RockA.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
-		RockA.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
+		RockA.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
 		RockA.add(new Instr(Prim.FILL, Color.black));
 		RockA.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-30,-30,60,60)));
-		RockA.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		RockA.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		RockA.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,20,0)));
 		RockA.add(new Instr(Prim.LINE, new Line2D.Double(0,-20,0,20)));
 		RockA.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-17,-17,8,8)));
@@ -116,10 +116,10 @@ public class Areas {
 	static {
 		RockC.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		RockC.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
-		RockC.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
+		RockC.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
 		RockC.add(new Instr(Prim.FILL, Color.black));
 		RockC.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-30,-30,60,60)));
-		RockC.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		RockC.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,20,0)));
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(-10,17.3,10,-17.3)));
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(10,17.3,-10,-17.3)));
@@ -127,14 +127,14 @@ public class Areas {
 	public static final Symbol Sandwaves = new Symbol();
 	public static final Symbol Seaplane = new Symbol();
 	static {
-		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Seaplane.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Seaplane.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-60,-60,120,120)));
 		Seaplane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 1.0, 0, 0, null, null)));
 	}
 	public static final Symbol WindFarm = new Symbol();
 	static {
-		WindFarm.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WindFarm.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WindFarm.add(new Instr(Prim.FILL, Color.black));
 		WindFarm.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-100,-100,200,200)));
 		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(-35,50,35,50)));
@@ -147,10 +147,10 @@ public class Areas {
 	static {
 		WreckD.add(new Instr(Prim.FILL, new Color(0x80c0ff)));
 		WreckD.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-50,-40,100,80)));
-		WreckD.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
+		WreckD.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{5,5}, 0)));
 		WreckD.add(new Instr(Prim.FILL, Color.black));
 		WreckD.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-50,-40,100,80)));
-		WreckD.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckD.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,40,0)));
 		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(0,-30,0,30)));
 		WreckD.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
@@ -158,7 +158,7 @@ public class Areas {
 	}
 	public static final Symbol WreckND = new Symbol();
 	static {
-		WreckND.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckND.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WreckND.add(new Instr(Prim.FILL, Color.black));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,40,0)));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(0,-30,0,30)));
@@ -167,7 +167,7 @@ public class Areas {
 	}
 	public static final Symbol WreckS = new Symbol();
 	static {
-		WreckS.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		WreckS.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		WreckS.add(new Instr(Prim.FILL, Color.black));
 		WreckS.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-6,-6,12,12)));
 		WreckS.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-6,0)));

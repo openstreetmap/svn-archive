@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 import s57.S57att.Att;
 import s57.S57obj.Obj;
-import s57.S57val.ColCOL;
 import s57.S57val.*;
 import s57.S57val;
 import seamap.SeaMap.*;
@@ -65,24 +64,23 @@ public class Renderer {
 	  if (feature.flag == Fflag.AREA) {
 			ArrayList<Long> way = map.ways.get(feature.refs);
 			Coord coord = map.nodes.get(way.get(0));
-	    double llon = Math.toRadians(coord.lon);
-	    double llat = Math.toRadians(coord.lat);
+	    double llon = coord.lon;
+	    double llat = coord.lat;
 	    double sigma = 0.0;
 			for (long node : way) {
 				coord = map.nodes.get(node);
-				double lat = Math.toRadians(coord.lat);
-				double lon = Math.toRadians(coord.lon);
+				double lat = coord.lat;
+				double lon = coord.lon;
 				sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
 				llon = lon;
 				llat = lat;
 	    }
-	    return Math.abs(sigma) / 2.0 * 3444 * 3444;
+	    return Math.abs(sigma) * 3444 * 3444 / 2.0;
 	  }
 	  return 0.0;
 	}
 
 	public static Coord findCentroid(Feature feature) {
-		double tst = calcArea(feature);
 		Coord coord;
 		ArrayList<Long> way = map.ways.get(feature.refs);
 		switch (feature.flag) {
@@ -104,7 +102,7 @@ public class Renderer {
 			coord = map.nodes.get(node);
       double lon = coord.lon;
       double lat = coord.lat;
-      double arc = (Math.acos(Math.cos(Math.toRadians(lon-llon)) * Math.cos(Math.toRadians(lat-llat))));
+      double arc = (Math.acos(Math.cos(lon-llon) * Math.cos(lat-llat)));
       slat += (lat * arc);
       slon += (lon * arc);
       sarc += arc;
@@ -121,4 +119,25 @@ public class Renderer {
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(pattern, colours));
 	}
 	
+	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
+		if (feature.flag != Fflag.NODE) {
+			ArrayList<Long> way = map.ways.get(feature.refs);
+			for (long node : way) {
+				Point2D point = helper.getPoint(map.nodes.get(node));
+				
+			}
+		}
+	}
+	
+	public static void lineVector (Feature feature, LineStyle style) {
+		
+	}
+	
+	public static void labelText (Feature feature, String str, TextStyle style, Delta delta) {
+		
+	}
+	
+	public static void lineText (Feature feature, String str, TextStyle style, double offset, Delta delta) {
+		
+	}
 }

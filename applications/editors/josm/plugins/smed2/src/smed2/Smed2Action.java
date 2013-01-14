@@ -26,7 +26,6 @@ import panels.ShowFrame;
 
 public class Smed2Action extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
 
-	private static final long serialVersionUID = 1L;
 	private static String editor = tr("SeaMap Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
@@ -41,7 +40,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void dataChanged(DataChangedEvent e) {
-			// reMap();
+			System.out.println("DataChangedEvent");
 		}
 
 		@Override
@@ -54,32 +53,32 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void otherDatasetChange(AbstractDatasetChangedEvent e) {
-			// reMap();
+			System.out.println("AbstractDatasetChangedEvent");
 		}
 
 		@Override
 		public void primitivesAdded(PrimitivesAddedEvent e) {
-			// reMap();
+			System.out.println("PrimitivesAddedEvent");
 		}
 
 		@Override
 		public void primitivesRemoved(PrimitivesRemovedEvent e) {
-			// reMap();
+			System.out.println("PrimitivesRemovedEvent");
 		}
 
 		@Override
 		public void relationMembersChanged(RelationMembersChangedEvent e) {
-			// reMap();
+			System.out.println("RelationMembersChangedEvent");
 		}
 
 		@Override
 		public void tagsChanged(TagsChangedEvent e) {
-			// reMap();
+			System.out.println("TagsChangedEvent");
 		}
 
 		@Override
 		public void wayNodesChanged(WayNodesChangedEvent e) {
-			// reMap();
+			System.out.println("WayNodesChangedEvent");
 		}
 	};
 

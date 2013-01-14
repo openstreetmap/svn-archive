@@ -27,7 +27,7 @@ public class Buoys {
 		p.lineTo(8.0, 0.0); p.curveTo(8.0,-11.0,-8.0,-11.0,-8.0,0.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
 		Barrel.add(new Instr(Prim.COLR, colours));
-    Barrel.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Barrel.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Barrel.add(new Instr(Prim.FILL, Color.black));
 		Barrel.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Barrel.add(new Instr(Prim.LINE, new Line2D.Double(-57,0,-10,0)));
@@ -54,7 +54,7 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(12.7,-37.9); p.lineTo(41.1,-28.4); p.lineTo(31.6,0);	p.lineTo(8.0,0.0); p.quadTo(8.0,-6.0,2.5,-7.6); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Can.add(new Instr(Prim.COLR, colours));
-    Can.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Can.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Can.add(new Instr(Prim.FILL, Color.black));
 		Can.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Can.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-10,0)));
@@ -80,7 +80,7 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(12.7,-37.9); p.curveTo(21.9,-30.5,32.8,-18.4,32.1,0.0);	p.lineTo(8.0,0.0); p.quadTo(8.0,-6.0,2.5,-7.6); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Cone.add(new Instr(Prim.COLR, colours));
-    Cone.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Cone.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Cone.add(new Instr(Prim.FILL, Color.black));
 		Cone.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Cone.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-10,0)));
@@ -110,7 +110,7 @@ public class Buoys {
 		p.lineTo(8.0,0.0); p.quadTo(7.7,-7.7,0.0,-8.0); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Float.add(new Instr(Prim.COLR, colours));
-    Float.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Float.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Float.add(new Instr(Prim.FILL, Color.black));
 		Float.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Float.add(new Instr(Prim.LINE, new Line2D.Double(-54,0,-10,0)));
@@ -126,7 +126,7 @@ public class Buoys {
 		p.lineTo(8.0, 0.0); p.curveTo(8.0,-11.0,-8.0,-11.0,-8.0,0.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));
     Ice.add(new Instr(Prim.COLR, colours));
-    Ice.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Ice.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     Ice.add(new Instr(Prim.FILL, Color.black));
     Ice.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     Ice.add(new Instr(Prim.LINE, new Line2D.Double(-35,0,-10,0)));
@@ -155,7 +155,7 @@ public class Buoys {
 		p.lineTo(25.0,0.0); p.lineTo(8.0,0.0); p.quadTo(8.0,-6.0,2.5,-7.6); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Pillar.add(new Instr(Prim.COLR, colours));
-		Pillar.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Pillar.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Pillar.add(new Instr(Prim.FILL, Color.black));
 		Pillar.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Pillar.add(new Instr(Prim.LINE, new Line2D.Double(-42,0,-10,0)));
@@ -179,7 +179,7 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(2.5,-7.6); p.lineTo(31.3,-94.8); p.lineTo(37.0,-92.9); p.lineTo(8.2,-5.7); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Spar.add(new Instr(Prim.COLR, colours));
-		Spar.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Spar.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Spar.add(new Instr(Prim.FILL, Color.black));
 		Spar.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Spar.add(new Instr(Prim.LINE, new Line2D.Double(-20,0,-10,0)));
@@ -205,7 +205,7 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(12.7,-37.9); p.curveTo(27.5,-33.8,37.8,-15.5,32.0,0.0);	p.lineTo(8.0,0.0); p.quadTo(8.0,-6.0,2.5,-7.6); p.closePath();
     colours.add(new Instr(Prim.V2, p));
     Sphere.add(new Instr(Prim.COLR, colours));
-    Sphere.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Sphere.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     Sphere.add(new Instr(Prim.FILL, Color.black));
     Sphere.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     Sphere.add(new Instr(Prim.LINE, new Line2D.Double(-33,0,-10,0)));
@@ -214,7 +214,7 @@ public class Buoys {
 	}
 	public static final Symbol Storage = new Symbol();
 	static {
-		Storage.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Storage.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Storage.add(new Instr(Prim.FILL, Color.black));
 		Storage.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     Path2D.Double p = new Path2D.Double(); p.moveTo(-50.0,0.0); p.lineTo(-40.0,-20.0); p.lineTo(40.0,-20.0); p.lineTo(40.0,-20.0);
@@ -239,7 +239,7 @@ public class Buoys {
 		p = new Path2D.Double(); p.moveTo(0.0,-42.0); p.lineTo(28.0,-42.0); p.lineTo(48.0,0.0); p.lineTo(8.0,0.0); p.quadTo(7.7,-7.7,0.0,-8.0); p.closePath();
     colours.add(new Instr(Prim.V2, p));
 		Super.add(new Instr(Prim.COLR, colours));
-    Super.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    Super.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Super.add(new Instr(Prim.FILL, Color.black));
 		Super.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
 		Super.add(new Instr(Prim.LINE, new Line2D.Double(-54,0,-10,0)));

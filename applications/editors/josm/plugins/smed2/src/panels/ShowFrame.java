@@ -17,7 +17,6 @@ import seamap.SeaMap.Coord;
 import seamap.SeaMap.Feature;
 
 public class ShowFrame extends JFrame implements MapHelper {
-	private static final long serialVersionUID = 1L;
 	
 	public SeaMap showMap;
 

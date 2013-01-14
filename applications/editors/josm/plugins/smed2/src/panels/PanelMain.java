@@ -15,8 +15,6 @@ import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	
 	private JTabbedPane tabs = null;
 //	public PanelF panelF = null;
 	public static JTextField messageBar = null;

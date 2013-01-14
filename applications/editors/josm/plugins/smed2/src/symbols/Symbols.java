@@ -23,7 +23,7 @@ import s57.S57val.*;
 public class Symbols {
 
 	public enum Prim {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, FONT, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
 	public enum Handle {
@@ -84,20 +84,41 @@ public class Symbols {
 		}
 	}
 
+	public static class TextStyle {
+		Font font;
+
+		public TextStyle(Font ifont) {
+			font = ifont;
+		}
+	}
+
 	public static class Caption {
-		String str;;
+		String str;
+		TextStyle style;
 		float x;
 		float y;
 
-		public Caption(String istr, float ix, float iy) {
+		public Caption(String istr, TextStyle istyle, float ix, float iy) {
 			str = istr;
+			style = istyle;
 			x = ix;
 			y = iy;
 		}
 	}
 
+	public static class LineStyle {
+		BasicStroke stroke;
+		Color line;
+		Color fill;
+
+		public LineStyle(BasicStroke istroke, Color iline, Color ifill) {
+			stroke = istroke;
+			line = iline;
+			fill = ifill;
+		}
+	}
+
 	public static class Symbol extends ArrayList<Instr> {
-		private static final long serialVersionUID = 1L;
 
 		public Symbol() {
 			super();
@@ -184,7 +205,7 @@ public class Symbols {
 					break;
 				case COLR:
 					if ((cs != null) && (cs.col != null)) {
-						for (Instr patch : (ArrayList<Instr>) item.params) {
+						for (Instr patch : (Symbol) item.params) {
 							switch (patch.type) {
 							case P1:
 								if (cn > 0) {
@@ -270,11 +291,9 @@ public class Symbols {
 					SubSymbol s = (SubSymbol) item.params;
 					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
 					break;
-				case FONT:
-					g2.setFont((Font) item.params);
-					break;
 				case TEXT:
 					Caption c = (Caption) item.params;
+					g2.setFont(c.style.font);
 					g2.drawString(c.str, c.x, c.y);
 					break;
 				}

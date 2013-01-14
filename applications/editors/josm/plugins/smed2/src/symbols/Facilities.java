@@ -18,7 +18,7 @@ import symbols.Symbols.*;
 public class Facilities {
 	private static final Symbol Facility = new Symbol();
 	static {
-		Facility.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Facility.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Facility.add(new Instr(Prim.FILL, new Color(0x80ffffff, true)));
 		RoundRectangle2D.Double s = new RoundRectangle2D.Double(-29,-29,58,58,15,15);
 		Facility.add(new Instr(Prim.RSHP, s));
@@ -28,7 +28,7 @@ public class Facilities {
 	public static final Symbol Boatlift = new Symbol();//was Crane
 	static {
 		Boatlift.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Boatlift.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
+		Boatlift.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
 		Boatlift.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-3.7,-19.7,12,12)));
 		Boatlift.add(new Instr(Prim.LINE, new Line2D.Double(2.3,-7.7,2.3,-2.0)));
 		Boatlift.add(new Instr(Prim.EARC, new Arc2D.Double(-10.0,-1.5,20,20,75.0,-260.0,Arc2D.OPEN)));
@@ -36,7 +36,7 @@ public class Facilities {
 	public static final Symbol Boatyard = new Symbol();
 	static {
 		Boatyard.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Boatyard.add(new Instr(Prim.STRK, new BasicStroke(8.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		Boatyard.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Boatyard.add(new Instr(Prim.LINE, new Line2D.Double(19,19,-8,-8)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-11.3,-11.3); p.lineTo(-10.5,-17.5); p.lineTo(-14.8,-21.9); p.lineTo(-11.3,-25.4); p.lineTo(-7.4,-21.5);
 		p.curveTo(1.0,-11.5,-11.5,1.0,-21.5,-7.4); p.lineTo(-25.4,-11.3); p.lineTo(-21.9,-14.8); p.lineTo(-17.5,-10.5); p.closePath();
@@ -45,7 +45,7 @@ public class Facilities {
 	public static final Symbol Chandler = new Symbol();
 	static {
 		Chandler.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Chandler.add(new Instr(Prim.STRK, new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Chandler.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Chandler.add(new Instr(Prim.ELPS, new Ellipse2D.Double(14,7,10,10)));
 		Chandler.add(new Instr(Prim.LINE, new Line2D.Double(-23.0,12.0,14.0,12.0)));
 		Chandler.add(new Instr(Prim.LINE, new Line2D.Double(8.0,21.0,8.0,-8.6)));
@@ -96,7 +96,7 @@ public class Facilities {
 	public static final Symbol SailingClub = new Symbol();
 	static {
 		SailingClub.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		SailingClub.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		SailingClub.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		SailingClub.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		SailingClub.add(new Instr(Prim.LINE, new Line2D.Double(-5,20,-5,-20)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-5,0); p.lineTo(20,-10); p.lineTo(-5,-20); p.closePath();
@@ -105,10 +105,10 @@ public class Facilities {
 	public static final Symbol Shower = new Symbol();
 	static {
 		Shower.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Shower.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Shower.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Shower.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Shower.add(new Instr(Prim.LINE, new Line2D.Double(-4.8,-24.5,6.2,-13.5)));
-		Shower.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Shower.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Shower.add(new Instr(Prim.LINE, new Line2D.Double(-18.1,-17.9,-6.1,-21.3)));
 		Shower.add(new Instr(Prim.LINE, new Line2D.Double(-13.9,-10.2,-3.9,-17.7)));
 		Shower.add(new Instr(Prim.LINE, new Line2D.Double(-7.8,-4.4,-0.5,-14.3)));
@@ -119,14 +119,14 @@ public class Facilities {
 	public static final Symbol Slipway = new Symbol();
 	static {
 		Slipway.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Slipway.add(new Instr(Prim.STRK, new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Slipway.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Slipway.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-24.8,0.1); p.lineTo(-24.8,18.0); p.curveTo(-21.2,18.0,-22.2,16.7,-18.6,16.7); p.curveTo(-15.0,16.7,-16.0,18.0,-12.4,18.0);
 		p.curveTo(-8.8,18.0,-9.8,16.7,-6.2,16.7); p.curveTo(-2.6,16.7,-3.6,18.0,0.0,18.0); p.curveTo(3.6,18.0,2.6,16.7,6.2,16.7); p.curveTo(9.8,16.7,8.8,18.0,12.4,18.0);
 		p.curveTo(16.0,18.0,15.0,16.7,18.6,16.7); p.curveTo(22.2,16.7,21.2,18.0,24.8,18.0);	p.lineTo(24.8,13.6); p.closePath();
 		Slipway.add(new Instr(Prim.PGON, p));
 		Slipway.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-1.65,-1.9,8,8)));
-		Slipway.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Slipway.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Slipway.add(new Instr(Prim.LINE, new Line2D.Double(-24.5,-8.3,-3.1,-2.4)));
 		Slipway.add(new Instr(Prim.LINE, new Line2D.Double(9.3,1.1,22.2,4.6)));
 		p = new Path2D.Double(); p.moveTo(22.9,0.6); p.lineTo(25.0,-7.4); p.lineTo(-5.1,-15.8); p.lineTo(0.3,-19.6); p.lineTo(-1.6,-20.1); p.lineTo(-7.2,-16.2);
@@ -136,7 +136,7 @@ public class Facilities {
 	public static final Symbol Toilet = new Symbol();
 	static {
 		Toilet.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Facilities.Facility, 1.0, 0, 0, null, null)));
-		Toilet.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+		Toilet.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Toilet.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Toilet.add(new Instr(Prim.LINE, new Line2D.Double(0,20,0,-20)));
 		Toilet.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-18.5,-22.5,7.4,7.4)));
@@ -165,11 +165,11 @@ public class Facilities {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-25.0,0); p.curveTo(-32.0,-21.0,-14.0,-45.5,12.7,-37.9); p.curveTo(27.5,-33.8,37.8,-15.5,32.0,0.0);
 		p.lineTo(8.0,0.0); p.curveTo(8.0,-11.0,-8.0,-11.0,-8.0,0.0); p.closePath();
 		VisitorMooring.add(new Instr(Prim.PGON, p));
-    VisitorMooring.add(new Instr(Prim.STRK, new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    VisitorMooring.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     VisitorMooring.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-10,20,20)));
     VisitorMooring.add(new Instr(Prim.LINE, new Line2D.Double(-33,0,-10,0)));
     VisitorMooring.add(new Instr(Prim.LINE, new Line2D.Double(10,0,40,0)));
-    VisitorMooring.add(new Instr(Prim.STRK, new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+    VisitorMooring.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
     VisitorMooring.add(new Instr(Prim.ELPS, new Ellipse2D.Double(6.5,-49.5,12,12)));
     VisitorMooring.add(new Instr(Prim.FILL, Color.white));
 		p = new Path2D.Double(); p.moveTo(8.3,-32.8); p.lineTo(12.5,-32.8); p.lineTo(5.4,-12.9); p.lineTo(1.0,-12.9); p.lineTo(-6.1,-32.8);

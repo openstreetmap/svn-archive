@@ -86,6 +86,6 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 	}
 
 	public Point2D getPoint(Coord coord) {
-		return Main.map.mapView.getPoint2D(new LatLon(coord.lat, coord.lon));
+		return Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
 	}
 }

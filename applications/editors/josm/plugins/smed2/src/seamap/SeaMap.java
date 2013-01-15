@@ -125,6 +125,7 @@ public class SeaMap {
 		nodes = new NodeTab();
 		ways = new WayTab();
 		mpolys = new WayTab();
+		outers = new MpolyTab();
 		feature = new Feature();
 		features = new FtrMap();
 		index = new FtrTab();

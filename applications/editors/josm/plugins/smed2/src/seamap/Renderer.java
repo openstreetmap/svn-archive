@@ -141,17 +141,25 @@ public class Renderer {
 	
 	public static void lineVector (Feature feature, LineStyle style) {
 		if (feature.flag != Fflag.NODE) {
-			ArrayList<Long> nodes = map.ways.get(feature.refs);
+			Long mpoly = map.outers.get(feature.refs);
+			ArrayList<Long> ways = new ArrayList<Long>();
+			if (mpoly != null) {
+				ways.addAll(map.mpolys.get(mpoly));
+			} else {
+				ways.add(feature.refs);
+			}
 			Path2D.Double p = new Path2D.Double();
-			p.setWindingRule(GeneralPath.WIND_NON_ZERO);
-			boolean first = true;
-			for (long node : nodes) {
-				Point2D point = helper.getPoint(map.nodes.get(node));
-				if (first) {
-					p.moveTo(point.getX(), point.getY());
-					first = false;
-				} else {
-					p.lineTo(point.getX(), point.getY());
+			p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+			for (long way : ways) {
+				boolean first = true;
+				for (long node : map.ways.get(way)) {
+					Point2D point = helper.getPoint(map.nodes.get(node));
+					if (first) {
+						p.moveTo(point.getX(), point.getY());
+						first = false;
+					} else {
+						p.lineTo(point.getX(), point.getY());
+					}
 				}
 			}
 			if (style.line != null) {

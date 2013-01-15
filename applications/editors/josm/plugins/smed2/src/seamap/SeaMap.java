@@ -66,6 +66,12 @@ public class SeaMap {
 		}
 	}
 	
+	public class MpolyTab extends HashMap<Long, Long> {
+		public MpolyTab() {
+			super();
+		}
+	}
+	
 	public class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
 		public FtrMap() {
 			super(Obj.class);
@@ -107,11 +113,13 @@ public class SeaMap {
 	public NodeTab nodes;
 	public WayTab ways;
 	public WayTab mpolys;
+	public MpolyTab outers;
 	public FtrMap features;
 	public FtrTab index;
 
 	private Feature feature;
 	private ArrayList<Long> list;
+	private long mpid;
 
 	public SeaMap() {
 		nodes = new NodeTab();
@@ -144,6 +152,7 @@ public class SeaMap {
 	public void addMpoly(long id) {
 		list = new ArrayList<Long>();
 		mpolys.put(id, list);
+		mpid = id;
 	}
 
 	public void addToWay(long node) {
@@ -151,10 +160,12 @@ public class SeaMap {
 	}
 
 	public void addToMpoly(long way, boolean outer) {
-		if (outer)
+		if (outer) {
 			list.add(0, way);
-		else
+			outers.put(way, mpid);
+		} else {
 			list.add(way);
+		}
 	}
 
 	public void tagsDone(long id) {

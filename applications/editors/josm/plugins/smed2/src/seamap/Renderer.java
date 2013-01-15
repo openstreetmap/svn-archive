@@ -9,8 +9,11 @@
 
 package seamap;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ import s57.S57att.Att;
 import s57.S57obj.Obj;
 import s57.S57val.*;
 import s57.S57val;
+import seamap.SeaMap;
 import seamap.SeaMap.*;
 import symbols.Symbols;
 import symbols.Symbols.*;
@@ -30,9 +34,11 @@ public class Renderer {
 	static double sScale;
 	static double tScale;
 	static Graphics2D g2;
+	static int zoom;
 	
-	public static void reRender(Graphics2D g, int zoom, double factor, SeaMap m, MapHelper h) {
+	public static void reRender(Graphics2D g, int z, double factor, SeaMap m, MapHelper h) {
 		g2 = g;
+		zoom = z;
 		helper = h;
 		map = m;
 		sScale = Symbols.symbolScale[zoom]*factor;
@@ -114,9 +120,13 @@ public class Renderer {
 	
 	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta) {
 		Point2D point = helper.getPoint(findCentroid(feature));
-		ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
-		ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
-		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(pattern, colours));
+		if (obj == null) {
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, null);
+		} else {
+			ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
+			ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(pattern, colours));
+		}
 	}
 	
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
@@ -130,7 +140,39 @@ public class Renderer {
 	}
 	
 	public static void lineVector (Feature feature, LineStyle style) {
-		
+		if (feature.flag != Fflag.NODE) {
+			ArrayList<Long> nodes = map.ways.get(feature.refs);
+			Path2D.Double p = new Path2D.Double();
+			p.setWindingRule(GeneralPath.WIND_NON_ZERO);
+			boolean first = true;
+			for (long node : nodes) {
+				Point2D point = helper.getPoint(map.nodes.get(node));
+				if (first) {
+					p.moveTo(point.getX(), point.getY());
+					first = false;
+				} else {
+					p.lineTo(point.getX(), point.getY());
+				}
+			}
+			if (style.line != null) {
+				if (style.dash != null) {
+					float[] dash = new float[style.dash.length];
+					System.arraycopy(style.dash, 0, dash, 0, style.dash.length);
+					for (int i = 0; i < style.dash.length; i++) {
+						dash[i] *= (float) (sScale);
+					}
+					g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
+				} else {
+					g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+				}
+				g2.setPaint(style.line);
+				g2.draw(p);
+			}
+			if (style.fill != null) {
+				g2.setPaint(style.fill);
+				g2.fill(p);
+			}
+		}
 	}
 	
 	public static void labelText (Feature feature, String str, TextStyle style, Delta delta) {

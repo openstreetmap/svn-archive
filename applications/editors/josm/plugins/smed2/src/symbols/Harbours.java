@@ -71,10 +71,6 @@ public class Harbours {
 		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(-10,25,10,25)));
 		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(0,25,0,15)));
 	}
-	public static final Symbol CoastGStation = new Symbol();
-	static{
-		
-	}
 	public static final Symbol ContainerCrane = new Symbol();
 	static {
 		ContainerCrane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
@@ -148,6 +144,14 @@ public class Harbours {
 		MarinaNF.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		MarinaNF.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, null, null)));
 	}
+	public static final Symbol Pilot = new Symbol();
+	static{
+		Pilot.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Pilot.add(new Instr(Prim.FILL, new Color(0xd400d4)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15,0); p.lineTo(0,-56); p.lineTo(15,0); p.lineTo(0,56); p.closePath();
+		Pilot.add(new Instr(Prim.PGON, p));
+		Pilot.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-58,-58,116,116)));
+	}
 	public static final Symbol PortCrane = new Symbol();
 	static {
 		PortCrane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
@@ -160,9 +164,13 @@ public class Harbours {
 		Post.add(new Instr(Prim.FILL, Color.black));
 		Post.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-10,-10,20,20)));
 	}
-	public static final Symbol RescueStation = new Symbol();
+	public static final Symbol Rescue = new Symbol();
 	static{
-		
+		Rescue.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Rescue.add(new Instr(Prim.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-11,0); p.lineTo(0,-43); p.lineTo(11,0); p.lineTo(0,43); p.closePath();
+		Rescue.add(new Instr(Prim.PGON, p));
+		Rescue.add(new Instr(Prim.LINE, new Line2D.Double(-15,0,15,0)));
 	}
 	public static final Symbol SignalStation = new Symbol();
 	static {

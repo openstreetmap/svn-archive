@@ -107,13 +107,15 @@ public class Symbols {
 	}
 
 	public static class LineStyle {
-		BasicStroke stroke;
-		Color line;
-		Color fill;
+		public Color line;
+		public float width;
+		public float[] dash;
+		public Color fill;
 
-		public LineStyle(BasicStroke istroke, Color iline, Color ifill) {
-			stroke = istroke;
+		public LineStyle(Color iline, float iwidth, float[] idash, Color ifill) {
 			line = iline;
+			width = iwidth;
+			dash = idash;
 			fill = ifill;
 		}
 	}

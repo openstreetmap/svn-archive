@@ -141,14 +141,14 @@ class JoinDB (OSMDB):
 #                raise Exception('Illegal highway type for way ({join_id}): "{ht}"'.format(join_id=join_id,ht=highway))
         if self._which_geometry_is_it(way)=="LINESTRING":
             #print "inserting a simple way"
-            #print "insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))"
-            self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+way+"'::Text,4326))")
+            #print "insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',ST_SetSrid('"+way+"'::Text,4326))"
+            self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',ST_SetSrid('"+way+"'::Text,4326))")
             return 1
         else:
             #print "inserting a MULTILINE way"
             ways = self._split_multiline_way(way)
             for one_way in ways:
-                self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',SetSrid('"+one_way+"'::Text,4326))")
+                self.insert("insert into planet_line_join (join_id, name, highway, way) values ('"+join_id+"','"+self._escape_quote(name)+"','"+highway+"',ST_SetSrid('"+one_way+"'::Text,4326))")
             return len(ways)
 
 
@@ -381,9 +381,9 @@ class JoinDB (OSMDB):
                 self.commit()
             t=time.time()-ts
             area=self.area_of_joinway(joinway)
-            if area==0.0: # prevent a rare division by zero bug (maybe due to ways with a single node only)
-                area=1
-                logging.info("***** found zero-sized area: {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
+            if area==0.0: # prevent a rare division by zero bug (usually due to ways with only two nodes, both on the same lat or lon coordinates)
+                area=0.001
+                logging.debug("***** found zero-sized area: {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
             logging.info("Joined {i}. ({id}) '{name}' ({t:.2f}s): {segs} segments -> {numjoins} joined segments [{area:.2f}km²,{tpa:.3f}s/km²]".format(i=i,id=highway['osm_id'],name=highway['name'],t=t,segs=len(joinset),numjoins=numjoins,area=area,tpa=(t/area)))
             if self.maxobjects>0 and i>=self.maxobjects:
                 break

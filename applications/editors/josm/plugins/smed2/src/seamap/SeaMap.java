@@ -119,7 +119,6 @@ public class SeaMap {
 
 	private Feature feature;
 	private ArrayList<Long> list;
-	private long mpid;
 
 	public SeaMap() {
 		nodes = new NodeTab();
@@ -153,7 +152,9 @@ public class SeaMap {
 	public void addMpoly(long id) {
 		list = new ArrayList<Long>();
 		mpolys.put(id, list);
-		mpid = id;
+		feature = new Feature();
+		feature.refs = id;
+		feature.flag = Fflag.AREA;
 	}
 
 	public void addToWay(long node) {
@@ -163,7 +164,7 @@ public class SeaMap {
 	public void addToMpoly(long way, boolean outer) {
 		if (outer) {
 			list.add(0, way);
-			outers.put(way, mpid);
+			outers.put(way, feature.refs);
 		} else {
 			list.add(way);
 		}

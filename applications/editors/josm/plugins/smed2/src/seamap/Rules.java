@@ -102,20 +102,19 @@ public class Rules {
 	}
 	
 	private static void shoreline(Feature feature) {
-		CatSLC cat = (CatSLC) Renderer.getAttVal(feature, feature.type, 0, Att.CATSLC);
 		if (zoom >= 12) {
-			switch (cat) {
+			switch ((CatSLC) Renderer.getAttVal(feature, feature.type, 0, Att.CATSLC)) {
 			case SLC_TWAL:
 				WatLEV lev = (WatLEV) Renderer.getAttVal(feature, feature.type, 0, Att.WATLEV);
 				if (lev == WatLEV.LEV_CVRS) {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 					if (zoom >= 15)
-						Renderer.lineText(feature, "(covers)", new TextStyle(new Font("Arial", Font.PLAIN, 80)), 0.5, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 20)));
+						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), 0.5, 20);
 				} else {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
 				}
 				if (zoom >= 15)
-					Renderer.lineText(feature, "Training Wall", new TextStyle(new Font("Arial", Font.PLAIN, 80)), 0.5, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -20)));
+					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), 0.5, -20);
 			}
 		}
 	}
@@ -148,7 +147,7 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
 			AttItem name = feature.atts.get(Att.OBJNAM);
 			if ((zoom >= 10) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new TextStyle(new Font("Arial", Font.BOLD, 150)), null);
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), null);
 			break;
 		case TSELNE:
 			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
@@ -170,7 +169,7 @@ public class Rules {
 				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10);
 			}
 			if ((zoom >= 15) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new TextStyle(new Font("Arial", Font.BOLD, 80)), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 			break;
 		case MARCUL:
 			if (zoom >= 14)
@@ -195,7 +194,7 @@ public class Rules {
 			else
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
 			if ((zoom >= 12) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new TextStyle(new Font("Arial", Font.PLAIN, 100)), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0)));
 			break;
 		case RESARE:
 			if (zoom >= 12) {
@@ -209,10 +208,21 @@ public class Rules {
 				Renderer.symbol(feature, Areas.WindFarm, Obj.OSPARE, null);
 				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }, null));
 				if ((zoom >= 15) && (name != null))
-					Renderer.labelText(feature, (String) name.val, new TextStyle(new Font("Arial", Font.BOLD, 80)), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
 			}
 			break;
 		case SEAARE:
+			switch ((CatSEA) Renderer.getAttVal(feature, feature.type, 0, Att.CATSEA)) {
+			case SEA_RECH:
+				break;
+			case SEA_BAY:
+				break;
+			case SEA_SHOL:
+				break;
+			case SEA_GAT:
+			case SEA_NRRW:
+				break;
+			}
 			break;
 		case SNDWAV:
 //	  if (zoom>=12)) area("fill:url(#sandwaves)");

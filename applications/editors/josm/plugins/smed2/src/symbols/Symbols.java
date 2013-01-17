@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -58,7 +59,7 @@ public class Symbols {
 		Prim type;
 		Object params;
 
-		Instr(Prim itype, Object iparams) {
+		public Instr(Prim itype, Object iparams) {
 			type = itype;
 			params = iparams;
 		}
@@ -84,25 +85,15 @@ public class Symbols {
 		}
 	}
 
-	public static class TextStyle {
-		Font font;
-
-		public TextStyle(Font ifont) {
-			font = ifont;
-		}
-	}
-
 	public static class Caption {
 		String str;
-		TextStyle style;
-		float x;
-		float y;
+		Font font;
+		Delta dd;
 
-		public Caption(String istr, TextStyle istyle, float ix, float iy) {
+		public Caption(String istr, Font ifont, Delta idd) {
 			str = istr;
-			style = istyle;
-			x = ix;
-			y = iy;
+			font = ifont;
+			dd = idd;
 		}
 	}
 
@@ -166,43 +157,43 @@ public class Symbols {
 						g2.transform(dd.t);
 						switch (dd.h) {
 						case CC:
-							dx = bbox.x + (bbox.width / 2.0);
-							dy = bbox.y + (bbox.height / 2.0);
+							dx -= bbox.x + (bbox.width / 2.0);
+							dy -= bbox.y + (bbox.height / 2.0);
 							break;
 						case TL:
-							dx = bbox.x;
-							dy = bbox.y;
+							dx -= bbox.x;
+							dy -= bbox.y;
 							break;
 						case TR:
-							dx = bbox.x + bbox.width;
-							dy = bbox.y;
+							dx -= bbox.x + bbox.width;
+							dy -= bbox.y;
 							break;
 						case TC:
-							dx = bbox.x + (bbox.width / 2.0);
-							dy = bbox.y;
+							dx -= bbox.x + (bbox.width / 2.0);
+							dy -= bbox.y;
 							break;
 						case LC:
-							dx = bbox.x;
-							dy = bbox.y + (bbox.height / 2.0);
+							dx -= bbox.x;
+							dy -= bbox.y + (bbox.height / 2.0);
 							break;
 						case RC:
-							dx = bbox.x + bbox.width;
-							dy = bbox.y + (bbox.height / 2.0);
+							dx -= bbox.x + bbox.width;
+							dy -= bbox.y + (bbox.height / 2.0);
 							break;
 						case BL:
-							dx = bbox.x;
-							dy = bbox.y + bbox.height;
+							dx -= bbox.x;
+							dy -= bbox.y + bbox.height;
 							break;
 						case BR:
-							dx = bbox.x + bbox.width;
-							dy = bbox.y + bbox.height;
+							dx -= bbox.x + bbox.width;
+							dy -= bbox.y + bbox.height;
 							break;
 						case BC:
-							dx = bbox.x + (bbox.width / 2.0);
-							dy = bbox.y + bbox.height;
+							dx -= bbox.x + (bbox.width / 2.0);
+							dy -= bbox.y + bbox.height;
 							break;
 						}
-						g2.translate(-dx, -dy);
+						g2.translate(dx, dy);
 					}
 					break;
 				case COLR:
@@ -295,8 +286,52 @@ public class Symbols {
 					break;
 				case TEXT:
 					Caption c = (Caption) item.params;
-					g2.setFont(c.style.font);
-					g2.drawString(c.str, c.x, c.y);
+					TextLayout layout = new TextLayout(c.str, c.font, g2.getFontRenderContext());
+					Rectangle2D bb = layout.getBounds();
+					dx = 0;
+					dy = 0;
+					if (c.dd != null) {
+						g2.transform(c.dd.t);
+						switch (c.dd.h) {
+						case CC:
+							dx -= bb.getX() + (bb.getWidth() / 2.0);
+							dy -= bb.getY() + (bb.getHeight() / 2.0);
+							break;
+						case TL:
+							dx -= bb.getX();
+							dy -= bb.getY();
+							break;
+						case TR:
+							dx -= bb.getX() + bb.getWidth();
+							dy -= bb.getY();
+							break;
+						case TC:
+							dx -= bb.getX() + (bb.getWidth() / 2.0);
+							dy -= bb.getY();
+							break;
+						case LC:
+							dx -= bb.getX();
+							dy -= bb.getY() + (bb.getHeight() / 2.0);
+							break;
+						case RC:
+							dx -= bb.getX() + bb.getWidth();
+							dy -= bb.getY() + (bb.getHeight() / 2.0);
+							break;
+						case BL:
+							dx -= bb.getX();
+							dy -= bb.getY() + bb.getHeight();
+							break;
+						case BR:
+							dx -= bb.getX() + bb.getWidth();
+							dy -= bb.getY() + bb.getHeight();
+							break;
+						case BC:
+							dx -= bb.getX() + (bb.getWidth() / 2.0);
+							dy -= bb.getY() + bb.getHeight();
+							break;
+						}
+					}
+					layout.draw(g2, (float)dx, (float)dy);
 					break;
 				}
 			}

@@ -10,8 +10,12 @@
 package seamap;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.font.TextLayout;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -24,6 +28,7 @@ import s57.S57val.*;
 import s57.S57val;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
+import symbols.Areas;
 import symbols.Symbols;
 import symbols.Symbols.*;
 
@@ -68,7 +73,12 @@ public class Renderer {
 
 	public static double calcArea(Feature feature) {
 	  if (feature.flag == Fflag.AREA) {
-			ArrayList<Long> way = map.ways.get(feature.refs);
+			ArrayList<Long> way;
+			if (map.mpolys.containsKey(feature.refs)) {
+				way = map.ways.get(map.mpolys.get(feature.refs));
+			} else {
+				way = map.ways.get(feature.refs);
+			}
 			Coord coord = map.nodes.get(way.get(0));
 	    double llon = coord.lon;
 	    double llat = coord.lat;
@@ -88,7 +98,12 @@ public class Renderer {
 
 	public static Coord findCentroid(Feature feature) {
 		Coord coord;
-		ArrayList<Long> way = map.ways.get(feature.refs);
+		ArrayList<Long> way;
+		if (map.mpolys.containsKey(feature.refs)) {
+			way = map.ways.get(map.mpolys.get(feature.refs));
+		} else {
+			way = map.ways.get(feature.refs);
+		}
 		switch (feature.flag) {
 		case NODE:
 			return map.nodes.get(feature.refs);
@@ -141,12 +156,15 @@ public class Renderer {
 	
 	public static void lineVector (Feature feature, LineStyle style) {
 		if (feature.flag != Fflag.NODE) {
-			Long mpoly = map.outers.get(feature.refs);
 			ArrayList<Long> ways = new ArrayList<Long>();
-			if (mpoly != null) {
-				ways.addAll(map.mpolys.get(mpoly));
+			if (map.outers.containsKey(feature.refs)) {
+				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
 			} else {
-				ways.add(feature.refs);
+				if (map.mpolys.containsKey(feature.refs)) {
+					ways.addAll(map.mpolys.get(feature.refs));
+				} else {
+					ways.add(feature.refs);
+				}
 			}
 			Path2D.Double p = new Path2D.Double();
 			p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
@@ -167,7 +185,7 @@ public class Renderer {
 					float[] dash = new float[style.dash.length];
 					System.arraycopy(style.dash, 0, dash, 0, style.dash.length);
 					for (int i = 0; i < style.dash.length; i++) {
-						dash[i] *= (float) (sScale);
+						dash[i] *= (float) sScale;
 					}
 					g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
 				} else {
@@ -183,11 +201,15 @@ public class Renderer {
 		}
 	}
 	
-	public static void labelText (Feature feature, String str, TextStyle style, Delta delta) {
-		
+	public static void labelText (Feature feature, String str, Font font, Delta delta) {
+		Symbol label = new Symbol();
+		label.add(new Instr(Prim.FILL, Color.black));
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, delta)));
+		Point2D point = helper.getPoint(findCentroid(feature));
+		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), delta, null);
 	}
 	
-	public static void lineText (Feature feature, String str, TextStyle style, double offset, Delta delta) {
+	public static void lineText (Feature feature, String str, Font font, double offset, double dy) {
 		
 	}
 }

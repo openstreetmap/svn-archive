@@ -206,19 +206,13 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		map = new SeaMap();
 		if (data != null) {
 			for (OsmPrimitive osm : data) {
-				if ((osm instanceof Node) || (osm instanceof Way)) {
-					if (osm instanceof Node) {
-						map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
-					} else {
-						map.addWay(((Way) osm).getUniqueId());
-						for (Node node : ((Way) osm).getNodes()) {
-							map.addToWay((node.getUniqueId()));
-						}
+				if (osm instanceof Node) {
+					map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
+				} else if (osm instanceof Way) {
+					map.addWay(((Way) osm).getUniqueId());
+					for (Node node : ((Way) osm).getNodes()) {
+						map.addToWay((node.getUniqueId()));
 					}
-					for (Entry<String, String> entry : osm.getKeys().entrySet()) {
-						map.addTag(entry.getKey(), entry.getValue());
-					}
-					map.tagsDone(osm.getUniqueId());
 				} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
 					map.addMpoly(((Relation) osm).getUniqueId());
 					for (RelationMember mem : ((Relation) osm).getMembers()) {
@@ -226,6 +220,10 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 							map.addToMpoly(mem.getUniqueId(), (mem.getRole().equals("outer")));
 					}
 				}
+				for (Entry<String, String> entry : osm.getKeys().entrySet()) {
+					map.addTag(entry.getKey(), entry.getValue());
+				}
+				map.tagsDone(osm.getUniqueId());
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 
 import javax.swing.Action;
 
@@ -85,7 +86,7 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 		}
 	}
 
-	public Point2D getPoint(Coord coord) {
-		return Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
+	public Point2D.Double getPoint(Coord coord) {
+		return (Double) Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
 	}
 }

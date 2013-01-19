@@ -15,7 +15,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -28,7 +28,6 @@ import s57.S57val.*;
 import s57.S57val;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
-import symbols.Areas;
 import symbols.Symbols;
 import symbols.Symbols.*;
 
@@ -144,16 +143,95 @@ public class Renderer {
 		}
 	}
 	
+	private static Rectangle symbolSize(Symbol symbol) {
+		Symbol ssymb = symbol;
+		while (ssymb != null) {
+			for (Instr item : symbol) {
+				if (item.type == Prim.BBOX) {
+					return (Rectangle) item.params;
+				}
+				if (item.type == Prim.SYMB) {
+					ssymb = (Symbol) item.params;
+					break;
+				}
+			}
+			if (ssymb == symbol)
+				break;
+		}
+		return null;
+	}
+	
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
 		if (feature.flag != Fflag.NODE) {
-			ArrayList<Long> way = map.ways.get(feature.refs);
-			for (long node : way) {
-				Point2D point = helper.getPoint(map.nodes.get(node));
-				
+			Rectangle prect = symbolSize(prisymb);
+			Rectangle srect = symbolSize(secsymb);
+			if (srect == null)
+				ratio = 0;
+			if (prect != null) {
+				ArrayList<Long> ways = new ArrayList<Long>();
+				double psize = Math.abs(prect.getY()) * sScale;
+				double ssize = (srect != null) ? Math.abs(srect.getY()) * sScale : 0;
+				if (map.outers.containsKey(feature.refs)) {
+					ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
+				} else {
+					if (map.mpolys.containsKey(feature.refs)) {
+						ways.addAll(map.mpolys.get(feature.refs));
+					} else {
+						ways.add(feature.refs);
+					}
+				}
+				Point2D prev = new Point2D.Double();
+				Point2D next = new Point2D.Double();
+				Point2D curr = new Point2D.Double();
+				Point2D succ = new Point2D.Double();
+				boolean gap = true;
+				boolean piv = false;
+				double len = 0;
+				double angle = 0;
+				int scount = ratio;
+				Symbol symbol = prisymb;
+				for (long way : ways) {
+					boolean first = true;
+					for (long node : map.ways.get(way)) {
+						prev = next;
+						next = helper.getPoint(map.nodes.get(node));
+						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
+						piv = true;
+						if (first) {
+							curr = succ = next;
+							gap  = (space > 0);
+							scount  = ratio;
+							symbol  = prisymb;
+							len = gap ? psize * space * 0.5 : psize;
+							first = false;
+						} else {
+							while (curr.distance(next) >= len) {
+								if (piv) {
+									succ = new Point2D.Double(prev.getX() + (len * Math.cos(angle)), prev.getY() + (len * Math.sin(angle)));
+									piv = false;
+								} else {
+									succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
+								}
+								if (!gap) {
+									Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2(succ.getY() - curr.getY(), succ.getX() - curr.getX())+Math.toRadians(90))), null);
+								}
+								if (space > 0) gap = !gap;
+								curr = succ;
+				        len = gap ? (psize * space) : (--scount == 0) ? ssize : psize;
+				        if (scount == 0) {
+				          symbol = secsymb;
+				          scount = ratio;
+				        } else {
+				          symbol = prisymb;
+				        }
+							}
+						}
+					}
+				}
 			}
 		}
 	}
-	
+
 	public static void lineVector (Feature feature, LineStyle style) {
 		if (feature.flag != Fflag.NODE) {
 			ArrayList<Long> ways = new ArrayList<Long>();
@@ -201,10 +279,10 @@ public class Renderer {
 		}
 	}
 	
-	public static void labelText (Feature feature, String str, Font font, Delta delta) {
+	public static void labelText (Feature feature, String str, Font font, Color colour, Delta delta) {
 		Symbol label = new Symbol();
-		label.add(new Instr(Prim.FILL, Color.black));
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, delta)));
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour
+				, delta)));
 		Point2D point = helper.getPoint(findCentroid(feature));
 		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), delta, null);
 	}

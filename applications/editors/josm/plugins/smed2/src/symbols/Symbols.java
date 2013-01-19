@@ -56,8 +56,8 @@ public class Symbols {
 	}
 
 	public static class Instr {
-		Prim type;
-		Object params;
+		public Prim type;
+		public Object params;
 
 		public Instr(Prim itype, Object iparams) {
 			type = itype;
@@ -66,8 +66,8 @@ public class Symbols {
 	}
 
 	public static class Delta {
-		Handle h;
-		AffineTransform t;
+		public Handle h;
+		public AffineTransform t;
 
 		public Delta(Handle ih, AffineTransform it) {
 			h = ih;
@@ -76,8 +76,8 @@ public class Symbols {
 	}
 
 	public static class Scheme {
-		ArrayList<ColPAT> pat;
-		ArrayList<ColCOL> col;
+		public ArrayList<ColPAT> pat;
+		public ArrayList<ColCOL> col;
 
 		public Scheme(ArrayList<ColPAT> ipat, ArrayList<ColCOL> icol) {
 			pat = ipat;
@@ -86,13 +86,15 @@ public class Symbols {
 	}
 
 	public static class Caption {
-		String str;
-		Font font;
-		Delta dd;
+		public String string;
+		public Font font;
+		public Color colour;
+		public Delta dd;
 
-		public Caption(String istr, Font ifont, Delta idd) {
-			str = istr;
+		public Caption(String istr, Font ifont, Color icolour, Delta idd) {
+			string = istr;
 			font = ifont;
+			colour = icolour;
 			dd = idd;
 		}
 	}
@@ -286,7 +288,8 @@ public class Symbols {
 					break;
 				case TEXT:
 					Caption c = (Caption) item.params;
-					TextLayout layout = new TextLayout(c.str, c.font, g2.getFontRenderContext());
+					g2.setPaint(c.colour);
+					TextLayout layout = new TextLayout(c.string, c.font, g2.getFontRenderContext());
 					Rectangle2D bb = layout.getBounds();
 					dx = 0;
 					dy = 0;

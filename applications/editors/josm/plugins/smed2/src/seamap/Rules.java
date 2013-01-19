@@ -147,7 +147,7 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
 			AttItem name = feature.atts.get(Att.OBJNAM);
 			if ((zoom >= 10) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), null);
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), new Color(0x80c480ff), null);
 			break;
 		case TSELNE:
 			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
@@ -169,7 +169,7 @@ public class Rules {
 				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10);
 			}
 			if ((zoom >= 15) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 			break;
 		case MARCUL:
 			if (zoom >= 14)
@@ -194,13 +194,13 @@ public class Rules {
 			else
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
 			if ((zoom >= 12) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0)));
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0)));
 			break;
 		case RESARE:
 			if (zoom >= 12) {
 				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0);
-				if ((CatREA)Renderer.getAttVal(feature, feature.type, 0, Att.CATREA) == CatREA.REA_NWAK)
-					Renderer.symbol(feature, Areas.NoWake, Obj.RESARE, null);
+//				if ((CatREA)Renderer.getAttVal(feature, feature.type, 0, Att.CATREA) == CatREA.REA_NWAK)
+//					Renderer.symbol(feature, Areas.NoWake, Obj.RESARE, null);
 			}
 			break;
 		case OSPARE:
@@ -208,7 +208,7 @@ public class Rules {
 				Renderer.symbol(feature, Areas.WindFarm, Obj.OSPARE, null);
 				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }, null));
 				if ((zoom >= 15) && (name != null))
-					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
 			}
 			break;
 		case SEAARE:

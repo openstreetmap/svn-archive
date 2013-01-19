@@ -50,7 +50,7 @@ public class Notices {
 	private static final Symbol Speedboat = new Symbol();
 	private static final Symbol Sport = new Symbol();
 	static {
-		Sport.add(new Instr(Prim.TEXT, new Caption("SPORT", new Font("Arial", Font.BOLD, 15), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)))));
+		Sport.add(new Instr(Prim.TEXT, new Caption("SPORT", new Font("Arial", Font.BOLD, 15), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)))));
 	}
 	private static final Symbol Turn = new Symbol();
 	static {
@@ -64,7 +64,7 @@ public class Notices {
 	}
 	private static final Symbol VHF = new Symbol();
 	static {
-		VHF.add(new Instr(Prim.TEXT, new Caption("VHF", new Font("Arial", Font.BOLD, 20), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)))));
+		VHF.add(new Instr(Prim.TEXT, new Caption("VHF", new Font("Arial", Font.BOLD, 20), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)))));
 	}
 	private static final Symbol Waterbike = new Symbol();
 	private static final Symbol Waterski = new Symbol();

@@ -34,6 +34,7 @@ public class Areas {
 	}
 	public static final Symbol LaneArrow = new Symbol();
 	static {
+		LaneArrow.add(new Instr(Prim.BBOX, new Rectangle(-20,-240,40,240)));
 		LaneArrow.add(new Instr(Prim.STRK, new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		LaneArrow.add(new Instr(Prim.FILL, new Color(0x80c480ff, true)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(15,0); p.lineTo(15,-195); p.lineTo(40,-195);

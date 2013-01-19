@@ -1,0 +1,84 @@
+
+A rough English translation of the texts in the flyer.
+
+>> Title page:
+
+OpenStreetMap - On the road for a free world map
+
+>> Page 2 (with Garmin image)
+
+Why a free world map?
+
+There are lots of no-fee city plans and maps on the Internet. But most
+are only for private use and must not be re-published. In a flyer like
+this we would not be allowed to print them, for example. Plus, they're
+often not current and not complete. Errors are fixed only slowly.
+
+The most important thing is that you only get map images but not the
+data from which they were created. You need that data if you want to
+create your own maps or use the map on a variety of devices, for
+example for routing.
+
+Because of that, OpenStreetMap has people like you and me collecting
+raw data themselves - world-wide, sometimes as a team and sometimes on
+their own. With our own data an our own software we become independent
+of commercial providers. As in Wikipedia, everybody can take part.
+
+>> Page 3
+
+full-page map.
+
+>> Page 4 
+
+(note that on this page, some words are printed in bold to coincide
+with the labelling on the image on page 5)
+
+How does OpenstreetMap work?
+
+The map data for OpenStreetMap is collected in various ways. A GPS 
+device and manual notes are the traditional tools of the trade;
+the *GPS track* is a recording of the way the surveyor (we call them
+"mappers") has traveled. Today, the project can also frequently make
+use of good *aerial imagery*.
+
+An *editor* specially developed for OSM shows the aerial imagery and 
+the GPS tracks, and also data already present in OSM. Street geometries,
+building outlines, forests or lakes can be traced from aerial imagery,
+but information like house numbers, street names, or "points of interest"
+are missing from such images. Such data can only be added if you know
+the place well - or if you travel there for surveying.
+
+Afterwards, results are uploaded to the central project database, and
+the *finished map* is computed. Shortly thereafter, the new changes
+are visible for everyone.
+
+>> Page 5
+
+Captions: "GPS track", "aerial image", "editor", "finished map"
+
+>> Page 6 (with the book cover - this is the rear side of the flyer
+>> when folded)
+
+Join OpenStreetMap!
+
+The English-language project start page is at www.openstreetmap.org.
+There's also a Wiki with a lot of project information and of course
+the world map viewer. At www.openstreetmap.de you will find a German
+introduction with links to forums and mailing lists.
+
+(Book advertising blurb not translated)
+
+OpenStreetMap currently uses the Creative Commons Attribution Share-Alike
+license. Works that are based on OpenStreetMap data have to use that
+license also.
+
+>> Page 7 (below wide map)
+
+The map on this double page as well as the map on the reverse and the
+world map on the title have been created with Open Source software from
+OSM data, and are published under CC-BY-SA 2.0.
+
+>> Page 8 (below wide map)
+
+(Geofabrik advertising blurb not translated)
+

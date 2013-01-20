@@ -23,7 +23,7 @@ import s57.S57val.*;
 public class SeaMap {
 
 	public enum Fflag {
-		UNKN, NODE, WAY, AREA
+		UNKN, NODE, LINE, AREA
 	}
 
 	public class AttItem {
@@ -146,7 +146,7 @@ public class SeaMap {
 		ways.put(id, list);
 		feature = new Feature();
 		feature.refs = id;
-		feature.flag = Fflag.WAY;
+		feature.flag = Fflag.LINE;
 	}
 
 	public void addMpoly(long id) {
@@ -171,9 +171,9 @@ public class SeaMap {
 	}
 
 	public void tagsDone(long id) {
-		if ((feature.type != Obj.UNKOBJ) && !((feature.flag == Fflag.WAY) && (list.size() < 2))) {
+		if ((feature.type != Obj.UNKOBJ) && !((feature.flag == Fflag.LINE) && (list.size() < 2))) {
 			index.put(id, feature);
-			if ((feature.flag == Fflag.WAY) && (list.size() > 0) && (list.get(0).equals(list.get(list.size() - 1)))) {
+			if ((feature.flag == Fflag.LINE) && (list.size() > 0) && (list.get(0).equals(list.get(list.size() - 1)))) {
 				feature.flag = Fflag.AREA;
 			}
 			if (features.get(feature.type) == null) {

@@ -99,14 +99,14 @@ public class Renderer {
 		Coord coord;
 		ArrayList<Long> way;
 		if (map.mpolys.containsKey(feature.refs)) {
-			way = map.ways.get(map.mpolys.get(feature.refs));
+			way = map.ways.get(map.mpolys.get(feature.refs).get(0));
 		} else {
 			way = map.ways.get(feature.refs);
 		}
 		switch (feature.flag) {
 		case NODE:
 			return map.nodes.get(feature.refs);
-		case WAY:
+		case LINE:
 			coord = map.nodes.get(way.get(1));
 			break;
 		case AREA:
@@ -151,7 +151,7 @@ public class Renderer {
 					return (Rectangle) item.params;
 				}
 				if (item.type == Prim.SYMB) {
-					ssymb = (Symbol) item.params;
+					ssymb = ((SubSymbol)item.params).instr;
 					break;
 				}
 			}
@@ -292,10 +292,9 @@ public class Renderer {
 	
 	public static void labelText (Feature feature, String str, Font font, Color colour, Delta delta) {
 		Symbol label = new Symbol();
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour
-				, delta)));
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour, (delta == null) ? new Delta(Handle.CC, null) : delta)));
 		Point2D point = helper.getPoint(findCentroid(feature));
-		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), delta, null);
+		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), null, null);
 	}
 	
 	public static void lineText (Feature feature, String str, Font font, double offset, double dy) {

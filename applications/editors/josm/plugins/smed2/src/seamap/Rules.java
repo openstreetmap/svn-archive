@@ -194,7 +194,7 @@ public class Rules {
 			else
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
 			if ((zoom >= 12) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0)));
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), Color.black, null);
 			break;
 		case RESARE:
 			if (zoom >= 12) {
@@ -290,7 +290,40 @@ public class Rules {
 	private static void transits(Feature feature) {
 	}
 	private static void harbours(Feature feature) {
+		AttItem name = feature.atts.get(Att.OBJNAM);
+		switch (feature.type) {
+		case ACHARE:
+			if (zoom >= 12) {
+				Renderer.symbol(feature, Harbours.Anchorage, null, null);
+				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10);
+				if ((zoom >= 15) && ((name) != null)) {
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Color(0x80c480ff), null);
+				}
+			}
+			break;
+		}
 	}
+	/*
+	 *   if ((zoom >= 12) && is_type("anchorage")) {
+    symbol("anchorage");
+    if ((zoom >= 15) && (has_item_attribute("name")))
+      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
+    if ((zoom >= 12) && (is_area)) line_symbols("restricted_line", 0.5, "line_anchor", 10);
+  }
+  if ((zoom >= 16) && is_type("anchor_berth")) symbol("anchor_berth");
+  if ((zoom >= 12) && is_type("harbour")) {
+    if (has_attribute("category")) {
+      attribute_switch("category")
+      attribute_case("marina|yacht") symbol("marina");
+      attribute_case("marina_no_facilities") symbol("marina_nf");
+      attribute_default symbol("harbour");
+      end_switch
+    } else symbol("harbour");
+    if ((zoom >= 15) && (has_item_attribute("name")))
+      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
+  }
+
+	 */
 	private static void locks(Feature feature) {
 	}
 	private static void distances(Feature feature) {

@@ -121,12 +121,12 @@ public class Symbols {
 	}
 	
 	public static class SubSymbol {
-		Symbol instr;
-		double scale;
-		double x;
-		double y;
-		Delta delta;
-		Scheme scheme;
+		public Symbol instr;
+		public double scale;
+		public double x;
+		public double y;
+		public Delta delta;
+		public Scheme scheme;
 
 		public SubSymbol(Symbol iinstr, double iscale, double ix, double iy, Delta idelta, Scheme ischeme) {
 			instr = iinstr;
@@ -294,7 +294,7 @@ public class Symbols {
 					dx = 0;
 					dy = 0;
 					if (c.dd != null) {
-						g2.transform(c.dd.t);
+						if (c.dd.t != null) g2.transform(c.dd.t);
 						switch (c.dd.h) {
 						case CC:
 							dx -= bb.getX() + (bb.getWidth() / 2.0);

@@ -43,6 +43,7 @@ public class Areas {
 	}
 	public static final Symbol LineAnchor = new Symbol();
 	static {
+		LineAnchor.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,90)));
 		LineAnchor.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
 	}

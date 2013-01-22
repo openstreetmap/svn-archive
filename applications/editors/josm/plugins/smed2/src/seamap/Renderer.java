@@ -210,12 +210,11 @@ public class Renderer {
 									double rem = len;
 									double s = prev.distance(next);
 									double p = curr.distance(prev);
-									if (p > 0) {
+									if ((s > 0) && (p > 0)) {
 										double n = curr.distance(next);
-										double beta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
-										double gamma = Math.asin(p / len * Math.sin(beta));
-										double alpha = Math.PI - beta - gamma;
-										rem = len * Math.sin(alpha) / Math.sin(beta);
+										double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
+										double phi = Math.asin(p / len * Math.sin(theta));
+										rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
 									}
 									succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
 									piv = false;
@@ -224,7 +223,7 @@ public class Renderer {
 								}
 								if (!gap) {
 									Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
-											new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2(succ.getY() - curr.getY(), succ.getX() - curr.getX())+Math.toRadians(90))), null);
+											new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX()) + Math.toRadians(90)))), null);
 								}
 								if (space > 0) gap = !gap;
 								curr = succ;

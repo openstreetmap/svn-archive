@@ -658,7 +658,7 @@ public class S57val {
 	private static final EnumMap<StsSTS, S57enum> Status = new EnumMap<StsSTS, S57enum>(StsSTS.class); static { Status.put(StsSTS.STS_UNKN, new S57enum(0, ""));
 		Status.put(StsSTS.STS_PERM, new S57enum(1, "permanent")); Status.put(StsSTS.STS_OCAS, new S57enum(2, "occasional")); Status.put(StsSTS.STS_RCMD, new S57enum(3, "recommended")); 
 		Status.put(StsSTS.STS_NIUS, new S57enum(4, "not_in_use")); Status.put(StsSTS.STS_IMTT, new S57enum(5, "intermittent")); Status.put(StsSTS.STS_RESV, new S57enum(6, "reserved"));
-		Status.put(StsSTS.STS_TEMP, new S57enum(7, "tempory")); Status.put(StsSTS.STS_PRIV, new S57enum(8, "private")); Status.put(StsSTS.STS_MAND, new S57enum(9, "mandatory"));
+		Status.put(StsSTS.STS_TEMP, new S57enum(7, "temporary")); Status.put(StsSTS.STS_PRIV, new S57enum(8, "private")); Status.put(StsSTS.STS_MAND, new S57enum(9, "mandatory"));
 		Status.put(StsSTS.STS_EXTD, new S57enum(11, "extinguished")); Status.put(StsSTS.STS_ILLD, new S57enum(12, "illuminated")); Status.put(StsSTS.STS_HIST, new S57enum(13, "historic"));
 		Status.put(StsSTS.STS_PBLC, new S57enum(14, "public")); Status.put(StsSTS.STS_SYNC, new S57enum(15, "synchronised")); Status.put(StsSTS.STS_WCHD, new S57enum(16, "watched"));
 		Status.put(StsSTS.STS_UWCD, new S57enum(17, "unwatched")); Status.put(StsSTS.STS_EDBT, new S57enum(18, "existence_doubtful")); Status.put(StsSTS.STS_OREQ, new S57enum(19, "on_request"));

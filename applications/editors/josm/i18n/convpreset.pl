@@ -192,6 +192,7 @@ while(my $line = <>)
   else
   {
     print "/* unparsed line $line */\n";
+    print STDERR "/* unparsed line $line */\n";
     $result = 20
   }
 
@@ -201,4 +202,4 @@ while(my $line = <>)
 }
 
 print "}}\n";
-return $result if $result;
+exit($result) if $result;

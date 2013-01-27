@@ -1108,7 +1108,7 @@ public class S57val {
 	}
 	
 	public static String decodeValue(String val, Integer attl) {          // Convert S57 attribute value string to OSeaM attribute value string
-		Att att = S57att.lookupAttribute(attl);
+		Att att = S57att.decodeAttribute(attl);
 		switch (keys.get(att).conv) {
 		case A:
 		case S:
@@ -1134,7 +1134,7 @@ public class S57val {
 	}
 
 	
-	public static String stringValue(AttVal attval) {                  // Convert OSeaM value struct to OSeaM attribute value string
+	public static String stringValue(AttVal attval) {                  // Convert OSeaM value object to OSeaM attribute value string
 		switch (attval.conv) {
 		case A:
 		case S:
@@ -1170,7 +1170,7 @@ public class S57val {
 		return unkn;
 	}
 
-	public static AttVal convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value struct
+	public static AttVal convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value object
 		switch (keys.get(att).conv) {
 		case A:
 		case S:

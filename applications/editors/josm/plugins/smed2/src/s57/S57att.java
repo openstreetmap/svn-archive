@@ -2,6 +2,8 @@ package s57;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import s57.S57obj.*;
 
@@ -81,65 +83,75 @@ public class S57att {
 		AttIENC.put(Att.LC_WD1, 18026); AttIENC.put(Att.LC_WD2, 18027); AttIENC.put(Att.SHPTYP, 33066); AttIENC.put(Att.UPDMSG, 40000); AttIENC.put(Att.BNKWTW, 17999);
 	}
 	
-	private static final EnumMap<Att, String> AttSTR = new EnumMap<Att, String>(Att.class);
+	private static final HashMap<Integer, Att> S57Att = new HashMap<Integer, Att>();
 	static {
-		AttSTR.put(Att.UNKATT, ""); AttSTR.put(Att.AGENCY, "agency"); AttSTR.put(Att.BCNSHP, "shape"); AttSTR.put(Att.BUISHP, "shape"); AttSTR.put(Att.BOYSHP, "shape");
-		AttSTR.put(Att.BURDEP, "depth_buried"); AttSTR.put(Att.CALSGN, "callsign"); AttSTR.put(Att.CATAIR, "category"); AttSTR.put(Att.CATACH, "category");
-		AttSTR.put(Att.CATBRG, "category"); AttSTR.put(Att.CATBUA, "category"); AttSTR.put(Att.CATCBL, "category"); AttSTR.put(Att.CATCAN, "category");
-		AttSTR.put(Att.CATCAM, "category"); AttSTR.put(Att.CATCHP, "category"); AttSTR.put(Att.CATCOA, "category"); AttSTR.put(Att.CATCTR, "category");
-		AttSTR.put(Att.CATCON, "category"); AttSTR.put(Att.CATCOV, "category"); AttSTR.put(Att.CATCRN, "category"); AttSTR.put(Att.CATDAM, "category");
-		AttSTR.put(Att.CATDIS, "category"); AttSTR.put(Att.CATDOC, "category"); AttSTR.put(Att.CATDPG, "category"); AttSTR.put(Att.CATFNC, "category");
-		AttSTR.put(Att.CATFRY, "category"); AttSTR.put(Att.CATFIF, "category"); AttSTR.put(Att.CATFOG, "category"); AttSTR.put(Att.CATFOR, "category");
-		AttSTR.put(Att.CATGAT, "category"); AttSTR.put(Att.CATHAF, "category"); AttSTR.put(Att.CATHLK, "category"); AttSTR.put(Att.CATICE, "category");
-		AttSTR.put(Att.CATINB, "category"); AttSTR.put(Att.CATLND, "category"); AttSTR.put(Att.CATLMK, "category"); AttSTR.put(Att.CATLAM, "category");
-		AttSTR.put(Att.CATLIT, "category"); AttSTR.put(Att.CATMFA, "category"); AttSTR.put(Att.CATMPA, "category"); AttSTR.put(Att.CATMOR, "category");
-		AttSTR.put(Att.CATNAV, "category"); AttSTR.put(Att.CATOBS, "category"); AttSTR.put(Att.CATOFP, "category"); AttSTR.put(Att.CATOLB, "category");
-		AttSTR.put(Att.CATPLE, "category"); AttSTR.put(Att.CATPIL, "category"); AttSTR.put(Att.CATPIP, "category"); AttSTR.put(Att.CATPRA, "category");
-		AttSTR.put(Att.CATPYL, "category"); AttSTR.put(Att.CATQUA, "category"); AttSTR.put(Att.CATRAS, "category"); AttSTR.put(Att.CATRTB, "category");
-		AttSTR.put(Att.CATROS, "category"); AttSTR.put(Att.CATTRK, "category"); AttSTR.put(Att.CATRSC, "category"); AttSTR.put(Att.CATREA, "category");
-		AttSTR.put(Att.CATROD, "category"); AttSTR.put(Att.CATRUN, "category"); AttSTR.put(Att.CATSEA, "category"); AttSTR.put(Att.CATSLC, "category");
-		AttSTR.put(Att.CATSIT, "category"); AttSTR.put(Att.CATSIW, "category"); AttSTR.put(Att.CATSIL, "category"); AttSTR.put(Att.CATSLO, "category");
-		AttSTR.put(Att.CATSCF, "category"); AttSTR.put(Att.CATSPM, "category"); AttSTR.put(Att.CATTSS, "category"); AttSTR.put(Att.CATVEG, "category");
-		AttSTR.put(Att.CATWAT, "category"); AttSTR.put(Att.CATWED, "category"); AttSTR.put(Att.CATWRK, "category"); AttSTR.put(Att.CATZOC, "category");
-		AttSTR.put(Att.COLOUR, "colour"); AttSTR.put(Att.COLPAT, "colour_pattern"); AttSTR.put(Att.COMCHA, "channel"); AttSTR.put(Att.CONDTN, "condition");
-		AttSTR.put(Att.CONRAD, "reflectivity"); AttSTR.put(Att.CONVIS, "conspicuity"); AttSTR.put(Att.CURVEL, "velocity"); AttSTR.put(Att.DATEND, "end_date");
-		AttSTR.put(Att.DATSTA, "start_date"); AttSTR.put(Att.DRVAL1, "minimum_depth"); AttSTR.put(Att.DRVAL2, "maximum_depth"); AttSTR.put(Att.DUNITS, "depth_units");
-		AttSTR.put(Att.ELEVAT, "elevation"); AttSTR.put(Att.ESTRNG, "estimated_range"); AttSTR.put(Att.EXCLIT, "exhibition"); AttSTR.put(Att.EXPSOU, "exposition");
-		AttSTR.put(Att.FUNCTN, "function"); AttSTR.put(Att.HEIGHT, "height"); AttSTR.put(Att.HUNITS, "height_units"); AttSTR.put(Att.HORACC, "accuracy");
-		AttSTR.put(Att.HORCLR, "clearance"); AttSTR.put(Att.HORLEN, "length"); AttSTR.put(Att.HORWID, "width"); AttSTR.put(Att.ICEFAC, "factor");
-		AttSTR.put(Att.INFORM, "information"); AttSTR.put(Att.JRSDTN, "jurisdiction"); AttSTR.put(Att.$JUSTH, ""); AttSTR.put(Att.$JUSTV, "");
-		AttSTR.put(Att.LIFCAP, "maximum_load"); AttSTR.put(Att.LITCHR, "character"); AttSTR.put(Att.LITVIS, "visibility"); AttSTR.put(Att.MARSYS, "system");
-		AttSTR.put(Att.MLTYLT, "multiple"); AttSTR.put(Att.NATION, "nationality"); AttSTR.put(Att.NATCON, "construction"); AttSTR.put(Att.NATSUR, "surface");
-		AttSTR.put(Att.NATQUA, "surface_qualification"); AttSTR.put(Att.NMDATE, "nm_date"); AttSTR.put(Att.OBJNAM, "name"); AttSTR.put(Att.ORIENT, "orientation");
-		AttSTR.put(Att.PEREND, "end_date"); AttSTR.put(Att.PERSTA, "start_date"); AttSTR.put(Att.PICREP, "representation"); AttSTR.put(Att.PILDST, "pilot_district");
-		AttSTR.put(Att.PRCTRY, "producing_country"); AttSTR.put(Att.PRODCT, "product"); AttSTR.put(Att.PUBREF, "reference"); AttSTR.put(Att.QUASOU, "quality");
-		AttSTR.put(Att.RADWAL, "wavelength"); AttSTR.put(Att.RADIUS, "radius"); AttSTR.put(Att.RECDAT, "date"); AttSTR.put(Att.RECIND, "indication");
-		AttSTR.put(Att.RYRMGV, "year"); AttSTR.put(Att.RESTRN, "restriction"); AttSTR.put(Att.SECTR1, "sector_start"); AttSTR.put(Att.SECTR2, "sector_end");
-		AttSTR.put(Att.SHIPAM, "shift"); AttSTR.put(Att.SIGFRQ, "frequency"); AttSTR.put(Att.SIGGEN, "generation"); AttSTR.put(Att.SIGGRP, "group");
-		AttSTR.put(Att.SIGPER, "period"); AttSTR.put(Att.SIGSEQ, "sequence"); AttSTR.put(Att.SOUACC, "accuracy"); AttSTR.put(Att.SDISMX, "maximum_sounding");
-		AttSTR.put(Att.SDISMN, "minimum_sounding"); AttSTR.put(Att.SORDAT, "source_date"); AttSTR.put(Att.SORIND, "source"); AttSTR.put(Att.STATUS, "status");
-		AttSTR.put(Att.SURATH, "authority"); AttSTR.put(Att.SUREND, "end_date"); AttSTR.put(Att.SURSTA, "start_date"); AttSTR.put(Att.SURTYP, "survey");
-		AttSTR.put(Att.TECSOU, "technique"); AttSTR.put(Att.TXTDSC, "description"); AttSTR.put(Att.TIMEND, "end_time"); AttSTR.put(Att.TIMSTA, "start_time");
-		AttSTR.put(Att.TOPSHP, "shape"); AttSTR.put(Att.TRAFIC, "flow"); AttSTR.put(Att.VALACM, "variation_change"); AttSTR.put(Att.VALDCO, "depth");
-		AttSTR.put(Att.VALLMA, "anomaly"); AttSTR.put(Att.VALMAG, "variation"); AttSTR.put(Att.VALMXR, "maximum_range"); AttSTR.put(Att.VALNMR, "range");
-		AttSTR.put(Att.VALSOU, "sounding"); AttSTR.put(Att.VERACC, "vertical_accuracy"); AttSTR.put(Att.VERCLR, "clearance_height");
-		AttSTR.put(Att.VERCCL, "clearance_height_closed"); AttSTR.put(Att.VERCOP, "clearance_height_open"); AttSTR.put(Att.VERCSA, "clearance_height_safe");
-		AttSTR.put(Att.VERDAT, "vertical_datum"); AttSTR.put(Att.VERLEN, "vertical_length"); AttSTR.put(Att.WATLEV, "water_level"); AttSTR.put(Att.CAT_TS, "category");
-		AttSTR.put(Att.PUNITS, "units"); AttSTR.put(Att.NINFOM, "national_information"); AttSTR.put(Att.NOBJNM, "national_name"); AttSTR.put(Att.NPLDST, "national_pilot_district");
-		AttSTR.put(Att.NTXTDS, "national_description"); AttSTR.put(Att.HORDAT, "horizontal_datum"); AttSTR.put(Att.POSACC, "positional_accuracy");
-		AttSTR.put(Att.QUAPOS, "position_quality"); AttSTR.put(Att.ADDMRK, "addition"); AttSTR.put(Att.BNKWTW, "bank");AttSTR.put(Att.CATBNK, "category");
-		AttSTR.put(Att.CATNMK, "category"); AttSTR.put(Att.CLSDNG, "class"); AttSTR.put(Att.DIRIMP, "impact"); AttSTR.put(Att.DISBK1, "distance_start");
-		AttSTR.put(Att.DISBK2, "distance_end");AttSTR.put(Att.DISIPU, "distance_up"); AttSTR.put(Att.DISIPD, "distance_down"); AttSTR.put(Att.ELEVA1, "minimum_elevation");
-		AttSTR.put(Att.ELEVA2, "maximum_elevation"); AttSTR.put(Att.FNCTNM, "function"); AttSTR.put(Att.WTWDIS, "distance"); AttSTR.put(Att.BUNVES, "availibility");
-		AttSTR.put(Att.CATBRT, "category"); AttSTR.put(Att.CATBUN, "category"); AttSTR.put(Att.CATCCL, "category"); AttSTR.put(Att.CATHBR, "category");
-		AttSTR.put(Att.CATRFD, "category"); AttSTR.put(Att.CATTML, "category"); AttSTR.put(Att.COMCTN, "communication"); AttSTR.put(Att.HORCLL, "clearance_length");
-		AttSTR.put(Att.HORCLW, "clearance_width"); AttSTR.put(Att.TRSHGD, "goods"); AttSTR.put(Att.UNLOCD, "locode"); AttSTR.put(Att.CATGAG, "category");
-		AttSTR.put(Att.HIGWAT, "high_value"); AttSTR.put(Att.HIGNAM, "high_name"); AttSTR.put(Att.LOWWAT, "low_value"); AttSTR.put(Att.LOWNAM, "low_name");
-		AttSTR.put(Att.MEAWAT, "mean_value"); AttSTR.put(Att.MEANAM, "mean_name"); AttSTR.put(Att.OTHWAT, "local_value"); AttSTR.put(Att.OTHNAM, "local_name");
-		AttSTR.put(Att.REFLEV, "gravity_reference"); AttSTR.put(Att.SDRLEV, "sounding_name"); AttSTR.put(Att.VCRLEV, "vertical_name"); AttSTR.put(Att.CATVTR, "category");
-		AttSTR.put(Att.CATTAB, "operation"); AttSTR.put(Att.SCHREF, "schedule"); AttSTR.put(Att.USESHP, "use"); AttSTR.put(Att.CURVHW, "high_velocity");
-		AttSTR.put(Att.CURVLW, "low_velocity"); AttSTR.put(Att.CURVMW, "mean_velocity"); AttSTR.put(Att.CURVOW, "other_velocity"); AttSTR.put(Att.APTREF, "passing_time");
-		AttSTR.put(Att.CATEXS, "category"); AttSTR.put(Att.CATWWM, "category"); AttSTR.put(Att.SHPTYP, "ship"); AttSTR.put(Att.UPDMSG, "message"); AttSTR.put(Att.LITRAD, "radius");
+		for (Map.Entry<Att, Integer> entry : AttS57.entrySet()) {
+			S57Att.put(entry.getValue(), entry.getKey());
+		}
+		for (Map.Entry<Att, Integer> entry : AttIENC.entrySet()) {
+			S57Att.put(entry.getValue(), entry.getKey());
+		}
+	}
+	
+	private static final EnumMap<Att, String> AttStr = new EnumMap<Att, String>(Att.class);
+	static {
+		AttStr.put(Att.UNKATT, ""); AttStr.put(Att.AGENCY, "agency"); AttStr.put(Att.BCNSHP, "shape"); AttStr.put(Att.BUISHP, "shape"); AttStr.put(Att.BOYSHP, "shape");
+		AttStr.put(Att.BURDEP, "depth_buried"); AttStr.put(Att.CALSGN, "callsign"); AttStr.put(Att.CATAIR, "category"); AttStr.put(Att.CATACH, "category");
+		AttStr.put(Att.CATBRG, "category"); AttStr.put(Att.CATBUA, "category"); AttStr.put(Att.CATCBL, "category"); AttStr.put(Att.CATCAN, "category");
+		AttStr.put(Att.CATCAM, "category"); AttStr.put(Att.CATCHP, "category"); AttStr.put(Att.CATCOA, "category"); AttStr.put(Att.CATCTR, "category");
+		AttStr.put(Att.CATCON, "category"); AttStr.put(Att.CATCOV, "category"); AttStr.put(Att.CATCRN, "category"); AttStr.put(Att.CATDAM, "category");
+		AttStr.put(Att.CATDIS, "category"); AttStr.put(Att.CATDOC, "category"); AttStr.put(Att.CATDPG, "category"); AttStr.put(Att.CATFNC, "category");
+		AttStr.put(Att.CATFRY, "category"); AttStr.put(Att.CATFIF, "category"); AttStr.put(Att.CATFOG, "category"); AttStr.put(Att.CATFOR, "category");
+		AttStr.put(Att.CATGAT, "category"); AttStr.put(Att.CATHAF, "category"); AttStr.put(Att.CATHLK, "category"); AttStr.put(Att.CATICE, "category");
+		AttStr.put(Att.CATINB, "category"); AttStr.put(Att.CATLND, "category"); AttStr.put(Att.CATLMK, "category"); AttStr.put(Att.CATLAM, "category");
+		AttStr.put(Att.CATLIT, "category"); AttStr.put(Att.CATMFA, "category"); AttStr.put(Att.CATMPA, "category"); AttStr.put(Att.CATMOR, "category");
+		AttStr.put(Att.CATNAV, "category"); AttStr.put(Att.CATOBS, "category"); AttStr.put(Att.CATOFP, "category"); AttStr.put(Att.CATOLB, "category");
+		AttStr.put(Att.CATPLE, "category"); AttStr.put(Att.CATPIL, "category"); AttStr.put(Att.CATPIP, "category"); AttStr.put(Att.CATPRA, "category");
+		AttStr.put(Att.CATPYL, "category"); AttStr.put(Att.CATQUA, "category"); AttStr.put(Att.CATRAS, "category"); AttStr.put(Att.CATRTB, "category");
+		AttStr.put(Att.CATROS, "category"); AttStr.put(Att.CATTRK, "category"); AttStr.put(Att.CATRSC, "category"); AttStr.put(Att.CATREA, "category");
+		AttStr.put(Att.CATROD, "category"); AttStr.put(Att.CATRUN, "category"); AttStr.put(Att.CATSEA, "category"); AttStr.put(Att.CATSLC, "category");
+		AttStr.put(Att.CATSIT, "category"); AttStr.put(Att.CATSIW, "category"); AttStr.put(Att.CATSIL, "category"); AttStr.put(Att.CATSLO, "category");
+		AttStr.put(Att.CATSCF, "category"); AttStr.put(Att.CATSPM, "category"); AttStr.put(Att.CATTSS, "category"); AttStr.put(Att.CATVEG, "category");
+		AttStr.put(Att.CATWAT, "category"); AttStr.put(Att.CATWED, "category"); AttStr.put(Att.CATWRK, "category"); AttStr.put(Att.CATZOC, "category");
+		AttStr.put(Att.COLOUR, "colour"); AttStr.put(Att.COLPAT, "colour_pattern"); AttStr.put(Att.COMCHA, "channel"); AttStr.put(Att.CONDTN, "condition");
+		AttStr.put(Att.CONRAD, "reflectivity"); AttStr.put(Att.CONVIS, "conspicuity"); AttStr.put(Att.CURVEL, "velocity"); AttStr.put(Att.DATEND, "end_date");
+		AttStr.put(Att.DATSTA, "start_date"); AttStr.put(Att.DRVAL1, "minimum_depth"); AttStr.put(Att.DRVAL2, "maximum_depth"); AttStr.put(Att.DUNITS, "depth_units");
+		AttStr.put(Att.ELEVAT, "elevation"); AttStr.put(Att.ESTRNG, "estimated_range"); AttStr.put(Att.EXCLIT, "exhibition"); AttStr.put(Att.EXPSOU, "exposition");
+		AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "height_units"); AttStr.put(Att.HORACC, "accuracy");
+		AttStr.put(Att.HORCLR, "clearance"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
+		AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.$JUSTH, ""); AttStr.put(Att.$JUSTV, "");
+		AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character"); AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");
+		AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality"); AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface");
+		AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date"); AttStr.put(Att.OBJNAM, "name"); AttStr.put(Att.ORIENT, "orientation");
+		AttStr.put(Att.PEREND, "end_date"); AttStr.put(Att.PERSTA, "start_date"); AttStr.put(Att.PICREP, "representation"); AttStr.put(Att.PILDST, "pilot_district");
+		AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product"); AttStr.put(Att.PUBREF, "reference"); AttStr.put(Att.QUASOU, "quality");
+		AttStr.put(Att.RADWAL, "wavelength"); AttStr.put(Att.RADIUS, "radius"); AttStr.put(Att.RECDAT, "date"); AttStr.put(Att.RECIND, "indication");
+		AttStr.put(Att.RYRMGV, "year"); AttStr.put(Att.RESTRN, "restriction"); AttStr.put(Att.SECTR1, "sector_start"); AttStr.put(Att.SECTR2, "sector_end");
+		AttStr.put(Att.SHIPAM, "shift"); AttStr.put(Att.SIGFRQ, "frequency"); AttStr.put(Att.SIGGEN, "generation"); AttStr.put(Att.SIGGRP, "group");
+		AttStr.put(Att.SIGPER, "period"); AttStr.put(Att.SIGSEQ, "sequence"); AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");
+		AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date"); AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");
+		AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date"); AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");
+		AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description"); AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");
+		AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "flow"); AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth");
+		AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation"); AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");
+		AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy"); AttStr.put(Att.VERCLR, "clearance_height");
+		AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open"); AttStr.put(Att.VERCSA, "clearance_height_safe");
+		AttStr.put(Att.VERDAT, "vertical_datum"); AttStr.put(Att.VERLEN, "vertical_length"); AttStr.put(Att.WATLEV, "water_level"); AttStr.put(Att.CAT_TS, "category");
+		AttStr.put(Att.PUNITS, "units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name"); AttStr.put(Att.NPLDST, "national_pilot_district");
+		AttStr.put(Att.NTXTDS, "national_description"); AttStr.put(Att.HORDAT, "horizontal_datum"); AttStr.put(Att.POSACC, "positional_accuracy");
+		AttStr.put(Att.QUAPOS, "position_quality"); AttStr.put(Att.ADDMRK, "addition"); AttStr.put(Att.BNKWTW, "bank");AttStr.put(Att.CATBNK, "category");
+		AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "class"); AttStr.put(Att.DIRIMP, "impact"); AttStr.put(Att.DISBK1, "distance_start");
+		AttStr.put(Att.DISBK2, "distance_end");AttStr.put(Att.DISIPU, "distance_up"); AttStr.put(Att.DISIPD, "distance_down"); AttStr.put(Att.ELEVA1, "minimum_elevation");
+		AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance"); AttStr.put(Att.BUNVES, "availibility");
+		AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category"); AttStr.put(Att.CATHBR, "category");
+		AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication"); AttStr.put(Att.HORCLL, "clearance_length");
+		AttStr.put(Att.HORCLW, "clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode"); AttStr.put(Att.CATGAG, "category");
+		AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value"); AttStr.put(Att.LOWNAM, "low_name");
+		AttStr.put(Att.MEAWAT, "mean_value"); AttStr.put(Att.MEANAM, "mean_name"); AttStr.put(Att.OTHWAT, "local_value"); AttStr.put(Att.OTHNAM, "local_name");
+		AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name"); AttStr.put(Att.CATVTR, "category");
+		AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
+		AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
+		AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.CATWWM, "category"); AttStr.put(Att.SHPTYP, "ship"); AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
 	}
 	
 	static class ObjAtt {
@@ -210,46 +222,32 @@ public class S57att {
 	  return ver;
 	}
 
-	public static String decodeAttribute(Integer attribute) {	// Convert S57 attribute code to OSeaM attribute string
-		String str = AttSTR.get(lookupAttribute(attribute));
-		return str != null ? str : "";
+	public static Att decodeAttribute(Integer attribute) {	// Convert S57 attribute code to OSeaM attribute enumeration
+		Att att = S57Att.get(attribute);
+		return (att != null) ? att : Att.UNKATT;
 	}
 	
-	public static Integer encodeAttribute(String attribute, Integer objl) {	// Convert OSeaM attribute string to S57 attribute code
-	  Att atta = enumAttribute(attribute, S57obj.lookupType(objl));
-	  return AttS57.get(atta) != 0 ? AttS57.get(atta) : AttIENC.get(atta);
+	public static Integer encodeAttribute(String attribute) {	// Convert OSeaM attribute enumeration to S57 attribute code
+		if (AttS57.containsKey(attribute))
+			return AttS57.get(attribute);
+		else if (AttIENC.containsKey(attribute))
+			return AttIENC.get(attribute);
+		return 0;
 	}
 
 	public static Integer encodeAttribute(Att attribute) {	// Convert OSeaM attribute enumeration to S57 attribute code
 	  return AttS57.get(attribute) != 0 ? AttS57.get(attribute) : AttIENC.get(attribute);
 	}
 
-	public static Att lookupAttribute(Integer attribute) {	// Convert S57 attribute code to OSeaM enumeration
-		if (attribute < 10000) {
-			for (Att att : AttS57.keySet()) {
-				if (AttS57.get(att).equals(attribute)) {
-					return att;
-				}
-			}
-		} else { 
-			for (Att att : AttIENC.keySet()) {
-				if (AttIENC.get(att).equals(attribute)) {
-					return att;
-				}
-			}
-		}
-		return Att.UNKATT;
-	}
-
 	public static String stringAttribute(Att attribute) {	// Convert OSeaM enumeration to OSeaM attribute string
-		String str = AttSTR.get(attribute);
+		String str = AttStr.get(attribute);
 		return str != null ? str : "";
 	}
 	
 	public static Att enumAttribute(String attribute, Obj obj) {	// Convert OSeaM attribute string to OSeaM enumeration
 	  if ((attribute != null) && (attribute.length() > 0)) {
-	    for (Att att : AttSTR.keySet()) {
-	      if (AttSTR.get(att).equals(attribute) && (verifyAttribute(obj, att) != Ver.NON ))
+	    for (Att att : AttStr.keySet()) {
+	      if (AttStr.get(att).equals(attribute) && (verifyAttribute(obj, att) != Ver.NON ))
 	        return att;
 	    }
 	  }

@@ -62,6 +62,7 @@
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
+        <ant antfile="build.xml" target="dist" dir="pbf"/>
         <ant antfile="build.xml" target="dist" dir="pdfimport"/>
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
@@ -100,7 +101,6 @@
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="trustosm"/>
-        <ant antfile="build.xml" target="dist" dir="pbf"/>
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="00_plugin_dir_template"/>

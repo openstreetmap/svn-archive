@@ -88,7 +88,7 @@ public class PrintableMapView extends MapView implements Printable {
      */
     public PrintableMapView() {
         /* Initialize MapView with a dummy parent */
-        super(new JPanel());
+        super(new JPanel(), null);
         
         /* Disable MapView's ComponentLister, 
          * as it will interfere with the main MapView. */

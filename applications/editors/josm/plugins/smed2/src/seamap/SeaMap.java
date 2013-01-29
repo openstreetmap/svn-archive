@@ -25,6 +25,27 @@ public class SeaMap {
 	public enum Fflag {
 		UNKN, NODE, LINE, AREA
 	}
+	
+	public enum Nflag {
+		ANON, ISOL, CONN
+	}
+
+	public class Coord {
+		public double lat;
+		public double lon;
+		public Nflag flg;
+
+		public Coord(double ilat, double ilon) {
+			lat = ilat;
+			lon = ilon;
+			flg = Nflag.ANON;
+		}
+		public Coord(double ilat, double ilon, Nflag iflg) {
+			lat = ilat;
+			lon = ilon;
+			flg = iflg;
+		}
+	}
 
 	public class AttItem {
 		Conv conv;
@@ -97,16 +118,6 @@ public class SeaMap {
 			type = Obj.UNKOBJ;
 			atts = new AttMap();
 			objs = new ObjMap();
-		}
-	}
-
-	public class Coord {
-		public double lat;
-		public double lon;
-
-		public Coord(double ilat, double ilon) {
-			lat = ilat;
-			lon = ilon;
 		}
 	}
 

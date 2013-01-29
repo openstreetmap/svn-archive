@@ -149,7 +149,8 @@ public class S57obj {
 	private static final HashMap<String, Obj> StrObj = new HashMap<String, Obj>();
 	static {
 		for (Map.Entry<Obj, String> entry : ObjStr.entrySet()) {
-			StrObj.put(entry.getValue(), entry.getKey());
+			if (!entry.getValue().isEmpty())
+				StrObj.put(entry.getValue(), entry.getKey());
 		}
 	}
 	
@@ -172,7 +173,7 @@ public class S57obj {
 	}
 
 	public static Obj enumType(String type) { // Convert OSeaM object string to OSeaM object enumeration
-		if (StrObj.containsKey(type))
+		if ((type != null) && !type.isEmpty() && (StrObj.containsKey(type)))
 			return StrObj.get(type);
 		else
 			return Obj.UNKOBJ;

@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -65,6 +65,8 @@ public class S57dat extends JPanel {
 	
 	private File importFile;
 	private FileInputStream inp;
+	private File exportFile;
+	private FileOutputStream outp;
 	private OsmDataLayer layer;
 	private DataSet data;
 
@@ -73,9 +75,20 @@ public class S57dat extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == importButton) {
 				readFile();
-		    Smed2Action.panelS57.setVisible(false);
-		    Smed2Action.panelMain.setVisible(true);
+		    Smed2Action.panelS57.setVisible(true);
+		    Smed2Action.panelMain.setVisible(false);
         PanelMain.messageBar.setText("File imported");
+      }
+		}
+	};
+	private JButton exportButton;
+	private ActionListener alExport = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (e.getSource() == exportButton) {
+				writeFile();
+		    Smed2Action.panelS57.setVisible(true);
+		    Smed2Action.panelMain.setVisible(false);
+        PanelMain.messageBar.setText("File exported");
       }
 		}
 	};
@@ -88,7 +101,7 @@ public class S57dat extends JPanel {
 				} catch (IOException e1) {}
 		    Smed2Action.panelS57.setVisible(false);
 		    Smed2Action.panelMain.setVisible(true);
-        PanelMain.messageBar.setText("Import cancelled");
+        PanelMain.messageBar.setText("Operation cancelled");
       }
 		}
 	};
@@ -107,6 +120,11 @@ public class S57dat extends JPanel {
 		importButton.setText(tr("Import"));
 		importButton.addActionListener(alImport);
 		add(importButton);
+		exportButton = new JButton();
+		exportButton.setBounds(370, 430, 100, 20);
+		exportButton.setText(tr("Export"));
+		exportButton.addActionListener(alExport);
+		add(exportButton);
 	}
 
 	public void startImport(File file) {
@@ -119,6 +137,21 @@ public class S57dat extends JPanel {
 		}
     Smed2Action.panelMain.setVisible(false);
     Smed2Action.panelS57.setVisible(true);
+	}
+
+	public void startExport(File file) {
+		exportFile = file;
+		try {
+			outp = new FileOutputStream(file);
+		} catch (IOException e) {
+      PanelMain.messageBar.setText("Failed to open file");
+			return;
+		}
+    Smed2Action.panelMain.setVisible(false);
+    Smed2Action.panelS57.setVisible(true);
+	}
+
+	private void writeFile() {
 	}
 
 	private void readFile() {

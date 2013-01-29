@@ -70,7 +70,7 @@ public class Renderer {
 		}
 	}
 
-	public static double calcArea(Feature feature) {
+	public static double signedArea(Feature feature) {
 	  if (feature.flag == Fflag.AREA) {
 			ArrayList<Long> way;
 			if (map.mpolys.containsKey(feature.refs)) {
@@ -90,9 +90,17 @@ public class Renderer {
 				llon = lon;
 				llat = lat;
 	    }
-	    return Math.abs(sigma) * 3444 * 3444 / 2.0;
+	    return sigma;
 	  }
-	  return 0.0;
+	  return 0;
+	}
+
+	public boolean handOfArea(Feature feature) {
+		return (signedArea(feature) < 0);
+	}
+	
+	public static double calcArea(Feature feature) {
+	  return Math.abs(signedArea(feature)) * 3444 * 3444 / 2.0;
 	}
 
 	public static Coord findCentroid(Feature feature) {

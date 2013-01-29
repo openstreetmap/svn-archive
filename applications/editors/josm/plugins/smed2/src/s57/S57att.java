@@ -245,7 +245,7 @@ public class S57att {
 	}
 	
 	public static Att enumAttribute(String attribute, Obj obj) {	// Convert OSeaM attribute string to OSeaM enumeration
-	  if ((attribute != null) && (attribute.length() > 0)) {
+	  if ((attribute != null) && !attribute.isEmpty()) {
 	    for (Att att : AttStr.keySet()) {
 	      if (AttStr.get(att).equals(attribute) && (verifyAttribute(obj, att) != Ver.NON ))
 	        return att;

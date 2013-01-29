@@ -24,15 +24,31 @@ public class PanelMain extends JPanel {
 //			item.saveSign(???);
 		}
 	};
-	private JButton openButton = null;
-	final JFileChooser fc = new JFileChooser();
-	private ActionListener alOpen = new ActionListener() {
+	private JButton importButton = null;
+	final JFileChooser ifc = new JFileChooser();
+	private ActionListener alImport = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if (e.getSource() == openButton) {
+			if (e.getSource() == importButton) {
         messageBar.setText("Select file");
-        int returnVal = fc.showOpenDialog(Main.parent);
+        int returnVal = ifc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-          Smed2Action.panelS57.startImport(fc.getSelectedFile());
+          Smed2Action.panelS57.startImport(ifc.getSelectedFile());
+         } else {
+           messageBar.setText("");
+         }
+      }
+		}
+	};
+
+	private JButton exportButton = null;
+	final JFileChooser efc = new JFileChooser();
+	private ActionListener alExport = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (e.getSource() == exportButton) {
+        messageBar.setText("Select file");
+        int returnVal = efc.showOpenDialog(Main.parent);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          Smed2Action.panelS57.startExport(efc.getSelectedFile());
          } else {
            messageBar.setText("");
          }
@@ -53,14 +69,18 @@ public class PanelMain extends JPanel {
 		add(tabs);
 		
     messageBar = new JTextField();
-    messageBar.setBounds(40, 430, 320, 20);
+    messageBar.setBounds(70, 430, 290, 20);
     messageBar.setEditable(false);
     messageBar.setBackground(Color.WHITE);
     add(messageBar);
-		openButton = new JButton(new ImageIcon(getClass().getResource("/images/fileButton.png")));
-		openButton.setBounds(10, 430, 20, 20);
-		add(openButton);
-		openButton.addActionListener(alOpen);
+		importButton = new JButton(new ImageIcon(getClass().getResource("/images/importButton.png")));
+		importButton.setBounds(10, 430, 20, 20);
+		add(importButton);
+		importButton.addActionListener(alImport);
+		exportButton = new JButton(new ImageIcon(getClass().getResource("/images/exportButton.png")));
+		exportButton.setBounds(40, 430, 20, 20);
+		add(exportButton);
+		exportButton.addActionListener(alExport);
 		saveButton = new JButton();
 		saveButton.setBounds(370, 430, 100, 20);
 		saveButton.setText(tr("Save"));

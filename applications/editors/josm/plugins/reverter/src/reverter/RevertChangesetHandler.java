@@ -10,13 +10,14 @@ public class RevertChangesetHandler extends RequestHandler {
     public static final String command = "revert_changeset";
     public static final String permissionKey = "remotecontrol.permission.revert_changeset";
     public static final boolean permissionDefault = true;
+    
+    private int changesetId;
 
     @Override
     protected void handleRequest() throws RequestHandlerErrorException,
             RequestHandlerBadRequestException {
         try
         {
-            int changesetId = Integer.parseInt(args.get("id"));
             Main.worker.submit(new RevertChangesetTask(changesetId, ChangesetReverter.RevertType.FULL, true));
         } catch (Exception ex) {
             System.out.println("RemoteControl: Error parsing revert_changeset remote control request:");
@@ -39,5 +40,14 @@ public class RevertChangesetHandler extends RequestHandler {
     @Override
     public String getPermissionMessage() {
         return tr("Remote Control has been asked to revert a changeset.");
+    }
+
+    @Override
+    protected void validateRequest() throws RequestHandlerBadRequestException {
+        try {
+            changesetId = Integer.parseInt(args.get("id"));
+        } catch (NumberFormatException e) {
+            throw new RequestHandlerBadRequestException("NumberFormatException: "+e.getMessage());
+        }
     }
 }

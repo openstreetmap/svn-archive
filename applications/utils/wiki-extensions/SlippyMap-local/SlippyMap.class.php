@@ -171,6 +171,8 @@ class SlippyMap {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.Mapnik("Mapnik"); ';
 		} elseif ( $layer == 'cycle' ) {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.CycleMap("OpenCycleMap"); ';
+                } elseif ( $layer == 'transport' ) {
+ 			$layerObjectDef = 'OpenLayers.Layer.OSM.TransportMap("Transport"); '; 
 		} else {
 			$error = wfMsg( 'slippymap_invalidlayer',  htmlspecialchars( $layer ) );
 		}
@@ -195,7 +197,7 @@ class SlippyMap {
 			$output .= "<style> .buttonsPanel .resetButtonItemInactive       { width:36px; height:19px; background-image:url('" . $wgScriptPath . "/extensions/SlippyMap/reset-button.png'); }</style>\n";
 
 			$output .= "<!-- bring in the OpenLayers javascript library -->";
-			$output .= "<script src=\"http://openlayers.org/api/OpenLayers.js\"></script> ";
+			$output .= "<script src=\"http://openstreetmap.org/openlayers/OpenLayers.js\"></script> ";
 
 			$output .= "<!-- bring in the OpenStreetMap OpenLayers layers. ";
 			$output .= "     Using this hosted file will make sure we are kept up ";
@@ -208,7 +210,8 @@ class SlippyMap {
 
 			$output .= 'var map; ';
 
-			$output .= 'addOnloadHook( slippymap_init ); ';
+		// broken in MW 1.17
+		//	$output .= 'addOnloadHook( slippymap_init ); ';
 
 			$output .= 'function slippymap_resetPosition() {';
 			$output .= '	map.setCenter(lonLat, zoom);';
@@ -285,6 +288,10 @@ class SlippyMap {
 			$output .= "<img src=\"" . $wgMapOfServiceUrl . "lat=${lat}&long=${lon}&z=${zoom}&w=${width}&h=${height}&format=jpeg\" width=\"${width}\" height=\"${height}\" border=\"0\" alt=\"Slippy Map\"><br />";
 			$output .= '</a></noscript>';
 			$output .= '</div>';
+
+			$output .= '<script type="text/javascript">';
+			$output .= ' slippymap_init();';
+			$output .= "</script> ";
 
 		}
 		return $output;

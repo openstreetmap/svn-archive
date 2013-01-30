@@ -164,7 +164,7 @@ public final class WikipediaApp {
             final String url = "http://" + wikipediaLang + ".wikipedia.org/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +
-                    "&titles=" + article +
+                    "&titles=" + URLEncoder.encode(article, "UTF-8") +
                     "&lllimit=500" +
                     "&format=xml";
             System.out.println("Wikipedia: GET " + url);

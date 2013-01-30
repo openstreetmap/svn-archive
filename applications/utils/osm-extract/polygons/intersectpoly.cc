@@ -47,7 +47,7 @@ MultiPolygon* readpoly()
         if (isspace(buffer[0]))
         {
             end = 0;
-            char *first = strpbrk(buffer, "0123456789.");
+            char *first = strpbrk(buffer, "0123456789.-");
             char *second = strpbrk(first+1, " \t");
             coords->push_back(Coordinate(atof(first), atof(second)));
         }

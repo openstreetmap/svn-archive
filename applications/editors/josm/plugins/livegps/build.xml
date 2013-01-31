@@ -26,7 +26,11 @@
 -->
 <project name="livegps" default="dist" basedir=".">
     <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5681"/>
+    <!--
+      ************************************************
+      ** should not be necessary to change the following properties
+     -->
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>

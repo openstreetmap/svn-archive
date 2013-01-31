@@ -64,14 +64,14 @@ public class DirectDownload extends Plugin {
 
 		    GpxReader r = new GpxReader(is);
 		    boolean parsedProperly = r.parse(true);
-		    GpxLayer gpxLayer = new GpxLayer(r.data, track.filename, true);
+		    GpxLayer gpxLayer = new GpxLayer(r.getGpxData(), track.filename, true);
 
-                    if (r.data.hasRoutePoints() || r.data.hasTrackPoints()) {
+                    if (r.getGpxData().hasRoutePoints() || r.getGpxData().hasTrackPoints()) {
                         Main.main.addLayer(gpxLayer);
                     }
 
-                    if (Main.pref.getBoolean("marker.makeautomarkers", true) && !r.data.waypoints.isEmpty()) {
-                        MarkerLayer ml = new MarkerLayer(r.data, tr("Markers from {0}", track.filename), null, gpxLayer);
+                    if (Main.pref.getBoolean("marker.makeautomarkers", true) && !r.getGpxData().waypoints.isEmpty()) {
+                        MarkerLayer ml = new MarkerLayer(r.getGpxData(), tr("Markers from {0}", track.filename), null, gpxLayer);
                         if (ml.data.size() > 0) {
                             Main.main.addLayer(ml);
                         }

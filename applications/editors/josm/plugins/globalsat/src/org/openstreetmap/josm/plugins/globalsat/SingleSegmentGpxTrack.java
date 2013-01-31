@@ -7,20 +7,19 @@ import java.util.Map;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.WithAttributes;
 
-public class SingleSegmentGpxTrack implements GpxTrack {
+public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
 
-    private final Map<String, Object> attributes;
     private final GpxTrackSegment trackSegment;
 
     public SingleSegmentGpxTrack(GpxTrackSegment trackSegment, Map<String, Object> attributes) {
-        this.attributes = Collections.unmodifiableMap(attributes);
+        this.attr = Collections.unmodifiableMap(attributes);
         this.trackSegment = trackSegment;
     }
 
-
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return attr;
     }
 
     public Bounds getBounds() {

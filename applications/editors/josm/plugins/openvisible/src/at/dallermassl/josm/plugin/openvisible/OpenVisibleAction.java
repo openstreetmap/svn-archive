@@ -128,10 +128,10 @@ public class OpenVisibleAction extends JosmAction {
                 JOptionPane.showMessageDialog(Main.parent, tr("Parsing file \"{0}\" failed", file));
                 throw new IllegalStateException();
             }
-            r.data.storageFile = file;
-            GpxLayer gpxLayer = new GpxLayer(r.data, fn);
+            r.getGpxData().storageFile = file;
+            GpxLayer gpxLayer = new GpxLayer(r.getGpxData(), fn);
             Main.main.addLayer(gpxLayer);
-            Main.main.addLayer(new MarkerLayer(r.data, tr("Markers from {0}", fn), file, gpxLayer));
+            Main.main.addLayer(new MarkerLayer(r.getGpxData(), tr("Markers from {0}", fn), file, gpxLayer));
 
         } else {
             throw new IllegalStateException();

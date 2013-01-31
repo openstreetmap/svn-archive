@@ -208,7 +208,7 @@ public class StopImporterAction extends JosmAction
       }
       final GpxReader r = new GpxReader(is);
       final boolean parsedProperly = r.parse(true);
-      data = r.data;
+      data = r.getGpxData();
 
       if (!parsedProperly)
       {

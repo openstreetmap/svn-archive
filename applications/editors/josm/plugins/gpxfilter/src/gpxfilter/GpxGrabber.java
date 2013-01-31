@@ -47,7 +47,7 @@ public class GpxGrabber extends OsmServerReader {
             InputStream in = getInputStream(url, NullProgressMonitor.INSTANCE);
             GpxReader reader = new GpxReader(in);
             reader.parse(false);
-            GpxData result = reader.data;
+            GpxData result = reader.getGpxData();
             in.close();
             result.fromServer = true;
             page++;
